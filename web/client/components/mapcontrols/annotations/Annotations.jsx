@@ -73,7 +73,7 @@ class Annotations extends React.Component {
         config: PropTypes.object,
         filter: PropTypes.string,
         onFilter: PropTypes.func,
-        onCreateClass: PropTypes.func
+        classNameSelector: PropTypes.func
     };
 
     static contextTypes = {
@@ -83,7 +83,7 @@ class Annotations extends React.Component {
     static defaultProps = {
         mode: 'list',
         config: defaultConfig,
-        onCreateClass: () => ''
+        classNameSelector: () => ''
     };
 
     getConfig = () => {
@@ -115,7 +115,7 @@ class Annotations extends React.Component {
 
     renderCard = (annotation) => {
         const readOnly = annotation.readOnly ? ' m-read-only' : '';
-        return (<div className={"mapstore-annotations-panel-card" + this.props.onCreateClass(annotation) + readOnly} onMouseOver={() => this.props.onHighlight(annotation.properties.id)} onMouseOut={this.props.onCleanHighlight} onClick={annotation.readOnly ? () => {} : () => this.props.onDetail(annotation.properties.id)}>
+        return (<div className={"mapstore-annotations-panel-card" + this.props.classNameSelector(annotation) + readOnly} onMouseOver={() => this.props.onHighlight(annotation.properties.id)} onMouseOut={this.props.onCleanHighlight} onClick={annotation.readOnly ? () => {} : () => this.props.onDetail(annotation.properties.id)}>
             <span className="mapstore-annotations-panel-card-thumbnail">{this.renderThumbnail(annotation.style)}</span>
             {this.getConfig().fields.map(f => this.renderField(f, annotation))}
         </div>);

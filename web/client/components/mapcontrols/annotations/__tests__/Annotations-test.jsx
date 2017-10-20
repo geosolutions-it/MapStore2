@@ -252,14 +252,14 @@ describe("test the Annotations Panel", () => {
             }
         }];
 
-        const onCreateClass = (annotation) => {
+        const classNameSelector = (annotation) => {
             if (annotation && annotation.properties && annotation.properties.external) {
                 return ' external';
             }
             return '';
         };
 
-        const annotations = ReactDOM.render(<Annotations mode="list" onCreateClass={onCreateClass} annotations={annotationsList} />, document.getElementById("container"));
+        const annotations = ReactDOM.render(<Annotations mode="list" classNameSelector={classNameSelector} annotations={annotationsList} />, document.getElementById("container"));
 
         expect(annotations).toExist();
 
