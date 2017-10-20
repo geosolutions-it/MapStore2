@@ -252,25 +252,21 @@ describe("test the Annotations Panel", () => {
             }
         }];
 
-        const testHandlers = {
-            onCreateClass: (annotation) => {
-                if (annotation && annotation.properties && annotation.properties.external) {
-                    return ' external';
-                }
-                return '';
+        const onCreateClass = (annotation) => {
+            if (annotation && annotation.properties && annotation.properties.external) {
+                return ' external';
             }
+            return '';
         };
 
-        const spyCreateClass = expect.spyOn(testHandlers, 'onCreateClass');
-
-        const annotations = ReactDOM.render(<Annotations mode="list" onCreateClass={spyCreateClass.onCreateClass} annotations={annotationsList} />, document.getElementById("container"));
+        const annotations = ReactDOM.render(<Annotations mode="list" onCreateClass={onCreateClass} annotations={annotationsList} />, document.getElementById("container"));
 
         expect(annotations).toExist();
 
-        const cards = TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card external");
-        expect(cards.length).toBe(1);
+        const cards = TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card");
+        expect(cards.length).toBe(2);
 
-        expect(spyCreateClass).toHaveBeenCalled();
-
+        const cardsExternal = TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card external");
+        expect(cardsExternal.length).toBe(1);
     });
 });
