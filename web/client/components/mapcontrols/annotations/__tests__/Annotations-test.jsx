@@ -229,4 +229,48 @@ describe("test the Annotations Panel", () => {
         expect(spyDetail).toNotHaveBeenCalled();
 
     });
+
+    it('test rendering custom class', () => {
+        const annotationsList = [{
+            properties: {
+                title: 'a',
+                description: 'b'
+            },
+            style: {
+                iconShape: 'square',
+                iconColor: 'blue'
+            }
+        }, {
+            properties: {
+                external: true,
+                title: 'c',
+                description: 'd'
+            },
+            style: {
+                iconShape: 'square',
+                iconColor: 'blue'
+            }
+        }];
+
+        const testHandlers = {
+            onCreateClass: (annotation) => {
+                if (annotation && annotation.properties && annotation.properties.external) {
+                    return ' external';
+                }
+                return '';
+            }
+        };
+
+        const spyCreateClass = expect.spyOn(testHandlers, 'onCreateClass');
+
+        const annotations = ReactDOM.render(<Annotations mode="list" onCreateClass={spyCreateClass.onCreateClass} annotations={annotationsList} />, document.getElementById("container"));
+
+        expect(annotations).toExist();
+
+        const cards = TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card external");
+        expect(cards.length).toBe(1);
+
+        expect(spyCreateClass).toHaveBeenCalled();
+
+    });
 });
