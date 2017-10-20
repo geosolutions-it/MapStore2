@@ -10,23 +10,25 @@
 const axios = require('../libs/ajax');
 const urlUtil = require('url');
 const Rx = require('rxjs');
-const toDescribeURL = ({url, typeName}) => {
-    const parsed = urlUtil.parse(url, true);
+const toDescribeURL = ({name, search = {}, url} = {}) => {
+    const parsed = urlUtil.parse(search.url || url, true);
     return urlUtil.format(
         {
         ...parsed,
+        search: undefined, // this allows to merge parameters correctly
         query: {
+            ...parsed.query,
+
             service: "WFS",
             version: "1.1.0",
-            typeName: typeName,
+            typeName: name,
             outputFormat: 'application/json',
-            request: "DescribeFeatureType",
-            ...parsed.query
+            request: "DescribeFeatureType"
         }
     });
 };
 module.exports = {
-    describeFeatureType: ({url, layer}) =>
+    describeFeatureType: ({layer}) =>
         Rx.Observable.defer(() =>
-            axios.get(toDescribeURL({url, typeName: layer.name})))
+            axios.get(toDescribeURL(layer)))
 };

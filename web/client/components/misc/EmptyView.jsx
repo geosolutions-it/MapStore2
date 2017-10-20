@@ -28,12 +28,13 @@ module.exports = ({
         contentStyle,
         glyph="info-sign",
         title,
+        tooltip,
         description,
         content
     } = {}) =>
         (<div className="empty-state-container">
             <div key="main-view" className="empty-state-main-view" style={mainViewStyle}>
-                {glyph ? <div key="glyph" className="empty-state-image"><FullWidthIcon glyph={glyph} /></div> : null}
+                {glyph ? <div key="glyph" className="empty-state-image"><FullWidthIcon tooltip={tooltip} glyph={glyph} /></div> : null}
                 {title ? <h1 key="title" >{title}</h1> : null}
                 {description ? <p key="description">{description}</p> : null}
             </div>

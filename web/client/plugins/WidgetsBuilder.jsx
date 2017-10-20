@@ -11,30 +11,43 @@ const Dock = require('react-dock').default;
 const {createSelector} = require('reselect');
 const {connect} = require('react-redux');
 const {widgetBulderSelector} = require('../selectors/controls');
+const {getEditingWidget, getEditorSettings} = require('../selectors/widgets');
+const {getSelectedLayer} = require('../selectors/layers');
 const {setControlProperty} = require('../actions/controls');
-const {insertWidget} = require('../actions/widgets');
+const {insertWidget, onEditorChange, setPage} = require('../actions/widgets');
 const PropTypes = require('prop-types');
 const WidgetsBuilder = connect(
-    () => {}, {
-        insertWidget
+    createSelector(
+        getSelectedLayer,
+        getEditingWidget,
+        getEditorSettings,
+        (layer, editorData, settings) => ({
+            layer,
+            editorData,
+            settings
+        })
+    ), {
+        insertWidget,
+        setPage,
+        onEditorChange
     }
 )(require('../components/widgets/builder/WidgetsBuilder'));
 
 
 const BuilderHeader = connect(() => {}, {
-    onClose: setControlProperty("widgetBulder", "enabled", false, false)
+    onClose: setControlProperty.bind(null, "widgetBulder", "enabled", false, false)
 })(require('../components/widgets/builder/BuilderHeader'));
 
 class SideBarComponent extends React.Component {
      static propTypes = {
          id: PropTypes.string,
-         enabled: PropTypes.isVisible,
+         enabled: PropTypes.bool,
          limitDockHeight: PropTypes.bool,
          fluid: PropTypes.bool,
          zIndex: PropTypes.number,
          dockSize: PropTypes.number,
          position: PropTypes.string,
-         dimMode: PropTypes.dimMode,
+         dimMode: PropTypes.string,
          src: PropTypes.string,
          style: PropTypes.object
      };
@@ -75,5 +88,6 @@ const Plugin = connect(
     }))
 )(SideBarComponent);
 module.exports = {
-    WidgetsBuilderPlugin: Plugin
+    WidgetsBuilderPlugin: Plugin,
+    epics: require('../epics/widgetsbuilder')
 };

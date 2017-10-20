@@ -944,6 +944,51 @@
                 "invalidOutputFormat": "The selected export format is not available"
             }
         },
+        "widgets": {
+            "title": "Title",
+            "description": "Description",
+            "errors": {
+                "nodatainviewport": "No data in the current viewport"
+            },
+            "builder": {
+                "header": {
+                    "title": "Widget"
+                }
+            },
+            "chartOptionsTitle": "Chart Data",
+            "widgetOptionsTitle": "Widget Info",
+            "groupByAttributes": {
+                "line": "X Attribute (Group By)",
+                "pie": "Group By",
+                "bar": "X Attribute (Group By)"
+            },
+            "aggregationAttribute": {
+                "line": "Y Attribute (Aggregated)",
+                "pie": "Attribute",
+                "bar": "Y Attribute (Aggregated)"
+            },
+            "aggregateFunction": {
+                "line": "Operation",
+                "pie": "Operation",
+                "bar": "Operation"
+            },
+            "colorRamp": {
+                "line": "Color",
+                "pie": "Color Ramp",
+                "bar": "Color"
+            },
+            "mapSync": {
+                "line": "Live Filter by viewport",
+                "pie": "Live Filter by viewport",
+                "bar": "Live Filter by viewport"
+            },
+            "displayLegend": {
+                "line": "Display Legend",
+                "pie": "Display Legend",
+                "bar": "Display Legend"
+            }
+
+        },
         "vectorstyler": {
             "tooltip": "Create and edit vector layer style",
             "paneltitle": "Vector Styler",

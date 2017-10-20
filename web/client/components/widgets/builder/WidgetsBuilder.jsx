@@ -7,4 +7,18 @@
   */
 const React = require('react');
 const ChartWizard = require('./ChartWizard');
-module.exports = () => <ChartWizard />;
+module.exports = ({
+        settings = {},
+        insertWidget = () => {},
+        onEditorChange = () => {},
+        setPage = () => {},
+        layer,
+        editorData = {}}
+    ) =>
+        (<ChartWizard
+            step={settings.step}
+            layer={layer}
+            data={editorData}
+            onFinish={insertWidget}
+            setPage={setPage}
+            onChange={onEditorChange}/>);

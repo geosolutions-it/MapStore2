@@ -5,7 +5,6 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-const {isEqual} = require('lodash');
 const {compose, withProps} = require('recompose');
 const wpsAggregate = require('../../../observables/wps/aggregate');
 const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
@@ -14,23 +13,25 @@ const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [
         ...GroupByAttributes.reduce( (a, p, i) => ({...a, [p]: res[i]}), {}),
         [AggregationAttribute]: res[res.length - 1]
     }));
-
+const sameFilter = (f1, f2) => f1 === f2;
 const sameOptions = (o1 = {}, o2 = {}) =>
     o1.aggregateFunction === o2.aggregateFunction
     && o1.aggregationAttribute === o2.aggregationAttribute
     && o1.groupByAttributes === o2.groupByAttributes;
-    // && isEqual(o1.fitler. o2.filter);
+
+const getLayerUrl = l => (l.search && l.search.url) || l.url;
 const dataStreamFactory = ($props) =>
     $props
-        .filter(({url, layer, options}) => url && layer && layer.name && options && options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes)
+        .filter(({layer = {}, options}) => layer.name && getLayerUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes)
         .distinctUntilChanged(
-            ({url, layer={}, options = {}}, newProps) =>
-                url === newProps.url
+            ({layer={}, options = {}, filter}, newProps) =>
+                getLayerUrl(layer) === getLayerUrl(layer)
                 && (newProps.layer && layer.name === newProps.layer.name)
-                && sameOptions(options, newProps.options))
+                && sameOptions(options, newProps.options)
+                && sameFilter(filter, newProps.filter))
         .switchMap(
-            ({url, layer={}, options, filter}) =>
-            wpsAggregate(url, {featureType: layer.name, ...options, filter})
+            ({layer={}, options, filter}) =>
+            wpsAggregate(getLayerUrl(layer), {featureType: layer.name, ...options, filter})
                 .map((response) => ({
                     loading: false,
                     isAnimationActive: false,

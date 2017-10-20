@@ -9,7 +9,8 @@ const {compose, withState, withHandlers} = require('recompose');
 module.exports = compose(
     // table / chart visualization
     withState('showTable', 'setShowTable', false),
+    withState('confirmDelete', 'toggleDeleteConfirm', false),
     withHandlers({
        toggleTableView: ({ setShowTable, showTable }) => () => setShowTable(!showTable)
-     })
+   }),
 );

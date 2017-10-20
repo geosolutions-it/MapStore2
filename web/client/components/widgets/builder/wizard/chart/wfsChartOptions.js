@@ -11,8 +11,8 @@ const propsStreamFactory = require('../../../../misc/enhancers/propsStreamFactor
 
 const {get, find} = require('lodash');
 const {describeFeatureType} = require('../../../../../observables/wfs');
-const dataStreamFactory = ($props, {layer, url}) =>
-    describeFeatureType({layer, url})
+const dataStreamFactory = ($props, {layer}) =>
+    describeFeatureType({layer})
         .map((response = {}) => ({
               isLoading: false,
               featureTypeProperties: get(response, "data.featureTypes[0].properties") || []
@@ -42,7 +42,7 @@ module.exports = compose(
   propsStreamFactory,
   withProps(({featureTypeProperties = [], data = {}} = {}) => ({
       options: propsToOptions(featureTypeProperties),
-      aggregationOptions: getAllowedAggregationOptions(data.aggregationAttribute, featureTypeProperties)
+      aggregationOptions: getAllowedAggregationOptions(data.options && data.options.aggregationAttribute, featureTypeProperties)
   })),
 
 );

@@ -30,6 +30,7 @@ const layersIcon = require('./toolbar/assets/img/layers.png');
 const {isObject, head} = require('lodash');
 
 const {setControlProperty} = require('../actions/controls');
+const {createWidget} = require('../actions/widgets');
 
 const {activeSelector} = require("../selectors/catalog");
 
@@ -426,7 +427,7 @@ const TOCPlugin = connect(tocSelector, {
     onSelectNode: selectNode,
     onFilter: filterLayers,
     onAddLayer: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
-    onNewWidget: setControlProperty.bind(null, "widgetBulder", "enabled", true, true),
+    onNewWidget: () => createWidget(),
     refreshLayerVersion
 })(LayerTree);
 

@@ -8,12 +8,9 @@
 const React = require('react');
 const {Row, Col, Form, FormGroup, ControlLabel, FormControl} = require('react-bootstrap');
 const Message = require('../../../../I18N/Message');
-const Select = require('react-select');
 const StepHeader = require('../../../../misc/wizard/StepHeader');
-const SwitchButton = require('../../../../misc/switch/SwitchButton');
 
-
-module.exports = ({data = {}, onChange = () => {}, options=[], aggregationOptions = [], sampleChart}) => (<Row>
+module.exports = ({data = {}, onChange = () => {}, sampleChart}) => (<Row>
         <StepHeader title={<Message msgId={`widgets.widgetOptionsTitle`} />} />
           <Col key="sample" xs={12}>
               <div style={{marginBottom: "30px"}}>
@@ -27,7 +24,7 @@ module.exports = ({data = {}, onChange = () => {}, options=[], aggregationOption
                 <Message msgId={`widgets.title`} />
               </Col>
               <Col sm={6}>
-                  <FormControl type="text" onChange={ val => onChange("title", val && val.value)} />
+                  <FormControl value={data.title} type="text" onChange={ e => onChange("title", e.target.value)} />
               </Col>
             </FormGroup>
 
@@ -36,11 +33,9 @@ module.exports = ({data = {}, onChange = () => {}, options=[], aggregationOption
                   <Message msgId={`widgets.description`} />
                 </Col>
               <Col sm={6}>
-                  <FormControl type="text" onChange={ val => onChange("description", val && val.value)} />
+                  <FormControl value={data.description} type="text" onChange={ e => onChange("description", e.target.value)} />
               </Col>
           </FormGroup>
           </Form>
-
-
   </Col>
 </Row>);

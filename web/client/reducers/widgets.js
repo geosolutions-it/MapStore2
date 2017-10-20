@@ -6,59 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const CREATE = require('../actions/widgets');
-const {get} = require('lodash');
-const {set} = require('../utils/ImmutableUtils');
-
-/***
- TEST DATA
- **********/
-const W1 = {
-     title: "chart",
-     description: "description",
-     type: "line",
-     layer: {
-         name: "topp:states"
-     },
-     url: "http://demo.geo-solutions.it/geoserver/wfs",
-     options: {aggregateFunction: "Count", aggregationAttribute: "STATE_NAME", groupByAttributes: "SUB_REGION"},
-     legend: {
-         layout: "vertical",
-         align: "left",
-         verticalAlign: "middle"
-     },
-     width: 500,
-     height: 200
-};
- /*
- const W2 = {
-     title: "chart",
-     description: "description",
-     type: "pie",
-     layer: {
-         name: "SITGEO:V_INDUSTRIE"
-     },
-     url: "/geoserver-test/wfs",
-     options: {aggregateFunction: "Count", aggregationAttribute: "AZIENDA", groupByAttributes: "TIPOSEDE"},
-     legend: {
-         layout: "vertical",
-         align: "left",
-         verticalAlign: "middle"
-     },
-     width: 500,
-     height: 200
- };
- */
-
-
- // const WIDGETS = [{data, loading: true, title: "chart", description: "description", series: SERIES, yAxis: {}, xAxis: {dataKey: "name"} }];
-const WIDGETS = [ W1, {...W1, type: 'pie'}, {...W1, type: 'bar'} ];
- /*** END TEST DATA ***/
+const {EDIT_NEW, INSERT, EDIT, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE} = require('../actions/widgets');
+const set = require('lodash/fp/set');
+const {arrayUpsert, arrayDelete} = require('../utils/ImmutableUtils');
 
 const emptyState = {
+    dependencies: {
+        viewport: "map.bbox"
+    },
     containers: {
         floating: {
-            widgets: WIDGETS
+            widgets: []
+        }
+    },
+    builder: {
+        settings: {
+            step: 0
         }
     }
 };
@@ -68,22 +31,45 @@ const emptyState = {
  *
  * @example
  *{
- *  widgets: [{}]
+ *  widgets: {
+ *    containers: {
+ *       floating: {
+ *          widgets: [{
+ *              //...
+ *          }]
+ *       }
+ *    }
+ *  }
  *}
  * @memberof reducers
  */
 function widgets(state = emptyState, action) {
     switch (action.type) {
-        case CREATE:
-            return set(state, `containers['${action.target}']`, {
-                widgets: [
-                    ...(get(state, `containers[${action.target}].widgets`) || []),
-                    {
-                        id: action.id,
-                        ...action.widget
-                    }
-                ]
-            });
+        case EDITOR_SETTING_CHANGE: {
+            return set(`builder.settings.${action.key}`, action.value, state);
+        }
+        case EDIT_NEW: {
+            return set(`builder.editor`, action.widget,
+                set("builder.settings", action.settings || emptyState.settings, state));
+
+        }
+        case EDIT: {
+            return set(`builder.editor`, action.widget, state);
+        }
+        case EDITOR_CHANGE: {
+            return set(`builder.editor.${action.key}`, action.value, state);
+        }
+        case INSERT:
+           return arrayUpsert(`containers[${action.target}].widgets`, {
+               id: action.id,
+               ...action.widget
+           }, {
+               id: action.widget.id || action.id
+           }, state);
+        case DELETE:
+            return arrayDelete(`containers[${action.target}].widgets`, {
+                id: action.widget.id
+            }, state);
         default:
             return state;
     }
