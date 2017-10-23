@@ -183,7 +183,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {this.props.toolbarButtonSelector('feature grid', {selectedLayers: this.props.selectedLayers, selectedGroups: this.props.selectedGroups}) && this.props.activateTool.activateQueryTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded ?
+                {this.props.toolbarButtonSelector('features grid', {selectedLayers: this.props.selectedLayers, selectedGroups: this.props.selectedGroups}) && this.props.activateTool.activateQueryTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded ?
                     <OverlayTrigger
                         key="featuresGrid"
                         placement="top"
