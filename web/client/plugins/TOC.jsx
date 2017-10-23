@@ -125,6 +125,7 @@ class LayerTree extends React.Component {
         onContextMenu: PropTypes.func,
         onBrowseData: PropTypes.func,
         onSelectNode: PropTypes.func,
+        toolbarButtonSelector: PropTypes.func,
         selectedNodes: PropTypes.array,
         onZoomToExtent: PropTypes.func,
         retrieveLayerData: PropTypes.func,
@@ -181,6 +182,7 @@ class LayerTree extends React.Component {
         updateNode: () => {},
         removeNode: () => {},
         onSelectNode: () => {},
+        toolbarButtonSelector: () => true,
         selectedNodes: [],
         activateSortLayer: true,
         activateFilterLayer: true,
@@ -283,6 +285,7 @@ class LayerTree extends React.Component {
                             selectedLayers={this.props.selectedLayers}
                             selectedGroups={this.props.selectedGroups}
                             settings={this.props.settings}
+                            toolbarButtonSelector={this.props.toolbarButtonSelector}
                             activateTool={{
                                 activateToolsContainer: this.props.activateToolsContainer,
                                 activateRemoveLayer: this.props.activateRemoveLayer,
