@@ -111,7 +111,6 @@ module.exports = {
      */
     getMarkerFromStyle: (style) => {
         return defaultMarkers.filter(m => m.name === style.iconShape)[0]
-            .markers.filter(m2 => m2.name === style.iconColor)[0]
-        || defaultMarkers[0] && defaultMarkers[0].markers && defaultMarkers[0].markers[0] || {};
+            .markers.filter(m2 => m2.name === style.iconColor)[0];
     }
 };

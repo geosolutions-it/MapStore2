@@ -7,7 +7,6 @@
  */
 
 const assign = require('object-assign');
-const {head, isObject} = require('lodash');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 const {TOGGLE_CONTROL} = require('../actions/controls');
 const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, CLOSE_ANNOTATIONS,
@@ -15,21 +14,9 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
         EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
     UPDATE_ANNOTATION_GEOMETRY, VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY, TOGGLE_STYLE,
     SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION, FILTER_ANNOTATIONS} = require('../actions/annotations');
-const {annotationsGlyphsSelector} = require('../selectors/annotations');
+const {annotationsDefaultStyleSelector} = require('../selectors/annotations');
 
 const uuid = require('uuid');
-const defaultMarker = a => {
-    const glyphs = annotationsGlyphsSelector(assign({}, {annotations: a}));
-    return glyphs ? {
-        iconGlyph: head(glyphs.filter(g => isObject(g) && g.value === 'comment' || g === 'comment')) && 'comment' || glyphs[0] && isObject(glyphs[0]) && glyphs[0].value || glyphs[0],
-        iconColor: 'blue',
-        iconShape: 'square'
-    } : {
-        iconGlyph: 'comment',
-        iconColor: 'blue',
-        iconShape: 'square'
-    };
-};
 
 function annotations(state = { validationErrors: {} }, action) {
     switch (action.type) {
@@ -44,7 +31,7 @@ function annotations(state = { validationErrors: {} }, action) {
         case EDIT_ANNOTATION:
             return assign({}, state, {
                 editing: assign({}, action.feature, {
-                    style: action.feature.style || defaultMarker(state)
+                    style: action.feature.style || annotationsDefaultStyleSelector({annotations: assign({}, state)})
                 }),
                 originalStyle: null,
                 featureType: action.featureType
@@ -60,7 +47,7 @@ function annotations(state = { validationErrors: {} }, action) {
                     properties: {
                         id
                     },
-                    style: defaultMarker(state)
+                    style: annotationsDefaultStyleSelector({annotations: assign({}, state)})
                 },
                 originalStyle: null,
                 featureType: action.featureType
