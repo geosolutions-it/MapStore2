@@ -145,12 +145,12 @@ class GeometryDetails extends React.Component {
                 center.x + this.circle.radius, center.y + this.circle.radius
             ];
             let coordinates = CoordinatesUtils.calculateCircleCoordinates(center, this.circle.radius, 100);
-            if (this.props.geometry && this.props.geometry.projection === "EPSG:4326") {
+            if (this.props.geometry && this.props.geometry.projection) {
                 // reproject into "EPSG:3857" to draw and circle coordinates
-                const projection = "EPSG:3857";
-                const tempCenter = CoordinatesUtils.reproject(center, "EPSG:4326", projection);
+                const METRIC = "EPSG:3857";
+                const tempCenter = CoordinatesUtils.reproject(center, this.props.geometry.projection, METRIC);
                 const tempCoordinates = CoordinatesUtils.calculateCircleCoordinates(tempCenter, this.circle.radius, 100);
-                const tempPolygon = CoordinatesUtils.reprojectGeoJson({type: "Feature", geometry: {type: "Polygon", coordinates: tempCoordinates}}, projection, "EPSG:4326");
+                const tempPolygon = CoordinatesUtils.reprojectGeoJson({type: "Feature", geometry: {type: "Polygon", coordinates: tempCoordinates}}, METRIC, this.props.geometry.projection);
                 coordinates = tempPolygon.geometry.coordinates;
             }
             geometry = {
