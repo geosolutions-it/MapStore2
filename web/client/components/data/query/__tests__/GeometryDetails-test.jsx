@@ -7,6 +7,8 @@
  */
 const React = require('react');
 const ReactDOM = require('react-dom');
+const ReactTestUtils = require('react-dom/test-utils');
+
 
 const GeometryDetails = require('../GeometryDetails.jsx');
 
@@ -64,6 +66,65 @@ describe('GeometryDetails', () => {
         expect(panelBodyRows.length).toBe(4);
 
         expect(panelBodyRows[0].childNodes.length).toBe(4);
+    });
+    it('Test GeometryDetails onEndDrawing', () => {
+        const actions = {
+            onEndDrawing: () => {}
+        };
+        let geometry = {
+            center: {
+                srs: "EPSG:900913",
+                x: -1761074.344349588,
+                y: 5852757.632510748
+            },
+            projection: "EPSG:900913",
+            radius: 836584.05,
+            type: "Polygon"
+        };
+
+        let type = "Circle";
+
+        const spyonEndDrawing = expect.spyOn(actions, 'onEndDrawing');
+        const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} type={type} onEndDrawing={actions.onEndDrawing} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        ReactTestUtils.Simulate.click(document.getElementById('save-radius')); // <-- trigger event callback
+        expect(spyonEndDrawing).toHaveBeenCalled();
+        expect(spyonEndDrawing.calls[0].arguments.length).toBe(2);
+        const geom = spyonEndDrawing.calls[0].arguments[0];
+        expect(geom).toExist();
+
+    });
+
+    it('Test GeometryDetails onEndDrawing without using map projection', () => {
+        const actions = {
+            onEndDrawing: () => {}
+        };
+        let geometry = {
+            center: {
+                srs: "EPSG:4326",
+                x: 0,
+                y: 0
+            },
+            projection: "EPSG:4326",
+            radius: 1,
+            type: "Polygon"
+        };
+
+        let type = "Circle";
+
+        const spyonEndDrawing = expect.spyOn(actions, 'onEndDrawing');
+        const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} type={type} onEndDrawing={actions.onEndDrawing} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        ReactTestUtils.Simulate.click(document.getElementById('save-radius')); // <-- trigger event callback
+        expect(spyonEndDrawing).toHaveBeenCalled();
+        const geom = spyonEndDrawing.calls[0].arguments[0];
+        const coords = geom.coordinates[0];
+        // verify that the geometry is not bigger than radious
+        for (let i = 0; i < coords.length; i++) {
+            expect(Math.abs(coords[i][0]) <= 1).toBe(true);
+            expect(Math.abs(coords[i][1]) <= 1).toBe(true);
+        }
+
     });
 
     it('creates the GeometryDetails component with BBOX selection', () => {

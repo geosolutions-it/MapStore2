@@ -221,10 +221,25 @@ class DrawSupport extends React.Component {
             this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
         } else {
             this.drawLayer.clearLayers();
-            this.drawLayer.options.pointToLayer = (f, latLng) => {
-                let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, newProps.options && newProps.options.featureProjection || "EPSG:4326", "EPSG:4326");
-                return VectorUtils.pointToLayer(L.latLng(center.y, center.x), f, newProps.style);
-            };
+            if (this.props.drawMethod === "Circle") {
+                this.drawLayer.options.pointToLayer = (feature, latLng) => {
+                    let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, feature.projection || "EPSG:4326", "EPSG:4326");
+                    return L.circle(L.latLng(center.y, center.x), feature.radius || 5);
+                };
+                this.drawLayer.options.style = {
+                    color: '#ffcc33',
+                    opacity: 1,
+                    weight: 3,
+                    fillColor: '#ffffff',
+                    fillOpacity: 0.2,
+                    clickable: false
+                };
+            } else {
+                this.drawLayer.options.pointToLayer = (f, latLng) => {
+                    let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, newProps.options && newProps.options.featureProjection || "EPSG:4326", "EPSG:4326");
+                    return VectorUtils.pointToLayer(L.latLng(center.y, center.x), f, newProps.style);
+                };
+            }
             this.drawLayer.addData(this.convertFeaturesPolygonToPoint(newProps.features, this.props.drawMethod));
         }
     };
@@ -305,7 +320,7 @@ class DrawSupport extends React.Component {
 
         if (newFeature && newFeature.geometry && newFeature.geometry.type && !isSimpleGeomType(newFeature.geometry.type)) {
             const newFeatures = newFeature.geometry.coordinates.map((coords, idx) => {
-                return assign({}, {
+                return {
                         type: 'Feature',
                         properties: {...newFeature.properties},
                         id: newFeature.geometry.type + idx,
@@ -313,7 +328,7 @@ class DrawSupport extends React.Component {
                             coordinates: coords,
                             type: getSimpleGeomType(newFeature.geometry.type)
                         }
-                    });
+                    };
             });
             newFeature = {type: "FeatureCollection", features: newFeatures};
         }
