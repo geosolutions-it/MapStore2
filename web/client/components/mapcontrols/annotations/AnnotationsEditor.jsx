@@ -236,6 +236,7 @@ class AnnotationsEditor extends React.Component {
             </div>
             <div className="mapstore-annotations-info-viewer-markers">{this.renderMarkers(this.getConfig().markers)}</div>
             <Select
+                clearable={false}
                 options={this.getConfig().glyphs.map(g => ({
                     label: isObject(g) ? g.label : g,
                     value: isObject(g) ? g.value : g
