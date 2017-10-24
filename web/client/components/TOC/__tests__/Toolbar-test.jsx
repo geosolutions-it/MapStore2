@@ -345,22 +345,28 @@ describe('TOC Toolbar', () => {
             }
         }];
 
-        const toolbarButtonSelector = (type, props) => {
+        const activateSelector = (type, selected) => {
             switch (type) {
+                case 'tools container':
+                    return true;
+                case 'add layer':
+                    return true;
                 case 'zoom to':
-                    return props && props.selectedLayers && props.selectedLayers[0].zoomToBtn;
+                    return selected && selected.selectedLayers && selected.selectedLayers[0].zoomToBtn;
                 case 'settings':
-                    return props && props.selectedLayers && props.selectedLayers[0].settingsBtn;
+                    return selected && selected.selectedLayers && selected.selectedLayers[0].settingsBtn;
+                case 'settings delete':
+                    return false;
                 case 'features grid':
-                    return props && props.selectedLayers && props.selectedLayers[0].featuresGridBtn;
+                    return selected && selected.selectedLayers && selected.selectedLayers[0].featuresGridBtn;
                 case 'remove':
-                    return props && props.selectedLayers && props.selectedLayers[0].removeBtn;
+                    return selected && selected.selectedLayers && selected.selectedLayers[0].removeBtn;
                 default:
                     return true;
             }
         };
 
-        const cmp = ReactDOM.render(<Toolbar toolbarButtonSelector={toolbarButtonSelector} selectedLayers={selectedLayers} selectedGroups={[]}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Toolbar activateSelector={activateSelector} selectedLayers={selectedLayers} selectedGroups={[]}/>, document.getElementById("container"));
 
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
