@@ -10,7 +10,6 @@ const L = require('leaflet');
 const {isFunction} = require('lodash');
 
 require('leaflet-extra-markers');
-require('leaflet-extra-markers/dist/css/leaflet.extra-markers.min.css');
 
 module.exports = {
     extra: {

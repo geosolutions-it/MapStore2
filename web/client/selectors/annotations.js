@@ -42,9 +42,12 @@ const annotationsListSelector = createSelector([
     filter: annotations.filter || ''
 }));
 
+const annotationsGlyphsSelector = state => state.annotations && state.annotations.config && state.annotations.config.glyphs || null;
+
 module.exports = {
     annotationsLayerSelector,
     annotationsInfoSelector,
     annotationsSelector,
-    annotationsListSelector
+    annotationsListSelector,
+    annotationsGlyphsSelector
 };

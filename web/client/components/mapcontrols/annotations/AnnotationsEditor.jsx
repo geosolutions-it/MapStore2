@@ -19,7 +19,7 @@ const {FormControl, ButtonGroup, Grid, Row, Col} = require('react-bootstrap');
 const ReactQuill = require('react-quill');
 require('react-quill/dist/quill.snow.css');
 
-const {isFunction} = require('lodash');
+const {isFunction, isObject, head} = require('lodash');
 
 const assign = require('object-assign');
 
@@ -229,6 +229,8 @@ class AnnotationsEditor extends React.Component {
 
     renderStyler = () => {
         const glyphRenderer = (option) => (<div><span className={"fa fa-" + option.value}/><span> {option.label}</span></div>);
+        const glyphs = [...this.getConfig().glyphs];
+        const value = head(glyphs.filter(g => isObject(g) && g.value === this.props.editing.style.iconGlyph || g === this.props.editing.style.iconGlyph)) || isObject(glyphs[0]) && glyphs[0].value || glyphs[0];
         return (<div className="mapstore-annotations-info-viewer-styler">
             <div className="mapstore-annotations-info-viewer-styler-buttons">
                 <Button bsStyle="primary" onClick={this.props.onSaveStyle}><Glyphicon glyph="floppy-disk"/>&nbsp;<Message msgId="annotations.save"/></Button>
@@ -236,13 +238,13 @@ class AnnotationsEditor extends React.Component {
             </div>
             <div className="mapstore-annotations-info-viewer-markers">{this.renderMarkers(this.getConfig().markers)}</div>
             <Select
-                options={this.getConfig().glyphs.map(g => ({
-                    label: g,
-                    value: g
+                options={glyphs.map(g => ({
+                    label: isObject(g) ? g.label : g,
+                    value: isObject(g) ? g.value : g
                 }))}
                 optionRenderer={glyphRenderer}
                 valueRenderer={glyphRenderer}
-                value={this.props.editing.style.iconGlyph}
+                value={value}
                 onChange={this.selectGlyph}/>
         </div>);
     };

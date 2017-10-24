@@ -19,15 +19,22 @@ const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAd
 const {GEOMETRY_CHANGED} = require('../actions/draw');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 
-const {head} = require('lodash');
+const {head, isObject} = require('lodash');
 const assign = require('object-assign');
 
-const {annotationsLayerSelector} = require('../selectors/annotations');
+const {annotationsLayerSelector, annotationsGlyphsSelector} = require('../selectors/annotations');
 
-const annotationsStyle = {
-    iconGlyph: 'comment',
-    iconShape: 'square',
-    iconColor: 'blue'
+const annotationsStyle = state => {
+    const glyphs = annotationsGlyphsSelector(state);
+    return glyphs ? {
+        iconGlyph: head(glyphs.filter(g => isObject(g) && g.value === 'comment' || g === 'comment')) && 'comment' || glyphs[0] && isObject(glyphs[0]) && glyphs[0].value || glyphs[0],
+        iconColor: 'blue',
+        iconShape: 'square'
+    } : {
+        iconGlyph: 'comment',
+        iconColor: 'blue',
+        iconShape: 'square'
+    };
 };
 
 const {changeDrawingStatus} = require('../actions/draw');
@@ -70,7 +77,7 @@ const toggleDrawOrEdit = (state) => {
     };
     return changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {
         highlight: false
-    }) || annotationsStyle);
+    }) || annotationsStyle(state));
 };
 
 const createNewFeature = (action) => {
@@ -139,7 +146,7 @@ module.exports = (viewer) => ({
                     name: "Annotations",
                     rowViewer: viewer,
                     hideLoading: true,
-                    style: annotationsStyle,
+                    style: annotationsStyle(store.getState()),
                     features: [createNewFeature(action)],
                     handleClickOnLayer: true
                 })
