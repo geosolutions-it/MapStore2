@@ -145,7 +145,7 @@ class GeometryDetails extends React.Component {
                 center.x + this.circle.radius, center.y + this.circle.radius
             ];
             let coordinates = CoordinatesUtils.calculateCircleCoordinates(center, this.circle.radius, 100);
-            if (!this.props.useMapProjection) {
+            if (this.props.geometry && this.props.geometry.projection === "EPSG:4326") {
                 // reproject into "EPSG:3857" to draw and circle coordinates
                 const projection = "EPSG:3857";
                 const tempCenter = CoordinatesUtils.reproject(center, "EPSG:4326", projection);

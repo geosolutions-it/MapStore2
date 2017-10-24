@@ -95,7 +95,7 @@ describe('GeometryDetails', () => {
 
     });
 
-    it('Test GeometryDetails onEndDrawing without using map projection', () => {
+    it('Test GeometryDetails onEndDrawing with 4326 (leaflet)', () => {
         const actions = {
             onEndDrawing: () => {}
         };
