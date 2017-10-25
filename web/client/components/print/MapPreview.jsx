@@ -36,7 +36,8 @@ class MapPreview extends React.Component {
         resolutions: PropTypes.array,
         printRatio: PropTypes.number,
         layout: PropTypes.string,
-        layoutSize: PropTypes.object
+        layoutSize: PropTypes.object,
+        useFixedScales: PropTypes.bool
     };
 
     static defaultProps = {
@@ -51,7 +52,8 @@ class MapPreview extends React.Component {
         height: 270,
         enableRefresh: true,
         enableScalebox: true,
-        printRatio: 96.0 / 72.0
+        printRatio: 96.0 / 72.0,
+        useFixedScales: false
     };
 
     componentWillMount() {
@@ -121,7 +123,7 @@ class MapPreview extends React.Component {
                 interactive={false}
                 onMapViewChanges={this.props.onMapViewChanges}
                 zoomControl={false}
-                zoom={this.props.scales ? PrintUtils.getMapZoom(this.props.map.scaleZoom, this.props.scales) : this.props.map.zoom}
+                zoom={this.props.useFixedScales && this.props.scales ? PrintUtils.getMapZoom(this.props.map.scaleZoom, this.props.scales) : this.props.map.zoom}
                 center={this.props.map.center}
                 id="print_preview"
                 registerHooks={false}

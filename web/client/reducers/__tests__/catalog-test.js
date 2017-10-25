@@ -171,7 +171,8 @@ describe('Test the catalog reducer', () => {
         const state = catalog({mode: "edit"}, {type: "default"});
         expect(state.mode).toBe("edit");
     });
-    it('CHANGE_CATALOG_MODE', () => {
+    // it should return an empty service as a new service
+    it('CHANGE_CATALOG_MODE with no configured services, new service', () => {
         const mode = "edit";
         let isNew = true;
         const state = catalog({}, {type: CHANGE_CATALOG_MODE, mode, isNew});
@@ -182,6 +183,26 @@ describe('Test the catalog reducer', () => {
         expect(state.newService.type).toBe(emptyService.type);
         expect(state.newService.title).toBe(emptyService.title);
         expect(state.newService.url).toBe(emptyService.url);
+        isNew = false;
+        const state2 = catalog({selectedService: "serv", services: {
+            "serv": {
+                title: "tit"
+            }
+        }}, {type: CHANGE_CATALOG_MODE, mode, isNew});
+        expect(state2.newService.title).toBe("tit");
+    });
+    it('CHANGE_CATALOG_MODE with no configured services, not new', () => {
+        const mode = "edit";
+        let isNew = false;
+        const state = catalog({}, {type: CHANGE_CATALOG_MODE, mode, isNew});
+        expect(state.result).toBe(null);
+        expect(state.loadingError).toBe(null);
+        expect(state.layerError).toBe(null);
+        expect(state.mode).toBe(mode);
+        expect(state.newService.oldService).toBe('');
+        expect(state.newService.type).toBe(undefined);
+        expect(state.newService.title).toBe(undefined);
+        expect(state.newService.url).toBe(undefined);
         isNew = false;
         const state2 = catalog({selectedService: "serv", services: {
             "serv": {

@@ -30,6 +30,7 @@ class Feature extends React.Component {
     };
 
     componentDidMount() {
+        this.addFeatures(this.props);
         const format = new ol.format.GeoJSON();
         const geometry = this.props.geometry && this.props.geometry.coordinates;
 
@@ -54,19 +55,7 @@ class Feature extends React.Component {
     componentWillUpdate(newProps) {
         if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || !isEqual(newProps.style, this.props.style)) {
             this.removeFromContainer();
-            const format = new ol.format.GeoJSON();
-            const geometry = newProps.geometry && newProps.geometry.coordinates;
-
-            if (newProps.container && geometry) {
-                this._feature = format.readFeatures({type: newProps.type, properties: newProps.properties, geometry: newProps.geometry, id: this.props.msId});
-                this._feature.forEach((f) => f.getGeometry().transform(newProps.featuresCrs, this.props.crs || 'EPSG:3857'));
-                this._feature.forEach((f) => {
-                    if (newProps.layerStyle !== newProps.style) {
-                        f.setStyle(getStyle({style: newProps.style}));
-                    }
-                });
-                newProps.container.getSource().addFeatures(this._feature);
-            }
+            this.addFeatures(newProps);
         }
     }
 
@@ -77,6 +66,25 @@ class Feature extends React.Component {
     render() {
         return null;
     }
+
+    addFeatures = (props) => {
+        const format = new ol.format.GeoJSON();
+        const geometry = props.geometry && props.geometry.coordinates;
+
+        if (props.container && geometry) {
+            this._feature = format.readFeatures({
+                type: props.type,
+                properties: props.properties,
+                geometry: props.geometry,
+                id: this.props.msId});
+            this._feature.forEach((f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
+            if (props.style && (props.style !== props.layerStyle)) {
+                this._feature.forEach((f) => { f.setStyle(getStyle({style: props.style})); });
+            }
+            props.container.getSource().addFeatures(this._feature);
+        }
+    };
+
 
     removeFromContainer = () => {
         if (this._feature) {

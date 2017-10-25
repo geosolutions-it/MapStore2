@@ -60,6 +60,9 @@ var WMTS = L.TileLayer.extend({
         let se = crs.project(map.unproject(sePoint, tilePoint.z));
         let tilewidth = se.x - nw.x;
         let t = map.getZoom();
+        if (!this.matrixIds[t]) {
+            return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
+        }
         let ident = this.matrixIds[t].identifier;
         let X0 = this.matrixIds[t].topLeftCorner.lng;
         let Y0 = this.matrixIds[t].topLeftCorner.lat;

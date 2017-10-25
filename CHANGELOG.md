@@ -1,5 +1,20 @@
 # Change Log
 
+## [2017.05.00](https://github.com/geosolutions-it/MapStore2/tree/2017.05.00) (2017-10-25)
+ - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/2017.04.00...2017.05.00)**
+
+ - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222017.05.00+%28TOC%26GUI+Review%29%22+is%3Aclosed+label%3Aenhancement)**
+
+
+
+ - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222017.05.00+%28TOC%26GUI+Review%29%22+is%3Aclosed+label%3Abug)**
+
+
+ - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222017.05.00+%28TOC%26GUI+Review%29%22+is%3Aclosed)**
+
+
+
+
 ## [2017.04.00](https://github.com/geosolutions-it/MapStore2/tree/2017.04.00) (2017-08-08)
 [Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/2017.03.02...2017.04.00)
 
