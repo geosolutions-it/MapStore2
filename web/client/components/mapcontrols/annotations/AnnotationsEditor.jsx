@@ -19,7 +19,7 @@ const {FormControl, ButtonGroup, Grid, Row, Col} = require('react-bootstrap');
 const ReactQuill = require('react-quill');
 require('react-quill/dist/quill.snow.css');
 
-const {isFunction} = require('lodash');
+const {isFunction, isObject} = require('lodash');
 
 const assign = require('object-assign');
 
@@ -236,9 +236,10 @@ class AnnotationsEditor extends React.Component {
             </div>
             <div className="mapstore-annotations-info-viewer-markers">{this.renderMarkers(this.getConfig().markers)}</div>
             <Select
+                clearable={false}
                 options={this.getConfig().glyphs.map(g => ({
-                    label: g,
-                    value: g
+                    label: isObject(g) ? g.label : g,
+                    value: isObject(g) ? g.value : g
                 }))}
                 optionRenderer={glyphRenderer}
                 valueRenderer={glyphRenderer}

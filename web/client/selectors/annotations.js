@@ -42,9 +42,16 @@ const annotationsListSelector = createSelector([
     filter: annotations.filter || ''
 }));
 
+const annotationsDefaultStyleSelector = state => state.annotations && state.annotations.config && state.annotations.config.defaultStyle || {
+    iconGlyph: 'comment',
+    iconColor: 'blue',
+    iconShape: 'square'
+};
+
 module.exports = {
     annotationsLayerSelector,
     annotationsInfoSelector,
     annotationsSelector,
-    annotationsListSelector
+    annotationsListSelector,
+    annotationsDefaultStyleSelector
 };

@@ -19,16 +19,10 @@ const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAd
 const {GEOMETRY_CHANGED} = require('../actions/draw');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 
-const {head} = require('lodash');
+const {head, isEmpty} = require('lodash');
 const assign = require('object-assign');
 
-const {annotationsLayerSelector} = require('../selectors/annotations');
-
-const annotationsStyle = {
-    iconGlyph: 'comment',
-    iconShape: 'square',
-    iconColor: 'blue'
-};
+const {annotationsLayerSelector, annotationsDefaultStyleSelector} = require('../selectors/annotations');
 
 const {changeDrawingStatus} = require('../actions/draw');
 
@@ -70,7 +64,7 @@ const toggleDrawOrEdit = (state) => {
     };
     return changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {
         highlight: false
-    }) || annotationsStyle);
+    }) || annotationsDefaultStyleSelector(state));
 };
 
 const createNewFeature = (action) => {
@@ -139,7 +133,7 @@ module.exports = (viewer) => ({
                     name: "Annotations",
                     rowViewer: viewer,
                     hideLoading: true,
-                    style: annotationsStyle,
+                    style: annotationsDefaultStyleSelector(store.getState()),
                     features: [createNewFeature(action)],
                     handleClickOnLayer: true
                 })
@@ -215,11 +209,11 @@ module.exports = (viewer) => ({
     closeAnnotationsEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
         .filter((action) => action.control === 'annotations' && !store.getState().controls.annotations.enabled)
         .switchMap(() => {
-            return Rx.Observable.from([
+            return !isEmpty(annotationsLayerSelector(store.getState())) ? Rx.Observable.from([
                 cleanHighlight(),
                 changeDrawingStatus("clean", store.getState().annotations.featureType, "annotations", [], {}),
                 changeLayerProperties('annotations', {visibility: true})
-            ]);
+            ]) : Rx.Observable.empty();
         }),
     confirmCloseAnnotationsEpic: (action$, store) => action$.ofType(CONFIRM_CLOSE_ANNOTATIONS)
     .switchMap(() => {

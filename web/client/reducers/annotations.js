@@ -7,7 +7,6 @@
  */
 
 const assign = require('object-assign');
-
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 const {TOGGLE_CONTROL} = require('../actions/controls');
 const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, CLOSE_ANNOTATIONS,
@@ -15,13 +14,9 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
         EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
     UPDATE_ANNOTATION_GEOMETRY, VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY, TOGGLE_STYLE,
     SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION, FILTER_ANNOTATIONS} = require('../actions/annotations');
+const {annotationsDefaultStyleSelector} = require('../selectors/annotations');
 
 const uuid = require('uuid');
-const defaultMarker = {
-    iconGlyph: 'comment',
-    iconColor: 'blue',
-    iconShape: 'square'
-};
 
 function annotations(state = { validationErrors: {} }, action) {
     switch (action.type) {
@@ -36,7 +31,7 @@ function annotations(state = { validationErrors: {} }, action) {
         case EDIT_ANNOTATION:
             return assign({}, state, {
                 editing: assign({}, action.feature, {
-                    style: action.feature.style || defaultMarker
+                    style: action.feature.style || annotationsDefaultStyleSelector({annotations: assign({}, state)})
                 }),
                 originalStyle: null,
                 featureType: action.featureType
@@ -52,7 +47,7 @@ function annotations(state = { validationErrors: {} }, action) {
                     properties: {
                         id
                     },
-                    style: defaultMarker
+                    style: annotationsDefaultStyleSelector({annotations: assign({}, state)})
                 },
                 originalStyle: null,
                 featureType: action.featureType
