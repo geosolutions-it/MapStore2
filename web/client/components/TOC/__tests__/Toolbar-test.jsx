@@ -327,4 +327,52 @@ describe('TOC Toolbar', () => {
         expect(removeModal).toExist();
     });
 
+    it('toolbar button selector', () => {
+        const selectedLayers = [{
+            id: 'l001',
+            title: 'layer001',
+            name: 'layer001name',
+            bbox: {
+                bounds: {
+                    maxx: 10,
+                    maxy: 9,
+                    minx: -10,
+                    miny: -9
+                }, crs: 'EPSG'
+            },
+            search: {
+                url: 'l001url'
+            }
+        }];
+
+        const activateSelector = (type, selected) => {
+            switch (type) {
+                case 'tools container':
+                    return true;
+                case 'add layer':
+                    return true;
+                case 'zoom to':
+                    return selected && selected.selectedLayers && selected.selectedLayers[0].zoomToBtn;
+                case 'settings':
+                    return selected && selected.selectedLayers && selected.selectedLayers[0].settingsBtn;
+                case 'settings delete':
+                    return false;
+                case 'features grid':
+                    return selected && selected.selectedLayers && selected.selectedLayers[0].featuresGridBtn;
+                case 'remove':
+                    return selected && selected.selectedLayers && selected.selectedLayers[0].removeBtn;
+                default:
+                    return true;
+            }
+        };
+
+        const cmp = ReactDOM.render(<Toolbar activateSelector={activateSelector} selectedLayers={selectedLayers} selectedGroups={[]}/>, document.getElementById("container"));
+
+        const el = ReactDOM.findDOMNode(cmp);
+        expect(el).toExist();
+
+        const btn = el.getElementsByClassName("btn");
+        expect(btn.length).toBe(0);
+    });
+
 });

@@ -125,6 +125,7 @@ class LayerTree extends React.Component {
         onContextMenu: PropTypes.func,
         onBrowseData: PropTypes.func,
         onSelectNode: PropTypes.func,
+        activateSelector: PropTypes.func,
         selectedNodes: PropTypes.array,
         onZoomToExtent: PropTypes.func,
         retrieveLayerData: PropTypes.func,
@@ -181,6 +182,7 @@ class LayerTree extends React.Component {
         updateNode: () => {},
         removeNode: () => {},
         onSelectNode: () => {},
+        activateSelector: null,
         selectedNodes: [],
         activateSortLayer: true,
         activateFilterLayer: true,
@@ -283,14 +285,27 @@ class LayerTree extends React.Component {
                             selectedLayers={this.props.selectedLayers}
                             selectedGroups={this.props.selectedGroups}
                             settings={this.props.settings}
-                            activateTool={{
-                                activateToolsContainer: this.props.activateToolsContainer,
-                                activateRemoveLayer: this.props.activateRemoveLayer,
-                                activateZoomTool: this.props.activateZoomTool,
-                                activateQueryTool: this.props.activateQueryTool,
-                                activateSettingsTool: this.props.activateSettingsTool,
-                                activateAddLayer: this.props.activateAddLayerButton && !this.props.catalogActive,
-                                includeDeleteButtonInSettings: false
+                            activateSelector={this.props.activateSelector ?
+                                this.props.activateSelector
+                            : (type) => {
+                                switch (type) {
+                                    case 'tools container':
+                                        return this.props.activateToolsContainer;
+                                    case 'add layer':
+                                        return this.props.activateAddLayerButton && !this.props.catalogActive;
+                                    case 'zoom to':
+                                        return this.props.activateZoomTool;
+                                    case 'settings':
+                                        return this.props.activateSettingsTool;
+                                    case 'settings delete':
+                                        return false;
+                                    case 'features grid':
+                                        return this.props.activateQueryTool;
+                                    case 'remove':
+                                        return this.props.activateRemoveLayer;
+                                    default:
+                                        return true;
+                                }
                             }}
                             options={{
                                 modalOptions: {},

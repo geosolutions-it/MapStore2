@@ -14,6 +14,7 @@ const {head} = require('lodash');
 const ConfirmModal = require('../maps/modals/ConfirmModal');
 const SettingsModal = require('./fragments/SettingsModal');
 const GroupSettingsModal = require('./fragments/GroupSettingsModal');
+const assign = require('object-assign');
 
 class Toolbar extends React.Component {
 
@@ -23,16 +24,17 @@ class Toolbar extends React.Component {
         selectedGroups: PropTypes.array,
         onToolsActions: PropTypes.object,
         text: PropTypes.object,
-        activateTool: PropTypes.object,
         options: PropTypes.object,
         style: PropTypes.object,
-        settings: PropTypes.object
+        settings: PropTypes.object,
+        activateSelector: PropTypes.func
     };
 
     static defaultProps = {
         groups: [],
         selectedLayers: [],
         selectedGroups: [],
+        activateSelector: () => true,
         onToolsActions: {
             onZoom: () => {},
             onBrowseData: () => {},
@@ -73,15 +75,6 @@ class Toolbar extends React.Component {
                 LAYER: '',
                 LAYERS: ''
             }
-        },
-        activateTool: {
-            activateToolsContainer: true,
-            activateRemoveLayer: true,
-            activateZoomTool: true,
-            activateQueryTool: true,
-            activateSettingsTool: true,
-            activateAddLayer: true,
-            includeDeleteButtonInSettings: false
         },
         options: {
             modalOptions: {},
@@ -131,7 +124,7 @@ class Toolbar extends React.Component {
                 hideSettings={this.props.onToolsActions.onHideSettings}
                 updateNode={this.props.onToolsActions.onUpdate}
                 removeNode={this.props.onToolsActions.onRemove}
-                includeDeleteButton={this.props.activateTool.includeDeleteButtonInSettings}
+                includeDeleteButton={this.props.activateSelector('settings delete', assign({}, {selectedLayers: [...this.props.selectedLayers], selectedGroups: [...this.props.selectedGroups]}))}
                 chartStyle={this.props.style.chartStyle}
                 titleText={this.props.text.settingsText}
                 opacityText={this.props.text.opacityText}
@@ -150,18 +143,19 @@ class Toolbar extends React.Component {
     render() {
         const status = this.getStatus();
         const settingModal = status === 'GROUP' || status === 'LAYER' ? this.getSettingsModal(status) : null;
-        return this.props.activateTool.activateToolsContainer ? (
+        const selected = assign({}, {selectedLayers: [...this.props.selectedLayers], selectedGroups: [...this.props.selectedGroups]});
+        return this.props.activateSelector('tools container', selected) ? (
         <ButtonGroup>
             <ReactCSSTransitionGroup
                 transitionName="toc-toolbar-btn-transition"
                 transitionEnterTimeout={300}
                 transitionLeaveTimeout={300}>
-                {this.props.activateTool.activateAddLayer && status === 'DESELECT' ?
+                {this.props.activateSelector('add layer', selected) && status === 'DESELECT' ?
                     <Button key="addLayer" bsStyle="primary" bsSize="small" onClick={this.props.onToolsActions.onAddLayer}>
                         {this.props.text.addLayer}
                     </Button>
                 : null}
-                {this.props.activateTool.activateZoomTool && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS') && this.checkBbox() ?
+                {this.props.activateSelector('zoom to', selected) && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS') && this.checkBbox() ?
                     <OverlayTrigger
                         key="zoomTo"
                         placement="top"
@@ -171,7 +165,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {this.props.activateTool.activateSettingsTool && (status === 'LAYER' || status === 'GROUP') ?
+                {this.props.activateSelector('settings', selected) && (status === 'LAYER' || status === 'GROUP') ?
                     <OverlayTrigger
                         key="settings"
                         placement="top"
@@ -181,7 +175,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {this.props.activateTool.activateQueryTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded ?
+                {this.props.activateSelector('features grid', selected) && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded ?
                     <OverlayTrigger
                         key="featuresGrid"
                         placement="top"
@@ -191,7 +185,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYERS_LOAD_ERROR') && this.props.selectedLayers.length > 0 && !this.props.settings.expanded ?
+                {this.props.activateSelector('remove', selected) && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYERS_LOAD_ERROR') && this.props.selectedLayers.length > 0 && !this.props.settings.expanded ?
                     <OverlayTrigger
                         key="removeNode"
                         placement="top"
