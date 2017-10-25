@@ -45,7 +45,7 @@ const annotationsListSelector = createSelector([
     config: info.config
 } : {})));
 
-const annotationsDefaultStyleSelector = state => state.annotations && state.annotations.config && state.annotations.config.defaultStyle || {
+const annotationsDefaultStyleSelector = state => state.annotations && state.annotations.defaultStyle || {
     iconGlyph: 'comment',
     iconColor: 'blue',
     iconShape: 'square'
