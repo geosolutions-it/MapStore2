@@ -126,7 +126,7 @@ class AnnotationsEditor extends React.Component {
                     <span><p key={field.name} className={"mapstore-annotations-info-viewer-item mapstore-annotations-info-viewer-" + field.name + ' ' + additionalCls}>
                         {field.showLabel ? <label><Message msgId={"annotations.field." + field.name}/></label> : null}
                         {isError ? this.renderErrorOn(field.name) : ''}
-                        {this.renderProperty(field, this.props[field.name], editing)}
+                        {this.renderProperty(field, this.props[field.name] || field.value, editing)}
                     </p>
                     </span>
                 );
@@ -196,6 +196,9 @@ class AnnotationsEditor extends React.Component {
             switch (field.type) {
                 case 'html':
                     return <ReactQuill readOnly={this.props.drawing} value={fieldValue || ''} onChange={(val) => this.change(field.name, val)}/>;
+                case 'component':
+                    const Component = fieldValue;
+                    return <prop editing value={<Component annotation={this.props.feature}/>} onChange={(e) => this.change(field.name, e.target.value)}/>;
                 default:
                     return <FormControl disabled={this.props.drawing} value={fieldValue || ''} onChange={(e) => this.change(field.name, e.target.value)}/>;
             }
@@ -204,6 +207,9 @@ class AnnotationsEditor extends React.Component {
         switch (field.type) {
             case 'html':
                 return <span dangerouslySetInnerHTML={{__html: fieldValue} }/>;
+            case 'component':
+                const Component = fieldValue;
+                return <Component annotation={this.props.feature}/>;
             default:
                 return fieldValue;
         }

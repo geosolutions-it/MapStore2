@@ -9,19 +9,21 @@
 const {createSelector} = require('reselect');
 const {layersSelector} = require('./layers');
 const {head} = require('lodash');
+const assign = require('object-assign');
 
 const annotationsLayerSelector = createSelector([
         layersSelector
     ], (layers) => head(layers.filter(l => l.id === 'annotations'))
 );
 
-const annotationsInfoSelector = (state) => ({
-    config: state.annotations && state.annotations.config,
+const annotationsInfoSelector = (state) => (assign({}, {
     editing: state.annotations && state.annotations.editing,
     drawing: state.annotations && !!state.annotations.drawing,
     styling: state.annotations && !!state.annotations.styling,
     errors: state.annotations.validationErrors
-});
+}, (state.annotations && state.annotations.config) ? {
+    config: state.annotations && state.annotations.config
+} : {}));
 
 const annotationsSelector = (state) => ({
     ...(state.annotations || {})
@@ -31,16 +33,17 @@ const annotationsListSelector = createSelector([
     annotationsInfoSelector,
     annotationsSelector,
     annotationsLayerSelector
-], (info, annotations, layer) => ({
+], (info, annotations, layer) => (assign({}, {
     removing: annotations.removing,
     closing: !!annotations.closing,
     mode: annotations.editing && 'editing' || annotations.current && 'detail' || 'list',
-    config: info.config,
     annotations: layer && layer.features || [],
     current: annotations.current || null,
     editing: info.editing,
     filter: annotations.filter || ''
-}));
+}, info.config ? {
+    config: info.config
+} : {})));
 
 const annotationsDefaultStyleSelector = state => state.annotations && state.annotations.config && state.annotations.config.defaultStyle || {
     iconGlyph: 'comment',
