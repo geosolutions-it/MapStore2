@@ -108,7 +108,7 @@ class Annotations extends React.Component {
 
     renderThumbnail = (style) => {
         const marker = this.getConfig().getMarkerFromStyle(style);
-        return (<div className={"mapstore-annotations-panel-card-thumbnail-" + marker.name} style={marker.thumbnailStyle}>
+        return (<div className={"mapstore-annotations-panel-card-thumbnail-" + (marker && marker.name || '')} style={marker && marker.thumbnailStyle || {}}>
             <span className={"mapstore-annotations-panel-card-thumbnail " + this.getConfig().getGlyphClassName(style)}>
         </span></div>);
     };
