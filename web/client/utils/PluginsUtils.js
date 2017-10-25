@@ -148,7 +148,7 @@ const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, load
                     item,
                     pluginCfg.override && pluginCfg.override[name] || {},
                     {
-                        cfg: pluginCfg && parsePluginConfig(state, plugins.requires, pluginCfg.cfg || {}) || undefined
+                        cfg: assign({}, pluginImpl.cfg || {}, pluginCfg && parsePluginConfig(state, plugins.requires, pluginCfg.cfg || {}) || undefined)
                     },
                     {
                         plugin: pluginImpl,
@@ -247,7 +247,7 @@ const PluginsUtils = {
             id: id || name,
             name,
             impl: includeLoaded(name, loadedPlugins, impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent ? impl : impl(stateSelector)),
-            cfg: isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {},
+            cfg: assign({}, impl.cfg || {}, isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {}),
             items: getPluginItems(state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
         };
     },

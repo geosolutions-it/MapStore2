@@ -136,10 +136,10 @@ class Annotations extends React.Component {
         }
         const Editor = this.props.editor;
         if (this.props.mode === 'detail' && annotation && annotation.properties) {
-            return <Editor showBack id={this.props.current} {...annotation.properties}/>;
+            return <Editor showBack config={this.props.config} id={this.props.current} {...annotation.properties}/>;
         }
         // mode = editing
-        return this.props.editing && <Editor id={this.props.editing.properties.id} {...this.props.editing.properties}/>;
+        return this.props.editing && <Editor config={this.props.config} id={this.props.editing.properties.id} {...this.props.editing.properties}/>;
     };
 
     render() {
