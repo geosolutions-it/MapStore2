@@ -161,9 +161,21 @@ const MapInfoUtils = {
         wmts: require('./mapinfo/wmts'),
         vector: require('./mapinfo/vector')
     },
+    /**
+     * To get the custom viewer with the given type
+     * This way you can extend the featureinfo with your custom viewers in external projects.
+     * @param type {string} the string the component was registered with
+     * @return {object} the registered component
+     */
     getViewer: (type) => {
         return !!MapInfoUtils.VIEWERS[type] ? MapInfoUtils.VIEWERS[type] : null;
     },
+    /**
+     * To register a custom viewer
+     * This way you can extend the featureinfo with your custom viewers in external projects.
+     * @param type {string} the string you want to register the component with
+     * @param viewer {object} the component to register
+     */
     setViewer: (type, viewer) => {
         MapInfoUtils.VIEWERS[type] = viewer;
     }
