@@ -28,6 +28,60 @@ describe('automapupdate Epics', () => {
         epicMiddleware.replaceEpic(rootEpic);
     });
 
+    it('should do nothing', (done) => {
+        // any map configuration with an id is considered "legacy" (MapStore1 version)
+        let configuration = configureMap({
+            "map": {
+                "layers": []
+            }
+        }, "id");
+        // cannot edit, the notification should not fire
+        let information = mapInfoLoaded({
+            canEdit: false
+        }, "id");
+
+        store.dispatch(configuration);
+        store.dispatch(information);
+
+        setTimeout( () => {
+            try {
+                const actions = store.getActions();
+                expect(actions.length).toBe(2);
+            } catch (e) {
+                return done(e);
+            }
+            done();
+        }, 1000);
+
+    });
+
+    it('should still do nothing', (done) => {
+        // any map configuration with an id is considered "legacy" (MapStore1 version)
+        let configuration = configureMap({
+            "map": {
+                "layers": [{ "type": "wms"}]
+            }
+        }, "id");
+        // cannot edit, the notification should not fire
+        let information = mapInfoLoaded({
+            canEdit: false
+        }, "id");
+
+        store.dispatch(configuration);
+        store.dispatch(information);
+
+        setTimeout( () => {
+            try {
+                const actions = store.getActions();
+                expect(actions.length).toBe(2);
+            } catch (e) {
+                return done(e);
+            }
+            done();
+        }, 1000);
+
+    });
+
     it('trigger update map', (done) => {
 
         let configuration = configureMap({}, "id");

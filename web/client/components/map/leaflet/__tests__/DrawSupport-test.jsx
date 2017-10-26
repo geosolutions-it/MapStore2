@@ -173,6 +173,60 @@ describe('Leaflet DrawSupport', () => {
             />
         , msNode);
     });
+    it('test draw replace with circle', () => {
+        const RADIUS = 1;
+        let bounds = L.latLngBounds(L.latLng(40.712, -74.227), L.latLng(40.774, -74.125));
+        let layer = {
+            getBounds: function() { return bounds; },
+            toGeoJSON: function() {return {geometry: {coordinates: [0, 0]}}; }
+        };
+        let map = L.map("map", {
+            center: [51.505, -0.09],
+            zoom: 13
+        });
+        let cmp = ReactDOM.render(
+            <DrawSupport
+                map={map}
+                drawOwner="me"
+                drawStatus="create"
+                drawMethod="Circle"
+                options={{editEnabled: true}}
+            />
+        , msNode);
+        let featureData;
+        cmp.drawLayer = { options: {}, addData: function(data) {featureData = data; return true; }, toGeoJSON: function() { return featureData; }, clearLayers: () => {}};
+        cmp.onDrawCreated.call(cmp, {layer: layer, layerType: "circle"});
+        cmp = ReactDOM.render(
+            <DrawSupport
+                map={map}
+                drawOwner="me"
+                drawStatus="create"
+                drawMethod="Circle"
+                options={{editEnabled: false}}
+            />
+        , msNode);
+        expect(cmp).toExist();
+        cmp = ReactDOM.render(
+            <DrawSupport
+                map={map}
+                drawOwner="me"
+                drawStatus="replace"
+                drawMethod="Circle"
+                features={[{
+                    projection: "EPSG:4326",
+                    coordinates: [[ -21150.703250721977, 5855989.620460]],
+                    type: "Circle"}
+                ]}
+                options={{featureProjection: "EPSG:4326"}}
+            />
+        , msNode);
+        expect(cmp.drawLayer.options).toExist();
+        expect(cmp.drawLayer.options.pointToLayer).toExist();
+        // verify the pointToLayer still exists and creates circle after replace
+        const circle = cmp.drawLayer.options.pointToLayer({radius: RADIUS}, {lng: 0, lat: 0});
+        expect(circle).toExist();
+        expect(circle._mRadius).toBe(RADIUS);
+    });
     it('test editEnabled=true', () => {
         let map = L.map("map", {
             center: [51.505, -0.09],

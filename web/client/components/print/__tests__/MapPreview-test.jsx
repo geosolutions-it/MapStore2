@@ -82,4 +82,44 @@ describe("Test the MapPreview component", () => {
         expect(node).toExist();
         expect(node.getElementsByClassName('leaflet-layer').length).toBe(2);
     });
+
+    it('uses map zoom when useFixedScales is false', () => {
+        const layers = [{
+            name: 'layer1',
+            type: "wms",
+            visibility: false,
+            url: "http://fake"
+        }, {
+            name: 'layer2',
+            visibility: true,
+            type: "osm"
+        }, {
+            name: 'layer3',
+            visibility: true,
+            type: "wms",
+            url: "http://fake"
+        }];
+        const cmp = ReactDOM.render(<MapPreview layers={layers} map={{center: {x: 10.0, y: 40.0}, zoom: 5}}/>, document.getElementById("container"));
+        expect(cmp.refs.mappa.props.zoom).toBe(5);
+    });
+
+    it('calculate zoom on given scales when useFixedScales is true', () => {
+        const layers = [{
+            name: 'layer1',
+            type: "wms",
+            visibility: false,
+            url: "http://fake"
+        }, {
+            name: 'layer2',
+            visibility: true,
+            type: "osm"
+        }, {
+            name: 'layer3',
+            visibility: true,
+            type: "wms",
+            url: "http://fake"
+        }];
+        const cmp = ReactDOM.render(<MapPreview layers={layers} map={{center: {x: 10.0, y: 40.0}, zoom: 5, scaleZoom: 3}} useFixedScales scales={[100, 1000, 10000, 100000]}/>, document.getElementById("container"));
+        expect(cmp.refs.mappa.props.zoom).toBe(13);
+    });
 });

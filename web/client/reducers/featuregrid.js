@@ -33,7 +33,8 @@ const {
     DISABLE_TOOLBAR,
     OPEN_FEATURE_GRID,
     CLOSE_FEATURE_GRID,
-    UPDATE_FILTER
+    UPDATE_FILTER,
+    INIT_PLUGIN
 } = require('../actions/featuregrid');
 const{
     FEATURE_TYPE_LOADED,
@@ -46,6 +47,7 @@ const uuid = require('uuid');
 
 const emptyResultsState = {
     filters: {},
+    editingAllowedRoles: ["ADMIN"],
     enableColumnFilters: true,
     open: false,
     canEdit: false,
@@ -88,6 +90,8 @@ const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
 /**
  * Manages the state of the featuregrid
  * The properties represent the shape of the state
+ * @prop {string[]} editingAllowedRoles array of user roles allowed to enter in edit mode
+ * @prop {boolean} canEdit flag used to enable editing on the feature grid
  * @prop {object} filters filters for quick search. `{attribute: "name", value: "filter_value", opeartor: "=", rawValue: "the fitler raw value"}`
  * @prop {boolan} enableColumnFilters enables column filter. [configurable]
  * @prop {boolean} open feature grid open or close
@@ -101,6 +105,7 @@ const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
  * @prop {array} features list of the features currently loaded in the feature grid
  * @example
  *  {
+ *     editingAllowedRoles: ["ADMIN"],
  *     filters: {},
  *     enableColumnFilters: true,
  *     open: false,
@@ -124,6 +129,11 @@ const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
  */
 function featuregrid(state = emptyResultsState, action) {
     switch (action.type) {
+    case INIT_PLUGIN: {
+        return assign({}, state, {
+            editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"]
+        });
+    }
     case CHANGE_PAGE: {
         return assign({}, state, {
             pagination: {

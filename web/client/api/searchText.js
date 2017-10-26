@@ -30,16 +30,16 @@ const defaultFromTextToFilter = ({searchText, staticFilter, blacklist, item, que
 /*
  * The API returns a promise for each search service.
  * These search services have a particular option that specify how the response is returned.
- * 'returnFullResponse' is a boolean option that if true a the full reponse is returned, otherwise an array o fearures.
+ * 'returnFullData' is a boolean option that if true a the full data is returned, otherwise an array o fearures.
 */
 let Services = {
     nominatim: (searchText, options = {
-        returnFullResponse: false
+        returnFullData: false
     }) =>
         require('./Nominatim')
         .geocode(searchText, options)
-        .then( res => {return options.returnFullResponse ? res : GeoCodeUtils.nominatimToGeoJson(res.data); }),
-    wfs: (searchText, {url, typeName, queriableAttributes = [], outputFormat = "application/json", predicate = "ILIKE", staticFilter = "", blacklist = [], item, fromTextToFilter = defaultFromTextToFilter, returnFullResponse = false, ...params }) => {
+        .then( res => {return options.returnFullData ? res : GeoCodeUtils.nominatimToGeoJson(res.data); }),
+    wfs: (searchText, {url, typeName, queriableAttributes = [], outputFormat = "application/json", predicate = "ILIKE", staticFilter = "", blacklist = [], item, fromTextToFilter = defaultFromTextToFilter, returnFullData = false, ...params }) => {
         const filter = fromTextToFilter({searchText, staticFilter, blacklist, item, queriableAttributes, predicate});
         return WFS
             .getFeatureSimple(url, assign({
@@ -49,7 +49,7 @@ let Services = {
                 // create a filter like : `(ATTR ilike '%word1%') AND (ATTR ilike '%word2%')`
                 cql_filter: filter
             }, params))
-            .then( response => {return returnFullResponse ? response : response.features; } );
+            .then( response => {return returnFullData ? response : response.features; } );
     }
 };
 

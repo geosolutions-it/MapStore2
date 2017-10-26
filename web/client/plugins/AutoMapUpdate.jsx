@@ -17,7 +17,11 @@ const {refresh} = require('../epics/layers');
 const OverlayProgressBar = require('../components/misc/progressbars/OverlayProgressBar/OverlayProgressBar');
 
 /**
-  * AutoMapUpdate Plugin. It sends a notification to update old maps (version < 2)
+  * AutoMapUpdate Plugin.
+  * It sends a notification to update old maps (version < 2).
+  * The notification is sent only if the user has "canEdit" permission on the map.
+  * The notification will disappear after 12 seconds (See https://github.com/igorprado/react-notification-system for details)
+  * The updated map is not automatically saved but the user will be prompted to do it.
   * @class AutoMapUpdate
   * @memberof plugins
   * @static

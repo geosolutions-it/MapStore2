@@ -22,6 +22,7 @@ const {
     changesSelector,
     isDrawingSelector,
     isSimpleGeomSelector,
+    editingAllowedRolesSelector,
     getCustomizedAttributes,
     isSavingSelector,
     isSavedSelector,
@@ -418,6 +419,11 @@ describe('Test featuregrid selectors', () => {
         expect(isSavingSelector(initialState)).toBe(false);
         expect(isSavingSelector({...initialState, featuregrid: { saving: true}})).toBe(true);
     });
+    it('test editingAllowedRolesSelector', () => {
+        expect(editingAllowedRolesSelector(initialState).length).toBe(1);
+        expect(editingAllowedRolesSelector(initialState)[0]).toBe("ADMIN");
+        expect(editingAllowedRolesSelector({...initialState, featuregrid: { editingAllowedRoles: ["USER", "ADMIN"]}}).length).toBe(2);
+    });
     it('test isSavedSelector', () => {
         expect(isSavedSelector(initialState)).toBe(false);
         expect(isSavedSelector({...initialState, featuregrid: { saved: true}})).toBe(true);
@@ -433,5 +439,12 @@ describe('Test featuregrid selectors', () => {
         initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].type = 'gml:Geometry';
         initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].localType = 'Geometry';
         expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(false);
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].type = 'gml:GeometryCollection';
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].localType = 'GeometryCollection';
+        expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(false);
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].type = 'gml:Polygon';
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].localType = 'Polygon';
+        expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(true);
+
     });
 });

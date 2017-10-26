@@ -56,7 +56,7 @@ const hasGeometrySelectedFeature = (state) => {
     return false;
 };
 
-const notSupportedGeometries = ['Geometry'];
+const notSupportedGeometries = ['Geometry', 'GeometryCollection'];
 
 const hasSupportedGeometry = state => head(notSupportedGeometries.filter(g => geomTypeSelectedFeatureSelector(state) === g)) ? false : true;
 const hasChangesSelector = state => changesSelector(state) && changesSelector(state).length > 0;
@@ -122,6 +122,7 @@ module.exports = {
     newFeaturesSelector,
     hasNewFeaturesSelector,
     isSavingSelector: state => state && state.featuregrid && state.featuregrid.saving,
+    editingAllowedRolesSelector: state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]),
     isSavedSelector: state => state && state.featuregrid && state.featuregrid.saved,
     isDrawingSelector: state => state && state.featuregrid && state.featuregrid.drawing,
     geomTypeSelectedFeatureSelector,

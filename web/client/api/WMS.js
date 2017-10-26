@@ -38,8 +38,9 @@ const flatLayers = (root) => {
 const getOnlineResource = (c) => {
     return c.Request && c.Request.GetMap && c.Request.GetMap.DCPType && c.Request.GetMap.DCPType.HTTP && c.Request.GetMap.DCPType.HTTP.Get && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource && c.Request.GetMap.DCPType.HTTP.Get.OnlineResource.$ || undefined;
 };
-const searchAndPaginate = (json, startPosition, maxRecords, text) => {
-    const root = (json.WMS_Capabilities || json.WMT_MS_Capabilities).Capability;
+const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
+    const root = (json.WMS_Capabilities || json.WMT_MS_Capabilities || {}).Capability;
+    const service = (json.WMS_Capabilities || json.WMT_MS_Capabilities || {}).Service;
     const onlineResource = getOnlineResource(root);
     const SRSList = root.Layer && (root.Layer.SRS || root.Layer.CRS) || [];
     const layersObj = flatLayers(root);
@@ -50,7 +51,7 @@ const searchAndPaginate = (json, startPosition, maxRecords, text) => {
         numberOfRecordsMatched: filteredLayers.length,
         numberOfRecordsReturned: Math.min(maxRecords, filteredLayers.length),
         nextRecord: startPosition + Math.min(maxRecords, filteredLayers.length) + 1,
-        service: json.WMS_Capabilities.Service,
+        service,
         records: filteredLayers
             .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
             .map((layer) => assign({}, layer, {onlineResource, SRS: SRSList}))
@@ -157,7 +158,7 @@ const Api = {
             // make it compatible with json format of describe layer
             return decriptions.map(desc => ({
                 ...desc && desc.$ || {},
-                layerName: desc.$ && desc.$.name,
+                layerName: desc && desc.$ && desc.$.name,
                 query: {
                     ...desc && desc.query && desc.query.$ || {}
                 }
