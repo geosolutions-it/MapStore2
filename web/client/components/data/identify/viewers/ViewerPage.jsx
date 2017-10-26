@@ -12,7 +12,7 @@ const React = require('react');
 module.exports = class extends React.Component {
     static propTypes = {
         format: PropTypes.string,
-        viewers: PropTypes.object,
+        viewers: PropTypes.oneOfType([PropTypes.func, PropTypes.object]),
         response: PropTypes.oneOfType([PropTypes.string, PropTypes.object, PropTypes.node]),
         layer: PropTypes.object
     };
@@ -58,7 +58,7 @@ module.exports = class extends React.Component {
     };
 
     renderPage = () => {
-        const Viewer = this.props.viewers[this.props.format];
+        const Viewer = typeof this.props.viewers === 'function' ? this.props.viewers : this.props.viewers[this.props.format];
         if (Viewer) {
             return <Viewer response={this.props.response} layer={this.props.layer}/>;
         }

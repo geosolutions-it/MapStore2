@@ -17,7 +17,7 @@ const Api = {
     getFeatureSimple: function(baseUrl, params) {
         return axios.get(baseUrl + '?service=WFS&version=1.1.0&request=GetFeature', {
             params: assign({
-                format: "application/json"
+                outputFormat: "application/json"
             }, params)
         }).then((response) => {
             if (typeof response.data !== 'object') {
