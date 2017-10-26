@@ -320,6 +320,7 @@ class LayerTree extends React.Component {
                                 confirmDeleteMessage: <Message msgId="layerProperties.deleteLayerMessage" />,
                                 confirmDeleteCancelText: <Message msgId="cancel"/>,
                                 addLayer: <Message msgId="toc.addLayer"/>,
+                                createWidgetTooltip: <Message msgId="toc.createWidget"/>,
                                 zoomToTooltip: {
                                     LAYER: <Message msgId="toc.toolZoomToLayerTooltip"/>,
                                     LAYERS: <Message msgId="toc.toolZoomToLayersTooltip"/>

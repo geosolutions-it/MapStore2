@@ -22,7 +22,7 @@ const ChartWidget = dependenciesToFilter(wpsChart(enhanceChartWidget(require('..
 
 module.exports = ({widgets=[], deleteWidget = () => {}, editWidget = () => {}, dependencies}={}) =>
     (<ResponsiveReactGridLayout
-        style={{left: 0, bottom: 30, height: '440px', width: 'calc(100% - 50px)', position: 'absolute', zIndex: 50}}
+        style={{left: 350, bottom: 50, height: 'calc(100% - 100px)', width: 'calc(100% - 400px)', position: 'absolute', zIndex: 50}}
         containerPadding={[10, 10]}
         className="widget-card-on-map"
         rowHeight={208}

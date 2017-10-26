@@ -57,6 +57,7 @@ class Toolbar extends React.Component {
             confirmDeleteText: '',
             confirmDeleteMessage: '',
             confirmDeleteCancelText: '',
+            createWidgetTooltip: '',
             zoomToTooltip: {
                 LAYER: '',
                 LAYERS: ''
@@ -216,7 +217,7 @@ class Toolbar extends React.Component {
                     <OverlayTrigger
                         key="widgets"
                         placement="top"
-                        overlay={<Tooltip id="toc-tooltip-widgets">{this.props.widgetsTooltip}</Tooltip>}>
+                        overlay={<Tooltip id="toc-tooltip-widgets">{this.props.text.createWidgetTooltip}</Tooltip>}>
                         <Button bsStyle="primary" className="square-button-md" onClick={this.props.onToolsActions.onNewWidget}>
                             <Glyphicon glyph="stats" />
                         </Button>
