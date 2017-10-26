@@ -52,4 +52,23 @@ describe('Test VectorStyle', () => {
         });
         expect(style).toExist();
     });
+
+    it('guess image point style', () => {
+        const feature = {
+              geometry: {
+                  type: 'Point',
+                  coordinates: [13.0, 43.0]
+              },
+              name: 'My Point'
+        };
+        const style = VectorStyle.getStyle({
+            features: [feature],
+            style: {
+                radius: 10,
+                color: 'blue'
+            }
+        });
+        expect(style).toExist();
+        expect(style.getImage()).toExist();
+    });
 });
