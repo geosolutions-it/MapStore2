@@ -19,7 +19,8 @@ A few sentences describing the overall goals of the issue.
 - [ ] Safari
 
 *Browser Version Affected*
-Indicate the browser version in which the issue has been found
+
+- Indicate the browser version in which the issue has been found
 
 **In case of New Feature describe below the Acceptance Criteria - AC (otherwise remove this paragraph)**
 1. ...
