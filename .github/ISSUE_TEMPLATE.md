@@ -5,14 +5,14 @@ A few sentences describing the overall goals of the issue.
  - A list of other involved issues (with link)
  - ...
 
-**Please indicate if the ticket is related to a bug or a new feature request**
+**Please indicate if this issue is related to a bug or a new feature request**
 - [ ] Bug
 - [ ] New Feature
 
-**In case of Bug describe below the steps to reproduce the error and the browser version (otherwise remove this paragraph)**
-1. ...
+**In case of Bug (otherwise remove this paragraph)**
 
 *Browser Affected*
+
 - [ ] Internet Explorer
 - [ ] Chrome
 - [ ] Firefox
@@ -22,7 +22,16 @@ A few sentences describing the overall goals of the issue.
 
 - Indicate the browser version in which the issue has been found
 
-**In case of New Feature describe below the Acceptance Criteria - AC (otherwise remove this paragraph)**
-1. ...
+*Steps to reproduce*
+
+- A list of steps to reproduce the bug
+- ...
+
+**In case of New Feature (otherwise remove this paragraph)**
+
+*Acceptance Criteria - AC*
+
+- Describe the list of Acceptance Criteria
+- ...
 
 **Other useful information**:
