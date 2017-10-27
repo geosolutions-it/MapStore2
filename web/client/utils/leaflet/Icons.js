@@ -20,7 +20,7 @@ module.exports = {
                 markerColor: style.iconColor || 'blue',
                 shape: style.iconShape || 'square',
                 prefix,
-                extraClasses: style.highlight ? 'marker-selected' : ''
+                extraClasses: (style.highlight ? 'marker-selected' : '') + ' ' + (style.extraClass)
             });
         }
     },
