@@ -222,6 +222,7 @@
                     }
                 }
             }, "Home", "FeatureEditor",
+            "WFSDownload",
             {
               "name": "QueryPanel",
               "cfg": {
