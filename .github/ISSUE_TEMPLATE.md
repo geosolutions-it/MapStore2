@@ -13,10 +13,10 @@ A few sentences describing the overall goals of the issue.
 1. ...
 
 *Browser Affected*
-- [] Internet Explorer
-- [] Chrome
-- [] Firefox
-- [] Safari
+- [ ] Internet Explorer
+- [ ] Chrome
+- [ ] Firefox
+- [ ] Safari
 
 *Browser Version Affected*
 Indicate the browser version in which the issue has been found
