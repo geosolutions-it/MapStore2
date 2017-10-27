@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 const L = require('leaflet');
+const MapUtils = require('../MapUtils');
+const {head, isNumber} = require('lodash');
 
 var WMTS = L.TileLayer.extend({
     defaultWmtsParams: {
@@ -36,6 +38,7 @@ var WMTS = L.TileLayer.extend({
         }
         this.wmtsParams = wmtsParams;
         this.matrixIds = matrixOptions.matrixIds && this.getMatrix(matrixOptions.matrixIds, matrixOptions) || this.getDefaultMatrix(matrixOptions);
+        this.matrixSet = matrixOptions.matrixSet && matrixOptions.matrixSet.TileMatrix || [];
         this.ignoreErrors = matrixOptions.ignoreErrors || false;
         L.setOptions(this, options);
     },
@@ -48,6 +51,12 @@ var WMTS = L.TileLayer.extend({
         }
         return true;
     },
+    getTopLeftCorner: (str) => {
+        const coord = str.split(' ');
+        const lng = parseFloat(coord[0]);
+        const lat = parseFloat(coord[1]);
+        return !isNaN(lng) && !isNaN(lat) && {lng, lat} || null;
+    },
     getTileUrl: function(tilePoint) { // (Point, Number) -> String
         let map = this._map;
         let crs = map.options.crs;
@@ -59,17 +68,51 @@ var WMTS = L.TileLayer.extend({
         let nw = crs.project(map.unproject(nwPoint, tilePoint.z));
         let se = crs.project(map.unproject(sePoint, tilePoint.z));
         let tilewidth = se.x - nw.x;
-        let t = map.getZoom();
-        if (!this.matrixIds[t]) {
+
+        const currentScale = MapUtils.getScales()[map.getZoom()];
+
+        const matrix = head(this.matrixSet.map((s, i) => {
+            if (i === this.matrixSet.length - 1) {
+                return null;
+            }
+            const top = parseFloat(s.ScaleDenominator);
+            const bottom = parseFloat(this.matrixSet[i + 1].ScaleDenominator);
+            const isBetween = top >= currentScale && bottom < currentScale;
+            if (isBetween) {
+                const delta = currentScale - bottom;
+                return delta > (top - bottom) / 2 ? {id: i, data: s} : {id: i + 1, data: this.matrixSet[i + 1]};
+            }
+            return null;
+        }).filter(v => v));
+
+        const id = matrix && isNumber(matrix.id) && matrix.id + '' || this.matrixSet.length === 0 && map.getZoom() || null;
+
+        if (!this.matrixIds[id]) {
             return 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
         }
-        let ident = this.matrixIds[t].identifier;
-        let X0 = this.matrixIds[t].topLeftCorner.lng;
-        let Y0 = this.matrixIds[t].topLeftCorner.lat;
-        let tilecol = Math.floor((nw.x - X0) / tilewidth);
-        let tilerow = -Math.floor((nw.y - Y0) / tilewidth);
-        if (this.matrixIds[t].ranges) {
-            if (!this.isInRange(tilecol, tilerow, this.matrixIds[t].ranges)) {
+
+        const ident = this.matrixIds[id].identifier;
+        const topLeftCorner = matrix.data && matrix.data.TopLeftCorner && this.getTopLeftCorner(matrix.data.TopLeftCorner) || this.matrixIds[id].topLeftCorner;
+
+        const X0 = topLeftCorner.lng;
+        const Y0 = topLeftCorner.lat;
+
+        const tilecol = Math.floor((nw.x - X0) / tilewidth);
+        const tilerow = -Math.floor((nw.y - Y0) / tilewidth);
+
+        const ranges = matrix.data && matrix.data.MatrixWidth && matrix.data.MatrixHeight ? {
+            cols: {
+                min: 0,
+                max: matrix.data.MatrixWidth - 1
+            },
+            rows: {
+                min: 0,
+                max: matrix.data.MatrixHeight - 1
+            }
+        } : this.matrixIds[id].ranges;
+
+        if (ranges) {
+            if (!this.isInRange(tilecol, tilerow, ranges)) {
                 return "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
             }
         }

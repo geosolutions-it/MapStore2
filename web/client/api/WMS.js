@@ -7,6 +7,7 @@
  */
 const axios = require('../libs/ajax');
 const ConfigUtils = require('../utils/ConfigUtils');
+const CoordinatesUtils = require('../utils/CoordinatesUtils');
 
 const urlUtil = require('url');
 const assign = require('object-assign');
@@ -15,7 +16,7 @@ const xml2js = require('xml2js');
 
 const capabilitiesCache = {};
 
-const {isArray, castArray} = require('lodash');
+const {isArray, castArray, head} = require('lodash');
 
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
@@ -56,6 +57,19 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
             .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
             .map((layer) => assign({}, layer, {onlineResource, SRS: SRSList}))
     };
+};
+
+const getBoundingBox = (BoundingBox) => {
+    const SRS = 'EPSG:3857';
+    const bbox = BoundingBox && isArray(BoundingBox) && head(BoundingBox.filter(b => {
+        return b && b.$ && b.$.SRS === SRS && b.$.maxx && b.$.maxy && b.$.minx && b.$.miny;
+    }).map(b => b && b.$ && CoordinatesUtils.reprojectBbox([
+        parseFloat(b.$.minx),
+        parseFloat(b.$.miny),
+        parseFloat(b.$.maxx),
+        parseFloat(b.$.maxy)
+    ], SRS, 'EPSG:4326')));
+    return isArray(bbox) && {minx: bbox[0], miny: bbox[1], maxx: bbox[2], maxy: bbox[3]} || null;
 };
 
 const Api = {
@@ -183,10 +197,10 @@ const Api = {
     },
     getBBox: function(record, bounds) {
         let layer = record;
-        let bbox = (layer.EX_GeographicBoundingBox || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
+        let bbox = (layer.EX_GeographicBoundingBox || getBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
         while (!bbox && layer.Layer && layer.Layer.length) {
             layer = layer.Layer[0];
-            bbox = (layer.EX_GeographicBoundingBox || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
+            bbox = (layer.EX_GeographicBoundingBox || getBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
         }
         if (!bbox) {
             bbox = {

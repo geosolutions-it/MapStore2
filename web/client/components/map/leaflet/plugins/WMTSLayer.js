@@ -13,7 +13,7 @@ const assign = require('object-assign');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const WMTSUtils = require('../../../../utils/WMTSUtils');
 const WMTS = require('../../../../utils/leaflet/WMTS');
-const {isArray, isObject} = require('lodash');
+const {isArray, isObject, head} = require('lodash');
 
 L.tileLayer.wmts = function(urls, options, matrixOptions) {
     return new WMTS(urls, options, matrixOptions);
@@ -54,7 +54,8 @@ Layers.registerType('wmts', {
             originY: options.originY || 20037508.3428,
             originX: options.originX || -20037508.3428,
             ignoreErrors: options.ignoreErrors || false,
-            matrixIds: options.matrixIds && getMatrixIds(options.matrixIds, queryParameters.tileMatrixSet || srs) || null
+            matrixIds: options.matrixIds && getMatrixIds(options.matrixIds, queryParameters.tileMatrixSet || srs) || null,
+            matrixSet: head(options.tileMatrixSet.filter(t => t['ows:Identifier'] === queryParameters.tileMatrixSet)) || null
         });
     }
 });
