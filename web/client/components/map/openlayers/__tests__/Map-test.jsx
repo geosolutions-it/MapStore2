@@ -114,7 +114,7 @@ describe('OpenlayersMap', () => {
             });
             expect(spy.calls.length).toEqual(1);
             done();
-        }, 0);
+        }, 500);
     });
 
     it('check layers init', () => {
