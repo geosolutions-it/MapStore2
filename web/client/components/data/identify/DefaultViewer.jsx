@@ -111,6 +111,10 @@ class DefaultViewer extends React.Component {
                 infoFormat = queryParams.info_format;
             }
             const PageHeader = this.props.header;
+            let customViewer;
+            if (layerMetadata.viewer && layerMetadata.viewer.type) {
+                customViewer = MapInfoUtils.getViewer(layerMetadata.viewer.type);
+            }
             return (
                 <Panel
                     eventKey={i}
@@ -125,7 +129,7 @@ class DefaultViewer extends React.Component {
                         onPrevious={() => this.previous()}/></span>
                     }
                     style={this.props.style}>
-                    <ViewerPage response={response} format={infoFormat || this.props.format} viewers={this.props.viewers} layer={layerMetadata}/>
+                    <ViewerPage response={response} format={infoFormat || this.props.format} viewers={customViewer || this.props.viewers} layer={layerMetadata}/>
                 </Panel>
             );
         });

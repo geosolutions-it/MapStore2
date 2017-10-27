@@ -14,7 +14,7 @@ const MapInfoUtils = require('../../../../utils/MapInfoUtils');
 module.exports = class extends React.Component {
     static propTypes = {
         element: PropTypes.object,
-        label: PropTypes.string,
+        label: PropTypes.object,
         defaultInfoFormat: PropTypes.object,
         onInfoFormatChange: PropTypes.func
     };
@@ -28,6 +28,7 @@ module.exports = class extends React.Component {
         const data = Object.keys(this.props.defaultInfoFormat).map((infoFormat) => {
             return infoFormat;
         });
+        const checkDisabled = !!(this.props.element.featureInfo && this.props.element.featureInfo.viewer);
         return (
             <div>
                 {this.props.element.type === "wms" ?
@@ -43,9 +44,11 @@ module.exports = class extends React.Component {
                     data={data}
                     value={this.props.element.featureInfo ? this.props.element.featureInfo.format : data[0]}
                     defaultValue={data[0]}
+                    disabled={checkDisabled}
                     onChange={(value) => {
                         this.props.onInfoFormatChange("featureInfo", Object.assign({}, {
-                            ['format']: value
+                            ['format']: value,
+                            ['viewer']: this.props.element.featureInfo ? this.props.element.featureInfo.viewer : undefined
                         }));
                     }} />
                 )] : null}
