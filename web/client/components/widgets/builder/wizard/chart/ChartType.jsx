@@ -45,14 +45,14 @@ module.exports = ({onSelect = () => {}, onNextPage = () => {}} = {}) => (<Row>
         caption: 'caption',
         type: "line",
         preview: <SimpleChart {...sampleProps} type="line"/>
-}/*,  {
+}, {
         title: 'Gauge',
         icon: 'icon',
         desc: 'desc',
         caption: 'caption',
         type: "gauge",
         preview: <SimpleChart {...sampleProps} type="gauge"/>
-    }*/
+    }
 
 
 ]} />

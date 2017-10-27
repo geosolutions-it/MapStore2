@@ -74,7 +74,7 @@ class SideBarComponent extends React.Component {
             dimStyle={{ background: 'rgba(0, 0, 100, 0.2)' }}
         >
             <BuilderHeader />
-            <WidgetsBuilder />
+            {this.props.enabled ? <WidgetsBuilder /> : null}
         </Dock>);
 
     }

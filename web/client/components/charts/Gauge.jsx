@@ -7,33 +7,30 @@
  */
 
 const React = require('react');
-const { Sector, Cell, PieChart, Pie} = require('recharts');
+const { Sector, Cell, PieChart, Pie, Tooltip} = require('recharts');
 const {convertToNameValue} = require('./polar');
-/*
-// sample colorData
-const colorData = [{
-        value: 1, // Meaning span is 0 to 40
-        color: '#663399'
-    }, {
-        value: 2, // span 40 to 140
-        color: '#e91e63'
-    }, {
-        value: 3, // span 140 to 190
-        color: '#ff9800'
-    }, {
-        value: 4,
-        color: '#4caf50'
-    }
-];
- */
-const GaugeChart = ({data, xAxis = {}, color, series = [], width=500, height = 500, useActive=false, cols=2, customCellHeight, maxValue, isAnimationActive}) => {
-    const seriesArray = Array.isArray(series) ? series : [series];
-
+const calculateCellHeight = ({customCellHeight, height, rows}) => customCellHeight || ( height - 20 ) / rows;
+const calculateCells = ({width, height, data, customCellHeight}) => {
+    // try with a square NxN
+    let cols = Math.floor(Math.sqrt(data.length));
+    // if data is less calculated cells, use full width, with a max of 20 charts per row
+    cols = Math.min(cols, data.length, 20);
     const cellWidth = (width / cols);
-    const cellHeight = customCellHeight || height / Math.floor((seriesArray.length || 1) / cols) * 0.75;
-    const centers = seriesArray.map( (e, i) => ({
+    const rows = Math.ceil((data.length) / cols);
+    const cellHeight = calculateCellHeight({customCellHeight, height, rows});
+    return {
+        cols,
+        rows,
+        cellWidth,
+        cellHeight
+    };
+};
+const GaugeChart = ({data, xAxis = {}, colorGenerator, series = [], width=500, height = 500, useActive=false, customCellHeight, maxValue, isAnimationActive}) => {
+    const seriesArray = Array.isArray(series) ? series : [series];
+    const {cols, rows, cellWidth, cellHeight} = calculateCells({width, height, data, customCellHeight});
+    const centers = data.map( (e, i) => ({
         cx: (i % cols + 0.5) * cellWidth,
-        cy: (Math.floor(i / cols) + 0.7) * cellHeight
+        cy: (Math.floor(i / cols)) * cellHeight + 5
     }));
     /*
     const centers = data.map( (e, i) => ({
@@ -45,12 +42,14 @@ const GaugeChart = ({data, xAxis = {}, color, series = [], width=500, height = 5
     const max = isNaN(maxValue)
         ? convertToNameValue({name: xAxis && xAxis.dataKey || serie.name, value: serie.dataKey || serie.value}, data).reduce( (a, c) => Math.max(c.value, a), Number.NEGATIVE_INFINITY)
         : maxValue;
+    const COLORS = colorGenerator(2);
     const colorData = [{
         value: max,
-        color
+        color: COLORS[0]
     }];
     return (
-        <PieChart width={width} height={height}>
+        <PieChart width={cellWidth * cols} height={cellHeight * rows + 20}>
+            <Tooltip content={({payload, label}) => <div>{`${label || payload && payload[0] && payload[0].name || ""} : ${payload && payload[0] && (payload[0].realValue || payload[0].value)}`}</div>}/>
             {
             convertToNameValue({name: xAxis && xAxis.dataKey || serie.name, value: serie.dataKey || serie.value}, data).map((d, i) => {
                 const pieW = width / cols;
@@ -73,14 +72,17 @@ const GaugeChart = ({data, xAxis = {}, color, series = [], width=500, height = 5
                     const RADIAN = Math.PI / 180;
                     const sin = Math.sin(-RADIAN * midAngle);
                     const cos = Math.cos(-RADIAN * midAngle);
-                    const mx = cx + (outerRadius + pieW * 0.03) * cos;
-                    const my = cy + (outerRadius + pieW * 0.03) * sin;
+                    const mx = cx + (outerRadius + pieW * 0.1) * cos;
+                    const my = cy + (outerRadius + pieW * 0.1) * sin;
                     return (
                         <g width={pieW}>
-                            <text text-anchor="middle" alignment-baseline="central" x={cx} y={cy - outerRadius * 1.5} >{d.name}</text>
-                            <text text-anchor="middle" alignment-baseline="central" x={cx} y={cy - outerRadius * 1.2} >{d.value}</text>
-                            <circle cx={cx} cy={cy} r={pieW * 0.05} fill="#666" stroke="none"/>
-                            <path d={`M${cx},${cy}L${mx},${my}`} strokeWidth="6" stroke="#666" fill="none" strokeLinecap="round"/>
+                            <circle cx={cx} cy={cy} r={pieW * 0.05} fill={COLORS[1]} stroke="none"/>
+                            <path d={`M${cx},${cy}L${mx},${my}`} strokeWidth={pieW * 0.06} stroke="#999999" strokeLinecap="round"/>
+                            <path d={`M${cx},${cy}L${mx},${my}`} strokeWidth={pieW * 0.05} stroke={COLORS[1]} fill={COLORS[1]} strokeLinecap="round"/>
+                            <text textAnchor={"middle"} width={pieW} x={cx} y={cy - outerRadius * 1.5} >{(d.value).toFixed(2)}</text>
+                            <text style={{
+                                    fill: "#000000", stroke: "#000000", fontSize: pieW * 0.1
+                                }} textAnchor={"middle"} width={pieW} x={cx} y={cy} >{d.name}</text>
                         </g>
                     );
                 };
@@ -100,21 +102,21 @@ const GaugeChart = ({data, xAxis = {}, color, series = [], width=500, height = 5
                     .reduce((a, b) => a + b);
 
                 const arrowData = [
-                    { value: chartValue },
-                    { value: 0 },
-                    { value: sumValues - chartValue }
+                    { value: chartValue, realValue: chartValue, name: d.name },
+                    { value: 0, realValue: chartValue, name: d.name },
+                    { value: sumValues - chartValue, realValue: chartValue, name: d.name }
                 ];
 
                 const pieProps = {
                     startAngle: 180,
                     endAngle: 0,
                     cx: centers[i] && centers[i].cx || 0,
-                    cy: centers[i] && centers[i].cy || 0
+                    cy: centers[i] && centers[i].cy + cellHeight || 0
                 };
 
                 const pieRadius = {
-                    innerRadius: (pieW / 2) * 0.35,
-                    outerRadius: (pieW / 2) * 0.4
+                    innerRadius: (pieW / 2) * 0.5,
+                    outerRadius: (pieW / 2) * 0.9
                 };
 
 

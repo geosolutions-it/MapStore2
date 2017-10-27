@@ -1,3 +1,12 @@
+/*
+ * Copyright 2017, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+const {castArray} = require('lodash');
 const applyTemplate = ({featureType, aggregationAttribute, groupByAttributes = [], aggregateFunction, filter=""}) => `<?xml version="1.0" encoding="UTF-8"?>
 <wps:Execute service="WPS"   version="1.0.0"
     xmlns="http://www.opengis.net/wps/1.0.0"
@@ -29,12 +38,13 @@ const applyTemplate = ({featureType, aggregationAttribute, groupByAttributes = [
                 <wps:LiteralData>${aggregationAttribute}</wps:LiteralData>
             </wps:Data>
         </wps:Input>
-        <wps:Input>
-            <ows:Identifier>function</ows:Identifier>
-            <wps:Data>
-                <wps:LiteralData>${aggregateFunction}</wps:LiteralData>
-            </wps:Data>
-        </wps:Input>
+        ${castArray(aggregateFunction).map( fun =>
+                    `<wps:Input>
+                    <ows:Identifier>function</ows:Identifier>
+                    <wps:Data>
+                        <wps:LiteralData>${fun}</wps:LiteralData>
+                    </wps:Data>
+                    </wps:Input>`)}
         <wps:Input>
             <ows:Identifier>singlePass</ows:Identifier>
             <wps:Data>
