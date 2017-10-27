@@ -47,6 +47,8 @@ class SideBarComponent extends React.Component {
          zIndex: PropTypes.number,
          dockSize: PropTypes.number,
          position: PropTypes.string,
+         onMount: PropTypes.funct,
+         onUnmount: PropTypes.funct,
          dimMode: PropTypes.string,
          src: PropTypes.string,
          style: PropTypes.object
@@ -59,8 +61,17 @@ class SideBarComponent extends React.Component {
          zIndex: 10000,
          fluid: false,
          dimMode: "none",
-         position: "left"
+         position: "left",
+         onMount: () => {},
+         onUnmount: () => {}
      };
+    componentDidMount() {
+        this.props.onMount();
+    }
+
+    componentWillUnmount() {
+        this.props.onUnmount();
+    }
     render() {
         return (<Dock
             id={this.props.id}
@@ -85,7 +96,11 @@ const Plugin = connect(
         widgetBulderSelector,
         (enabled) => ({
             enabled
-    }))
+    })),{
+        onMount: () => setControlProperty("wfsdownload", "available", true),
+        onUnmount: () => setControlProperty("wfsdownload", "available", false),
+    }
+
 )(SideBarComponent);
 module.exports = {
     WidgetsBuilderPlugin: Plugin,

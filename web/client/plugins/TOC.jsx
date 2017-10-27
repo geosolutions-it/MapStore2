@@ -18,6 +18,7 @@ const {zoomToExtent} = require('../actions/map');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector} = require('../selectors/layers');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector} = require("../selectors/locale");
+const {widgetBuilderAvailable} = require('../selectors/controls');
 
 const LayersUtils = require('../utils/LayersUtils');
 const mapUtils = require('../utils/MapUtils');
@@ -69,8 +70,9 @@ const tocSelector = createSelector(
         layerFilterSelector,
         layersSelector,
         mapNameSelector,
-        activeSelector
-    ], (enabled, groups, settings, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive) => ({
+        activeSelector,
+        widgetBuilderAvailable
+    ], (enabled, groups, settings, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool) => ({
         enabled,
         groups,
         settings,
@@ -100,7 +102,8 @@ const tocSelector = createSelector(
                 func: (node) => filterText && head(node.nodes.filter(l => filterLayersByTitle(l, filterText, currentLocale) || l.nodes && head(node.nodes.filter(g => g.showComponent))))
             }
         ]),
-        catalogActive
+        catalogActive,
+        activateWidgetTool
     })
 );
 
@@ -197,7 +200,7 @@ class LayerTree extends React.Component {
         activateSettingsTool: true,
         activateRemoveLayer: true,
         activateQueryTool: false,
-        activateWidgetTool: true,
+        activateWidgetTool: false,
         visibilityCheckType: "glyph",
         settingsOptions: {
             includeCloseButton: false,
