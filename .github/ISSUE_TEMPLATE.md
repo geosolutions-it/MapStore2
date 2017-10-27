@@ -27,6 +27,14 @@ A few sentences describing the overall goals of the issue.
 - A list of steps to reproduce the bug
 - ...
 
+*Expected Result*
+
+- Describe here the expected result 
+
+*Current Result*
+
+- Describe here the current behavior
+
 **In case of New Feature (otherwise remove this paragraph)**
 
 *Acceptance Criteria - AC*
