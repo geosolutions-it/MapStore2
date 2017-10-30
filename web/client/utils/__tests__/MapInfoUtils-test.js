@@ -6,16 +6,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const React = require('react');
 var expect = require('expect');
 var {
     getAvailableInfoFormat,
     getAvailableInfoFormatLabels,
     getAvailableInfoFormatValues,
     getDefaultInfoFormatValue,
-    buildIdentifyRequest
+    buildIdentifyRequest,
+    getViewer,
+    setViewer
 } = require('../MapInfoUtils');
 
 const CoordinatesUtils = require('../CoordinatesUtils');
+
+class App extends React.Component {
+    render() {
+        return (<div></div>);
+    }
+}
 
 describe('MapInfoUtils', () => {
 
@@ -137,6 +146,66 @@ describe('MapInfoUtils', () => {
         expect(req1.request.service).toBe('WMS');
     });
 
+    it('buildIdentifyRequest works for wms layer with config featureInfo info_format', () => {
+        let props = {
+            map: {
+                zoom: 0,
+                projection: 'EPSG:4326'
+            },
+            point: {
+                latlng: {
+                    lat: 0,
+                    lng: 0
+                }
+            }
+        };
+        let layer1 = {
+            type: "wms",
+            queryLayers: ["sublayer1", "sublayer2"],
+            name: "layer",
+            url: "http://localhost",
+            featureInfo: {
+                format: "HTML"
+            }
+        };
+        let req1 = buildIdentifyRequest(layer1, props);
+        expect(req1.request).toExist();
+        expect(req1.request.service).toBe('WMS');
+        expect(req1.request.info_format).toBe('text/html');
+    });
+
+    it('buildIdentifyRequest works for wms layer with config featureInfo viewer', () => {
+        let props = {
+            map: {
+                zoom: 0,
+                projection: 'EPSG:4326'
+            },
+            point: {
+                latlng: {
+                    lat: 0,
+                    lng: 0
+                }
+            }
+        };
+        let layer1 = {
+            type: "wms",
+            queryLayers: ["sublayer1", "sublayer2"],
+            name: "layer",
+            url: "http://localhost",
+            featureInfo: {
+                format: "JSON",
+                viewer: {
+                    type: 'customViewer'
+                }
+            }
+        };
+        let req1 = buildIdentifyRequest(layer1, props);
+        expect(req1.request).toExist();
+        expect(req1.request.service).toBe('WMS');
+        expect(req1.request.info_format).toBe('application/json');
+        expect(req1.metadata.viewer.type).toBe('customViewer');
+    });
+
     it('buildIdentifyRequest works for wmts layer', () => {
         let props = {
             map: {
@@ -181,5 +250,43 @@ describe('MapInfoUtils', () => {
         let req1 = buildIdentifyRequest(layer1, props);
         expect(req1.request).toExist();
         expect(req1.request.lat).toBe(43);
+    });
+
+    it('getViewer and setViewer test', () => {
+        let props = {
+            map: {
+                zoom: 0,
+                projection: 'EPSG:4326'
+            },
+            point: {
+                latlng: {
+                    lat: 0,
+                    lng: 0
+                }
+            }
+        };
+        let layer1 = {
+            type: "wms",
+            queryLayers: ["sublayer1", "sublayer2"],
+            name: "layer",
+            url: "http://localhost",
+            featureInfo: {
+                format: "JSON",
+                viewer: {
+                    type: 'customViewer'
+                }
+            }
+        };
+        let req1 = buildIdentifyRequest(layer1, props);
+        expect(req1.request).toExist();
+        expect(req1.request.service).toBe('WMS');
+        expect(req1.request.info_format).toBe('application/json');
+        expect(req1.metadata.viewer.type).toBe('customViewer');
+
+        let get = getViewer(req1.metadata.viewer.type);
+        expect(get).toNotExist();
+        setViewer('customViewer', <App/>);
+        let newGet = getViewer(req1.metadata.viewer.type);
+        expect(newGet).toExist();
     });
 });

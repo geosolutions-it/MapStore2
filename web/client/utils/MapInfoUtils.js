@@ -18,6 +18,7 @@ const MapInfoUtils = {
     //           default format ↴
     AVAILABLE_FORMAT: ['TEXT', 'JSON', 'HTML'],
 
+    VIEWERS: {},
     /**
      * @return a filtered version of INFO_FORMATS object.
      * the returned object contains only keys that AVAILABLE_FORMAT contains.
@@ -61,6 +62,13 @@ const MapInfoUtils = {
         }
         return props.format || 'application/json';
     },
+    getLayerFeatureInfoViewer(layer) {
+        if (layer.featureInfo
+            && layer.featureInfo.viewer) {
+            return layer.featureInfo.viewer;
+        }
+        return {};
+    },
     clickedPointToGeoJson(clickedPoint) {
         if (!clickedPoint) {
             return [];
@@ -101,7 +109,8 @@ const MapInfoUtils = {
     buildIdentifyRequest(layer, props) {
         if (MapInfoUtils.services[layer.type]) {
             let infoFormat = MapInfoUtils.getDefaultInfoFormatValueFromLayer(layer, props);
-            return MapInfoUtils.services[layer.type].buildRequest(layer, props, infoFormat);
+            let viewer = MapInfoUtils.getLayerFeatureInfoViewer(layer);
+            return MapInfoUtils.services[layer.type].buildRequest(layer, props, infoFormat, viewer);
         }
         return {};
     },
@@ -151,6 +160,24 @@ const MapInfoUtils = {
         wms: require('./mapinfo/wms'),
         wmts: require('./mapinfo/wmts'),
         vector: require('./mapinfo/vector')
+    },
+    /**
+     * To get the custom viewer with the given type
+     * This way you can extend the featureinfo with your custom viewers in external projects.
+     * @param type {string} the string the component was registered with
+     * @return {object} the registered component
+     */
+    getViewer: (type) => {
+        return !!MapInfoUtils.VIEWERS[type] ? MapInfoUtils.VIEWERS[type] : null;
+    },
+    /**
+     * To register a custom viewer
+     * This way you can extend the featureinfo with your custom viewers in external projects.
+     * @param type {string} the string you want to register the component with
+     * @param viewer {object} the component to register
+     */
+    setViewer: (type, viewer) => {
+        MapInfoUtils.VIEWERS[type] = viewer;
     }
 };
 
