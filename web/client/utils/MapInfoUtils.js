@@ -126,7 +126,7 @@ const MapInfoUtils = {
                     if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
                         infoFormat = current.queryParams.info_format;
                     }
-                    const valid = (FeatureInfoUtils.Validator[INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
+                    const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getValidResponses([current]);
                     return [...previous, ...valid];
                 }, []);
             },
@@ -136,7 +136,7 @@ const MapInfoUtils = {
                     if (current.queryParams && current.queryParams.hasOwnProperty('info_format')) {
                         infoFormat = current.queryParams.info_format;
                     }
-                    const valid = (FeatureInfoUtils.Validator[INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getNoValidResponses([current]);
+                    const valid = (FeatureInfoUtils.Validator[current.format || INFO_FORMATS_BY_MIME_TYPE[infoFormat] || INFO_FORMATS_BY_MIME_TYPE[format]] || defaultValidator).getNoValidResponses([current]);
                     return [...previous, ...valid];
                 }, []);
             }
