@@ -11,10 +11,11 @@ const PropTypes = require('prop-types');
 const ConfirmDialog = require('../../misc/ConfirmDialog');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
-const {Glyphicon, Button, ButtonGroup} = require('react-bootstrap');
+const {ButtonGroup} = require('react-bootstrap');
 const {head} = require('lodash');
 const assign = require('object-assign');
 const Filter = require('../../misc/Filter');
+const TButton = require('../../data/featuregrid/toolbars/TButton');
 
 const defaultConfig = require('./AnnotationsConfig');
 
@@ -115,7 +116,7 @@ class Annotations extends React.Component {
 
     renderCard = (annotation) => {
         const readOnly = annotation.readOnly ? ' m-read-only' : '';
-        return (<div className={"mapstore-annotations-panel-card" + this.props.classNameSelector(annotation) + readOnly} onMouseOver={() => this.props.onHighlight(annotation.properties.id)} onMouseOut={this.props.onCleanHighlight} onClick={annotation.readOnly ? () => {} : () => this.props.onDetail(annotation.properties.id)}>
+        return (<div className={"mapstore-annotations-panel-card" + this.props.classNameSelector(annotation) + readOnly} onMouseOver={() => this.props.onHighlight(annotation.properties.id)} onMouseOut={this.props.onCleanHighlight} onClick={() => this.props.onDetail(annotation.properties.id)}>
             <span className="mapstore-annotations-panel-card-thumbnail">{this.renderThumbnail(annotation.style)}</span>
             {this.getConfig().fields.map(f => this.renderField(f, annotation))}
         </div>);
@@ -124,8 +125,15 @@ class Annotations extends React.Component {
     renderCards = () => {
         const annotation = this.props.annotations && head(this.props.annotations.filter(a => a.properties.id === this.props.current));
         if (this.props.mode === 'list' || (!annotation && !this.props.editing)) {
-            return [<ButtonGroup id="mapstore-annotations-panel-buttons">
-                <Button bsStyle="primary" onClick={() => this.props.onAdd(this.props.config.multiGeometry ? 'MultiPoint' : 'Point')}><Glyphicon glyph="plus"/>&nbsp;<Message msgId="annotations.add"/></Button>
+            return [
+            <ButtonGroup id="mapstore-annotations-panel-buttons">
+                <TButton
+                    id="add-annotation"
+                    tooltip={<Message msgId="annotations.add"/>}
+                    onClick={() => this.props.onAdd(this.props.config.multiGeometry ? 'MultiPoint' : 'Point')}
+                    visible
+                    className="square-button-md"
+                    glyph="plus"/>
             </ButtonGroup>,
             <Filter
                 filterPlaceholder={LocaleUtils.getMessageById(this.context.messages, "annotations.filter")}
@@ -136,10 +144,10 @@ class Annotations extends React.Component {
         }
         const Editor = this.props.editor;
         if (this.props.mode === 'detail' && annotation && annotation.properties) {
-            return <Editor showBack config={this.props.config} id={this.props.current} {...annotation.properties}/>;
+            return <Editor feature={annotation} showBack config={this.props.config} id={this.props.current} {...annotation.properties}/>;
         }
         // mode = editing
-        return this.props.editing && <Editor config={this.props.config} id={this.props.editing.properties.id} {...this.props.editing.properties}/>;
+        return this.props.editing && <Editor feature={annotation} config={this.props.config} id={this.props.editing.properties.id} {...this.props.editing.properties}/>;
     };
 
     render() {
