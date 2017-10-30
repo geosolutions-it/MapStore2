@@ -19,22 +19,15 @@ function getWMSURLs( urls ) {
     return urls.map((url) => url.split("\?")[0]);
 }
 
-const getTopLeftCorner = (str) => {
-    const coord = str.split(' ');
-    const lng = parseFloat(coord[0]);
-    const lat = parseFloat(coord[1]);
-    return !isNaN(lng) && !isNaN(lat) && {lng, lat} || null;
-};
-
 Layers.registerType('wmts', {
     create: (options) => {
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
         const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
         const tilMatrixSetName = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
         const tileMatrixSet = head(options.tileMatrixSet.filter(tM => tM['ows:Identifier'] === tilMatrixSetName));
-        const scales = tileMatrixSet.TileMatrix.map(t => t.ScaleDenominator);
-        const mapResolutions = mapUtils.getResolutions();
-        const matrixResolutions = options.resolutions || mapUtils.getResolutionsForScales(scales, srs, 96);
+        const scales = tileMatrixSet && tileMatrixSet.TileMatrix.map(t => t.ScaleDenominator);
+        const mapResolutions = options.resolutions || mapUtils.getResolutions();
+        const matrixResolutions = options.resolutions || scales && mapUtils.getResolutionsForScales(scales, srs, 96) || [];
         const resolutions = matrixResolutions && matrixResolutions.map(res => {
             return head(mapResolutions.map((mRes, i) => {
                 if (i === mapResolutions.length - 1) {
@@ -52,7 +45,7 @@ Layers.registerType('wmts', {
 
         const extent = options.bbox ? ol.extent.applyTransform([parseFloat(options.bbox.bounds.minx), parseFloat(options.bbox.bounds.miny), parseFloat(options.bbox.bounds.maxx), parseFloat(options.bbox.bounds.maxy)], ol.proj.getTransform(options.bbox.crs, options.srs)) : null;
 
-        const origin = tileMatrixSet.TileMatrix && tileMatrixSet.TileMatrix[1] && tileMatrixSet.TileMatrix[1].TopLeftCorner && getTopLeftCorner(tileMatrixSet.TileMatrix[1].TopLeftCorner);
+        const origin = tileMatrixSet && tileMatrixSet.TileMatrix && tileMatrixSet.TileMatrix[1] && tileMatrixSet.TileMatrix[1].TopLeftCorner && CoordinatesUtils.parseString(tileMatrixSet.TileMatrix[1].TopLeftCorner) || {};
 
         /* remove matrix 0, it doesn't happear correctly on map  */
         const paramResolutions = resolutions.filter((r, i) => i > 0);
@@ -70,8 +63,8 @@ Layers.registerType('wmts', {
                 format: options.format || 'image/png',
                 tileGrid: new ol.tilegrid.WMTS({
                     origin: [
-                        origin.lng || -20037508.3428,
-                        origin.lat || 20037508.3428
+                        origin.lng || origin.x || options.originX || -20037508.3428,
+                        origin.lat || origin.y || options.originX || 20037508.3428
                     ],
                     extent: extent,
                     resolutions: paramResolutions,
