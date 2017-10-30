@@ -9,7 +9,6 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 
-const {Button, Glyphicon} = require('react-bootstrap');
 const TButton = require('../../data/featuregrid/toolbars/TButton');
 
 const Message = require('../../I18N/Message');

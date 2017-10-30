@@ -429,24 +429,15 @@ describe("test the AnnotationsEditor Panel", () => {
             description: '<span><i>desc</i></span>'
         };
 
-        const viewer = ReactDOM.render(<AnnotationsEditor feature={{
+        const viewer = ReactDOM.render(<AnnotationsEditor showBack feature={{
             readOnly: true
-        }} {...feature} editing={{
-            readOnly: true,
-            properties: feature,
-            style: {
-                iconGlyph: 'comment',
-                iconColor: 'red',
-                iconShape: 'square'
-            }
-        }}/>, document.getElementById("container"));
+        }} {...feature} />, document.getElementById("container"));
         expect(viewer).toExist();
 
-        const editingBtnLength = TestUtils.scryRenderedDOMComponentsWithClass(viewer, "mapstore-annotations-info-viewer-buttons").length;
-        expect(editingBtnLength).toBe(0);
+        const viewBtn = TestUtils.scryRenderedDOMComponentsWithClass(viewer, "mapstore-annotations-info-viewer-buttons");
+        expect(viewBtn.length).toBe(1);
 
-        const viewBtnLength = TestUtils.scryRenderedDOMComponentsWithClass(viewer, "mapstore-annotations-info-viewer-buttons").length;
-        expect(viewBtnLength).toBe(0);
+        expect(TestUtils.scryRenderedDOMComponentsWithClass(viewer, "glyphicon glyphicon-arrow-left")).toExist();
 
     });
 

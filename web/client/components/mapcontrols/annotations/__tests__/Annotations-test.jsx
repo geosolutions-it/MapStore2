@@ -226,7 +226,7 @@ describe("test the Annotations Panel", () => {
         TestUtils.Simulate.click(ReactDOM.findDOMNode(cards[0]));
         TestUtils.Simulate.click(ReactDOM.findDOMNode(cards[1]));
 
-        expect(spyDetail).toNotHaveBeenCalled();
+        expect(spyDetail).toHaveBeenCalled();
 
     });
 

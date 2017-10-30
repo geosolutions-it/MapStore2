@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const ConfirmDialog = require('../../misc/ConfirmDialog');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
-const {Glyphicon, Button, ButtonGroup} = require('react-bootstrap');
+const {ButtonGroup} = require('react-bootstrap');
 const {head} = require('lodash');
 const assign = require('object-assign');
 const Filter = require('../../misc/Filter');
@@ -126,10 +126,6 @@ class Annotations extends React.Component {
         const annotation = this.props.annotations && head(this.props.annotations.filter(a => a.properties.id === this.props.current));
         if (this.props.mode === 'list' || (!annotation && !this.props.editing)) {
             return [
-            <Filter
-                filterPlaceholder={LocaleUtils.getMessageById(this.context.messages, "annotations.filter")}
-                filterText={this.props.filter}
-                onFilter={this.props.onFilter}/>,
             <ButtonGroup id="mapstore-annotations-panel-buttons">
                 <TButton
                     id="add-annotation"
@@ -139,6 +135,10 @@ class Annotations extends React.Component {
                     className="square-button-md"
                     glyph="plus"/>
             </ButtonGroup>,
+            <Filter
+                filterPlaceholder={LocaleUtils.getMessageById(this.context.messages, "annotations.filter")}
+                filterText={this.props.filter}
+                onFilter={this.props.onFilter}/>,
             <div className="mapstore-annotations-panel-cards">{this.props.annotations.filter(this.applyFilter).map(a => this.renderCard(a))}</div>
             ];
         }
