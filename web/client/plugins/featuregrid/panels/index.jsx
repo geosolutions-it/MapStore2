@@ -10,6 +10,7 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
 const {createSelector, createStructuredSelector} = require('reselect');
+const {wfsDownloadAvailable} = require('../../../selectors/controls');
 const {paginationInfo, featureLoadingSelector, resultsSelector, isSyncWmsActive} = require('../../../selectors/query');
 const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter, hasSupportedGeometry, editingAllowedRolesSelector} = require('../../../selectors/featuregrid');
 const {userRoleSelector} = require('../../../selectors/security');
@@ -37,6 +38,7 @@ const Toolbar = connect(
         isSimpleGeom: isSimpleGeomSelector,
         selectedCount: selectedFeaturesCount,
         disableToolbar: state => state && state.featuregrid && state.featuregrid.disableToolbar,
+        displayDownload: wfsDownloadAvailable,
         disableDownload: state => (resultsSelector(state) || []).length === 0,
         isDownloadOpen: state => state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.enabled,
         isSyncActive: isSyncWmsActive,

@@ -33,6 +33,15 @@ describe('Featuregrid toolbar component', () => {
         expect(el).toExist();
         const downloadBtn = document.getElementById("fg-download-grid");
         const editButton = document.getElementById("fg-edit-mode");
+        expect(isVisibleButton(downloadBtn)).toBe(false);
+        expect(isVisibleButton(editButton)).toBe(false);
+    });
+    it('check download displayDownload', () => {
+        ReactDOM.render(<Toolbar displayDownload />, document.getElementById("container"));
+        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+        expect(el).toExist();
+        const downloadBtn = document.getElementById("fg-download-grid");
+        const editButton = document.getElementById("fg-edit-mode");
         expect(isVisibleButton(downloadBtn)).toBe(true);
         expect(isVisibleButton(editButton)).toBe(false);
     });

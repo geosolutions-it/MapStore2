@@ -8,13 +8,17 @@
 
 const expect = require('expect');
 const {
-    queryPanelSelector
+    queryPanelSelector,
+    wfsDownloadAvailable
 } = require("../controls");
 
 const state = {
     controls: {
         queryPanel: {
             enabled: true
+        },
+        wfsdownload: {
+            available: true
         }
     }
 };
@@ -22,6 +26,11 @@ const state = {
 describe('Test controls selectors', () => {
     it('test queryPanelSelector', () => {
         const retVal = queryPanelSelector(state);
+        expect(retVal).toExist();
+        expect(retVal).toBe(true);
+    });
+    it('test wfsDownloadAvailable', () => {
+        const retVal = wfsDownloadAvailable(state);
         expect(retVal).toExist();
         expect(retVal).toBe(true);
     });
