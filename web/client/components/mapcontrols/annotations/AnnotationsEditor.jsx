@@ -142,16 +142,39 @@ class AnnotationsEditor extends React.Component {
 
     renderViewButtons = () => {
         return (<ButtonGroup className="mapstore-annotations-info-viewer-buttons">
-                <Button bsStyle="primary" onClick={() => this.props.onEdit(this.props.id, this.props.config.multiGeometry ? 'MultiPoint' : 'Point')}><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="annotations.edit"/></Button>
-                <Button bsStyle="primary" onClick={() => this.props.onRemove(this.props.id)}><Glyphicon glyph="ban-circle"/>&nbsp;<Message msgId="annotations.remove"/></Button>
-                {this.props.showBack ? <Button bsStyle="primary" onClick={() => this.props.onCancel()}><Glyphicon glyph="back"/>&nbsp;<Message msgId="annotations.back"/></Button> : null }
+                {!this.props.feature.readOnly &&
+                    <span>
+                    <TButton
+                        id="annotation-edit"
+                        tooltip={<Message msgId="annotations.edit"/>}
+                        onClick={() => this.props.onEdit(this.props.id, this.props.config.multiGeometry ? 'MultiPoint' : 'Point')}
+                        visible
+                        className="square-button-md"
+                        glyph="pencil"/>
+                    <TButton
+                        id="annotation-remove"
+                        tooltip={<Message msgId="annotations.remove"/>}
+                        onClick={() => this.props.onRemove(this.props.id)}
+                        visible
+                        className="square-button-md"
+                        glyph="trash"/>
+                    </span>}
+                {this.props.showBack ?
+                    <TButton
+                        id="annotation-back"
+                        tooltip={<Message msgId="annotations.back"/>}
+                        onClick={() => this.props.onCancel()}
+                        visible
+                        className="square-button-md"
+                        glyph="arrow-left"/>
+                : null }
             </ButtonGroup>);
     };
 
     renderEditingButtons = () => {
         return (<Grid className="mapstore-annotations-info-viewer-buttons" fluid>
                     <Row>
-                        <Col xs={7}>
+                        <Col xs={12}>
                             <TButton
                                 id="edit-geometry"
                                 tooltip={<Message msgId="annotations.addMarker"/>}
@@ -175,12 +198,20 @@ class AnnotationsEditor extends React.Component {
                                 visible
                                 className="square-button-md"
                                 glyph="trash"/>
-                        </Col>
-                        <Col xs={5}>
-                            <ButtonGroup id="mapstore-annotations-info-viewer-edit-buttons">
-                                <Button bsStyle="primary" onClick={this.save}><Glyphicon glyph="floppy-disk"/>&nbsp;<Message msgId="annotations.save"/></Button>
-                                <Button bsStyle="primary" onClick={this.cancelEdit}><Glyphicon glyph="remove"/>&nbsp;<Message msgId="annotations.cancel"/></Button>
-                            </ButtonGroup>
+                            <TButton
+                                id="save-annotation"
+                                tooltip={<Message msgId="annotations.save"/>}
+                                onClick={this.save}
+                                visible
+                                className="square-button-md"
+                                glyph="floppy-disk"/>
+                            <TButton
+                                id="cancel-edit-annotation"
+                                tooltip={<Message msgId="annotations.cancel"/>}
+                                onClick={this.cancelEdit}
+                                visible
+                                className="square-button-md"
+                                glyph="remove"/>
                         </Col>
             </Row>
         </Grid>);
@@ -237,8 +268,20 @@ class AnnotationsEditor extends React.Component {
         const glyphRenderer = (option) => (<div><span className={"fa fa-" + option.value}/><span> {option.label}</span></div>);
         return (<div className="mapstore-annotations-info-viewer-styler">
             <div className="mapstore-annotations-info-viewer-styler-buttons">
-                <Button bsStyle="primary" onClick={this.props.onSaveStyle}><Glyphicon glyph="floppy-disk"/>&nbsp;<Message msgId="annotations.save"/></Button>
-                <Button bsStyle="primary" onClick={this.props.onCancelStyle}><Glyphicon glyph="remove"/>&nbsp;<Message msgId="annotations.cancel"/></Button>
+                <TButton
+                    id="save-annotation"
+                    tooltip={<Message msgId="annotations.save"/>}
+                    onClick={this.props.onSaveStyle}
+                    visible
+                    className="square-button-md"
+                    glyph="floppy-disk"/>
+                <TButton
+                    id="cancel-edit-annotation"
+                    tooltip={<Message msgId="annotations.cancel"/>}
+                    onClick={this.props.onCancelStyle}
+                    visible
+                    className="square-button-md"
+                    glyph="remove"/>
             </div>
             <div className="mapstore-annotations-info-viewer-markers">{this.renderMarkers(this.getConfig().markers)}</div>
             <Select
@@ -279,7 +322,7 @@ class AnnotationsEditor extends React.Component {
         const editing = this.props.editing && (this.props.editing.properties.id === this.props.id);
         return (
             <div className="mapstore-annotations-info-viewer">
-                {this.props.feature.readOnly ? null : this.renderButtons(editing)}
+                {this.renderButtons(editing)}
                 {this.renderError(editing)}
                 {this.renderBody(editing)}
             </div>
