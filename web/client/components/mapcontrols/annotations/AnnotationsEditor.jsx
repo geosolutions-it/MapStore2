@@ -196,7 +196,7 @@ class AnnotationsEditor extends React.Component {
                                 onClick={this.props.onDeleteGeometry}
                                 visible
                                 className="square-button-md"
-                                glyph="trash"/>
+                                glyph="polygon-trash"/>
                             <TButton
                                 id="save-annotation"
                                 tooltip={<Message msgId="annotations.save"/>}
