@@ -85,7 +85,7 @@ var WMTS = L.TileLayer.extend({
         const tilecol = Math.floor((nw.x - X0) / tilewidth);
         const tilerow = -Math.floor((nw.y - Y0) / tilewidth);
 
-        const ranges = matrix.data && matrix.data.MatrixWidth && matrix.data.MatrixHeight ? {
+        const matrixRanges = matrix.data && matrix.data.MatrixWidth && matrix.data.MatrixHeight && {
             cols: {
                 min: 0,
                 max: matrix.data.MatrixWidth - 1
@@ -94,7 +94,9 @@ var WMTS = L.TileLayer.extend({
                 min: 0,
                 max: matrix.data.MatrixHeight - 1
             }
-        } : matrixIds[id].ranges;
+        };
+
+        const ranges = matrixIds[id].ranges || matrixRanges;
 
         if (ranges) {
             if (!isInRange(tilecol, tilerow, ranges)) {

@@ -8,7 +8,7 @@
 
 var Layers = require('../../../../utils/openlayers/Layers');
 var ol = require('openlayers');
-const {isArray, head} = require('lodash');
+const {isArray, head, isEmpty} = require('lodash');
 // const SecurityUtils = require('../../../../utils/SecurityUtils');
 const WMTSUtils = require('../../../../utils/WMTSUtils');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
@@ -41,11 +41,35 @@ Layers.registerType('wmts', {
                 return null;
             }).filter(r => r)) || res;
         }) || mapResolutions;
+
         const matrixIds = WMTSUtils.limitMatrix(options.matrixIds && WMTSUtils.getMatrixIds(options.matrixIds, tilMatrixSetName || srs) || WMTSUtils.getDefaultMatrixId(options), resolutions.length);
 
-        const extent = options.bbox ? ol.extent.applyTransform([parseFloat(options.bbox.bounds.minx), parseFloat(options.bbox.bounds.miny), parseFloat(options.bbox.bounds.maxx), parseFloat(options.bbox.bounds.maxy)], ol.proj.getTransform(options.bbox.crs, options.srs)) : null;
-
         const origin = tileMatrixSet && tileMatrixSet.TileMatrix && tileMatrixSet.TileMatrix[1] && tileMatrixSet.TileMatrix[1].TopLeftCorner && CoordinatesUtils.parseString(tileMatrixSet.TileMatrix[1].TopLeftCorner) || {};
+
+        let bbox = null;
+
+        /* calculate bbox from tile matrix set to avoid tile errors when fit world bounds*/
+        if (!isEmpty(origin) && origin.x && options.bbox && options.bbox.bounds
+        && parseFloat(options.bbox.bounds.minx) === -180 && parseFloat(options.bbox.bounds.miny) === -90
+        && parseFloat(options.bbox.bounds.maxx) === 180 && parseFloat(options.bbox.bounds.maxy) === 90
+        && tileMatrixSet && tileMatrixSet.TileMatrix[1] && tileMatrixSet.TileMatrix[1].ScaleDenominator
+        && tileMatrixSet.TileMatrix[1].MatrixWidth && tileMatrixSet.TileMatrix[1].MatrixHeight
+        && tileMatrixSet.TileMatrix[1].TileWidth && tileMatrixSet.TileMatrix[1].TileHeight) {
+            const res = mapUtils.getResolutionsForScales([tileMatrixSet.TileMatrix[1].ScaleDenominator], srs, 96);
+            bbox = {
+                bounds: {
+                    minx: origin.x,
+                    maxx: origin.x + tileMatrixSet.TileMatrix[1].MatrixWidth * tileMatrixSet.TileMatrix[1].TileWidth * res,
+                    maxy: origin.y,
+                    miny: origin.y - tileMatrixSet.TileMatrix[1].MatrixHeight * tileMatrixSet.TileMatrix[1].TileHeight * res
+                },
+                crs: srs
+            };
+
+        }
+        bbox = bbox || options.bbox || null;
+
+        const extent = bbox ? ol.extent.applyTransform([parseFloat(bbox.bounds.minx), parseFloat(bbox.bounds.miny), parseFloat(bbox.bounds.maxx), parseFloat(bbox.bounds.maxy)], ol.proj.getTransform(bbox.crs, options.srs)) : null;
 
         /* remove matrix 0, it doesn't happear correctly on map  */
         const paramResolutions = resolutions.filter((r, i) => i > 0);
