@@ -91,6 +91,11 @@ const Api = {
     },
     textSearch: function(url, startPosition, maxRecords, text) {
         return Api.getRecords(url, startPosition, maxRecords, text);
+    },
+    reset: () => {
+        Object.keys(capabilitiesCache).forEach(key => {
+            delete capabilitiesCache[key];
+        });
     }
 };
 
