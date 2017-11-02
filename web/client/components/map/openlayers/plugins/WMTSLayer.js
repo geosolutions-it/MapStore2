@@ -88,7 +88,7 @@ Layers.registerType('wmts', {
                 tileGrid: new ol.tilegrid.WMTS({
                     origin: [
                         origin.lng || origin.x || options.originX || -20037508.3428,
-                        origin.lat || origin.y || options.originX || 20037508.3428
+                        origin.lat || origin.y || options.originY || 20037508.3428
                     ],
                     extent: extent,
                     resolutions: paramResolutions,
