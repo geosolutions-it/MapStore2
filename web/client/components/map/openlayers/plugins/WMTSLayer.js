@@ -79,6 +79,7 @@ Layers.registerType('wmts', {
         return new ol.layer.Tile({
             opacity: options.opacity !== undefined ? options.opacity : 1,
             zIndex: options.zIndex,
+            extent: extent,
             source: new ol.source.WMTS(assign({
                 urls: urls,
                 layer: options.name,
