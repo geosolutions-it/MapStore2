@@ -82,8 +82,8 @@ var WMTS = L.TileLayer.extend({
         const X0 = topLeftCorner.lng || topLeftCorner.x;
         const Y0 = topLeftCorner.lat || topLeftCorner.y;
 
-        const tilecol = Math.floor((nw.x - X0) / tilewidth);
-        const tilerow = -Math.floor((nw.y - Y0) / tilewidth);
+        const tilecol = Math.round((nw.x - X0) / tilewidth);
+        const tilerow = -Math.round((nw.y - Y0) / tilewidth);
 
         const matrixRanges = matrix.data && matrix.data.MatrixWidth && matrix.data.MatrixHeight && {
             cols: {
