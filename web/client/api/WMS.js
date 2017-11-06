@@ -217,6 +217,11 @@ const Api = {
             };
         }
         return catalogBounds;
+    },
+    reset: () => {
+        Object.keys(capabilitiesCache).forEach(key => {
+            delete capabilitiesCache[key];
+        });
     }
 };
 

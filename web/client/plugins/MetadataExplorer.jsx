@@ -20,7 +20,6 @@ const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalog
     addLayer, addLayerError, resetCatalog, focusServicesList} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
 const {currentLocaleSelector} = require("../selectors/locale");
-const {newCatalogServiceAdded, deleteCatalogServiceEpic, closeFeatureGridEpic} = require("../epics/catalog");
 const {setControlProperty, toggleControl} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
@@ -160,6 +159,12 @@ const MetadataExplorerPlugin = connect((state) => ({
     onError: addLayerError
 })(MetadataExplorerComponent);
 
+const API = {
+    csw: require('../api/CSW'),
+    wms: require('../api/WMS'),
+    wmts: require('../api/WMTS')
+};
+
 module.exports = {
     MetadataExplorerPlugin: assign(MetadataExplorerPlugin, {
         Toolbar: {
@@ -185,5 +190,5 @@ module.exports = {
         }
     }),
     reducers: {catalog: require('../reducers/catalog')},
-    epics: {newCatalogServiceAdded, deleteCatalogServiceEpic, closeFeatureGridEpic}
+    epics: require("../epics/catalog")(API)
 };

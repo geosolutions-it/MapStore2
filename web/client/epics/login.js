@@ -8,6 +8,7 @@
 const {refreshAccessToken, sessionValid, logout, LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
 const {loadMapConfig, configureError} = require('../actions/config');
 const {mapIdSelector} = require('../selectors/map');
+const {initCatalog} = require('../actions/catalog');
 const {pathnameSelector} = require('../selectors/routing');
 const ConfigUtils = require('../utils/ConfigUtils');
 const AuthenticationAPI = require('../api/GeoStoreDAO');
@@ -51,6 +52,12 @@ const reloadMapConfig = (action$, store) =>
         return Rx.Observable.of(configureError(e));
     });
 
+const initCatalogOnLoginOutEpic = (action$) =>
+    action$.ofType(LOGIN_SUCCESS, LOGOUT)
+    .switchMap(() => {
+        return Rx.Observable.of(initCatalog());
+    });
+
 /**
  * Epics for login functionality
  * @name epics.login
@@ -58,5 +65,6 @@ const reloadMapConfig = (action$, store) =>
  */
 module.exports = {
     refreshTokenEpic,
-    reloadMapConfig
+    reloadMapConfig,
+    initCatalogOnLoginOutEpic
 };

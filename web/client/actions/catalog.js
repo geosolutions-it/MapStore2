@@ -35,6 +35,7 @@ const DELETE_CATALOG_SERVICE = 'CATALOG:DELETE_CATALOG_SERVICE';
 const ADD_SERVICE = 'CATALOG:ADD_SERVICE';
 const DELETE_SERVICE = 'CATALOG:DELETE_SERVICE';
 const SAVING_SERVICE = 'CATALOG:SAVING_SERVICE';
+const CATALOG_INITED = 'CATALOG:INIT';
 
 function recordsLoaded(options, result) {
     return {
@@ -133,6 +134,22 @@ function recordsLoadError(e) {
         error: e
     };
 }
+
+function catalogInited() {
+    return {
+        type: CATALOG_INITED
+    };
+}
+
+function initCatalog(apis = API) {
+    return (dispatch) => {
+        Object.keys(apis).forEach((name) => {
+            apis[name].reset();
+        });
+        dispatch(catalogInited());
+    };
+}
+
 function getRecords(format, url, startPosition = 1, maxRecords, filter, options) {
     return (dispatch /* , getState */) => {
         // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
@@ -231,6 +248,7 @@ module.exports = {
     ADD_CATALOG_SERVICE, addCatalogService,
     DELETE_CATALOG_SERVICE, deleteCatalogService,
     DELETE_SERVICE, deleteService,
+    CATALOG_INITED, initCatalog,
     getRecords,
     textSearch,
     addLayer: addLayerAndDescribe
