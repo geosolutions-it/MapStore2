@@ -83,7 +83,7 @@ class General extends React.Component {
                         disabled
                         onChange={this.updateEntry.bind(null, "name")}/>
                 </FormGroup>
-                {this.props.element.type === "wms" ? (<FormGroup>
+                <FormGroup>
                     <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
                     {this.props.element.capabilitiesLoading ? <Spinner spinnerName="circle"/> :
                     <FormControl
@@ -93,7 +93,7 @@ class General extends React.Component {
                         componentClass="textarea"
                         style={{ resize: "vertical", minHeight: "33px" }}
                         onChange={this.updateEntry.bind(null, "description")}/>}
-                </FormGroup>) : null}
+                </FormGroup>
                 { this.props.nodeType === 'layers' ?
                 <div>
                     <label key="group-label" className="control-label"><Message msgId="layerProperties.group" /></label>
