@@ -18,17 +18,20 @@ const {insertWidget, onEditorChange, setPage} = require('../actions/widgets');
 const PropTypes = require('prop-types');
 const builderConfiguration = require('../components/widgets/enhancers/builderConfiguration');
 const BorderLayout = require('../components/layout/BorderLayout');
+
+const wizardSelector = createSelector(
+    getSelectedLayer,
+    getEditingWidget,
+    getEditorSettings,
+    (layer, editorData, settings) => ({
+        layer: editorData.layer || layer,
+        editorData,
+        settings
+    })
+);
 const WidgetsBuilder = connect(
-    createSelector(
-        getSelectedLayer,
-        getEditingWidget,
-        getEditorSettings,
-        (layer, editorData, settings) => ({
-            layer: editorData.layer || layer,
-            editorData,
-            settings
-        })
-    ), {
+    wizardSelector,
+     {
         insertWidget,
         setPage,
         onEditorChange
@@ -56,7 +59,7 @@ class SideBarComponent extends React.Component {
          style: PropTypes.object
      };
      static defaultProps = {
-         id: "widgets-plugin",
+         id: "widgets-builder-plugin",
          enabled: false,
          dockSize: 500,
          limitDockHeight: true,
@@ -84,7 +87,7 @@ class SideBarComponent extends React.Component {
             isVisible={this.props.enabled}
             onSizeChange={this.limitDockHeight}
             fluid={this.props.fluid}
-            dimStyle={{ background: 'rgba(0, 0, 100, 0.2)' }}
+            dockStyle={{ background: "white" /* TODO set it to undefined when you can inject a class inside Dock, to use theme */}}
         >
             <BorderLayout
                 header={<BuilderHeader />}

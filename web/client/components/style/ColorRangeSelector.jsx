@@ -20,21 +20,27 @@ class ColorRangeSelector extends React.Component {
         onChange: () => {},
         items: [{
             name: 'global.colors.blue',
+            schema: 'sequencial',
             options: {base: 190, range: 20}
         }, {
             name: 'global.colors.red',
+            schema: 'sequencial',
             options: {base: 10, range: 4}
         }, {
             name: 'global.colors.green',
+            schema: 'sequencial',
             options: {base: 180, range: 4}
         }, {
             name: 'global.colors.brown',
+            schema: 'sequencial',
             options: {base: 30, range: 4}
         }, {
             name: 'global.colors.purple',
+            schema: 'sequencial',
             options: {base: 275, range: 4}
         }, {
             name: 'global.colors.random',
+            schema: 'qualitative',
             options: {base: 180, range: 360, options: {base: 180, range: 360, s: 0.67, v: 0.67}}
         }]
     };
@@ -60,7 +66,6 @@ class ColorRangeSelector extends React.Component {
             <DropdownList
                 className="color-range-selector"
                 data={this.getItems()}
-                groupBy="schema"
                 valueComponent={ColorRampItem}
                 itemComponent={ColorRampItem}
                 value={this.getValue()}

@@ -112,7 +112,7 @@
         "global": {
             "colors": {
                 "red": "{number, plural, =0 {Red} =1 {Red} other {Reds}}",
-                "blue": "{number, plural, =0 {Blue} =1 {Blue} other {Reds}}",
+                "blue": "{number, plural, =0 {Blue} =1 {Blue} other {Blues}}",
                 "green": "{number, plural, =0 {green} =1 {Green} other {Greens}}",
                 "brown": "{number, plural, =0 {Brown} =1 {Brown} other {Browns}}",
                 "purple": "{number, plural, =0 {Purple} =1 {Purple} other {Purples}}",
