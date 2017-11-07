@@ -16,13 +16,15 @@ const {getSelectedLayer} = require('../selectors/layers');
 const {setControlProperty} = require('../actions/controls');
 const {insertWidget, onEditorChange, setPage} = require('../actions/widgets');
 const PropTypes = require('prop-types');
+const builderConfiguration = require('../components/widgets/enhancers/builderConfiguration');
+const BorderLayout = require('../components/layout/BorderLayout');
 const WidgetsBuilder = connect(
     createSelector(
         getSelectedLayer,
         getEditingWidget,
         getEditorSettings,
         (layer, editorData, settings) => ({
-            layer,
+            layer: editorData.layer || layer,
             editorData,
             settings
         })
@@ -31,7 +33,7 @@ const WidgetsBuilder = connect(
         setPage,
         onEditorChange
     }
-)(require('../components/widgets/builder/WidgetsBuilder'));
+)(builderConfiguration(require('../components/widgets/builder/WidgetsBuilder')));
 
 
 const BuilderHeader = connect(() => {}, {
@@ -84,8 +86,12 @@ class SideBarComponent extends React.Component {
             fluid={this.props.fluid}
             dimStyle={{ background: 'rgba(0, 0, 100, 0.2)' }}
         >
-            <BuilderHeader />
-            {this.props.enabled ? <WidgetsBuilder /> : null}
+            <BorderLayout
+                header={<BuilderHeader />}
+                >
+                {this.props.enabled ? <WidgetsBuilder /> : null}
+            </BorderLayout>
+
         </Dock>);
 
     }
@@ -96,9 +102,9 @@ const Plugin = connect(
         widgetBulderSelector,
         (enabled) => ({
             enabled
-    })),{
-        onMount: () => setControlProperty("wfsdownload", "available", true),
-        onUnmount: () => setControlProperty("wfsdownload", "available", false),
+    })), {
+        onMount: () => setControlProperty("widgetBulder", "available", true),
+        onUnmount: () => setControlProperty("widgetBulder", "available", false)
     }
 
 )(SideBarComponent);

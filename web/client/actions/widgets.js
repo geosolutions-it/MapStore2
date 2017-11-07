@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+const uuid = require('uuid/v1');
 const INSERT = "WIDGETS:INSERT";
 const NEW = "WIGETS:NEW";
 const EDIT = "WIDGETS:EDIT";
@@ -13,8 +13,11 @@ const EDIT_NEW = "WIGETS:EDIT_NEW";
 const EDITOR_CHANGE = "WIDGETS:EDITOR_CHANGE";
 const EDITOR_SETTING_CHANGE = "WIGETS:EDITOR_SETTING_CHANGE";
 const UPDATE = "WIDGETS:UPDATE";
+const CHANGE_LAYOUT = "WIDGETS:CHANGE_LAYOUT";
 const DELETE = "WIDGETS:DELETE";
-const uuid = require('uuid/v1');
+
+const DEFAULT_TARGET = "floating";
+
 
 /**
  * Intent to create a new Widgets
@@ -32,7 +35,7 @@ const createWidget = (widget) => ({
  * @param {string} [target=floating] the target container of the widget
  * @return {object}        action with type `WIDGETS:INSERT`, the widget and the target
  */
-const insertWidget = (widget, target = "floating") => ({
+const insertWidget = (widget, target = DEFAULT_TARGET) => ({
     type: INSERT,
     target,
     id: uuid(),
@@ -45,7 +48,7 @@ const insertWidget = (widget, target = "floating") => ({
  * @param {string} [target=floating] the target container of the widget
  * @return {object}        action with type `WIDGETS:UPDATE`, the widget and the target
  */
-const updateWidget = (widget, target = "floating") => ({
+const updateWidget = (widget, target = DEFAULT_TARGET) => ({
     type: UPDATE,
     target,
     widget
@@ -56,11 +59,22 @@ const updateWidget = (widget, target = "floating") => ({
  * @param {string} [target=floating] the container of the widget
  * @return {object} action with type `WIDGETS:DELETE`, the widget and the target
  */
-const deleteWidget = (widget, target = "floating") => ({
+const deleteWidget = (widget, target = DEFAULT_TARGET) => ({
     type: DELETE,
     target,
     widget
 });
+
+
+/**
+ * Change the layout of the widgets view
+ * @param  {object} layout layout object
+ * @param  {object} cols   the columns of the layout
+ * @param  {string} target layout target
+ * @return {object}        action of type `CHANGE_LAYOUT`
+ */
+const changeLayout = (layout, cols, target = DEFAULT_TARGET) => ({ type: CHANGE_LAYOUT, cols, layout, target});
+
 
 /**
  * Edit an existing widget
@@ -119,14 +133,17 @@ module.exports = {
     INSERT,
     UPDATE,
     DELETE,
+    CHANGE_LAYOUT,
     EDIT,
     EDIT_NEW,
     EDITOR_CHANGE,
     EDITOR_SETTING_CHANGE,
+    DEFAULT_TARGET,
     createWidget,
     insertWidget,
     updateWidget,
     deleteWidget,
+    changeLayout,
     editWidget,
     editNewWidget,
     onEditorChange,

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {EDIT_NEW, INSERT, EDIT, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE} = require('../actions/widgets');
+const {EDIT_NEW, INSERT, EDIT, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT} = require('../actions/widgets');
 const set = require('lodash/fp/set');
 const {arrayUpsert, arrayDelete} = require('../utils/ImmutableUtils');
 
@@ -70,6 +70,9 @@ function widgets(state = emptyState, action) {
             return arrayDelete(`containers[${action.target}].widgets`, {
                 id: action.widget.id
             }, state);
+        case CHANGE_LAYOUT: {
+            return set(`containers[${action.target}].layout`, action.layout, state);
+        }
         default:
             return state;
     }

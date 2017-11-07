@@ -22,39 +22,41 @@ const sampleProps = {
     popup: false
 };
 const StepHeader = require('../../../../misc/wizard/StepHeader');
-module.exports = ({onSelect = () => {}, onNextPage = () => {}} = {}) => (<Row>
-    <StepHeader key="title" title={<Message msgId="widgets.selectChartType.title" />} />
-    <SideGrid key="content" onItemClick={i => {onSelect(i.type); onNextPage(); }} items={[{
-        title: 'Bar chart',
-        icon: 'icon',
-        desc: 'desc',
-        caption: 'caption',
-        type: "bar",
-        preview: <SimpleChart {...sampleProps} type="bar"/>
-    }, {
-        title: 'Pie chart',
-        icon: 'icon',
-        desc: 'desc',
-        caption: 'caption',
-        type: "pie",
-        preview: <SimpleChart {...sampleProps} type="pie"/>
-    }, {
-        title: 'Line chart',
-        icon: 'icon',
-        desc: 'desc',
-        caption: 'caption',
-        type: "line",
-        preview: <SimpleChart {...sampleProps} type="line"/>
+
+const ITEMS = [{
+    title: 'Bar chart',
+    icon: 'icon',
+    desc: 'desc',
+    caption: 'caption',
+    type: "bar",
+    preview: <SimpleChart {...sampleProps} type="bar"/>
 }, {
-        title: 'Gauge',
-        icon: 'icon',
-        desc: 'desc',
-        caption: 'caption',
-        type: "gauge",
-        preview: <SimpleChart {...sampleProps} type="gauge"/>
-    }
+    title: 'Pie chart',
+    icon: 'icon',
+    desc: 'desc',
+    caption: 'caption',
+    type: "pie",
+    preview: <SimpleChart {...sampleProps} type="pie"/>
+}, {
+    title: 'Line chart',
+    icon: 'icon',
+    desc: 'desc',
+    caption: 'caption',
+    type: "line",
+    preview: <SimpleChart {...sampleProps} type="line"/>
+}, {
+    title: 'Gauge',
+    icon: 'icon',
+    desc: 'desc',
+    caption: 'caption',
+    type: "gauge",
+    preview: <SimpleChart {...sampleProps} type="gauge"/>
+}
 
 
-]} />
+];
+module.exports = ({onSelect = () => {}, onNextPage = () => {}} = {}, types = []) => (<Row>
+    <StepHeader key="title" title={<Message msgId="widgets.selectChartType.title" />} />
+    <SideGrid key="content" onItemClick={i => {onSelect(i.type); onNextPage(); }} items={types && ITEMS} />
 </Row>
     );

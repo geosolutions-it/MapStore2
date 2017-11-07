@@ -8,6 +8,7 @@
 const {compose, withProps} = require('recompose');
 const wpsAggregate = require('../../../observables/wps/aggregate');
 const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
+const Rx = require('rxjs');
 const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [], AggregationAttribute} = {}) =>
     AggregationResults.map( (res) => ({
         ...GroupByAttributes.reduce( (a, p, i) => ({...a, [p]: res[i]}), {}),
@@ -38,7 +39,12 @@ const dataStreamFactory = ($props) =>
                     data: wpsAggregateToChartData(response.data),
                     series: [{dataKey: response.data.AggregationAttribute}],
                     xAxis: {dataKey: response.data.GroupByAttributes[0]}
-                })).startWith({loading: true})
+                }))
+                .catch(() => Rx.Observable.of({
+                    loading: false,
+                    data: []
+                }))
+                .startWith({loading: true})
         );
 module.exports = compose(
     withProps( () => ({

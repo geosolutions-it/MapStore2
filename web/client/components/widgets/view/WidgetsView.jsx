@@ -9,7 +9,7 @@ const React = require('react');
 const enhanceChartWidget = require('../enhancers/chartWidget');
 const wpsChart = require('../enhancers/wpsChart');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
-
+const {pure} = require('recompose');
 const {Responsive, WidthProvider: widthProvider} = require('react-grid-layout');
 const ResponsiveReactGridLayout = widthProvider(Responsive);
 
@@ -20,8 +20,10 @@ const ChartWidget = dependenciesToFilter(wpsChart(enhanceChartWidget(require('..
 // const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
 // const StreamWidget = propsStreamFactory((props) => <ChartWidget {...props} />);
 
-module.exports = ({widgets=[], deleteWidget = () => {}, editWidget = () => {}, dependencies}={}) =>
+module.exports = pure(({widgets=[], layout, deleteWidget = () => {}, editWidget = () => {}, onLayoutChange = () => {}, dependencies}={}) =>
     (<ResponsiveReactGridLayout
+        onLayoutChange={onLayoutChange}
+        layouts={layout ? JSON.parse(JSON.stringify(layout)) : undefined}
         style={{left: 350, bottom: 50, height: 'calc(100% - 100px)', width: 'calc(100% - 400px)', position: 'absolute', zIndex: 50}}
         containerPadding={[10, 10]}
         className="widget-card-on-map"
@@ -30,7 +32,7 @@ module.exports = ({widgets=[], deleteWidget = () => {}, editWidget = () => {}, d
         compactType={'vertical'}
         verticalCompact={false}
         breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-        cols={{lg: 6, md: 4, sm: 2, xs: 1, xxs: 1}}>
+        cols={{lg: 6, md: 6, sm: 1, xs: 1, xxs: 1}}>
 
      {widgets.map((w, i) => {
          return (<div key={'wg' + i} className="widget-card-on-map" >
@@ -40,4 +42,4 @@ module.exports = ({widgets=[], deleteWidget = () => {}, editWidget = () => {}, d
                   onEdit={() => editWidget(w)} />
          </div>);
      })}
-   </ResponsiveReactGridLayout>);
+ </ResponsiveReactGridLayout>));

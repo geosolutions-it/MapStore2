@@ -74,12 +74,15 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], aggreg
               <Message msgId={`widgets.colorRamp.${data.type}`} />
             </Col>
           <Col sm={6}>
-              <ColorRangeSelector value={data.autoColorOptions} onChange={v => onChange("autoColorOptions", v.options)}/>
+              <ColorRangeSelector
+                  value={data.autoColorOptions}
+                  samples={data.type === "pie" ? 5 : 1}
+                  onChange={v => onChange("autoColorOptions", v.options)}/>
           </Col>
         </FormGroup>
         <FormGroup controlId="mapSync" className="mapstore-block-width">
             <Col componentClass={ControlLabel} sm={6}>
-              <Message msgId={`widgets.mapSync.${data.type}`} />
+              <Message msgId={`widgets.mapSync`} />
             </Col>
           <Col sm={6}>
               <SwitchButton

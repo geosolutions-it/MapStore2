@@ -103,12 +103,22 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "confirmTitle": "Do you confirm?",
-        "pageInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {Items {start}-{end} of {total}}}",
+        "pageInfo": "{numUsers, plural, =0 {0 users} one {1 user} other {# users}}",
         "loading": "Loading...",
         "group": "Group",
         "groups": "Groups",
         "permission": "Permission",
         "permissions": "Permissions",
+        "global": {
+            "colors": {
+                "red": "{number, plural, =0 {Red} =1 {Red} other {Reds}}",
+                "blue": "{number, plural, =0 {Blue} =1 {Blue} other {Reds}}",
+                "green": "{number, plural, =0 {green} =1 {Green} other {Greens}}",
+                "brown": "{number, plural, =0 {Brown} =1 {Brown} other {Browns}}",
+                "purple": "{number, plural, =0 {Purple} =1 {Purple} other {Purples}}",
+                "random": "{number, plural, =0 {Random} =1 {Random} other {Random}}"
+            }
+        },
         "home":{
             "open": "Open",
             "description": "MapStore 2 has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.<br/>Visit the <a href=\"/mapstore/docs/\">home page</a> for more details.",
@@ -956,39 +966,53 @@
             "builder": {
                 "header": {
                     "title": "Widget"
+                },
+                "errors": {
+                    "noWidgetsAvailableTitle": "No Widgets available",
+                    "noWidgetsAvailableDescription": "<p>You can't create any widgets for the selected layer. This is probably because the layer is not suitable for the available widgets or the server doesn't expose all the needed services or information to generate widget. Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li>gs:aggregate process is not available</li></ul> )<p>"
+                }
+            },
+            "widget": {
+                "menu": {
+                    "showChartData": "Show chart data",
+                    "edit": "Edit",
+                    "delete": "Delete",
+                    "downloadData": "Download Data",
+                    "exportImage": "Export Image"
                 }
             },
             "chartOptionsTitle": "Chart Data",
             "widgetOptionsTitle": "Widget Info",
             "groupByAttributes": {
-                "line": "X Attribute (Group By)",
+                "line": "X Attribute",
                 "pie": "Group By",
-                "bar": "X Attribute (Group By)"
+                "bar": "X Attribute",
+                "gauge": "Group By"
             },
             "aggregationAttribute": {
-                "line": "Y Attribute (Aggregated)",
-                "pie": "Attribute",
-                "bar": "Y Attribute (Aggregated)"
+                "line": "Y Attribute",
+                "pie": "Value",
+                "bar": "Y Attribute",
+                "gauge": "Value"
             },
             "aggregateFunction": {
                 "line": "Operation",
                 "pie": "Operation",
-                "bar": "Operation"
+                "bar": "Operation",
+                "gauge": "Operation"
             },
             "colorRamp": {
                 "line": "Color",
                 "pie": "Color Ramp",
-                "bar": "Color"
+                "bar": "Color",
+                "gauge": "Color"
             },
-            "mapSync": {
-                "line": "Live Filter by viewport",
-                "pie": "Live Filter by viewport",
-                "bar": "Live Filter by viewport"
-            },
+            "mapSync": "Live Filter by viewport",
             "displayLegend": {
                 "line": "Display Legend",
                 "pie": "Display Legend",
-                "bar": "Display Legend"
+                "bar": "Display Legend",
+                "gauge": "Display labels"
             }
 
         },

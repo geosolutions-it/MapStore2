@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
+const Message = require('../../I18N/Message');
 const TableView = require('./TableView');
 const ChartView = require('./ChartView');
 const InfoPopover = require('./InfoPopover');
@@ -23,7 +23,7 @@ const renderHeaderLeftTopItem = ({title, description, showTable, toggleTableView
     if (showTable) {
         return <Glyphicon onClick={() => {toggleTableView(); }} glyph="arrow-left pull-left"/>;
     }
-    return <InfoPopover placement="top" title={title} text={description}/>;
+    return title || description ? <InfoPopover placement="top" title={title} text={description}/> : null;
 };
 
 
@@ -49,11 +49,12 @@ module.exports = ({
                         <span className="mapstore-widget-options">
                             {showTable
                                 ? null : <ButtonToolbar>
-                                <DropdownButton pullRight bsStyle="default" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
-                                    <MenuItem onClick={() => toggleTableView()} eventKey="1"><Glyphicon glyph="features-grid"/>&nbsp;Show chart data</MenuItem>
-                                    <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash"/>&nbsp;Delete</MenuItem>
-                                    <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil"/>&nbsp;Edit</MenuItem>
-                                    <MenuItem eventKey="4"><Glyphicon glyph="download"/>&nbsp;Download data</MenuItem>
+                                <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
+                                    <MenuItem onClick={() => toggleTableView()} eventKey="1"><Glyphicon glyph="features-grid"/>&nbsp;<Message msgId="widgets.widget.menu.showChartData" /></MenuItem>
+                                    <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>
+                                    <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash"/>&nbsp;<Message msgId="widgets.widget.menu.delete" /></MenuItem>
+                                    <MenuItem eventKey="4"><Glyphicon glyph="download"/>&nbsp;<Message msgId="widgets.widget.menu.downloadData" /></MenuItem>
+                                    <MenuItem eventKey="4"><Glyphicon glyph="download"/>&nbsp;<Message msgId="widgets.widget.menu.exportImage" /></MenuItem>
                                 </DropdownButton>
                             </ButtonToolbar>}
                         </span>

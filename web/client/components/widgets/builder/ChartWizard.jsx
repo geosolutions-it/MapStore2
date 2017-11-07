@@ -8,6 +8,7 @@
 const React = require('react');
 const {wizardHanlders} = require('../../misc/wizard/enhancers');
 const loadingState = require('../../misc/enhancers/loadingState')(({loading, data}) => loading || !data, {width: 500, height: 200});
+
 const Wizard = wizardHanlders(require('../../misc/wizard/WizardContainer'));
 const ChartType = require('./wizard/chart/ChartType');
 const wfsChartOptions = require('./wizard/chart/wfsChartOptions');
@@ -45,7 +46,7 @@ const renderPreview = ({data = {}, layer}) => isChartOptionsValid(data.options)
         legend={data.legend} />);
 
 
-module.exports = ({onChange = () => {}, onFinish = () => {}, setPage= () => {}, data = {}, layer ={}, step=0}) =>
+module.exports = ({onChange = () => {}, onFinish = () => {}, setPage= () => {}, data = {}, layer ={}, step=0, types, featureTypeProperties}) =>
     (<Wizard
         step={step}
         setPage={setPage}
@@ -53,10 +54,13 @@ module.exports = ({onChange = () => {}, onFinish = () => {}, setPage= () => {}, 
             onFinish({layer: data.layer || layer, url: layer.url, ...data});
         }}
         isStepValid={ n => n === 1 ? isChartOptionsValid(data.options) : true} skipButtonsOnSteps={[0]}>
-        <ChartType onSelect={(i) => {
-            onChange("type", i);
-        }}/>
+        <ChartType
+            onSelect={ i => {
+                onChange("type", i);
+            }}/>
     <ChartOptions
+        featureTypeProperties={featureTypeProperties}
+        types={types}
         data={data}
         onChange={onChange}
         layer={data.layer || layer}

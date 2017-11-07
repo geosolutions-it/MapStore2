@@ -10,14 +10,18 @@ const React = require('react');
 const { Sector, Cell, PieChart, Pie, Tooltip} = require('recharts');
 const {convertToNameValue} = require('./polar');
 const calculateCellHeight = ({customCellHeight, height, rows}) => customCellHeight || ( height - 20 ) / rows;
-const calculateCells = ({width, height, data, customCellHeight}) => {
-    // try with a square NxN
-    let cols = Math.floor(Math.sqrt(data.length));
-    // if data is less calculated cells, use full width, with a max of 20 charts per row
-    cols = Math.min(cols, data.length, 20);
-    const cellWidth = (width / cols);
-    const rows = Math.ceil((data.length) / cols);
-    const cellHeight = calculateCellHeight({customCellHeight, height, rows});
+const calculateCellWidth = ({width, cols}) => width / cols;
+const calculateRows = ({data, cols}) => Math.ceil((data.length) / cols);
+const adjustCols = ({cols, rows, cellWidth, cellHeight, height, width, data = []}) => {
+    if ( 2 * cellHeight < cellWidth) {
+        const newCols = Math.min(data.length, Math.ceil(data.length / (height / cellWidth * 2)));
+        return {
+            cols: newCols,
+            rows: calculateRows({data, cols: newCols}),
+            cellWidth: calculateCellWidth({width, cols: newCols}),
+            cellHeight: calculateCellHeight({height, rows: calculateRows({data, cols: newCols})})
+        };
+    }
     return {
         cols,
         rows,
@@ -25,7 +29,25 @@ const calculateCells = ({width, height, data, customCellHeight}) => {
         cellHeight
     };
 };
-const GaugeChart = ({data, xAxis = {}, colorGenerator, series = [], width=500, height = 500, useActive=false, customCellHeight, maxValue, isAnimationActive}) => {
+const calculateCells = ({width, height, data = [], customCellHeight}) => {
+    // try with a square NxN
+    let cols = Math.floor(Math.sqrt(data.length));
+    // if data is less calculated cells, use full width, with a max of 20 charts per row
+    cols = Math.min(cols, data.length, 20);
+    const cellWidth = calculateCellWidth({width, cols});
+    const rows = calculateRows({data, cols});
+    const cellHeight = calculateCellHeight({customCellHeight, height, rows});
+    return adjustCols({
+        data,
+        height,
+        width,
+        cols,
+        rows,
+        cellWidth,
+        cellHeight
+    });
+};
+const GaugeChart = ({data, xAxis = {}, colorGenerator, series = [], width=500, height = 500, useActive=false, customCellHeight, tooltip, legend, maxValue, isAnimationActive}) => {
     const seriesArray = Array.isArray(series) ? series : [series];
     const {cols, rows, cellWidth, cellHeight} = calculateCells({width, height, data, customCellHeight});
     const centers = data.map( (e, i) => ({
@@ -49,7 +71,12 @@ const GaugeChart = ({data, xAxis = {}, colorGenerator, series = [], width=500, h
     }];
     return (
         <PieChart width={cellWidth * cols} height={cellHeight * rows + 20}>
-            <Tooltip content={({payload, label}) => <div>{`${label || payload && payload[0] && payload[0].name || ""} : ${payload && payload[0] && (payload[0].realValue || payload[0].value)}`}</div>}/>
+            {tooltip
+                ? <Tooltip content={({payload, label}) =>
+                    (<div style={{backgroundColor: "#FFF", padding: 5, border: "1px solid #CCCCCC" }}>
+                        {`${label || payload && payload[0] && payload[0].name || ""} : ${payload && payload[0] && (payload[0].realValue || payload[0].value)}`}
+                    </div>)}/>
+                : null}
             {
             convertToNameValue({name: xAxis && xAxis.dataKey || serie.name, value: serie.dataKey || serie.value}, data).map((d, i) => {
                 const pieW = width / cols;
@@ -79,10 +106,12 @@ const GaugeChart = ({data, xAxis = {}, colorGenerator, series = [], width=500, h
                             <circle cx={cx} cy={cy} r={pieW * 0.05} fill={COLORS[1]} stroke="none"/>
                             <path d={`M${cx},${cy}L${mx},${my}`} strokeWidth={pieW * 0.06} stroke="#999999" strokeLinecap="round"/>
                             <path d={`M${cx},${cy}L${mx},${my}`} strokeWidth={pieW * 0.05} stroke={COLORS[1]} fill={COLORS[1]} strokeLinecap="round"/>
-                            <text textAnchor={"middle"} width={pieW} x={cx} y={cy - outerRadius * 1.5} >{(d.value).toFixed(2)}</text>
-                            <text style={{
+                            {legend ? <text textAnchor={"middle"} width={pieW} x={cx} y={cy - outerRadius * 1.5} >{(d.value).toFixed(2)}</text> : null}
+                            {legend
+                                ? (<text style={{
                                     fill: "#000000", stroke: "#000000", fontSize: pieW * 0.1
-                                }} textAnchor={"middle"} width={pieW} x={cx} y={cy} >{d.name}</text>
+                                }} textAnchor={"middle"} width={pieW} x={cx} y={cy} >{d.name}</text>)
+                                : null}
                         </g>
                     );
                 };
@@ -124,7 +153,7 @@ const GaugeChart = ({data, xAxis = {}, colorGenerator, series = [], width=500, h
                     isAnimationActive={isAnimationActive}
                     activeIndex={activeSectorIndex}
                     activeShape={useActive && ActiveSectorMark}
-                    data={colorData}
+                    data={colorData.map( cd => ({realValue: chartValue, name: d.name, ...cd}))}
                     fill="#8884d8"
                     { ...pieRadius }
                     { ...pieProps }

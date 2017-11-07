@@ -10,6 +10,8 @@
 const axios = require('../libs/ajax');
 const urlUtil = require('url');
 const Rx = require('rxjs');
+const {interceptOGCError} = require('../utils/ObservableUtils');
+
 const toDescribeURL = ({name, search = {}, url} = {}) => {
     const parsed = urlUtil.parse(search.url || url, true);
     return urlUtil.format(
@@ -30,5 +32,5 @@ const toDescribeURL = ({name, search = {}, url} = {}) => {
 module.exports = {
     describeFeatureType: ({layer}) =>
         Rx.Observable.defer(() =>
-            axios.get(toDescribeURL(layer)))
+            axios.get(toDescribeURL(layer))).let(interceptOGCError)
 };

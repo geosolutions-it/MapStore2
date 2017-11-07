@@ -6,18 +6,10 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const {compose, defaultProps, withProps} = require('recompose');
-const propsStreamFactory = require('../../../../misc/enhancers/propsStreamFactory');
+const {compose, withProps} = require('recompose');
 
-const {get, find} = require('lodash');
-const {describeFeatureType} = require('../../../../../observables/wfs');
-const dataStreamFactory = ($props, {layer}) =>
-    describeFeatureType({layer})
-        .map((response = {}) => ({
-              isLoading: false,
-              featureTypeProperties: get(response, "data.featureTypes[0].properties") || []
-        })
-    ).startWith({isLoading: true});
+const {find} = require('lodash');
+
 const propsToOptions = props => props.filter(({type} = {}) => type.indexOf("gml:") !== 0)
 .map( ({name} = {}) => ({label: name, value: name}));
 
@@ -36,10 +28,6 @@ const getAllowedAggregationOptions = (propertyName, featureTypeProperties = []) 
 };
 
 module.exports = compose(
-  defaultProps({
-      dataStreamFactory
-  }),
-  propsStreamFactory,
   withProps(({featureTypeProperties = [], data = {}} = {}) => ({
       options: propsToOptions(featureTypeProperties),
       aggregationOptions: getAllowedAggregationOptions(data.options && data.options.aggregationAttribute, featureTypeProperties)

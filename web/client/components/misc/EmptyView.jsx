@@ -36,7 +36,7 @@ module.exports = ({
             <div key="main-view" className="empty-state-main-view" style={mainViewStyle}>
                 {glyph ? <div key="glyph" className="empty-state-image"><FullWidthIcon tooltip={tooltip} glyph={glyph} /></div> : null}
                 {title ? <h1 key="title" >{title}</h1> : null}
-                {description ? <p key="description">{description}</p> : null}
+                {description ? <p key="description" className="empty-state-description">{description}</p> : null}
             </div>
             <div key="content" className="empty-state-content" style={contentStyle}>{content}</div>
         </div>);

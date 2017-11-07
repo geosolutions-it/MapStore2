@@ -3,31 +3,38 @@ const PropTypes = require('prop-types');
 const {head} = require('lodash');
 const ColorUtils = require('../../utils/ColorUtils');
 const ColorRampItem = require('./EqualIntervalComponents/ColorRampItem');
-const Combobox = require('react-widgets').Combobox;
+const DropdownList = require('react-widgets').DropdownList;
 class ColorRangeSelector extends React.Component {
 
     static propTypes = {
         value: PropTypes.object,
+        samples: PropTypes.number,
         onChange: PropTypes.funct,
         items: PropTypes.array
     };
-
+    static contextTypes = {
+        messages: PropTypes.object
+    };
     static defaultProps = {
+        samples: 5,
         onChange: () => {},
-        items: [ {
-            name: 'Blues',
+        items: [{
+            name: 'global.colors.blue',
             options: {base: 190, range: 20}
         }, {
-            name: 'Reds',
+            name: 'global.colors.red',
             options: {base: 10, range: 4}
         }, {
-            name: 'Browns',
+            name: 'global.colors.green',
+            options: {base: 180, range: 4}
+        }, {
+            name: 'global.colors.brown',
             options: {base: 30, range: 4}
         }, {
-            name: 'Purples',
+            name: 'global.colors.purple',
             options: {base: 275, range: 4}
         }, {
-            name: 'Random',
+            name: 'global.colors.random',
             options: {base: 180, range: 360, options: {base: 180, range: 360, s: 0.67, v: 0.67}}
         }]
     };
@@ -44,21 +51,23 @@ class ColorRangeSelector extends React.Component {
         return this.props.items.map(({options = {}, ...item}) => ({
             ...item,
             options,
-            ramp: ColorUtils.sameToneRangeColors(options.base, options.range, 6, options.options)
+            ramp: ColorUtils.sameToneRangeColors(options.base, options.range, this.props.samples, options.options)
         }));
     }
 
     render() {
-        return (<div className="mapstore-color-ramp-selector">
-            <Combobox data={this.getItems()}
+        return (
+            <DropdownList
+                className="color-range-selector"
+                data={this.getItems()}
                 groupBy="schema"
-                textField="name"
+                valueComponent={ColorRampItem}
                 itemComponent={ColorRampItem}
                 value={this.getValue()}
                 onChange={(ramp) => {
                     this.props.onChange(ramp);
                 }}/>
-        </div>);
+        );
     }
 }
 

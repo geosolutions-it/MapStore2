@@ -6,6 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 const React = require('react');
+
 const ChartWizard = require('./ChartWizard');
 module.exports = ({
         settings = {},
@@ -13,9 +14,13 @@ module.exports = ({
         onEditorChange = () => {},
         setPage = () => {},
         layer,
+        types,
+        featureTypeProperties,
         editorData = {}}
     ) =>
         (<ChartWizard
+            types={types}
+            featureTypeProperties={featureTypeProperties}
             step={settings.step}
             layer={layer}
             data={editorData}
