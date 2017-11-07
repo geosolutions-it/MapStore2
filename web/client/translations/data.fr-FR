@@ -703,7 +703,11 @@
             "placeholder": "Déposez vos fichiers ici ou cliquez sur pour sélectionner les shapefiles à importer. (Shapefiles doivent être contenus dans des archives zip)",
             "defaultStyle": "Style par défaut",
             "zoom": "Zoomer sur le fichier shape",
-            "error": {"select": "Sélectionner un ou plusieurs fichiers zip"},
+            "error": {
+                "select": "Sélectionner un ou plusieurs fichiers zip",
+                "addShape": "Impossible de charger le fichier de formes. Le fichier pourrait être endommagé ou pas généré correctement",
+                "addToMap": "Impossible de charger le fichier de formes sur la carte"
+            },
             "add": "Ajouter",
             "cancel": "Annuler",
             "success": " Import correct"

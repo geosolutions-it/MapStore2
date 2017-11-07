@@ -700,7 +700,11 @@
             "placeholder": "Ziehe deine Dateien hierher oder klicke Shapefile(s) die importiert werden sollen.(Shapefiles müssen in Zip-Archiven enthalten sein)",
             "defaultStyle": "Standardstil",
             "zoom": "Zoome auf Shapefiles",
-            "error": {"select": "Wähle ein oder mehrere Zip Archive"},
+            "error": {
+                "select": "Wähle ein oder mehrere Zip Archive",
+                "addShape": "Das Shapefile kann nicht geladen werden. Die Datei könnte beschädigt oder nicht ordnungsgemäß generiert werden",
+                "addToMap": "Das Shapefile kann nicht auf der Karte geladen werden"
+            },
             "add": "Hinzufügen",
             "cancel": "Abbrechen",
             "success": " erfolgreich importiert"

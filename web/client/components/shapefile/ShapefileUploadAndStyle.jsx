@@ -157,9 +157,9 @@ class ShapeFileUploadAndStyle extends React.Component {
             }, []);
             this.props.onShapeChoosen(ls);
             this.props.shapeLoading(false);
-        }).catch((e) => {
+        }).catch(() => {
             this.props.shapeLoading(false);
-            this.props.onShapeError(e.message || e);
+            this.props.onShapeError(<Message msgId="shapefile.error.addShape"/>);
         });
     };
 
@@ -196,9 +196,9 @@ class ShapeFileUploadAndStyle extends React.Component {
             }
             this.props.onShapeSuccess(this.props.layers[0].name + LocaleUtils.getMessageById(this.context.messages, "shapefile.success"));
             this.props.onLayerAdded(this.props.selected);
-        }).catch((e) => {
+        }).catch(() => {
             this.props.shapeLoading(false);
-            this.props.onShapeError(e.message || e);
+            this.props.onShapeError(<Message msgId="shapefile.error.addToMap"/>);
         });
     };
 }

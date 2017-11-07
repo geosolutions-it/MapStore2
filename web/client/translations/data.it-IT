@@ -700,7 +700,11 @@
             "placeholder": "Trascina qui i file o fai click per selezionare gli shapefile da importare.(gli shapefiles devono essere contenuti in archivi zip)",
             "defaultStyle": "Stile di default",
             "zoom": "Zoom sugli shapefile",
-            "error": {"select": "Seleziona Shapefile compresso"},
+            "error": {
+                "select": "Seleziona Shapefile compresso",
+                "addShape": "Non è stato possibile caricare lo shapefile. Il file potrebbe essere danneggiato o non generato correttamente",
+                "addToMap": "Lo shapefile non è stato caricato correttamente sulla mappa"
+            },
             "add": "Importa",
             "cancel": "Annulla",
             "success": " correttamente importato"
