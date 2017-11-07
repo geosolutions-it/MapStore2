@@ -40,9 +40,10 @@ describe('TOC SettingsModal', () => {
         expect(cmp).toExist();
         expect(cmp2).toExist();
         expect(textarea).toNotExist();
-        const cmp3 = ReactDOM.render(<SettingsModal element={{id: 'layer001', type: "wms", capabilitiesLoading: false}} settings={{expanded: true}}/>, document.getElementById("container"));
+        const cmp3 = ReactDOM.render(<SettingsModal element={{id: 'layer001', type: "wms", capabilitiesLoading: false, description: "description of layer"}} settings={{expanded: true}}/>, document.getElementById("container"));
         expect(cmp3).toExist();
         const textareaAfterLoading = document.getElementsByTagName('textarea')[0];
         expect(textareaAfterLoading).toExist();
+        expect(textareaAfterLoading.value).toBe("description of layer");
     });
 });
