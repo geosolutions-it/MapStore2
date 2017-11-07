@@ -35,6 +35,7 @@
             "title": "Título",
             "name": "Nombre",
             "group": "Grupo",
+            "description": "Descripción",
             "general": "General",
             "display": "Visualización",
             "style": "Estilo",

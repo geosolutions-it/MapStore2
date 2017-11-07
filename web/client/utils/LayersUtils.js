@@ -8,7 +8,10 @@
 
 const assign = require('object-assign');
 const {isString, isObject, isArray, head} = require('lodash');
-
+const REG_GEOSERVER_RULE = /\/[\w- ]*geoserver[\w- ]*\//;
+const findGeoServerName = ({url, regex = REG_GEOSERVER_RULE}) => {
+    return regex.test(url) && url.match(regex)[0] || null;
+};
 const getGroup = (groupId, groups) => {
     return head(groups.filter((subGroup) => isObject(subGroup) && subGroup.id === groupId));
 };
@@ -273,6 +276,7 @@ const LayersUtils = {
             name: layer.name,
             opacity: layer.opacity,
             provider: layer.provider,
+            description: layer.description,
             styles: layer.styles,
             style: layer.style,
             styleName: layer.styleName,
@@ -298,13 +302,18 @@ const LayersUtils = {
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },
+    REG_GEOSERVER_RULE,
+    findGeoServerName,
     getCapabilitiesUrl: (layer) => {
+        const matchedGeoServerName = findGeoServerName({url: layer.url});
         let reqUrl = layer.url;
-        let urlParts = reqUrl.split("/geoserver/");
-        if (urlParts.length === 2) {
-            let layerParts = layer.name.split(":");
-            if (layerParts.length === 2) {
-                reqUrl = urlParts[0] + "/geoserver/" + layerParts [0] + "/" + layerParts[1] + "/" + urlParts[1];
+        if (!!matchedGeoServerName) {
+            let urlParts = reqUrl.split(matchedGeoServerName);
+            if (urlParts.length === 2) {
+                let layerParts = layer.name.split(":");
+                if (layerParts.length === 2) {
+                    reqUrl = urlParts[0] + matchedGeoServerName + layerParts [0] + "/" + layerParts[1] + "/" + urlParts[1];
+                }
             }
         }
         return addBaseParams(reqUrl, layer.baseParams || {});
