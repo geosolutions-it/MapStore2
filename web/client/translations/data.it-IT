@@ -702,8 +702,8 @@
             "zoom": "Zoom sugli shapefile",
             "error": {
                 "select": "Seleziona Shapefile compresso",
-                "addShape": "Non è stato possibile caricare lo shapefile. Il file potrebbe essere danneggiato o non generato correttamente",
-                "addToMap": "Lo shapefile non è stato caricato correttamente sulla mappa"
+                "shapeFileParsingError": "Non è stato possibile caricare lo shapefile. Il file potrebbe essere danneggiato o non generato correttamente",
+                "genericLoadError": "Lo shapefile non è stato caricato correttamente sulla mappa"
             },
             "add": "Importa",
             "cancel": "Annulla",

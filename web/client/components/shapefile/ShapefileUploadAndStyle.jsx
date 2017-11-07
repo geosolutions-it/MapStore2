@@ -79,7 +79,7 @@ class ShapeFileUploadAndStyle extends React.Component {
 
     renderError = () => {
         return (<Row>
-                   <div style={{textAlign: "center"}} className="alert alert-danger">{this.props.error}</div>
+                   <div style={{textAlign: "center"}} className="alert alert-danger"><Message msgId={this.props.error}/></div>
                 </Row>);
     };
 
@@ -159,7 +159,7 @@ class ShapeFileUploadAndStyle extends React.Component {
             this.props.shapeLoading(false);
         }).catch(() => {
             this.props.shapeLoading(false);
-            this.props.onShapeError(<Message msgId="shapefile.error.addShape"/>);
+            this.props.onShapeError('shapefile.error.shapeFileParsingError');
         });
     };
 
@@ -198,7 +198,7 @@ class ShapeFileUploadAndStyle extends React.Component {
             this.props.onLayerAdded(this.props.selected);
         }).catch(() => {
             this.props.shapeLoading(false);
-            this.props.onShapeError(<Message msgId="shapefile.error.addToMap"/>);
+            this.props.onShapeError('shapefile.error.genericLoadError');
         });
     };
 }

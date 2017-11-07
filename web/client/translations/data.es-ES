@@ -705,8 +705,8 @@
             "zoom": "Zoom sobre el fichero shape",
             "error": {
                 "select": "Seleccionar uno o más ficheros zip",
-                "addShape": "No se puede cargar el shapefile El archivo podría dañarse o no ser generado correctamente",
-                "addToMap": "No se puede cargar el shapefile en el mapa"
+                "shapeFileParsingError": "No se puede cargar el shapefile El archivo podría dañarse o no ser generado correctamente",
+                "genericLoadError": "No se puede cargar el shapefile en el mapa"
             },
             "add": "Añadir",
             "cancel": "Cancelar",
