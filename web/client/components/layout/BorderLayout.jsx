@@ -19,8 +19,8 @@ const React = require('react');
  *  /></BorderLayout>
  *
  */
-module.exports = ({children, header, footer, columns, height}) =>
-    (<div style={{
+module.exports = ({children, header, footer, columns, height, className}) =>
+    (<div className={className} style={{
         display: "flex",
         flexDirection: "column",
         width: "100%",

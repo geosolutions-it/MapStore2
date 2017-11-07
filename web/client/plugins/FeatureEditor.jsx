@@ -113,6 +113,7 @@ const FeatureDock = (props = {
         { ({ height }) =>
             // added height to solve resize issue in firefox, edge and ie
         <BorderLayout
+            className="feature-grid-container"
             key={"feature-grid-container"}
             height={height - (62 + 32)}
             header={getHeader()}
