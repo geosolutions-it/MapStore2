@@ -22,8 +22,8 @@ const wizardHanlders = compose(
         onPrevPage: ({step, setPage = () => {}}) => () => {
             setPage(Math.max(step - 1, 0));
         }
-    }),
-)
+    })
+);
 module.exports = {
    /**
     * Apply this enhancer to the WizarContainer to make it controlled.

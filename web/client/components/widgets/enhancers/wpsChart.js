@@ -13,7 +13,20 @@ const wpsAggregateToChartData = ({AggregationResults = [], GroupByAttributes = [
     AggregationResults.map( (res) => ({
         ...GroupByAttributes.reduce( (a, p, i) => ({...a, [p]: res[i]}), {}),
         [AggregationAttribute]: res[res.length - 1]
-    }));
+    })).sort( (e1, e2) => {
+        const n1 = parseFloat(e1[GroupByAttributes]);
+        const n2 = parseFloat(e2[GroupByAttributes]);
+        if (!isNaN(n1) && !isNaN(n2) ) {
+            return n1 - n2;
+        }
+        if (e1 < e2) {
+            return -1;
+        }
+        if (e1 > e2) {
+            return 1;
+        }
+        return 0;
+    });
 const sameFilter = (f1, f2) => f1 === f2;
 const sameOptions = (o1 = {}, o2 = {}) =>
     o1.aggregateFunction === o2.aggregateFunction
