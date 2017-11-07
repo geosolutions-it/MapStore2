@@ -292,7 +292,7 @@ const groupSaveFormatted = (node) => {
     return {id: node.id, expanded: node.expanded};
 };
 
-function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSearchConfig, catalogServices) {
+function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSearchConfig, additionalOptions) {
 
     const map = {
         center: currentMap.center,
@@ -320,7 +320,7 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
         version: 2,
         // layers are defined inside the map object
         map: assign({}, map, {layers, groups, text_serch_config: textSearchConfig}),
-        catalogServices
+        ...additionalOptions
     };
 }
 
