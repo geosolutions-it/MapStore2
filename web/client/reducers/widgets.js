@@ -6,7 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {EDIT_NEW, INSERT, EDIT, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT} = require('../actions/widgets');
+const {EDIT_NEW, INSERT, EDIT, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT, DEFAULT_TARGET} = require('../actions/widgets');
+const {
+    MAP_CONFIG_LOADED
+} = require('../actions/config');
+const {LOCATION_CHANGE} = require('react-router-redux');
 const set = require('lodash/fp/set');
 const {arrayUpsert, arrayDelete} = require('../utils/ImmutableUtils');
 
@@ -43,7 +47,7 @@ const emptyState = {
  *}
  * @memberof reducers
  */
-function widgets(state = emptyState, action) {
+function widgetsReducer(state = emptyState, action) {
     switch (action.type) {
         case EDITOR_SETTING_CHANGE: {
             return set(`builder.settings.${action.key}`, action.value, state);
@@ -70,12 +74,20 @@ function widgets(state = emptyState, action) {
             return arrayDelete(`containers[${action.target}].widgets`, {
                 id: action.widget.id
             }, state);
+        case MAP_CONFIG_LOADED:
+            const {widgetsConfig} = (action.config || {});
+            return set(`containers[${DEFAULT_TARGET}]`, {
+                ...widgetsConfig
+            }, state);
         case CHANGE_LAYOUT: {
-            return set(`containers[${action.target}].layout`, action.layout, state);
+            return set(`containers[${action.target}].layout`, action.layout)(set(`containers[${action.target}].layouts`, action.allLayouts, state));
+        }
+        case LOCATION_CHANGE: {
+            return set(`containers[${DEFAULT_TARGET}]`, emptyState.containers[DEFAULT_TARGET], state);
         }
         default:
             return state;
     }
 }
 
-module.exports = widgets;
+module.exports = widgetsReducer;

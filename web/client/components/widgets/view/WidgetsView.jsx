@@ -17,13 +17,12 @@ require('react-grid-layout/css/styles.css');
 require('react-resizable/css/styles.css');
 
 const ChartWidget = dependenciesToFilter(wpsChart(enhanceChartWidget(require('../widget/ChartWidget'))));
-// const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
-// const StreamWidget = propsStreamFactory((props) => <ChartWidget {...props} />);
 
-module.exports = pure(({widgets=[], layout, deleteWidget = () => {}, editWidget = () => {}, onLayoutChange = () => {}, dependencies}={}) =>
+module.exports = pure(({id, widgets=[], layouts, deleteWidget = () => {}, editWidget = () => {}, onLayoutChange = () => {}, dependencies}={}) =>
     (<ResponsiveReactGridLayout
+        key={id}
         onLayoutChange={onLayoutChange}
-        layouts={layout ? JSON.parse(JSON.stringify(layout)) : undefined}
+        layouts={layouts ? JSON.parse(JSON.stringify(layouts)) : undefined}
         style={{left: 350, bottom: 50, height: 'calc(100% - 100px)', width: 'calc(100% - 400px)', position: 'absolute', zIndex: 50}}
         containerPadding={[10, 10]}
         className="widget-card-on-map"
@@ -35,7 +34,7 @@ module.exports = pure(({widgets=[], layout, deleteWidget = () => {}, editWidget 
         cols={{lg: 6, md: 6, sm: 1, xs: 1, xxs: 1}}>
 
      {widgets.map((w, i) => {
-         return (<div key={'wg' + i} className="widget-card-on-map" >
+         return (<div key={w.id} className="widget-card-on-map" >
               <ChartWidget key={i} {...w}
                   dependencies={dependencies}
                   onDelete={() => deleteWidget(w)}

@@ -73,7 +73,7 @@ const deleteWidget = (widget, target = DEFAULT_TARGET) => ({
  * @param  {string} target layout target
  * @return {object}        action of type `CHANGE_LAYOUT`
  */
-const changeLayout = (layout, cols, target = DEFAULT_TARGET) => ({ type: CHANGE_LAYOUT, cols, layout, target});
+const changeLayout = (layout, allLayouts, target = DEFAULT_TARGET) => ({ type: CHANGE_LAYOUT, allLayouts, layout, target});
 
 
 /**

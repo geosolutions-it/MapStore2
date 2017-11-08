@@ -8,11 +8,16 @@
 
 const {createStructuredSelector} = require('reselect');
 const {servicesSelector, selectedServiceSelector} = require('./catalog');
+const {getFloatingWidgets, getFloatingWidgetsLayout} = require('./widgets');
 
 const mapOptionsToSaveSelector = createStructuredSelector({
      catalogServices: createStructuredSelector({
          services: servicesSelector,
          selectedService: selectedServiceSelector
+     }),
+     widgetsConfig: createStructuredSelector({
+         widgets: getFloatingWidgets,
+         layouts: getFloatingWidgetsLayout
      })
  });
 module.exports = {mapOptionsToSaveSelector};

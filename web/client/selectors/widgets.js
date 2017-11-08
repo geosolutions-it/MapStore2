@@ -19,7 +19,7 @@ const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
 const getDependenciesKeys = s => Object.keys(getDependenciesMap(s)).map(k => getDependenciesMap(s)[k]);
 module.exports = {
     getFloatingWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
-    getFloatingWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layout`),
+    getFloatingWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
     getEditingWidget: state => get(state, "widgets.builder.editor"),
     getEditorSettings: state => get(state, "widgets.builder.settings"),
     dependenciesSelector: createShallowSelector(

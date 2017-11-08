@@ -9,18 +9,21 @@
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
+const {mapIdSelector} = require('../selectors/map');
 const {getFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout} = require('../selectors/widgets');
 const {editWidget, deleteWidget, changeLayout} = require('../actions/widgets');
 const assign = require('object-assign');
 const PropTypes = require('prop-types');
 const WidgetsView = connect(
     createSelector(
+        mapIdSelector,
         getFloatingWidgets,
         getFloatingWidgetsLayout,
         dependenciesSelector,
-        (widgets, layout, dependencies) => ({
+        (id, widgets, layouts, dependencies) => ({
+            id,
             widgets,
-            layout,
+            layouts,
             dependencies
         })
     ), {
