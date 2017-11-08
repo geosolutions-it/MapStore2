@@ -15,7 +15,9 @@ var API = {
 const {addLayer, changeLayerProperties} = require('./layers');
 
 const LayersUtils = require('../utils/LayersUtils');
+const ConfigUtils = require('../utils/ConfigUtils');
 const {find} = require('lodash');
+const {authkeyParamNameSelector} = require('../selectors/catalog');
 
 const RECORD_LIST_LOADED = 'CATALOG:RECORD_LIST_LOADED';
 const RESET_CATALOG = 'CATALOG:RESET_CATALOG';
@@ -178,6 +180,7 @@ function describeError(layer, error) {
         error
     };
 }
+
 function addLayerAndDescribe(layer) {
     return (dispatch, getState) => {
         const state = getState();
@@ -190,9 +193,10 @@ function addLayerAndDescribe(layer) {
                 if (results) {
                     let description = find(results, (desc) => desc.name === layer.name );
                     if (description && description.owsType === 'WFS') {
+                        const filteredUrl = ConfigUtils.filterUrlParams(ConfigUtils.normalizeUrl(description.owsURL), authkeyParamNameSelector(state));
                         dispatch(changeLayerProperties(id, {
                             search: {
-                                url: description.owsURL,
+                                url: filteredUrl,
                                 type: 'wfs'
                             }
                         }));

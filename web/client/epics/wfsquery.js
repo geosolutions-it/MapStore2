@@ -221,7 +221,7 @@ const featureTypeSelectedEpic = (action$, store) =>
                     return Rx.Observable.from([featureTypeError(action.typeName, 'Error: feature types are empty')]);
                 })
                 .mergeAll()
-                .catch(e => Rx.Observable.of(featureTypeError(action.typeName, e.message)));
+                .catch(e => Rx.Observable.of(featureTypeError(action.typeName, e.message || e.statusText)));
         });
 
 /**

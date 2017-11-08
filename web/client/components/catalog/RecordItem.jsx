@@ -14,6 +14,7 @@ const {head, memoize, isObject} = require('lodash');
 const assign = require('object-assign');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
+const ConfigUtils = require('../../utils/ConfigUtils');
 
 const defaultThumb = require('./img/default.jpg');
 
@@ -51,6 +52,7 @@ class RecordItem extends React.Component {
         onLayerAdd: PropTypes.func,
         onZoomToExtent: PropTypes.func,
         record: PropTypes.object,
+        authkeyParamNames: PropTypes.array,
         showGetCapLinks: PropTypes.bool,
         zoomToLayer: PropTypes.bool
     };
@@ -211,7 +213,7 @@ class RecordItem extends React.Component {
     };
 
     addLayer = (wms) => {
-        const {url, params} = removeParameters(wms.url, ["request", "layer", "service", "version"]);
+        const {url, params} = removeParameters(ConfigUtils.normalizeUrl(wms.url), ["request", "layer", "service", "version"].concat(this.props.authkeyParamNames));
         const allowedSRS = buildSRSMap(wms.SRS);
         if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
@@ -245,7 +247,7 @@ class RecordItem extends React.Component {
     };
 
     addwmtsLayer = (wmts) => {
-        const {url, params} = removeParameters(wmts.url, ["request", "layer"]);
+        const {url, params} = removeParameters(ConfigUtils.normalizeUrl(wmts.url), ["request", "layer"].concat(this.props.authkeyParamNames));
         const allowedSRS = buildSRSMap(wmts.SRS);
         if (wmts.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
