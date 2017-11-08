@@ -673,7 +673,11 @@
             "placeholder": "Drop your files here or click to select the shapefiles to import. (shapefiles must be contained in zip archives)",
             "defaultStyle": "Default style",
             "zoom": "Zoom on the shapefiles",
-            "error": {"select": "Select one or more zip files"},
+            "error": {
+                "select": "Select one or more zip files",
+                "shapeFileParsingError": "Cannot load the shapefile. The file could be damaged or not well formed",
+                "genericLoadError": "Cannot load the shapefile on map"
+            },
             "add": "Add",
             "cancel": "Cancel",
             "success": " correctly imported"
