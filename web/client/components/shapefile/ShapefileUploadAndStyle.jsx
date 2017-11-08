@@ -15,6 +15,7 @@ const LocaleUtils = require('../../utils/LocaleUtils');
 const FileUtils = require('../../utils/FileUtils');
 let StyleUtils;
 const {Grid, Row, Col, Button} = require('react-bootstrap');
+const {isString} = require('lodash');
 
 const Combobox = require('react-widgets').DropdownList;
 
@@ -29,6 +30,7 @@ class ShapeFileUploadAndStyle extends React.Component {
         selected: PropTypes.object,
         style: PropTypes.object,
         shapeStyle: PropTypes.object,
+        readFiles: PropTypes.func,
         onShapeError: PropTypes.func,
         onShapeSuccess: PropTypes.func,
         onShapeChoosen: PropTypes.func,
@@ -55,6 +57,12 @@ class ShapeFileUploadAndStyle extends React.Component {
     };
 
     static defaultProps = {
+        shapeLoading: () => {},
+        readFiles: files => files.map((file) => {
+            return FileUtils.readZip(file).then((buffer) => {
+                return FileUtils.shpToGeoJSON(buffer);
+            });
+        }),
         mapType: "leaflet",
         buttonSize: "small",
         uploadOptions: {},
@@ -142,11 +150,7 @@ class ShapeFileUploadAndStyle extends React.Component {
 
     addShape = (files) => {
         this.props.shapeLoading(true);
-        let queue = files.map((file) => {
-            return FileUtils.readZip(file).then((buffer) => {
-                return FileUtils.shpToGeoJSON(buffer);
-            });
-        }, this);
+        let queue = this.props.readFiles(files);
         Promise.all(queue).then((geoJsons) => {
             let ls = geoJsons.reduce((layers, geoJson) => {
                 if (geoJson) {
@@ -157,9 +161,14 @@ class ShapeFileUploadAndStyle extends React.Component {
             }, []);
             this.props.onShapeChoosen(ls);
             this.props.shapeLoading(false);
-        }).catch(() => {
+        }).catch(e => {
             this.props.shapeLoading(false);
-            this.props.onShapeError('shapefile.error.shapeFileParsingError');
+            const error = e && e.message || e || '';
+            if (isString(error) && error.toLowerCase().match('unexpected token')) {
+                this.props.onShapeError('shapefile.error.shapeFileParsingError');
+            } else {
+                this.props.onShapeError('shapefile.error.genericLoadError');
+            }
         });
     };
 

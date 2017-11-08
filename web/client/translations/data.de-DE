@@ -702,7 +702,7 @@
             "zoom": "Zoome auf Shapefiles",
             "error": {
                 "select": "Wähle ein oder mehrere Zip Archive",
-                "shapeFileParsingError": "Das Shapefile kann nicht geladen werden. Die Datei könnte beschädigt oder nicht ordnungsgemäß generiert werden",
+                "shapeFileParsingError": "Das Shapefile kann nicht geladen werden. Die Datei könnte beschädigt oder nicht gut geformt sein",
                 "genericLoadError": "Das Shapefile kann nicht auf der Karte geladen werden"
             },
             "add": "Hinzufügen",

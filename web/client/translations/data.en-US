@@ -701,7 +701,7 @@
             "zoom": "Zoom on the shapefiles",
             "error": {
                 "select": "Select one or more zip files",
-                "shapeFileParsingError": "Cannot load the shapefile. The file could be damaged or not properly generated",
+                "shapeFileParsingError": "Cannot load the shapefile. The file could be damaged or not well formed",
                 "genericLoadError": "Cannot load the shapefile on map"
             },
             "add": "Add",

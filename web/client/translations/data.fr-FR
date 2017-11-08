@@ -705,7 +705,7 @@
             "zoom": "Zoomer sur le fichier shape",
             "error": {
                 "select": "Sélectionner un ou plusieurs fichiers zip",
-                "shapeFileParsingError": "Impossible de charger le fichier de formes. Le fichier pourrait être endommagé ou pas généré correctement",
+                "shapeFileParsingError": "Impossible de charger le fichier de formes. Le fichier pourrait être endommagé ou mal formé",
                 "genericLoadError": "Impossible de charger le fichier de formes sur la carte"
             },
             "add": "Ajouter",
