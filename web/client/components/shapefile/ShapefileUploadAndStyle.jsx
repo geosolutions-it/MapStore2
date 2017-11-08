@@ -163,8 +163,8 @@ class ShapeFileUploadAndStyle extends React.Component {
             this.props.shapeLoading(false);
         }).catch(e => {
             this.props.shapeLoading(false);
-            const error = e && e.message || e || '';
-            if (isString(error) && error.toLowerCase().match('unexpected token')) {
+            const errorName = e && e.name || e || '';
+            if (isString(errorName) && errorName === 'SyntaxError') {
                 this.props.onShapeError('shapefile.error.shapeFileParsingError');
             } else {
                 this.props.onShapeError('shapefile.error.genericLoadError');
