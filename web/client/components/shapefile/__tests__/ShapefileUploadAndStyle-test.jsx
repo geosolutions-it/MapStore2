@@ -25,4 +25,37 @@ describe("Test the select shapefile component", () => {
         expect(cmp).toExist();
     });
 
+    it('test parser error', done => {
+        const onShapeError = (error) => {
+            try {
+                expect(error).toBe('shapefile.error.shapeFileParsingError');
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        const cmp = ReactDOM.render(<ShapefileUploadAndStyle useDefaultStyle onShapeError={onShapeError} readFiles={() => {
+            return ['{ "error":  }'].map(s => new Promise(() => JSON.parse(s)));
+        }} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        cmp.addShape();
+    });
+
+    it('test generic error', done => {
+        const onShapeError = (error) => {
+            try {
+                expect(error).toBe('shapefile.error.genericLoadError');
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        const cmp = ReactDOM.render(<ShapefileUploadAndStyle useDefaultStyle onShapeError={onShapeError} readFiles={() => {
+            return ["100"].map(() => new Promise(() => decodeURIComponent('%')));
+        }} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        cmp.addShape();
+    });
 });
