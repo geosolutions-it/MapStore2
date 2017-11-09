@@ -32,7 +32,8 @@ class BackgroundSelector extends React.Component {
         onPropertiesChange: PropTypes.func,
         onToggle: PropTypes.func,
         onLayerChange: PropTypes.func,
-        onStartChange: PropTypes.func
+        onStartChange: PropTypes.func,
+        cssStatus: PropTypes.string
     };
 
     static defaultProps = {
@@ -51,7 +52,8 @@ class BackgroundSelector extends React.Component {
         onPropertiesChange: () => {},
         onToggle: () => {},
         onLayerChange: () => {},
-        onStartChange: () => {}
+        onStartChange: () => {},
+        cssStatus: ''
     };
 
     componentWillUnmount() {
@@ -125,8 +127,10 @@ class BackgroundSelector extends React.Component {
             width: buttonSize * visibleIconsLength
         };
 
+        const style = this.props.bottom && {style: {bottom: this.props.bottom}} || {style: {}};
+
         return visibleIconsLength <= 0 && this.props.enabled ? null : (
-            <div className="background-plugin-position" style={{left: this.props.left, bottom: this.props.bottom}}>
+            <div className={'background-plugin-position' + this.props.cssStatus} {...style}>
                 <PreviewButton showLabel={configuration.label} src={src} side={sideButton} frame={frame} margin={margin} labelHeight={labelHeight} label={layer.title} onToggle={this.props.onToggle}/>
                 <div className="background-list-container" style={listContainerStyle}>
                     <PreviewList vertical={configuration.vertical} start={this.props.start} bottom={0} height={previewListStyle.height} width={previewListStyle.width} icons={icons} pagination={pagination} length={visibleIconsLength} onStartChange={this.props.onStartChange} />

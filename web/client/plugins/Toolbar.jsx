@@ -13,6 +13,8 @@ const {connect} = require('react-redux');
 require('./toolbar/assets/css/toolbar.css');
 
 const {CSSTransitionGroup} = require('react-transition-group');
+const {cssStatusSelector} = require('../selectors/controls');
+const {createSelector} = require('reselect');
 
 const assign = require('object-assign');
 
@@ -43,7 +45,8 @@ class Toolbar extends React.Component {
         buttonStyle: PropTypes.string,
         buttonSize: PropTypes.string,
         pressedButtonStyle: PropTypes.string,
-        btnConfig: PropTypes.object
+        btnConfig: PropTypes.object,
+        cssStatus: PropTypes.string
     };
 
     static contextTypes = {
@@ -72,7 +75,8 @@ class Toolbar extends React.Component {
         pressedButtonStyle: 'success',
         btnConfig: {
             className: "square-button"
-        }
+        },
+        cssStatus: "panel-open"
     };
 
     getPanel = (tool) => {
@@ -96,7 +100,7 @@ class Toolbar extends React.Component {
     };
 
     render() {
-        return (<ToolsContainer id={this.props.id} className={"mapToolbar btn-group-" + this.props.layout}
+        return (<ToolsContainer id={this.props.id} className={"mapToolbar btn-group-" + this.props.layout + this.props.cssStatus}
             toolCfg={this.props.btnConfig}
             container={AnimatedContainer}
             mapType={this.props.mapType}
@@ -114,11 +118,22 @@ class Toolbar extends React.Component {
     }
 }
 
+const toolbarSelector = stateSelector => createSelector([
+        state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].active,
+        state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].expanded,
+        cssStatusSelector,
+        state => state.featuregrid && state.featuregrid.dockSize,
+        state => state.featuregrid && state.featuregrid.open
+    ], (active, allVisible, cssStatus, dockSize, featuregridOpen) => ({
+        active,
+        allVisible,
+        stateSelector,
+        cssStatus,
+        layout: cssStatus.match('mapstore-featuregrid-open') ? 'horizontal' : 'vertical',
+        style: featuregridOpen && {bottom: (dockSize * 100) + '%'} || {}
+}));
+
 module.exports = {
-    ToolbarPlugin: (stateSelector = 'toolbar') => connect((state) => ({
-        active: state.controls && state.controls[stateSelector] && state.controls[stateSelector].active,
-        allVisible: state.controls && state.controls[stateSelector] && state.controls[stateSelector].expanded,
-        stateSelector
-    }))(Toolbar),
+    ToolbarPlugin: (stateSelector = 'toolbar') => connect(toolbarSelector(stateSelector))(Toolbar),
     reducers: {controls: require('../reducers/controls')}
 };

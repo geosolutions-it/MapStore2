@@ -20,6 +20,8 @@ const {changeMousePointer} = require('../actions/map');
 const {changeMapInfoFormat} = require('../actions/mapInfo');
 const {currentLocaleSelector} = require('../selectors/locale');
 
+const {cssStatusSelector} = require('../selectors/controls');
+
 const Message = require('./locale/Message');
 
 const {Glyphicon} = require('react-bootstrap');
@@ -40,10 +42,11 @@ const selector = createSelector([
     (state) => state.mapInfo && state.mapInfo.showModalReverse,
     (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
     (state) => state.mapInfo && state.mapInfo.warning,
-    currentLocaleSelector
+    currentLocaleSelector,
+    cssStatusSelector
 
-], (enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale) => ({
-    enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale
+], (enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, cssStatus) => ({
+    enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, cssStatus
 }));
 // result panel
 

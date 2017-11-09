@@ -69,10 +69,6 @@ html, body, #container, .fill {
     z-index: 2000!important;
 }
 
-#navigationBar .mapToolbar {
-    bottom: 50px !important;
-}
-
 #mapstore-scalebox-container {
     bottom: -36px !important;
     right: 323px !important;
@@ -107,6 +103,7 @@ html, body, #container, .fill {
     left: auto;
     top: 0;
     margin-top: 0;
+    border: none;
 }
 
 .mapstore-right-panel .info-wrap {

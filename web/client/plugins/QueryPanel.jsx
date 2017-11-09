@@ -30,6 +30,9 @@ const QueryBuilder = require('../components/data/query/QueryBuilder');
 const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic} = require('../epics/wfsquery');
 const autocompleteEpics = require('../epics/autocomplete');
 const {bindActionCreators} = require('redux');
+
+const {cssStatusSelector} = require('../selectors/controls');
+
 const {
     // QueryBuilder action functions
     addGroupField,
@@ -135,12 +138,14 @@ const tocSelector = createSelector(
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
         (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}},
-        (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false
-    ], (enabled, groups, settings, querypanelEnabled) => ({
+        (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false,
+        cssStatusSelector
+    ], (enabled, groups, settings, querypanelEnabled, cssStatus) => ({
         enabled,
         groups,
         settings,
-        querypanelEnabled
+        querypanelEnabled,
+        cssStatus
     })
 );
 
@@ -171,7 +176,8 @@ class QueryPanel extends React.Component {
         activateZoomTool: PropTypes.bool,
         activateSettingsTool: PropTypes.bool,
         visibilityCheckType: PropTypes.string,
-        settingsOptions: PropTypes.object
+        settingsOptions: PropTypes.object,
+        cssStatus: PropTypes.string
     };
 
     static defaultProps = {
@@ -192,7 +198,8 @@ class QueryPanel extends React.Component {
         activateRemoveLayer: true,
         visibilityCheckType: "checkbox",
         settingsOptions: {},
-        querypanelEnabled: false
+        querypanelEnabled: false,
+        cssStatus: ''
     };
 
     componentWillReceiveProps(newProps) {
@@ -209,7 +216,7 @@ class QueryPanel extends React.Component {
             <Sidebar
                 open={this.props.querypanelEnabled}
                 sidebar={this.renderQueryPanel()}
-                sidebarClassName="query-form-panel-container"
+                sidebarClassName={"query-form-panel-container" + this.props.cssStatus}
                 styles={{
                     sidebar: {
                         zIndex: 1024,

@@ -16,6 +16,7 @@ const {Glyphicon} = require('react-bootstrap');
 const {on, toggleControl} = require('../actions/controls');
 
 const {createSelector} = require('reselect');
+const {cssStatusSelector} = require('../selectors/controls');
 
 const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnotation, removeAnnotation, cancelEditAnnotation,
     saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
@@ -92,7 +93,8 @@ class AnnotationsPanel extends React.Component {
         dockProps: PropTypes.object,
 
         // side panel properties
-        width: PropTypes.number
+        width: PropTypes.number,
+        cssStatus: PropTypes.string
     };
 
     static defaultProps = {
@@ -118,7 +120,8 @@ class AnnotationsPanel extends React.Component {
             fluid: true,
             position: "right",
             zIndex: 1030
-        }
+        },
+        cssStatus: ''
     };
 
     render() {
@@ -127,12 +130,13 @@ class AnnotationsPanel extends React.Component {
         return this.props.active ? (
             <ContainerDimensions>
             { ({ width }) =>
-                <Dock {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
-                    <Panel id={this.props.id} header={panelHeader}
-                        style={this.props.panelStyle} className={this.props.panelClassName}>
+                <span className={"mapstore-dock vertical" + this.props.cssStatus}>
+                    <Dock {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
+                        <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
                             {panel}
                         </Panel>
-                </Dock>}
+                    </Dock>
+                </span>}
             </ContainerDimensions>
         ) : null;
     }
@@ -158,7 +162,8 @@ const conditionalToggle = on.bind(null, toggleControl('annotations', null), (sta
   * @static
   */
 const AnnotationsPlugin = connect((state) => ({
-    active: (state.controls && state.controls.annotations && state.controls.annotations.enabled) || (state.annotations && state.annotations.closing) || false
+    active: (state.controls && state.controls.annotations && state.controls.annotations.enabled) || (state.annotations && state.annotations.closing) || false,
+    cssStatus: cssStatusSelector(state)
 }), {
     toggleControl: conditionalToggle
 })(AnnotationsPanel);

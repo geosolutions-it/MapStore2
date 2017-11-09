@@ -28,6 +28,7 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
 } = require("../selectors/catalog");
 const Message = require("../components/I18N/Message");
 require('./metadataexplorer/css/style.css');
+const {cssStatusSelector} = require('../selectors/controls');
 
 const CatalogUtils = require('../utils/CatalogUtils');
 
@@ -86,7 +87,8 @@ class MetadataExplorerComponent extends React.Component {
         zoomToLayer: PropTypes.bool,
 
         // side panel properties
-        width: PropTypes.number
+        width: PropTypes.number,
+        cssStatus: PropTypes.string
     };
 
     static defaultProps = {
@@ -113,7 +115,8 @@ class MetadataExplorerComponent extends React.Component {
             fluid: true,
             position: "right",
             zIndex: 1030
-        }
+        },
+        cssStatus: ''
     };
 
     render() {
@@ -122,12 +125,13 @@ class MetadataExplorerComponent extends React.Component {
         return this.props.active ? (
             <ContainerDimensions>
             { ({ width }) =>
-                <Dock {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
-                    <Panel id={this.props.id} header={panelHeader}
-                        style={this.props.panelStyle} className={this.props.panelClassName}>
-                            {panel}
+                <span className={"mapstore-dock vertical" + this.props.cssStatus}>
+                    <Dock {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
+                        <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
+                                {panel}
                         </Panel>
-                </Dock>}
+                    </Dock>
+                </span>}
             </ContainerDimensions>
         ) : null;
     }
@@ -142,7 +146,8 @@ const MetadataExplorerPlugin = connect((state) => ({
     mode: modeSelector(state),
     services: servicesSelector(state),
     layerError: layerErrorSelector(state),
-    active: activeSelector(state)
+    active: activeSelector(state),
+    cssStatus: cssStatusSelector(state)
 }), {
     onSearch: textSearch,
     onLayerAdd: addLayer,

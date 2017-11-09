@@ -1,7 +1,7 @@
 .mapToolbar {
     position: absolute;
     bottom: 5px;
-    right: 5px;
+    right: 0;
     z-index: 1000;
 }
 
@@ -21,12 +21,6 @@
 .toolbarexpand-leave.toolbarexpand-leave-active {
   opacity: 0.01;
   transition: opacity 300ms ease-in;
-}
-
-#navigationBar .mapToolbar {
-    top: auto !important;
-    bottom: 5px;
-    right: 0 !important;
 }
 
 #navigationBar .toolbar-panel {

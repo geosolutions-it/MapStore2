@@ -59,7 +59,7 @@ class ToggleButton extends React.Component {
         options: {},
         pressed: false,
         tooltipPlace: "top",
-        style: {width: "100%"},
+        style: {},
         btnType: 'normal',
         pressedStyle: 'primary',
         defaultStyle: 'default'
