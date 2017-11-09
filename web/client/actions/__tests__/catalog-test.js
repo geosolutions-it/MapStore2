@@ -177,7 +177,7 @@ describe('Test correctness of the catalog actions', () => {
                 expect(action.newProperties).toExist();
                 expect(action.newProperties.search).toExist();
                 expect(action.newProperties.search.type).toBe('wfs');
-                expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs?");
+                expect(action.newProperties.search.url).toBe("http://some.geoserver.org:80/geoserver/wfs");
                 done();
             }
         };
