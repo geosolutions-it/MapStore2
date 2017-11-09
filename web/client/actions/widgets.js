@@ -15,6 +15,7 @@ const EDITOR_SETTING_CHANGE = "WIGETS:EDITOR_SETTING_CHANGE";
 const UPDATE = "WIDGETS:UPDATE";
 const CHANGE_LAYOUT = "WIDGETS:CHANGE_LAYOUT";
 const DELETE = "WIDGETS:DELETE";
+const OPEN_FILTER_EDITOR = "WIDGETS:OPEN_FILTER_EDITOR";
 
 const DEFAULT_TARGET = "floating";
 
@@ -128,6 +129,8 @@ const changeEditorSetting = (key, value) => ({
  */
 const setPage = (step) => changeEditorSetting("step", step);
 
+
+const openFilterEditor = () => ({type: OPEN_FILTER_EDITOR});
 module.exports = {
     NEW,
     INSERT,
@@ -139,6 +142,8 @@ module.exports = {
     EDITOR_CHANGE,
     EDITOR_SETTING_CHANGE,
     DEFAULT_TARGET,
+    OPEN_FILTER_EDITOR,
+    openFilterEditor,
     createWidget,
     insertWidget,
     updateWidget,

@@ -28,35 +28,48 @@ const ITEMS = [{
     icon: 'icon',
     desc: 'desc',
     caption: 'caption',
-    type: "bar",
-    preview: <SimpleChart {...sampleProps} type="bar"/>
+    type: "bar"
 }, {
     title: 'Pie chart',
     icon: 'icon',
     desc: 'desc',
     caption: 'caption',
-    type: "pie",
-    preview: <SimpleChart {...sampleProps} type="pie"/>
+    type: "pie"
 }, {
     title: 'Line chart',
     icon: 'icon',
     desc: 'desc',
     caption: 'caption',
-    type: "line",
-    preview: <SimpleChart {...sampleProps} type="line"/>
+    type: "line"
 }, {
     title: 'Gauge',
     icon: 'icon',
     desc: 'desc',
     caption: 'caption',
-    type: "gauge",
-    preview: <SimpleChart {...sampleProps} type="gauge"/>
+    type: "gauge"
 }
 
 
 ];
-module.exports = ({onSelect = () => {}, onNextPage = () => {}} = {}, types = []) => (<Row>
+module.exports = ({onSelect = () => {}, onNextPage = () => {}, types = [], type} = {}) => (<Row>
     <StepHeader key="title" title={<Message msgId="widgets.selectChartType.title" />} />
-    <SideGrid key="content" onItemClick={i => {onSelect(i.type); onNextPage(); }} items={types && ITEMS} />
+    <SideGrid
+        key="content"
+        onItemClick={item => {onSelect(item.type); onNextPage(); }}
+        items={types &&
+            ITEMS.map( item =>
+                ({
+                    ...item,
+                    selected: item.type === type,
+                    preview: (<SimpleChart
+                        {...sampleProps}
+                        type={item.type}
+                        autoColorOptions={item.type === type ? {
+                            base: 0,
+                            s: 0,
+                            v: 0
+                        } : undefined}
+                     />)
+            }))} />
 </Row>
     );

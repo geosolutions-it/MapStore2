@@ -16,9 +16,11 @@ module.exports = ({
         layer,
         types,
         featureTypeProperties,
+        dependencies,
         editorData = {}}
     ) =>
         (<ChartWizard
+            dependencies={dependencies}
             types={types}
             featureTypeProperties={featureTypeProperties}
             step={settings.step}

@@ -12,7 +12,7 @@ const Url = require('url');
 const {changeSpatialAttribute, SELECT_VIEWPORT_SPATIAL_METHOD, updateGeometrySpatialField} = require('../actions/queryform');
 const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {FEATURE_TYPE_SELECTED, QUERY, UPDATE_QUERY, featureLoading, featureTypeLoaded, featureTypeError, querySearchResponse, queryError} = require('../actions/wfsquery');
-const {paginationInfo, isDescribeLoaded, describeSelector} = require('../selectors/query');
+const {paginationInfo, isDescribeLoaded, layerDescribeSelector} = require('../selectors/query');
 const {mapSelector} = require('../selectors/map');
 const FilterUtils = require('../utils/FilterUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
@@ -202,7 +202,7 @@ const featureTypeSelectedEpic = (action$, store) =>
         .switchMap(action => {
             const state = store.getState();
             if (isDescribeLoaded(state, action.typeName)) {
-                const info = extractInfo(describeSelector(state));
+                const info = extractInfo(layerDescribeSelector(state, action.typeName));
                 const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
                 return Rx.Observable.of(changeSpatialAttribute(geometry));
             }

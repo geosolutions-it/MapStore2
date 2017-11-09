@@ -7,27 +7,34 @@
  */
 const {compose, withPropsOnChange} = require('recompose');
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
+const FilterUtils = require('../../../utils/FilterUtils');
 const filterBuilder = require('../../../utils/ogc/Filter/FilterBuilder');
 module.exports = compose(
    withPropsOnChange(
-       ({mapSync, geom_prop, dependencies} = {}, nextProps = {}) => mapSync !== nextProps.mapSync || dependencies.viewport !== (nextProps.dependencies && nextProps.dependencies.viewport),
-       ({mapSync, dependencies = {}}) => {
+       ({mapSync, geomProp, dependencies = {}} = {}, nextProps = {}, filter) =>
+            mapSync !== nextProps.mapSync
+            || dependencies.viewport !== (nextProps.dependencies && nextProps.dependencies.viewport)
+            || geomProp !== nextProps.geomProp
+            || filter !== nextProps.filter,
+       ({mapSync, geomProp = "the_geom", dependencies = {}, filter: filterObj} = {}) => {
            const viewport = dependencies.viewport;
+           const {filter, property, and} = filterBuilder({gmlVersion: "3.1.1"});
            if (!mapSync || !dependencies.viewport) {
-               return ({
-                   filter: undefined
-               });
+               return {
+                   filter: filterObj ? filter(and(...(FilterUtils.toOGCFilterParts(filterObj, "1.1.0", "ogc") : []))) : undefined
+               };
            }
 
            const bounds = Object.keys(viewport.bounds).reduce((p, c) => {
                return {...p, [c]: parseFloat(viewport.bounds[c])};
            }, {});
            const geom = CoordinatesUtils.getViewportGeometry(bounds, viewport.crs);
-           const {filter, property} = filterBuilder({gmlVersion: "3.1.1"});
            return {
-               filter: filter(property("the_geom").intersects(geom))
+               filter: filter(and(
+                   ...(filterObj ? FilterUtils.toOGCFilterParts(filterObj, "1.1.0", "ogc") : []),
+                    property(geomProp).intersects(geom)))
            };
        }
-   ),
+   )
 
 );

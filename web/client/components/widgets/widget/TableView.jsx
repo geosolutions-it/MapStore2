@@ -11,13 +11,13 @@ const React = require('react');
 const {
      Table
 } = require('react-bootstrap');
-module.exports = ({data = [], options = {}} = {}) => {
+module.exports = ({data = []} = {}) => {
     const cols = Object.keys(data.reduce((a, c) => ({...a, ...c}), {}));
     return (<div className="mapstore-widget-table">
      <Table striped>
          <thead>
              <tr>
-                 {cols.map( (k, i) => <th>{i > 0 ? `${options.aggregateFunction}(${k})` : k}</th>)}
+                 {cols.map( (k, i) => <th>{i > 0 ? `${k}` : k}</th>)}
              </tr>
          </thead>
          <tbody>

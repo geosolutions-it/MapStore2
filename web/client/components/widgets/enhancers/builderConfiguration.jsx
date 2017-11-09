@@ -9,16 +9,27 @@ const {describeFeatureType} = require('../../../observables/wfs');
 const {describeProcess} = require('../../../observables/wps/describe');
 const {Message, HTML} = require("../../I18N/I18N");
 const TYPES = "ALL";
+const {findGeometryProperty} = require('../../../utils/ogc/WFS/base');
 module.exports = compose(
     defaultProps({
-        dataStreamFactory: ($props, {layer}) =>
-            Observable.forkJoin(describeFeatureType({layer}), describeProcess(layer.url, "gs:Aggregate"))
-                .map(([result]) => ({
+        dataStreamFactory: ($props, {onEditorChange = () => {}} = {}) =>
+            $props
+            .distinctUntilChanged( ({layer = {}} = {}, {layer: newLayer} = {})=> layer.name === newLayer.name)
+            .switchMap( ({layer} = {}) => Observable.forkJoin(describeFeatureType({layer}), describeProcess(layer.url, "gs:Aggregate"))
+                .do(([result]) => {
+                    const geomProp = get(findGeometryProperty(result.data || {}), "name");
+                    if (geomProp) {
+                        onEditorChange("geomProp", geomProp);
+                    }
+
+                })
+                .map(([result]) => get(result, "data.featureTypes[0].properties") || [])
+                .map(featureTypeProperties => ({
                       loading: false,
                       types: TYPES,
-                      featureTypeProperties: get(result, "data.featureTypes[0].properties") || []
+                      featureTypeProperties
                 })
-            )
+            ))
             .catch( () => Observable.of({
                 loading: false,
                 featureTypeProperties: []

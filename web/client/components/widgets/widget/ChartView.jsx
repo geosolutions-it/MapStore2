@@ -6,15 +6,10 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const Message = require('../../I18N/Message');
-const emptyState = require('../../misc/enhancers/emptyState');
+
 const loadingState = require('../../misc/enhancers/loadingState')();
-const SimpleChart = loadingState(emptyState(
-    ({data = []}) => !data || data.length === 0,
-    ({mapSync} = {}) => ({
-        tooltip: mapSync ? <Message msgId="widgets.errors.nodatainviewport" /> : <Message msgId="widgets.errors.nodata" />
-    })
-)((require('../../charts/SimpleChart'))));
+const emptyChartState = require('../enhancers/emptyChartState');
+const SimpleChart = loadingState(emptyChartState((require('../../charts/SimpleChart'))));
 const ContainerDimensions = require('react-container-dimensions').default;
 const React = require('react');
 module.exports = (props) => (<div className="mapstore-widget-chart">

@@ -10,23 +10,25 @@ const React = require('react');
 const Dock = require('react-dock').default;
 const {createSelector} = require('reselect');
 const {connect} = require('react-redux');
-const {widgetBulderSelector} = require('../selectors/controls');
-const {getEditingWidget, getEditorSettings} = require('../selectors/widgets');
-const {getSelectedLayer} = require('../selectors/layers');
+const {widgetBuilderSelector} = require('../selectors/controls');
+const {getEditingWidget, getEditorSettings, getWidgetLayer, dependenciesSelector} = require('../selectors/widgets');
+
 const {setControlProperty} = require('../actions/controls');
-const {insertWidget, onEditorChange, setPage} = require('../actions/widgets');
+const {insertWidget, onEditorChange, setPage, openFilterEditor} = require('../actions/widgets');
 const PropTypes = require('prop-types');
 const builderConfiguration = require('../components/widgets/enhancers/builderConfiguration');
 const BorderLayout = require('../components/layout/BorderLayout');
 
 const wizardSelector = createSelector(
-    getSelectedLayer,
+    getWidgetLayer,
     getEditingWidget,
     getEditorSettings,
-    (layer, editorData, settings) => ({
+    dependenciesSelector,
+    (layer, editorData, settings, dependencies) => ({
         layer: editorData.layer || layer,
         editorData,
-        settings
+        settings,
+        dependencies
     })
 );
 const WidgetsBuilder = connect(
@@ -39,8 +41,9 @@ const WidgetsBuilder = connect(
 )(builderConfiguration(require('../components/widgets/builder/WidgetsBuilder')));
 
 
-const BuilderHeader = connect(() => {}, {
-    onClose: setControlProperty.bind(null, "widgetBulder", "enabled", false, false)
+const BuilderHeader = connect(() => ({}), {
+    openFilterEditor: openFilterEditor,
+    onClose: setControlProperty.bind(null, "widgetBuilder", "enabled", false, false)
 })(require('../components/widgets/builder/BuilderHeader'));
 
 class SideBarComponent extends React.Component {
@@ -52,8 +55,8 @@ class SideBarComponent extends React.Component {
          zIndex: PropTypes.number,
          dockSize: PropTypes.number,
          position: PropTypes.string,
-         onMount: PropTypes.funct,
-         onUnmount: PropTypes.funct,
+         onMount: PropTypes.func,
+         onUnmount: PropTypes.func,
          dimMode: PropTypes.string,
          src: PropTypes.string,
          style: PropTypes.object
@@ -102,12 +105,12 @@ class SideBarComponent extends React.Component {
 
 const Plugin = connect(
     createSelector(
-        widgetBulderSelector,
+        widgetBuilderSelector,
         (enabled) => ({
             enabled
     })), {
-        onMount: () => setControlProperty("widgetBulder", "available", true),
-        onUnmount: () => setControlProperty("widgetBulder", "available", false)
+        onMount: () => setControlProperty("widgetBuilder", "available", true),
+        onUnmount: () => setControlProperty("widgetBuilder", "available", false)
     }
 
 )(SideBarComponent);

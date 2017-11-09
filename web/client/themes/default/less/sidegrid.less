@@ -79,6 +79,20 @@
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
     margin: 10px 0 0 0;
     transition: all 0.3s;
+    &.selected {
+        background-color: #078aa3;
+        color: #ffffff;
+        webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        -moz-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        .mapstore-side-glyph {
+            color: #078aa3;
+            background-color: #ffffff;
+        }
+        .mapstore-side-card-tool .glyphicon {
+            color: #ffffff;
+        }
+    }
 }
 
 .mapstore-side-card:hover {

@@ -16,7 +16,16 @@ const ChartOptions = wfsChartOptions(require('./wizard/chart/ChartOptions'));
 const WidgetOptions = require('./wizard/chart/WidgetOptions');
 const sampleData = require('../enhancers/sampleChartData');
 const wpsChart = require('../enhancers/wpsChart');
-const PreviewChart = wpsChart(loadingState(require('../../charts/SimpleChart')));
+const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
+const emptyChartState = require('../enhancers/emptyChartState');
+const {compose} = require('recompose');
+const enhanchePreview = compose(
+    dependenciesToFilter,
+    wpsChart,
+    loadingState,
+    emptyChartState
+);
+const PreviewChart = enhanchePreview(require('../../charts/SimpleChart'));
 const SampleChart = sampleData(require('../../charts/SimpleChart'));
 
 const sampleProps = {
@@ -27,14 +36,18 @@ const sampleProps = {
 
 const isChartOptionsValid = (options = {}) => options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes;
 
-const renderPreview = ({data = {}, layer}) => isChartOptionsValid(data.options)
+const renderPreview = ({data = {}, layer, dependencies={}}) => isChartOptionsValid(data.options)
     ? (<PreviewChart
         key="preview-chart"
         isAnimationActive={false}
+        dependencies={dependencies}
         {...sampleProps}
         type={data.type}
         legend={data.legend}
         layer={data.layer || layer}
+        filter={data.filter}
+        geomProp={data.geomProp}
+        mapSync={data.mapSync}
         autoColorOptions={data.autoColorOptions}
         options={data.options}
         />)
@@ -46,7 +59,7 @@ const renderPreview = ({data = {}, layer}) => isChartOptionsValid(data.options)
         legend={data.legend} />);
 
 
-module.exports = ({onChange = () => {}, onFinish = () => {}, setPage= () => {}, data = {}, layer ={}, step=0, types, featureTypeProperties}) =>
+module.exports = ({onChange = () => {}, onFinish = () => {}, setPage= () => {}, data = {}, layer ={}, step=0, types, featureTypeProperties, dependencies}) =>
     (<Wizard
         step={step}
         setPage={setPage}
@@ -55,6 +68,7 @@ module.exports = ({onChange = () => {}, onFinish = () => {}, setPage= () => {}, 
         }}
         isStepValid={ n => n === 1 ? isChartOptionsValid(data.options) : true} skipButtonsOnSteps={[0]}>
         <ChartType
+            type={data.type}
             onSelect={ i => {
                 onChange("type", i);
             }}/>
@@ -64,7 +78,7 @@ module.exports = ({onChange = () => {}, onFinish = () => {}, setPage= () => {}, 
         data={data}
         onChange={onChange}
         layer={data.layer || layer}
-        sampleChart={renderPreview({data, layer: data.layer || layer})}
+        sampleChart={renderPreview({data, layer: data.layer || layer, dependencies})}
     />
     <WidgetOptions
         data={data}

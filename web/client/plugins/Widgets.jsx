@@ -37,13 +37,13 @@ const WidgetsView = connect(
 class Widgets extends React.Component {
      static propTypes = {
          id: PropTypes.string,
-         enabled: PropTypes.isVisible,
+         enabled: PropTypes.bool,
          limitDockHeight: PropTypes.bool,
          fluid: PropTypes.bool,
          zIndex: PropTypes.number,
          dockSize: PropTypes.number,
          position: PropTypes.string,
-         dimMode: PropTypes.dimMode,
+         dimMode: PropTypes.string,
          src: PropTypes.string,
          style: PropTypes.object
      };

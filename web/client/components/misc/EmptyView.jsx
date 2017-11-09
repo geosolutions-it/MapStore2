@@ -24,6 +24,7 @@ const FullWidthIcon = require('./FullWidthGlyph');
  * @param  {string|node} [content]             Additional content for the empty view (e.g. buttons...)
  */
 module.exports = ({
+        style,
         mainViewStyle,
         contentStyle,
         glyph="info-sign",
@@ -32,7 +33,7 @@ module.exports = ({
         description,
         content
     } = {}) =>
-        (<div className="empty-state-container">
+        (<div className="empty-state-container" style={style}>
             <div key="main-view" className="empty-state-main-view" style={mainViewStyle}>
                 {glyph ? <div key="glyph" className="empty-state-image"><FullWidthIcon tooltip={tooltip} glyph={glyph} /></div> : null}
                 {title ? <h1 key="title" >{title}</h1> : null}

@@ -22,8 +22,10 @@ module.exports = pure(({id, widgets=[], layouts, deleteWidget = () => {}, editWi
     (<ResponsiveReactGridLayout
         key={id}
         onLayoutChange={onLayoutChange}
+        preventCollision={false}
+        autoSize={false}
         layouts={layouts ? JSON.parse(JSON.stringify(layouts)) : undefined}
-        style={{left: 350, bottom: 50, height: 'calc(100% - 100px)', width: 'calc(100% - 400px)', position: 'absolute', zIndex: 50}}
+        style={{left: 350, bottom: 50, height: 'calc(100% - 100px)', width: 'calc(100% - 500px)', position: 'absolute', zIndex: 50}}
         containerPadding={[10, 10]}
         className="widget-card-on-map"
         rowHeight={208}

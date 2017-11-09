@@ -9,8 +9,8 @@
 
 const React = require('react');
 
-module.exports = ({onClick=() => {}, title, preview, desc, caption, tools, ...more} = {}) =>
-<div className="mapstore-side-card" onClick={() => onClick({title, preview, desc, caption, tools, ...more})}>
+module.exports = ({onClick=() => {}, title, preview, desc, caption, tools, selected, ...more} = {}) =>
+<div className={`mapstore-side-card${selected ? ' selected' : ''}`} onClick={() => onClick({title, preview, desc, caption, tools, ...more})}>
   <div className="mapstore-side-preview">
       {preview}
   </div>

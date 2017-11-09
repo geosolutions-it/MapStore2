@@ -10,7 +10,7 @@ const { Button, Row, Col, Glyphicon } = require('react-bootstrap');
 const Message = require('../../I18N/Message');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 
-module.exports = ({onClose = () => {}} = {}) =>
+module.exports = ({onClose = () => {}, openFilterEditor = () => {}} = {}) =>
 (<div className="mapstore-flex-container">
     <div className="m-header">
         <Row fluid>
@@ -31,6 +31,7 @@ module.exports = ({onClose = () => {}} = {}) =>
                         bsSize: "sm"
                     }}
                     buttons={[{
+                        onClick: openFilterEditor,
                         glyph: "filter",
                         tooltipId: "widgets.builder.setupFilter"
                     }]} />

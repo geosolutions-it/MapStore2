@@ -19,6 +19,7 @@ module.exports = {
     },
     isDescribeLoaded: (state, name) => !!get(state, `query.featureTypes.${name}`),
     describeSelector: (state) => get(state, `query.featureTypes.${get(state, "query.filterObj.featureTypeName")}.original`),
+    layerDescribeSelector: (state, featureTypeName) =>get(state, `query.featureTypes.[${featureTypeName}].original`),
     featureLoadingSelector: (state) => get(state, "query.featureLoading"),
     isSyncWmsActive: (state) => get(state, "query.syncWmsFilter", false)
 };
