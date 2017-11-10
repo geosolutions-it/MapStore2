@@ -3,7 +3,6 @@ var DefinePlugin = require("webpack/lib/DefinePlugin");
 var LoaderOptionsPlugin = require("webpack/lib/LoaderOptionsPlugin");
 var NormalModuleReplacementPlugin = require("webpack/lib/NormalModuleReplacementPlugin");
 var NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
-var CopyWebpackPlugin = require('copy-webpack-plugin');
 
 const assign = require('object-assign');
 const themeEntries = require('./themes.js').themeEntries;
@@ -22,9 +21,6 @@ module.exports = {
         filename: "[name].js"
     },
     plugins: [
-        new CopyWebpackPlugin([
-            { from: path.join(__dirname, 'node_modules', 'bootstrap', 'less'), to: path.join(__dirname, "web", "client", "dist", "bootstrap", "less") }
-        ]),
         new LoaderOptionsPlugin({
             debug: true,
             options: {
@@ -128,11 +124,11 @@ module.exports = {
     },
     devServer: {
         proxy: {
-            '/mapstore/rest/geostore': {
-                target: "http://dev.mapstore2.geo-solutions.it"
+            '/rest/geostore': {
+                target: "http://dev.mapstore2.geo-solutions.it/mapstore"
             },
-            '/mapstore/proxy': {
-                target: "http://dev.mapstore2.geo-solutions.it"
+            '/proxy': {
+                target: "http://dev.mapstore2.geo-solutions.it/mapstore"
             },
             '/docs': {
                 target: "http://localhost:8081",

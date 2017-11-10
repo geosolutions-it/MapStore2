@@ -30,7 +30,8 @@ class MapViewerComponent extends React.Component {
         }
     };
     componentWillMount() {
-        if (this.props.match.params.mapId && oldLocation !== this.props.location) {
+        const id = this.props.match.params.mapId || '0';
+        if (id && oldLocation !== this.props.location) {
             oldLocation = this.props.location;
             if (!ConfigUtils.getDefaults().ignoreMobileCss) {
                 if (this.props.mode === 'mobile') {
@@ -42,7 +43,7 @@ class MapViewerComponent extends React.Component {
             // if 0 it loads config.json
             // if mapId is a string it loads mapId.json
             // if it is a number it loads the config from geostore
-            let mapId = this.props.match.params.mapId === '0' ? null : this.props.match.params.mapId;
+            let mapId = id === '0' ? null : id;
             let config = urlQuery && urlQuery.config || null;
             const {configUrl} = ConfigUtils.getConfigUrl({mapId, config});
             mapId = mapId === 'new' ? null : mapId;
