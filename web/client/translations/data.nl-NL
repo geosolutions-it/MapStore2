@@ -773,7 +773,7 @@
                 "none": "Geen",
                 "StretchToMinimumMaximum": "Rekken",
                 "ClipToMinimumMaximum": "Klem",
-                "ClipToZero": "Klem op nul	"
+                "ClipToZero": "Klem op nul"
             }
         },
         "equalinterval": {
