@@ -75,7 +75,6 @@
             "leave": "Verlaten",
             "accept": "Aanvaarden"
         },
-        "enable": "Activeren",
         "background": "Achtergrondkaart",
         "language": "Taal",
         "mousePositionCoordinates": "Coördinaten",
@@ -307,7 +306,7 @@
             "areaLabel": "Afstand",
             "bearingLabel": "Richting"
         },
-        "search":{
+        "search": {
             "placeholder": "Zoeken op plaatsnaam of coördinaten...",
             "searchservicesbutton": "Opzoekservices configureren",
             "configpaneltitle": "Een opzoekservice aanmaken/wijzigen",
