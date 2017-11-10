@@ -302,8 +302,23 @@ const LayersUtils = {
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },
+    /**
+    * default regex rule for searching for a /geoserver/ string in a url
+    */
     REG_GEOSERVER_RULE,
+    /**
+    * it tests if a url is matched by a regex,
+    * if so it returns the matched string
+    * otherwise returns null
+    * @param object.regex the regex to use for parsing the url
+    * @param object.url the url to test
+    */
     findGeoServerName,
+    /**
+     * This method search for a /geoserver/  string inside the url
+     * if it finds it returns a getCapabilitiesUrl to a single layer if it has a name like WORKSPACE:layerName
+     * otherwise it returns the default getCapabilitiesUrl
+    */
     getCapabilitiesUrl: (layer) => {
         const matchedGeoServerName = findGeoServerName({url: layer.url});
         let reqUrl = layer.url;
