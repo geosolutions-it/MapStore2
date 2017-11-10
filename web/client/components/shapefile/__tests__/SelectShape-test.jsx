@@ -2,7 +2,7 @@ const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const SelectShape = require('../SelectShape');
-const b64toBlob = require('b64-to-blob')
+const b64toBlob = require('b64-to-blob');
 
 const TestUtils = require('react-dom/test-utils');
 
