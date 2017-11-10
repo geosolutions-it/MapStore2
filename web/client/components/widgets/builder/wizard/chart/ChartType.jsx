@@ -24,33 +24,19 @@ const sampleProps = {
 const StepHeader = require('../../../../misc/wizard/StepHeader');
 
 const ITEMS = [{
-    title: 'Bar chart',
-    icon: 'icon',
-    desc: 'desc',
-    caption: 'caption',
     type: "bar"
 }, {
-    title: 'Pie chart',
-    icon: 'icon',
-    desc: 'desc',
-    caption: 'caption',
     type: "pie"
 }, {
-    title: 'Line chart',
-    icon: 'icon',
-    desc: 'desc',
-    caption: 'caption',
     type: "line"
 }, {
-    title: 'Gauge',
-    icon: 'icon',
-    desc: 'desc',
-    caption: 'caption',
     type: "gauge"
-}
-
-
-];
+}].map( ({type}) => ({
+    type,
+    title: <Message msgId={`widgets.chartType.${type}.title`} />,
+    description: <Message msgId={`widgets.chartType.${type}.description`} />,
+    caption: <Message msgId={`widgets.chartType.${type}.caption`} />
+}));
 module.exports = ({onSelect = () => {}, onNextPage = () => {}, types = [], type} = {}) => (<Row>
     <StepHeader key="title" title={<Message msgId="widgets.selectChartType.title" />} />
     <SideGrid

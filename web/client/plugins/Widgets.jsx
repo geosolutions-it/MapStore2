@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {mapIdSelector} = require('../selectors/map');
 const {getFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout} = require('../selectors/widgets');
-const {editWidget, deleteWidget, changeLayout} = require('../actions/widgets');
+const {editWidget, deleteWidget, changeLayout, exportCSV, exportImage} = require('../actions/widgets');
 const assign = require('object-assign');
 const PropTypes = require('prop-types');
 const WidgetsView = connect(
@@ -28,6 +28,8 @@ const WidgetsView = connect(
         })
     ), {
         editWidget,
+        exportCSV,
+        exportImage,
         deleteWidget,
         onLayoutChange: changeLayout
     }
@@ -69,5 +71,6 @@ module.exports = {
     }),
     reducers: {
         widgets: require('../reducers/widgets')
-    }
+    },
+    epics: require('../epics/widgets')
 };

@@ -10,34 +10,38 @@ const enhanceChartWidget = require('../enhancers/chartWidget');
 const wpsChart = require('../enhancers/wpsChart');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const {pure} = require('recompose');
-const {Responsive, WidthProvider: widthProvider} = require('react-grid-layout');
-const ResponsiveReactGridLayout = widthProvider(Responsive);
 
-require('react-grid-layout/css/styles.css');
-require('react-resizable/css/styles.css');
+/*
+react-grid-layout-resize-prevent-collision is a fork of react-grid-layout deployed on npmjs.org to fix https://github.com/STRML/react-grid-layout/issues/655
+You can install and use react-grid-layout again when the issue is fixed
+*/
+const {Responsive, WidthProvider: widthProvider} = require('react-grid-layout-resize-prevent-collision');
+const ResponsiveReactGridLayout = widthProvider(Responsive);
+require('react-grid-layout-resize-prevent-collision/css/styles.css');
+require('react-grid-layout-resize-prevent-collision/css/styles.css');
 
 const ChartWidget = dependenciesToFilter(wpsChart(enhanceChartWidget(require('../widget/ChartWidget'))));
 
-module.exports = pure(({id, widgets=[], layouts, deleteWidget = () => {}, editWidget = () => {}, onLayoutChange = () => {}, dependencies}={}) =>
+module.exports = pure(({id, widgets=[], layouts, deleteWidget = () => {}, editWidget = () => {}, onLayoutChange = () => {}, exportCSV = () => {}, exportImage = () => {}, dependencies}={}) =>
     (<ResponsiveReactGridLayout
         key={id}
         onLayoutChange={onLayoutChange}
-        preventCollision={false /* set it to true when https://github.com/STRML/react-grid-layout/issues/655 is solved */ }
-        autoSize={false}
+        preventCollision
         layouts={layouts ? JSON.parse(JSON.stringify(layouts)) : undefined}
         style={{left: 500, bottom: 50, height: 'calc(100% - 100px)', width: 'calc(100% - 550px)', position: 'absolute', zIndex: 50}}
         containerPadding={[10, 10]}
         className="widget-card-on-map"
         rowHeight={208}
-        autoSize={false}
+        autoSize
         verticalCompact={false}
         breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-        cols={{lg: 6, md: 6, sm: 3, xs: 2, xxs: 1}}>
-
+        cols={{lg: 6, md: 6, sm: 6, xs: 4, xxs: 4}}>
      {widgets.map( w => {
          return (<div key={w.id} data-grid={w.dataGrid} >
               <ChartWidget {...w}
+                  exportCSV={exportCSV}
                   dependencies={dependencies}
+                  exportImage={exportImage}
                   onDelete={() => deleteWidget(w)}
                   onEdit={() => editWidget(w)} />
          </div>);

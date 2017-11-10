@@ -970,7 +970,8 @@
                 "errors": {
                     "noWidgetsAvailableTitle": "No Widgets available",
                     "noWidgetsAvailableDescription": "<p>You can't create any widgets for the selected layer. This is probably because the layer is not suitable for the available widgets or the server doesn't expose all the needed services or information to generate widget. Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li>gs:aggregate process is not available</li></ul> )<p>"
-                }
+                },
+                "setupFilter": "Configure a filter for the widget data"
             },
             "widget": {
                 "menu": {
@@ -979,6 +980,28 @@
                     "delete": "Delete",
                     "downloadData": "Download Data",
                     "exportImage": "Export Image"
+                }
+            },
+            "chartType": {
+                "bar": {
+                    "title": "Bar Chart",
+                    "description": "Create a bar chart to add to the map",
+                    "caption": "bar"
+                },
+                "pie": {
+                    "title": "Pie Chart",
+                    "description": "Create a pie chart to add to the map",
+                    "caption": "pie"
+                },
+                "line": {
+                    "title": "Bar Chart",
+                    "description": "Create a line chart to add to the map",
+                    "caption": "line"
+                },
+                "gauge": {
+                    "title": "Gauge Chart",
+                    "description": "Create a gauge chart to add to the map",
+                    "caption": "gauge"
                 }
             },
             "chartOptionsTitle": "Chart Data",

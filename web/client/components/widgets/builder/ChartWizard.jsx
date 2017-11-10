@@ -29,7 +29,7 @@ const PreviewChart = enhanchePreview(require('../../charts/SimpleChart'));
 const SampleChart = sampleData(require('../../charts/SimpleChart'));
 
 const sampleProps = {
-    width: 400,
+    width: 430,
     height: 200
 };
 

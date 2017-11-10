@@ -1,6 +1,3 @@
-#widgets-builder-plugin{
-    background-color: darken(@ms2-color-background, 2%);
-}
 .widget-card-on-map {
     &.react-grid-layout {
         pointer-events: none;
@@ -35,7 +32,8 @@
             color: #078aa3;
             .widget-title {
                 text-overflow: ellipsis;
-                width: calc(100% - 30px)
+                width: calc(100% - 30px);
+                font-size: 14px;
             }
             .mapstore-info-popover .glyphicon {
                 margin-top: 7px;
@@ -43,10 +41,6 @@
                 left: 22px;
                 font-size: 14px;
                 color: @ms2-color-primary;
-            }
-
-            .m-title {
-                font-size: 14px;
             }
         }
         .mapstore-widget-description {
