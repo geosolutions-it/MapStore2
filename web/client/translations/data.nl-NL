@@ -860,167 +860,168 @@
             }
         },
         "vectorstyler": {
-            "tooltip": "Créer et éditer un style de couche vectorielle",
-            "paneltitle": "Style de couche",
-            "layerlabel": "Couche",
-            "rulelabel": "Règles",
-            "namelabel": "Nom de règle",
-            "symboltitle": "Symbole",
-            "labeltitle": "Label",
-            "conditiontitle": "Conditions",
-            "applybtn": "Appliquer le style",
-            "addrulebtn": "Ajouter une règle",
-            "removerulebtn": "Retirer une règle"
+            "tooltip": "Maak en bewerk een stijl van een vectorlaag",
+            "paneltitle": "Laagstijl",
+            "layerlabel": "Laag",
+            "rulelabel": "Regels",
+            "namelabel": "Naam van de regel",
+            "symboltitle": "Symbool",
+            "labeltitle": "Etiket",
+            "conditiontitle": "Voorwaarden",
+            "applybtn": "Stijl toepassen",
+            "addrulebtn": "Regel toevoegen",
+            "removerulebtn": "Regel verwijderen"
         },
         "scaledenominator": {
-            "minlabel": "Dénominateur d'échelle minimum",
-            "maxlabel": "Dénominateur d'échelle maximum",
-            "maxerror": "La valeur max doit être plus grande que la valeur min",
-            "minerror": "La vleur min doit être plus petite que la valeur max",
-            "none": "Aucun"
+            "minlabel": "Minimale schaalnominator",
+            "maxlabel": "Maximale schaalnominator",
+            "maxerror": "De maximale waarde moet groter zijn dan de minimumwaarde",
+            "minerror": "De minimale waarde moet groter zijn dan de maximumwaarde",
+            "none": "Geen enkele"
         },
         "markNameSelector": {
-            "circle": "Cercle",
-            "square": "Carré",
-            "triangle": "Triangle",
-            "star": "Etoile",
-            "cross": "Croix",
+            "circle": "Cirkel",
+            "square": "Vierkant",
+            "triangle": "Driehoek",
+            "star": "Ster",
+            "cross": "Kruis",
             "x": "X"
         },
         "styler": {
-            "tooltip": "Créer et éditer un style de couche",
-            "paneltitle": "Style de couche",
-            "layerlabel": "Couche"
+            "tooltip": "Maak en bewerk een laagstijl",
+            "paneltitle": "Laagstijl",
+            "layerlabel": "Laag"
         },
         "rulesmanager": {
-            "title": "Règles d'accès",
-            "role": "Rôle",
-            "user": "Utilisateur",
+            "title": "Toegangsregels",
+            "role": "Rol",
+            "user": "Gebruiker",
             "service": "Service",
             "request": "Request",
             "workspace": "Workspace",
-            "layer": "Layer",
-            "filters": "Filtres",
-            "rules": "Règles",
-            "access": "Accès",
-            "newModal": "Nouvelle règle",
-            "editModal": "Modifier la règle",
-            "newButton": "Créer",
-            "editButton": "Enregistrer",
-            "close": "Fermer",
-            "previous": "précédent",
-            "next": "prochain",
-            "errorLoadingRoles": "Erreur lors du chargement des rôles.",
-            "errorLoadingUsers": "Erreur lors du chargement des utilisateurs.",
-            "errorLoadingWorkspaces": "Erreur lors du chargement des  workspaces.",
-            "errorLoadingLayers": "Erreur lors du chargement des layers.",
-            "errorLoadingRules": "Erreur lors du chargement des règles.",
-            "errorMovingRules": "Erreur lors du déplacement des règles.",
-            "errorDeletingRules": "Erreur de suppression des règles.",
-            "errorAddingRule": "Erreur lors de l'ajout de la règle.",
-            "errorUpdatingRule": "Erreur lors de la mise à jour règle.",
-            "deleteModal": "Supprimer la règle",
-            "selectedRulesDelete": "Voulez-vous supprimer les règles sélectionnées ?",
-            "deleteButton": "Effacer",
-            "cancelButton": "Annuler"
+            "layer": "Laag",
+            "filters": "Filters",
+            "rules": "Regels",
+            "access": "Toegang",
+            "newModal": "Nieuwe regel",
+            "editModal": "Regel wijzigen",
+            "newButton": "Aanmaken",
+            "editButton": "Opslaan",
+            "close": "Sluiten",
+            "previous": "vorige",
+            "next": "volgende",
+            "errorLoadingRoles": "Fout bij laden van de rollen.",
+            "errorLoadingUsers": "Fout bij laden van de gebruikers.",
+            "errorLoadingWorkspaces": "Fout bij laden van workspaces.",
+            "errorLoadingLayers": "Fout bij laden van de lagen.",
+            "errorLoadingRules": "Fout bij laden van de regels.",
+            "errorMovingRules": "Fout bij verplaatsen van de regels.",
+            "errorDeletingRules": "Fout bij verwijderen van de regels.",
+            "errorAddingRule": "Fout bij toevoegen van de regel.",
+            "errorUpdatingRule": "Fout bij bijwerken van de regel.",
+            "deleteModal": "Regel verwijderen",
+            "selectedRulesDelete": "Wilt u de geselecteerde regels verwijderen?",
+            "deleteButton": "Wissen",
+            "cancelButton": "Annuleren"
         },
         "tutorial": {
             "title": "Tutorial",
-            "back": "Back",
-            "next": "Next",
-            "close": "Close",
-            "skip": "Skip",
-            "last": "Finish",
+            "back": "Vorige",
+            "next": "Volgende",
+            "close": "Sluiten",
+            "skip": "Overslaan",
+            "last": "Einde",
             "start": "Start",
-            "checkbox": "don't show this message again",
-            "error": "Error: target not found",
+            "checkbox": "laat dit bericht niet meer zien",
+            "error": "Fout: doel niet gevonden",
             "intro": {
-                "title": "Welcome on MapStore2",
-                "text": "framework to build web mapping applications using standard mapping libraries, such as OpenLayers 3 and Leaflet."
+                "title": "Welkom bij MapStore2",
+                "text": "framework om web mapping-applicaties te bouwen met behulp van standaard mapping-bibliotheken, zoals OpenLayers 3 en Leaflet."
             },
             "drawerMenu": {
-                "title": "Main menu",
-                "text": "You can find information and tools to manage layer"
+                "title": "Hoofdmenu",
+                "text": "U kunt informatie en hulpmiddelen vinden om laag te beheren"
             },
             "searchBar": {
-                "title": "Search Bar",
-                "text": "Write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+                "title": "Zoekbalk"
+        ,
+                "text": "Schrijf het adres van een te vinden plaats, bijv. '1st avenue, new york'. U kunt zelfs coördinaten inbrengen in volgend formaat: 43.87,10.20"
             },
             "home": {
                 "title": "Home",
-                "text": "Go to homepage"
+                "text": "Ga naar homepagina"
             },
             "searchButton": {
-                "title": "Search",
-                "text": "Click to open the search bar, then write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+                "title": "Zoek",
+                "text": "Klik om de zoekbalk te openen en typ vervolgens het adres van een te vinden plaats. bijv. '1st avenue, new york'. U kunt zelfs coördinaten invoegen in dit formaat: 43.87,10.20"
             },
             "burgerMenu": {
-                "title": "Option Menu",
-                "text": "You can find options, settings and help"
+                "title": "Optiemenu",
+                "text": "U kunt opties, instellingen en hulp vinden"
             },
             "zoomInButton": {
-                "title": "Zoom In",
-                "text": "Click to enlarge the map"
+                "title": "Inzoomen",
+                "text": "Klik om de kaart te vergroten"
             },
             "zoomOutButton": {
-                "title": "Zoom Out",
-                "text": "Click to reduce the map"
+                "title": "UItzoomen",
+                "text": "Klik om de kaart te verkleinen"
             },
             "measureAreaBrugisButton": {
-                "title": "Mesure de surface",
-                "text": "Utilisez cet outil pour mesurer des surfaces"
+                "title": "Oppervlaktemeting",
+                "text": "Gebruik deze tool om oppervlakken te meten"
             },
             "measureLengthBrugisButton": {
-                "title": "Mesure de longueur",
-                "text": "Utilisez cet outil pour mesurer des distances"
+                "title": "Lengte meting",
+                "text": "Gebruik dit hulpmiddel om afstanden te meten"
             },
             "fullscreen": {
-                "title": "Basculer en plein écran",
-                "text": "Basculer en plein écran"
+                "title": "Schakel over naar volledig scherm",
+                "text": "Schakel over naar volledig scherm"
             },
             "identifyButton": {
                 "title": "Info",
-                "text": "Press the button to activate the tool, then click on the map to retrieve information from layers"
+                "text": "Druk op de knop om de tool te activeren en klik vervolgens op de kaart om informatie uit lagen op te halen"
             },
             "mapType": {
-                "title": "Library",
-                "text": "You can choose Leaflet or OpenLayers to render your maps"
+                "title": "Bibliotheek",
+                "text": "U kunt Leaflet of OpenLayers kiezen om uw kaarten weer te geven"
             },
             "mapsGrid": {
-                "title": "Maps",
-                "text": "Here some examples of MapStore2. Click on an image to try the demo."
+                "title": "Kaarten",
+                "text": "Hier enkele voorbeelden van MapStore2. Klik op een afbeelding om de demo te proberen."
             },
             "examples": {
-                "title": "Custom Application",
-                "text": "You can use components and plugins of MapStore2 to build custom applications"
+                "title": "Aangepaste applicatie",
+                "text": "U kunt componenten en plug-ins van MapStore2 gebruiken om aangepaste applicaties te bouwen"
             },
             "introCesium": {
-                "title": "3D map instructions",
-                "text": "Click on next button to start the tutorial"
+                "title": "3D-kaartinstructies",
+                "text": "Klik op de volgende knop om de tutorial te starten"
             },
             "cesium": {
-                "title": "Interactions with the Map",
-                "pan": "Pan view",
-                "zoom": "Zoom view",
-                "tilt": "Tilt view",
-                "rotate": "Rotate view",
-                "oneDrag": "One finger drag",
+                "title": "Interacties met de kaart",
+                "pan": "Pan beeld",
+                "zoom": "Zoomweergave",
+                "tilt": "Schuine weergave",
+                "rotate": "Draai het beeld",
+                "oneDrag": "Sleep met één vinger",
                 "twoPinch": "Two finger pinch",
-                "twoDragSame": "Two finger drag, same direction",
-                "twoDragOpposite": "Two finger drag, opposite direction",
-                "leftClick": "Left click + drag",
-                "rightClick": "Right click + drag, or Mouse wheel scroll",
-                "middleClick": "Middle click + drag, or CTRL + Left/Right click + drag"
+                "twoDragSame": "Twee vingers slepen, dezelfde richting",
+                "twoDragOpposite": "Twee vingers slepen, tegengestelde richting",
+                "leftClick": "Klik met de linkermuisknop + slepen",
+                "rightClick": "Klik met de rechtermuisknop + slepen, of muiswiel scrollen",
+                "middleClick": "Middelste klik + slepen, of CTRL + Links / Rechts klikken + slepen"
 
             },
             "cesiumCompass": {
-                "title": "Compass",
-                "text": "You can use the compass to orbit around the globe. Drag to rotate the map"
+                "title": "Kompas",
+                "text": "Je kunt het kompas gebruiken om rond de wereld te cirkelen. Sleep om de kaart te draaien"
             },
             "cesiumNavigation": {
-                "title": "Navigation",
-                "text": "Here you can find the zoom in and zoom out buttons"
+                "title": "Navigatie",
+                "text": "Hier kunt u de knoppen voor in- en uitzoomen vinden"
             }
         }
+      }
     }
-}
