@@ -22,22 +22,21 @@ module.exports = pure(({id, widgets=[], layouts, deleteWidget = () => {}, editWi
     (<ResponsiveReactGridLayout
         key={id}
         onLayoutChange={onLayoutChange}
-        preventCollision={false}
+        preventCollision={false /* set it to true when https://github.com/STRML/react-grid-layout/issues/655 is solved */ }
         autoSize={false}
         layouts={layouts ? JSON.parse(JSON.stringify(layouts)) : undefined}
-        style={{left: 350, bottom: 50, height: 'calc(100% - 100px)', width: 'calc(100% - 500px)', position: 'absolute', zIndex: 50}}
+        style={{left: 500, bottom: 50, height: 'calc(100% - 100px)', width: 'calc(100% - 550px)', position: 'absolute', zIndex: 50}}
         containerPadding={[10, 10]}
         className="widget-card-on-map"
         rowHeight={208}
         autoSize={false}
-        compactType={'vertical'}
         verticalCompact={false}
         breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-        cols={{lg: 6, md: 6, sm: 1, xs: 1, xxs: 1}}>
+        cols={{lg: 6, md: 6, sm: 3, xs: 2, xxs: 1}}>
 
-     {widgets.map((w, i) => {
-         return (<div key={w.id} className="widget-card-on-map" >
-              <ChartWidget key={i} {...w}
+     {widgets.map( w => {
+         return (<div key={w.id} data-grid={w.dataGrid} >
+              <ChartWidget {...w}
                   dependencies={dependencies}
                   onDelete={() => deleteWidget(w)}
                   onEdit={() => editWidget(w)} />

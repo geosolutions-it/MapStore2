@@ -64,12 +64,15 @@ function widgetsReducer(state = emptyState, action) {
             return set(`builder.editor.${action.key}`, action.value, state);
         }
         case INSERT:
-           return arrayUpsert(`containers[${action.target}].widgets`, {
+           let tempState = arrayUpsert(`containers[${action.target}].widgets`, {
                id: action.id,
-               ...action.widget
+               ...action.widget,
+               dataGrid: action.id && {y: 0, x: 0, w: 1, h: 1}
            }, {
                id: action.widget.id || action.id
            }, state);
+
+           return tempState;
         case DELETE:
             return arrayDelete(`containers[${action.target}].widgets`, {
                 id: action.widget.id

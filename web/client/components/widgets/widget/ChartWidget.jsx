@@ -43,9 +43,9 @@ module.exports = ({
     ...props}) =>
     (<div className="mapstore-widget-card">
         <BorderLayout header={(<div className="mapstore-widget-info">
-                    <div className="mapstore-widget-title">
+                    <div className="mapstore-widget-header">
                         {renderHeaderLeftTopItem({loading, title, description, showTable, toggleTableView})}
-                        {title}
+                        <span className="widget-title">{title}</span>
                         <span className="mapstore-widget-options">
                             {showTable
                                 ? null : <ButtonToolbar>
