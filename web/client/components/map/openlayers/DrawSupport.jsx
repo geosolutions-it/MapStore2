@@ -421,7 +421,6 @@ class DrawSupport extends React.Component {
         }
         if (newProps.options.editEnabled) {
             this.addModifyInteraction();
-            this.addTranslateInteraction();
         }
         if (newProps.options.drawEnabled) {
             this.handleDrawAndEdit(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints);
