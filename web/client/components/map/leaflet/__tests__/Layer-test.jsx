@@ -192,7 +192,7 @@ describe('Leaflet layer', () => {
             "tileMatrixSet": [
                 {
                     "TileMatrix": [],
-                    "ows:Identifier": "EPSG:4326",
+                    "ows:Identifier": "EPSG:900913",
                     "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::900913"
                 }
             ],
