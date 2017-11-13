@@ -421,6 +421,9 @@ class DrawSupport extends React.Component {
         }
         if (newProps.options.editEnabled) {
             this.addModifyInteraction();
+        }
+        // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
+        if (getSimpleGeomType(newProps.drawMethod) !== "Polygon") {
             this.addTranslateInteraction();
         }
         if (newProps.options.drawEnabled) {
