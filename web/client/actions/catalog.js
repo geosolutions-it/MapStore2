@@ -193,7 +193,7 @@ function addLayerAndDescribe(layer) {
                 if (results) {
                     let description = find(results, (desc) => desc.name === layer.name );
                     if (description && description.owsType === 'WFS') {
-                        const filteredUrl = ConfigUtils.filterUrlParams(ConfigUtils.normalizeUrl(description.owsURL), authkeyParamNameSelector(state));
+                        const filteredUrl = ConfigUtils.filterUrlParams(ConfigUtils.cleanDuplicatedQuestionMarks(description.owsURL), authkeyParamNameSelector(state));
                         dispatch(changeLayerProperties(id, {
                             search: {
                                 url: filteredUrl,

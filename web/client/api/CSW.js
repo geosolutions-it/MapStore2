@@ -104,7 +104,7 @@ var Api = {
                                                 * So we place references as they are.
                                                 */
                                                 if (elName === "references" && dcel.value) {
-                                                    let urlString = dcel.value.content && ConfigUtils.normalizeUrl(dcel.value.content[0]) || dcel.value.content || dcel.value;
+                                                    let urlString = dcel.value.content && ConfigUtils.cleanDuplicatedQuestionMarks(dcel.value.content[0]) || dcel.value.content || dcel.value;
                                                     finalEl = {
                                                         value: urlString,
                                                         scheme: dcel.value.scheme

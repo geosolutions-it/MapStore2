@@ -54,7 +54,7 @@ const getConfigurationOptions = function(query, defaultName, extension, geoStore
  * it removes some params from the query string
  * return the shrinked url
 */
-const removeParameters = (urlToFilter, skip) => {
+const getUrlWithoutParameters = (urlToFilter, skip) => {
     const urlparts = urlToFilter.split('?');
     let paramsFiltered = "";
     if (urlparts.length >= 2 && urlparts[1]) {
@@ -73,8 +73,20 @@ const removeParameters = (urlToFilter, skip) => {
  * WORKAROUND: it removes the extra ? when the authkey param is present
  * the url was like         http......?authkey=....?service=....&otherparam
  * that should become like  http......?authkey=....&service=....&otherparam
+ *
+ * The problem happens when you have this in the Record.properties
+ * file of the csw folder in GeoServer, with csw plugin installed:
+ * references.scheme='OGC:WMS'
+ * references.value=strConcat('${url.wms}?service=WMS&request=GetMap&layers=', prefixedName)
+ * That is ok when you are not using an authkey, but If you have the authkey
+ * module installed and you get record with a proper authkey parameter the
+ * ${url.wms} URL will have also ?authkey=... and so the final URL is something like:
+ * http://domain.org/geoserver/?autkey=abcdefghijklmnopqrstuvz1234567890?service=WMS&request=GetMap&layers=LAYER_NAME
+ * ${url.wms} is replaced with the wms URL after the execution of strConcat,
+ * so the url can not be parsed in any way to solve the problem via configuration,
+ * because you can not know if ${url.wms} contains ? or not.
 */
-const normalizeUrl = (urlToNormalize) => {
+const cleanDuplicatedQuestionMarks = (urlToNormalize) => {
     const urlParts = urlToNormalize.split("?");
     if (urlParts.length > 2) {
         let newUrlParts = urlParts.slice(1);
@@ -299,13 +311,13 @@ var ConfigUtils = {
     getProxyUrl: function(config) {
         return config.proxyUrl ? config.proxyUrl : defaultConfig.proxyUrl;
     },
-    normalizeUrl,
-    removeParameters,
+    cleanDuplicatedQuestionMarks,
+    getUrlWithoutParameters,
     filterUrlParams: (urlToFilter, params = []) => {
         if (isNil(urlToFilter) || urlToFilter === "") {
             return null;
         }
-        return removeParameters(normalizeUrl(urlToFilter), params);
+        return getUrlWithoutParameters(cleanDuplicatedQuestionMarks(urlToFilter), params);
     },
     getProxiedUrl: function(uri, config = {}) {
         let sameOrigin = !(uri.indexOf("http") === 0);

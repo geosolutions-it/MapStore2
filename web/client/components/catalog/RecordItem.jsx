@@ -213,7 +213,7 @@ class RecordItem extends React.Component {
     };
 
     addLayer = (wms) => {
-        const {url, params} = removeParameters(ConfigUtils.normalizeUrl(wms.url), ["request", "layer", "service", "version"].concat(this.props.authkeyParamNames));
+        const {url, params} = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wms.url), ["request", "layer", "service", "version"].concat(this.props.authkeyParamNames));
         const allowedSRS = buildSRSMap(wms.SRS);
         if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
@@ -247,7 +247,7 @@ class RecordItem extends React.Component {
     };
 
     addwmtsLayer = (wmts) => {
-        const {url, params} = removeParameters(ConfigUtils.normalizeUrl(wmts.url), ["request", "layer"].concat(this.props.authkeyParamNames));
+        const {url, params} = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wmts.url), ["request", "layer"].concat(this.props.authkeyParamNames));
         const allowedSRS = buildSRSMap(wmts.SRS);
         if (wmts.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
