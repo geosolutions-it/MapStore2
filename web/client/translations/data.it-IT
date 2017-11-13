@@ -109,6 +109,16 @@
         "groups": "Gruppi",
         "permission": "Permesso",
         "permissions": "Permessi",
+        "global": {
+            "colors": {
+                "red": "{number, plural, =0 {Rosso} =1 {Rosso} other {Rossi}}",
+                "blue": "{number, plural, =0 {Blu} =1 {Blu} other {Blu}}",
+                "green": "{number, plural, =0 {Verde} =1 {Verde} other {Verdi}}",
+                "brown": "{number, plural, =0 {Marrone} =1 {Marrone} other {Marroni}}",
+                "purple": "{number, plural, =0 {Porpora} =1 {Porpora} other {Porpora}}",
+                "random": "{number, plural, =0 {Casuale} =1 {Casuale} other {Casuale}}"
+            }
+        },
         "home":{
             "open": "Apri",
             "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"/mapstore/docs/\">home page</a> per maggiori dettagli.",
@@ -939,7 +949,7 @@
             }
         },
         "wfsdownload": {
-            "title": "Esporta Dati",
+            "title": "Esporta dati",
             "format": "Formato file",
             "srs": "Sistema di riferimento",
             "export": "Esporta",
@@ -948,6 +958,91 @@
                 "title": "Errore durante l'esportazione",
                 "invalidOutputFormat": "Il formato selezionato non è disponibile"
             }
+        },
+        "widgets": {
+            "selectChartType": {
+                "title": "Seleziona il tipo di widget"
+            },
+            "title": "Titolo",
+            "description": "Descrizione",
+            "errors": {
+                "nodatainviewport": "Nessun dato per la vista selezionata"
+            },
+            "builder": {
+                "header": {
+                    "title": "Widget"
+                },
+                "errors": {
+                    "noWidgetsAvailableTitle": "Nessun widgets disponibile",
+                    "noWidgetsAvailableDescription": "<p>Non si possono creare widget per il livello selezionato. Questo perchè il livello non è adatto a nessuno degli widget disponibili o perché il server non espone sufficienti servizi per gernerali. Possibili cause: <ul><li>Hai selezionato un livello raster</li><li>Il servizio WFS non è disponibile per il livello in oggetto</li><li>Il processo gs:aggregate non è disponibile sul server</li></ul> )<p>"
+                },
+                "setupFilter": "Configura un filtro per il livello selezionato"
+            },
+            "widget": {
+                "menu": {
+                    "showChartData": "Mostra dati del grafico",
+                    "edit": "Modifica",
+                    "delete": "Elimina",
+                    "downloadData": "Scarica dati",
+                    "exportImage": "Esporta dati"
+                }
+            },
+            "chartType": {
+                "bar": {
+                    "title": "Istogramma",
+                    "description": "Crea un istogramma da aggiungere alla mappa",
+                    "caption": "istogramma"
+                },
+                "pie": {
+                    "title": "Torta",
+                    "description": "Crea un diagramma a torta da aggiungere alla mappa",
+                    "caption": "torta"
+                },
+                "line": {
+                    "title": "Grafico a Linea",
+                    "description": "Crea un grafico a linea",
+                    "caption": "linea"
+                },
+                "gauge": {
+                    "title": "Cruscotto",
+                    "description": "Crea un cruscotto di contatori da aggiungere alla mappa",
+                    "caption": "cruscotto"
+                }
+            },
+            "chartOptionsTitle": "Dati grafico",
+            "widgetOptionsTitle": "Informazioni",
+            "groupByAttributes": {
+                "line": "Attributo X",
+                "pie": "Raggruppa per",
+                "bar": "Attributo X",
+                "gauge": "Group By"
+            },
+            "aggregationAttribute": {
+                "line": "Attributo Y",
+                "pie": "Valore",
+                "bar": "Attributo Y",
+                "gauge": "Valore"
+            },
+            "aggregateFunction": {
+                "line": "Operazione",
+                "pie": "Operazione",
+                "bar": "Operazione",
+                "gauge": "Operazione"
+            },
+            "colorRamp": {
+                "line": "Colore",
+                "pie": "Scala colori",
+                "bar": "Colore",
+                "gauge": "Colore"
+            },
+            "mapSync": "Filtra dati sull'area visibile",
+            "displayLegend": {
+                "line": "Mostra legenda",
+                "pie": "Mostra legenda",
+                "bar": "Mostra legenda",
+                "gauge": "Mostra etichette"
+            }
+
         },
         "vectorstyler": {
             "tooltip": "Crea e modifica lo stile dei layer vettoriali",

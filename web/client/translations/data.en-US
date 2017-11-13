@@ -998,7 +998,7 @@
                     "caption": "pie"
                 },
                 "line": {
-                    "title": "Bar Chart",
+                    "title": "Line Chart",
                     "description": "Create a line chart to add to the map",
                     "caption": "line"
                 },
