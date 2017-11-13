@@ -17,7 +17,13 @@ module.exports = {
         resultSize: (state) =>get(state, "query.result.features.length"),
         totalFeatures: (state) => get(state, "query.result.totalFeatures")
     },
-    isDescribeLoaded: (state, name) => !!get(state, `query.featureTypes.${name}`),
+    isDescribeLoaded: (state, name) => {
+        const ft = get(state, `query.featureTypes.${name}`);
+        if (ft && ft.attributes && ft.geometry && ft.original) {
+            return true;
+        }
+        return false;
+    },
     describeSelector: (state) => get(state, `query.featureTypes.${get(state, "query.filterObj.featureTypeName")}.original`),
     layerDescribeSelector: (state, featureTypeName) =>get(state, `query.featureTypes.[${featureTypeName}].original`),
     featureLoadingSelector: (state) => get(state, "query.featureLoading"),

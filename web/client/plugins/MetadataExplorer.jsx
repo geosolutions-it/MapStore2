@@ -24,7 +24,7 @@ const {setControlProperty, toggleControl} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
     servicesSelector, formatsSelector, loadingErrorSelector, selectedServiceSelector,
-    modeSelector, layerErrorSelector, activeSelector, savingSelector
+    modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector
 } = require("../selectors/catalog");
 const Message = require("../components/I18N/Message");
 require('./metadataexplorer/css/style.css');
@@ -32,6 +32,7 @@ require('./metadataexplorer/css/style.css');
 const CatalogUtils = require('../utils/CatalogUtils');
 
 const catalogSelector = createSelector([
+    (state) => authkeyParamNameSelector(state),
     (state) => resultSelector(state),
     (state) => savingSelector(state),
     (state) => serviceListOpenSelector(state),
@@ -40,7 +41,8 @@ const catalogSelector = createSelector([
     (state) => selectedServiceTypeSelector(state),
     (state) => searchOptionsSelector(state),
     (state) => currentLocaleSelector(state)
-], (result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale) =>({
+], (authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale) =>({
+    authkeyParamNames,
     saving,
     openCatalogServiceList,
     format: newformat,

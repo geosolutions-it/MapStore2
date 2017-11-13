@@ -14,5 +14,8 @@ module.exports = {
     selectedServiceSelector: (state) => get(state, "catalog.selectedService"),
     modeSelector: (state) => get(state, "catalog.mode", "view"),
     layerErrorSelector: (state) => get(state, "catalog.layerError"),
-    activeSelector: (state) => get(state, "controls.toolbar.active") === "metadataexplorer" || get(state, "controls.metadataexplorer.enabled")
+    activeSelector: (state) => get(state, "controls.toolbar.active") === "metadataexplorer" || get(state, "controls.metadataexplorer.enabled"),
+    authkeyParamNameSelector: (state) => {
+        return (get(state, "localConfig.authenticationRules") || []).filter(a => a.method === "authkey").map(r => r.authkeyParamName) || [];
+    }
 };

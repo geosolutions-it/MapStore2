@@ -307,4 +307,50 @@ describe('ConfigUtils', () => {
         ConfigUtils.removeConfigProp('testProperty');
         expect(ConfigUtils.getConfigProp('testProperty')).toNotExist();
     });
+
+    it('testing cleanDuplicatedQuestionMarks', () => {
+        const urlDoubleQuestionMark = "http.../wms?authkey=...?service=...&otherparam";
+        const match = "http.../wms?authkey=...&service=...&otherparam";
+        const noQuestionMark = "http.../wmsauthkey=...&service=...&otherparam";
+        // with 2 ? it returns the cleanDuplicatedQuestionMarks
+        let normalizedUrl = ConfigUtils.cleanDuplicatedQuestionMarks(urlDoubleQuestionMark);
+        expect(normalizedUrl).toBe(match);
+        // with 1 ? it returns the url passed as argument
+        let normalizedUrl2 = ConfigUtils.cleanDuplicatedQuestionMarks(match);
+        expect(normalizedUrl2).toBe(match);
+        // with 0 ? it returns the url passed as argument
+        let normalizedUrl3 = ConfigUtils.cleanDuplicatedQuestionMarks(noQuestionMark);
+        expect(normalizedUrl3).toBe(noQuestionMark);
+    });
+    it('getUrlWithoutParameters from a normalized url with single ?', () => {
+        const match = "http://somesite.com/geoserver/wms?authkey=someautkeyvalue&service=WMS&otherparam=OTHERVALUE";
+        let shrinkedUrl = ConfigUtils.getUrlWithoutParameters(match, ["authkey"]);
+        expect(shrinkedUrl).toBe("http://somesite.com/geoserver/wms?service=WMS&otherparam=OTHERVALUE");
+    });
+    it('getUrlWithoutParameters from a normalized url without passing params ', () => {
+        const match = "http://somesite.com/geoserver/wms?authkey=someautkeyvalue&service=WMS&otherparam=OTHERVALUE";
+        let shrinkedUrl = ConfigUtils.getUrlWithoutParameters(match, []);
+        expect(shrinkedUrl).toBe(match);
+    });
+    it('getUrlWithoutParameters from a normalized url, removing all the params ', () => {
+        const match = "http://somesite.com/geoserver/wms?authkey=someautkeyvalue&service=WMS&otherparam=OTHERVALUE";
+        let shrinkedUrl = ConfigUtils.getUrlWithoutParameters(match, ["authkey", "service", "otherparam"]);
+        expect(shrinkedUrl).toBe("http://somesite.com/geoserver/wms");
+    });
+    it('filterUrlParams with normalized url', () => {
+        const match = "http://somesite.com/geoserver/wms?authkey=someautkeyvalue&service=WMS&otherparam=OTHERVALUE";
+        let shrinkedUrl = ConfigUtils.filterUrlParams(match, ["authkey", "service", "otherparam"]);
+        expect(shrinkedUrl).toBe("http://somesite.com/geoserver/wms");
+    });
+    it('filterUrlParams with non normalized url', () => {
+        const match = "http://somesite.com/geoserver/wms?authkey=someautkeyvalue?service=WMS&otherparam=OTHERVALUE";
+        let shrinkedUrl = ConfigUtils.filterUrlParams(match, ["authkey", "service", "otherparam"]);
+        expect(shrinkedUrl).toBe("http://somesite.com/geoserver/wms");
+    });
+    it('filterUrlParams with empty string as url', () => {
+        const match = "";
+        let shrinkedUrl = ConfigUtils.filterUrlParams(match, ["authkey", "service", "otherparam"]);
+        expect(shrinkedUrl).toBe(null);
+    });
+
 });
