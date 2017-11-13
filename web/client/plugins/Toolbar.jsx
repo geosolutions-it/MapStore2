@@ -13,7 +13,8 @@ const {connect} = require('react-redux');
 require('./toolbar/assets/css/toolbar.css');
 
 const {CSSTransitionGroup} = require('react-transition-group');
-const {cssStatusSelector} = require('../selectors/controls');
+const {cssStateSelector} = require('../selectors/controls');
+const {getDockSize, isFeatureGridOpen} = require('../selectors/featuregrid');
 const {createSelector} = require('reselect');
 
 const assign = require('object-assign');
@@ -46,7 +47,7 @@ class Toolbar extends React.Component {
         buttonSize: PropTypes.string,
         pressedButtonStyle: PropTypes.string,
         btnConfig: PropTypes.object,
-        cssStatus: PropTypes.string
+        cssState: PropTypes.string
     };
 
     static contextTypes = {
@@ -76,7 +77,7 @@ class Toolbar extends React.Component {
         btnConfig: {
             className: "square-button"
         },
-        cssStatus: "panel-open"
+        cssState: ""
     };
 
     getPanel = (tool) => {
@@ -100,7 +101,7 @@ class Toolbar extends React.Component {
     };
 
     render() {
-        return (<ToolsContainer id={this.props.id} className={"mapToolbar btn-group-" + this.props.layout + this.props.cssStatus}
+        return (<ToolsContainer id={this.props.id} className={"mapToolbar btn-group-" + this.props.layout + this.props.cssState}
             toolCfg={this.props.btnConfig}
             container={AnimatedContainer}
             mapType={this.props.mapType}
@@ -121,15 +122,15 @@ class Toolbar extends React.Component {
 const toolbarSelector = stateSelector => createSelector([
         state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].active,
         state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].expanded,
-        cssStatusSelector,
-        state => state.featuregrid && state.featuregrid.dockSize,
-        state => state.featuregrid && state.featuregrid.open
-    ], (active, allVisible, cssStatus, dockSize, featuregridOpen) => ({
+        cssStateSelector,
+        getDockSize,
+        isFeatureGridOpen
+    ], (active, allVisible, cssState, dockSize, featuregridOpen) => ({
         active,
         allVisible,
         stateSelector,
-        cssStatus,
-        layout: cssStatus.match('mapstore-featuregrid-open') ? 'horizontal' : 'vertical',
+        cssState,
+        layout: cssState.match('mapstore-featuregrid-open') ? 'horizontal' : 'vertical',
         style: featuregridOpen && {bottom: (dockSize * 100) + '%'} || {}
 }));
 

@@ -16,7 +16,7 @@ const {Glyphicon} = require('react-bootstrap');
 const {on, toggleControl} = require('../actions/controls');
 
 const {createSelector} = require('reselect');
-const {cssStatusSelector} = require('../selectors/controls');
+const {cssStateSelector} = require('../selectors/controls');
 
 const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnotation, removeAnnotation, cancelEditAnnotation,
     saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
@@ -94,7 +94,7 @@ class AnnotationsPanel extends React.Component {
 
         // side panel properties
         width: PropTypes.number,
-        cssStatus: PropTypes.string
+        cssState: PropTypes.string
     };
 
     static defaultProps = {
@@ -121,7 +121,7 @@ class AnnotationsPanel extends React.Component {
             position: "right",
             zIndex: 1030
         },
-        cssStatus: ''
+        cssState: ''
     };
 
     render() {
@@ -130,7 +130,7 @@ class AnnotationsPanel extends React.Component {
         return this.props.active ? (
             <ContainerDimensions>
             { ({ width }) =>
-                <span className={"mapstore-dock vertical" + this.props.cssStatus}>
+                <span className={"mapstore-dock vertical" + this.props.cssState}>
                     <Dock {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
                         <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
                             {panel}
@@ -163,7 +163,7 @@ const conditionalToggle = on.bind(null, toggleControl('annotations', null), (sta
   */
 const AnnotationsPlugin = connect((state) => ({
     active: (state.controls && state.controls.annotations && state.controls.annotations.enabled) || (state.annotations && state.annotations.closing) || false,
-    cssStatus: cssStatusSelector(state)
+    cssState: cssStateSelector(state)
 }), {
     toggleControl: conditionalToggle
 })(AnnotationsPanel);

@@ -31,7 +31,7 @@ const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatia
 const autocompleteEpics = require('../epics/autocomplete');
 const {bindActionCreators} = require('redux');
 
-const {cssStatusSelector} = require('../selectors/controls');
+const {cssStateSelector} = require('../selectors/controls');
 
 const {
     // QueryBuilder action functions
@@ -139,13 +139,13 @@ const tocSelector = createSelector(
         groupsSelector,
         (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}},
         (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false,
-        cssStatusSelector
-    ], (enabled, groups, settings, querypanelEnabled, cssStatus) => ({
+        cssStateSelector
+    ], (enabled, groups, settings, querypanelEnabled, cssState) => ({
         enabled,
         groups,
         settings,
         querypanelEnabled,
-        cssStatus
+        cssState
     })
 );
 
@@ -177,7 +177,7 @@ class QueryPanel extends React.Component {
         activateSettingsTool: PropTypes.bool,
         visibilityCheckType: PropTypes.string,
         settingsOptions: PropTypes.object,
-        cssStatus: PropTypes.string
+        cssState: PropTypes.string
     };
 
     static defaultProps = {
@@ -199,7 +199,7 @@ class QueryPanel extends React.Component {
         visibilityCheckType: "checkbox",
         settingsOptions: {},
         querypanelEnabled: false,
-        cssStatus: ''
+        cssState: ''
     };
 
     componentWillReceiveProps(newProps) {
@@ -216,7 +216,7 @@ class QueryPanel extends React.Component {
             <Sidebar
                 open={this.props.querypanelEnabled}
                 sidebar={this.renderQueryPanel()}
-                sidebarClassName={"query-form-panel-container" + this.props.cssStatus}
+                sidebarClassName={"query-form-panel-container" + this.props.cssState}
                 styles={{
                     sidebar: {
                         zIndex: 1024,

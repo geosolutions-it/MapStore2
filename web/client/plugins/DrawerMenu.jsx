@@ -24,7 +24,7 @@ const Section = require('./drawer/Section');
 const {partialRight} = require('lodash');
 
 const assign = require('object-assign');
-const {cssStatusSelector} = require('../selectors/controls');
+const {cssStateSelector} = require('../selectors/controls');
 
 const Menu = connect((state) => ({
     show: state.controls.drawer && state.controls.drawer.enabled,
@@ -67,7 +67,7 @@ class DrawerMenu extends React.Component {
         buttonClassName: PropTypes.string,
         menuButtonStyle: PropTypes.object,
         disabled: PropTypes.bool,
-        cssStatus: PropTypes.string
+        cssState: PropTypes.string
     };
 
     static contextTypes = {
@@ -85,7 +85,7 @@ class DrawerMenu extends React.Component {
         singleSection: true,
         buttonClassName: "square-button",
         disabled: false,
-        cssStatus: ''
+        cssState: ''
     };
 
     getTools = () => {
@@ -121,7 +121,7 @@ class DrawerMenu extends React.Component {
     render() {
         let tooltip = <Tooltip key="drawerButtonTooltip" id="drawerButtonTooltip"><Message msgId={"toc.drawerButton"}/></Tooltip>;
         return (
-            <div id={this.props.id} className={this.props.cssStatus}>
+            <div id={this.props.id} className={this.props.cssState}>
                 <OverlayTrigger placement="bottom" key="drawerButtonTooltip"
                     overlay={tooltip}>
                     <Button id="drawer-menu-button" style={this.props.menuButtonStyle} bsStyle={this.props.buttonStyle} key="menu-button" className={this.props.buttonClassName} onClick={this.props.toggleMenu} disabled={this.props.disabled}><Glyphicon glyph={this.props.glyph}/></Button>
@@ -138,7 +138,7 @@ module.exports = {
     DrawerMenuPlugin: connect((state) => ({
         active: state.controls && state.controls.drawer && state.controls.drawer.active,
         disabled: state.controls && state.controls.drawer && state.controls.drawer.disabled,
-        cssStatus: cssStatusSelector(state)
+        cssState: cssStateSelector(state)
     }), {
         toggleMenu: toggleControl.bind(null, 'drawer', null)
     })(assign(DrawerMenu, {disablePluginIf: "{state('featuregridmode') === 'EDIT'}"})),

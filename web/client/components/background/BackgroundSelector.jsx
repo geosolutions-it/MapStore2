@@ -33,7 +33,7 @@ class BackgroundSelector extends React.Component {
         onToggle: PropTypes.func,
         onLayerChange: PropTypes.func,
         onStartChange: PropTypes.func,
-        cssStatus: PropTypes.string
+        cssState: PropTypes.string
     };
 
     static defaultProps = {
@@ -53,7 +53,7 @@ class BackgroundSelector extends React.Component {
         onToggle: () => {},
         onLayerChange: () => {},
         onStartChange: () => {},
-        cssStatus: ''
+        cssState: ''
     };
 
     componentWillUnmount() {
@@ -130,7 +130,7 @@ class BackgroundSelector extends React.Component {
         const style = this.props.bottom && {style: {bottom: this.props.bottom}} || {style: {}};
 
         return visibleIconsLength <= 0 && this.props.enabled ? null : (
-            <div className={'background-plugin-position' + this.props.cssStatus} {...style}>
+            <div className={'background-plugin-position' + this.props.cssState} {...style}>
                 <PreviewButton showLabel={configuration.label} src={src} side={sideButton} frame={frame} margin={margin} labelHeight={labelHeight} label={layer.title} onToggle={this.props.onToggle}/>
                 <div className="background-list-container" style={listContainerStyle}>
                     <PreviewList vertical={configuration.vertical} start={this.props.start} bottom={0} height={previewListStyle.height} width={previewListStyle.width} icons={icons} pagination={pagination} length={visibleIconsLength} onStartChange={this.props.onStartChange} />
