@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -64,8 +64,8 @@ const isSupportedLayer = (layer, maptype) => {
     if (layer.type === "mapquest" || layer.type === "bing") {
         return Layers.isSupported(layer.type) && layer.apiKey && layer.apiKey !== "__API_KEY_MAPQUEST__" && !layer.invalid;
     }
-    // type 'ol' represents 'No background' layer
-    if (layer.type === 'ol') {
+    // type 'ol' or 'OpenLayers.Layer' represents 'No background' layer
+    if (layer.type === 'ol' || layer.type === 'OpenLayers.Layer') {
         return maptype === 'openlayers' || maptype === 'leaflet';
     }
     return Layers.isSupported(layer.type) && !layer.invalid;
@@ -355,8 +355,12 @@ const LayersUtils = {
     invalidateUnsupportedLayer(layer, maptype) {
         return isSupportedLayer(layer, maptype) ? checkInvalidParam(layer) : assign({}, layer, {invalid: true});
     },
+    /**
+     * Estasblish if a layer is supported or not
+     * @return {boolean} value
+    */
     isSupportedLayer(layer, maptype) {
-        return isSupportedLayer(layer, maptype);
+        return !!isSupportedLayer(layer, maptype);
     },
     getLayerTitleTranslations: (capabilities) => {
         return !!LayerCustomUtils.getLayerTitleTranslations ? LayerCustomUtils.getLayerTitleTranslations(capabilities) : capabilities.Title;
