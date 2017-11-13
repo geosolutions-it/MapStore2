@@ -400,4 +400,45 @@ describe('CoordinatesUtils', () => {
         });
     });
 
+    it('test parseString number', () => {
+        expect(CoordinatesUtils.parseString("10000 500000")).toEqual({x: 10000, y: 500000});
+    });
+
+    it('test parseString char', () => {
+        expect(CoordinatesUtils.parseString("AAA00 500000")).toBe(null);
+    });
+
+    it('test getWMSBoundingBox no data', () => {
+        expect(CoordinatesUtils.getWMSBoundingBox([])).toBe(null);
+        expect(CoordinatesUtils.getWMSBoundingBox()).toBe(null);
+    });
+
+    it('test getWMSBoundingBox', () => {
+        expect(CoordinatesUtils.getWMSBoundingBox([
+            {
+                $: {
+                    SRS: 'EPSG:3857',
+                    maxx: "1271911.7584765626",
+                    maxy: "5459438.758476563",
+                    minx: "1232776.0",
+                    miny: "5420303.0"
+                }
+            },
+            {
+                $: {
+                    SRS: 'EPSG:4326',
+                    minx: "-180",
+                    miny: "-90",
+                    maxx: "180",
+                    maxy: "90"
+                }
+            }
+        ])).toEqual({
+            minx: 11.074215226957271,
+            miny: 43.70759642778742,
+            maxx: 11.425777726908334,
+            maxy: 43.96119355022118
+        });
+    });
+
 });

@@ -18,7 +18,8 @@ const LayersUtils = require('../../utils/LayersUtils');
 const {getRecords, addLayerError, addLayer, ADD_LAYER_ERROR, changeCatalogFormat, CHANGE_CATALOG_FORMAT, changeSelectedService, CHANGE_SELECTED_SERVICE,
      focusServicesList, FOCUS_SERVICES_LIST, changeCatalogMode, CHANGE_CATALOG_MODE, changeTitle, CHANGE_TITLE,
     changeUrl, CHANGE_URL, changeType, CHANGE_TYPE, addService, ADD_SERVICE, addCatalogService, ADD_CATALOG_SERVICE, resetCatalog, RESET_CATALOG,
-    changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService, SAVING_SERVICE, DESCRIBE_ERROR} = require('../catalog');
+    changeAutoload, CHANGE_AUTOLOAD, deleteCatalogService, DELETE_CATALOG_SERVICE, deleteService, DELETE_SERVICE, savingService,
+    SAVING_SERVICE, DESCRIBE_ERROR, initCatalog, CATALOG_INITED} = require('../catalog');
 const {CHANGE_LAYER_PROPERTIES, ADD_LAYER} = require('../layers');
 describe('Test correctness of the catalog actions', () => {
 
@@ -119,6 +120,19 @@ describe('Test correctness of the catalog actions', () => {
         var retval = resetCatalog();
         expect(retval).toExist();
         expect(retval.type).toBe(RESET_CATALOG);
+    });
+    it('initCatalog', (done) => {
+        const API = {
+            myApi: {
+                reset: () => {}
+            }
+        };
+        const spyReset = expect.spyOn(API.myApi, 'reset');
+        initCatalog(API)(e => {
+            expect(e.type).toBe(CATALOG_INITED);
+            expect(spyReset).toHaveBeenCalled();
+            done();
+        });
     });
     it('getRecords ISO Metadata Profile', (done) => {
         getRecords('csw', 'base/web/client/test-resources/csw/getRecordsResponseISO.xml', 1, 1)((actionResult) => {

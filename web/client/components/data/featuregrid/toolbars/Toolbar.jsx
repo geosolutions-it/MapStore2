@@ -16,7 +16,7 @@ const getSaveMessageId = ({saving, saved}) => {
     return "featuregrid.toolbar.saveChanges";
 };
 
-module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen, disableToolbar, isSearchAllowed, disableDownload, isSyncActive = false, hasSupportedGeometry = true} = {}) =>
+module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen, disableToolbar, isSearchAllowed, disableDownload, displayDownload, isSyncActive = false, hasSupportedGeometry = true} = {}) =>
 
     (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
         <TButton
@@ -96,7 +96,7 @@ module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeo
             tooltip={<Message msgId="featuregrid.toolbar.downloadGridData"/>}
             disabled={disableToolbar || disableDownload}
             active={isDownloadOpen}
-            visible={mode === "VIEW"}
+            visible={displayDownload && mode === "VIEW"}
             onClick={events.download}
             glyph="features-grid-download"/>
         <TButton

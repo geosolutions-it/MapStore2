@@ -201,16 +201,20 @@ module.exports = (viewer) => ({
         }),
     cleanHighlightAnnotationEpic: (action$, store) => action$.ofType(CLEAN_HIGHLIGHT)
         .switchMap(() => {
-            return Rx.Observable.of(
-                updateNode('annotations', 'layer', {
-                    features: annotationsLayerSelector(store.getState()).features.map(f =>
-                    assign({}, f, {
-                        style: assign({}, f.style, {
-                            highlight: false
-                        })
-                    }))
-                })
-            );
+            const annotationsLayer = annotationsLayerSelector(store.getState());
+            if (annotationsLayer && annotationsLayer.features) {
+                return Rx.Observable.of(
+                    updateNode('annotations', 'layer', {
+                        features: annotationsLayer.features.map(f =>
+                        assign({}, f, {
+                            style: assign({}, f.style, {
+                                highlight: false
+                            })
+                        }))
+                    })
+                );
+            }
+            return Rx.Observable.empty();
         }),
     closeAnnotationsEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
         .filter((action) => action.control === 'annotations' && !store.getState().controls.annotations.enabled)

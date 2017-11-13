@@ -163,7 +163,8 @@ var Api = {
                 resolve(Api.getRecords(url, startPosition, maxRecords, filter));
             });
         });
-    }
+    },
+    reset: () => {}
 };
 
 module.exports = Api;

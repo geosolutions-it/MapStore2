@@ -14,19 +14,13 @@ const {closeFeatureGrid} = require('../actions/featuregrid');
 const {newServiceSelector, selectedServiceSelector, servicesSelector} = require('../selectors/catalog');
 const axios = require('../libs/ajax');
 
-const API = {
-    csw: require('../api/CSW'),
-    wms: require('../api/WMS'),
-    wmts: require('../api/WMTS')
-};
-
    /**
     * Epics for CATALOG
     * @name epics.catalog
     * @type {Object}
     */
 
-module.exports = {
+module.exports = (API) => ({
     /**
      * Gets every `ADD_SERVICE` event.
      * It performs a head request in order to check if the server is up. (a better validation should be handled when research is performed).
@@ -126,4 +120,4 @@ module.exports = {
             .switchMap(() => {
                 return Rx.Observable.of(closeFeatureGrid());
             })
-};
+});

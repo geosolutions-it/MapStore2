@@ -7,6 +7,7 @@
  */
 const axios = require('../libs/ajax');
 const ConfigUtils = require('../utils/ConfigUtils');
+const CoordinatesUtils = require('../utils/CoordinatesUtils');
 
 const urlUtil = require('url');
 const assign = require('object-assign');
@@ -183,10 +184,10 @@ const Api = {
     },
     getBBox: function(record, bounds) {
         let layer = record;
-        let bbox = (layer.EX_GeographicBoundingBox || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
+        let bbox = (layer.EX_GeographicBoundingBox || CoordinatesUtils.getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
         while (!bbox && layer.Layer && layer.Layer.length) {
             layer = layer.Layer[0];
-            bbox = (layer.EX_GeographicBoundingBox || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
+            bbox = (layer.EX_GeographicBoundingBox || CoordinatesUtils.getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
         }
         if (!bbox) {
             bbox = {
@@ -217,6 +218,11 @@ const Api = {
             };
         }
         return catalogBounds;
+    },
+    reset: () => {
+        Object.keys(capabilitiesCache).forEach(key => {
+            delete capabilitiesCache[key];
+        });
     }
 };
 

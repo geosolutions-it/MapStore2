@@ -259,6 +259,7 @@ class DockedFeatureGrid extends React.Component {
                         }}>
                             <FeatureGrid
                                 useIcons
+                                exportEnabled={this.actions.exportEnabled}
                                 exportAction={this.props.exportEnabled && this.props.exportAction}
                                 tools={[<Button onClick={this.props.onBackToSearch} ><Glyphicon glyph="arrow-left" /><I18N.Message msgId="featuregrid.backtosearch"/></Button>]}
                                 key={"search-results-" + (this.state && this.state.searchN)}
@@ -281,7 +282,7 @@ class DockedFeatureGrid extends React.Component {
                                 zoomToFeatureAction={this.props.zoomToFeatureAction}
                                 toolbar={{
                                     zoom: this.props.withMap,
-                                    exporter: true,
+                                    exporter: this.props.exportEnabled,
                                     toolPanel: true,
                                     selectAll: false
                                 }}

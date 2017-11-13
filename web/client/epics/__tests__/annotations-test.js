@@ -26,6 +26,8 @@ const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, remov
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
+const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
+
 describe('annotations Epics', () => {
     let store;
     beforeEach(() => {
@@ -217,6 +219,32 @@ describe('annotations Epics', () => {
         });
         const action = cleanHighlight('1');
         store.dispatch(action);
+    });
+
+    it('clean highlight without layer', (done) => {
+        const state = {
+            annotations: {
+                editing: {
+                    style: {}
+                },
+                originalStyle: {}
+            },
+            layers: {
+                flat: []
+            }
+        };
+        testEpic(addTimeoutEpic(cleanHighlightAnnotationEpic), 1, cleanHighlight('1'), actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(false).toBe(true);
+                }
+            });
+            done();
+        }, state);
     });
 
 });

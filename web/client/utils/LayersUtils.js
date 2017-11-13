@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,7 +7,7 @@
  */
 
 const assign = require('object-assign');
-const {isString, isObject, isArray, head} = require('lodash');
+const {isString, isObject, isArray, head, isEmpty} = require('lodash');
 
 const getGroup = (groupId, groups) => {
     return head(groups.filter((subGroup) => isObject(subGroup) && subGroup.id === groupId));
@@ -126,6 +126,47 @@ const deepChange = (nodes, findValue, propName, propValue) => {
     return [];
 };
 
+/**
+* It extracts tile matrix set from sources and add them to the layer
+*
+* @param sources {object} sources object from state or configuration
+* @param layer {object} layer to check
+* @return {object} new layers with tileMatrixSet and matrixIds (if needed)
+*/
+
+const extractTileMatrixFromSources = (sources, layer) => {
+    if (!sources || !layer) {
+        return {};
+    }
+    const matrixIds = layer.matrixIds && layer.matrixIds.reduce((a, mI) => {
+        const ids = sources[layer.url] && sources[layer.url].tileMatrixSet && sources[layer.url].tileMatrixSet[mI] && sources[layer.url].tileMatrixSet[mI].TileMatrix.map(i => ({identifier: i['ows:Identifier'], ranges: i.ranges})) || [];
+        return ids.length === 0 ? assign({}, a) : assign({}, a, {[mI]: [...ids]});
+    }, {}) || null;
+    const tileMatrixSet = layer.tileMatrixSet && layer.matrixIds.map(mI => sources[layer.url].tileMatrixSet[mI]).filter(v => v) || null;
+    return tileMatrixSet && matrixIds && {tileMatrixSet, matrixIds} || {};
+};
+
+/**
+* It extracts data from configuration sources and add them to the layers
+*
+* @param mapState {object} state of map, must contains layers array
+* @return {object} new sources object with data from layers
+*/
+
+const extractDataFromSources = mapState => {
+    if (!mapState || !mapState.layers || !isArray(mapState.layers)) {
+        return null;
+    }
+    const sources = mapState.mapInitialConfig && mapState.mapInitialConfig.sources && assign({}, mapState.mapInitialConfig.sources) || {};
+
+    return !isEmpty(sources) ? mapState.layers.map(l => {
+
+        const tileMatrix = extractTileMatrixFromSources(sources, l);
+
+        return assign({}, l, tileMatrix);
+    }) : [...mapState.layers];
+};
+
 const LayerCustomUtils = {};
 
 const LayersUtils = {
@@ -234,9 +275,11 @@ const LayersUtils = {
                 }, [].concat(groups));
             }
 
+            let layers = extractDataFromSources(mapState);
+
             return assign({}, mapState, {
                 layers: {
-                    flat: LayersUtils.reorder(groups, mapState.layers),
+                    flat: LayersUtils.reorder(groups, layers),
                     groups: groups
                 }
             });
@@ -323,7 +366,9 @@ const LayersUtils = {
     },
     getNode,
     getGroupNodes,
-    deepChange
+    deepChange,
+    extractDataFromSources,
+    extractTileMatrixFromSources
 };
 
 module.exports = LayersUtils;
