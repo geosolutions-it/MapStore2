@@ -21,7 +21,12 @@ function mapConfig(state = null, action) {
         let hasVersion = action.config.version && action.config.version >= 2;
             // we get from the configuration what will be used as the initial state
         let mapState = action.legacy && !hasVersion ? ConfigUtils.convertFromLegacy(action.config) : ConfigUtils.normalizeConfig(action.config.map);
-
+        mapState.layers = mapState.layers.map( l => {
+            if (l.group === "background" && (l.type === "ol" || l.type === "OpenLayers.Layer")) {
+                l.type = "empty";
+            }
+            return l;
+        });
         mapState.map = assign({}, mapState.map, {mapId: action.mapId, size, version: hasVersion ? action.config.version : 1});
             // we store the map initial state for future usage
         return assign({}, mapState, {mapInitialConfig: {...mapState.map, mapId: action.mapId}});

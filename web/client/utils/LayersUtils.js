@@ -64,8 +64,12 @@ const isSupportedLayer = (layer, maptype) => {
     if (layer.type === "mapquest" || layer.type === "bing") {
         return Layers.isSupported(layer.type) && layer.apiKey && layer.apiKey !== "__API_KEY_MAPQUEST__" && !layer.invalid;
     }
-    // type 'ol' or 'OpenLayers.Layer' represents 'No background' layer
-    if (layer.type === 'ol' || layer.type === 'OpenLayers.Layer') {
+
+    /*
+     * type 'empty' represents 'No background' layer
+     * previously was checking for types
+    */
+    if (layer.type === 'empty') {
         return maptype === 'openlayers' || maptype === 'leaflet';
     }
     return Layers.isSupported(layer.type) && !layer.invalid;

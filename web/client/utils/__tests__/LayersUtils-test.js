@@ -8,13 +8,9 @@
 const expect = require('expect');
 const assign = require('object-assign');
 const LayersUtils = require('../LayersUtils');
-const typeV1 = "OpenLayers.Layer";
-const typeV2 = "ol";
-const emptyBackgroundVersion1 = {
+const typeV1 = "empty";
+const emptyBackground = {
     type: typeV1
-};
-const emptyBackgroundVersion2 = {
-    type: typeV2
 };
 const bingLayerWithApikey = {
     type: 'bing',
@@ -332,34 +328,15 @@ describe('LayersUtils', () => {
     });
     describe('isSupportedLayer', () => {
         it('type: ' + typeV1 + '  maptype: leaflet, supported', () => {
-            const res = LayersUtils.isSupportedLayer(emptyBackgroundVersion1, "leaflet");
+            const res = LayersUtils.isSupportedLayer(emptyBackground, "leaflet");
             expect(res).toBeTruthy();
         });
         it('type: ' + typeV1 + '  maptype: openlayers, supported', () => {
-            const res = LayersUtils.isSupportedLayer(emptyBackgroundVersion1, "openlayers");
+            const res = LayersUtils.isSupportedLayer(emptyBackground, "openlayers");
             expect(res).toBeTruthy();
         });
         it('type: ' + typeV1 + '  maptype: cesium, not supported', () => {
-            const res = LayersUtils.isSupportedLayer(emptyBackgroundVersion1, "cesium");
-            expect(res).toBeFalsy();
-        });
-
-        it('type: ' + typeV2 + '  maptype: leaflet, supported', () => {
-            const res = LayersUtils.isSupportedLayer(emptyBackgroundVersion2, "leaflet");
-            expect(res).toBeTruthy();
-        });
-        it('type: ' + typeV2 + '  maptype: openlayers, supported', () => {
-            const res = LayersUtils.isSupportedLayer(emptyBackgroundVersion2, "openlayers");
-            expect(res).toBeTruthy();
-        });
-        it('type: ' + typeV2 + '  maptype: cesium, not supported', () => {
-            const res = LayersUtils.isSupportedLayer(emptyBackgroundVersion2, "cesium");
-            expect(res).toBeFalsy();
-        });
-
-        it('type: newtype  maptype: leaflet, not supported', () => {
-            const maptype = "leaflet";
-            const res = LayersUtils.isSupportedLayer(wmsLayer, maptype);
+            const res = LayersUtils.isSupportedLayer(emptyBackground, "cesium");
             expect(res).toBeFalsy();
         });
         it('type: wms  maptype: leaflet, supported', () => {
