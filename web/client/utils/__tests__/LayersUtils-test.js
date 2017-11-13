@@ -112,7 +112,6 @@ describe('LayersUtils', () => {
         const newGroupsNull = LayersUtils.getNode(nestedGroups, 'nested010');
         expect(newGroupsNull).toNotExist();
     });
-
     it('extract data from sources no state', () => {
         expect( LayersUtils.extractDataFromSources()).toBe(null);
         expect( LayersUtils.extractDataFromSources({})).toBe(null);
@@ -306,4 +305,18 @@ describe('LayersUtils', () => {
         expect(LayersUtils.extractTileMatrixFromSources(sources, layer)).toEqual({});
     });
 
+    it('findGeoServerName with a positive match and using default regex', () => {
+        const matchedGeoServerName = LayersUtils.findGeoServerName({url: "http:/hostname/geoservering/ows"});
+        expect(matchedGeoServerName).toBe("/geoservering/");
+    });
+    it('findGeoServerName with a positive match and using a custom regex', () => {
+        const matchedGeoServerName = LayersUtils.findGeoServerName({url: "http:/hostname/geoserver/ows", regex: /\/geoserver\//});
+        expect(matchedGeoServerName).toBe("/geoserver/");
+    });
+    it('findGeoServerName with no match, with custom and default regex', () => {
+        const matchedGeoServerName = LayersUtils.findGeoServerName({url: "http:/hostname/geosssearavering/ows"});
+        expect(matchedGeoServerName).toBe(null);
+        const matchedGeoServerNameCustomReg = LayersUtils.findGeoServerName({url: "http:/hostname/geosssearavering/ows", regex: /\/geoserver\//});
+        expect(matchedGeoServerNameCustomReg).toBe(null);
+    });
 });

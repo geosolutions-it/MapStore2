@@ -8,6 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
+const Spinner = require('react-spinkit');
 const {FormControl, FormGroup, ControlLabel, InputGroup} = require('react-bootstrap');
 const Message = require('../../../I18N/Message');
 const {SimpleSelect} = require('react-selectize');
@@ -81,6 +82,17 @@ class General extends React.Component {
                         type="text"
                         disabled
                         onChange={this.updateEntry.bind(null, "name")}/>
+                </FormGroup>
+                <FormGroup>
+                    <ControlLabel><Message msgId="layerProperties.description" /></ControlLabel>
+                    {this.props.element.capabilitiesLoading ? <Spinner spinnerName="circle"/> :
+                    <FormControl
+                        value={this.props.element.description}
+                        key="description"
+                        rows="2"
+                        componentClass="textarea"
+                        style={{ resize: "vertical", minHeight: "33px" }}
+                        onChange={this.updateEntry.bind(null, "description")}/>}
                 </FormGroup>
                 { this.props.nodeType === 'layers' ?
                 <div>
