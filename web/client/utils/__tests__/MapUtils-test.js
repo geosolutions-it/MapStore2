@@ -342,6 +342,7 @@ describe('Test the MapUtils', () => {
             {
                 allowedSRS: {},
                 bbox: {},
+                description: undefined,
                 dimensions: [],
                 id: "layer001",
                 loading: true,
@@ -375,6 +376,7 @@ describe('Test the MapUtils', () => {
             {
                 allowedSRS: {},
                 bbox: {},
+                description: undefined,
                 dimensions: [],
                 id: "layer002",
                 loading: true,
@@ -390,6 +392,7 @@ describe('Test the MapUtils', () => {
             {
                 allowedSRS: {},
                 bbox: {},
+                description: undefined,
                 dimensions: [],
                 id: "layer003",
                 loading: true,
@@ -439,6 +442,7 @@ describe('Test the MapUtils', () => {
                     availableStyles: undefined,
                     bbox: {},
                     capabilitiesURL: undefined,
+                    description: undefined,
                     dimensions: [],
                     features: undefined,
                     featureInfo: undefined,
@@ -473,6 +477,7 @@ describe('Test the MapUtils', () => {
                     availableStyles: undefined,
                     bbox: {},
                     capabilitiesURL: undefined,
+                    description: undefined,
                     dimensions: [],
                     features: undefined,
                     featureInfo: undefined,
@@ -507,6 +512,7 @@ describe('Test the MapUtils', () => {
                     availableStyles: undefined,
                     bbox: {},
                     capabilitiesURL: undefined,
+                    description: undefined,
                     dimensions: [],
                     features: undefined,
                     featureInfo: undefined,
