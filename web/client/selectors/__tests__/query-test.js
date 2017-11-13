@@ -347,6 +347,22 @@ describe('Test query selectors', () => {
         const isLoaded = isDescribeLoaded(initialState, "editing:polygons");
         expect(isLoaded).toBe(true);
     });
+    it('test isDescribeLoaded with missing describe', () => {
+        const isLoaded = isDescribeLoaded(initialState, "editing:polygosns");
+        expect(isLoaded).toBe(false);
+    });
+    it('test isDescribeLoaded with error in describe', () => {
+        const isLoaded = isDescribeLoaded({
+            query: {
+                featureTypes: {
+                    "editing:polygons": {
+                        error: "500 internal server error"
+                    }
+                }
+            }
+        }, "editing:polygons");
+        expect(isLoaded).toBe(false);
+    });
     it('test getFeatureById selector', () => {
         const ft = getFeatureById(initialState, "poligoni.7");
         expect(ft).toExist();
