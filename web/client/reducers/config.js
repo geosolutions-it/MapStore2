@@ -10,7 +10,6 @@ const {MAP_CONFIG_LOADED, MAP_INFO_LOAD_START, MAP_INFO_LOADED, MAP_INFO_LOAD_ER
 const {MAP_CREATED} = require('../actions/maps');
 
 const assign = require('object-assign');
-const {set} = require('lodash');
 const ConfigUtils = require('../utils/ConfigUtils');
 
 function mapConfig(state = null, action) {
@@ -22,14 +21,17 @@ function mapConfig(state = null, action) {
         let hasVersion = action.config.version && action.config.version >= 2;
             // we get from the configuration what will be used as the initial state
         let mapState = action.legacy && !hasVersion ? ConfigUtils.convertFromLegacy(action.config) : ConfigUtils.normalizeConfig(action.config.map);
-        const newMapState = assign({}, set(mapState, "layers", mapState.layers.map( l => {
-            if (l.group === "background" && (l.type === "ol" || l.type === "OpenLayers.Layer")) {
-                l.type = "empty";
-            }
-            return l;
-        })));
+        let newMapState = {
+            ...mapState,
+            layers: mapState.layers.map( l => {
+                if (l.group === "background" && (l.type === "ol" || l.type === "OpenLayers.Layer")) {
+                    l.type = "empty";
+                }
+                return l;
+            })
+        };
         newMapState.map = assign({}, newMapState.map, {mapId: action.mapId, size, version: hasVersion ? action.config.version : 1});
-            // we store the map initial state for future usage
+        // we store the map initial state for future usage
         return assign({}, newMapState, {mapInitialConfig: {...newMapState.map, mapId: action.mapId}});
     case MAP_CONFIG_LOAD_ERROR:
         return {
