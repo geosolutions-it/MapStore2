@@ -390,6 +390,13 @@ describe('LayersUtils', () => {
             const res = LayersUtils.isSupportedLayer(mapquestLayerWithoutApikey, maptype);
             expect(res).toBeFalsy();
         });
+        it('type: bing  maptype: openlayers, with invalid apikey, not supported', () => {
+            const maptype = "openlayers";
+            const Layers = require('../' + maptype + '/Layers');
+            Layers.registerType('bing', {});
+            const res = LayersUtils.isSupportedLayer(assign({}, bingLayerWithApikey, {apiKey: "__API_KEY_MAPQUEST__"}), maptype);
+            expect(res).toBeFalsy();
+        });
         it('type: bing  maptype: openlayers, with apikey supported', () => {
             const maptype = "openlayers";
             const Layers = require('../' + maptype + '/Layers');
