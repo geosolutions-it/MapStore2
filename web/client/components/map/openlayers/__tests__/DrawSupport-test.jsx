@@ -825,7 +825,7 @@ describe('Test DrawSupport', () => {
                 }}
                 />, document.getElementById("container"));
         expect(spyAddLayer.calls.length).toBe(1);
-        expect(spyAddInteraction.calls.length).toBe(3);
+        expect(spyAddInteraction.calls.length).toBe(2);
     });
 
     it('draw or edit, endevent', () => {

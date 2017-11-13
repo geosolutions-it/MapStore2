@@ -422,7 +422,7 @@ class DrawSupport extends React.Component {
         if (newProps.options.editEnabled) {
             this.addModifyInteraction();
         }
-        if (isSimpleGeomType(newProps.drawMethod) && getSimpleGeomType(newProps.drawMethod) === "Point") {
+        if (getSimpleGeomType(newProps.drawMethod) !== "Polygon") {
             this.addTranslateInteraction();
         }
         if (newProps.options.drawEnabled) {
