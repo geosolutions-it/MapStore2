@@ -13,7 +13,7 @@ module.exports = ({width = 600, height = 300, data, series =[], colorGenerator, 
     const seriesArray = (Array.isArray(series) ? series : [series]);
     const COLORS = colorGenerator(seriesArray.length);
     return (<BarChart width={width} height={height} data={data}>
-       {seriesArray.map(({color, ...serie} = {}, i) => <Bar fill={COLORS[i]} {...serie}/>)}
+       {seriesArray.map(({color, ...serie} = {}, i) => <Bar key={`bar-${i}`} fill={COLORS[i]} {...serie}/>)}
        {renderCartesianTools(props)}
        {props.children}
     </BarChart>);

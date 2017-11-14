@@ -14,7 +14,9 @@ const enhanceTooltip = require('./enhancers/tooltip');
 const Glyph = enhanceTooltip(Glyphicon);
 /**
  * An icon that fits to the width of the container
- * @param {string} glyph icon glyph
+ * @prop {string} glyph icon glyph
+ * @prop {tooltip} [tooltip] tooltip
+ * @prop {iconfit} [iconfit] if true, the icon will fit min height or width.
  */
 module.exports = ({glyph = "info-sign", tooltip, iconFit}) => (<ContainerDimensions>
     { ({ width, height }) => (<Glyph glyph={glyph} tooltip={tooltip} style={{fontSize: iconFit ? Math.min(width, height) : width}} />)}

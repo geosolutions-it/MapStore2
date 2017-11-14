@@ -35,6 +35,7 @@ describe('loadingState enhancher', () => {
     it('loadingState rendering with loading state', () => {
         ReactDOM.render(<CMP loading/>, document.getElementById("container"));
         const container = document.getElementById('container');
+        expect(container.querySelector('.loader-container')).toExist();
         const loading = container.querySelector('.mapstore-full-size-loader');
         expect(loading).toExist();
         const content = container.querySelector('#CONTENT');

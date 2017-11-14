@@ -13,7 +13,7 @@ module.exports = ({width = 600, height = 300, data, series =[], colorGenerator, 
     const seriesArray = (Array.isArray(series) ? series : [series]);
     const COLORS = colorGenerator(seriesArray.length, autoColorOptions);
     return (<LineChart width={width} height={height} data={data}>
-       {seriesArray.map(({color, ...serie}, i) => <Line isAnimationActive={isAnimationActive} stroke={COLORS[i]} {...serie} />)}
+       {seriesArray.map(({color, ...serie}, i) => <Line key={`line-${i}`} isAnimationActive={isAnimationActive} stroke={COLORS[i]} {...serie} />)}
        {renderCartesianTools(props)}
        {props.children}
     </LineChart>);

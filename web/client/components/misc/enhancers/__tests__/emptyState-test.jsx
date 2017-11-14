@@ -63,4 +63,15 @@ describe('emptyState enhancher', () => {
         content = container.querySelector('#PropCMP');
         expect(content).toExist();
     });
+    it('custom component with transformed component props', () => {
+        const CMP2 = emptyState(
+            () => true,
+            ({emptyId}) => ({emptyId}),
+            ({emptyId}) => <div id={emptyId} />
+        )(() => <div id="CONTENT"></div>);
+        ReactDOM.render(<CMP2 emptyId="EMPTY"/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('#EMPTY');
+        expect(el).toExist();
+    });
 });

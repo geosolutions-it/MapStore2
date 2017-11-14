@@ -150,6 +150,7 @@ const GaugeChart = ({data, xAxis = {}, colorGenerator, series = [], width=500, h
 
 
                 return [<Pie
+                    key={`pie-${i}`}
                     isAnimationActive={isAnimationActive}
                     activeIndex={activeSectorIndex}
                     activeShape={useActive && ActiveSectorMark}

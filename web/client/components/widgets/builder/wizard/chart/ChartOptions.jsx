@@ -54,7 +54,7 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], aggreg
               </div>
               </Col>
           <Col xs={12}>
-          <Form horizontal>
+          <Form className="chart-options-form" horizontal>
         <FormGroup controlId="groupByAttributes" className="mapstore-block-width">
           <Col componentClass={ControlLabel} sm={6}>
             <Message msgId={`widgets.groupByAttributes.${data.type}`} />

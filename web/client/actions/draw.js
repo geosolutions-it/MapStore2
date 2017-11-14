@@ -54,7 +54,7 @@ function setCurrentStyle(style) {
     };
 }
 
-const drawSupportReset = () => changeDrawingStatus("clean", "", "featureGrid", [], {});
+const drawSupportReset = (owner) => changeDrawingStatus("clean", "", owner, [], {});
 
 module.exports = {
     CHANGE_DRAWING_STATUS, changeDrawingStatus, drawSupportReset,

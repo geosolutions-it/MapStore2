@@ -18,7 +18,7 @@ module.exports = ({data = {}, onChange = () => {}, sampleChart}) => (<Row>
               </div>
               </Col>
           <Col key="form" xs={12}>
-            <Form horizontal>
+            <Form className="widget-options-form" horizontal>
             <FormGroup controlId="groupByAttributes">
               <Col componentClass={ControlLabel} sm={6}>
                 <Message msgId={`widgets.title`} />

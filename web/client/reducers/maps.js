@@ -111,7 +111,7 @@ function maps(state = {
             loadingError: action.error
         };
     case MAP_UPDATING: {
-        let newMaps = state.results === "" ? [] : [...state.results];
+        let newMaps = state.results === "" ? [] : [...(state.results || [])];
 
         for (let i = 0; i < newMaps.length; i++) {
             if (newMaps[i].id && newMaps[i].id === action.resourceId ) {
