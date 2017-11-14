@@ -35,6 +35,7 @@
             "title": "Titre",
             "name": "Nom",
             "group": "Groupe",
+            "description": "Description",
             "general": "Général",
             "display": "Affichage",
             "style": "Style",
