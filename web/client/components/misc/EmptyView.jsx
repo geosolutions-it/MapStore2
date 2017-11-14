@@ -7,7 +7,7 @@
   */
 const React = require('react');
 
-const FullWidthIcon = require('./FullWidthGlyph');
+const FitIcon = require('./FitIcon');
 
 /**
  * A component to display an empty page.
@@ -28,14 +28,19 @@ module.exports = ({
         mainViewStyle,
         contentStyle,
         glyph="info-sign",
+        iconFit,
         title,
         tooltip,
         description,
         content
     } = {}) =>
-        (<div className="empty-state-container" style={style}>
-            <div key="main-view" className="empty-state-main-view" style={mainViewStyle}>
-                {glyph ? <div key="glyph" className="empty-state-image"><FullWidthIcon tooltip={tooltip} glyph={glyph} /></div> : null}
+        (<div className="empty-state-container" style={{height: iconFit ? "100%" : undefined, ...style}}>
+            <div key="main-view" className="empty-state-main-view" style={{height: iconFit ? "100%" : undefined, ...mainViewStyle}} >
+                {glyph
+                    ? <div key="glyph" className="empty-state-image" style={{height: iconFit ? "100%" : undefined}}>
+                        <FitIcon iconFit={iconFit} tooltip={tooltip} glyph={glyph} />
+                    </div>
+                    : null}
                 {title ? <h1 key="title" >{title}</h1> : null}
                 {description ? <p key="description" className="empty-state-description">{description}</p> : null}
             </div>

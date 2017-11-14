@@ -12,7 +12,39 @@ const Select = require('react-select');
 const ColorRangeSelector = require('../../../../style/ColorRangeSelector');
 const StepHeader = require('../../../../misc/wizard/StepHeader');
 const SwitchButton = require('../../../../misc/switch/SwitchButton');
+const COLORS = [{
+    name: 'global.colors.random',
+    schema: 'qualitative',
+    options: {base: 190, range: 360, options: {}}
+}, {
+    name: 'global.colors.blue',
+    schema: 'sequencial',
+    options: {base: 190, range: 20}
+}, {
+    name: 'global.colors.red',
+    schema: 'sequencial',
+    options: {base: 10, range: 4}
+}, {
+    name: 'global.colors.green',
+    schema: 'sequencial',
+    options: {base: 120, range: 4}
+}, {
+    name: 'global.colors.brown',
+    schema: 'sequencial',
+    options: {base: 30, range: 4}
+}, {
+    name: 'global.colors.purple',
+    schema: 'sequencial',
+    options: {base: 300, range: 4}
+}];
 
+
+const getColorRangeItems = (type) => {
+    if ( type !== "pie") {
+        return COLORS.filter( c => c.schema !== 'qualitative');
+    }
+    return COLORS;
+};
 
 module.exports = ({data = {options: {}}, onChange = () => {}, options=[], aggregationOptions = [], sampleChart}) => (<Row>
         <StepHeader title={<Message msgId={`widgets.chartOptionsTitle`} />} />
@@ -75,9 +107,10 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], aggreg
             </Col>
           <Col sm={6}>
               <ColorRangeSelector
-                  value={data.autoColorOptions}
+                  items={getColorRangeItems(data.type)}
+                  value={getColorRangeItems(data.type).filter(c => c.name === data.colorRangeName)}
                   samples={data.type === "pie" ? 5 : 1}
-                  onChange={v => onChange("autoColorOptions", v.options)}/>
+                  onChange={v => {onChange("autoColorOptions", v.options); onChange("colorRangeName", v.name); }}/>
           </Col>
         </FormGroup>
         <FormGroup controlId="mapSync" className="mapstore-block-width">

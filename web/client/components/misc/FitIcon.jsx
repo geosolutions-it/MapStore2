@@ -16,6 +16,6 @@ const Glyph = enhanceTooltip(Glyphicon);
  * An icon that fits to the width of the container
  * @param {string} glyph icon glyph
  */
-module.exports = ({glyph = "info-sign", tooltip}) => (<ContainerDimensions>
-    { ({ width }) => (<Glyph glyph={glyph} tooltip={tooltip} style={{fontSize: width}} />)}
+module.exports = ({glyph = "info-sign", tooltip, iconFit}) => (<ContainerDimensions>
+    { ({ width, height }) => (<Glyph glyph={glyph} tooltip={tooltip} style={{fontSize: iconFit ? Math.min(width, height) : width}} />)}
 </ContainerDimensions>);

@@ -252,7 +252,7 @@
             "grabLayerIcon": "Grab and sort layer",
             "grabGroupIcon": "Grab and sort group",
             "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
-
+            "createWidget": "Create a widget for the selected layer",
             "editLayerProperties": "Edit layer properties",
             "browseData": "Open Attribute Table",
             "removeLayer": "Remove layer",
@@ -965,7 +965,10 @@
             "title": "Title",
             "description": "Description",
             "errors": {
-                "nodatainviewport": "No data in the current viewport"
+                "nodata": "No data available for the selected layer/filter",
+                "nodatainviewport": "No data in the current viewport",
+                "timeoutExpired": "The service took too much time to respond. Maybe the query is too complex or the server is busy",
+                "genericError": "There was an error during data retrival"
             },
             "builder": {
                 "header": {
@@ -1042,6 +1045,11 @@
                 "gauge": "Display labels"
             }
 
+        },
+        "wizard": {
+            "next": "Next",
+            "prev": "Previous",
+            "finish": "Finish"
         },
         "vectorstyler": {
             "tooltip": "Create and edit vector layer style",

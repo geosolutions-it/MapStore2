@@ -69,8 +69,9 @@ const axios = require('../../libs/ajax');
 
 const Rx = require('rxjs');
 const {getWPSURL} = require('./common');
-module.exports = (url, options) =>
+module.exports = (url, options, requestOptions = {}) =>
     Rx.Observable.defer(() =>
         axios.post(getWPSURL(url), applyTemplate(options), {
-            headers: {'Content-Type': 'text/xml'}
+            headers: {'Content-Type': 'text/xml'},
+            ...requestOptions
         }));

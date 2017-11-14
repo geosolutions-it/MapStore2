@@ -51,12 +51,12 @@ class WizardComponent extends React.Component {
        const childrenLenght = children.length >= 0 ? children.length : 1;
        if (this.props.hideButtons) return null;
        if (this.props.step > 0) {
-           buttons.push(<Button className="ms-wizard-prev" onClick={() => this.props.onPrevPage()} ><Message msgId="prev" /></Button>);
+           buttons.push(<Button className="ms-wizard-prev" onClick={() => this.props.onPrevPage()} ><Message msgId="wizard.prev" /></Button>);
        }
        if ( this.props.step >= childrenLenght - 1) {
-           buttons.push(<Button className="ms-wizard-finish" onClick={() => this.props.onFinish()} ><Message msgId="finish" /></Button>);
+           buttons.push(<Button className="ms-wizard-finish" onClick={() => this.props.onFinish()} ><Message msgId="wizard.finish" /></Button>);
        } else if (this.props.step < childrenLenght - 1 && childrenLenght > 1) {
-           buttons.push(<Button className="ms-wizard-next" disabled={!isStepValid(this.props.step)} onClick={() => this.props.onNextPage()} ><Message msgId="next" /></Button>);
+           buttons.push(<Button className="ms-wizard-next" disabled={!isStepValid(this.props.step)} onClick={() => this.props.onNextPage()} ><Message msgId="wizard.next" /></Button>);
        }
        return buttons;
 

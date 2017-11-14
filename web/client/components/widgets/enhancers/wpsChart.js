@@ -45,16 +45,19 @@ const dataStreamFactory = ($props) =>
                 && sameFilter(filter, newProps.filter))
         .switchMap(
             ({layer={}, options, filter}) =>
-            wpsAggregate(getLayerUrl(layer), {featureType: layer.name, ...options, filter})
-                .map((response) => ({
+            wpsAggregate(getLayerUrl(layer), {featureType: layer.name, ...options, filter}, {
+                timeout: 15000
+            }).map((response) => ({
                     loading: false,
                     isAnimationActive: false,
+                    error: undefined,
                     data: wpsAggregateToChartData(response.data),
                     series: [{dataKey: `${response.data.AggregationFunctions[0]}(${response.data.AggregationAttribute})`}],
                     xAxis: {dataKey: response.data.GroupByAttributes[0]}
                 }))
-                .catch(() => Rx.Observable.of({
+                .catch((e) => Rx.Observable.of({
                     loading: false,
+                    error: e,
                     data: []
                 }))
                 .startWith({loading: true})

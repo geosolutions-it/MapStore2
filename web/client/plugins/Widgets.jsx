@@ -12,6 +12,8 @@ const {createSelector} = require('reselect');
 const {mapIdSelector} = require('../selectors/map');
 const {getFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout} = require('../selectors/widgets');
 const {editWidget, deleteWidget, changeLayout, exportCSV, exportImage} = require('../actions/widgets');
+const ContainerDimensions = require('react-container-dimensions').default;
+
 const assign = require('object-assign');
 const PropTypes = require('prop-types');
 const WidgetsView = connect(
@@ -60,7 +62,7 @@ class Widgets extends React.Component {
          position: "right"
      };
     render() {
-        return (<WidgetsView />);
+        return (<ContainerDimensions>{({width, height}) => <WidgetsView width={width} height={height}/>}</ContainerDimensions> );
 
     }
 }

@@ -22,20 +22,26 @@ require('react-grid-layout-resize-prevent-collision/css/styles.css');
 
 const ChartWidget = dependenciesToFilter(wpsChart(enhanceChartWidget(require('../widget/ChartWidget'))));
 
-module.exports = pure(({id, widgets=[], layouts, deleteWidget = () => {}, editWidget = () => {}, onLayoutChange = () => {}, exportCSV = () => {}, exportImage = () => {}, dependencies}={}) =>
+module.exports = pure(({id, width, height, rowHeight=208, widgets=[], layouts, deleteWidget = () => {}, editWidget = () => {}, onLayoutChange = () => {}, exportCSV = () => {}, exportImage = () => {}, dependencies}={}) =>
     (<ResponsiveReactGridLayout
         key={id}
         onLayoutChange={onLayoutChange}
         preventCollision
         layouts={layouts ? JSON.parse(JSON.stringify(layouts)) : undefined}
-        style={{left: 500, bottom: 50, height: 'calc(100% - 100px)', width: 'calc(100% - 550px)', position: 'absolute', zIndex: 50}}
-        containerPadding={[10, 10]}
+        style={{
+            left: (width && width > 800) ? "500px" : "0",
+            bottom: 50,
+            height: Math.floor((height - 100) / (rowHeight + 10)) * (rowHeight + 10),
+            width: `${width && width > 800 ? 'calc(100% - 550px)' : 'calc(100% - 50px)'}`,
+            position: 'absolute',
+            zIndex: 50}}
+
         className="widget-card-on-map"
-        rowHeight={208}
+        rowHeight={rowHeight}
         autoSize
         verticalCompact={false}
         breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-        cols={{lg: 6, md: 6, sm: 6, xs: 4, xxs: 4}}>
+        cols={{lg: 6, md: 6, sm: 4, xs: 2, xxs: 1}}>
      {widgets.map( w => {
          return (<div key={w.id} data-grid={w.dataGrid} >
               <ChartWidget {...w}

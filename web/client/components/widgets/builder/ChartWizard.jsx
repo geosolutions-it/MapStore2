@@ -18,11 +18,13 @@ const sampleData = require('../enhancers/sampleChartData');
 const wpsChart = require('../enhancers/wpsChart');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const emptyChartState = require('../enhancers/emptyChartState');
+const errorChartState = require('../enhancers/errorChartState');
 const {compose} = require('recompose');
 const enhanchePreview = compose(
     dependenciesToFilter,
     wpsChart,
     loadingState,
+    errorChartState,
     emptyChartState
 );
 const PreviewChart = enhanchePreview(require('../../charts/SimpleChart'));
@@ -52,6 +54,7 @@ const renderPreview = ({data = {}, layer, dependencies={}}) => isChartOptionsVal
         options={data.options}
         />)
     : (<SampleChart
+        key="sample-chart"
         isAnimationActive={false}
         {...sampleProps}
         type={data.type}

@@ -64,7 +64,7 @@ module.exports = ({
                 </div>)}>
                 {showTable
                     ? <TableView data={data} {...props}/>
-                : <ChartView id={id} isAnimationActive={!loading} loading={loading} data={data} series={series} {...props} />}
+                : <ChartView id={id} isAnimationActive={!loading} loading={loading} data={data} series={series} iconFit {...props} />}
                 {confirmDelete ? <ConfirmModal
                     confirmText={'Delete'}
                     cancelText={'Cancel'}
