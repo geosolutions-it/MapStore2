@@ -20,6 +20,7 @@ class Toolbar extends React.Component {
     static propTypes = {
         groups: PropTypes.array,
         selectedLayers: PropTypes.array,
+        generalInfoFormat: PropTypes.string,
         selectedGroups: PropTypes.array,
         onToolsActions: PropTypes.object,
         text: PropTypes.object,
@@ -126,6 +127,7 @@ class Toolbar extends React.Component {
                 {...this.props.options.settingsOptions}
                 settings={this.props.settings}
                 element={this.props.selectedLayers[0]}
+                generalInfoFormat={this.props.generalInfoFormat}
                 retrieveLayerData={this.props.onToolsActions.onRetrieveLayerData}
                 updateSettings={this.props.onToolsActions.onUpdateSettings}
                 hideSettings={this.props.onToolsActions.onHideSettings}

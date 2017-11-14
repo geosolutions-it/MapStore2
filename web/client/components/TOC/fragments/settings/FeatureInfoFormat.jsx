@@ -16,18 +16,24 @@ module.exports = class extends React.Component {
         element: PropTypes.object,
         label: PropTypes.object,
         defaultInfoFormat: PropTypes.object,
+        generalInfoFormat: PropTypes.string,
         onInfoFormatChange: PropTypes.func
     };
 
     static defaultProps = {
         defaultInfoFormat: MapInfoUtils.getAvailableInfoFormat(),
+        generalInfoFormat: "text/plain",
         onInfoFormatChange: () => {}
     };
 
-    render() {
-        const data = Object.keys(this.props.defaultInfoFormat).map((infoFormat) => {
+    getInfoFormat = (infoFormats) => {
+        return Object.keys(infoFormats).map((infoFormat) => {
             return infoFormat;
         });
+    }
+    render() {
+        // the selected value if missing on that layer should be set to the general info format value and not the first one.
+        const data = this.getInfoFormat(this.props.defaultInfoFormat);
         const checkDisabled = !!(this.props.element.featureInfo && this.props.element.featureInfo.viewer);
         return (
             <div>
@@ -42,7 +48,7 @@ module.exports = class extends React.Component {
                 (<DropdownList
                     key="format-dropdown"
                     data={data}
-                    value={this.props.element.featureInfo ? this.props.element.featureInfo.format : data[0]}
+                    value={this.props.element.featureInfo ? this.props.element.featureInfo.format : MapInfoUtils.getLabelFromValue(this.props.generalInfoFormat)}
                     defaultValue={data[0]}
                     disabled={checkDisabled}
                     onChange={(value) => {

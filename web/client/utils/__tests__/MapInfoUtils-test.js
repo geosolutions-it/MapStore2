@@ -16,7 +16,8 @@ var {
     buildIdentifyRequest,
     getValidator,
     getViewer,
-    setViewer
+    setViewer,
+    getLabelFromValue
 } = require('../MapInfoUtils');
 
 const CoordinatesUtils = require('../CoordinatesUtils');
@@ -328,5 +329,17 @@ describe('MapInfoUtils', () => {
         let validator = getValidator('text/plain');
         let validResponses = validator.getValidResponses(response);
         expect(validResponses.length).toBe(1);
+    });
+    it('get the label given the text/plain value', () => {
+        let label = getLabelFromValue("text/plain");
+        expect(label).toBe("TEXT");
+    });
+    it('get the label given the text/html value', () => {
+        let label = getLabelFromValue("text/html");
+        expect(label).toBe("HTML");
+    });
+    it('get the default label given the wrong value', () => {
+        let label = getLabelFromValue("text_or_something_else");
+        expect(label).toBe("TEXT");
     });
 });

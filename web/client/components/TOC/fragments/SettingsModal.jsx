@@ -34,6 +34,7 @@ class SettingsModal extends React.Component {
         updateNode: PropTypes.func,
         removeNode: PropTypes.func,
         retrieveLayerData: PropTypes.func,
+        generalInfoFormat: PropTypes.string,
         titleText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         opacityText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         elevationText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
@@ -168,6 +169,7 @@ class SettingsModal extends React.Component {
                 return (<FeatureInfoFormat
                    label= {<Message msgId="layerProperties.featureInfoFormatLbl"/>}
                    element={this.props.element}
+                   generalInfoFormat={this.props.generalInfoFormat}
                    onInfoFormatChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
             }
         }
