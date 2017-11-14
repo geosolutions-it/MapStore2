@@ -12,7 +12,8 @@ const {createSelector} = require('reselect');
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode, browseData, selectNode, filterLayers, refreshLayerVersion} = require('../actions/layers');
+       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
+       browseData, selectNode, filterLayers, refreshLayerVersion} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector} = require('../selectors/layers');
