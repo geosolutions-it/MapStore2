@@ -1,5 +1,5 @@
 /*
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -8,7 +8,10 @@
 
 const assign = require('object-assign');
 const {isString, isObject, isArray, head, isEmpty} = require('lodash');
-
+const REG_GEOSERVER_RULE = /\/[\w- ]*geoserver[\w- ]*\//;
+const findGeoServerName = ({url, regex = REG_GEOSERVER_RULE}) => {
+    return regex.test(url) && url.match(regex)[0] || null;
+};
 const getGroup = (groupId, groups) => {
     return head(groups.filter((subGroup) => isObject(subGroup) && subGroup.id === groupId));
 };
@@ -64,8 +67,12 @@ const isSupportedLayer = (layer, maptype) => {
     if (layer.type === "mapquest" || layer.type === "bing") {
         return Layers.isSupported(layer.type) && layer.apiKey && layer.apiKey !== "__API_KEY_MAPQUEST__" && !layer.invalid;
     }
-    // type 'ol' represents 'No background' layer
-    if (layer.type === 'ol') {
+
+    /*
+     * type 'empty' represents 'No background' layer
+     * previously was checking for types
+    */
+    if (layer.type === 'empty') {
         return maptype === 'openlayers' || maptype === 'leaflet';
     }
     return Layers.isSupported(layer.type) && !layer.invalid;
@@ -316,6 +323,7 @@ const LayersUtils = {
             name: layer.name,
             opacity: layer.opacity,
             provider: layer.provider,
+            description: layer.description,
             styles: layer.styles,
             style: layer.style,
             styleName: layer.styleName,
@@ -341,13 +349,33 @@ const LayersUtils = {
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },
+    /**
+    * default regex rule for searching for a /geoserver/ string in a url
+    */
+    REG_GEOSERVER_RULE,
+    /**
+    * it tests if a url is matched by a regex,
+    * if so it returns the matched string
+    * otherwise returns null
+    * @param object.regex the regex to use for parsing the url
+    * @param object.url the url to test
+    */
+    findGeoServerName,
+    /**
+     * This method search for a /geoserver/  string inside the url
+     * if it finds it returns a getCapabilitiesUrl to a single layer if it has a name like WORKSPACE:layerName
+     * otherwise it returns the default getCapabilitiesUrl
+    */
     getCapabilitiesUrl: (layer) => {
+        const matchedGeoServerName = findGeoServerName({url: layer.url});
         let reqUrl = layer.url;
-        let urlParts = reqUrl.split("/geoserver/");
-        if (urlParts.length === 2) {
-            let layerParts = layer.name.split(":");
-            if (layerParts.length === 2) {
-                reqUrl = urlParts[0] + "/geoserver/" + layerParts [0] + "/" + layerParts[1] + "/" + urlParts[1];
+        if (!!matchedGeoServerName) {
+            let urlParts = reqUrl.split(matchedGeoServerName);
+            if (urlParts.length === 2) {
+                let layerParts = layer.name.split(":");
+                if (layerParts.length === 2) {
+                    reqUrl = urlParts[0] + matchedGeoServerName + layerParts [0] + "/" + layerParts[1] + "/" + urlParts[1];
+                }
             }
         }
         return addBaseParams(reqUrl, layer.baseParams || {});
@@ -355,8 +383,12 @@ const LayersUtils = {
     invalidateUnsupportedLayer(layer, maptype) {
         return isSupportedLayer(layer, maptype) ? checkInvalidParam(layer) : assign({}, layer, {invalid: true});
     },
+    /**
+     * Estasblish if a layer is supported or not
+     * @return {boolean} value
+    */
     isSupportedLayer(layer, maptype) {
-        return isSupportedLayer(layer, maptype);
+        return !!isSupportedLayer(layer, maptype);
     },
     getLayerTitleTranslations: (capabilities) => {
         return !!LayerCustomUtils.getLayerTitleTranslations ? LayerCustomUtils.getLayerTitleTranslations(capabilities) : capabilities.Title;

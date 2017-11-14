@@ -1,13 +1,34 @@
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
+const assign = require('object-assign');
 const LayersUtils = require('../LayersUtils');
-
+const typeV1 = "empty";
+const emptyBackground = {
+    type: typeV1
+};
+const bingLayerWithApikey = {
+    type: 'bing',
+    apiKey: "SOME_APIKEY_VALUE"
+};
+const bingLayerWithoutApikey = {
+    type: 'bing'
+};
+const mapquestLayerWithApikey = {
+    type: 'mapquest',
+    apiKey: "SOME_APIKEY_VALUE"
+};
+const mapquestLayerWithoutApikey = {
+    type: 'mapquest'
+};
+const wmsLayer = {
+    type: 'wms'
+};
 describe('LayersUtils', () => {
     it('splits layers and groups one group', () => {
         const state = LayersUtils.splitMapAndLayers({
@@ -112,7 +133,6 @@ describe('LayersUtils', () => {
         const newGroupsNull = LayersUtils.getNode(nestedGroups, 'nested010');
         expect(newGroupsNull).toNotExist();
     });
-
     it('extract data from sources no state', () => {
         expect( LayersUtils.extractDataFromSources()).toBe(null);
         expect( LayersUtils.extractDataFromSources({})).toBe(null);
@@ -305,5 +325,84 @@ describe('LayersUtils', () => {
 
         expect(LayersUtils.extractTileMatrixFromSources(sources, layer)).toEqual({});
     });
+    describe('isSupportedLayer', () => {
+        it('type: ' + typeV1 + '  maptype: leaflet, supported', () => {
+            const res = LayersUtils.isSupportedLayer(emptyBackground, "leaflet");
+            expect(res).toBeTruthy();
+        });
+        it('type: ' + typeV1 + '  maptype: openlayers, supported', () => {
+            const res = LayersUtils.isSupportedLayer(emptyBackground, "openlayers");
+            expect(res).toBeTruthy();
+        });
+        it('type: ' + typeV1 + '  maptype: cesium, not supported', () => {
+            const res = LayersUtils.isSupportedLayer(emptyBackground, "cesium");
+            expect(res).toBeFalsy();
+        });
+        it('type: wms  maptype: leaflet, supported', () => {
+            const maptype = "leaflet";
+            const Layers = require('../' + maptype + '/Layers');
+            Layers.registerType('wms', {});
+            const res = LayersUtils.isSupportedLayer(wmsLayer, maptype);
+            expect(res).toBeTruthy();
+        });
+        it('type: wms  maptype: leaflet, not supported because invalid', () => {
+            const maptype = "leaflet";
+            const Layers = require('../' + maptype + '/Layers');
+            Layers.registerType('wms', {});
+            const res = LayersUtils.isSupportedLayer(assign({}, wmsLayer, {invalid: true}), maptype);
+            expect(res).toBeFalsy();
+        });
+        it('type: mapquest  maptype: openlayers, with apikey supported', () => {
+            const maptype = "openlayers";
+            const Layers = require('../' + maptype + '/Layers');
+            Layers.registerType('mapquest', {});
+            const res = LayersUtils.isSupportedLayer(mapquestLayerWithApikey, maptype);
+            expect(res).toBeTruthy();
+        });
+        it('type: mapquest  maptype: openlayers, without apikey not supported', () => {
+            const maptype = "openlayers";
+            const Layers = require('../' + maptype + '/Layers');
+            Layers.registerType('mapquest', {});
+            const res = LayersUtils.isSupportedLayer(mapquestLayerWithoutApikey, maptype);
+            expect(res).toBeFalsy();
+        });
+        it('type: bing  maptype: openlayers, with invalid apikey, not supported', () => {
+            const maptype = "openlayers";
+            const Layers = require('../' + maptype + '/Layers');
+            Layers.registerType('bing', {});
+            const res = LayersUtils.isSupportedLayer(assign({}, bingLayerWithApikey, {apiKey: "__API_KEY_MAPQUEST__"}), maptype);
+            expect(res).toBeFalsy();
+        });
+        it('type: bing  maptype: openlayers, with apikey supported', () => {
+            const maptype = "openlayers";
+            const Layers = require('../' + maptype + '/Layers');
+            Layers.registerType('bing', {});
+            const res = LayersUtils.isSupportedLayer(bingLayerWithApikey, maptype);
+            expect(res).toBeTruthy();
+        });
+        it('type: bing  maptype: openlayers, without apikey not supported', () => {
+            const maptype = "openlayers";
+            const Layers = require('../' + maptype + '/Layers');
+            Layers.registerType('bing', {});
+            const res = LayersUtils.isSupportedLayer(bingLayerWithoutApikey, maptype);
+            expect(res).toBeFalsy();
+        });
 
+
+    });
+
+    it('findGeoServerName with a positive match and using default regex', () => {
+        const matchedGeoServerName = LayersUtils.findGeoServerName({url: "http:/hostname/geoservering/ows"});
+        expect(matchedGeoServerName).toBe("/geoservering/");
+    });
+    it('findGeoServerName with a positive match and using a custom regex', () => {
+        const matchedGeoServerName = LayersUtils.findGeoServerName({url: "http:/hostname/geoserver/ows", regex: /\/geoserver\//});
+        expect(matchedGeoServerName).toBe("/geoserver/");
+    });
+    it('findGeoServerName with no match, with custom and default regex', () => {
+        const matchedGeoServerName = LayersUtils.findGeoServerName({url: "http:/hostname/geosssearavering/ows"});
+        expect(matchedGeoServerName).toBe(null);
+        const matchedGeoServerNameCustomReg = LayersUtils.findGeoServerName({url: "http:/hostname/geosssearavering/ows", regex: /\/geoserver\//});
+        expect(matchedGeoServerNameCustomReg).toBe(null);
+    });
 });

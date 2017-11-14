@@ -30,7 +30,7 @@ const EXPRESSION_TESTS = [
     [" ", "=", undefined],
     ["ZZZ", "=", undefined]
 ];
-const testExperssion = (spyonChange, spyonValueChange, rawValue, expectedOperator, expectedValue) => {
+const testExpression = (spyonChange, spyonValueChange, rawValue, expectedOperator, expectedValue) => {
     const input = document.getElementsByTagName("input")[0];
     input.value = rawValue;
     ReactTestUtils.Simulate.change(input);
@@ -95,6 +95,6 @@ describe('Test for NumberFilter component', () => {
         const spyonChange = expect.spyOn(actions, 'onChange');
         const spyonValueChange = expect.spyOn(actions, 'onValueChange');
         ReactDOM.render(<NumberFilter onChange={actions.onChange} onValueChange={actions.onValueChange} />, document.getElementById("container"));
-        EXPRESSION_TESTS.map( params => testExperssion(spyonChange, spyonValueChange, ...params));
+        EXPRESSION_TESTS.map( params => testExpression(spyonChange, spyonValueChange, ...params));
     });
 });

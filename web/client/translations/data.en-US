@@ -35,6 +35,7 @@
             "name": "Name",
             "group": "Group",
             "general": "General",
+            "description": "Beschreibung",
             "display": "Display",
             "style": "Style",
             "transparent": "Transparent",
