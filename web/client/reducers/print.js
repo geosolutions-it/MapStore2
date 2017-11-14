@@ -73,7 +73,11 @@ function print(state = {spec: initialSpec, capabilities: null, map: null, isLoad
     case CONFIGURE_PRINT_MAP: {
 
         const layers = action.layers.map((layer) => {
-            return layer.title ? assign({}, layer, {title: isObject(layer.title) ? layer.title.default : layer.title}) : layer;
+            return layer.title ? assign({}, layer, {
+                title: isObject(layer.title) && action.currentLocale && layer.title[action.currentLocale]
+                || isObject(layer.title) && layer.title.default
+                || layer.title
+            }) : layer;
         });
 
         return assign({}, state, {

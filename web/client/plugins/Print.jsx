@@ -30,6 +30,7 @@ const assign = require('object-assign');
 const {head} = require('lodash');
 
 const {scalesSelector} = require('../selectors/map');
+const {currentLocaleSelector} = require('../selectors/locale');
 
 require('./print/print.css');
 
@@ -91,7 +92,8 @@ class Print extends React.Component {
         defaultBackground: PropTypes.string,
         closeGlyph: PropTypes.string,
         submitConfig: PropTypes.object,
-        previewOptions: PropTypes.object
+        previewOptions: PropTypes.object,
+        currentLocale: PropTypes.string
     };
 
     static contextTypes = {
@@ -150,7 +152,8 @@ class Print extends React.Component {
         previewOptions: {
             buttonStyle: "primary"
         },
-        style: {}
+        style: {},
+        currentLocale: 'en-US'
     };
 
     componentWillMount() {
@@ -325,10 +328,10 @@ class Print extends React.Component {
                 const scaleZoom = PrintUtils.getNearestZoom(newMap.zoom, scales);
 
                 this.props.configurePrintMap(newMap.center, mapZoom, scaleZoom, scales[scaleZoom],
-                    this.filterLayers(newPrintSpec), newMap.projection);
+                    this.filterLayers(newPrintSpec), newMap.projection, this.props.currentLocale);
             } else {
                 this.props.configurePrintMap(newMap.center, newMap.zoom, newMap.zoom, this.props.scales[newMap.zoom],
-                    this.filterLayers(newPrintSpec), newMap.projection);
+                    this.filterLayers(newPrintSpec), newMap.projection, this.props.currentLocale);
             }
         }
     };
@@ -350,8 +353,9 @@ const selector = createSelector([
     mapSelector,
     layersSelector,
     scalesSelector,
-    (state) => state.browser && (!state.browser.ie || state.browser.ie11)
-], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview) => ({
+    (state) => state.browser && (!state.browser.ie || state.browser.ie11),
+    currentLocaleSelector
+], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale) => ({
     open,
     capabilities,
     printSpec,
@@ -360,7 +364,8 @@ const selector = createSelector([
     map,
     layers: layers.filter(l => !l.loadingError),
     scales,
-    usePreview
+    usePreview,
+    currentLocale
 }));
 
 const PrintPlugin = connect(selector, {
