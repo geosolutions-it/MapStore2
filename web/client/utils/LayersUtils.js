@@ -331,6 +331,7 @@ const LayersUtils = {
             type: layer.type,
             url: layer.url,
             bbox: layer.bbox,
+            nativeCrs: layer.nativeCrs,
             visibility: layer.loadingError === 'Error' ? true : layer.visibility,
             singleTile: layer.singleTile || false,
             allowedSRS: layer.allowedSRS,
