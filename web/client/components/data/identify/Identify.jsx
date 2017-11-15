@@ -21,6 +21,7 @@ const Message = require('../../I18N/Message');
 const DefaultViewer = require('./DefaultViewer');
 const GeocodeViewer = require('./GeocodeViewer');
 const Dialog = require('../../misc/Dialog');
+const Rx = require('rxjs');
 
 class Identify extends React.Component {
     static propTypes = {
@@ -65,7 +66,8 @@ class Identify extends React.Component {
         closeGlyph: PropTypes.string,
         allowMultiselection: PropTypes.bool,
         warning: PropTypes.string,
-        currentLocale: PropTypes.string
+        currentLocale: PropTypes.string,
+        fullscreen: PropTypes.bool
     };
 
     static defaultProps = {
@@ -118,8 +120,36 @@ class Identify extends React.Component {
         closeGlyph: "1-close",
         className: "square-button",
         allowMultiselection: false,
-        currentLocale: 'en-US'
+        currentLocale: 'en-US',
+        fullscreen: false
     };
+
+    state = {
+        fullClass: ''
+    };
+
+    componentWillMount() {
+        if (this.props.fullscreen) {
+            /* compatibility with Safari*/
+            const touchStream$ = new Rx.Subject();
+            touchStream$
+                .delay(100)
+                .subscribe({
+                    next: () => {
+                        const current = new Date();
+                        const previous = this.date;
+                        const delta = current - previous;
+                        if (this.date && delta < 700) {
+                            this.setFullscreen();
+                        }
+                        this.date = current;
+                    }
+                });
+            this.setState({
+                touchStream$
+            });
+        }
+    }
 
     componentWillReceiveProps(newProps) {
         if (this.needsRefresh(newProps)) {
@@ -159,6 +189,12 @@ class Identify extends React.Component {
         }
     }
 
+    componentWillUnmount() {
+        if (this.props.fullscreen && this.state.touchStream$) {
+            this.state.touchStream$.complete();
+        }
+    }
+
     onModalHiding = () => {
         this.props.hideMarker();
         this.props.purgeResults();
@@ -166,11 +202,22 @@ class Identify extends React.Component {
 
     renderHeader = (missing) => {
         return (
-            <span role="header">
+            <div role="header"
+                onTouchStart={this.props.fullscreen && !this.state.lockDoubleTouch ? () => { this.state.touchStream$.next(); } : () => {}}
+                onDoubleClick={this.props.fullscreen ?
+                    () => {
+                        if (!this.state.lockDoubleTouch) {
+                            this.setState({
+                                lockDoubleTouch: true
+                            });
+                        }
+                        this.setFullscreen();
+                    }
+                    : () => {}}>
                 { missing !== 0 ? <Spinner value={missing} sSize="sp-small" /> : null }
                 {this.props.headerGlyph ? <Glyphicon glyph={this.props.headerGlyph} /> : null}&nbsp;<Message msgId="identifyTitle" />
                 <button onClick={this.onModalHiding} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
-            </span>
+            </div>
         );
     };
 
@@ -211,7 +258,7 @@ class Identify extends React.Component {
                 collapsible={this.props.collapsible}
                 id="mapstore-getfeatureinfo"
                 style={this.props.style}
-                className={this.props.panelClassName}>
+                className={this.props.panelClassName + this.state.fullClass}>
                 <div className={this.props.headerClassName ? this.props.headerClassName : "panel-heading"}>
                     {this.renderHeader(missingResponses)}
                 </div>
@@ -221,7 +268,7 @@ class Identify extends React.Component {
          :
             <Dialog id="mapstore-getfeatureinfo"
                 style={this.props.style}
-                className={this.props.panelClassName}
+                className={this.props.panelClassName + this.state.fullClass}
                 headerClassName={this.props.headerClassName}
                 bodyClassName={this.props.bodyClassName}
                 draggable={this.props.draggable}
@@ -291,6 +338,14 @@ class Identify extends React.Component {
             return op;
         }, {});
         return options;
+    };
+
+    setFullscreen = () => {
+        const fullscreen = !this.state.fullscreen;
+        this.setState({
+            fullscreen,
+            fullClass: fullscreen ? ' fullscreen' : ''
+        });
     };
 }
 
