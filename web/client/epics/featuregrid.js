@@ -12,6 +12,8 @@ const axios = require('../libs/ajax');
 const bbox = require('@turf/bbox');
 const {fidFilter} = require('../utils/ogc/Filter/filter');
 const {getDefaultFeatureProjection} = require('../utils/FeatureGridUtils');
+const CoordinatesUtils = require('../utils/CoordinatesUtils');
+const LayersUtils = require('../utils/LayersUtils');
 const {isSimpleGeomType} = require('../utils/MapUtils');
 const assign = require('object-assign');
 const {changeDrawingStatus, GEOMETRY_CHANGED} = require('../actions/draw');
@@ -24,6 +26,7 @@ const {zoomToExtent} = require('../actions/map');
 
 const {BROWSE_DATA, changeLayerProperties, refreshLayerVersion} = require('../actions/layers');
 const {purgeMapInfoResults} = require('../actions/mapInfo');
+const {getCapabilities, parseLayerCapabilities} = require('../api/WMS');
 
 const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
     saveSuccess, saveError, clearChanges, setLayer, clearSelection, toggleViewMode, toggleTool,
@@ -43,12 +46,28 @@ const {queryPanelSelector} = require('../selectors/controls');
 
 const {error, warning} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive} = require('../selectors/query');
+const {getLayerFromId} = require('../selectors/layers');
 const drawSupportReset = () => changeDrawingStatus("clean", "", "featureGrid", [], {});
 const {interceptOGCError} = require('../utils/ObservableUtils');
 
 const {gridUpdateToQueryUpdate} = require('../utils/FeatureGridUtils');
 
-
+/**
+@return a spatial filter with coordinates reprojeted to nativeCrs
+*/
+const getFilterInNativeCrs = (filter, nativeCrs) => {
+    let newCoords = CoordinatesUtils.reprojectGeoJson(filter.spatialField.geometry, filter.spatialField.geometry.projection || "EPSG:3857", nativeCrs).coordinates;
+    return {
+        ...filter,
+        spatialField: {
+            ...filter.spatialField,
+            geometry: {
+                ...filter.spatialField.geometry,
+                coordinates: newCoords
+            }
+        }
+    };
+};
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
     let drawOptions; let geomType;
@@ -165,6 +184,10 @@ const createInitialQueryFlow = (action$, store, {url, name} = {}) => {
 // Create action to add filter to wms layer
 const addFilterToWMSLayer = (layer, filter) => {
     return changeLayerProperties(layer, {filterObj: filter});
+};
+// Create action to add filter and nativeCrs to wms layer
+const addFilterNativeCRSToWMSLayer = (layer, filter, nativeCrs) => {
+    return changeLayerProperties(layer, {filterObj: filter, nativeCrs});
 };
 const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
     return changeLayerProperties(f.selectedLayer, {filterObj: undefined});
@@ -555,7 +578,11 @@ module.exports = {
         .filter( () => !isSyncWmsActive(store.getState()))
         .switchMap(() => Rx.Observable.from([removeFilterFromWMSLayer(store.getState()), {type: STOP_SYNC_WMS}])),
     /**
-     * Sync map with filter
+     * Sync map with filter.
+     *
+     * Since the CQL_FILTER must be projected in the native crs of the layer
+     * if this info is missing and sync is active we need to perform a getCapabilites
+     * to the single layer in order to fetch this data. see #2210 issue.
      */
     syncMapWmsFilter: (action$, store) =>
         action$.ofType(QUERY_CREATE, UPDATE_QUERY).
@@ -565,8 +592,30 @@ module.exports = {
             })
             .switchMap(() => {
                 const {query: q, featuregrid: f} = store.getState();
-                const filter = (q || {}).filterObj;
                 const layer = (f || {}).selectedLayer;
-                return Rx.Observable.merge(Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a), action$.ofType(START_SYNC_WMS)).map(() => addFilterToWMSLayer(layer, filter));
+                const filter = (q || {}).filterObj;
+                return Rx.Observable.merge(
+                    Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a),
+                    action$.ofType(START_SYNC_WMS))
+                    .mergeMap(() => {
+                        // if a spatial filter is present AND native crs is not present, we call the getCapabilites
+                        if (filter && filter.spatialField && filter.spatialField.geometry && filter.spatialField.geometry.coordinates && filter.spatialField.geometry.coordinates[0]) {
+                            if (!layer.nativeCRS) {
+                                const reqUrl = LayersUtils.getCapabilitiesUrl(getLayerFromId(store.getState(), layer));
+                                return Rx.Observable.fromPromise(
+                                    getCapabilities(reqUrl, false)
+                                    .then((capabilities) => {
+                                        // perform coords Projection to nativeCrs
+                                        const layerCapability = parseLayerCapabilities(capabilities, getLayerFromId(store.getState(), layer));
+                                        // update layer node with native crs
+                                        const nativeCrs = head(layerCapability.crs) || "EPSG:3857";
+                                        return addFilterNativeCRSToWMSLayer(layer, getFilterInNativeCrs(filter, nativeCrs), nativeCrs);
+                                    })
+                                );
+                            }
+                            return Rx.Observable.of(addFilterToWMSLayer(layer, getFilterInNativeCrs(filter, layer.nativeCRS)));
+                        }
+                        return Rx.Observable.of(addFilterToWMSLayer(layer, filter));
+                    });
             })
 };
