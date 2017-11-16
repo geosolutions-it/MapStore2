@@ -2,6 +2,7 @@ const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const SelectShape = require('../SelectShape');
+const b64toBlob = require('b64-to-blob');
 
 const TestUtils = require('react-dom/test-utils');
 
@@ -43,10 +44,9 @@ describe("Test the select shapefile component", () => {
         expect(dom.innerHTML.indexOf('TEST') !== -1).toBe(true);
     });
 
-    it('upload file', () => {
-        let dropped = false;
+    it('upload file', (done) => {
         const handler = () => {
-            dropped = true;
+            done();
         };
         const cmp = ReactDOM.render(<SelectShape onShapeChoosen={handler}/>, document.getElementById("container"));
         expect(cmp).toExist();
@@ -59,13 +59,24 @@ describe("Test the select shapefile component", () => {
             type: 'application/zip'
         }];
         TestUtils.Simulate.drop(content, { dataTransfer: { files } });
-        expect(dropped).toBe(true);
     });
 
-    it('upload wrong file', () => {
-        let error = false;
+    it('upload wrong mime, right file', (done) => {
         const handler = () => {
-            error = true;
+            done();
+        };
+        const cmp = ReactDOM.render(<SelectShape onShapeChoosen={handler}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        const dom = ReactDOM.findDOMNode(cmp);
+        expect(dom.getElementsByTagName('input').length).toBe(1);
+        const content = TestUtils.findRenderedDOMComponentWithClass(cmp, 'dropzone-content');
+        const files = [b64toBlob('UEsDBAoAAAAAACGPaktDvrfoAQAAAAEAAAAKAAAAc2FtcGxlLnR4dGFQSwECPwAKAAAAAAAhj2pLQ7636AEAAAABAAAACgAkAAAAAAAAACAAAAAAAAAAc2FtcGxlLnR4dAoAIAAAAAAAAQAYAGILh+1EWtMBy3f86URa0wHLd/zpRFrTAVBLBQYAAAAAAQABAFwAAAApAAAAAAA=', 'application/pdf')];
+        TestUtils.Simulate.drop(content, { dataTransfer: { files } });
+    });
+
+    it('upload wrong file', (done) => {
+        const handler = () => {
+            done();
         };
         const cmp = ReactDOM.render(<SelectShape onShapeError={handler}/>, document.getElementById("container"));
         expect(cmp).toExist();
@@ -78,6 +89,5 @@ describe("Test the select shapefile component", () => {
             type: 'application/pdf'
         }];
         TestUtils.Simulate.drop(content, { dataTransfer: { files } });
-        expect(error).toBe(true);
     });
 });
