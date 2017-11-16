@@ -9,7 +9,7 @@ const React = require('react');
 
 const ChartWizard = require('./ChartWizard');
 module.exports = ({
-        settings = {},
+        settings = {step: 0},
         insertWidget = () => {},
         onEditorChange = () => {},
         setPage = () => {},

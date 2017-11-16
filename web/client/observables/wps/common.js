@@ -13,20 +13,21 @@ module.exports = {
     getWPSURL: (urlToParse, options) => {
         if (urlToParse) {
             const parsed = url.parse(urlToParse, true);
-            let newPathname = null;
-            if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms") || endsWith(parsed.pathname, "ows")) {
+            let newPathname = parsed.pathname;
+            if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms")) {
                 newPathname = parsed.pathname.replace(/(wms|ows|wfs|wps)$/, "wps");
-                return url.format({
-                    ...parsed,
-                    search: null,
-                    pathname: newPathname,
-                    query: {
-                        service: "WPS",
-                        ...options,
-                        ...parsed.query
-                    }
-                });
             }
+            return url.format({
+                ...parsed,
+                search: null,
+                pathname: newPathname,
+                query: {
+                    service: "WPS",
+                    ...options,
+                    ...parsed.query
+                }
+            });
+
         }
     }
 };

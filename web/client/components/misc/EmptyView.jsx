@@ -31,6 +31,7 @@ module.exports = ({
         iconFit,
         title,
         tooltip,
+        tooltipId,
         description,
         content
     } = {}) =>
@@ -38,7 +39,7 @@ module.exports = ({
             <div key="main-view" className="empty-state-main-view" style={{height: iconFit ? "100%" : undefined, ...mainViewStyle}} >
                 {glyph
                     ? <div key="glyph" className="empty-state-image" style={{height: iconFit ? "100%" : undefined}}>
-                        <FitIcon iconFit={iconFit} tooltip={tooltip} glyph={glyph} />
+                        <FitIcon iconFit={iconFit} tooltip={tooltip} tooltipId={tooltipId} glyph={glyph} />
                     </div>
                     : null}
                 {title ? <h1 key="title" >{title}</h1> : null}

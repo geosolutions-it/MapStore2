@@ -153,7 +153,7 @@ const GaugeChart = ({data, xAxis = {}, colorGenerator, series = [], width=500, h
                     key={`pie-${i}`}
                     isAnimationActive={isAnimationActive}
                     activeIndex={activeSectorIndex}
-                    activeShape={useActive && ActiveSectorMark}
+                    activeShape={useActive ? ActiveSectorMark : undefined}
                     data={colorData.map( cd => ({realValue: chartValue, name: d.name, ...cd}))}
                     fill="#8884d8"
                     { ...pieRadius }

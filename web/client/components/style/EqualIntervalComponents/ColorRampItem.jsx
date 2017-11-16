@@ -4,7 +4,7 @@ const colors = require("./ExtendColorBrewer");
 const Message = require('../../I18N/Message');
 class ColorRampItem extends React.Component {
     static propTypes = {
-        item: PropTypes.object
+        item: PropTypes.oneOfType([PropTypes.string, PropTypes.object])
     };
 
     render() {

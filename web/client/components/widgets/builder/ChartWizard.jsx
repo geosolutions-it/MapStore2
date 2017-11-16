@@ -71,22 +71,25 @@ module.exports = ({onChange = () => {}, onFinish = () => {}, setPage= () => {}, 
         }}
         isStepValid={ n => n === 1 ? isChartOptionsValid(data.options) : true} skipButtonsOnSteps={[0]}>
         <ChartType
+            key="type"
             type={data.type}
             onSelect={ i => {
                 onChange("type", i);
             }}/>
-    <ChartOptions
-        featureTypeProperties={featureTypeProperties}
-        types={types}
-        data={data}
-        onChange={onChange}
-        layer={data.layer || layer}
-        sampleChart={renderPreview({data, layer: data.layer || layer, dependencies})}
-    />
-    <WidgetOptions
-        data={data}
-        onChange={onChange}
-        layer={data.layer || layer}
-        sampleChart={renderPreview({data, layer: data.layer || layer})}
-    />
+        <ChartOptions
+            key="chart-options"
+            featureTypeProperties={featureTypeProperties}
+            types={types}
+            data={data}
+            onChange={onChange}
+            layer={data.layer || layer}
+            sampleChart={renderPreview({data, layer: data.layer || layer, dependencies})}
+        />
+        <WidgetOptions
+            key="widget-options"
+            data={data}
+            onChange={onChange}
+            layer={data.layer || layer}
+            sampleChart={renderPreview({data, layer: data.layer || layer})}
+        />
     </Wizard>);

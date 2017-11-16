@@ -12,7 +12,7 @@ const TYPES = "ALL";
 const {findGeometryProperty} = require('../../../utils/ogc/WFS/base');
 module.exports = compose(
     defaultProps({
-        dataStreamFactory: ($props, {onEditorChange = () => {}} = {}) =>
+        dataStreamFactory: ($props, {onEditorChange = () => {}, onConfigurationError = () => {}} = {}) =>
             $props
             .distinctUntilChanged( ({layer = {}} = {}, {layer: newLayer} = {})=> layer.name === newLayer.name)
             .switchMap( ({layer} = {}) => Observable.forkJoin(describeFeatureType({layer}), describeProcess(layer.url, "gs:Aggregate"))
@@ -30,10 +30,14 @@ module.exports = compose(
                       featureTypeProperties
                 })
             ))
-            .catch( () => Observable.of({
-                loading: false,
-                featureTypeProperties: []
-            }))
+            .catch( e => {
+                onConfigurationError(e);
+                return Observable.of({
+                    errorObj: e,
+                    loading: false,
+                    featureTypeProperties: []
+                });
+            })
             .startWith({loading: true})
     }),
     propsStreamFactory,
@@ -42,7 +46,7 @@ module.exports = compose(
         ({featureTypeProperties = [], types = []}) => featureTypeProperties.length === 0 || types.length === 0,
         () => ({
             title: <Message msgId="widgets.builder.errors.noWidgetsAvailableTitle" />,
-        description: <HTML msgId="widgets.builder.errors.noWidgetsAvailableDescription" />
+            description: <HTML msgId="widgets.builder.errors.noWidgetsAvailableDescription" />
         })
     )
 );

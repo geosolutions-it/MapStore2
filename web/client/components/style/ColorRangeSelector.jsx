@@ -1,6 +1,5 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const {head} = require('lodash');
 const ColorUtils = require('../../utils/ColorUtils');
 const ColorRampItem = require('./EqualIntervalComponents/ColorRampItem');
 const DropdownList = require('react-widgets').DropdownList;
@@ -9,7 +8,7 @@ class ColorRangeSelector extends React.Component {
     static propTypes = {
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
         samples: PropTypes.number,
-        onChange: PropTypes.funct,
+        onChange: PropTypes.func,
         items: PropTypes.array
     };
     static contextTypes = {
@@ -51,7 +50,7 @@ class ColorRangeSelector extends React.Component {
         });
     }
     getValue = () => {
-        head(this.getItems().filter( (i = {}) => i === this.props.value || i.name === (this.props.value && this.props.value.name)));
+        this.getItems().filter( (i = {}) => i === this.props.value || i.name === (this.props.value && this.props.value.name));
     }
     getItems = () => {
         return this.props.items.map(({options = {}, ...item}) => ({

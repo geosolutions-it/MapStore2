@@ -13,7 +13,7 @@ const Toolbar = require('../../misc/toolbar/Toolbar');
 module.exports = ({onClose = () => {}, openFilterEditor = () => {}} = {}) =>
 (<div className="mapstore-flex-container">
     <div className="m-header">
-        <Row fluid>
+        <Row>
         <Col md={12} className="text-center" style={{overflow: 'hidden', lineHeight: '52px'}}>
              <Button onClick={() => onClose()} className="pull-left square-button no-border ">
                 <Glyphicon glyph="1-close"/>

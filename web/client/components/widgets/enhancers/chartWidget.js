@@ -12,5 +12,5 @@ module.exports = compose(
     withState('confirmDelete', 'toggleDeleteConfirm', false),
     withHandlers({
        toggleTableView: ({ setShowTable, showTable }) => () => setShowTable(!showTable)
-   }),
+   })
 );

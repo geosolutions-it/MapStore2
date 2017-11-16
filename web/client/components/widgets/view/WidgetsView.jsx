@@ -22,7 +22,20 @@ require('react-grid-layout-resize-prevent-collision/css/styles.css');
 
 const ChartWidget = dependenciesToFilter(wpsChart(enhanceChartWidget(require('../widget/ChartWidget'))));
 
-module.exports = pure(({id, width, height, rowHeight=208, widgets=[], layouts, deleteWidget = () => {}, editWidget = () => {}, onLayoutChange = () => {}, exportCSV = () => {}, exportImage = () => {}, dependencies}={}) =>
+module.exports = pure(({
+    id,
+    width,
+    height,
+    rowHeight=208,
+    widgets=[],
+    layouts,
+    deleteWidget = () => {},
+    editWidget = () => {},
+    onLayoutChange = () => {},
+    exportCSV = () => {},
+    exportImage = () => {},
+    dependencies}={}
+    ) =>
     (<ResponsiveReactGridLayout
         key={id}
         onLayoutChange={onLayoutChange}

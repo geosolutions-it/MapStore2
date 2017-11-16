@@ -6,6 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 const React = require('react');
+const {head} = require('lodash');
 const {Row, Col, Form, FormGroup, ControlLabel} = require('react-bootstrap');
 const Message = require('../../../../I18N/Message');
 const Select = require('react-select');
@@ -108,7 +109,7 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], aggreg
           <Col sm={6}>
               <ColorRangeSelector
                   items={getColorRangeItems(data.type)}
-                  value={getColorRangeItems(data.type).filter(c => c.name === data.colorRangeName)}
+                  value={head(getColorRangeItems(data.type).filter(c => c.name === data.colorRangeName))}
                   samples={data.type === "pie" ? 5 : 1}
                   onChange={v => {onChange("autoColorOptions", v.options); onChange("colorRangeName", v.name); }}/>
           </Col>
