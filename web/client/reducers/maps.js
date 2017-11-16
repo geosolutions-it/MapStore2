@@ -14,7 +14,7 @@ const {
 const {
     EDIT_MAP, RESET_CURRENT_MAP} = require('../actions/currentMap');
 const assign = require('object-assign');
-const _ = require('lodash');
+const {isArray, isNil} = require('lodash');
 /**
  * Manages the state of the maps list search with it's results
  * The properties represent the shape of the state
@@ -111,7 +111,7 @@ function maps(state = {
             loadingError: action.error
         };
     case MAP_UPDATING: {
-        let newMaps = state.results === "" ? [] : [...(state.results || [])];
+        let newMaps = state.results === "" || isNil(state.results) ? [] : [...state.results];
 
         for (let i = 0; i < newMaps.length; i++) {
             if (newMaps[i].id && newMaps[i].id === action.resourceId ) {
@@ -236,7 +236,7 @@ function maps(state = {
                             // Fix to overcome GeoStore bad encoding of single object arrays
                     let fixedSecurityRule = [];
                     if (action.permissions && action.permissions.SecurityRuleList && action.permissions.SecurityRuleList.SecurityRule) {
-                        if ( _.isArray(action.permissions.SecurityRuleList.SecurityRule)) {
+                        if ( isArray(action.permissions.SecurityRuleList.SecurityRule)) {
                             fixedSecurityRule = action.permissions.SecurityRuleList.SecurityRule;
                         } else {
                             fixedSecurityRule.push(action.permissions.SecurityRuleList.SecurityRule);

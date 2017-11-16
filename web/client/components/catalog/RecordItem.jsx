@@ -225,6 +225,7 @@ class RecordItem extends React.Component {
                 dimensions: this.props.record.dimensions || [],
                 name: wms.params && wms.params.name,
                 title: this.props.record.title || wms.params && wms.params.name,
+                description: this.props.record.description || "",
                 bbox: {
                     crs: this.props.record.boundingBox.crs,
                     bounds: {
@@ -259,6 +260,7 @@ class RecordItem extends React.Component {
                 name: wmts.params && wmts.params.name,
                 title: this.props.record.title || wmts.params && wmts.params.name,
                 matrixIds: this.props.record.matrixIds || [],
+                description: this.props.record.description || "",
                 tileMatrixSet: this.props.record.tileMatrixSet || [],
                 bbox: {
                     crs: this.props.record.boundingBox.crs,
