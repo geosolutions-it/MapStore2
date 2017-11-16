@@ -32,6 +32,12 @@ const MapInfoUtils = {
         }, {});
     },
     /**
+     * @return the label of an inputformat given the value
+     */
+    getLabelFromValue(value) {
+        return MapInfoUtils.getAvailableInfoFormatLabels().filter(info => INFO_FORMATS[info] === value)[0] || "TEXT";
+    },
+    /**
      * @return like getAvailableInfoFormat but return an array filled with the keys
      */
     getAvailableInfoFormatLabels() {
