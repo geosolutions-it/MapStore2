@@ -73,4 +73,22 @@ describe('test Layer Properties FeatureInfoFormat module component', () => {
         li[0].click();
         expect(spy.calls.length).toBe(1);
     });
+    it('tests FeatureInfoFormat component for wms using generalInfoFormat', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const generalInfoFormat = "text/html";
+        const label = "label";
+        const comp = ReactDOM.render(<FeatureInfoFormat element={l} label={label} generalInfoFormat={generalInfoFormat} onInfoFormatChange={() => {}}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        const div = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "div" );
+        expect(div[2]).toExist();
+        expect(div[2].textContent).toBe("HTML");
+
+    });
 });

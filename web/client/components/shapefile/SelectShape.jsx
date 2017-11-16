@@ -13,6 +13,10 @@ const Spinner = require('react-spinkit');
 
 const LocaleUtils = require('../../utils/LocaleUtils');
 
+const JSZip = require('jszip');
+const FileUtils = require('../../utils/FileUtils');
+const {Promise} = require('es6-promise');
+
 class SelectShape extends React.Component {
     static propTypes = {
         text: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
@@ -43,17 +47,32 @@ class SelectShape extends React.Component {
         );
     }
 
+    tryUnzip = (file) => {
+        return FileUtils.readZip(file).then((buffer) => {
+            return new JSZip(buffer);
+        });
+    };
+
+    isZip = (file) => {
+        return new Promise((resolve, reject) => {
+            if (file.type === 'application/zip' || file.type === 'application/x-zip-compressed') {
+                resolve();
+            } else {
+                this.tryUnzip(file).then(resolve).catch(reject);
+            }
+        });
+    };
+
     checkfile = (files) => {
-        const allZip = files.filter((file) => { return file.type !== 'application/zip' && file.type !== 'application/x-zip-compressed'; }).length === 0;
-        if (allZip) {
+        Promise.all(files.map(file => this.isZip(file))).then(() => {
             if (this.props.error) {
                 this.props.onShapeError(null);
             }
             this.props.onShapeChoosen(files);
-        } else {
+        }).catch(() => {
             const error = LocaleUtils.getMessageById(this.context.messages, this.props.errorMessage);
             this.props.onShapeError(error);
-        }
+        });
     };
 }
 

@@ -52,6 +52,8 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {function} onCleanHighlight triggered when the mouse is out of any annotation card
  * @prop {function} onDetail triggered when the user clicks on an annotation card
  * @prop {function} onFilter triggered when the user enters some text in the filtering widget
+ * @prop {function} classNameSelector optional selector to assign custom a CSS class to annotations, based on
+ * the annotation's attributes.
  */
 class Annotations extends React.Component {
     static propTypes = {
@@ -72,7 +74,8 @@ class Annotations extends React.Component {
         current: PropTypes.string,
         config: PropTypes.object,
         filter: PropTypes.string,
-        onFilter: PropTypes.func
+        onFilter: PropTypes.func,
+        classNameSelector: PropTypes.func
     };
 
     static contextTypes = {
@@ -81,7 +84,8 @@ class Annotations extends React.Component {
 
     static defaultProps = {
         mode: 'list',
-        config: defaultConfig
+        config: defaultConfig,
+        classNameSelector: () => ''
     };
 
     getConfig = () => {
@@ -112,7 +116,7 @@ class Annotations extends React.Component {
     };
 
     renderCard = (annotation) => {
-        return (<div className="mapstore-annotations-panel-card" onMouseOver={() => this.props.onHighlight(annotation.properties.id)} onMouseOut={this.props.onCleanHighlight} onClick={() => this.props.onDetail(annotation.properties.id)}>
+        return (<div className={"mapstore-annotations-panel-card " + this.props.classNameSelector(annotation)} onMouseOver={() => this.props.onHighlight(annotation.properties.id)} onMouseOut={this.props.onCleanHighlight} onClick={() => this.props.onDetail(annotation.properties.id)}>
             <span className="mapstore-annotations-panel-card-thumbnail">{this.renderThumbnail(annotation.style)}</span>
             {this.getConfig().fields.map(f => this.renderField(f, annotation))}
         </div>);
