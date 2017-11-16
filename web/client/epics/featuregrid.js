@@ -606,9 +606,8 @@ module.exports = {
                                 return Rx.Observable.fromPromise(
                                     getCapabilities(reqUrl, false)
                                     .then((capabilities) => {
-                                        // perform coords Projection to nativeCrs
+                                        // reproject coordinates to nativeCrs & update layer with nativeCrs for future
                                         const layerCapability = parseLayerCapabilities(capabilities, objLayer);
-                                        // update layer node with native crs
                                         const nativeCrs = head(layerCapability.crs) || "EPSG:3857";
                                         return addFilterNativeCRSToWMSLayer(layerId, reprojectFilterInNativeCrs(filter, nativeCrs), nativeCrs);
                                     })

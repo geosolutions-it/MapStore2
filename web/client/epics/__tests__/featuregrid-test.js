@@ -23,7 +23,6 @@ const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery')
 
 const {setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeCatalogOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing, syncMapWmsFilter} = require('../featuregrid');
 const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
-const {isSyncWmsActive} = require('../../selectors/query');
 const {isEmpty, isNil} = require('lodash');
 const filterObj = {
     featureTypeName: 'MEDIATORE:V_SOTTOPASSO',
@@ -509,7 +508,7 @@ const stateWithGmlGeometry = {
 };
 
 describe('featuregrid Epics', () => {
-/*
+
     it('set highlight feature path with geometry not supported EDIT MODE', (done) => {
         const epicResult = actions => {
             expect(actions.length).toBe(3);
@@ -1206,21 +1205,23 @@ describe('featuregrid Epics', () => {
             });
             done();
         }, newState);
-    });*/
+    });
 
-    it('test syncMapWmsFilter with only: spatialField. nativers fetched remotely', (done) => {
+    it('test syncMapWmsFilter with only: spatialField. nativeCrs fetched "remotely"', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
                 open: true,
-                selectedLayer: "TEST_LAYER",
+                selectedLayer: "MEDIATORE:V_SOTTOPASSO__6",
                 mode: 'EDIT',
                 select: [{id: 'poligoni.1', _new: 'poligoni._new'}],
                 changes: []
             }, layers: {
                 flat: [{
-                    id: "TEST_LAYER",
-                    title: "Test Layer",
-                    filterObj
+                    id: "MEDIATORE:V_SOTTOPASSO__6",
+                    name: "MEDIATORE:V_SOTTOPASSO",
+                    title: "V_SOTTOPASSO",
+                    filterObj,
+                    url: "base/web/client/test-resources/wms/getCapabilitiesSingleLayer.xml"
                 }]
             }
         };
