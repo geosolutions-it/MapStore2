@@ -55,7 +55,7 @@ const {gridUpdateToQueryUpdate} = require('../utils/FeatureGridUtils');
 /**
 @return a spatial filter with coordinates reprojeted to nativeCrs
 */
-const getFilterInNativeCrs = (filter, nativeCrs) => {
+const reprojectFilterInNativeCrs = (filter, nativeCrs) => {
     let newCoords = CoordinatesUtils.reprojectGeoJson(filter.spatialField.geometry, filter.spatialField.geometry.projection || "EPSG:3857", nativeCrs).coordinates;
     return {
         ...filter,
@@ -592,7 +592,7 @@ module.exports = {
             })
             .switchMap(() => {
                 const {query: q, featuregrid: f} = store.getState();
-                const layer = (f || {}).selectedLayer;
+                const layerId = (f || {}).selectedLayer;
                 const filter = (q || {}).filterObj;
                 return Rx.Observable.merge(
                     Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a),
@@ -600,22 +600,23 @@ module.exports = {
                     .mergeMap(() => {
                         // if a spatial filter is present AND native crs is not present, we call the getCapabilites
                         if (filter && filter.spatialField && filter.spatialField.geometry && filter.spatialField.geometry.coordinates && filter.spatialField.geometry.coordinates[0]) {
-                            if (!layer.nativeCRS) {
-                                const reqUrl = LayersUtils.getCapabilitiesUrl(getLayerFromId(store.getState(), layer));
+                            const objLayer = getLayerFromId(store.getState(), layerId);
+                            if (!objLayer.nativeCrs) {
+                                const reqUrl = LayersUtils.getCapabilitiesUrl(objLayer);
                                 return Rx.Observable.fromPromise(
                                     getCapabilities(reqUrl, false)
                                     .then((capabilities) => {
                                         // perform coords Projection to nativeCrs
-                                        const layerCapability = parseLayerCapabilities(capabilities, getLayerFromId(store.getState(), layer));
+                                        const layerCapability = parseLayerCapabilities(capabilities, objLayer);
                                         // update layer node with native crs
                                         const nativeCrs = head(layerCapability.crs) || "EPSG:3857";
-                                        return addFilterNativeCRSToWMSLayer(layer, getFilterInNativeCrs(filter, nativeCrs), nativeCrs);
+                                        return addFilterNativeCRSToWMSLayer(layerId, reprojectFilterInNativeCrs(filter, nativeCrs), nativeCrs);
                                     })
                                 );
                             }
-                            return Rx.Observable.of(addFilterToWMSLayer(layer, getFilterInNativeCrs(filter, layer.nativeCRS)));
+                            return Rx.Observable.of(addFilterToWMSLayer(layerId, reprojectFilterInNativeCrs(filter, objLayer.nativeCrs)));
                         }
-                        return Rx.Observable.of(addFilterToWMSLayer(layer, filter));
+                        return Rx.Observable.of(addFilterToWMSLayer(layerId, filter));
                     });
             })
 };
