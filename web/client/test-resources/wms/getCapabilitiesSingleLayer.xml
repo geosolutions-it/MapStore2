@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?><WMS_Capabilities version="1.3.0" updateSequence="10277" xmlns="http://www.opengis.net/wms" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wms http://localhost:8081/geoserver-test/schemas/wms/1.3.0/capabilities_1_3_0.xsd?ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0">
+  <Service>
+    <Name>WMS</Name>
+    <Title>GeoServer Web Map Service</Title>
+    <Abstract>A compliant implementation of WMS plus most of the SLD extension (dynamic styling). Can also generate PDF, SVG, KML, GeoRSS</Abstract>
+    <KeywordList>
+      <Keyword>WFS</Keyword>
+      <Keyword>WMS</Keyword>
+      <Keyword>GEOSERVER</Keyword>
+    </KeywordList>
+    <OnlineResource xlink:type="simple" xlink:href="http://geoserver.sourceforge.net/html/index.php"/>
+    <ContactInformation>
+      <ContactPersonPrimary>
+        <ContactPerson>Claudius Ptolomaeus</ContactPerson>
+        <ContactOrganization>The ancient geographes INC</ContactOrganization>
+      </ContactPersonPrimary>
+      <ContactPosition>Chief geographer</ContactPosition>
+      <ContactAddress>
+        <AddressType>Work</AddressType>
+        <Address/>
+        <City>Alexandria</City>
+        <StateOrProvince/>
+        <PostCode/>
+        <Country>Egypt</Country>
+      </ContactAddress>
+      <ContactVoiceTelephone/>
+      <ContactFacsimileTelephone/>
+      <ContactElectronicMailAddress>claudius.ptolomaeus@gmail.com</ContactElectronicMailAddress>
+    </ContactInformation>
+    <Fees>NONE</Fees>
+    <AccessConstraints>NONE</AccessConstraints>
+  </Service>
+  <Capability>
+    <Request>
+      <GetCapabilities>
+        <Format>text/xml</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/MEDIATORE/V_SOTTOPASSO/ows?SERVICE=WMS&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0&amp;"/>
+            </Get>
+            <Post>
+              <OnlineResource xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/MEDIATORE/V_SOTTOPASSO/ows?SERVICE=WMS&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0&amp;"/>
+            </Post>
+          </HTTP>
+        </DCPType>
+      </GetCapabilities>
+      <GetMap>
+        <Format>image/png</Format>
+        <Format>application/atom+xml</Format>
+        <Format>application/json;type=utfgrid</Format>
+        <Format>application/pdf</Format>
+        <Format>application/rss+xml</Format>
+        <Format>application/vnd.google-earth.kml+xml</Format>
+        <Format>application/vnd.google-earth.kml+xml;mode=networklink</Format>
+        <Format>application/vnd.google-earth.kmz</Format>
+        <Format>image/geotiff</Format>
+        <Format>image/geotiff8</Format>
+        <Format>image/gif</Format>
+        <Format>image/jpeg</Format>
+        <Format>image/png; mode=8bit</Format>
+        <Format>image/svg+xml</Format>
+        <Format>image/tiff</Format>
+        <Format>image/tiff8</Format>
+        <Format>image/vnd.jpeg-png</Format>
+        <Format>text/html; subtype=openlayers</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/MEDIATORE/V_SOTTOPASSO/ows?SERVICE=WMS&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0&amp;"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetMap>
+      <GetFeatureInfo>
+        <Format>text/plain</Format>
+        <Format>application/vnd.ogc.gml</Format>
+        <Format>text/xml</Format>
+        <Format>application/vnd.ogc.gml/3.1.1</Format>
+        <Format>text/xml; subtype=gml/3.1.1</Format>
+        <Format>text/html</Format>
+        <Format>application/json</Format>
+        <DCPType>
+          <HTTP>
+            <Get>
+              <OnlineResource xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/MEDIATORE/V_SOTTOPASSO/ows?SERVICE=WMS&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0&amp;"/>
+            </Get>
+          </HTTP>
+        </DCPType>
+      </GetFeatureInfo>
+    </Request>
+    <Exception>
+      <Format>XML</Format>
+      <Format>INIMAGE</Format>
+      <Format>BLANK</Format>
+      <Format>JSON</Format>
+    </Exception>
+    <Layer>
+      <Title>GeoServer Web Map Service</Title>
+      <Abstract>A compliant implementation of WMS plus most of the SLD extension (dynamic styling). Can also generate PDF, SVG, KML, GeoRSS</Abstract>
+      <!--Limited list of EPSG projections:-->
+      <CRS>EPSG:3003</CRS>
+      <CRS>EPSG:3857</CRS>
+      <CRS>EPSG:4326</CRS>
+      <CRS>EPSG:900913</CRS>
+      <CRS>CRS:84</CRS>
+      <EX_GeographicBoundingBox>
+        <westBoundLongitude>8.66543982800556</westBoundLongitude>
+        <eastBoundLongitude>9.095784663970527</eastBoundLongitude>
+        <southBoundLatitude>44.378583539095004</southBoundLatitude>
+        <northBoundLatitude>44.51989321330547</northBoundLatitude>
+      </EX_GeographicBoundingBox>
+      <BoundingBox CRS="CRS:84" minx="8.66543982800556" miny="44.378583539095004" maxx="9.095784663970527" maxy="44.51989321330547"/>
+      <Layer queryable="0">
+        <Name>BASE</Name>
+        <Title>BASE</Title>
+        <Abstract>BASE</Abstract>
+        <CRS>EPSG:3003</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>8.66463138729189</westBoundLongitude>
+          <eastBoundLongitude>9.096015806053382</eastBoundLongitude>
+          <southBoundLatitude>44.37809332063032</southBoundLatitude>
+          <northBoundLatitude>44.52038364700468</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3003" minx="1473374.7844641604" miny="4913940.549585524" maxx="1507657.8064751413" maxy="4929691.508965048"/>
+      </Layer>
+      <Layer queryable="0">
+        <Name>BASE_CARTOGRAFICA</Name>
+        <Title>BASE_CARTOGRAFICA</Title>
+        <Abstract>BASE CARTOGRAFICA CON CIVICI</Abstract>
+        <CRS>EPSG:3003</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>8.66463138729189</westBoundLongitude>
+          <eastBoundLongitude>9.096015806053382</eastBoundLongitude>
+          <southBoundLatitude>44.37809332063032</southBoundLatitude>
+          <northBoundLatitude>44.52038364700468</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3003" minx="1473374.7844641604" miny="4913940.549585524" maxx="1507657.8064751413" maxy="4929691.508965048"/>
+      </Layer>
+      <Layer queryable="0">
+        <Name>BASE_CARTOGRAFICA_LEGGERA</Name>
+        <Title>BASE_CARTOGRAFICA_LEGGERA</Title>
+        <Abstract>BASE CARTOGRAFICA CON CIVICI SENZA CONFINI AMMINISTRATIVI.(aggiornata 03 ottobre 2017)</Abstract>
+        <CRS>EPSG:3003</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>8.66463138729189</westBoundLongitude>
+          <eastBoundLongitude>9.096015806053382</eastBoundLongitude>
+          <southBoundLatitude>44.37809332063032</southBoundLatitude>
+          <northBoundLatitude>44.52038364700468</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3003" minx="1473374.7844641604" miny="4913940.549585524" maxx="1507657.8064751413" maxy="4929691.508965048"/>
+      </Layer>
+      <Layer queryable="0">
+        <Name>RIVI_E _TOMBINATURE</Name>
+        <Title>RIVI E TOMBINATURE</Title>
+        <Abstract>Layer-Group type layer: RIVI_E _TOMBINATURE</Abstract>
+        <CRS>EPSG:3003</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>8.666804226748013</westBoundLongitude>
+          <eastBoundLongitude>9.096010940584678</eastBoundLongitude>
+          <southBoundLatitude>44.378340511550846</southBoundLatitude>
+          <northBoundLatitude>44.51901625529282</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3003" minx="1473546.8477936038" miny="4913967.306210477" maxx="1507657.5976432906" maxy="4929539.61278015"/>
+      </Layer>
+      <Layer queryable="0">
+        <Name>SISTEMA_SERVIZI_PUBBLICI</Name>
+        <Title>SISTEMA DEI SERVIZI PUBBLICI</Title>
+        <Abstract>Layer-Group type layer: SISTEMA_SERVIZI_PUBBLICI</Abstract>
+        <CRS>EPSG:3003</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>8.66548177755422</westBoundLongitude>
+          <eastBoundLongitude>9.065193431428321</eastBoundLongitude>
+          <southBoundLatitude>44.37858353671111</southBoundLatitude>
+          <northBoundLatitude>44.51256723247018</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3003" minx="1473438.81" miny="4913994.74096034" maxx="1505208.99" maxy="4928823.19122115"/>
+      </Layer>
+      <Layer queryable="0">
+        <Name>ZONIZZAZIONE_ACUSTICA</Name>
+        <Title>ZONIZZAZIONE ACUSTICA</Title>
+        <Abstract>PIANO DI ZONIZZAZIONE ACUSTICA</Abstract>
+        <CRS>EPSG:3003</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>8.665439817083838</westBoundLongitude>
+          <eastBoundLongitude>9.095784653288375</eastBoundLongitude>
+          <southBoundLatitude>44.377470808234534</southBoundLatitude>
+          <northBoundLatitude>44.519893202311344</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="EPSG:3003" minx="1473438.81" miny="4913871.14" maxx="1507639.5" maxy="4929637.03"/>
+      </Layer>
+      <Layer queryable="1" opaque="0">
+        <Name>V_SOTTOPASSO</Name>
+        <Title>V_SOTTOPASSO</Title>
+        <Abstract/>
+        <KeywordList>
+          <Keyword>features</Keyword>
+          <Keyword>V_SOTTOPASSO</Keyword>
+        </KeywordList>
+        <CRS>EPSG:4326</CRS>
+        <CRS>CRS:84</CRS>
+        <EX_GeographicBoundingBox>
+          <westBoundLongitude>8.66543982800556</westBoundLongitude>
+          <eastBoundLongitude>9.095784663970527</eastBoundLongitude>
+          <southBoundLatitude>44.378583539095004</southBoundLatitude>
+          <northBoundLatitude>44.51989321330547</northBoundLatitude>
+        </EX_GeographicBoundingBox>
+        <BoundingBox CRS="CRS:84" minx="8.66543982800556" miny="44.378583539095004" maxx="9.095784663970527" maxy="44.51989321330547"/>
+        <BoundingBox CRS="EPSG:3003" minx="1473438.810873" miny="4913994.74122158" maxx="1507639.50084751" maxy="4929637.0312211"/>
+        <Style>
+          <Name>POINT_BIG_RED</Name>
+          <Abstract>A sample style that draws a point</Abstract>
+          <LegendURL width="20" height="20">
+            <Format>image/png</Format>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/MEDIATORE/V_SOTTOPASSO/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=V_SOTTOPASSO&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0"/>
+          </LegendURL>
+        </Style>
+      </Layer>
+    </Layer>
+  </Capability>
+</WMS_Capabilities>
