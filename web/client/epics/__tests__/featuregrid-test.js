@@ -8,6 +8,7 @@
 
 const expect = require('expect');
 const assign = require('object-assign');
+const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const {toggleEditMode, toggleViewMode, openFeatureGrid, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid, GEOMETRY_CHANGED} = require('../../actions/featuregrid');
 const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
@@ -1245,5 +1246,43 @@ describe('featuregrid Epics', () => {
             done();
         }, newState);
     });
+    it('test syncMapWmsFilter with only: spatialField. nativeCrs and projdef fetched "remotely"', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "MEDIATORE:V_SOTTOPASSO__6",
+                mode: 'EDIT',
+                select: [{id: 'poligoni.1', _new: 'poligoni._new'}],
+                changes: []
+            }, layers: {
+                flat: [{
+                    id: "MEDIATORE:V_SOTTOPASSO__6",
+                    name: "MEDIATORE:V_SOTTOPASSO",
+                    title: "V_SOTTOPASSO",
+                    filterObj,
+                    url: "base/web/client/test-resources/wms/getCapabilitiesSingleLayer3044.xml"
+                }]
+            }
+        };
+        const newState = assign({}, state, stateFeaturegrid);
+        CoordinatesUtils.getProjUrl = () => "base/web/client/test-resources/wms/projDef_3044.txt";
 
+        testEpic(addTimeoutEpic(syncMapWmsFilter), 1, [{type: UPDATE_QUERY}, {type: START_SYNC_WMS}], actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case CHANGE_LAYER_PROPERTIES: {
+                        expect(action.newProperties.nativeCrs).toBe("EPSG:3044");
+                        const firstPoint = [parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][0] * 1000000), 10) / 1000000, parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][1] * 100000), 10) / 100000 ];
+                        expect(firstPoint[0]).toBe(483245.221897);
+                        expect(firstPoint[1]).toBe(4920603.15079);
+                        break;
+                    }
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        }, newState);
+    });
 });

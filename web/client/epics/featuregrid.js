@@ -8,6 +8,8 @@
 const Rx = require('rxjs');
 const {get, head, isEmpty, find} = require('lodash');
 const { LOCATION_CHANGE } = require('react-router-redux');
+const Proj4js = require('proj4');
+const proj4 = Proj4js;
 const axios = require('../libs/ajax');
 const bbox = require('@turf/bbox');
 const {fidFilter} = require('../utils/ogc/Filter/filter');
@@ -608,10 +610,17 @@ module.exports = {
                                     .then((capabilities) => {
                                         // reproject coordinates to nativeCrs & update layer with nativeCrs for future
                                         const layerCapability = parseLayerCapabilities(capabilities, objLayer);
-                                        const nativeCrs = head(layerCapability.crs) || "EPSG:3857";
-                                        return addFilterNativeCRSToWMSLayer(layerId, reprojectFilterInNativeCrs(filter, nativeCrs), nativeCrs);
-                                    })
-                                );
+                                        return head(layerCapability.crs) || "EPSG:3857";
+                                    })).switchMap((nativeCrs) => {
+                                        if (!CoordinatesUtils.determineCrs(nativeCrs)) {
+                                            const EPSG = nativeCrs.split(":").length === 2 ? nativeCrs.split(":")[1] : "3857";
+                                            return Rx.Observable.fromPromise(CoordinatesUtils.fetchProjRemotely(nativeCrs, CoordinatesUtils.getProjUrl(EPSG)).then(res => {
+                                                proj4.defs(nativeCrs, res.data);
+                                                return addFilterNativeCRSToWMSLayer(layerId, reprojectFilterInNativeCrs(filter, nativeCrs), nativeCrs);
+                                            }));
+                                        }
+                                        return Rx.Observable.of(addFilterNativeCRSToWMSLayer(layerId, reprojectFilterInNativeCrs(filter, nativeCrs), nativeCrs));
+                                    });
                             }
                             return Rx.Observable.of(addFilterToWMSLayer(layerId, reprojectFilterInNativeCrs(filter, objLayer.nativeCrs)));
                         }
