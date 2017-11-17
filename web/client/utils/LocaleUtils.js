@@ -39,11 +39,11 @@ let supportedLocales = {
     "es": {
         code: "es-ES",
         description: "Español"
-    },
+    }/*,
     "nl": {
         code: "nl-NL",
         description: "Nederlands"
-    }
+    }*/
 };
 const DATE_FORMATS = {
     "default": "yyyy/MM/dd",
