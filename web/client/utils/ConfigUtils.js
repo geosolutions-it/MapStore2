@@ -106,9 +106,9 @@ var ConfigUtils = {
         }),
         mapStateSource: PropTypes.string
     },
-    getParsedUrl: (urlToParse, options) => {
+    getParsedUrl: (urlToParse, options, params = []) => {
         if (urlToParse) {
-            const parsed = url.parse(urlToParse, true);
+            const parsed = url.parse(ConfigUtils.filterUrlParams(urlToParse, params), true);
             let newPathname = null;
             if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms") || endsWith(parsed.pathname, "ows")) {
                 newPathname = parsed.pathname.replace(/(wms|ows|wfs|wps)$/, "wps");

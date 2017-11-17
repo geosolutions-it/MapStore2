@@ -16,6 +16,7 @@ const {error} = require('../actions/notifications');
 const {typeNameSelector} = require('../selectors/query');
 const {maxFeaturesWPSSelector} = require('../selectors/queryform');
 const {getParsedUrl} = require('../utils/ConfigUtils');
+const {authkeyParamNameSelector} = require('../selectors/catalog');
 
    /**
     * Epics for WFS query requests
@@ -25,13 +26,13 @@ const {getParsedUrl} = require('../utils/ConfigUtils');
 
 module.exports = {
 
-    isAutoCompleteEnabled: (action$) =>
+    isAutoCompleteEnabled: (action$, store) =>
     action$.ofType(FEATURE_TYPE_SELECTED)
         .switchMap((action) => {
             const parsedUrl = getParsedUrl(action.url, {
                 "version": "1.0.0",
                 "REQUEST": "DescribeProcess",
-                "IDENTIFIER": "gs:PagedUnique" });
+                "IDENTIFIER": "gs:PagedUnique" }, authkeyParamNameSelector(store.getState()));
             if (parsedUrl === null) {
                 return Rx.Observable.of(setAutocompleteMode(false));
             }
@@ -70,7 +71,7 @@ module.exports = {
                         startIndex: (action.fieldOptions.currentPage - 1) * maxFeaturesWPS,
                         value: action.fieldValue
                     });
-                const parsedUrl = getParsedUrl(state.query.url, {"outputFormat": "json"});
+                const parsedUrl = getParsedUrl(state.query.url, {"outputFormat": "json"}, authkeyParamNameSelector(store.getState()));
                 if (parsedUrl === null) {
                     return Rx.Observable.of(setAutocompleteMode(false));
                 }

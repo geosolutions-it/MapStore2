@@ -14,8 +14,10 @@ const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {FEATURE_TYPE_SELECTED, QUERY, UPDATE_QUERY, featureLoading, featureTypeLoaded, featureTypeError, querySearchResponse, queryError} = require('../actions/wfsquery');
 const {paginationInfo, isDescribeLoaded, layerDescribeSelector} = require('../selectors/query');
 const {mapSelector} = require('../selectors/map');
+const {authkeyParamNameSelector} = require('../selectors/catalog');
 const FilterUtils = require('../utils/FilterUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
+const ConfigUtils = require('../utils/ConfigUtils');
 const assign = require('object-assign');
 const {spatialFieldMethodSelector, spatialFieldSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
 const {changeDrawingStatus} = require('../actions/draw');
@@ -144,10 +146,10 @@ const getWFSFilterData = (filterObj) => {
     return data;
 };
 
-const getWFSFeature = (searchUrl, filterObj) => {
+const getWFSFeature = (searchUrl, filterObj, state) => {
     const data = getWFSFilterData(filterObj);
 
-    const urlParsedObj = Url.parse(searchUrl, true);
+    const urlParsedObj = Url.parse(ConfigUtils.filterUrlParams(searchUrl, authkeyParamNameSelector(state)), true);
     let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};
     params.service = 'WFS';
     params.outputFormat = 'json';
@@ -177,7 +179,7 @@ const retryWithForcedSortOptions = (action, store) => {
     const sortOptions = getDefaultSortOptions(getFirstAttribute(store.getState()));
     return getWFSFeature(action.searchUrl, assign(action.filterObj, {
         sortOptions
-    }))
+    }), store.getState())
         .let(interceptOGCError)
         .map((newResponse) => {
             const state = store.getState();
@@ -206,7 +208,7 @@ const featureTypeSelectedEpic = (action$, store) =>
                 const geometry = info.geometry[0] && info.geometry[0].attribute ? info.geometry[0].attribute : 'the_geom';
                 return Rx.Observable.of(changeSpatialAttribute(geometry));
             }
-            return Rx.Observable.defer( () => axios.get(action.url + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json'))
+            return Rx.Observable.defer( () => axios.get(ConfigUtils.filterUrlParams(action.url, authkeyParamNameSelector(store.getState())) + '?service=WFS&version=1.1.0&request=DescribeFeatureType&typeName=' + action.typeName + '&outputFormat=application/json'))
                 .map((response) => {
                     if (typeof response.data === 'object' && response.data.featureTypes && response.data.featureTypes[0]) {
                         const info = extractInfo(response.data);
@@ -236,7 +238,7 @@ const wfsQueryEpic = (action$, store) =>
     action$.ofType(QUERY)
         .switchMap(action => {
             return Rx.Observable.merge(
-                getWFSFeature(action.searchUrl, action.filterObj)
+                getWFSFeature(action.searchUrl, action.filterObj, store.getState())
                     .let(interceptOGCError)
                     .switchMap((response) => {
                         const state = store.getState();
