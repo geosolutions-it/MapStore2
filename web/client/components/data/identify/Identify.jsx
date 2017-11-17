@@ -65,8 +65,7 @@ class Identify extends React.Component {
         closeGlyph: PropTypes.string,
         allowMultiselection: PropTypes.bool,
         warning: PropTypes.string,
-        currentLocale: PropTypes.string,
-        cssState: PropTypes.string
+        currentLocale: PropTypes.string
     };
 
     static defaultProps = {
@@ -119,8 +118,7 @@ class Identify extends React.Component {
         closeGlyph: "1-close",
         className: "square-button",
         allowMultiselection: false,
-        currentLocale: 'en-US',
-        cssState: ''
+        currentLocale: 'en-US'
     };
 
     componentWillReceiveProps(newProps) {
@@ -213,7 +211,7 @@ class Identify extends React.Component {
                 collapsible={this.props.collapsible}
                 id="mapstore-getfeatureinfo"
                 style={this.props.style}
-                className={this.props.panelClassName + this.props.cssState}>
+                className={this.props.panelClassName}>
                 <div className={this.props.headerClassName ? this.props.headerClassName : "panel-heading"}>
                     {this.renderHeader(missingResponses)}
                 </div>
@@ -223,7 +221,7 @@ class Identify extends React.Component {
          :
             <Dialog id="mapstore-getfeatureinfo"
                 style={this.props.style}
-                className={this.props.panelClassName + this.props.cssState}
+                className={this.props.panelClassName}
                 headerClassName={this.props.headerClassName}
                 bodyClassName={this.props.bodyClassName}
                 draggable={this.props.draggable}

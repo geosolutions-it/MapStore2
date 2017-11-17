@@ -28,7 +28,6 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
 } = require("../selectors/catalog");
 const Message = require("../components/I18N/Message");
 require('./metadataexplorer/css/style.css');
-const {cssStateSelector} = require('../selectors/controls');
 
 const CatalogUtils = require('../utils/CatalogUtils');
 
@@ -87,8 +86,7 @@ class MetadataExplorerComponent extends React.Component {
         zoomToLayer: PropTypes.bool,
 
         // side panel properties
-        width: PropTypes.number,
-        cssState: PropTypes.string
+        width: PropTypes.number
     };
 
     static defaultProps = {
@@ -115,8 +113,7 @@ class MetadataExplorerComponent extends React.Component {
             fluid: true,
             position: "right",
             zIndex: 1030
-        },
-        cssState: ''
+        }
     };
 
     render() {
@@ -125,7 +122,7 @@ class MetadataExplorerComponent extends React.Component {
         return this.props.active ? (
             <ContainerDimensions>
             { ({ width }) =>
-                <span className={"mapstore-dock vertical" + this.props.cssState}>
+                <span className={"mapstore-dock vertical"}>
                     <Dock {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
                         <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
                                 {panel}
@@ -146,8 +143,7 @@ const MetadataExplorerPlugin = connect((state) => ({
     mode: modeSelector(state),
     services: servicesSelector(state),
     layerError: layerErrorSelector(state),
-    active: activeSelector(state),
-    cssState: cssStateSelector(state)
+    active: activeSelector(state)
 }), {
     onSearch: textSearch,
     onLayerAdd: addLayer,

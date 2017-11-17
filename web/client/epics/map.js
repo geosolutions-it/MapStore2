@@ -8,15 +8,17 @@
 
 const Rx = require('rxjs');
 const {changeLayerProperties} = require('../actions/layers');
-const {CREATION_ERROR_LAYER, INIT_MAP} = require('../actions/map');
+const {CREATION_ERROR_LAYER, INIT_MAP, updateMapLayout} = require('../actions/map');
 const {currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId} = require('../selectors/layers');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {setControlProperty} = require('../actions/controls');
 const {isSupportedLayer} = require('../utils/LayersUtils');
 const {warning} = require('../actions/notifications');
-const {resetControls} = require('../actions/controls');
+const {resetControls, TOGGLE_CONTROL, SET_CONTROL_PROPERTY} = require('../actions/controls');
 const {clearLayers} = require('../actions/layers');
-const {head} = require('lodash');
+const {head, get} = require('lodash');
+const {mapLayoutBoundsSelector} = require('../selectors/map');
+const {isFeatureGridOpen, getDockSize} = require('../selectors/featuregrid');
 
 const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
@@ -70,8 +72,38 @@ const handleCreationLayerError = (action$, store) =>
 const resetMapOnInit = action$ =>
     action$.ofType(INIT_MAP).switchMap(() => Rx.Observable.of(resetControls(), clearLayers()));
 
+const updateMapLayoutBounds = (action$, store) =>
+    action$.ofType("MAP_CONFIG_LOADED", "FEATUREGRID:SIZE_CHANGE", "FEATUREGRID:CLOSE_GRID", "FEATUREGRID:OPEN_GRID", "PURGE_MAPINFO_RESULTS", TOGGLE_CONTROL, SET_CONTROL_PROPERTY)
+        .switchMap(() => {
+
+            const layoutBounds = mapLayoutBoundsSelector(store.getState());
+
+            const leftPanels = head([
+                get(store.getState(), "controls.queryPanel.enabled") && {left: 600} || null,
+                get(store.getState(), "controls.drawer.enabled") && {left: 300} || null
+            ].filter(panel => panel)) || {left: 0};
+
+            const rightPanels = head([
+                get(store.getState(), "controls.annotations.enabled") && {right: 658} || null,
+                get(store.getState(), "controls.metadataexplorer.enabled") && {right: 658} || null,
+                get(store.getState(), "mapInfo.requests") && store.getState().mapInfo.requests.length > 0 && {right: 658} || null
+            ].filter(panel => panel)) || {right: 0};
+
+            const footer = isFeatureGridOpen(store.getState()) && {bottom: getDockSize(store.getState()) * 100 + '%'} || {bottom: 30};
+
+            const newBounds = {
+                ...layoutBounds,
+                ...leftPanels,
+                ...rightPanels,
+                ...footer
+            };
+
+            return Rx.Observable.of(updateMapLayout(newBounds));
+        });
+
 module.exports = {
     handleCreationLayerError,
     handleCreationBackgroundError,
-    resetMapOnInit
+    resetMapOnInit,
+    updateMapLayoutBounds
 };

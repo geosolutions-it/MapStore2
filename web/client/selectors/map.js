@@ -54,6 +54,12 @@ const scalesSelector = createSelector(
 const mapVersionSelector = (state) => state.map && state.map.present && state.map.present.version || 1;
 const mapNameSelector = (state) => state.map && state.map.present && state.map.present.info && state.map.present.info.name || '';
 
+const mapLayoutBoundsSelector = (state) => state.map && state.map.present && state.map.present.layoutBounds || {left: 0, top: 0, right: 0, bottom: 0};
+const mapLayoutBoundsValuesSelector = (layoutBounds, attributes = {}) => layoutBounds && Object.keys(layoutBounds).filter(key =>
+    attributes[key]).reduce((a, key) => (
+        {...a, [key]: layoutBounds[key]}
+    ), {}) || {};
+
 module.exports = {
     mapSelector,
     scalesSelector,
@@ -61,5 +67,7 @@ module.exports = {
     mapIdSelector,
     projectionDefsSelector,
     mapVersionSelector,
-    mapNameSelector
+    mapNameSelector,
+    mapLayoutBoundsSelector,
+    mapLayoutBoundsValuesSelector
 };

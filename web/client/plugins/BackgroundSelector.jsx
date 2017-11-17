@@ -14,9 +14,7 @@ const {createSelector} = require('reselect');
 const {layersSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector} = require('../selectors/layers');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {invalidateUnsupportedLayer} = require('../utils/LayersUtils');
-const {cssStateSelector} = require('../selectors/controls');
-const {isFeatureGridOpen, getDockSize} = require('../selectors/featuregrid');
-const {mapSelector} = require('../selectors/map');
+const {mapSelector, mapLayoutBoundsValuesSelector, mapLayoutBoundsSelector} = require('../selectors/map');
 
 const drawerEnabledControlSelector = (state) => (state.controls && state.controls.drawer && state.controls.drawer.enabled) || false;
 
@@ -70,19 +68,16 @@ const backgroundSelector = createSelector([
         mapTypeSelector,
         currentBackgroundSelector,
         tempBackgroundSelector,
-        cssStateSelector,
-        getDockSize,
-        isFeatureGridOpen
+        mapLayoutBoundsSelector
     ],
-    (map, layers, controls, drawer, maptype, currentLayer, tempLayer, cssState, dockSize, featuregridOpen) => ({
+    (map, layers, controls, drawer, maptype, currentLayer, tempLayer, layout) => ({
         size: map && map.size || {width: 0, height: 0},
         layers: layers.filter((l) => l && l.group === "background").map((l) => invalidateUnsupportedLayer(l, maptype)) || [],
         tempLayer,
         currentLayer,
         start: controls.start || 0,
         enabled: controls.enabled,
-        cssState,
-        bottom: featuregridOpen && (dockSize * 100) + '%' || null
+        style: mapLayoutBoundsValuesSelector(layout, {left: true, bottom: true})
     }));
 
 /**

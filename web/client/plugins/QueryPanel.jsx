@@ -31,8 +31,6 @@ const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatia
 const autocompleteEpics = require('../epics/autocomplete');
 const {bindActionCreators} = require('redux');
 
-const {cssStateSelector} = require('../selectors/controls');
-
 const {
     // QueryBuilder action functions
     addGroupField,
@@ -138,14 +136,12 @@ const tocSelector = createSelector(
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
         (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}},
-        (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false,
-        cssStateSelector
-    ], (enabled, groups, settings, querypanelEnabled, cssState) => ({
+        (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false
+    ], (enabled, groups, settings, querypanelEnabled) => ({
         enabled,
         groups,
         settings,
-        querypanelEnabled,
-        cssState
+        querypanelEnabled
     })
 );
 
@@ -176,8 +172,7 @@ class QueryPanel extends React.Component {
         activateZoomTool: PropTypes.bool,
         activateSettingsTool: PropTypes.bool,
         visibilityCheckType: PropTypes.string,
-        settingsOptions: PropTypes.object,
-        cssState: PropTypes.string
+        settingsOptions: PropTypes.object
     };
 
     static defaultProps = {
@@ -198,8 +193,7 @@ class QueryPanel extends React.Component {
         activateRemoveLayer: true,
         visibilityCheckType: "checkbox",
         settingsOptions: {},
-        querypanelEnabled: false,
-        cssState: ''
+        querypanelEnabled: false
     };
 
     componentWillReceiveProps(newProps) {
@@ -216,7 +210,7 @@ class QueryPanel extends React.Component {
             <Sidebar
                 open={this.props.querypanelEnabled}
                 sidebar={this.renderQueryPanel()}
-                sidebarClassName={"query-form-panel-container" + this.props.cssState}
+                sidebarClassName="query-form-panel-container"
                 styles={{
                     sidebar: {
                         zIndex: 1024,

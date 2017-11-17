@@ -23,7 +23,6 @@ const EMPTY_OBJ = {};
 const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
 const {initPlugin, sizeChange} = require('../actions/featuregrid');
 const ContainerDimensions = require('react-container-dimensions').default;
-const {cssStateSelector} = require('../selectors/controls');
 
 /**
   * @name FeatureEditor
@@ -95,8 +94,7 @@ const {cssStateSelector} = require('../selectors/controls');
 const FeatureDock = (props = {
     tools: EMPTY_OBJ,
     dialogs: EMPTY_OBJ,
-    select: EMPTY_ARR,
-    cssState: ''
+    select: EMPTY_ARR
 }) => {
     const dockProps = {
         dimMode: "none",
@@ -112,7 +110,7 @@ const FeatureDock = (props = {
     // columns={[<aside style={{backgroundColor: "red", flex: "0 0 12em"}}>column-selector</aside>]}
 
     return (
-        <span className={"mapstore-dock horizontal bottom" + props.cssState}>
+        <span className={"mapstore-dock horizontal bottom"}>
         <Dock size={props.dockSize} {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>
         {props.open &&
         <ContainerDimensions>
@@ -170,9 +168,8 @@ const selector = createSelector(
     hasChangesSelector,
     state => get(state, 'featuregrid.focusOnEdit') || [],
     state => get(state, 'featuregrid.enableColumnFilters'),
-    cssStateSelector,
     getDockSize,
-    (open, autocompleteEnabled, url, typeName, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters, cssState, dockSize) => ({
+    (open, autocompleteEnabled, url, typeName, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters, dockSize) => ({
         open,
         autocompleteEnabled,
         url,
@@ -188,7 +185,6 @@ const selector = createSelector(
         focusOnEdit,
         enableColumnFilters,
         changes: toChangesMap(changes),
-        cssState,
         dockSize
     })
 );

@@ -20,8 +20,7 @@ require('./css/background.css');
 class BackgroundSelector extends React.Component {
     static propTypes = {
         start: PropTypes.number,
-        left: PropTypes.number,
-        bottom: PropTypes.number,
+        style: PropTypes.object,
         enabled: PropTypes.bool,
         layers: PropTypes.array,
         currentLayer: PropTypes.object,
@@ -32,14 +31,12 @@ class BackgroundSelector extends React.Component {
         onPropertiesChange: PropTypes.func,
         onToggle: PropTypes.func,
         onLayerChange: PropTypes.func,
-        onStartChange: PropTypes.func,
-        cssState: PropTypes.string
+        onStartChange: PropTypes.func
     };
 
     static defaultProps = {
         start: 0,
-        bottom: 50,
-        left: 0,
+        style: {},
         enabled: false,
         layers: [],
         currentLayer: {},
@@ -52,8 +49,7 @@ class BackgroundSelector extends React.Component {
         onPropertiesChange: () => {},
         onToggle: () => {},
         onLayerChange: () => {},
-        onStartChange: () => {},
-        cssState: ''
+        onStartChange: () => {}
     };
 
     componentWillUnmount() {
@@ -104,17 +100,17 @@ class BackgroundSelector extends React.Component {
         const src = this.getThumb(layer);
         const icons = this.getIcons(side, frame, margin, configuration.vertical);
 
-        const {pagination, listSize, visibleIconsLength} = this.getDimensions(side, frame, margin, this.props.left, configuration.vertical ? this.props.size.height : this.props.size.width, icons.length);
+        const {pagination, listSize, visibleIconsLength} = this.getDimensions(side, frame, margin, 0, configuration.vertical ? this.props.size.height : this.props.size.width, icons.length);
         const buttonSize = side + frame + margin;
         const buttonSizeWithMargin = side + frame + margin * 2;
 
         const listContainerStyle = configuration.vertical ? {
             bottom: buttonSizeWithMargin,
-            left: this.props.left,
+            left: 0,
             width: buttonSizeWithMargin,
             height: listSize
         } : {
-            left: this.props.left + sideButton + margin * 2 + frame,
+            left: sideButton + margin * 2 + frame,
             width: listSize,
             height: buttonSize
         };
@@ -127,10 +123,8 @@ class BackgroundSelector extends React.Component {
             width: buttonSize * visibleIconsLength
         };
 
-        const style = this.props.bottom && {style: {bottom: this.props.bottom}} || {style: {}};
-
         return visibleIconsLength <= 0 && this.props.enabled ? null : (
-            <div className={'background-plugin-position' + this.props.cssState} {...style}>
+            <div className={'background-plugin-position'} style={this.props.style}>
                 <PreviewButton showLabel={configuration.label} src={src} side={sideButton} frame={frame} margin={margin} labelHeight={labelHeight} label={layer.title} onToggle={this.props.onToggle}/>
                 <div className="background-list-container" style={listContainerStyle}>
                     <PreviewList vertical={configuration.vertical} start={this.props.start} bottom={0} height={previewListStyle.height} width={previewListStyle.width} icons={icons} pagination={pagination} length={visibleIconsLength} onStartChange={this.props.onStartChange} />
