@@ -11,7 +11,9 @@ const getErrorMessage = (error = {}) => {
 
 module.exports = emptyState(
     ({error}) => error,
-    ({error} = {}) => ({
+    ({error, iconFit} = {}) => ({
+        glyph: "warning-sign",
+        iconFit,
         tooltip: getErrorMessage(error)
     })
 );
