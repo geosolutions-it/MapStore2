@@ -8,8 +8,9 @@
 
 
 const loadingState = require('../../misc/enhancers/loadingState')();
+const errorChartState = require('../enhancers/errorChartState');
 const emptyChartState = require('../enhancers/emptyChartState');
-const SimpleChart = loadingState(emptyChartState((require('../../charts/SimpleChart'))));
+const SimpleChart = loadingState(errorChartState(emptyChartState((require('../../charts/SimpleChart')))));
 const ContainerDimensions = require('react-container-dimensions').default;
 const React = require('react');
 module.exports = (props) => (<div className="mapstore-widget-chart">

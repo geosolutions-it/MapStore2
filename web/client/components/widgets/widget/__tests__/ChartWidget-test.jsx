@@ -32,13 +32,13 @@ describe('ChartWidget component', () => {
             onEdit: () => {}
         };
         const spyonEdit = expect.spyOn(actions, 'onEdit');
-        ReactDOM.render(<ChartWidget onEdit onEdit={actions.onEdit} />, document.getElementById("container"));
+        ReactDOM.render(<ChartWidget onEdit={actions.onEdit} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.glyphicon-pencil');
         ReactTestUtils.Simulate.click(el); // <-- trigger event callback
         expect(spyonEdit).toHaveBeenCalled();
     });
-    it('Test ChartWidget onEdit callback', () => {
+    it('Test ChartWidget callbacks', () => {
         const actions = {
             onEdit: () => {},
             exportCSV: () => {},

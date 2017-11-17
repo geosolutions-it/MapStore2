@@ -27,4 +27,11 @@ describe('ChartView component', () => {
         const el = container.querySelector('.mapstore-widget-chart');
         expect(el).toExist();
     });
+    it('ChartView rendering with error', () => {
+        ReactDOM.render(<ChartView error={new Error()}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.mapstore-widget-chart');
+        expect(el).toExist();
+        expect(container.querySelector('.empty-state-container')).toExist();
+    });
 });
