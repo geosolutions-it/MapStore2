@@ -31,7 +31,7 @@ class LangBar extends React.Component {
         var code;
         var label;
         var list = [];
-        for (let lang in this.props.locales) {
+        for (let lang in LocaleUtils.getSupportedLocales()) {
             if (this.props.locales.hasOwnProperty(lang)) {
                 code = this.props.locales[lang].code;
                 label = this.props.locales[lang].description;

@@ -46,6 +46,19 @@ This is the main structure:
       // default initial state for every mode (will override initialState imposed by plugins reducers)
       "defaultState": {
           ...
+          // if you want to customize the supported locales put here the list
+          "locales": {
+            "supportedLocales": {
+              "it": {
+                "code": "it-IT",
+                "description": "Italiano"
+              },
+              "en": {
+                "code": "en-US",
+                "description": "English"
+              }
+          }
+        }
       },
       // mobile override (defined properties will overide default in mobile mode)
       "mobile": {
