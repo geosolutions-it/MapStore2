@@ -985,6 +985,7 @@
                     "showChartData": "Show chart data",
                     "edit": "Edit",
                     "delete": "Delete",
+                    "confirmDelete": "Are you sure?",
                     "downloadData": "Download Data",
                     "exportImage": "Export Image"
                 }

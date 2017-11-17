@@ -66,10 +66,9 @@ module.exports = ({
                     ? <TableView data={data} {...props}/>
                 : <ChartView id={id} isAnimationActive={!loading} loading={loading} data={data} series={series} iconFit {...props} />}
                 {confirmDelete ? <ConfirmModal
-                    confirmText={'Delete'}
-                    cancelText={'Cancel'}
-                    titleText={'Delete Widget'}
-                    body={'Delete Widget'}
+                    confirmText={<Message msgId="widgets.widget.menu.delete" />}
+                    titleText={<Message msgId="widgets.widget.menu.delete" />}
+                    body={<Message msgId="widgets.widget.menu.confirmDelete" />}
                     show={confirmDelete}
                     onClose={() => toggleDeleteConfirm(false)}
                     onConfirm={() => onDelete(id) }/> : null}

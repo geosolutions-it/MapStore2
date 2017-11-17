@@ -986,6 +986,7 @@
                     "showChartData": "Mostra dati del grafico",
                     "edit": "Modifica",
                     "delete": "Elimina",
+                    "confirmDelete": "Sei sicuro?",
                     "downloadData": "Scarica dati",
                     "exportImage": "Esporta dati"
                 }

@@ -991,6 +991,7 @@
                     "showChartData": "Afficher les données de graphique",
                     "edit": "éditer",
                     "delete": "effacer",
+                    "confirmDelete": "Êtes-vous sûr?",
                     "downloadData": "Télécharger les données",
                     "exportImage": "Exporter l'image"
                 }

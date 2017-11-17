@@ -986,6 +986,7 @@
                     "showChartData": "Diagrammdaten anzeigen",
                     "edit": "Bearbeiten",
                     "delete": "Löschen",
+                    "confirmDelete": "Bist du sicher?",
                     "downloadData": "Daten herunterladen",
                     "exportImage": "Bild exportieren"
                 }
