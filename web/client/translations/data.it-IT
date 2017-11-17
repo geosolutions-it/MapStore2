@@ -988,7 +988,7 @@
                     "delete": "Elimina",
                     "confirmDelete": "Sei sicuro?",
                     "downloadData": "Scarica dati",
-                    "exportImage": "Esporta dati"
+                    "exportImage": "Esporta Immagine"
                 }
             },
             "chartType": {
