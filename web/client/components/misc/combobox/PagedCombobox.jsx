@@ -94,7 +94,7 @@ class PagedCombobox extends React.Component {
             </CustomTooltip>);
         }
         const tooltip = (<Tooltip id={this.props.tooltip.id}>
-            this.props.tooltip.message</Tooltip>);
+            {this.props.tooltip.message}</Tooltip>);
         return (<OverlayTrigger key={this.props.tooltip.overlayTriggerKey} placement={this.props.tooltip.placement} overlay={tooltip}>
             { field }
         </OverlayTrigger>);

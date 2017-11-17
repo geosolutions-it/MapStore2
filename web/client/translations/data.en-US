@@ -896,6 +896,7 @@
             },
             "noFeaturesAvailable": "No Features Available",
             "errorSaving": "An error occured with saving operation",
+            "errorProj": "An error occurred while re-projecting to the native layer system. There is no definition of the native crs.",
             "notSupportedGeometryTitle": "Geometry type not supported ",
             "notSupportedGeometry": "Current layer geometry type is not supported by editing but you can still edit attributes",
             "yesButton": "Yes",
