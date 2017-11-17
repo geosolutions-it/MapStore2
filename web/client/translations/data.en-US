@@ -104,7 +104,7 @@
         "cancel": "Cancel",
         "confirm": "Confirm",
         "confirmTitle": "Do you confirm?",
-        "pageInfo": "{numUsers, plural, =0 {0 users} one {1 user} other {# users}}",
+        "pageInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {Items {start}-{end} of {total}}}",
         "loading": "Loading...",
         "group": "Group",
         "groups": "Groups",
