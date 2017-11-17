@@ -9,6 +9,7 @@
 const FileSaver = require('file-saver');
 const toBlob = require('canvas-to-blob');
 const shp = require('shpjs');
+const {Promise} = require('es6-promise');
 
 const FileUtils = {
     download: function(blob, name, mimetype) {

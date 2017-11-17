@@ -186,4 +186,44 @@ describe("test the Annotations Panel", () => {
         expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card").length).toBe(0);
         expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "myeditor").length).toBe(1);
     });
+
+    it('test rendering custom class', () => {
+        const annotationsList = [{
+            properties: {
+                title: 'a',
+                description: 'b'
+            },
+            style: {
+                iconShape: 'square',
+                iconColor: 'blue'
+            }
+        }, {
+            properties: {
+                external: true,
+                title: 'c',
+                description: 'd'
+            },
+            style: {
+                iconShape: 'square',
+                iconColor: 'blue'
+            }
+        }];
+
+        const classNameSelector = (annotation) => {
+            if (annotation && annotation.properties && annotation.properties.external) {
+                return 'external';
+            }
+            return '';
+        };
+
+        const annotations = ReactDOM.render(<Annotations mode="list" classNameSelector={classNameSelector} annotations={annotationsList} />, document.getElementById("container"));
+
+        expect(annotations).toExist();
+
+        const cards = TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card");
+        expect(cards.length).toBe(2);
+
+        const cardsExternal = TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card external");
+        expect(cardsExternal.length).toBe(1);
+    });
 });
