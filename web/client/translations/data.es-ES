@@ -900,6 +900,7 @@
             },
             "noFeaturesAvailable": "No hay resultados disponibles",
             "errorSaving": "Se ha producido un error al guardar la operación",
+            "errorProj": "Se produjo un error al volver a proyectar al sistema de capa nativo. No hay definición de las crs nativas.",
             "notSupportedGeometryTitle": "Geometry type not supported ",
             "notSupportedGeometry": "Current layer geometry type is not supported by editing but you can still edit attributes",
             "yesButton": "Si",

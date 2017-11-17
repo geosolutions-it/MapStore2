@@ -900,6 +900,7 @@
             },
             "noFeaturesAvailable": "Aucune fonctionnalité disponible",
             "errorSaving": "Une erreur s'est produite lors de l'enregistrement de l'opération",
+            "errorProj": "Une erreur s'est produite lors de la re-projection sur le système de calque natif. Il n'y a pas de définition du crs natif.",
             "notSupportedGeometryTitle": "Geometry type not supported ",
             "notSupportedGeometry": "Current layer geometry type is not supported by editing but you can still edit attributes",
             "yesButton": "Oui",

@@ -896,6 +896,7 @@
                 "more": "viele"
             },
             "noFeaturesAvailable": "Keine features verfügbar",
+            "errorProj": "Bei der erneuten Projektion auf das native Ebenensystem ist ein Fehler aufgetreten. Es gibt keine Definition der nativen Crs.",
             "errorSaving": "Beim Speichern des Vorgangs ist ein Fehler aufgetreten",
             "notSupportedGeometryTitle": "Geometry type not supported ",
             "notSupportedGeometry": "Current layer geometry type is not supported by editing but you can still edit attributes",
