@@ -54,7 +54,8 @@
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
-            "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa"
+            "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa",
+            "legenderror": "Legenda non disponibile"
         },
         "notification": {
             "update": "Aggiorna",

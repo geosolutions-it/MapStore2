@@ -55,7 +55,8 @@
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
-            "featureInfoFormatLbl": "Information, format de la réponse"
+            "featureInfoFormatLbl": "Information, format de la réponse",
+            "legenderror": "La légende n'est pas disponible"
         },
         "notification": {
             "update": "Update",
