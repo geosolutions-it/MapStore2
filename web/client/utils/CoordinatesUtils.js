@@ -574,6 +574,24 @@ const CoordinatesUtils = {
             extent,
             center
         };
+    },
+    parseString: (str) => {
+        const coord = str.split(' ');
+        const x = parseFloat(coord[0]);
+        const y = parseFloat(coord[1]);
+        return !isNaN(x) && !isNaN(y) && {x, y} || null;
+    },
+    getWMSBoundingBox: (BoundingBox, mapSRS) => {
+        const SRS = mapSRS || 'EPSG:3857';
+        const bbox = BoundingBox && isArray(BoundingBox) && head(BoundingBox.filter(b => {
+            return b && b.$ && b.$.SRS === SRS && b.$.maxx && b.$.maxy && b.$.minx && b.$.miny;
+        }).map(b => b && b.$ && CoordinatesUtils.reprojectBbox([
+            parseFloat(b.$.minx),
+            parseFloat(b.$.miny),
+            parseFloat(b.$.maxx),
+            parseFloat(b.$.maxy)
+        ], SRS, 'EPSG:4326')));
+        return isArray(bbox) && {minx: bbox[0], miny: bbox[1], maxx: bbox[2], maxy: bbox[3]} || null;
     }
 };
 

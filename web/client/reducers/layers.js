@@ -79,7 +79,7 @@ function layers(state = [], action) {
         case LAYER_ERROR: {
             const isError = action.tilesCount === action.tilesErrorCount;
             const newLayers = (state.flat || []).map((layer) => {
-                return layer.id === action.layerId ? assign({}, layer, {loadingError: isError ? 'Error' : 'Warning', visibility: !isError}) : layer;
+                return layer.id === action.layerId ? assign({}, layer, {loadingError: isError ? 'Error' : 'Warning'}) : layer;
             });
             return assign({}, state, {flat: newLayers});
         }

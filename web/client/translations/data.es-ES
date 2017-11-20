@@ -35,6 +35,7 @@
             "title": "Título",
             "name": "Nombre",
             "group": "Grupo",
+            "description": "Descripción",
             "general": "General",
             "display": "Visualización",
             "style": "Estilo",
@@ -703,7 +704,11 @@
             "placeholder": "Ponga aqui sus fichero  o clique  para selecionar los shapefile  a importar. (Shapefiles deben estar dentro de un zip)",
             "defaultStyle": "Estilo por defecto",
             "zoom": "Zoom sobre el fichero shape",
-            "error": {"select": "Seleccionar uno o más ficheros zip"},
+            "error": {
+                "select": "Seleccionar uno o más ficheros zip",
+                "shapeFileParsingError": "No se puede cargar el shapefile El archivo podría dañarse o no estar bien formado",
+                "genericLoadError": "No se puede cargar el shapefile en el mapa"
+            },
             "add": "Añadir",
             "cancel": "Cancelar",
             "success": " Importación correcta"

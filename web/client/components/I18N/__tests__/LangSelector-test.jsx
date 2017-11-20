@@ -35,7 +35,7 @@ describe('LangSelector', () => {
         expect(cmpDom).toExist();
 
         const opts = cmpDom.childNodes;
-        const langs = {'Italiano': 'it-IT', 'English': 'en-US', 'Français': 'fr-FR', 'Deutsch': 'de-DE', 'Español': 'es-ES'};
+        const langs = {'Italiano': 'it-IT', 'English': 'en-US', 'Français': 'fr-FR', 'Deutsch': 'de-DE', 'Español': 'es-ES', 'Nederlands': 'nl-NL'};
 
         for (let i = 0; i < opts.length; i++) {
             lbl = opts[i].innerHTML;

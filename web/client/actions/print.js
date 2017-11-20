@@ -105,7 +105,7 @@ function setPrintParameter(name, value) {
     };
 }
 
-function configurePrintMap(center, zoom, scaleZoom, scale, layers, projection) {
+function configurePrintMap(center, zoom, scaleZoom, scale, layers, projection, currentLocale) {
     return {
         type: CONFIGURE_PRINT_MAP,
         center,
@@ -113,7 +113,8 @@ function configurePrintMap(center, zoom, scaleZoom, scale, layers, projection) {
         scaleZoom,
         scale,
         layers,
-        projection
+        projection,
+        currentLocale
     };
 }
 

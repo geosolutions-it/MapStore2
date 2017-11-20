@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2015-2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -32,7 +32,7 @@ var hooks = {};
 var CoordinatesUtils = require('./CoordinatesUtils');
 const LayersUtils = require('./LayersUtils');
 const assign = require('object-assign');
-const {isObject, head} = require('lodash');
+const {isObject, head, isEmpty} = require('lodash');
 
 function registerHook(name, hook) {
     hooks[name] = hook;
@@ -292,6 +292,40 @@ const groupSaveFormatted = (node) => {
     return {id: node.id, expanded: node.expanded};
 };
 
+/**
+* It extracts tile matrix set from layers and add them to sources object
+*
+* @param sourcesFromLayers {object} layers grouped by url
+* @param sources {object} current source object if exists, default { }
+* @return {object} new sources object with data from layers
+*/
+const extractTileMatrixSetFromLayers = (sourcesFromLayers, sources = {}) => {
+    return sourcesFromLayers && Object.keys(sourcesFromLayers).reduce((src, url) => {
+        const matrixIds = sourcesFromLayers[url].reduce((a, b) => {
+            return assign(a, {[b.id || b.name]: { srs: [...Object.keys(b.matrixIds)], matrixIds: assign({}, b.matrixIds)}});
+        }, {});
+
+        const newMatrixSet = sourcesFromLayers[url].reduce((nMS, l) => {
+
+            const matrixSetObject = l.tileMatrixSet.reduce((i, tM) => assign({}, i, {[tM['ows:Identifier']]: assign({}, tM)}), {});
+
+            const matrixFilteredByLayers = Object.keys(matrixSetObject).reduce((mFBL, key) => {
+
+                const layers = Object.keys(matrixIds)
+                    .filter(layerId => head(matrixIds[layerId].srs.filter(mId => mId === key)))
+                    .map(layerId => matrixIds[layerId].matrixIds[key]);
+
+                const TileMatrix = layers[0] && matrixSetObject[key].TileMatrix.map((m, idx) => layers[0][idx] && layers[0][idx].ranges ? assign({}, m, {ranges: layers[0][idx].ranges}) : assign({}, m));
+
+                return !head(layers) ? assign({}, mFBL) : assign({}, mFBL, {[key]: assign({}, matrixSetObject[key], {TileMatrix}) });
+            }, {});
+
+            return assign({}, nMS, matrixFilteredByLayers);
+        }, {});
+        return assign({}, src, { [url]: assign({}, sources[url] || {}, { tileMatrixSet: assign({}, src[url] && src[url].tileMatrixSet || {}, newMatrixSet)})});
+    }, assign({}, sources)) || sources;
+};
+
 function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSearchConfig, catalogServices) {
 
     const map = {
@@ -316,10 +350,24 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
         return node && node.nodes ? groupSaveFormatted(node) : null;
     }).filter(g => g);
 
+
+    /* layers gruped by url to create the source object */
+    const groupByUrl = layers.filter(l => l.tileMatrixSet).reduce((a, l) => {
+        return a[l.url] ? assign({}, a, {[l.url]: [...a[l.url], l]}) : assign({}, a, {[l.url]: [l]});
+    }, {});
+
+    /* extract and add tilematrixseto to sources object  */
+    const sources = extractTileMatrixSetFromLayers(groupByUrl);
+
+    /* removes tilematrixset from layers and reduced matrix ids to a list */
+    const formattedLayers = layers.map(l => {
+        return assign({}, l, {tileMatrixSet: l.tileMatrixSet && l.tileMatrixSet.length > 0, matrixIds: l.matrixIds && Object.keys(l.matrixIds)});
+    });
+
     return {
         version: 2,
         // layers are defined inside the map object
-        map: assign({}, map, {layers, groups, text_serch_config: textSearchConfig}),
+        map: assign({}, map, {layers: formattedLayers, groups, text_serch_config: textSearchConfig}, !isEmpty(sources) && {sources} || {}),
         catalogServices
     };
 }
@@ -368,5 +416,6 @@ module.exports = {
     transformExtent,
     saveMapConfiguration,
     isSimpleGeomType,
-    getSimpleGeomType
+    getSimpleGeomType,
+    extractTileMatrixSetFromLayers
 };

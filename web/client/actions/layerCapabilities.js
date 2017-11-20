@@ -13,7 +13,7 @@ const WCS = require('../api/WCS');
 
 const LayersUtils = require('../utils/LayersUtils');
 
-const _ = require('lodash');
+const {get, head} = require('lodash');
 
 function getDescribeLayer(url, layer, options) {
     return (dispatch /* , getState */) => {
@@ -21,8 +21,8 @@ function getDescribeLayer(url, layer, options) {
             if (describeLayer && describeLayer.owsType === "WFS") {
                 return WFS.describeFeatureType(url, describeLayer.name).then((describeFeatureType) => {
                     // TODO move the management of this geometryType in the proper components, getting the describeFeatureType entry:
-                    let types = _.get(describeFeatureType, "complexType[0].complexContent.extension.sequence.element");
-                    let geometryType = _.head(types && types.filter( elem => elem.name === "the_geom" || elem.type.prefix.indexOf("gml") === 0));
+                    let types = get(describeFeatureType, "complexType[0].complexContent.extension.sequence.element");
+                    let geometryType = head(types && types.filter( elem => elem.name === "the_geom" || elem.type.prefix.indexOf("gml") === 0));
                     geometryType = geometryType && geometryType.type.localPart;
                     describeLayer.geometryType = geometryType && geometryType.split("PropertyType")[0];
                     return dispatch(updateNode(layer.id, "id", {describeLayer, describeFeatureType}));
@@ -32,7 +32,7 @@ function getDescribeLayer(url, layer, options) {
             } else if ( describeLayer && describeLayer.owsType === "WCS" ) {
                 WCS.describeCoverage(url, describeLayer.name).then((describeCoverage) => {
                     // TODO move the management of this bands in the proper components, getting the describeFeatureType entry:
-                    let axis = _.get(describeCoverage, "wcs:CoverageDescriptions.wcs:CoverageDescription.wcs:Range.wcs:Field.wcs:Axis.wcs:AvailableKeys.wcs:Key");
+                    let axis = get(describeCoverage, "wcs:CoverageDescriptions.wcs:CoverageDescription.wcs:Range.wcs:Field.wcs:Axis.wcs:AvailableKeys.wcs:Key");
                     if (axis && typeof axis === "string") {
                         describeLayer.bands = [1 + ""];
                     } else {
@@ -65,6 +65,7 @@ function getLayerCapabilities(layer, options) {
                 dispatch(updateNode(layer.id, "id", {
                     capabilities: layerCapability,
                     capabilitiesLoading: null,
+                    description: layerCapability._abstract,
                     boundingBox: layerCapability.latLonBoundingBox,
                     availableStyles: layerCapability.style && (Array.isArray(layerCapability.style) ? layerCapability.style : [layerCapability.style])
                 }));
@@ -72,7 +73,7 @@ function getLayerCapabilities(layer, options) {
             // return dispatch(updateNode(layer.id, "id", {capabilities: capabilities || {"error": "no describe Layer found"}}));
 
         }).catch((error) => {
-            dispatch(updateNode(layer.id, "id", {capabilitiesLoading: null, capabilities: {error: "error getting capabilities", details: error}} ));
+            dispatch(updateNode(layer.id, "id", {capabilitiesLoading: null, capabilities: {error: "error getting capabilities", details: error}, description: null} ));
 
             // return dispatch(updateNode(layer.id, "id", {capabilities: capabilities || {"error": "no describe Layer found"}}));
 

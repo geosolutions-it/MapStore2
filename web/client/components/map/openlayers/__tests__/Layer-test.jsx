@@ -154,7 +154,13 @@ describe('Openlayers layer', () => {
             "name": "nurc:Arc_Sample",
             "group": "Meteo",
             "format": "image/png",
-            "tileMatrixSet": "EPSG:900913",
+            "tileMatrixSet": [
+                {
+                    "TileMatrix": [],
+                    "ows:Identifier": "EPSG:900913",
+                    "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::900913"
+                }
+            ],
             "url": "http://sample.server/geoserver/gwc/service/wmts"
         };
         // create layers
@@ -176,7 +182,13 @@ describe('Openlayers layer', () => {
             "name": "nurc:Arc_Sample",
             "group": "Meteo",
             "format": "image/png",
-            "tileMatrixSet": "EPSG:900913",
+            "tileMatrixSet": [
+                {
+                    "TileMatrix": [],
+                    "ows:Identifier": "EPSG:900913",
+                    "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::900913"
+                }
+            ],
             "url": ["http://sample.server/geoserver/gwc/service/wmts", "http://sample.server/geoserver/gwc/service/wmts"]
         };
         // create layers

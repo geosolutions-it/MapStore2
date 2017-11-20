@@ -6,10 +6,25 @@
 * LICENSE file in the root directory of this source tree.
 */
 
+
 const expect = require('expect');
-const {mapInfoRequestsSelector} = require('../mapinfo');
+const {mapInfoRequestsSelector, generalInfoFormatSelector} = require('../mapinfo');
 
 describe('Test map selectors', () => {
+    it('test generalInfoFormatSelector default value', () => {
+        const mapinfo = generalInfoFormatSelector({});
+        expect(mapinfo).toBe("text/plain");
+    });
+    it('test generalInfoFormatSelector infoFormat: undefined', () => {
+        const mapinfo = generalInfoFormatSelector({mapInfo: {infoFormat: undefined}});
+        expect(mapinfo).toBe("text/plain");
+    });
+    it('test generalInfoFormatSelector ', () => {
+        const mapinfo = generalInfoFormatSelector({mapInfo: {infoFormat: "text/html"}});
+
+        expect(mapinfo).toExist();
+        expect(mapinfo).toBe("text/html");
+    });
 
     it('test mapInfoRequestsSelector no state', () => {
         const props = mapInfoRequestsSelector({});
@@ -24,5 +39,4 @@ describe('Test map selectors', () => {
         });
         expect(props).toEqual(['request']);
     });
-
 });

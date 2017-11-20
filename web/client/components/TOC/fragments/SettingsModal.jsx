@@ -9,6 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {Button, Glyphicon, Tabs, Tab} = require('react-bootstrap');
+const {isNil} = require('lodash');
 
 require("./css/settingsModal.css");
 
@@ -34,6 +35,7 @@ class SettingsModal extends React.Component {
         updateNode: PropTypes.func,
         removeNode: PropTypes.func,
         retrieveLayerData: PropTypes.func,
+        generalInfoFormat: PropTypes.string,
         titleText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         opacityText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         elevationText: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
@@ -89,6 +91,13 @@ class SettingsModal extends React.Component {
             initialState: this.props.element,
             originalSettings: this.props.element
         });
+    }
+    componentWillReceiveProps(newProps) {
+        // an empty description does not trigger the single layer getCapabilites,
+        // it does only for missing description
+        if (!this.props.settings.expanded && newProps.settings.expanded && isNil(newProps.element.description) && newProps.element.type === "wms") {
+            this.props.retrieveLayerData(newProps.element);
+        }
     }
 
     componentWillUpdate(newProps, newState) {
@@ -168,6 +177,7 @@ class SettingsModal extends React.Component {
                 return (<FeatureInfoFormat
                    label= {<Message msgId="layerProperties.featureInfoFormatLbl"/>}
                    element={this.props.element}
+                   generalInfoFormat={this.props.generalInfoFormat}
                    onInfoFormatChange={(key, value) => this.updateParams({[key]: value}, this.props.realtimeUpdate)} />);
             }
         }

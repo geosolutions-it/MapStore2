@@ -12,12 +12,14 @@ const {createSelector} = require('reselect');
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode, browseData, selectNode, filterLayers, refreshLayerVersion} = require('../actions/layers');
+       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
+       browseData, selectNode, filterLayers, refreshLayerVersion} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector} = require('../selectors/layers');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector} = require("../selectors/locale");
+const {generalInfoFormatSelector} = require("../selectors/mapinfo");
 
 const LayersUtils = require('../utils/LayersUtils');
 const mapUtils = require('../utils/MapUtils');
@@ -68,8 +70,9 @@ const tocSelector = createSelector(
         layerFilterSelector,
         layersSelector,
         mapNameSelector,
-        activeSelector
-    ], (enabled, groups, settings, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive) => ({
+        activeSelector,
+        generalInfoFormatSelector
+    ], (enabled, groups, settings, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, generalInfoFormat) => ({
         enabled,
         groups,
         settings,
@@ -81,6 +84,7 @@ const tocSelector = createSelector(
         currentLocale,
         selectedNodes,
         filterText,
+        generalInfoFormat,
         selectedLayers: layers.filter((l) => head(selectedNodes.filter(s => s === l.id))),
         noFilterResults: layers.filter((l) => filterLayersByTitle(l, filterText, currentLocale)).length === 0,
         selectedGroups: selectedNodes.map(n => LayersUtils.getNode(groups, n)).filter(n => n && n.nodes),
@@ -157,6 +161,7 @@ class LayerTree extends React.Component {
         currentLocale: PropTypes.string,
         onFilter: PropTypes.func,
         filterText: PropTypes.string,
+        generalInfoFormat: PropTypes.string,
         selectedLayers: PropTypes.array,
         selectedGroups: PropTypes.array,
         mapName: PropTypes.string,
@@ -287,6 +292,7 @@ class LayerTree extends React.Component {
                             groups={this.props.groups}
                             selectedLayers={this.props.selectedLayers}
                             selectedGroups={this.props.selectedGroups}
+                            generalInfoFormat={this.props.generalInfoFormat}
                             settings={this.props.settings}
                             activateTool={{
                                 activateToolsContainer: this.props.activateToolsContainer,

@@ -24,6 +24,15 @@ const {get} = require('lodash');
   */
 const mapInfoRequestsSelector = state => get(state, "mapInfo.requests") || [];
 
+/**
+ * selects generalInfoFormat from state
+ * @memberof selectors.mapinfo
+ * @param  {object} state the state
+ * @return {string}       the maptype in the state
+ */
+const generalInfoFormatSelector = (state) => get(state, "mapInfo.infoFormat", "text/plain");
+
 module.exports = {
+    generalInfoFormatSelector,
     mapInfoRequestsSelector
 };

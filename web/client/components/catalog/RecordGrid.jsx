@@ -22,6 +22,7 @@ class RecordGrid extends React.Component {
         onLayerAdd: PropTypes.func,
         onError: PropTypes.func,
         records: PropTypes.array,
+        authkeyParamNames: PropTypes.array,
         style: PropTypes.object,
         showGetCapLinks: PropTypes.bool,
         addAuthentication: PropTypes.bool,
@@ -49,6 +50,7 @@ class RecordGrid extends React.Component {
                     onError={this.props.onError}
                     catalogURL={this.props.catalogURL}
                     record={record}
+                    authkeyParamNames={this.props.authkeyParamNames}
                     style={{height: "215px", maxHeight: "215px"}}
                     showGetCapLinks={this.props.showGetCapLinks}
                     addAuthentication={this.props.addAuthentication}
