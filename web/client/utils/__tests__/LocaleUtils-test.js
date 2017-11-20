@@ -20,6 +20,29 @@ describe('LocaleUtils', () => {
     });
 
     it('getLocale', () => {
+        let supportedLocales = {
+            "it": {
+                code: "it-IT",
+                description: "Italiano"
+            },
+            "en": {
+                code: "en-US",
+                description: "English"
+            },
+            "fr": {
+                code: "fr-FR",
+                description: "Français"
+            },
+            "de": {
+                code: "de-DE",
+                description: "Deutsch"
+            },
+            "es": {
+                code: "es-ES",
+                description: "Español"
+            }
+        };
+        LocaleUtils.setSupportedLocales(supportedLocales);
         expect(LocaleUtils.getLocale({locale: 'it'})).toBe('it-IT');
         expect(LocaleUtils.getLocale({locale: 'en'})).toBe('en-US');
 

@@ -35,7 +35,6 @@ let supportedLocales = {
         code: "de-DE",
         description: "Deutsch"
     },
-
     "es": {
         code: "es-ES",
         description: "Español"
