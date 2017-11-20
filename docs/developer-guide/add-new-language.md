@@ -1,6 +1,4 @@
 # How to Add a new language
-Available from the release 2017.06.00
-
 Let's say we want to add the russian language.
 In order to add a new language to MapStore 2 you need to follow these steps:
 
@@ -20,6 +18,11 @@ In order to add a new language to MapStore 2 you need to follow these steps:
     ...
 
     require('intl/locale-data/jsonp/ru.js');
+    ```
+  - update the addLocaleData() call with the new locale obj i.e.
+    ```
+    const ru = require('react-intl/locale-data/ru');
+    addLocaleData([...en, ...it, ...fr, ...de, ...es, ...ru]);
     ```
 1. add the relative flag inside web\client\components\I18N\images\flags naming it ru-RU.png
 1. add the russian translations inside web\client\translations naming it data.ru-RU (remember to change the locale property into ru-RU)

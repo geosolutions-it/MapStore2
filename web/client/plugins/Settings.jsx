@@ -27,7 +27,7 @@ const {undo, redo} = ActionCreators;
 
 const Message = require('./locale/Message');
 
-const {Glyphicon} = require('react-bootstrap');
+const {Glyphicon, FormGroup, Row, Col} = require('react-bootstrap');
 
 const assign = require('object-assign');
 
@@ -87,7 +87,22 @@ class SettingsButton extends React.Component {
 
     renderSettings = () => {
         const settingsFirst = {
-            language: <span key="language-label"><label><Message msgId="language" /></label> <LangBar locales={LocaleUtils.getSupportedLocales()} key="langSelector"/></span>
+            language: (
+            <span key="language-label">
+                <FormGroup>
+                    <Row>
+                        <Col xs={12}>
+                            <label><Message msgId="language" /></label>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12}>
+                            <LangBar locales={LocaleUtils.getSupportedLocales()} key="langSelector"/>
+                        </Col>
+                    </Row>
+                </FormGroup>
+
+            </span>)
         };
         const settingsLast = {
             history: <HistoryBar
@@ -120,8 +135,7 @@ class SettingsButton extends React.Component {
         const settings =
             (<SettingsPanel key="SettingsPanel" role="body" style={this.props.style}>
                 {this.renderSettings()}
-            </SettingsPanel>)
-        ;
+            </SettingsPanel>);
         if (this.props.wrap) {
             if (this.props.visible) {
                 if (this.props.wrapWithPanel) {

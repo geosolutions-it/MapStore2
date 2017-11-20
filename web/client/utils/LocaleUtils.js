@@ -18,6 +18,11 @@ const nl = require('react-intl/locale-data/nl');
 
 addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl]);
 
+/*
+ * it, en, fr, de, es are the default locales and it is preferrable to change them via configuration.
+ * if you want to change it please add your supported locales in the configuration file localConfig.json
+ * Please, read documentation guides on how to do this.
+*/
 let supportedLocales = {
     "it": {
         code: "it-IT",

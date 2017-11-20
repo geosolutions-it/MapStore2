@@ -29,6 +29,9 @@
             "updating": "Updating...",
             "layers": "layers"
         },
+        "localeErrors": {
+            "404": "Übersetzungsdatei nicht gefunden"
+        },
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",
             "title": "Titel",

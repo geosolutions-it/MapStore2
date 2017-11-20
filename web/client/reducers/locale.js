@@ -17,6 +17,7 @@ function locale(state = null, action) {
         };
     case LOCALE_LOAD_ERROR:
         return {
+            ...state,
             loadingError: action.error
         };
     default:

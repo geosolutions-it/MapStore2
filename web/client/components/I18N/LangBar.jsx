@@ -22,7 +22,7 @@ class LangBar extends React.Component {
 
     static defaultProps = {
         id: "mapstore-langselector",
-        locales: LocaleUtils.getSupportedLocales(),
+        locales: {},
         currentLocale: 'en-US',
         onLanguageChange: function() {}
     };
@@ -31,10 +31,11 @@ class LangBar extends React.Component {
         var code;
         var label;
         var list = [];
-        for (let lang in LocaleUtils.getSupportedLocales()) {
-            if (this.props.locales.hasOwnProperty(lang)) {
-                code = this.props.locales[lang].code;
-                label = this.props.locales[lang].description;
+        let locales = LocaleUtils.getSupportedLocales();
+        for (let lang in locales) {
+            if (locales.hasOwnProperty(lang)) {
+                code = locales[lang].code;
+                label = locales[lang].description;
                 list.push(
                     <FlagButton
                         key={lang}
