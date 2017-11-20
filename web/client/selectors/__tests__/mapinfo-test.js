@@ -10,7 +10,7 @@
 const expect = require('expect');
 const {mapInfoRequestsSelector, generalInfoFormatSelector} = require('../mapinfo');
 
-describe('Test map selectors', () => {
+describe('Test mapinfo selectors', () => {
     it('test generalInfoFormatSelector default value', () => {
         const mapinfo = generalInfoFormatSelector({});
         expect(mapinfo).toBe("text/plain");
@@ -25,12 +25,10 @@ describe('Test map selectors', () => {
         expect(mapinfo).toExist();
         expect(mapinfo).toBe("text/html");
     });
-
     it('test mapInfoRequestsSelector no state', () => {
         const props = mapInfoRequestsSelector({});
         expect(props).toEqual([]);
     });
-
     it('test mapInfoRequestsSelector', () => {
         const props = mapInfoRequestsSelector({
             mapInfo: {
