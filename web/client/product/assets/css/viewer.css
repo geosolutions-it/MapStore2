@@ -98,7 +98,7 @@ html, body, #container, .fill {
 
 #mapstore-getfeatureinfo.mapstore-right-panel {
     position: absolute;
-    height: 100%;
+    height: calc(100% - 30px);
     right: 0;
     left: auto;
     top: 0;

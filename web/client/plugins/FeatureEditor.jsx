@@ -11,7 +11,7 @@ const assign = require('object-assign');
 const {createSelector} = require('reselect');
 const {bindActionCreators} = require('redux');
 const {get} = require('lodash');
-const Dock = require('react-dock').default;
+
 const Grid = require('../components/data/featuregrid/FeatureGrid');
 const {resultsSelector, describeSelector, wfsURLSelector, typeNameSelector} = require('../selectors/query');
 const {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector, getDockSize} = require('../selectors/featuregrid');
@@ -23,7 +23,16 @@ const EMPTY_OBJ = {};
 const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
 const {initPlugin, sizeChange} = require('../actions/featuregrid');
 const ContainerDimensions = require('react-container-dimensions').default;
-
+const {mapLayoutBoundsValuesSelector, mapLayoutBoundsSelector} = require('../selectors/map');
+const Dock = connect(createSelector(
+    getDockSize,
+    mapLayoutBoundsSelector,
+    (size, layout) => ({
+        size,
+        dockStyle: mapLayoutBoundsValuesSelector(layout, {transform: true})
+    })
+)
+)(require('react-dock').default);
 /**
   * @name FeatureEditor
   * @memberof plugins
@@ -110,8 +119,7 @@ const FeatureDock = (props = {
     // columns={[<aside style={{backgroundColor: "red", flex: "0 0 12em"}}>column-selector</aside>]}
 
     return (
-        <span className={"mapstore-dock horizontal bottom"}>
-        <Dock size={props.dockSize} {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>
+        <Dock {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>
         {props.open &&
         <ContainerDimensions>
         { ({ height }) =>
@@ -149,8 +157,7 @@ const FeatureDock = (props = {
 
         </ContainerDimensions>
         }
-    </Dock>
-    </span>);
+    </Dock>);
 };
 const selector = createSelector(
     state => get(state, "featuregrid.open"),
@@ -168,8 +175,7 @@ const selector = createSelector(
     hasChangesSelector,
     state => get(state, 'featuregrid.focusOnEdit') || [],
     state => get(state, 'featuregrid.enableColumnFilters'),
-    getDockSize,
-    (open, autocompleteEnabled, url, typeName, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters, dockSize) => ({
+    (open, autocompleteEnabled, url, typeName, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters) => ({
         open,
         autocompleteEnabled,
         url,
@@ -184,8 +190,7 @@ const selector = createSelector(
         mode,
         focusOnEdit,
         enableColumnFilters,
-        changes: toChangesMap(changes),
-        dockSize
+        changes: toChangesMap(changes)
     })
 );
 const EditorPlugin = connect(selector, assign({}, {onSizeChange: sizeChange}, (dispatch) => ({
@@ -198,6 +203,7 @@ const EditorPlugin = connect(selector, assign({}, {onSizeChange: sizeChange}, (d
         events: bindActionCreators(t.events, dispatch)
     }))
 })))(FeatureDock);
+
 
 module.exports = {
      FeatureEditorPlugin: EditorPlugin,

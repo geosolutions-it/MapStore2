@@ -9,6 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
+const {createSelector} = require('reselect');
 const OverlayTrigger = require('../components/misc/OverlayTrigger');
 
 const Message = require('./locale/Message');
@@ -25,11 +26,21 @@ const {partialRight} = require('lodash');
 
 const assign = require('object-assign');
 
-const Menu = connect((state) => ({
-    show: state.controls.drawer && state.controls.drawer.enabled,
-    activeKey: state.controls.drawer && state.controls.drawer.menu || "1",
-    dynamicWidth: state.controls.queryPanel && state.controls.queryPanel.enabled && state.controls.drawer && state.controls.drawer.width || undefined
-}), {
+const {mapLayoutBoundsValuesSelector, mapLayoutBoundsSelector} = require('../selectors/map');
+
+const menuSelector = createSelector([
+    state => state.controls.drawer && state.controls.drawer.enabled,
+    state => state.controls.drawer && state.controls.drawer.menu || "1",
+    state => state.controls.queryPanel && state.controls.queryPanel.enabled && state.controls.drawer && state.controls.drawer.width || undefined,
+    mapLayoutBoundsSelector
+], (show, activeKey, dynamicWidth, mapLayout) => ({
+    show,
+    activeKey,
+    dynamicWidth,
+    layout: mapLayoutBoundsValuesSelector(mapLayout, {height: true})
+}));
+
+const Menu = connect(menuSelector, {
     onToggle: toggleControl.bind(null, 'drawer', null),
     onChoose: partialRight(setControlProperty.bind(null, 'drawer', 'menu'), true),
     changeMapStyle: changeMapStyle

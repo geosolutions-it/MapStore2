@@ -7,7 +7,13 @@
 }
 
 #navigationBar .mapToolbar {
-    bottom: 25px !important;
+    bottom: 25px;
+    margin-bottom: 0;
+}
+
+.background-plugin-position {
+    bottom: 20px;
+    margin-bottom: 0;
 }
 
 .leaflet-control-attribution {

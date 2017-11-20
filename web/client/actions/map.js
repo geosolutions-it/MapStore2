@@ -130,13 +130,22 @@ function initMap() {
     };
 }
 
+/**
+ * updateMapLayout action, type `UPDATE_MAP_LAYOUT`
+ * @memberof actions.map
+ * @param  {object} layoutBounds style of the layout
+ * @return {action}            type `UPDATE_MAP_LAYOUT` with layoutBounds
+ */
 function updateMapLayout(layoutBounds) {
     return {
         type: UPDATE_MAP_LAYOUT,
         layoutBounds
     };
 }
-
+/**
+ * Actions for Map Plugin.
+ * @name actions.map
+ */
 module.exports = {
     CHANGE_MAP_VIEW,
     CLICK_ON_MAP,

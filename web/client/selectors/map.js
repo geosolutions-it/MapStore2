@@ -50,11 +50,38 @@ const scalesSelector = createSelector(
         return [];
     }
 );
-
+/**
+ * Get version of the map
+ * @function
+ * @memberof selectors.map
+ * @param  {object} state the state
+ * @return {number} version of the map
+ */
 const mapVersionSelector = (state) => state.map && state.map.present && state.map.present.version || 1;
+/**
+ * Get name/titlet of the map
+ * @function
+ * @memberof selectors.map
+ * @param  {object} state the state
+ * @return {string} name/title of the map
+ */
 const mapNameSelector = (state) => state.map && state.map.present && state.map.present.info && state.map.present.info.name || '';
-
-const mapLayoutBoundsSelector = (state) => state.map && state.map.present && state.map.present.layoutBounds || {left: 0, top: 0, right: 0, bottom: 0};
+/**
+ * Get map layout bounds and style
+ * @function
+ * @memberof selectors.map
+ * @param  {object} state the state
+ * @return {object} the layout of the map
+ */
+const mapLayoutBoundsSelector = (state) => state.map && state.map.present && state.map.present.layoutBounds || {};
+/**
+ * Retrieve only specific attribute from map layout
+ * @function
+ * @memberof selectors.map
+ * @param  {object} layoutBounds map layout style
+ * @param  {object} attributes attributes to retrieve, bool {left: true}
+ * @return {object} selected attributes of layout of the map
+ */
 const mapLayoutBoundsValuesSelector = (layoutBounds, attributes = {}) => layoutBounds && Object.keys(layoutBounds).filter(key =>
     attributes[key]).reduce((a, key) => (
         {...a, [key]: layoutBounds[key]}

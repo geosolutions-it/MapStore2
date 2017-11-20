@@ -128,6 +128,7 @@
             "web/client/actions/controls.js",
             "web/client/actions/fullscreen.js",
             "web/client/actions/globeswitcher.js",
+            "web/client/actions/map.js",
             "web/client/actions/maps.js",
             "web/client/actions/maptype.js",
             "web/client/actions/notifications.js",
@@ -136,6 +137,7 @@
             "web/client/selectors/index.jsdoc",
             "web/client/selectors/featuregrid.js",
             "web/client/selectors/map.js",
+            "web/client/selectors/mapinfo.js",
             "web/client/selectors/maptype.js",
             "web/client/selectors/tutorial.js",
 
@@ -155,6 +157,7 @@
             "web/client/epics/featuregrid.js",
             "web/client/epics/fullscreen.js",
             "web/client/epics/globeswitcher.js",
+            "web/client/epics/map.js",
             "web/client/epics/maptype.js",
             "web/client/epics/notifications.js",
             "web/client/epics/search.js",

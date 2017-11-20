@@ -4,6 +4,7 @@
     left: 0;
     position: absolute;
     z-index: 100;
+    margin-bottom: 30px;
 }
 
 .background-list-container {

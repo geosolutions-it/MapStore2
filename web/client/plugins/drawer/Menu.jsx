@@ -25,14 +25,16 @@ class Menu extends React.Component {
         width: PropTypes.number,
         dynamicWidth: PropTypes.number,
         overlapMap: PropTypes.bool,
-        changeMapStyle: PropTypes.func
+        changeMapStyle: PropTypes.func,
+        layout: PropTypes.object
     };
 
     static defaultProps = {
         docked: false,
         single: false,
         width: 300,
-        overlapMap: true
+        overlapMap: true,
+        layout: {}
     };
 
     componentDidMount() {
@@ -101,6 +103,7 @@ class Menu extends React.Component {
         return (
             <Sidebar styles={{
                 sidebar: {
+                    ...this.props.layout,
                     zIndex: 1022,
                     width: this.props.dynamicWidth || this.props.width
                 },
