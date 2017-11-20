@@ -50,6 +50,7 @@ Layers.registerType('wms', {
         urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
         if (options.singleTile) {
             return new ol.layer.Image({
+                extent: map.getView().getProjection().getExtent(),
                 opacity: options.opacity !== undefined ? options.opacity : 1,
                 visible: options.visibility !== false,
                 zIndex: options.zIndex,
@@ -100,12 +101,16 @@ Layers.registerType('wms', {
             }, false);
             if (oldOptions.srs !== newOptions.srs) {
                 const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS)).getExtent();
-                layer.getSource().tileGrid = new ol.tilegrid.TileGrid({
-                    extent: extent,
-                    resolutions: mapUtils.getResolutions(),
-                    tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
-                    origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
-                });
+                if (newOptions.singleTile) {
+                    layer.setExtent(extent);
+                } else {
+                    layer.getSource().tileGrid = new ol.tilegrid.TileGrid({
+                        extent: extent,
+                        resolutions: mapUtils.getResolutions(),
+                        tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
+                        origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
+                    });
+                }
             }
             if (changed) {
                 layer.getSource().updateParams(objectAssign(newParams, newOptions.params));
