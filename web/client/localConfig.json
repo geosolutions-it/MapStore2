@@ -93,14 +93,8 @@
                 "name": "Identify",
                 "showIn": ["Settings"],
                 "cfg": {
-                    "style": {
-                        "position": "absolute",
-                        "width": "100%",
-                        "bottom": "0px",
-                        "zIndex": 1023,
-                        "maxHeight": "70%",
-                        "marginBottom": 0
-                    },
+                    "panelClassName": "mapstore-mobile-identify",
+                    "fullscreen": true,
                     "draggable": false,
                     "collapsible": true,
                     "viewerOptions": {
@@ -373,14 +367,8 @@
               }, {
                 "name": "Identify",
                 "cfg": {
-                    "style": {
-                        "position": "absolute",
-                        "width": "100%",
-                        "bottom": "0px",
-                        "zIndex": 1010,
-                        "maxHeight": "70%",
-                        "marginBottom": 0
-                    },
+                    "panelClassName": "mapstore-mobile-identify",
+                    "fullscreen": true,
                     "draggable": false,
                     "collapsible": true,
                     "viewerOptions": {

@@ -73,8 +73,7 @@ class PropertiesViewer extends React.Component {
             <div style={{
                 padding: "4px",
                 margin: 0,
-                borderRadius: "4px",
-                boxShadow: "0px 2px 1px rgb(240,240,240)"
+                borderRadius: "4px"
             }}>
                 {items}
             </div>

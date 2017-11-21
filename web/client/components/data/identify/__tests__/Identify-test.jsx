@@ -9,7 +9,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 
 const Identify = require('../Identify.jsx');
-
+const TestUtils = require('react-dom/test-utils');
 const expect = require('expect');
 
 describe('Identify', () => {
@@ -405,5 +405,29 @@ describe('Identify', () => {
         );
         expect(identify).toExist();
         expect(identify.needsRefresh({ enabled: true, point: { pixel: {x: 0, y: 0}}})).toBe(true);
+    });
+
+    it('test click/touch on header fullscreen false', () => {
+        const identify = ReactDOM.render(
+            <Identify enabled requests={[{}]} responses={[{}]}/>,
+            document.getElementById("container")
+        );
+        expect(identify).toExist();
+        const arrow = document.getElementsByClassName('m-fullscreen-btn');
+        expect(arrow.length).toBe(0);
+    });
+
+    it('test click/touch on header fullscreen true', () => {
+        const identify = ReactDOM.render(
+            <Identify fullscreen enabled requests={[{}]} responses={[{}]}/>,
+            document.getElementById("container")
+        );
+        expect(identify).toExist();
+        const arrow = document.getElementsByClassName('m-fullscreen-btn');
+        expect(arrow.length).toBe(1);
+        TestUtils.Simulate.click(arrow[0]);
+        expect(document.getElementsByClassName('fullscreen').length).toBe(1);
+        TestUtils.Simulate.click(arrow[0]);
+        expect(document.getElementsByClassName('fullscreen').length).toBe(0);
     });
 });
