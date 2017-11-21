@@ -133,13 +133,13 @@ function initMap() {
 /**
  * updateMapLayout action, type `UPDATE_MAP_LAYOUT`
  * @memberof actions.map
- * @param  {object} layoutBounds style of the layout
- * @return {action}            type `UPDATE_MAP_LAYOUT` with layoutBounds
+ * @param  {object} layout style of the layout
+ * @return {action}            type `UPDATE_MAP_LAYOUT` with layout
  */
-function updateMapLayout(layoutBounds) {
+function updateMapLayout(layout) {
     return {
         type: UPDATE_MAP_LAYOUT,
-        layoutBounds
+        layout
     };
 }
 /**

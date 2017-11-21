@@ -224,12 +224,12 @@ describe('Test the map reducer', () => {
     });
 
     it('change layout bounds/style', () => {
-        let layoutBounds = {left: 300};
+        let layout = {left: 300};
         const action = {
             type: 'UPDATE_MAP_LAYOUT',
-            layoutBounds
+            layout
         };
         let state = mapConfig({}, action);
-        expect(state.layoutBounds).toEqual(layoutBounds);
+        expect(state.layout).toEqual(layout);
     });
 });

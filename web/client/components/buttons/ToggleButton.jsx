@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -8,6 +7,7 @@ const PropTypes = require('prop-types');
  */
 
 var React = require('react');
+const PropTypes = require('prop-types');
 var {Button, Glyphicon} = require('react-bootstrap');
 
 const OverlayTrigger = require('../misc/OverlayTrigger');

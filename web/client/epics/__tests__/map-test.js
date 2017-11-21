@@ -10,7 +10,7 @@ const expect = require('expect');
 
 const {toggleControl} = require('../../actions/controls');
 const {UPDATE_MAP_LAYOUT} = require('../../actions/map');
-const {updateMapLayoutBounds} = require('../map');
+const {updateMapLayoutEpic} = require('../map');
 const {testEpic} = require('./epicTestUtils');
 
 describe('map Epics', () => {
@@ -20,7 +20,7 @@ describe('map Epics', () => {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
-                    expect(action.layoutBounds).toEqual({ left: 600, right: 658, bottom: 30, transform: 'none', height: 'calc(100% - 30px)' } );
+                    expect(action.layout).toEqual({ left: 600, right: 658, bottom: 30, transform: 'none', height: 'calc(100% - 30px)' } );
                 });
             } catch(e) {
                 done(e);
@@ -28,7 +28,7 @@ describe('map Epics', () => {
             done();
         };
         const state = {controls: { metadataexplorer: {enabled: true}, queryPanel: {enabled: true}}};
-        testEpic(updateMapLayoutBounds, 1, toggleControl("queryPanel"), epicResult, state);
+        testEpic(updateMapLayoutEpic, 1, toggleControl("queryPanel"), epicResult, state);
     });
 
     it('tests layout embedded', (done) => {
@@ -37,7 +37,7 @@ describe('map Epics', () => {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
-                    expect(action.layoutBounds).toEqual({ height: 'calc(100% - 30px)' } );
+                    expect(action.layout).toEqual({ height: 'calc(100% - 30px)' } );
                 });
             } catch(e) {
                 done(e);
@@ -45,6 +45,6 @@ describe('map Epics', () => {
             done();
         };
         const state = {mode: 'embedded', controls: { drawer: {enabled: true}}};
-        testEpic(updateMapLayoutBounds, 1, toggleControl("queryPanel"), epicResult, state);
+        testEpic(updateMapLayoutEpic, 1, toggleControl("queryPanel"), epicResult, state);
     });
 });

@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,13 +7,14 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 
 require('./toolbar/assets/css/toolbar.css');
 
 const {CSSTransitionGroup} = require('react-transition-group');
 const {isFeatureGridOpen} = require('../selectors/featuregrid');
-const {mapLayoutBoundsSelector, mapLayoutBoundsValuesSelector} = require('../selectors/map');
+const {mapLayoutSelector, mapLayoutValuesSelector} = require('../selectors/map');
 const {createSelector} = require('reselect');
 
 const assign = require('object-assign');
@@ -121,13 +121,13 @@ const toolbarSelector = stateSelector => createSelector([
         state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].active,
         state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].expanded,
         isFeatureGridOpen,
-        mapLayoutBoundsSelector
-    ], (active, allVisible, featuregridOpen, layout) => ({
+        mapLayoutSelector
+    ], (active, allVisible, featuregridOpen, mapLayout) => ({
         active,
         allVisible,
         stateSelector,
         layout: featuregridOpen ? 'horizontal' : 'vertical',
-        style: mapLayoutBoundsValuesSelector(layout, {right: true, bottom: true})
+        style: mapLayoutValuesSelector(mapLayout, {right: true, bottom: true})
 }));
 
 module.exports = {

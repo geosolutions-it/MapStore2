@@ -21,7 +21,7 @@ const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 const {mapInfoRequestsSelector} = require('../selectors/mapinfo');
 const {clearLayers} = require('../actions/layers');
 const {head, get} = require('lodash');
-const {mapLayoutBoundsSelector} = require('../selectors/map');
+const {mapLayoutSelector} = require('../selectors/map');
 const {isFeatureGridOpen, getDockSize} = require('../selectors/featuregrid');
 /**
  * Epìcs for feature grid
@@ -88,7 +88,7 @@ const resetMapOnInit = action$ =>
  * @memberof epics.map
  * @return {external:Observable} emitting {@link #actions.map.updateMapLayout} action
  */
-const updateMapLayoutBounds = (action$, store) =>
+const updateMapLayoutEpic = (action$, store) =>
     action$.ofType(MAP_CONFIG_LOADED, SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID, PURGE_MAPINFO_RESULTS, TOGGLE_CONTROL, SET_CONTROL_PROPERTY)
         .switchMap(() => {
 
@@ -97,17 +97,15 @@ const updateMapLayoutBounds = (action$, store) =>
             }
 
             const mapLayout = {left: {sm: 300, md: 600}, right: {md: 658}, bottom: {sm: 30}};
+            const layout = mapLayoutSelector(store.getState());
 
             if (get(store.getState(), "mode") === 'embedded') {
-                const layoutBounds = mapLayoutBoundsSelector(store.getState());
                 const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
                 return Rx.Observable.of(updateMapLayout({
-                    ...layoutBounds,
+                    ...layout,
                     ...height
                 }));
             }
-
-            const layoutBounds = mapLayoutBoundsSelector(store.getState());
 
             const leftPanels = head([
                 get(store.getState(), "controls.queryPanel.enabled") && {left: mapLayout.left.md} || null,
@@ -126,7 +124,7 @@ const updateMapLayoutBounds = (action$, store) =>
             const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
 
             return Rx.Observable.of(updateMapLayout({
-                ...layoutBounds,
+                ...layout,
                 ...leftPanels,
                 ...rightPanels,
                 ...footer,
@@ -139,5 +137,5 @@ module.exports = {
     handleCreationLayerError,
     handleCreationBackgroundError,
     resetMapOnInit,
-    updateMapLayoutBounds
+    updateMapLayoutEpic
 };

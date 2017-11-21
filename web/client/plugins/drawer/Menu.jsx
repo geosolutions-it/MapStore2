@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,6 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 const {Glyphicon, Button, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../components/misc/OverlayTrigger');
 const Sidebar = require('react-sidebar').default;

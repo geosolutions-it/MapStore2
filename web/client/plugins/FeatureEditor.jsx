@@ -7,7 +7,6 @@
  */
 const React = require('react');
 const {connect} = require('react-redux');
-const assign = require('object-assign');
 const {createSelector} = require('reselect');
 const {bindActionCreators} = require('redux');
 const {get} = require('lodash');
@@ -23,13 +22,13 @@ const EMPTY_OBJ = {};
 const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
 const {initPlugin, sizeChange} = require('../actions/featuregrid');
 const ContainerDimensions = require('react-container-dimensions').default;
-const {mapLayoutBoundsValuesSelector, mapLayoutBoundsSelector} = require('../selectors/map');
+const {mapLayoutValuesSelector, mapLayoutSelector} = require('../selectors/map');
 const Dock = connect(createSelector(
     getDockSize,
-    mapLayoutBoundsSelector,
-    (size, layout) => ({
+    mapLayoutSelector,
+    (size, mapLayout) => ({
         size,
-        dockStyle: mapLayoutBoundsValuesSelector(layout, {transform: true})
+        dockStyle: mapLayoutValuesSelector(mapLayout, {transform: true})
     })
 )
 )(require('react-dock').default);
@@ -193,16 +192,19 @@ const selector = createSelector(
         changes: toChangesMap(changes)
     })
 );
-const EditorPlugin = connect(selector, assign({}, {onSizeChange: sizeChange}, (dispatch) => ({
-    gridEvents: bindActionCreators(gridEvents, dispatch),
-    pageEvents: bindActionCreators(pageEvents, dispatch),
-    initPlugin: bindActionCreators((options) => initPlugin(options), dispatch),
-    toolbarEvents: bindActionCreators(toolbarEvents, dispatch),
-    gridTools: gridTools.map((t) => ({
-        ...t,
-        events: bindActionCreators(t.events, dispatch)
-    }))
-})))(FeatureDock);
+const EditorPlugin = connect(selector,
+    (dispatch) => ({
+        gridEvents: bindActionCreators(gridEvents, dispatch),
+        pageEvents: bindActionCreators(pageEvents, dispatch),
+        initPlugin: bindActionCreators((options) => initPlugin(options), dispatch),
+        toolbarEvents: bindActionCreators(toolbarEvents, dispatch),
+        gridTools: gridTools.map((t) => ({
+            ...t,
+            events: bindActionCreators(t.events, dispatch)
+        })),
+        onSizeChange: (...params) => dispatch(sizeChange(...params))
+    })
+)(FeatureDock);
 
 
 module.exports = {

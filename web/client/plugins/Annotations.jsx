@@ -24,7 +24,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     require('../actions/annotations');
 
 const {annotationsInfoSelector, annotationsListSelector} = require('../selectors/annotations');
-const {mapLayoutBoundsValuesSelector, mapLayoutBoundsSelector} = require('../selectors/map');
+const {mapLayoutValuesSelector, mapLayoutSelector} = require('../selectors/map');
 
 const AnnotationsEditor = connect(annotationsInfoSelector,
 {
@@ -162,10 +162,10 @@ const conditionalToggle = on.bind(null, toggleControl('annotations', null), (sta
 
 const annotationsSelector = createSelector([
     state => (state.controls && state.controls.annotations && state.controls.annotations.enabled) || (state.annotations && state.annotations.closing) || false,
-    mapLayoutBoundsSelector
-], (active, layout) => ({
+    mapLayoutSelector
+], (active, mapLayout) => ({
     active,
-    dockStyle: mapLayoutBoundsValuesSelector(layout, {height: true})
+    dockStyle: mapLayoutValuesSelector(mapLayout, {height: true})
 }));
 
 const AnnotationsPlugin = connect(annotationsSelector, {

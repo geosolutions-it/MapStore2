@@ -73,18 +73,18 @@ const mapNameSelector = (state) => state.map && state.map.present && state.map.p
  * @param  {object} state the state
  * @return {object} the layout of the map
  */
-const mapLayoutBoundsSelector = (state) => state.map && state.map.present && state.map.present.layoutBounds || {};
+const mapLayoutSelector = (state) => state.map && state.map.present && state.map.present.layout || {};
 /**
  * Retrieve only specific attribute from map layout
  * @function
  * @memberof selectors.map
- * @param  {object} layoutBounds map layout style
+ * @param  {object} layout map layout style
  * @param  {object} attributes attributes to retrieve, bool {left: true}
  * @return {object} selected attributes of layout of the map
  */
-const mapLayoutBoundsValuesSelector = (layoutBounds, attributes = {}) => layoutBounds && Object.keys(layoutBounds).filter(key =>
+const mapLayoutValuesSelector = (layout, attributes = {}) => layout && Object.keys(layout).filter(key =>
     attributes[key]).reduce((a, key) => (
-        {...a, [key]: layoutBounds[key]}
+        {...a, [key]: layout[key]}
     ), {}) || {};
 
 module.exports = {
@@ -95,6 +95,6 @@ module.exports = {
     projectionDefsSelector,
     mapVersionSelector,
     mapNameSelector,
-    mapLayoutBoundsSelector,
-    mapLayoutBoundsValuesSelector
+    mapLayoutSelector,
+    mapLayoutValuesSelector
 };

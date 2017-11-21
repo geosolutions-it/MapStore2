@@ -30,7 +30,7 @@ const QueryBuilder = require('../components/data/query/QueryBuilder');
 const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic} = require('../epics/wfsquery');
 const autocompleteEpics = require('../epics/autocomplete');
 const {bindActionCreators} = require('redux');
-const {mapLayoutBoundsValuesSelector, mapLayoutBoundsSelector} = require('../selectors/map');
+const {mapLayoutValuesSelector, mapLayoutSelector} = require('../selectors/map');
 
 const {
     // QueryBuilder action functions
@@ -138,13 +138,13 @@ const tocSelector = createSelector(
         groupsSelector,
         (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}},
         (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false,
-        mapLayoutBoundsSelector
+        mapLayoutSelector
     ], (enabled, groups, settings, querypanelEnabled, mapLayout) => ({
         enabled,
         groups,
         settings,
         querypanelEnabled,
-        layout: mapLayoutBoundsValuesSelector(mapLayout, {height: true})
+        layout: mapLayoutValuesSelector(mapLayout, {height: true})
     })
 );
 

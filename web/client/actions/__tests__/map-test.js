@@ -146,6 +146,6 @@ describe('Test correctness of the map actions', () => {
         const retval = updateMapLayout({left: 300});
         expect(retval).toExist();
         expect(retval.type).toEqual(UPDATE_MAP_LAYOUT);
-        expect(retval.layoutBounds).toEqual({left: 300});
+        expect(retval.layout).toEqual({left: 300});
     });
 });

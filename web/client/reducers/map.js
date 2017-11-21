@@ -138,7 +138,7 @@ function mapConfig(state = null, action) {
         return assign({}, state, {version: action.version});
     }
     case UPDATE_MAP_LAYOUT: {
-        return assign({}, state, {layoutBounds: action.layoutBounds});
+        return assign({}, state, {layout: action.layout});
     }
     default:
         return state;
