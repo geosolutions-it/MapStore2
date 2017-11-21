@@ -1,0 +1,402 @@
+
+@import "./less/common.less";
+
+@import "./less/ag-grid.less";
+@import "./less/autocomplete.less";
+@import "./less/cookie.less";
+@import "./less/catalog.less";
+@import "./less/dock-panel.less";
+@import "./less/draggable.less";
+@import "./less/drawer-menu.less";
+@import "./less/dropdown-menu.less";
+@import "./less/dropzone.less";
+@import "./less/embedded.less";
+@import "./less/get-feature.less";
+@import "./less/help-badge.less";
+@import "./less/home.less";
+@import "./less/leaflet.less";
+@import "./less/loaders.less";
+@import "./less/manager.less";
+@import "./less/map-footer.less";
+@import "./less/map-search-bar.less";
+@import "./less/map-toolbar.less";
+@import "./less/measure.less";
+@import "./less/mouse-position.less";
+@import "./less/navbar.less";
+@import "./less/ol.less";
+@import "./less/print.less";
+@import "./less/query-panel.less";
+@import "./less/react-data-grid.less";
+@import "./less/select.less";
+@import "./less/settings.less";
+@import "./less/shapefile-upload.less";
+@import "./less/share.less";
+@import "./less/square-button.less";
+@import "./less/toc.less";
+@import "./less/tutorial.less";
+@import "./less/version.less";
+@import "./less/annotations.less";
+.mapstore-sidebar {
+    background-color: #fff;
+}
+
+.mapstore-sidebar-right {
+    background-color: rgba(255,255,255,0.4);
+}
+
+.mapstore-sidebar .panel-heading {
+    padding: 0;
+    border: none;
+}
+
+.mapstore-sidebar .panel-heading .btn {
+    border: none;
+}
+
+.mapstore-sidebar .panel-body {
+    padding: 0;
+    border: none;
+}
+
+.mapstore-sidebar .nav {
+    height: 52px;
+    padding-top: 6px;
+}
+
+.mapstore-sidebar .panel-default {
+    margin-bottom: 0;
+    box-shadow: none;
+}
+
+.mapstore-sidebar .row {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.mapstore-sidebar .col-xs-12 {
+
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.mapstore-sidebar .col-xs-6 {
+    padding-left: 0;
+    padding-right: 0;
+}
+
+.mapstore-sidebar .panel {
+    border: none;
+}
+
+.mapstore-sidebar .container-fluid {
+    padding: 0;
+    margin: 0;
+}
+.msSideGrid {
+    margin: 30px;
+}
+.ms-wizard  .msSideGrid {
+    margin: 0;
+}
+.ms-wizard > .row{
+    margin: 30px;
+}
+
+.mapstore-side-card {
+    overflow: hidden;
+    width: 100%;
+    height: 104px; /* sq-btn * 2 */
+    webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
+    -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
+    margin: 10px 0 0 0;
+    transition: all 0.3s;
+}
+
+.mapstore-side-card:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+    webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    -moz-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.mapstore-side-card > div {
+    float: left;
+}
+
+.mapstore-side-card img {
+    height: 98px; /* sq-btn * 2 - 4px */
+    width: 98px;
+    margin: 4px;
+    border: none;
+
+}
+
+.mapstore-side-glyph {
+    height: 94px; /* sq-btn * 2 - 4px */
+    width: 94px;
+    margin: 4px;
+    padding: 23px;
+}
+
+.mapstore-side-preview {
+    height: 98px; /* sq-btn * 2 - 4px */
+    width: 98px;
+    margin: 4px;
+}
+
+.mapstore-side-glyph span {
+    font-size: 52px;
+}
+
+.mapstore-side-card .mapstore-side-card-info {
+    width: calc(100% - 156px);
+    height: 104px;
+    padding: 8px;
+}
+
+.mapstore-side-card .mapstore-side-card-info div {
+    margin-bottom: 10px;
+}
+
+.mapstore-side-card .mapstore-side-card-info  .mapstore-side-card-title {
+    font-weight: bold;
+}
+
+.mapstore-side-card .mapstore-side-card-info  .mapstore-side-card-desc {
+    border-bottom: 1px solid #ddd;
+}
+
+.mapstore-side-card .mapstore-side-card-info  .mapstore-side-card-caption {
+    font-style: italic;
+    font-size: 12px;
+}
+
+.mapstore-side-card-tool {
+    display: table;
+    height: 100%;
+    width: 50px;
+}
+
+.mapstore-side-card-tool span{
+    display: table-cell;
+    height: 100%;
+    vertical-align: middle;
+    font-size: 20px;
+}
+
+.mapstore-join-stats {
+
+}
+
+.mapstore-result-square {
+    height: 52px;
+    width: 52px;
+    padding: 16px;
+    webkit-box-shadow: -3px 0 6px rgba(0, 0, 0, 0.06), -4px 0 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
+    -moz-box-shadow: -3px 0 6px rgba(0, 0, 0, 0.06), -4px 0 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
+    box-shadow: -3px 0 6px rgba(0, 0, 0, 0.06), -4px 0 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
+    position: absolute;
+    margin: 0 30px;
+}
+
+.mapstore-result-square:hover {
+    transform: scale(1.05);
+    transition: all 0.3s;
+    z-index: 1;
+    webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    -moz-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.mapstore-result-container {
+    height: 52px;
+}
+.mapstore-result-square span {
+    font-size: 20px;
+}
+
+.mapstore-side-footer {
+    height: 52px;
+    padding-top: 9px;
+    position: absolute;
+bottom: 0;
+width: 100%;
+left: 0;
+padding-right: 10px !important;
+}
+
+.mapstore-sidebar-header-title {
+    height: 52px;
+    line-height: 52px;
+}
+
+.mapstore-scroll-container {
+    height: calc(100% - 312px);
+    position: absolute;
+    overflow-y: auto;
+    width: 100%;
+    padding: 0 30px;
+    border-bottom: 1px solid #ddd;
+}
+
+.mapstore-scroll-container-w {
+    height: calc(100% - 260px);
+    position: absolute;
+    overflow-y: auto;
+    width: 100%;
+    padding: 0 30px;
+    border-bottom: 1px solid #ddd;
+}
+
+.mapstore-widget-card {
+    background: #fff;
+    overflow: hidden;
+    margin: 20px 0;
+    webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    -moz-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.mapstore-widget-card .mapstore-widget-chart {
+    width: 90%;
+    margin: 10px 5%;
+    height: 200px;
+}
+
+.mapstore-widget-card .mapstore-widget-layer {
+    text-align: center;
+    width: 90%;
+    margin: 10px 5%;
+    font-style: italic;
+}
+
+.mapstore-widget-card .mapstore-widget-title {
+    text-align: center;
+    width: 90%;
+    margin: 10px 5%;
+    font-size: 22px;
+    font-weight: bold;
+    border-bottom: 1px solid #ddd;
+    color: #078aa3;
+}
+
+.mapstore-widget-card .mapstore-widget-description {
+    text-align: center;
+    width: 90%;
+    margin: 5px 5%;
+}
+
+.mapstore-widget-remove {
+    height: 32px;
+    font-size: 18px;
+    width: 100%;
+    padding: 5px 5%;
+    color: #078aa3;
+    margin-top: 5px;
+}
+
+.mapstore-widget-remove span {
+    float: right;
+}
+
+.mapstore-scroll-container-1 {
+    position: absolute;
+    overflow-y: auto;
+    width: 100%;
+    padding: 0 30px;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+
+.mapstore-scroll-container-2 {
+    height: calc(100% - 156px);
+    position: absolute;
+    overflow-y: auto;
+    width: 100%;
+    padding: 0 30px;
+    border-bottom: 1px solid #ddd;
+    border-top: 1px solid #ddd;
+}
+
+.mapstore-step-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.mapstore-step-description {
+    font-size: 14px;
+    font-style: italic;
+}
+
+.mapstore-step-chart {
+    margin: 0 auto;
+    height: 200px;
+    .recharts-wrapper {
+        margin: 0 auto;
+    }
+}
+
+.mapstore-widget-options {
+    position: absolute;
+    font-size: 18px;
+    color: #078aa3;
+    right: 20px;
+}
+
+.mapstore-color-palette-6 {
+    webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
+    -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
+    width: 100%;
+    height: 26px;
+    margin: 10px 0;
+    transition: all 0.3s;
+}
+
+
+.mapstore-color-palette-6:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+    webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    -moz-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+}
+
+.mapstore-color-palette-6 .mapstore-color-palette-box {
+    width: 16.6667%;
+    height: 26px;
+    float:left;
+}
+
+.mapstore-color-palette-name {
+    margin-top: 20px;
+}
+
+
+.mapstore-widget-loader/*(@border: 1.1em, @size: 10em, @color: #fff)*/ {
+    margin-top: 5px;
+    position: absolute;
+    left: 20px;
+    text-indent: -9999em;
+    border-top: 1.6px solid rgba(7, 138, 163, 0.2);
+    border-right: 1.6px solid rgba(7, 138, 163, 0.2);
+    border-bottom: 1.6px solid rgba(7, 138, 163, 0.2);
+    border-left: 1.6px solid #078aa3;
+    -webkit-transform: translateZ(0);
+    -ms-transform: translateZ(0);
+    transform: translateZ(0);
+    -webkit-animation: mapstore-circle-load8 1.1s infinite linear;
+    animation: mapstore-circle-load8 1.1s infinite linear;
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+
+}
+
+.mapstore-widget-loader::after {
+    border-radius: 50%;
+    width: 18px;
+    height: 18px;
+}

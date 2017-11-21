@@ -1,0 +1,1 @@
+{"GroupByAttributes":["District_N"],"AggregationResults":[["1",2.05430041227E10],["2",3.47070619276E10],["3",5.67742286386E10],["4",2.98796874154E10],["5",2.44128352236E10],["6",5.00548921075E10]],"AggregationFunctions":["Sum"],"AggregationAttribute":"Shape_Area"}

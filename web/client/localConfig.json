@@ -2,7 +2,7 @@
 
     "proxyUrl": {
         "url": "/mapstore/proxy/?url=",
-        "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it/geoserver"]
+        "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver"]
     },
     "geoStoreUrl": "/mapstore/rest/geostore/",
     "printUrl": "https://demo.geo-solutions.it/geoserver/pdf/info.json",
@@ -330,7 +330,7 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig"
+            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets"
         ],
         "embedded": [{
                 "name": "Map",

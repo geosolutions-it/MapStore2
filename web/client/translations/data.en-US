@@ -110,6 +110,16 @@
         "groups": "Groups",
         "permission": "Permission",
         "permissions": "Permissions",
+        "global": {
+            "colors": {
+                "red": "{number, plural, =0 {Red} =1 {Red} other {Reds}}",
+                "blue": "{number, plural, =0 {Blue} =1 {Blue} other {Blues}}",
+                "green": "{number, plural, =0 {green} =1 {Green} other {Greens}}",
+                "brown": "{number, plural, =0 {Brown} =1 {Brown} other {Browns}}",
+                "purple": "{number, plural, =0 {Purple} =1 {Purple} other {Purples}}",
+                "random": "{number, plural, =0 {Random} =1 {Random} other {Random}}"
+            }
+        },
         "home":{
             "open": "Open",
             "description": "MapStore 2 has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.<br/>Visit the <a href=\"/mapstore/docs/\">home page</a> for more details.",
@@ -224,7 +234,6 @@
             "toggleLayerVisibility": "Toggle layer visibility",
             "displayLegendAndTools": "Display legend and tools",
             "zoomToLayerExtent": "Zoom to layer extent",
-
             "addLayer": "Add Layer",
             "toolZoomToLayerTooltip": "Zoom to selected layer extent",
             "toolZoomToLayersTooltip": "Zoom to selected layers extent",
@@ -243,7 +252,7 @@
             "grabLayerIcon": "Grab and sort layer",
             "grabGroupIcon": "Grab and sort group",
             "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
-
+            "createWidget": "Create a widget for the selected layer",
             "editLayerProperties": "Edit layer properties",
             "browseData": "Open Attribute Table",
             "removeLayer": "Remove layer",
@@ -948,6 +957,108 @@
                 "title": "Error during export",
                 "invalidOutputFormat": "The selected export format is not available"
             }
+        },
+        "widgets": {
+            "selectChartType": {
+                "title": "Select the widget type"
+            },
+            "title": "Title",
+            "description": "Description",
+            "errors": {
+                "nodata": "No data available for the selected layer/filter",
+                "nodatainviewport": "No data in the current viewport",
+                "timeoutExpired": "The service took too much time to respond. Maybe the query is too complex or the server is busy",
+                "genericError": "There was an error during data retrival"
+            },
+            "builder": {
+                "header": {
+                    "title": "Widget"
+                },
+                "wizard": {
+                    "backToTypeSelection": "Back to type selection",
+                    "backToChartOptions": "Back to chart options",
+                    "configureChartOptions": "Configure chart options",
+                    "configureWidgetOptions": "Configure widget options",
+                    "updateWidget": "Update the widget",
+                    "addToTheMap": "Add the widget to the map"
+                },
+                "errors": {
+                    "noWidgetsAvailableTitle": "No Widgets available",
+                    "noWidgetsAvailableDescription": "<p>You can't create any widgets for the selected layer. This is probably because the layer is not suitable for the available widgets or the server doesn't expose all the needed services or information to generate widget. Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li>gs:aggregate process is not available</li></ul> )<p>"
+                },
+                "setupFilter": "Configure a filter for the widget data"
+            },
+            "widget": {
+                "menu": {
+                    "showChartData": "Show chart data",
+                    "edit": "Edit",
+                    "delete": "Delete",
+                    "confirmDelete": "Are you sure?",
+                    "downloadData": "Download Data",
+                    "exportImage": "Export Image"
+                }
+            },
+            "chartType": {
+                "bar": {
+                    "title": "Bar Chart",
+                    "description": "Create a bar chart to add to the map",
+                    "caption": "bar"
+                },
+                "pie": {
+                    "title": "Pie Chart",
+                    "description": "Create a pie chart to add to the map",
+                    "caption": "pie"
+                },
+                "line": {
+                    "title": "Line Chart",
+                    "description": "Create a line chart to add to the map",
+                    "caption": "line"
+                },
+                "gauge": {
+                    "title": "Gauge Chart",
+                    "description": "Create a gauge chart to add to the map",
+                    "caption": "gauge"
+                }
+            },
+            "chartOptionsTitle": "Chart Data",
+            "widgetOptionsTitle": "Widget Info",
+            "groupByAttributes": {
+                "line": "X Attribute",
+                "pie": "Group By",
+                "bar": "X Attribute",
+                "gauge": "Group By"
+            },
+            "aggregationAttribute": {
+                "line": "Y Attribute",
+                "pie": "Value",
+                "bar": "Y Attribute",
+                "gauge": "Value"
+            },
+            "aggregateFunction": {
+                "line": "Operation",
+                "pie": "Operation",
+                "bar": "Operation",
+                "gauge": "Operation"
+            },
+            "colorRamp": {
+                "line": "Color",
+                "pie": "Color Ramp",
+                "bar": "Color",
+                "gauge": "Color"
+            },
+            "mapSync": "Live Filter by viewport",
+            "displayLegend": {
+                "line": "Display Legend",
+                "pie": "Display Legend",
+                "bar": "Display Legend",
+                "gauge": "Display labels"
+            }
+
+        },
+        "wizard": {
+            "next": "Next",
+            "prev": "Previous",
+            "finish": "Finish"
         },
         "vectorstyler": {
             "tooltip": "Create and edit vector layer style",

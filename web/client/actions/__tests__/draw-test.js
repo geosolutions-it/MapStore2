@@ -9,7 +9,7 @@
 const expect = require('expect');
 const {
     CHANGE_DRAWING_STATUS, changeDrawingStatus,
-    END_DRAWING, endDrawing,
+    END_DRAWING, endDrawing, drawSupportReset,
     geometryChanged, GEOMETRY_CHANGED,
     drawStopped, DRAW_SUPPORT_STOPPED,
     setCurrentStyle, SET_CURRENT_STYLE
@@ -71,4 +71,11 @@ describe('Test correctness of the draw actions', () => {
         expect(retval.type).toBe(SET_CURRENT_STYLE);
         expect(retval.currentStyle).toBe("somestyle");
     });
+    it('Test drawSupportReset action creator', () => {
+        const retval = drawSupportReset();
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_DRAWING_STATUS);
+        expect(retval.status).toBe("clean");
+    });
+
 });

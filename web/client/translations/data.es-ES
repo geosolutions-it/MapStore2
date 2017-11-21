@@ -1,4 +1,3 @@
-
 {
     "locale": "es-ES",
     "messages": {
@@ -81,11 +80,10 @@
             "leave": "Leave",
             "accept": "Accept"
         },
-        "enable": "Activar",
-        "background": "Fondo",
-        "language": "lengua",
-        "mousePositionCoordinates": "Indicador de coordenadas",
-        "mouseCoordinates": "Coordenadas:",
+        "background": "Background",
+        "language": "Language",
+        "mousePositionCoordinates": "Coordinates indicator",
+        "mouseCoordinates": "Coordinates:",
         "mousePositionCRS": "CRS:",
         "mapScale": "Escala:",
         "showMousePositionCoordinates": "Mostrar/esconder las coordenadas",
@@ -112,6 +110,16 @@
         "groups": "Grupos",
         "permission": "Permiso",
         "permissions": "Permisos",
+        "global": {
+            "colors": {
+                "red": "{number, plural, =0 {Rojo} =1 {Rojo} other {rojos}}",
+                "blue": "{number, plural, =0 {Azul} =1 {Azul} other {Azul}}",
+                "green": "{number, plural, =0 {Verde} =1 {Verde} other {Verdes}}",
+                "brown": "{number, plural, =0 {Marrón} =1 {Marrón} other {Marrónes}}",
+                "purple": "{number, plural, =0 {Púrpura} =1 {Púrpura} other {Púrpura}}",
+                "random": "{number, plural, =0 {Aleatorio} =1 {Aleatorio} other {Aleatorio}}"
+            }
+        },
         "home":{
             "open": "Abrir",
             "description": "MapStore 2 está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que propocionone protocolos estandar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"/mapstore/docs/\">página principal</a> para más detalles.",
@@ -245,7 +253,7 @@
             "grabLayerIcon": "Grab and sort layer",
             "grabGroupIcon": "Grab and sort group",
             "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
-
+            "createWidget": "Crea un widget para la capa seleccionada",
             "editLayerProperties": "Modificar las propiedades de la capa",
             "browseData": "Abrir la tabla de atributos",
             "searchFeatures": "Buscar en el  mapa ...",
@@ -396,7 +404,6 @@
                         }
                     },
                     "polygon": {
-                        "error": "Error: Los bodes de la figura no se pueden cruzar!",
                         "tooltip": {
                             "start": "Pinchar para comenzar a pintar una figura.",
                             "cont": "Pinchar para continuar pintando la figura.",
@@ -952,6 +959,108 @@
                 "title": "Error en la exportación",
                 "invalidOutputFormat": "Formato de exportación no disponible"
             }
+        },
+        "widgets": {
+            "selectChartType": {
+                "title": "Seleccione el tipo de widget"
+            },
+            "title": "Título",
+            "description": "Descripción",
+            "errors": {
+                "nodata": "No hay datos disponibles para la capa / filtro seleccionado",
+                "nodatainviewport": "Sin datos en la ventana gráfica actual",
+                "timeoutExpired": "El servicio tomó demasiado tiempo para responder. Tal vez la consulta es demasiado compleja o el servidor está ocupado",
+                "genericError": "Hubo un error durante la recuperación de datos"
+            },
+            "builder": {
+                "header": {
+                    "title": "Widget"
+                },
+                "wizard": {
+                    "backToTypeSelection": "Volver a la selección de tipo",
+                    "backToChartOptions": "Volver a las opciones de gráfico",
+                    "configureChartOptions": "Configurar opciones de gráfico",
+                    "configureWidgetOptions": "Configurar las opciones del widget",
+                    "updateWidget": "Actualiza el widget",
+                    "addToTheMap": "Agrega el widget al mapa"
+                },
+                "errors": {
+                    "noWidgetsAvailableTitle": "Sin widgets disponibles",
+                    "noWidgetsAvailableDescription": "<p> No puede crear ningún widgets para la capa seleccionada. Esto es probablemente porque la capa no es adecuada para los widgets disponibles o el servidor no expone todos los servicios o información necesarios para generar el widget. Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> gs: el proceso agregado no está disponible </li> </ul >) <p>"
+                },
+                "setupFilter": "Configurar un filtro para los datos del widget"
+            },
+            "widget": {
+                "menu": {
+                    "showChartData": "Mostrar datos de gráfico",
+                    "edit": "Editar",
+                    "delete": "Borrar",
+                    "confirmDelete": "Está seguro?",
+                    "downloadData": "Descargar datos",
+                    "exportImage": "Exportar imagen"
+                }
+            },
+            "chartType": {
+                "bar": {
+                    "title": "Gráfico de barras",
+                    "description": "Crea un gráfico de barras para agregar al mapa",
+                    "caption": "barras"
+                },
+                "pie": {
+                    "title": "Gráfico circular",
+                    "description": "Crea un gráfico circular para agregar al mapa",
+                    "caption": "circular"
+                },
+                "line": {
+                    "title": "Gráfico de linea",
+                    "description": "Crea un gráfico de líneas para agregar al mapa",
+                    "caption": "linea"
+                },
+                "gauge": {
+                    "title": "Indicatores",
+                    "description": "Crea una tabla de indicadores para agregar a la ma",
+                    "caption": "indicatores"
+                }
+            },
+            "chartOptionsTitle": "Datos del gráfico",
+            "widgetOptionsTitle": "Información de widget",
+            "groupByAttributes": {
+                "line": "Atributo X",
+                "pie": "Agrupar por",
+                "bar": "Atributo X",
+                "gauge": "Agrupar por"
+            },
+            "aggregationAttribute": {
+                "line": "Atributo Y",
+                "pie": "Valor",
+                "bar": "Atributo Y",
+                "gauge": "Valor"
+            },
+            "aggregateFunction": {
+                "line": "Operación",
+                "pie": "Operación",
+                "bar": "Operación",
+                "gauge": "Operación"
+            },
+            "colorRamp": {
+                "line": "Color",
+                "pie": "Rampa de color",
+                "bar": "Color",
+                "gauge": "Color"
+            },
+            "mapSync": "Filtro en vivo por la Viewport",
+            "displayLegend": {
+                "line": "Mostrar leyenda",
+                "pie": "Mostrar leyenda",
+                "bar": "Mostrar leyenda",
+                "gauge": "Mostrar etiquetas"
+            }
+
+        },
+        "wizard": {
+            "next": "Siguiente",
+            "prev": "Anterior",
+            "finish": "Terminar"
         },
         "vectorstyler": {
             "tooltip": "Crear y editar estilo de capas vectoriales",

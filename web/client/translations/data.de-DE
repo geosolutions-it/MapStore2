@@ -110,6 +110,16 @@
         "groups": "Gruppen",
         "permission": "Genehmigung",
         "permissions": "Genehmigungen",
+        "global": {
+            "colors": {
+                "red": "{number, plural, =0 {Rot} =1 {Rot} other {Rottöne}}",
+                "blue": "{number, plural, =0 {Blau} =1 {Blau} other {Blau}}",
+                "green": "{number, plural, =0 {Grün} =1 {Grün} other {Grüns}}",
+                "brown": "{number, plural, =0 {Braun} =1 {Braun} other {Braun}}",
+                "purple": "{number, plural, =0 {Lila} =1 {Lila} other {Purpur}}",
+                "random": "{number, plural, =0 {Zufällig} =1 {Zufällig} other {Zufällig}}"
+            }
+        },
         "home":{
             "open": "Öffnen",
             "description": "MapStore 2 wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren.<br/>Besuche die <a href=\"/mapstore/docs/\">Homepage</a> für mehr Details.",
@@ -224,7 +234,6 @@
             "toggleLayerVisibility": "Ändere die Ebenen Sichtbarkeit",
             "displayLegendAndTools": "Legende und Werkzeuge zeigen",
             "zoomToLayerExtent": "Zoome auf Ausdehung der Ebene",
-
             "addLayer": "Ebene hinzufügen",
             "toolZoomToLayerTooltip": "Zoom to selected layer extent",
             "toolZoomToLayersTooltip": "Zoom to selected layers extent",
@@ -243,7 +252,7 @@
             "grabLayerIcon": "Grab and sort layer",
             "grabGroupIcon": "Grab and sort group",
             "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
-
+            "createWidget": "Erstellen Sie ein Widget für die ausgewählte Ebene",
             "editLayerProperties": "Ändere Ebenen Eigenschaften",
             "browseData": "öffnen Sie die Attributtabelle",
             "searchFeatures": "Auf dieser Ebene suchen...",
@@ -949,6 +958,108 @@
                 "title": "Fehler beim Export",
                 "invalidOutputFormat": "Das ausgewählte Exportformat ist nicht verfügbar"
             }
+        },
+        "widgets": {
+            "selectChartType": {
+                "title": "Wählen Sie den Widgettyp"
+            },
+            "title": "Titel",
+            "description": "Beschreibung",
+            "errors": {
+                "nodata": "Keine Daten für den ausgewählten Layer / Filter verfügbar",
+                "nodatainviewport": "Keine Daten im aktuellen Ansichtsfenster",
+                "timeoutExpired": "Der Service hat zu lange gedauert. Vielleicht ist die Abfrage zu komplex oder der Server ist beschäftigt",
+                "genericError": "Beim Abrufen der Daten ist ein Fehler aufgetreten"
+            },
+            "builder": {
+                "header": {
+                    "title": "Widget"
+                },
+                "wizard": {
+                    "backToTypeSelection": "Zurück zur Typenauswahl",
+                    "backToChartOptions": "Zurück zu den Diagrammoptionen",
+                    "configureChartOptions": "Diagrammoptionen konfigurieren",
+                    "configureWidgetOptions": "Widget-Optionen konfigurieren",
+                    "updateWidget": "Aktualisieren Sie das Widget",
+                    "addToTheMap": "Hinzufügen des Widgets zur Karte"
+                },
+                "errors": {
+                    "noWidgetsAvailableTitle": "Keine Widgets verfügbar",
+                    "noWidgetsAvailableDescription": "<p> Sie können keine Widgets für die ausgewählte Ebene erstellen. Dies liegt wahrscheinlich daran, dass der Layer nicht für die verfügbaren Widgets geeignet ist oder der Server nicht alle benötigten Services oder Informationen zum Generieren eines Widgets bereitstellt. Mögliche Ursachen sind: <ul><li> Die ausgewählte Ebene ist eine Rasterebene </li><li> WFS-Dienst ist nicht verfügbar </li><li> gs: Aggregatprozess ist nicht verfügbar </li> </ul>) <p>"
+                },
+                "setupFilter": "Konfigurieren Sie einen Filter für die Widgetdaten"
+            },
+            "widget": {
+                "menu": {
+                    "showChartData": "Diagrammdaten anzeigen",
+                    "edit": "Bearbeiten",
+                    "delete": "Löschen",
+                    "confirmDelete": "Bist du sicher?",
+                    "downloadData": "Daten herunterladen",
+                    "exportImage": "Bild exportieren"
+                }
+            },
+            "chartType": {
+                "bar": {
+                    "title": "Balkendiagramm",
+                    "description": "Erstellen Sie ein Balkendiagramm, das der Karte hinzugefügt werden soll",
+                    "caption": "bar"
+                },
+                "pie": {
+                    "title": "Kuchendiagramm",
+                    "description": "Erstellen Sie ein Kreisdiagramm, um es der Karte hinzuzufügen.p",
+                    "caption": "pie"
+                },
+                "line": {
+                    "title": "Liniendiagramm",
+                    "description": "Erstellen Sie ein Liniendiagramm, das der Karte hinzugefügt werden soll",
+                    "caption": "line"
+                },
+                "gauge": {
+                    "title": "Messuhr",
+                    "description": "Erstellen Sie ein Messdiagramm, um es der Karte hinzuzufügen.",
+                    "caption": "gauge"
+                }
+            },
+            "chartOptionsTitle": "Kartendaten",
+            "widgetOptionsTitle": "Widget Info",
+            "groupByAttributes": {
+                "line": "X-Attribut",
+                "pie": "Gruppiere nach",
+                "bar": "X-Attribut",
+                "gauge": "Gruppiere nach"
+            },
+            "aggregationAttribute": {
+                "line": "Y-Attribut",
+                "pie": "Wert",
+                "bar": "Y-Attribut",
+                "gauge": "Wert"
+            },
+            "aggregateFunction": {
+                "line": "Betrieb",
+                "pie": "Betrieb",
+                "bar": "Betrieb",
+                "gauge": "Betrieb"
+            },
+            "colorRamp": {
+                "line": "Farbe",
+                "pie": "Farbrampe",
+                "bar": "Farbe",
+                "gauge": "Farbe"
+            },
+            "mapSync": "Live-Filter nach Ansichtsfenster",
+            "displayLegend": {
+                "line": "Legende anzeigen",
+                "pie": "Legende anzeigen",
+                "bar": "Legende anzeigen",
+                "gauge": "Legende anzeigen"
+            }
+
+        },
+        "wizard": {
+            "next": "Nächster",
+            "prev": "Bisherige",
+            "finish": "Fertig"
         },
         "vectorstyler": {
             "tooltip": "Erstelle und bearbeite den Vektor Ebenen Stil",
