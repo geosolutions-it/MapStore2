@@ -10,6 +10,7 @@ var expect = require('expect');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var Legend = require('../Legend');
+const Rx = require('rxjs');
 
 const TestUtils = require('react-dom/test-utils');
 
@@ -44,7 +45,6 @@ describe("test the Layer legend", () => {
         expect(tb).toExist();
 
     });
-
     it('test legend content', () => {
         let layer = {
             "type": "wms",
@@ -58,5 +58,23 @@ describe("test the Layer legend", () => {
         let thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
         expect(thumbs.length).toBe(1);
     });
-
+    it('test legend img error content', (done) => {
+        let layer = {
+            "type": "wms",
+            "url": "base/web/client/test-resources/legendImgError.xml",
+            "visibility": true,
+            "title": "test layer 3 (no group)",
+            "name": "layer3",
+            "format": "image/png"
+        };
+        var tb = ReactDOM.render(<Legend layer={layer} />, document.getElementById("container"));
+        const sub = Rx.Observable.interval(100)
+        .filter(() => tb && tb.state.error)
+        .subscribe(() => {
+            let thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
+            expect(thumbs.length).toBe(0);
+            sub.unsubscribe();
+            done();
+        });
+    });
 });
