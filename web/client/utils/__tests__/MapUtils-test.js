@@ -208,7 +208,6 @@ describe('Test the MapUtils', () => {
 
         const saved = saveMapConfiguration(mapConfig, flat, groups, '', {});
         expect(saved).toEqual({
-            catalogServices: {},
             map: {
                 center: {crs: 'EPSG:4326', x: 0, y: 0},
                 groups: [{
@@ -424,7 +423,6 @@ describe('Test the MapUtils', () => {
 
         const saved = saveMapConfiguration(mapConfig, flat, groups, '', {});
         expect(saved).toEqual({
-            catalogServices: {},
             map: {
                 center: {crs: 'EPSG:4326', x: 0, y: 0},
                 groups: [{

@@ -14,12 +14,12 @@ const {fidFilter} = require('../utils/ogc/Filter/filter');
 const {getDefaultFeatureProjection} = require('../utils/FeatureGridUtils');
 const {isSimpleGeomType} = require('../utils/MapUtils');
 const assign = require('object-assign');
-const {changeDrawingStatus, GEOMETRY_CHANGED} = require('../actions/draw');
+const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../actions/draw');
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {setControlProperty} = require('../actions/controls');
 const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS} = require('../actions/wfsquery');
-const {reset, QUERY_FORM_RESET} = require('../actions/queryform');
+const {reset, QUERY_FORM_RESET, QUERY_FORM_SEARCH} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 
 const {BROWSE_DATA, changeLayerProperties, refreshLayerVersion} = require('../actions/layers');
@@ -43,7 +43,7 @@ const {queryPanelSelector} = require('../selectors/controls');
 
 const {error, warning} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive} = require('../selectors/query');
-const drawSupportReset = () => changeDrawingStatus("clean", "", "featureGrid", [], {});
+
 const {interceptOGCError} = require('../utils/ObservableUtils');
 
 const {gridUpdateToQueryUpdate} = require('../utils/FeatureGridUtils');
@@ -509,8 +509,9 @@ module.exports = {
                     }))))
             .merge(
                 Rx.Observable.race(
-                    action$.ofType(QUERY_CREATE).mergeMap(() =>
+                    action$.ofType(QUERY_FORM_SEARCH).mergeMap((action) =>
                         Rx.Observable.of(
+                            createQuery(action.searchUrl, action.filterObj),
                             setControlProperty('queryPanel', "enabled", false),
                             openFeatureGrid()
                         )

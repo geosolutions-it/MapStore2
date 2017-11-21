@@ -19,16 +19,17 @@ module.exports = ({isAnimationActive, width = 600, height = 300, data, series =[
         cx: (i % cols + 0.5) * cellWidth,
         cy: (Math.floor(i / cols) + 0.5) * cellHeight
     }));
-    const cells = data.map( (emtry, i) => <Cell fill={COLORS[i]} />);
+    const cells = data.map( (emtry, i) => <Cell key={`cell-${i}`}fill={COLORS[i]} />);
     return (<PieChart width={width} height={height} data={data}>
         {
-            seriesArray.map((serie = {}, i) => (<Pie isAnimationActive={isAnimationActive}
-                 {...centers[i]}
-                 data={convertToNameValue({name: xAxis && xAxis.dataKey || serie.name, value: serie.dataKey || serie.value}, data)}
-                 {...serie}
-                 outerRadius={Math.min(cellWidth / 2, cellHeight / 2)}>
-                 {cells}
-             </Pie>))
+            seriesArray.map((serie = {}, i) =>
+                (<Pie key={`pie-${i}`} isAnimationActive={isAnimationActive}
+                     {...centers[i]}
+                     data={convertToNameValue({name: xAxis && xAxis.dataKey || serie.name, value: serie.dataKey || serie.value}, data)}
+                     {...serie}
+                     outerRadius={Math.min(cellWidth / 2, cellHeight / 2)}>
+                     {cells}
+                 </Pie>))
          }
         {props.children}
     </PieChart>);

@@ -56,3 +56,7 @@
 .mapstore-identify-modal {
     z-index: 2001;
 }
+
+#mapstore-getfeatureinfo .m-fullscreen-btn {
+    cursor: pointer;
+}

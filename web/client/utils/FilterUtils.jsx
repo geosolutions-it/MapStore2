@@ -29,7 +29,7 @@ const normalizeVersion = (version) => {
 };
 var ogcVersion = "2.0";
 
-var propertyTagReference = {
+const propertyTagReference = {
     "ogc": {startTag: "<ogc:PropertyName>", endTag: "</ogc:PropertyName>"},
     "fes": {startTag: "<fes:ValueReference>", endTag: "</fes:ValueReference>"}
 };
@@ -186,26 +186,14 @@ const processOGCSimpleFilterField = (field, nsplaceholder) => {
 };
 const FilterUtils = {
     checkOperatorValidity,
-    toOGCFilter: function(ftName, json, version, sortOptions = null, hits = false, format = null, propertyNames = null, srsName = "EPSG:4326") {
-        let objFilter;
-        try {
-            objFilter = json instanceof Object ? json : JSON.parse(json);
-        } catch (e) {
-            return e;
-        }
-        const versionOGC = normalizeVersion(version || ogcVersion);
-        const nsplaceholder = versionOGC === "2.0" ? "fes" : "ogc";
-
-
-        let ogcFilter = this.getGetFeatureBase(versionOGC, objFilter.pagination, hits, format);
+    toOGCFilterParts: function(objFilter, versionOGC, nsplaceholder) {
         let filters = [];
-
         let attributeFilter;
         if (objFilter.filterFields && objFilter.filterFields.length > 0) {
             if (objFilter.groupFields && objFilter.groupFields.length > 0) {
-                attributeFilter = this.processOGCFilterGroup(objFilter.groupFields[0], objFilter, nsplaceholder);
+                attributeFilter = FilterUtils.processOGCFilterGroup(objFilter.groupFields[0], objFilter, nsplaceholder);
             } else {
-                attributeFilter = this.processOGCFilterFields(null, objFilter, nsplaceholder);
+                attributeFilter = FilterUtils.processOGCFilterFields(null, objFilter, nsplaceholder);
             }
             if (attributeFilter !== "") {
                 filters.push(attributeFilter);
@@ -242,6 +230,23 @@ const FilterUtils = {
                 filters.push(this.processOGCCrossLayerFilter(crossLayerFilter, nsplaceholder));
             }
         }
+
+        return filters;
+    },
+    toOGCFilter: function(ftName, json, version, sortOptions = null, hits = false, format = null, propertyNames = null, srsName = "EPSG:4326") {
+        let objFilter;
+        try {
+            objFilter = json instanceof Object ? json : JSON.parse(json);
+        } catch (e) {
+            return e;
+        }
+        const versionOGC = normalizeVersion(version || ogcVersion);
+        const nsplaceholder = versionOGC === "2.0" ? "fes" : "ogc";
+
+
+        let ogcFilter = this.getGetFeatureBase(versionOGC, objFilter.pagination, hits, format);
+
+        let filters = this.toOGCFilterParts(objFilter, versionOGC, nsplaceholder);
         let filter = "";
 
         if (filters.length > 0) {

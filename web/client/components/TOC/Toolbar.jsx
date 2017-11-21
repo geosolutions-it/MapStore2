@@ -36,6 +36,7 @@ class Toolbar extends React.Component {
         selectedGroups: [],
         onToolsActions: {
             onZoom: () => {},
+            onNewWidget: () => {},
             onBrowseData: () => {},
             onUpdate: () => {},
             onRemove: () => {},
@@ -57,6 +58,7 @@ class Toolbar extends React.Component {
             confirmDeleteText: '',
             confirmDeleteMessage: '',
             confirmDeleteCancelText: '',
+            createWidgetTooltip: '',
             zoomToTooltip: {
                 LAYER: '',
                 LAYERS: ''
@@ -210,6 +212,16 @@ class Toolbar extends React.Component {
                         overlay={<Tooltip id="toc-tooltip-reload">{this.props.text.reloadTooltip[this.props.selectedLayers.length > 1 ? 'LAYERS' : 'LAYER']}</Tooltip>}>
                         <Button bsStyle="primary" className="square-button-md" onClick={this.reload}>
                             <Glyphicon glyph="refresh" />
+                        </Button>
+                    </OverlayTrigger>
+                : null}
+                {this.props.activateTool.activateWidgetTool && (status === 'LAYER') && this.props.selectedLayers.length === 1 && !this.props.settings.expanded ?
+                    <OverlayTrigger
+                        key="widgets"
+                        placement="top"
+                        overlay={<Tooltip id="toc-tooltip-widgets">{this.props.text.createWidgetTooltip}</Tooltip>}>
+                        <Button bsStyle="primary" className="square-button-md" onClick={this.props.onToolsActions.onNewWidget}>
+                            <Glyphicon glyph="stats" />
                         </Button>
                     </OverlayTrigger>
                 : null}

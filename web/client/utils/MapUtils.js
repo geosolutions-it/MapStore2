@@ -326,7 +326,7 @@ const extractTileMatrixSetFromLayers = (sourcesFromLayers, sources = {}) => {
     }, assign({}, sources)) || sources;
 };
 
-function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSearchConfig, catalogServices) {
+function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSearchConfig, additionalOptions) {
 
     const map = {
         center: currentMap.center,
@@ -368,7 +368,7 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
         version: 2,
         // layers are defined inside the map object
         map: assign({}, map, {layers: formattedLayers, groups, text_serch_config: textSearchConfig}, !isEmpty(sources) && {sources} || {}),
-        catalogServices
+        ...additionalOptions
     };
 }
 

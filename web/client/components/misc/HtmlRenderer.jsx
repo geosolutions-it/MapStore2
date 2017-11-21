@@ -28,7 +28,7 @@ class HtmlRenderer extends React.Component {
     };
 
     render() {
-        return <div id={this.props.id} style={{padding: "8px"}} dangerouslySetInnerHTML={this.getSourceCode()} />;
+        return <div id={this.props.id} dangerouslySetInnerHTML={this.getSourceCode()} />;
     }
 }
 

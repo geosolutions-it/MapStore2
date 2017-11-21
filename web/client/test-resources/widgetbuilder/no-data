@@ -1,0 +1,7 @@
+<ExceptionReport version="1.1.0" xmlns="http://www.opengis.net/ows/1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.opengis.net/ows/1.1 http://geowebcache.org/schema/ows/1.1.0/owsExceptionReport.xsd">
+  <Exception exceptionCode="OperationNotSupported" locator="request">
+    <ExceptionText>describe is not implemented</ExceptionText>
+  </Exception>
+</ExceptionReport>

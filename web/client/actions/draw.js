@@ -38,6 +38,7 @@ function changeDrawingStatus(status, method, owner, features, options, style) {
     };
 }
 
+
 function endDrawing(geometry, owner) {
     return {
         type: END_DRAWING,
@@ -53,8 +54,10 @@ function setCurrentStyle(style) {
     };
 }
 
+const drawSupportReset = (owner) => changeDrawingStatus("clean", "", owner, [], {});
+
 module.exports = {
-    CHANGE_DRAWING_STATUS, changeDrawingStatus,
+    CHANGE_DRAWING_STATUS, changeDrawingStatus, drawSupportReset,
     END_DRAWING, endDrawing,
     SET_CURRENT_STYLE, setCurrentStyle,
     DRAW_SUPPORT_STOPPED, drawStopped,

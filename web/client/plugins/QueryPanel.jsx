@@ -49,6 +49,7 @@ const {
     selectSpatialOperation,
     removeSpatialSelection,
     showSpatialSelectionDetails,
+    search,
     reset,
     changeDwithinValue,
     zoneGetValues,
@@ -57,7 +58,7 @@ const {
     toggleMenu
 } = require('../actions/queryform');
 
-const {createQuery, initQueryPanel} = require('../actions/wfsquery');
+const {initQueryPanel} = require('../actions/wfsquery');
 
 const {
     changeDrawingStatus,
@@ -125,7 +126,7 @@ const SmartQueryForm = connect((state) => {
             zoneChange
         }, dispatch),
         queryToolbarActions: bindActionCreators({
-            onQuery: createQuery,
+            onQuery: search,
             onReset: reset,
             onChangeDrawingStatus: changeDrawingStatus
         }, dispatch)

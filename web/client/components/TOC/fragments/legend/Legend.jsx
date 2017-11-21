@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {isArray} = require('lodash');
 
+const Message = require('../../../I18N/Message');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 
 const assign = require('object-assign');
@@ -24,9 +25,19 @@ class Legend extends React.Component {
         legendOptions: "forceLabels:on;fontSize:10",
         style: {maxWidth: "100%"}
     };
-
+    state = {
+        error: false
+    }
+    componentWillReceiveProps() {
+        if (this.state.error) {
+            this.setState(() => ({error: false}));
+        }
+    }
+    onImgError = () => {
+        this.setState(() => ({error: true}));
+    }
     render() {
-        if (this.props.layer && this.props.layer.type === "wms" && this.props.layer.url) {
+        if (!this.state.error && this.props.layer && this.props.layer.type === "wms" && this.props.layer.url) {
             let layer = this.props.layer;
             const url = isArray(layer.url) ?
                 layer.url[Math.floor(Math.random() * layer.url.length)] :
@@ -56,9 +67,9 @@ class Legend extends React.Component {
                 pathname: urlObj.pathname,
                 query: query
             });
-            return <img src={legendUrl} style={this.props.style}/>;
+            return <img onError={this.onImgError} src={legendUrl} style={this.props.style}/>;
         }
-        return null;
+        return <Message msgId="layerProperties.legenderror" />;
     }
 }
 
