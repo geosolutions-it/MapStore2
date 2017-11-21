@@ -1,4 +1,10 @@
-const {EXPORT_CSV, EXPORT_IMAGE} = require('../actions/widgets');
+const Rx = require('rxjs');
+const {get} = require('lodash');
+const {EXPORT_CSV, EXPORT_IMAGE, clearWidgets} = require('../actions/widgets');
+const {
+    MAP_CONFIG_LOADED
+} = require('../actions/config');
+const {LOCATION_CHANGE} = require('react-router-redux');
 const {saveAs} = require('file-saver');
 const FileUtils = require('../utils/FileUtils');
 const converter = require('json-2-csv');
@@ -17,6 +23,20 @@ module.exports = {
                     csv
                 ], {type: "text/csv"}), title + ".csv")))
             .filter( () => false),
+    clearWidgetsOnlocationChange: (action$, {getState = () => {}} = {}) =>
+        action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
+            const location = get(getState(), "routing.location");
+            return action$.ofType(LOCATION_CHANGE)
+                .filter( () => {
+                    const newLocation = get(getState(), "routing.location");
+                    return newLocation !== location;
+                }).switchMap( ({payload = {}} = {}) => {
+                    if (payload && payload.pathname) {
+                        return Rx.Observable.of(clearWidgets());
+                    }
+                    return Rx.Observable.empty();
+                });
+        }),
     exportWidgetImage: action$ =>
         action$.ofType(EXPORT_IMAGE)
             .do( ({widgetDivId, title = "data"}) => {

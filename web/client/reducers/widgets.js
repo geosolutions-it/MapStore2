@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {EDIT_NEW, INSERT, EDIT, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT, DEFAULT_TARGET} = require('../actions/widgets');
+const {EDIT_NEW, INSERT, EDIT, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT, CLEAR_WIDGETS, DEFAULT_TARGET} = require('../actions/widgets');
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
-const {LOCATION_CHANGE} = require('react-router-redux');
+
 const set = require('lodash/fp/set');
 const {arrayUpsert, arrayDelete} = require('../utils/ImmutableUtils');
 
@@ -85,7 +85,7 @@ function widgetsReducer(state = emptyState, action) {
         case CHANGE_LAYOUT: {
             return set(`containers[${action.target}].layout`, action.layout)(set(`containers[${action.target}].layouts`, action.allLayouts, state));
         }
-        case LOCATION_CHANGE: {
+        case CLEAR_WIDGETS: {
             return set(`containers[${DEFAULT_TARGET}]`, emptyState.containers[DEFAULT_TARGET], state);
         }
         default:

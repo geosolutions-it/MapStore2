@@ -15,6 +15,7 @@ const EDITOR_SETTING_CHANGE = "WIGETS:EDITOR_SETTING_CHANGE";
 const UPDATE = "WIDGETS:UPDATE";
 const CHANGE_LAYOUT = "WIDGETS:CHANGE_LAYOUT";
 const DELETE = "WIDGETS:DELETE";
+const CLEAR_WIDGETS = "WIDGETS:CLEAR_WIDGETS";
 const OPEN_FILTER_EDITOR = "WIDGETS:OPEN_FILTER_EDITOR";
 const EXPORT_CSV = "WIDGETS:EXPORT_CSV";
 const EXPORT_IMAGE = "WIDGETS:EXPORT_IMAGE";
@@ -67,6 +68,13 @@ const deleteWidget = (widget, target = DEFAULT_TARGET) => ({
     widget
 });
 
+/**
+ * Removes all the widget from the containers
+ * @return {object}   action of type CLEAR_WIDGETS
+ */
+const clearWidgets = () => ({
+    type: CLEAR_WIDGETS
+});
 
 /**
  * Change the layout of the widgets view
@@ -150,6 +158,7 @@ module.exports = {
     INSERT,
     UPDATE,
     DELETE,
+    CLEAR_WIDGETS,
     CHANGE_LAYOUT,
     EDIT,
     EDIT_NEW,
@@ -166,6 +175,7 @@ module.exports = {
     insertWidget,
     updateWidget,
     deleteWidget,
+    clearWidgets,
     changeLayout,
     editWidget,
     editNewWidget,
