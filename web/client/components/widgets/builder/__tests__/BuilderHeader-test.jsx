@@ -42,7 +42,7 @@ describe('BuilderHeader component', () => {
             openFilterEditor: () => {}
         };
         const spy = expect.spyOn(actions, 'openFilterEditor');
-        ReactDOM.render(<BuilderHeader openFilterEditor={actions.openFilterEditor} />, document.getElementById("container"));
+        ReactDOM.render(<BuilderHeader step={1} openFilterEditor={actions.openFilterEditor} />, document.getElementById("container"));
         const btn = document.querySelector('.m-padding-md button'); // the toolbar button
         ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
         expect(spy).toHaveBeenCalled();
