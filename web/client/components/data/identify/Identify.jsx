@@ -21,7 +21,6 @@ const Message = require('../../I18N/Message');
 const DefaultViewer = require('./DefaultViewer');
 const GeocodeViewer = require('./GeocodeViewer');
 const Dialog = require('../../misc/Dialog');
-const Rx = require('rxjs');
 
 class Identify extends React.Component {
     static propTypes = {
@@ -128,29 +127,6 @@ class Identify extends React.Component {
         fullClass: ''
     };
 
-    componentWillMount() {
-        if (this.props.fullscreen) {
-            /* compatibility with Safari*/
-            const touchStream$ = new Rx.Subject();
-            touchStream$
-                .delay(100)
-                .subscribe({
-                    next: () => {
-                        const current = new Date();
-                        const previous = this.date;
-                        const delta = current - previous;
-                        if (this.date && delta < 700) {
-                            this.setFullscreen();
-                        }
-                        this.date = current;
-                    }
-                });
-            this.setState({
-                touchStream$
-            });
-        }
-    }
-
     componentWillReceiveProps(newProps) {
         if (this.needsRefresh(newProps)) {
             if (!newProps.point.modifiers || newProps.point.modifiers.ctrl !== true || !newProps.allowMultiselection) {
@@ -189,12 +165,6 @@ class Identify extends React.Component {
         }
     }
 
-    componentWillUnmount() {
-        if (this.props.fullscreen && this.state.touchStream$) {
-            this.state.touchStream$.complete();
-        }
-    }
-
     onModalHiding = () => {
         this.props.hideMarker();
         this.props.purgeResults();
@@ -202,19 +172,9 @@ class Identify extends React.Component {
 
     renderHeader = (missing) => {
         return (
-            <div role="header"
-                onTouchStart={this.props.fullscreen && !this.state.lockDoubleTouch ? () => { this.state.touchStream$.next(); } : () => {}}
-                onDoubleClick={this.props.fullscreen ?
-                    () => {
-                        if (!this.state.lockDoubleTouch) {
-                            this.setState({
-                                lockDoubleTouch: true
-                            });
-                        }
-                        this.setFullscreen();
-                    }
-                    : () => {}}>
+            <div role="header">
                 { missing !== 0 ? <Spinner value={missing} sSize="sp-small" /> : null }
+                {this.props.fullscreen ? <Glyphicon className="m-fullscreen-btn" onClick={() => { this.setFullscreen(); }} glyph={this.state.fullscreen ? 'chevron-down' : 'chevron-up'} /> : null}&nbsp;
                 {this.props.headerGlyph ? <Glyphicon glyph={this.props.headerGlyph} /> : null}&nbsp;<Message msgId="identifyTitle" />
                 <button onClick={this.onModalHiding} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
             </div>

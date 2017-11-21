@@ -407,100 +407,27 @@ describe('Identify', () => {
         expect(identify.needsRefresh({ enabled: true, point: { pixel: {x: 0, y: 0}}})).toBe(true);
     });
 
-    it('test double click on header fullscreen false', () => {
+    it('test click/touch on header fullscreen false', () => {
         const identify = ReactDOM.render(
-            <Identify enabled requests={[{}]} responses={[{}]} headerClassName="header-gfi"/>,
+            <Identify enabled requests={[{}]} responses={[{}]}/>,
             document.getElementById("container")
         );
         expect(identify).toExist();
-        const header = document.getElementsByClassName('header-gfi')[0];
-        TestUtils.Simulate.doubleClick(header.children[0]);
-        expect(document.getElementsByClassName('fullscreen').length).toBe(0);
+        const arrow = document.getElementsByClassName('m-fullscreen-btn');
+        expect(arrow.length).toBe(0);
     });
 
-    it('test double click on header fullscreen class', () => {
+    it('test click/touch on header fullscreen true', () => {
         const identify = ReactDOM.render(
-            <Identify enabled fullscreen requests={[{}]} responses={[{}]} headerClassName="header-gfi"/>,
+            <Identify fullscreen enabled requests={[{}]} responses={[{}]}/>,
             document.getElementById("container")
         );
         expect(identify).toExist();
-        const header = document.getElementsByClassName('header-gfi')[0];
-        TestUtils.Simulate.doubleClick(header.children[0]);
+        const arrow = document.getElementsByClassName('m-fullscreen-btn');
+        expect(arrow.length).toBe(1);
+        TestUtils.Simulate.click(arrow[0]);
         expect(document.getElementsByClassName('fullscreen').length).toBe(1);
-        TestUtils.Simulate.doubleClick(header.children[0]);
+        TestUtils.Simulate.click(arrow[0]);
         expect(document.getElementsByClassName('fullscreen').length).toBe(0);
-    });
-
-    it('test double click on header fullscreen class as panel', () => {
-        const identify = ReactDOM.render(
-            <Identify enabled fullscreen requests={[{}]} responses={[{}]} headerClassName="header-gfi" asPanel/>,
-            document.getElementById("container")
-        );
-        expect(identify).toExist();
-        const header = document.getElementsByClassName('header-gfi')[0];
-        TestUtils.Simulate.doubleClick(header.children[0]);
-        expect(document.getElementsByClassName('fullscreen').length).toBe(1);
-        TestUtils.Simulate.doubleClick(header.children[0]);
-        expect(document.getElementsByClassName('fullscreen').length).toBe(0);
-    });
-
-    it('test double touch on header fullscreen false', done => {
-        const delay = 100;
-        const identify = ReactDOM.render(
-            <Identify enabled requests={[{}]} responses={[{}]} headerClassName="header-gfi"/>,
-            document.getElementById("container")
-        );
-        expect(identify).toExist();
-        const header = document.getElementsByClassName('header-gfi')[0];
-        TestUtils.Simulate.touchStart(header.children[0]);
-        TestUtils.Simulate.touchStart(header.children[0]);
-        setTimeout(() => {
-            try {
-                expect(document.getElementsByClassName('fullscreen').length).toBe(0);
-            } catch (e) {
-                done(e);
-            }
-            done();
-        }, delay + 50);
-    });
-
-    it('test double touch on header fullscreen class', done => {
-        const delay = 100;
-        const identify = ReactDOM.render(
-            <Identify enabled fullscreen requests={[{}]} responses={[{}]} headerClassName="header-gfi"/>,
-            document.getElementById("container")
-        );
-        expect(identify).toExist();
-        const header = document.getElementsByClassName('header-gfi')[0];
-        TestUtils.Simulate.touchStart(header.children[0]);
-        TestUtils.Simulate.touchStart(header.children[0]);
-        setTimeout(() => {
-            try {
-                expect(document.getElementsByClassName('fullscreen').length).toBe(1);
-            } catch (e) {
-                done(e);
-            }
-            done();
-        }, delay + 50);
-    });
-
-    it('test double touch on header fullscreen class as panel', done => {
-        const delay = 100;
-        const identify = ReactDOM.render(
-            <Identify enabled fullscreen requests={[{}]} responses={[{}]} headerClassName="header-gfi" asPanel/>,
-            document.getElementById("container")
-        );
-        expect(identify).toExist();
-        const header = document.getElementsByClassName('header-gfi')[0];
-        TestUtils.Simulate.touchStart(header.children[0]);
-        TestUtils.Simulate.touchStart(header.children[0]);
-        setTimeout(() => {
-            try {
-                expect(document.getElementsByClassName('fullscreen').length).toBe(1);
-            } catch (e) {
-                done(e);
-            }
-            done();
-        }, delay + 50);
     });
 });
