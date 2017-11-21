@@ -111,7 +111,30 @@ const ogcStringField = (attribute, operator, value, nsplaceholder) => {
     }
     return fieldFilter;
 };
-
+/**
+ * it creates a ogc filter for boolean attributes
+ * it ignores any operator beside "="
+ * it ignores empty or falsy values
+ * @param {string} attribute
+ * @param {string} operator
+ * @param {string|boolean} value can be a value between (t, tr, tru, true, f, fa, fal, fals, false) because geoserver accepts them
+ * @return the ogc filter
+*/
+const ogcBooleanField = (attribute, operator, value, nsplaceholder) => {
+    let fieldFilter = "";
+    if (checkOperatorValidity(value, operator)) {
+        if (operator === "=" && value !== "") {
+            fieldFilter =
+                ogcComparisonOperators[operator](nsplaceholder,
+                    propertyTagReference[nsplaceholder].startTag +
+                        attribute +
+                    propertyTagReference[nsplaceholder].endTag +
+                    "<" + nsplaceholder + ":Literal>" + value + "</" + nsplaceholder + ":Literal>"
+                );
+        }
+    }
+    return fieldFilter;
+};
 const ogcNumberField = (attribute, operator, value, nsplaceholder) => {
     let fieldFilter;
     if (operator === "><") {
@@ -167,6 +190,9 @@ const processOGCSimpleFilterField = (field, nsplaceholder) => {
             break;
         case "string":
             filter = ogcStringField(field.attribute, field.operator, field.values, nsplaceholder);
+            break;
+        case "boolean":
+            filter = ogcBooleanField(field.attribute, field.operator, field.values, nsplaceholder);
             break;
         case "list": {
             if (field.values && field.values.length > 0 ) {
@@ -322,6 +348,9 @@ const FilterUtils = {
                         break;
                     case "string":
                         fieldFilter = ogcStringField(field.attribute, field.operator, field.value, nsplaceholder);
+                        break;
+                    case "boolean":
+                        fieldFilter = ogcBooleanField(field.attribute, field.operator, field.value, nsplaceholder);
                         break;
                     case "list":
                         fieldFilter = ogcListField(field.attribute, field.operator, field.value, nsplaceholder);
@@ -498,7 +527,9 @@ const FilterUtils = {
         let attributeFilter;
         if (objFilter.filterFields && objFilter.filterFields.length > 0) {
             attributeFilter = this.processCQLFilterGroup(objFilter.groupFields[0], objFilter);
-            filters.push(attributeFilter);
+            if (attributeFilter) {
+                filters.push(attributeFilter);
+            }
         } else if (objFilter.simpleFilterFields && objFilter.simpleFilterFields.length > 0) {
             let simpleFilter = objFilter.simpleFilterFields.reduce((cql, field) => {
                 let tmp = cql;
@@ -517,8 +548,10 @@ const FilterUtils = {
             spatialFilter = this.processCQLSpatialFilter(objFilter);
             filters.push(spatialFilter);
         }
-
-        return "(" + (filters.length > 1 ? filters.join(") AND (") : filters[0]) + ")";
+        if (filters.length) {
+            return "(" + (filters.length > 1 ? filters.join(") AND (") : filters[0]) + ")";
+        }
+        return null;
     },
     processCQLFilterGroup: function(root, objFilter) {
         let cql = this.processCQLFilterFields(root, objFilter);
@@ -630,6 +663,25 @@ const FilterUtils = {
         }
         return fieldFilter;
     },
+    /**
+     * it creates a cql filter for boolean attributes
+     * it ignores any operator beside "="
+     * it ignores empty or falsy values
+     * @param {string} attribute
+     * @param {string} operator
+     * @param {string|boolean} value can be a value between (t, tr, tru, true, f, fa, fal, fals, false) because geoserver accepts them
+     * @return the cql filter in the form "attribute"='value'
+    */
+    cqlBooleanField: function(attribute, operator, value) {
+        let fieldFilter = "";
+        if (!isNil(value) && value !== "") {
+            if (operator === "=") {
+                let val = "'" + value + "'";
+                fieldFilter = "\"" + attribute + "\"" + operator + val;
+            }
+        }
+        return fieldFilter;
+    },
 
     cqlNumberField: function(attribute, operator, value) {
         let fieldFilter;
@@ -679,6 +731,9 @@ const FilterUtils = {
                 case "string":
                     fieldFilter = this.cqlStringField(field.attribute, field.operator, field.value);
                     break;
+                case "boolean":
+                    fieldFilter = this.cqlBooleanField(field.attribute, field.operator, field.value);
+                    break;
                 case "list":
                     fieldFilter = this.cqlListField(field.attribute, field.operator, field.value);
                     break;
@@ -707,6 +762,9 @@ const FilterUtils = {
             break;
         case "string":
             strFilter = this.cqlStringField(field.attribute, field.operator, field.values);
+            break;
+        case "boolean":
+            strFilter = this.cqlBooleanField(field.attribute, field.operator, field.values);
             break;
         case "list": {
             if (field.values.length !== field.optionsValues.length) {
@@ -757,6 +815,7 @@ const FilterUtils = {
     ogcNumberField,
     ogcDateField,
     ogcListField,
+    ogcBooleanField,
     ogcStringField,
     isLikeOrIlike: (operator) => operator === "ilike" || operator === "like",
     isFilterValid: (f = {}) => (f.filterFields && f.filterFields.length > 0) || (f.simpleFilterFields && f.simpleFilterFields.length > 0) || (f.spatialField && f.spatialField.geometry && f.spatialField.operation)
