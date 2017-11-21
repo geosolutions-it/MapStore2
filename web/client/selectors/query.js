@@ -10,7 +10,7 @@ module.exports = {
         const results = get(state, "query.result");
         return {
             ...results,
-            features: results.features.filter(f => !isNil(f.geometry))
+            features: (results && results.features || []).filter(f => !isNil(f.geometry))
         };
     },
     getFeatureById: (state, id) => {
