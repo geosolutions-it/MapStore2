@@ -20,7 +20,6 @@ const CHANGE_ROTATION = 'CHANGE_ROTATION';
 const CREATION_ERROR_LAYER = 'CREATION_ERROR_LAYER';
 const UPDATE_VERSION = 'UPDATE_VERSION';
 const INIT_MAP = 'INIT_MAP';
-const UPDATE_MAP_LAYOUT = 'UPDATE_MAP_LAYOUT';
 
 function creationError(options) {
     return {
@@ -130,22 +129,6 @@ function initMap() {
     };
 }
 
-/**
- * updateMapLayout action, type `UPDATE_MAP_LAYOUT`
- * @memberof actions.map
- * @param  {object} layout style of the layout
- * @return {action}            type `UPDATE_MAP_LAYOUT` with layout
- */
-function updateMapLayout(layout) {
-    return {
-        type: UPDATE_MAP_LAYOUT,
-        layout
-    };
-}
-/**
- * Actions for Map Plugin.
- * @name actions.map
- */
 module.exports = {
     CHANGE_MAP_VIEW,
     CLICK_ON_MAP,
@@ -161,7 +144,6 @@ module.exports = {
     CREATION_ERROR_LAYER,
     UPDATE_VERSION,
     INIT_MAP,
-    UPDATE_MAP_LAYOUT,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -175,6 +157,5 @@ module.exports = {
     zoomToPoint,
     creationError,
     updateVersion,
-    initMap,
-    updateMapLayout
+    initMap
 };

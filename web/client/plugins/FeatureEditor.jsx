@@ -22,13 +22,13 @@ const EMPTY_OBJ = {};
 const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
 const {initPlugin, sizeChange} = require('../actions/featuregrid');
 const ContainerDimensions = require('react-container-dimensions').default;
-const {mapLayoutValuesSelector, mapLayoutSelector} = require('../selectors/map');
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const Dock = connect(createSelector(
     getDockSize,
-    mapLayoutSelector,
-    (size, mapLayout) => ({
+    state => mapLayoutValuesSelector(state, {transform: true}),
+    (size, dockStyle) => ({
         size,
-        dockStyle: mapLayoutValuesSelector(mapLayout, {transform: true})
+        dockStyle
     })
 )
 )(require('react-dock').default);

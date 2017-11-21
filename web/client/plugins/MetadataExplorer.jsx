@@ -26,7 +26,7 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
     servicesSelector, formatsSelector, loadingErrorSelector, selectedServiceSelector,
     modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector
 } = require("../selectors/catalog");
-const {mapLayoutValuesSelector, mapLayoutSelector} = require('../selectors/map');
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const Message = require("../components/I18N/Message");
 require('./metadataexplorer/css/style.css');
 
@@ -148,8 +148,8 @@ const metadataExplorerSelector = createSelector([
     servicesSelector,
     layerErrorSelector,
     activeSelector,
-    mapLayoutSelector
-], (searchOptions, formats, result, loadingError, selectedService, mode, services, layerError, active, mapLayout) => ({
+    state => mapLayoutValuesSelector(state, {height: true})
+], (searchOptions, formats, result, loadingError, selectedService, mode, services, layerError, active, dockStyle) => ({
     searchOptions,
     formats,
     result,
@@ -158,7 +158,7 @@ const metadataExplorerSelector = createSelector([
     mode, services,
     layerError,
     active,
-    dockStyle: mapLayoutValuesSelector(mapLayout, {height: true})
+    dockStyle
 }));
 
 const MetadataExplorerPlugin = connect(metadataExplorerSelector, {

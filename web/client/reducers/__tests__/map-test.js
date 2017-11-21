@@ -223,13 +223,4 @@ describe('Test the map reducer', () => {
         expect(state.version).toEqual(version);
     });
 
-    it('change layout bounds/style', () => {
-        let layout = {left: 300};
-        const action = {
-            type: 'UPDATE_MAP_LAYOUT',
-            layout
-        };
-        let state = mapConfig({}, action);
-        expect(state.layout).toEqual(layout);
-    });
 });

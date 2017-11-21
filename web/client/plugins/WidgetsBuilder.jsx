@@ -18,6 +18,7 @@ const {insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSett
 const PropTypes = require('prop-types');
 const builderConfiguration = require('../components/widgets/enhancers/builderConfiguration');
 const BorderLayout = require('../components/layout/BorderLayout');
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
 const wizardStateToProps = ( stateProps = {}, dispatchProps = {}, ownProps = {}) => ({
         ...ownProps,
@@ -77,7 +78,8 @@ class SideBarComponent extends React.Component {
          onUnmount: PropTypes.func,
          dimMode: PropTypes.string,
          src: PropTypes.string,
-         style: PropTypes.object
+         style: PropTypes.object,
+         layout: PropTypes.object
      };
      static defaultProps = {
          id: "widgets-builder-plugin",
@@ -89,7 +91,8 @@ class SideBarComponent extends React.Component {
          dimMode: "none",
          position: "left",
          onMount: () => {},
-         onUnmount: () => {}
+         onUnmount: () => {},
+         layout: {}
      };
     componentDidMount() {
         this.props.onMount();
@@ -108,7 +111,7 @@ class SideBarComponent extends React.Component {
             isVisible={this.props.enabled}
             onSizeChange={this.limitDockHeight}
             fluid={this.props.fluid}
-            dockStyle={{ background: "white" /* TODO set it to undefined when you can inject a class inside Dock, to use theme */}}
+            dockStyle={{...this.props.layout, background: "white" /* TODO set it to undefined when you can inject a class inside Dock, to use theme */}}
         >
             <BorderLayout
                 header={<BuilderHeader />}
@@ -124,8 +127,10 @@ class SideBarComponent extends React.Component {
 const Plugin = connect(
     createSelector(
         widgetBuilderSelector,
-        (enabled) => ({
-            enabled
+        state => mapLayoutValuesSelector(state, {height: true}),
+        (enabled, layout) => ({
+            enabled,
+            layout
     })), {
         onMount: () => setControlProperty("widgetBuilder", "available", true),
         onUnmount: () => setControlProperty("widgetBuilder", "available", false)

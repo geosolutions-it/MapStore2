@@ -14,7 +14,8 @@ const {createSelector} = require('reselect');
 const {layersSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector} = require('../selectors/layers');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {invalidateUnsupportedLayer} = require('../utils/LayersUtils');
-const {mapSelector, mapLayoutValuesSelector, mapLayoutSelector} = require('../selectors/map');
+const {mapSelector} = require('../selectors/map');
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
 const drawerEnabledControlSelector = (state) => (state.controls && state.controls.drawer && state.controls.drawer.enabled) || false;
 
@@ -68,16 +69,16 @@ const backgroundSelector = createSelector([
         mapTypeSelector,
         currentBackgroundSelector,
         tempBackgroundSelector,
-        mapLayoutSelector
+        state => mapLayoutValuesSelector(state, {left: true, bottom: true})
     ],
-    (map, layers, controls, drawer, maptype, currentLayer, tempLayer, mapLayout) => ({
+    (map, layers, controls, drawer, maptype, currentLayer, tempLayer, style) => ({
         size: map && map.size || {width: 0, height: 0},
         layers: layers.filter((l) => l && l.group === "background").map((l) => invalidateUnsupportedLayer(l, maptype)) || [],
         tempLayer,
         currentLayer,
         start: controls.start || 0,
         enabled: controls.enabled,
-        style: mapLayoutValuesSelector(mapLayout, {left: true, bottom: true})
+        style
     }));
 
 /**

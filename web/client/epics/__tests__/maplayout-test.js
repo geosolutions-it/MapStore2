@@ -9,11 +9,11 @@
 const expect = require('expect');
 
 const {toggleControl} = require('../../actions/controls');
-const {UPDATE_MAP_LAYOUT} = require('../../actions/map');
-const {updateMapLayoutEpic} = require('../map');
+const {UPDATE_MAP_LAYOUT} = require('../../actions/maplayout');
+const {updateMapLayoutEpic} = require('../maplayout');
 const {testEpic} = require('./epicTestUtils');
 
-describe('map Epics', () => {
+describe('map layout epics', () => {
     it('tests layout', (done) => {
         const epicResult = actions => {
             try {

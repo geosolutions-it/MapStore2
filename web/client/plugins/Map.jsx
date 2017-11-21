@@ -20,7 +20,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 
 const {isString} = require('lodash');
 let plugins;
-const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit, updateMapLayoutEpic} = require('../epics/map');
+const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} = require('../epics/map');
 /**
  * The Map plugin allows adding mapping library dependent functionality using support tools.
  * Some are already available for the supported mapping libraries (openlayers, leaflet, cesium), but it's possible to develop new ones.
@@ -308,5 +308,5 @@ module.exports = {
         draw: require('../reducers/draw'),
         highlight: require('../reducers/highlight')
      },
-    epics: assign({}, {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit, updateMapLayoutEpic})
+    epics: assign({}, {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit})
 };

@@ -7,7 +7,7 @@
 */
 
 const expect = require('expect');
-const {mapSelector, projectionSelector, mapVersionSelector, mapIdSelector, projectionDefsSelector, mapNameSelector, mapLayoutSelector, mapLayoutValuesSelector} = require('../map');
+const {mapSelector, projectionSelector, mapVersionSelector, mapIdSelector, projectionDefsSelector, mapNameSelector} = require('../map');
 const center = {x: 1, y: 1};
 let state = {
         map: {center: center},
@@ -76,31 +76,5 @@ describe('Test map selectors', () => {
     it('test mapNameSelector no state', () => {
         const props = mapNameSelector({});
         expect(props).toBe('');
-    });
-
-    it('test mapLayoutSelector no state', () => {
-        const props = mapLayoutSelector({});
-        expect(props).toEqual({});
-    });
-
-    it('test mapLayoutSelector', () => {
-        const props = mapLayoutSelector({
-            map: {
-                present: {
-                    layout: {left: 0, bottom: 0, right: 0, top: 0}
-                }
-            }
-        });
-        expect(props).toEqual({left: 0, bottom: 0, right: 0, top: 0});
-    });
-
-    it('test mapLayoutValuesSelector empty layout', () => {
-        const props = mapLayoutValuesSelector({}, {left: true});
-        expect(props).toEqual({});
-    });
-
-    it('test mapLayoutValuesSelector', () => {
-        const props = mapLayoutValuesSelector({left: 300}, {left: true});
-        expect(props).toEqual({ left: 300 });
     });
 });

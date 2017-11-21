@@ -26,18 +26,18 @@ const {partialRight} = require('lodash');
 
 const assign = require('object-assign');
 
-const {mapLayoutValuesSelector, mapLayoutSelector} = require('../selectors/map');
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
 const menuSelector = createSelector([
     state => state.controls.drawer && state.controls.drawer.enabled,
     state => state.controls.drawer && state.controls.drawer.menu || "1",
     state => state.controls.queryPanel && state.controls.queryPanel.enabled && state.controls.drawer && state.controls.drawer.width || undefined,
-    mapLayoutSelector
-], (show, activeKey, dynamicWidth, mapLayout) => ({
+    state => mapLayoutValuesSelector(state, {height: true})
+], (show, activeKey, dynamicWidth, layout) => ({
     show,
     activeKey,
     dynamicWidth,
-    layout: mapLayoutValuesSelector(mapLayout, {height: true})
+    layout
 }));
 
 const Menu = connect(menuSelector, {

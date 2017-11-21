@@ -14,7 +14,7 @@ require('./toolbar/assets/css/toolbar.css');
 
 const {CSSTransitionGroup} = require('react-transition-group');
 const {isFeatureGridOpen} = require('../selectors/featuregrid');
-const {mapLayoutSelector, mapLayoutValuesSelector} = require('../selectors/map');
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {createSelector} = require('reselect');
 
 const assign = require('object-assign');
@@ -121,13 +121,13 @@ const toolbarSelector = stateSelector => createSelector([
         state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].active,
         state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].expanded,
         isFeatureGridOpen,
-        mapLayoutSelector
-    ], (active, allVisible, featuregridOpen, mapLayout) => ({
+        state => mapLayoutValuesSelector(state, {right: true, bottom: true})
+    ], (active, allVisible, featuregridOpen, style) => ({
         active,
         allVisible,
         stateSelector,
         layout: featuregridOpen ? 'horizontal' : 'vertical',
-        style: mapLayoutValuesSelector(mapLayout, {right: true, bottom: true})
+        style
 }));
 
 module.exports = {
