@@ -1,4 +1,4 @@
-const {get, head} = require('lodash');
+const {isNil, get, head} = require('lodash');
 module.exports = {
     wfsURL: state => state && state.query && state.query.searchUrl,
     wfsURLSelector: state => state && state.query && state.query.url,
@@ -6,7 +6,13 @@ module.exports = {
     attributesSelector: state => get(state, `query.featureTypes.${get(state, "query.filterObj.featureTypeName")}.attributes`),
     typeNameSelector: state => get(state, "query.typeName"),
     resultsSelector: (state) => get(state, "query.result.features"),
-    featureCollectionResultSelector: state => get(state, "query.result"),
+    featureCollectionResultSelector: state => {
+        const results = get(state, "query.result");
+        return {
+            ...results,
+            features: results.features.filter(f => !isNil(f.geometry))
+        };
+    },
     getFeatureById: (state, id) => {
         let features = state && state.query && state.query.result && state.query.result.features;
         return head(features.filter(f => f.id === id));
