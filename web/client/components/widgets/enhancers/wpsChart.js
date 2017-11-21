@@ -44,7 +44,7 @@ const dataStreamFactory = ($props) =>
                 && sameOptions(options, newProps.options)
                 && sameFilter(filter, newProps.filter))
         .switchMap(
-            ({layer={}, options, filter}) =>
+            ({layer={}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
             wpsAggregate(getLayerUrl(layer), {featureType: layer.name, ...options, filter}, {
                 timeout: 15000
             }).map((response) => ({
@@ -54,13 +54,13 @@ const dataStreamFactory = ($props) =>
                     data: wpsAggregateToChartData(response.data),
                     series: [{dataKey: `${response.data.AggregationFunctions[0]}(${response.data.AggregationAttribute})`}],
                     xAxis: {dataKey: response.data.GroupByAttributes[0]}
-                }))
+                })).do(onLoad)
                 .catch((e) => Rx.Observable.of({
-                    loading: false,
-                    error: e,
-                    data: []
-                }))
-                .startWith({loading: true})
+                        loading: false,
+                        error: e,
+                        data: []
+                    }).do(onLoadError)
+                ).startWith({loading: true})
         );
 module.exports = compose(
     withProps( () => ({

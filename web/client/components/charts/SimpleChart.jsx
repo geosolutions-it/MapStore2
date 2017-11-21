@@ -34,9 +34,10 @@ const AUTOCOLOR_DEFAULTS = {
  */
 const SimpleChart = ({type="line", tooltip = {}, legend = {}, autoColorOptions = AUTOCOLOR_DEFAULTS, colorGenerator, ...props} = {}) => {
     const Component = charts[type];
-    const {base, range, ...opts} = autoColorOptions;
-    const defaultColorGenerator = (total) => {
-        return (sameToneRangeColors(base, range, total + 1, opts) || []).slice(1);
+
+    const defaultColorGenerator = (total, colorOptions = autoColorOptions) => {
+        const {base, range, ...opts} = colorOptions;
+        return (sameToneRangeColors(base, range, total + 1, opts) || [0]).slice(1);
     };
     return (<Component margin={{top: 5, right: 30, left: 20, bottom: 5}} colorGenerator={colorGenerator || defaultColorGenerator} autoColorOptions={autoColorOptions} {...props} {...{legend, tooltip}}>
       {tooltip !== false ? <Tooltip {...tooltip}/> : null}

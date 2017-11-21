@@ -109,9 +109,9 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], aggreg
           <Col sm={6}>
               <ColorRangeSelector
                   items={getColorRangeItems(data.type)}
-                  value={head(getColorRangeItems(data.type).filter(c => c.name === data.colorRangeName))}
+                  value={head(getColorRangeItems(data.type).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
                   samples={data.type === "pie" ? 5 : 1}
-                  onChange={v => {onChange("autoColorOptions", v.options); onChange("colorRangeName", v.name); }}/>
+                  onChange={v => {onChange("autoColorOptions", {...v.options, name: v.name}); }}/>
           </Col>
         </FormGroup>
         <FormGroup controlId="mapSync" className="mapstore-block-width">

@@ -8,7 +8,7 @@ class ColorRampItem extends React.Component {
     };
 
     render() {
-        let ramp = this.props.item && this.props.item.ramp || colors[this.props.item.name] && colors[this.props.item.name][5] || [];
+        let ramp = this.props.item && (this.props.item.ramp || colors[this.props.item.name] && colors[this.props.item.name][5]) || [];
         return (<div className="color-ramp-item">
                 {ramp.map(cell => <div className="color-cell" key={this.props.item && this.props.item.name + "-" + cell} style={{backgroundColor: cell}}/>)}
                 <div className="colorname-cell">

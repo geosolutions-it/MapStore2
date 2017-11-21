@@ -975,6 +975,14 @@
                 "header": {
                     "title": "Widget"
                 },
+                "wizard": {
+                    "backToTypeSelection": "Torna alla selezione del tipo",
+                    "backToChartOptions": "Torna alle opzioni del grafico",
+                    "configureChartOptions": "Configura le opzioni del grafico",
+                    "configureWidgetOptions": "Configura le opzioni del widget",
+                    "updateWidget": "Aggiorna il widget",
+                    "addToTheMap": "Aggiungi il widget alla mappa"
+                },
                 "errors": {
                     "noWidgetsAvailableTitle": "Nessun widgets disponibile",
                     "noWidgetsAvailableDescription": "<p>Non si possono creare widget per il livello selezionato. Questo perchè il livello non è adatto a nessuno degli widget disponibili o perché il server non espone sufficienti servizi per gernerali. Possibili cause: <ul><li>Hai selezionato un livello raster</li><li>Il servizio WFS non è disponibile per il livello in oggetto</li><li>Il processo gs:aggregate non è disponibile sul server</li></ul> )<p>"

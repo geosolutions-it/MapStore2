@@ -9,8 +9,10 @@ const React = require('react');
 
 const ChartWizard = require('./ChartWizard');
 module.exports = ({
-        settings = {step: 0},
-        insertWidget = () => {},
+        step=0,
+        valid,
+        onFinish = () => {},
+        setValid = () => {},
         onEditorChange = () => {},
         setPage = () => {},
         layer,
@@ -21,11 +23,13 @@ module.exports = ({
     ) =>
         (<ChartWizard
             dependencies={dependencies}
+            valid={valid}
             types={types}
             featureTypeProperties={featureTypeProperties}
-            step={settings.step}
+            step={step}
             layer={layer}
             data={editorData}
-            onFinish={insertWidget}
+            setValid={setValid}
+            onFinish={onFinish}
             setPage={setPage}
             onChange={onEditorChange}/>);

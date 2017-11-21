@@ -975,6 +975,14 @@
                 "header": {
                     "title": "Widget"
                 },
+                "wizard": {
+                    "backToTypeSelection": "Zurück zur Typenauswahl",
+                    "backToChartOptions": "Zurück zu den Diagrammoptionen",
+                    "configureChartOptions": "Diagrammoptionen konfigurieren",
+                    "configureWidgetOptions": "Widget-Optionen konfigurieren",
+                    "updateWidget": "Aktualisieren Sie das Widget",
+                    "addToTheMap": "Hinzufügen des Widgets zur Karte"
+                },
                 "errors": {
                     "noWidgetsAvailableTitle": "Keine Widgets verfügbar",
                     "noWidgetsAvailableDescription": "<p> Sie können keine Widgets für die ausgewählte Ebene erstellen. Dies liegt wahrscheinlich daran, dass der Layer nicht für die verfügbaren Widgets geeignet ist oder der Server nicht alle benötigten Services oder Informationen zum Generieren eines Widgets bereitstellt. Mögliche Ursachen sind: <ul><li> Die ausgewählte Ebene ist eine Rasterebene </li><li> WFS-Dienst ist nicht verfügbar </li><li> gs: Aggregatprozess ist nicht verfügbar </li> </ul>) <p>"

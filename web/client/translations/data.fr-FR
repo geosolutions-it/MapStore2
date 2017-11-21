@@ -980,6 +980,14 @@
                 "header": {
                     "title": "Widget"
                 },
+                "wizard": {
+                    "backToTypeSelection": "Retour à la sélection du type",
+                    "backToChartOptions": "retour aux options de graphique",
+                    "configureChartOptions": "Configurer les options de graphique",
+                    "configureWidgetOptions": "Configurer les options du widget",
+                    "updateWidget": "Mettre à jour le widget",
+                    "addToTheMap": "Ajouter le widget à la carte"
+                },
                 "errors": {
                     "noWidgetsAvailableTitle": "Aucun widget disponible",
                     "noWidgetsAvailableDescription": "<p> Vous ne pouvez pas créer de widget pour le calque sélectionné. C'est probablement parce que la couche ne convient pas aux widgets ou que le serveur n'expose pas tous les services ou informations nécessaires pour générer un widget. Les causes possibles sont: <ul> <li> Le calque sélectionné est une couche raster </li><li> Le service WFS n'est pas disponible</li><li>gs:aggregate process n'est pas disponible </li> </ul>) <p>"

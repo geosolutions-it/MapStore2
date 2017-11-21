@@ -43,12 +43,6 @@ class ColorRangeSelector extends React.Component {
             options: {base: 190, range: 340, options: {base: 10, range: 360, s: 0.67, v: 0.67}}
         }]
     };
-
-    componentWillMount() {
-        this.setState({
-            ramp: this.props.value
-        });
-    }
     getValue = () => {
         this.getItems().filter( (i = {}) => i === this.props.value || i.name === (this.props.value && this.props.value.name));
     }
@@ -61,11 +55,12 @@ class ColorRangeSelector extends React.Component {
     }
 
     render() {
+        const items = this.getItems();
         return (
             <DropdownList
                 className="color-range-selector"
-                data={this.getItems()}
-                valueComponent={ColorRampItem}
+                data={items}
+                valueComponent={(props) => <ColorRampItem {...props} data={items} />}
                 itemComponent={ColorRampItem}
                 value={this.getValue()}
                 onChange={(ramp) => {

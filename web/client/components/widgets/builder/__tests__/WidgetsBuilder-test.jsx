@@ -29,7 +29,7 @@ describe('WidgetsBuilder component', () => {
         expect(container.querySelector('.chart-options-form')).toNotExist();
     });
     it('WidgetsBuilder rendering chart options', () => {
-        ReactDOM.render(<WidgetsBuilder settings={{step: 1}} />, document.getElementById("container"));
+        ReactDOM.render(<WidgetsBuilder step={1} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.chart-options-form');
         expect(el).toExist();

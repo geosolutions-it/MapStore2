@@ -14,18 +14,30 @@ const {widgetBuilderSelector} = require('../selectors/controls');
 const {getEditingWidget, getEditorSettings, getWidgetLayer, dependenciesSelector} = require('../selectors/widgets');
 
 const {setControlProperty} = require('../actions/controls');
-const {insertWidget, onEditorChange, setPage, openFilterEditor} = require('../actions/widgets');
+const {insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting} = require('../actions/widgets');
 const PropTypes = require('prop-types');
 const builderConfiguration = require('../components/widgets/enhancers/builderConfiguration');
 const BorderLayout = require('../components/layout/BorderLayout');
 
+const wizardStateToProps = ( stateProps = {}, dispatchProps = {}, ownProps = {}) => ({
+        ...ownProps,
+        ...stateProps,
+        ...dispatchProps,
+        step: stateProps && stateProps.settings && stateProps.settings.step,
+        valid: stateProps && stateProps.settings && stateProps.settings.valid,
+        onFinish: () => dispatchProps.insertWidget && dispatchProps.insertWidget({
+            layer: stateProps.layer,
+            url: stateProps.layer && stateProps.layer.url,
+            ...(stateProps.editorData || {})
+        })
+    });
 const wizardSelector = createSelector(
     getWidgetLayer,
     getEditingWidget,
     getEditorSettings,
     dependenciesSelector,
     (layer, editorData, settings, dependencies) => ({
-        layer: editorData.layer || layer,
+        layer: (editorData && editorData.layer) || layer,
         editorData,
         settings,
         dependencies
@@ -34,17 +46,23 @@ const wizardSelector = createSelector(
 const WidgetsBuilder = connect(
     wizardSelector,
      {
-        insertWidget,
         setPage,
-        onEditorChange
-    }
+        setValid: valid => changeEditorSetting("valid", valid),
+        onEditorChange,
+        insertWidget
+    },
+    wizardStateToProps
 )(builderConfiguration(require('../components/widgets/builder/WidgetsBuilder')));
 
 
-const BuilderHeader = connect(() => ({}), {
-    openFilterEditor: openFilterEditor,
-    onClose: setControlProperty.bind(null, "widgetBuilder", "enabled", false, false)
-})(require('../components/widgets/builder/BuilderHeader'));
+const BuilderHeader = connect(wizardSelector, {
+        openFilterEditor: openFilterEditor,
+        setPage,
+        insertWidget,
+        onClose: setControlProperty.bind(null, "widgetBuilder", "enabled", false, false)
+    },
+    wizardStateToProps
+)(require('../components/widgets/builder/BuilderHeader'));
 
 class SideBarComponent extends React.Component {
      static propTypes = {
@@ -95,7 +113,7 @@ class SideBarComponent extends React.Component {
             <BorderLayout
                 header={<BuilderHeader />}
                 >
-                {this.props.enabled ? <WidgetsBuilder /> : null}
+                {this.props.enabled ? <WidgetsBuilder onFinish /> : null}
             </BorderLayout>
 
         </Dock>);

@@ -974,6 +974,14 @@
                 "header": {
                     "title": "Widget"
                 },
+                "wizard": {
+                    "backToTypeSelection": "Back to type selection",
+                    "backToChartOptions": "Back to chart options",
+                    "configureChartOptions": "Configure chart options",
+                    "configureWidgetOptions": "Configure widget options",
+                    "updateWidget": "Update the widget",
+                    "addToTheMap": "Add the widget to the map"
+                },
                 "errors": {
                     "noWidgetsAvailableTitle": "No Widgets available",
                     "noWidgetsAvailableDescription": "<p>You can't create any widgets for the selected layer. This is probably because the layer is not suitable for the available widgets or the server doesn't expose all the needed services or information to generate widget. Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li>gs:aggregate process is not available</li></ul> )<p>"

@@ -10,7 +10,37 @@ const { Button, Row, Col, Glyphicon } = require('react-bootstrap');
 const Message = require('../../I18N/Message');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 
-module.exports = ({onClose = () => {}, openFilterEditor = () => {}} = {}) =>
+const getBackTooltipId = step => {
+    switch (step) {
+        case 1:
+            return "widgets.builder.wizard.backToTypeSelection";
+        case 2:
+            return "widgets.builder.wizard.backToChartOptions";
+        default:
+            return "back";
+
+    }
+};
+
+const getNextTooltipId = step => {
+    switch (step) {
+        case 0:
+            return "widgets.builder.wizard.configureChartOptions";
+        case 1:
+            return "widgets.builder.wizard.configureWidgetOptions";
+        default:
+            return "next";
+    }
+};
+
+const getSaveTooltipId = (step, {id} = {}) => {
+    if (id) {
+        return "widgets.builder.wizard.updateWidget";
+    }
+    return "widgets.builder.wizard.addToTheMap";
+};
+
+module.exports = ({onClose = () => {}, openFilterEditor = () => {}, step = 0, editorData = {}, valid, setPage = () => {}, onFinish = () => {}} = {}) =>
 (<div className="mapstore-flex-container">
     <div className="m-header">
         <Row>
@@ -31,9 +61,25 @@ module.exports = ({onClose = () => {}, openFilterEditor = () => {}} = {}) =>
                         bsSize: "sm"
                     }}
                     buttons={[{
+                        onClick: () => setPage(Math.max(0, step - 1)),
+                        visible: step > 0,
+                        glyph: "arrow-left",
+                        tooltipId: getBackTooltipId(step)
+                    }, {
                         onClick: openFilterEditor,
                         glyph: "filter",
                         tooltipId: "widgets.builder.setupFilter"
+                    }, {
+                        onClick: () => setPage(Math.min(step + 1, 2)),
+                        visible: !!(step === 0 && (!editorData.type || editorData.type.indexOf("WI") !== 0)) || step === 1,
+                        disabled: step === 1 && !valid,
+                        glyph: "arrow-right",
+                        tooltipId: getNextTooltipId(step)
+                    }, {
+                        onClick: () => onFinish(Math.min(step + 1, 1)),
+                        visible: step === 2,
+                        glyph: "floppy-disk",
+                        tooltipId: getSaveTooltipId(step, editorData)
                     }]} />
             </div>
         </Row>

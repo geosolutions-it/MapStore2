@@ -47,4 +47,41 @@ describe('BuilderHeader component', () => {
         ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
         expect(spy).toHaveBeenCalled();
     });
+    it('Test BuilderHeader nextButton', () => {
+        const actions = {
+            setPage: () => {}
+        };
+        const spysetPage = expect.spyOn(actions, 'setPage' );
+        ReactDOM.render(<BuilderHeader step={1} valid setPage={actions.setPage} editorData={{type: "bar"}}/>, document.getElementById("container"));
+        const btn = document.querySelector('.glyphicon-arrow-right');
+        expect(btn).toExist();
+        const prev = document.querySelector('.glyphicon-arrow-left');
+        expect(prev).toExist();
+        ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
+        expect(spysetPage).toHaveBeenCalled();
+    });
+    it('Test BuilderHeader prevButton', () => {
+        const actions = {
+            setPage: () => {}
+        };
+        const spysetPage = expect.spyOn(actions, 'setPage' );
+        ReactDOM.render(<BuilderHeader step={1} valid setPage={actions.setPage} editorData={{type: "bar"}}/>, document.getElementById("container"));
+        const btn = document.querySelector('.glyphicon-arrow-right');
+        expect(btn).toExist();
+        const prev = document.querySelector('.glyphicon-arrow-left');
+        expect(prev).toExist();
+        ReactTestUtils.Simulate.click(prev); // <-- trigger event callback
+        expect(spysetPage).toHaveBeenCalled();
+    });
+    it('Test BuilderHeader save', () => {
+        const actions = {
+            onFinish: () => {}
+        };
+        const spyonFinish = expect.spyOn(actions, 'onFinish' );
+        ReactDOM.render(<BuilderHeader step={2} valid onFinish={actions.onFinish} editorData={{type: "bar"}}/>, document.getElementById("container"));
+        const btn = document.querySelector('.glyphicon-floppy-disk');
+        expect(btn).toExist();
+        ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
+        expect(spyonFinish).toHaveBeenCalled();
+    });
 });

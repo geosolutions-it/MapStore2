@@ -6,10 +6,10 @@
   * LICENSE file in the root directory of this source tree.
   */
 const React = require('react');
+
 const {wizardHanlders} = require('../../misc/wizard/enhancers');
 const loadingState = require('../../misc/enhancers/loadingState')(({loading, data}) => loading || !data, {width: 500, height: 200});
 
-const Wizard = wizardHanlders(require('../../misc/wizard/WizardContainer'));
 const ChartType = require('./wizard/chart/ChartType');
 const wfsChartOptions = require('./wizard/chart/wfsChartOptions');
 const ChartOptions = wfsChartOptions(require('./wizard/chart/ChartOptions'));
@@ -19,7 +19,7 @@ const wpsChart = require('../enhancers/wpsChart');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const emptyChartState = require('../enhancers/emptyChartState');
 const errorChartState = require('../enhancers/errorChartState');
-const {compose} = require('recompose');
+const {compose, lifecycle} = require('recompose');
 const enhanchePreview = compose(
     dependenciesToFilter,
     wpsChart,
@@ -38,9 +38,14 @@ const sampleProps = {
 
 const isChartOptionsValid = (options = {}) => options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes;
 
-const renderPreview = ({data = {}, layer, dependencies={}}) => isChartOptionsValid(data.options)
+const Wizard = wizardHanlders(require('../../misc/wizard/WizardContainer'));
+
+
+const renderPreview = ({data = {}, layer, dependencies={}, setValid = () => {}}) => isChartOptionsValid(data.options)
     ? (<PreviewChart
         key="preview-chart"
+        onLoad={() => setValid(true)}
+        onLoadError={() => setValid(false)}
         isAnimationActive={false}
         dependencies={dependencies}
         {...sampleProps}
@@ -61,15 +66,19 @@ const renderPreview = ({data = {}, layer, dependencies={}}) => isChartOptionsVal
         autoColorOptions={data.autoColorOptions}
         legend={data.legend} />);
 
-
-module.exports = ({onChange = () => {}, onFinish = () => {}, setPage= () => {}, data = {}, layer ={}, step=0, types, featureTypeProperties, dependencies}) =>
+const enhanceWizard = compose(lifecycle({
+    componentWillReceiveProps: ({data = {}, valid, setValid = () => {}} = {}) => {
+        if (valid && !isChartOptionsValid(data.options)) {
+            setValid(false);
+        }
+    }})
+);
+module.exports = enhanceWizard(({onChange = () => {}, onFinish = () => {}, setPage= () => {}, setValid, data = {}, layer ={}, step=0, types, featureTypeProperties, dependencies}) =>
     (<Wizard
         step={step}
         setPage={setPage}
-        onFinish={() => {
-            onFinish({layer: data.layer || layer, url: layer.url, ...data});
-        }}
-        isStepValid={ n => n === 1 ? isChartOptionsValid(data.options) : true} skipButtonsOnSteps={[0]}>
+        onFinish={onFinish}
+        isStepValid={ n => n === 1 ? isChartOptionsValid(data.options) : true} hideButtons>
         <ChartType
             key="type"
             type={data.type}
@@ -83,13 +92,13 @@ module.exports = ({onChange = () => {}, onFinish = () => {}, setPage= () => {}, 
             data={data}
             onChange={onChange}
             layer={data.layer || layer}
-            sampleChart={renderPreview({data, layer: data.layer || layer, dependencies})}
+            sampleChart={renderPreview({data, layer: data.layer || layer, dependencies, setValid: v => setValid(v && isChartOptionsValid(data.options))})}
         />
         <WidgetOptions
             key="widget-options"
             data={data}
             onChange={onChange}
             layer={data.layer || layer}
-            sampleChart={renderPreview({data, layer: data.layer || layer})}
+            sampleChart={renderPreview({data, layer: data.layer || layer, dependencies, setValid: v => setValid(v && isChartOptionsValid(data.options))})}
         />
-    </Wizard>);
+</Wizard>));
