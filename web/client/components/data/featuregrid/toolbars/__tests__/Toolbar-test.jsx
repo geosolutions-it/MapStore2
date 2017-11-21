@@ -310,9 +310,10 @@ describe('Featuregrid toolbar component', () => {
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
         expect(el).toExist();
         let zoomAllButton = document.getElementById("fg-zoom-all");
-        expect(isVisibleButton(zoomAllButton)).toBe(false);
-        ReactDOM.render(<Toolbar events={events} mode="EDIT" isEditingAllowed={false}/>, document.getElementById("container"));
-        zoomAllButton = document.getElementById("fg-zoom-all");
         expect(isVisibleButton(zoomAllButton)).toBe(true);
+        expect(el.children[2].disabled).toBe(true);
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" allFeaturesWithNoGeometry={false}/>, document.getElementById("container"));
+        zoomAllButton = document.getElementById("fg-zoom-all");
+        expect(el.children[2].disabled).toBe(false);
     });
 });
