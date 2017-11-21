@@ -73,7 +73,7 @@ const initialState = {
     }
 };
 
-describe('Test query selectors', () => {
+describe('Test queryform selectors', () => {
     it(' 1) - spatialFieldSelector', () => {
         const spatialfield = spatialFieldSelector(initialState);
         expect(spatialfield).toExist();
