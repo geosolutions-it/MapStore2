@@ -37,10 +37,10 @@
         <DCPType>
           <HTTP>
             <Get>
-              <OnlineResource xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/MEDIATORE/V_SOTTOPASSO/ows?SERVICE=WMS&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0&amp;"/>
+              <OnlineResource xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/TEST/V_TEST/ows?SERVICE=WMS&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0&amp;"/>
             </Get>
             <Post>
-              <OnlineResource xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/MEDIATORE/V_SOTTOPASSO/ows?SERVICE=WMS&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0&amp;"/>
+              <OnlineResource xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/TEST/V_TEST/ows?SERVICE=WMS&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0&amp;"/>
             </Post>
           </HTTP>
         </DCPType>
@@ -67,7 +67,7 @@
         <DCPType>
           <HTTP>
             <Get>
-              <OnlineResource xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/MEDIATORE/V_SOTTOPASSO/ows?SERVICE=WMS&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0&amp;"/>
+              <OnlineResource xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/TEST/V_TEST/ows?SERVICE=WMS&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0&amp;"/>
             </Get>
           </HTTP>
         </DCPType>
@@ -83,7 +83,7 @@
         <DCPType>
           <HTTP>
             <Get>
-              <OnlineResource xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/MEDIATORE/V_SOTTOPASSO/ows?SERVICE=WMS&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0&amp;"/>
+              <OnlineResource xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/TEST/V_TEST/ows?SERVICE=WMS&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0&amp;"/>
             </Get>
           </HTTP>
         </DCPType>
@@ -190,12 +190,12 @@
         <BoundingBox CRS="EPSG:3003" minx="1473438.81" miny="4913871.14" maxx="1507639.5" maxy="4929637.03"/>
       </Layer>
       <Layer queryable="1" opaque="0">
-        <Name>V_SOTTOPASSO</Name>
-        <Title>V_SOTTOPASSO</Title>
+        <Name>V_TEST</Name>
+        <Title>V_TEST</Title>
         <Abstract/>
         <KeywordList>
           <Keyword>features</Keyword>
-          <Keyword>V_SOTTOPASSO</Keyword>
+          <Keyword>V_TEST</Keyword>
         </KeywordList>
         <CRS>EPSG:4326</CRS>
         <CRS>CRS:84</CRS>
@@ -212,7 +212,7 @@
           <Abstract>A sample style that draws a point</Abstract>
           <LegendURL width="20" height="20">
             <Format>image/png</Format>
-            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/MEDIATORE/V_SOTTOPASSO/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=V_SOTTOPASSO&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0"/>
+            <OnlineResource xmlns:xlink="http://www.w3.org/1999/xlink" xlink:type="simple" xlink:href="http://localhost:8081/geoserver-test/TEST/V_TEST/ows?service=WMS&amp;request=GetLegendGraphic&amp;format=image%2Fpng&amp;width=20&amp;height=20&amp;layer=V_TEST&amp;ms2-authkey=4e00911b-ec74-4220-b0ca-e04b3aa019e0"/>
           </LegendURL>
         </Style>
       </Layer>

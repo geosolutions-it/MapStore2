@@ -36,7 +36,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
-    STOP_SYNC_WMS} = require('../actions/featuregrid');
+    STOP_SYNC_WMS, startSyncWMS} = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL, resetControls} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
@@ -186,9 +186,9 @@ const createInitialQueryFlow = (action$, store, {url, name} = {}) => {
 const addFilterToWMSLayer = (layer, filter) => {
     return changeLayerProperties(layer, {filterObj: filter});
 };
-// Create action to add filter and nativeCrs to wms layer
-const addFilterNativeCRSToWMSLayer = (layer, filter, nativeCrs) => {
-    return changeLayerProperties(layer, {filterObj: filter, nativeCrs});
+// Create action to add nativeCrs to wms layer
+const addNativeCrsLayer = (layer, nativeCrs = "") => {
+    return changeLayerProperties(layer, {nativeCrs});
 };
 const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
     return changeLayerProperties(f.selectedLayer, {filterObj: undefined});
@@ -567,11 +567,50 @@ module.exports = {
         }),
     /**
      * start sync filter with wms layer
+     *
+     * Since the CQL_FILTER must be projected in the native crs of the layer
+     * if this info is missing and sync is active we need to perform a getCapabilites
+     * to the single layer in order to fetch this data. see #2210 issue.
      */
      startSyncWmsFilter: (action$, store) =>
         action$.ofType(TOGGLE_SYNC_WMS)
         .filter( () => isSyncWmsActive(store.getState()))
-        .switchMap(() => Rx.Observable.of({type: START_SYNC_WMS})),
+        .switchMap(() => {
+            const state = store.getState();
+            const layerId = selectedLayerIdSelector(state);
+            const objLayer = getLayerFromId(store.getState(), layerId);
+            if (!objLayer.nativeCrs) {
+                const reqUrl = LayersUtils.getCapabilitiesUrl(objLayer);
+                // update layer with nativeCrs if fetched otherwise display a warning
+                return Rx.Observable.fromPromise(
+                    getCapabilities(reqUrl, false)
+                    .then((capabilities) => {
+                        const layerCapability = parseLayerCapabilities(capabilities, objLayer);
+                        return head(layerCapability.crs) || "EPSG:3857";
+                    })).switchMap((nativeCrs) => {
+                        if (!CoordinatesUtils.determineCrs(nativeCrs)) {
+                            const EPSG = nativeCrs.split(":").length === 2 ? nativeCrs.split(":")[1] : "3857";
+                            return Rx.Observable.fromPromise(CoordinatesUtils.fetchProjRemotely(nativeCrs, CoordinatesUtils.getProjUrl(EPSG))
+                                .then(res => {
+                                    proj4.defs(nativeCrs, res.data);
+                                    return [addNativeCrsLayer(layerId, nativeCrs), startSyncWMS()];
+                                })).switchMap(actions => Rx.Observable.from(actions))
+                                .catch(() => {
+                                    return Rx.Observable.of(
+                                        warning({
+                                            title: "notification.warning",
+                                            message: "featuregrid.errorProjFetch",
+                                            position: "tc",
+                                            autoDismiss: 5
+                                        }),
+                                        startSyncWMS());
+                                });
+                        }
+                        return Rx.Observable.of(startSyncWMS());
+                    });
+            }
+            return Rx.Observable.of(startSyncWMS());
+        }),
     /**
      * stop sync filter with wms layer
      */
@@ -582,9 +621,6 @@ module.exports = {
     /**
      * Sync map with filter.
      *
-     * Since the CQL_FILTER must be projected in the native crs of the layer
-     * if this info is missing and sync is active we need to perform a getCapabilites
-     * to the single layer in order to fetch this data. see #2210 issue.
      */
     syncMapWmsFilter: (action$, store) =>
         action$.ofType(QUERY_CREATE, UPDATE_QUERY).
@@ -604,30 +640,11 @@ module.exports = {
                         if (filter && filter.spatialField && filter.spatialField.geometry && filter.spatialField.geometry.coordinates && filter.spatialField.geometry.coordinates[0]) {
                             const objLayer = getLayerFromId(store.getState(), layerId);
                             if (!objLayer.nativeCrs) {
-                                const reqUrl = LayersUtils.getCapabilitiesUrl(objLayer);
-                                return Rx.Observable.fromPromise(
-                                    getCapabilities(reqUrl, false)
-                                    .then((capabilities) => {
-                                        // reproject coordinates to nativeCrs & update layer with nativeCrs for future
-                                        const layerCapability = parseLayerCapabilities(capabilities, objLayer);
-                                        return head(layerCapability.crs) || "EPSG:3857";
-                                    })).switchMap((nativeCrs) => {
-                                        if (!CoordinatesUtils.determineCrs(nativeCrs)) {
-                                            const EPSG = nativeCrs.split(":").length === 2 ? nativeCrs.split(":")[1] : "3857";
-                                            return Rx.Observable.fromPromise(CoordinatesUtils.fetchProjRemotely(nativeCrs, CoordinatesUtils.getProjUrl(EPSG)).then(res => {
-                                                proj4.defs(nativeCrs, res.data);
-                                                return addFilterNativeCRSToWMSLayer(layerId, reprojectFilterInNativeCrs(filter, nativeCrs), nativeCrs);
-                                            })).catch(() => {
-                                                return Rx.Observable.of(error({
-                                                    title: "notification.warning",
-                                                    message: "featuregrid.errorProjFetch",
-                                                    position: "tc",
-                                                    autoDismiss: 5
-                                                }));
-                                            });
-                                        }
-                                        return Rx.Observable.of(addFilterNativeCRSToWMSLayer(layerId, reprojectFilterInNativeCrs(filter, nativeCrs), nativeCrs));
-                                    });
+                                const onlyAttributeFilter = {
+                                    ...filter,
+                                    spatialField: undefined
+                                };
+                                return Rx.Observable.of(addFilterToWMSLayer(layerId, onlyAttributeFilter));
                             }
                             return Rx.Observable.of(addFilterToWMSLayer(layerId, reprojectFilterInNativeCrs(filter, objLayer.nativeCrs)));
                         }
