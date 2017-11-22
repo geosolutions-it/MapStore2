@@ -13,8 +13,8 @@ const {mapIdSelector} = require('../selectors/map');
 const {getFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout} = require('../selectors/widgets');
 const {editWidget, deleteWidget, changeLayout, exportCSV, exportImage} = require('../actions/widgets');
 const ContainerDimensions = require('react-container-dimensions').default;
+const {rightPanelOpenSelector, bottomPanelOpenSelector} = require('../selectors/maplayout');
 
-const assign = require('object-assign');
 const PropTypes = require('prop-types');
 const WidgetsView = connect(
     createSelector(
@@ -40,37 +40,32 @@ const WidgetsView = connect(
 
 class Widgets extends React.Component {
      static propTypes = {
-         id: PropTypes.string,
-         enabled: PropTypes.bool,
-         limitDockHeight: PropTypes.bool,
-         fluid: PropTypes.bool,
-         zIndex: PropTypes.number,
-         dockSize: PropTypes.number,
-         position: PropTypes.string,
-         dimMode: PropTypes.string,
-         src: PropTypes.string,
-         style: PropTypes.object
+         enabled: PropTypes.bool
      };
      static defaultProps = {
-         id: "widgets-plugin",
-         enabled: true,
-         dockSize: 600,
-         limitDockHeight: true,
-         zIndex: 10000,
-         fluid: false,
-         dimMode: "none",
-         position: "right"
+         enabled: true
      };
     render() {
-        return (<ContainerDimensions>{({width, height}) => <WidgetsView width={width} height={height}/>}</ContainerDimensions> );
+        return this.props.enabled ? (<ContainerDimensions>{({width, height}) => <WidgetsView width={width} height={height}/>}</ContainerDimensions> ) : null;
 
     }
 }
 
-module.exports = {
-    WidgetsPlugin: assign(Widgets, {
+const WidgetsPlugin = connect(
+    createSelector(
 
-    }),
+        // we need to remove this selector when the widget view is resizable with the map layout
+        state => rightPanelOpenSelector(state) || bottomPanelOpenSelector(state),
+        //
+
+        (checkPanel) => ({
+            enabled: !checkPanel
+        })
+    )
+)(Widgets);
+
+module.exports = {
+    WidgetsPlugin,
     reducers: {
         widgets: require('../reducers/widgets')
     },
