@@ -807,4 +807,51 @@ describe('FilterUtils', () => {
 
         expect(FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits)).toEqual(expected);
     });
+
+    it('Calculate CQL filter for number with value 0', () => {
+        let filterObj = {
+            filterFields: [
+            {
+                groupId: 1,
+                attribute: "attribute3",
+                exception: null,
+                operator: "=",
+                rowId: "3",
+                type: "number",
+                value: 0
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }]
+        };
+
+        let filter = FilterUtils.toCQLFilter(filterObj);
+        expect(filter).toExist();
+        expect(filter).toBe("(\"attribute3\" = \'0\')");
+    });
+    it('Calculate CQL filter for string  and LIKE operator', () => {
+        let filterObj = {
+            filterFields: [
+            {
+                groupId: 1,
+                attribute: "attribute3",
+                exception: null,
+                operator: "LIKE",
+                rowId: "3",
+                type: "string",
+                value: "val"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }]
+        };
+
+        let filter = FilterUtils.toCQLFilter(filterObj);
+        expect(filter).toExist();
+        expect(filter).toBe("(\"attribute3\" LIKE \'%val%\')");
+    });
 });

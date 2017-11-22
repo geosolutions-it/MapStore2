@@ -14,7 +14,7 @@ const {isNil, isUndefined, isArray} = require('lodash');
 const checkOperatorValidity = (value, operator) => {
     return (!isNil(value) && operator !== "isNull" || !isUndefined(value) && operator === "isNull");
 };
-
+const wrapAttributeWithDoubleQuotes = a => "\"" + a + "\"";
 const normalizeVersion = (version) => {
     if (!version) {
         return "2.0";
@@ -619,18 +619,19 @@ const FilterUtils = {
 
     cqlStringField: function(attribute, operator, value) {
         let fieldFilter;
+        const wrappedAttr = wrapAttributeWithDoubleQuotes(attribute);
         if (!isNil(value)) {
             if (operator === "isNull") {
-                fieldFilter = "isNull(" + attribute + ")=true";
+                fieldFilter = "isNull(" + wrappedAttr + ")=true";
             } else if (operator === "=") {
                 let val = "'" + value + "'";
-                fieldFilter = attribute + operator + val;
+                fieldFilter = wrappedAttr + operator + val;
             } else if (operator === "ilike") {
                 let val = "'%" + value.toLowerCase() + "%'";
-                fieldFilter = "strToLowerCase(" + attribute + ") LIKE " + val;
+                fieldFilter = "strToLowerCase(" + wrappedAttr + ") LIKE " + val;
             } else {
                 let val = "'%" + value + "%'";
-                fieldFilter = attribute + "LIKE " + val;
+                fieldFilter = wrappedAttr + " LIKE " + val;
             }
         }
         return fieldFilter;
@@ -638,19 +639,21 @@ const FilterUtils = {
 
     cqlNumberField: function(attribute, operator, value) {
         let fieldFilter;
+        const wrappedAttr = wrapAttributeWithDoubleQuotes(attribute);
         if (operator === "><") {
             if (!isNil(value) && (value.lowBound !== null && value.lowBound !== undefined) && (value.upBound === null || value.upBound === undefined)) {
-                fieldFilter = "(" + attribute + ">='" + value.lowBound + "')";
+                fieldFilter = "(" + wrappedAttr + ">='" + value.lowBound + "')";
             } else if (!isNil(value) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound === null || value.lowBound === undefined)) {
-                fieldFilter = "(" + attribute + "<='" + value.upBound + "')";
+                fieldFilter = "(" + wrappedAttr + "<='" + value.upBound + "')";
             } else if (!isNil(value) && (value.upBound !== null && value.upBound !== undefined) && (value.lowBound !== null && value.lowBound !== undefined)) {
-                fieldFilter = "(" + attribute + ">='" + value.lowBound +
-                    "' AND " + attribute + "<='" + value.upBound + "')";
+                fieldFilter = "(" + wrappedAttr + ">='" + value.lowBound +
+                    "' AND " + wrappedAttr + "<='" + value.upBound + "')";
             }
         } else {
             let val = (!isNil(value)) && (value.lowBound !== null && value.lowBound !== undefined) ? value.lowBound : value;
-            if (val ) {
-                fieldFilter = attribute + operator + "'" + val + "'";
+            if (!isNil(val)) {
+                // TODO fix this
+                fieldFilter = wrappedAttr + " " + operator + " '" + val + "'";
             }
         }
         return fieldFilter;
