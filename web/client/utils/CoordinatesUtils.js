@@ -26,7 +26,7 @@ function traverseCoords(coordinates, callback) {
     return coordinates.map(function(coord) { return traverseCoords(coord, callback); });
 }
 const getProjUrl = (EPSG) => {
-    return `http://spatialreference.org/ref/epsg/'${EPSG}'/proj4/`;
+    return `http://spatialreference.org/ref/epsg/${EPSG}/proj4/`;
 };
 function traverseGeoJson(geojson, leafCallback, nodeCallback) {
     if (geojson === null) return geojson;
@@ -585,7 +585,9 @@ const CoordinatesUtils = {
     */
     fetchProjRemotely: (crs, url) => {
         const EPSG = crs.split(":").length === 2 ? crs.split(":")[1] : "3857";
-        return axios.get(url || getProjUrl(EPSG));
+        return axios.get(url || getProjUrl(EPSG), null, {
+            timeout: 2000
+        });
     },
     determineCrs,
     parseString: (str) => {

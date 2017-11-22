@@ -617,7 +617,14 @@ module.exports = {
                                             return Rx.Observable.fromPromise(CoordinatesUtils.fetchProjRemotely(nativeCrs, CoordinatesUtils.getProjUrl(EPSG)).then(res => {
                                                 proj4.defs(nativeCrs, res.data);
                                                 return addFilterNativeCRSToWMSLayer(layerId, reprojectFilterInNativeCrs(filter, nativeCrs), nativeCrs);
-                                            }));
+                                            })).catch(() => {
+                                                return Rx.Observable.of(error({
+                                                    title: "notification.warning",
+                                                    message: "featuregrid.errorProjFetch",
+                                                    position: "tc",
+                                                    autoDismiss: 5
+                                                }));
+                                            });
                                         }
                                         return Rx.Observable.of(addFilterNativeCRSToWMSLayer(layerId, reprojectFilterInNativeCrs(filter, nativeCrs), nativeCrs));
                                     });

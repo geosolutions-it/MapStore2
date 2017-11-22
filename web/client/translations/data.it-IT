@@ -898,6 +898,7 @@
             "noFeaturesAvailable": "Nessun risultato disponibile",
             "errorSaving": "C'è stato un errore durante il salvataggio",
             "errorProj": "Errore durante la riproiezione al sistema nativo del layer. Non è presente la definizione del crs nativo.",
+            "errorProjFetch": "Errore durante il recupero della definizione della stringa proj dal sito spatialreference.org. Lo strumento di sincronizzazione non puÃ² applicare il filtro spaziale.",
             "notSupportedGeometryTitle": "Tipo di geometria non supportato",
             "notSupportedGeometry": "Il tipo di geometria del layer corrente non è supportato dall'editing ma è ancora possibile modificare gli attributi",
             "yesButton": "Si",
