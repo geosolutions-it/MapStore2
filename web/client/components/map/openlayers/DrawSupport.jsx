@@ -514,13 +514,6 @@ class DrawSupport extends React.Component {
             geometry.setCoordinates(coordinates);
         }
 
-        if (this.props.drawMethod === "Polygon") {
-            /*
-             * this can introduce a breaking change due to the fact that now
-             * polygons for ol has the initial point equal to the final one
-            */
-            coordinates = [concat(coordinates[0], [coordinates[0][0]])];
-        }
         if (this.props.drawMethod === "Circle") {
             radius = Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
         }

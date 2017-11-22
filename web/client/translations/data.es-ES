@@ -908,7 +908,6 @@
             },
             "noFeaturesAvailable": "No hay resultados disponibles",
             "errorSaving": "Se ha producido un error al guardar la operación",
-            "errorProj": "Se produjo un error al volver a proyectar al sistema de capa nativo. No hay definición de las crs nativas.",
             "errorProjFetch": "Error al recuperar la definición de la cadena proj4 de spatialreference.org. La herramienta de sincronización no puede aplicar el filtro espacial.",
             "notSupportedGeometryTitle": "Geometry type not supported ",
             "notSupportedGeometry": "Current layer geometry type is not supported by editing but you can still edit attributes",

@@ -6,7 +6,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {processOGCGeometry, pointElement, polygonElement, lineStringElement } = require("./ogc/GML");
+const {processOGCGeometry, pointElement, polygonElement, lineStringElement, closePolygon } = require("./ogc/GML");
 const {wfsToGmlVersion} = require('./ogc/WFS/base');
 const {ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators} = require("./ogc/Filter/operators");
 const {isNil, isUndefined, isArray} = require('lodash');
@@ -554,10 +554,9 @@ const FilterUtils = {
         case "Polygon":
             coordinates.forEach((element, index) => {
                 geometry += "(";
-                let coords = element.map((coordinate) => {
+                let coords = closePolygon(element).map((coordinate) => {
                     return coordinate[0] + " " + coordinate[1];
                 });
-
                 geometry += coords.join(", ");
                 geometry += ")";
 
@@ -569,7 +568,7 @@ const FilterUtils = {
                 geometry += "(";
                 polygon.forEach((element, index) => {
                     geometry += "(";
-                    let coords = element.map((coordinate) => {
+                    let coords = closePolygon(element).map((coordinate) => {
                         return coordinate[0] + " " + coordinate[1];
                     });
 
