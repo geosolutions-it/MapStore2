@@ -222,5 +222,4 @@ describe('Test the map reducer', () => {
         let state = mapConfig({}, action);
         expect(state.version).toEqual(version);
     });
-
 });

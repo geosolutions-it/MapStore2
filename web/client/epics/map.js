@@ -15,7 +15,6 @@ const {setControlProperty} = require('../actions/controls');
 const {isSupportedLayer} = require('../utils/LayersUtils');
 const {warning} = require('../actions/notifications');
 const {resetControls} = require('../actions/controls');
-
 const {clearLayers} = require('../actions/layers');
 const {head} = require('lodash');
 

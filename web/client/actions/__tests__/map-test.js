@@ -139,5 +139,4 @@ describe('Test correctness of the map actions', () => {
         expect(retval).toExist();
         expect(retval.type).toEqual(INIT_MAP);
     });
-
 });

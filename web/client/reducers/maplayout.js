@@ -9,10 +9,10 @@
 const {UPDATE_MAP_LAYOUT} = require('../actions/maplayout');
 const assign = require('object-assign');
 
-function mapLayout(state = null, action) {
+function mapLayout(state = { layout: {} }, action) {
     switch (action.type) {
     case UPDATE_MAP_LAYOUT: {
-        return assign({}, state, {layout: action.layout});
+        return assign({}, state, {layout: assign({}, state.layout, action.layout)});
     }
     default:
         return state;

@@ -34,4 +34,5 @@ describe('Test controls selectors', () => {
         expect(retVal).toExist();
         expect(retVal).toBe(true);
     });
+
 });

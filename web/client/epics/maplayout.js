@@ -20,7 +20,6 @@ const {mapInfoRequestsSelector} = require('../selectors/mapinfo');
  */
 
 const {head, get} = require('lodash');
-const {mapLayoutSelector} = require('../selectors/maplayout');
 const {isFeatureGridOpen, getDockSize} = require('../selectors/featuregrid');
 
 /**
@@ -40,12 +39,10 @@ const updateMapLayoutEpic = (action$, store) =>
             }
 
             const mapLayout = {left: {sm: 300, md: 500, lg: 600}, right: {md: 658}, bottom: {sm: 30}};
-            const layout = mapLayoutSelector(store.getState());
 
             if (get(store.getState(), "mode") === 'embedded') {
                 const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
                 return Rx.Observable.of(updateMapLayout({
-                    ...layout,
                     ...height
                 }));
             }
@@ -68,7 +65,6 @@ const updateMapLayoutEpic = (action$, store) =>
             const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
 
             return Rx.Observable.of(updateMapLayout({
-                ...layout,
                 ...leftPanels,
                 ...rightPanels,
                 ...footer,
