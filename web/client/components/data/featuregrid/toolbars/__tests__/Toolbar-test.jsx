@@ -306,13 +306,13 @@ describe('Featuregrid toolbar component', () => {
             switchEditMode: () => {}
         };
         spyOn(events, "switchEditMode");
-        ReactDOM.render(<Toolbar events={events} mode="VIEW" allFeaturesWithNoGeometry/>, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
         expect(el).toExist();
         let zoomAllButton = document.getElementById("fg-zoom-all");
         expect(isVisibleButton(zoomAllButton)).toBe(true);
         expect(el.children[2].disabled).toBe(true);
-        ReactDOM.render(<Toolbar events={events} mode="VIEW" allFeaturesWithNoGeometry={false}/>, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll={false}/>, document.getElementById("container"));
         zoomAllButton = document.getElementById("fg-zoom-all");
         expect(el.children[2].disabled).toBe(false);
     });
