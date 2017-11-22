@@ -44,6 +44,7 @@ const DISABLE_TOOLBAR = 'FEATUREGRID:DISABLE_TOOLBAR';
 const OPEN_ADVANCED_SEARCH = 'FEATUREGRID:ADVANCED_SEARCH';
 const ZOOM_ALL = 'FEATUREGRID:ZOOM_ALL';
 const INIT_PLUGIN = 'FEATUREGRID:INIT_PLUGIN';
+const SIZE_CHANGE = 'FEATUREGRID:SIZE_CHANGE';
 
 const MODES = {
     EDIT: "EDIT",
@@ -281,6 +282,13 @@ function zoomAll() {
         type: ZOOM_ALL
     };
 }
+function sizeChange(size, dockProps) {
+    return {
+        type: SIZE_CHANGE,
+        size,
+        dockProps
+    };
+}
 module.exports = {
     SELECT_FEATURES,
     DESELECT_FEATURES,
@@ -320,6 +328,7 @@ module.exports = {
     OPEN_ADVANCED_SEARCH, openAdvancedSearch,
     ZOOM_ALL, zoomAll,
     UPDATE_FILTER, updateFilter,
+    SIZE_CHANGE, sizeChange,
     setLayer,
     selectFeatures,
     deselectFeatures,

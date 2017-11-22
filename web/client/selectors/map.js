@@ -50,8 +50,21 @@ const scalesSelector = createSelector(
         return [];
     }
 );
-
+/**
+ * Get version of the map
+ * @function
+ * @memberof selectors.map
+ * @param  {object} state the state
+ * @return {number} version of the map
+ */
 const mapVersionSelector = (state) => state.map && state.map.present && state.map.present.version || 1;
+/**
+ * Get name/titlet of the map
+ * @function
+ * @memberof selectors.map
+ * @param  {object} state the state
+ * @return {string} name/title of the map
+ */
 const mapNameSelector = (state) => state.map && state.map.present && state.map.present.info && state.map.present.info.name || '';
 
 module.exports = {
