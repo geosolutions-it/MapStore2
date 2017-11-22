@@ -7,7 +7,7 @@
 */
 
 const expect = require('expect');
-const {mapLayoutSelector, mapLayoutValuesSelector, checkConditionsSelector} = require('../maplayout');
+const {mapLayoutSelector, mapLayoutValuesSelector, checkConditionsSelector, rightPanelOpenSelector, bottomPanelOpenSelector} = require('../maplayout');
 
 describe('Test map layout selectors', () => {
     it('test mapLayoutSelector no state', () => {
@@ -44,5 +44,17 @@ describe('Test map layout selectors', () => {
         expect(props).toBe(true);
         props = checkConditionsSelector({maplayout: { layout: {left: 400}}}, [{key: 'left', value: 300}]);
         expect(props).toBe(false);
+    });
+
+    it('test rightPanelOpenSelector', () => {
+        expect(rightPanelOpenSelector({maplayout: { layout: {right: 658, bottom: 500}}})).toBe(true);
+        expect(rightPanelOpenSelector({maplayout: { layout: {left: 300, bottom: 30}}})).toBe(false);
+        expect(rightPanelOpenSelector({})).toBe(false);
+    });
+
+    it('test bottomPanelOpenSelector', () => {
+        expect(bottomPanelOpenSelector({maplayout: { layout: {left: 300, bottom: 500}}})).toBe(true);
+        expect(bottomPanelOpenSelector({maplayout: { layout: {left: 300, bottom: 30}}})).toBe(false);
+        expect(bottomPanelOpenSelector({})).toBe(false);
     });
 });

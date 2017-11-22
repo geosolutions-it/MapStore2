@@ -13,7 +13,7 @@ const {mapIdSelector} = require('../selectors/map');
 const {getFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout} = require('../selectors/widgets');
 const {editWidget, deleteWidget, changeLayout, exportCSV, exportImage} = require('../actions/widgets');
 const ContainerDimensions = require('react-container-dimensions').default;
-const {checkConditionsSelector} = require('../selectors/maplayout');
+const {rightPanelOpenSelector, bottomPanelOpenSelector} = require('../selectors/maplayout');
 
 const PropTypes = require('prop-types');
 const WidgetsView = connect(
@@ -53,10 +53,11 @@ class Widgets extends React.Component {
 
 const WidgetsPlugin = connect(
     createSelector(
-        state => checkConditionsSelector(state, [
-            {key: 'right', value: 658},
-            {key: 'bottom', type: 'not', value: 30}
-        ]),
+
+        // we need to remove this selector when the widget view is resizable with the map layout
+        state => rightPanelOpenSelector(state) || bottomPanelOpenSelector(state),
+        //
+
         (checkPanel) => ({
             enabled: !checkPanel
         })
