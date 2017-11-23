@@ -62,7 +62,7 @@ module.exports = {
             describe,
             columnSettings = {},
             {editable=false, sortable=true, resizable=true, filterable = true} = {},
-            {getEditor = () => {}, getFilterRenderer = () => {}} = {}) =>
+            {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}} = {}) =>
         getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map( (desc) => ({
                 sortable,
                 key: desc.name,
@@ -72,6 +72,7 @@ module.exports = {
                 editable,
                 filterable,
                 editor: getEditor(desc),
+                formatter: getFormatter(desc),
                 filterRenderer: getFilterRenderer(desc, desc.name)
         })),
     getRow,

@@ -25,11 +25,13 @@ class DropDownEditor extends AttributeEditor {
         typeName: PropTypes.string,
         url: PropTypes.string,
         value: PropTypes.string,
+        filter: PropTypes.string,
         values: PropTypes.array
     };
     static defaultProps = {
         isValid: () => true,
         dataType: "string",
+        filter: "contains",
         values: [],
         forceSelection: true,
         allowEmpty: true
@@ -72,7 +74,7 @@ class DropDownEditor extends AttributeEditor {
             data,
             defaultOption: this.props.defaultOption || head(this.props.values)
         });
-        return <ControlledCombobox {...props} filter="contains"/>;
+        return <ControlledCombobox {...props} filter={this.props.filter}/>;
     }
 }
 

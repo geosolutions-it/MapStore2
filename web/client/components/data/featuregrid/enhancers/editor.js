@@ -3,6 +3,7 @@ const EditorRegistry = require('../../../../utils/featuregrid/EditorRegistry');
 const {compose, withPropsOnChange, withHandlers, defaultProps} = require('recompose');
 const {isNil} = require('lodash');
 const {getFilterRenderer} = require('../filterRenderers');
+const {getFormatter} = require('../formatters');
 const {manageFilterRendererState} = require('../enhancers/filterRenderers');
 
 const editors = require('../editors');
@@ -103,7 +104,8 @@ const featuresToGrid = compose(
                             return props.filterRenderers[name];
                         }
                         return manageFilterRendererState(getFilterRenderer(localType));
-                    }
+                    },
+                    getFormatter: (desc) => getFormatter(desc)
                 }))
             })
     ),
