@@ -106,50 +106,6 @@ describe('FilterUtils', () => {
                 rowId: "1",
                 type: "list",
                 value: "value1"
-            }, {
-                groupId: 1,
-                attribute: "attribute2",
-                exception: null,
-                operator: "=",
-                rowId: "2",
-                type: "list",
-                value: "value2"
-            },
-            {
-                groupId: 1,
-                attribute: "attribute3",
-                exception: null,
-                operator: "=",
-                rowId: "3",
-                type: "number",
-                value: "value1"
-            },
-            {
-                groupId: 1,
-                attribute: "attribute4",
-                exception: null,
-                operator: "><",
-                rowId: "4",
-                type: "number",
-                value: {lowBound: 10, upBound: 20}
-            },
-            {
-                attribute: "attribute5",
-                exception: null,
-                operator: "isNull",
-                groupId: 1,
-                rowId: "5",
-                type: "string",
-                value: ''
-            },
-            {
-                attribute: "attribute5",
-                exception: null,
-                operator: "ilike",
-                groupId: 1,
-                rowId: "6",
-                type: "string",
-                value: 'pa'
             }],
             groupFields: [{
                 id: 1,
@@ -161,13 +117,13 @@ describe('FilterUtils', () => {
                 attribute: "the_geom",
                 geometry: {
                     center: [1, 1],
-                    coordinates: [
+                    coordinates: [[
                         [1, 2],
                         [2, 3],
                         [3, 4],
                         [4, 5],
                         [5, 6]
-                    ],
+                    ]],
                     extent: [
                         1, 2, 3, 4, 5
                     ],
@@ -182,6 +138,7 @@ describe('FilterUtils', () => {
 
         let filter = FilterUtils.toCQLFilter(filterObj);
         expect(filter).toExist();
+        expect(filter).toBe("(\"attribute1\"='value1') AND (INTERSECTS(the_geom, Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
     });
     it('Check for pagination wfs 1.1.0', () => {
         let filterObj = {
@@ -806,5 +763,52 @@ describe('FilterUtils', () => {
         '</wfs:GetFeature>';
 
         expect(FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits)).toEqual(expected);
+    });
+
+    it('Calculate CQL filter for number with value 0', () => {
+        let filterObj = {
+            filterFields: [
+            {
+                groupId: 1,
+                attribute: "attribute3",
+                exception: null,
+                operator: "=",
+                rowId: "3",
+                type: "number",
+                value: 0
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }]
+        };
+
+        let filter = FilterUtils.toCQLFilter(filterObj);
+        expect(filter).toExist();
+        expect(filter).toBe("(\"attribute3\" = \'0\')");
+    });
+    it('Calculate CQL filter for string  and LIKE operator', () => {
+        let filterObj = {
+            filterFields: [
+            {
+                groupId: 1,
+                attribute: "attribute3",
+                exception: null,
+                operator: "LIKE",
+                rowId: "3",
+                type: "string",
+                value: "val"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }]
+        };
+
+        let filter = FilterUtils.toCQLFilter(filterObj);
+        expect(filter).toExist();
+        expect(filter).toBe("(\"attribute3\" LIKE \'%val%\')");
     });
 });

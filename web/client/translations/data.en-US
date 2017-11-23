@@ -906,6 +906,7 @@
             },
             "noFeaturesAvailable": "No Features Available",
             "errorSaving": "An error occured with saving operation",
+            "errorProjFetch": "Error retrieving the proj4 string definition from spatialreference.org. Synch tool cannot apply the spatial filter.",
             "notSupportedGeometryTitle": "Geometry type not supported ",
             "notSupportedGeometry": "Current layer geometry type is not supported by editing but you can still edit attributes",
             "yesButton": "Yes",
