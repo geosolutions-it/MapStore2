@@ -8,6 +8,7 @@
 
 const Proj4js = require('proj4');
 const proj4 = Proj4js;
+const axios = require('../libs/ajax');
 const assign = require('object-assign');
 const {isArray, flattenDeep, chunk, cloneDeep} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
@@ -24,7 +25,9 @@ function traverseCoords(coordinates, callback) {
     if (isXY(coordinates)) return callback(coordinates);
     return coordinates.map(function(coord) { return traverseCoords(coord, callback); });
 }
-
+const getProjUrl = (EPSG) => {
+    return `http://spatialreference.org/ref/epsg/${EPSG}/proj4/`;
+};
 function traverseGeoJson(geojson, leafCallback, nodeCallback) {
     if (geojson === null) return geojson;
 
@@ -575,6 +578,18 @@ const CoordinatesUtils = {
             center
         };
     },
+    getProjUrl,
+    /**
+     * @param crs in the form EPSG:4326
+     * @return {Object} a promise for fetching the proj4 definition
+    */
+    fetchProjRemotely: (crs, url) => {
+        const EPSG = crs.split(":").length === 2 ? crs.split(":")[1] : "3857";
+        return axios.get(url || getProjUrl(EPSG), null, {
+            timeout: 2000
+        });
+    },
+    determineCrs,
     parseString: (str) => {
         const coord = str.split(' ');
         const x = parseFloat(coord[0]);

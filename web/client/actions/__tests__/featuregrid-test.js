@@ -37,7 +37,8 @@ const {
     zoomAll, ZOOM_ALL,
     openAdvancedSearch, OPEN_ADVANCED_SEARCH,
     initPlugin, INIT_PLUGIN,
-    sizeChange, SIZE_CHANGE
+    sizeChange, SIZE_CHANGE,
+    START_SYNC_WMS, startSyncWMS
 } = require('../featuregrid');
 
 const idFeature = "2135";
@@ -222,6 +223,11 @@ describe('Test correctness of featurgrid actions', () => {
         const retval = zoomAll();
         expect(retval).toExist();
         expect(retval.type).toBe(ZOOM_ALL);
+    });
+    it('Test startSyncWMS', () => {
+        const retval = startSyncWMS();
+        expect(retval).toExist();
+        expect(retval.type).toBe(START_SYNC_WMS);
     });
     it('Test openAdvancedSearch', () => {
         const retval = openAdvancedSearch();
