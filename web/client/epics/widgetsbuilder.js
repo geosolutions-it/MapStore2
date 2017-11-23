@@ -17,6 +17,7 @@ const {
 } = require('../actions/draw');
 const {QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {setControlProperty, TOGGLE_CONTROL} = require('../actions/controls');
+const {ADD_LAYER} = require('../actions/layers');
 const {LOCATION_CHANGE} = require('react-router-redux');
 
 const {featureTypeSelected} = require('../actions/wfsquery');
@@ -29,8 +30,11 @@ const getFTSelectedArgs = (state) => {
 };
 module.exports = {
     openWidgetEditor: action$ => action$.ofType(NEW, EDIT)
-        .switchMap(() => Rx.Observable.of(setControlProperty("widgetBuilder", "enabled", true))),
-    closeWidgetEditorOnFinish: action$ => action$.ofType(INSERT)
+        .switchMap(() => Rx.Observable.of(
+            setControlProperty("widgetBuilder", "enabled", true),
+            setControlProperty("metadataexplorer", "enabled", false)
+    )),
+    closeWidgetEditorOnFinish: action$ => action$.ofType(INSERT, ADD_LAYER)
         .switchMap(() => Rx.Observable.of(setControlProperty("widgetBuilder", "enabled", false))),
     initEditorOnNew: action$ => action$.ofType(NEW)
         .switchMap((w) => Rx.Observable.of(editNewWidget({

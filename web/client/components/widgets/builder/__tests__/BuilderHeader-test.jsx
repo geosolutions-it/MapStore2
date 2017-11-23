@@ -37,6 +37,11 @@ describe('BuilderHeader component', () => {
         ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
         expect(spyonClose).toHaveBeenCalled();
     });
+    it('filter button not present on first step', () => {
+        ReactDOM.render(<BuilderHeader step={0} />, document.getElementById("container"));
+        const btn = document.querySelector('.m-padding-md button');
+        expect(btn).toNotExist();
+    });
     it('Test BuilderHeader  openFilterEditor callback', () => {
         const actions = {
             openFilterEditor: () => {}
