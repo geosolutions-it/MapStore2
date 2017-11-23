@@ -37,13 +37,18 @@ describe('BuilderHeader component', () => {
         ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
         expect(spyonClose).toHaveBeenCalled();
     });
+    it('filter button not present on first step', () => {
+        ReactDOM.render(<BuilderHeader step={0} />, document.getElementById("container"));
+        const btn = document.querySelector('.glyphicon-filter');
+        expect(btn).toNotExist();
+    });
     it('Test BuilderHeader  openFilterEditor callback', () => {
         const actions = {
             openFilterEditor: () => {}
         };
         const spy = expect.spyOn(actions, 'openFilterEditor');
-        ReactDOM.render(<BuilderHeader openFilterEditor={actions.openFilterEditor} />, document.getElementById("container"));
-        const btn = document.querySelector('.m-padding-md button'); // the toolbar button
+        ReactDOM.render(<BuilderHeader step={1} openFilterEditor={actions.openFilterEditor} />, document.getElementById("container"));
+        const btn = document.querySelector('.glyphicon-filter'); // the toolbar button
         ReactTestUtils.Simulate.click(btn); // <-- trigger event callback
         expect(spy).toHaveBeenCalled();
     });

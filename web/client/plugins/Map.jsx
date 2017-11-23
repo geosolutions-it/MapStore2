@@ -178,6 +178,7 @@ class MapPlugin extends React.Component {
         return (<plugins.Layer type="vector" srs={projection} position={index} key="highlight" options={{name: "highlight"}}>
                     {this.props.features.map( (feature) => {
                         return (<plugins.Feature
+                            msId={feature.id}
                             key={feature.id}
                             crs={projection}
                             type={feature.type}
@@ -218,6 +219,7 @@ class MapPlugin extends React.Component {
                 return (
                     <plugins.Feature
                         key={feature.id}
+                        msId={feature.id}
                         type={feature.type}
                         crs={projection}
                         geometry={feature.geometry}

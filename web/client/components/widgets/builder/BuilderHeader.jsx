@@ -66,6 +66,7 @@ module.exports = ({onClose = () => {}, openFilterEditor = () => {}, step = 0, ed
                         glyph: "arrow-left",
                         tooltipId: getBackTooltipId(step)
                     }, {
+                        visible: step > 0,
                         onClick: openFilterEditor,
                         glyph: "filter",
                         tooltipId: "widgets.builder.setupFilter"
