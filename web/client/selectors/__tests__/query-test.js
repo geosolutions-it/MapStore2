@@ -235,7 +235,16 @@ const initialState = {
           properties: {
             name: 'vvvv'
           }
+      },
+      {
+        type: 'Feature',
+        id: 'poligoni.8',
+        geometry: null,
+        geometry_name: 'geometry',
+        properties: {
+          name: 'no geom'
         }
+      }
       ],
       crs: {
         type: 'name',
@@ -317,7 +326,7 @@ describe('Test query selectors', () => {
     it('test resultsSelector selector', () => {
         const res = resultsSelector(initialState);
         expect(res).toExist();
-        expect(res.length).toBe(4);
+        expect(res.length).toBe(5);
     });
     it('test paginationInfo.startIndex selector', () => {
         const startIndex = paginationInfo.startIndex(initialState);
@@ -329,7 +338,7 @@ describe('Test query selectors', () => {
     });
     it('test paginationInfo.resultSize selector', () => {
         const featuresLength = paginationInfo.resultSize(initialState);
-        expect(featuresLength).toBe(4);
+        expect(featuresLength).toBe(5);
     });
     it('test paginationInfo.totalFeatures selector', () => {
         const totalFeatures = paginationInfo.totalFeatures(initialState);
