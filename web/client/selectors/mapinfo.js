@@ -9,7 +9,7 @@
 const {get} = require('lodash');
 
 const {createSelector} = require('reselect');
-
+const {modeSelector} = require('./featuregrid');
 /**
  * selects mapinfo state
  * @name mapinfo
@@ -39,7 +39,7 @@ const drawSupportActiveSelector = (state) => {
     const drawStatus = get(state, "draw.drawStatus", false);
     return drawStatus && drawStatus !== 'clean' && drawStatus !== 'stop';
 };
-const gridEditingSelector = (state) => get(state, "featuregrid.mode") === 'EDIT';
+const gridEditingSelector = createSelector(modeSelector, (mode) => mode === 'EDIT');
 const annotationsEditingSelector = (state) => get(state, "annotations.editing");
 const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false);
 
