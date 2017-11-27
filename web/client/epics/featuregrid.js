@@ -606,7 +606,7 @@ module.exports = {
                                         startSyncWMS());
                                 });
                         }
-                        return Rx.Observable.of(startSyncWMS());
+                        return Rx.Observable.of(addNativeCrsLayer(layerId, nativeCrs), startSyncWMS());
                     });
             }
             return Rx.Observable.of(startSyncWMS());
