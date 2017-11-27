@@ -15,6 +15,8 @@ const REMOVE_GROUP_FIELD = 'REMOVE_GROUP_FIELD';
 const CHANGE_CASCADING_VALUE = 'CHANGE_CASCADING_VALUE';
 const EXPAND_ATTRIBUTE_PANEL = 'EXPAND_ATTRIBUTE_PANEL';
 const EXPAND_SPATIAL_PANEL = 'EXPAND_SPATIAL_PANEL';
+const EXPAND_CROSS_LAYER = 'QUERYFORM:EXPAND_CROSS_LAYER';
+const SET_CROSS_LAYER_PARAMETER= 'QUERYFORM:SET_CROSS_LAYER_PARAMETER';
 const SELECT_SPATIAL_METHOD = 'SELECT_SPATIAL_METHOD';
 const SELECT_VIEWPORT_SPATIAL_METHOD = 'SELECT_VIEWPORT_SPATIAL_METHOD';
 const UPDATE_GEOMETRY = 'UPDATE_GEOMETRY';
@@ -140,7 +142,19 @@ function expandSpatialFilterPanel(expand) {
         expand: expand
     };
 }
-
+function expandCrossLayerFilterPanel(expand) {
+    return {
+        type: EXPAND_CROSS_LAYER,
+        expand
+    };
+}
+function setCrossLayerFilterParameter(key, value) {
+    return {
+        type: SET_CROSS_LAYER_PARAMETER,
+        key,
+        value
+    };
+}
 function selectSpatialMethod(method, fieldName) {
     return {
         type: SELECT_SPATIAL_METHOD,
@@ -368,11 +382,13 @@ module.exports = {
     CHANGE_CASCADING_VALUE,
     EXPAND_ATTRIBUTE_PANEL,
     EXPAND_SPATIAL_PANEL,
+    EXPAND_CROSS_LAYER,
     SELECT_SPATIAL_METHOD,
     SELECT_SPATIAL_OPERATION,
     CHANGE_SPATIAL_ATTRIBUTE,
     REMOVE_SPATIAL_SELECT,
     SHOW_SPATIAL_DETAILS,
+    SET_CROSS_LAYER_PARAMETER,
     QUERY_FORM_SEARCH,
     QUERY_FORM_RESET,
     // WFS_LOAD_ERROR,
@@ -417,11 +433,13 @@ module.exports = {
     changeCascadingValue,
     expandAttributeFilterPanel,
     expandSpatialFilterPanel,
+    expandCrossLayerFilterPanel,
     selectSpatialMethod,
     selectSpatialOperation,
     changeSpatialAttribute,
     removeSpatialSelection,
     showSpatialSelectionDetails,
+    setCrossLayerFilterParameter,
     query,
     reset,
     changeDwithinValue,

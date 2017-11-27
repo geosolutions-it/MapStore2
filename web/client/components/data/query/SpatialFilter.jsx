@@ -1,4 +1,4 @@
-const PropTypes = require('prop-types');
+
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,6 +7,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 
 const {Row, Col, Panel, Button, Glyphicon, FormControl} = require('react-bootstrap');
 const ComboField = require('./ComboField');
@@ -15,6 +16,7 @@ const GeometryDetails = require('./GeometryDetails');
 const ZoneField = require('./ZoneField');
 
 const LocaleUtils = require('../../../utils/LocaleUtils');
+const SwitchPanel = require('../../misc/switch/SwitchPanel');
 const I18N = require('../../I18N/I18N');
 
 class SpatialFilter extends React.Component {
@@ -60,18 +62,7 @@ class SpatialFilter extends React.Component {
     };
 
     renderHeader = () => {
-        const spatialFilterHeader = LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.spatial_filter_header");
-
-        return (
-            <span>
-                <span
-                    style={{cursor: "pointer"}}
-                    onClick={this.props.actions.onExpandSpatialFilterPanel.bind(null, !this.props.spatialPanelExpanded)}>{spatialFilterHeader}</span>
-                <button onClick={this.props.actions.onExpandSpatialFilterPanel.bind(null, !this.props.spatialPanelExpanded)} className="close">
-                    {this.props.spatialPanelExpanded ? <Glyphicon glyph="glyphicon glyphicon-collapse-down"/> : <Glyphicon glyph="glyphicon glyphicon-expand"/>}
-                </button>
-            </span>
-        );
+        return LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.spatial_filter_header");
     };
 
     renderSpatialHeader = () => {
@@ -291,9 +282,15 @@ class SpatialFilter extends React.Component {
             <div className="query-filter-container">
                 {
                     this.props.withContainer ?
-                        <Panel id="spatialFilterPanel" collapsible expanded={this.props.spatialPanelExpanded} header={this.renderHeader()}>
+                        <SwitchPanel
+                            id="spatialFilterPanel"
+                            header={this.renderHeader()}
+                            collapsible
+                            expanded={this.props.spatialPanelExpanded}
+                            onSwitch={(expanded) => this.props.actions.onExpandSpatialFilterPanel(expanded)}
+                            >
                             {this.renderSpatialPanel(operationRow, drawLabel)}
-                        </Panel>
+                        </SwitchPanel>
                      : this.renderSpatialPanel(operationRow, drawLabel)
                 }
                 {detailsPanel}

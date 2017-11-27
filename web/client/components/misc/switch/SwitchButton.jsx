@@ -16,12 +16,9 @@ class SwitchButton extends React.Component {
     render() {
         return (<label className="mapstore-switch-btn">
             <input type="checkbox"
-                onChange={() => {
-                    this.props.onChange(!this.props.checked);
-                }}
                 checked={this.props.checked}
                 />
-            <span className="m-slider"/>
+            <span onClick={() => this.props.onChange(!this.props.checked)} className="m-slider"/>
         </label>);
     }
 }

@@ -17,6 +17,8 @@ const {
     CHANGE_CASCADING_VALUE,
     EXPAND_ATTRIBUTE_PANEL,
     EXPAND_SPATIAL_PANEL,
+    EXPAND_CROSS_LAYER,
+    SET_CROSS_LAYER_PARAMETER,
     SELECT_SPATIAL_METHOD,
     SELECT_SPATIAL_OPERATION,
     CHANGE_SPATIAL_ATTRIBUTE,
@@ -52,6 +54,7 @@ const assign = require('object-assign');
 
 const union = require('turf-union');
 const bbox = require('turf-bbox');
+const {set} = require('../utils/ImmutableUtils');
 
 const initialState = {
     searchUrl: null,
@@ -198,6 +201,16 @@ function queryform(state = initialState, action) {
         case EXPAND_SPATIAL_PANEL: {
             return assign({}, state, {
                 spatialPanelExpanded: action.expand
+            });
+        }
+        case EXPAND_CROSS_LAYER: {
+            return assign({}, state, {
+                crossLayerExpanded: action.expand
+            });
+        }
+        case SET_CROSS_LAYER_PARAMETER: {
+            return assign({}, state, {
+                crossLayerFilter: set(action.key, action.value, state.crossLayerFilter)
             });
         }
         case SELECT_SPATIAL_METHOD: {
