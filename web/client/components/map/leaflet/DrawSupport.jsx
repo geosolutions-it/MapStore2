@@ -345,6 +345,10 @@ class DrawSupport extends React.Component {
         if (newProps.options.drawEnabled) {
             this.addDrawInteraction(props);
         }
+        if (newProps.options.updateSpatialField) {
+            const feature = this.fromLeafletFeature();
+            this.props.onEndDrawing(feature, this.props.drawOwner);
+        }
     };
 
     addEditInteraction = (newProps) => {
@@ -458,6 +462,30 @@ class DrawSupport extends React.Component {
             geom = featureEdited.toGeoJSON().geometry;
         }
         return assign({}, featureEdited.toGeoJSON(), {geometry: geom});
+    };
+    fromLeafletFeature = () => {
+        const layer = this.drawLayer;
+        // let drawn geom stay on the map
+        let geoJesonFt = layer.toGeoJSON();
+        let bounds = layer.getBounds();
+        // const newGeoJsonFt = this.convertFeaturesToGeoJson([feature], props);
+        let extent = this.boundsToOLExtent(bounds);
+        let center = bounds.getCenter();
+        let radius = layer.getRadius ? layer.getRadius() : 0;
+        let coordinates = geoJesonFt.features[0].geometry.coordinates;
+        let projection = "EPSG:4326";
+        let type = geoJesonFt.features[0].geometry.type;
+        // We always draw geoJson feature
+        // this.drawLayer.addData(geoJesonFt);
+        // Geometry respect query form panel needs
+        return {
+            type,
+            extent,
+            center,
+            coordinates,
+            radius,
+            projection
+        };
     };
 }
 

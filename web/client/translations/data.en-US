@@ -551,7 +551,7 @@
                 "filterType": "Filter Type",
                 "geometric_operation": "Geometric Operation",
                 "combo_placeholder": "Select...",
-                "spatial_filter_header": "Spatial Filter",
+                "spatial_filter_header": "Region of interest",
                 "draw_start_label": "Draw the region of interest on the map",
                 "dwithin_label": "meters",
                 "details": {
@@ -567,6 +567,7 @@
                 "methods": {
                     "zone": "Zone",
                     "viewport": "Viewport",
+                    "regions": "Regions",
                     "box": "Rectangle",
                     "buffer": "Buffer",
                     "circle": "Circle",

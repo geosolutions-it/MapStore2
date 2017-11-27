@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -7,12 +6,16 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 
 const {Row, Col, Panel, Button, Glyphicon, FormControl} = require('react-bootstrap');
 const ComboField = require('./ComboField');
 const GeometryDetails = require('./GeometryDetails');
+const AutocompleteWFSComboboxContainer = require('../../misc/AutocompleteWFSComboboxContainer');
+const ComboFieldListItem = require('./ComboFieldListItem');
 
 const ZoneField = require('./ZoneField');
+const {find} = require('lodash');
 
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const I18N = require('../../I18N/I18N');
@@ -59,6 +62,9 @@ class SpatialFilter extends React.Component {
         }
     };
 
+    getMethodFromId = (id) => {
+        return find(this.props.spatialMethodOptions, method => method && method.id === id) || null;
+    };
     renderHeader = () => {
         const spatialFilterHeader = LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.spatial_filter_header");
 
@@ -75,21 +81,23 @@ class SpatialFilter extends React.Component {
     };
 
     renderSpatialHeader = () => {
-        const selectedMethod = this.props.spatialMethodOptions.filter((opt) => this.props.spatialField.method === opt.id)[0];
+        const selectedMethod = this.getMethodFromId(this.props.spatialField.method);
+        // const selectedMethod = this.props.spatialMethodOptions.filter((opt) => this.props.spatialField.method === opt.id)[0];
 
         const methodCombo =
             (<ComboField
                 fieldOptions={
                     this.props.spatialMethodOptions.map((opt) => {
-                        return LocaleUtils.getMessageById(this.context.messages, opt.name);
+                        return LocaleUtils.getMessageById(this.context.messages, opt.name) || opt.name;
                     })
                 }
+                itemComponent={(other) => <ComboFieldListItem customItemClassName={this.getMethodFromId(other.item) && this.getMethodFromId(other.item).customItemClassName || ""} {...other}/>}
                 placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.combo_placeholder")}
                 fieldName="method"
                 style={{width: "140px"}}
                 fieldRowId={new Date().getTime()}
                 fieldValue={
-                    LocaleUtils.getMessageById(this.context.messages, selectedMethod ? selectedMethod.name : "")
+                    LocaleUtils.getMessageById(this.context.messages, selectedMethod ? selectedMethod.name : "") || selectedMethod && selectedMethod.name || ""
                 }
                 onUpdateField={this.updateSpatialMethod}/>)
         ;
@@ -181,11 +189,36 @@ class SpatialFilter extends React.Component {
                 }) : <span/>;
     };
 
+    renderRoiPanel = () => {
+        const selectedMethod = this.getMethodFromId(this.props.spatialField.method);
+        return (<Panel>
+            <div className="container-fluid">
+                <Row className="filter-field-row">
+                    <Col xs={5}>
+                        <span>{this.props.spatialField.method}</span>
+                    </Col>
+                    <Col xs={7}>
+                        <div style={{width: "140px"}}>
+                            <AutocompleteWFSComboboxContainer
+                                valueField={selectedMethod && selectedMethod.filterProps && selectedMethod.filterProps.valueField}
+                                textField={selectedMethod && selectedMethod.filterProps && selectedMethod.filterProps.valueField}
+                                url={selectedMethod && selectedMethod.url}
+                                onChangeDrawingStatus={this.props.actions.onChangeDrawingStatus}
+                                filterProps={selectedMethod && selectedMethod.filterProps}
+                                />
+                        </div>
+
+                    </Col>
+                </Row>
+            </div>
+        </Panel>);
+    };
     renderSpatialPanel = (operationRow, drawLabel) => {
         return (
             <Panel>
                 {this.props.spatialMethodOptions.length > 1 ? this.renderSpatialHeader() : <span/>}
                 {this.renderZoneFields()}
+                {this.props.spatialField.method && this.getMethodFromId(this.props.spatialField.method) && this.getMethodFromId(this.props.spatialField.method).type === "wfsGeocoder" ? this.renderRoiPanel() : <span/>}
                 {this.props.spatialOperations.length > 1 ?
                     <Panel>
                         <div className="container-fluid">
@@ -208,7 +241,8 @@ class SpatialFilter extends React.Component {
         const selectedOperation = this.props.spatialOperations.filter((opt) => this.props.spatialField.operation === opt.id)[0];
 
         let drawLabel = <span/>;
-        if (this.props.spatialField.method && this.props.spatialField.method !== "ZONE" && this.props.spatialField.method !== "Viewport") {
+        if (this.props.spatialField.method !== "ZONE" && this.props.spatialField.method !== "Viewport" &&
+        this.getMethodFromId(this.props.spatialField.method) && this.getMethodFromId(this.props.spatialField.method).type !== "wfsGeocoder") {
             drawLabel = !this.props.spatialField.geometry ?
                 (<span>
                     <hr width="100%"/>
@@ -305,25 +339,29 @@ class SpatialFilter extends React.Component {
         this.props.actions.onShowSpatialSelectionDetails(false);
 
         const method = this.props.spatialMethodOptions.filter((opt) => {
-            if (value === LocaleUtils.getMessageById(this.context.messages, opt.name)) {
+            if (value === (LocaleUtils.getMessageById(this.context.messages, opt.name) || opt.name)) {
                 return opt;
             }
-        })[0].id;
+        })[0].id; // TODO change id with a type, change also localConfig objects?
 
         this.props.actions.onSelectSpatialMethod(method, name);
 
-        switch (method) {
-            case "ZONE": {
-                this.changeDrawingStatus('clean', null, "queryform", []); break;
+        if (this.getMethodFromId(method).type !== "wfsGeocoder") {
+            switch (method.id) {
+                case "ZONE": {
+                    this.changeDrawingStatus('clean', null, "queryform", []); break;
+                }
+                case "Viewport": {
+                    this.changeDrawingStatus('clean', null, "queryform", []);
+                    this.props.actions.onSelectViewportSpatialMethod();
+                    break;
+                }
+                default: {
+                    this.changeDrawingStatus('start', method, "queryform", [], {stopAfterDrawing: true});
+                }
             }
-            case "Viewport": {
-                this.changeDrawingStatus('clean', null, "queryform", []);
-                this.props.actions.onSelectViewportSpatialMethod();
-                break;
-            }
-            default: {
-                this.changeDrawingStatus('start', method, "queryform", [], {stopAfterDrawing: true});
-            }
+        } else {
+            this.changeDrawingStatus('clean', null, "queryform", []);
         }
     };
 
@@ -346,7 +384,7 @@ class SpatialFilter extends React.Component {
     changeDrawingStatus = (status, method, owner, features, options) => {
         this.props.actions.onChangeDrawingStatus(
             status,
-            method !== undefined ? method : this.props.spatialField.method,
+            method !== undefined ? method : this.props.spatialField.method && this.props.spatialField.method.id,
             owner,
             features,
             options);

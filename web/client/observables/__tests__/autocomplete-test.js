@@ -11,8 +11,9 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const {isEmpty} = require('lodash');
 const assign = require('object-assign');
-const {createPagedUniqueAutompleteStream} = require('../autocomplete');
+const {createPagedUniqueAutompleteStream, singleAttributeFilter, createWFSFetchStream} = require('../autocomplete');
 const AutocompleteEditor = require('../../components/data/featuregrid/editors/AutocompleteEditor');
+const AutocompleteWFSComboboxContainer = require('../../components/misc/AutocompleteWFSComboboxContainer');
 const rxjsConfig = require('recompose/rxjsObservableConfig').default;
 const {setObservableConfig, mapPropsStreamWithConfig} = require('recompose');
 setObservableConfig(rxjsConfig);
@@ -83,5 +84,73 @@ describe('\nautocomplete Observables', () => {
         )(AutocompleteEditor);
         const item = ReactDOM.render(<ReactItem {...assign({}, props, {performFetch: true, url: "wrong"})}/>, document.getElementById("container"));
         expect(item).toExist();
+    });
+
+    it('test with fake createWFSFetchStream, performFetch=true', (done) => {
+        const ReactItem = mapPropsStream(props$ =>
+            createWFSFetchStream(props$).map(p => {
+                if (!isEmpty(p) && p.fetchedData !== undefined ) {
+                    expect(p.fetchedData.values.length).toBe(2);
+                    expect(p.fetchedData.values[0].name).toBe("name ft 1");
+                    expect(p.fetchedData.size).toBe(2);
+                    expect(p.fetchedData.features.length).toBe(2);
+                    expect(p.busy).toBe(false);
+                    done();
+                }
+            })
+        )(AutocompleteWFSComboboxContainer);
+        const item = ReactDOM.render(<ReactItem {...assign({}, {
+            url: "base/web/client/test-resources/wps/pageUniqueResponse.jsonwfs",
+            "filterProps": {
+                "blacklist": [],
+                "maxFeatures": 5,
+                "predicate": "LIKE",
+                "queriableAttributes": ["STATE_NAME"],
+                "typeName": "topp:states",
+                "valueField": "STATE_NAME",
+                "returnFullData": true
+            },
+            value: "searchText",
+            performFetch: true})}/>, document.getElementById("container"));
+        expect(item).toExist();
+    });
+    it('test with fake createWFSFetchStream, performFetch=false', (done) => {
+        const ReactItem = mapPropsStream(props$ =>
+            createWFSFetchStream(props$).map(p => {
+                if (!isEmpty(p) && p.fetchedData !== undefined ) {
+                    expect(p.fetchedData.values.length).toBe(0);
+                    expect(p.fetchedData.size).toBe(0);
+                    expect(p.fetchedData.features.length).toBe(0);
+                    expect(p.busy).toBe(false);
+                    done();
+                }
+            })
+        )(AutocompleteWFSComboboxContainer);
+        const item = ReactDOM.render(<ReactItem {...assign({}, {
+            url: "base/web/client/test-resources/wps/pageUniqueResponse.jsonwfs",
+            "filterProps": {
+                "blacklist": [],
+                "maxFeatures": 5,
+                "predicate": "LIKE",
+                "queriableAttributes": ["STATE_NAME"],
+                "typeName": "topp:states",
+                "valueField": "STATE_NAME",
+                "returnFullData": true
+            },
+            value: "searchText",
+            performFetch: false})}/>, document.getElementById("container"));
+        expect(item).toExist();
+    });
+    it("test singleAttributeFilter NAME LIKE '%montana%'", () => {
+        const searchText = "montana";
+        const queriableAttributes = ["NAME"];
+        const predicate = "LIKE";
+        const filter = singleAttributeFilter({searchText, queriableAttributes, predicate});
+        expect(filter).toExist();
+        expect(filter).toBe("(strToLowerCase(NAME) LIKE '%montana%')");
+    });
+    it("test singleAttributeFilter empty queriable attributes, returns empty string", () => {
+        const filter = singleAttributeFilter({});
+        expect(filter).toBe("");
     });
 });
