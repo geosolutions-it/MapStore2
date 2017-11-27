@@ -1370,12 +1370,17 @@ describe('featuregrid Epics', () => {
         };
 
         const newState = assign({}, state, stateFeaturegrid);
-        testEpic(startSyncWmsFilter, 1, toggleSyncWms(), actions => {
-            expect(actions.length).toBe(1);
+        proj4.defs("EPSG:3044", "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs");
+        testEpic(startSyncWmsFilter, 2, toggleSyncWms(), actions => {
+            expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
                     case START_SYNC_WMS:
                         expect(action.type).toBe(START_SYNC_WMS);
+                        break;
+                    case CHANGE_LAYER_PROPERTIES:
+                        expect(action.type).toBe(CHANGE_LAYER_PROPERTIES);
+                        expect(action.newProperties.nativeCrs).toBe("EPSG:3044");
                         break;
                     default:
                         expect(true).toBe(false);
