@@ -75,9 +75,13 @@
             "leave": "Verlaten",
             "accept": "Aanvaarden"
         },
+        "enable": "Activeren",
         "background": "Achtergrondkaart",
         "language": "Taal",
         "mousePositionCoordinates": "Coördinaten",
+        "mouseCoordinates": "Coördinaten:",
+        "mousePositionCRS": "CRS:",
+        "mapScale": "Schaal:",
         "showMousePositionCoordinates": "Toon de coördinaten",
         "menu": "Menu",
         "options": "Opties",
@@ -943,8 +947,7 @@
                 "text": "U kunt informatie en hulpmiddelen vinden om laag te beheren"
             },
             "searchBar": {
-                "title": "Zoekbalk"
-        ,
+                "title": "Zoekbalk",
                 "text": "Schrijf het adres van een te vinden plaats, bijv. '1st avenue, new york'. U kunt zelfs coördinaten inbrengen in volgend formaat: 43.87,10.20"
             },
             "home": {
@@ -966,14 +969,6 @@
             "zoomOutButton": {
                 "title": "UItzoomen",
                 "text": "Klik om de kaart te verkleinen"
-            },
-            "measureAreaBrugisButton": {
-                "title": "Oppervlaktemeting",
-                "text": "Gebruik deze tool om oppervlakken te meten"
-            },
-            "measureLengthBrugisButton": {
-                "title": "Lengte meting",
-                "text": "Gebruik dit hulpmiddel om afstanden te meten"
             },
             "fullscreen": {
                 "title": "Schakel over naar volledig scherm",

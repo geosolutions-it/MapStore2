@@ -52,11 +52,10 @@
             "confirmDelete": "Êtes-vous sûr?",
             "featureTypeError": "Impossible de charger les attributs de calque",
             "elevation": "élévation",
-            "titleTranslations": "Title translations",
-            "groupProperties": "Group properties",
-            "featureInfo": "Feature Info",
-            "featureInfoFormatLbl": "Information, format de la réponse",
-            "legenderror": "La légende n'est pas disponible"
+            "titleTranslations": "Traductions du titre",
+            "groupProperties": "Propriétés du groupe",
+            "featureInfo": "Informations attributaires de l'objet",
+            "featureInfoFormatLbl": "Information, format de la réponse"
         },
         "notification": {
             "update": "Update",
@@ -113,16 +112,6 @@
         "groups": "Groups",
         "permission": "Permission",
         "permissions": "Permissions",
-        "global": {
-            "colors": {
-                "red": "{number, plural, =0 {Rouge} =1 {Rouge} other {rouges}}",
-                "blue": "{number, plural, =0 {Bleu} =1 {Bleu} other {Bleus}}",
-                "green": "{number, plural, =0 {vert} =1 {vert} other {verts}}",
-                "brown": "{number, plural, =0 {Brun} =1 {Brun} other {Bruns}}",
-                "purple": "{number, plural, =0 {Pourpre} =1 {Pourpre} other {Pourpre}}",
-                "random": "{number, plural, =0 {Random} =1 {Random} other {Random}}"
-            }
-        },
         "home":{
             "open": "Ouvrir",
             "description": "MapStore 2 est développé pour créer, sauvegarder et partager de façon simple et intuitive cartes et assemblages créés à partir du contenu de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce.<br/>Visitez notre <a href=\"/mapstore/docs/\">page d'accueil</a> pour plus de détails.",
@@ -237,31 +226,29 @@
             "toggleLayerVisibility": "Activer / désactiver la visibilité du calque",
             "displayLegendAndTools": "Afficher la légende et les outils",
             "zoomToLayerExtent": "Zoomer sur l'étendue du calque",
-
-            "addLayer": "Añadir capa",
-            "toolZoomToLayerTooltip": "Zoom to selected layer extent",
-            "toolZoomToLayersTooltip": "Zoom to selected layers extent",
-            "toolLayerSettingsTooltip": "Selected layer settings",
-            "toolGroupSettingsTooltip": "Selected group settings",
-            "toolTrashLayerTooltip": "Remove selected layer",
-            "toolTrashLayersTooltip": "Remove selected layers",
-            "toolFeaturesGridTooltip": "Open Attribute Table",
-            "noFilteredResults": "No results",
-            "filterPlaceholder": "Filter layers",
-            "clearFilter": "Clear filter",
-            "toolReloadLayerTooltip": "Force reload of selected layer",
-            "toolReloadLayersTooltip": "Force reload of selected layers",
-            "statusIconOpen": "Close group",
-            "statusIconClose": "Open group",
-            "grabLayerIcon": "Grab and sort layer",
-            "grabGroupIcon": "Grab and sort group",
-            "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
-            "createWidget": "Créer un widget pour le calque sélectionné",
+            "addLayer": "Ajouter la couche",
+            "toolZoomToLayerTooltip": "Zoomer sur l'extension de la couche sélectionnée",
+            "toolZoomToLayersTooltip": "Zoomer sur l'extension des couches sélectionnées",
+            "toolLayerSettingsTooltip": "Réglages de la couche sélectionnée",
+            "toolGroupSettingsTooltip": "Réglages du groupe de couches sélectionné",
+            "toolTrashLayerTooltip": "Retirer la couche sélectionnée",
+            "toolTrashLayersTooltip": "Retirer les couches sélectionnées",
+            "toolFeaturesGridTooltip": "Ouvrir la table attributaires",
+            "noFilteredResults": "Pas de résultats",
+            "filterPlaceholder": "Filtrer les couches",
+            "clearFilter": "Supprimer le filtre",
+            "toolReloadLayerTooltip": "Forcer la recharge de la couche sélectionnée",
+            "toolReloadLayersTooltip": "Forcer la recharge des couches sélectionnées",
+            "statusIconOpen": "Fermer le groupe de couches",
+            "statusIconClose": Ouvrir le groupe de couches",
+            "grabLayerIcon": "Attraper et déplacer la couche",
+            "grabGroupIcon": "Attraper et déplacer le groupe",
+            "toggleLayerVisibilityWarning": "Inverser la visibilité de la couche, attention: la couche ne s'est pas chargée correctement",
             "editLayerProperties": "Modifier les propriétés de la couche",
             "browseData": "Ouvrir la table d'attribut",
             "searchFeatures": "Recherche sur ce calque ...",
             "removeLayer": "Supprimer la couche",
-            "loadingerror": "La couche n'a pas été chargée correctement ou pas disponible",
+            "loadingerror": "La couche n'a pas été chargée correctement",
             "measure": "Mesurer",
             "backgroundSwitcher": "Fond de plan",
             "layers": "Couches",
@@ -306,17 +293,17 @@
             "layoutWarning": "Mise en page impossible"
         },
         "backgroundSwither":{
-            "tooltip": "Selection du fond de plan"
+            "tooltip": "Sélection du fond de plan"
         },
         "info":{
-            "tooltip": "Interroger les objects sur la carte"
+            "tooltip": "Interroger les objets sur la carte"
         },
         "expandtoolbar": {
             "tooltip": "Agrandir / Réduire"
         },
         "getFeatureInfoTitle": "Informations de l'objet",
         "identifyTitle": "Informations de l'objet",
-        "identifyNoQueryableLayers": "Aucune couche active requise",
+        "identifyNoQueryableLayers": "Aucune couche active rencontrée",
         "identifyRevGeocodeHeader": "Coordonnées",
         "identifyRevGeocodeModalTitle": "Adresse",
         "identifyRevGeocodeSubmitText": "Plus d'Informations",
@@ -965,108 +952,6 @@
                 "invalidOutputFormat": "Le format d'exportation sélectionné n'est pas disponible"
             }
         },
-        "widgets": {
-            "selectChartType": {
-                "title": "Sélectionnez le type de widget"
-            },
-            "title": "Titre",
-            "description": "Description",
-            "errors": {
-                "nodata": "Aucune donnée disponible pour la couche / filtre sélectionné",
-                "nodatainviewport": "Aucune donnée dans la fenêtre courante",
-                "timeoutExpired": "Le service a pris trop de temps pour répondre. Peut-être que la requête est trop complexe ou que le serveur est occupé",
-                "genericError": "Il y a une erreur lors de la récupération des données"
-            },
-            "builder": {
-                "header": {
-                    "title": "Widget"
-                },
-                "wizard": {
-                    "backToTypeSelection": "Retour à la sélection du type",
-                    "backToChartOptions": "retour aux options de graphique",
-                    "configureChartOptions": "Configurer les options de graphique",
-                    "configureWidgetOptions": "Configurer les options du widget",
-                    "updateWidget": "Mettre à jour le widget",
-                    "addToTheMap": "Ajouter le widget à la carte"
-                },
-                "errors": {
-                    "noWidgetsAvailableTitle": "Aucun widget disponible",
-                    "noWidgetsAvailableDescription": "<p> Vous ne pouvez pas créer de widget pour le calque sélectionné. C'est probablement parce que la couche ne convient pas aux widgets ou que le serveur n'expose pas tous les services ou informations nécessaires pour générer un widget. Les causes possibles sont: <ul> <li> Le calque sélectionné est une couche raster </li><li> Le service WFS n'est pas disponible</li><li>gs:aggregate process n'est pas disponible </li> </ul>) <p>"
-                },
-                "setupFilter": "Configurer un filtre pour les données du widget"
-            },
-            "widget": {
-                "menu": {
-                    "showChartData": "Afficher les données de graphique",
-                    "edit": "éditer",
-                    "delete": "effacer",
-                    "confirmDelete": "Êtes-vous sûr?",
-                    "downloadData": "Télécharger les données",
-                    "exportImage": "Exporter l'image"
-                }
-            },
-            "chartType": {
-                "bar": {
-                    "title": "Diagramme à barres",
-                    "description": "Créer un graphique à barres à ajouter à la carte",
-                    "caption": "barres"
-                },
-                "pie": {
-                    "title": "Diagramme à secteurs",
-                    "description": "Créer un graphique à secteurs à ajouter à la carte",
-                    "caption": "secteurs"
-                },
-                "line": {
-                    "title": "Graphique linéaire",
-                    "description": "Créer un graphique linéaire à ajouter à la carte",
-                    "caption": "linéaire"
-                },
-                "gauge": {
-                    "title": "Tableau de jauge",
-                    "description": "Créer un graphique de jauge à ajouter à la carte",
-                    "caption": "jauge"
-                }
-            },
-            "chartOptionsTitle": "Données de graphique",
-            "widgetOptionsTitle": "Info sur le widget",
-            "groupByAttributes": {
-                "line": "Attributs X",
-                "pie": "Grouper par",
-                "bar": "Attributs X",
-                "gauge": "Grouper par"
-            },
-            "aggregationAttribute": {
-                "line": "Attributs Y",
-                "pie": "Valeur",
-                "bar": "Attributs Y",
-                "gauge": "valeur"
-            },
-            "aggregateFunction": {
-                "line": "Opération",
-                "pie": "Opération",
-                "bar": "Opération",
-                "gauge": "Opération"
-            },
-            "colorRamp": {
-                "line": "Couleur",
-                "pie": "Rampe de couleur",
-                "bar": "Couleur",
-                "gauge": "Couleur"
-            },
-            "mapSync": "Live Filter par viewport",
-            "displayLegend": {
-                "line": "Légende d'affichage",
-                "pie": "Légende d'affichage",
-                "bar": "Légende d'affichage",
-                "gauge": "Afficher les étiquettes"
-            }
-
-        },
-        "wizard": {
-            "next": "Suivant",
-            "prev": "Précédent",
-            "finish": "Finition"
-        },
         "vectorstyler": {
             "tooltip": "Créer et éditer un style de couche vectorielle",
             "paneltitle": "Style de couche",
@@ -1084,7 +969,7 @@
             "minlabel": "Dénominateur d'échelle minimum",
             "maxlabel": "Dénominateur d'échelle maximum",
             "maxerror": "La valeur max doit être plus grande que la valeur min",
-            "minerror": "La vleur min doit être plus petite que la valeur max",
+            "minerror": "La valeur min doit être plus petite que la valeur max",
             "none": "Aucun"
         },
         "markNameSelector": {
@@ -1133,46 +1018,46 @@
             "cancelButton": "Annuler"
         },
         "tutorial": {
-            "title": "Tutorial",
-            "back": "Back",
-            "next": "Next",
-            "close": "Close",
-            "skip": "Skip",
-            "last": "Finish",
-            "start": "Start",
-            "checkbox": "don't show this message again",
-            "error": "Error: target not found",
+            "title": "Tutoriel",
+            "back": "Retour",
+            "next": "Suivant",
+            "close": "Fermer",
+            "skip": "Passer",
+            "last": "Terminer",
+            "start": "Commencer",
+            "checkbox": "Ne plus me montrer ce message",
+            "error": "Erreur: ressource non trouvée",
             "intro": {
-                "title": "Welcome on MapStore2",
-                "text": "framework to build web mapping applications using standard mapping libraries, such as OpenLayers 3 and Leaflet."
+                "title": "Bienvenue dans MapStore2",
+                "text": "Environnement de développement d'applications cartographiques en ligne utilisant des librairies cartographiques standards, telles qu'OpenLayers 3 et Leaflet."
             },
             "drawerMenu": {
-                "title": "Main menu",
-                "text": "You can find information and tools to manage layer"
+                "title": "Menu Principal",
+                "text": "Le catalogue des données ainsi que la légende de la carte se trouvent ici"
             },
             "searchBar": {
-                "title": "Search Bar",
-                "text": "Write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+                "title": "Recherche d'adresse",
+                "text": "Tapez l'adresse recherchée, par ex. Rue du progrès 80; vous pouvez aussi entrer des coordonnées au format 43.87,10.20"
             },
             "home": {
                 "title": "Home",
                 "text": "Click to go to homepage"
             },
             "searchButton": {
-                "title": "Search",
-                "text": "Click to open the search bar, then write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+                "title": "Recherche d'adresse",
+                "text": "Tapez l'adresse recherchée, par ex. Rue du progrès 80; vous pouvez aussi entrer des coordonnées au format 43.87,10.20"
             },
             "burgerMenu": {
-                "title": "Option Menu",
-                "text": "You can find options, settings and help"
+                "title": "Menu Options",
+                "text": "Les outils d'ajout de catalogue externe, de sauvegarde de carte, de choix linguistique et de paramétrage de BruGIS se trouvent ici"
             },
             "zoomInButton": {
                 "title": "Zoom In",
-                "text": "Click to enlarge the map"
+                "text": "Cliquez pour aggrandir la carte"
             },
             "zoomOutButton": {
                 "title": "Zoom Out",
-                "text": "Click to reduce the map"
+                "text": "Cliquez pour diminuer la carte"
             },
             "fullscreen": {
                 "title": "Basculer en plein écran",
@@ -1180,11 +1065,11 @@
             },
             "identifyButton": {
                 "title": "Info",
-                "text": "Press the button to activate the tool, then click on the map to retrieve information from layers"
+                "text": "Cliquez le bouton pour activer l'outil, cliquez ensuite dans la carte pour obtenir plus d'information"
             },
             "mapType": {
-                "title": "Library",
-                "text": "You can choose Leaflet or OpenLayers to render your maps"
+                "title": "Librairie",
+                "text": "Choisissez Leaflet ou OpenLayers pour afficher vos cartes"
             },
             "mapsGrid": {
                 "title": "Maps",
