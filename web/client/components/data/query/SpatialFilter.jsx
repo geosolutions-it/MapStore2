@@ -342,7 +342,7 @@ class SpatialFilter extends React.Component {
             if (value === (LocaleUtils.getMessageById(this.context.messages, opt.name) || opt.name)) {
                 return opt;
             }
-        })[0].id; // TODO change id with a type, change also localConfig objects?
+        })[0].id;
 
         this.props.actions.onSelectSpatialMethod(method, name);
 

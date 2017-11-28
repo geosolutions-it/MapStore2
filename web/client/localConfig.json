@@ -231,38 +231,7 @@
                       {"id": "Viewport", "name": "queryform.spatialfilter.methods.viewport"},
                       {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
                       {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
-                      {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"},
-                      {
-                        "id": "ToppStates",
-                        "name": "ToppStates",
-                        "type": "wfsGeocoder",
-                        "url": "http://demo.geo-solutions.it/geoserver/wfs",
-                        "filterProps": {
-                          "blacklist": [],
-                          "maxFeatures": 5,
-                          "predicate": "LIKE",
-                          "queriableAttributes": ["STATE_NAME"],
-                          "typeName": "topp:states",
-                          "valueField": "STATE_NAME",
-                          "returnFullData": true
-                        },
-                        "customItemClassName": "customItemClassName"
-                      }, {
-                        "id": "Islands",
-                        "name": "Islands",
-                        "type": "wfsGeocoder",
-                        "url": "http://demo.geo-solutions.it/geoserver/wfs",
-                        "filterProps": {
-                          "blacklist": [],
-                          "maxFeatures": 5,
-                          "predicate": "LIKE",
-                          "queriableAttributes": ["name"],
-                          "typeName": "atlantis:island",
-                          "valueField": "name",
-                          "returnFullData": true
-                        },
-                        "customItemClassName": "customItemClassName"
-                      }
+                      {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
                   ]
               }
             }, {
