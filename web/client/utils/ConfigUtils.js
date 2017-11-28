@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 var url = require('url');
 
 var axios = require('axios');
-const {isArray, isObject, endsWith} = require('lodash');
+const {isArray, isObject, endsWith, isNil} = require('lodash');
 const assign = require('object-assign');
 const {Promise} = require('es6-promise');
 
@@ -51,6 +51,50 @@ const getConfigurationOptions = function(query, defaultName, extension, geoStore
     };
 };
 
+/**
+ * it removes some params from the query string
+ * return the shrinked url
+*/
+const getUrlWithoutParameters = (urlToFilter, skip) => {
+    const urlparts = urlToFilter.split('?');
+    let paramsFiltered = "";
+    if (urlparts.length >= 2 && urlparts[1]) {
+        const pars = urlparts[1].split(/[&;]/g).filter( p => !!p);
+        pars.forEach((par, i) => {
+            const param = par.split('=');
+            if (skip.indexOf(param[0].toLowerCase()) === -1) {
+                let addAnd = i === (pars.length - 1) ? "" : "&";
+                paramsFiltered += param.join("=") + addAnd;
+            }
+        });
+    }
+    return !!paramsFiltered ? urlparts[0] + "?" + paramsFiltered : urlparts[0];
+};
+/**
+ * WORKAROUND: it removes the extra ? when the authkey param is present
+ * the url was like         http......?authkey=....?service=....&otherparam
+ * that should become like  http......?authkey=....&service=....&otherparam
+ *
+ * The problem happens when you have this in the Record.properties
+ * file of the csw folder in GeoServer, with csw plugin installed:
+ * references.scheme='OGC:WMS'
+ * references.value=strConcat('${url.wms}?service=WMS&request=GetMap&layers=', prefixedName)
+ * That is ok when you are not using an authkey, but If you have the authkey
+ * module installed and you get record with a proper authkey parameter the
+ * ${url.wms} URL will have also ?authkey=... and so the final URL is something like:
+ * http://domain.org/geoserver/?autkey=abcdefghijklmnopqrstuvz1234567890?service=WMS&request=GetMap&layers=LAYER_NAME
+ * ${url.wms} is replaced with the wms URL after the execution of strConcat,
+ * so the url can not be parsed in any way to solve the problem via configuration,
+ * because you can not know if ${url.wms} contains ? or not.
+*/
+const cleanDuplicatedQuestionMarks = (urlToNormalize) => {
+    const urlParts = urlToNormalize.split("?");
+    if (urlParts.length > 2) {
+        let newUrlParts = urlParts.slice(1);
+        return urlParts[0] + "?" + newUrlParts.join("&");
+    }
+    return urlToNormalize;
+};
 var ConfigUtils = {
     defaultSourceType: "gxp_wmssource",
     backgroundGroup: "background",
@@ -63,9 +107,9 @@ var ConfigUtils = {
         }),
         mapStateSource: PropTypes.string
     },
-    getParsedUrl: (urlToParse, options) => {
+    getParsedUrl: (urlToParse, options, params = []) => {
         if (urlToParse) {
-            const parsed = url.parse(urlToParse, true);
+            const parsed = url.parse(ConfigUtils.filterUrlParams(urlToParse, params), true);
             let newPathname = null;
             if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms") || endsWith(parsed.pathname, "ows")) {
                 newPathname = parsed.pathname.replace(/(wms|ows|wfs|wps)$/, "wps");
@@ -267,6 +311,14 @@ var ConfigUtils = {
     },
     getProxyUrl: function(config) {
         return config.proxyUrl ? config.proxyUrl : defaultConfig.proxyUrl;
+    },
+    cleanDuplicatedQuestionMarks,
+    getUrlWithoutParameters,
+    filterUrlParams: (urlToFilter, params = []) => {
+        if (isNil(urlToFilter) || urlToFilter === "") {
+            return null;
+        }
+        return getUrlWithoutParameters(cleanDuplicatedQuestionMarks(urlToFilter), params);
     },
     getProxiedUrl: function(uri, config = {}) {
         let sameOrigin = !(uri.indexOf("http") === 0);

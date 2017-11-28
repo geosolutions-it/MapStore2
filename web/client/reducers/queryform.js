@@ -39,7 +39,8 @@ const {
     UPDATE_FILTER_FIELD_OPTIONS,
     LOADING_FILTER_FIELD_OPTIONS,
     SET_AUTOCOMPLETE_MODE,
-    TOGGLE_AUTOCOMPLETE_MENU
+    TOGGLE_AUTOCOMPLETE_MENU,
+    LOAD_FILTER
 } = require('../actions/queryform');
 
 const {
@@ -407,6 +408,15 @@ function queryform(state = initialState, action) {
         case REMOVE_ALL_SIMPLE_FILTER_FIELDS: {
             return {...state, simpleFilterFields: []};
         }
+        case LOAD_FILTER:
+            const {spatialField, filterFields, groupFields} = (action.filter || initialState);
+            return {...state,
+                    ...{
+                    spatialField,
+                    filterFields,
+                    groupFields
+                    }
+                };
         default:
             return state;
     }

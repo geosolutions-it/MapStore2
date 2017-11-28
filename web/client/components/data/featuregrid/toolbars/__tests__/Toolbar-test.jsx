@@ -300,4 +300,20 @@ describe('Featuregrid toolbar component', () => {
         expect(isVisibleButton(document.getElementById("fg-save-feature"))).toBe(true);
         expect(isVisibleButton(document.getElementById("fg-cancel-editing"))).toBe(true);
     });
+
+    it('check zoom-all button if all features has no geom', () => {
+        const events = {
+            switchEditMode: () => {}
+        };
+        spyOn(events, "switchEditMode");
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll/>, document.getElementById("container"));
+        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+        expect(el).toExist();
+        let zoomAllButton = document.getElementById("fg-zoom-all");
+        expect(isVisibleButton(zoomAllButton)).toBe(true);
+        expect(el.children[2].disabled).toBe(true);
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" disableZoomAll={false}/>, document.getElementById("container"));
+        zoomAllButton = document.getElementById("fg-zoom-all");
+        expect(el.children[2].disabled).toBe(false);
+    });
 });

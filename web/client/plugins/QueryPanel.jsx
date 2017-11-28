@@ -30,6 +30,8 @@ const QueryBuilder = require('../components/data/query/QueryBuilder');
 const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic} = require('../epics/wfsquery');
 const autocompleteEpics = require('../epics/autocomplete');
 const {bindActionCreators} = require('redux');
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+
 const {
     // QueryBuilder action functions
     addGroupField,
@@ -47,6 +49,7 @@ const {
     selectSpatialOperation,
     removeSpatialSelection,
     showSpatialSelectionDetails,
+    search,
     reset,
     changeDwithinValue,
     zoneGetValues,
@@ -55,7 +58,7 @@ const {
     toggleMenu
 } = require('../actions/queryform');
 
-const {createQuery, initQueryPanel} = require('../actions/wfsquery');
+const {initQueryPanel} = require('../actions/wfsquery');
 
 const {
     changeDrawingStatus,
@@ -123,7 +126,7 @@ const SmartQueryForm = connect((state) => {
             zoneChange
         }, dispatch),
         queryToolbarActions: bindActionCreators({
-            onQuery: createQuery,
+            onQuery: search,
             onReset: reset,
             onChangeDrawingStatus: changeDrawingStatus
         }, dispatch)
@@ -135,12 +138,14 @@ const tocSelector = createSelector(
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
         (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}},
-        (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false
-    ], (enabled, groups, settings, querypanelEnabled) => ({
+        (state) => state.controls && state.controls.queryPanel && state.controls.queryPanel.enabled || false,
+        state => mapLayoutValuesSelector(state, {height: true})
+    ], (enabled, groups, settings, querypanelEnabled, layout) => ({
         enabled,
         groups,
         settings,
-        querypanelEnabled
+        querypanelEnabled,
+        layout
     })
 );
 
@@ -171,7 +176,8 @@ class QueryPanel extends React.Component {
         activateZoomTool: PropTypes.bool,
         activateSettingsTool: PropTypes.bool,
         visibilityCheckType: PropTypes.string,
-        settingsOptions: PropTypes.object
+        settingsOptions: PropTypes.object,
+        layout: PropTypes.object
     };
 
     static defaultProps = {
@@ -192,7 +198,8 @@ class QueryPanel extends React.Component {
         activateRemoveLayer: true,
         visibilityCheckType: "checkbox",
         settingsOptions: {},
-        querypanelEnabled: false
+        querypanelEnabled: false,
+        layout: {}
     };
 
     componentWillReceiveProps(newProps) {
@@ -212,6 +219,7 @@ class QueryPanel extends React.Component {
                 sidebarClassName="query-form-panel-container"
                 styles={{
                     sidebar: {
+                        ...this.props.layout,
                         zIndex: 1024,
                         width: 600
                     },

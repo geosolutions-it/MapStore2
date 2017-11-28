@@ -45,7 +45,6 @@ class DefaultViewer extends React.Component {
         validator: MapInfoUtils.getValidator,
         viewers: MapInfoUtils.getViewers(),
         style: {
-            maxHeight: "500px",
             position: "relative",
             marginBottom: 0
         },

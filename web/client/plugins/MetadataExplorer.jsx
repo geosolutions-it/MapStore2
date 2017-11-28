@@ -24,14 +24,16 @@ const {setControlProperty, toggleControl} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
     servicesSelector, formatsSelector, loadingErrorSelector, selectedServiceSelector,
-    modeSelector, layerErrorSelector, activeSelector, savingSelector
+    modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector
 } = require("../selectors/catalog");
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const Message = require("../components/I18N/Message");
 require('./metadataexplorer/css/style.css');
 
 const CatalogUtils = require('../utils/CatalogUtils');
 
 const catalogSelector = createSelector([
+    (state) => authkeyParamNameSelector(state),
     (state) => resultSelector(state),
     (state) => savingSelector(state),
     (state) => serviceListOpenSelector(state),
@@ -40,7 +42,8 @@ const catalogSelector = createSelector([
     (state) => selectedServiceTypeSelector(state),
     (state) => searchOptionsSelector(state),
     (state) => currentLocaleSelector(state)
-], (result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale) =>({
+], (authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale) =>({
+    authkeyParamNames,
     saving,
     openCatalogServiceList,
     format: newformat,
@@ -86,7 +89,8 @@ class MetadataExplorerComponent extends React.Component {
         zoomToLayer: PropTypes.bool,
 
         // side panel properties
-        width: PropTypes.number
+        width: PropTypes.number,
+        dockStyle: PropTypes.object
     };
 
     static defaultProps = {
@@ -113,7 +117,8 @@ class MetadataExplorerComponent extends React.Component {
             fluid: true,
             position: "right",
             zIndex: 1030
-        }
+        },
+        dockStyle: {}
     };
 
     render() {
@@ -122,28 +127,41 @@ class MetadataExplorerComponent extends React.Component {
         return this.props.active ? (
             <ContainerDimensions>
             { ({ width }) =>
-                <Dock {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
-                    <Panel id={this.props.id} header={panelHeader}
-                        style={this.props.panelStyle} className={this.props.panelClassName}>
-                            {panel}
-                        </Panel>
-                </Dock>}
+                <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
+                    <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
+                        {panel}
+                    </Panel>
+                </Dock>
+            }
             </ContainerDimensions>
         ) : null;
     }
 }
 
-const MetadataExplorerPlugin = connect((state) => ({
-    searchOptions: searchOptionsSelector(state),
-    formats: formatsSelector(state),
-    result: resultSelector(state),
-    loadingError: loadingErrorSelector(state),
-    selectedService: selectedServiceSelector(state),
-    mode: modeSelector(state),
-    services: servicesSelector(state),
-    layerError: layerErrorSelector(state),
-    active: activeSelector(state)
-}), {
+const metadataExplorerSelector = createSelector([
+    searchOptionsSelector,
+    formatsSelector,
+    resultSelector,
+    loadingErrorSelector,
+    selectedServiceSelector,
+    modeSelector,
+    servicesSelector,
+    layerErrorSelector,
+    activeSelector,
+    state => mapLayoutValuesSelector(state, {height: true})
+], (searchOptions, formats, result, loadingError, selectedService, mode, services, layerError, active, dockStyle) => ({
+    searchOptions,
+    formats,
+    result,
+    loadingError,
+    selectedService,
+    mode, services,
+    layerError,
+    active,
+    dockStyle
+}));
+
+const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onSearch: textSearch,
     onLayerAdd: addLayer,
     toggleControl: catalogClose,

@@ -21,27 +21,25 @@ const ConfigUtils = require('../utils/ConfigUtils');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
-const stateSelector = state => state;
-const {servicesSelector, selectedServiceSelector} = require('../selectors/catalog');
+const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
 
 const MapUtils = require('../utils/MapUtils');
-
-const selector = createSelector(mapSelector, stateSelector, layersSelector, groupsSelector, (map, state, layers, groups) => ({
+const showSelector = state => state.controls && state.controls.save && state.controls.save.enabled;
+const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
+const selector = createSelector(mapSelector, mapOptionsToSaveSelector, layersSelector, groupsSelector, showSelector, textSearchConfigSelector, (map, additionalOptions, layers, groups, show, textSearchConfig) => ({
     currentZoomLvl: map && map.zoom,
-    show: state.controls && state.controls.save && state.controls.save.enabled,
+    show,
     map,
-    catalogServices: servicesSelector(state),
-    selectedService: selectedServiceSelector(state),
+    additionalOptions,
     mapId: map && map.mapId,
     layers,
-    textSearchConfig: state.searchconfig && state.searchconfig.textSearchConfig,
+    textSearchConfig,
     groups
 }));
 
 class Save extends React.Component {
     static propTypes = {
-        catalogServices: PropTypes.object,
-        selectedService: PropTypes.string,
+        additionalOptions: PropTypes.object,
         show: PropTypes.bool,
         mapId: PropTypes.string,
         onClose: PropTypes.func,
@@ -55,6 +53,7 @@ class Save extends React.Component {
     };
 
     static defaultProps = {
+        additionalOptions: {},
         onMapSave: () => {},
         loadMapInfo: () => {},
         show: false
@@ -90,11 +89,7 @@ class Save extends React.Component {
     goForTheUpdate = () => {
         if (this.props.mapId) {
             if (this.props.map && this.props.layers) {
-                const catalogServices = {
-                    services: this.props.catalogServices,
-                    selectedService: this.props.selectedService
-                };
-                const resultingmap = MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, catalogServices);
+                const resultingmap = MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions);
                 this.props.onMapSave(this.props.mapId, JSON.stringify(resultingmap));
                 this.props.onClose();
             }

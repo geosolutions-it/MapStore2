@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wps:ProcessDescriptions xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:wps="http://www.opengis.net/wps/1.0.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xml:lang="en" service="WPS" version="1.0.0" xsi:schemaLocation="http://www.opengis.net/wps/1.0.0 http://schemas.opengis.net/wps/1.0.0/wpsAll.xsd">
+    <ProcessDescription wps:processVersion="1.0.0" statusSupported="true" storeSupported="true">
+        <ows:Identifier>gs:Aggregate</ows:Identifier>
+        <ows:Title>Aggregate</ows:Title>
+        <ows:Abstract>Computes one or more aggregation functions on a feature attribute. Functions include Count, Average, Max, Median, Min, StdDev, and Sum.</ows:Abstract>
+        <DataInputs>
+            <Input maxOccurs="1" minOccurs="1">
+                <ows:Identifier>features</ows:Identifier>
+                <ows:Title>features</ows:Title>
+                <ows:Abstract>Input feature collection</ows:Abstract>
+                <ComplexData>
+                    <Default>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.0</MimeType>
+                        </Format>
+                    </Default>
+                    <Supported>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.0</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>text/xml; subtype=wfs-collection/1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/json</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/wfs-collection-1.0</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/wfs-collection-1.1</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/zip</MimeType>
+                            <Encoding>base64</Encoding>
+                        </Format>
+                    </Supported>
+                </ComplexData>
+            </Input>
+            <Input maxOccurs="1" minOccurs="0">
+                <ows:Identifier>aggregationAttribute</ows:Identifier>
+                <ows:Title>aggregationAttribute</ows:Title>
+                <ows:Abstract>Attribute on which to perform aggregation</ows:Abstract>
+                <LiteralData>
+                    <ows:AnyValue/>
+                </LiteralData>
+            </Input>
+            <Input maxOccurs="2147483647" minOccurs="0">
+                <ows:Identifier>function</ows:Identifier>
+                <ows:Title>function</ows:Title>
+                <ows:Abstract>An aggregate function to compute. Functions include Count, Average, Max, Median, Min, StdDev, and Sum.</ows:Abstract>
+                <LiteralData>
+                    <ows:AllowedValues>
+                        <ows:Value>Count</ows:Value>
+                        <ows:Value>Average</ows:Value>
+                        <ows:Value>Max</ows:Value>
+                        <ows:Value>Median</ows:Value>
+                        <ows:Value>Min</ows:Value>
+                        <ows:Value>StdDev</ows:Value>
+                        <ows:Value>Sum</ows:Value>
+                    </ows:AllowedValues>
+                </LiteralData>
+            </Input>
+            <Input maxOccurs="1" minOccurs="1">
+                <ows:Identifier>singlePass</ows:Identifier>
+                <ows:Title>singlePass</ows:Title>
+                <ows:Abstract>If True computes all aggregation values in a single pass (this will defeat DBMS-specific optimizations)</ows:Abstract>
+                <LiteralData>
+                    <ows:DataType>xs:boolean</ows:DataType>
+                    <ows:AnyValue/>
+                    <DefaultValue>false</DefaultValue>
+                </LiteralData>
+            </Input>
+            <Input maxOccurs="2147483647" minOccurs="0">
+                <ows:Identifier>groupByAttributes</ows:Identifier>
+                <ows:Title>groupByAttributes</ows:Title>
+                <ows:Abstract>List of group by attributes</ows:Abstract>
+                <LiteralData>
+                    <ows:AnyValue/>
+                </LiteralData>
+            </Input>
+        </DataInputs>
+        <ProcessOutputs>
+            <Output>
+                <ows:Identifier>result</ows:Identifier>
+                <ows:Title>result</ows:Title>
+                <ComplexOutput>
+                    <Default>
+                        <Format>
+                            <MimeType>text/xml</MimeType>
+                        </Format>
+                    </Default>
+                    <Supported>
+                        <Format>
+                            <MimeType>text/xml</MimeType>
+                        </Format>
+                        <Format>
+                            <MimeType>application/json</MimeType>
+                        </Format>
+                    </Supported>
+                </ComplexOutput>
+            </Output>
+        </ProcessOutputs>
+    </ProcessDescription>
+</wps:ProcessDescriptions>

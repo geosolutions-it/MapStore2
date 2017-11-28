@@ -63,7 +63,7 @@ describe('Test correctness of the print actions', () => {
     });
 
     it('configurePrintMap', () => {
-        const retVal = configurePrintMap({x: 1, y: 1}, 5, 6, 2.0, [], 'EPSG:4326');
+        const retVal = configurePrintMap({x: 1, y: 1}, 5, 6, 2.0, [], 'EPSG:4326', 'en-US');
         expect(retVal).toExist();
         expect(retVal.type).toBe(CONFIGURE_PRINT_MAP);
         expect(retVal.center).toExist();
@@ -74,6 +74,7 @@ describe('Test correctness of the print actions', () => {
         expect(retVal.layers).toExist();
         expect(retVal.layers.length).toBe(0);
         expect(retVal.projection).toBe('EPSG:4326');
+        expect(retVal.currentLocale).toBe('en-US');
     });
 
     it('changePrintZoomLevel', () => {

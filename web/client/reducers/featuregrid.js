@@ -34,7 +34,8 @@ const {
     OPEN_FEATURE_GRID,
     CLOSE_FEATURE_GRID,
     UPDATE_FILTER,
-    INIT_PLUGIN
+    INIT_PLUGIN,
+    SIZE_CHANGE
 } = require('../actions/featuregrid');
 const{
     FEATURE_TYPE_LOADED,
@@ -338,6 +339,17 @@ function featuregrid(state = emptyResultsState, action) {
         return assign({}, state, {
             filters: {
             }
+        });
+    }
+    case SIZE_CHANGE : {
+        const maxDockSize = action.dockProps && action.dockProps.maxDockSize;
+        const minDockSize = action.dockProps && action.dockProps.minDockSize;
+        const size = maxDockSize && minDockSize && minDockSize <= action.size && maxDockSize >= action.size && action.size
+        || maxDockSize && maxDockSize < action.size && maxDockSize
+        || minDockSize && minDockSize > action.size && minDockSize
+        || action.size;
+        return assign({}, state, {
+            dockSize: size
         });
     }
     default:

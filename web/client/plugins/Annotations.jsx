@@ -24,6 +24,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     require('../actions/annotations');
 
 const {annotationsInfoSelector, annotationsListSelector} = require('../selectors/annotations');
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
 const AnnotationsEditor = connect(annotationsInfoSelector,
 {
@@ -118,7 +119,8 @@ class AnnotationsPanel extends React.Component {
             fluid: true,
             position: "right",
             zIndex: 1030
-        }
+        },
+        dockStyle: {}
     };
 
     render() {
@@ -127,12 +129,12 @@ class AnnotationsPanel extends React.Component {
         return this.props.active ? (
             <ContainerDimensions>
             { ({ width }) =>
-                <Dock {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
-                    <Panel id={this.props.id} header={panelHeader}
-                        style={this.props.panelStyle} className={this.props.panelClassName}>
-                            {panel}
-                        </Panel>
-                </Dock>}
+                <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
+                    <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
+                        {panel}
+                    </Panel>
+                </Dock>
+            }
             </ContainerDimensions>
         ) : null;
     }
@@ -157,9 +159,16 @@ const conditionalToggle = on.bind(null, toggleControl('annotations', null), (sta
   * @memberof plugins
   * @static
   */
-const AnnotationsPlugin = connect((state) => ({
-    active: (state.controls && state.controls.annotations && state.controls.annotations.enabled) || (state.annotations && state.annotations.closing) || false
-}), {
+
+const annotationsSelector = createSelector([
+    state => (state.controls && state.controls.annotations && state.controls.annotations.enabled) || (state.annotations && state.annotations.closing) || false,
+    state => mapLayoutValuesSelector(state, {height: true})
+], (active, dockStyle) => ({
+    active,
+    dockStyle
+}));
+
+const AnnotationsPlugin = connect(annotationsSelector, {
     toggleControl: conditionalToggle
 })(AnnotationsPanel);
 

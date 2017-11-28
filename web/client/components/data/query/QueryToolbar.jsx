@@ -32,7 +32,10 @@ class QueryToolbar extends React.Component {
         featureTypeName: PropTypes.string,
         actions: PropTypes.object,
         ogcVersion: PropTypes.string,
+        titleMsgId: PropTypes.string,
+        queryBtnMsgId: PropTypes.string,
         resultTitle: PropTypes.string,
+        queryBtnGlyph: PropTypes.string,
         pagination: PropTypes.object,
         sortOptions: PropTypes.object,
         hits: PropTypes.bool,
@@ -50,7 +53,10 @@ class QueryToolbar extends React.Component {
         searchUrl: null,
         showGeneratedFilter: false,
         featureTypeName: null,
+        titleMsgId: "queryform.title",
+        queryBtnMsgId: "queryform.query",
         resultTitle: "Generated Filter",
+        queryBtnGlyph: "search",
         pagination: null,
         sortOptions: null,
         hits: false,
@@ -75,8 +81,8 @@ class QueryToolbar extends React.Component {
             !fieldsWithValues && !this.props.spatialField.geometry;
         const tooltip = <Tooltip id="query-warning-tooltip"><I18N.Message msgId="queryform.emptyfilter"/></Tooltip>;
         const btn = (<Button disabled={queryDisabled} bsSize="xs" id="query-toolbar-query" onClick={this.search}>
-            <Glyphicon glyph="glyphicon glyphicon-search"/>
-            <span><strong><I18N.Message msgId={"queryform.query"}/></strong></span>
+            <Glyphicon glyph={this.props.queryBtnGlyph}/>
+            <span><strong><I18N.Message msgId={this.props.queryBtnMsgId}/></strong></span>
         </Button>);
         const showTooltip = this.props.emptyFilterWarning && this.props.filterFields.filter((field) => field.value).length === 0 && !this.props.spatialField.geometry;
         const queryButton = showTooltip ?
@@ -86,10 +92,10 @@ class QueryToolbar extends React.Component {
          : btn;
         return (
             <div className="container-fluid query-toolbar">
-                <div id="query-toolbar-title"><I18N.Message msgId={"queryform.title"}/></div>
+                <div id="query-toolbar-title"><I18N.Message msgId={this.props.titleMsgId}/></div>
                 <ButtonToolbar className="queryFormToolbar row-fluid pull-right">
                     <Button disabled={!this.props.toolbarEnabled} bsSize="xs" id="reset" onClick={this.reset}>
-                        <Glyphicon glyph="glyphicon glyphicon-refresh"/>
+                        <Glyphicon glyph="refresh"/>
                         <span><strong><I18N.Message msgId={"queryform.reset"}/></strong></span>
                     </Button>
                     {queryButton}

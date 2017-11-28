@@ -459,7 +459,6 @@ describe('featuregrid Epics', () => {
                     case CHANGE_DRAWING_STATUS:
                         expect(action.status).toBe("clean");
                         expect(action.method).toBe("");
-                        expect(action.owner).toBe("featureGrid");
                         expect(action.features).toEqual([]);
                         expect(action.options).toEqual({});
                         expect(action.style).toBe(undefined);
@@ -489,7 +488,6 @@ describe('featuregrid Epics', () => {
                         case CHANGE_DRAWING_STATUS:
                             expect(action.status).toBe("clean");
                             expect(action.method).toBe("");
-                            expect(action.owner).toBe("featureGrid");
                             expect(action.features).toEqual([]);
                             expect(action.options).toEqual({});
                             expect(action.style).toBe(undefined);
@@ -549,7 +547,6 @@ describe('featuregrid Epics', () => {
                         case CHANGE_DRAWING_STATUS:
                             expect(action.status).toBe("clean");
                             expect(action.method).toBe("");
-                            expect(action.owner).toBe("featureGrid");
                             expect(action.features).toEqual([]);
                             expect(action.options).toEqual({});
                             expect(action.style).toBe(undefined);
@@ -650,7 +647,6 @@ describe('featuregrid Epics', () => {
                     case CHANGE_DRAWING_STATUS:
                         expect(action.status).toBe("clean");
                         expect(action.method).toBe("");
-                        expect(action.owner).toBe("featureGrid");
                         expect(action.features).toEqual([]);
                         expect(action.options).toEqual({});
                         expect(action.style).toBe(undefined);
@@ -672,7 +668,6 @@ describe('featuregrid Epics', () => {
                     case CHANGE_DRAWING_STATUS:
                         expect(action.status).toBe("clean");
                         expect(action.method).toBe("");
-                        expect(action.owner).toBe("featureGrid");
                         expect(action.features).toEqual([]);
                         expect(action.options).toEqual({});
                         expect(action.style).toBe(undefined);
@@ -983,7 +978,6 @@ describe('featuregrid Epics', () => {
                     case CHANGE_DRAWING_STATUS:
                         expect(action.status).toBe("clean");
                         expect(action.method).toBe("");
-                        expect(action.owner).toBe("featureGrid");
                         expect(action.features).toEqual([]);
                         expect(action.options).toEqual({});
                         expect(action.style).toBe(undefined);

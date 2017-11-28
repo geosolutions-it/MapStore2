@@ -807,4 +807,39 @@ describe('FilterUtils', () => {
 
         expect(FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits)).toEqual(expected);
     });
+    it('Check if cqlBooleanField(attribute, operator, value)', () => {
+        // testing operators
+        expect(FilterUtils.cqlBooleanField("attribute_1", "=", true)).toBe("\"attribute_1\"='true'");
+        expect(FilterUtils.cqlBooleanField("attribute_1", "=", false)).toBe("\"attribute_1\"='false'");
+        expect(FilterUtils.cqlBooleanField("attribute_1", "=", "true")).toBe("\"attribute_1\"='true'");
+        expect(FilterUtils.cqlBooleanField("attribute_1", "=", "false")).toBe("\"attribute_1\"='false'");
+        expect(FilterUtils.cqlBooleanField("attribute_1", "<", true)).toBe("");
+        expect(FilterUtils.cqlBooleanField("attribute_1", "like", true)).toBe("");
+        // testing falsy values
+        expect(FilterUtils.cqlBooleanField("attribute_1", "=", "")).toBe("");
+        expect(FilterUtils.cqlBooleanField("attribute_1", "=", undefined)).toBe("");
+        expect(FilterUtils.cqlBooleanField("attribute_1", "=", null)).toBe("");
+    });
+    it('Check if ogcBooleanField(attribute, operator, value, nsplaceholder)', () => {
+        // testing operators
+        expect(FilterUtils.ogcBooleanField("attribute_1", "=", true, "ogc"))
+            .toBe("<ogc:PropertyIsEqualTo><ogc:PropertyName>attribute_1</ogc:PropertyName><ogc:Literal>true</ogc:Literal></ogc:PropertyIsEqualTo>");
+        expect(FilterUtils.ogcBooleanField("attribute_1", "=", false, "ogc"))
+            .toBe("<ogc:PropertyIsEqualTo><ogc:PropertyName>attribute_1</ogc:PropertyName><ogc:Literal>false</ogc:Literal></ogc:PropertyIsEqualTo>");
+        expect(FilterUtils.ogcBooleanField("attribute_1", "=", "true", "ogc"))
+            .toBe("<ogc:PropertyIsEqualTo><ogc:PropertyName>attribute_1</ogc:PropertyName><ogc:Literal>true</ogc:Literal></ogc:PropertyIsEqualTo>");
+        expect(FilterUtils.ogcBooleanField("attribute_1", "=", "false", "ogc"))
+            .toBe("<ogc:PropertyIsEqualTo><ogc:PropertyName>attribute_1</ogc:PropertyName><ogc:Literal>false</ogc:Literal></ogc:PropertyIsEqualTo>");
+        expect(FilterUtils.ogcBooleanField("attribute_1", "<", true, "ogc")).toBe("");
+        expect(FilterUtils.ogcBooleanField("attribute_1", "<", false, "ogc")).toBe("");
+        expect(FilterUtils.ogcBooleanField("attribute_1", "<", true, "ogc")).toBe("");
+        expect(FilterUtils.ogcBooleanField("attribute_1", "like", true, "ogc")).toBe("");
+            // testing falsy values
+        expect(FilterUtils.ogcBooleanField("attribute_1", "=", "", "ogc")).toBe("");
+        expect(FilterUtils.ogcBooleanField("attribute_1", "=", undefined, "ogc")).toBe("");
+        expect(FilterUtils.ogcBooleanField("attribute_1", "=", null, "ogc")).toBe("");
+
+    });
+
+
 });

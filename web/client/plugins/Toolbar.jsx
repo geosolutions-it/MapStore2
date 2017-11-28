@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,11 +7,15 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 
 require('./toolbar/assets/css/toolbar.css');
 
 const {CSSTransitionGroup} = require('react-transition-group');
+const {isFeatureGridOpen} = require('../selectors/featuregrid');
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+const {createSelector} = require('reselect');
 
 const assign = require('object-assign');
 
@@ -114,11 +117,20 @@ class Toolbar extends React.Component {
     }
 }
 
+const toolbarSelector = stateSelector => createSelector([
+        state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].active,
+        state => state.controls && state.controls[stateSelector] && state.controls[stateSelector].expanded,
+        isFeatureGridOpen,
+        state => mapLayoutValuesSelector(state, {right: true, bottom: true})
+    ], (active, allVisible, featuregridOpen, style) => ({
+        active,
+        allVisible,
+        stateSelector,
+        layout: featuregridOpen ? 'horizontal' : 'vertical',
+        style
+}));
+
 module.exports = {
-    ToolbarPlugin: (stateSelector = 'toolbar') => connect((state) => ({
-        active: state.controls && state.controls[stateSelector] && state.controls[stateSelector].active,
-        allVisible: state.controls && state.controls[stateSelector] && state.controls[stateSelector].expanded,
-        stateSelector
-    }))(Toolbar),
+    ToolbarPlugin: (stateSelector = 'toolbar') => connect(toolbarSelector(stateSelector))(Toolbar),
     reducers: {controls: require('../reducers/controls')}
 };

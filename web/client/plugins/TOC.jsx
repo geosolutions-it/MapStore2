@@ -12,12 +12,15 @@ const {createSelector} = require('reselect');
 const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
-       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode, browseData, selectNode, filterLayers, refreshLayerVersion} = require('../actions/layers');
+       sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
+       browseData, selectNode, filterLayers, refreshLayerVersion} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
 const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector} = require('../selectors/layers');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector} = require("../selectors/locale");
+const {widgetBuilderAvailable} = require('../selectors/controls');
+const {generalInfoFormatSelector} = require("../selectors/mapinfo");
 
 const LayersUtils = require('../utils/LayersUtils');
 const mapUtils = require('../utils/MapUtils');
@@ -30,6 +33,7 @@ const layersIcon = require('./toolbar/assets/img/layers.png');
 const {isObject, head} = require('lodash');
 
 const {setControlProperty} = require('../actions/controls');
+const {createWidget} = require('../actions/widgets');
 
 const {activeSelector} = require("../selectors/catalog");
 
@@ -68,8 +72,10 @@ const tocSelector = createSelector(
         layerFilterSelector,
         layersSelector,
         mapNameSelector,
-        activeSelector
-    ], (enabled, groups, settings, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive) => ({
+        activeSelector,
+        widgetBuilderAvailable,
+        generalInfoFormatSelector
+    ], (enabled, groups, settings, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat) => ({
         enabled,
         groups,
         settings,
@@ -81,6 +87,7 @@ const tocSelector = createSelector(
         currentLocale,
         selectedNodes,
         filterText,
+        generalInfoFormat,
         selectedLayers: layers.filter((l) => head(selectedNodes.filter(s => s === l.id))),
         noFilterResults: layers.filter((l) => filterLayersByTitle(l, filterText, currentLocale)).length === 0,
         selectedGroups: selectedNodes.map(n => LayersUtils.getNode(groups, n)).filter(n => n && n.nodes),
@@ -99,7 +106,8 @@ const tocSelector = createSelector(
                 func: (node) => filterText && head(node.nodes.filter(l => filterLayersByTitle(l, filterText, currentLocale) || l.nodes && head(node.nodes.filter(g => g.showComponent))))
             }
         ]),
-        catalogActive
+        catalogActive,
+        activateWidgetTool
     })
 );
 
@@ -131,6 +139,7 @@ class LayerTree extends React.Component {
         onSort: PropTypes.func,
         onSettings: PropTypes.func,
         onRefreshLayer: PropTypes.func,
+        onNewWidget: PropTypes.func,
         hideSettings: PropTypes.func,
         updateSettings: PropTypes.func,
         updateNode: PropTypes.func,
@@ -145,6 +154,7 @@ class LayerTree extends React.Component {
         activateZoomTool: PropTypes.bool,
         activateQueryTool: PropTypes.bool,
         activateSettingsTool: PropTypes.bool,
+        activateWidgetTool: PropTypes.bool,
         visibilityCheckType: PropTypes.string,
         settingsOptions: PropTypes.object,
         chartStyle: PropTypes.object,
@@ -157,6 +167,7 @@ class LayerTree extends React.Component {
         currentLocale: PropTypes.string,
         onFilter: PropTypes.func,
         filterText: PropTypes.string,
+        generalInfoFormat: PropTypes.string,
         selectedLayers: PropTypes.array,
         selectedGroups: PropTypes.array,
         mapName: PropTypes.string,
@@ -179,6 +190,7 @@ class LayerTree extends React.Component {
         onZoomToExtent: () => {},
         onSettings: () => {},
         onRefreshLayer: () => {},
+        onNewWidget: () => {},
         updateNode: () => {},
         removeNode: () => {},
         onSelectNode: () => {},
@@ -193,6 +205,7 @@ class LayerTree extends React.Component {
         activateSettingsTool: true,
         activateRemoveLayer: true,
         activateQueryTool: false,
+        activateWidgetTool: false,
         visibilityCheckType: "glyph",
         settingsOptions: {
             includeCloseButton: false,
@@ -287,6 +300,7 @@ class LayerTree extends React.Component {
                             groups={this.props.groups}
                             selectedLayers={this.props.selectedLayers}
                             selectedGroups={this.props.selectedGroups}
+                            generalInfoFormat={this.props.generalInfoFormat}
                             settings={this.props.settings}
                             activateTool={{
                                 activateToolsContainer: this.props.activateToolsContainer,
@@ -295,7 +309,8 @@ class LayerTree extends React.Component {
                                 activateQueryTool: this.props.activateQueryTool,
                                 activateSettingsTool: this.props.activateSettingsTool,
                                 activateAddLayer: this.props.activateAddLayerButton && !this.props.catalogActive,
-                                includeDeleteButtonInSettings: false
+                                includeDeleteButtonInSettings: false,
+                                activateWidgetTool: this.props.activateWidgetTool
                             }}
                             options={{
                                 modalOptions: {},
@@ -314,6 +329,7 @@ class LayerTree extends React.Component {
                                 confirmDeleteMessage: <Message msgId="layerProperties.deleteLayerMessage" />,
                                 confirmDeleteCancelText: <Message msgId="cancel"/>,
                                 addLayer: <Message msgId="toc.addLayer"/>,
+                                createWidgetTooltip: <Message msgId="toc.createWidget"/>,
                                 zoomToTooltip: {
                                     LAYER: <Message msgId="toc.toolZoomToLayerTooltip"/>,
                                     LAYERS: <Message msgId="toc.toolZoomToLayersTooltip"/>
@@ -334,6 +350,7 @@ class LayerTree extends React.Component {
                             }}
                             onToolsActions={{
                                 onZoom: this.props.onZoomToExtent,
+                                onNewWidget: this.props.onNewWidget,
                                 onBrowseData: this.props.onBrowseData,
                                 onUpdate: this.props.updateNode,
                                 onRemove: this.props.removeNode,
@@ -420,6 +437,7 @@ const TOCPlugin = connect(tocSelector, {
     onSelectNode: selectNode,
     onFilter: filterLayers,
     onAddLayer: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+    onNewWidget: () => createWidget(),
     refreshLayerVersion
 })(LayerTree);
 

@@ -9,6 +9,7 @@
 const FileSaver = require('file-saver');
 const toBlob = require('canvas-to-blob');
 const shp = require('shpjs');
+const {Promise} = require('es6-promise');
 
 const FileUtils = {
     download: function(blob, name, mimetype) {
@@ -16,8 +17,8 @@ const FileUtils = {
         // a.href = URL.createObjectURL(file);
         FileSaver.saveAs(file, name);
     },
-    downloadCanvasDataURL: function(dataURL, name, mimetype) {
-        FileUtils.download(toBlob(dataURL), "snapshot.png", mimetype);
+    downloadCanvasDataURL: function(dataURL, name = "snapshot.png", mimetype) {
+        FileUtils.download(toBlob(dataURL), name, mimetype);
     },
     shpToGeoJSON: function(zipBuffer) {
         return [].concat(shp.parseZip(zipBuffer));

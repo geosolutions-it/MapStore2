@@ -10,7 +10,7 @@ const {createSelector} = require('reselect');
 
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
-const {head, isEmpty} = require('lodash');
+const {head, isEmpty, find} = require('lodash');
 
 const layersSelector = state => state.layers && state.layers.flat || state.layers || state.config && state.config.layers || [];
 const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
@@ -52,6 +52,14 @@ const layerSelectorWithMarkers = createSelector(
 const groupsSelector = (state) => state.layers && state.layers.flat && state.layers.groups && LayersUtils.denormalizeGroups(state.layers.flat, state.layers.groups).groups || [];
 
 const selectedNodesSelector = (state) => state.layers && state.layers.selected || [];
+const getSelectedLayers = state => {
+    const selectedIds = selectedNodesSelector(state);
+    return selectedIds.map((id) => find(layersSelector(state), {id}));
+};
+const getSelectedLayer = state => {
+    const selected = getSelectedLayers(state) || [];
+    return selected && selected[0];
+};
 const layerFilterSelector = (state) => state.layers && state.layers.filter || '';
 const layerSettingSelector = (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}};
 
@@ -75,6 +83,8 @@ module.exports = {
     allBackgroundLayerSelector,
     getLayerFromId,
     selectedNodesSelector,
+    getSelectedLayer,
+    getSelectedLayers,
     layerFilterSelector,
     layerSettingSelector,
     backgroundControlsSelector,

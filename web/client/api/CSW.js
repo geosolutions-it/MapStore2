@@ -10,6 +10,7 @@ const axios = require('../libs/ajax');
 const _ = require('lodash');
 
 const urlUtil = require('url');
+const ConfigUtils = require('../utils/ConfigUtils');
 const assign = require('object-assign');
 
 const parseUrl = (url) => {
@@ -98,12 +99,12 @@ var Api = {
                                                 let dcel = dcElement[j];
                                                 let elName = dcel.name.localPart;
                                                 let finalEl = {};
-                                                /* Some services (e.g. GeoServer ) support http://schemas.opengis.net/csw/2.0.2/record.xsd only
+                                                /* Some services (e.g. GeoServer) support http://schemas.opengis.net/csw/2.0.2/record.xsd only
                                                 * Usually they publish the WMS URL at dct:"references" with scheme=OGC:WMS
                                                 * So we place references as they are.
                                                 */
                                                 if (elName === "references" && dcel.value) {
-                                                    let urlString = dcel.value.content && dcel.value.content[0] || dcel.value.content || dcel.value;
+                                                    let urlString = dcel.value.content && ConfigUtils.cleanDuplicatedQuestionMarks(dcel.value.content[0]) || dcel.value.content || dcel.value;
                                                     finalEl = {
                                                         value: urlString,
                                                         scheme: dcel.value.scheme

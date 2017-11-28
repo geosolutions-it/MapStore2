@@ -50,6 +50,7 @@ class Catalog extends React.Component {
         onZoomToExtent: PropTypes.func,
         pageSize: PropTypes.number,
         records: PropTypes.array,
+        authkeyParamNames: PropTypes.array,
         recordItem: PropTypes.element,
         result: PropTypes.object,
         saving: PropTypes.bool,
@@ -203,6 +204,7 @@ class Catalog extends React.Component {
         return (<div className="catalog-results">
                 <RecordGrid {...this.props.gridOptions} key="records"
                     records={this.props.records}
+                    authkeyParamNames={this.props.authkeyParamNames}
                     catalogURL={this.isValidServiceSelected() && this.props.services[this.props.selectedService].url || ""}
                     onLayerAdd={this.props.onLayerAdd}
                     onZoomToExtent={this.props.onZoomToExtent}

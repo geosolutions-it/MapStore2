@@ -20,7 +20,8 @@ const {
     selectedServiceSelector,
     modeSelector,
     layerErrorSelector,
-    activeSelector
+    activeSelector,
+    authkeyParamNameSelector
 } = require("../catalog");
 const url = "https://demo.geo-solutions.it/geoserver/wms";
 const state = {
@@ -68,6 +69,13 @@ const state = {
             maxRecords: 4,
             text: ''
         }
+    },
+    localConfig: {
+        authenticationRules: [{
+        "urlPattern": "\\/geoserver.*",
+        "authkeyParamName": "ms2-authkey",
+        "method": "authkey"
+      }]
     }
 };
 
@@ -135,6 +143,17 @@ describe('Test catalog selectors', () => {
         const retVal = activeSelector(state);
         expect(retVal).toExist();
         expect(retVal).toBeTruthy();
+    });
+    it('test authkeyParamNameSelector with authkey params set', () => {
+        const authkeyParamNames = authkeyParamNameSelector(state);
+        expect(authkeyParamNames).toExist();
+        expect(authkeyParamNames.length).toBe(1);
+        expect(authkeyParamNames[0]).toBe("ms2-authkey");
+    });
+    it('test authkeyParamNameSelector without authkey params set', () => {
+        const authkeyParamNames = authkeyParamNameSelector({});
+        expect(authkeyParamNames).toExist();
+        expect(authkeyParamNames.length).toBe(0);
     });
 
 });

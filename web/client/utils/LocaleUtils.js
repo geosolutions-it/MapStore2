@@ -14,8 +14,9 @@ const it = require('react-intl/locale-data/it');
 const fr = require('react-intl/locale-data/fr');
 const de = require('react-intl/locale-data/de');
 const es = require('react-intl/locale-data/es');
+const nl = require('react-intl/locale-data/nl');
 
-addLocaleData([...en, ...it, ...fr, ...de, ...es]);
+addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl]);
 
 let supportedLocales = {
     "it": {
@@ -38,22 +39,28 @@ let supportedLocales = {
     "es": {
         code: "es-ES",
         description: "Español"
-    }
+    }/*,
+    "nl": {
+        code: "nl-NL",
+        description: "Nederlands"
+    }*/
 };
 const DATE_FORMATS = {
     "default": "yyyy/MM/dd",
     "en-US": "MM/dd/yyyy",
-    "it-IT": "dd/MM/yyyy"
+    "it-IT": "dd/MM/yyyy",
+    "nl-NL": "dd/MM/yyyy"
 };
 const LocaleUtils = {
     ensureIntl(callback) {
-        require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js', 'intl/locale-data/jsonp/de.js', 'intl/locale-data/jsonp/es.js'], (require) => {
+        require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js', 'intl/locale-data/jsonp/de.js', 'intl/locale-data/jsonp/es.js', 'intl/locale-data/jsonp/nl.js'], (require) => {
             global.Intl = require('intl');
             require('intl/locale-data/jsonp/en.js');
             require('intl/locale-data/jsonp/it.js');
             require('intl/locale-data/jsonp/fr.js');
             require('intl/locale-data/jsonp/de.js');
             require('intl/locale-data/jsonp/es.js');
+            require('intl/locale-data/jsonp/nl.js');
             if (callback) {
                 callback();
             }

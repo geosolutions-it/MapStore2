@@ -10,19 +10,28 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {bindActionCreators} = require('redux');
 const {get} = require('lodash');
-const Dock = require('react-dock').default;
+
 const Grid = require('../components/data/featuregrid/FeatureGrid');
 const {resultsSelector, describeSelector, wfsURLSelector, typeNameSelector} = require('../selectors/query');
-const {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector} = require('../selectors/featuregrid');
+const {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector, getDockSize} = require('../selectors/featuregrid');
 const { toChangesMap} = require('../utils/FeatureGridUtils');
 const {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} = require('./featuregrid/panels/index');
 const BorderLayout = require('../components/layout/BorderLayout');
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
 const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
-const {initPlugin} = require('../actions/featuregrid');
+const {initPlugin, sizeChange} = require('../actions/featuregrid');
 const ContainerDimensions = require('react-container-dimensions').default;
-
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+const Dock = connect(createSelector(
+    getDockSize,
+    state => mapLayoutValuesSelector(state, {transform: true}),
+    (size, dockStyle) => ({
+        size,
+        dockStyle
+    })
+)
+)(require('react-dock').default);
 /**
   * @name FeatureEditor
   * @memberof plugins
@@ -97,7 +106,7 @@ const FeatureDock = (props = {
 }) => {
     const dockProps = {
         dimMode: "none",
-        dockSize: 0.35,
+        defaultSize: 0.35,
         fluid: true,
         isVisible: props.open,
         maxDockSize: 0.7,
@@ -107,12 +116,15 @@ const FeatureDock = (props = {
         zIndex: 1030
     };
     // columns={[<aside style={{backgroundColor: "red", flex: "0 0 12em"}}>column-selector</aside>]}
-    return (<Dock {...dockProps} >
+
+    return (
+        <Dock {...dockProps} onSizeChange={size => { props.onSizeChange(size, dockProps); }}>
         {props.open &&
         <ContainerDimensions>
         { ({ height }) =>
             // added height to solve resize issue in firefox, edge and ie
         <BorderLayout
+            className="feature-grid-container"
             key={"feature-grid-container"}
             height={height - (62 + 32)}
             header={getHeader()}
@@ -181,16 +193,20 @@ const selector = createSelector(
         changes: toChangesMap(changes)
     })
 );
-const EditorPlugin = connect(selector, (dispatch) => ({
-    gridEvents: bindActionCreators(gridEvents, dispatch),
-    pageEvents: bindActionCreators(pageEvents, dispatch),
-    initPlugin: bindActionCreators((options) => initPlugin(options), dispatch),
-    toolbarEvents: bindActionCreators(toolbarEvents, dispatch),
-    gridTools: gridTools.map((t) => ({
-        ...t,
-        events: bindActionCreators(t.events, dispatch)
-    }))
-}))(FeatureDock);
+const EditorPlugin = connect(selector,
+    (dispatch) => ({
+        gridEvents: bindActionCreators(gridEvents, dispatch),
+        pageEvents: bindActionCreators(pageEvents, dispatch),
+        initPlugin: bindActionCreators((options) => initPlugin(options), dispatch),
+        toolbarEvents: bindActionCreators(toolbarEvents, dispatch),
+        gridTools: gridTools.map((t) => ({
+            ...t,
+            events: bindActionCreators(t.events, dispatch)
+        })),
+        onSizeChange: (...params) => dispatch(sizeChange(...params))
+    })
+)(FeatureDock);
+
 
 module.exports = {
      FeatureEditorPlugin: EditorPlugin,

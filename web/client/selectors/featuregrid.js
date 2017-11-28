@@ -136,5 +136,6 @@ module.exports = {
      * @param  {object}  state applications state
      * @return {boolean}       true if the geometry is supported, false otherwise
      */
-    hasSupportedGeometry
+    hasSupportedGeometry,
+    getDockSize: state => state.featuregrid && state.featuregrid.dockSize
 };

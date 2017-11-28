@@ -38,6 +38,19 @@ describe('Test the mapConfig reducer', () => {
         expect(state.layers.length).toBe(1);
         expect(state.layers[0].apiKey).toBe(null);
     });
+    it('checks if empty background layer type is changed accordingly', () => {
+        const state = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { version: 2, map: { center: {x: 1, y: 1}, zoom: 11, layers: [{type: 'ol', group: "background"}] }}});
+        expect(state.map.zoom).toExist();
+        expect(state.map.center).toExist();
+        expect(state.map.center.crs).toExist();
+        expect(state.layers).toExist();
+        expect(state.layers.length).toBe(1);
+        expect(state.layers[0].type).toBe("empty");
+        const state2 = mapConfig({}, {type: 'MAP_CONFIG_LOADED', config: { version: 2, map: { center: {x: 1, y: 1}, zoom: 11, layers: [{type: 'OpenLayers.Layer', group: "background"}] }}});
+        expect(state2.layers).toExist();
+        expect(state2.layers.length).toBe(1);
+        expect(state2.layers[0].type).toBe("empty");
+    });
 
     it('creates an error on wrongly loaded config', () => {
         var state = mapConfig({}, {type: 'MAP_CONFIG_LOAD_ERROR', error: 'error'});

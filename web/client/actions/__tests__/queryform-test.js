@@ -32,6 +32,8 @@ const {
     SHOW_GENERATED_FILTER,
     QUERY_FORM_RESET,
     CHANGE_DWITHIN_VALUE,
+    QUERY_FORM_SEARCH,
+    LOAD_FILTER,
     SIMPLE_FILTER_FIELD_UPDATE,
     ADD_SIMPLE_FILTER_FIELD,
     REMOVE_SIMPLE_FILTER_FIELD,
@@ -51,6 +53,8 @@ const {
     zoneFilter,
     zoneGetValues,
     query,
+    search,
+    loadFilter,
     reset,
     addFilterField,
     addGroupField,
@@ -286,6 +290,22 @@ describe('Test correctness of the queryform actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(SHOW_GENERATED_FILTER);
         expect(retval.data).toBe(null);
+    });
+
+    it('search', () => {
+        const retval = search("URL", {});
+        expect(retval).toExist();
+        expect(retval.type).toBe(QUERY_FORM_SEARCH);
+    });
+
+    it('loadFilter', () => {
+        const filter = {
+
+        };
+        const retval = loadFilter(filter);
+        expect(retval).toExist();
+        expect(retval.type).toBe(LOAD_FILTER);
+        expect(retval.filter).toBe(filter);
     });
 
     it('reset', () => {

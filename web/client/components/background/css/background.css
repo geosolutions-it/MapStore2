@@ -1,13 +1,10 @@
 
 .background-plugin-position {
-    bottom: 0;
+    bottom: 45px;
     left: 0;
     position: absolute;
     z-index: 100;
-    -webkit-transition: all 0.3s;
-    -moz-transition: all 0.3s;
-    -o-transition: all 0.3s;
-    transition: all 0.3s;
+    margin-bottom: 30px;
 }
 
 .background-list-container {

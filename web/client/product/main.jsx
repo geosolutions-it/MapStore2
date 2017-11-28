@@ -24,11 +24,14 @@ module.exports = (config, pluginsDef) => {
             locale: state.locale || {},
             pages
         }))(require('../components/app/StandardRouter'));
+        
+        const {updateMapLayoutEpic} = require('../epics/maplayout');
 
         const appStore = require('../stores/StandardStore').bind(null, initialState, {
             maptype: require('../reducers/maptype'),
-            maps: require('../reducers/maps')
-        }, appEpics);
+            maps: require('../reducers/maps'),
+            maplayout: require('../reducers/maplayout')
+        }, {...appEpics, updateMapLayoutEpic});
 
         const initialActions = [
             () => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*"),

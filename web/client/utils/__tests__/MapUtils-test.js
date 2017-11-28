@@ -25,7 +25,8 @@ var {
     getCenterForExtent,
     getBbox,
     getCurrentResolution,
-    saveMapConfiguration
+    saveMapConfiguration,
+    extractTileMatrixSetFromLayers
 } = require('../MapUtils');
 
 describe('Test the MapUtils', () => {
@@ -207,7 +208,6 @@ describe('Test the MapUtils', () => {
 
         const saved = saveMapConfiguration(mapConfig, flat, groups, '', {});
         expect(saved).toEqual({
-            catalogServices: {},
             map: {
                 center: {crs: 'EPSG:4326', x: 0, y: 0},
                 groups: [{
@@ -225,6 +225,7 @@ describe('Test the MapUtils', () => {
                     availableStyles: undefined,
                     bbox: {},
                     capabilitiesURL: undefined,
+                    description: undefined,
                     dimensions: [],
                     features: undefined,
                     featureInfo: undefined,
@@ -259,6 +260,7 @@ describe('Test the MapUtils', () => {
                     availableStyles: undefined,
                     bbox: {},
                     capabilitiesURL: undefined,
+                    description: undefined,
                     dimensions: [],
                     features: undefined,
                     featureInfo: undefined,
@@ -293,6 +295,7 @@ describe('Test the MapUtils', () => {
                     availableStyles: undefined,
                     bbox: {},
                     capabilitiesURL: undefined,
+                    description: undefined,
                     dimensions: [],
                     features: undefined,
                     featureInfo: undefined,
@@ -330,6 +333,533 @@ describe('Test the MapUtils', () => {
             },
             version: 2
         });
+    });
+
+    it('save map configuration with tile matrix', () => {
+
+        const flat = [
+            {
+                allowedSRS: {},
+                bbox: {},
+                description: undefined,
+                dimensions: [],
+                id: "layer001",
+                loading: true,
+                name: "layer001",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "layer001",
+                type: "wms",
+                url: "http:url001",
+                visibility: true,
+                matrixIds: {
+                    'EPSG:4326': [{
+                        identifier: 'EPSG:4326:0'
+                    }]
+                },
+                tileMatrixSet: [{
+                    TileMatrix: [{
+                        'ows:Identifier': 'EPSG:4326:0'
+                    }],
+                    'ows:Identifier': "EPSG:4326",
+                    'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                }, {
+                    TileMatrix: [{
+                        'ows:Identifier': 'custom:0'
+                    }],
+                    'ows:Identifier': "custom",
+                    'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                }]
+            },
+            {
+                allowedSRS: {},
+                bbox: {},
+                description: undefined,
+                dimensions: [],
+                id: "layer002",
+                loading: true,
+                name: "layer002",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "layer002",
+                type: "wms",
+                url: "http:url001",
+                visibility: true
+            },
+            {
+                allowedSRS: {},
+                bbox: {},
+                description: undefined,
+                dimensions: [],
+                id: "layer003",
+                loading: true,
+                name: "layer003",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "layer003",
+                type: "wms",
+                url: "http:url001",
+                visibility: true
+            }
+        ];
+
+        const groups = [
+            {expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002']},
+            {expanded: false, id: 'custom', name: 'custom', title: 'custom',
+                nodes: [{expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003']}
+            ]}
+        ];
+
+        const mapConfig = {
+            center: {x: 0, y: 0, crs: 'EPSG:4326'},
+            maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            projection: 'EPSG:900913',
+            units: 'm',
+            zoom: 10
+        };
+
+        const saved = saveMapConfiguration(mapConfig, flat, groups, '', {});
+        expect(saved).toEqual({
+            map: {
+                center: {crs: 'EPSG:4326', x: 0, y: 0},
+                groups: [{
+                    id: 'Default',
+                    expanded: true
+                }, {
+                    id: 'custom',
+                    expanded: false
+                }, {
+                    id: 'custom.nested001',
+                    expanded: true
+                }],
+                layers: [{
+                    allowedSRS: {},
+                    availableStyles: undefined,
+                    bbox: {},
+                    capabilitiesURL: undefined,
+                    description: undefined,
+                    dimensions: [],
+                    features: undefined,
+                    featureInfo: undefined,
+                    format: undefined,
+                    group: undefined,
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    id: "layer001",
+                    matrixIds: ['EPSG:4326'],
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer001",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    styles: undefined,
+                    tileMatrixSet: true,
+                    tiled: undefined,
+                    title: "layer001",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "http:url001",
+                    visibility: true
+                },
+                {
+                    allowedSRS: {},
+                    availableStyles: undefined,
+                    bbox: {},
+                    capabilitiesURL: undefined,
+                    description: undefined,
+                    dimensions: [],
+                    features: undefined,
+                    featureInfo: undefined,
+                    format: undefined,
+                    group: undefined,
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    id: "layer002",
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer002",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "layer002",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "http:url001",
+                    visibility: true
+                },
+                {
+                    allowedSRS: {},
+                    availableStyles: undefined,
+                    bbox: {},
+                    capabilitiesURL: undefined,
+                    description: undefined,
+                    dimensions: [],
+                    features: undefined,
+                    featureInfo: undefined,
+                    format: undefined,
+                    group: undefined,
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    id: "layer003",
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer003",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "layer003",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "http:url001",
+                    visibility: true
+                }],
+                maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                projection: 'EPSG:900913',
+                text_serch_config: '',
+                units: 'm',
+                zoom: 10,
+                sources: {
+                    'http:url001': {
+                        tileMatrixSet: {
+                            'EPSG:4326': {
+                                TileMatrix: [{
+                                    'ows:Identifier': 'EPSG:4326:0'
+                                }],
+                                'ows:Identifier': "EPSG:4326",
+                                'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                            }
+                        }
+                    }
+                }
+            },
+            version: 2
+        });
+    });
+
+    it('extract TileMatrixSet from layers without sources and grouped layers', () => {
+        expect(extractTileMatrixSetFromLayers()).toEqual({});
+    });
+
+    it('extract TileMatrixSet from layers without sources and empty grouped layers', () => {
+        expect(extractTileMatrixSetFromLayers({})).toEqual({});
+    });
+
+    it('extract TileMatrixSet from layers with sources and empty grouped layers', () => {
+        expect(extractTileMatrixSetFromLayers(null, {data: 'data'})).toEqual({data: 'data'});
+    });
+
+    it('extract TileMatrixSet from layers without sources', () => {
+
+        const groupedLayersByUrl = {
+            'http:url001': [
+                {
+                    id: "layer001",
+                    matrixIds: {
+                        'EPSG:4326': [{
+                            identifier: 'EPSG:4326:0'
+                        }]
+                    },
+                    tileMatrixSet: [{
+                        TileMatrix: [{
+                            'ows:Identifier': 'EPSG:4326:0'
+                        }],
+                        'ows:Identifier': "EPSG:4326",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                    }, {
+                        TileMatrix: [{
+                            'ows:Identifier': 'custom:0'
+                        }],
+                        'ows:Identifier': "custom",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                    }]
+                },
+                {
+                    id: "layer003",
+                    matrixIds: {
+                        'custom': [{
+                            identifier: 'custom'
+                        }]
+                    },
+                    tileMatrixSet: [{
+                        TileMatrix: [{
+                            'ows:Identifier': 'EPSG:4326:0'
+                        }],
+                        'ows:Identifier': "EPSG:4326",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                    }, {
+                        TileMatrix: [{
+                            'ows:Identifier': 'custom:0'
+                        }],
+                        'ows:Identifier': "custom",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                    }]
+                }
+            ],
+            'http:url002': [
+                {
+                    id: "layer002",
+                    matrixIds: {
+                        'custom': [
+                            {
+                                identifier: 'custom:0',
+                                ranges: {
+                                    cols: {
+                                        min: 0,
+                                        max: 1
+                                    },
+                                    rows: {
+                                        min: 0,
+                                        max: 1
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    tileMatrixSet: [{
+                        TileMatrix: [{
+                            'ows:Identifier': 'EPSG:4326:0'
+                        }],
+                        'ows:Identifier': "EPSG:4326",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                    }, {
+                        TileMatrix: [{
+                            'ows:Identifier': 'custom:0'
+                        }],
+                        'ows:Identifier': "custom",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                    }]
+                }
+            ]
+        };
+
+        const newSources = extractTileMatrixSetFromLayers(groupedLayersByUrl);
+
+        expect(newSources).toEqual({
+            'http:url001': {
+                tileMatrixSet: {
+                    'EPSG:4326': {
+                        TileMatrix: [{
+                            'ows:Identifier': 'EPSG:4326:0'
+                        }],
+                        'ows:Identifier': "EPSG:4326",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                    },
+                    'custom': {
+                        TileMatrix: [{
+                            'ows:Identifier': 'custom:0'
+                        }],
+                        'ows:Identifier': "custom",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                    }
+                }
+            },
+            'http:url002': {
+                tileMatrixSet: {
+                    'custom': {
+                        TileMatrix: [{
+                            'ows:Identifier': 'custom:0',
+                            ranges: {
+                                cols: {
+                                    min: 0,
+                                    max: 1
+                                },
+                                rows: {
+                                    min: 0,
+                                    max: 1
+                                }
+                            }
+                        }],
+                        'ows:Identifier': "custom",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                    }
+                }
+            }
+        });
+
+    });
+
+    it('extract TileMatrixSet from layers with sources', () => {
+
+        const groupedLayersByUrl = {
+            'http:url001': [
+                {
+                    id: "layer001",
+                    matrixIds: {
+                        'EPSG:4326': [{
+                            identifier: 'EPSG:4326:0'
+                        }]
+                    },
+                    tileMatrixSet: [{
+                        TileMatrix: [{
+                            'ows:Identifier': 'EPSG:4326:0'
+                        }],
+                        'ows:Identifier': "EPSG:4326",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                    }, {
+                        TileMatrix: [{
+                            'ows:Identifier': 'custom:0'
+                        }],
+                        'ows:Identifier': "custom",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                    }]
+                },
+                {
+                    id: "layer003",
+                    matrixIds: {
+                        'custom': [{
+                            identifier: 'custom'
+                        }]
+                    },
+                    tileMatrixSet: [{
+                        TileMatrix: [{
+                            'ows:Identifier': 'EPSG:4326:0'
+                        }],
+                        'ows:Identifier': "EPSG:4326",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                    }, {
+                        TileMatrix: [{
+                            'ows:Identifier': 'custom:0'
+                        }],
+                        'ows:Identifier': "custom",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                    }]
+                }
+            ],
+            'http:url002': [
+                {
+                    id: "layer002",
+                    matrixIds: {
+                        'custom': [
+                            {
+                                identifier: 'custom:0',
+                                ranges: {
+                                    cols: {
+                                        min: 0,
+                                        max: 1
+                                    },
+                                    rows: {
+                                        min: 0,
+                                        max: 1
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    tileMatrixSet: [{
+                        TileMatrix: [{
+                            'ows:Identifier': 'EPSG:4326:0'
+                        }],
+                        'ows:Identifier': "EPSG:4326",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                    }, {
+                        TileMatrix: [{
+                            'ows:Identifier': 'custom:0'
+                        }],
+                        'ows:Identifier': "custom",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                    }]
+                }
+            ]
+        };
+
+        const sources = {
+            'http:url003': {
+                data: 'data'
+            },
+            'http:url002': {
+                tileMatrixSet: {
+                    'fromsources': {
+                        TileMatrix: [{
+                            'ows:Identifier': 'fromsources:0'
+                        }],
+                        'ows:Identifier': "fromsources",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                    }
+                }
+            }
+        };
+
+        const newSources = extractTileMatrixSetFromLayers(groupedLayersByUrl, sources);
+
+        expect(newSources).toEqual({
+            'http:url001': {
+                tileMatrixSet: {
+                    'EPSG:4326': {
+                        TileMatrix: [{
+                            'ows:Identifier': 'EPSG:4326:0'
+                        }],
+                        'ows:Identifier': "EPSG:4326",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
+                    },
+                    'custom': {
+                        TileMatrix: [{
+                            'ows:Identifier': 'custom:0'
+                        }],
+                        'ows:Identifier': "custom",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                    }
+                }
+            },
+            'http:url002': {
+                tileMatrixSet: {
+                    'custom': {
+                        TileMatrix: [{
+                            'ows:Identifier': 'custom:0',
+                            ranges: {
+                                cols: {
+                                    min: 0,
+                                    max: 1
+                                },
+                                rows: {
+                                    min: 0,
+                                    max: 1
+                                }
+                            }
+                        }],
+                        'ows:Identifier': "custom",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                    },
+                    'fromsources': {
+                        TileMatrix: [{
+                            'ows:Identifier': 'fromsources:0'
+                        }],
+                        'ows:Identifier': "fromsources",
+                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
+                    }
+                }
+            },
+            'http:url003': {
+                data: 'data'
+            }
+        });
+
     });
 
 });

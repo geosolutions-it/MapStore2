@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
+const {createSelector, createStructuredSelector} = require('reselect');
 const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
@@ -19,33 +19,40 @@ const MetadataModal = require('../components/maps/modals/MetadataModal');
 const {createMap, createThumbnail, onDisplayMetadataEdit, metadataChanged} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('../actions/currentMap');
 const {mapSelector} = require('../selectors/map');
-const stateSelector = state => state;
 const {layersSelector, groupsSelector} = require('../selectors/layers');
-const {servicesSelector, selectedServiceSelector} = require('../selectors/catalog');
+const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
 const {indexOf} = require('lodash');
 
 const MapUtils = require('../utils/MapUtils');
 
-const selector = createSelector(mapSelector, stateSelector, layersSelector, groupsSelector, (map, state, layers, groups) => ({
+const saveAsStateSelector = createStructuredSelector({
+    show: state => state.controls && state.controls.saveAs && state.controls.saveAs.enabled,
+    mapType: state => state && (state.home && state.home.mapType || state.maps && state.maps.mapType) || "leaflet",
+    newMapId: state => state.currentMap && state.currentMap.newMapId,
+    user: state => state.security && state.security.user,
+    currentMap: state => state.currentMap,
+    metadata: state => state.maps.metadata,
+    textSearchConfig: state => state.searchconfig && state.searchconfig.textSearchConfig
+});
+
+const selector = createSelector(
+        mapSelector,
+        layersSelector,
+        groupsSelector,
+        mapOptionsToSaveSelector,
+        saveAsStateSelector,
+        (map, layers, groups, additionalOptions, saveAsState) => ({
     currentZoomLvl: map && map.zoom,
-    show: state.controls && state.controls.saveAs && state.controls.saveAs.enabled,
-    mapType: state && (state.home && state.home.mapType || state.maps && state.maps.mapType) || "leaflet",
-    newMapId: state.currentMap && state.currentMap.newMapId,
     map,
-    catalogServices: servicesSelector(state),
-    selectedService: selectedServiceSelector(state),
-    user: state.security && state.security.user,
-    currentMap: state.currentMap,
-    metadata: state.maps.metadata,
     layers,
-    textSearchConfig: state.searchconfig && state.searchconfig.textSearchConfig,
-    groups
+    groups,
+    additionalOptions,
+    ...saveAsState
 }));
 
 class SaveAs extends React.Component {
     static propTypes = {
-        catalogServices: PropTypes.object,
-        selectedService: PropTypes.string,
+        additionalOptions: PropTypes.object,
         show: PropTypes.bool,
         newMapId: PropTypes.number,
         map: PropTypes.object,
@@ -75,6 +82,7 @@ class SaveAs extends React.Component {
     };
 
     static defaultProps = {
+        additionalOptions: {},
         onMapSave: () => {},
         loadMapInfo: () => {},
         show: false
@@ -127,11 +135,7 @@ class SaveAs extends React.Component {
 
     // this method creates the content for the Map Resource
     createV2Map = () => {
-        let catalogServices = {
-            services: this.props.catalogServices,
-            selectedService: this.props.selectedService
-        };
-        return MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, catalogServices);
+        return MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions);
     };
 
     saveMap = (id, name, description) => {
