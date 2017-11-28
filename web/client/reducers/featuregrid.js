@@ -35,7 +35,8 @@ const {
     CLOSE_FEATURE_GRID,
     UPDATE_FILTER,
     INIT_PLUGIN,
-    SIZE_CHANGE
+    SIZE_CHANGE,
+    STORE_ADVANCED_SEARCH_FILTER
 } = require('../actions/featuregrid');
 const{
     FEATURE_TYPE_LOADED,
@@ -47,6 +48,7 @@ const{
 const uuid = require('uuid');
 
 const emptyResultsState = {
+    advancedFilters: {},
     filters: {},
     editingAllowedRoles: ["ADMIN"],
     enableColumnFilters: true,
@@ -351,6 +353,9 @@ function featuregrid(state = emptyResultsState, action) {
         return assign({}, state, {
             dockSize: size
         });
+    }
+    case STORE_ADVANCED_SEARCH_FILTER : {
+        return assign({}, state, {advancedFilters: assign({}, state.advancedFilters, {[state.selectedLayer]: action.filterObj})});
     }
     default:
         return state;
