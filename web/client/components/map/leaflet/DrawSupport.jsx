@@ -11,6 +11,7 @@ const {head} = require('lodash');
 const L = require('leaflet');
 require('leaflet-draw');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
+const {fromLeafletFeatureToQueryform, boundsToOLExtent} = require('../../../utils/DrawSupportUtils');
 const assign = require('object-assign');
 
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
@@ -126,7 +127,7 @@ class DrawSupport extends React.Component {
         } else {
             bounds = layer.getBounds();
         }
-        let extent = this.boundsToOLExtent(bounds);
+        let extent = boundsToOLExtent(bounds);
         let center = bounds.getCenter();
         center = [center.lng, center.lat];
         let radius = layer.getRadius ? layer.getRadius() : 0;
@@ -346,7 +347,7 @@ class DrawSupport extends React.Component {
             this.addDrawInteraction(props);
         }
         if (newProps.options.updateSpatialField) {
-            const feature = this.fromLeafletFeature();
+            const feature = fromLeafletFeatureToQueryform(this.drawLayer);
             this.props.onEndDrawing(feature, this.props.drawOwner);
         }
     };
@@ -437,10 +438,6 @@ class DrawSupport extends React.Component {
         }
     };
 
-    boundsToOLExtent = (bounds) => {
-        return [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
-    };
-
     convertFeaturesPolygonToPoint = (features, method) => {
         return method === 'Circle' ? features.map((f) => {
             return {...f, type: "Point"};
@@ -462,30 +459,6 @@ class DrawSupport extends React.Component {
             geom = featureEdited.toGeoJSON().geometry;
         }
         return assign({}, featureEdited.toGeoJSON(), {geometry: geom});
-    };
-    fromLeafletFeature = () => {
-        const layer = this.drawLayer;
-        // let drawn geom stay on the map
-        let geoJesonFt = layer.toGeoJSON();
-        let bounds = layer.getBounds();
-        // const newGeoJsonFt = this.convertFeaturesToGeoJson([feature], props);
-        let extent = this.boundsToOLExtent(bounds);
-        let center = bounds.getCenter();
-        let radius = layer.getRadius ? layer.getRadius() : 0;
-        let coordinates = geoJesonFt.features[0].geometry.coordinates;
-        let projection = "EPSG:4326";
-        let type = geoJesonFt.features[0].geometry.type;
-        // We always draw geoJson feature
-        // this.drawLayer.addData(geoJesonFt);
-        // Geometry respect query form panel needs
-        return {
-            type,
-            extent,
-            center,
-            coordinates,
-            radius,
-            projection
-        };
     };
 }
 
