@@ -347,7 +347,7 @@ class SpatialFilter extends React.Component {
         this.props.actions.onSelectSpatialMethod(method, name);
 
         if (this.getMethodFromId(method).type !== "wfsGeocoder") {
-            switch (method.id) {
+            switch (method) {
                 case "ZONE": {
                     this.changeDrawingStatus('clean', null, "queryform", []); break;
                 }
@@ -384,7 +384,7 @@ class SpatialFilter extends React.Component {
     changeDrawingStatus = (status, method, owner, features, options) => {
         this.props.actions.onChangeDrawingStatus(
             status,
-            method !== undefined ? method : this.props.spatialField.method && this.props.spatialField.method.id,
+            method !== undefined ? method : this.props.spatialField.method,
             owner,
             features,
             options);
