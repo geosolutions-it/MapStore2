@@ -1,5 +1,5 @@
-/**
-* Copyright 2016, GeoSolutions Sas.
+/*
+* Copyright 2017, GeoSolutions Sas.
 * All rights reserved.
 *
 * This source code is licensed under the BSD-style license found in the
@@ -12,6 +12,7 @@ const {loadMaps, updateMapMetadata, deleteMap, createThumbnail, deleteThumbnail,
 const {editMap, updateCurrentMap, errorCurrentMap, removeThumbnail, resetCurrentMap} = require('../actions/currentMap');
 const {mapTypeSelector} = require('../selectors/maptype');
 const ConfigUtils = require('../utils/ConfigUtils');
+
 const MapsGrid = connect((state) => {
     return {
         bsSize: "small",
