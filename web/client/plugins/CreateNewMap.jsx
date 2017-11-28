@@ -11,6 +11,7 @@ const {connect} = require('react-redux');
 
 const {Button, Grid, Col} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
+const {mapTypeSelector} = require('../selectors/maptype');
 
 
 class CreateNewMap extends React.Component {
@@ -54,7 +55,7 @@ class CreateNewMap extends React.Component {
 
 module.exports = {
     CreateNewMapPlugin: connect((state) => ({
-        mapType: state.maps && state.maps.mapType || state.home && state.home.mapType,
+        mapType: mapTypeSelector(state),
         isLoggedIn: state && state.security && state.security.user && state.security.user.enabled && true || false,
         user: state && state.security && state.security.user
     }))(CreateNewMap)

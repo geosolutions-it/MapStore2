@@ -13,7 +13,6 @@ const {createSelector, createStructuredSelector} = require('reselect');
 const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
-// const {toggleControl} = require('../actions/controls');
 const {loadMapInfo} = require('../actions/config');
 const MetadataModal = require('../components/maps/modals/MetadataModal');
 const {createMap, createThumbnail, onDisplayMetadataEdit, metadataChanged} = require('../actions/maps');
@@ -21,13 +20,14 @@ const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('.
 const {mapSelector} = require('../selectors/map');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
+const {mapTypeSelector} = require('../selectors/maptype');
 const {indexOf} = require('lodash');
 
 const MapUtils = require('../utils/MapUtils');
 
 const saveAsStateSelector = createStructuredSelector({
     show: state => state.controls && state.controls.saveAs && state.controls.saveAs.enabled,
-    mapType: state => state && (state.home && state.home.mapType || state.maps && state.maps.mapType) || "leaflet",
+    mapType: state => mapTypeSelector(state),
     newMapId: state => state.currentMap && state.currentMap.newMapId,
     user: state => state.security && state.security.user,
     currentMap: state => state.currentMap,

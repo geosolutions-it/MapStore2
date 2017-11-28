@@ -1,16 +1,16 @@
-const PropTypes = require('prop-types');
 /**
- * Copyright 2016, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
+* Copyright 2016, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 const {loadMaps, updateMapMetadata, deleteMap, createThumbnail, deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating, metadataChanged} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap, removeThumbnail, resetCurrentMap} = require('../actions/currentMap');
+const {mapTypeSelector} = require('../selectors/maptype');
 const ConfigUtils = require('../utils/ConfigUtils');
 const MapsGrid = connect((state) => {
     return {
@@ -18,7 +18,7 @@ const MapsGrid = connect((state) => {
         maps: state.maps && state.maps.results ? state.maps.results : [],
         currentMap: state.currentMap,
         loading: state.maps && state.maps.loading,
-        mapType: state.home && state.home.mapType || state.maps && state.maps.mapType
+        mapType: mapTypeSelector(state)
     };
 }, {
     loadMaps,
