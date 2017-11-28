@@ -17,6 +17,11 @@ const FilterUtils = require('../../../../utils/FilterUtils');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const mapUtils = require('../../../../utils/MapUtils');
 
+/**
+    @param {object} options of the layer
+    @return the Openlayers options from the layers ones and/or default.
+    tiled params must be tru if not defined
+*/
 function wmsToOpenlayersOptions(options) {
     const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
     // NOTE: can we use opacity to manage visibility?
