@@ -1,4 +1,3 @@
-
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -13,8 +12,9 @@ const PropTypes = require('prop-types');
 const {Row, Col, Panel, Glyphicon, FormControl} = require('react-bootstrap');
 const ComboField = require('./ComboField');
 const GeometryDetails = require('./GeometryDetails');
-const AutocompleteWFSComboboxContainer = () => <div>REPLACE WITH WFS GEOCODER</div>;
-const ComboFieldListItem = () => <div>REPLACE WITH COMPOLIST ITEM</div>;
+const {AutocompleteWFSCombobox} = require('../../misc/AutocompleteWFSCombobox');
+const ComboFieldListItem = require('./ComboFieldListItem');
+const {createWFSFetchStream} = require('../../../observables/autocomplete');
 
 const ZoneField = require('./ZoneField');
 
@@ -64,6 +64,7 @@ class SpatialFilter extends React.Component {
             // zoneSelect: () => {}
         }
     };
+
     getMethodFromId = (id) => {
         return find(this.props.spatialMethodOptions, method => method && method.id === id) || null;
     };
@@ -178,13 +179,15 @@ class SpatialFilter extends React.Component {
                     </Col>
                     <Col xs={7}>
                         <div style={{width: "140px"}}>
-                            <AutocompleteWFSComboboxContainer
+                            <AutocompleteWFSCombobox
+                                autocompleteStreamFactory={createWFSFetchStream}
                                 valueField={selectedMethod && selectedMethod.filterProps && selectedMethod.filterProps.valueField}
                                 textField={selectedMethod && selectedMethod.filterProps && selectedMethod.filterProps.valueField}
                                 url={selectedMethod && selectedMethod.url}
+                                filter="contains"
                                 onChangeDrawingStatus={this.props.actions.onChangeDrawingStatus}
                                 filterProps={selectedMethod && selectedMethod.filterProps}
-                                />
+                            />
                         </div>
 
                     </Col>
@@ -320,19 +323,19 @@ class SpatialFilter extends React.Component {
         this.props.actions.onSelectSpatialMethod(method, name);
 
         if (this.getMethodFromId(method).type !== "wfsGeocoder") {
-            switch (method) {
-                case "ZONE": {
-                    this.changeDrawingStatus('clean', null, "queryform", []); break;
-                }
-                case "Viewport": {
-                    this.changeDrawingStatus('clean', null, "queryform", []);
-                    this.props.actions.onSelectViewportSpatialMethod();
-                    break;
-                }
-                default: {
-                    this.changeDrawingStatus('start', method, "queryform", [], {stopAfterDrawing: true});
-                }
+        switch (method) {
+            case "ZONE": {
+                this.changeDrawingStatus('clean', null, "queryform", []); break;
             }
+            case "Viewport": {
+                this.changeDrawingStatus('clean', null, "queryform", []);
+                this.props.actions.onSelectViewportSpatialMethod();
+                break;
+            }
+            default: {
+                this.changeDrawingStatus('start', method, "queryform", [], {stopAfterDrawing: true});
+            }
+        }
         } else {
             this.changeDrawingStatus('clean', null, "queryform", []);
         }

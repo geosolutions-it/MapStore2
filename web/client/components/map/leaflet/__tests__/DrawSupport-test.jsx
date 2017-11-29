@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var expect = require('expect');
-var React = require('react');
-var ReactDOM = require('react-dom');
-var L = require('leaflet');
-var DrawSupport = require('../DrawSupport');
+const expect = require('expect');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const L = require('leaflet');
+const DrawSupport = require('../DrawSupport');
 const {} = require('../../../../test-resources/drawsupport/features');
 describe('Leaflet DrawSupport', () => {
     var msNode;
@@ -265,6 +265,29 @@ describe('Leaflet DrawSupport', () => {
         });
         let cmp = ReactDOM.render( <DrawSupport map={map} drawOwner="me" drawStatus="start" drawMethod="LineString" options={{}} />, msNode);
         cmp = ReactDOM.render( <DrawSupport map={map} drawOwner="me" drawStatus="stop" drawMethod="LineString" options={{}} />, msNode);
+        expect(cmp).toExist();
+
+    });
+    it('test updateSpatialField = true', () => {
+        const latlngs = [[37, -109.05], [41, -109.03], [41, -102.05], [37, -102.04]];
+        let map = L.map("map", {
+            center: [51.505, -0.09],
+            zoom: 13
+        });
+        let cmp = ReactDOM.render( <DrawSupport map={map} drawOwner="me" drawStatus="drawOrEdit" drawMethod="Polygon" features={[{
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [latlngs]
+            }
+        }]} options={{drawEnabled: false, updateSpatialField: false}} />, msNode);
+        cmp = ReactDOM.render( <DrawSupport map={map} drawOwner="me" drawStatus="drawOrEdit" drawMethod="Polygon" features={[{
+            type: "Feature",
+            geometry: {
+                type: "Polygon",
+                coordinates: [latlngs]
+            }
+        }]} options={{drawEnabled: false, updateSpatialField: true}} />, msNode);
         expect(cmp).toExist();
 
     });
