@@ -111,14 +111,10 @@ describe('Test queryform selectors', () => {
         const filterObj = filterObjSelector(initialState);
         expect(filterObj).toExist();
         expect(filterObj.spatialField).toBe(initialState.queryform.spatialField);
-        expect(filterObj.featureTypeName).toBeUndefined();
-        expect(filterObj.filterType).toBeUndefined();
-        expect(filterObj.ogcVersion).toBeUndefined();
-        expect(filterObj.filterFields).toBeDefined();
-        expect(filterObj.filterFields.length).toExist();
+        expect(filterObj.featureTypeName).toNotExist();
+        expect(filterObj.filterType).toNotExist();
+        expect(filterObj.ogcVersion).toNotExist();
         expect(filterObj.filterFields.length).toBe(0);
-        expect(filterObj.groupFields).toBeDefined();
-        expect(filterObj.groupFields.length).toExist();
         expect(filterObj.groupFields.length).toBe(0);
     });
 });
