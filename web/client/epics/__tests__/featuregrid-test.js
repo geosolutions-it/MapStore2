@@ -8,6 +8,9 @@
 
 const expect = require('expect');
 const assign = require('object-assign');
+const Proj4js = require('proj4');
+const proj4 = Proj4js;
+const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const {toggleEditMode, toggleViewMode, openFeatureGrid, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid, GEOMETRY_CHANGED} = require('../../actions/featuregrid');
 const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
@@ -19,11 +22,75 @@ const {toggleSyncWms} = require('../../actions/wfsquery');
 const {CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
 
-const {layerSelectedForSearch} = require('../../actions/wfsquery');
+const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
 
-const {setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeCatalogOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing} = require('../featuregrid');
+const {setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeCatalogOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing, syncMapWmsFilter} = require('../featuregrid');
 const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
-
+const {isEmpty, isNil} = require('lodash');
+const filterObj = {
+    featureTypeName: 'TEST',
+    groupFields: [
+      {
+        id: 1,
+        logic: 'OR',
+        index: 0
+      }
+    ],
+    filterFields: [],
+    spatialField: {
+      method: 'BBOX',
+      attribute: 'GEOMETRY',
+      operation: 'INTERSECTS',
+      geometry: {
+        id: 'a45697d0-cab1-11e7-a45c-3d37963eccab',
+        type: 'Polygon',
+        extent: [
+          978438.5673027613,
+          5527214.592597753,
+          994987.1839265019,
+          5533558.865945422
+        ],
+        center: [
+          986712.8756146316,
+          5530386.729271587
+        ],
+        coordinates: [
+          [
+            [
+              978438.5673027613,
+              5533558.865945422
+            ],
+            [
+              978438.5673027613,
+              5527214.592597753
+            ],
+            [
+              994987.1839265019,
+              5527214.592597753
+            ],
+            [
+              994987.1839265019,
+              5533558.865945422
+            ],
+            [
+              978438.5673027613,
+              5533558.865945422
+            ]
+          ]
+        ],
+        style: {},
+        projection: 'EPSG:900913'
+      }
+    },
+    pagination: {
+      startIndex: 0,
+      maxFeatures: 20
+    },
+    filterType: 'OGC',
+    ogcVersion: '1.1.0',
+    sortOptions: null,
+    hits: false
+  };
 const state = {
     query: {
         featureTypes: {
@@ -41,7 +108,7 @@ const state = {
                     targetNamespace: 'http://geoserver.org/editing',
                     targetPrefix: 'editing',
                     featureTypes: [{
-                        typeName: 'poligoni',
+                        typeName: 'polygons',
                         properties: [{
                                 name: 'name',
                                 maxOccurs: 1,
@@ -77,7 +144,7 @@ const state = {
             totalFeatures: 4,
             features: [{
                     type: 'Feature',
-                    id: 'poligoni.1',
+                    id: 'polygons.1',
                     geometry: {
                         type: 'Polygon',
                         coordinates: [
@@ -104,7 +171,7 @@ const state = {
                 },
                 {
                     type: 'Feature',
-                    id: 'poligoni.2',
+                    id: 'polygons.2',
                     geometry: {
                         type: 'Polygon',
                         coordinates: [
@@ -134,7 +201,7 @@ const state = {
                 },
                 {
                     type: 'Feature',
-                    id: 'poligoni.6',
+                    id: 'polygons.6',
                     geometry: {
                         type: 'Polygon',
                         coordinates: [
@@ -161,7 +228,7 @@ const state = {
                 },
                 {
                     type: 'Feature',
-                    id: 'poligoni.7',
+                    id: 'polygons.7',
                     geometry: {
                         type: 'Polygon',
                         coordinates: [
@@ -204,12 +271,7 @@ const state = {
                 index: 0
             }],
             filterFields: [],
-            spatialField: {
-                method: null,
-                attribute: 'geometry',
-                operation: 'INTERSECTS',
-                geometry: null
-            },
+            spatialField: {...filterObj.spatialField},
             pagination: {
                 startIndex: 0,
                 maxFeatures: 20
@@ -227,7 +289,9 @@ const state = {
     layers: {
         flat: [{
             id: "TEST_LAYER",
-            title: "Test Layer"
+            title: "Test Layer",
+            filterObj,
+            nativeCrs: "EPSG:4326"
         }]
     },
     highlight: {
@@ -252,7 +316,7 @@ const stateWithGmlGeometry = {
                     targetNamespace: 'http://geoserver.org/editing',
                     targetPrefix: 'editing',
                     featureTypes: [{
-                        typeName: 'poligoni',
+                        typeName: 'polygons',
                         properties: [{
                                 name: 'name',
                                 maxOccurs: 1,
@@ -288,7 +352,7 @@ const stateWithGmlGeometry = {
             totalFeatures: 4,
             features: [{
                     type: 'Feature',
-                    id: 'poligoni.1',
+                    id: 'polygons.1',
                     geometry: {
                         type: 'Polygon',
                         coordinates: [
@@ -315,7 +379,7 @@ const stateWithGmlGeometry = {
                 },
                 {
                     type: 'Feature',
-                    id: 'poligoni.2',
+                    id: 'polygons.2',
                     geometry: {
                         type: 'Polygon',
                         coordinates: [
@@ -345,7 +409,7 @@ const stateWithGmlGeometry = {
                 },
                 {
                     type: 'Feature',
-                    id: 'poligoni.6',
+                    id: 'polygons.6',
                     geometry: {
                         type: 'Polygon',
                         coordinates: [
@@ -372,7 +436,7 @@ const stateWithGmlGeometry = {
                 },
                 {
                     type: 'Feature',
-                    id: 'poligoni.7',
+                    id: 'polygons.7',
                     geometry: {
                         type: 'Polygon',
                         coordinates: [
@@ -447,6 +511,49 @@ const stateWithGmlGeometry = {
 };
 
 describe('featuregrid Epics', () => {
+
+    it('test startSyncWmsFilter with nativeCrs absent in layer props, but no definition registered in proj4 defs', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST__6",
+                mode: 'EDIT',
+                select: [{id: 'polygons.1', _new: 'polygons._new'}],
+                changes: []
+            },
+            layers: {
+                flat: [{
+                    id: "TEST__6",
+                    name: "V_TEST",
+                    title: "V_TEST",
+                    filterObj,
+                    url: "base/web/client/test-resources/wms/getCapabilitiesSingleLayer3044.xml"
+                }]
+            },
+            query: {
+                syncWmsFilter: true
+            }
+        };
+        CoordinatesUtils.getProjUrl = () => "base/web/client/test-resources/wms/projDef_3044.txt";
+
+        const newState = assign({}, state, stateFeaturegrid);
+        testEpic(startSyncWmsFilter, 2, toggleSyncWms(), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                    case START_SYNC_WMS:
+                        expect(action.type).toBe(START_SYNC_WMS);
+                        break;
+                    case CHANGE_LAYER_PROPERTIES:
+                        expect(action.newProperties.nativeCrs).toBe("EPSG:3044");
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        }, newState);
+    });
 
     it('set highlight feature path with geometry not supported EDIT MODE', (done) => {
         const epicResult = actions => {
@@ -856,26 +963,6 @@ describe('featuregrid Epics', () => {
     });
 
 
-    it('test startSyncWmsFilter', (done) => {
-        testEpic(startSyncWmsFilter, 1, toggleSyncWms(), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
-                switch (action.type) {
-                    case START_SYNC_WMS:
-                        expect(action.type).toBe(START_SYNC_WMS);
-                        break;
-                    default:
-                        expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {
-            query: {
-                syncWmsFilter: true
-            }
-        });
-    });
-
     it('test stopSyncWmsFilter', (done) => {
         testEpic(stopSyncWmsFilter, 2, toggleSyncWms(), actions => {
             expect(actions.length).toBe(2);
@@ -996,21 +1083,21 @@ describe('featuregrid Epics', () => {
                 open: true,
                 selectedLayer: "TEST_LAYER",
                 mode: 'EDIT',
-                select: [{id: 'poligoni.1', _new: 'poligoni._new'}],
+                select: [{id: 'polygons.1', _new: 'polygons._new'}],
                 changes: []
             }
         };
         const newState = assign({}, state, stateFeaturegrid);
 
-        testEpic(onFeatureGridGeometryEditing, 1, [geometryChanged([{id: 'poligoni.1', geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]}, geometry_name: 'geometry' }], 'featureGrid', '')], actions => {
+        testEpic(onFeatureGridGeometryEditing, 1, [geometryChanged([{id: 'polygons.1', geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]}, geometry_name: 'geometry' }], 'featureGrid', '')], actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
                     case GEOMETRY_CHANGED:
                         expect(action.features).toEqual([{
-                            id: 'poligoni.1',
+                            id: 'polygons.1',
                             type: 'Feature',
-                            _new: 'poligoni._new',
+                            _new: 'polygons._new',
                             geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]},
                             geometry_name: 'geometry'
                         }]);
@@ -1030,21 +1117,21 @@ describe('featuregrid Epics', () => {
                 open: true,
                 selectedLayer: "TEST_LAYER",
                 mode: 'EDIT',
-                select: [{id: 'poligoni.1', _new: 'poligoni._new'}],
+                select: [{id: 'polygons.1', _new: 'polygons._new'}],
                 changes: []
             }
         };
         const newState = assign({}, state, stateFeaturegrid);
 
-        testEpic(onFeatureGridGeometryEditing, 2, [geometryChanged([{id: 'poligoni.1', geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]}, geometry_name: 'geometry' }], 'featureGrid', 'enterEditMode')], actions => {
+        testEpic(onFeatureGridGeometryEditing, 2, [geometryChanged([{id: 'polygons.1', geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]}, geometry_name: 'geometry' }], 'featureGrid', 'enterEditMode')], actions => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
                     case GEOMETRY_CHANGED:
                         expect(action.features).toEqual([{
-                            id: 'poligoni.1',
+                            id: 'polygons.1',
                             type: 'Feature',
-                            _new: 'poligoni._new',
+                            _new: 'polygons._new',
                             geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]},
                             geometry_name: 'geometry'
                         }]);
@@ -1054,13 +1141,246 @@ describe('featuregrid Epics', () => {
                         expect(action.method).toBe("Polygon");
                         expect(action.owner).toBe("featureGrid");
                         expect(action.features).toEqual([{
-                            id: 'poligoni.1',
+                            id: 'polygons.1',
                             type: 'Feature',
-                            _new: 'poligoni._new',
+                            _new: 'polygons._new',
                             geometry: { type: 'Polygon', coordinates: [[[-180, 90], [180, 90], [180, -90], [-180, 90]]]},
                             geometry_name: 'geometry'
                         }]);
                         expect(action.style).toBe(undefined);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        }, newState);
+    });
+
+
+    it('test syncMapWmsFilter with: nativeCrs and spatialField', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                mode: 'EDIT',
+                select: [{id: 'polygons.1', _new: 'polygons._new'}],
+                changes: []
+            }
+        };
+        const newState = assign({}, state, stateFeaturegrid);
+
+        testEpic(addTimeoutEpic(syncMapWmsFilter), 1, [{type: UPDATE_QUERY}, {type: START_SYNC_WMS}], actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case CHANGE_LAYER_PROPERTIES: {
+                        expect(action.newProperties.filterObj.spatialField.geometry.coordinates[0].length).toBe(5);
+                        const firstPoint = [parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][0] * 10000000000), 10) / 10000000000, parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][1] * 10000000000), 10) / 10000000000 ];
+                        expect(firstPoint[0]).toBe(8.7894631958);
+                        expect(firstPoint[1]).toBe(44.4385328728);
+                        break;
+                    }
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        }, newState);
+    });
+
+    it('test syncMapWmsFilter with only: nativeCrs', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                mode: 'EDIT',
+                select: [{id: 'polygons.1', _new: 'polygons._new'}],
+                changes: []
+            },
+            layers: {
+                flat: [{
+                    id: "TEST_LAYER",
+                    title: "Test Layer",
+                    nativeCrs: "EPSG:4326"
+                }]
+            },
+            query: {
+                filterObj: {}
+            }
+        };
+        const newState = assign({}, state, stateFeaturegrid);
+
+        testEpic(addTimeoutEpic(syncMapWmsFilter), 1, [{type: UPDATE_QUERY}, {type: START_SYNC_WMS}], actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case CHANGE_LAYER_PROPERTIES: {
+                        expect(isEmpty(action.newProperties.filterObj)).toBeTruthy();
+                        expect(isNil(action.newProperties.nativeCrs)).toBeTruthy();
+                        break;
+                    }
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        }, newState);
+    });
+
+
+    it('test syncMapWmsFilter with only spatialField. NativeCrs not fetched', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST__6",
+                mode: 'EDIT',
+                select: [{id: 'polygons.1', _new: 'polygons._new'}],
+                changes: []
+            },
+            layers: {
+                flat: [{
+                    id: "TEST__6",
+                    name: "V_TEST",
+                    title: "V_TEST",
+                    filterObj,
+                    url: "base/web/client/test-resources/wms/getCapabilitiesSingleLayer3044.xml"
+                }]
+            }
+        };
+        const newState = assign({}, state, stateFeaturegrid);
+
+        testEpic(addTimeoutEpic(syncMapWmsFilter), 1, [{type: UPDATE_QUERY}, {type: START_SYNC_WMS}], actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case CHANGE_LAYER_PROPERTIES: {
+                        expect(action.newProperties.filterObj.spatialField).toBe(undefined);
+                        break;
+                    }
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        }, newState);
+    });
+
+    it('test syncMapWmsFilter with only spatialField. NativeCrs already present', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST__6",
+                mode: 'EDIT',
+                select: [{id: 'polygons.1', _new: 'polygons._new'}],
+                changes: []
+            },
+            layers: {
+                flat: [{
+                    id: "TEST__6",
+                    name: "V_TEST",
+                    title: "V_TEST",
+                    filterObj,
+                    nativeCrs: "EPSG:3044",
+                    url: "base/web/client/test-resources/wms/getCapabilitiesSingleLayer3044.xml"
+                }]
+            }
+        };
+        const newState = assign({}, state, stateFeaturegrid);
+        proj4.defs("EPSG:3044", "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs");
+
+        testEpic(addTimeoutEpic(syncMapWmsFilter), 1, [{type: UPDATE_QUERY}, {type: START_SYNC_WMS}], actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case CHANGE_LAYER_PROPERTIES: {
+                        const firstPoint = [parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][0] * 1000000), 10) / 1000000, parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][1] * 100000), 10) / 100000 ];
+                        expect(firstPoint[0]).toBe(483245.221897);
+                        expect(firstPoint[1]).toBe(4920603.15079);
+                        break;
+                    }
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        }, newState);
+    });
+
+    it('test startSyncWmsFilter with nativeCrs present in layer props', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST__6",
+                mode: 'EDIT',
+                select: [{id: 'polygons.1', _new: 'polygons._new'}],
+                changes: []
+            },
+            layers: {
+                flat: [{
+                    id: "TEST__6",
+                    name: "V_TEST",
+                    title: "V_TEST",
+                    filterObj,
+                    nativeCrs: "EPSG:3044",
+                    url: "base/web/client/test-resources/wms/getCapabilitiesSingleLayer3044.xml"
+                }]
+            },
+            query: {
+                syncWmsFilter: true
+            }
+        };
+        const newState = assign({}, state, stateFeaturegrid);
+        testEpic(startSyncWmsFilter, 1, toggleSyncWms(), actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case START_SYNC_WMS:
+                        expect(action.type).toBe(START_SYNC_WMS);
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        }, newState);
+    });
+
+    it('test startSyncWmsFilter with nativeCrs absent in layer props and with definition registered in proj4 defs', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST__6",
+                mode: 'EDIT',
+                select: [{id: 'polygons.1', _new: 'polygons._new'}],
+                changes: []
+            },
+            layers: {
+                flat: [{
+                    id: "TEST__6",
+                    name: "V_TEST",
+                    title: "V_TEST",
+                    filterObj,
+                    url: "base/web/client/test-resources/wms/getCapabilitiesSingleLayer3044.xml"
+                }]
+            },
+            query: {
+                syncWmsFilter: true
+            }
+        };
+
+        const newState = assign({}, state, stateFeaturegrid);
+        proj4.defs("EPSG:3044", "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs");
+        testEpic(startSyncWmsFilter, 2, toggleSyncWms(), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                    case START_SYNC_WMS:
+                        expect(action.type).toBe(START_SYNC_WMS);
+                        break;
+                    case CHANGE_LAYER_PROPERTIES:
+                        expect(action.type).toBe(CHANGE_LAYER_PROPERTIES);
+                        expect(action.newProperties.nativeCrs).toBe("EPSG:3044");
                         break;
                     default:
                         expect(true).toBe(false);

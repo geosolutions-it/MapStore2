@@ -28,19 +28,21 @@ class Legend extends React.Component {
     state = {
         error: false
     }
-    componentWillReceiveProps() {
-        if (this.state.error) {
+    componentWillReceiveProps(nProps) {
+        if ( this.state.error && this.getUrl(nProps, 0) !== this.getUrl(this.props, 0)) {
             this.setState(() => ({error: false}));
         }
     }
     onImgError = () => {
         this.setState(() => ({error: true}));
     }
-    render() {
-        if (!this.state.error && this.props.layer && this.props.layer.type === "wms" && this.props.layer.url) {
-            let layer = this.props.layer;
+    getUrl = (props, urlIdx) => {
+        if (props.layer && props.layer.type === "wms" && props.layer.url) {
+            const layer = props.layer;
+            const idx = urlIdx || isArray(layer.url) && Math.floor(Math.random() * layer.url.length);
+
             const url = isArray(layer.url) ?
-                layer.url[Math.floor(Math.random() * layer.url.length)] :
+                layer.url[idx] :
                 layer.url.replace(/[?].*$/g, '');
 
             let urlObj = urlUtil.parse(url);
@@ -48,26 +50,31 @@ class Legend extends React.Component {
                 service: "WMS",
                 request: "GetLegendGraphic",
                 format: "image/png",
-                height: this.props.legendHeigth,
-                width: this.props.legendWidth,
+                height: props.legendHeigth,
+                width: props.legendWidth,
                 layer: layer.name,
                 style: layer.style || null,
                 version: layer.version || "1.3.0",
                 SLD_VERSION: "1.1.0",
-                LEGEND_OPTIONS: this.props.legendOptions
+                LEGEND_OPTIONS: props.legendOptions
             }, layer.legendParams || {},
             layer.params || {},
             layer.params && layer.params.SLD_BODY ? {SLD_BODY: layer.params.SLD_BODY} : {},
-            this.props.scales && this.props.currentZoomLvl ? {SCALE: Math.round(this.props.scales[this.props.currentZoomLvl])} : {});
+            props.scales && props.currentZoomLvl ? {SCALE: Math.round(props.scales[props.currentZoomLvl])} : {});
             SecurityUtils.addAuthenticationParameter(url, query);
 
-            let legendUrl = urlUtil.format({
+            return urlUtil.format({
                 host: urlObj.host,
                 protocol: urlObj.protocol,
                 pathname: urlObj.pathname,
                 query: query
             });
-            return <img onError={this.onImgError} src={legendUrl} style={this.props.style}/>;
+        }
+        return '';
+    }
+    render() {
+        if (!this.state.error && this.props.layer && this.props.layer.type === "wms" && this.props.layer.url) {
+            return <img onError={this.onImgError} src={this.getUrl(this.props)} style={this.props.style}/>;
         }
         return <Message msgId="layerProperties.legenderror" />;
     }

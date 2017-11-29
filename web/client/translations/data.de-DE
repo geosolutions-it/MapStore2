@@ -34,7 +34,7 @@
             "title": "Titel",
             "name": "Name",
             "group": "Gruppe",
-            "description": "Description",
+            "description": "Beschreibung",
             "general": "Generell",
             "display": "Darstellung",
             "style": "Stil",
@@ -906,6 +906,7 @@
                 "more": "viele"
             },
             "noFeaturesAvailable": "Keine features verfügbar",
+            "errorProjFetch": "Fehler beim Abrufen der proj4-String-Definition von spatialreference.org. Das Synchronisierungstool kann den räumlichen Filter nicht anwenden.",
             "errorSaving": "Beim Speichern des Vorgangs ist ein Fehler aufgetreten",
             "notSupportedGeometryTitle": "Geometry type not supported ",
             "notSupportedGeometry": "Current layer geometry type is not supported by editing but you can still edit attributes",

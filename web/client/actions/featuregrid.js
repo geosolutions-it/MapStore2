@@ -282,6 +282,11 @@ function zoomAll() {
         type: ZOOM_ALL
     };
 }
+function startSyncWMS() {
+    return {
+        type: START_SYNC_WMS
+    };
+}
 function sizeChange(size, dockProps) {
     return {
         type: SIZE_CHANGE,
@@ -353,6 +358,6 @@ module.exports = {
     toggleEditMode,
     toggleViewMode,
     initPlugin, INIT_PLUGIN,
-    START_SYNC_WMS,
+    START_SYNC_WMS, startSyncWMS,
     STOP_SYNC_WMS
 };

@@ -99,9 +99,16 @@ describe('OpenlayersMap', () => {
         setTimeout(() => {
             map.map.forEachFeatureAtPixel = (pixel, callback) => {
                 callback.call(null, {
+                    feature: new ol.Feature({
+                        geometry: new ol.geom.Point([10.3, 43.9]),
+                        name: 'My Point'
+                    }),
                     getGeometry: () => {
                         return {
-                            getFirstCoordinate: () => [10.3, 43.9]
+                            getFirstCoordinate: () => [10.3, 43.9],
+                            getType: () => {
+                                return 'Point';
+                            }
                         };
                     }
                 });
@@ -360,9 +367,9 @@ describe('OpenlayersMap', () => {
     });
 
     it('create attribution with container', () => {
-        let map = ReactDOM.render(<OpenlayersMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: 'body'}}}/>, document.getElementById("map"));
+        let map = ReactDOM.render(<OpenlayersMap id="ol-map" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: 'body'}}}/>, document.getElementById("map"));
         expect(map).toExist();
-        const domMap = document.getElementById('map');
+        const domMap = document.getElementById('ol-map');
         let attributions = domMap.getElementsByClassName('ol-attribution');
         expect(attributions.length).toBe(0);
         attributions = document.body.getElementsByClassName('ol-attribution');
@@ -370,14 +377,30 @@ describe('OpenlayersMap', () => {
     });
 
     it('remove attribution from container', () => {
-        let map = ReactDOM.render(<OpenlayersMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: 'body'}}}/>, document.getElementById("map"));
+        let map = ReactDOM.render(<OpenlayersMap id="ol-map" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: 'body'}}}/>, document.getElementById("map"));
         expect(map).toExist();
-        const domMap = document.getElementById('map');
+        const domMap = document.getElementById('ol-map');
         let attributions = domMap.getElementsByClassName('ol-attribution');
         expect(attributions.length).toBe(0);
         attributions = document.body.getElementsByClassName('ol-attribution');
         document.body.removeChild(attributions[0]);
         attributions = document.body.getElementsByClassName('ol-attribution');
         expect(attributions.length).toBe(0);
+    });
+
+    it('test double attribution on document', () => {
+        let map = ReactDOM.render(
+            <span>
+                <div className="ol-attribution"></div>
+                <div id="map-attribution"></div>
+                <OpenlayersMap id="ol-map" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{attribution: {container: '#map-attribution'}}}/>
+            </span>
+        , document.getElementById("map"));
+        expect(map).toExist();
+        const domMap = document.getElementById('ol-map');
+        let attributions = domMap.getElementsByClassName('ol-attribution');
+        expect(attributions.length).toBe(0);
+        attributions = document.getElementsByClassName('ol-attribution');
+        expect(attributions.length).toBe(2);
     });
 });

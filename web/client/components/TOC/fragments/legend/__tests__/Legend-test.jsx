@@ -77,4 +77,27 @@ describe("test the Layer legend", () => {
             done();
         });
     });
+    it('test legend img error reload', (done) => {
+        let layer = {
+            "type": "wms",
+            "url": "base/web/client/test-resources/legendImgError.xml",
+            "visibility": true,
+            "title": "test layer 3 (no group)",
+            "name": "layer3",
+            "format": "image/png"
+        };
+        var tb = ReactDOM.render(<Legend layer={layer} />, document.getElementById("container"));
+        const sub = Rx.Observable.interval(100)
+        .filter(() => tb && tb.state.error)
+        .subscribe(() => {
+            let thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
+            expect(thumbs.length).toBe(0);
+            const newLayer = {...layer, url: "http://test2/reflector/open/service"};
+            tb = ReactDOM.render(<Legend layer={newLayer} />, document.getElementById("container"));
+            thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
+            expect(thumbs.length).toBe(1);
+            sub.unsubscribe();
+            done();
+        });
+    });
 });
