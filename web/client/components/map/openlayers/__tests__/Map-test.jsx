@@ -99,9 +99,16 @@ describe('OpenlayersMap', () => {
         setTimeout(() => {
             map.map.forEachFeatureAtPixel = (pixel, callback) => {
                 callback.call(null, {
+                    feature: new ol.Feature({
+                        geometry: new ol.geom.Point([10.3, 43.9]),
+                        name: 'My Point'
+                    }),
                     getGeometry: () => {
                         return {
-                            getFirstCoordinate: () => [10.3, 43.9]
+                            getFirstCoordinate: () => [10.3, 43.9],
+                            getType: () => {
+                                return 'Point';
+                            }
                         };
                     }
                 });

@@ -32,7 +32,7 @@ class Feature extends React.Component {
     componentDidMount() {
         this.addFeatures(this.props);
         const format = new ol.format.GeoJSON();
-        const geometry = this.props.geometry && this.props.geometry.coordinates;
+        const geometry = this.props.geometry.type === "GeometryCollection" ? this.props.geometry && this.props.geometry.geometries : this.props.geometry && this.props.geometry.coordinates;
 
         if (this.props.container && geometry) {
             this._feature = format.readFeatures({
@@ -69,7 +69,7 @@ class Feature extends React.Component {
 
     addFeatures = (props) => {
         const format = new ol.format.GeoJSON();
-        const geometry = props.geometry && props.geometry.coordinates;
+        const geometry = this.props.geometry.type === "GeometryCollection" ? this.props.geometry && this.props.geometry.geometries : this.props.geometry && this.props.geometry.coordinates;
 
         if (props.container && geometry) {
             this._feature = format.readFeatures({

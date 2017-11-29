@@ -129,7 +129,9 @@ class OpenlayersMap extends React.Component {
                     if (layer && layer.get('handleClickOnLayer')) {
                         layerInfo = layer.get('msId');
                     }
-                    coords = ol.proj.toLonLat(feature.getGeometry().getFirstCoordinate(), this.props.projection);
+                    const geom = feature.getGeometry();
+                    const getCoord = geom.getType() === "GeometryCollection" ? geom.getGeometries()[0].getFirstCoordinate() : geom.getFirstCoordinate();
+                    coords = ol.proj.toLonLat(getCoord, this.props.projection);
                     tLng = CoordinatesUtils.normalizeLng(coords[0]);
                 });
                 this.props.onClick({
