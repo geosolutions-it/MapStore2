@@ -277,7 +277,6 @@ class QueryPanel extends React.Component {
  *   - queriableAttributes {string[]} list of attributes to query on.
  *   - typeName {string} the workspace + layer name on geosever
  *   - valueField {string} the attribute from features properties used as value/label in the autocomplete list
- *   - returnFullData {boolean} if true it returns full data as response (useful to manage pagination)
  *
  * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
  *
@@ -306,8 +305,7 @@ class QueryPanel extends React.Component {
  *            "predicate": "LIKE",
  *            "queriableAttributes": ["ATTRIBUTE_X"],
  *            "typeName": "workspace:typeName",
- *            "valueField": "ATTRIBUTE_Y",
- *            "returnFullData": true
+ *            "valueField": "ATTRIBUTE_Y"
  *        },
  *        "customItemClassName": "customItemClassName"
  *    }

@@ -11,8 +11,9 @@ const PropTypes = require('prop-types');
 const {Row, Col, Panel, Button, Glyphicon, FormControl} = require('react-bootstrap');
 const ComboField = require('./ComboField');
 const GeometryDetails = require('./GeometryDetails');
-const AutocompleteWFSComboboxContainer = require('../../misc/AutocompleteWFSComboboxContainer');
+const {AutocompleteWFSCombobox} = require('../../misc/AutocompleteWFSCombobox');
 const ComboFieldListItem = require('./ComboFieldListItem');
+const {createWFSFetchStream} = require('../../../observables/autocomplete');
 
 const ZoneField = require('./ZoneField');
 const {find} = require('lodash');
@@ -199,13 +200,15 @@ class SpatialFilter extends React.Component {
                     </Col>
                     <Col xs={7}>
                         <div style={{width: "140px"}}>
-                            <AutocompleteWFSComboboxContainer
+                            <AutocompleteWFSCombobox
+                                autocompleteStreamFactory={createWFSFetchStream}
                                 valueField={selectedMethod && selectedMethod.filterProps && selectedMethod.filterProps.valueField}
                                 textField={selectedMethod && selectedMethod.filterProps && selectedMethod.filterProps.valueField}
                                 url={selectedMethod && selectedMethod.url}
+                                filter="contains"
                                 onChangeDrawingStatus={this.props.actions.onChangeDrawingStatus}
                                 filterProps={selectedMethod && selectedMethod.filterProps}
-                                />
+                            />
                         </div>
 
                     </Col>

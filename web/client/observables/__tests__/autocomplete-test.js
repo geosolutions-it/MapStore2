@@ -13,7 +13,7 @@ const {isEmpty} = require('lodash');
 const assign = require('object-assign');
 const {createPagedUniqueAutompleteStream, singleAttributeFilter, createWFSFetchStream} = require('../autocomplete');
 const AutocompleteEditor = require('../../components/data/featuregrid/editors/AutocompleteEditor');
-const AutocompleteWFSComboboxContainer = require('../../components/misc/AutocompleteWFSComboboxContainer');
+const {AutocompleteWFSCombobox} = require('../../components/misc/AutocompleteWFSCombobox');
 const rxjsConfig = require('recompose/rxjsObservableConfig').default;
 const {setObservableConfig, mapPropsStreamWithConfig} = require('recompose');
 setObservableConfig(rxjsConfig);
@@ -28,7 +28,7 @@ const props = {
     url: "base/web/client/test-resources/wps/pageUniqueResponse.json",
     delayDebounce: 0
 };
-describe('\nautocomplete Observables', () => {
+describe('\nAutocomplete Observables', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -98,7 +98,7 @@ describe('\nautocomplete Observables', () => {
                     done();
                 }
             })
-        )(AutocompleteWFSComboboxContainer);
+        )(() => <AutocompleteWFSCombobox autocompleteStreamFactory={createWFSFetchStream}/>);
         const item = ReactDOM.render(<ReactItem {...assign({}, {
             url: "base/web/client/test-resources/wps/pageUniqueResponse.jsonwfs",
             "filterProps": {
@@ -125,7 +125,7 @@ describe('\nautocomplete Observables', () => {
                     done();
                 }
             })
-        )(AutocompleteWFSComboboxContainer);
+        )(() => <AutocompleteWFSCombobox autocompleteStreamFactory={createWFSFetchStream}/>);
         const item = ReactDOM.render(<ReactItem {...assign({}, {
             url: "base/web/client/test-resources/wps/pageUniqueResponse.jsonwfs",
             "filterProps": {
