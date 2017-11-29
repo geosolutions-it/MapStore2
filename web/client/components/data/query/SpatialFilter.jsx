@@ -7,11 +7,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const {find} = require('lodash');
 const PropTypes = require('prop-types');
 
-const {Row, Col, Panel, Button, Glyphicon, FormControl} = require('react-bootstrap');
+const {Row, Col, Panel, Glyphicon, FormControl} = require('react-bootstrap');
 const ComboField = require('./ComboField');
 const GeometryDetails = require('./GeometryDetails');
+const AutocompleteWFSComboboxContainer = () => <div>REPLACE WITH WFS GEOCODER</div>;
+const ComboFieldListItem = () => <div>REPLACE WITH COMPOLIST ITEM</div>;
 
 const ZoneField = require('./ZoneField');
 
@@ -52,6 +55,7 @@ class SpatialFilter extends React.Component {
             onShowSpatialSelectionDetails: () => {},
             onEndDrawing: () => {},
             onSelectViewportSpatialMethod: () => {},
+            onChangeRegion: () => {},
             onChangeDwithinValue: () => {},
             zoneFilter: () => {},
             zoneSearch: () => {},
@@ -60,80 +64,72 @@ class SpatialFilter extends React.Component {
             // zoneSelect: () => {}
         }
     };
-
+    getMethodFromId = (id) => {
+        return find(this.props.spatialMethodOptions, method => method && method.id === id) || null;
+    };
     renderHeader = () => {
-        return LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.spatial_filter_header");
+        const spatialFilterHeader = LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.spatial_filter_header");
+
+        return (
+            <span>
+                <span
+                    style={{cursor: "pointer"}}
+                    onClick={this.props.actions.onExpandSpatialFilterPanel.bind(null, !this.props.spatialPanelExpanded)}>{spatialFilterHeader}</span>
+                <button onClick={this.props.actions.onExpandSpatialFilterPanel.bind(null, !this.props.spatialPanelExpanded)} className="close">
+                    {this.props.spatialPanelExpanded ? <Glyphicon glyph="glyphicon glyphicon-collapse-down"/> : <Glyphicon glyph="glyphicon glyphicon-expand"/>}
+                </button>
+            </span>
+        );
     };
 
     renderSpatialHeader = () => {
-        const selectedMethod = this.props.spatialMethodOptions.filter((opt) => this.props.spatialField.method === opt.id)[0];
-
-        const methodCombo =
-            (<ComboField
-                fieldOptions={
-                    this.props.spatialMethodOptions.map((opt) => {
-                        return LocaleUtils.getMessageById(this.context.messages, opt.name);
-                    })
-                }
-                placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.combo_placeholder")}
-                fieldName="method"
-                style={{width: "140px"}}
-                fieldRowId={new Date().getTime()}
-                fieldValue={
-                    LocaleUtils.getMessageById(this.context.messages, selectedMethod ? selectedMethod.name : "")
-                }
-                onUpdateField={this.updateSpatialMethod}/>)
-        ;
-
-        const detailsButton = this.props.spatialField.geometry && (this.props.spatialField.method === "BBOX" || this.props.spatialField.method === "Circle") ?
-            (<Button id="remove-filter-field" className="filter-buttons" bsSize="xs" style={{border: 'none'}} onClick={() => this.props.actions.onShowSpatialSelectionDetails(true)}>
-                <Glyphicon glyph={'glyphicon glyphicon-plus'}/><I18N.Message msgId={"queryform.spatialfilter.details.detail_button_label"}/>
-            </Button>)
-         :
-            <span/>
-        ;
-
-        const resetButton = this.props.spatialField.geometry && this.props.spatialField.geometry.coordinates ?
-            (<Button className="remove-filter-button" onClick={() => this.resetSpatialFilter()}>
-                <Glyphicon glyph="glyphicon glyphicon-remove"/>
-            </Button>)
-         :
-            <span/>
-        ;
-
-        const methodSelector = this.props.spatialField.geometry ?
-            (<Row className="logicHeader filter-field-row">
-                <Col xs={5}>
-                    <div><I18N.Message msgId="queryform.spatialfilter.filterType"/></div>
-                </Col>
-                <Col xs={3}>
-                    {methodCombo}
-                </Col>
-                <Col xs={2} className="detail_geom_button filter-text-desc">
-                    {detailsButton}
-                </Col>
-                <Col xs={2} className="detail_geom_button">
-                    {resetButton}
-                </Col>
-            </Row>)
-         :
-            (<Row className="logicHeader filter-field-row">
-                <Col xs={5}>
-                    <div><I18N.Message msgId={"queryform.spatialfilter.filterType"}/></div>
-                </Col>
-                <Col xs={7}>
-                    {methodCombo}
-                </Col>
-            </Row>)
-        ;
-
+        const selectedMethod = this.getMethodFromId(this.props.spatialField.method);
         return (
             <div className="container-fluid">
-                {methodSelector}
+                <Row className="logicHeader filter-field-row filter-field-fixed-row">
+                    <Col xs={6}>
+                        <div><I18N.Message msgId={"queryform.spatialfilter.filterType"}/></div>
+                    </Col>
+                    <Col xs={6}>
+                        <ComboField
+                            itemComponent={(other) =>
+                                (<ComboFieldListItem
+                                    customItemClassName={this.getMethodFromId(other.item) && this.getMethodFromId(other.item).customItemClassName || ""}
+                                    {...other}/>)}
+                            fieldOptions={
+                                this.props.spatialMethodOptions.map((opt) => {
+                                    return LocaleUtils.getMessageById(this.context.messages, opt.name) || opt.name;
+                                })
+                            }
+                            placeholder={LocaleUtils.getMessageById(this.context.messages, "queryform.spatialfilter.combo_placeholder")}
+                            fieldName="method"
+                            fieldRowId={new Date().getTime()}
+                            fieldValue={
+                                LocaleUtils.getMessageById(this.context.messages, selectedMethod ? selectedMethod.name : "") || selectedMethod && selectedMethod.name || ""
+                            }
+                            onUpdateField={this.updateSpatialMethod}/>
+                    </Col>
+                </Row>
             </div>
         );
     };
 
+    renderDwithin = () => {
+        return (<Row className="container-fluid filter-field-fixed-row">
+                <Col xs={6} className="filter-text-desc">
+                    <I18N.Message msgId={"queryform.spatialfilter.dwithin_label"}/>
+                </Col>
+                <Col xs={6}>
+                    <FormControl
+                        type="number"
+                        min="0"
+                        defaultValue="0"
+                        disabled={!this.props.spatialField.geometry}
+                        id={"queryform_dwithin_field"}
+                        onChange={(evt) => this.props.actions.onChangeDwithinValue(evt.target.value, name)}/>
+                </Col>
+            </Row>);
+    };
     renderZoneFields = () => {
         return this.props.spatialField.method &&
             this.props.spatialField.method === "ZONE" &&
@@ -169,19 +165,49 @@ class SpatialFilter extends React.Component {
                             // onSelect={this.props.actions.zoneSelect}
                             onChange={this.props.actions.zoneChange}/>
                     );
-                }) : <span/>;
+                }) : null;
     };
 
-    renderSpatialPanel = (operationRow, drawLabel) => {
+    renderRoiPanel = () => {
+        const selectedMethod = this.getMethodFromId(this.props.spatialField.method);
+        return (<Panel>
+            <div className="container-fluid">
+                <Row className="filter-field-row">
+                    <Col xs={5}>
+                        <span>{this.props.spatialField.method}</span>
+                    </Col>
+                    <Col xs={7}>
+                        <div style={{width: "140px"}}>
+                            <AutocompleteWFSComboboxContainer
+                                valueField={selectedMethod && selectedMethod.filterProps && selectedMethod.filterProps.valueField}
+                                textField={selectedMethod && selectedMethod.filterProps && selectedMethod.filterProps.valueField}
+                                url={selectedMethod && selectedMethod.url}
+                                onChangeDrawingStatus={this.props.actions.onChangeDrawingStatus}
+                                filterProps={selectedMethod && selectedMethod.filterProps}
+                                />
+                        </div>
+
+                    </Col>
+                </Row>
+            </div>
+        </Panel>);
+    };
+    renderSpatialPanel = (operationRow, drawLabel, selectedOperation) => {
         return (
-            <Panel>
+            <Panel className="spatial-panel">
                 {this.props.spatialMethodOptions.length > 1 ? this.renderSpatialHeader() : <span/>}
                 {this.renderZoneFields()}
+                 {this.props.spatialField.method
+                     && this.getMethodFromId(this.props.spatialField.method)
+                     && this.getMethodFromId(this.props.spatialField.method).type === "wfsGeocoder"
+                 ? this.renderRoiPanel()
+                 : null}
                 {this.props.spatialOperations.length > 1 ?
                     <Panel>
                         <div className="container-fluid">
                             {operationRow}
                         </div>
+                        {selectedOperation && selectedOperation.id === "DWITHIN" ? this.renderDwithin() : null}
                         <Row>
                             <Col xs={12}>
                                 {drawLabel}
@@ -194,20 +220,39 @@ class SpatialFilter extends React.Component {
             </Panel>
         );
     };
-
+    renderButtons = () => {
+        const buttons = [];
+        const showDetails = this.props.spatialField.geometry
+            && (this.props.spatialField.method
+                && this.props.spatialField.method === "BBOX"
+                || this.props.spatialField.method === "Circle");
+        const showReset = this.props.spatialField.geometry && this.props.spatialField.geometry.coordinates;
+        if (showDetails) {
+            buttons.push({
+                glyph: 'pencil',
+                onClick: () => this.props.actions.onShowSpatialSelectionDetails(true),
+                tooltipId: "queryform.spatialfilter.details.detail_button_label"
+            });
+        }
+        if (showReset) {
+            buttons.push({
+                glyph: 'clear-filter',
+                tooltipId: "remove",
+                onClick: () => this.resetSpatialFilter()
+            });
+        }
+        return buttons;
+    };
     render() {
         const selectedOperation = this.props.spatialOperations.filter((opt) => this.props.spatialField.operation === opt.id)[0];
-
         let drawLabel = <span/>;
-        if (this.props.spatialField.method && this.props.spatialField.method !== "ZONE" && this.props.spatialField.method !== "Viewport") {
-            drawLabel = !this.props.spatialField.geometry ?
-                (<span>
-                    <hr width="100%"/>
-                    <div><h5><I18N.Message msgId={"queryform.spatialfilter.draw_start_label"}/></h5></div>
-                </span>)
-             :
-                <span/>
-            ;
+        if (this.props.spatialField.method !== "ZONE"
+            && this.props.spatialField.method !== "Viewport"
+            && this.getMethodFromId(this.props.spatialField.method)
+            && this.getMethodFromId(this.props.spatialField.method).type !== "wfsGeocoder" ) {
+            drawLabel = !this.props.spatialField.geometry
+                ? (<span><div className="m-label m-caption text-center"><I18N.Message msgId={"queryform.spatialfilter.draw_start_label"}/></div></span>)
+                : null;
         }
 
         const detailsPanel = this.props.showDetailsPanel ?
@@ -222,12 +267,11 @@ class SpatialFilter extends React.Component {
             <span/>
         ;
 
-        const operationRow = selectedOperation && selectedOperation.id === "DWITHIN" ?
-            (<Row className="filter-field-row">
-                <Col xs={5}>
+        const operationRow = (<Row className="filter-field-row filter-field-fixed-row">
+                <Col xs={6}>
                     <I18N.Message msgId={"queryform.spatialfilter.geometric_operation"}/>
                 </Col>
-                <Col xs={3}>
+                <Col xs={6}>
                     <ComboField
                         fieldOptions={
                             this.props.spatialOperations.map((opt) => {
@@ -235,48 +279,13 @@ class SpatialFilter extends React.Component {
                             })
                         }
                         fieldName="operation"
-                        style={{width: "140px"}}
                         fieldRowId={new Date().getTime()}
                         fieldValue={
                             LocaleUtils.getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
                         }
                         onUpdateField={this.updateSpatialOperation}/>
                 </Col>
-                <Col xs={2} className="filter-text-desc">
-                    <I18N.Message msgId={"queryform.spatialfilter.dwithin_label"}/>{':'}
-                </Col>
-                <Col xs={2}>
-                        <FormControl
-                            type="number"
-                            min="0"
-                            defaultValue="0"
-                            disabled={!this.props.spatialField.geometry}
-                            id={"queryform_dwithin_field"}
-                            onChange={(evt) => this.props.actions.onChangeDwithinValue(evt.target.value, name)}/>
-                </Col>
-            </Row>)
-         :
-            (<Row className="filter-field-row">
-                <Col xs={5}>
-                    <I18N.Message msgId={"queryform.spatialfilter.geometric_operation"}/>
-                </Col>
-                <Col xs={7}>
-                    <ComboField
-                        fieldOptions={
-                            this.props.spatialOperations.map((opt) => {
-                                return LocaleUtils.getMessageById(this.context.messages, opt.name);
-                            })
-                        }
-                        fieldName="operation"
-                        style={{width: "140px"}}
-                        fieldRowId={new Date().getTime()}
-                        fieldValue={
-                            LocaleUtils.getMessageById(this.context.messages, selectedOperation ? selectedOperation.name : "")
-                        }
-                        onUpdateField={this.updateSpatialOperation}/>
-                </Col>
-            </Row>)
-        ;
+            </Row>);
 
         return (
             <div className="query-filter-container">
@@ -285,13 +294,14 @@ class SpatialFilter extends React.Component {
                         <SwitchPanel
                             id="spatialFilterPanel"
                             header={this.renderHeader()}
+                            buttons={this.renderButtons()}
                             collapsible
                             expanded={this.props.spatialPanelExpanded}
                             onSwitch={(expanded) => this.props.actions.onExpandSpatialFilterPanel(expanded)}
                             >
-                            {this.renderSpatialPanel(operationRow, drawLabel)}
+                            {this.renderSpatialPanel(operationRow, drawLabel, selectedOperation)}
                         </SwitchPanel>
-                     : this.renderSpatialPanel(operationRow, drawLabel)
+                     : this.renderSpatialPanel(operationRow, drawLabel, selectedOperation)
                 }
                 {detailsPanel}
             </div>
@@ -302,26 +312,31 @@ class SpatialFilter extends React.Component {
         this.props.actions.onShowSpatialSelectionDetails(false);
 
         const method = this.props.spatialMethodOptions.filter((opt) => {
-            if (value === LocaleUtils.getMessageById(this.context.messages, opt.name)) {
+            if (value === (LocaleUtils.getMessageById(this.context.messages, opt.name) || opt.name)) {
                 return opt;
             }
         })[0].id;
 
         this.props.actions.onSelectSpatialMethod(method, name);
 
-        switch (method) {
-            case "ZONE": {
-                this.changeDrawingStatus('clean', null, "queryform", []); break;
+        if (this.getMethodFromId(method).type !== "wfsGeocoder") {
+            switch (method) {
+                case "ZONE": {
+                    this.changeDrawingStatus('clean', null, "queryform", []); break;
+                }
+                case "Viewport": {
+                    this.changeDrawingStatus('clean', null, "queryform", []);
+                    this.props.actions.onSelectViewportSpatialMethod();
+                    break;
+                }
+                default: {
+                    this.changeDrawingStatus('start', method, "queryform", [], {stopAfterDrawing: true});
+                }
             }
-            case "Viewport": {
-                this.changeDrawingStatus('clean', null, "queryform", []);
-                this.props.actions.onSelectViewportSpatialMethod();
-                break;
-            }
-            default: {
-                this.changeDrawingStatus('start', method, "queryform", [], {stopAfterDrawing: true});
-            }
+        } else {
+            this.changeDrawingStatus('clean', null, "queryform", []);
         }
+
     };
 
     updateSpatialOperation = (id, name, value) => {

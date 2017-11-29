@@ -55,6 +55,10 @@ const {
     removeSpatialSelection,
     showSpatialSelectionDetails,
     setCrossLayerFilterParameter,
+    addCrossLayerFilterField,
+    updateCrossLayerFilterField,
+    removeCrossLayerFilterField,
+    resetCrossLayerFilter,
     search,
     reset,
     changeDwithinValue,
@@ -143,7 +147,11 @@ const SmartQueryForm = connect((state) => {
         }, dispatch),
         crossLayerFilterActions: bindActionCreators({
             expandCrossLayerFilterPanel,
-            setCrossLayerFilterParameter
+            setCrossLayerFilterParameter,
+            addCrossLayerFilterField,
+            updateCrossLayerFilterField,
+            removeCrossLayerFilterField,
+            resetCrossLayerFilter
         }, dispatch)
     };
 })(QueryBuilder);

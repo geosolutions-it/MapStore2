@@ -76,6 +76,7 @@ class QueryBuilder extends React.Component {
         spatialOperations: [],
         featureTypeError: "",
         spatialField: {},
+        crossLayerFilter: null,
         removeButtonIcon: "trash",
         addButtonIcon: "glyphicon glyphicon-plus",
         attributePanelExpanded: true,
@@ -132,9 +133,13 @@ class QueryBuilder extends React.Component {
             return <div style={{margin: "0 auto", "text-align": "center"}}>{this.props.featureTypeErrorText}</div>;
         }
 
-        const header =
-            [this.props.header,
+        const header = (<div className="m-header">{this.props.header}
             <QueryToolbar
+                sendFilters={{
+                    attributeFilter: this.props.attributePanelExpanded,
+                    spatialFilter: this.props.spatialPanelExpanded,
+                    crossLayerFilter: this.props.crossLayerExpanded
+                }}
                 params={this.props.params}
                 filterFields={this.props.filterFields}
                 groupFields={this.props.groupFields}
@@ -149,10 +154,11 @@ class QueryBuilder extends React.Component {
                 resultTitle={this.props.resultTitle}
                 pagination={this.props.pagination}
                 sortOptions={this.props.sortOptions}
+                crossLayerFilter={this.props.crossLayerFilterOptions.crossLayerFilter}
                 hits={this.props.hits}
                 allowEmptyFilter={this.props.allowEmptyFilter}
                 emptyFilterWarning={this.props.emptyFilterWarning}
-            />];
+            /></div>);
         return this.props.attributes.length > 0 ?
             <BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">
                     <GroupField
@@ -175,6 +181,7 @@ class QueryBuilder extends React.Component {
                         showDetailsPanel={this.props.showDetailsPanel}
                         actions={this.props.spatialFilterActions}/>
                     <CrossLayerFilter
+                        spatialOperations={this.props.spatialOperations}
                         crossLayerExpanded={this.props.crossLayerExpanded}
                         {...this.props.crossLayerFilterOptions}
                         {...this.props.crossLayerFilterActions}

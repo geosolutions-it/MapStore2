@@ -11,12 +11,14 @@ const {get, find} = require('lodash');
 const {Observable} = require('rxjs');
 const {describeFeatureType} = require('../../../observables/wfs');
 const {findGeometryProperty} = require('../../../utils/ogc/WFS/base');
+const {describeFeatureTypeToAttributes} = require('../../../utils/FeatureTypeUtils');
 const SwitchPanel = require('../../misc/switch/SwitchPanel');
 const {Row, Col} = require('react-bootstrap');
 const Select = require('react-select');
 const {compose, withProps, withPropsOnChange, withHandlers, defaultProps} = require('recompose');
 const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
-
+const GeometricOperationSelector = require('./GeometricOperationSelector');
+const GroupField = require('./GroupField');
 
 const crossLayerFilterEnhancer = compose(
     withPropsOnChange(
@@ -30,7 +32,14 @@ const crossLayerFilterEnhancer = compose(
         layer: find(layers, ({name} = {}) => name === queryCollection.typeName)
     })),
     withHandlers({
-        setQueryCollectionParameter: ({setCrossLayerFilterParameter = () => {}}) => (k, v) => setCrossLayerFilterParameter(`collectGeometries.queryCollection[${k}]`, v)
+        setQueryCollectionParameter: ({setCrossLayerFilterParameter = () => {}}) => (k, v) => setCrossLayerFilterParameter(`collectGeometries.queryCollection[${k}]`, v),
+        updateLogicCombo: ({setCrossLayerFilterParameter = () => {}}) =>
+            (id, logic) => setCrossLayerFilterParameter(`collectGeometries.queryCollection.groupFields`, [{
+                id,
+                logic,
+                index: 0
+            }]),
+        setOperation: ({setCrossLayerFilterParameter = () => {}}) => (v) => setCrossLayerFilterParameter(`operation`, v)
     }),
     defaultProps({
         dataStreamFactory: ($props, {setQueryCollectionParameter = () => {}} = {}) => $props
@@ -43,15 +52,21 @@ const crossLayerFilterEnhancer = compose(
                         if (geomProp) {
                             setQueryCollectionParameter("geometryName", geomProp);
                         }
-
                     })
-                    .map((result) => get(result, "data.featureTypes[0].properties") || [])
-                    .map(featureTypeProperties => ({
-                          loading: false,
-                          featureTypeProperties
-                    }).startWith({loading: true})
-            ))
-            .catch( e => {
+                    .map(({data = {}} = {}) => describeFeatureTypeToAttributes(data))
+                    .map(attributes => ({
+                        attributes,
+                          loading: false
+                    }))
+                    .catch( e => {
+                        return Observable.of({
+                            errorObj: e,
+                            loading: false,
+                            featureTypeProperties: []
+                        });
+                    })
+                    .startWith({loading: true})
+            ).catch( e => {
                 return Observable.of({
                     errorObj: e,
                     loading: false,
@@ -65,24 +80,43 @@ const crossLayerFilterEnhancer = compose(
 
 module.exports = crossLayerFilterEnhancer(({
     crossLayerExpanded,
+    spatialOperations,
     expandCrossLayerFilterPanel = () => {},
     layers,
     loading,
     queryCollection = {},
-    setQueryCollectionParameter = () => {}
+    attributes = [],
+    operation,
+    updateLogicCombo = () => {},
+    resetCrossLayerFilter = () => {},
+    setOperation = () => {},
+    setQueryCollectionParameter = () => {},
+    addCrossLayerFilterField = () => {},
+    updateCrossLayerFilterField = () => {},
+    removeCrossLayerFilterField = () => {}
 } = {}) => {
-    const {typeName, geometryName} = queryCollection;
+    const {typeName, geometryName, filterFields, groupFields = [{
+        id: 1,
+        logic: "OR",
+        index: 0
+    }]} = queryCollection;
 
     return (<SwitchPanel
         expanded={crossLayerExpanded}
+        buttons={typeName ? [{
+            glyph: 'clear-filter',
+            tooltipId: "remove",
+            onClick: () => resetCrossLayerFilter()
+        }] : []}
         onSwitch={expandCrossLayerFilterPanel}
         title={"Layer Filter" /* TODO */}>
-            <Row>
+            <Row className="filter-field-fixed-row">
             <Col xs={6}>
-                <div className="m-label">Layer:</div>
+                <div className="m-label">Target Layer/* TODO */</div>
             </Col>
             <Col xs={6}>
                 <Select
+                    clearable={false}
                     isLoading={loading}
                     options={layers.map( l => ({
                         label: l.title || l.name,
@@ -94,8 +128,40 @@ module.exports = crossLayerFilterEnhancer(({
                     onChange={ sel => {
                         setQueryCollectionParameter("typeName", sel && sel.value);
                     }}/>
-                {geometryName }
             </Col>
         </Row>
+        {(typeName && geometryName)
+            ? (<Row className="filter-field-fixed-row">
+                <Col xs={6}>
+                    <div className="m-label">Operation/* TODO */</div>
+                </Col>
+                <Col xs={6}>
+                <GeometricOperationSelector
+                    value={operation}
+                    onChange={({id}={}) => setOperation(id)}
+                    spatialOperations={spatialOperations.filter( ({id} = {}) => id !== "BBOX")}
+                    />
+                </Col>
+            </Row>)
+            : null}
+            {(typeName && geometryName && operation)
+                ? (<Row className="filter-field-fixed-row">
+                    <Col xs={12}>
+                        <GroupField
+                            autocompleteEnabled={false /* TODO make it work with stream enhancer */}
+                            withContainer={false}
+                            attributes={attributes}
+                            groupLevels={-1}
+                            filterFields={filterFields}
+                            actions={{
+                                onUpdateLogicCombo: updateLogicCombo,
+                                onAddFilterField: addCrossLayerFilterField,
+                                onUpdateFilterField: updateCrossLayerFilterField,
+                                onRemoveFilterField: removeCrossLayerFilterField
+                            }}
+                            groupFields={groupFields} filterField/>
+                    </Col>
+                </Row>)
+                : null}
         </SwitchPanel>);
 });

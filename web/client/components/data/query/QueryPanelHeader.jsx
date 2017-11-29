@@ -4,9 +4,8 @@ const {Button, Glyphicon} = require('react-bootstrap');
 module.exports = ({onToggleQuery = () => {}} = {}) => (<div className="mapstore-block-width">
     <Button
         id="toc-query-close-button"
-        bsStyle="primary"
         key="menu-button"
-        className="square-button"
+        className="square-button no-border"
         onClick={() => onToggleQuery()}>
             <Glyphicon glyph="arrow-left"/>
         </Button>

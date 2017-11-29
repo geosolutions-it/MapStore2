@@ -72,6 +72,9 @@
     .m-header {
         .shadow-soft;
         z-index: 10;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
     }
 
     .m-footer {
@@ -118,10 +121,7 @@
 
         }
     }
-    .mapstore-block-width {
-        width: 100%;
-        height: @square-btn-size;
-    }
+
     .query-content .filter-field-row {
         padding-left: 0;
         padding-right: 0;
@@ -140,6 +140,9 @@
         margin-top:( @square-btn-size - @square-btn-medium-size) / 2;
         height: @square-btn-medium-size;
         line-height: @square-btn-medium-size;
+    }
+    .filter-field-fixed-row {
+        height: 52px;
     }
 }
 

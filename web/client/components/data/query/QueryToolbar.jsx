@@ -11,7 +11,7 @@ const React = require('react');
 const {Button} = require('react-bootstrap');
 
 const Modal = require('../../misc/Modal');
-const {checkOperatorValidity} = require('../../../utils/FilterUtils');
+const {checkOperatorValidity, setupCrossLayerFilterDefaults} = require('../../../utils/FilterUtils');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 
 class QueryToolbar extends React.Component {
@@ -21,6 +21,8 @@ class QueryToolbar extends React.Component {
         filterFields: PropTypes.array,
         groupFields: PropTypes.array,
         spatialField: PropTypes.object,
+        sendFilters: PropTypes.object,
+        crossLayerFilter: PropTypes.object,
         toolbarEnabled: PropTypes.bool,
         searchUrl: PropTypes.string,
         showGeneratedFilter: PropTypes.oneOfType([
@@ -42,6 +44,11 @@ class QueryToolbar extends React.Component {
     };
 
     static defaultProps = {
+        sendFilters: {
+            attributeFilter: true,
+            spatialFilter: true,
+            crossLayerFilter: true
+        },
         filterType: "OGC",
         params: {},
         groupFields: [],
@@ -116,12 +123,23 @@ class QueryToolbar extends React.Component {
         let filterObj = {
             featureTypeName: this.props.featureTypeName,
             groupFields: this.props.groupFields,
-            filterFields: this.props.filterFields.filter(field => checkOperatorValidity(field.value, field.operator)),
-            spatialField: this.props.spatialField,
+            filterFields: this.props.sendFilters
+                && this.props.sendFilters.attributeFilter
+                && this.props.filterFields.filter(field => checkOperatorValidity(field.value, field.operator))
+                || [],
+            spatialField: this.props.sendFilters
+                && this.props.sendFilters.spatialFilter
+                && this.props.spatialField
+                || {
+                    attribute: this.props.spatialField && this.props.spatialField.attribute
+                },
             pagination: this.props.pagination,
             filterType: this.props.filterType,
             ogcVersion: this.props.ogcVersion,
             sortOptions: this.props.sortOptions,
+            crossLayerFilter: this.props.sendFilters
+                && this.props.sendFilters.crossLayerFilter
+                && setupCrossLayerFilterDefaults(this.props.crossLayerFilter) || null,
             hits: this.props.hits
         };
         this.props.actions.onQuery(this.props.searchUrl, filterObj, this.props.params);

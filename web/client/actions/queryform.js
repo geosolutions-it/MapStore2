@@ -16,7 +16,8 @@ const CHANGE_CASCADING_VALUE = 'CHANGE_CASCADING_VALUE';
 const EXPAND_ATTRIBUTE_PANEL = 'EXPAND_ATTRIBUTE_PANEL';
 const EXPAND_SPATIAL_PANEL = 'EXPAND_SPATIAL_PANEL';
 const EXPAND_CROSS_LAYER = 'QUERYFORM:EXPAND_CROSS_LAYER';
-const SET_CROSS_LAYER_PARAMETER= 'QUERYFORM:SET_CROSS_LAYER_PARAMETER';
+const SET_CROSS_LAYER_PARAMETER = 'QUERYFORM:SET_CROSS_LAYER_PARAMETER';
+const RESET_CROSS_LAYER_FILTER = 'QUERYFORM:RESET_CROSS_LAYER_FILTER';
 const SELECT_SPATIAL_METHOD = 'SELECT_SPATIAL_METHOD';
 const SELECT_VIEWPORT_SPATIAL_METHOD = 'SELECT_VIEWPORT_SPATIAL_METHOD';
 const UPDATE_GEOMETRY = 'UPDATE_GEOMETRY';
@@ -45,6 +46,9 @@ const REMOVE_SIMPLE_FILTER_FIELD = 'REMOVE_SIMPLE_FILTER_FIELD';
 const REMOVE_ALL_SIMPLE_FILTER_FIELDS = 'REMOVE_ALL_SIMPLE_FILTER_FIELDS';
 const UPDATE_FILTER_FIELD_OPTIONS = 'UPDATE_FILTER_FIELD_OPTIONS';
 const LOADING_FILTER_FIELD_OPTIONS = 'LOADING_FILTER_FIELD_OPTIONS';
+const ADD_CROSS_LAYER_FILTER_FIELD = 'QUERYFORM:ADD_CROSS_LAYER_FILTER_FIELD';
+const UPDATE_CROSS_LAYER_FILTER_FIELD = 'QUERYFORM:UPDATE_CROSS_LAYER_FILTER_FIELD';
+const REMOVE_CROSS_LAYER_FILTER_FIELD = 'QUERYFORM:REMOVE_CROSS_LAYER_FILTER_FIELD';
 const SET_AUTOCOMPLETE_MODE = 'SET_AUTOCOMPLETE_MODE';
 const TOGGLE_AUTOCOMPLETE_MENU = 'TOGGLE_AUTOCOMPLETE_MENU';
 const LOAD_FILTER = 'QUERYFORM:LOAD_FILTER';
@@ -353,6 +357,34 @@ function removeAllSimpleFilterFields() {
         type: REMOVE_ALL_SIMPLE_FILTER_FIELDS
     };
 }
+function addCrossLayerFilterField(groupId) {
+    return {
+        type: ADD_CROSS_LAYER_FILTER_FIELD,
+        rowId: new Date().getTime(),
+        groupId
+    };
+}
+function updateCrossLayerFilterField(rowId, fieldName, fieldValue, fieldType, fieldOptions = {}) {
+    return {
+        type: UPDATE_CROSS_LAYER_FILTER_FIELD,
+        rowId,
+        fieldName,
+        fieldValue,
+        fieldType,
+        fieldOptions
+    };
+}
+function removeCrossLayerFilterField(rowId) {
+    return {
+        type: REMOVE_CROSS_LAYER_FILTER_FIELD,
+        rowId
+    };
+}
+function resetCrossLayerFilter() {
+    return {
+        type: RESET_CROSS_LAYER_FILTER
+    };
+}
 
 function loadingFilterFieldOptions(status, filterField) {
     return {
@@ -408,6 +440,10 @@ module.exports = {
     UPDATE_GEOMETRY,
     UPDATE_FILTER_FIELD_OPTIONS,
     LOADING_FILTER_FIELD_OPTIONS,
+    ADD_CROSS_LAYER_FILTER_FIELD,
+    UPDATE_CROSS_LAYER_FILTER_FIELD,
+    REMOVE_CROSS_LAYER_FILTER_FIELD,
+    RESET_CROSS_LAYER_FILTER,
     SET_AUTOCOMPLETE_MODE,
     TOGGLE_AUTOCOMPLETE_MENU,
     LOAD_FILTER,
@@ -447,6 +483,10 @@ module.exports = {
     addSimpleFilterField,
     removeSimpleFilterField,
     removeAllSimpleFilterFields,
+    addCrossLayerFilterField,
+    updateCrossLayerFilterField,
+    removeCrossLayerFilterField,
+    resetCrossLayerFilter,
     updateFilterFieldOptions,
     toggleMenu
     // wfsLoadError,

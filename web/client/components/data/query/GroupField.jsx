@@ -26,6 +26,7 @@ const I18N = require('../../I18N/I18N');
 class GroupField extends React.Component {
     static propTypes = {
         groupLevels: PropTypes.number,
+        withContainer: PropTypes.bool,
         autocompleteEnabled: PropTypes.bool,
         maxFeaturesWPS: PropTypes.number,
         groupFields: PropTypes.array,
@@ -45,6 +46,7 @@ class GroupField extends React.Component {
 
     static defaultProps = {
         autocompleteEnabled: true,
+        withContainer: true,
         groupLevels: 1,
         groupFields: [],
         filterFields: [],
@@ -175,23 +177,6 @@ class GroupField extends React.Component {
         );
     };
     renderGroupButtons = groupField => {
-        /*
-        const removeButton = groupField.groupId
-            ? (<Button key="remove-button" bsSize="xs" className="remove-filter-button" onClick={() => this.props.actions.onRemoveGroupField(groupField.id)}>
-                    <Glyphicon glyph={this.props.removeButtonIcon}/>
-                </Button>)
-            : null;
-
-        const addButton = groupField.index <= this.props.groupLevels
-            ? (<Button key="add-condition-group" id="add-condition-group" className="filter-buttons" bsSize="xs" onClick={() => this.props.actions.onAddGroupField(groupField.id, groupField.index)}>
-                    <Glyphicon glyph={this.props.addButtonIcon}/><I18N.Message msgId={"queryform.attributefilter.add_group"}/></Button>)
-            : null;
-        const addCondition = (<Button key="add-filter-field" id="add-filter-field" className="filter-buttons" bsSize="xs" onClick={() => this.props.actions.onAddFilterField(groupField.id)}>
-                <Glyphicon glyph={this.props.addButtonIcon}/>
-                <I18N.Message msgId={"queryform.attributefilter.add_condition"}/>
-            </Button>);
-
-        */
         const buttons = [];
         if (groupField.index <= this.props.groupLevels) {
             buttons.push({
@@ -236,13 +221,13 @@ class GroupField extends React.Component {
                         <Row className="filter-field-row">
                             <div key="filter-logic-header" className="filter-logig-header-text m-label">
                                 <span className="group_label_a"><I18N.Message msgId={"queryform.attributefilter.group_label_a"}/></span>
-                                <StringSelector
+                                &nbsp;<StringSelector
                                     options={this.props.logicComboOptions}
                                     valueField={"logic"}
                                     value={groupField.logic}
                                     onSelect={ v => this.props.actions.onUpdateLogicCombo(groupField.id, v)}
                                     labelRenderer={ ({name} = {}) => <I18N.Message msgId={name} />}
-                                    />
+                                    />&nbsp;
                                 <span className="group_label_b"><I18N.Message msgId={"queryform.attributefilter.group_label_b"}/></span>
                                 <span className="pull-right">{this.renderGroupButtons(groupField)}</span>
                             </div>
@@ -284,7 +269,7 @@ class GroupField extends React.Component {
 
     render() {
         return (
-            <SwitchPanel
+            this.props.withContainer ? (<SwitchPanel
                 id="attributeFilterPanel"
                 className="query-filter-container"
                 header={this.renderHeader()}
@@ -293,7 +278,10 @@ class GroupField extends React.Component {
                 onSwitch={(checked) => this.props.actions.onExpandAttributeFilterPanel(checked)}
                 >
                     {this.props.groupFields.filter(g => !g.groupId).map(this.renderGroupField)}
-            </SwitchPanel>
+            </SwitchPanel>) : (
+                <div className="query-filter-container">{this.props.groupFields.filter(g => !g.groupId).map(this.renderGroupField)}</div>
+
+            )
         );
     }
 

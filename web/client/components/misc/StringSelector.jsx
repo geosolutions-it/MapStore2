@@ -52,11 +52,8 @@ class StringSelector extends React.Component {
     };
     render() {
         return (
-            <span className="mapstore-string-select">
-                <span onClick={() => {
-                    const open = !this.state.open;
-                    this.setState({open});
-                }}>
+            <span ref={node => this.node = node} className="mapstore-string-select">
+                <span onClick={this.handleClick}>
                     <strong>{this.renderLabel(this.getSelected())}</strong>
                     <Glyphicon glyph="chevron-down"/>
                 </span>
@@ -71,6 +68,22 @@ class StringSelector extends React.Component {
             </span>
         );
     }
+    handleOutsideClick = (e) => {
+        // ignore clicks on the component itself
+        if (!this.node.contains(e.target) && this.state.open) {
+            this.handleClick();
+        }
+    };
+    handleClick = () => {
+        if (document && !this.state.open) {
+            // attach/remove event handler
+            document.addEventListener('click', this.handleOutsideClick, false);
+        } else {
+            document.removeEventListener('click', this.handleOutsideClick, false);
+        }
+        const open = !this.state.open;
+        this.setState({open});
+    };
 }
 
 module.exports = StringSelector;
