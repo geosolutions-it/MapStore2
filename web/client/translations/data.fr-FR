@@ -556,7 +556,7 @@
                 "filterType": "Type de filtre",
                 "geometric_operation": "Opération géométrique",
                 "combo_placeholder": "Sélectionner...",
-                "spatial_filter_header": "Filtre spatial",
+                "spatial_filter_header": "Région d'intérêt",
                 "draw_start_label": "Dessiner la région d'intérêt sur la carte",
                 "dwithin_label": "mètres",
                 "details": {
@@ -572,6 +572,7 @@
                 "methods": {
                     "zone": "Zone",
                     "viewport": "Viewport",
+                    "regions": "Régions",
                     "box": "Rectangle",
                     "buffer": "Zone tampon",
                     "circle": "Cercle",

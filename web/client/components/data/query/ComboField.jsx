@@ -24,6 +24,7 @@ class ComboField extends React.Component {
         valueField: PropTypes.string,
         textField: PropTypes.string,
         placeholder: PropTypes.object,
+        itemComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         fieldOptions: PropTypes.array,
         fieldName: PropTypes.string,
         fieldRowId: PropTypes.number,
@@ -74,6 +75,7 @@ class ComboField extends React.Component {
         textField: null,
         fieldOptions: [],
         fieldName: null,
+        itemComponent: null,
         fieldRowId: null,
         fieldValue: null,
         fieldException: null,
@@ -100,6 +102,7 @@ class ComboField extends React.Component {
                 {...this.props.options}
                 busy={this.props.busy}
                 disabled={this.props.disabled}
+                itemComponent={this.props.itemComponent}
                 valueField={this.props.valueField}
                 textField={this.props.textField}
                 data={this.props.fieldOptions}
@@ -119,6 +122,7 @@ class ComboField extends React.Component {
                 {...this.props.options}
                 busy={this.props.busy}
                 disabled={this.props.disabled}
+                itemComponent={this.props.itemComponent}
                 data={this.props.fieldOptions}
                 value={this.props.fieldValue}
                 caseSensitive={false}
