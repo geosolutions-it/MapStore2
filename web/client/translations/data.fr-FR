@@ -55,7 +55,8 @@
             "titleTranslations": "Traductions du titre",
             "groupProperties": "Propriétés du groupe",
             "featureInfo": "Informations attributaires de l'objet",
-            "featureInfoFormatLbl": "Information, format de la réponse"
+            "featureInfoFormatLbl": "Information, format de la réponse",
+            "legenderror": "La légende n'est pas disponible"
         },
         "notification": {
             "update": "Mise à jour",
@@ -953,6 +954,107 @@
                 "title": "Erreur lors de l'exportation",
                 "invalidOutputFormat": "Le format d'exportation sélectionné n'est pas disponible"
             }
+        },
+        "widgets": {
+            "selectChartType": {
+                "title": "Sélectionnez le type de widget"
+            },
+            "title": "Titre",
+            "description": "Description",
+            "errors": {
+                "nodata": "Aucune donnée disponible pour la couche / filtre sélectionné",
+                "nodatainviewport": "Aucune donnée dans la fenêtre courante",
+                "timeoutExpired": "Le service a pris trop de temps pour répondre. Peut-être que la requête est trop complexe ou que le serveur est occupé",
+                "genericError": "Il y a une erreur lors de la récupération des données"
+            },
+            "builder": {
+                "header": {
+                    "title": "Widget"
+                },
+                "wizard": {
+                    "backToTypeSelection": "Retour à la sélection du type",
+                    "backToChartOptions": "retour aux options de graphique",
+                    "configureChartOptions": "Configurer les options de graphique",
+                    "configureWidgetOptions": "Configurer les options du widget",
+                    "updateWidget": "Mettre à jour le widget",
+                    "addToTheMap": "Ajouter le widget à la carte"
+                },
+                "errors": {
+                    "noWidgetsAvailableTitle": "Aucun widget disponible",
+                    "noWidgetsAvailableDescription": "<p> Vous ne pouvez pas créer de widget pour le calque sélectionné. C'est probablement parce que la couche ne convient pas aux widgets ou que le serveur n'expose pas tous les services ou informations nécessaires pour générer un widget. Les causes possibles sont: <ul> <li> Le calque sélectionné est une couche raster </li><li> Le service WFS n'est pas disponible</li><li>gs:aggregate process n'est pas disponible </li> </ul>) <p>"
+                },
+                "setupFilter": "Configurer un filtre pour les données du widget"
+            },
+            "widget": {
+                "menu": {
+                    "showChartData": "Afficher les données de graphique",
+                    "edit": "éditer",
+                    "delete": "effacer",
+                    "confirmDelete": "Êtes-vous sûr?",
+                    "downloadData": "Télécharger les données",
+                    "exportImage": "Exporter l'image"
+                }
+            },
+            "chartType": {
+                "bar": {
+                    "title": "Diagramme à barres",
+                    "description": "Créer un graphique à barres à ajouter à la carte",
+                    "caption": "barres"
+                },
+                "pie": {
+                    "title": "Diagramme à secteurs",
+                    "description": "Créer un graphique à secteurs à ajouter à la carte",
+                    "caption": "secteurs"
+                },
+                "line": {
+                    "title": "Graphique linéaire",
+                    "description": "Créer un graphique linéaire à ajouter à la carte",
+                    "caption": "linéaire"
+                },
+                "gauge": {
+                    "title": "Tableau de jauge",
+                    "description": "Créer un graphique de jauge à ajouter à la carte",
+                    "caption": "jauge"
+                }
+            },
+            "chartOptionsTitle": "Données de graphique",
+            "widgetOptionsTitle": "Info sur le widget",
+            "groupByAttributes": {
+                "line": "Attributs X",
+                "pie": "Grouper par",
+                "bar": "Attributs X",
+                "gauge": "Grouper par"
+            },
+            "aggregationAttribute": {
+                "line": "Attributs Y",
+                "pie": "Valeur",
+                "bar": "Attributs Y",
+                "gauge": "valeur"
+            },
+            "aggregateFunction": {
+                "line": "Opération",
+                "pie": "Opération",
+                "bar": "Opération",
+                "gauge": "Opération"
+            },
+            "colorRamp": {
+                "line": "Couleur",
+                "pie": "Rampe de couleur",
+                "bar": "Couleur",
+                "gauge": "Couleur"
+            },
+            "mapSync": "Live Filter par viewport",
+            "displayLegend": {
+                "line": "Légende d'affichage",
+                "pie": "Légende d'affichage",
+                "bar": "Légende d'affichage",
+                "gauge": "Afficher les étiquettes"
+            }
+        },
+        "wizard": {
+            "next": "Suivant",
+            "prev": "Précédent",
+            "finish": "Finition"
         },
         "vectorstyler": {
             "tooltip": "Créer et éditer un style de couche vectorielle",
