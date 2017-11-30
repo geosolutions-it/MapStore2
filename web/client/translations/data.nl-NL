@@ -49,7 +49,12 @@
             "deleteLayerMessage": "Weet u zeker dat u deze laag wilt verwijderen?",
             "confirmDelete": "Bent u zeker?",
             "featureTypeError": "De atributen van de laag kunnen niet geladen worden",
-            "elevation": "hoogte"
+            "elevation": "hoogte",
+            "titleTranslations": "Title translations",
+            "groupProperties": "Groep properties",
+            "featureInfo": "Feature Info",
+            "featureInfoFormatLbl": "Informatie, formaat van het antwoord",
+            "legenderror": "Het legende is niet berijkbaar"
         },
         "notification": {
             "update": "Bijwerken",
@@ -78,6 +83,9 @@
         "background": "Achtergrondkaart",
         "language": "Taal",
         "mousePositionCoordinates": "Coördinaten",
+        "mouseCoordinates": "Coördinaten:",
+        "mousePositionCRS": "CRS:",
+        "mapScale": "Schaal:",
         "showMousePositionCoordinates": "Toon de coördinaten",
         "menu": "Menu",
         "options": "Opties",
@@ -101,6 +109,16 @@
         "groups": "Groepen",
         "permission": "Permissie",
         "permissions": "Permissies",
+        "global": {
+            "colors": {
+                "red": "{number, plural, =0 {Rouge} =1 {Rouge} other {rouges}}",
+                "blue": "{number, plural, =0 {Bleu} =1 {Bleu} other {Bleus}}",
+                "green": "{number, plural, =0 {vert} =1 {vert} other {verts}}",
+                "brown": "{number, plural, =0 {Brun} =1 {Brun} other {Bruns}}",
+                "purple": "{number, plural, =0 {Pourpre} =1 {Pourpre} other {Pourpre}}",
+                "random": "{number, plural, =0 {Random} =1 {Random} other {Random}}"
+            }
+        },
         "home":{
             "open": "Openen",
             "description": "MapStore 2 is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. <br/>Bezoek onze <a href=\"/mapstore/docs/\">homepage</a> voor meer detail.",
@@ -859,6 +877,108 @@
                 "invalidOutputFormat": "Het geselecteerde exportformaat is niet beschikbaar"
             }
         },
+        "widgets": {
+            "selectChartType": {
+                "title": "Sélectionnez le type de widget"
+            },
+            "title": "Titre",
+            "description": "Description",
+            "errors": {
+                "nodata": "Aucune donnée disponible pour la couche / filtre sélectionné",
+                "nodatainviewport": "Aucune donnée dans la fenêtre courante",
+                "timeoutExpired": "Le service a pris trop de temps pour répondre. Peut-être que la requête est trop complexe ou que le serveur est occupé",
+                "genericError": "Il y a une erreur lors de la récupération des données"
+            },
+            "builder": {
+                "header": {
+                    "title": "Widget"
+                },
+                "wizard": {
+                    "backToTypeSelection": "Retour à la sélection du type",
+                    "backToChartOptions": "retour aux options de graphique",
+                    "configureChartOptions": "Configurer les options de graphique",
+                    "configureWidgetOptions": "Configurer les options du widget",
+                    "updateWidget": "Mettre à jour le widget",
+                    "addToTheMap": "Ajouter le widget à la carte"
+                },
+                "errors": {
+                    "noWidgetsAvailableTitle": "Aucun widget disponible",
+                    "noWidgetsAvailableDescription": "<p> Vous ne pouvez pas créer de widget pour le calque sélectionné. C'est probablement parce que la couche ne convient pas aux widgets ou que le serveur n'expose pas tous les services ou informations nécessaires pour générer un widget. Les causes possibles sont: <ul> <li> Le calque sélectionné est une couche raster </li><li> Le service WFS n'est pas disponible</li><li>gs:aggregate process n'est pas disponible </li> </ul>) <p>"
+                },
+                "setupFilter": "Configurer un filtre pour les données du widget"
+            },
+            "widget": {
+                "menu": {
+                    "showChartData": "Afficher les données de graphique",
+                    "edit": "éditer",
+                    "delete": "effacer",
+                    "confirmDelete": "Êtes-vous sûr?",
+                    "downloadData": "Télécharger les données",
+                    "exportImage": "Exporter l'image"
+                }
+            },
+            "chartType": {
+                "bar": {
+                    "title": "Diagramme à barres",
+                    "description": "Créer un graphique à barres à ajouter à la carte",
+                    "caption": "barres"
+                },
+                "pie": {
+                    "title": "Diagramme à secteurs",
+                    "description": "Créer un graphique à secteurs à ajouter à la carte",
+                    "caption": "secteurs"
+                },
+                "line": {
+                    "title": "Graphique linéaire",
+                    "description": "Créer un graphique linéaire à ajouter à la carte",
+                    "caption": "linéaire"
+                },
+                "gauge": {
+                    "title": "Tableau de jauge",
+                    "description": "Créer un graphique de jauge à ajouter à la carte",
+                    "caption": "jauge"
+                }
+            },
+            "chartOptionsTitle": "Données de graphique",
+            "widgetOptionsTitle": "Info sur le widget",
+            "groupByAttributes": {
+                "line": "Attributs X",
+                "pie": "Grouper par",
+                "bar": "Attributs X",
+                "gauge": "Grouper par"
+            },
+            "aggregationAttribute": {
+                "line": "Attributs Y",
+                "pie": "Valeur",
+                "bar": "Attributs Y",
+                "gauge": "valeur"
+            },
+            "aggregateFunction": {
+                "line": "Opération",
+                "pie": "Opération",
+                "bar": "Opération",
+                "gauge": "Opération"
+            },
+            "colorRamp": {
+                "line": "Couleur",
+                "pie": "Rampe de couleur",
+                "bar": "Couleur",
+                "gauge": "Couleur"
+            },
+            "mapSync": "Live Filter par viewport",
+            "displayLegend": {
+                "line": "Légende d'affichage",
+                "pie": "Légende d'affichage",
+                "bar": "Légende d'affichage",
+                "gauge": "Afficher les étiquettes"
+            }
+
+        },
+        "wizard": {
+            "next": "Suivant",
+            "prev": "Précédent",
+            "finish": "Finition"
+        },
         "vectorstyler": {
             "tooltip": "Maak en bewerk een stijl van een vectorlaag",
             "paneltitle": "Laagstijl",
@@ -943,8 +1063,7 @@
                 "text": "U kunt informatie en hulpmiddelen vinden om laag te beheren"
             },
             "searchBar": {
-                "title": "Zoekbalk"
-        ,
+                "title": "Zoekbalk",
                 "text": "Schrijf het adres van een te vinden plaats, bijv. '1st avenue, new york'. U kunt zelfs coördinaten inbrengen in volgend formaat: 43.87,10.20"
             },
             "home": {
@@ -966,14 +1085,6 @@
             "zoomOutButton": {
                 "title": "UItzoomen",
                 "text": "Klik om de kaart te verkleinen"
-            },
-            "measureAreaBrugisButton": {
-                "title": "Oppervlaktemeting",
-                "text": "Gebruik deze tool om oppervlakken te meten"
-            },
-            "measureLengthBrugisButton": {
-                "title": "Lengte meting",
-                "text": "Gebruik dit hulpmiddel om afstanden te meten"
             },
             "fullscreen": {
                 "title": "Schakel over naar volledig scherm",

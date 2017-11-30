@@ -11,6 +11,7 @@ const {head} = require('lodash');
 const L = require('leaflet');
 require('leaflet-draw');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
+const {fromLeafletFeatureToQueryform, boundsToOLExtent} = require('../../../utils/DrawSupportUtils');
 const assign = require('object-assign');
 
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
@@ -126,7 +127,7 @@ class DrawSupport extends React.Component {
         } else {
             bounds = layer.getBounds();
         }
-        let extent = this.boundsToOLExtent(bounds);
+        let extent = boundsToOLExtent(bounds);
         let center = bounds.getCenter();
         center = [center.lng, center.lat];
         let radius = layer.getRadius ? layer.getRadius() : 0;
@@ -345,6 +346,10 @@ class DrawSupport extends React.Component {
         if (newProps.options.drawEnabled) {
             this.addDrawInteraction(props);
         }
+        if (newProps.options.updateSpatialField) {
+            const feature = fromLeafletFeatureToQueryform(this.drawLayer);
+            this.props.onEndDrawing(feature, this.props.drawOwner);
+        }
     };
 
     addEditInteraction = (newProps) => {
@@ -431,10 +436,6 @@ class DrawSupport extends React.Component {
             this.props.map.removeLayer(this.drawLayer);
             this.drawLayer = null;
         }
-    };
-
-    boundsToOLExtent = (bounds) => {
-        return [bounds.getWest(), bounds.getSouth(), bounds.getEast(), bounds.getNorth()];
     };
 
     convertFeaturesPolygonToPoint = (features, method) => {

@@ -1,0 +1,23 @@
+{
+  "values": ["value3", "value45435"],
+  "features": [{
+    "id": "ft_1",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [[[1,1],[2,2],[3,3],[1,1]]]
+    },
+    "properties": {
+      "name": "name ft 1"
+    }
+  }, {
+    "id": "ft_2",
+    "geometry": {
+      "type": "Polygon",
+      "coordinates": [[[1,1],[2,2],[3,3],[1,1]]]
+    },
+    "properties": {
+      "name": "name ft 2"
+    }
+  }],
+  "totalFeatures": 2
+}

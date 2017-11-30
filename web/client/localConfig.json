@@ -234,7 +234,6 @@
                       {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
                   ]
               }
-
             }, {
                 "name": "TOC",
                 "cfg": {
