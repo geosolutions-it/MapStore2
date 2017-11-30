@@ -543,7 +543,7 @@
                 "filterType": "Type de filtre",
                 "geometric_operation": "Opération géométrique",
                 "combo_placeholder": "Sélectionner...",
-                "spatial_filter_header": "Filtre spatial",
+                "spatial_filter_header": "Région d'intérêt",
                 "draw_start_label": "Dessiner la région d'intérêt sur la carte",
                 "dwithin_label": "mètres",
                 "details": {
@@ -559,6 +559,7 @@
                 "methods": {
                     "zone": "Zone",
                     "viewport": "Viewport",
+                    "regions": "Régions",
                     "box": "Rectangle",
                     "buffer": "Zone tampon",
                     "circle": "Cercle",
@@ -898,6 +899,7 @@
             },
             "noFeaturesAvailable": "Aucune fonctionnalité disponible",
             "errorSaving": "Une erreur s'est produite lors de l'enregistrement de l'opération",
+            "errorProjFetch": "Erreur lors de la recuperation de la definition de la charne proj4 depuis spatialreference.org. L'outil de synchronisation ne peut pas appliquer le filtre spatial.",
             "notSupportedGeometryTitle": "Geometry type not supported ",
             "notSupportedGeometry": "Current layer geometry type is not supported by editing but you can still edit attributes",
             "yesButton": "Oui",

@@ -114,6 +114,7 @@ const FeatureInfoFormatSelector = connect((state) => ({
 
 module.exports = {
     IdentifyPlugin: assign(IdentifyPlugin, {
+        disablePluginIf: "{state('featuregridmode') === 'EDIT'}",
         Toolbar: {
             name: 'info',
             position: 6,

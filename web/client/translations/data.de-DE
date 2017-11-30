@@ -34,7 +34,7 @@
             "title": "Titel",
             "name": "Name",
             "group": "Gruppe",
-            "description": "Description",
+            "description": "Beschreibung",
             "general": "Generell",
             "display": "Darstellung",
             "style": "Stil",
@@ -551,7 +551,7 @@
             "spatialfilter": {
                 "filterType": "Filtertyp",
                 "geometric_operation": "Geometrische Operation",
-                "spatial_filter_header": "Räumlicher Filter",
+                "spatial_filter_header": "Region von Interesse",
                 "combo_placeholder": "Wählen...",
                 "draw_start_label": "Zeichne die Region von Interesse auf der Karte",
                 "dwithin_label": "Meter",
@@ -568,6 +568,7 @@
                 "methods": {
                     "zone": "Zone",
                     "viewport": "Viewport",
+                    "regions": "Regionen",
                     "box": "BoundingBox",
                     "buffer": "Buffer",
                     "circle": "Kreis",
@@ -906,6 +907,7 @@
                 "more": "viele"
             },
             "noFeaturesAvailable": "Keine features verfügbar",
+            "errorProjFetch": "Fehler beim Abrufen der proj4-String-Definition von spatialreference.org. Das Synchronisierungstool kann den räumlichen Filter nicht anwenden.",
             "errorSaving": "Beim Speichern des Vorgangs ist ein Fehler aufgetreten",
             "notSupportedGeometryTitle": "Geometry type not supported ",
             "notSupportedGeometry": "Current layer geometry type is not supported by editing but you can still edit attributes",

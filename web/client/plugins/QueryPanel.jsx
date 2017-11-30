@@ -257,6 +257,59 @@ class QueryPanel extends React.Component {
     }
 }
 
+/**
+ * @class
+ * @classdesc
+ * QueryPanelPlugin allow to query a layer in different ways, using attributes of that layer, spatial filters
+ * @name QueryPanel
+ * @memberof plugins
+ * @prop {boolean} cfg.activateQueryTool: Activate query tool options, default `false`
+ * @prop {object[]} cfg.spatialMethodOptions: The list of geometric methods use to create/draw the spatial filter <br/>
+ * Here you can configure a list of methods used to draw (BBOX, Circle, Polygon) or create (Viewport and wfsGeocoder types) regarding the wfsGeocoder. <br/>The options for wfsGeocoder are:
+ * - id: id of the method
+ * - name: label used in the DropdownList
+ * - type: must be wfsGeocoder
+ * - customItemClassName: a custom class for used for this method in the DropdownList
+ * - filterProps:
+ *   - blacklist {string[]} a list of banned words excluded from the wfs search
+ *   - maxFeatures {number} the maximum features fetched per request
+ *   - predicate {string} the cql predicate
+ *   - queriableAttributes {string[]} list of attributes to query on.
+ *   - typeName {string} the workspace + layer name on geosever
+ *   - valueField {string} the attribute from features properties used as value/label in the autocomplete list
+ *
+ * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
+ *
+ * @example
+ * // This example configure a layer with polyogns geometry as spatial filter method
+ * "spatialOperations": [
+ *      {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
+ *      {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},
+ *      {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
+ *      {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"},
+ *      {"id": "DWITHIN", "name": "queryform.spatialfilter.operations.dwithin"}
+ * ],
+ * "spatialMethodOptions": [
+ *    {"id": "Viewport", "name": "queryform.spatialfilter.methods.viewport"},
+ *    {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
+ *    {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
+ *    {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"},
+ *    {
+ *        "id": "methodId",
+ *        "name": "methodName",
+ *        "type": "wfsGeocoder",
+ *        "url": "urlToGeoserver",
+ *        "filterProps": {
+ *            "blacklist": [],
+ *            "maxFeatures": 5,
+ *            "predicate": "LIKE",
+ *            "queriableAttributes": ["ATTRIBUTE_X"],
+ *            "typeName": "workspace:typeName",
+ *            "valueField": "ATTRIBUTE_Y"
+ *        },
+ *        "customItemClassName": "customItemClassName"
+ *    }
+ */
 const QueryPanelPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
     layerPropertiesChangeHandler: changeLayerProperties,

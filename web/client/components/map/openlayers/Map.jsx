@@ -129,7 +129,9 @@ class OpenlayersMap extends React.Component {
                     if (layer && layer.get('handleClickOnLayer')) {
                         layerInfo = layer.get('msId');
                     }
-                    coords = ol.proj.toLonLat(feature.getGeometry().getFirstCoordinate(), this.props.projection);
+                    const geom = feature.getGeometry();
+                    const getCoord = geom.getType() === "GeometryCollection" ? geom.getGeometries()[0].getFirstCoordinate() : geom.getFirstCoordinate();
+                    coords = ol.proj.toLonLat(getCoord, this.props.projection);
                     tLng = CoordinatesUtils.normalizeLng(coords[0]);
                 });
                 this.props.onClick({
@@ -206,7 +208,7 @@ class OpenlayersMap extends React.Component {
         const attributionContainer = this.props.mapOptions.attribution && this.props.mapOptions.attribution.container
         && document.querySelector(this.props.mapOptions.attribution.container);
         if (attributionContainer && attributionContainer.querySelector('.ol-attribution')) {
-            attributionContainer.removeChild(document.querySelector('.ol-attribution'));
+            attributionContainer.removeChild(attributionContainer.querySelector('.ol-attribution'));
         }
         this.map.setTarget(null);
     }

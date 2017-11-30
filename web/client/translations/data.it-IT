@@ -552,7 +552,7 @@
                 "filterType": "Tipo di filtro",
                 "geometric_operation": "Operazione Geometrica",
                 "combo_placeholder": "Seleziona...",
-                "spatial_filter_header": "Filtro Spaziale",
+                "spatial_filter_header": "Regioni di interesse",
                 "draw_start_label": "Disegna sulla mappa l'area di interesse",
                 "dwithin_label": "metri",
                 "details": {
@@ -568,6 +568,7 @@
                 "methods": {
                     "zone": "Zona",
                     "viewport": "Viewport",
+                    "regions": "Regioni",
                     "box": "Rettangolo",
                     "buffer": "Buffer",
                     "circle": "Cerchio",
@@ -907,6 +908,7 @@
             },
             "noFeaturesAvailable": "Nessun risultato disponibile",
             "errorSaving": "C'è stato un errore durante il salvataggio",
+            "errorProjFetch": "Errore durante il recupero della definizione della stringa proj dal sito spatialreference.org. Lo strumento di sincronizzazione non può applicare il filtro spaziale.",
             "notSupportedGeometryTitle": "Tipo di geometria non supportato",
             "notSupportedGeometry": "Il tipo di geometria del layer corrente non è supportato dall'editing ma è ancora possibile modificare gli attributi",
             "yesButton": "Si",

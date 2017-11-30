@@ -8,6 +8,7 @@
 
 const PropTypes = require('prop-types');
 const React = require('react');
+const {head} = require('lodash');
 const Combobox = require('react-widgets').Combobox;
 const {Glyphicon, Tooltip} = require('react-bootstrap');
 const LocaleUtils = require('../../../utils/LocaleUtils');
@@ -32,15 +33,17 @@ class PagedCombobox extends React.Component {
         data: PropTypes.array,
         disabled: PropTypes.bool,
         dropUp: PropTypes.bool,
+        features: PropTypes.array,
+        filter: PropTypes.string,
         itemComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         label: PropTypes.string,
         loading: PropTypes.bool,
-        filter: PropTypes.string,
         messages: PropTypes.object,
         onChange: PropTypes.func,
         onFocus: PropTypes.func,
         onSelect: PropTypes.func,
         onToggle: PropTypes.func,
+        onChangeDrawingStatus: PropTypes.func,
         open: PropTypes.bool,
         pagination: PropTypes.object,
         nextPageIcon: PropTypes.string,
@@ -57,10 +60,11 @@ class PagedCombobox extends React.Component {
 
     static defaultProps = {
         dropUp: false,
+        features: [],
+        filter: "",
         itemComponent: AutocompleteListItem,
         loading: false,
         label: null,
-        filter: "",
         pagination: {
             paginated: true,
             firstPage: false,
@@ -73,6 +77,7 @@ class PagedCombobox extends React.Component {
         onFocus: () => {},
         onToggle: () => {},
         onChange: () => {},
+        onChangeDrawingStatus: () => {},
         onSelect: () => {},
         textField: "label",
         tooltip: {
@@ -85,7 +90,11 @@ class PagedCombobox extends React.Component {
         },
         valueField: "value"
     };
-
+    componentWillReceiveProps(newProps) {
+        if (this.props.valueField !== newProps.valueField) {
+            this.props.onChange("", newProps.valueField);
+        }
+    }
     renderWithTooltip = (field) => {
         if (this.props.tooltip.customizedTooltip) {
             const CustomTooltip = this.props.tooltip.customizedTooltip;
@@ -94,7 +103,7 @@ class PagedCombobox extends React.Component {
             </CustomTooltip>);
         }
         const tooltip = (<Tooltip id={this.props.tooltip.id}>
-            {this.props.tooltip.message}</Tooltip>);
+            this.props.tooltip.message</Tooltip>);
         return (<OverlayTrigger key={this.props.tooltip.overlayTriggerKey} placement={this.props.tooltip.placement} overlay={tooltip}>
             { field }
         </OverlayTrigger>);
@@ -138,10 +147,34 @@ class PagedCombobox extends React.Component {
             messages={this.props.messages || messages}
             open={this.props.open}
             filter={this.props.filter}
-            onChange={(val) => this.props.onChange(val)}
+            onChange={(val) => {
+                this.props.onChange(val, this.props.valueField);
+            }}
             onFocus={() => this.props.onFocus(this.props.data)}
-            onSelect={(v) => this.props.onSelect(v)}
-            onToggle={() => this.props.onToggle()}
+            onSelect={(v) => {
+                const feature = head(this.props.features.filter(f => f.properties[this.props.valueField].toLowerCase() === v[this.props.valueField].toLowerCase()));
+                this.props.onSelect(v, feature);
+                if (feature) {
+                    this.props.onChangeDrawingStatus('drawOrEdit', feature.geometry.type, "queryform", [feature], {editEnabled: false, stopAfterDrawing: true, updateSpatialField: true});
+                }
+            }}
+            onToggle={(v) => {
+                const feature = head(this.props.features.filter( (f) => {
+                    return f.properties[this.props.valueField].toLowerCase() === this.props.selectedValue.toLowerCase();
+                }));
+                this.props.onToggle(v, feature, this.props.pagination.currentPage);
+                // if when closing the menu it finds a feature with the text inserted, then update the spatial field
+                if (feature && !v) {
+                    this.props.onChangeDrawingStatus('drawOrEdit', feature.geometry.type, "queryform", [feature], {editEnabled: false, stopAfterDrawing: true, updateSpatialField: true});
+                }
+                // if when closing the menu it does not find a feature, then clean all
+                // it conflicts with change page which trigger the on toggle twice, one for closing and one for opening
+                /*if (!feature && !v) {
+                    this.props.onChange("", this.props.valueField);
+                    this.props.onChangeDrawingStatus('clean', null, "queryform", [], {});
+                }*/
+
+            }}
             textField={this.props.textField}
             valueField={this.props.valueField}
             value={this.props.selectedValue}
