@@ -82,7 +82,6 @@
             "leave": "Quitter",
             "accept": "Accepter"
         },
-        "enable": "Activer",
         "background": "Fond de plan",
         "language": "langue",
         "mousePositionCoordinates": "Coordonnées",
@@ -251,7 +250,7 @@
             "toolReloadLayerTooltip": "Forcer la recharge de la couche sélectionnée",
             "toolReloadLayersTooltip": "Forcer la recharge des couches sélectionnées",
             "statusIconOpen": "Fermer le groupe de couches",
-            "statusIconClose": Ouvrir le groupe de couches",
+            "statusIconClose": "Ouvrir le groupe de couches",
             "grabLayerIcon": "Attraper et déplacer la couche",
             "grabGroupIcon": "Attraper et déplacer le groupe",
             "toggleLayerVisibilityWarning": "Inverser la visibilité de la couche, attention: la couche ne s'est pas chargée correctement",
