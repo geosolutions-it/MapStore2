@@ -255,6 +255,7 @@
             "grabLayerIcon": "Attraper et déplacer la couche",
             "grabGroupIcon": "Attraper et déplacer le groupe",
             "toggleLayerVisibilityWarning": "Inverser la visibilité de la couche, attention: la couche ne s'est pas chargée correctement",
+            "createWidget": "Créer un widget pour le calque sélectionné",
             "editLayerProperties": "Modifier les propriétés de la couche",
             "browseData": "Ouvrir la table d'attribut",
             "searchFeatures": "Recherche sur ce calque ...",
