@@ -26,9 +26,9 @@
             "label": "Version"
         },
         "autorefresh": {
-            "of": "of",
-            "updating": "Updating...",
-            "layers": "layers"
+            "of": "de",
+            "updating": "Rafraichissement...",
+            "layers": "Couches"
         },
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
@@ -40,7 +40,7 @@
             "display": "Affichage",
             "style": "Style",
             "transparent": "Transparent",
-            "singleTile": "Single Tile",
+            "singleTile": "Tuile unique",
             "cached": "Utiliser les options de cache",
             "styleCustom": "Utilisez un style nommé \"{value} \"",
             "styleListLoadError": "Une erreur s'est produite lors du chargement de la liste de styles",
@@ -58,14 +58,14 @@
             "featureInfoFormatLbl": "Information, format de la réponse"
         },
         "notification": {
-            "update": "Update",
-            "warning": "Warning",
-            "success": "Success",
+            "update": "Mise à jour",
+            "warning": "Avertissement",
+            "success": "Succès",
             "backgroundLayerNotSupported": "L'arrière-plan précédemment sélectionné est pas pris en charge pour ce type de carte. Le premier disponible est ensuite utilisée.",
             "noBackgroundLayerSupported": "Il n'y a pas de couches de fond supportées pour ce type de carte.",
-            "updateOldMap": "This is an old map, thus not all the functionalities can be enabled. Click on update button in order to update the map or simply dismiss this notification if you don't want to update it.",
-            "warningSaveUpdatedMap": "Some layers haven't been updated correctly",
-            "saveUpdatedMap": "All the layers have been successfully updated"
+            "updateOldMap": "Ceci est une carte ancienne, toutes les fonctionnalités ne peuvent pas s'y retrouver. Cliquer sur le bouton de mise à jour pour rafraichir la carte ou ne tenez pas compte de cet avertissement pour ne pas rafraichir la carte.",
+            "warningSaveUpdatedMap": "Certaines couches n'ont pas été mises à jour correctement",
+            "saveUpdatedMap": "Toutes les couches ont bien été mises à jour"
         },
         "dock": {
             "row": "{rowsSelected} ligne sélectionné",
@@ -76,10 +76,10 @@
             "tooltipActivate": "Entrez le mode 3D"
         },
         "cookie":{
-            "info": "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.",
-            "moreDetailsButton": "More Details",
-            "leave": "Leave",
-            "accept": "Accept"
+            "info": "Ce site fait usage de cookies pour améliorer votre expérience. Nous supposons que vous êtes d'accord avec cela, mais vous êtes libres de le refuser.",
+            "moreDetailsButton": "Plus de détails",
+            "leave": "Quitter",
+            "accept": "Accepter"
         },
         "enable": "Activer",
         "background": "Fond de plan",
@@ -94,7 +94,7 @@
         "settings": "Réglages",
         "help": "Aide",
         "gohome": "Retour",
-        "back": "Back to the Importer",
+        "back": "Retour à l'import",
         "printbutton": "Imprimer",
         "annotationsbutton": "Annotations",
         "noresultfound": "Aucun résultat trouvé",
@@ -108,8 +108,8 @@
         "confirmTitle": "Confirmez-vous?",
         "pageInfo": "{total, plural, =0 {aucun objet} =1 {{total} objet parmi {total}} other {objets {start}-{end} parmi {total}}}",
         "loading": "Chargement...",
-        "group": "Group",
-        "groups": "Groups",
+        "group": "Groupe",
+        "groups": "Groupes",
         "permission": "Permission",
         "permissions": "Permissions",
         "home":{
@@ -117,7 +117,7 @@
             "description": "MapStore 2 est développé pour créer, sauvegarder et partager de façon simple et intuitive cartes et assemblages créés à partir du contenu de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce.<br/>Visitez notre <a href=\"/mapstore/docs/\">page d'accueil</a> pour plus de détails.",
             "Applications": "Applications",
             "Examples": "Exemples",
-            "LinkedinGroup": "Mapstore Linkedin groupe",
+            "LinkedinGroup": "Groupe Linkedin Mapstore",
             "scrollTop": "Retour en haut de la page",
             "ml": {
                 "title": "Restez au fait des derniers développements via les mailing lists",
