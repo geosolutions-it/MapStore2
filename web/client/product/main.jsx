@@ -24,7 +24,7 @@ module.exports = (config, pluginsDef) => {
             locale: state.locale || {},
             pages
         }))(require('../components/app/StandardRouter'));
-        
+
         const {updateMapLayoutEpic} = require('../epics/maplayout');
 
         const appStore = require('../stores/StandardStore').bind(null, initialState, {
