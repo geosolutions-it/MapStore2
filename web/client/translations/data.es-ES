@@ -707,15 +707,15 @@
             "taintedMessage": "La funcionalidad de guardar está limitada por las restricciones de seguridad del navegador. Para un mejor resultado, clique con el botón derecho del ratón en la vista previa y selecionar 'Guardar como ...' (en firefox y chrome)"
         },
         "shapefile": {
-            "title": "Añadir fichero shape local",
-            "tooltip": "Añadir fichero shape local al mapa.",
-            "placeholder": "Ponga aqui sus fichero  o clique  para selecionar los shapefile  a importar. (Shapefiles deben estar dentro de un zip)",
+            "title": "Añadir fichero archivo local",
+            "tooltip": "Añadir fichero archivo local al mapa.",
+            "placeholder": "Ponga aqui sus fichero  o clique  para selecionar los archivo local a importar. (archivos compatibles: Shapefiles deben estar dentro de un zip, KML/KMZ e GPX)",
             "defaultStyle": "Estilo por defecto",
             "zoom": "Zoom sobre el fichero shape",
             "error": {
-                "select": "Seleccionar uno o más ficheros zip",
-                "shapeFileParsingError": "No se puede cargar el shapefile El archivo podría dañarse o no estar bien formado",
-                "genericLoadError": "No se puede cargar el shapefile en el mapa"
+                "select": "Seleccionar uno o más archivo local. (archivos compatibles: Shapefiles deben estar dentro de un zip, KML/KMZ e GPX)",
+                "shapeFileParsingError": "No se puede cargar el archivo local El archivo podría dañarse o no estar bien formado",
+                "genericLoadError": "No se puede cargar el archivo local en el mapa"
             },
             "add": "Añadir",
             "cancel": "Cancelar",

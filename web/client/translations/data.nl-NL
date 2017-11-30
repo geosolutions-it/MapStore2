@@ -643,12 +643,12 @@
             "taintedMessage": "De opslagfunctie is beperkt omwille van beveiligingsbeperkingen van de browser. Klik met de rechtermuisknop op het voorbeeld en selecteer 'Afbeelding opslaan als ...' om een beter resultaat te bekomen (ondersteund door Firefox en Chrome)"
         },
         "shapefile": {
-            "title": "Voeg een lokaal Shape-bestand toe",
-            "tooltip": "Voeg een lokaal Shape-bestand toe aan de kaart.",
+            "title": "Voeg een lokaal bestand",
+            "tooltip": "Voeg een lokaal bestand toe aan de kaart.",
             "placeholder": "Drop je bestanden hier of klik hier op om de shapefiles te selecteren die u wilt importeren. (Shapefiles moeten in zip-archieven zijn opgenomen)",
             "defaultStyle": "Standaard stijl",
-            "zoom": "Zoomer op het Shape-bestand",
-            "error": {"select": "Kies één of meerdere zip-bestanden"},
+            "zoom": "Zoomer op het bestand",
+            "error": {"select": "Kies één of meerdere zip-bestanden. (Shapefiles moeten in zip-archieven zijn opgenomen, KML/KMZ e GPX)"},
             "add": "Voeg toe",
             "cancel": "Annuleer",
             "success": " Import geslaagd"

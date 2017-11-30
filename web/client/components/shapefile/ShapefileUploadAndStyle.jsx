@@ -58,7 +58,24 @@ class ShapeFileUploadAndStyle extends React.Component {
 
     static defaultProps = {
         shapeLoading: () => {},
-        readFiles: files => files.map((file) => {
+        readFiles: (files) => files.map((file) => {
+            const ext = file.name.split('.').slice(-1)[0];
+            const type = file.type || FileUtils.MIME_LOOKUPS[ext];
+            if (file.type === 'application/vnd.google-earth.kml+xml') {
+                return FileUtils.readKml(file).then((xml) => {
+                    return FileUtils.kmlToGeoJSON(xml);
+                });
+            }
+            if (type === 'application/gpx+xml') {
+                return FileUtils.readKml(file).then((xml) => {
+                    return FileUtils.gpxToGeoJSON(xml);
+                });
+            }
+            if (file.type === 'application/vnd.google-earth.kmz') {
+                return FileUtils.readKmz(file).then((xml) => {
+                    return FileUtils.kmlToGeoJSON(xml);
+                });
+            }
             return FileUtils.readZip(file).then((buffer) => {
                 return FileUtils.shpToGeoJSON(buffer);
             });
@@ -81,6 +98,22 @@ class ShapeFileUploadAndStyle extends React.Component {
 
     getGeomType = (layer) => {
         if (layer && layer.features && layer.features[0].geometry) {
+            let unique;
+            const geometryType = layer.features.filter((element) => {
+                if (element.geometry.type === "GeometryCollection") {
+                    return element.geometry.geometries;
+                }
+            });
+            if (geometryType.length > 0) {
+                let arr = [];
+                geometryType.forEach((item) => {
+                    item.geometry.geometries.forEach((i) => {
+                        arr.push(i.type);
+                    });
+                });
+                unique = arr.filter((v, i, a) => a.indexOf(v) === i);
+                return unique && unique.length === 1 ? unique[0] : "GeometryCollection";
+            }
             return layer.features[0].geometry.type;
         }
     };
@@ -152,7 +185,7 @@ class ShapeFileUploadAndStyle extends React.Component {
         this.props.shapeLoading(true);
         let queue = this.props.readFiles(files);
         Promise.all(queue).then((geoJsons) => {
-            let ls = geoJsons.reduce((layers, geoJson) => {
+            let ls = geoJsons.filter((element) => {if (element[0].features.length !== 0) {return element; }}).reduce((layers, geoJson) => {
                 if (geoJson) {
                     return layers.concat(geoJson.map((layer) => {
                         return LayersUtils.geoJSONToLayer(layer, this.props.createId(layer, geoJson));

@@ -706,15 +706,15 @@
             "taintedMessage": "La funzionalità di salvataggio dell'istantanea è limitata a causa di alcune regole di sicurezza. Per un risultato migliore cliccare con il tasto destro sull'anteprima e selezionare  'Salva immagine con nome' (supportato solo da Mozilla Firefox e Google Chrome)"
         },
         "shapefile": {
-            "title": "Carica Shapefile",
-            "tooltip": "Aggiungi uno shapefile alla mappa.",
-            "placeholder": "Trascina qui i file o fai click per selezionare gli shapefile da importare.(gli shapefiles devono essere contenuti in archivi zip)",
+            "title": "Carica files vettoriali",
+            "tooltip": "Aggiungi uno file vettoriale alla mappa.",
+            "placeholder": "Trascina qui i file o fai click per selezionare i file vettoriali da importare.(file supportati: SHAPEFILES contenuti in archivi zip, KML/KMZ e GPX)",
             "defaultStyle": "Stile di default",
-            "zoom": "Zoom sugli shapefile",
+            "zoom": "Zoom sui file",
             "error": {
-                "select": "Seleziona Shapefile compresso",
-                "shapeFileParsingError": "Non è stato possibile caricare lo shapefile. Il file potrebbe essere danneggiato o non corretto",
-                "genericLoadError": "Lo shapefile non è stato caricato correttamente sulla mappa"
+                "select": "Seleziona file corretto. File supportati: SHAPEFILES contenuti in archivi zip, KML/KMZ e GPX)",
+                "shapeFileParsingError": "Non è stato possibile caricare il file. Il file potrebbe essere danneggiato o non corretto",
+                "genericLoadError": "Il file non è stato caricato correttamente sulla mappa"
             },
             "add": "Importa",
             "cancel": "Annulla",
