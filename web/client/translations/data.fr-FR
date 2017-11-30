@@ -750,14 +750,14 @@
             }
         },
         "uploader": {
-            "filename": "File Name",
+            "filename": "Nom du fichier",
             "type": "Type",
-            "lastModified": "Last Modified",
-            "filesize": "Size",
-            "beforeUpload": "Doing pre-upload operations... ",
-            "uploadingFiles": "Uploading Files...",
-            "dropfile": "drop files here to upload",
-            "dropfileImport": "drop here files to add it to this process"
+            "lastModified": "Date de dernière modification",
+            "filesize": "Taille",
+            "beforeUpload": "Réalisation de pré-envoi en cours... ",
+            "uploadingFiles": "Envoi des fichiers...",
+            "dropfile": "Déposer ici les fichiers à envoyer",
+            "dropfileImport": "Déposer ici les fichiers à ajouter au traitement"
         },
         "importer": {
             "title": "Importer des données",
@@ -990,9 +990,9 @@
             "role": "Rôle",
             "user": "Utilisateur",
             "service": "Service",
-            "request": "Request",
-            "workspace": "Workspace",
-            "layer": "Layer",
+            "request": "Requête",
+            "workspace": "Espace de travail",
+            "layer": "Couche",
             "filters": "Filtres",
             "rules": "Règles",
             "access": "Accès",
@@ -1040,8 +1040,8 @@
                 "text": "Tapez l'adresse recherchée, par ex. Rue du progrès 80; vous pouvez aussi entrer des coordonnées au format 43.87,10.20"
             },
             "home": {
-                "title": "Home",
-                "text": "Click to go to homepage"
+                "title": "Page de démarrage",
+                "text": "Cliquer pour retourner à la page de démarrage"
             },
             "searchButton": {
                 "title": "Recherche d'adresse",
@@ -1072,39 +1072,39 @@
                 "text": "Choisissez Leaflet ou OpenLayers pour afficher vos cartes"
             },
             "mapsGrid": {
-                "title": "Maps",
-                "text": "Here some examples of MapStore2. Click on an image to try the demo."
+                "title": "Cartes",
+                "text": "Quelques exemples de MapStore2. Cliquez sur une image pour lancer la démo."
             },
             "examples": {
-                "title": "Custom Application",
-                "text": "You can use components and plugins of MapStore2 to build custom applications"
+                "title": "Application sur mesure",
+                "text": "Utilisez les composants et outils de MapStore2 pour construire votre application personnalisée"
             },
             "introCesium": {
-                "title": "3D map instructions",
-                "text": "Click on next button to start the tutorial"
+                "title": "Instructions carte 3D",
+                "text": "Cliquez le bouton suivant pour démarrer le tutoriel"
             },
             "cesium": {
-                "title": "Interactions with the Map",
-                "pan": "Pan view",
-                "zoom": "Zoom view",
-                "tilt": "Tilt view",
-                "rotate": "Rotate view",
-                "oneDrag": "One finger drag",
-                "twoPinch": "Two finger pinch",
-                "twoDragSame": "Two finger drag, same direction",
-                "twoDragOpposite": "Two finger drag, opposite direction",
-                "leftClick": "Left click + drag",
-                "rightClick": "Right click + drag, or Mouse wheel scroll",
-                "middleClick": "Middle click + drag, or CTRL + Left/Right click + drag"
+                "title": "Interactions avec la carte",
+                "pan": "Panner la vue",
+                "zoom": "Zoomer dans la vue",
+                "tilt": "Incliner la vue",
+                "rotate": "Tourner la vue",
+                "oneDrag": "Déplacer à un doigt",
+                "twoPinch": "Echelle à deux doigts",
+                "twoDragSame": "Déplacer à deux doigts, dans la même direction",
+                "twoDragOpposite": "Déplacer à deux doigts, directions opposées",
+                "leftClick": "Clic gauche + déplacer",
+                "rightClick": "Clic droit + déplacer, ou molette souris",
+                "middleClick": "Clic central + déplacer, ou CTRL + clic Gauche/Droit + déplacer"
 
             },
             "cesiumCompass": {
-                "title": "Compass",
-                "text": "You can use the compass to orbit around the globe. Drag to rotate the map"
+                "title": "boussole",
+                "text": "Vous pouvez utiliser la boussole pour vous déplacer sur le globe. Déplacer pour bouger la carte"
             },
             "cesiumNavigation": {
                 "title": "Navigation",
-                "text": "Here you can find the zoom in and zoom out buttons"
+                "text": "Vous trouverez ici les boutons de zoom in et zoom out"
             }
         }
     }
