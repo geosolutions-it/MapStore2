@@ -9,8 +9,9 @@
 const React = require('react');
 const {get, find} = require('lodash');
 const {Observable} = require('rxjs');
-const {describeFeatureType} = require('../../../observables/wfs');
+const {describeFeatureType, getLayerWFSCapabilities} = require('../../../observables/wfs');
 const {findGeometryProperty} = require('../../../utils/ogc/WFS/base');
+const Message = require('../../I18N/Message');
 const {describeFeatureTypeToAttributes} = require('../../../utils/FeatureTypeUtils');
 const SwitchPanel = require('../../misc/switch/SwitchPanel');
 const {Row, Col} = require('react-bootstrap');
@@ -20,6 +21,50 @@ const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
 const GeometricOperationSelector = require('./GeometricOperationSelector');
 const GroupField = require('./GroupField');
 
+const hasCrossLayerFunctionalities = (data) => {
+    const functions = get(data, "WFS_Capabilities.Filter_Capabilities.Scalar_Capabilities.ArithmeticOperators.Functions.FunctionNames.FunctionName");
+    return !!find(functions, ({_} = {}) => _ === "queryCollection");
+};
+const isSameOGCServiceRoot = (origSearchUrl, {search, url} = {}) => origSearchUrl === url || origSearchUrl === (search && search.url);
+
+// bbox make not sense with cross layer filter
+const getAllowedSpatialOperations = (spatialOperations) => (spatialOperations || []).filter( ({id} = {}) => id !== "BBOX");
+
+const createCrossLayerFunctionalitiesInspectionStream = ($props) => $props
+    .distinctUntilChanged(({searchUrl} = {}, {searchUrl: newSearchUrl} = {}) => searchUrl === newSearchUrl)
+    .switchMap( (props = {}) => {
+        if (props.crossLayerExpanded) {
+            return Observable.of(props);
+        }
+        return $props.filter( ({crossLayerExpanded} = {}) => crossLayerExpanded).take(1);
+    })
+    .switchMap(({featureTypeName, searchUrl }) => getLayerWFSCapabilities({layer: {
+        name: featureTypeName,
+        url: searchUrl,
+        search: {
+            type: "wfs",
+            url: searchUrl
+        }
+    }})
+    .do(
+        (capabilities) => {
+            if (!hasCrossLayerFunctionalities(capabilities)) {
+                throw new Error("nocrosslayerfunctionalities");
+            }
+        })
+        .map(() => ({
+            loadingCapabilities: false
+        }))
+        .catch( e => {
+            return Observable.of({
+                errorObj: e,
+                loadingAttributes: false,
+                loadingCapabilities: false,
+                featureTypeProperties: []
+            });
+        })
+    .startWith({loadingCapabilities: true}))
+.startWith({});
 const crossLayerFilterEnhancer = compose(
     withPropsOnChange(
         ['crossLayerFilter'],
@@ -42,38 +87,49 @@ const crossLayerFilterEnhancer = compose(
         setOperation: ({setCrossLayerFilterParameter = () => {}}) => (v) => setCrossLayerFilterParameter(`operation`, v)
     }),
     defaultProps({
-        dataStreamFactory: ($props, {setQueryCollectionParameter = () => {}} = {}) => $props
-            .distinctUntilChanged(({layer = {}} = {}, {layer: newLayer } = {}) => newLayer && layer.name === (newLayer && newLayer.name))
-            .filter(({layer} = {}) => !!layer)
-            .switchMap(({layer} = {}) =>
-                Observable.defer( () => describeFeatureType({layer}))
-                    .do((result) => {
-                        const geomProp = get(findGeometryProperty(result.data || {}), "name");
-                        if (geomProp) {
-                            setQueryCollectionParameter("geometryName", geomProp);
-                        }
+        dataStreamFactory: ($props, {setQueryCollectionParameter = () => {}} = {}) =>
+            createCrossLayerFunctionalitiesInspectionStream($props)
+            .combineLatest(
+                $props
+                // retrieve layer's attributes on layer selection change
+                .distinctUntilChanged(({layer = {}} = {}, {layer: newLayer } = {}) => newLayer && layer.name === (newLayer && newLayer.name))
+                .filter(({layer} = {}) => !!layer)
+                .switchMap(({layer} = {}) =>
+                    Observable.defer( () => describeFeatureType({layer}))
+                        .do((result) => {
+                            const geomProp = get(findGeometryProperty(result.data || {}), "name");
+                            if (geomProp) {
+                                setQueryCollectionParameter("geometryName", geomProp);
+                            }
+                            setQueryCollectionParameter("filterFields", []);
+                        })
+                        .map(({data = {}} = {}) => describeFeatureTypeToAttributes(data))
+                        .map(attributes => ({
+                            attributes,
+                            loadingAttributes: false
+                        }))
+                        .startWith({loadingAttributes: true})
+                        .catch( e => {
+                            return Observable.of({
+                                errorObj: e,
+                                loadingAttributes: false,
+                                featureTypeProperties: []
+                            });
+                        })
+                ).catch( e => {
+                    return Observable.of({
+                        errorObj: e,
+                        loadingAttributes: false,
+                        loadingCapabilities: false,
+                        featureTypeProperties: []
+                    });
+                }).startWith({}),
+                    // combine the 2 streams output props
+                    (overrides= {}, props = {}) => ({
+                        ...props,
+                        ...overrides
                     })
-                    .map(({data = {}} = {}) => describeFeatureTypeToAttributes(data))
-                    .map(attributes => ({
-                        attributes,
-                          loading: false
-                    }))
-                    .catch( e => {
-                        return Observable.of({
-                            errorObj: e,
-                            loading: false,
-                            featureTypeProperties: []
-                        });
-                    })
-                    .startWith({loading: true})
-            ).catch( e => {
-                return Observable.of({
-                    errorObj: e,
-                    loading: false,
-                    featureTypeProperties: []
-                });
-            }).startWith({})
-
+            ).startWith({})
     }),
     propsStreamFactory
 );
@@ -83,7 +139,10 @@ module.exports = crossLayerFilterEnhancer(({
     spatialOperations,
     expandCrossLayerFilterPanel = () => {},
     layers,
-    loading,
+    errorObj,
+    loadingAttributes,
+    loadingCapabilities,
+    searchUrl,
     queryCollection = {},
     attributes = [],
     operation,
@@ -102,23 +161,31 @@ module.exports = crossLayerFilterEnhancer(({
     }]} = queryCollection;
 
     return (<SwitchPanel
-        expanded={crossLayerExpanded}
-        buttons={typeName ? [{
-            glyph: 'clear-filter',
-            tooltipId: "remove",
-            onClick: () => resetCrossLayerFilter()
-        }] : []}
+        loading={loadingCapabilities}
+        expanded={crossLayerExpanded && !loadingCapabilities && !errorObj}
+        error={errorObj}
+        errorMsgId={"queryPanel"}
+        buttons={[
+            ...(typeName ? [{
+                glyph: 'clear-filter',
+                tooltipId: "queryform.crossLayerFilter.clear",
+                onClick: () => resetCrossLayerFilter()
+                }] : [])
+            ]}
         onSwitch={expandCrossLayerFilterPanel}
-        title={"Layer Filter" /* TODO */}>
+        title={<Message msgId="queryform.crossLayerFilter.title" />} >
             <Row className="filter-field-fixed-row">
             <Col xs={6}>
-                <div className="m-label">Target Layer/* TODO */</div>
+                <div className="m-label"><Message msgId="queryform.crossLayerFilter.targetLayer"/></div>
             </Col>
             <Col xs={6}>
                 <Select
                     clearable={false}
-                    isLoading={loading}
-                    options={layers.map( l => ({
+                    disabled={loadingCapabilities || errorObj}
+                    isLoading={loadingAttributes}
+                    options={layers
+                      .filter( l => isSameOGCServiceRoot(searchUrl, l))
+                      .map( l => ({
                         label: l.title || l.name,
                         value: l.name
                     }))}
@@ -133,13 +200,13 @@ module.exports = crossLayerFilterEnhancer(({
         {(typeName && geometryName)
             ? (<Row className="filter-field-fixed-row">
                 <Col xs={6}>
-                    <div className="m-label">Operation/* TODO */</div>
+                    <div className="m-label"><Message msgId="queryform.crossLayerFilter.operation"/></div>
                 </Col>
                 <Col xs={6}>
                 <GeometricOperationSelector
                     value={operation}
                     onChange={({id}={}) => setOperation(id)}
-                    spatialOperations={spatialOperations.filter( ({id} = {}) => id !== "BBOX")}
+                    spatialOperations={getAllowedSpatialOperations(spatialOperations)}
                     />
                 </Col>
             </Row>)

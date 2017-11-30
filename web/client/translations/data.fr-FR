@@ -585,6 +585,15 @@
                     "dwithin": "Distance de",
                     "within": "Contient"
                 }
+            },
+            "crossLayerFilter": {
+                "title": "Filtre de couche",
+                "targetLayer": "Couche cible",
+                "clear": "Effacer le filtre",
+                "operation": "Opération",
+                "errors": {
+                    "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour le calque sélectionné"
+                }
             }
         },
         "annotations": {

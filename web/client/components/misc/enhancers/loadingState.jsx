@@ -8,17 +8,8 @@
 
 const React = require('react');
 const {branch} = require('recompose');
-const ContainerDimensions = require('react-container-dimensions').default;
-const DefaultLoadingomponent = ({width: ww, height: hh, className = "loader-container", contentStyle = {}}) => (<div className={className} >
-    <ContainerDimensions>
-        {({width = 200, height= 200}) => {
-            const w = ww || (height > 0 ? Math.min(width, height) : width);
-            const h = hh || (height > 0 ? Math.min(width, height) : width);
-            const size = Math.min(w, h);
-            return (<div style={{width: size, height: size, display: "flex", margin: "auto", overflow: "hidden", padding: "10%", ...contentStyle}}><div className="mapstore-full-size-loader"></div></div>);
-        }}
-    </ContainerDimensions>
-</div>);
+
+const DefaultLoadingomponent = require('../LoadingView');
 
 const defaultTest = ({loading, isLoading}) => loading || isLoading && ((typeof isLoading === 'function') ? isLoading() : isLoading === true);
 /**

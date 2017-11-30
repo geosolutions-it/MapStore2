@@ -581,6 +581,15 @@
                     "dwithin": "Entfernung von",
                     "within": "Enthält"
                 }
+            },
+            "crossLayerFilter": {
+                "title": "Schichtfilter",
+                "targetLayer": "Zielschicht",
+                "clear": "Filter löschen",
+                "operation": "Betrieb",
+                "errors": {
+                    "noCrossLayerAvailable": "Cross Layer Filtering ist für die ausgewählte Ebene nicht verfügbar"
+                }
             }
         },
         "user":{

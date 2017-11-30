@@ -55,7 +55,7 @@ class QueryBuilder extends React.Component {
         spatialOperations: PropTypes.array,
         spatialMethodOptions: PropTypes.array,
         crossLayerFilterOptions: PropTypes.object,
-        crossLayerFilterActions: PropTypes.crossLayerilterActions,
+        crossLayerFilterActions: PropTypes.object,
         hits: PropTypes.bool,
         maxHeight: PropTypes.number,
         allowEmptyFilter: PropTypes.bool,
@@ -183,6 +183,8 @@ class QueryBuilder extends React.Component {
                     <CrossLayerFilter
                         spatialOperations={this.props.spatialOperations}
                         crossLayerExpanded={this.props.crossLayerExpanded}
+                        searchUrl={this.props.searchUrl}
+                        featureTypeName={this.props.featureTypeName}
                         {...this.props.crossLayerFilterOptions}
                         {...this.props.crossLayerFilterActions}
                         />

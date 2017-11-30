@@ -581,6 +581,15 @@
                     "dwithin": "Distanza da",
                     "within": "Contiene"
                 }
+            },
+            "crossLayerFilter": {
+                "title": "Filtra usando un livello",
+                "targetLayer": "Livello Filtro",
+                "clear": "Pulisci Filtro",
+                "operation": "Operazione",
+                "errors": {
+                    "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato"
+                }
             }
         },
         "user":{

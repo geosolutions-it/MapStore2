@@ -70,8 +70,10 @@ class StringSelector extends React.Component {
     }
     handleOutsideClick = (e) => {
         // ignore clicks on the component itself
-        if (!this.node.contains(e.target) && this.state.open) {
+        if (this.node && this.node.contains && !this.node.contains(e.target) && this.state.open) {
             this.handleClick();
+        } else if (document && !this.node && this.handleOutsideClick) {
+            document.removeEventListener('click', this.handleOutsideClick, false);
         }
     };
     handleClick = () => {

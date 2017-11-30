@@ -8,10 +8,12 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Panel} = require('react-bootstrap');
+const {Panel, Button, Glyphicon} = require('react-bootstrap');
 const SwitchButton = require('./SwitchButton');
 const Toolbar = require('../toolbar/Toolbar');
-
+const ErrorIcon = () => <Button className="square-button-sm no-border switch-error"><Glyphicon glyph="exclamation-mark" className="text-danger" /></Button>;
+const LoadingView = require('../LoadingView');
+const LoadingIcon = () => <div className="switch-loading"><LoadingView size="small"/></div>;
 class SwitchPanel extends React.Component {
 
     static propTypes = {
@@ -22,6 +24,9 @@ class SwitchPanel extends React.Component {
         onSwitch: PropTypes.func,
         locked: PropTypes.bool,
         buttons: PropTypes.array,
+        loading: PropTypes.bool,
+        error: PropTypes.object,
+        errorMsgId: PropTypes.object,
         transitionProps: PropTypes.object
     };
 
@@ -33,7 +38,6 @@ class SwitchPanel extends React.Component {
         buttons: []
     };
     state = {};
-
     renderHeader() {
         return (<div>
             <div className="pull-left">{this.props.title || this.props.header}</div>
@@ -43,6 +47,8 @@ class SwitchPanel extends React.Component {
                     onChange={(checked) => {
                         this.props.onSwitch(checked);
                     }}/> : null}
+                {this.props.error ? <ErrorIcon /> : null}
+                {this.props.loading ? <LoadingIcon /> : null}
                 {this.props.buttons.length > 0 && this.props.expanded && <Toolbar btnDefaultProps={{ className: 'square-button-sm no-border'}} buttons={this.props.buttons}/>}
             </div>
         </div>);

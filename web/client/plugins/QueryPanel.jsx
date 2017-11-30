@@ -96,7 +96,8 @@ const SmartQueryForm = connect((state) => {
         crossLayerExpanded: state.queryform.crossLayerExpanded,
         crossLayerFilterOptions: {
             layers: availableCrossLayerFilterLayersSelector(state),
-            crossLayerFilter: crossLayerFilterSelector(state)
+            crossLayerFilter: crossLayerFilterSelector(state),
+            ...(state.queryform.crossLayerFilterOptions || {})
         },
         maxFeaturesWPS: state.queryform.maxFeaturesWPS,
         spatialPanelExpanded: state.queryform.spatialPanelExpanded,

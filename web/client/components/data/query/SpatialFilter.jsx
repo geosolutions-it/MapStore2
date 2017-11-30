@@ -323,19 +323,19 @@ class SpatialFilter extends React.Component {
         this.props.actions.onSelectSpatialMethod(method, name);
 
         if (this.getMethodFromId(method).type !== "wfsGeocoder") {
-        switch (method) {
-            case "ZONE": {
-                this.changeDrawingStatus('clean', null, "queryform", []); break;
+            switch (method) {
+                case "ZONE": {
+                    this.changeDrawingStatus('clean', null, "queryform", []); break;
+                }
+                case "Viewport": {
+                    this.changeDrawingStatus('clean', null, "queryform", []);
+                    this.props.actions.onSelectViewportSpatialMethod();
+                    break;
+                }
+                default: {
+                    this.changeDrawingStatus('start', method, "queryform", [], {stopAfterDrawing: true});
+                }
             }
-            case "Viewport": {
-                this.changeDrawingStatus('clean', null, "queryform", []);
-                this.props.actions.onSelectViewportSpatialMethod();
-                break;
-            }
-            default: {
-                this.changeDrawingStatus('start', method, "queryform", [], {stopAfterDrawing: true});
-            }
-        }
         } else {
             this.changeDrawingStatus('clean', null, "queryform", []);
         }
