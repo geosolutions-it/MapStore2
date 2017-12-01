@@ -205,7 +205,6 @@ class GroupField extends React.Component {
             });
         }
         return (<Toolbar buttons={buttons} btnDefaultProps={{
-            bsSize: "md"
         }} />);
         /*
         return (<Toolbar className="pull-right">

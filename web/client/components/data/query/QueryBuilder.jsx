@@ -11,7 +11,8 @@ const React = require('react');
 const GroupField = require('./GroupField');
 const SpatialFilter = require('./SpatialFilter');
 const QueryToolbar = require('./QueryToolbar');
-const CrossLayerFilter = require('./CrossLayerFilter');
+const crossLayerFilterEnhancer = require('./enhancers/crossLayerFilter');
+const CrossLayerFilter = crossLayerFilterEnhancer(require('./CrossLayerFilter'));
 const BorderLayout = require('../../layout/BorderLayout');
 
 const Spinner = require('react-spinkit');

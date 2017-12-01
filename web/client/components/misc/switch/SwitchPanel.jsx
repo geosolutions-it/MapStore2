@@ -18,15 +18,18 @@ class SwitchPanel extends React.Component {
 
     static propTypes = {
         header: PropTypes.node,
-        title: PropTypes.string,
+        title: PropTypes.oneOfType([
+            PropTypes.string,
+            PropTypes.node
+        ]),
         defaultExpanded: PropTypes.string,
         expanded: PropTypes.bool,
         onSwitch: PropTypes.func,
         locked: PropTypes.bool,
         buttons: PropTypes.array,
         loading: PropTypes.bool,
-        error: PropTypes.object,
-        errorMsgId: PropTypes.object,
+        error: PropTypes.any,
+        errorMsgId: PropTypes.string,
         transitionProps: PropTypes.object
     };
 
@@ -44,7 +47,7 @@ class SwitchPanel extends React.Component {
             <div className="pull-right">
                 {!this.props.locked ? <SwitchButton
                     checked={this.props.expanded}
-                    onChange={(checked) => {
+                    onClick={(checked) => {
                         this.props.onSwitch(checked);
                     }}/> : null}
                 {this.props.error ? <ErrorIcon /> : null}

@@ -11,6 +11,7 @@ const ListItem = ({ item } = {}) => (
 module.exports = ({spatialOperations = [], onChange= () => {}} = {}) =>
 (<DropdownList
         valueField="id"
+        className="geometry-operation-selector"
         onChange={onChange}
         data={spatialOperations}
         valueComponent={ListItem}

@@ -58,14 +58,15 @@ describe('GeometryDetails', () => {
         expect(geometryDetailsDOMNode).toExist();
 
         let childNodes = geometryDetailsDOMNode.actual.childNodes;
-        expect(childNodes.length).toBe(1);
-        expect(childNodes[0].className).toBe("panel-body");
-
-        let panelBodyRows = childNodes[0].getElementsByClassName('row');
+        expect(childNodes.length).toBe(2);
+        expect(childNodes[1]).toExist();
+        const pb = childNodes[1].querySelector('.panel-body');
+        expect(pb).toExist();
+        let panelBodyRows = pb.getElementsByClassName('row');
         expect(panelBodyRows).toExist();
-        expect(panelBodyRows.length).toBe(4);
+        expect(panelBodyRows.length).toBe(3);
 
-        expect(panelBodyRows[0].childNodes.length).toBe(4);
+        expect(pb.childNodes.length).toBe(1);
     });
     it('Test GeometryDetails onEndDrawing', () => {
         const actions = {
@@ -87,7 +88,7 @@ describe('GeometryDetails', () => {
         const spyonEndDrawing = expect.spyOn(actions, 'onEndDrawing');
         const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} type={type} onEndDrawing={actions.onEndDrawing} />, document.getElementById("container"));
         expect(cmp).toExist();
-        ReactTestUtils.Simulate.click(document.getElementById('save-radius')); // <-- trigger event callback
+        ReactTestUtils.Simulate.click(document.getElementsByClassName('glyphicon-ok')[0]); // <-- trigger event callback
         expect(spyonEndDrawing).toHaveBeenCalled();
         expect(spyonEndDrawing.calls[0].arguments.length).toBe(2);
         const geom = spyonEndDrawing.calls[0].arguments[0];
@@ -115,7 +116,7 @@ describe('GeometryDetails', () => {
         const spyonEndDrawing = expect.spyOn(actions, 'onEndDrawing');
         const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} type={type} onEndDrawing={actions.onEndDrawing} />, document.getElementById("container"));
         expect(cmp).toExist();
-        ReactTestUtils.Simulate.click(document.getElementById('save-radius')); // <-- trigger event callback
+        ReactTestUtils.Simulate.click(document.getElementsByClassName('glyphicon-ok')[0]); // <-- trigger event callback
         expect(spyonEndDrawing).toHaveBeenCalled();
         const geom = spyonEndDrawing.calls[0].arguments[0];
         const coords = geom.coordinates[0];
@@ -158,11 +159,11 @@ describe('GeometryDetails', () => {
         expect(geometryDetailsDOMNode).toExist();
 
         let childNodes = geometryDetailsDOMNode.actual.childNodes;
-        expect(childNodes.length).toBe(1);
-        expect(childNodes[0].className).toBe("panel-body");
-
-        let panelBodyRows = childNodes[0].getElementsByClassName('row');
+        expect(childNodes.length).toBe(2);
+        const pb = childNodes[1].querySelector('.panel-body');
+        expect(pb).toExist();
+        let panelBodyRows = pb.getElementsByClassName('row');
         expect(panelBodyRows).toExist();
-        expect(panelBodyRows.length).toBe(4);
+        expect(panelBodyRows.length).toBe(3);
     });
 });

@@ -843,4 +843,29 @@ describe('FilterUtils', () => {
         expect(filter).toExist();
         expect(filter).toBe("(\"attribute3\" LIKE \'%val%\')");
     });
+    it('getCrossLayerCqlFilter', () => {
+        const filter = FilterUtils.getCrossLayerCqlFilter({
+            collectGeometries: {
+                queryCollection: {
+                        filterFields: [
+                        {
+                            groupId: 1,
+                            attribute: "attribute3",
+                            exception: null,
+                            operator: "LIKE",
+                            rowId: "3",
+                            type: "string",
+                            value: "val"
+                        }],
+                        groupFields: [{
+                            id: 1,
+                            index: 0,
+                            logic: "OR"
+                        }]
+                }
+            }
+        });
+        expect(filter).toExist();
+        expect(filter).toBe("(\"attribute3\" LIKE \'%val%\')");
+    });
 });

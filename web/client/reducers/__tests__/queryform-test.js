@@ -9,7 +9,12 @@ const expect = require('expect');
 const queryform = require('../queryform');
 
 const {featureCollection} = require('../../test-resources/featureCollectionZone.js');
-const {UPDATE_FILTER_FIELD_OPTIONS, SET_AUTOCOMPLETE_MODE, TOGGLE_AUTOCOMPLETE_MENU} = require('../../actions/queryform');
+const {
+    UPDATE_FILTER_FIELD_OPTIONS, SET_AUTOCOMPLETE_MODE, TOGGLE_AUTOCOMPLETE_MENU,
+    loadFilter,
+    expandCrossLayerFilterPanel, setCrossLayerFilterParameter, resetCrossLayerFilter,
+    addCrossLayerFilterField, updateCrossLayerFilterField, removeCrossLayerFilterField
+} = require('../../actions/queryform');
 const {END_DRAWING, CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 
 describe('Test the queryform reducer', () => {
@@ -918,7 +923,68 @@ describe('Test the queryform reducer', () => {
         expect(state.filterFields[0].openAutocompleteMenu).toBe(true);
 
     });
+    it('toggle crosslayer', () => {
+        let action = expandCrossLayerFilterPanel(true);
+        let newState = queryform(undefined, action);
+        expect(newState.crossLayerExpanded).toBe(true);
+    });
+    it('toggle crosslayer', () => {
+        let action = expandCrossLayerFilterPanel(true);
+        let newState = queryform(undefined, action);
+        expect(newState.crossLayerExpanded).toBe(true);
+    });
+    it('test setCrossLayerFilterParameter', () => {
+        let action = setCrossLayerFilterParameter("test", "TEST");
+        let newState = queryform(undefined, action);
+        expect(newState.crossLayerFilter.test).toBe("TEST");
+    });
+    it('test addCrossLayerFilterField, updateCrossLayerFilterField, removeCrossLayerFilterField', () => {
+        let action = addCrossLayerFilterField({attribute: "a"});
+        let newState = queryform(undefined, action);
+        expect(newState.crossLayerFilter.collectGeometries.queryCollection.filterFields.length).toBe(1);
+        const rowId = newState.crossLayerFilter.collectGeometries.queryCollection.filterFields[0].rowId;
+        newState = queryform(newState, updateCrossLayerFilterField(rowId, "test", "test", "TYPE"));
+        expect(newState.crossLayerFilter.collectGeometries.queryCollection.filterFields.length).toBe(1);
+        expect(newState.crossLayerFilter.collectGeometries.queryCollection.filterFields[0].test).toBe("test");
+        expect(newState.crossLayerFilter.collectGeometries.queryCollection.filterFields[0].type).toBe("TYPE");
+        newState = queryform(newState, removeCrossLayerFilterField(rowId));
+        expect(newState.crossLayerFilter.collectGeometries.queryCollection.filterFields.length).toBe(0);
+    });
+    it('test resetCrossLayerFilter', () => {
+        let action = resetCrossLayerFilter();
+        let newState = queryform({crossLayerFilter: {attribute: "ATTRIBUTE"}}, action);
+        expect(newState.crossLayerFilter.attribute).toBe("ATTRIBUTE");
+    });
+    it('test loadFilter', () => {
+        const newFilter = {
+            crossLayerFilter: {
+                collectGeometries: {
+                    queryCollection: {
 
+                    }
+                }
+            },
+            spatialField: {
+                method: "BBOX",
+                operation: "DWITHIN",
+                geometry: '{"type":"Feature","geometry":{"type":"Polygon","coordinates":[[[-635956.0753326667,5466776.262955805],[-635956.0753326667,4723196.8517976105],[-29351.81886150781,4723196.8517976105],[-29351.81886150781,5466776.262955805],[-635956.0753326667,5466776.262955805]]]},"properties":null}'
+            }
+
+        };
+        const initialState = {
+            crossLayerFilter: {
+                attribute: "ATTRIBUTE1"
+            },
+            spatialField: {
+                attribute: "GEOMETRY"
+            }
+        };
+        let action = loadFilter(newFilter);
+        let newState = queryform(initialState, action);
+        expect(newState.crossLayerFilter.attribute).toBe("ATTRIBUTE1");
+        expect(newState.spatialField.attribute).toBe("GEOMETRY");
+        expect(newState.spatialField.method).toBe("BBOX");
+    });
 
     /* it('Open Zones Menu', () => {
         let testAction = {

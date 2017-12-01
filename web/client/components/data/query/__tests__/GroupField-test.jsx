@@ -101,7 +101,7 @@ describe('GroupField', () => {
 
         let groupPanel = containerGroupPanel.getElementsByClassName('panel-body')[0];
         childNodes = groupPanel.childNodes;
-        expect(childNodes.length).toBe(3);
+        expect(childNodes.length).toBe(2);
 
         for (let i = 0; i < childNodes.length; i++) {
             let child = childNodes[i];
@@ -224,7 +224,7 @@ describe('GroupField', () => {
         let childNodes = groupPanel.childNodes;
         expect(childNodes.length).toBe(1);
 
-        let selectBtn = groupFieldDOMNode.actual.getElementsByClassName('rw-dropdownlist-picker rw-select rw-btn')[6];
+        let selectBtn = groupFieldDOMNode.actual.getElementsByClassName('rw-dropdownlist-picker rw-select rw-btn')[5];
         selectBtn.click();
         let options = groupFieldDOMNode.actual.getElementsByClassName('rw-list-option');
         expect(options.length).toBe(2);
