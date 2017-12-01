@@ -57,9 +57,8 @@ class SelectShape extends React.Component {
     checkFileType = (file) => {
         return new Promise((resolve, reject) => {
             const ext = FileUtils.recognizeExt(file.name);
-            const type = file.type || FileUtils.MIME_LOOKUPS[ext];
-            if (type instanceof Array ||
-                type === 'application/x-zip-compressed' ||
+            const type = FileUtils.MIME_LOOKUPS[ext];
+            if (type === 'application/x-zip-compressed' ||
                 type === 'application/zip' ||
                 type === 'application/vnd.google-earth.kml+xml' ||
                 type === 'application/vnd.google-earth.kmz' ||

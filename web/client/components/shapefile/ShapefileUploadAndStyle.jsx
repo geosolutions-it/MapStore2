@@ -60,7 +60,7 @@ class ShapeFileUploadAndStyle extends React.Component {
         shapeLoading: () => {},
         readFiles: (files) => files.map((file) => {
             const ext = FileUtils.recognizeExt(file.name);
-            const type = file.type || FileUtils.MIME_LOOKUPS[ext];
+            const type = FileUtils.MIME_LOOKUPS[ext];
             if (type === 'application/vnd.google-earth.kml+xml') {
                 return FileUtils.readKml(file).then((xml) => {
                     return FileUtils.kmlToGeoJSON(xml);
@@ -82,8 +82,7 @@ class ShapeFileUploadAndStyle extends React.Component {
                     return e.message;
                 });
             }
-            if (type instanceof Array ||
-                type === 'application/x-zip-compressed' ||
+            if (type === 'application/x-zip-compressed' ||
                 type === 'application/zip' ) {
                 return FileUtils.readZip(file).then((buffer) => {
                     return FileUtils.shpToGeoJSON(buffer);

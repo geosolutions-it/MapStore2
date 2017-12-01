@@ -20,7 +20,7 @@ const FileUtils = {
         'gpx': 'application/gpx+xml',
         'kmz': 'application/vnd.google-earth.kmz',
         'kml': 'application/vnd.google-earth.kml+xml',
-        'zip': ['application/x-zip-compressed', 'application/zip']
+        'zip': 'application/zip'
     },
     recognizeExt: function(fileName) {
         return fileName.split('.').slice(-1)[0];
