@@ -13,6 +13,7 @@ const tj = require('@mapbox/togeojson');
 const JSZip = require('jszip');
 const {Promise} = require('es6-promise');
 const parser = new DOMParser();
+const assign = require('object-assign');
 
 const FileUtils = {
     MIME_LOOKUPS: {
@@ -20,6 +21,9 @@ const FileUtils = {
         'kmz': 'application/vnd.google-earth.kmz',
         'kml': 'application/vnd.google-earth.kml+xml',
         'zip': ['application/x-zip-compressed', 'application/zip']
+    },
+    recognizeExt: function(fileName) {
+        return fileName.split('.').slice(-1)[0];
     },
     download: function(blob, name, mimetype) {
         let file = new Blob([blob], {type: mimetype});
@@ -33,17 +37,11 @@ const FileUtils = {
         return [].concat(shp.parseZip(zipBuffer));
     },
     kmlToGeoJSON: function(xml) {
-        let geoJSON = [].concat(tj.kml(xml));
-        geoJSON.forEach(function(item) {
-            item.fileName = xml.getElementsByTagName('name')[0].innerHTML;
-        });
+        const geoJSON = [].concat(tj.kml(xml)).map(item => assign({}, item, {fileName: xml.getElementsByTagName('name')[0].innerHTML}));
         return geoJSON;
     },
     gpxToGeoJSON: function(xml) {
-        let geoJSON = [].concat(tj.gpx(xml));
-        geoJSON.forEach(function(item) {
-            item.fileName = xml.getElementsByTagName('name')[0].innerHTML;
-        });
+        const geoJSON = [].concat(tj.gpx(xml)).map(item => assign({}, item, {fileName: xml.getElementsByTagName('name')[0].innerHTML}));
         return geoJSON;
     },
     readZip: function(file) {
@@ -72,7 +70,7 @@ const FileUtils = {
             zip.loadAsync(file).then(files => {
                 files.filter(elem => {
                     return elem.indexOf('kml') !== -1;
-                }).map(elem => {
+                }).forEach(elem => {
                     return elem.async("string").then((response) => {
                         resolve(parser.parseFromString(response, "text/xml"));
                     }).catch((e) => {

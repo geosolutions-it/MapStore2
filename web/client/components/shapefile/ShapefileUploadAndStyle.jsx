@@ -59,26 +59,38 @@ class ShapeFileUploadAndStyle extends React.Component {
     static defaultProps = {
         shapeLoading: () => {},
         readFiles: (files) => files.map((file) => {
-            const ext = file.name.split('.').slice(-1)[0];
+            const ext = FileUtils.recognizeExt(file.name);
             const type = file.type || FileUtils.MIME_LOOKUPS[ext];
-            if (file.type === 'application/vnd.google-earth.kml+xml') {
+            if (type === 'application/vnd.google-earth.kml+xml') {
                 return FileUtils.readKml(file).then((xml) => {
                     return FileUtils.kmlToGeoJSON(xml);
+                }).catch((e) => {
+                    return e.message;
                 });
             }
             if (type === 'application/gpx+xml') {
                 return FileUtils.readKml(file).then((xml) => {
                     return FileUtils.gpxToGeoJSON(xml);
+                }).catch((e) => {
+                    return e.message;
                 });
             }
-            if (file.type === 'application/vnd.google-earth.kmz') {
+            if (type === 'application/vnd.google-earth.kmz') {
                 return FileUtils.readKmz(file).then((xml) => {
                     return FileUtils.kmlToGeoJSON(xml);
+                }).catch((e) => {
+                    return e.message;
                 });
             }
-            return FileUtils.readZip(file).then((buffer) => {
-                return FileUtils.shpToGeoJSON(buffer);
-            });
+            if (type instanceof Array ||
+                type === 'application/x-zip-compressed' ||
+                type === 'application/zip' ) {
+                return FileUtils.readZip(file).then((buffer) => {
+                    return FileUtils.shpToGeoJSON(buffer);
+                }).catch((e) => {
+                    return e.message;
+                });
+            }
         }),
         mapType: "leaflet",
         buttonSize: "small",
@@ -100,14 +112,12 @@ class ShapeFileUploadAndStyle extends React.Component {
         if (layer && layer.features && layer.features[0].geometry) {
             let unique;
             const geometryType = layer.features.filter((element) => {
-                if (element.geometry.type === "GeometryCollection") {
-                    return element.geometry.geometries;
-                }
+                return element.geometry.type === "GeometryCollection";
             });
             if (geometryType.length > 0) {
                 let arr = [];
-                geometryType.forEach((item) => {
-                    item.geometry.geometries.forEach((i) => {
+                geometryType.map((item) => {
+                    item.geometry.geometries.map((i) => {
                         arr.push(i.type);
                     });
                 });
@@ -185,7 +195,7 @@ class ShapeFileUploadAndStyle extends React.Component {
         this.props.shapeLoading(true);
         let queue = this.props.readFiles(files);
         Promise.all(queue).then((geoJsons) => {
-            let ls = geoJsons.filter((element) => {if (element[0].features.length !== 0) {return element; }}).reduce((layers, geoJson) => {
+            let ls = geoJsons.filter((element) => element[0].features.length !== 0).reduce((layers, geoJson) => {
                 if (geoJson) {
                     return layers.concat(geoJson.map((layer) => {
                         return LayersUtils.geoJSONToLayer(layer, this.props.createId(layer, geoJson));
