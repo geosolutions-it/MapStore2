@@ -1,16 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>it.geosolutions.mapstore</groupId>
-  <artifactId>mapstore-web</artifactId>
+  <parent>
+    <groupId>it.geosolutions.__PROJECTNAME__</groupId>
+    <artifactId>__PROJECTNAME__-root</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </parent>
+  <artifactId>__PROJECTNAME__-web</artifactId>
   <packaging>war</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>MapStore 2 - WAR</name>
-  <url>http://www.geo-solutions.it</url>
+  <name>__PROJECTDESCRIPTION__ - WAR</name>
+  <url>__REPOURL__</url>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <mapstore2.version>DEV</mapstore2.version>
   </properties>
 
   <dependencies>
@@ -50,11 +52,11 @@
           <groupId>javax.servlet</groupId>
           <artifactId>servlet-api</artifactId>
           <version>2.5</version>
-      </dependency>
+    </dependency>
   </dependencies>
 
   <build>
-    <finalName>mapstore</finalName>
+    <finalName>__PROJECTNAME__</finalName>
     <plugins>
         <plugin>
             <artifactId>maven-resources-plugin</artifactId>
@@ -67,14 +69,14 @@
                         <goal>copy-resources</goal>
                     </goals>
                     <configuration>
-                        <outputDirectory>${basedir}/target/mapstore</outputDirectory>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__</outputDirectory>
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client</directory>
-                                 <filtering>true</filtering>
+                                <directory>${basedir}/..</directory>
+                                <filtering>true</filtering>
                                 <includes>
-                                    <include>**/version.txt</include>
+                                    <include>version.txt</include>
                                 </includes>
                             </resource>
                         </resources>
@@ -87,11 +89,11 @@
                         <goal>copy-resources</goal>
                     </goals>
                     <configuration>
-                        <outputDirectory>${basedir}/target/mapstore</outputDirectory>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__</outputDirectory>
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client</directory>
+                                <directory>${basedir}/..</directory>
                                 <includes>
                                     <include>**/*.html</include>
                                     <include>**/*.json</include>
@@ -101,6 +103,8 @@
                                 <excludes>
                                     <exclude>node_modules/*</exclude>
                                     <exclude>node_modules/**/*</exclude>
+                                    <exclude>MapStore2/*</exclude>
+                                    <exclude>MapStore2/**/*</exclude>
                                     <exclude>**/libs/Cesium/**/*</exclude>
                                     <exclude>**/test-resources/*</exclude>
                                 </excludes>
@@ -115,49 +119,27 @@
                         <goal>copy-resources</goal>
                     </goals>
                     <configuration>
-                        <outputDirectory>${basedir}/target/mapstore/dist</outputDirectory>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/dist</outputDirectory>
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client/dist</directory>
+                                <directory>${basedir}/../dist</directory>
                             </resource>
                         </resources>
                     </configuration>
                 </execution>
                 <execution>
-                    <id>example data</id>
+                    <id>CSS files</id>
                     <phase>process-classes</phase>
                     <goals>
                         <goal>copy-resources</goal>
                     </goals>
                     <configuration>
-                        <outputDirectory>${basedir}/target/mapstore/examples</outputDirectory>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/assets</outputDirectory>
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client/examples</directory>
-                                <includes>
-                                    <include>data/*</include>
-                                </includes>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>example js</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${basedir}/target/mapstore/examples</outputDirectory>
-                        <encoding>UTF-8</encoding>
-                        <resources>
-                            <resource>
-                                <directory>${basedir}/client/examples</directory>
-                                <includes>
-                                    <include>**/*.js</include>
-                                </includes>
+                                <directory>${basedir}/../assets</directory>
                             </resource>
                         </resources>
                     </configuration>
@@ -169,11 +151,17 @@
                         <goal>copy-resources</goal>
                     </goals>
                     <configuration>
-                        <outputDirectory>${basedir}/target/mapstore</outputDirectory>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client</outputDirectory>
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client</directory>
+                                <directory>${basedir}/../js</directory>
+                                <includes>
+                                    <include>translations/*</include>
+                                </includes>
+                            </resource>
+                            <resource>
+                                <directory>${basedir}/../MapStore2/web/client</directory>
                                 <includes>
                                     <include>translations/*</include>
                                 </includes>
@@ -182,17 +170,20 @@
                     </configuration>
                 </execution>
                 <execution>
-                    <id>docs</id>
+                    <id>translations-ms2</id>
                     <phase>process-classes</phase>
                     <goals>
                         <goal>copy-resources</goal>
                     </goals>
                     <configuration>
-                        <outputDirectory>${basedir}/target/mapstore/docs</outputDirectory>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client</outputDirectory>
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/docs</directory>
+                                <directory>${basedir}/../MapStore2/web/client</directory>
+                                <includes>
+                                    <include>translations/*</include>
+                                </includes>
                             </resource>
                         </resources>
                     </configuration>
@@ -204,11 +195,30 @@
                         <goal>copy-resources</goal>
                     </goals>
                     <configuration>
-                        <outputDirectory>${basedir}/target/mapstore/libs/cesium-navigation</outputDirectory>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client/libs/cesium-navigation</outputDirectory>
                         <encoding>UTF-8</encoding>
                         <resources>
                             <resource>
-                                <directory>${basedir}/client/libs/cesium-navigation</directory>
+                                <directory>${basedir}/../MapStore2/web/client/libs/cesium-navigation</directory>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>config files</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__/MapStore2/web/client</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/../MapStore2/web/client</directory>
+                                <includes>
+                                    <include>localConfig.json</include>
+                                </includes>
                             </resource>
                         </resources>
                     </configuration>
@@ -233,76 +243,29 @@
                 </overlays>
             </configuration>
         </plugin>
+
+        <!-- Run the application using "mvn jetty:run" -->
         <plugin>
-          <groupId>org.eclipse.jetty</groupId>
-          <artifactId>jetty-maven-plugin</artifactId>
-          <version>9.2.11.v20150529</version>
-          <configuration>
-                <systemProperties>
-                    <systemProperty>
-                        <name>log4j.configuration</name>
-                        <value>log4j-test.properties</value>
-                    </systemProperty>
-                </systemProperties>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>maven-jetty-plugin</artifactId>
+            <version>6.1.20</version>
+            <configuration>
+                <webAppConfig>
+                    <contextPath>/__PROJECTNAME__</contextPath>
+                </webAppConfig>
+                <connectors>
+                    <connector implementation="org.mortbay.jetty.nio.SelectChannelConnector">
+                        <port>9191</port>
+                        <maxIdleTime>60000</maxIdleTime>
+                    </connector>
+                </connectors>
+                <reload>manual</reload>
             </configuration>
         </plugin>
     </plugins>
   </build>
-  <profiles>
-    <profile>
-        <id>serveronly</id>
-        <properties>
-            <skipTests>true</skipTests>
-            <skipcesiumdownload>true</skipcesiumdownload>
-        </properties>
-        <build>
-            <plugins>
-                <plugin>
-                    <groupId>com.github.eirslett</groupId>
-                    <artifactId>frontend-maven-plugin</artifactId>
-                    <configuration>
-                        <skip>true</skip>
-                    </configuration>
-                </plugin>
-                <plugin>
-                    <artifactId>maven-resources-plugin</artifactId>
-                    <version>2.6</version>
-                    <executions></executions>
-                </plugin>
-            </plugins>
-        </build>
-    </profile>
-    <profile>
-        <id>api_mapquest</id>
-        <build>
-            <plugins>
-                <plugin>
-                    <groupId>com.google.code.maven-replacer-plugin</groupId>
-                    <artifactId>replacer</artifactId>
-                    <version>1.5.3</version>
-                    <executions>
-                        <execution>
-                            <phase>prepare-package</phase>
-                            <goals>
-                                <goal>replace</goal>
-                            </goals>
-                        </execution>
-                    </executions>
-                    <configuration>
-                        <file>target/mapstore/index.html</file>
-                        <replacements>
-                            <replacement>
-                                <token>__API_KEY_MAPQUEST__</token>
-                                <value>${__API_KEY_MAPQUEST__}</value>
-                            </replacement>
-                        </replacements>
-                    </configuration>
-                </plugin>
-            </plugins>
-        </build>
-    </profile>
-  </profiles>
-    <repositories>
+
+	<repositories>
         <!-- GeoSolutions -->
         <repository>
             <id>geosolutions</id>
