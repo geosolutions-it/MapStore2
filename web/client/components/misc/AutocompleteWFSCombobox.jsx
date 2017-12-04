@@ -24,6 +24,7 @@ const streamEnhancer = mapPropsStream(props$ => {
         data: isArray(data && data.fetchedData && data.fetchedData.values) ? data.fetchedData.values : [],
         features: isArray(data && data.fetchedData && data.fetchedData.features) ? data.fetchedData.features : [],
         valuesCount: data && data.fetchedData && data.fetchedData.size,
+        srsName: data && data.fetchedData && data.fetchedData.crs,
         busy: data.busy
     }));
 });
@@ -32,13 +33,13 @@ const streamEnhancer = mapPropsStream(props$ => {
 const PagedWFSComboboxEnhanced = streamEnhancer(
     ({ open, toggle, select, focus, change, value, valuesCount, onChangeDrawingStatus,
     loadNextPage, loadPrevPage, maxFeatures, currentPage, itemComponent, features,
-    busy, data, loading = false, valueField, textField, filter }) => {
+    busy, data, loading = false, valueField, textField, filter, srsName }) => {
         const numberOfPages = Math.ceil(valuesCount / maxFeatures);
         // for understanding "numberOfPages <= currentPage" see  https://osgeo-org.atlassian.net/browse/GEOS-7233. can be removed when fixed
         // sometimes on the last page it returns a wrong totalFeatures number
         return (<PagedComboboxWithFeatures
             pagination={{firstPage: currentPage === 1, lastPage: numberOfPages <= currentPage, paginated: true, loadPrevPage, loadNextPage, currentPage}}
-            busy={busy} dropUp={false} data={data} open={open} onChangeDrawingStatus={onChangeDrawingStatus}
+            srsName={srsName} busy={busy} dropUp={false} data={data} open={open} onChangeDrawingStatus={onChangeDrawingStatus}
             valueField={valueField} textField={textField} itemComponent={itemComponent} filter={filter}
             onFocus={focus} onToggle={toggle} onChange={change} onSelect={select} features={features}
             selectedValue={value} loading={loading}/>);
