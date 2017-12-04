@@ -8,8 +8,6 @@
 
 const {get} = require('lodash');
 
-const {createSelector} = require('reselect');
-const {modeSelector} = require('./featuregrid');
 /**
  * selects mapinfo state
  * @name mapinfo
@@ -34,27 +32,7 @@ const mapInfoRequestsSelector = state => get(state, "mapInfo.requests") || [];
  */
 const generalInfoFormatSelector = (state) => get(state, "mapInfo.infoFormat", "text/plain");
 
-const measureActiveSelector = (state) => get(state, "measurement.lineMeasureEnabled") || get(state, "measurement.areaMeasureEnabled") || get(state, "measurement.bearingMeasureEnabled");
-const drawSupportActiveSelector = (state) => {
-    const drawStatus = get(state, "draw.drawStatus", false);
-    return drawStatus && drawStatus !== 'clean' && drawStatus !== 'stop';
-};
-const gridEditingSelector = createSelector(modeSelector, (mode) => mode === 'EDIT');
-const annotationsEditingSelector = (state) => get(state, "annotations.editing");
-const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false);
-
-/**
- * selects stopGetFeatureInfo from state
- * @memberof selectors.mapinfo
- * @param  {object} state the state
- * @return {boolean} true if the get feature info has to stop the request
- */
-
-const stopGetFeatureInfoSelector = createSelector(mapInfoDisabledSelector, measureActiveSelector, drawSupportActiveSelector, gridEditingSelector, annotationsEditingSelector,
-    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isGridEditing, isAnnotationsEditing) => isMapInfoDisabled || !!isMeasureActive || isDrawSupportActive || isGridEditing || !!isAnnotationsEditing);
-
 module.exports = {
     generalInfoFormatSelector,
-    mapInfoRequestsSelector,
-    stopGetFeatureInfoSelector
+    mapInfoRequestsSelector
 };

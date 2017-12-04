@@ -22,6 +22,8 @@ const {currentLocaleSelector} = require('../selectors/locale');
 
 const Message = require('./locale/Message');
 
+const {Glyphicon} = require('react-bootstrap');
+
 const assign = require('object-assign');
 
 require('./identify/identify.css');
@@ -52,11 +54,6 @@ const conditionalToggle = on.bind(null, purgeMapInfoResults(), (state) =>
 /**
  * Identify plugin. This plugin allows to perform getfeature info.
  * It can be configured to have a mobile or a desktop flavor.
- * It's enabled by default. The bubbling of an on_click_map action to GFI is stopped
- * if Annotations orFeatureGrid plugins are editing, draw or measurement supports are
- * active ore the identify plugin is disabled.
- * To restore old behaviour, in mapInfo state, set enabled to false and disabledAlwaysOn to true and
- * manage the plugin using changeMapInfoState action or toggleControl action with 'info' as control name.
  * @class Identify
  * @memberof plugins
  * @static
@@ -117,6 +114,15 @@ const FeatureInfoFormatSelector = connect((state) => ({
 
 module.exports = {
     IdentifyPlugin: assign(IdentifyPlugin, {
+        disablePluginIf: "{state('featuregridmode') === 'EDIT'}",
+        Toolbar: {
+            name: 'info',
+            position: 6,
+            tooltip: "info.tooltip",
+            icon: <Glyphicon glyph="map-marker"/>,
+            help: <Message msgId="helptexts.infoButton"/>,
+            toggle: true
+        },
         Settings: {
             tool: <FeatureInfoFormatSelector
                 key="featureinfoformat"
