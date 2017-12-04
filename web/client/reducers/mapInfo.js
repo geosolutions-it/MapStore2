@@ -6,8 +6,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {CLICK_ON_MAP} = require('../actions/map');
-
 const {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
@@ -22,7 +20,8 @@ const {
     HIDE_REVERSE_GEOCODE,
     GET_VECTOR_INFO,
     NO_QUERYABLE_LAYERS,
-    CLEAR_WARNING
+    CLEAR_WARNING,
+    FEATURE_INFO_CLICK
 } = require('../actions/mapInfo');
 
 const {RESET_CONTROLS} = require('../actions/controls');
@@ -44,8 +43,9 @@ function receiveResponse(state, action, type) {
     }
     return state;
 }
+const initState = {enabled: true};
 
-function mapInfo(state = {}, action) {
+function mapInfo(state = initState, action) {
     switch (action.type) {
     case NO_QUERYABLE_LAYERS:
         return assign({}, state, {
@@ -80,7 +80,7 @@ function mapInfo(state = {}, action) {
     case ERROR_FEATURE_INFO: {
         return receiveResponse(state, action, 'error');
     }
-    case CLICK_ON_MAP: {
+    case FEATURE_INFO_CLICK: {
         return assign({}, state, {
             clickPoint: action.point,
             clickLayer: action.layer || null

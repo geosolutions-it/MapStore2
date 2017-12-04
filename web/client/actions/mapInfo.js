@@ -25,6 +25,7 @@ const HIDE_REVERSE_GEOCODE = 'HIDE_REVERSE_GEOCODE';
 const GET_VECTOR_INFO = 'GET_VECTOR_INFO';
 const NO_QUERYABLE_LAYERS = 'NO_QUERYABLE_LAYERS';
 const CLEAR_WARNING = 'CLEAR_WARNING';
+const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
 
 /**
  * Private
@@ -203,6 +204,7 @@ module.exports = {
     GET_VECTOR_INFO,
     NO_QUERYABLE_LAYERS,
     CLEAR_WARNING,
+    FEATURE_INFO_CLICK,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
