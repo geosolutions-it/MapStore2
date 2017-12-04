@@ -9,12 +9,41 @@
 const {processOGCGeometry, pointElement, polygonElement, lineStringElement, closePolygon } = require("./ogc/GML");
 const {wfsToGmlVersion} = require('./ogc/WFS/base');
 const {ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators} = require("./ogc/Filter/operators");
-const {isNil, isUndefined, isArray} = require('lodash');
+const {get, isNil, isUndefined, isArray} = require('lodash');
 
 const checkOperatorValidity = (value, operator) => {
     return (!isNil(value) && operator !== "isNull" || !isUndefined(value) && operator === "isNull");
 };
 const wrapAttributeWithDoubleQuotes = a => "\"" + a + "\"";
+
+const setupCrossLayerFilterDefaults = (crossLayerFilter) => {
+    if (!crossLayerFilter || !get(crossLayerFilter, 'collectGeometries.queryCollection')) {
+        return null;
+    }
+    if (get(crossLayerFilter, 'collectGeometries.queryCollection')) {
+        const filterFields = (get(crossLayerFilter, 'collectGeometries.queryCollection.filterFields') || []).filter(field => checkOperatorValidity(field.value, field.operator));
+        const groupFields = get(crossLayerFilter, 'collectGeometries.queryCollection.groupFields')
+            || [{
+                id: 1,
+                index: 0,
+                logic: 'OR'
+        }];
+        return {
+            ...crossLayerFilter,
+            collectGeometries: {
+                ...crossLayerFilter.collectGeometries,
+                queryCollection: {
+                    ...crossLayerFilter.collectGeometries.queryCollection,
+                    filterFields,
+                    groupFields
+                }
+            }
+        };
+    }
+
+
+};
+
 const normalizeVersion = (version) => {
     if (!version) {
         return "2.0";
@@ -212,6 +241,7 @@ const processOGCSimpleFilterField = (field, nsplaceholder) => {
 };
 const FilterUtils = {
     checkOperatorValidity,
+    setupCrossLayerFilterDefaults,
     toOGCFilterParts: function(objFilter, versionOGC, nsplaceholder) {
         let filters = [];
         let attributeFilter;
@@ -249,7 +279,10 @@ const FilterUtils = {
             filters.push(spatialFilter);
         }
         if (objFilter.crossLayerFilter) {
-            let crossLayerFilter = objFilter.crossLayerFilter;
+            let crossLayerFilter = {
+                ...objFilter.crossLayerFilter,
+                attribute: objFilter.crossLayerFilter.attribute // || (objFilter.spatialField && objFilter.spatialField.attribute)
+            };
             if (Array.isArray()) {
                 crossLayerFilter.forEach( f => filters.push(this.processOGCCrossLayerFilter(f, nsplaceholder)));
             } else {
@@ -473,6 +506,11 @@ const FilterUtils = {
 
         return getFeature;
     },
+    getCrossLayerCqlFilter: crossLayerFilter => get(crossLayerFilter, 'collectGeometries.queryCollection.cqlFilter')
+        || (get(crossLayerFilter, 'collectGeometries.queryCollection.filterFields') || []).length > 0
+            && (get(crossLayerFilter, 'collectGeometries.queryCollection.groupFields') || []).length > 0
+            && FilterUtils.toCQLFilter(crossLayerFilter.collectGeometries.queryCollection)
+        || "INCLUDE",
     /**
     *  processOGCCrossLayerFilter(object)
     *  object should be in this form :
@@ -506,11 +544,12 @@ const FilterUtils = {
             propertyTagReference[nsplaceholder].endTag;
         // only collectGeometries is supported now
         if (crossLayerFilter.collectGeometries) {
+            const cqlFilter = FilterUtils.getCrossLayerCqlFilter(crossLayerFilter);
             ogc += `<ogc:Function name="collectGeometries">` +
              `<ogc:Function name="queryCollection">` +
                `<ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.typeName}</ogc:Literal>` +
                `<ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.geometryName}</ogc:Literal>` +
-               `<ogc:Literal>${crossLayerFilter.collectGeometries.queryCollection.cqlFilter}</ogc:Literal>` +
+               `<ogc:Literal>${cqlFilter}</ogc:Literal>` +
              `</ogc:Function>` +
          `</ogc:Function>`;
         }
@@ -552,6 +591,21 @@ const FilterUtils = {
         if (objFilter.spatialField && objFilter.spatialField.geometry && objFilter.spatialField.operation) {
             spatialFilter = this.processCQLSpatialFilter(objFilter);
             filters.push(spatialFilter);
+        }
+        if (objFilter.crossLayerFilter) {
+            const {crossLayerFilter} = objFilter;
+            const {operation} = crossLayerFilter;
+            const attribute = crossLayerFilter.attribute; // || (objFilter.spatialField && objFilter.spatialField.attribute)
+            const queryCollection = crossLayerFilter.collectGeometries && crossLayerFilter.collectGeometries.queryCollection;
+            // Something like CONTAINS(the_geom, collectGeometries(queryCollection('sf:roads','the_geom','INCLUDE')))
+            if (operation && attribute && queryCollection) {
+                const {typeName, geometryName} = queryCollection;
+                const cqlFilter =
+                    FilterUtils.getCrossLayerCqlFilter(crossLayerFilter)
+                        .replace(/\'/g, "''"); // escape single quotes to make the CQL a valid string.
+                // TODO DWITHIN needs also distance and unit
+                filters.push(`${operation}(${attribute},collectGeometries(queryCollection('${typeName}', '${geometryName}','${cqlFilter}')))`);
+            }
         }
         if (filters.length) {
             return "(" + (filters.length > 1 ? filters.join(") AND (") : filters[0]) + ")";
@@ -825,7 +879,15 @@ const FilterUtils = {
     ogcBooleanField,
     ogcStringField,
     isLikeOrIlike: (operator) => operator === "ilike" || operator === "like",
-    isFilterValid: (f = {}) => (f.filterFields && f.filterFields.length > 0) || (f.simpleFilterFields && f.simpleFilterFields.length > 0) || (f.spatialField && f.spatialField.geometry && f.spatialField.operation)
+    isFilterValid: (f = {}) =>
+        (f.filterFields && f.filterFields.length > 0)
+        || (f.simpleFilterFields && f.simpleFilterFields.length > 0)
+        || (f.spatialField && f.spatialField.geometry && f.spatialField.operation)
+        || (f.crossLayerFilter
+            && f.crossLayerFilter.collectGeometries
+            && f.crossLayerFilter.collectGeometries.queryCollection
+            && f.crossLayerFilter.collectGeometries.queryCollection.geometryName
+            && f.crossLayerFilter.collectGeometries.queryCollection.typeName)
 };
 
 module.exports = FilterUtils;

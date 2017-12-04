@@ -57,6 +57,7 @@ const arrayUpdate = (path, entry, condition, object) => {
  * @param  {object} obj   the object to clone and change
  * @return {object} the new object
  * @memberof utils.ImmutableUtils
+ * @example arrayDelete('path.to.array', {id: id_of_the_item_to_delete}, object_to_modify)
  */
 const arrayDelete = (path, condition, object) => {
     const arr = path ? get(object, path) || [] : object;

@@ -21,6 +21,7 @@ class FilterField extends React.Component {
         onUpdateField: PropTypes.func,
         maxFeaturesWPS: PropTypes.number,
         toggleMenu: PropTypes.func,
+        deleteButton: PropTypes.node,
         onUpdateExceptionField: PropTypes.func,
         onChangeCascadingValue: PropTypes.func
     };
@@ -89,8 +90,9 @@ class FilterField extends React.Component {
                             onUpdateField={this.updateFieldElement}
                             comboFilter={"contains"}/>
                     </Col>
-                    <Col xs={3}>{selectedAttribute ? this.renderOperatorField() : null}</Col>
+                    <Col xs={this.props.deleteButton ? 2 : 3}>{selectedAttribute ? this.renderOperatorField() : null}</Col>
                     <Col xs={5}>{selectedAttribute && this.props.filterField.operator ? this.renderValueField(selectedAttribute) : null}</Col>
+                    {this.props.deleteButton ? <Col xs={1}>{this.props.deleteButton}</Col> : null}
                 </Row>
             </div>
         );

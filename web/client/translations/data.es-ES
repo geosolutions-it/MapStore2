@@ -582,6 +582,15 @@
                     "dwithin": "Distancia desde",
                     "within": "Contiene"
                 }
+            },
+            "crossLayerFilter": {
+                "title": "Filtro de capa",
+                "targetLayer": "Capa objetivo",
+                "clear": "Eliminar filtro",
+                "operation": "Operación",
+                "errors": {
+                    "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada"
+                }
             }
         },
         "user":{

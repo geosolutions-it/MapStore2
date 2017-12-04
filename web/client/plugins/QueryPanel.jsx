@@ -8,7 +8,7 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
-const {Button, Glyphicon} = require('react-bootstrap');
+
 const Sidebar = require('react-sidebar').default;
 const {createSelector} = require('reselect');
 const {changeLayerProperties, changeGroupProperties, toggleNode,
@@ -21,12 +21,16 @@ const {zoomToExtent} = require('../actions/map');
 const {toggleControl} = require('../actions/controls');
 
 const {groupsSelector} = require('../selectors/layers');
+const {
+    crossLayerFilterSelector,
+    availableCrossLayerFilterLayersSelector
+} = require('../selectors/queryform');
 
 const LayersUtils = require('../utils/LayersUtils');
 
 // include application component
 const QueryBuilder = require('../components/data/query/QueryBuilder');
-
+const QueryPanelHeader = require('../components/data/query/QueryPanelHeader');
 const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic} = require('../epics/wfsquery');
 const autocompleteEpics = require('../epics/autocomplete');
 const {bindActionCreators} = require('redux');
@@ -44,11 +48,17 @@ const {
     changeCascadingValue,
     expandAttributeFilterPanel,
     expandSpatialFilterPanel,
+    expandCrossLayerFilterPanel,
     selectSpatialMethod,
     selectViewportSpatialMethod,
     selectSpatialOperation,
     removeSpatialSelection,
     showSpatialSelectionDetails,
+    setCrossLayerFilterParameter,
+    addCrossLayerFilterField,
+    updateCrossLayerFilterField,
+    removeCrossLayerFilterField,
+    resetCrossLayerFilter,
     search,
     reset,
     changeDwithinValue,
@@ -83,6 +93,12 @@ const SmartQueryForm = connect((state) => {
         toolbarEnabled: state.queryform.toolbarEnabled,
         attributePanelExpanded: state.queryform.attributePanelExpanded,
         autocompleteEnabled: state.queryform.autocompleteEnabled,
+        crossLayerExpanded: state.queryform.crossLayerExpanded,
+        crossLayerFilterOptions: {
+            layers: availableCrossLayerFilterLayersSelector(state),
+            crossLayerFilter: crossLayerFilterSelector(state),
+            ...(state.queryform.crossLayerFilterOptions || {})
+        },
         maxFeaturesWPS: state.queryform.maxFeaturesWPS,
         spatialPanelExpanded: state.queryform.spatialPanelExpanded,
         featureTypeConfigUrl: state.query && state.query.url,
@@ -129,6 +145,14 @@ const SmartQueryForm = connect((state) => {
             onQuery: search,
             onReset: reset,
             onChangeDrawingStatus: changeDrawingStatus
+        }, dispatch),
+        crossLayerFilterActions: bindActionCreators({
+            expandCrossLayerFilterPanel,
+            setCrossLayerFilterParameter,
+            addCrossLayerFilterField,
+            updateCrossLayerFilterField,
+            removeCrossLayerFilterField,
+            resetCrossLayerFilter
         }, dispatch)
     };
 })(QueryBuilder);
@@ -243,9 +267,9 @@ class QueryPanel extends React.Component {
     };
 
     renderQueryPanel = () => {
-        return (<div>
-            <Button id="toc-query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={() => this.props.onToggleQuery()}><Glyphicon glyph="arrow-left"/></Button>
+        return (<div className="mapstore-query-builder">
             <SmartQueryForm
+                header={<QueryPanelHeader onToggleQuery={this.props.onToggleQuery} />}
                 spatialOperations={this.props.spatialOperations}
                 spatialMethodOptions={this.props.spatialMethodOptions}
                 featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}/>

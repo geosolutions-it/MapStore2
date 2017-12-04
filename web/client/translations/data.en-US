@@ -580,6 +580,15 @@
                     "dwithin": "Distance from",
                     "within": "Contains"
                 }
+            },
+            "crossLayerFilter": {
+                "title": "Layer filter",
+                "targetLayer": "Target layer",
+                "clear": "Clear filter",
+                "operation": "Operation",
+                "errors": {
+                    "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer"
+                }
             }
         },
         "user":{

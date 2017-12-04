@@ -17,6 +17,8 @@ const {
     CHANGE_CASCADING_VALUE,
     EXPAND_ATTRIBUTE_PANEL,
     EXPAND_SPATIAL_PANEL,
+    EXPAND_CROSS_LAYER,
+    SET_CROSS_LAYER_PARAMETER,
     SELECT_SPATIAL_METHOD,
     SELECT_SPATIAL_OPERATION,
     CHANGE_SPATIAL_ATTRIBUTE,
@@ -38,6 +40,10 @@ const {
     REMOVE_ALL_SIMPLE_FILTER_FIELDS,
     UPDATE_FILTER_FIELD_OPTIONS,
     LOADING_FILTER_FIELD_OPTIONS,
+    ADD_CROSS_LAYER_FILTER_FIELD,
+    UPDATE_CROSS_LAYER_FILTER_FIELD,
+    REMOVE_CROSS_LAYER_FILTER_FIELD,
+    RESET_CROSS_LAYER_FILTER,
     SET_AUTOCOMPLETE_MODE,
     TOGGLE_AUTOCOMPLETE_MENU,
     LOAD_FILTER
@@ -52,6 +58,8 @@ const assign = require('object-assign');
 
 const union = require('turf-union');
 const bbox = require('turf-bbox');
+const {get} = require('lodash');
+const {set, arrayUpsert, arrayDelete} = require('../utils/ImmutableUtils');
 
 const initialState = {
     searchUrl: null,
@@ -79,6 +87,18 @@ const initialState = {
         geometry: null
     },
     simpleFilterFields: []
+};
+
+const updateFilterField = (field = {}, action = {}) => {
+    let f = assign({}, field, {[action.fieldName]: action.fieldValue, type: action.fieldType}, {fieldOptions: assign({}, {...field.fieldOptions}, {currentPage: action.fieldOptions.currentPage === undefined ? 1 : action.fieldOptions.currentPage})});
+    if (action.fieldName === "attribute") {
+        f.value = action.fieldType === "string" ? '' : null;
+        f.operator = "=";
+    }
+    if (action.fieldName === "operator") {
+        f.value = null;
+    }
+    return f;
 };
 
 function queryform(state = initialState, action) {
@@ -109,15 +129,7 @@ function queryform(state = initialState, action) {
         case UPDATE_FILTER_FIELD: {
             return assign({}, state, {filterFields: state.filterFields.map((field) => {
                 if (field.rowId === action.rowId) {
-                    let f = assign({}, field, {[action.fieldName]: action.fieldValue, type: action.fieldType}, {fieldOptions: assign({}, {...field.fieldOptions}, {currentPage: action.fieldOptions.currentPage === undefined ? 1 : action.fieldOptions.currentPage})});
-                    if (action.fieldName === "attribute") {
-                        f.value = action.fieldType === "string" ? '' : null;
-                        f.operator = "=";
-                    }
-                    if (action.fieldName === "operator") {
-                        f.value = null;
-                    }
-                    return f;
+                    return updateFilterField(field, action);
                 }
                 return field;
             })});
@@ -200,6 +212,57 @@ function queryform(state = initialState, action) {
                 spatialPanelExpanded: action.expand
             });
         }
+        case EXPAND_CROSS_LAYER: {
+            return assign({}, state, {
+                crossLayerExpanded: action.expand
+            });
+        }
+        case SET_CROSS_LAYER_PARAMETER: {
+            return assign({}, state, {
+                crossLayerFilter: set(action.key, action.value, state.crossLayerFilter)
+            });
+        }
+        case ADD_CROSS_LAYER_FILTER_FIELD: {
+            return arrayUpsert(`crossLayerFilter.collectGeometries.queryCollection.filterFields`, {
+                rowId: action.rowId,
+                groupId: action.groupId,
+                attribute: null,
+                operator: "=",
+                value: null,
+                type: null,
+                fieldOptions: {
+                    valuesCount: 0,
+                    currentPage: 1
+                },
+                exception: null
+              }, {
+                rowId: action.rowId
+            }, state);
+        }
+        case UPDATE_CROSS_LAYER_FILTER_FIELD: {
+            return set(
+                `crossLayerFilter.collectGeometries.queryCollection.filterFields`,
+                (get(state, 'crossLayerFilter.collectGeometries.queryCollection.filterFields') || [])
+                    .map((field) => {
+                        if (field.rowId === action.rowId) {
+                            return updateFilterField(field, action);
+                        }
+                        return field;
+                    })
+                , state);
+        }
+        case REMOVE_CROSS_LAYER_FILTER_FIELD: {
+            return arrayDelete('crossLayerFilter.collectGeometries.queryCollection.filterFields', {
+                rowId: action.rowId
+            }, state);
+        }
+        case RESET_CROSS_LAYER_FILTER: {
+            return assign({}, state, {
+                crossLayerFilter: {
+                    attribute: state.crossLayerFilter && state.crossLayerFilter.attribute
+                }
+            });
+        }
         case SELECT_SPATIAL_METHOD: {
             return assign({}, state, {spatialField: assign({}, state.spatialField, {[action.fieldName]: action.method, geometry: null})});
         }
@@ -210,7 +273,10 @@ function queryform(state = initialState, action) {
             return assign({}, state, {spatialField: assign({}, state.spatialField, {[action.fieldName]: action.operation})});
         }
         case CHANGE_SPATIAL_ATTRIBUTE: {
-            return assign({}, state, { spatialField: assign({}, state.spatialField, {attribute: action.attribute}) });
+            return assign({}, state, {
+                spatialField: assign({}, state.spatialField, {attribute: action.attribute}),
+                crossLayerFilter: assign({}, state.crossLayerFilter, {attribute: action.attribute})
+            });
         }
         case CHANGE_DRAWING_STATUS: {
             if (action.owner === "queryform" && action.status === "start") {
@@ -238,7 +304,11 @@ function queryform(state = initialState, action) {
         }
         case QUERY_FORM_RESET: {
             let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute });
-            return assign({}, state, initialState, {spatialField});
+            let crossLayerFilter = { attribute: state.crossLayerFilter && state.crossLayerFilter.attribute };
+            return assign({}, state, initialState, {
+                spatialField,
+                crossLayerFilter
+            });
         }
         case SHOW_GENERATED_FILTER: {
             return assign({}, state, {showGeneratedFilter: action.data});
@@ -409,12 +479,22 @@ function queryform(state = initialState, action) {
             return {...state, simpleFilterFields: []};
         }
         case LOAD_FILTER:
-            const {spatialField, filterFields, groupFields} = (action.filter || initialState);
+            const {spatialField, filterFields, groupFields, crossLayerFilter} = (action.filter || initialState);
             return {...state,
                     ...{
-                    spatialField,
+                    spatialField: {
+                        ...spatialField,
+                        // This prevents an empty filter to override attribute settings made before from previous CHANGE_SPATIAL_ATTRIBUTE
+                        attribute: spatialField && spatialField.attribute || state.spatialField && state.spatialField.attribute
+
+                    },
                     filterFields,
-                    groupFields
+                    groupFields,
+                    crossLayerFilter: {
+                        ...crossLayerFilter,
+                        // This prevents an empty filter to override attribute settings made before from previous CHANGE_SPATIAL_ATTRIBUTE
+                        attribute: crossLayerFilter && crossLayerFilter.attribute || state.crossLayerFilter && state.crossLayerFilter.attribute
+                    }
                     }
                 };
         default:

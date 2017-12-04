@@ -5,23 +5,23 @@ class SwitchButton extends React.Component {
 
     static propTypes = {
         checked: PropTypes.bool,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        onClick: PropTypes.func
     };
 
     static defaultProps = {
         checked: false,
-        onChange: () => {}
+        onChange: () => {},
+        onClick: () => {}
     };
 
     render() {
         return (<label className="mapstore-switch-btn">
             <input type="checkbox"
-                onChange={() => {
-                    this.props.onChange(!this.props.checked);
-                }}
                 checked={this.props.checked}
+                onChange={() => this.props.onChange(!this.props.checked)}
                 />
-            <span className="m-slider"/>
+            <span onClick={() => this.props.onClick(!this.props.checked)} className="m-slider"/>
         </label>);
     }
 }
