@@ -90,11 +90,12 @@ const createWFSFetchStream = (props$) => props$
                 item: {},
                 timeout: 60000,
                 headers: {'Accept': 'application/json', 'Content-Type': 'application/xml'},
+                srsName: p.filterProps && p.filterProps.srsName || "EPSG:4326",
                 ...parsed.query
             });
             return Rx.Observable.fromPromise((API.Utils.getService("wfs")(p.value, serviceOptions)
                 .then( data => {
-                    return {fetchedData: { values: data.features.map(f => f.properties), size: data.totalFeatures, features: data.features}, busy: false};
+                    return {fetchedData: { values: data.features.map(f => f.properties), size: data.totalFeatures, features: data.features, crs: p.filterProps && p.filterProps.srsName || "EPSG:4326"}, busy: false};
                 }))).catch(() => {
                     return Rx.Observable.of({fetchedData: {values: [], size: 0, features: []}, busy: false});
                 }).startWith({busy: true});

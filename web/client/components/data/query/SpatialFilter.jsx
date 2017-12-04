@@ -173,12 +173,11 @@ class SpatialFilter extends React.Component {
         const selectedMethod = this.getMethodFromId(this.props.spatialField.method);
         return (<Panel>
             <div className="container-fluid">
-                <Row className="filter-field-row">
-                    <Col xs={5}>
+                <Row className="filter-field-row filter-field-fixed-row">
+                    <Col xs={6}>
                         <span>{this.props.spatialField.method}</span>
                     </Col>
-                    <Col xs={7}>
-                        <div style={{width: "140px"}}>
+                    <Col xs={6}>
                             <AutocompleteWFSCombobox
                                 autocompleteStreamFactory={createWFSFetchStream}
                                 valueField={selectedMethod && selectedMethod.filterProps && selectedMethod.filterProps.valueField}
@@ -188,8 +187,6 @@ class SpatialFilter extends React.Component {
                                 onChangeDrawingStatus={this.props.actions.onChangeDrawingStatus}
                                 filterProps={selectedMethod && selectedMethod.filterProps}
                             />
-                        </div>
-
                     </Col>
                 </Row>
             </div>

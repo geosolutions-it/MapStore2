@@ -49,6 +49,7 @@ class PagedCombobox extends React.Component {
         nextPageIcon: PropTypes.string,
         prevPageIcon: PropTypes.string,
         selectedValue: PropTypes.string,
+        srsName: PropTypes.string,
         textField: PropTypes.string,
         tooltip: PropTypes.object,
         valueField: PropTypes.string
@@ -79,6 +80,7 @@ class PagedCombobox extends React.Component {
         onChange: () => {},
         onChangeDrawingStatus: () => {},
         onSelect: () => {},
+        srsName: "EPSG:4326",
         textField: "label",
         tooltip: {
             customizedTooltip: undefined,
@@ -155,7 +157,7 @@ class PagedCombobox extends React.Component {
                 const feature = head(this.props.features.filter(f => f.properties[this.props.valueField].toLowerCase() === v[this.props.valueField].toLowerCase()));
                 this.props.onSelect(v, feature);
                 if (feature) {
-                    this.props.onChangeDrawingStatus('drawOrEdit', feature.geometry.type, "queryform", [feature], {editEnabled: false, stopAfterDrawing: true, updateSpatialField: true});
+                    this.props.onChangeDrawingStatus('drawOrEdit', feature.geometry.type, "queryform", [feature], {editEnabled: false, stopAfterDrawing: true, updateSpatialField: true, featureProjection: this.props.srsName});
                 }
             }}
             onToggle={(v) => {
@@ -165,7 +167,7 @@ class PagedCombobox extends React.Component {
                 this.props.onToggle(v, feature, this.props.pagination.currentPage);
                 // if when closing the menu it finds a feature with the text inserted, then update the spatial field
                 if (feature && !v) {
-                    this.props.onChangeDrawingStatus('drawOrEdit', feature.geometry.type, "queryform", [feature], {editEnabled: false, stopAfterDrawing: true, updateSpatialField: true});
+                    this.props.onChangeDrawingStatus('drawOrEdit', feature.geometry.type, "queryform", [feature], {editEnabled: false, stopAfterDrawing: true, updateSpatialField: true, featureProjection: this.props.srsName});
                 }
                 // if when closing the menu it does not find a feature, then clean all
                 // it conflicts with change page which trigger the on toggle twice, one for closing and one for opening
