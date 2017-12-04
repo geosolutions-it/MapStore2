@@ -60,34 +60,26 @@ class ShapeFileUploadAndStyle extends React.Component {
         shapeLoading: () => {},
         readFiles: (files) => files.map((file) => {
             const ext = FileUtils.recognizeExt(file.name);
-            const type = FileUtils.MIME_LOOKUPS[ext];
+            const type = file.type || FileUtils.MIME_LOOKUPS[ext];
             if (type === 'application/vnd.google-earth.kml+xml') {
                 return FileUtils.readKml(file).then((xml) => {
                     return FileUtils.kmlToGeoJSON(xml);
-                }).catch((e) => {
-                    return e.message;
                 });
             }
             if (type === 'application/gpx+xml') {
                 return FileUtils.readKml(file).then((xml) => {
                     return FileUtils.gpxToGeoJSON(xml);
-                }).catch((e) => {
-                    return e.message;
                 });
             }
             if (type === 'application/vnd.google-earth.kmz') {
                 return FileUtils.readKmz(file).then((xml) => {
                     return FileUtils.kmlToGeoJSON(xml);
-                }).catch((e) => {
-                    return e.message;
                 });
             }
             if (type === 'application/x-zip-compressed' ||
                 type === 'application/zip' ) {
                 return FileUtils.readZip(file).then((buffer) => {
                     return FileUtils.shpToGeoJSON(buffer);
-                }).catch((e) => {
-                    return e.message;
                 });
             }
         }),
@@ -107,23 +99,46 @@ class ShapeFileUploadAndStyle extends React.Component {
         StyleUtils = require('../../utils/StyleUtils')(this.props.mapType);
     }
 
+    getGeometryType = (geometry) => {
+        if (geometry && geometry.type === 'GeometryCollection') {
+            return geometry.geometries.reduce((previous, g) => {
+                if (g && g.type === previous) {
+                    return previous;
+                }
+                return g.type;
+            }, null);
+        }
+        if (geometry) {
+            switch (geometry.type) {
+                case 'Polygon':
+                case 'MultiPolygon': {
+                    return 'Polygon';
+                }
+                case 'MultiLineString':
+                case 'LineString': {
+                    return 'LineString';
+                }
+                case 'Point':
+                case 'MultiPoint': {
+                    return 'Point';
+                }
+                default: {
+                    return null;
+                }
+            }
+        }
+        return null;
+    };
+
     getGeomType = (layer) => {
         if (layer && layer.features && layer.features[0].geometry) {
-            let unique;
-            const geometryType = layer.features.filter((element) => {
-                return element.geometry.type === "GeometryCollection";
-            });
-            if (geometryType.length > 0) {
-                let arr = [];
-                geometryType.map((item) => {
-                    item.geometry.geometries.map((i) => {
-                        arr.push(i.type);
-                    });
-                });
-                unique = arr.filter((v, i, a) => a.indexOf(v) === i);
-                return unique && unique.length === 1 ? unique[0] : "GeometryCollection";
-            }
-            return layer.features[0].geometry.type;
+            return layer.features.reduce((previous, f) => {
+                const currentType = this.getGeometryType(f.geometry);
+                if (previous) {
+                    return currentType === previous ? previous : 'GeometryCollection';
+                }
+                return currentType;
+            }, null);
         }
     };
 
