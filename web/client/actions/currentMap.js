@@ -15,10 +15,11 @@ const REMOVE_THUMBNAIL = 'REMOVE_THUMBNAIL';
 const RESET_CURRENT_MAP = 'RESET_CURRENT_MAP';
 const ADD_CURRENT_MAP_PERMISSION = 'ADD_CURRENT_MAP_PERMISSION';
 
-function editMap(map) {
+function editMap(map, openModalProperties) {
     return {
         type: EDIT_MAP,
-        map
+        map,
+        openModalProperties
     };
 }
 

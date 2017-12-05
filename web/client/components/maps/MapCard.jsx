@@ -1,12 +1,11 @@
-const PropTypes = require('prop-types');
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+const PropTypes = require('prop-types');
 const React = require('react');
 const Message = require('../I18N/Message');
 const GridCard = require('../misc/GridCard');
@@ -23,6 +22,7 @@ class MapCard extends React.Component {
         // props
         style: PropTypes.object,
         map: PropTypes.object,
+        detailsSheetActions: PropTypes.object,
         mapType: PropTypes.string,
         // CALLBACKS
         viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
@@ -41,13 +41,17 @@ class MapCard extends React.Component {
             backgroundPosition: "center",
             backgroundRepeat: "repeat-x"
         },
+        detailsSheetActions: {
+            onToggleDetailsSheet: () => {},
+            onOpenOrFetchDetails: () => {}
+        },
         // CALLBACKS
         onMapDelete: ()=> {},
         onEdit: ()=> {}
     };
 
-    onEdit = (map) => {
-        this.props.onEdit(map);
+    onEdit = (map, openModalProperties) => {
+        this.props.onEdit(map, openModalProperties);
     };
 
     onConfirmDelete = () => {
@@ -74,25 +78,40 @@ class MapCard extends React.Component {
     };
 
     render() {
-        var availableAction = [{
-            onClick: (evt) => {this.stopPropagate(evt); this.props.viewerUrl(this.props.map); },
-            glyph: "chevron-right",
-            tooltip: LocaleUtils.getMessageById(this.context.messages, "manager.openInANewTab")
-        }];
-
+        let availableAction = [];
         if (this.props.map.canEdit === true) {
+            availableAction.push(
+                {
+                    onClick: (evt) => {this.stopPropagate(evt); this.displayDeleteDialog(); },
+                    glyph: "trash",
+                    disabled: this.props.map.deleting,
+                    loading: this.props.map.deleting,
+                    tooltip: LocaleUtils.getMessageById(this.context.messages, "manager.deleteMap")
+                }, {
+                    onClick: (evt) => {
+                        this.stopPropagate(evt);
+                        this.onEdit(this.props.map, true);
+                        this.props.detailsSheetActions.onOpenOrFetchDetails({open: false, fetch: true});
+                    },
+                    glyph: "wrench",
+                    disabled: this.props.map.updating,
+                    loading: this.props.map.updating,
+                    tooltip: LocaleUtils.getMessageById(this.context.messages, "manager.editMapMetadata")
+                });
+        }
+        if (this.props.map.details) {
             availableAction.push({
-                onClick: (evt) => {this.stopPropagate(evt); this.onEdit(this.props.map); },
-                glyph: "wrench",
-                disabled: this.props.map.updating,
-                loading: this.props.map.updating,
-                tooltip: LocaleUtils.getMessageById(this.context.messages, "manager.editMapMetadata")
-            }, {
-                onClick: (evt) => {this.stopPropagate(evt); this.displayDeleteDialog(); },
-                glyph: "remove-circle",
-                disabled: this.props.map.deleting,
-                loading: this.props.map.deleting,
-                tooltip: LocaleUtils.getMessageById(this.context.messages, "manager.deleteMap")
+                onClick: (evt) => {
+                    this.stopPropagate(evt);
+                    this.onEdit(this.props.map, false);
+                    if (!this.props.map.detailsText) {
+                        this.props.detailsSheetActions.onOpenOrFetchDetails({open: true, fetch: true});
+                    } else {
+                        this.props.detailsSheetActions.onToggleDetailsSheet(true);
+                    }
+                },
+                glyph: "chevron-up",
+                tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.show")
             });
         }
         return (

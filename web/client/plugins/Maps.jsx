@@ -1,17 +1,21 @@
-const PropTypes = require('prop-types');
 /**
- * Copyright 2016, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
+* Copyright 2016, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+const PropTypes = require('prop-types');
 const React = require('react');
+const {bindActionCreators} = require('redux');
 const {connect} = require('react-redux');
-const {loadMaps, updateMapMetadata, deleteMap, createThumbnail, deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating, metadataChanged} = require('../actions/maps');
+const {loadMaps, updateMapMetadata, deleteMap, createThumbnail,
+    updateDetails, deleteDetails, saveDetails, toggleDetailsSheet, toggleGroupProperties, toggleUnsavedChanges, setUnsavedChanges,
+    deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating, metadataChanged, openOrFetchDetails} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap, removeThumbnail, resetCurrentMap} = require('../actions/currentMap');
 const ConfigUtils = require('../utils/ConfigUtils');
+const maptypeEpics = require('../epics/maptype');
+const mapsEpics = require('../epics/maps');
 const MapsGrid = connect((state) => {
     return {
         bsSize: "small",
@@ -20,22 +24,34 @@ const MapsGrid = connect((state) => {
         loading: state.maps && state.maps.loading,
         mapType: state.home && state.home.mapType || state.maps && state.maps.mapType
     };
-}, {
-    loadMaps,
-    updateMapMetadata,
-    editMap,
-    saveMap,
-    removeThumbnail,
-    onDisplayMetadataEdit,
-    resetUpdating,
-    saveAll,
-    updateCurrentMap,
-    errorCurrentMap,
-    thumbnailError,
-    createThumbnail,
-    deleteThumbnail,
-    deleteMap,
-    resetCurrentMap
+}, dispatch => {
+    return {
+        loadMaps: (...params) => dispatch(loadMaps(...params)),
+        updateMapMetadata: (...params) => dispatch(updateMapMetadata(...params)),
+        editMap: (...params) => dispatch(editMap(...params)),
+        saveMap: (...params) => dispatch(saveMap(...params)),
+        removeThumbnail: (...params) => dispatch(removeThumbnail(...params)),
+        onDisplayMetadataEdit: (...params) => dispatch(onDisplayMetadataEdit(...params)),
+        resetUpdating: (...params) => dispatch(resetUpdating(...params)),
+        saveAll: (...params) => dispatch(saveAll(...params)),
+        updateCurrentMap: (...params) => dispatch(updateCurrentMap(...params)),
+        errorCurrentMap: (...params) => dispatch(errorCurrentMap(...params)),
+        thumbnailError: (...params) => dispatch(thumbnailError(...params)),
+        createThumbnail: (...params) => dispatch(createThumbnail(...params)),
+        deleteThumbnail: (...params) => dispatch(deleteThumbnail(...params)),
+        deleteMap: (...params) => dispatch(deleteMap(...params)),
+        resetCurrentMap: (...params) => dispatch(resetCurrentMap(...params)),
+        detailsSheetActions: bindActionCreators({
+            onToggleDetailsSheet: toggleDetailsSheet,
+            onToggleGroupProperties: toggleGroupProperties,
+            onToggleUnsavedChangesModal: toggleUnsavedChanges,
+            onOpenOrFetchDetails: openOrFetchDetails,
+            onSetUnsavedChanges: setUnsavedChanges,
+            onUpdateDetails: updateDetails,
+            onSaveDetails: saveDetails,
+            onDeleteDetails: deleteDetails
+        }, dispatch)
+    };
 })(require('../components/maps/MapGrid'));
 
 const {loadPermissions, updatePermissions, loadAvailableGroups} = require('../actions/maps');
@@ -140,7 +156,10 @@ module.exports = {
     }), {
         loadMaps
     })(Maps),
-    epics: require('../epics/maptype'),
+    epics: {
+        ...maptypeEpics,
+        ...mapsEpics
+    },
     reducers: {
         maps: require('../reducers/maps'),
         maptype: require('../reducers/maptype'),

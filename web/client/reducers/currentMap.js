@@ -25,7 +25,14 @@ const {
     MAP_ERROR,
     MAP_CREATED,
     PERMISSIONS_LIST_LOADING,
-    PERMISSIONS_LIST_LOADED
+    PERMISSIONS_LIST_LOADED,
+    TOGGLE_DETAILS_SHEET,
+    UPDATE_DETAILS,
+    SAVE_DETAILS,
+    DELETE_DETAILS,
+    TOGGLE_GROUP_PROPERTIES,
+    TOGGLE_UNSAVED_CHANGES,
+    SET_UNSAVED_CHANGES
 } = require('../actions/maps');
 
 const assign = require('object-assign');
@@ -34,7 +41,9 @@ const _ = require('lodash');
 function currentMap(state = {}, action) {
     switch (action.type) {
     case EDIT_MAP: {
-        return assign({}, state, action.map, {newThumbnail: action.map && action.map.thumbnail ? action.map.thumbnail : null, displayMetadataEdit: true, thumbnailError: null, errors: [] });
+        return assign({}, state, action.map, {newThumbnail: action.map && action.map.thumbnail ? action.map.thumbnail : null, displayMetadataEdit: action.openModalProperties, thumbnailError: null, errors: [],
+            hideGroupProperties: false,
+            detailsSheetReadOnly: true });
     }
     case UPDATE_CURRENT_MAP: {
         return assign({}, state, {newThumbnail: action.thumbnail, files: action.files});
@@ -101,6 +110,47 @@ function currentMap(state = {}, action) {
     }
     case RESET_CURRENT_MAP: {
         return {};
+    }
+    case TOGGLE_DETAILS_SHEET: {
+        return assign({}, state, {
+            showDetailEditor: !state.showDetailEditor,
+            detailsBackup: "",
+            detailsSheetReadOnly: action.detailsSheetReadOnly
+        });
+    }
+    case UPDATE_DETAILS: {
+        return assign({}, state, {
+            detailsText: action.detailsText,
+            detailsBackup: action.doBackup ? state.detailsText : ""
+        });
+    }
+    case SAVE_DETAILS: {
+        return assign({}, state, {
+            detailsText: action.detailsText,
+            detailsBackup: ""
+        });
+    }
+    case DELETE_DETAILS: {
+        return assign({}, state, {
+            detailsText: "",
+            detailsBackup: state.detailsText
+        });
+    }
+    case TOGGLE_GROUP_PROPERTIES: {
+        return assign({}, state, {
+            hideGroupProperties: !state.hideGroupProperties
+        });
+    }
+    case TOGGLE_UNSAVED_CHANGES: {
+        return assign({}, state, {
+            showUnsavedChanges: !state.showUnsavedChanges
+        });
+    }
+    case SET_UNSAVED_CHANGES: {
+        return assign({}, state, {
+            unsavedChanges: action.unsavedChanges,
+            [action.name]: true
+        });
     }
     default:
         return state;

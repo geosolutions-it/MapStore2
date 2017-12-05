@@ -103,6 +103,8 @@
         "elevation": "Elevation",
         "close": "Close",
         "cancel": "Cancel",
+        "no": "No",
+        "yes": "Yes",
         "confirm": "Confirm",
         "confirmTitle": "Do you confirm?",
         "pageInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {Items {start}-{end} of {total}}}",
@@ -229,6 +231,18 @@
                 "canWrite": "can edit",
                 "noResult": "no results found",
                 "title": "Permissions Groups"
+            },
+            "details": {
+                "back": "Back",
+                "save": "Save",
+                "show": "Show details sheet",
+                "add": "Add New Details",
+                "edit": "Edit Details",
+                "title": "Details Sheet",
+                "undo": "Undo remove",
+                "showPreview": "Show preview",
+                "hidePreview": "Hide preview",
+                "delete": "Delete details sheet"
             }
         },
         "toc": {

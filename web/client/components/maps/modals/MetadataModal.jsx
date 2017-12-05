@@ -1,28 +1,29 @@
+/*
+* Copyright 2017, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
 const PropTypes = require('prop-types');
-/**
- * Copyright 2016, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
 const React = require('react');
 const Metadata = require('../forms/Metadata');
 const Thumbnail = require('../forms/Thumbnail');
 const PermissionEditor = require('../../security/PermissionEditor');
-
+const ReactQuill = require('react-quill');
+const Portal = require('../../misc/Portal');
+const ResizableModal = require('../../misc/ResizableModal');
+require('react-quill/dist/quill.snow.css');
 require('./css/modals.css');
 
-const {Button, Grid, Row, Col} = require('react-bootstrap');
-const Modal = require('../../misc/Modal');
+const {Grid, Row, Col} = require('react-bootstrap');
 const Message = require('../../I18N/Message');
-
+const Toolbar = require('../../misc/toolbar/Toolbar');
 const Spinner = require('react-spinkit');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
 /**
-* A Modal window to show map metadata form
+ * A Modal window to show map metadata form
 */
 class MetadataModal extends React.Component {
     static propTypes = {
@@ -32,15 +33,17 @@ class MetadataModal extends React.Component {
         authHeader: PropTypes.string,
         show: PropTypes.bool,
         options: PropTypes.object,
+        modules: PropTypes.object,
         metadata: PropTypes.object,
         loadPermissions: PropTypes.func,
         loadAvailableGroups: PropTypes.func,
         onSave: PropTypes.func,
+        detailsSheetActions: PropTypes.object,
         onCreateThumbnail: PropTypes.func,
         onDeleteThumbnail: PropTypes.func,
         onGroupsChange: PropTypes.func,
         onAddPermission: PropTypes.func,
-        onClose: PropTypes.func,
+        onResetCurrentMap: PropTypes.func,
         useModal: PropTypes.bool,
         closeGlyph: PropTypes.string,
         buttonSize: PropTypes.string,
@@ -56,6 +59,7 @@ class MetadataModal extends React.Component {
         onRemoveThumbnail: PropTypes.func,
         onErrorCurrentMap: PropTypes.func,
         onUpdateCurrentMap: PropTypes.func,
+        onDisplayMetadataEdit: PropTypes.func,
         onNewGroupChoose: PropTypes.func,
         onNewPermissionChoose: PropTypes.func,
         metadataChanged: PropTypes.func,
@@ -77,10 +81,20 @@ class MetadataModal extends React.Component {
         loadPermissions: () => {},
         loadAvailableGroups: () => {},
         onSave: ()=> {},
+        detailsSheetActions: {
+            onToggleGroupProperties: () => {},
+            onToggleUnsavedChangesModal: () => {},
+            onOpenOrFetchDetails: () => {},
+            onToggleDetailsSheet: () => {},
+            onUpdateDetails: () => {},
+            onDeleteDetails: () => {},
+            onSaveDetails: () => {}
+        },
         onCreateThumbnail: ()=> {},
         onDeleteThumbnail: ()=> {},
         onGroupsChange: ()=> {},
         onAddPermission: ()=> {},
+        onDisplayMetadataEdit: ()=> {},
         metadataChanged: ()=> {},
         onNewGroupChoose: ()=> {},
         onNewPermissionChoose: ()=> {},
@@ -88,6 +102,13 @@ class MetadataModal extends React.Component {
             name: "Guest"
         },
         metadata: {name: "", description: ""},
+        modules: {
+            toolbar: [
+                [{ 'size': ['small', false, 'large', 'huge'] }, 'bold', 'italic', 'underline', 'blockquote'],
+                [{ 'list': 'bullet' }, { 'align': [] }],
+                [{ 'color': [] }, { 'background': [] }, 'clean'], ['image', 'video', 'link']
+            ]
+        },
         options: {},
         useModal: true,
         closeGlyph: "",
@@ -101,7 +122,7 @@ class MetadataModal extends React.Component {
         onSaveAll: () => {},
         onRemoveThumbnail: ()=> {},
         onSaveMap: ()=> {},
-        onClose: () => {},
+        onResetCurrentMap: () => {},
         // I18N
         errorMessages: {"FORMAT": <Message msgId="map.errorFormat"/>, "SIZE": <Message msgId="map.errorSize"/>},
         errorImage: <Message msgId="map.error"/>,
@@ -122,7 +143,7 @@ class MetadataModal extends React.Component {
             this.setState({
                 saving: false
             });
-            this.props.onClose();
+            this.props.onResetCurrentMap();
         }
     }
 
@@ -154,6 +175,161 @@ class MetadataModal extends React.Component {
         this.refs.thumbnail.updateThumbnail(this.props.map, metadata);
     };
 
+    renderDetailsSheet = (readOnly) => {
+        return (
+            <Portal>
+                {readOnly ? (
+                    <ResizableModal size="lg"
+                        fullscreen
+                        onClose={() => {
+                            this.props.onResetCurrentMap();
+                        }}
+                        title={LocaleUtils.getMessageById(this.context.messages, "map.details.title") + ' - ' + this.props.map.name}
+                        show
+                        >
+                        <div className="ms-detail-body">
+                            <div className="ql-editor" dangerouslySetInnerHTML={{__html: this.props.map.detailsText || ''}} />
+                        </div>
+                    </ResizableModal>
+                ) : (<ResizableModal
+                    show={!!this.props.map.showDetailEditor}
+                    title={LocaleUtils.getMessageById(this.context.messages, "map.details.title") + ' - ' + this.props.map.name}
+                    bodyClassName="ms-modal-quill-container"
+                    size="lg"
+                    clickOutEnabled={false}
+                    fullscreen
+                    fullscreenType="full"
+                    onClose={() => { this.props.detailsSheetActions.onToggleDetailsSheet(true); }}
+                    buttons={[{
+                        text: LocaleUtils.getMessageById(this.context.messages, "map.details.back"),
+                        onClick: () => {
+                            this.props.detailsSheetActions.onToggleDetailsSheet(true);
+                            this.props.detailsSheetActions.onUpdateDetails(this.props.map.detailsBackup);
+                            if (readOnly) {
+                                this.props.onResetCurrentMap();
+                            }
+                        }
+                    }, {
+                        text: LocaleUtils.getMessageById(this.context.messages, "map.details.save"),
+                        onClick: () => {
+                            this.props.detailsSheetActions.onToggleDetailsSheet(true);
+                            this.props.detailsSheetActions.onSaveDetails(this.props.map.detailsText);
+                        }
+                    }]}>
+                    <div id="ms-details-editor">
+                        <ReactQuill
+                            bounds={"#ms-details-editor"}
+                            value={this.props.map.detailsText}
+                            onChange={(details) => {
+                                if (details && details !== '<p><br></p>') {
+                                    this.props.detailsSheetActions.onUpdateDetails(details, true);
+                                }
+                            }}
+                            modules={this.props.modules}/>
+                    </div>
+                </ResizableModal>)}
+        </Portal>);
+    }
+    /**
+     * @return the modal for unsaved changes
+    */
+    renderUnsavedChanges = () => {
+        return (<Portal>
+                <ResizableModal
+                    title="Are you sure to close without save your changes?"
+                    bodyClassName="modal-details-sheet-confirm"
+                    show={!!this.props.map.showUnsavedChanges}
+                    buttons={[{
+                        text: LocaleUtils.getMessageById(this.context.messages, "no"),
+                        onClick: () => {
+                            this.props.detailsSheetActions.onToggleUnsavedChangesModal();
+                            this.props.onDisplayMetadataEdit(true);
+                        }
+                    }, {
+                        text: LocaleUtils.getMessageById(this.context.messages, "yes"),
+                        onClick: () => {
+                            this.props.onResetCurrentMap();
+                            /*this.props.detailsSheetActions.onToggleUnsavedChangesModal();
+                            this.props.detailsSheetActions.onSetUnsavedChanges(false);
+                            this.props.onDisplayMetadataEdit(false);*/
+                        }
+                    }]}>
+                    <Grid fluid>
+                        <Row>
+                            <Col xs={12}>
+                                Some fields has been changed.
+                                <br/>
+                                Are you sure to close without save your changes?
+                            </Col>
+                        </Row>
+                    </Grid>
+                </ResizableModal>
+            </Portal>);
+    }
+    renderDetailsRow = () => {
+        return (
+            <div className={"ms-section" + (this.props.map.hideGroupProperties ? ' ms-transition' : '')}>
+                <div className="mapstore-block-width">
+                    <Row>
+                        <Col xs={6}>
+                            <div className="m-label">
+                                {this.props.map.detailsText === "" ? <Message msgId="map.details.add"/> : <Message msgId="map.details.title"/>}
+                            </div>
+                        </Col>
+                        <Col xs={6}>
+                            <div className="ms-details-sheet">
+                                <div className="pull-right">
+                                    <Toolbar
+                                        btnDefaultProps={{ className: 'square-button-md no-border'}}
+                                        buttons={[
+                                            {
+                                                glyph: !this.props.map.hideGroupProperties ? 'eye-close' : 'eye-open',
+                                                tooltip: !this.props.map.hideGroupProperties ? LocaleUtils.getMessageById(this.context.messages, "map.details.showPreview") : LocaleUtils.getMessageById(this.context.messages, "map.details.hidePreview"),
+                                                visible: !!this.props.map.detailsText,
+                                                onClick: () => { this.props.detailsSheetActions.onToggleGroupProperties(); }
+                                            }, {
+                                                glyph: 'undo',
+                                                tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.undo"),
+                                                visible: !!this.props.map.detailsBackup,
+                                                onClick: () => { this.props.detailsSheetActions.onUpdateDetails(this.props.map.detailsBackup, true); }
+                                            }, {
+                                                glyph: 'pencil-add',
+                                                tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.add"),
+                                                visible: !this.props.map.detailsText,
+                                                onClick: () => {
+                                                    if (!this.props.map.detailsText) {
+                                                        this.props.detailsSheetActions.onOpenOrFetchDetails({fetch: true, open: true});
+                                                    } else {
+                                                        this.props.detailsSheetActions.onToggleDetailsSheet(false);
+                                                    }
+                                                }
+                                            }, {
+                                                glyph: 'pencil',
+                                                tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.edit"),
+                                                visible: !!this.props.map.detailsText,
+                                                onClick: () => {
+                                                    if (!this.props.map.detailsText) {
+                                                        this.props.detailsSheetActions.onOpenOrFetchDetails({fetch: true, open: true});
+                                                    } else {
+                                                        this.props.detailsSheetActions.onToggleDetailsSheet(false);
+                                                        this.props.detailsSheetActions.onUpdateDetails(this.props.map.detailsText, true);
+                                                    }
+                                                }
+                                            }, {
+                                                glyph: 'trash',
+                                                tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.delete"),
+                                                visible: !!this.props.map.detailsText,
+                                                onClick: () => { this.props.detailsSheetActions.onDeleteDetails(); }
+                                            }]}/>
+                                </div>
+                            </div>
+                        </Col>
+                    </Row>
+                </div>
+                {this.props.map.detailsText && <div className="ms-details-preview-container"><div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: this.props.map.detailsText }} /></div>}
+            </div>
+        );
+    }
     renderPermissionEditor = () => {
         if (this.props.displayPermissionEditor && this.props.user.name === this.props.map.owner || this.props.user.role === "ADMIN" ) {
             // Hack to convert map permissions to a simpler format, TODO: remove this
@@ -184,36 +360,7 @@ class MetadataModal extends React.Component {
             );
         }
     };
-
-    renderLoading = () => {
-        return this.props.map && this.props.map.updating ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner"/> : null;
-    };
-
-    render() {
-        const footer = (<span role="footer"><div style={{"float": "left"}}>{this.renderLoading()}</div>
-            <Button
-                ref="metadataSaveButton"
-                key="metadataSaveButton"
-                bsStyle="primary"
-                bsSize={this.props.buttonSize}
-                onClick={() => {
-                    this.onSave();
-                }}><Message msgId="save" /></Button>
-            {this.props.includeCloseButton ? <Button
-                key="closeButton"
-                ref="closeButton"
-                bsSize={this.props.buttonSize}
-                onClick={this.props.onClose}><Message msgId="close" /></Button> : <span/>}
-            </span>);
-        const body =
-            (<Metadata role="body" ref="mapMetadataForm"
-                onChange={this.props.metadataChanged}
-                map={this.props.map}
-                nameFieldText={<Message msgId="map.name" />}
-                descriptionFieldText={<Message msgId="map.description" />}
-                namePlaceholderText={LocaleUtils.getMessageById(this.context.messages, "map.namePlaceholder") || "Map Name"}
-                descriptionPlaceholderText={LocaleUtils.getMessageById(this.context.messages, "map.descriptionPlaceholder") || "Map Description"}
-            />);
+    renderMapProperties = () => {
         const mapErrorStatus = this.props.map && this.props.map.mapError && this.props.map.mapError.status ? this.props.map.mapError.status : null;
         let messageIdMapError = "";
         if (mapErrorStatus === 404 || mapErrorStatus === 403 || mapErrorStatus === 409) {
@@ -228,63 +375,100 @@ class MetadataModal extends React.Component {
         } else {
             messageIdError = "Default";
         }
-        return (
-            <Modal {...this.props.options}
-                show={this.props.show}
-                onHide={this.props.onClose}
-                id={this.props.id}>
-                <Modal.Header key="mapMetadata" closeButton>
-                    <Modal.Title>
-                        <Message msgId="manager.editMapMetadata" />
-                    </Modal.Title>
-                </Modal.Header>
-                <Modal.Body>
-                    <Grid fluid={this.props.fluid}>
-                        <Row>
-                            {this.props.map && this.props.map.mapError ?
-                                <div className="dropzone-errorBox alert-danger">
-                                    <div id={"error" + messageIdMapError} key={"error" + messageIdMapError} className={"error" + messageIdMapError}>
-                                        <Message msgId={"map.mapError.error" + messageIdMapError}/>
-                                    </div>
-                                </div>
-                            : null }
-                            {this.props.map && this.props.map.errors && this.props.map.errors.length > 0 ?
+        return (<Portal>
+            <ResizableModal
+            id={this.props.id}
+            title={LocaleUtils.getMessageById(this.context.messages, "manager.editMapMetadata") }
+            show={this.props.show && !this.props.map.showDetailEditor && !this.props.map.showUnsavedChanges}
+            clickOutEnabled
+            bodyClassName="ms-flex modal-properties-container"
+            buttons={[{
+                text: LocaleUtils.getMessageById(this.context.messages, "close"),
+                onClick: () => {
+                    if ( this.props.map.unsavedChanges) {
+                        this.props.detailsSheetActions.onToggleUnsavedChangesModal();
+                    } else {
+                        this.props.onDisplayMetadataEdit(false);
+                    }
+                }
+            }, {
+                text: LocaleUtils.getMessageById(this.context.messages, "save"),
+                onClick: () => { this.onSave(); }
+            }]}
+            onClose={() => {
+                if ( this.props.map.unsavedChanges) {
+                    this.props.detailsSheetActions.onToggleUnsavedChangesModal();
+                } else {
+                    this.props.onDisplayMetadataEdit(false);
+                }
+            }}>
+            <Grid fluid>
+                <div className="ms-map-properties">
+                    {/* TODO fix this error messages*/}
+                    <Row>
+                        {this.props.map && this.props.map.mapError ?
                             <div className="dropzone-errorBox alert-danger">
-                                <p>{this.props.errorImage}</p>
-                                { (this.props.map.errors.map((error) => <div id={"error" + error} key={"error" + error} className={"error" + error}> {this.props.errorMessages[error]} </div>))}
-                            </div>
-                            : null }
-                            {this.props.map && this.props.map.thumbnailError ?
-                                <div className="dropzone-errorBox alert-danger">
-                                    <div id={"error" + messageIdError} key={"error" + messageIdError} className={"error" + messageIdError}>
-                                        <Message msgId={"map.thumbnailError.error" + messageIdError}/>
-                                    </div>
+                                    <div id={"error" + messageIdMapError} key={"error" + messageIdMapError} className={"error" + messageIdMapError}>
+                                    <Message msgId={"map.mapError.error" + messageIdMapError}/>
                                 </div>
-                            : null }
-                        </Row>
-                        <Row>
-                            <Col xs={7}>
-                                <Thumbnail
-                                    map={this.props.map}
-                                    onSaveAll={this.props.onSaveAll}
-                                    onRemoveThumbnail={this.props.onRemoveThumbnail}
-                                    onError={this.props.onErrorCurrentMap}
-                                    onUpdate={this.props.onUpdateCurrentMap}
-                                    onCreateThumbnail={this.props.onCreateThumbnail}
-                                    onDeleteThumbnail={this.props.onDeleteThumbnail}
-                                    ref="thumbnail"/>
-                            </Col>
-                            <Col xs={5}>
-                                {body}
-                            </Col>
-                        </Row>
-                        {this.renderPermissionEditor()}
-                    </Grid>
-                </Modal.Body>
-                <Modal.Footer>
-                  {footer}
-                </Modal.Footer>
-            </Modal>);
+                            </div>
+                        : null }
+                        {this.props.map && this.props.map.errors && this.props.map.errors.length > 0 ?
+                        <div className="dropzone-errorBox alert-danger">
+                            <p>{this.props.errorImage}</p>
+                            { (this.props.map.errors.map((error) => <div id={"error" + error} key={"error" + error} className={"error" + error}> {this.props.errorMessages[error]} </div>))}
+                        </div>
+                        : null }
+                        {this.props.map && this.props.map.thumbnailError ?
+                            <div className="dropzone-errorBox alert-danger">
+                                <div id={"error" + messageIdError} key={"error" + messageIdError} className={"error" + messageIdError}>
+                                    <Message msgId={"map.thumbnailError.error" + messageIdError}/>
+                                </div>
+                            </div>
+                        : null }
+                    </Row>
+                    <Row>
+                        <Col xs={12}>
+                            <Thumbnail
+                                map={this.props.map}
+                                onSaveAll={this.props.onSaveAll}
+                                onRemoveThumbnail={this.props.onRemoveThumbnail}
+                                onError={this.props.onErrorCurrentMap}
+                                onUpdate={this.props.onUpdateCurrentMap}
+                                onCreateThumbnail={this.props.onCreateThumbnail}
+                                onDeleteThumbnail={this.props.onDeleteThumbnail}
+                                ref="thumbnail"/>
+                        </Col>
+                        <Col xs={12}>
+                            <Metadata role="body" ref="mapMetadataForm"
+                                onChange={this.props.metadataChanged}
+                                map={this.props.map}
+                                nameFieldText={<Message msgId="map.name" />}
+                                descriptionFieldText={<Message msgId="map.description" />}
+                                namePlaceholderText={LocaleUtils.getMessageById(this.context.messages, "map.namePlaceholder") || "Map Name"}
+                                descriptionPlaceholderText={LocaleUtils.getMessageById(this.context.messages, "map.descriptionPlaceholder") || "Map Description"}
+                            />
+                        </Col>
+                    </Row>
+                    {this.renderDetailsRow()}
+                    {!this.props.map.hideGroupProperties && this.props.displayPermissionEditor && this.renderPermissionEditor()}
+
+            </div></Grid>
+        </ResizableModal>
+    </Portal>);
+    }
+    // TODO restore this
+    renderLoading = () => {
+        return this.props.map && this.props.map.updating ? <Spinner spinnerName="circle" key="loadingSpinner" noFadeIn overrideSpinnerClassName="spinner"/> : null;
+    };
+
+    render() {
+        return (
+            <span>
+                {this.props.map.showDetailEditor && this.renderDetailsSheet(this.props.map.detailsSheetReadOnly)}
+                {this.props.map.showUnsavedChanges && this.renderUnsavedChanges()}
+                {this.props.show && !this.props.map.showDetailEditor && this.renderMapProperties()}
+            </span>);
     }
 
     loadAvailableGroups = () => {
