@@ -255,9 +255,10 @@ function query(seachURL, data) {
     };*/
 }
 
-function reset() {
+function reset(skip) {
     return {
-        type: QUERY_FORM_RESET
+        type: QUERY_FORM_RESET,
+        skip
     };
 }
 

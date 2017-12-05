@@ -23,7 +23,7 @@ const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {setControlProperty} = require('../actions/controls');
 const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS} = require('../actions/wfsquery');
-const {reset, QUERY_FORM_RESET, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
+const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 
 const {BROWSE_DATA, changeLayerProperties, refreshLayerVersion} = require('../actions/layers');
@@ -50,12 +50,12 @@ const {error, warning} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive} = require('../selectors/query');
 
 const {getLayerFromId} = require('../selectors/layers');
-const {filterObjSelector} = require('../selectors/queryform');
 
 const {interceptOGCError} = require('../utils/ObservableUtils');
 
 const {gridUpdateToQueryUpdate} = require('../utils/FeatureGridUtils');
 
+const {queryFormUiStateSelector} = require('../selectors/queryform');
 /**
 @return a spatial filter with coordinates reprojeted to nativeCrs
 */
@@ -216,9 +216,7 @@ module.exports = {
                 )
                 .merge(
                     Rx.Observable.of(reset())
-                    .filter(() => currentTypeName !== layer.name && get(store.getState(), `featuregrid.advancedFilters.${layer.id}`, true)),
-                    Rx.Observable.of(loadFilter(get(store.getState(), `featuregrid.advancedFilters.${layer.id}`, {})))
-                    .filter(() => currentTypeName !== layer.name && get(store.getState(), `featuregrid.advancedFilters.${layer.id}`, false))
+                    .filter(() => currentTypeName !== layer.name)
                 );
         }),
     /**
@@ -527,25 +525,16 @@ module.exports = {
     onOpenAdvancedSearch: (action$, store) =>
         action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
             return Rx.Observable.of(
+                loadFilter(get(store.getState(), `featuregrid.advancedFilters.${selectedLayerIdSelector(store.getState())}`)),
                 closeFeatureGrid(),
                 setControlProperty('queryPanel', "enabled", true)
-            ).merge(
-                action$.ofType(QUERY_FORM_RESET)
-                    // RESET YOU HAVE TO PERFORM A SEARCH AGAIN WHEN BACK
-                    .switchMap(() => action$.ofType(TOGGLE_CONTROL)
-                    .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
-                    .switchMap( () => createInitialQueryFlow(action$, store, {
-                        url: get(store.getState(), "query.url"),
-                        name: get(store.getState(), "query.typeName")
-                    }).startWith(storeAdvancedSearchFilter(filterObjSelector(store.getState())))
-                    )
-                ))
+            )
             .merge(
                 Rx.Observable.race(
                     action$.ofType(QUERY_FORM_SEARCH).mergeMap((action) =>
                         Rx.Observable.of(
                             createQuery(action.searchUrl, action.filterObj),
-                            storeAdvancedSearchFilter(action.filterObj),
+                            storeAdvancedSearchFilter(assign({}, queryFormUiStateSelector(store.getState()), action.filterObj)),
                             setControlProperty('queryPanel', "enabled", false),
                             openFeatureGrid()
                         )

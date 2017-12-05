@@ -57,7 +57,6 @@ const retrieveCrossLayerAttributes = ($props, setQueryCollectionParameter) => $p
             if (geomProp) {
                 setQueryCollectionParameter("geometryName", geomProp);
             }
-            setQueryCollectionParameter("filterFields", []);
         })
         .map(({data = {}} = {}) => describeFeatureTypeToAttributes(data))
         .map(attributes => ({
@@ -92,7 +91,12 @@ module.exports = compose(
         layer: find(layers, ({name} = {}) => name === queryCollection.typeName)
     })),
     withHandlers({
-        setQueryCollectionParameter: ({setCrossLayerFilterParameter = () => {}}) => (k, v) => setCrossLayerFilterParameter(`collectGeometries.queryCollection[${k}]`, v),
+        setQueryCollectionParameter: ({setCrossLayerFilterParameter = () => {}}) => (k, v) => {
+            setCrossLayerFilterParameter(`collectGeometries.queryCollection[${k}]`, v);
+            if ( k === 'typeName') {
+                setCrossLayerFilterParameter('collectGeometries.queryCollection.filterFields', []);
+            }
+        },
         updateLogicCombo: ({setCrossLayerFilterParameter = () => {}}) =>
             (id, logic) => setCrossLayerFilterParameter(`collectGeometries.queryCollection.groupFields`, [{
                 id,
