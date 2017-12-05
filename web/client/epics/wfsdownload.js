@@ -15,7 +15,7 @@ const DOWNLOAD_FORMATS_LOOKUP = {
 	"application/vnd.google-earth.kml+xml": "KML",
 	"OGR-CSV": "OGR-CSV",
 	"OGR-FileGDB": "OGR-GeoDatabase",
-	"OGR-GPKG": "OGR-OGR-GeoPackage",
+	"OGR-GPKG": "OGR-GeoPackage",
 	"OGR-KML": "OGR-KML",
 	"OGR-MIF": "OGR-MIF",
 	"OGR-TAB": "OGR-TAB",
