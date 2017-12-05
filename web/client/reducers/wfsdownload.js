@@ -38,6 +38,7 @@ function wfsdownload( state = {downloadOptions: {singlePage: true}}, action) {
                 ...state,
                 layer: action.layer,
                 formats: [],
+                formatFilter: action.formatFilter,
                 formatsLoading: true
             };
         case DOWNLOAD_FINISHED: {

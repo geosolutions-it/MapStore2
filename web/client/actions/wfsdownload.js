@@ -56,9 +56,10 @@ module.exports = {
      * @param  {object} layer           selected layer
      * @return {action}                 the action of type `FORMAT_OPTIONS_FETCH`
      */
-    onFormatOptionsFetch: (layer) => ({
+    onFormatOptionsFetch: (layer, formatFilter) => ({
         type: FORMAT_OPTIONS_FETCH,
-        layer
+        layer,
+        formatFilter
     }),
     /**
      * action for update list of formats

@@ -23,6 +23,7 @@ class DownloadDialog extends React.Component {
         onFormatOptionsFetch: PropTypes.func,
         downloadOptions: PropTypes.object,
         formats: PropTypes.array,
+        formatFilter: PropTypes.object,
         srsList: PropTypes.array,
         defaultSrs: PropTypes.string,
         layer: PropTypes.object,
@@ -39,6 +40,7 @@ class DownloadDialog extends React.Component {
         layer: {},
         closeGlyph: "1-close",
         formats: [],
+        formatFilter: {},
         formatsLoading: false,
         srsList: [
             {name: "native", label: "Native"},
@@ -75,6 +77,7 @@ class DownloadDialog extends React.Component {
                     formatOptionsFetch={this.props.onFormatOptionsFetch}
                     formatsLoading={this.props.formatsLoading}
                     formats={this.props.formats}
+                    formatFilter={this.props.formatFilter}
                     srsList={this.props.srsList}
                     defaultSrs={this.props.defaultSrs}
                     layer={this.props.layer}/>

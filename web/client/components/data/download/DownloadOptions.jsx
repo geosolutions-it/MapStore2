@@ -27,6 +27,7 @@ module.exports = class extends React.Component {
             downloadOptions: PropTypes.object,
             formatOptionsFetch: PropTypes.func,
             formats: PropTypes.array,
+            formatFilter: PropTypes.object,
             srsList: PropTypes.array,
             onChange: PropTypes.func,
             defaultSrs: PropTypes.string,
@@ -38,6 +39,7 @@ module.exports = class extends React.Component {
         downloadOptions: {},
         formatsLoading: false,
         formats: [],
+        formatFilter: {},
         srsList: []
     };
 
@@ -53,7 +55,7 @@ module.exports = class extends React.Component {
             <Select
                 clearable={false}
                 isLoading={this.props.formatsLoading}
-                onOpen={() => this.props.formatOptionsFetch(this.props.layer)}
+                onOpen={() => this.props.formatOptionsFetch(this.props.layer, this.props.formatFilter)}
                 value={this.getSelectedFormat()}
                 noResultsText={<Message msgId="wfsdownload.format" />}
                 onChange={(sel) => this.props.onChange("selectedFormat", sel.value)}
