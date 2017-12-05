@@ -8,18 +8,13 @@ const crossLayerFilterSelector = state => get(state, "queryform.crossLayerFilter
 const availableCrossLayerFilterLayersSelector = state =>(layersSelector(state) || []).filter(({type} = {}) => type === "wms");
 const spatialFieldGeomSelector = state => get(state, "queryform.spatialField.geometry");
 const spatialFieldSelector = state => get(state, "queryform.spatialField");
-const filterFieldsSelector = state => get(state, "queryform.filterFields", []);
-const groupFieldsSelector = state => get(state, "queryform.groupFields", []);
-const featureTypeNameSelector = state => get(state, "queryform.featureTypeName");
-const filterTypeSelector = state => get(state, "queryform.filterType");
-const ogcVersionSelector = state => get(state, "queryform.ogcVersion");
-const filterObjSelector = createSelector(spatialFieldSelector, filterFieldsSelector, groupFieldsSelector, featureTypeNameSelector, filterTypeSelector, ogcVersionSelector, (spatialField, filterFields, groupFields, featureTypeName, filterType, ogcVersion) => ({
-        spatialField,
-        filterFields,
-        groupFields,
-        featureTypeName,
-        filterType,
-        ogcVersion
+const attributePanelExpandedSelector = state => get(state, "queryform.attributePanelExpanded");
+const spatialPanelExpandedSelector = state => get(state, "queryform.spatialPanelExpanded");
+const crossLayerExpandedSelector = state => get(state, "queryform.crossLayerExpanded");
+const queryFormUiStateSelector = createSelector(attributePanelExpandedSelector, spatialPanelExpandedSelector, crossLayerExpandedSelector, (attributePanelExpanded, spatialPanelExpanded, crossLayerExpanded) => ({
+        attributePanelExpanded,
+        spatialPanelExpanded,
+        crossLayerExpanded
 }));
 
 module.exports = {
@@ -32,5 +27,5 @@ module.exports = {
     spatialFieldGeomCoordSelector: state => spatialFieldGeomSelector(state) && spatialFieldGeomSelector(state).coordinates || [],
     crossLayerFilterSelector,
     availableCrossLayerFilterLayersSelector,
-    filterObjSelector
+    queryFormUiStateSelector
 };

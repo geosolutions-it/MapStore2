@@ -14,7 +14,7 @@ const {
     spatialFieldGeomProjSelector,
     spatialFieldGeomCoordSelector,
     spatialFieldMethodSelector,
-    filterObjSelector
+    queryFormUiStateSelector
 } = require('../queryform');
 
 const circle = "Circle";
@@ -23,6 +23,9 @@ const type = "Polygon";
 const projection = "EPSG:4326";
 const initialState = {
     queryform: {
+        attributePanelExpanded: false,
+        spatialPanelExpanded: true,
+        crossLayerExpanded: true,
         spatialField: {
             method: circle,
             attribute,
@@ -107,14 +110,11 @@ describe('Test queryform selectors', () => {
         expect(method).toExist();
         expect(method).toBe(circle);
     });
-    it(' 7) - filterObjSelector', () => {
-        const filterObj = filterObjSelector(initialState);
-        expect(filterObj).toExist();
-        expect(filterObj.spatialField).toBe(initialState.queryform.spatialField);
-        expect(filterObj.featureTypeName).toNotExist();
-        expect(filterObj.filterType).toNotExist();
-        expect(filterObj.ogcVersion).toNotExist();
-        expect(filterObj.filterFields.length).toBe(0);
-        expect(filterObj.groupFields.length).toBe(0);
+    it(' 7) - queryFormUiStateSelector', () => {
+        const queryFormUiState = queryFormUiStateSelector(initialState);
+        expect(queryFormUiState).toExist();
+        expect(queryFormUiState.attributePanelExpanded).toBe(false);
+        expect(queryFormUiState.spatialPanelExpanded).toBe(true);
+        expect(queryFormUiState.crossLayerExpanded).toBe(true);
     });
 });
