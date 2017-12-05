@@ -27,7 +27,8 @@ class DefaultGroup extends React.Component {
         visibilityCheckType: PropTypes.string,
         currentLocale: PropTypes.string,
         selectedNodes: PropTypes.array,
-        onSelect: PropTypes.func
+        onSelect: PropTypes.func,
+        titleTooltip: PropTypes.bool
     };
 
     static defaultProps = {
@@ -44,7 +45,8 @@ class DefaultGroup extends React.Component {
         level: 1,
         currentLocale: 'en-US',
         selectedNodes: [],
-        onSelect: () => {}
+        onSelect: () => {},
+        titleTooltip: false
     };
 
     renderVisibility = (error) => {
@@ -72,7 +74,7 @@ class DefaultGroup extends React.Component {
                 <div className="toc-default-group-head">
                     {grab}
                     {this.renderVisibility(error)}
-                    <GroupTitle node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onToggle} onSelect={this.props.onSelect}/>
+                    <GroupTitle tooltip={this.props.titleTooltip} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onToggle} onSelect={this.props.onSelect}/>
                 </div>
                 <GroupChildren level={this.props.level + 1} onSort={this.props.onSort} position="collapsible">
                     {this.props.children}

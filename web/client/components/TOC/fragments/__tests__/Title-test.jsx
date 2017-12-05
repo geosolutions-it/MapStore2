@@ -114,4 +114,42 @@ describe('test Title module component', () => {
         expect(domNode).toExist();
         expect(domNode.innerHTML).toBe(l.name);
     });
+
+    it('tests Title with tooltip', () => {
+        const l = {
+            name: 'layer00',
+            title: {
+                'default': 'Layer',
+                'it-IT': 'Livello'
+            },
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const comp = ReactDOM.render(<Title node={l} tooltip currentLocale="it-IT"/>, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        ReactTestUtils.Simulate.mouseOver(domNode);
+        expect(ReactDOM.findDOMNode(comp).getAttribute('aria-describedby')).toBe('tooltip-layer-title');
+    });
+
+    it('tests Title without tooltip', () => {
+        const l = {
+            name: 'layer00',
+            title: {
+                'default': 'Layer',
+                'it-IT': 'Livello'
+            },
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const comp = ReactDOM.render(<Title node={l} currentLocale="it-IT"/>, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        ReactTestUtils.Simulate.mouseOver(domNode);
+        expect(ReactDOM.findDOMNode(comp).getAttribute('aria-describedby')).toBe(null);
+    });
 });
