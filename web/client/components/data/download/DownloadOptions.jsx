@@ -12,6 +12,7 @@ require('react-select/dist/react-select.css');
 const {Checkbox} = require('react-bootstrap');
 const {get, head} = require('lodash');
 const Message = require('../../I18N/Message');
+
 /**
  * Download Options Form. Shows a selector of the options to perform a WFS download
  * @memberof components.data.download
@@ -24,14 +25,18 @@ const Message = require('../../I18N/Message');
 module.exports = class extends React.Component {
     static propTypes = {
             downloadOptions: PropTypes.object,
+            formatOptionsFetch: PropTypes.func,
             formats: PropTypes.array,
             srsList: PropTypes.array,
             onChange: PropTypes.func,
-            defaultSrs: PropTypes.string
+            defaultSrs: PropTypes.string,
+            layer: PropTypes.object,
+            formatsLoading: PropTypes.bool
     };
 
     static defaultProps = {
         downloadOptions: {},
+        formatsLoading: false,
         formats: [],
         srsList: []
     };
@@ -47,7 +52,10 @@ module.exports = class extends React.Component {
             <label><Message msgId="wfsdownload.format" /></label>
             <Select
                 clearable={false}
+                isLoading={this.props.formatsLoading}
+                onOpen={() => this.props.formatOptionsFetch(this.props.layer)}
                 value={this.getSelectedFormat()}
+                noResultsText={<Message msgId="wfsdownload.format" />}
                 onChange={(sel) => this.props.onChange("selectedFormat", sel.value)}
                 options={this.props.formats.map(f => ({value: f.name, label: f.label || f.name}))} />
             <label><Message msgId="wfsdownload.srs" /></label>

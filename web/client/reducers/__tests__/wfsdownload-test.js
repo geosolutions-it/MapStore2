@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {
-    onDownloadOptionChange, downloadFeatures, onDownloadFinished} = require('../../actions/wfsdownload');
+    onDownloadOptionChange, downloadFeatures, onDownloadFinished, onFormatOptionsFetch, updateFormats} = require('../../actions/wfsdownload');
 const wfsdownload = require('../wfsdownload');
 
 const expect = require('expect');
@@ -24,6 +24,15 @@ describe('Test the wfsdownload reducer', () => {
     it('onDownloadFinished', () => {
         const state = wfsdownload({loading: true}, onDownloadFinished());
         expect(state.loading).toBe(false);
+    });
+    it('onFormatOptionsFetch', () => {
+        const state = wfsdownload({formatsLoading: false, formats: [{name: "CSV", label: "CSV"}, {name: "SHAPE-FILE", label: "SHAPE-FILE"}]}, onFormatOptionsFetch());
+        expect(state.formatsLoading).toBe(true);
+        expect(state.formats).toEqual([]);
+    });
+    it('updateFormats', () => {
+        const state = wfsdownload({formatsLoading: true}, updateFormats());
+        expect(state.formatsLoading).toBe(false);
     });
 
 });

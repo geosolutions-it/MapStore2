@@ -9,6 +9,8 @@
 const DOWNLOAD_FEATURES = "WFSDOWNLOAD::DOWNLOAD_FEATURES";
 const DOWNLOAD_FINISHED = "WFSDOWNLOAD::DOWNLOAD_FINISHED";
 const DOWNLOAD_OPTIONS_CHANGE = "WFSDOWNLOAD::FORMAT_SELECTED";
+const FORMAT_OPTIONS_FETCH = "WFSDOWNLOAD::FORMAT_FETCH";
+const FORMAT_OPTIONS_UPDATE = "WFSDOWNLOAD::FORMAT_UPDATE";
 
 /**
  * Actions for WFS Download
@@ -20,6 +22,8 @@ module.exports = {
     DOWNLOAD_FEATURES,
     DOWNLOAD_OPTIONS_CHANGE,
     DOWNLOAD_FINISHED,
+    FORMAT_OPTIONS_FETCH,
+    FORMAT_OPTIONS_UPDATE,
     /**
      * action to download features
      * @memberof actions.wfsdownload
@@ -45,6 +49,26 @@ module.exports = {
         type: DOWNLOAD_OPTIONS_CHANGE,
         key,
         value
+    }),
+    /**
+     * action for fetch format options WFS download
+     * @memberof actions.wfsdownload
+     * @param  {object} layer           selected layer
+     * @return {action}                 the action of type `FORMAT_OPTIONS_FETCH`
+     */
+    onFormatOptionsFetch: (layer) => ({
+        type: FORMAT_OPTIONS_FETCH,
+        layer
+    }),
+    /**
+     * action for update list of formats
+     * @memberof actions.wfsdownload
+     * @param  {array} formats          available formats for download
+     * @return {action}                 the action of type `FORMAT_OPTIONS_UPDATE`
+     */
+    updateFormats: (formats) => ({
+        type: FORMAT_OPTIONS_UPDATE,
+        formats
     }),
     /**
      * action that notifies the end of the downloadOptions

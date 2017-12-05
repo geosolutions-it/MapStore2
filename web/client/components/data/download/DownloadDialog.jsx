@@ -20,10 +20,13 @@ class DownloadDialog extends React.Component {
         onClose: PropTypes.func,
         onExport: PropTypes.func,
         onDownloadOptionChange: PropTypes.func,
+        onFormatOptionsFetch: PropTypes.func,
         downloadOptions: PropTypes.object,
         formats: PropTypes.array,
         srsList: PropTypes.array,
-        defaultSrs: PropTypes.string
+        defaultSrs: PropTypes.string,
+        layer: PropTypes.object,
+        formatsLoading: PropTypes.bool
     };
 
     static defaultProps = {
@@ -32,11 +35,11 @@ class DownloadDialog extends React.Component {
         onExport: () => {},
         onClose: () => {},
         onDownloadOptionChange: () => {},
+        onFormatOptionsFetch: () => {},
+        layer: {},
         closeGlyph: "1-close",
-        formats: [
-            {name: "csv", label: "csv"},
-            {name: "shape-zip", label: "shape-zip"}
-        ],
+        formats: [],
+        formatsLoading: false,
         srsList: [
             {name: "native", label: "Native"},
             {name: "EPSG:4326", label: "WGS84"}
@@ -69,9 +72,12 @@ class DownloadDialog extends React.Component {
                 <DownloadOptions
                     downloadOptions={this.props.downloadOptions}
                     onChange={this.props.onDownloadOptionChange}
+                    formatOptionsFetch={this.props.onFormatOptionsFetch}
+                    formatsLoading={this.props.formatsLoading}
                     formats={this.props.formats}
                     srsList={this.props.srsList}
-                    defaultSrs={this.props.defaultSrs}/>
+                    defaultSrs={this.props.defaultSrs}
+                    layer={this.props.layer}/>
                 </div>
             <div role="footer">
                 <Button

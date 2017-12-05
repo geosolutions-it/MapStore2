@@ -11,9 +11,13 @@ var {
     DOWNLOAD_FEATURES,
     DOWNLOAD_OPTIONS_CHANGE,
     DOWNLOAD_FINISHED,
+    FORMAT_OPTIONS_FETCH,
+    FORMAT_OPTIONS_UPDATE,
     downloadFeatures,
     onDownloadOptionChange,
-    onDownloadFinished
+    onDownloadFinished,
+    onFormatOptionsFetch,
+    updateFormats
 } = require('../wfsdownload');
 
 describe('Test correctness of the wfsdownload actions', () => {
@@ -34,6 +38,15 @@ describe('Test correctness of the wfsdownload actions', () => {
         let {type} = onDownloadFinished();
         expect(type).toBe(DOWNLOAD_FINISHED);
     });
-
+    it('test onFormatOptionsFetch action', () => {
+        let {type, layer} = onFormatOptionsFetch("layer");
+        expect(type).toBe(FORMAT_OPTIONS_FETCH);
+        expect(layer).toBe("layer");
+    });
+    it('test onFormatOptionsFetch action', () => {
+        let {type, formats} = updateFormats("formats");
+        expect(type).toBe(FORMAT_OPTIONS_UPDATE);
+        expect(formats).toBe("formats");
+    });
 
 });
