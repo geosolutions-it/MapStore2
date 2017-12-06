@@ -9,7 +9,8 @@
 const React = require('react');
 const {isArray} = require('lodash');
 const PagedComboboxWithFeatures = require('./combobox/PagedComboboxWithFeatures');
-const {setObservableConfig, mapPropsStreamWithConfig, compose, withStateHandlers, withPropsOnChange} = require('recompose');
+const {generateTemplateString} = require('../../utils/TemplateUtils');
+const {setObservableConfig, mapPropsStreamWithConfig, compose, withStateHandlers, withPropsOnChange, withHandlers} = require('recompose');
 const rxjsConfig = require('recompose/rxjsObservableConfig').default;
 setObservableConfig(rxjsConfig);
 const mapPropsStream = mapPropsStreamWithConfig(rxjsConfig);
@@ -33,7 +34,7 @@ const streamEnhancer = mapPropsStream(props$ => {
 const PagedWFSComboboxEnhanced = streamEnhancer(
     ({ open, toggle, select, focus, change, value, valuesCount, onChangeDrawingStatus,
     loadNextPage, loadPrevPage, maxFeatures, currentPage, itemComponent, features,
-    busy, data, loading = false, valueField, textField, filter, srsName }) => {
+    busy, data, loading = false, valueField, textField, filter, srsName, style }) => {
         const numberOfPages = Math.ceil(valuesCount / maxFeatures);
         // for understanding "numberOfPages <= currentPage" see  https://osgeo-org.atlassian.net/browse/GEOS-7233. can be removed when fixed
         // sometimes on the last page it returns a wrong totalFeatures number
@@ -41,7 +42,7 @@ const PagedWFSComboboxEnhanced = streamEnhancer(
             pagination={{firstPage: currentPage === 1, lastPage: numberOfPages <= currentPage, paginated: true, loadPrevPage, loadNextPage, currentPage}}
             srsName={srsName} busy={busy} dropUp={false} data={data} open={open} onChangeDrawingStatus={onChangeDrawingStatus}
             valueField={valueField} textField={textField} itemComponent={itemComponent} filter={filter}
-            onFocus={focus} onToggle={toggle} onChange={change} onSelect={select} features={features}
+            onFocus={focus} onToggle={toggle} onChange={change} onSelect={select} features={features} style={style}
             selectedValue={value} loading={loading}/>);
     });
 
@@ -61,34 +62,24 @@ const addStateHandlers = compose(
         itemComponent: props.itemComponent,
         attribute: props.column && props.column.key
     }), {
-        select: (state) => () => {
+        select: (state) => (selected) => {
             return ({
-            ...state,
-            selected: true
-        }); },
+                ...state,
+                selected
+            });
+        },
         change: (state) => (v, valuefield) => {
             if (!state.selected && !state.open) {
                 state.onChangeDrawingStatus('clean', null, "queryform", [], {});
             }
-            if (state.selected && state.changingPage) {
-                return ({
-                    ...state,
-                    delayDebounce: state.selected ? 0 : 500,
-                    selected: false,
-                    changingPage: false,
-                    performFetch: state.selected && !state.changingPage ? false : true,
-                    value: state.value,
-                    currentPage: !state.changingPage ? 1 : state.currentPage
-                });
-            }
-            const value = typeof v === "string" ? v : v[valuefield];
             return ({
                 ...state,
-                delayDebounce: state.selected ? 0 : 500,
+                delayDebounce: 500,
                 selected: false,
                 changingPage: false,
                 performFetch: state.selected && !state.changingPage ? false : true,
-                value: value,
+                value: state.selected && state.changingPage && state.value
+                    || (typeof v === "string" ? v : v[valuefield]),
                 currentPage: !state.changingPage ? 1 : state.currentPage
             });
         },
@@ -127,6 +118,40 @@ const addStateHandlers = compose(
             delayDebounce: 0,
             value: state.value
         })
+    }),
+    withHandlers({
+        select: ({options, onChangeSpatialFilterValue = () => {}, select = () => {}} = {}) => (value, feature, srsName, style) => {
+            if (feature) {
+                if (options && options.crossLayer) {
+                    const cqlFilter = generateTemplateString(options.crossLayer.cqlTemplate || "")(feature);
+                    const collectGeometries = {
+                        queryCollection: {
+                            typeName: options.crossLayer.typeName,
+                            geometryName: options.crossLayer.geometryName,
+                            cqlFilter: cqlFilter
+                        }
+                    };
+                    onChangeSpatialFilterValue({
+                        geometry: feature.geometry,
+                        feature,
+                        srsName,
+                        style,
+                        options: options,
+                        collectGeometries
+                    });
+                } else {
+                    onChangeSpatialFilterValue({
+                        geometry: feature.geometry,
+                        feature,
+                        srsName,
+                        style,
+                        options: options
+                    });
+                }
+
+            }
+            select(true);
+        }
     })
 );
 

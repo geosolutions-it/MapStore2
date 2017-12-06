@@ -20,6 +20,7 @@ class UserDialog extends React.Component {
     static propTypes = {
         // props
         show: PropTypes.bool,
+        draggable: PropTypes.bool,
         onClose: PropTypes.func,
         onConfirm: PropTypes.func,
         onSave: PropTypes.func,
@@ -49,7 +50,7 @@ class UserDialog extends React.Component {
     };
 
     render() {
-        return (<Dialog onClickOut={this.props.onClose} id="confirm-dialog" modal={this.props.modal} style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
+        return (<Dialog draggable={this.props.draggable} onClickOut={this.props.onClose} id="confirm-dialog" modal={this.props.modal} style={assign({}, this.props.style, {display: this.props.show ? "block" : "none"})}>
             <span role="header">
                 <span className="user-panel-title">{this.props.title}</span>
                 <button onClick={this.props.onClose} className="login-panel-close close">

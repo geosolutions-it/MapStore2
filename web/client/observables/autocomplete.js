@@ -60,12 +60,13 @@ const createPagedUniqueAutompleteStream = (props$) => props$
         return Rx.Observable.of({fetchedData: {values: [], size: 0}, busy: false});
     }).startWith({});
 
-const createWFSFetchStream = (props$) => props$
-    .throttle(props => Rx.Observable.timer(props.delayDebounce || 0))
-    .merge(props$.debounce(props => Rx.Observable.timer(props.delayDebounce || 0)))
+const createWFSFetchStream = (props$) =>
+    Rx.Observable.merge(
+        props$.distinctUntilChanged(({value} = {}, {value: nextValue} = {}) => value === nextValue ).debounce(props => Rx.Observable.timer(props.delayDebounce || 0)),
+        props$.distinctUntilChanged( ({filterProps, currentPage} = {}, {filterProps: nextFilterProps, currentPage: nextCurrentPage} ) => filterProps === nextFilterProps && currentPage === nextCurrentPage)
+    )
     .switchMap((p) => {
         if (p.performFetch) {
-
             let parsed = url.parse(p.url, true);
             let newPathname = "";
             if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms") || endsWith(parsed.pathname, "ows") || endsWith(parsed.pathname, "wps")) {

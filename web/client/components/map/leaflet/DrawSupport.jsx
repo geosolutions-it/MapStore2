@@ -346,10 +346,6 @@ class DrawSupport extends React.Component {
         if (newProps.options.drawEnabled) {
             this.addDrawInteraction(props);
         }
-        if (newProps.options.updateSpatialField) {
-            const feature = fromLeafletFeatureToQueryform(this.drawLayer);
-            this.props.onEndDrawing(feature, this.props.drawOwner);
-        }
     };
 
     addEditInteraction = (newProps) => {

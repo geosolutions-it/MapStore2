@@ -53,6 +53,7 @@ const {
     selectViewportSpatialMethod,
     selectSpatialOperation,
     removeSpatialSelection,
+    changeSpatialFilterValue,
     showSpatialSelectionDetails,
     setCrossLayerFilterParameter,
     addCrossLayerFilterField,
@@ -128,6 +129,7 @@ const SmartQueryForm = connect((state) => {
             onExpandAttributeFilterPanel: expandAttributeFilterPanel
         }, dispatch),
         spatialFilterActions: bindActionCreators({
+            onChangeSpatialFilterValue: changeSpatialFilterValue,
             onExpandSpatialFilterPanel: expandSpatialFilterPanel,
             onSelectSpatialMethod: selectSpatialMethod,
             onSelectViewportSpatialMethod: selectViewportSpatialMethod,
@@ -331,7 +333,7 @@ class QueryPanel extends React.Component {
  *            "queriableAttributes": ["ATTRIBUTE_X"],
  *            "typeName": "workspace:typeName",
  *            "valueField": "ATTRIBUTE_Y",
-+ *            "srsName": "ESPG:3857"
+ *            "srsName": "ESPG:3857"
  *        },
  *        "customItemClassName": "customItemClassName"
  *    }
@@ -359,5 +361,5 @@ module.exports = {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
     },
-    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics}
+    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...require('../epics/queryform')}
 };
