@@ -10,6 +10,8 @@ const {get} = require('lodash');
 
 const {createSelector} = require('reselect');
 const {modeSelector} = require('./featuregrid');
+const {queryPanelSelector} = require('./controls');
+
 /**
  * selects mapinfo state
  * @name mapinfo
@@ -50,8 +52,8 @@ const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false)
  * @return {boolean} true if the get feature info has to stop the request
  */
 
-const stopGetFeatureInfoSelector = createSelector(mapInfoDisabledSelector, measureActiveSelector, drawSupportActiveSelector, gridEditingSelector, annotationsEditingSelector,
-    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isGridEditing, isAnnotationsEditing) => isMapInfoDisabled || !!isMeasureActive || isDrawSupportActive || isGridEditing || !!isAnnotationsEditing);
+const stopGetFeatureInfoSelector = createSelector(mapInfoDisabledSelector, measureActiveSelector, drawSupportActiveSelector, gridEditingSelector, annotationsEditingSelector, queryPanelSelector,
+    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isGridEditing, isAnnotationsEditing, isQueryPanelActive) => isMapInfoDisabled || !!isMeasureActive || isDrawSupportActive || isGridEditing || !!isAnnotationsEditing || !!isQueryPanelActive);
 
 module.exports = {
     generalInfoFormatSelector,
