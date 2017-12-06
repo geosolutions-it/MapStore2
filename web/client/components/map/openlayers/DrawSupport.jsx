@@ -463,10 +463,15 @@ class DrawSupport extends React.Component {
 
     removeDrawInteraction = () => {
         if (this.drawInteraction) {
-            this.props.map.enableEventListener('singleclick');
             this.props.map.removeInteraction(this.drawInteraction);
             this.drawInteraction = null;
             this.sketchFeature = null;
+            /** Map Singleclick event is dealyed by 250 ms see here
+              * https://openlayers.org/en/latest/apidoc/ol.MapBrowserEvent.html#event:singleclick
+              * This timeout prevents ol map to throw mapClick event that has alredy been managed
+              * by the draw interaction.
+             */
+            setTimeout(() => this.props.map.enableEventListener('singleclick'), 500);
             setTimeout(() => this.setDoubleClickZoomEnabled(true), 250);
         }
     };
