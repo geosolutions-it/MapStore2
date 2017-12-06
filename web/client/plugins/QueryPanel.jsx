@@ -326,6 +326,11 @@ class QueryPanel extends React.Component {
  *        "name": "methodName",
  *        "type": "wfsGeocoder",
  *        "url": "urlToGeoserver",
+ *        "crossLayer": { // if this is present, allows to optimize the filter using crossLayerFilter functinalities instead of geometry. The server must support them
+ *           "cqlTemplate": "ATTRIBUTE_Y = '${properties.ATTRIBUTE_Y}'", // a template to generate the filter from the feature properties
+ *           "geometryName": "GEOMETRY",
+ *           "typeName": "workspace:typeName"
+ *        },
  *        "filterProps": {
  *            "blacklist": [],
  *            "maxFeatures": 5,
