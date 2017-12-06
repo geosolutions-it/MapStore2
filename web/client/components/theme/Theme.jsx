@@ -18,7 +18,7 @@ const reducePropsToState = (props) => {
     */
     if (innermostProps && innermostProps.version) {
         return {
-            version: !innermostProps.version && innermostProps.version !== "${mapstore2.version}\n" ? "?" + innermostProps.version : '',
+            version: innermostProps.version !== "${mapstore2.version}\n" ? "?" + innermostProps.version : '',
             theme: innermostProps.theme || 'default',
             themeElement: innermostProps.themeElement || 'theme_stylesheet',
             prefix: innermostProps.prefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2',

@@ -22,8 +22,7 @@ const Localized = require('../I18N/Localized');
 const assign = require('object-assign');
 
 const Theme = connect((state) => ({
-    theme: state.theme && state.theme.selectedTheme && state.theme.selectedTheme.id,
-    version: state.version && state.version.current
+    theme: state.theme && state.theme.selectedTheme && state.theme.selectedTheme.id
 }), {}, (stateProps, dispatchProps, ownProps) => {
     return assign({}, stateProps, dispatchProps, ownProps);
 })(require('../theme/Theme'));
@@ -34,7 +33,8 @@ class StandardRouter extends React.Component {
         locale: PropTypes.object,
         pages: PropTypes.array,
         className: PropTypes.string,
-        themeCfg: PropTypes.object
+        themeCfg: PropTypes.object,
+        version: PropTypes.string
     };
 
     static defaultProps = {
@@ -62,7 +62,7 @@ class StandardRouter extends React.Component {
         return (
 
             <div className={this.props.className}>
-                <Theme {...this.props.themeCfg}/>
+                <Theme {...this.props.themeCfg} version={this.props.version}/>
                 <Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                     <ConnectedRouter history={history}>
                         <div>
