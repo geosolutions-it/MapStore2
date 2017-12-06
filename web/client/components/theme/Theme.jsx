@@ -14,7 +14,7 @@ const reducePropsToState = (props) => {
     const innermostProps = props[props.length - 1];
     if (innermostProps && innermostProps.version) {
         return {
-            version: innermostProps.version || '',
+            version: !innermostProps.version && innermostProps.version !== "${mapstore2.version}\n" ? "?" + innermostProps.version : '',
             theme: innermostProps.theme || 'default',
             themeElement: innermostProps.themeElement || 'theme_stylesheet',
             prefix: innermostProps.prefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2',
@@ -36,7 +36,7 @@ const handleStateChangeOnClient = (themeCfg) => {
             document.head.insertBefore(link, document.head.firstChild);
         }
         const basePath = link.href && link.href.substring(0, link.href.lastIndexOf("/")) || themeCfg.path;
-        link.setAttribute('href', basePath + "/" + themeCfg.theme + ".css?" + themeCfg.version);
+        link.setAttribute('href', basePath + "/" + themeCfg.theme + ".css" + themeCfg.version);
 
         const prefixContainer = themeCfg.prefixContainer;
         const prefix = themeCfg.prefix;
