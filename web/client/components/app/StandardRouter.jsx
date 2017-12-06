@@ -22,7 +22,8 @@ const Localized = require('../I18N/Localized');
 const assign = require('object-assign');
 
 const Theme = connect((state) => ({
-    theme: state.theme && state.theme.selectedTheme && state.theme.selectedTheme.id
+    theme: state.theme && state.theme.selectedTheme && state.theme.selectedTheme.id,
+    version: state.version && state.version.current
 }), {}, (stateProps, dispatchProps, ownProps) => {
     return assign({}, stateProps, dispatchProps, ownProps);
 })(require('../theme/Theme'));

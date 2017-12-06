@@ -12,8 +12,9 @@ const ConfigUtils = require('../../utils/ConfigUtils');
 
 const reducePropsToState = (props) => {
     const innermostProps = props[props.length - 1];
-    if (innermostProps) {
+    if (innermostProps && innermostProps.version) {
         return {
+            version: innermostProps.version || '',
             theme: innermostProps.theme || 'default',
             themeElement: innermostProps.themeElement || 'theme_stylesheet',
             prefix: innermostProps.prefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2',
@@ -35,7 +36,7 @@ const handleStateChangeOnClient = (themeCfg) => {
             document.head.insertBefore(link, document.head.firstChild);
         }
         const basePath = link.href && link.href.substring(0, link.href.lastIndexOf("/")) || themeCfg.path;
-        link.setAttribute('href', basePath + "/" + themeCfg.theme + ".css");
+        link.setAttribute('href', basePath + "/" + themeCfg.theme + ".css?" + themeCfg.version);
 
         const prefixContainer = themeCfg.prefixContainer;
         const prefix = themeCfg.prefix;
@@ -49,7 +50,8 @@ const handleStateChangeOnClient = (themeCfg) => {
 
 class Theme extends React.Component {
     static propTypes = {
-        theme: PropTypes.string.isRequired
+        theme: PropTypes.string.isRequired,
+        version: PropTypes.string
     };
 
     static defaultProps = {
