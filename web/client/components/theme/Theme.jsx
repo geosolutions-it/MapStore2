@@ -12,6 +12,10 @@ const ConfigUtils = require('../../utils/ConfigUtils');
 
 const reducePropsToState = (props) => {
     const innermostProps = props[props.length - 1];
+    /**
+     * version is taken from the build.hs which inject something like SNAPSHOT-lastSHACommit
+     * if not available it will include default.css as usual
+    */
     if (innermostProps && innermostProps.version) {
         return {
             version: !innermostProps.version && innermostProps.version !== "${mapstore2.version}\n" ? "?" + innermostProps.version : '',
