@@ -16,13 +16,15 @@ module.exports = (config, pluginsDef) => {
         const ConfigUtils = require('../utils/ConfigUtils');
         const {loadMaps} = require('../actions/maps');
         const {loadVersion} = require('../actions/version');
+        const {versionSelector} = require('../selectors/version');
         const StandardApp = require('../components/app/StandardApp');
 
         const {pages, initialState, storeOpts, appEpics = {}} = config;
 
         const StandardRouter = connect((state) => ({
             locale: state.locale || {},
-            pages
+            pages,
+            version: versionSelector(state)
         }))(require('../components/app/StandardRouter'));
 
         const {updateMapLayoutEpic} = require('../epics/maplayout');
