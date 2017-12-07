@@ -11,7 +11,6 @@ const queryform = require('../queryform');
 const {featureCollection} = require('../../test-resources/featureCollectionZone.js');
 const {
     UPDATE_FILTER_FIELD_OPTIONS, SET_AUTOCOMPLETE_MODE, TOGGLE_AUTOCOMPLETE_MENU,
-    CHANGE_SPATIAL_FILTER_VALUE,
     loadFilter,
     expandCrossLayerFilterPanel, setCrossLayerFilterParameter, resetCrossLayerFilter,
     addCrossLayerFilterField, updateCrossLayerFilterField, removeCrossLayerFilterField,
