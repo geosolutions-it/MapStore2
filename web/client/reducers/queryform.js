@@ -288,6 +288,7 @@ function queryform(state = initialState, action) {
         }
         case CHANGE_SPATIAL_FILTER_VALUE: {
             return assign({}, state, {toolbarEnabled: true, spatialField: assign({}, state.spatialField, {
+                value: action.value,
                 collectGeometries: action.collectGeometries,
                 geometry: action.geometry
             })});

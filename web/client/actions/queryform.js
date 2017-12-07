@@ -195,10 +195,11 @@ function changeSpatialAttribute(attribute) {
     };
 }
 
-function changeSpatialFilterValue({feature, srsName, collectGeometries, style} = {}) {
+function changeSpatialFilterValue({feature, srsName, collectGeometries, style, options} = {}) {
     return {
         type: CHANGE_SPATIAL_FILTER_VALUE,
         collectGeometries,
+        options,
         geometry: feature && feature.geometry,
         feature,
         srsName,

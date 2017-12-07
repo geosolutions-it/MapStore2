@@ -59,12 +59,10 @@ const addStateHandlers = compose(
         maxFeatures: 5,
         value: props.value,
         onChangeDrawingStatus: props.onChangeDrawingStatus,
-        itemComponent: props.itemComponent,
-        attribute: props.column && props.column.key
+        itemComponent: props.itemComponent
     }), {
-        select: (state) => (selected) => {
+        select: () => (selected) => {
             return ({
-                ...state,
                 selected
             });
         },
@@ -73,7 +71,6 @@ const addStateHandlers = compose(
                 state.onChangeDrawingStatus('clean', null, "queryform", [], {});
             }
             return ({
-                ...state,
                 delayDebounce: 500,
                 selected: false,
                 changingPage: false,
@@ -86,7 +83,6 @@ const addStateHandlers = compose(
         focus: (state) => (options) => {
             if (options && options.length === 0 && state.value === "") {
                 return ({
-                    ...state,
                     delayDebounce: 0,
                     currentPage: 1,
                     performFetch: true,
@@ -96,59 +92,45 @@ const addStateHandlers = compose(
             }
             return (state);
         },
-        toggle: (state) => (v, feature, page) => {
+        toggle: (state) => () => {
             return ({
-            ...state,
-            open: state.changingPage ? true : !state.open,
-            value: state.currentPage === page && !v && !feature ? "" : state.value
+            open: state.changingPage ? true : !state.open
         }); },
         loadNextPage: (state) => () => ({
-            ...state,
             currentPage: state.currentPage + 1,
             performFetch: true,
             changingPage: true,
-            delayDebounce: 0,
-            value: state.value
+            delayDebounce: 0
         }),
         loadPrevPage: (state) => () => ({
-            ...state,
             currentPage: state.currentPage - 1,
             performFetch: true,
             changingPage: true,
-            delayDebounce: 0,
-            value: state.value
+            delayDebounce: 0
         })
     }),
     withHandlers({
         select: ({options, onChangeSpatialFilterValue = () => {}, select = () => {}} = {}) => (value, feature, srsName, style) => {
             if (feature) {
-                if (options && options.crossLayer) {
-                    const cqlFilter = generateTemplateString(options.crossLayer.cqlTemplate || "")(feature);
-                    const collectGeometries = {
-                        queryCollection: {
-                            typeName: options.crossLayer.typeName,
-                            geometryName: options.crossLayer.geometryName,
-                            cqlFilter: cqlFilter
-                        }
-                    };
-                    onChangeSpatialFilterValue({
-                        geometry: feature.geometry,
-                        feature,
-                        srsName,
-                        style,
-                        options: options,
-                        collectGeometries
-                    });
-                } else {
-                    onChangeSpatialFilterValue({
-                        geometry: feature.geometry,
-                        feature,
-                        srsName,
-                        style,
-                        options: options
-                    });
-                }
-
+                onChangeSpatialFilterValue({
+                    geometry: feature.geometry,
+                    value,
+                    feature,
+                    srsName,
+                    style,
+                    options,
+                    collectGeometries:
+                        options && options.crossLayer
+                            ?
+                                {
+                                    queryCollection: {
+                                        typeName: options.crossLayer.typeName,
+                                        geometryName: options.crossLayer.geometryName,
+                                        cqlFilter: generateTemplateString(options.crossLayer.cqlTemplate || "")(feature)
+                                    }
+                                }
+                            : undefined
+                });
             }
             select(true);
         }

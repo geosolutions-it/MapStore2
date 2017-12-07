@@ -180,6 +180,7 @@ class SpatialFilter extends React.Component {
                     </Col>
                     <Col xs={6}>
                             <AutocompleteWFSCombobox
+                                value={this.props.spatialField}
                                 key={this.props.spatialField.method}
                                 options={selectedMethod}
                                 autocompleteStreamFactory={createWFSFetchStream}
