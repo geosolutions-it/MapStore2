@@ -194,11 +194,11 @@ describe('Test the mapInfo reducer', () => {
     });
 
     it('set a new point on map which has been clicked', () => {
-        let state = mapInfo({}, {type: 'CLICK_ON_MAP', point: "p"});
+        let state = mapInfo({}, {type: 'FEATURE_INFO_CLICK', point: "p"});
         expect(state.clickPoint).toExist();
         expect(state.clickPoint).toBe('p');
 
-        state = mapInfo({clickPoint: 'oldP'}, {type: 'CLICK_ON_MAP', point: "p"});
+        state = mapInfo({clickPoint: 'oldP'}, {type: 'FEATURE_INFO_CLICK', point: "p"});
         expect(state.clickPoint).toExist();
         expect(state.clickPoint).toBe('p');
     });
@@ -244,6 +244,12 @@ describe('Test the mapInfo reducer', () => {
         let state = mapInfo({showMarker: true}, {type: 'RESET_CONTROLS'});
         expect(state).toExist();
         expect(state.showMarker).toBe(false);
+    });
+
+    it('should toggle mapinfo state', () => {
+        let state = mapInfo({enabled: true}, {type: 'TOGGLE_MAPINFO_STATE'});
+        expect(state).toExist();
+        expect(state.enabled).toBe(false);
     });
 
 });
