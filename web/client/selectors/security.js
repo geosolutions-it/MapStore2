@@ -31,10 +31,10 @@ const rulesSelector = (state) => {
 const userSelector = (state) => state && state.security && state.security.user;
 const userRoleSelector = (state) => userSelector(state) && userSelector(state).role;
 
-
 module.exports = {
     rulesSelector,
     userSelector,
     userRoleSelector,
-    isAdminUserSelector: (state) => userRoleSelector(state) === "ADMIN"
+    isAdminUserSelector: (state) => userRoleSelector(state) === "ADMIN",
+    securityTokenSelector: state => state.security && state.security.token
 };

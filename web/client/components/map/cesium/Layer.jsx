@@ -16,11 +16,12 @@ class CesiumLayer extends React.Component {
         type: PropTypes.string,
         options: PropTypes.object,
         onCreationError: PropTypes.func,
-        position: PropTypes.number
+        position: PropTypes.number,
+        securityToken: PropTypes.string
     };
 
     componentDidMount() {
-        this.createLayer(this.props.type, this.props.options, this.props.position, this.props.map);
+        this.createLayer(this.props.type, this.props.options, this.props.position, this.props.map, this.props.securityToken);
         if (this.props.options && this.layer && this.props.options.visibility !== false) {
             this.addLayer(this.props);
             this.updateZIndex();
@@ -133,9 +134,9 @@ class CesiumLayer extends React.Component {
         }
     };
 
-    createLayer = (type, options, position, map) => {
+    createLayer = (type, options, position, map, securityToken) => {
         if (type) {
-            const opts = assign({}, options, position ? {zIndex: position} : null);
+            const opts = assign({}, options, position ? {zIndex: position} : null, {securityToken});
             this.layer = Layers.createLayer(type, opts, map);
 
             if (this.layer) {
@@ -150,7 +151,7 @@ class CesiumLayer extends React.Component {
     };
 
     updateLayer = (newProps, oldProps) => {
-        const newLayer = Layers.updateLayer(newProps.type, this.layer, newProps.options, oldProps.options, this.props.map);
+        const newLayer = Layers.updateLayer(newProps.type, this.layer, {...newProps.options, securityToken: newProps.securityToken}, {...oldProps.options, securityToken: oldProps.securityToken}, this.props.map);
         if (newLayer) {
             this.removeLayer();
             this.layer = newLayer;

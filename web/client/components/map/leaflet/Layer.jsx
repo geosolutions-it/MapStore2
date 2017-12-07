@@ -20,7 +20,8 @@ class LeafletLayer extends React.Component {
         position: PropTypes.number,
         zoomOffset: PropTypes.number,
         onCreationError: PropTypes.func,
-        onClick: PropTypes.func
+        onClick: PropTypes.func,
+        securityToken: PropTypes.string
     };
 
     static defaultProps = {
@@ -29,7 +30,7 @@ class LeafletLayer extends React.Component {
 
     componentDidMount() {
         this.valid = true;
-        this.createLayer(this.props.type, this.props.options, this.props.position);
+        this.createLayer(this.props.type, this.props.options, this.props.position, this.props.securityToken);
         if (this.props.options && this.layer && this.props.options.visibility !== false) {
             this.addLayer();
             this.updateZIndex();
@@ -116,12 +117,13 @@ class LeafletLayer extends React.Component {
         }
     };
 
-    generateOpts = (options, position) => {
+    generateOpts = (options, position, securityToken) => {
         return assign({}, options, position ? {zIndex: position, srs: this.props.srs } : null, {
             zoomOffset: -this.props.zoomOffset,
             onError: () => {
                 this.props.onCreationError(options);
-            }
+            },
+            securityToken
         });
     };
 
@@ -132,9 +134,9 @@ class LeafletLayer extends React.Component {
         }
     };
 
-    createLayer = (type, options, position) => {
+    createLayer = (type, options, position, securityToken) => {
         if (type) {
-            const opts = this.generateOpts(options, position);
+            const opts = this.generateOpts(options, position, securityToken);
             this.layer = Layers.createLayer(type, opts);
             if (this.layer) {
                 this.layer.layerName = options.name;
@@ -148,8 +150,8 @@ class LeafletLayer extends React.Component {
     };
 
     updateLayer = (newProps, oldProps) => {
-        const newLayer = Layers.updateLayer(newProps.type, this.layer, this.generateOpts(newProps.options, newProps.position),
-            this.generateOpts(oldProps.options, oldProps.position));
+        const newLayer = Layers.updateLayer(newProps.type, this.layer, this.generateOpts(newProps.options, newProps.position, newProps.securityToken),
+            this.generateOpts(oldProps.options, oldProps.position, oldProps.securityToken));
         if (newLayer) {
             this.removeLayer();
             this.layer = newLayer;

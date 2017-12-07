@@ -159,13 +159,13 @@ const SecurityUtils = {
      * This method will add query parameter based authentications to an object
      * containing query paramaters.
      */
-    addAuthenticationParameter: function(url, parameters) {
+    addAuthenticationParameter: function(url, parameters, securityToken) {
         if (!url || !this.isAuthenticationActivated()) {
             return parameters;
         }
         switch (this.getAuthenticationMethod(url)) {
         case 'authkey':
-            const token = this.getToken();
+            const token = securityToken || this.getToken();
             if (!token) {
                 return parameters;
             }

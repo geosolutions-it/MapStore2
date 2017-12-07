@@ -14,6 +14,7 @@ const assign = require('object-assign');
 const {isArray} = require('lodash');
 const WMSUtils = require('../../../../utils/cesium/WMSUtils');
 const FilterUtils = require('../../../../utils/FilterUtils');
+const SecurityUtils = require('../../../../utils/SecurityUtils');
 
 function getWMSURLs( urls ) {
     return urls.map((url) => url.split("\?")[0]);
@@ -54,6 +55,13 @@ function getQueryString(parameters) {
     return Object.keys(parameters).map((key) => key + '=' + encodeURIComponent(parameters[key])).join('&');
 }
 
+function getAuthenticationParam(options) {
+    const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
+    let authenticationParam = {};
+    urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, authenticationParam, options.securityToken));
+    return authenticationParam;
+}
+
 function wmsToCesiumOptionsSingleTile(options) {
     const opacity = options.opacity !== undefined ? options.opacity : 1;
     const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
@@ -68,7 +76,7 @@ function wmsToCesiumOptionsSingleTile(options) {
         height: options.size || 2000,
         bbox: "-180.0,-90,180.0,90",
         srs: "EPSG:4326"
-    }, (CQL_FILTER ? {CQL_FILTER} : {}), options.params || {});
+    }, (CQL_FILTER ? {CQL_FILTER} : {}), options.params || {}, getAuthenticationParam(options));
 
     return {
         url: (isArray(options.url) ? options.url[Math.round(Math.random() * (options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&' + getQueryString(parameters)
@@ -101,7 +109,8 @@ function wmsToCesiumOptions(options) {
             {},
             (CQL_FILTER ? {CQL_FILTER} : {}),
             (options._v_ ? {_v_: options._v_} : {}),
-            (options.params || {})
+            (options.params || {}),
+            getAuthenticationParam(options)
         ))
     });
 }
@@ -134,7 +143,7 @@ const updateLayer = (layer, newOptions, oldOptions) => {
             const newOption = newOptions[key] === undefined ? newParams && newParams[key] : newOptions[key];
             return oldOption !== newOption;
         });
-    if (newParameters.length > 0) {
+    if (newParameters.length > 0 || newOptions.securityToken !== oldOptions.securityToken) {
         return createLayer(newOptions);
     }
     return null;
