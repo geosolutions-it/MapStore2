@@ -11,9 +11,11 @@ const queryform = require('../queryform');
 const {featureCollection} = require('../../test-resources/featureCollectionZone.js');
 const {
     UPDATE_FILTER_FIELD_OPTIONS, SET_AUTOCOMPLETE_MODE, TOGGLE_AUTOCOMPLETE_MENU,
+    CHANGE_SPATIAL_FILTER_VALUE,
     loadFilter,
     expandCrossLayerFilterPanel, setCrossLayerFilterParameter, resetCrossLayerFilter,
-    addCrossLayerFilterField, updateCrossLayerFilterField, removeCrossLayerFilterField
+    addCrossLayerFilterField, updateCrossLayerFilterField, removeCrossLayerFilterField,
+    changeSpatialFilterValue
 } = require('../../actions/queryform');
 const {END_DRAWING, CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 
@@ -493,6 +495,26 @@ describe('Test the queryform reducer', () => {
         let state = queryform(initialState, testAction);
         expect(state).toExist();
         expect(state.spatialField.attribute).toEqual(attribute);
+    });
+
+    it('test CHANGE_SPATIAL_FILTER_VALUE', () => {
+        const initialState = { spatialField: {geometry: {}} };
+        const args = {
+            collectGeometries: {},
+            value: "SELECTED_VALUE",
+            feature: {
+                geometry: {
+                    type: "Point",
+                    coordinates: [1, 1]
+                }
+            }
+        };
+        const action = changeSpatialFilterValue(args);
+        const newState = queryform(initialState, action);
+        expect(newState.spatialField).toExist();
+        expect(newState.spatialField.geometry).toBe(args.feature.geometry);
+        expect(newState.spatialField.collectGeometries).toBe(args.collectGeometries);
+        expect(newState.spatialField.value).toBe(args.value);
     });
 
     it('test CHANGE_DRAWING_STATUS', () => {
