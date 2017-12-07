@@ -44,6 +44,7 @@ class PagedCombobox extends React.Component {
         onSelect: PropTypes.func,
         onToggle: PropTypes.func,
         onChangeDrawingStatus: PropTypes.func,
+        style: PropTypes.style,
         open: PropTypes.bool,
         pagination: PropTypes.object,
         nextPageIcon: PropTypes.string,
@@ -92,11 +93,9 @@ class PagedCombobox extends React.Component {
         },
         valueField: "value"
     };
-    componentWillReceiveProps(newProps) {
-        if (this.props.valueField !== newProps.valueField) {
-            this.props.onChange("", newProps.valueField);
-        }
-    }
+    state = {
+
+    };
     renderWithTooltip = (field) => {
         if (this.props.tooltip.customizedTooltip) {
             const CustomTooltip = this.props.tooltip.customizedTooltip;
@@ -125,9 +124,10 @@ class PagedCombobox extends React.Component {
             </div>
         );
     };
+
     renderField = () => {
         const messages = {
-            emptyList: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
+            emptyList: () => this.props.busy ? "Loading..." : LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyList"),
             open: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.open"),
             emptyFilter: LocaleUtils.getMessageById(this.context.messages, "queryform.attributefilter.autocomplete.emptyFilter")
         };
@@ -139,6 +139,14 @@ class PagedCombobox extends React.Component {
         if (this.props.pagination && this.props.pagination.paginated && options.length > 0) {
             options.push({ [this.props.textField]: '', [this.props.valueField]: '', disabled: true, pagination: this.renderPagination() });
         }
+        /* this lock is needed to distinguish onToggle triggered by
+           mouse click on combobox dropdown menu and the onToggle triggered by
+           on change. In the first case you have to trigger an empty search.
+           In the second case only onChange must trigger the search.
+           The 2 actions are triggered in sequence so you can not do nothing more.
+           Maybe in the future we can restructure this component in a unique WFS search Combobox
+        */
+        let lock = false;
         const data = this.props.loading ? [] : options;
         const field = (<Combobox
             dropUp={this.props.dropUp}
@@ -148,33 +156,29 @@ class PagedCombobox extends React.Component {
             itemComponent={(other) => <this.props.itemComponent textField={this.props.textField} valueField={this.props.valueField} {...other}/>}
             messages={this.props.messages || messages}
             open={this.props.open}
-            filter={this.props.filter}
+            filter={false}
             onChange={(val) => {
                 this.props.onChange(val, this.props.valueField);
+                lock = true;
             }}
             onFocus={() => this.props.onFocus(this.props.data)}
             onSelect={(v) => {
                 const feature = head(this.props.features.filter(f => f.properties[this.props.valueField].toLowerCase() === v[this.props.valueField].toLowerCase()));
-                this.props.onSelect(v, feature);
-                if (feature) {
-                    this.props.onChangeDrawingStatus('drawOrEdit', feature.geometry.type, "queryform", [feature], {editEnabled: false, stopAfterDrawing: true, updateSpatialField: true, featureProjection: this.props.srsName});
-                }
+                this.props.onSelect(v, feature, this.props.srsName, this.props.style);
             }}
-            onToggle={(v) => {
+            onToggle={(expanded) => {
                 const feature = head(this.props.features.filter( (f) => {
                     return f.properties[this.props.valueField].toLowerCase() === this.props.selectedValue.toLowerCase();
                 }));
-                this.props.onToggle(v, feature, this.props.pagination.currentPage);
-                // if when closing the menu it finds a feature with the text inserted, then update the spatial field
-                if (feature && !v) {
-                    this.props.onChangeDrawingStatus('drawOrEdit', feature.geometry.type, "queryform", [feature], {editEnabled: false, stopAfterDrawing: true, updateSpatialField: true, featureProjection: this.props.srsName});
-                }
-                // if when closing the menu it does not find a feature, then clean all
-                // it conflicts with change page which trigger the on toggle twice, one for closing and one for opening
-                /*if (!feature && !v) {
+                if (expanded && !this.props.selectedValue && !this.props.selectedValue && !lock) {
                     this.props.onChange("", this.props.valueField);
-                    this.props.onChangeDrawingStatus('clean', null, "queryform", [], {});
-                }*/
+                }
+                this.props.onToggle(expanded, feature, this.props.pagination.currentPage);
+                // if when closing the menu it finds a feature with the text inserted, then update the spatial field
+                if (feature && !expanded) {
+                    this.onSelect(this.props.selectedValue, feature, this.props.srsName, this.props.style);
+                }
+                lock = false;
 
             }}
             textField={this.props.textField}

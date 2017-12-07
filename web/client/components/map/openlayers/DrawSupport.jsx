@@ -141,6 +141,7 @@ class DrawSupport extends React.Component {
             });
             this.drawSource.addFeature(feature);
         });
+        this.updateFeatureStyles(features);
         if (features.length === 0 && (options.editEnabled || options.drawEnabled)) {
             const feature = new ol.Feature({
                 geometry: this.createOLGeometry({type: drawMethod, coordinates: null})
@@ -428,13 +429,6 @@ class DrawSupport extends React.Component {
         }
         if (newProps.options.drawEnabled) {
             this.handleDrawAndEdit(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints);
-        }
-        if (newProps.options.updateSpatialField) {
-            this.sketchFeature = this.drawSource.getFeatures()[0];
-            this.sketchFeature.set('id', uuid.v1());
-            const feature = this.fromOLFeature(this.sketchFeature);
-
-            this.props.onEndDrawing(feature, this.props.drawOwner);
         }
     };
 

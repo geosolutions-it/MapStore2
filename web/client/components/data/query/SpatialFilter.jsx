@@ -50,6 +50,7 @@ class SpatialFilter extends React.Component {
             onExpandSpatialFilterPanel: () => {},
             onSelectSpatialMethod: () => {},
             onSelectSpatialOperation: () => {},
+            onChangeSpatialFilterValue: () => {},
             onChangeDrawingStatus: () => {},
             onRemoveSpatialSelection: () => {},
             onShowSpatialSelectionDetails: () => {},
@@ -175,16 +176,22 @@ class SpatialFilter extends React.Component {
             <div className="container-fluid">
                 <Row className="filter-field-row filter-field-fixed-row">
                     <Col xs={6}>
-                        <span>{this.props.spatialField.method}</span>
+                        <span>{selectedMethod && selectedMethod.name || selectedMethod.id}</span>
                     </Col>
                     <Col xs={6}>
                             <AutocompleteWFSCombobox
+                                value={this.props.spatialField}
+                                key={this.props.spatialField.method}
+                                options={selectedMethod}
                                 autocompleteStreamFactory={createWFSFetchStream}
                                 valueField={selectedMethod && selectedMethod.filterProps && selectedMethod.filterProps.valueField}
                                 textField={selectedMethod && selectedMethod.filterProps && selectedMethod.filterProps.valueField}
                                 url={selectedMethod && selectedMethod.url}
                                 filter="contains"
-                                onChangeDrawingStatus={this.props.actions.onChangeDrawingStatus}
+                                onChangeSpatialFilterValue={this.props.actions.onChangeSpatialFilterValue}
+                                onChangeDrawingStatus={(...props) => {
+                                    this.props.actions.onChangeDrawingStatus(...props);
+                                }}
                                 filterProps={selectedMethod && selectedMethod.filterProps}
                             />
                     </Col>

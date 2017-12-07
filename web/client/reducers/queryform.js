@@ -22,6 +22,7 @@ const {
     SELECT_SPATIAL_METHOD,
     SELECT_SPATIAL_OPERATION,
     CHANGE_SPATIAL_ATTRIBUTE,
+    CHANGE_SPATIAL_FILTER_VALUE,
     REMOVE_SPATIAL_SELECT,
     SHOW_SPATIAL_DETAILS,
     QUERY_FORM_RESET,
@@ -285,10 +286,20 @@ function queryform(state = initialState, action) {
 
             return state;
         }
+        case CHANGE_SPATIAL_FILTER_VALUE: {
+            return assign({}, state, {toolbarEnabled: true, spatialField: assign({}, state.spatialField, {
+                value: action.value,
+                collectGeometries: action.collectGeometries,
+                geometry: action.geometry
+            })});
+        }
         case END_DRAWING: {
             let newState;
             if (action.owner === "queryform") {
-                newState = assign({}, state, {toolbarEnabled: true, spatialField: assign({}, state.spatialField, {geometry: action.geometry})});
+                newState = assign({}, state, {toolbarEnabled: true, spatialField: assign({}, state.spatialField, {
+                    collectGeometries: action.collectGeometries,
+                    geometry: action.geometry
+                })});
             } else {
                 newState = state;
             }

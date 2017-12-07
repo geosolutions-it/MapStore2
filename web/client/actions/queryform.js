@@ -23,6 +23,7 @@ const SELECT_VIEWPORT_SPATIAL_METHOD = 'SELECT_VIEWPORT_SPATIAL_METHOD';
 const UPDATE_GEOMETRY = 'UPDATE_GEOMETRY';
 const SELECT_SPATIAL_OPERATION = 'SELECT_SPATIAL_OPERATION';
 const CHANGE_SPATIAL_ATTRIBUTE = 'CHANGE_SPATIAL_ATTRIBUTE';
+const CHANGE_SPATIAL_FILTER_VALUE = 'CHANGE_SPATIAL_FILTER_VALUE';
 const REMOVE_SPATIAL_SELECT = 'REMOVE_SPATIAL_SELECT';
 const SHOW_SPATIAL_DETAILS = 'SHOW_SPATIAL_DETAILS';
 const QUERY_FORM_SEARCH = 'QUERY_FORM_SEARCH';
@@ -194,6 +195,18 @@ function changeSpatialAttribute(attribute) {
     };
 }
 
+function changeSpatialFilterValue({feature, srsName, collectGeometries, style, options, value} = {}) {
+    return {
+        type: CHANGE_SPATIAL_FILTER_VALUE,
+        value,
+        collectGeometries,
+        options,
+        geometry: feature && feature.geometry,
+        feature,
+        srsName,
+        style
+    };
+}
 function removeSpatialSelection() {
     return {
         type: REMOVE_SPATIAL_SELECT
@@ -418,6 +431,7 @@ module.exports = {
     SELECT_SPATIAL_METHOD,
     SELECT_SPATIAL_OPERATION,
     CHANGE_SPATIAL_ATTRIBUTE,
+    CHANGE_SPATIAL_FILTER_VALUE,
     REMOVE_SPATIAL_SELECT,
     SHOW_SPATIAL_DETAILS,
     SET_CROSS_LAYER_PARAMETER,
@@ -473,6 +487,7 @@ module.exports = {
     selectSpatialMethod,
     selectSpatialOperation,
     changeSpatialAttribute,
+    changeSpatialFilterValue,
     removeSpatialSelection,
     showSpatialSelectionDetails,
     setCrossLayerFilterParameter,
