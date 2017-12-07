@@ -7,6 +7,8 @@
  */
 const React = require('react');
 
+const {Glyphicon} = require('react-bootstrap');
+
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 
@@ -14,7 +16,7 @@ const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 const {on} = require('../actions/controls');
 
-const {getFeatureInfo, getVectorInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning} = require('../actions/mapInfo');
+const {getFeatureInfo, getVectorInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState} = require('../actions/mapInfo');
 const {closeAnnotations} = require('../actions/annotations');
 const {changeMousePointer} = require('../actions/map');
 const {changeMapInfoFormat} = require('../actions/mapInfo');
@@ -53,10 +55,12 @@ const conditionalToggle = on.bind(null, purgeMapInfoResults(), (state) =>
  * Identify plugin. This plugin allows to perform getfeature info.
  * It can be configured to have a mobile or a desktop flavor.
  * It's enabled by default. The bubbling of an on_click_map action to GFI is stopped
- * if Annotations orFeatureGrid plugins are editing, draw or measurement supports are
- * active ore the identify plugin is disabled.
- * To restore old behaviour, in mapInfo state, set enabled to false and disabledAlwaysOn to true and
- * manage the plugin using changeMapInfoState action or toggleControl action with 'info' as control name.
+ * if Annotations or FeatureGrid plugins are editing, draw or measurement supports are
+ * active, the query panel is active or the identify plugin is disabled.
+ * To restore old behaviour, in mapInfo state, set disabledAlwaysOn to true and
+ * manage the plugin using toggleControl action with 'info' as control name.
+ * It's possible also possible disable the plugin by changeMapInfoState or toggleMapInfoState actions
+ *
  * @class Identify
  * @memberof plugins
  * @static
@@ -117,6 +121,18 @@ const FeatureInfoFormatSelector = connect((state) => ({
 
 module.exports = {
     IdentifyPlugin: assign(IdentifyPlugin, {
+        Toolbar: {
+            name: 'info',
+            position: 6,
+            tooltip: "info.tooltip",
+            icon: <Glyphicon glyph="map-marker"/>,
+            help: <Message msgId="helptexts.infoButton"/>,
+            action: toggleMapInfoState,
+            selector: (state) => ({
+                bsStyle: state.mapInfo && state.mapInfo.enabled ? "success" : "primary",
+                active: !!(state.mapInfo && state.mapInfo.enabled)
+            })
+        },
         Settings: {
             tool: <FeatureInfoFormatSelector
                 key="featureinfoformat"

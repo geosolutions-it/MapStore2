@@ -246,4 +246,10 @@ describe('Test the mapInfo reducer', () => {
         expect(state.showMarker).toBe(false);
     });
 
+    it('should toggle mapinfo state', () => {
+        let state = mapInfo({enabled: true}, {type: 'TOGGLE_MAPINFO_STATE'});
+        expect(state).toExist();
+        expect(state.enabled).toBe(false);
+    });
+
 });

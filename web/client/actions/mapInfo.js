@@ -26,6 +26,7 @@ const GET_VECTOR_INFO = 'GET_VECTOR_INFO';
 const NO_QUERYABLE_LAYERS = 'NO_QUERYABLE_LAYERS';
 const CLEAR_WARNING = 'CLEAR_WARNING';
 const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
+const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 
 /**
  * Private
@@ -189,6 +190,12 @@ function hideMapinfoRevGeocode() {
     };
 }
 
+function toggleMapInfoState() {
+    return {
+        type: TOGGLE_MAPINFO_STATE
+    };
+}
+
 module.exports = {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
@@ -205,6 +212,7 @@ module.exports = {
     NO_QUERYABLE_LAYERS,
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
+    TOGGLE_MAPINFO_STATE,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
@@ -219,5 +227,6 @@ module.exports = {
     noQueryableLayers,
     clearWarning,
     errorFeatureInfo,
-    loadFeatureInfo
+    loadFeatureInfo,
+    toggleMapInfoState
 };

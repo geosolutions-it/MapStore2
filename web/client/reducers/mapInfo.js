@@ -21,7 +21,8 @@ const {
     GET_VECTOR_INFO,
     NO_QUERYABLE_LAYERS,
     CLEAR_WARNING,
-    FEATURE_INFO_CLICK
+    FEATURE_INFO_CLICK,
+    TOGGLE_MAPINFO_STATE
 } = require('../actions/mapInfo');
 
 const {RESET_CONTROLS} = require('../actions/controls');
@@ -58,6 +59,10 @@ function mapInfo(state = initState, action) {
     case CHANGE_MAPINFO_STATE:
         return assign({}, state, {
             enabled: action.enabled
+        });
+    case TOGGLE_MAPINFO_STATE:
+        return assign({}, state, {
+            enabled: !state.enabled
         });
     case NEW_MAPINFO_REQUEST: {
         const {reqId, request} = action;
