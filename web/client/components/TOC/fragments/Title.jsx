@@ -9,6 +9,8 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const {isObject} = require('lodash');
+const {Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 require("./css/toctitle.css");
 
 class Title extends React.Component {
@@ -17,14 +19,16 @@ class Title extends React.Component {
         onClick: PropTypes.func,
         onContextMenu: PropTypes.func,
         currentLocale: PropTypes.string,
-        filterText: PropTypes.string
+        filterText: PropTypes.string,
+        tooltip: PropTypes.bool
     };
 
     static defaultProps = {
         onClick: () => {},
         onContextMenu: () => {},
         currentLocale: 'en-US',
-        filterText: ''
+        filterText: '',
+        tooltip: false
     };
 
     getFilteredTitle = (title) => {
@@ -41,7 +45,19 @@ class Title extends React.Component {
     render() {
         const translation = isObject(this.props.node.title) ? this.props.node.title[this.props.currentLocale] || this.props.node.title.default : this.props.node.title;
         const title = translation || this.props.node.name;
-        return <div className="toc-title" onClick={this.props.onClick ? (e) => this.props.onClick(this.props.node.id, 'layer', e.ctrlKey) : () => {}} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>{this.getFilteredTitle(title)}</div>;
+        return this.props.tooltip ? (
+            <OverlayTrigger placement="top" overlay={(<Tooltip id={"tooltip-layer-title"}>{title}</Tooltip>)}>
+                <div className="toc-title" onClick={this.props.onClick ? (e) => this.props.onClick(this.props.node.id, 'layer', e.ctrlKey) : () => {}} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>
+                    {this.getFilteredTitle(title)}
+                </div>
+            </OverlayTrigger>
+
+        ) :
+        (
+            <div className="toc-title" onClick={this.props.onClick ? (e) => this.props.onClick(this.props.node.id, 'layer', e.ctrlKey) : () => {}} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>
+                {this.getFilteredTitle(title)}
+            </div>
+        );
     }
 }
 

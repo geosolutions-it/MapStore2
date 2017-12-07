@@ -11,7 +11,7 @@ const {head} = require('lodash');
 const L = require('leaflet');
 require('leaflet-draw');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
-const {fromLeafletFeatureToQueryform, boundsToOLExtent} = require('../../../utils/DrawSupportUtils');
+const {boundsToOLExtent} = require('../../../utils/DrawSupportUtils');
 const assign = require('object-assign');
 
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
@@ -345,10 +345,6 @@ class DrawSupport extends React.Component {
         }
         if (newProps.options.drawEnabled) {
             this.addDrawInteraction(props);
-        }
-        if (newProps.options.updateSpatialField) {
-            const feature = fromLeafletFeatureToQueryform(this.drawLayer);
-            this.props.onEndDrawing(feature, this.props.drawOwner);
         }
     };
 

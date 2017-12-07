@@ -60,12 +60,13 @@ const createPagedUniqueAutompleteStream = (props$) => props$
         return Rx.Observable.of({fetchedData: {values: [], size: 0}, busy: false});
     }).startWith({});
 
-const createWFSFetchStream = (props$) => props$
-    .throttle(props => Rx.Observable.timer(props.delayDebounce || 0))
-    .merge(props$.debounce(props => Rx.Observable.timer(props.delayDebounce || 0)))
+const createWFSFetchStream = (props$) =>
+    Rx.Observable.merge(
+        props$.distinctUntilChanged(({value} = {}, {value: nextValue} = {}) => value === nextValue ).debounce(props => Rx.Observable.timer(props.delayDebounce || 0)),
+        props$.distinctUntilChanged( ({filterProps, currentPage} = {}, {filterProps: nextFilterProps, currentPage: nextCurrentPage} ) => filterProps === nextFilterProps && currentPage === nextCurrentPage)
+    )
     .switchMap((p) => {
         if (p.performFetch) {
-
             let parsed = url.parse(p.url, true);
             let newPathname = "";
             if (endsWith(parsed.pathname, "wfs") || endsWith(parsed.pathname, "wms") || endsWith(parsed.pathname, "ows") || endsWith(parsed.pathname, "wps")) {
@@ -90,11 +91,12 @@ const createWFSFetchStream = (props$) => props$
                 item: {},
                 timeout: 60000,
                 headers: {'Accept': 'application/json', 'Content-Type': 'application/xml'},
+                srsName: p.filterProps && p.filterProps.srsName || "EPSG:4326",
                 ...parsed.query
             });
             return Rx.Observable.fromPromise((API.Utils.getService("wfs")(p.value, serviceOptions)
                 .then( data => {
-                    return {fetchedData: { values: data.features.map(f => f.properties), size: data.totalFeatures, features: data.features}, busy: false};
+                    return {fetchedData: { values: data.features.map(f => f.properties), size: data.totalFeatures, features: data.features, crs: p.filterProps && p.filterProps.srsName || "EPSG:4326"}, busy: false};
                 }))).catch(() => {
                     return Rx.Observable.of({fetchedData: {values: [], size: 0, features: []}, busy: false});
                 }).startWith({busy: true});

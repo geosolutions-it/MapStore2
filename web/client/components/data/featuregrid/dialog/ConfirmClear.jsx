@@ -6,6 +6,7 @@ module.exports = ({
     saving = false,
     onConfirm = () => {}
 } = {}) => (<Confirm
+    draggable={false}
     show
     onClose={onClose}
     onConfirm={onConfirm}

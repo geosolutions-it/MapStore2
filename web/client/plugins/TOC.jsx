@@ -144,6 +144,7 @@ class LayerTree extends React.Component {
         updateSettings: PropTypes.func,
         updateNode: PropTypes.func,
         removeNode: PropTypes.func,
+        activateTitleTooltip: PropTypes.bool,
         activateOpacityTool: PropTypes.bool,
         activateSortLayer: PropTypes.bool,
         activateFilterLayer: PropTypes.bool,
@@ -196,6 +197,7 @@ class LayerTree extends React.Component {
         onSelectNode: () => {},
         selectedNodes: [],
         activateOpacityTool: true,
+        activateTitleTooltip: true,
         activateSortLayer: true,
         activateFilterLayer: true,
         activateMapTitle: true,
@@ -249,6 +251,7 @@ class LayerTree extends React.Component {
             <DefaultGroup
                 onSort={!this.props.filterText && this.props.activateSortLayer ? this.props.onSort : null}
                 {...this.props.groupOptions}
+                titleTooltip={this.props.activateTitleTooltip}
                 propertiesChangeHandler={this.props.groupPropertiesChangeHandler}
                 onToggle={this.props.onToggleGroup}
                 style={this.props.groupStyle}
@@ -263,6 +266,7 @@ class LayerTree extends React.Component {
         return (
             <DefaultLayer
                 {...this.props.layerOptions}
+                titleTooltip={this.props.activateTitleTooltip}
                 onToggle={this.props.onToggleLayer}
                 activateOpacityTool={this.props.activateOpacityTool}
                 onContextMenu={this.props.onContextMenu}
@@ -393,6 +397,7 @@ class LayerTree extends React.Component {
  * @memberof plugins
  * @prop {boolean} cfg.activateFilterLayer: activate filter layers tool, default `true`
  * @prop {boolean} cfg.activateMapTitle: show map title, default `true`
+ * @prop {boolean} cfg.activateTitleTooltip: show tooltip with full title on layers and groups, default `true`
  * @prop {boolean} cfg.activateOpacityTool: show opacity slider in collapsible panel of layer, default `true`
  * @prop {boolean} cfg.activateToolsContainer: activate layers and group global toolbar, default `true`
  * @prop {boolean} cfg.activateLegendTool: show legend in collapsible panel, default `true`

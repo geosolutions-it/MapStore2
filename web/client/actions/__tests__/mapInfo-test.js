@@ -18,6 +18,7 @@ var {
     SHOW_REVERSE_GEOCODE,
     HIDE_REVERSE_GEOCODE,
     GET_VECTOR_INFO,
+    TOGGLE_MAPINFO_STATE,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
@@ -25,7 +26,8 @@ var {
     changeMapInfoFormat,
     showMapinfoRevGeocode,
     hideMapinfoRevGeocode,
-    getVectorInfo
+    getVectorInfo,
+    toggleMapInfoState
 } = require('../mapInfo');
 
 describe('Test correctness of the map actions', () => {
@@ -190,5 +192,10 @@ describe('Test correctness of the map actions', () => {
         const e = hideMapinfoRevGeocode();
         expect(e).toExist();
         expect(e.type).toBe(HIDE_REVERSE_GEOCODE);
+    });
+
+    it('toggle map info state', () => {
+        const retval = toggleMapInfoState();
+        expect(retval.type).toBe(TOGGLE_MAPINFO_STATE);
     });
 });

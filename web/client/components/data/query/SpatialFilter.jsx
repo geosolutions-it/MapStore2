@@ -50,6 +50,7 @@ class SpatialFilter extends React.Component {
             onExpandSpatialFilterPanel: () => {},
             onSelectSpatialMethod: () => {},
             onSelectSpatialOperation: () => {},
+            onChangeSpatialFilterValue: () => {},
             onChangeDrawingStatus: () => {},
             onRemoveSpatialSelection: () => {},
             onShowSpatialSelectionDetails: () => {},
@@ -171,25 +172,34 @@ class SpatialFilter extends React.Component {
 
     renderRoiPanel = () => {
         const selectedMethod = this.getMethodFromId(this.props.spatialField.method);
+        const value = selectedMethod
+            && selectedMethod.filterProps
+            && selectedMethod.filterProps.valueField
+            && this.props.spatialField
+            && this.props.spatialField.value
+            && this.props.spatialField.value[selectedMethod.filterProps.valueField];
         return (<Panel>
             <div className="container-fluid">
-                <Row className="filter-field-row">
-                    <Col xs={5}>
-                        <span>{this.props.spatialField.method}</span>
+                <Row className="filter-field-row filter-field-fixed-row">
+                    <Col xs={6}>
+                        <span>{selectedMethod && selectedMethod.name || selectedMethod.id}</span>
                     </Col>
-                    <Col xs={7}>
-                        <div style={{width: "140px"}}>
+                    <Col xs={6}>
                             <AutocompleteWFSCombobox
+                                originalValue={value}
+                                key={this.props.spatialField.method}
+                                options={selectedMethod}
                                 autocompleteStreamFactory={createWFSFetchStream}
                                 valueField={selectedMethod && selectedMethod.filterProps && selectedMethod.filterProps.valueField}
                                 textField={selectedMethod && selectedMethod.filterProps && selectedMethod.filterProps.valueField}
                                 url={selectedMethod && selectedMethod.url}
                                 filter="contains"
-                                onChangeDrawingStatus={this.props.actions.onChangeDrawingStatus}
+                                onChangeSpatialFilterValue={this.props.actions.onChangeSpatialFilterValue}
+                                onChangeDrawingStatus={(...props) => {
+                                    this.props.actions.onChangeDrawingStatus(...props);
+                                }}
                                 filterProps={selectedMethod && selectedMethod.filterProps}
                             />
-                        </div>
-
                     </Col>
                 </Row>
             </div>

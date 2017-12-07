@@ -7,7 +7,6 @@
  */
 const CHANGE_MEASUREMENT_TOOL = 'CHANGE_MEASUREMENT_TOOL';
 const CHANGE_MEASUREMENT_STATE = 'CHANGE_MEASUREMENT_STATE';
-const {setControlProperty} = require('./controls');
 
 // TODO: the measurement control should use the "controls" state
 function toggleMeasurement(measurement) {
@@ -19,7 +18,6 @@ function toggleMeasurement(measurement) {
 
 function changeMeasurement(measurement) {
     return (dispatch) => {
-        dispatch(setControlProperty('info', 'enabled', false, false));
         dispatch(toggleMeasurement(measurement));
     };
 }

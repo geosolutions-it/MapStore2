@@ -647,6 +647,64 @@ describe('FilterUtils', () => {
         let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj);
         expect(filter).toEqual(expected);
     });
+    it('Check SpatialFilterField OGC collectGeometries', () => {
+        let filterObj = {
+            spatialField: {
+                "operation": "INTERSECTS",
+                "attribute": "geometry",
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "TEST",
+                        cqlFilter: "INCLUDE",
+                        geometryName: "GEOMETRY"
+                    }
+                },
+                "geometry": {
+                    "type": "Point",
+                    "projection": "EPSG:4326",
+                    "coordinates": [1, 1]
+                }
+            }
+        };
+        const expectedGeom = "<ogc:Intersects>"
+         + '<ogc:PropertyName>geometry</ogc:PropertyName>'
+         + '<ogc:Function name="collectGeometries">'
+         + '<ogc:Function name="queryCollection">'
+         + '<ogc:Literal>TEST</ogc:Literal>'
+         + '<ogc:Literal>GEOMETRY</ogc:Literal>'
+         + '<ogc:Literal>INCLUDE</ogc:Literal>'
+         + '</ogc:Function></ogc:Function>'
+         + "</ogc:Intersects>";
+        let expected =
+            '<wfs:GetFeature service="WFS" version="2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"><wfs:Query typeNames="ft_name_test" srsName="EPSG:4326"><fes:Filter>'
+            + expectedGeom
+            + '</fes:Filter></wfs:Query></wfs:GetFeature>';
+        let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj);
+        expect(filter).toEqual(expected);
+    });
+    it('Check SpatialFilterField CQL collectGeometries', () => {
+        let filterObj = {
+            spatialField: {
+                "operation": "INTERSECTS",
+                "attribute": "geometry",
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "TEST",
+                        cqlFilter: "INCLUDE",
+                        geometryName: "GEOMETRY"
+                    }
+                },
+                "geometry": {
+                    "type": "Point",
+                    "projection": "EPSG:4326",
+                    "coordinates": [1, 1]
+                }
+            }
+        };
+
+        let filter = FilterUtils.toCQLFilter(filterObj);
+        expect(filter).toEqual('(INTERSECTS(geometry, collectGeometries(queryCollection(\'TEST\', \'GEOMETRY\',\'INCLUDE\'))))');
+    });
     it('Check SpatialFilterField cql', () => {
         let filterObj = {
             simpleFilterFields: [{

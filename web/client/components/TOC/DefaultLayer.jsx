@@ -36,7 +36,8 @@ class DefaultLayer extends React.Component {
         currentLocale: PropTypes.string,
         selectedNodes: PropTypes.array,
         filterText: PropTypes.string,
-        onUpdateNode: PropTypes.func
+        onUpdateNode: PropTypes.func,
+        titleTooltip: PropTypes.bool
     };
 
     static defaultProps = {
@@ -53,7 +54,8 @@ class DefaultLayer extends React.Component {
         currentLocale: 'en-US',
         selectedNodes: [],
         filterText: '',
-        onUpdateNode: () => {}
+        onUpdateNode: () => {},
+        titleTooltip: false
     };
 
     renderCollapsible = () => {
@@ -124,7 +126,7 @@ class DefaultLayer extends React.Component {
                 <div className="toc-default-layer-head">
                     {grab}
                     {this.renderVisibility()}
-                    <Title filterText={this.props.filterText} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onSelect} onContextMenu={this.props.onContextMenu}/>
+                    <Title tooltip={this.props.titleTooltip} filterText={this.props.filterText} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onSelect} onContextMenu={this.props.onContextMenu}/>
                     {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
                 </div>
                 {isEmpty ? null : this.renderCollapsible()}
