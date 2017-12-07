@@ -542,7 +542,7 @@ module.exports = {
                     action$.ofType(TOGGLE_CONTROL)
                         .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
                         .mergeMap(() => {
-                            const {drawStatus} = (store.getState()).draw;
+                            const {drawStatus} = (store.getState()).draw || {};
                             const acts = drawStatus !== 'clean' ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
                             return Rx.Observable.from(acts.concat(openFeatureGrid()));
                         }

@@ -11,7 +11,7 @@ const assign = require('object-assign');
 const Proj4js = require('proj4');
 const proj4 = Proj4js;
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
-const {toggleEditMode, toggleViewMode, openFeatureGrid, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid, GEOMETRY_CHANGED, OPEN_FEATURE_GRID} = require('../../actions/featuregrid');
+const {toggleEditMode, toggleViewMode, openFeatureGrid, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid, GEOMETRY_CHANGED, OPEN_FEATURE_GRID, openAdvancedSearch} = require('../../actions/featuregrid');
 const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
@@ -1414,19 +1414,16 @@ describe('featuregrid Epics', () => {
         };
 
         const newState = assign({}, state, stateFeaturegrid);
-        proj4.defs("EPSG:3044", "+proj=utm +zone=32 +ellps=GRS80 +units=m +no_defs");
-        testEpic(onOpenAdvancedSearch, 2, toggleControl('queryPanel', 'enabled'), actions => {
-            expect(actions.length).toBe(2);
+        testEpic(onOpenAdvancedSearch, 4, [openAdvancedSearch(), toggleControl('queryPanel', 'enabled')], actions => {
+
+            expect(actions.length).toBe(4);
             actions.map((action) => {
                 switch (action.type) {
                     case CHANGE_DRAWING_STATUS:
                         expect(action.status).toBe('clean');
                         break;
-                    case OPEN_FEATURE_GRID:
-                        expect(true).toBe(true);
-                        break;
                     default:
-                        expect(true).toBe(false);
+                        expect(true).toBe(true);
                 }
             });
             done();
