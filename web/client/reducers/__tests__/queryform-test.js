@@ -1006,11 +1006,8 @@ describe('Test the queryform reducer', () => {
         expect(newState.spatialField.attribute).toBe("GEOMETRY");
         expect(newState.spatialField.method).toBe("BBOX");
     });
-    it('attribute property on load undefied filter', () => {
+    it('attribute property on load an undefied filter', () => {
         const initialState = {
-            crossLayerFilter: {
-                attribute: "ATTRIBUTE1"
-            },
             spatialField: {
                 attribute: "GEOMETRY",
                 operation: "INTERSECTS"
