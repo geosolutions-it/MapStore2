@@ -1011,12 +1011,15 @@ describe('Test the queryform reducer', () => {
             spatialField: {
                 attribute: "GEOMETRY",
                 operation: "INTERSECTS"
+            },
+            crossLayerFilter: {
+                attribute: "GEOMETRY1"
             }
         };
         let action = loadFilter();
         let newState = queryform(initialState, action);
-        expect(newState.crossLayerFilter.attribute).toNotExist();
-        expect(newState.spatialField.attribute).toNotExist();
+        expect(newState.crossLayerFilter.attribute).toBe("GEOMETRY1");
+        expect(newState.spatialField.attribute).toBe("GEOMETRY");
         expect(newState.spatialField.operation).toBe("INTERSECTS");
     });
     /* it('Open Zones Menu', () => {
