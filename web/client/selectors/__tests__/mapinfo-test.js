@@ -8,7 +8,7 @@
 
 
 const expect = require('expect');
-const {mapInfoRequestsSelector, generalInfoFormatSelector} = require('../mapinfo');
+const {mapInfoRequestsSelector, generalInfoFormatSelector, stopGetFeatureInfoSelector} = require('../mapinfo');
 
 describe('Test mapinfo selectors', () => {
     it('test generalInfoFormatSelector default value', () => {
@@ -37,4 +37,65 @@ describe('Test mapinfo selectors', () => {
         });
         expect(props).toEqual(['request']);
     });
+    it('test stopGetFeatureInfoSelector', () => {
+        const props = stopGetFeatureInfoSelector({
+            mapInfo: {
+                enabled: true
+            }
+        });
+        expect(props).toEqual(false);
+    });
+    it('test stopGetFeatureInfoSelector when identify is disabled', () => {
+        const props = stopGetFeatureInfoSelector({
+            mapInfo: {
+                enabled: false
+            }
+        });
+        expect(props).toEqual(true);
+    });
+    it('test stopGetFeatureInfoSelector with draw active', () => {
+        const props = stopGetFeatureInfoSelector({
+            mapInfo: {
+                enabled: true
+            },
+            draw: {
+                drawStatus: 'start'
+            }
+        });
+        expect(props).toEqual(true);
+    });
+    it('test stopGetFeatureInfoSelector with measurement active', () => {
+        const props = stopGetFeatureInfoSelector({
+            mapInfo: {
+                enabled: true
+            },
+            measurement: {
+                areaMeasureEnabled: true
+            }
+        });
+        expect(props).toEqual(true);
+    });
+    it('test stopGetFeatureInfoSelector with annotations editing', () => {
+        const props = stopGetFeatureInfoSelector({
+            mapInfo: {
+                enabled: true
+            },
+            annotations: {
+                editing: {}
+            }
+        });
+        expect(props).toEqual(true);
+    });
+    it('test stopGetFeatureInfoSelector with grid editing', () => {
+        const props = stopGetFeatureInfoSelector({
+            mapInfo: {
+                enabled: true
+            },
+            featuregrid: {
+                mode: "EDIT"
+            }
+        });
+        expect(props).toEqual(true);
+    });
+
 });
