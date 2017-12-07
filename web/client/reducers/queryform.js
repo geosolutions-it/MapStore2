@@ -308,14 +308,14 @@ function queryform(state = initialState, action) {
             return newState;
         }
         case REMOVE_SPATIAL_SELECT: {
-            let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute });
+            let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute, value: undefined });
             return assign({}, state, {spatialField: assign({}, state.spatialField, spatialField)});
         }
         case SHOW_SPATIAL_DETAILS: {
             return assign({}, state, {showDetailsPanel: action.show});
         }
         case QUERY_FORM_RESET: {
-            let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute });
+            let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute, value: undefined });
             let crossLayerFilter = { attribute: state.crossLayerFilter && state.crossLayerFilter.attribute };
             return assign({}, state, initialState, {
                 spatialField,

@@ -176,7 +176,7 @@ class PagedCombobox extends React.Component {
                 this.props.onToggle(expanded, feature, this.props.pagination.currentPage);
                 // if when closing the menu it finds a feature with the text inserted, then update the spatial field
                 if (feature && !expanded) {
-                    this.onSelect(this.props.selectedValue, feature, this.props.srsName, this.props.style);
+                    this.props.onSelect(this.props.selectedValue, feature, this.props.srsName, this.props.style);
                 }
                 lock = false;
 

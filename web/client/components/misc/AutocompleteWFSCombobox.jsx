@@ -32,7 +32,7 @@ const streamEnhancer = mapPropsStream(props$ => {
 
 // component enhanced with props from stream, and local state
 const PagedWFSComboboxEnhanced = streamEnhancer(
-    ({ open, toggle, select, focus, change, value, valuesCount, onChangeDrawingStatus,
+    ({ open, toggle, select, focus, change, changed, originalValue, value, valuesCount, onChangeDrawingStatus,
     loadNextPage, loadPrevPage, maxFeatures, currentPage, itemComponent, features,
     busy, data, loading = false, valueField, textField, filter, srsName, style }) => {
         const numberOfPages = Math.ceil(valuesCount / maxFeatures);
@@ -43,7 +43,7 @@ const PagedWFSComboboxEnhanced = streamEnhancer(
             srsName={srsName} busy={busy} dropUp={false} data={data} open={open} onChangeDrawingStatus={onChangeDrawingStatus}
             valueField={valueField} textField={textField} itemComponent={itemComponent} filter={filter}
             onFocus={focus} onToggle={toggle} onChange={change} onSelect={select} features={features} style={style}
-            selectedValue={value} loading={loading}/>);
+            selectedValue={!changed ? originalValue || value : value} loading={loading}/>);
     });
 
 // state enhancer for local props
@@ -57,6 +57,7 @@ const addStateHandlers = compose(
         open: false,
         currentPage: 1,
         maxFeatures: 5,
+        changed: props.value,
         value: props.value,
         onChangeDrawingStatus: props.onChangeDrawingStatus,
         itemComponent: props.itemComponent
@@ -74,6 +75,7 @@ const addStateHandlers = compose(
                 delayDebounce: 500,
                 selected: false,
                 changingPage: false,
+                changed: true,
                 performFetch: state.selected && !state.changingPage ? false : true,
                 value: state.selected && state.changingPage && state.value
                     || (typeof v === "string" ? v : v[valuefield]),
