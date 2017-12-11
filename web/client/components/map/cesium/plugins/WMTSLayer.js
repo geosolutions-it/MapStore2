@@ -10,6 +10,7 @@ var Layers = require('../../../../utils/cesium/Layers');
 var ConfigUtils = require('../../../../utils/ConfigUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
 const WMTSUtils = require('../../../../utils/WMTSUtils');
+const SecurityUtils = require('../../../../utils/SecurityUtils');
 var Cesium = require('../../../../libs/cesium');
 var assign = require('object-assign');
 var {isObject, isArray, slice, get} = require('lodash');
@@ -93,6 +94,15 @@ const getMatrixOptions = (options, srs) => {
     return {tileMatrixSet, matrixIds};
 };
 
+const getAuthenticationParam = options => {
+    const urls = getWMTSURLs(isArray(options.url) ? options.url : [options.url]);
+    let authenticationParam = {};
+    urls.forEach(url => {
+        SecurityUtils.addAuthenticationParameter(url, authenticationParam, options.securityToken);
+    });
+    return authenticationParam;
+};
+
 function wmtsToCesiumOptions(options) {
     let srs = 'EPSG:4326';
     let {tileMatrixSet, matrixIds} = getMatrixOptions(options, srs);
@@ -129,10 +139,10 @@ function wmtsToCesiumOptions(options) {
         tileHeight: options.tileHeight || options.tileSize || 256,
         tileMatrixSetID: tileMatrixSet,
         maximumLevel: 30
-    });
+    }, getAuthenticationParam(options));
 }
 
-const createLayer = (options) => {
+const createLayer = options => {
     let layer;
     const cesiumOptions = wmtsToCesiumOptions(options);
     layer = new Cesium.WebMapTileServiceImageryProvider(cesiumOptions);
@@ -147,4 +157,11 @@ const createLayer = (options) => {
     return layer;
 };
 
-Layers.registerType('wmts', createLayer);
+const updateLayer = (layer, newOptions, oldOptions) => {
+    if (newOptions.securityToken !== oldOptions.securityToken) {
+        return createLayer(newOptions);
+    }
+    return null;
+};
+
+Layers.registerType('wmts', {create: createLayer, update: updateLayer});

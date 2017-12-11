@@ -43,19 +43,26 @@ function getMatrixIds(matrix, srs) {
     return isObject(matrix) && matrix[srs] || matrix;
 }
 
-Layers.registerType('wmts', {
-    create: (options) => {
-        const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
-        const queryParameters = wmtsToLeafletOptions(options) || {};
-        urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
-        const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
-        return L.tileLayer.wmts(urls, queryParameters, {
-            tileMatrixPrefix: options.tileMatrixPrefix || queryParameters.tileMatrixSet + ':' || srs + ':',
-            originY: options.originY || 20037508.3428,
-            originX: options.originX || -20037508.3428,
-            ignoreErrors: options.ignoreErrors || false,
-            matrixIds: options.matrixIds && getMatrixIds(options.matrixIds, queryParameters.tileMatrixSet || srs) || null,
-            matrixSet: head(options.tileMatrixSet.filter(t => t['ows:Identifier'] === queryParameters.tileMatrixSet)) || null
-        });
+const createLayer = options => {
+    const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
+    const queryParameters = wmtsToLeafletOptions(options) || {};
+    urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
+    const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
+    return L.tileLayer.wmts(urls, queryParameters, {
+        tileMatrixPrefix: options.tileMatrixPrefix || queryParameters.tileMatrixSet + ':' || srs + ':',
+        originY: options.originY || 20037508.3428,
+        originX: options.originX || -20037508.3428,
+        ignoreErrors: options.ignoreErrors || false,
+        matrixIds: options.matrixIds && getMatrixIds(options.matrixIds, queryParameters.tileMatrixSet || srs) || null,
+        matrixSet: head(options.tileMatrixSet.filter(t => t['ows:Identifier'] === queryParameters.tileMatrixSet)) || null
+    });
+};
+
+const updateLayer = (layer, newOptions, oldOptions) => {
+    if (oldOptions.securityToken !== newOptions.securityToken) {
+        return createLayer(newOptions);
     }
-});
+    return null;
+};
+
+Layers.registerType('wmts', {create: createLayer, update: updateLayer});

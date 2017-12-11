@@ -55,12 +55,14 @@ function getQueryString(parameters) {
     return Object.keys(parameters).map((key) => key + '=' + encodeURIComponent(parameters[key])).join('&');
 }
 
-function getAuthenticationParam(options) {
+const getAuthenticationParam = options => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     let authenticationParam = {};
-    urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, authenticationParam, options.securityToken));
+    urls.forEach(url => {
+        SecurityUtils.addAuthenticationParameter(url, authenticationParam, options.securityToken);
+    });
     return authenticationParam;
-}
+};
 
 function wmsToCesiumOptionsSingleTile(options) {
     const opacity = options.opacity !== undefined ? options.opacity : 1;
