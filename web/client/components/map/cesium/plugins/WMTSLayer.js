@@ -14,9 +14,10 @@ const SecurityUtils = require('../../../../utils/SecurityUtils');
 var Cesium = require('../../../../libs/cesium');
 var assign = require('object-assign');
 var {isObject, isArray, slice, get} = require('lodash');
+const urlParser = require('url');
 
-function getWMTSURLs( urls ) {
-    return urls.map((url) => url.split("\?")[0]);
+function getWMTSURLs( urls, queryParametersString ) {
+    return urls.map((url) => url.split("\?")[0] + queryParametersString);
 }
 
 
@@ -121,8 +122,10 @@ function wmtsToCesiumOptions(options) {
     }
     // NOTE: can we use opacity to manage visibility?
     const isValid = isValidTile(options.matrixIds && options.matrixIds[tileMatrixSet]);
+    const queryParametersString = urlParser.format({ query: {...getAuthenticationParam(options)}});
+
     return assign({
-        url: getWMTSURLs(isArray(options.url) ? options.url : [options.url]), // TODO subdomain support, if use {s} switches to RESTFul mode
+        url: getWMTSURLs(isArray(options.url) ? options.url : [options.url], queryParametersString), // TODO subdomain support, if use {s} switches to RESTFul mode
         format: options.format || 'image/png',
         isValid,
         // tileDiscardPolicy: {
@@ -138,8 +141,9 @@ function wmtsToCesiumOptions(options) {
         tileWidth: options.tileWidth || options.tileSize || 256,
         tileHeight: options.tileHeight || options.tileSize || 256,
         tileMatrixSetID: tileMatrixSet,
-        maximumLevel: 30
-    }, getAuthenticationParam(options));
+        maximumLevel: 30,
+        parameters: {...getAuthenticationParam(options)}
+    });
 }
 
 const createLayer = options => {

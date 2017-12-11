@@ -11,7 +11,8 @@ const {
     userSelector,
     userRoleSelector,
     isAdminUserSelector,
-    rulesSelector
+    rulesSelector,
+    securityTokenSelector
 } = require('../security');
 const id = 1833;
 const name = 'teo';
@@ -76,6 +77,10 @@ describe('Test security selectors', () => {
     it('test rulesSelector user ', () => {
         const rules = rulesSelector(initialState);
         expect(rules).toExist();
+    });
+    it('test securityTokenSelector', () => {
+        expect(securityTokenSelector({ security: { token: '########-####-####-####-###########' }})).toBe('########-####-####-####-###########');
+        expect(securityTokenSelector({})).toBe(undefined);
     });
 
 });
