@@ -68,6 +68,7 @@ const initialState = {
     showGeneratedFilter: false,
     attributePanelExpanded: true,
     spatialPanelExpanded: true,
+    crossLayerExpanded: true,
     showDetailsPanel: false,
     groupLevels: 5,
     useMapProjection: false,
@@ -307,14 +308,14 @@ function queryform(state = initialState, action) {
             return newState;
         }
         case REMOVE_SPATIAL_SELECT: {
-            let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute });
+            let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute, value: undefined });
             return assign({}, state, {spatialField: assign({}, state.spatialField, spatialField)});
         }
         case SHOW_SPATIAL_DETAILS: {
             return assign({}, state, {showDetailsPanel: action.show});
         }
         case QUERY_FORM_RESET: {
-            let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute });
+            let spatialField = assign({}, initialState.spatialField, { attribute: state.spatialField.attribute, value: undefined });
             let crossLayerFilter = { attribute: state.crossLayerFilter && state.crossLayerFilter.attribute };
             return assign({}, state, initialState, {
                 spatialField,
@@ -490,9 +491,14 @@ function queryform(state = initialState, action) {
             return {...state, simpleFilterFields: []};
         }
         case LOAD_FILTER:
-            const {spatialField, filterFields, groupFields, crossLayerFilter} = (action.filter || initialState);
+            const {attribute, ...other} = initialState.spatialField;
+            const cleanInitialState = assign({}, initialState, {spatialField: {...other}});
+            const {spatialField, filterFields, groupFields, crossLayerFilter, attributePanelExpanded, spatialPanelExpanded, crossLayerExpanded} = (action.filter || cleanInitialState);
             return {...state,
                     ...{
+                    attributePanelExpanded,
+                    spatialPanelExpanded,
+                    crossLayerExpanded,
                     spatialField: {
                         ...spatialField,
                         // This prevents an empty filter to override attribute settings made before from previous CHANGE_SPATIAL_ATTRIBUTE
@@ -502,6 +508,7 @@ function queryform(state = initialState, action) {
                     filterFields,
                     groupFields,
                     crossLayerFilter: {
+                        // TODO:: Improve the restore
                         ...crossLayerFilter,
                         // This prevents an empty filter to override attribute settings made before from previous CHANGE_SPATIAL_ATTRIBUTE
                         attribute: crossLayerFilter && crossLayerFilter.attribute || state.crossLayerFilter && state.crossLayerFilter.attribute

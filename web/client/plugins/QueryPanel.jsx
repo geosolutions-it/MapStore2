@@ -75,7 +75,7 @@ const {
     changeDrawingStatus,
     endDrawing
 } = require('../actions/draw');
-
+const onReset = reset.bind(null, "query");
 // connecting a Dumb component to the store
 // makes it a smart component
 // we both connect state => props
@@ -145,7 +145,7 @@ const SmartQueryForm = connect((state) => {
         }, dispatch),
         queryToolbarActions: bindActionCreators({
             onQuery: search,
-            onReset: reset,
+            onReset,
             onChangeDrawingStatus: changeDrawingStatus
         }, dispatch),
         crossLayerFilterActions: bindActionCreators({

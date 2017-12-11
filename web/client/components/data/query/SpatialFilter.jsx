@@ -172,6 +172,12 @@ class SpatialFilter extends React.Component {
 
     renderRoiPanel = () => {
         const selectedMethod = this.getMethodFromId(this.props.spatialField.method);
+        const value = selectedMethod
+            && selectedMethod.filterProps
+            && selectedMethod.filterProps.valueField
+            && this.props.spatialField
+            && this.props.spatialField.value
+            && this.props.spatialField.value[selectedMethod.filterProps.valueField];
         return (<Panel>
             <div className="container-fluid">
                 <Row className="filter-field-row filter-field-fixed-row">
@@ -180,7 +186,7 @@ class SpatialFilter extends React.Component {
                     </Col>
                     <Col xs={6}>
                             <AutocompleteWFSCombobox
-                                value={this.props.spatialField}
+                                originalValue={value}
                                 key={this.props.spatialField.method}
                                 options={selectedMethod}
                                 autocompleteStreamFactory={createWFSFetchStream}

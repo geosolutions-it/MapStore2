@@ -265,7 +265,7 @@ const FilterUtils = {
 
         let spatialFilter;
         if (objFilter.spatialField && objFilter.spatialField.geometry && objFilter.spatialField.operation) {
-            if (objFilter.spatialField.operation === 'BBOX' && isArray(objFilter.spatialField.geometry.extent[0])) {
+            if (objFilter.spatialField.operation === 'BBOX' && isArray(objFilter.spatialField.geometry && objFilter.spatialField.geometry.extent[0])) {
                 const OP = "OR";
                 const bBoxFilter = objFilter.spatialField.geometry.extent.reduce((a, extent) => {
                     let filter = Object.assign({}, objFilter);

@@ -23,7 +23,7 @@ const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {setControlProperty} = require('../actions/controls');
 const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS} = require('../actions/wfsquery');
-const {reset, QUERY_FORM_RESET, QUERY_FORM_SEARCH} = require('../actions/queryform');
+const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 
 const {BROWSE_DATA, changeLayerProperties, refreshLayerVersion} = require('../actions/layers');
@@ -36,7 +36,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
-    STOP_SYNC_WMS, startSyncWMS} = require('../actions/featuregrid');
+    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter} = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL, resetControls} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
@@ -48,11 +48,14 @@ const {queryPanelSelector} = require('../selectors/controls');
 
 const {error, warning} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive} = require('../selectors/query');
+
 const {getLayerFromId} = require('../selectors/layers');
+
 const {interceptOGCError} = require('../utils/ObservableUtils');
 
 const {gridUpdateToQueryUpdate} = require('../utils/FeatureGridUtils');
 
+const {queryFormUiStateSelector} = require('../selectors/queryform');
 /**
 @return a spatial filter with coordinates reprojeted to nativeCrs
 */
@@ -166,8 +169,9 @@ const createLoadPageFlow = (store) => ({page, size} = {}) => {
     ));
 };
 
-const createInitialQueryFlow = (action$, store, {url, name} = {}) => {
-    const createInitialQuery = () => createQuery(url, {
+const createInitialQueryFlow = (action$, store, {url, name, id} = {}) => {
+    const filterObj = get(store.getState(), `featuregrid.advancedFilters.${id}`);
+    const createInitialQuery = () => createQuery(url, filterObj || {
         featureTypeName: name,
         filterType: 'OGC',
         ogcVersion: '1.1.0'
@@ -201,20 +205,20 @@ const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
  */
 module.exports = {
     featureGridBrowseData: (action$, store) =>
-        action$.ofType(BROWSE_DATA).switchMap( ({layer}) =>
-            Rx.Observable.of(
+        action$.ofType(BROWSE_DATA).switchMap( ({layer}) => {
+            const currentTypeName = get(store.getState(), "query.typeName");
+            return Rx.Observable.of(
                 setControlProperty('drawer', 'enabled', false),
                 setLayer(layer.id),
                 openFeatureGrid()
-            ).merge(
-                createInitialQueryFlow(action$, store, layer)
-            ).merge(
-                get(store.getState(), "query.typeName") !== name
-                    ? Rx.Observable.of(reset())
-                    : Rx.Observable.empty()
-
-            )
-        ),
+                ).merge(
+                    createInitialQueryFlow(action$, store, layer)
+                )
+                .merge(
+                    Rx.Observable.of(reset())
+                    .filter(() => currentTypeName !== layer.name)
+                );
+        }),
     /**
      * Intercepts layer selection to set it's id in the status and retrieve it later
      * @memberof epics.featuregrid
@@ -521,31 +525,27 @@ module.exports = {
     onOpenAdvancedSearch: (action$, store) =>
         action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
             return Rx.Observable.of(
+                loadFilter(get(store.getState(), `featuregrid.advancedFilters.${selectedLayerIdSelector(store.getState())}`)),
                 closeFeatureGrid(),
                 setControlProperty('queryPanel', "enabled", true)
-            ).merge(
-                action$.ofType(QUERY_FORM_RESET) // ON RESET YOU HAVE TO PERFORM A SEARCH AGAIN WHEN BACK
-                    .switchMap(() => action$.ofType(TOGGLE_CONTROL)
-                    .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
-                    .switchMap( () => createInitialQueryFlow(action$, store, {
-                        url: get(store.getState(), "query.url"),
-                        name: get(store.getState(), "query.typeName")
-                    }))))
+            )
             .merge(
                 Rx.Observable.race(
                     action$.ofType(QUERY_FORM_SEARCH).mergeMap((action) =>
                         Rx.Observable.of(
                             createQuery(action.searchUrl, action.filterObj),
+                            storeAdvancedSearchFilter(assign({}, queryFormUiStateSelector(store.getState()), action.filterObj)),
                             setControlProperty('queryPanel', "enabled", false),
                             openFeatureGrid()
                         )
                     ),
                     action$.ofType(TOGGLE_CONTROL)
                         .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
-                        .mergeMap(() =>
-                            Rx.Observable.of(
-                                openFeatureGrid()
-                            )
+                        .mergeMap(() => {
+                            const {drawStatus} = (store.getState()).draw || {};
+                            const acts = drawStatus !== 'clean' ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
+                            return Rx.Observable.from(acts.concat(openFeatureGrid()));
+                        }
                     )
                 ).takeUntil(action$.ofType(OPEN_FEATURE_GRID, LOCATION_CHANGE))
             );

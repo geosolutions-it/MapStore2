@@ -8,12 +8,13 @@ const ListItem = ({ item } = {}) => (
     {item && item.name ? <Message msgId={item.name} /> : null}
   </span>
 );
-module.exports = ({spatialOperations = [], onChange= () => {}} = {}) =>
+module.exports = ({spatialOperations = [], onChange= () => {}, value} = {}) =>
 (<DropdownList
         valueField="id"
         className="geometry-operation-selector"
         onChange={onChange}
         data={spatialOperations}
         valueComponent={ListItem}
+        value={value}
         itemComponent={ListItem} />
     );

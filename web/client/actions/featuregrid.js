@@ -52,6 +52,14 @@ const MODES = {
 };
 const START_SYNC_WMS = 'FEATUREGRID:START_SYNC_WMS';
 const STOP_SYNC_WMS = 'FEATUREGRID:STOP_SYNC_WMS';
+const STORE_ADVANCED_SEARCH_FILTER = 'STORE_ADVANCED_SEARCH_FILTER';
+
+function storeAdvancedSearchFilter(filterObj) {
+    return {
+        type: STORE_ADVANCED_SEARCH_FILTER,
+        filterObj
+    };
+}
 
 
 function initPlugin(options = {}) {
@@ -359,5 +367,6 @@ module.exports = {
     toggleViewMode,
     initPlugin, INIT_PLUGIN,
     START_SYNC_WMS, startSyncWMS,
-    STOP_SYNC_WMS
+    STOP_SYNC_WMS,
+    storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER
 };
