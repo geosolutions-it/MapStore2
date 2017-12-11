@@ -13,10 +13,10 @@ const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
-       browseData, selectNode, filterLayers, refreshLayerVersion} = require('../actions/layers');
+       browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
-const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector} = require('../selectors/layers');
+const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector} = require('../selectors/layers');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
@@ -34,6 +34,8 @@ const {isObject, head} = require('lodash');
 
 const {setControlProperty} = require('../actions/controls');
 const {createWidget} = require('../actions/widgets');
+
+const {getMetadataRecordById} = require("../actions/catalog");
 
 const {activeSelector} = require("../selectors/catalog");
 
@@ -66,6 +68,7 @@ const tocSelector = createSelector(
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
         layerSettingSelector,
+        layerMetadataSelector,
         mapSelector,
         currentLocaleSelector,
         selectedNodesSelector,
@@ -75,10 +78,11 @@ const tocSelector = createSelector(
         activeSelector,
         widgetBuilderAvailable,
         generalInfoFormatSelector
-    ], (enabled, groups, settings, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat) => ({
+    ], (enabled, groups, settings, layerMetadata, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat) => ({
         enabled,
         groups,
         settings,
+        layerMetadata,
         currentZoomLvl: map && map.zoom,
         scales: mapUtils.getScales(
             map && map.projection || 'EPSG:3857',
@@ -124,6 +128,7 @@ class LayerTree extends React.Component {
         buttonContent: PropTypes.node,
         groups: PropTypes.array,
         settings: PropTypes.object,
+        layerMetadata: PropTypes.object,
         refreshMapEnabled: PropTypes.bool,
         groupStyle: PropTypes.object,
         groupPropertiesChangeHandler: PropTypes.func,
@@ -154,6 +159,7 @@ class LayerTree extends React.Component {
         activateZoomTool: PropTypes.bool,
         activateQueryTool: PropTypes.bool,
         activateSettingsTool: PropTypes.bool,
+        activateMetedataTool: PropTypes.bool,
         activateWidgetTool: PropTypes.bool,
         visibilityCheckType: PropTypes.string,
         settingsOptions: PropTypes.object,
@@ -174,6 +180,8 @@ class LayerTree extends React.Component {
         filteredGroups: PropTypes.array,
         noFilterResults: PropTypes.bool,
         onAddLayer: PropTypes.func,
+        onGetMetadataRecord: PropTypes.func,
+        hideLayerMetadata: PropTypes.func,
         activateAddLayerButton: PropTypes.bool,
         catalogActive: PropTypes.bool,
         refreshLayerVersion: PropTypes.func
@@ -203,6 +211,7 @@ class LayerTree extends React.Component {
         activateLegendTool: true,
         activateZoomTool: true,
         activateSettingsTool: true,
+        activateMetedataTool: true,
         activateRemoveLayer: true,
         activateQueryTool: false,
         activateWidgetTool: false,
@@ -235,6 +244,8 @@ class LayerTree extends React.Component {
         filteredGroups: [],
         noFilterResults: false,
         onAddLayer: () => {},
+        onGetMetadataRecord: () => {},
+        hideLayerMetadata: () => {},
         activateAddLayerButton: false,
         catalogActive: false,
         refreshLayerVersion: () => {}
@@ -302,6 +313,7 @@ class LayerTree extends React.Component {
                             selectedGroups={this.props.selectedGroups}
                             generalInfoFormat={this.props.generalInfoFormat}
                             settings={this.props.settings}
+                            layerMetadata={this.props.layerMetadata}
                             activateTool={{
                                 activateToolsContainer: this.props.activateToolsContainer,
                                 activateRemoveLayer: this.props.activateRemoveLayer,
@@ -310,6 +322,7 @@ class LayerTree extends React.Component {
                                 activateSettingsTool: this.props.activateSettingsTool,
                                 activateAddLayer: this.props.activateAddLayerButton && !this.props.catalogActive,
                                 includeDeleteButtonInSettings: false,
+                                activateMetedataTool: this.props.activateMetedataTool,
                                 activateWidgetTool: this.props.activateWidgetTool
                             }}
                             options={{
@@ -346,7 +359,9 @@ class LayerTree extends React.Component {
                                 reloadTooltip: {
                                     LAYER: <Message msgId="toc.toolReloadLayerTooltip"/>,
                                     LAYERS: <Message msgId="toc.toolReloadLayersTooltip"/>
-                                }
+                                },
+                                layerMetadataTooltip: <Message msgId="toc.layerMetadata.toolLayerMetadataTooltip"/>,
+                                layerMetadataPanelTitle: <Message msgId="toc.layerMetadata.layerMetadataPanelTitle"/>
                             }}
                             onToolsActions={{
                                 onZoom: this.props.onZoomToExtent,
@@ -361,6 +376,8 @@ class LayerTree extends React.Component {
                                 onHideSettings: this.props.hideSettings,
                                 onReload: this.props.refreshLayerVersion,
                                 onAddLayer: this.props.onAddLayer,
+                                onGetMetadataRecord: this.props.onGetMetadataRecord,
+                                onHideLayerMetadata: this.props.hideLayerMetadata,
                                 onShow: this.props.layerPropertiesChangeHandler}}/>
                     }/>
                 <div className={'mapstore-toc' + bodyClass}>
@@ -437,9 +454,15 @@ const TOCPlugin = connect(tocSelector, {
     onSelectNode: selectNode,
     onFilter: filterLayers,
     onAddLayer: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+    onGetMetadataRecord: getMetadataRecordById,
+    hideLayerMetadata,
     onNewWidget: () => createWidget(),
     refreshLayerVersion
 })(LayerTree);
+
+const API = {
+    csw: require('../api/CSW')
+};
 
 module.exports = {
     TOCPlugin: assign(TOCPlugin, {
@@ -470,5 +493,6 @@ module.exports = {
     reducers: {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
-    }
+    },
+    epics: require("../epics/catalog")(API)
 };

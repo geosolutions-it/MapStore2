@@ -235,7 +235,6 @@
             "toggleLayerVisibility": "Activar / desactivar la visibilidad del mapa",
             "displayLegendAndTools": "Mostrar la leyenda y las herramientas",
             "zoomToLayerExtent": "Zoom sobre la extensión del mapa",
-
             "addLayer": "Añadir capa",
             "toolZoomToLayerTooltip": "Zoom to selected layer extent",
             "toolZoomToLayersTooltip": "Zoom to selected layers extent",
@@ -273,6 +272,13 @@
                 "search": "Refrescar las optiones de búsqueda",
                 "title": "Refrescar el título",
                 "dimensions": "Refrescar las dimensiones"
+            },
+            "layerMetadata": {
+                "toolLayerMetadataTooltip": "Mostrar los metadatos de la capa seleccionada",
+                "layerMetadataPanelTitle": "Metadatos de capa",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Error en la búsqueda de metadatos"
+                }
             }
         },
         "print":{

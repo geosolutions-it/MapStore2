@@ -347,6 +347,7 @@ const LayersUtils = {
             hideLoading: layer.hideLoading || false,
             handleClickOnLayer: layer.handleClickOnLayer || false,
             featureInfo: layer.featureInfo,
+            catalogURL: layer.catalogURL,
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },

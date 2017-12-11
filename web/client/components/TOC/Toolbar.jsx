@@ -14,6 +14,7 @@ const {head} = require('lodash');
 const ConfirmModal = require('../maps/modals/ConfirmModal');
 const SettingsModal = require('./fragments/SettingsModal');
 const GroupSettingsModal = require('./fragments/GroupSettingsModal');
+const LayerMetadataModal = require('./fragments/LayerMetadataModal');
 
 class Toolbar extends React.Component {
 
@@ -27,7 +28,8 @@ class Toolbar extends React.Component {
         activateTool: PropTypes.object,
         options: PropTypes.object,
         style: PropTypes.object,
-        settings: PropTypes.object
+        settings: PropTypes.object,
+        layerMetadata: PropTypes.object
     };
 
     static defaultProps = {
@@ -47,6 +49,8 @@ class Toolbar extends React.Component {
             onHideSettings: () => {},
             onReload: () => {},
             onAddLayer: () => {},
+            onGetMetadataRecord: () => {},
+            onHideLayerMetadata: () => {},
             onShow: () => {}
         },
         text: {
@@ -75,7 +79,9 @@ class Toolbar extends React.Component {
             reloadTooltip: {
                 LAYER: '',
                 LAYERS: ''
-            }
+            },
+            layerMetadataTooltip: '',
+            layerMetadataPanelTitle: ''
         },
         activateTool: {
             activateToolsContainer: true,
@@ -84,7 +90,8 @@ class Toolbar extends React.Component {
             activateQueryTool: true,
             activateSettingsTool: true,
             activateAddLayer: true,
-            includeDeleteButtonInSettings: false
+            includeDeleteButtonInSettings: false,
+            activateMetedataTool: true
         },
         options: {
             modalOptions: {},
@@ -93,7 +100,8 @@ class Toolbar extends React.Component {
         style: {
             chartStyle: {}
         },
-        settings: {}
+        settings: {},
+        layerMetadata: {}
     };
 
     state = {
@@ -154,6 +162,11 @@ class Toolbar extends React.Component {
     render() {
         const status = this.getStatus();
         const settingModal = status === 'GROUP' || status === 'LAYER' ? this.getSettingsModal(status) : null;
+        const layerMetadataModal = (<LayerMetadataModal
+                                key="toollayermetadatamodal"
+                                layerMetadata={this.props.layerMetadata}
+                                hideLayerMetadata={this.props.onToolsActions.onHideLayerMetadata}
+                                layerMetadataPanelTitle={this.props.text.layerMetadataPanelTitle} />);
         return this.props.activateTool.activateToolsContainer ? (
         <ButtonGroup>
             <ReactCSSTransitionGroup
@@ -175,7 +188,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {this.props.activateTool.activateSettingsTool && (status === 'LAYER' || status === 'GROUP') ?
+                {this.props.activateTool.activateSettingsTool && (status === 'LAYER' || status === 'GROUP') && !this.props.layerMetadata.expanded ?
                     <OverlayTrigger
                         key="settings"
                         placement="top"
@@ -185,7 +198,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {this.props.activateTool.activateQueryTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded ?
+                {this.props.activateTool.activateQueryTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded ?
                     <OverlayTrigger
                         key="featuresGrid"
                         placement="top"
@@ -195,7 +208,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYERS_LOAD_ERROR') && this.props.selectedLayers.length > 0 && !this.props.settings.expanded ?
+                {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYERS_LOAD_ERROR') && this.props.selectedLayers.length > 0 && !this.props.settings.expanded && !this.props.layerMetadata.expanded ?
                     <OverlayTrigger
                         key="removeNode"
                         placement="top"
@@ -215,13 +228,23 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {this.props.activateTool.activateWidgetTool && (status === 'LAYER') && this.props.selectedLayers.length === 1 && !this.props.settings.expanded ?
+                {this.props.activateTool.activateWidgetTool && (status === 'LAYER') && this.props.selectedLayers.length === 1 && !this.props.settings.expanded && !this.props.layerMetadata.expanded ?
                     <OverlayTrigger
                         key="widgets"
                         placement="top"
                         overlay={<Tooltip id="toc-tooltip-widgets">{this.props.text.createWidgetTooltip}</Tooltip>}>
                         <Button bsStyle="primary" className="square-button-md" onClick={this.props.onToolsActions.onNewWidget}>
                             <Glyphicon glyph="stats" />
+                        </Button>
+                    </OverlayTrigger>
+                : null}
+                {this.props.activateTool.activateMetedataTool && (status === 'LAYER') && this.props.selectedLayers[0].catalogURL && !this.props.settings.expanded ?
+                    <OverlayTrigger
+                        key="layerMetadata"
+                        placement="top"
+                        overlay={<Tooltip id="legend-tooltip-metadata">{this.props.text.layerMetadataTooltip}</Tooltip>}>
+                        <Button key="layer-metadata" bsStyle={this.props.layerMetadata.expanded ? 'success' : 'primary'} className="square-button-md" onClick={() => this.showMetadata()}>
+                            <Glyphicon glyph="info-sign" />
                         </Button>
                     </OverlayTrigger>
                 : null}
@@ -237,6 +260,7 @@ class Toolbar extends React.Component {
                 cancelText={this.props.text.confirmDeleteCancelText}
                 body={this.props.text.confirmDeleteMessage} />
             {settingModal}
+            {layerMetadataModal}
         </ButtonGroup>) : null;
     }
 
@@ -277,6 +301,14 @@ class Toolbar extends React.Component {
             }
         } else {
             this.props.onToolsActions.onHideSettings();
+        }
+    }
+
+    showMetadata = () => {
+        if (!this.props.layerMetadata.expanded) {
+            this.props.onToolsActions.onGetMetadataRecord();
+        } else {
+            this.props.onToolsActions.onHideLayerMetadata();
         }
     }
 

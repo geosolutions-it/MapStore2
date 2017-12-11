@@ -157,7 +157,8 @@ describe('Test the MapUtils', () => {
                 title: "layer001",
                 type: "wms",
                 url: "",
-                visibility: true
+                visibility: true,
+                catalogURL: "url"
             },
             {
                 allowedSRS: {},
@@ -172,7 +173,8 @@ describe('Test the MapUtils', () => {
                 title: "layer002",
                 type: "wms",
                 url: "",
-                visibility: true
+                visibility: true,
+                catalogURL: "url"
             },
             {
                 allowedSRS: {},
@@ -187,7 +189,8 @@ describe('Test the MapUtils', () => {
                 title: "layer003",
                 type: "wms",
                 url: "",
-                visibility: true
+                visibility: true,
+                catalogURL: "url"
             }
         ];
 
@@ -254,7 +257,8 @@ describe('Test the MapUtils', () => {
                     transparent: undefined,
                     type: "wms",
                     url: "",
-                    visibility: true
+                    visibility: true,
+                    catalogURL: "url"
                 },
                 {
                     allowedSRS: {},
@@ -290,7 +294,8 @@ describe('Test the MapUtils', () => {
                     transparent: undefined,
                     type: "wms",
                     url: "",
-                    visibility: true
+                    visibility: true,
+                    catalogURL: "url"
                 },
                 {
                     allowedSRS: {},
@@ -326,7 +331,8 @@ describe('Test the MapUtils', () => {
                     transparent: undefined,
                     type: "wms",
                     url: "",
-                    visibility: true
+                    visibility: true,
+                    catalogURL: "url"
                 }],
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',
@@ -356,6 +362,7 @@ describe('Test the MapUtils', () => {
                 type: "wms",
                 url: "http:url001",
                 visibility: true,
+                catalogURL: "url",
                 matrixIds: {
                     'EPSG:4326': [{
                         identifier: 'EPSG:4326:0'
@@ -389,7 +396,8 @@ describe('Test the MapUtils', () => {
                 title: "layer002",
                 type: "wms",
                 url: "http:url001",
-                visibility: true
+                visibility: true,
+                catalogURL: "url"
             },
             {
                 allowedSRS: {},
@@ -405,7 +413,8 @@ describe('Test the MapUtils', () => {
                 title: "layer003",
                 type: "wms",
                 url: "http:url001",
-                visibility: true
+                visibility: true,
+                catalogURL: "url"
             }
         ];
 
@@ -472,7 +481,8 @@ describe('Test the MapUtils', () => {
                     transparent: undefined,
                     type: "wms",
                     url: "http:url001",
-                    visibility: true
+                    visibility: true,
+                    catalogURL: "url"
                 },
                 {
                     allowedSRS: {},
@@ -508,7 +518,8 @@ describe('Test the MapUtils', () => {
                     transparent: undefined,
                     type: "wms",
                     url: "http:url001",
-                    visibility: true
+                    visibility: true,
+                    catalogURL: "url"
                 },
                 {
                     allowedSRS: {},
@@ -544,7 +555,8 @@ describe('Test the MapUtils', () => {
                     transparent: undefined,
                     type: "wms",
                     url: "http:url001",
-                    visibility: true
+                    visibility: true,
+                    catalogURL: "url"
                 }],
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
                 projection: 'EPSG:900913',

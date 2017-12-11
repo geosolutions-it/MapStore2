@@ -630,5 +630,28 @@ describe('Test the layers reducer', () => {
         expect(state.selected).toEqual([]);
     });
 
+    it('show layer metadata', () => {
+        const action = {
+            type: "LAYERS:SHOW_LAYER_METADATA",
+            metadataRecord: {"identifier": 1},
+            maskLoading: true
+        };
+
+        const state = layers({}, action);
+        expect(state).toExist();
+        expect(state.layerMetadata).toExist();
+        expect(state.layerMetadata.expanded).toEqual(true);
+    });
+
+    it('hide layer metadata', () => {
+        const action = {
+            type: "LAYERS:HIDE_LAYER_METADATA"
+        };
+
+        const state = layers({}, action);
+        expect(state).toExist();
+        expect(state.layerMetadata).toExist();
+        expect(state.layerMetadata.expanded).toEqual(false);
+    });
 
 });

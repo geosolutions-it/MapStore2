@@ -272,6 +272,13 @@
                 "search": "Aggiorna opzioni di ricerca",
                 "title": "Aggiorna il titolo del layer",
                 "dimensions": "Aggiorna le dimensioni aggiuntive"
+            },
+            "layerMetadata": {
+                "toolLayerMetadataTooltip": "Mostra i metadati del layer selezionato",
+                "layerMetadataPanelTitle": "Metadati del layer",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Errore nella ricerca dei metadati"
+                }
             }
         },
         "print":{

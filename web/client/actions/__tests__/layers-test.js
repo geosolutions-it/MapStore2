@@ -28,6 +28,8 @@ var {
     CLEAR_LAYERS,
     SELECT_NODE,
     FILTER_LAYERS,
+    SHOW_LAYER_METADATA,
+    HIDE_LAYER_METADATA,
     changeLayerProperties,
     toggleNode,
     sortNode,
@@ -47,7 +49,9 @@ var {
     browseData,
     clearLayers,
     selectNode,
-    filterLayers
+    filterLayers,
+    showLayerMetadata,
+    hideLayerMetadata
 } = require('../layers');
 var {getLayerCapabilities} = require('../layerCapabilities');
 
@@ -266,5 +270,17 @@ describe('Test correctness of the layers actions', () => {
         const action = filterLayers('text');
         expect(action.type).toBe(FILTER_LAYERS);
         expect(action.text).toBe('text');
+    });
+
+    it('show layer metadata', () => {
+        const action = showLayerMetadata({'identifier': '1'}, true);
+        expect(action.type).toBe(SHOW_LAYER_METADATA);
+        expect(action.metadataRecord).toEqual({'identifier': '1'});
+        expect(action.maskLoading).toBe(true);
+    });
+
+    it('hide layer metadata', () => {
+        const action = hideLayerMetadata();
+        expect(action.type).toBe(HIDE_LAYER_METADATA);
     });
 });

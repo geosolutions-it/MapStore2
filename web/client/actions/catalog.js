@@ -38,6 +38,7 @@ const ADD_SERVICE = 'CATALOG:ADD_SERVICE';
 const DELETE_SERVICE = 'CATALOG:DELETE_SERVICE';
 const SAVING_SERVICE = 'CATALOG:SAVING_SERVICE';
 const CATALOG_INITED = 'CATALOG:INIT';
+const GET_METADATA_RECORD_BY_ID = 'CATALOG:GET_METADATA_RECORD_BY_ID';
 
 function recordsLoaded(options, result) {
     return {
@@ -231,7 +232,11 @@ function addLayerError(error) {
         error
     };
 }
-
+function getMetadataRecordById() {
+    return {
+        type: GET_METADATA_RECORD_BY_ID
+    };
+}
 
 module.exports = {
     RECORD_LIST_LOADED,
@@ -253,6 +258,7 @@ module.exports = {
     DELETE_CATALOG_SERVICE, deleteCatalogService,
     DELETE_SERVICE, deleteService,
     CATALOG_INITED, initCatalog,
+    GET_METADATA_RECORD_BY_ID, getMetadataRecordById,
     getRecords,
     textSearch,
     addLayer: addLayerAndDescribe
