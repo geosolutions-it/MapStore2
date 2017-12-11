@@ -78,6 +78,7 @@
   "//": "replace react-sortable-items with official on npm when it will support React 15",
   "dependencies": {
     "@carnesen/redux-add-action-listener-enhancer": "0.0.1",
+    "@mapbox/togeojson": "0.16.0",
     "@turf/bbox": "4.1.0",
     "@turf/inside": "4.1.0",
     "@turf/line-intersect": "4.1.0",
@@ -107,6 +108,7 @@
     "json-2-csv": "2.1.2",
     "json-loader": "0.5.4",
     "jsonix": "2.4.1",
+    "jszip": "3.1.5",
     "keymirror": "0.1.1",
     "leaflet": "0.7.7",
     "leaflet-draw": "0.2.4",

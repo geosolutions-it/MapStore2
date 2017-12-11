@@ -715,15 +715,15 @@
             "taintedMessage": "Save snapshot functionality is limited due to some browser security rules. For better results right-click on the preview and select 'Save image as' (supported by Firefox and Chrome)."
         },
         "shapefile": {
-            "title": "Add Local Shapefile",
-            "tooltip": "Add a local shapefile to the map.",
-            "placeholder": "Drop your files here or click to select the shapefiles to import. (shapefiles must be contained in zip archives)",
+            "title": "Add Local Vector Files",
+            "tooltip": "Add a local Vector Files to the map.",
+            "placeholder": "Drop your files here or click to select the Vector Files to import. (supported files: shapefiles must be contained in zip archives, KML/KMZ e GPX)",
             "defaultStyle": "Default style",
-            "zoom": "Zoom on the shapefiles",
+            "zoom": "Zoom on the vector files",
             "error": {
-                "select": "Select one or more zip files",
-                "shapeFileParsingError": "Cannot load the shapefile. The file could be damaged or not well formed",
-                "genericLoadError": "Cannot load the shapefile on map"
+                "select": "Select one or more files. (supported files: shapefiles must be contained in zip archives, KML/KMZ e GPX)",
+                "shapeFileParsingError": "Cannot load the vector file. The file could be damaged or not well formed",
+                "genericLoadError": "Cannot load the vector file on map"
             },
             "add": "Add",
             "cancel": "Cancel",

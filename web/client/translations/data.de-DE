@@ -716,13 +716,13 @@
             "taintedMessage": "Die Snapshot Speichern Funktionalität ist aufgrund von Browser Sicherheits Beschränkungen eingeschränkt. Für ein besseres Ergebnis klicke mit der rechten Maustaste auf die Vorschau und wähle 'Bild speichern unter'(unterstützt von Firefox und Chrome)"
         },
         "shapefile": {
-            "title": "Shapefile hochladen",
-            "tooltip": "Füge der Karte ein Shapefile hinzu.",
-            "placeholder": "Ziehe deine Dateien hierher oder klicke Shapefile(s) die importiert werden sollen.(Shapefiles müssen in Zip-Archiven enthalten sein)",
+            "title": "Vektor-Dateien hochladen",
+            "tooltip": "Füge der Karte ein Vektor-Dateien hinzu.",
+            "placeholder": "Ziehe deine Dateien hierher oder klicke Vektor-Dateien die importiert werden sollen.(Shapefiles müssen in Zip-Archiven enthalten sein, KML/KMZ e GPX)",
             "defaultStyle": "Standardstil",
             "zoom": "Zoome auf Shapefiles",
             "error": {
-                "select": "Wähle ein oder mehrere Zip Archive",
+                "select": "Wählen Sie die richtige Datei aus",
                 "shapeFileParsingError": "Das Shapefile kann nicht geladen werden. Die Datei könnte beschädigt oder nicht gut geformt sein",
                 "genericLoadError": "Das Shapefile kann nicht auf der Karte geladen werden"
             },
