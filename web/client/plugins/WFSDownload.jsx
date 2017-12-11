@@ -19,21 +19,18 @@ const DownloadDialog = require('../components/data/download/DownloadDialog');
  * @memberof plugins
  * @name WFSDownload
  * @class
- * @prop {object[]} formats An array of name-label objects for the allowed formats available.
- * @prop {object[]} srsList An array of name-label objects for the allowed srs available. Use name:'native' to omit srsName param in wfs filter
+ * @prop {object[]} formatFilter An object of "Name": "label" objects for the allowed format available. Now the list of available format is always fetched by server. This prop filter the result list. Use the example below
+ * @prop {array[]} srsList An array of name-label objects for the allowed srs available. Use name:'native' to omit srsName param in wfs filter
  * @prop {string} defaultSrs Deafult selected srs
  * @prop {string} closeGlyph The icon to use for close the dialog
  * @example
  * {
  *  "name": "WFSDownload",
  *  "cfg": {
- *    "formats": [
- *            {"name": "csv", "label": "csv"},
- *            {"name": "shape-zip", "label": "shape-zip"},
- *            {"name": "excel", "label": "excel"},
- *            {"name": "excel2007", "label": "excel2007"},
- *            {"name": "dxf-zip", "label": "dxf-zip"}
- *    ],
+ *     "formatFilter": {
+ *	       "SHAPE-ZIP": "Shapefile",
+ *	       "csv": "CSV"
+ *     }
  *     "srsList": [
  *            {"name": "native", "label": "Native"},
  *            {"name": "EPSG:4326", "label": "WGS84"}
