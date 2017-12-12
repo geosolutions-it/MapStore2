@@ -247,8 +247,8 @@ class ShapeFileUploadAndStyle extends React.Component {
                 ];
             }
             if (this.state.zoomOnShapefiles) {
-                this.props.updateShapeBBox(bbox.length && bbox || this.props.bbox);
-                this.props.onZoomSelected(bbox.length && bbox || this.props.bbox, "EPSG:4326");
+                this.props.updateShapeBBox(bbox && bbox.length ? bbox : this.props.bbox);
+                this.props.onZoomSelected(bbox && bbox.length ? bbox : this.props.bbox, "EPSG:4326");
             }
             this.props.onShapeSuccess(this.props.layers[0].name + LocaleUtils.getMessageById(this.context.messages, "shapefile.success"));
             this.props.onLayerAdded(this.props.selected);
