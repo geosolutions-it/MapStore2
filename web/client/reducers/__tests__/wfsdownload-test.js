@@ -26,9 +26,9 @@ describe('Test the wfsdownload reducer', () => {
         expect(state.loading).toBe(false);
     });
     it('onFormatOptionsFetch', () => {
-        const state = wfsdownload({formatsLoading: false, formats: [{name: "CSV", label: "CSV"}, {name: "SHAPE-FILE", label: "SHAPE-FILE"}]}, onFormatOptionsFetch());
+        const state = wfsdownload({formatsLoading: false, wfsFormats: [{name: "CSV", label: "CSV"}, {name: "SHAPE-FILE", label: "SHAPE-FILE"}]}, onFormatOptionsFetch());
         expect(state.formatsLoading).toBe(true);
-        expect(state.formats).toEqual([]);
+        expect(state.wfsFormats).toEqual([]);
     });
     it('updateFormats', () => {
         const state = wfsdownload({formatsLoading: true}, updateFormats());

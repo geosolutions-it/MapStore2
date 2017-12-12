@@ -2,7 +2,7 @@ const {FORMAT_OPTIONS_FETCH, DOWNLOAD_FEATURES, onDownloadFinished, updateFormat
 const {TOGGLE_CONTROL, toggleControl} = require('../actions/controls');
 const {error} = require('../actions/notifications');
 const Rx = require('rxjs');
-const {get, find, pick, toPairs, isEmpty} = require('lodash');
+const {get, find, pick, toPairs} = require('lodash');
 const {saveAs} = require('file-saver');
 const axios = require('axios');
 const FilterUtils = require('../utils/FilterUtils');
@@ -26,12 +26,12 @@ const DOWNLOAD_FORMATS_LOOKUP = {
 	"application/x-gpkg": "GeoPackage"
 };
 
-const hasOutputFormat = (data, formatFilter) => {
+const hasOutputFormat = (data) => {
     const operation = get(data, "WFS_Capabilities.OperationsMetadata.Operation");
     const getFeature = find(operation, function(o) { return o.name === 'GetFeature'; });
     const parameter = get(getFeature, "Parameter");
     const outputFormatValue = find(parameter, function(o) { return o.name === 'outputFormat'; }).Value;
-    const pickedObj = pick(!isEmpty(formatFilter) ? formatFilter : DOWNLOAD_FORMATS_LOOKUP, outputFormatValue);
+    const pickedObj = pick(DOWNLOAD_FORMATS_LOOKUP, outputFormatValue);
     return toPairs(pickedObj).map(([prop, value]) => ({ name: prop, label: value }));
 };
 
@@ -73,7 +73,7 @@ module.exports = {
             .switchMap( action => {
                 return getLayerWFSCapabilities(action)
                 .map((data) => {
-                    return updateFormats(hasOutputFormat(data, action.formatFilter));
+                    return updateFormats(hasOutputFormat(data));
                 });
             }),
     startFeatureExportDownload: (action$, store) =>

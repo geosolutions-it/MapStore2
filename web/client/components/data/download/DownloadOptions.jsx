@@ -26,8 +26,8 @@ module.exports = class extends React.Component {
     static propTypes = {
             downloadOptions: PropTypes.object,
             formatOptionsFetch: PropTypes.func,
+            wfsFormats: PropTypes.array,
             formats: PropTypes.array,
-            formatFilter: PropTypes.object,
             srsList: PropTypes.array,
             onChange: PropTypes.func,
             defaultSrs: PropTypes.string,
@@ -38,8 +38,8 @@ module.exports = class extends React.Component {
     static defaultProps = {
         downloadOptions: {},
         formatsLoading: false,
+        wfsFormats: [],
         formats: [],
-        formatFilter: {},
         srsList: []
     };
 
@@ -49,17 +49,31 @@ module.exports = class extends React.Component {
     getSelectedSRS = () => {
         return get(this.props, "downloadOptions.selectedSrs") || this.props.defaultSrs || get(head(this.props.srsList), "name");
     };
+    setSelectMethod = (formats) => {
+        if (formats && !formats.length) {
+            return (
+                <Select
+                    clearable={false}
+                    isLoading={this.props.formatsLoading}
+                    onOpen={() => this.props.formatOptionsFetch(this.props.layer)}
+                    value={this.getSelectedFormat()}
+                    noResultsText={<Message msgId="wfsdownload.format" />}
+                    onChange={(sel) => this.props.onChange("selectedFormat", sel.value)}
+                    options={this.props.wfsFormats.map(f => ({value: f.name, label: f.label || f.name}))} />
+            );
+        }
+        return (
+            <Select
+                clearable={false}
+                value={this.getSelectedFormat()}
+                onChange={(sel) => this.props.onChange("selectedFormat", sel.value)}
+                options={formats.map(f => ({value: f.name, label: f.label || f.name}))} />
+        );
+    };
     render() {
         return (<form>
             <label><Message msgId="wfsdownload.format" /></label>
-            <Select
-                clearable={false}
-                isLoading={this.props.formatsLoading}
-                onOpen={() => this.props.formatOptionsFetch(this.props.layer, this.props.formatFilter)}
-                value={this.getSelectedFormat()}
-                noResultsText={<Message msgId="wfsdownload.format" />}
-                onChange={(sel) => this.props.onChange("selectedFormat", sel.value)}
-                options={this.props.formats.map(f => ({value: f.name, label: f.label || f.name}))} />
+            {this.setSelectMethod(this.props.formats)}
             <label><Message msgId="wfsdownload.srs" /></label>
             <Select
                 clearable={false}

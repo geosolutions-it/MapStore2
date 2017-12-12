@@ -37,8 +37,7 @@ function wfsdownload( state = {downloadOptions: {singlePage: true}}, action) {
             return {
                 ...state,
                 layer: action.layer,
-                formats: [],
-                formatFilter: action.formatFilter,
+                wfsFormats: [],
                 formatsLoading: true
             };
         case DOWNLOAD_FINISHED: {
@@ -50,7 +49,7 @@ function wfsdownload( state = {downloadOptions: {singlePage: true}}, action) {
         case FORMAT_OPTIONS_UPDATE: {
             return {
                 ...state,
-                formats: action.formats,
+                wfsFormats: action.wfsFormats,
                 formatsLoading: false
             };
         }

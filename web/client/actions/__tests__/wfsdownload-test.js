@@ -43,10 +43,10 @@ describe('Test correctness of the wfsdownload actions', () => {
         expect(type).toBe(FORMAT_OPTIONS_FETCH);
         expect(layer).toBe("layer");
     });
-    it('test onFormatOptionsFetch action', () => {
-        let {type, formats} = updateFormats("formats");
+    it('test updateFormats action', () => {
+        let {type, wfsFormats} = updateFormats("wfsFormats");
         expect(type).toBe(FORMAT_OPTIONS_UPDATE);
-        expect(formats).toBe("formats");
+        expect(wfsFormats).toBe("wfsFormats");
     });
 
 });

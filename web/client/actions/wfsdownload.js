@@ -56,20 +56,19 @@ module.exports = {
      * @param  {object} layer           selected layer
      * @return {action}                 the action of type `FORMAT_OPTIONS_FETCH`
      */
-    onFormatOptionsFetch: (layer, formatFilter) => ({
+    onFormatOptionsFetch: (layer) => ({
         type: FORMAT_OPTIONS_FETCH,
-        layer,
-        formatFilter
+        layer
     }),
     /**
      * action for update list of formats
      * @memberof actions.wfsdownload
-     * @param  {array} formats          available formats for download
+     * @param  {array} wfsFormats          available wfsFormats for download
      * @return {action}                 the action of type `FORMAT_OPTIONS_UPDATE`
      */
-    updateFormats: (formats) => ({
+    updateFormats: (wfsFormats) => ({
         type: FORMAT_OPTIONS_UPDATE,
-        formats
+        wfsFormats
     }),
     /**
      * action that notifies the end of the downloadOptions
