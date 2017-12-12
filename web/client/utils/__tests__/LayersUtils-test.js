@@ -405,4 +405,19 @@ describe('LayersUtils', () => {
         const matchedGeoServerNameCustomReg = LayersUtils.findGeoServerName({url: "http:/hostname/geosssearavering/ows", regex: /\/geoserver\//});
         expect(matchedGeoServerNameCustomReg).toBe(null);
     });
+    it('getAuthenticationParam', () => {
+        expect(LayersUtils.getAuthenticationParam({
+            url: ['http://url/'],
+            securityToken: '########-####-####-####-###########'
+        })).toEqual({});
+
+        expect(LayersUtils.getAuthenticationParam({
+            url: 'http://url/'
+        })).toEqual({});
+    });
+    it('getURLs', () => {
+        expect(LayersUtils.getURLs(['http://url/?delete=param'])).toEqual(['http://url/']);
+        expect(LayersUtils.getURLs(['http://url/?delete=param'], '?custom=param')).toEqual(['http://url/?custom=param']);
+    });
+
 });

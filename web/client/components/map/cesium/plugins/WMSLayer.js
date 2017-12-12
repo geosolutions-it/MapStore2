@@ -13,13 +13,8 @@ const Cesium = require('../../../../libs/cesium');
 const assign = require('object-assign');
 const {isArray} = require('lodash');
 const WMSUtils = require('../../../../utils/cesium/WMSUtils');
+const {getAuthenticationParam, getURLs} = require('../../../../utils/LayersUtils');
 const FilterUtils = require('../../../../utils/FilterUtils');
-const SecurityUtils = require('../../../../utils/SecurityUtils');
-
-function getWMSURLs( urls ) {
-    return urls.map((url) => url.split("\?")[0]);
-}
-
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -55,15 +50,6 @@ function getQueryString(parameters) {
     return Object.keys(parameters).map((key) => key + '=' + encodeURIComponent(parameters[key])).join('&');
 }
 
-const getAuthenticationParam = options => {
-    const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
-    let authenticationParam = {};
-    urls.forEach(url => {
-        SecurityUtils.addAuthenticationParameter(url, authenticationParam, options.securityToken);
-    });
-    return authenticationParam;
-};
-
 function wmsToCesiumOptionsSingleTile(options) {
     const opacity = options.opacity !== undefined ? options.opacity : 1;
     const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
@@ -96,7 +82,7 @@ function wmsToCesiumOptions(options) {
     // NOTE: can we use opacity to manage visibility?
     return assign({
         url: "{s}",
-        subdomains: getWMSURLs(isArray(options.url) ? options.url : [options.url]),
+        subdomains: getURLs(isArray(options.url) ? options.url : [options.url]),
         proxy: proxy && new WMSProxy(proxy) || new NoProxy(),
         layers: options.name,
         enablePickFeatures: false,

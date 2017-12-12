@@ -76,7 +76,7 @@ const createLayer = options => {
     const paramMatrixIds = matrixIds.filter((r, i) => i > 0);
 
     let queryParameters = {};
-    urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
+    urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
     const queryParametersString = urlParser.format({ query: {...queryParameters}});
 
     return new ol.layer.Tile({

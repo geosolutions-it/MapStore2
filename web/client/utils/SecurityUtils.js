@@ -9,7 +9,7 @@
 const ConfigUtils = require('./ConfigUtils');
 const URL = require('url');
 const assign = require('object-assign');
-const {head} = require('lodash');
+const {head, isNil} = require('lodash');
 
 /**
  * This utility class will get information about the current logged user directly from the store.
@@ -165,7 +165,7 @@ const SecurityUtils = {
         }
         switch (this.getAuthenticationMethod(url)) {
         case 'authkey':
-            const token = securityToken || this.getToken();
+            const token = !isNil(securityToken) ? securityToken : this.getToken();
             if (!token) {
                 return parameters;
             }

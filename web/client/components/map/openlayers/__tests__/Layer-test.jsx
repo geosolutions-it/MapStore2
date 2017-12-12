@@ -22,6 +22,9 @@ require('../plugins/VectorLayer');
 require('../plugins/GraticuleLayer');
 require('../plugins/OverlayLayer');
 
+const SecurityUtils = require('../../../../utils/SecurityUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils');
+
 describe('Openlayers layer', () => {
     document.body.innerHTML = '<div id="map"></div>';
     let map;
@@ -879,5 +882,128 @@ describe('Openlayers layer', () => {
             <OpenlayersLayer type="wms" observables={["cql_filter"]}
                  options={assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
+    });
+    it('test wms security token', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms"
+        };
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        ConfigUtils.setConfigProp('authenticationRules', [
+            {
+                urlPattern: '.*geostore.*',
+                method: 'bearer'
+            }, {
+                urlPattern: '\\/geoserver.*',
+                authkeyParamName: 'ms2-authkey',
+                method: 'authkey'
+            }
+        ]);
+
+        SecurityUtils.setStore({
+            getState: () => ({
+                security: {
+                    token: "########-####-####-####-###########"
+                }
+            })
+        });
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+            securityToken="########-####-####-####-###########"/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getSource()).toExist();
+        expect(layer.layer.getSource().getParams()['ms2-authkey']).toBe("########-####-####-####-###########");
+
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+            securityToken=""/>, document.getElementById("container"));
+        expect(layer.layer.getSource().getParams()['ms2-authkey']).toBe(undefined);
+
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+            securityToken="########-####-$$$$-####-###########"/>, document.getElementById("container"));
+
+        expect(layer.layer.getSource().getParams()['ms2-authkey']).toBe("########-####-$$$$-####-###########");
+    });
+
+    it('test wmts security token', () => {
+        const options = {
+            type: 'wmts',
+            visibility: true,
+            name: 'nurc:Arc_Sample',
+            group: 'Meteo',
+            format: 'image/png',
+            tileMatrixSet: [
+                {
+                    'TileMatrix': [],
+                    'ows:Identifier': 'EPSG:900913',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts'
+        };
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        ConfigUtils.setConfigProp('authenticationRules', [
+            {
+                urlPattern: '.*geostore.*',
+                method: 'bearer'
+            }, {
+                urlPattern: '\\/geoserver.*',
+                authkeyParamName: 'ms2-authkey',
+                method: 'authkey'
+            }
+        ]);
+
+        SecurityUtils.setStore({
+            getState: () => ({
+                security: {
+                    token: "########-####-####-####-###########"
+                }
+            })
+        });
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={options}
+            map={map}
+            securityToken="########-####-####-####-###########"/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["http://sample.server/geoserver/gwc/service/wmts?ms2-authkey=########-####-####-####-###########"]);
+
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={options}
+            map={map}
+            securityToken=""/>, document.getElementById("container"));
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["http://sample.server/geoserver/gwc/service/wmts"]);
+
+
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={options}
+            map={map}
+            securityToken="########-####-$$$$-####-###########"/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["http://sample.server/geoserver/gwc/service/wmts?ms2-authkey=########-####-$$$$-####-###########"]);
+
+
     });
 });

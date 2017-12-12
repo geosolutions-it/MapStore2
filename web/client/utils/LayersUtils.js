@@ -174,6 +174,12 @@ const extractDataFromSources = mapState => {
     }) : [...mapState.layers];
 };
 
+const getURLs = (urls, queryParametersString = '') => {
+    return urls.map((url) => url.split("\?")[0] + queryParametersString);
+};
+
+const SecurityUtils = require('./SecurityUtils');
+
 const LayerCustomUtils = {};
 
 const LayersUtils = {
@@ -400,7 +406,16 @@ const LayersUtils = {
     getGroupNodes,
     deepChange,
     extractDataFromSources,
-    extractTileMatrixFromSources
+    extractTileMatrixFromSources,
+    getURLs,
+    getAuthenticationParam: options => {
+        const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
+        let authenticationParam = {};
+        urls.forEach(url => {
+            SecurityUtils.addAuthenticationParameter(url, authenticationParam, options.securityToken);
+        });
+        return authenticationParam;
+    }
 };
 
 module.exports = LayersUtils;
