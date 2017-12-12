@@ -8,7 +8,7 @@
 const Rx = require('rxjs');
 const {get, head, isEmpty, find} = require('lodash');
 const { LOCATION_CHANGE } = require('react-router-redux');
-const Proj4js = require('proj4');
+const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const axios = require('../libs/ajax');
 const bbox = require('@turf/bbox');
