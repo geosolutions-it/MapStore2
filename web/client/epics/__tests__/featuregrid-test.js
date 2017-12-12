@@ -1296,7 +1296,7 @@ describe('featuregrid Epics', () => {
                     case CHANGE_LAYER_PROPERTIES: {
                         const firstPoint = [parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][0] * 1000000), 10) / 1000000, parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][1] * 100000), 10) / 100000 ];
                         expect(firstPoint[0]).toBe(483245.221897);
-                        expect(firstPoint[1]).toBe(4920603.15079);
+                        expect(firstPoint[1]).toBe(4920603.15056);
                         break;
                     }
                     default:
