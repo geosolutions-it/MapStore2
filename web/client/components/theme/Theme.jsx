@@ -13,7 +13,7 @@ const reducePropsToState = (props) => {
     const innermostProps = props[props.length - 1];
     if (innermostProps && innermostProps.version) {
         return {
-            version: escape(innermostProps.version) !== "%24%7Bmapstore2.version%7D%0D%0A" ? "?" + innermostProps.version : '',
+            version: innermostProps.version.indexOf('${mapstore2.version}') !== -1 ? "?" + innermostProps.version : '',
             theme: innermostProps.theme || 'default',
             themeElement: innermostProps.themeElement || 'theme_stylesheet',
             prefix: innermostProps.prefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2',
@@ -57,10 +57,6 @@ class Theme extends React.Component {
     };
     static defaultProps = {
         theme: 'default'
-    };
-
-    state = {
-        renderChildren: false
     };
 
     render() {

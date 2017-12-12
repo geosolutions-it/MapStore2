@@ -45,7 +45,7 @@ class StandardRouter extends React.Component {
         }
     };
     state = {
-        renderChildren: false
+        themeLoaded: false
     }
     renderPages = () => {
         return this.props.pages.map((page, i) => {
@@ -62,8 +62,8 @@ class StandardRouter extends React.Component {
         return (
 
             <div className={this.props.className}>
-                <Theme {...this.props.themeCfg} version={this.props.version} onLoad={this.loaded}>
-                    {this.state.renderChildren ? (<Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
+                <Theme {...this.props.themeCfg} version={this.props.version} onLoad={this.themeLoaded}>
+                    {this.state.themeLoaded ? (<Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                         <ConnectedRouter history={history}>
                             <div>
                                 {this.renderPages()}
@@ -76,9 +76,9 @@ class StandardRouter extends React.Component {
             </div>
         );
     }
-    loaded = () => {
+    themeLoaded = () => {
         this.setState({
-            renderChildren: true
+            themeLoaded: true
         });
     }
 }
