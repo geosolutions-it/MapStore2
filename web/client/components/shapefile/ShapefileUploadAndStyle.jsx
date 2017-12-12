@@ -237,28 +237,18 @@ class ShapeFileUploadAndStyle extends React.Component {
         }
         Promise.resolve(this.props.addShapeLayer( styledLayer )).then(() => {
             this.props.shapeLoading(false);
-
-            // calculates the bbox that contains all shapefiles added
-            const bbox = this.props.layers[0].features.reduce((bboxtotal, feature) => {
-                if (feature.geometry.bbox && feature.geometry.bbox[0] && feature.geometry.bbox[1] && feature.geometry.bbox[2] && feature.geometry.bbox[3] ) {
-                    return [
-                        Math.min(bboxtotal[0], feature.geometry.bbox[0]),
-                        Math.min(bboxtotal[1], feature.geometry.bbox[1]),
-                        Math.max(bboxtotal[2], feature.geometry.bbox[2]),
-                        Math.max(bboxtotal[3], feature.geometry.bbox[3])
-                    ] || bboxtotal;
-                } else if (feature.geometry && feature.geometry.type === "Point" && feature.geometry.coordinates && feature.geometry.coordinates.length >= 2) {
-                    return [Math.min(bboxtotal[0], feature.geometry.coordinates[0]),
-                        Math.min(bboxtotal[1], feature.geometry.coordinates[1]),
-                        Math.max(bboxtotal[2], feature.geometry.coordinates[0]),
-                        Math.max(bboxtotal[3], feature.geometry.coordinates[1])
-                    ];
-                }
-                return bboxtotal;
-            }, this.props.bbox);
+            let bbox = [];
+            if (this.props.layers[0].bbox && this.props.bbox) {
+                bbox = [
+                    Math.min(this.props.bbox[0], this.props.layers[0].bbox.bounds.minx),
+                    Math.min(this.props.bbox[1], this.props.layers[0].bbox.bounds.miny),
+                    Math.max(this.props.bbox[2], this.props.layers[0].bbox.bounds.maxx),
+                    Math.max(this.props.bbox[3], this.props.layers[0].bbox.bounds.maxy)
+                ];
+            }
             if (this.state.zoomOnShapefiles) {
-                this.props.updateShapeBBox(bbox);
-                this.props.onZoomSelected(bbox, "EPSG:4326");
+                this.props.updateShapeBBox(bbox.length && bbox || this.props.bbox);
+                this.props.onZoomSelected(bbox.length && bbox || this.props.bbox, "EPSG:4326");
             }
             this.props.onShapeSuccess(this.props.layers[0].name + LocaleUtils.getMessageById(this.context.messages, "shapefile.success"));
             this.props.onLayerAdded(this.props.selected);
