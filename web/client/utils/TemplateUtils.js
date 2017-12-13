@@ -39,5 +39,18 @@ module.exports = {
             return fn;
         }
         return generateTemplate;
-    })()
+    })(),
+
+    parseTemplate: function(temp, callback) {
+        require.ensure(['babel-standalone'], function() {
+            const Babel = require('babel-standalone');
+            let template = typeof temp === 'function' ? temp() : temp;
+            try {
+                const comp = Babel.transform(template, { presets: ['es2015', 'react', 'stage-0'] }).code;
+                callback(comp);
+            } catch (e) {
+                callback(null, e);
+            }
+        });
+    }
 };
