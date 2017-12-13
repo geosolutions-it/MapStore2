@@ -53,7 +53,7 @@ class ResizableModal extends React.Component {
 
     static defaultProps = {
         show: false,
-        onClose: null,
+        onClose: () => {},
         title: '',
         clickOutEnabled: true,
         fullscreen: false,
@@ -72,44 +72,44 @@ class ResizableModal extends React.Component {
         const sizeClassName = sizes[this.props.size] || '';
         const fullscreenClassName = this.props.fullscreen && this.state.fullscreen === 'expanded' && fullscreen.className[this.props.fullscreenType] || '';
         return (
-            <span className="modal-fixed">
-            <Dialog
-                id="ms-resizable-modal"
-                style={{display: this.props.show ? 'flex' : 'none'}}
-                onClickOut={this.props.clickOutEnabled && this.props.onClose}
-                containerClassName="ms-resizable-modal"
-                draggable={false}
-                modal
-                className={'modal-dialog modal-content' + sizeClassName + fullscreenClassName}>
-                <span role="header">
-                    <h4 className="modal-title">
-                        <div className="ms-title">{this.props.title}</div>
-                        {this.props.fullscreen && fullscreen.className[this.props.fullscreenType] &&
-                            <Glyphicon
-                                className="ms-header-btn"
-                                onClick={() => {
-                                    this.setState({
-                                        fullscreen: this.state.fullscreen === 'expanded' ? 'collapsed' : 'expanded'
-                                    });
-                                }}
-                                glyph={fullscreen.glyph[this.state.fullscreen][this.props.fullscreenType]}/>
-                        }
-                        {this.props.onClose &&
-                            <Glyphicon
-                                glyph="1-close"
-                                className="ms-header-btn"
-                                onClick={this.props.onClose}/>
-                        }
-                    </h4>
-                </span>
-                <div role="body" className={this.props.bodyClassName}>
-                    {this.props.children}
-                </div>
-                <div role="footer">
-                    <Toolbar buttons={this.props.buttons}/>
-                </div>
-            </Dialog>
-        </span>
+            <span className={this.props.show ? "modal-fixed" : ""}>
+                <Dialog
+                    id="ms-resizable-modal"
+                    style={{display: this.props.show ? 'flex' : 'none'}}
+                    onClickOut={this.props.clickOutEnabled ? this.props.onClose : () => {}}
+                    containerClassName="ms-resizable-modal"
+                    draggable={false}
+                    modal
+                    className={'modal-dialog modal-content' + sizeClassName + fullscreenClassName}>
+                    <span role="header">
+                        <h4 className="modal-title">
+                            <div className="ms-title">{this.props.title}</div>
+                            {this.props.fullscreen && fullscreen.className[this.props.fullscreenType] &&
+                                <Glyphicon
+                                    className="ms-header-btn"
+                                    onClick={() => {
+                                        this.setState({
+                                            fullscreen: this.state.fullscreen === 'expanded' ? 'collapsed' : 'expanded'
+                                        });
+                                    }}
+                                    glyph={fullscreen.glyph[this.state.fullscreen][this.props.fullscreenType]}/>
+                            }
+                            {this.props.onClose &&
+                                <Glyphicon
+                                    glyph="1-close"
+                                    className="ms-header-btn"
+                                    onClick={this.props.onClose}/>
+                            }
+                        </h4>
+                    </span>
+                    <div role="body" className={this.props.bodyClassName}>
+                        {this.props.children}
+                    </div>
+                    <div role="footer">
+                        <Toolbar buttons={this.props.buttons}/>
+                    </div>
+                </Dialog>
+            </span>
         );
     }
 }

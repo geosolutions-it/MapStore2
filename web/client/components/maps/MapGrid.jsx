@@ -58,10 +58,12 @@ class MapGrid extends React.Component {
         onChangeMapType: function() {},
         updateMapMetadata: () => {},
         detailsSheetActions: {
+            onBackDetails: () => {},
+            onUndoDetails: () => {},
             onToggleDetailsSheet: () => {},
             onToggleGroupProperties: () => {},
             onToggleUnsavedChangesModal: () => {},
-            onSetUnsavedChanges: () => {},
+            onsetDetailsChanged: () => {},
             onUpdateDetails: () => {},
             onDeleteDetails: () => {},
             onSaveDetails: () => {}

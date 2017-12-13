@@ -99,13 +99,13 @@ class MapCard extends React.Component {
                     tooltip: LocaleUtils.getMessageById(this.context.messages, "manager.editMapMetadata")
                 });
         }
-        if (this.props.map.details) {
+        if (this.props.map.details && this.props.map.details !== "NODATA") {
             availableAction.push({
                 onClick: (evt) => {
                     this.stopPropagate(evt);
                     this.onEdit(this.props.map, false);
                     if (!this.props.map.detailsText) {
-                        this.props.detailsSheetActions.onOpenOrFetchDetails({open: true, fetch: true});
+                        this.props.detailsSheetActions.onOpenOrFetchDetails({open: true, fetch: true, readOnly: true});
                     } else {
                         this.props.detailsSheetActions.onToggleDetailsSheet(true);
                     }

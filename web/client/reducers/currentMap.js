@@ -30,18 +30,24 @@ const {
     UPDATE_DETAILS,
     SAVE_DETAILS,
     DELETE_DETAILS,
+    BACK_DETAILS,
+    UNDO_DETAILS,
     TOGGLE_GROUP_PROPERTIES,
     TOGGLE_UNSAVED_CHANGES,
-    SET_UNSAVED_CHANGES
+    SET_DETAILS_CHANGED
 } = require('../actions/maps');
 
 const assign = require('object-assign');
-const _ = require('lodash');
+const {isArray} = require('lodash');
 
 function currentMap(state = {}, action) {
     switch (action.type) {
     case EDIT_MAP: {
-        return assign({}, state, action.map, {newThumbnail: action.map && action.map.thumbnail ? action.map.thumbnail : null, displayMetadataEdit: action.openModalProperties, thumbnailError: null, errors: [],
+        return assign({}, state, action.map, {
+            newThumbnail: action.map && action.map.thumbnail ? action.map.thumbnail : null,
+            displayMetadataEdit: action.openModalProperties,
+            thumbnailError: null,
+            errors: [],
             hideGroupProperties: false,
             detailsSheetReadOnly: true });
     }
@@ -55,7 +61,7 @@ function currentMap(state = {}, action) {
             // Fix to overcome GeoStore bad encoding of single object arrays
         let fixedSecurityRule = [];
         if (action.permissions && action.permissions.SecurityRuleList && action.permissions.SecurityRuleList.SecurityRule) {
-            if ( _.isArray(action.permissions.SecurityRuleList.SecurityRule)) {
+            if ( isArray(action.permissions.SecurityRuleList.SecurityRule)) {
                 fixedSecurityRule = action.permissions.SecurityRuleList.SecurityRule;
             } else {
                 fixedSecurityRule.push(action.permissions.SecurityRuleList.SecurityRule);
@@ -114,26 +120,45 @@ function currentMap(state = {}, action) {
     case TOGGLE_DETAILS_SHEET: {
         return assign({}, state, {
             showDetailEditor: !state.showDetailEditor,
-            detailsBackup: "",
+            detailsBackup: !state.showDetailEditor && !state.detailsDeleted ? "" : state.detailsBackup,
             detailsSheetReadOnly: action.detailsSheetReadOnly
         });
     }
     case UPDATE_DETAILS: {
         return assign({}, state, {
             detailsText: action.detailsText,
-            detailsBackup: action.doBackup ? state.detailsText : ""
+            originalDetails: action.originalDetails || state.originalDetails,
+            detailsBackup: action.doBackup ? state.detailsText : state.detailsBackup
+        });
+    }
+    case BACK_DETAILS: {
+        return assign({}, state, {
+            detailsText: state.detailsDeleted ? "" : action.backupDetails,
+            detailsBackup: state.detailsDeleted ? state.detailsBackup : "",
+            showDetailEditor: false
+        });
+    }
+    case UNDO_DETAILS: {
+        return assign({}, state, {
+            detailsText: state.detailsBackup,
+            detailsBackup: "",
+            detailsDeleted: false
         });
     }
     case SAVE_DETAILS: {
         return assign({}, state, {
             detailsText: action.detailsText,
-            detailsBackup: ""
+            detailsBackup: "",
+            detailsDeleted: false
         });
     }
     case DELETE_DETAILS: {
         return assign({}, state, {
             detailsText: "",
-            detailsBackup: state.detailsText
+            detailsBackup: state.detailsText,
+            detailsChanged: true,
+            unsavedChanges: true,
+            detailsDeleted: true
         });
     }
     case TOGGLE_GROUP_PROPERTIES: {
@@ -146,10 +171,10 @@ function currentMap(state = {}, action) {
             showUnsavedChanges: !state.showUnsavedChanges
         });
     }
-    case SET_UNSAVED_CHANGES: {
+    case SET_DETAILS_CHANGED: {
         return assign({}, state, {
-            unsavedChanges: action.unsavedChanges,
-            [action.name]: true
+            unsavedChanges: action.detailsChanged ? action.detailsChanged : state.unsavedChanges,
+            detailsChanged: action.detailsChanged
         });
     }
     default:

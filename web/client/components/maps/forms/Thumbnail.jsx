@@ -98,7 +98,7 @@ class Thumbnail extends React.Component {
                 // without errors
                 this.props.onError([], this.props.map.id);
                 this.files = images;
-                this.props.onUpdate(null, images && images[0].preview);
+                this.props.onUpdate(images, images && images[0].preview);
             } else {
                 // with at least one error
                 if (!isAnImage) {

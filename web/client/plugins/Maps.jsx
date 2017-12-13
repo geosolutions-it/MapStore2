@@ -10,8 +10,9 @@ const React = require('react');
 const {bindActionCreators} = require('redux');
 const {connect} = require('react-redux');
 const {loadMaps, updateMapMetadata, deleteMap, createThumbnail,
-    updateDetails, deleteDetails, saveDetails, toggleDetailsSheet, toggleGroupProperties, toggleUnsavedChanges, setUnsavedChanges,
-    deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating, metadataChanged, openOrFetchDetails} = require('../actions/maps');
+    updateDetails, deleteDetails, saveDetails, toggleDetailsSheet, toggleGroupProperties, toggleUnsavedChanges, setDetailsChanged,
+    deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating, metadataChanged, openOrFetchDetails,
+    backDetails, undoDetails} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap, removeThumbnail, resetCurrentMap} = require('../actions/currentMap');
 const ConfigUtils = require('../utils/ConfigUtils');
 const maptypeEpics = require('../epics/maptype');
@@ -42,11 +43,13 @@ const MapsGrid = connect((state) => {
         deleteMap: (...params) => dispatch(deleteMap(...params)),
         resetCurrentMap: (...params) => dispatch(resetCurrentMap(...params)),
         detailsSheetActions: bindActionCreators({
+            onBackDetails: backDetails,
+            onUndoDetails: undoDetails,
             onToggleDetailsSheet: toggleDetailsSheet,
             onToggleGroupProperties: toggleGroupProperties,
             onToggleUnsavedChangesModal: toggleUnsavedChanges,
             onOpenOrFetchDetails: openOrFetchDetails,
-            onSetUnsavedChanges: setUnsavedChanges,
+            onsetDetailsChanged: setDetailsChanged,
             onUpdateDetails: updateDetails,
             onSaveDetails: saveDetails,
             onDeleteDetails: deleteDetails

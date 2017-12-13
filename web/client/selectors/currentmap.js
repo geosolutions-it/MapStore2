@@ -15,19 +15,23 @@ const {get} = require('lodash');
  * @static
  */
 
-const currentMapDetailsSelector = (state) => get(state, "currentMap.detailsText", "");
+const currentMapDetailsTextSelector = (state) => get(state, "currentMap.detailsText", "");
 const currentMapDetailsUriSelector = (state) => get(state, "currentMap.details", "");
+const currentMapThumbnailUriSelector = (state) => get(state, "currentMap.thumbnail", "");
 const currentMapIdSelector = (state) => get(state, "currentMap.id", "");
 const currentMapSelector = (state) => get(state, "currentMap", "");
 const currentMapNameSelector = (state) => get(state, "currentMap.name", "");
 const currentMapDecriptionSelector = (state) => get(state, "currentMap.description", "");
-const currentMapDetailsChangedSelector = (state) => get(state, "currentMap.detailsChanged", "");
+const currentMapDetailsChangedSelector = (state) => get(state, "currentMap.detailsChanged", false);
+const currentMapOriginalDetailsTextSelector = (state) => get(state, "currentMap.originalDetails", false);
 module.exports = {
     currentMapDetailsChangedSelector,
-    currentMapDetailsSelector,
+    currentMapThumbnailUriSelector,
+    currentMapDetailsTextSelector,
     currentMapDetailsUriSelector,
     currentMapSelector,
     currentMapIdSelector,
     currentMapNameSelector,
+    currentMapOriginalDetailsTextSelector,
     currentMapDecriptionSelector
 };

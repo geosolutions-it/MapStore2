@@ -3,15 +3,15 @@ const {get, isNil} = require('lodash');
 const {parseString} = require('xml2js');
 const {stripPrefix} = require('xml2js/lib/processors');
 const GeoStoreApi = require('../api/GeoStoreDAO');
-const {error} = require('../actions/notifications');
-const {updatePermissions, updateAttribute} = require('../actions/maps');
+const {error, success} = require('../actions/notifications');
+const {updatePermissions, updateAttribute, doNothing} = require('../actions/maps');
 const ConfigUtils = require('../utils/ConfigUtils');
 
 const catchInPromise = e => {
     return Rx.Observable.of(error({
-        title: "warning",
+        title: "notification.warning",
         message: "warning: " + e.status + "  " + e.data, // TODO add tranlations
-        autoDismiss: 0,
+        autoDismiss: 5,
         position: "tc"
     }));
 };
@@ -45,60 +45,106 @@ const interceptOGCError = (observable) => observable.switchMap(response => {
 });
 
 const getIdFromUri = (uri) => {
-    return /\d+/.test(uri) ? uri.match(/\d+/)[0] : null;
+    const decodedUri = decodeURIComponent(uri);
+    return /\d+/.test(decodedUri) ? decodedUri.match(/\d+/)[0] : null;
 };
-const createAssociatedResource = ({attribute, permissions, mapId, metadata, value, category, type, optionsRes, optionsAttr}) => {
+const createAssociatedResource = ({attribute, permissions, mapId, metadata, value, category, type, optionsRes, optionsAttr} = {}) => {
     return Rx.Observable.fromPromise(
             GeoStoreApi.createResource(metadata, value, category, optionsRes)
-            .then(res => res.data)
+            .then(res => res.data))
             .switchMap((resourceId) => {
                 // update permissions
                 let actions = [];
                 actions.push(updatePermissions(resourceId, permissions));
-                const attibuteUri = ConfigUtils.getDefaults().geoStoreUrl + "data/" + mapId + "/raw?decode=datauri";
+                const attibuteUri = ConfigUtils.getDefaults().geoStoreUrl + "data/" + resourceId + "/raw?decode=datauri";
                 const encodedResourceUri = encodeURIComponent(encodeURIComponent(attibuteUri));
                 // UPDATE resource map with new attribute
                 actions.push(updateAttribute(mapId, attribute, encodedResourceUri, type, optionsAttr));
+                // display a success message
+                actions.push(success({
+                    title: "notification.success",
+                    message: "The " + attribute + " has been saved correctly",
+                    autoDismiss: 5,
+                    position: "tc"
+                }));
                 return Rx.Observable.from(actions);
             })
-        ).catch(catchInPromise);
+        .catch(catchInPromise);
 };
 
-const updateAssociatedResource = ({permissions, resourceId, value, options}) => {
+const updateAssociatedResource = ({permissions, resourceId, value, attribute, options} = {}) => {
     return Rx.Observable.fromPromise(GeoStoreApi.putResource(resourceId, value, options)
-            .then(res => res.data)
+            .then(res => res.data))
             .switchMap((id) => {
-                return Rx.Observable.of(updatePermissions(id, permissions));
+                let actions = [];
+                actions.push(success({
+                    title: "notification.success",
+                    message: "The " + attribute + " have been updated correctly",
+                    autoDismiss: 5,
+                    position: "tc"
+                }));
+                actions.push(updatePermissions(id, permissions));
+                return Rx.Observable.from(actions);
             })
-        ).catch(catchInPromise);
+        .catch(catchInPromise);
 
 };
-const deleteAssociatedResource = ({mapId, attribute, type, optionsAttr, resourceId, options}) => {
+const deleteAssociatedResource = ({mapId, attribute, type, resourceId, options} = {}) => {
     return Rx.Observable.fromPromise(GeoStoreApi.deleteResource(resourceId, options)
-            .then(res => res.data)
-            .switchMap(() => {
-                return Rx.Observable.of(updateAttribute(mapId, attribute, "NODATA", type, optionsAttr));
+            .then(res => res.status === 204))
+            .switchMap((deleted) => {
+                let actions = [];
+                if (deleted) {
+                    actions.push(success({
+                        title: "notification.success",
+                        message: "The " + attribute + " have been removed correctly",
+                        autoDismiss: 5,
+                        position: "tc"
+                    }));
+                    actions.push(updateAttribute(mapId, attribute, "NODATA", type, options));
+                    return Rx.Observable.from(actions);
+                }
+                actions.push(doNothing());
+                return Rx.Observable.from(actions);
             })
-        ).catch(catchInPromise);
+        .catch(catchInPromise);
 };
 
-const manageMapResource = ({map = {}, attribute = "", resource = null}) => {
+const deleteResourceById = (resId, options) => resId ?
+    GeoStoreApi.deleteResource(resId, options)
+        .then((res) => {return {data: res.data, resType: "success", error: null}; })
+        .catch((e) => {return {error: e, resType: "error"}; }) :
+    Rx.Observable.of({resType: "success"});
+
+const manageMapResource = ({map = {}, attribute = "", resource = null, type = "STRING", optionsDel = {}} = {}) => {
     const attrVal = map[attribute];
     const mapId = map.id;
     // create
     if ((isNil(attrVal) || attrVal === "NODATA") && !isNil(resource)) {
-        return createAssociatedResource({...resource, attribute, mapId});
+        return createAssociatedResource({...resource, attribute, mapId, type});
     }
-    if (!isNil(resource)) {
-        // update
-        return updateAssociatedResource({resourceId: getIdFromUri(attrVal), mapId, options: resource.optionsAttr});
+    if (isNil(resource)) {
+        // delete
+        return deleteAssociatedResource({
+            mapId,
+            attribute,
+            type,
+            resourceId: getIdFromUri(attrVal),
+            options: optionsDel});
     }
-    // delete
-    return deleteAssociatedResource({resourceId: getIdFromUri(attrVal), mapId, permissions: resource.permissions, value: resource.value, options: resource.optionsDel});
+    // update
+    return updateAssociatedResource({
+        permissions: resource.permissions,
+        resourceId: getIdFromUri(attrVal),
+        value: resource.value,
+        attribute,
+        options: resource.optionsAttr});
 
 };
 
 module.exports = {
+    getIdFromUri,
+    deleteResourceById,
     createAssociatedResource,
     updateAssociatedResource,
     deleteAssociatedResource,

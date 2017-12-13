@@ -48,6 +48,7 @@ class MetadataModal extends React.Component {
         closeGlyph: PropTypes.string,
         buttonSize: PropTypes.string,
         includeCloseButton: PropTypes.bool,
+        showDetailsRow: PropTypes.bool,
         map: PropTypes.object,
         style: PropTypes.object,
         fluid: PropTypes.bool,
@@ -82,6 +83,8 @@ class MetadataModal extends React.Component {
         loadAvailableGroups: () => {},
         onSave: ()=> {},
         detailsSheetActions: {
+            onBackDetails: () => {},
+            onUndoDetails: () => {},
             onToggleGroupProperties: () => {},
             onToggleUnsavedChangesModal: () => {},
             onOpenOrFetchDetails: () => {},
@@ -115,6 +118,7 @@ class MetadataModal extends React.Component {
         style: {},
         buttonSize: "small",
         includeCloseButton: true,
+        showDetailsRow: true,
         fluid: true,
         // CALLBACKS
         onErrorCurrentMap: ()=> {},
@@ -143,7 +147,7 @@ class MetadataModal extends React.Component {
             this.setState({
                 saving: false
             });
-            this.props.onResetCurrentMap();
+            // this.props.onResetCurrentMap();
         }
     }
 
@@ -203,10 +207,14 @@ class MetadataModal extends React.Component {
                     buttons={[{
                         text: LocaleUtils.getMessageById(this.context.messages, "map.details.back"),
                         onClick: () => {
-                            this.props.detailsSheetActions.onToggleDetailsSheet(true);
-                            this.props.detailsSheetActions.onUpdateDetails(this.props.map.detailsBackup);
                             if (readOnly) {
                                 this.props.onResetCurrentMap();
+                            } else {
+                                this.props.detailsSheetActions.onBackDetails(this.props.map.detailsBackup);
+
+                                /*this.props.detailsSheetActions.onToggleDetailsSheet(true);
+                                this.props.detailsSheetActions.onUpdateDetails(this.props.map.detailsBackup);
+                                */
                             }
                         }
                     }, {
@@ -222,7 +230,7 @@ class MetadataModal extends React.Component {
                             value={this.props.map.detailsText}
                             onChange={(details) => {
                                 if (details && details !== '<p><br></p>') {
-                                    this.props.detailsSheetActions.onUpdateDetails(details, true);
+                                    this.props.detailsSheetActions.onUpdateDetails(details, false);
                                 }
                             }}
                             modules={this.props.modules}/>
@@ -250,7 +258,7 @@ class MetadataModal extends React.Component {
                         onClick: () => {
                             this.props.onResetCurrentMap();
                             /*this.props.detailsSheetActions.onToggleUnsavedChangesModal();
-                            this.props.detailsSheetActions.onSetUnsavedChanges(false);
+                            this.props.detailsSheetActions.onsetDetailsChanged(false);
                             this.props.onDisplayMetadataEdit(false);*/
                         }
                     }]}>
@@ -291,14 +299,15 @@ class MetadataModal extends React.Component {
                                                 glyph: 'undo',
                                                 tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.undo"),
                                                 visible: !!this.props.map.detailsBackup,
-                                                onClick: () => { this.props.detailsSheetActions.onUpdateDetails(this.props.map.detailsBackup, true); }
+                                                onClick: () => { this.props.detailsSheetActions.onUndoDetails(this.props.map.detailsBackup); }
                                             }, {
                                                 glyph: 'pencil-add',
                                                 tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.add"),
                                                 visible: !this.props.map.detailsText,
                                                 onClick: () => {
                                                     if (!this.props.map.detailsText) {
-                                                        this.props.detailsSheetActions.onOpenOrFetchDetails({fetch: true, open: true});
+                                                        this.props.detailsSheetActions.onOpenOrFetchDetails({fetch: false, open: true});
+                                                        this.props.detailsSheetActions.onToggleDetailsSheet(false);
                                                     } else {
                                                         this.props.detailsSheetActions.onToggleDetailsSheet(false);
                                                     }
@@ -385,10 +394,12 @@ class MetadataModal extends React.Component {
             buttons={[{
                 text: LocaleUtils.getMessageById(this.context.messages, "close"),
                 onClick: () => {
+                    // TODO write only a single function used also in onClose property
                     if ( this.props.map.unsavedChanges) {
                         this.props.detailsSheetActions.onToggleUnsavedChangesModal();
                     } else {
                         this.props.onDisplayMetadataEdit(false);
+                        this.props.onResetCurrentMap();
                     }
                 }
             }, {
@@ -396,10 +407,13 @@ class MetadataModal extends React.Component {
                 onClick: () => { this.onSave(); }
             }]}
             onClose={() => {
-                if ( this.props.map.unsavedChanges) {
+                // TODO write only a single function used also in onClick property
+
+                if (this.props.map.unsavedChanges) {
                     this.props.detailsSheetActions.onToggleUnsavedChangesModal();
                 } else {
                     this.props.onDisplayMetadataEdit(false);
+                    this.props.onResetCurrentMap();
                 }
             }}>
             <Grid fluid>
@@ -450,7 +464,7 @@ class MetadataModal extends React.Component {
                             />
                         </Col>
                     </Row>
-                    {this.renderDetailsRow()}
+                    {this.props.showDetailsRow ? this.renderDetailsRow() : null}
                     {!this.props.map.hideGroupProperties && this.props.displayPermissionEditor && this.renderPermissionEditor()}
 
             </div></Grid>

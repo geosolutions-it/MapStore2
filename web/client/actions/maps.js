@@ -10,7 +10,7 @@ const GeoStoreApi = require('../api/GeoStoreDAO');
 const {updateCurrentMapPermissions, updateCurrentMapGroups} = require('./currentMap');
 const ConfigUtils = require('../utils/ConfigUtils');
 const {userGroupSecuritySelector, userSelector} = require('../selectors/security');
-const {areDetailsChangedSelector} = require('../selectors/currentmap');
+const {currentMapDetailsChangedSelector} = require('../selectors/currentmap');
 const assign = require('object-assign');
 const {findIndex} = require('lodash');
 
@@ -43,9 +43,13 @@ const TOGGLE_UNSAVED_CHANGES = 'MAPS:TOGGLE_UNSAVED_CHANGES';
 const UPDATE_DETAILS = 'MAPS:UPDATE_DETAILS';
 const SAVE_DETAILS = 'MAPS:SAVE_DETAILS';
 const DELETE_DETAILS = 'MAPS:DELETE_DETAILS';
-const SET_UNSAVED_CHANGES = 'MAPS:SET_UNSAVED_CHANGES';
+const SET_DETAILS_CHANGED = 'MAPS:SET_DETAILS_CHANGED';
 const SAVE_RESOURCE_DETAILS = 'MAPS:SAVE_RESOURCE_DETAILS';
 const OPEN_OR_FETCH_DETAILS = 'MAPS:OPEN_OR_FETCH_DETAILS';
+const DO_NOTHING = 'MAPS:DO_NOTHING';
+const DELETE_MAP = 'MAPS:DELETE_MAP';
+const BACK_DETAILS = 'MAPS:BACK_DETAILS';
+const UNDO_DETAILS = 'MAPS:UNDO_DETAILS';
 
 
 /**
@@ -575,11 +579,11 @@ function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categor
  * @param  {string} dataThumbnail     the data to save for the thubnail
  * @param  {string} categoryThumbnail the category for the thumbnails
  * @param  {number} resourceIdMap     the id of the map
- * @param  {object} [options          options for the request
+ * @param  {object} [options]         options for the request
  * @return {thunk}                    perform the update and dispatch proper actions
  */
 function saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options) {
-    return (dispatch, store) => {
+    return (dispatch, getState) => {
         dispatch(mapUpdating(resourceIdMap));
         dispatch(updatePermissions(resourceIdMap));
         if (dataThumbnail !== null && metadataMap !== null) {
@@ -594,7 +598,7 @@ function saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbna
             dispatch(onDisplayMetadataEdit(false));
         }
         // launch this only if details has changed
-        const detailsChanged = areDetailsChangedSelector(store.getState());
+        const detailsChanged = currentMapDetailsChangedSelector(getState());
         if (detailsChanged) {
             dispatch(saveResourceDetails());
         }
@@ -652,6 +656,7 @@ function createMap(metadata, content, thumbnail, options) {
             if (thumbnail && thumbnail.data) {
                 dispatch(createThumbnail(null, null, thumbnail.name, thumbnail.data, thumbnail.category, resourceId, options));
             }
+
             dispatch(mapCreated(response.data, assign({id: response.data, canDelete: true, canEdit: true, canCopy: true}, metadata), content));
             dispatch(onDisplayMetadataEdit(false));
         }).catch((e) => {
@@ -668,17 +673,10 @@ function createMap(metadata, content, thumbnail, options) {
  * @return {thunk}             performs the delete operations and dispatches mapDeleted and loadMaps
  */
 function deleteMap(resourceId, options) {
-    return (dispatch, getState) => {
-        dispatch(mapDeleting(resourceId));
-        GeoStoreApi.deleteResource(resourceId, options).then(() => {
-            dispatch(mapDeleted(resourceId, "success"));
-            let state = getState && getState();
-            if ( state && state.maps && state.maps.totalCount === state.maps.start) {
-                dispatch(loadMaps(false, state.maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*"));
-            }
-        }).catch((e) => {
-            dispatch(mapDeleted(resourceId, "failure", e));
-        });
+    return {
+        type: DELETE_MAP,
+        resourceId,
+        options
     };
 }
 
@@ -718,11 +716,12 @@ function toggleUnsavedChanges() {
  * @memberof actions.maps
  * @return {action}        type `UPDATE_DETAILS`
 */
-function updateDetails(detailsText, doBackup) {
+function updateDetails(detailsText, doBackup, originalDetails) {
     return {
         type: UPDATE_DETAILS,
         detailsText,
-        doBackup
+        doBackup,
+        originalDetails
     };
 }
 
@@ -750,16 +749,15 @@ function deleteDetails() {
     };
 }
 /**
- * set unsaved changes in the current map state, type `SET_UNSAVED_CHANGES`
+ * set unsaved changes in the current map state, type `SET_DETAILS_CHANGED`
  * @memberof actions.maps
- * @prop {boolean} unsavedChanges flag used to trigger the opening of the unsavedChangesModal
- * @return {action}        type `SET_UNSAVED_CHANGES`
+ * @prop {boolean} detailsChanged flag used to trigger the opening of the unsavedChangesModal
+ * @return {action}        type `SET_DETAILS_CHANGED`
 */
-function setUnsavedChanges(unsavedChanges, name) {
+function setDetailsChanged(detailsChanged) {
     return {
-        type: SET_UNSAVED_CHANGES,
-        unsavedChanges,
-        name
+        type: SET_DETAILS_CHANGED,
+        detailsChanged
     };
 }
 /**
@@ -767,11 +765,43 @@ function setUnsavedChanges(unsavedChanges, name) {
  * @memberof actions.maps
  * @return {action}        type `OPEN_AND_FETCH_DETAILS`
 */
-function openOrFetchDetails({open, fetch}) {
+function openOrFetchDetails({open, fetch, readOnly = false}) {
     return {
         type: OPEN_OR_FETCH_DETAILS,
         open,
-        fetch
+        fetch,
+        readOnly
+    };
+}
+/**
+ * back details
+ * @memberof actions.maps
+ * @return {action}        type `BACK_DETAILS`
+*/
+function backDetails(backupDetails) {
+    return {
+        type: BACK_DETAILS,
+        backupDetails
+    };
+}
+/**
+ * undo details
+ * @memberof actions.maps
+ * @return {action}        type `UNDO_DETAILS`
+*/
+function undoDetails() {
+    return {
+        type: UNDO_DETAILS
+    };
+}
+/**
+ * do nothing action
+ * @memberof actions.maps
+ * @return {action}        type `DO_NOTHING`
+*/
+function doNothing() {
+    return {
+        type: DO_NOTHING
     };
 }
 
@@ -810,9 +840,12 @@ module.exports = {
     updateDetails, UPDATE_DETAILS,
     saveDetails, SAVE_DETAILS,
     deleteDetails, DELETE_DETAILS,
-    setUnsavedChanges, SET_UNSAVED_CHANGES,
+    setDetailsChanged, SET_DETAILS_CHANGED,
     saveResourceDetails, SAVE_RESOURCE_DETAILS,
     openOrFetchDetails, OPEN_OR_FETCH_DETAILS,
+    backDetails, BACK_DETAILS,
+    undoDetails, UNDO_DETAILS,
+    doNothing, DO_NOTHING,
     metadataChanged,
     loadMaps,
     mapsLoading,
@@ -823,7 +856,7 @@ module.exports = {
     updateMap,
     updateMapMetadata,
     mapMetadataUpdated,
-    deleteMap,
+    deleteMap, DELETE_MAP,
     deleteThumbnail,
     createThumbnail,
     mapUpdating,

@@ -16,12 +16,16 @@ const {find, get} = require('lodash');
 
 const mapsResultsSelector = (state) => get(state, "maps.results", []);
 const mapFromIdSelector = (state, id) => find(mapsResultsSelector(state), m => m.id === id);
-const mapDetailsFromIdSelector = (state, id) => mapFromIdSelector(state, id).detailsText || "";
+const mapDetailsTextFromIdSelector = (state, id) => mapFromIdSelector(state, id).detailsText || "";
+const mapDetailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id).details || "";
+const mapThumbnailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id).thumbnail || "";
 const mapPermissionsFromIdSelector = (state, id) => mapFromIdSelector(state, id).permissions || "";
 
 module.exports = {
     mapsResultsSelector,
     mapFromIdSelector,
-    mapDetailsFromIdSelector,
+    mapDetailsUriFromIdSelector,
+    mapDetailsTextFromIdSelector,
+    mapThumbnailsUriFromIdSelector,
     mapPermissionsFromIdSelector
 };

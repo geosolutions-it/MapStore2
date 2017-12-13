@@ -10,7 +10,7 @@ const expect = require('expect');
 const {
     mapsResultsSelector,
     mapFromIdSelector,
-    mapDetailsFromIdSelector,
+    mapDetailsUriFromIdSelector,
     mapPermissionsFromIdSelector
 } = require('../maps');
 const mapsState = {
@@ -45,8 +45,8 @@ describe('Test maps selectors', () => {
         const props = mapFromIdSelector(mapsState, 1);
         expect(props.creation).toBe("2017-12-01 10:58:46.337");
     });
-    it('test mapDetailsFromIdSelector no state', () => {
-        const props = mapDetailsFromIdSelector(mapsState, 1);
+    it('test mapDetailsUriFromIdSelector no state', () => {
+        const props = mapDetailsUriFromIdSelector(mapsState, 1);
         expect(props).toBe("%2Fmapstore%2Frest%2Fgeostore%2Fdata%2F10%2Fraw%3Fdecode%3Ddatauri");
     });
     it('test mapPermissionsFromIdSelector no state', () => {
