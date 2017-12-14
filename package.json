@@ -124,7 +124,7 @@
     "ogc-schemas": "2.6.1",
     "openlayers": "4.0.1",
     "pdfviewer": "0.3.2",
-    "proj4": "2.4.4",
+    "proj4": "https://github.com/proj4js/proj4js/tarball/6efe8285e181777728b2c307ca17e53121a5faef",
     "prop-types": "15.6.0",
     "qrcode.react": "0.6.1",
     "react": "15.6.2",
