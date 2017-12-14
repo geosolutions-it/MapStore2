@@ -15,6 +15,7 @@ const ConfigUtils = require('../../../utils/ConfigUtils');
 
 describe('WithContainer Overlay', () => {
     beforeEach((done) => {
+        document.body.innerHTML = '<div id="main-conatiner"><div id="container"><div><div id="old-container"></div></div>';
         setTimeout(done);
     });
 
@@ -25,31 +26,53 @@ describe('WithContainer Overlay', () => {
     });
 
     it('test with no class', () => {
-        document.body.innerHTML = '<div id="main-conatiner"><div id="container"><div><div id="old-container"></div></div>';
         const cmp = ReactDOM.render(<div id="old-portal-container"><Portal><div className="portal-child"/></Portal></div>, document.getElementById("old-container"));
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         expect(document.body.children[1].children[0].getAttribute('class')).toBe('portal-child');
         expect(document.getElementById('old-portal-container').querySelector('.portal-child')).toBe(null);
     });
+});
+
+describe('WithContainer Overlay', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="main-conatiner" class="ms2"><div id="container"><div><div id="old-container"></div></div>';
+        setTimeout(done);
+    });
+
+    afterEach((done) => {
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+        document.body.innerHTML = '';
+        setTimeout(done);
+    });
 
     it('test with default ms2 class', () => {
-        document.body.innerHTML = '<div id="main-conatiner" class="ms2"><div id="container"><div><div id="old-container"></div></div>';
         const cmp = ReactDOM.render(<div id="old-portal-container"><Portal><div className="portal-child"/></Portal></div>, document.getElementById("old-container"));
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         expect(document.getElementById('container').querySelector('.portal-child')).toExist();
         expect(document.getElementById('old-portal-container').querySelector('.portal-child')).toBe(null);
+    });
+});
+
+describe('WithContainer Overlay', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="main-conatiner" class="custom"><div id="container"><div><div id="old-container"></div></div>';
+        setTimeout(done);
+    });
+
+    afterEach((done) => {
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+        document.body.innerHTML = '';
+        setTimeout(done);
     });
 
     it('test with default custom class', () => {
         ConfigUtils.setConfigProp('themePrefix', 'custom');
-        document.body.innerHTML = '<div id="main-conatiner" class="custom"><div id="container"><div><div id="old-container"></div></div>';
         const cmp = ReactDOM.render(<div id="old-portal-container"><Portal><div className="portal-child"/></Portal></div>, document.getElementById("old-container"));
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         expect(document.getElementById('container').querySelector('.portal-child')).toExist();
         expect(document.getElementById('old-portal-container').querySelector('.portal-child')).toBe(null);
     });
-
 });
