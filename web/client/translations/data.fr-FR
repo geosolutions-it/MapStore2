@@ -638,7 +638,13 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Merci d'entrer vos nom d'utilisateur et mot de passe",
                 "usernamePwdIncorrect":"Nom d'utilisateur ou mot de passe incorrect"
-            }
+            },
+            "detailsName": "Nom",
+            "detailsRole": "Rôle",
+            "detailsGroups": "Groupes",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Compagnie",
+            "detailsNotes": "Remarques"
         },
         "users": {
             "title": "Gérer les comptes",

@@ -614,7 +614,13 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Por favor, intoduzca su clave y contraseña",
                 "usernamePwdIncorrect":"Ususario o clave incorrectos"
-            }
+            },
+            "detailsName": "Nombre",
+            "detailsRole": "Rol",
+            "detailsGroups": "Grupos",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Empresa",
+            "detailsNotes": "Notas"
         },
         "annotations": {
             "edit": "Editar",

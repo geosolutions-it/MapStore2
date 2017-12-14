@@ -613,7 +613,13 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Per favore, Inserisci username e password",
                 "usernamePwdIncorrect":"Username o password non corretti"
-            }
+            },
+            "detailsName": "Nome",
+            "detailsRole": "Ruolo",
+            "detailsGroups": "Gruppi",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Company",
+            "detailsNotes": "Note"
         },
         "annotations": {
             "edit": "Modifica",
