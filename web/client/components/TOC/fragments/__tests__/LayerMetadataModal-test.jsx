@@ -10,6 +10,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 
 const LayerMetadataModal = require('../LayerMetadataModal');
+const RenderTemplate = require("../template/index");
 const expect = require('expect');
 
 describe('TOC LayerMetadataModal', () => {
@@ -37,10 +38,8 @@ describe('TOC LayerMetadataModal', () => {
             expanded: true
         };
 
-        ReactDOM.render(<LayerMetadataModal layerMetadata={layerMetadata} />, document.getElementById("container"));
+        ReactDOM.render(<LayerMetadataModal renderContent={RenderTemplate} layerMetadata={layerMetadata} />, document.getElementById("container"));
         const panelClass = document.getElementsByClassName('layer-settings-metadata-panel-title');
         expect(panelClass).toExist();
-        const id = document.getElementById('msg_rss_micro');
-        expect(id).toExist();
     });
 });

@@ -53,4 +53,16 @@ describe('Test correctness of the CSW APIs', () => {
             }
         });
     });
+    it('getRecordsById ISO Metadata Profile', (done) => {
+        API.getRecordById('base/web/client/test-resources/csw/getRecordById.xml').then((result) => {
+            try {
+                expect(result).toExist();
+                expect(result.dc).toExist();
+                expect(result.dc.identifier).toBe("msg_rss_micro");
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
 });

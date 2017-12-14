@@ -16,11 +16,13 @@ const Dialog = require('../../misc/Dialog');
 const Portal = require('../../misc/Portal');
 const Template = require('../../data/template/jsx/Template');
 const MetadataTemplate = require('./template/MetadataTemplate');
+const RenderTemplate = require("./template/index");
 
 class LayerMetadataModal extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         layerMetadata: PropTypes.object,
+        metadataTemplate: PropTypes.array,
         hideLayerMetadata: PropTypes.func,
         closeGlyph: PropTypes.string,
         panelStyle: PropTypes.object,
@@ -32,6 +34,7 @@ class LayerMetadataModal extends React.Component {
     static defaultProps = {
         id: "mapstore-layer-settings-metadata",
         layerMetadata: {expanded: false},
+        metadataTemplate: [],
         closeGlyph: "1-close",
         panelStyle: {},
         panelClassName: "toolbar-panel portal-dialog",
@@ -52,7 +55,8 @@ class LayerMetadataModal extends React.Component {
             return (
                 <Template
                     model={this.props.layerMetadata.metadataRecord}
-                    template={MetadataTemplate} />
+                    template={this.props.metadataTemplate && this.props.metadataTemplate.length ? this.props.metadataTemplate.join('\n') : MetadataTemplate}
+                    renderContent={RenderTemplate}/>
             );
         }
         return null;

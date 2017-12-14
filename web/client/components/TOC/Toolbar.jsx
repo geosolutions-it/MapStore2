@@ -29,7 +29,8 @@ class Toolbar extends React.Component {
         options: PropTypes.object,
         style: PropTypes.object,
         settings: PropTypes.object,
-        layerMetadata: PropTypes.object
+        layerMetadata: PropTypes.object,
+        metadataTemplate: PropTypes.array
     };
 
     static defaultProps = {
@@ -101,7 +102,8 @@ class Toolbar extends React.Component {
             chartStyle: {}
         },
         settings: {},
-        layerMetadata: {}
+        layerMetadata: {},
+        metadataTemplate: []
     };
 
     state = {
@@ -165,6 +167,7 @@ class Toolbar extends React.Component {
         const layerMetadataModal = (<LayerMetadataModal
                                 key="toollayermetadatamodal"
                                 layerMetadata={this.props.layerMetadata}
+                                metadataTemplate={this.props.metadataTemplate}
                                 hideLayerMetadata={this.props.onToolsActions.onHideLayerMetadata}
                                 layerMetadataPanelTitle={this.props.text.layerMetadataPanelTitle} />);
         return this.props.activateTool.activateToolsContainer ? (

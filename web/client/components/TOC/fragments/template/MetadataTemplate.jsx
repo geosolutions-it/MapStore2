@@ -7,7 +7,7 @@
  */
 
 const MetadataTemplate = "<div id={model.identifier}>" +
-        "<table className='table striped'>" +
+        "<Table>" +
             "<thead>" +
             "<tr>" +
                 "<th>Campo</th><th>Valore</th>" +
@@ -33,7 +33,7 @@ const MetadataTemplate = "<div id={model.identifier}>" +
                     "<td>Creator</td><td>{model.creator}</td>" +
                 "</tr>" +
             "</tbody>" +
-        "</table>" +
+        "</Table>" +
     "</div>";
 
 module.exports = MetadataTemplate;

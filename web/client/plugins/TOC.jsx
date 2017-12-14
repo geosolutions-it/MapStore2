@@ -129,6 +129,7 @@ class LayerTree extends React.Component {
         groups: PropTypes.array,
         settings: PropTypes.object,
         layerMetadata: PropTypes.object,
+        metadataTemplate: PropTypes.array,
         refreshMapEnabled: PropTypes.bool,
         groupStyle: PropTypes.object,
         groupPropertiesChangeHandler: PropTypes.func,
@@ -248,7 +249,8 @@ class LayerTree extends React.Component {
         hideLayerMetadata: () => {},
         activateAddLayerButton: false,
         catalogActive: false,
-        refreshLayerVersion: () => {}
+        refreshLayerVersion: () => {},
+        metadataTemplate: []
     };
 
     getNoBackgroundLayers = (group) => {
@@ -314,6 +316,7 @@ class LayerTree extends React.Component {
                             generalInfoFormat={this.props.generalInfoFormat}
                             settings={this.props.settings}
                             layerMetadata={this.props.layerMetadata}
+                            metadataTemplate={this.props.metadataTemplate}
                             activateTool={{
                                 activateToolsContainer: this.props.activateToolsContainer,
                                 activateRemoveLayer: this.props.activateRemoveLayer,
@@ -463,7 +466,48 @@ const TOCPlugin = connect(tocSelector, {
 const API = {
     csw: require('../api/CSW')
 };
-
+/**
+ * Provides Table Of Content visualization.
+ * @memberof plugins
+ * @name TOC
+ * @class
+ * @prop {array[]} metadataTemplate custom template for displaying metadata
+ * @example
+ * {
+ * "name": "TOC",
+ *      "cfg": {
+ *          "metadataTemplate": ["<div id={model.identifier}>",
+ *              "<Table className='responsive'>",
+ *                  "<thead>",
+ *                  "<tr>",
+ *                      "<th>Campo</th><th>Valore</th>",
+ *                  "</tr>",
+ *                  "</thead>",
+ *                  "<tbody>",
+ *                      "<tr>",
+ *                          "<td>Identifier</td><td>{model.identifier}</td>",
+ *                      "</tr>",
+ *                      "<tr>",
+ *                          "<td>Title</td><td>{model.title}</td>",
+ *                      "</tr>",
+ *                      "<tr>",
+ *                          "<td>Abstract</td><td>{model.abstract}</td>",
+ *                      "</tr>",
+ *                      "<tr>",
+ *                          "<td>Subject</td><td>{Array.isArray(model.subject) ? model.subject.map((value, i) => <ul key={'meta'+i}><li key={i}>{value}</li></ul>) : model.subject}</td>",
+ *                      "</tr>",
+ *                      "<tr>",
+ *                          "<td>Type</td><td>{model.type}</td>",
+ *                      "</tr>",
+ *                      "<tr>",
+ *                          "<td>Creator</td><td>{model.creator}</td>",
+ *                      "</tr>",
+ *                  "</tbody>",
+ *              "</Table>",
+ *          "</div>"]
+ *      }
+ *  }
+ */
 module.exports = {
     TOCPlugin: assign(TOCPlugin, {
         Toolbar: {
