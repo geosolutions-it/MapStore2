@@ -244,7 +244,7 @@
             "toolTrashLayersTooltip": "Rimuovi livelli selezionati",
             "toolFeaturesGridTooltip": "Apri tabella degli attributi",
             "noFilteredResults": "Nessun risultato",
-            "filterPlaceholder": "Filtra livelli",
+            "filterPlaceholder": "Filtra layers",
             "clearFilter": "Pulisci filtro",
             "toolReloadLayerTooltip": "Forza caricamento del livello selezionato",
             "toolReloadLayersTooltip": "Forza caricamento dei livelli selezionati",
