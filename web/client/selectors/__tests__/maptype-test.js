@@ -16,6 +16,13 @@ const {
 } = require('../maptype');
 
 describe('Test maptype', () => {
+    it('test mapTypeSelector default', () => {
+        const mapType = mapTypeSelector({});
+
+        expect(mapType).toExist();
+        expect(mapType).toBe("leaflet");
+    });
+
     it('test mapTypeSelector', () => {
         const mapType = mapTypeSelector({maptype: {mapType: "cesium"}});
 

@@ -61,7 +61,6 @@ class RecordItem extends React.Component {
         buttonSize: "small",
         crs: "EPSG:3857",
         currentLocale: 'en-US',
-        mapType: "leaflet",
         onCopy: () => {},
         onError: () => {},
         onLayerAdd: () => {},
