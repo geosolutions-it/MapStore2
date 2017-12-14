@@ -21,6 +21,7 @@ const Message = require('../../I18N/Message');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const Spinner = require('react-spinkit');
 const LocaleUtils = require('../../../utils/LocaleUtils');
+// const axios = require('../../../libs/ajax');
 
 /**
  * A Modal window to show map metadata form
@@ -160,6 +161,16 @@ class MetadataModal extends React.Component {
         }
     }
 
+    onCloseMapPropertiesModal = () => {
+        // TODO write only a single function used also in onClose property
+        if ( this.props.map.unsavedChanges) {
+            this.props.detailsSheetActions.onToggleUnsavedChangesModal();
+        } else {
+            this.props.onDisplayMetadataEdit(false);
+            this.props.onResetCurrentMap();
+        }
+    }
+
     onSave = () => {
         this.setState({
             saving: true
@@ -175,8 +186,8 @@ class MetadataModal extends React.Component {
             };
             this.props.onSave(this.props.map.id, name, description);
         }
+        this.refs.thumbnail.processUpdateThumbnail(this.props.map, metadata, this.props.map.thumbnailData);
         this.props.updatePermissions(this.props.map.id, this.props.map.permissions);
-        this.refs.thumbnail.updateThumbnail(this.props.map, metadata);
     };
 
     renderDetailsSheet = (readOnly) => {
@@ -211,10 +222,6 @@ class MetadataModal extends React.Component {
                                 this.props.onResetCurrentMap();
                             } else {
                                 this.props.detailsSheetActions.onBackDetails(this.props.map.detailsBackup);
-
-                                /*this.props.detailsSheetActions.onToggleDetailsSheet(true);
-                                this.props.detailsSheetActions.onUpdateDetails(this.props.map.detailsBackup);
-                                */
                             }
                         }
                     }, {
@@ -244,7 +251,7 @@ class MetadataModal extends React.Component {
     renderUnsavedChanges = () => {
         return (<Portal>
                 <ResizableModal
-                    title="Are you sure to close without save your changes?"
+                    title={LocaleUtils.getMessageById(this.context.messages, "map.details.titleUnsavedChanges")}
                     bodyClassName="modal-details-sheet-confirm"
                     show={!!this.props.map.showUnsavedChanges}
                     buttons={[{
@@ -257,17 +264,14 @@ class MetadataModal extends React.Component {
                         text: LocaleUtils.getMessageById(this.context.messages, "yes"),
                         onClick: () => {
                             this.props.onResetCurrentMap();
-                            /*this.props.detailsSheetActions.onToggleUnsavedChangesModal();
-                            this.props.detailsSheetActions.onsetDetailsChanged(false);
-                            this.props.onDisplayMetadataEdit(false);*/
                         }
                     }]}>
                     <Grid fluid>
                         <Row>
                             <Col xs={12}>
-                                Some fields has been changed.
+                                <Message msgId="map.details.fieldsChanged"/>
                                 <br/>
-                                Are you sure to close without save your changes?
+                                <Message msgId="map.details.sureToClose"/>
                             </Col>
                         </Row>
                     </Grid>
@@ -393,29 +397,12 @@ class MetadataModal extends React.Component {
             bodyClassName="ms-flex modal-properties-container"
             buttons={[{
                 text: LocaleUtils.getMessageById(this.context.messages, "close"),
-                onClick: () => {
-                    // TODO write only a single function used also in onClose property
-                    if ( this.props.map.unsavedChanges) {
-                        this.props.detailsSheetActions.onToggleUnsavedChangesModal();
-                    } else {
-                        this.props.onDisplayMetadataEdit(false);
-                        this.props.onResetCurrentMap();
-                    }
-                }
+                onClick: this.onCloseMapPropertiesModal
             }, {
                 text: LocaleUtils.getMessageById(this.context.messages, "save"),
                 onClick: () => { this.onSave(); }
             }]}
-            onClose={() => {
-                // TODO write only a single function used also in onClick property
-
-                if (this.props.map.unsavedChanges) {
-                    this.props.detailsSheetActions.onToggleUnsavedChangesModal();
-                } else {
-                    this.props.onDisplayMetadataEdit(false);
-                    this.props.onResetCurrentMap();
-                }
-            }}>
+            onClose={this.onCloseMapPropertiesModal}>
             <Grid fluid>
                 <div className="ms-map-properties">
                     {/* TODO fix this error messages*/}
@@ -457,6 +444,7 @@ class MetadataModal extends React.Component {
                             <Metadata role="body" ref="mapMetadataForm"
                                 onChange={this.props.metadataChanged}
                                 map={this.props.map}
+                                metadata={this.props.metadata}
                                 nameFieldText={<Message msgId="map.name" />}
                                 descriptionFieldText={<Message msgId="map.description" />}
                                 namePlaceholderText={LocaleUtils.getMessageById(this.context.messages, "map.namePlaceholder") || "Map Name"}

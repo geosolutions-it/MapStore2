@@ -63,7 +63,7 @@ const {setControlProperty} = require('../actions/controls');
 
 const MetadataModal = connect(
     (state = {}) => ({
-        metadata: state.maps.metadata,
+        metadata: state.currentMap.metadata,
         availableGroups: state.currentMap && state.currentMap.availableGroups || [ ], // TODO: add message when array is empty
         newGroup: state.controls && state.controls.permissionEditor && state.controls.permissionEditor.newGroup,
         newPermission: state.controls && state.controls.permissionEditor && state.controls.permissionEditor.newPermission || "canRead",

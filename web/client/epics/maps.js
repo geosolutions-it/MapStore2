@@ -8,24 +8,29 @@
 
 const Rx = require('rxjs');
 const uuidv1 = require('uuid/v1');
-const {error, success, CLEAR_NOTIFICATIONS} = require('../actions/notifications');
+const {CLEAR_NOTIFICATIONS} = require('../actions/notifications');
+const {basicError, basicSuccess} = require('../utils/NotificationUtils');
+const LocaleUtils = require('../utils/NotificationUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
 const {
-    SAVE_DETAILS, SAVE_RESOURCE_DETAILS,
-    OPEN_OR_FETCH_DETAILS, DELETE_MAP, doNothing,
+    SAVE_DETAILS, SAVE_RESOURCE_DETAILS, MAP_CREATED,
+    OPEN_OR_FETCH_DETAILS, DELETE_MAP,
     setDetailsChanged, updateDetails, toggleDetailsSheet,
-    mapDeleting, mapDeleted, loadMaps, MAP_CREATED
+    mapDeleting, mapDeleted, loadMaps,
+    doNothing
 } = require('../actions/maps');
 const {
-    mapPermissionsFromIdSelector,
-    mapThumbnailsUriFromIdSelector,
-    mapDetailsUriFromIdSelector
+    mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
+    mapDetailsUriFromIdSelector, isMapsLastPageSelector
 } = require('../selectors/maps');
 const {
     currentMapDetailsTextSelector, currentMapIdSelector,
     currentMapDetailsUriSelector, currentMapSelector,
     currentMapDetailsChangedSelector, currentMapOriginalDetailsTextSelector
 } = require('../selectors/currentmap');
+const {
+    currentMessagesSelector
+} = require('../selectors/locale');
 
 const {userParamsSelector} = require('../selectors/security');
 const {manageMapResource, deleteResourceById, getIdFromUri} = require('../utils/ObservableUtils');
@@ -46,6 +51,7 @@ const setDetailsChangedEpic = (action$, store) =>
         const currentDetails = currentMapDetailsTextSelector(state);
         return Rx.Observable.of(setDetailsChanged(originalDetails !== currentDetails));
     });
+
 
 /**
  * If the details resource does not exist it saves it, and it updates its permission with the one set for the mapPermissionsFromIdSelector
@@ -78,6 +84,7 @@ const saveResourceDetailsEpic = (action$, store) =>
                 optionsAttr: {},
                 optionsRes: {}
             };
+            params.messages = currentMessagesSelector(state);
         } else {
             params.optionsDel = {};
         }
@@ -86,6 +93,9 @@ const saveResourceDetailsEpic = (action$, store) =>
         });
     });
 
+/**
+    Epics used to fetch and/or open the details modal
+*/
 const fetchDetailsFromResource = (action$, store) =>
     action$.ofType(OPEN_OR_FETCH_DETAILS)
     .filter(a => a.fetch)
@@ -116,13 +126,9 @@ const fetchDetailsFromResource = (action$, store) =>
                 return Rx.Observable.of(
                     updateDetails(details, true, details)
                 );
-            }).catch(e => {
-                return Rx.Observable.of(error({
-                        title: "notification.warning",
-                        message: "Error FETCHING details for this map: " + currentMapIdSelector(store.getState()) + "\t\n" + e.status + " " + e.data,
-                        autoDismiss: 6,
-                        position: "tc"
-                    }));
+            }).catch(() => {
+                return Rx.Observable.of(basicError({
+                    message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorFetchingDetailsOfMap") + currentMapIdSelector(store.getState())}));
             });
     });
 
@@ -147,55 +153,33 @@ const deleteMapAndAssociatedResources = (action$, store) =>
         ).concatMap(([details, thumbnail, map]) => {
             let actions = [];
             if (details.resType === "error") {
-                actions.push(error({
-                        title: "notification.warning",
-                        message: "Error when DELETING details for this map: " + currentMapIdSelector(store.getState()) + "\t\n" + details.error.status + " " + details.error.data,
-                        autoDismiss: 6,
-                        position: "tc"
-                    }));
+                actions.push(basicError({message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorDeletingDetailsOfMap") + mapId }));
             }
             if (thumbnail.resType === "error") {
-                actions.push(error({
-                        title: "notification.warning",
-                        message: "Error when DELETING thumbanil for this map: " + currentMapIdSelector(store.getState()) + "\t\n" + details.error.status + " " + details.error.data,
-                        autoDismiss: 6,
-                        position: "tc"
-                    }));
+                actions.push(basicError({message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorDeletingThumbnailOfMap") + mapId }));
             }
-            if (map.resType === "success" && details.resType === "success" && thumbnail.resType === "success") {
+            if (map.resType === "error") {
+                actions.push(basicError({message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorDeletingMap") + mapId }));
+                actions.push(mapDeleted(resourceId, "failure", map.error));
+            }
+            if (map.resType === "success") {
                 actions.push(mapDeleted(resourceId, "success"));
-                actions.push(success({
-                        title: "notification.success",
-                        message: "All resources associated with this map #### have been deleted successfully",
-                        autoDismiss: 6,
-                        position: "tc"
-                    }));
-
-                if ( state && state.maps && state.maps.totalCount === state.maps.start) {
+                if ( isMapsLastPageSelector(state)) {
                     actions.push(loadMaps(false, state.maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*"));
                 }
-            } else if (map.resType === "error") {
-                actions.push(error({
-                        title: "notification.warning",
-                        message: "Error when DELETING this map: " + currentMapIdSelector(store.getState()) + "\t\n" + details.error.status + " " + details.error.data,
-                        autoDismiss: 6,
-                        position: "tc"
-                    }));
-                actions.push(mapDeleted(resourceId, "failure", map.error));
+            }
+            if (map.resType === "success" && details.resType === "success" && thumbnail.resType === "success") {
+                actions.push(basicSuccess({ message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.allResDeleted") + mapId }));
+
             }
             return Rx.Observable.from(actions);
         }).startWith(mapDeleting(resourceId));
     });
 
 const mapCreatedNotificationEpic = action$ =>
-    action$.ofType(MAP_CREATED).concat(
-        action$.ofType(CLEAR_NOTIFICATIONS))
-        .switchMap(() => Rx.Observable.of(success({
-            title: "success",
-            message: "The Map has been created correctly",
-            autoDismiss: 6,
-            position: "tc"
-        })));
+    action$.ofType(MAP_CREATED)
+        .concat(action$.ofType(CLEAR_NOTIFICATIONS))
+        .switchMap(() => Rx.Observable.of(basicSuccess({message: "maps.feedback.successSavedMap"})));
 
 
 module.exports = {

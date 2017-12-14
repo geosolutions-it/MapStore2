@@ -23,12 +23,12 @@ function editMap(map, openModalProperties) {
     };
 }
 
-// update the thumbnail and the files property of the currentMap
-function updateCurrentMap(files, thumbnail) {
+// update the thumbnail and the thumbnailData property of the currentMap
+function updateCurrentMap(thumbnailData, thumbnail) {
     return {
         type: UPDATE_CURRENT_MAP,
         thumbnail,
-        files
+        thumbnailData
     };
 }
 

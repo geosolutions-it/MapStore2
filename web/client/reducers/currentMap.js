@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+// const {isNil} = require('lodash');
 const {
     EDIT_MAP,
     UPDATE_CURRENT_MAP,
@@ -34,7 +35,9 @@ const {
     UNDO_DETAILS,
     TOGGLE_GROUP_PROPERTIES,
     TOGGLE_UNSAVED_CHANGES,
-    SET_DETAILS_CHANGED
+    SET_DETAILS_CHANGED,
+    SET_UNSAVED_CHANGES,
+    METADATA_CHANGED
 } = require('../actions/maps');
 
 const assign = require('object-assign');
@@ -48,11 +51,19 @@ function currentMap(state = {}, action) {
             displayMetadataEdit: action.openModalProperties,
             thumbnailError: null,
             errors: [],
+            metadata: {
+                name: action.map.name,
+                description: action.map.description
+            },
             hideGroupProperties: false,
             detailsSheetReadOnly: true });
     }
     case UPDATE_CURRENT_MAP: {
-        return assign({}, state, {newThumbnail: action.thumbnail, files: action.files});
+        return assign({}, state, {
+            newThumbnail: action.thumbnail,
+            thumbnailData: action.thumbnailData,
+            unsavedChanges: true
+        });
     }
     case MAP_UPDATING: {
         return assign({}, state, {updating: true});
@@ -124,6 +135,15 @@ function currentMap(state = {}, action) {
             detailsSheetReadOnly: action.detailsSheetReadOnly
         });
     }
+    case METADATA_CHANGED: {
+        let prop = action.prop;
+        return assign({}, state, {
+            metadata: assign({}, state.metadata, {[action.prop]: action.value }),
+            unsavedChanges:
+                (prop === "name" ? action.value : state.metadata.name) !== state.name ||
+                (prop === "description" ? action.value : state.metadata.description) !== state.description
+        });
+    }
     case UPDATE_DETAILS: {
         return assign({}, state, {
             detailsText: action.detailsText,
@@ -159,6 +179,11 @@ function currentMap(state = {}, action) {
             detailsChanged: true,
             unsavedChanges: true,
             detailsDeleted: true
+        });
+    }
+    case SET_UNSAVED_CHANGES: {
+        return assign({}, state, {
+            unsavedChanges: action.value
         });
     }
     case TOGGLE_GROUP_PROPERTIES: {

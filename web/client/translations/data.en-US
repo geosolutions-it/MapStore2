@@ -194,6 +194,24 @@
         },
         "newMap": "New Map",
 		"maps": {
+            "feedback": {
+                "successSavedMap": "The map has been created correctly",
+                "errorDeletingMap": "Error when deleting this map with id: ",
+                "errorDeletingThumbnailOfMap": "Error when deleting thumbnail for the map with id: ",
+                "errorDeletingDetailsOfMap": "Error when deleting details for the map with id: ",
+                "allResDeleted": "Have been deleted successfully all resources associated with this map: ",
+                "errorFetchingDetailsOfMap": "Error when fetching details for the map with id: ",
+                "details": {
+                    "deletedSuccesfully": "The details have been removed correctly",
+                    "savedSuccesfully": "The details have been saved correctly",
+                    "updatedSuccesfully": "The details have been updated correctly"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "The thumbnail have been removed correctly",
+                    "savedSuccesfully": "The thumbnail have been saved correctly",
+                    "updatedSuccesfully": "The thumbnail have been updated correctly"
+                }
+            },
 			"search": "search for maps..."
 		},
         "map": {
@@ -242,7 +260,10 @@
                 "undo": "Undo remove",
                 "showPreview": "Show preview",
                 "hidePreview": "Hide preview",
-                "delete": "Delete details sheet"
+                "delete": "Delete details sheet",
+                "titleUnsavedChanges": "Are you sure to close without save your changes?",
+                "sureToClose": "Are you sure to close without save your changes?",
+                "fieldsChanged": "Some fields has been changed"
             }
         },
         "toc": {

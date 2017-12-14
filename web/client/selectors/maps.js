@@ -15,17 +15,23 @@ const {find, get} = require('lodash');
  */
 
 const mapsResultsSelector = (state) => get(state, "maps.results", []);
+const mapMetadataSelector = (state) => get(state, "maps.metadata", {});
+const isMapsLastPageSelector = (state) => state && state.maps && state.maps.totalCount === state.maps.start;
 const mapFromIdSelector = (state, id) => find(mapsResultsSelector(state), m => m.id === id);
-const mapDetailsTextFromIdSelector = (state, id) => mapFromIdSelector(state, id).detailsText || "";
 const mapDetailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id).details || "";
 const mapThumbnailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id).thumbnail || "";
 const mapPermissionsFromIdSelector = (state, id) => mapFromIdSelector(state, id).permissions || "";
+const mapNameSelector = (state, id) => mapFromIdSelector(state, id).name || "";
+const mapDescriptionSelector = (state, id) => mapFromIdSelector(state, id).description || "";
 
 module.exports = {
+    isMapsLastPageSelector,
+    mapMetadataSelector,
+    mapNameSelector,
+    mapDescriptionSelector,
     mapsResultsSelector,
     mapFromIdSelector,
     mapDetailsUriFromIdSelector,
-    mapDetailsTextFromIdSelector,
     mapThumbnailsUriFromIdSelector,
     mapPermissionsFromIdSelector
 };

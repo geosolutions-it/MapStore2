@@ -192,6 +192,24 @@
         },
         "newMap": "Neue Karte",
         "maps": {
+            "feedback": {
+                "successSavedMap": "Die Karte wurde korrekt erstellt",
+                "errorDeletingMap": "Fehler beim Löschen dieser Map mit ID: ",
+                "errorDeletingThumbnailOfMap": "Fehler beim Löschen der Miniaturansicht für die Karte mit ID: ",
+                "errorDeletingDetailsOfMap": "Fehler beim Löschen der Details für die Karte mit ID: ",
+                "allResDeleted": "Alle Ressourcen, die mit dieser Karte verknüpft sind, wurden erfolgreich gelöscht: ",
+                "errorFetchingDetailsOfMap": "Fehler beim Abrufen von Details für die Karte mit der ID: ",
+                "details": {
+                    "deletedSuccesfully": "Die Details wurden korrekt entfernt",
+                    "savedSuccesfully": "Die Details wurden korrekt entfernt",
+                    "updatedSuccesfully": "Die Details wurden korrekt aktualisiert"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "Das Vorschaubild wurde korrekt entfernt",
+                    "savedSuccesfully": "Das Vorschaubild wurde korrekt entfernt",
+                    "updatedSuccesfully": "Das Thumbnail wurde korrekt aktualisiert"
+                }
+            },
             "search": "Suche nach Karten..."
         },
         "map": {
@@ -229,6 +247,21 @@
                 "canWrite": "kann bearbeiten",
                 "noResult": "keine Resultate gefunden",
                 "title": "Gruppen Berechtigungen"
+            },
+            "details": {
+                "back": "Zurück",
+                "save": "Sparen",
+                "show": "Details anzeigen",
+                "add": "Neue Details hinzufügen",
+                "edit": "Details bearbeiten",
+                "title": "Detailblatt",
+                "undo": "Rückgängig entfernen",
+                "showPreview": "Vorschau zeigen",
+                "hidePreview": "Vorschau ausblenden",
+                "delete": "Löschen Sie das Detailblatt",
+                "titleUnsavedChanges": "Sind Sie sicher, dass Sie schließen, ohne Ihre Änderungen zu speichern??",
+                "sureToClose": "Sind Sie sicher, dass Sie schließen, ohne Ihre Änderungen zu speichern??",
+                "fieldsChanged": "Einige Felder wurden geändert"
             }
         },
         "toc": {

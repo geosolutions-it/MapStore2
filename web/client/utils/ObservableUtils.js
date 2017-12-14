@@ -3,16 +3,14 @@ const {get, isNil} = require('lodash');
 const {parseString} = require('xml2js');
 const {stripPrefix} = require('xml2js/lib/processors');
 const GeoStoreApi = require('../api/GeoStoreDAO');
-const {error, success} = require('../actions/notifications');
 const {updatePermissions, updateAttribute, doNothing} = require('../actions/maps');
 const ConfigUtils = require('../utils/ConfigUtils');
+const LocaleUtils = require('../utils/LocaleUtils');
+const {basicSuccess, basicError} = require('../utils/NotificationUtils');
 
-const catchInPromise = e => {
-    return Rx.Observable.of(error({
-        title: "notification.warning",
-        message: "warning: " + e.status + "  " + e.data, // TODO add tranlations
-        autoDismiss: 5,
-        position: "tc"
+const catchGeoStoreApi = e => {
+    return Rx.Observable.of(basicError({
+        message: "warning: " + e.status + "  " + e.data
     }));
 };
 class OGCError extends Error {
@@ -48,7 +46,7 @@ const getIdFromUri = (uri) => {
     const decodedUri = decodeURIComponent(uri);
     return /\d+/.test(decodedUri) ? decodedUri.match(/\d+/)[0] : null;
 };
-const createAssociatedResource = ({attribute, permissions, mapId, metadata, value, category, type, optionsRes, optionsAttr} = {}) => {
+const createAssociatedResource = ({attribute, permissions, mapId, metadata, value, category, type, optionsRes, optionsAttr, messages} = {}) => {
     return Rx.Observable.fromPromise(
             GeoStoreApi.createResource(metadata, value, category, optionsRes)
             .then(res => res.data))
@@ -61,53 +59,38 @@ const createAssociatedResource = ({attribute, permissions, mapId, metadata, valu
                 // UPDATE resource map with new attribute
                 actions.push(updateAttribute(mapId, attribute, encodedResourceUri, type, optionsAttr));
                 // display a success message
-                actions.push(success({
-                    title: "notification.success",
-                    message: "The " + attribute + " has been saved correctly",
-                    autoDismiss: 5,
-                    position: "tc"
-                }));
+                actions.push(basicSuccess({message: LocaleUtils.getMessageById(messages, "maps.feedback." + attribute + ".savedSuccesfully" ) }));
                 return Rx.Observable.from(actions);
             })
-        .catch(catchInPromise);
+        .catch(catchGeoStoreApi);
 };
 
-const updateAssociatedResource = ({permissions, resourceId, value, attribute, options} = {}) => {
+const updateAssociatedResource = ({permissions, resourceId, value, attribute, options, messages} = {}) => {
     return Rx.Observable.fromPromise(GeoStoreApi.putResource(resourceId, value, options)
             .then(res => res.data))
             .switchMap((id) => {
                 let actions = [];
-                actions.push(success({
-                    title: "notification.success",
-                    message: "The " + attribute + " have been updated correctly",
-                    autoDismiss: 5,
-                    position: "tc"
-                }));
+                actions.push(basicSuccess({ message: LocaleUtils.getMessageById(messages, "maps.feedback." + attribute + ".updatedSuccesfully" )}));
                 actions.push(updatePermissions(id, permissions));
                 return Rx.Observable.from(actions);
             })
-        .catch(catchInPromise);
+        .catch(catchGeoStoreApi);
 
 };
-const deleteAssociatedResource = ({mapId, attribute, type, resourceId, options} = {}) => {
+const deleteAssociatedResource = ({mapId, attribute, type, resourceId, options, messages} = {}) => {
     return Rx.Observable.fromPromise(GeoStoreApi.deleteResource(resourceId, options)
             .then(res => res.status === 204))
             .switchMap((deleted) => {
                 let actions = [];
                 if (deleted) {
-                    actions.push(success({
-                        title: "notification.success",
-                        message: "The " + attribute + " have been removed correctly",
-                        autoDismiss: 5,
-                        position: "tc"
-                    }));
+                    actions.push(basicSuccess({ message: LocaleUtils.getMessageById(messages, "maps.feedback." + attribute + ".deletedSuccesfully" ) }));
                     actions.push(updateAttribute(mapId, attribute, "NODATA", type, options));
                     return Rx.Observable.from(actions);
                 }
                 actions.push(doNothing());
                 return Rx.Observable.from(actions);
             })
-        .catch(catchInPromise);
+        .catch(catchGeoStoreApi);
 };
 
 const deleteResourceById = (resId, options) => resId ?
@@ -116,12 +99,12 @@ const deleteResourceById = (resId, options) => resId ?
         .catch((e) => {return {error: e, resType: "error"}; }) :
     Rx.Observable.of({resType: "success"});
 
-const manageMapResource = ({map = {}, attribute = "", resource = null, type = "STRING", optionsDel = {}} = {}) => {
+const manageMapResource = ({map = {}, attribute = "", resource = null, type = "STRING", optionsDel = {}, messages = {}} = {}) => {
     const attrVal = map[attribute];
     const mapId = map.id;
     // create
     if ((isNil(attrVal) || attrVal === "NODATA") && !isNil(resource)) {
-        return createAssociatedResource({...resource, attribute, mapId, type});
+        return createAssociatedResource({...resource, attribute, mapId, type, messages});
     }
     if (isNil(resource)) {
         // delete
@@ -130,7 +113,8 @@ const manageMapResource = ({map = {}, attribute = "", resource = null, type = "S
             attribute,
             type,
             resourceId: getIdFromUri(attrVal),
-            options: optionsDel});
+            options: optionsDel,
+            messages});
     }
     // update
     return updateAssociatedResource({
@@ -138,7 +122,8 @@ const manageMapResource = ({map = {}, attribute = "", resource = null, type = "S
         resourceId: getIdFromUri(attrVal),
         value: resource.value,
         attribute,
-        options: resource.optionsAttr});
+        options: resource.optionsAttr,
+        messages});
 
 };
 

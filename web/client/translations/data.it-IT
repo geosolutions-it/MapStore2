@@ -192,6 +192,24 @@
         },
         "newMap": "Nuova Mappa",
 		"maps": {
+            "feedback": {
+                "successSavedMap": "La mappa è stata salvata correttamente",
+                "errorDeletingMap": "Errore durante l'eliminazione della mappa con id: ",
+                "errorDeletingThumbnailOfMap": "Errore durante l'eliminazione dell'anteprima della mappa con id: ",
+                "errorDeletingDetailsOfMap": "Errore durante l'eliminazione dei dettagli della mappa con id: ",
+                "allResDeleted": "Sono state eliminate tutte le risorse associate a questa mappa: ",
+                "errorFetchingDetailsOfMap": "Errore durante il recupero dei dettagli della mappa con id: ",
+                "details": {
+                    "deletedSuccesfully": "I dettagli sono stati eliminati correttamente",
+                    "savedSuccesfully": "I dettagli sono stati salvati correttamente",
+                    "updatedSuccesfully": "I dettagli sono stati aggiornati correttamente"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "L'anteprima è stata eliminata correttamente",
+                    "savedSuccesfully": "L'anteprima è stata salvata correttamente",
+                    "updatedSuccesfully": "L'anteprima è stata aggiornata correttamente"
+                }
+            },
 			"search": "Cerca mappe..."
 		},
         "map": {
@@ -229,6 +247,21 @@
                 "canWrite": "Può modificare",
                 "noResult": "Nessun gruppo rimasto",
                 "title": "Permessi dei gruppi"
+            },
+            "details": {
+                "back": "Indietro",
+                "save": "Salva",
+                "show": "Mostra i dettagli",
+                "add": "Aggiungi dettagli",
+                "edit": "Modifica dettagli",
+                "title": "Dettagli",
+                "undo": "Annulla eliminazione",
+                "showPreview": "Mostra anteprima",
+                "hidePreview": "Nascondi anteprima",
+                "delete": "Elimina dettagli",
+                "titleUnsavedChanges": "Sicuro di chiudere senza salvare?",
+                "sureToClose": "Sicuro di chiudere senza salvare?",
+                "fieldsChanged": "Alcuni dati sono cambiati"
             }
         },
         "toc": {

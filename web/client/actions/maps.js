@@ -12,7 +12,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const {userGroupSecuritySelector, userSelector} = require('../selectors/security');
 const {currentMapDetailsChangedSelector} = require('../selectors/currentmap');
 const assign = require('object-assign');
-const {findIndex} = require('lodash');
+const {findIndex, isNil} = require('lodash');
 
 const MAPS_LIST_LOADED = 'MAPS_LIST_LOADED';
 const MAPS_LIST_LOADING = 'MAPS_LIST_LOADING';
@@ -50,6 +50,7 @@ const DO_NOTHING = 'MAPS:DO_NOTHING';
 const DELETE_MAP = 'MAPS:DELETE_MAP';
 const BACK_DETAILS = 'MAPS:BACK_DETAILS';
 const UNDO_DETAILS = 'MAPS:UNDO_DETAILS';
+const SET_UNSAVED_CHANGES = 'MAPS:SET_UNSAVED_CHANGES';
 
 
 /**
@@ -586,22 +587,23 @@ function saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbna
     return (dispatch, getState) => {
         dispatch(mapUpdating(resourceIdMap));
         dispatch(updatePermissions(resourceIdMap));
-        if (dataThumbnail !== null && metadataMap !== null) {
+        const detailsChanged = currentMapDetailsChangedSelector(getState());
+        if (detailsChanged) {
+            dispatch(saveResourceDetails());
+        }
+        if (!isNil(dataThumbnail) && !isNil(metadataMap)) {
             dispatch(createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap,
                 updateMapMetadata(resourceIdMap, metadataMap.name, metadataMap.description, onDisplayMetadataEdit(false), options), null, options));
-        } else if (dataThumbnail !== null) {
+        } else if (!isNil(dataThumbnail)) {
             dispatch(createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, null, onDisplayMetadataEdit(false), options));
-        } else if (metadataMap !== null) {
+        } else if (!isNil(metadataMap)) {
             dispatch(updateMapMetadata(resourceIdMap, metadataMap.name, metadataMap.description, onDisplayMetadataEdit(false), options));
         } else {
             dispatch(resetUpdating(resourceIdMap));
             dispatch(onDisplayMetadataEdit(false));
         }
         // launch this only if details has changed
-        const detailsChanged = currentMapDetailsChangedSelector(getState());
-        if (detailsChanged) {
-            dispatch(saveResourceDetails());
-        }
+
         dispatch(resetCurrentMap());
     };
 }
@@ -795,6 +797,17 @@ function undoDetails() {
     };
 }
 /**
+ * setUnsavedChanged
+ * @memberof actions.maps
+ * @return {action}        type `SET_UNSAVED_CHANGES`
+*/
+function setUnsavedChanged(value) {
+    return {
+        type: SET_UNSAVED_CHANGES,
+        value
+    };
+}
+/**
  * do nothing action
  * @memberof actions.maps
  * @return {action}        type `DO_NOTHING`
@@ -846,6 +859,7 @@ module.exports = {
     backDetails, BACK_DETAILS,
     undoDetails, UNDO_DETAILS,
     doNothing, DO_NOTHING,
+    setUnsavedChanged, SET_UNSAVED_CHANGES,
     metadataChanged,
     loadMaps,
     mapsLoading,
