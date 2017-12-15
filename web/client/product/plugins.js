@@ -77,6 +77,7 @@ module.exports = {
         AutoMapUpdatePlugin: require('../plugins/AutoMapUpdate'),
         MapFooterPlugin: require('../plugins/MapFooter'),
         AnnotationsPlugin: require('../plugins/Annotations'),
+        Dashboard: require('../plugins/Dashboard'),
         WidgetsPlugin: require('../plugins/Widgets'),
         WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder')
     },

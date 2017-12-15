@@ -11,59 +11,17 @@ const Dock = require('react-dock').default;
 const {createSelector} = require('reselect');
 const {connect} = require('react-redux');
 const {widgetBuilderSelector} = require('../selectors/controls');
-const {getEditingWidget, getEditorSettings, getWidgetLayer, dependenciesSelector} = require('../selectors/widgets');
+
 
 const {setControlProperty} = require('../actions/controls');
-const {insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting} = require('../actions/widgets');
+
 const PropTypes = require('prop-types');
-const builderConfiguration = require('../components/widgets/enhancers/builderConfiguration');
-const BorderLayout = require('../components/layout/BorderLayout');
+
+
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
-const wizardStateToProps = ( stateProps = {}, dispatchProps = {}, ownProps = {}) => ({
-        ...ownProps,
-        ...stateProps,
-        ...dispatchProps,
-        step: stateProps && stateProps.settings && stateProps.settings.step,
-        valid: stateProps && stateProps.settings && stateProps.settings.valid,
-        onFinish: () => dispatchProps.insertWidget && dispatchProps.insertWidget({
-            layer: stateProps.layer,
-            url: stateProps.layer && stateProps.layer.url,
-            ...(stateProps.editorData || {})
-        })
-    });
-const wizardSelector = createSelector(
-    getWidgetLayer,
-    getEditingWidget,
-    getEditorSettings,
-    dependenciesSelector,
-    (layer, editorData, settings, dependencies) => ({
-        layer: (editorData && editorData.layer) || layer,
-        editorData,
-        settings,
-        dependencies
-    })
-);
-const WidgetsBuilder = connect(
-    wizardSelector,
-     {
-        setPage,
-        setValid: valid => changeEditorSetting("valid", valid),
-        onEditorChange,
-        insertWidget
-    },
-    wizardStateToProps
-)(builderConfiguration(require('../components/widgets/builder/WidgetsBuilder')));
+const Builder = require('./widgetbuilder/ChartBuilder');
 
-
-const BuilderHeader = connect(wizardSelector, {
-        openFilterEditor: openFilterEditor,
-        setPage,
-        insertWidget,
-        onClose: setControlProperty.bind(null, "widgetBuilder", "enabled", false, false)
-    },
-    wizardStateToProps
-)(require('../components/widgets/builder/BuilderHeader'));
 
 class SideBarComponent extends React.Component {
      static propTypes = {
@@ -113,12 +71,7 @@ class SideBarComponent extends React.Component {
             fluid={this.props.fluid}
             dockStyle={{...this.props.layout, background: "white" /* TODO set it to undefined when you can inject a class inside Dock, to use theme */}}
         >
-            <BorderLayout
-                header={<BuilderHeader />}
-                >
-                {this.props.enabled ? <WidgetsBuilder onFinish /> : null}
-            </BorderLayout>
-
+        <Builder enabled={this.props.enabled} />
         </Dock>);
 
     }

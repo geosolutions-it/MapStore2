@@ -13,6 +13,8 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 const assign = require('object-assign');
 
 const {get} = require('lodash');
+const {componentFromProp} = require('recompose');
+const Component = componentFromProp('component');
 
 /**
  * Container for plugins. Get's the plugin definitions (`plugins`) and configuration (`pluginsConfig`)
@@ -36,6 +38,7 @@ class PluginsContainer extends React.Component {
         pluginsConfig: PropTypes.object,
         id: PropTypes.string,
         className: PropTypes.string,
+        component: PropTypes.any,
         style: PropTypes.object,
         pluginsState: PropTypes.object,
         monitoredState: PropTypes.object,
@@ -49,6 +52,7 @@ class PluginsContainer extends React.Component {
     static defaultProps = {
         mode: 'desktop',
         defaultMode: 'desktop',
+        component: "div",
         params: {},
         plugins: {},
         pluginsConfig: {},
@@ -94,13 +98,19 @@ class PluginsContainer extends React.Component {
     };
 
     render() {
-        if (this.props.pluginsConfig) {
+        const pluginsConfig = this.props.pluginsConfig && this.props.pluginsConfig[this.props.mode] ? this.props.pluginsConfig[this.props.mode] : this.props.pluginsConfig[this.props.defaultMode];
+        if (pluginsConfig) {
+            const {bodyPlugins, ...containerPlugins} = PluginsUtils.mapPluginsPosition(pluginsConfig);
+            const containerProps = Object.keys(containerPlugins).reduce( (o, k) => ({
+                ...o,
+                [k]: this.renderPlugins(containerPlugins[k])
+            }), {});
             return (
-                <div id={this.props.id} className={this.props.className} style={this.props.style}>
+                <Component id={this.props.id} className={this.props.className} style={this.props.style} component={this.props.component} {...containerProps}>
                     {
-                     this.props.pluginsConfig[this.props.mode] ? this.renderPlugins(this.props.pluginsConfig[this.props.mode]) : this.props.pluginsConfig[this.props.defaultMode]
+                       this.renderPlugins(bodyPlugins)
                     }
-                </div>
+                </Component>
             );
         }
         return null;

@@ -208,6 +208,29 @@ const PluginsUtils = {
     filterState,
     filterDisabledPlugins,
     getMonitoredState: (state, monitorState = []) => filterState(state, defaultMonitoredState.concat(monitorState)),
+    /**
+     * Create an object structured like following:
+     * ```
+     * {
+     *   bodyPlugins: [...all the configs without cfg.contanerPosition attribute ]
+     *   columns: [...all the configs configured with cfg.contanerPosition: "columns"]
+     *   header: [...all the configs configured with cfg.contanerPosition: "header"]
+     *   ... and so on, for every cfg.contanerPosition value found
+     * }
+     * ```
+     * @param  {[type]} pluginsConfig [description]
+     * @return {[type]}               [description]
+     */
+    mapPluginsPosition: (pluginsConfig = []) =>
+        pluginsConfig.reduce( (o, p) => {
+            const position = p.cfg && p.cfg.containerPosition || "bodyPlugins";
+            return {
+                ...o,
+                [position]: o[position]
+                    ? [...o[position], p]
+                    : [p]
+            };
+        }, {}),
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
                                 .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
     /**

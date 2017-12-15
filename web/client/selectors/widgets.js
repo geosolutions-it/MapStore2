@@ -22,6 +22,8 @@ const getEditingWidget = state => get(state, "widgets.builder.editor");
 module.exports = {
     getFloatingWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
     getFloatingWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
+    getDashboardWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
+    getDashboardWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
     getEditingWidget,
     getEditingWidgetFilter: state => get(getEditingWidget(state), "filter"),
     getEditorSettings,
