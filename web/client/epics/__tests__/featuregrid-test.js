@@ -24,7 +24,7 @@ const {geometryChanged} = require('../../actions/draw');
 
 const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
 
-const {setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeCatalogOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing, syncMapWmsFilter} = require('../featuregrid');
+const {setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeRightPanelOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing, syncMapWmsFilter} = require('../featuregrid');
 const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
 const {isEmpty, isNil} = require('lodash');
 const filterObj = {
@@ -714,17 +714,38 @@ describe('featuregrid Epics', () => {
         }, {});
     });
 
-    it('test closeCatalogOnFeatureGridOpen', (done) => {
-        testEpic(closeCatalogOnFeatureGridOpen, 1, openFeatureGrid(), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
+    it('test closeRightPanelOnFeatureGridOpen', (done) => {
+        testEpic(closeRightPanelOnFeatureGridOpen, 3, openFeatureGrid(), actions => {
+            expect(actions.length).toBe(3);
+            actions.map((action, i) => {
                 switch (action.type) {
-                    case SET_CONTROL_PROPERTY:
-                        expect(action.control).toBe('metadataexplorer');
-                        expect(action.property).toBe('enabled');
-                        expect(action.value).toBe(false);
-                        expect(action.toggle).toBe(undefined);
+                    case SET_CONTROL_PROPERTY: {
+                        switch (i) {
+                            case 0: {
+                                expect(action.control).toBe('metadataexplorer');
+                                expect(action.property).toBe('enabled');
+                                expect(action.value).toBe(false);
+                                expect(action.toggle).toBe(undefined);
+                                break;
+                            }
+                            case 1: {
+                                expect(action.control).toBe('annotations');
+                                expect(action.property).toBe('enabled');
+                                expect(action.value).toBe(false);
+                                expect(action.toggle).toBe(undefined);
+                                break;
+                            }
+                            case 2: {
+                                expect(action.control).toBe('details');
+                                expect(action.property).toBe('enabled');
+                                expect(action.value).toBe(false);
+                                expect(action.toggle).toBe(undefined);
+                                break;
+                            }
+                            default: expect(true).toBe(false);
+                        }
                         break;
+                    }
                     default:
                         expect(true).toBe(false);
                 }
