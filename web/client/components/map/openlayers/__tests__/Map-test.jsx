@@ -123,6 +123,86 @@ describe('OpenlayersMap', () => {
             done();
         }, 500);
     });
+    it('click on feature preserves clicked point', (done) => {
+        const testHandlers = {
+            handler: () => {}
+        };
+        const spy = expect.spyOn(testHandlers, 'handler');
+        const comp = (<OpenlayersMap projection="EPSG:4326" center={{y: 43.9, x: 10.3}} zoom={11}
+            onClick={testHandlers.handler}/>);
+        const map = ReactDOM.render(comp, document.getElementById("map"));
+        expect(map).toExist();
+        setTimeout(() => {
+            map.map.forEachFeatureAtPixel = (pixel, callback) => {
+                callback.call(null, {
+                    feature: new ol.Feature({
+                        geometry: new ol.geom.Polygon([ [0, 0], [0, 1], [1, 1], [1, 0], [0, 0] ]),
+                        name: 'My Point'
+                    }),
+                    getGeometry: () => {
+                        return {
+                            getFirstCoordinate: () => [10.3, 43.9],
+                            getType: () => {
+                                return 'Polygon';
+                            }
+                        };
+                    }
+                }, {
+                    get: (key) => key === "handleClickOnLayer" ? false : "ID"
+                });
+            };
+            map.map.dispatchEvent({
+                type: 'singleclick',
+                coordinate: [0.5, 0.5],
+                pixel: map.map.getPixelFromCoordinate([0.5, 0.5]),
+                originalEvent: {}
+            });
+            expect(spy.calls.length).toEqual(1);
+            expect(spy.calls[0].arguments[0].latlng.lat).toBe(0.5);
+            expect(spy.calls[0].arguments[0].latlng.lng).toBe(0.5);
+            done();
+        }, 500);
+    });
+    it('click on feature for handleClickOnLayer', (done) => {
+        const testHandlers = {
+            handler: () => {}
+        };
+        const spy = expect.spyOn(testHandlers, 'handler');
+        const comp = (<OpenlayersMap projection="EPSG:4326" center={{y: 43.9, x: 10.3}} zoom={11}
+            onClick={testHandlers.handler}/>);
+        const map = ReactDOM.render(comp, document.getElementById("map"));
+        expect(map).toExist();
+        setTimeout(() => {
+            map.map.forEachFeatureAtPixel = (pixel, callback) => {
+                callback.call(null, {
+                    feature: new ol.Feature({
+                        geometry: new ol.geom.Polygon([ [0, 0], [0, 1], [1, 1], [1, 0], [0, 0] ]),
+                        name: 'My Point'
+                    }),
+                    getGeometry: () => {
+                        return {
+                            getFirstCoordinate: () => [10.3, 43.9], // this makes sense only for points, maybe centroid is more appropriate
+                            getType: () => {
+                                return 'Polygon';
+                            }
+                        };
+                    }
+                }, {
+                    get: (key) => key === "handleClickOnLayer" ? true : "ID"
+                });
+            };
+            map.map.dispatchEvent({
+                type: 'singleclick',
+                coordinate: [0.5, 0.5],
+                pixel: map.map.getPixelFromCoordinate([0.5, 0.5]),
+                originalEvent: {}
+            });
+            expect(spy.calls.length).toEqual(1);
+            expect(spy.calls[0].arguments[0].latlng.lat).toBe(43.9);
+            expect(spy.calls[0].arguments[0].latlng.lng).toBe(10.3);
+            done();
+        }, 500);
+    });
 
     it('check layers init', () => {
         var options = {
