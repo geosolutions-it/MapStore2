@@ -30,7 +30,7 @@
             "layers": "layers"
         },
         "details": {
-            "title": "Detalles del mapa"
+            "title": "Detalles"
         },
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",

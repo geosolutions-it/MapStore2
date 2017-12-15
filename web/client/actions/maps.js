@@ -11,6 +11,7 @@ const {updateCurrentMapPermissions, updateCurrentMapGroups} = require('./current
 const ConfigUtils = require('../utils/ConfigUtils');
 const {userGroupSecuritySelector, userSelector} = require('../selectors/security');
 const {currentMapDetailsChangedSelector} = require('../selectors/currentmap');
+const {resetCurrentMap} = require('./currentmap');
 const assign = require('object-assign');
 const {findIndex, isNil} = require('lodash');
 
@@ -34,7 +35,6 @@ const RESET_UPDATING = 'RESET_UPDATING';
 const SAVE_MAP = 'SAVE_MAP';
 const PERMISSIONS_LIST_LOADING = 'PERMISSIONS_LIST_LOADING';
 const PERMISSIONS_LIST_LOADED = 'PERMISSIONS_LIST_LOADED';
-const RESET_CURRENT_MAP = 'RESET_CURRENT_MAP';
 const MAPS_SEARCH_TEXT_CHANGED = 'MAPS_SEARCH_TEXT_CHANGED';
 const METADATA_CHANGED = 'METADATA_CHANGED';
 const TOGGLE_DETAILS_SHEET = 'MAPS:TOGGLE_DETAILS_SHEET';
@@ -54,17 +54,6 @@ const SET_UNSAVED_CHANGES = 'MAPS:SET_UNSAVED_CHANGES';
 const OPEN_DETAILS_PANEL = 'DETAILS:OPEN_DETAILS_PANEL';
 const CLOSE_DETAILS_PANEL = 'DETAILS:CLOSE_DETAILS_PANEL';
 
-
-/**
- * reset current map metadata, `RESET_CURRENT_MAP`
- * @memberof actions.maps
- * @return {action} of type `RESET_CURRENT_MAP`
- */
-function resetCurrentMap() {
-    return {
-        type: RESET_CURRENT_MAP
-    };
-}
 
 /**
  * saves details section in the resurce map on geostore
@@ -866,7 +855,6 @@ module.exports = {
     DISPLAY_METADATA_EDIT,
     RESET_UPDATING,
     MAP_ERROR,
-    RESET_CURRENT_MAP,
     MAPS_SEARCH_TEXT_CHANGED,
     METADATA_CHANGED,
     toggleDetailsSheet, TOGGLE_DETAILS_SHEET,
@@ -884,6 +872,7 @@ module.exports = {
     setUnsavedChanged, SET_UNSAVED_CHANGES,
     openDetailsPanel, OPEN_DETAILS_PANEL,
     closeDetailsPanel, CLOSE_DETAILS_PANEL,
+    deleteMap, DELETE_MAP,
     metadataChanged,
     loadMaps,
     mapsLoading,
@@ -894,7 +883,6 @@ module.exports = {
     updateMap,
     updateMapMetadata,
     mapMetadataUpdated,
-    deleteMap, DELETE_MAP,
     deleteThumbnail,
     createThumbnail,
     mapUpdating,

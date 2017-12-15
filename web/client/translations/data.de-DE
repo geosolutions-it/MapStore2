@@ -30,7 +30,7 @@
             "layers": "layers"
         },
         "details": {
-            "title": "Details der Karte"
+            "title": "Einzelheiten"
         },
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",

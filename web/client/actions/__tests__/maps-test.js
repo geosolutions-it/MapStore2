@@ -32,7 +32,6 @@ const {
     DISPLAY_METADATA_EDIT, onDisplayMetadataEdit,
     RESET_UPDATING, resetUpdating,
     THUMBNAIL_ERROR, thumbnailError,
-    RESET_CURRENT_MAP, resetCurrentMap,
     MAPS_SEARCH_TEXT_CHANGED, mapsSearchTextChanged,
     MAPS_LIST_LOAD_ERROR, loadError,
     MAP_ERROR, mapError, updatePermissions,
@@ -40,6 +39,7 @@ const {
     METADATA_CHANGED, metadataChanged,
     updateAttribute, saveAll
 } = require('../maps');
+const {RESET_CURRENT_MAP} = require('../currentMap');
 let GeoStoreDAO = require('../../api/GeoStoreDAO');
 let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
 
@@ -244,10 +244,7 @@ describe('Test correctness of the maps actions', () => {
         expect(retval.resourceId).toBe(resourceId);
         expect(retval.map).toBe(map);
     });
-    it('resetCurrentMap', () => {
-        const a = resetCurrentMap();
-        expect(a.type).toBe(RESET_CURRENT_MAP);
-    });
+
     it('mapsSearchTextChanged', () => {
         const a = mapsSearchTextChanged("TEXT");
         expect(a.type).toBe(MAPS_SEARCH_TEXT_CHANGED);

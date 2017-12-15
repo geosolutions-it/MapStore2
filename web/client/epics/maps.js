@@ -184,7 +184,7 @@ const deleteMapAndAssociatedResources = (action$, store) =>
 
 const mapCreatedNotificationEpic = action$ =>
     action$.ofType(MAP_CREATED)
-        .concat(action$.ofType(CLEAR_NOTIFICATIONS))
+        .concat(() => action$.ofType(CLEAR_NOTIFICATIONS))
         .switchMap(() => Rx.Observable.of(basicSuccess({message: "maps.feedback.successSavedMap"})));
 
 const fetchdataForDetailsPanel = (action$, store) =>
@@ -210,7 +210,7 @@ const fetchdataForDetailsPanel = (action$, store) =>
             });
     });
 
-const closeDetailsPanel = (action$) =>
+const closeDetailsPanelEpic = (action$) =>
     action$.ofType(CLOSE_DETAILS_PANEL)
     .switchMap(() => Rx.Observable.from( [
                 toggleControl("details", "enabled"),
@@ -218,7 +218,7 @@ const closeDetailsPanel = (action$) =>
             ])
     );
 module.exports = {
-    closeDetailsPanel,
+    closeDetailsPanelEpic,
     fetchdataForDetailsPanel,
     mapCreatedNotificationEpic,
     deleteMapAndAssociatedResources,

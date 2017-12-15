@@ -61,6 +61,11 @@ function removeThumbnail(resourceId) {
     };
 }
 
+/**
+ * reset current map , `RESET_CURRENT_MAP`
+ * @memberof actions.maps
+ * @return {action} of type `RESET_CURRENT_MAP`
+ */
 function resetCurrentMap() {
     return {
         type: RESET_CURRENT_MAP
