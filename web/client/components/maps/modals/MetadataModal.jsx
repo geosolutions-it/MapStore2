@@ -195,7 +195,7 @@ class MetadataModal extends React.Component {
             <Portal>
                 {readOnly ? (
                     <ResizableModal size="lg"
-                        fullscreen
+                        showFullscreen
                         onClose={() => {
                             this.props.onResetCurrentMap();
                         }}
@@ -212,17 +212,13 @@ class MetadataModal extends React.Component {
                     bodyClassName="ms-modal-quill-container"
                     size="lg"
                     clickOutEnabled={false}
-                    fullscreen
+                    showFullscreen
                     fullscreenType="full"
-                    onClose={() => { this.props.detailsSheetActions.onToggleDetailsSheet(true); }}
+                    onClose={() => { this.props.detailsSheetActions.onBackDetails(this.props.map.detailsBackup); }}
                     buttons={[{
                         text: LocaleUtils.getMessageById(this.context.messages, "map.details.back"),
                         onClick: () => {
-                            if (readOnly) {
-                                this.props.onResetCurrentMap();
-                            } else {
-                                this.props.detailsSheetActions.onBackDetails(this.props.map.detailsBackup);
-                            }
+                            this.props.detailsSheetActions.onBackDetails(this.props.map.detailsBackup);
                         }
                     }, {
                         text: LocaleUtils.getMessageById(this.context.messages, "map.details.save"),
@@ -251,7 +247,10 @@ class MetadataModal extends React.Component {
     renderUnsavedChanges = () => {
         return (<Portal>
                 <ResizableModal
-                    title={LocaleUtils.getMessageById(this.context.messages, "map.details.titleUnsavedChanges")}
+                    size="xs"
+                    clickOutEnabled={false}
+                    showClose={false}
+                    title={LocaleUtils.getMessageById(this.context.messages, "warning")}
                     bodyClassName="modal-details-sheet-confirm"
                     show={!!this.props.map.showUnsavedChanges}
                     buttons={[{
@@ -266,15 +265,13 @@ class MetadataModal extends React.Component {
                             this.props.onResetCurrentMap();
                         }
                     }]}>
-                    <Grid fluid>
-                        <Row>
-                            <Col xs={12}>
+                        <div className="ms-alert">
+                            <span className="ms-alert-center">
                                 <Message msgId="map.details.fieldsChanged"/>
                                 <br/>
                                 <Message msgId="map.details.sureToClose"/>
-                            </Col>
-                        </Row>
-                    </Grid>
+                            </span>
+                        </div>
                 </ResizableModal>
             </Portal>);
     }

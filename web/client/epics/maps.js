@@ -10,19 +10,25 @@ const Rx = require('rxjs');
 const uuidv1 = require('uuid/v1');
 const {CLEAR_NOTIFICATIONS} = require('../actions/notifications');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
-const LocaleUtils = require('../utils/NotificationUtils');
+const LocaleUtils = require('../utils/LocaleUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
 const {
     SAVE_DETAILS, SAVE_RESOURCE_DETAILS, MAP_CREATED,
-    OPEN_OR_FETCH_DETAILS, DELETE_MAP,
+    OPEN_OR_FETCH_DETAILS, DELETE_MAP, OPEN_DETAILS_PANEL,
+    CLOSE_DETAILS_PANEL,
     setDetailsChanged, updateDetails, toggleDetailsSheet,
-    mapDeleting, mapDeleted, loadMaps,
+    mapDeleting, mapDeleted, loadMaps, resetCurrentMap,
     doNothing
 } = require('../actions/maps');
+const {closeFeatureGrid} = require('../actions/featuregrid');
+const {toggleControl} = require('../actions/controls');
 const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
     mapDetailsUriFromIdSelector, isMapsLastPageSelector
 } = require('../selectors/maps');
+const {
+    mapIdSelector
+} = require('../selectors/map');
 const {
     currentMapDetailsTextSelector, currentMapIdSelector,
     currentMapDetailsUriSelector, currentMapSelector,
@@ -113,7 +119,7 @@ const fetchDetailsFromResource = (action$, store) =>
                 updateDetails("", true, "")
             );
         }
-        let detailsId = getIdFromUri(detailsUri);
+        const detailsId = getIdFromUri(detailsUri);
         return Rx.Observable.fromPromise(GeoStoreApi.getData(detailsId)
             .then(data => data))
             .switchMap((details) => {
@@ -181,8 +187,39 @@ const mapCreatedNotificationEpic = action$ =>
         .concat(action$.ofType(CLEAR_NOTIFICATIONS))
         .switchMap(() => Rx.Observable.of(basicSuccess({message: "maps.feedback.successSavedMap"})));
 
+const fetchdataForDetailsPanel = (action$, store) =>
+    action$.ofType(OPEN_DETAILS_PANEL)
+    .switchMap(() => {
+        const state = store.getState();
+        const mapId = mapIdSelector(state);
+        const detailsUri = mapDetailsUriFromIdSelector(state, mapId);
+        const detailsId = getIdFromUri(detailsUri);
+        return Rx.Observable.fromPromise(GeoStoreApi.getData(detailsId)
+            .then(data => data))
+            .switchMap((details) => {
+                return Rx.Observable.from( [
+                        toggleControl("details", "enabled"),
+                        closeFeatureGrid(),
+                        updateDetails(details, true, details
+                    )]
+                );
+            })
+            .catch(() => {
+                return Rx.Observable.of(basicError({
+                    message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorFetchingDetailsOfMap") + mapId}));
+            });
+    });
 
+const closeDetailsPanel = (action$) =>
+    action$.ofType(CLOSE_DETAILS_PANEL)
+    .switchMap(() => Rx.Observable.from( [
+                toggleControl("details", "enabled"),
+                resetCurrentMap()
+            ])
+    );
 module.exports = {
+    closeDetailsPanel,
+    fetchdataForDetailsPanel,
     mapCreatedNotificationEpic,
     deleteMapAndAssociatedResources,
     setDetailsChangedEpic,

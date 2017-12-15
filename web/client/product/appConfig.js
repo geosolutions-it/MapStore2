@@ -36,6 +36,9 @@ module.exports = {
                 help: {
                     enabled: false
                 },
+                details: {
+                    enabled: false
+                },
                 print: {
                     enabled: false
                 },

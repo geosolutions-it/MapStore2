@@ -8,24 +8,42 @@
 
 const expect = require('expect');
 const {
-    mapsResultsSelector,
+    mapNameSelector,
     mapFromIdSelector,
+    mapsResultsSelector,
+    mapMetadataSelector,
+    isMapsLastPageSelector,
+    mapDescriptionSelector,
     mapDetailsUriFromIdSelector,
-    mapPermissionsFromIdSelector
+    mapPermissionsFromIdSelector,
+    mapThumbnailsUriFromIdSelector
 } = require('../maps');
+
+const name = "name";
+const description = "description";
+const details = "%2Fmapstore%2Frest%2Fgeostore%2Fdata%2F10%2Fraw%3Fdecode%3Ddatauri";
+const thumbnail = "%2Fmapstore%2Frest%2Fgeostore%2Fdata%2F10%2Fraw%3Fdecode%3Ddatauri";
+const detailsText = "<p>name<p>";
+const mapId = 1;
+const creation = '2017-12-01 10:58:46.337';
 const mapsState = {
     maps: {
+        metadata: {
+            name,
+            description
+        },
         results: [
         {
           canDelete: true,
           canEdit: true,
           canCopy: true,
-          creation: '2017-12-01 10:58:46.337',
-          description: 'desc details map',
-          id: 1,
-          name: 'details map',
-          thumbnail: '%2Fmapstore%2Frest%2Fgeostore%2Fdata%2F4%2Fraw%3Fdecode%3Ddatauri',
-          detailsText: '%2Fmapstore%2Frest%2Fgeostore%2Fdata%2F10%2Fraw%3Fdecode%3Ddatauri',
+          creation,
+          description,
+          id: mapId,
+          name,
+          thumbnail,
+          details,
+          detailsText,
           owner: 'admin',
           permissions: [
               {name: "name"}
@@ -39,18 +57,40 @@ describe('Test maps selectors', () => {
     it('test mapsResultsSelector no state', () => {
         const props = mapsResultsSelector(mapsState);
         expect(props.length).toBe(1);
-        expect(props[0].creation).toBe("2017-12-01 10:58:46.337");
+        expect(props[0].creation).toBe(creation);
+        expect(props[0].id).toBe(mapId);
     });
     it('test mapFromIdSelector no state', () => {
-        const props = mapFromIdSelector(mapsState, 1);
-        expect(props.creation).toBe("2017-12-01 10:58:46.337");
+        const props = mapFromIdSelector(mapsState, mapId);
+        expect(props.creation).toBe(creation);
+    });
+    it('test mapNameSelector no state', () => {
+        const props = mapNameSelector(mapsState, mapId);
+        expect(props).toBe(name);
+    });
+    it('test mapMetadataSelector no state', () => {
+        const props = mapMetadataSelector(mapsState);
+        expect(props.name).toBe(name);
+        expect(props.description).toBe(description);
+    });
+    it('test isMapsLastPageSelector no state', () => {
+        const props = isMapsLastPageSelector(mapsState);
+        expect(props).toBeTruthy();
+    });
+    it('test mapDescriptionSelector no state', () => {
+        const props = mapDescriptionSelector(mapsState, mapId);
+        expect(props).toBe(description);
     });
     it('test mapDetailsUriFromIdSelector no state', () => {
-        const props = mapDetailsUriFromIdSelector(mapsState, 1);
+        const props = mapDetailsUriFromIdSelector(mapsState, mapId);
         expect(props).toBe("%2Fmapstore%2Frest%2Fgeostore%2Fdata%2F10%2Fraw%3Fdecode%3Ddatauri");
     });
     it('test mapPermissionsFromIdSelector no state', () => {
-        const props = mapPermissionsFromIdSelector(mapsState, 1);
+        const props = mapPermissionsFromIdSelector(mapsState, mapId);
         expect(props.length).toBe(1);
+    });
+    it('test mapThumbnailsUriFromIdSelector no state', () => {
+        const props = mapThumbnailsUriFromIdSelector(mapsState, mapId);
+        expect(props).toBe(thumbnail);
     });
 });

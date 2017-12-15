@@ -12,26 +12,26 @@ const {find, get} = require('lodash');
  * @name maps
  * @memberof selectors
  * @static
- */
+*/
 
 const mapsResultsSelector = (state) => get(state, "maps.results", []);
+const mapFromIdSelector = (state, id) => find(mapsResultsSelector(state), m => m.id === id);
+const mapNameSelector = (state, id) => mapFromIdSelector(state, id).name || "";
 const mapMetadataSelector = (state) => get(state, "maps.metadata", {});
 const isMapsLastPageSelector = (state) => state && state.maps && state.maps.totalCount === state.maps.start;
-const mapFromIdSelector = (state, id) => find(mapsResultsSelector(state), m => m.id === id);
-const mapDetailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id).details || "";
-const mapThumbnailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id).thumbnail || "";
-const mapPermissionsFromIdSelector = (state, id) => mapFromIdSelector(state, id).permissions || "";
-const mapNameSelector = (state, id) => mapFromIdSelector(state, id).name || "";
 const mapDescriptionSelector = (state, id) => mapFromIdSelector(state, id).description || "";
+const mapDetailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id).details || "";
+const mapPermissionsFromIdSelector = (state, id) => mapFromIdSelector(state, id).permissions || "";
+const mapThumbnailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id).thumbnail || "";
 
 module.exports = {
-    isMapsLastPageSelector,
-    mapMetadataSelector,
     mapNameSelector,
-    mapDescriptionSelector,
-    mapsResultsSelector,
     mapFromIdSelector,
+    mapsResultsSelector,
+    mapMetadataSelector,
+    isMapsLastPageSelector,
+    mapDescriptionSelector,
     mapDetailsUriFromIdSelector,
-    mapThumbnailsUriFromIdSelector,
-    mapPermissionsFromIdSelector
+    mapPermissionsFromIdSelector,
+    mapThumbnailsUriFromIdSelector
 };

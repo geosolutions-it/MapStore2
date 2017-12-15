@@ -51,6 +51,8 @@ const DELETE_MAP = 'MAPS:DELETE_MAP';
 const BACK_DETAILS = 'MAPS:BACK_DETAILS';
 const UNDO_DETAILS = 'MAPS:UNDO_DETAILS';
 const SET_UNSAVED_CHANGES = 'MAPS:SET_UNSAVED_CHANGES';
+const OPEN_DETAILS_PANEL = 'DETAILS:OPEN_DETAILS_PANEL';
+const CLOSE_DETAILS_PANEL = 'DETAILS:CLOSE_DETAILS_PANEL';
 
 
 /**
@@ -808,6 +810,26 @@ function setUnsavedChanged(value) {
     };
 }
 /**
+ * openDetailsPanel
+ * @memberof actions.maps
+ * @return {action}        type `OPEN_DETAILS_PANEL`
+*/
+function openDetailsPanel() {
+    return {
+        type: OPEN_DETAILS_PANEL
+    };
+}
+/**
+ * closeDetailsPanel
+ * @memberof actions.maps
+ * @return {action}        type `CLOSE_DETAILS_PANEL`
+*/
+function closeDetailsPanel() {
+    return {
+        type: CLOSE_DETAILS_PANEL
+    };
+}
+/**
  * do nothing action
  * @memberof actions.maps
  * @return {action}        type `DO_NOTHING`
@@ -860,6 +882,8 @@ module.exports = {
     undoDetails, UNDO_DETAILS,
     doNothing, DO_NOTHING,
     setUnsavedChanged, SET_UNSAVED_CHANGES,
+    openDetailsPanel, OPEN_DETAILS_PANEL,
+    closeDetailsPanel, CLOSE_DETAILS_PANEL,
     metadataChanged,
     loadMaps,
     mapsLoading,

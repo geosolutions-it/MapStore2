@@ -29,6 +29,9 @@
             "updating": "Updating...",
             "layers": "layers"
         },
+        "details": {
+            "title": "Details der Karte"
+        },
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",
             "title": "Titel",
@@ -103,6 +106,8 @@
         "elevation": "Höhe",
         "close": "Schliessen",
         "cancel": "Abbrechen",
+        "no": "Nein",
+        "yes": "Ja",
         "confirm": "Bestätigen",
         "confirmTitle": "Bestätigst du das?",
         "pageInfo": "{total, plural, =0 {Keine Artikel} =1 {{total} Artikel von {total}} other {Artikel {start}-{end} von {total}}}",

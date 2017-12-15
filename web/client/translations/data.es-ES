@@ -29,6 +29,9 @@
             "updating": "Updating...",
             "layers": "layers"
         },
+        "details": {
+            "title": "Detalles del mapa"
+        },
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
             "title": "Título",
@@ -103,6 +106,8 @@
         "elevation": "Elevación",
         "close": "Cerrar",
         "cancel": "Cancelar",
+        "no": "No",
+        "yes": "Sí",
         "confirm": "Confirmar",
         "confirmTitle": "¿Lo confirma?",
         "pageInfo": "{total, plural, =0 {ningún item} =1 {{total} item de {total}} other {objets {start}-{end} de {total}}}",

@@ -8,6 +8,7 @@
 
 module.exports = {
     plugins: {
+        DetailsPlugin: require('../plugins/Details'),
         MousePositionPlugin: require('../plugins/MousePosition'),
         PrintPlugin: require('../plugins/Print'),
         IdentifyPlugin: require('../plugins/Identify'),

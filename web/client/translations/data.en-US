@@ -29,6 +29,9 @@
             "updating": "Updating...",
             "layers": "layers"
         },
+        "details": {
+            "title": "Details of the map"
+        },
         "layerProperties": {
             "windowTitle": "Layer Properties",
             "title": "Title",

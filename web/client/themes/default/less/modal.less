@@ -20,6 +20,11 @@
         border: none;
         .shadow;
 
+        &.ms-xs {
+            height: 30%;
+            top: 35%;
+        }
+
         &.ms-sm {
             height: 40%;
             top: 30%;
@@ -59,7 +64,6 @@
                     flex: 1;
                     height: @font-size-h4;
                     line-height: @font-size-h4;
-                    overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                 }
@@ -93,6 +97,17 @@
                 height: auto;
                 &.ms-no-scroll {
                     overflow-y: hidden;
+                }
+            }
+
+            .ms-alert {
+                margin: 0;
+                flex: 1;
+                height: 100%;
+                overflow-y: auto;
+                display: flex;
+                .ms-alert-center {
+                    margin: auto;
                 }
             }
         }

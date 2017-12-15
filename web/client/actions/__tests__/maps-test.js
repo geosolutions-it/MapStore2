@@ -8,8 +8,23 @@
 
 var expect = require('expect');
 const assign = require('object-assign');
-var {
-    // CREATE_THUMBNAIL, createThumbnail,
+const {
+    toggleDetailsSheet, TOGGLE_DETAILS_SHEET,
+    toggleGroupProperties, TOGGLE_GROUP_PROPERTIES,
+    toggleUnsavedChanges, TOGGLE_UNSAVED_CHANGES,
+    deleteMap, DELETE_MAP,
+    updateDetails, UPDATE_DETAILS,
+    saveDetails, SAVE_DETAILS,
+    deleteDetails, DELETE_DETAILS,
+    setDetailsChanged, SET_DETAILS_CHANGED,
+    saveResourceDetails, SAVE_RESOURCE_DETAILS,
+    openOrFetchDetails, OPEN_OR_FETCH_DETAILS,
+    backDetails, BACK_DETAILS,
+    undoDetails, UNDO_DETAILS,
+    doNothing, DO_NOTHING,
+    setUnsavedChanged, SET_UNSAVED_CHANGES,
+    openDetailsPanel, OPEN_DETAILS_PANEL,
+    closeDetailsPanel, CLOSE_DETAILS_PANEL,
     MAP_UPDATING, mapUpdating,
     PERMISSIONS_UPDATED, permissionsUpdated,
     ATTRIBUTE_UPDATED, attributeUpdated,
@@ -80,9 +95,9 @@ describe('Test correctness of the maps actions', () => {
             default: done();
             }
             count++;
-        });
+        }, () => {});
     });
-    it('saveAll - with metadataMap, without thumbnail', (done) => {
+    it('saveAll - without metadataMap, without thumbnail', (done) => {
         const resourceId = 1;
         // saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options)
         const retFun = saveAll({}, null, null, null, null, resourceId, {});
@@ -94,10 +109,33 @@ describe('Test correctness of the maps actions', () => {
             case 1: expect(action.type).toBe("NONE"); break;
             case 2: expect(action.type).toBe(RESET_UPDATING); break;
             case 3: expect(action.type).toBe(DISPLAY_METADATA_EDIT); break;
+            case 4: expect(action.type).toBe(RESET_CURRENT_MAP); done(); break;
             default: done();
             }
             count++;
-        });
+        }, () => {});
+    });
+    it('saveAll - without metadataMap, without thumbnail, detailsChanged', (done) => {
+        const resourceId = 1;
+        // saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options)
+        const retFun = saveAll({}, null, null, null, null, resourceId, {});
+        expect(retFun).toExist();
+        let count = 0;
+        retFun((action) => {
+            switch (count) {
+            case 0: expect(action.type).toBe(MAP_UPDATING); break;
+            case 1: expect(action.type).toBe("NONE"); break;
+            case 2: expect(action.type).toBe(SAVE_RESOURCE_DETAILS); break;
+            case 3: expect(action.type).toBe(RESET_UPDATING); break;
+            case 4: expect(action.type).toBe(DISPLAY_METADATA_EDIT); break;
+            case 5: expect(action.type).toBe(RESET_CURRENT_MAP); done(); break;
+            default: done();
+            }
+            count++;
+        }, () => ({currentMap: {
+            detailsChanged: true
+        }}
+        ));
     });
     it('updatePermissions with securityRules list & without', (done) => {
         const securityRules = {
@@ -243,4 +281,102 @@ describe('Test correctness of the maps actions', () => {
         expect(a.prop).toBe(prop);
         expect(a.value).toBe(value);
     });
+
+    it('toggleDetailsSheet', () => {
+        const detailsSheetReadOnly = true;
+        const a = toggleDetailsSheet(detailsSheetReadOnly);
+        expect(a.type).toBe(TOGGLE_DETAILS_SHEET);
+        expect(a.detailsSheetReadOnly).toBeTruthy();
+
+    });
+    it('toggleGroupProperties', () => {
+        const a = toggleGroupProperties();
+        expect(a.type).toBe(TOGGLE_GROUP_PROPERTIES);
+    });
+    it('toggleUnsavedChanges', () => {
+        const a = toggleUnsavedChanges();
+        expect(a.type).toBe(TOGGLE_UNSAVED_CHANGES);
+    });
+    it('updateDetails', () => {
+        const detailsText = "<p>some value</p>";
+        const originalDetails = "<p>old value</p>";
+        const doBackup = true;
+        const a = updateDetails(detailsText, doBackup, originalDetails);
+        expect(a.doBackup).toBeTruthy();
+        expect(a.detailsText).toBe(detailsText);
+        expect(a.originalDetails).toBe(originalDetails);
+        expect(a.type).toBe(UPDATE_DETAILS);
+    });
+    it('deleteMap', () => {
+        const resourceId = 1;
+        const someOpt = {
+            name: "name"
+        };
+        const options = {
+            someOpt
+        };
+        const a = deleteMap(resourceId, options);
+        expect(a.resourceId).toBe(resourceId);
+        expect(a.type).toBe(DELETE_MAP);
+        expect(a.options).toBe(options);
+    });
+    it('saveDetails', () => {
+        const detailsText = "<p>some detailsText</p>";
+        const a = saveDetails(detailsText);
+        expect(a.type).toBe(SAVE_DETAILS);
+        expect(a.detailsText).toBe(detailsText);
+    });
+    it('deleteDetails', () => {
+        const a = deleteDetails();
+        expect(a.type).toBe(DELETE_DETAILS);
+    });
+    it('setDetailsChanged', () => {
+        const detailsChanged = true;
+        const a = setDetailsChanged(detailsChanged);
+        expect(a.type).toBe(SET_DETAILS_CHANGED);
+        expect(a.detailsChanged).toBe(detailsChanged);
+    });
+    it('openOrFetchDetails', () => {
+        const open = true;
+        const fetch = true;
+        const readOnly = true;
+        const a = openOrFetchDetails({open, fetch, readOnly});
+        expect(a.type).toBe(OPEN_OR_FETCH_DETAILS);
+        expect(a.open).toBe(open);
+        expect(a.fetch).toBe(fetch);
+        expect(a.readOnly).toBe(readOnly);
+    });
+    it('backDetails', () => {
+        const backupDetails = true;
+        const a = backDetails(backupDetails);
+        expect(a.type).toBe(BACK_DETAILS);
+        expect(a.backupDetails).toBe(backupDetails);
+    });
+    it('undoDetails', () => {
+        const a = undoDetails();
+        expect(a.type).toBe(UNDO_DETAILS);
+    });
+    it('setUnsavedChanged', () => {
+        const value = true;
+        const a = setUnsavedChanged(value);
+        expect(a.type).toBe(SET_UNSAVED_CHANGES);
+        expect(a.value).toBe(value);
+    });
+    it('openDetailsPanel', () => {
+        const a = openDetailsPanel();
+        expect(a.type).toBe(OPEN_DETAILS_PANEL);
+    });
+    it('closeDetailsPanel', () => {
+        const a = closeDetailsPanel();
+        expect(a.type).toBe(CLOSE_DETAILS_PANEL);
+    });
+    it('doNothing', () => {
+        const a = doNothing();
+        expect(a.type).toBe(DO_NOTHING);
+    });
+    it('saveResourceDetails', () => {
+        const a = saveResourceDetails();
+        expect(a.type).toBe(SAVE_RESOURCE_DETAILS);
+    });
+
 });

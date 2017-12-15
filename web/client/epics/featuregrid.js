@@ -392,10 +392,13 @@ module.exports = {
                     .switchMap(() => Rx.Observable.of(drawSupportReset())))
 
     ),
-    closeCatalogOnFeatureGridOpen: (action$) =>
+    closeRightPanelOnFeatureGridOpen: (action$) =>
         action$.ofType(OPEN_FEATURE_GRID)
             .switchMap( () => {
-                return Rx.Observable.of(setControlProperty('metadataexplorer', 'enabled', false));
+                return Rx.Observable.from(
+                    [setControlProperty('metadataexplorer', 'enabled', false),
+                    setControlProperty('annotations', 'enabled', false),
+                    setControlProperty('details', 'enabled', false)]);
             }),
     /**
      * intercept geometry changed events in draw support to update current

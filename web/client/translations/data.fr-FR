@@ -30,6 +30,9 @@
             "updating": "Updating...",
             "layers": "layers"
         },
+        "details": {
+            "title": "Détails de la carte"
+        },
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
             "title": "Titre",
@@ -105,6 +108,8 @@
         "elevation": "Elévation",
         "close": "Fermer",
         "cancel": "Annuler",
+        "no": "Non",
+        "yes": "Oui",
         "confirm": "Confirmer",
         "confirmTitle": "Confirmez-vous?",
         "pageInfo": "{total, plural, =0 {aucun objet} =1 {{total} objet parmi {total}} other {objets {start}-{end} parmi {total}}}",
