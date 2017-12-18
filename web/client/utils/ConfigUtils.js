@@ -149,7 +149,7 @@ var ConfigUtils = {
             if (center.crs !== "EPSG:4326") {
                 let xy = Proj4js.toPoint([center.x, center.y]);
                 const epsgMap = new Proj4js.Proj(center.crs);
-                Proj4js.transform(epsgMap, epsg4326, xy);
+                xy = Proj4js.transform(epsgMap, epsg4326, xy);
                 retval = {y: xy.y, x: xy.x, crs: "EPSG:4326"};
             } else {
                 retval = center;
@@ -159,7 +159,7 @@ var ConfigUtils = {
         let xy = Proj4js.toPoint(center);
         if (projection) {
             const epsgMap = new Proj4js.Proj(projection);
-            Proj4js.transform(epsgMap, epsg4326, xy);
+            xy = Proj4js.transform(epsgMap, epsg4326, xy);
         }
         return {y: xy.y, x: xy.x, crs: "EPSG:4326"};
     },
