@@ -11,7 +11,7 @@ const {updateCurrentMapPermissions, updateCurrentMapGroups} = require('./current
 const ConfigUtils = require('../utils/ConfigUtils');
 const {userGroupSecuritySelector, userSelector} = require('../selectors/security');
 const {currentMapDetailsChangedSelector} = require('../selectors/currentmap');
-const {resetCurrentMap} = require('./currentmap');
+const {resetCurrentMap} = require('./currentMap');
 const assign = require('object-assign');
 const {findIndex, isNil} = require('lodash');
 
@@ -900,7 +900,6 @@ module.exports = {
     saveAll,
     onDisplayMetadataEdit,
     resetUpdating,
-    resetCurrentMap,
     mapError,
     mapsSearchTextChanged,
     updateAttribute

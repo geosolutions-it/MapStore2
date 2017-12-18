@@ -17,9 +17,12 @@ const {
     OPEN_OR_FETCH_DETAILS, DELETE_MAP, OPEN_DETAILS_PANEL,
     CLOSE_DETAILS_PANEL,
     setDetailsChanged, updateDetails, toggleDetailsSheet,
-    mapDeleting, mapDeleted, loadMaps, resetCurrentMap,
+    mapDeleting, mapDeleted, loadMaps,
     doNothing
 } = require('../actions/maps');
+const {
+    resetCurrentMap
+} = require('../actions/currentMap');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {toggleControl} = require('../actions/controls');
 const {
@@ -102,7 +105,7 @@ const saveResourceDetailsEpic = (action$, store) =>
 /**
     Epics used to fetch and/or open the details modal
 */
-const fetchDetailsFromResource = (action$, store) =>
+const fetchDetailsFromResourceEpic = (action$, store) =>
     action$.ofType(OPEN_OR_FETCH_DETAILS)
     .filter(a => a.fetch)
     .switchMap((a) => {
@@ -138,12 +141,12 @@ const fetchDetailsFromResource = (action$, store) =>
             });
     });
 
-const deleteMapAndAssociatedResources = (action$, store) =>
+const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
     action$.ofType(DELETE_MAP)
     .switchMap((action) => {
         const state = store.getState();
-        const {resourceId, options} = action;
         const mapId = action.resourceId;
+        const options = action.options;
         const detailsUri = mapDetailsUriFromIdSelector(state, mapId);
         const thumbnailUri = mapThumbnailsUriFromIdSelector(state, mapId);
         const detailsId = getIdFromUri(detailsUri);
@@ -166,10 +169,10 @@ const deleteMapAndAssociatedResources = (action$, store) =>
             }
             if (map.resType === "error") {
                 actions.push(basicError({message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorDeletingMap") + mapId }));
-                actions.push(mapDeleted(resourceId, "failure", map.error));
+                actions.push(mapDeleted(mapId, "failure", map.error));
             }
             if (map.resType === "success") {
-                actions.push(mapDeleted(resourceId, "success"));
+                actions.push(mapDeleted(mapId, "success"));
                 if ( isMapsLastPageSelector(state)) {
                     actions.push(loadMaps(false, state.maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*"));
                 }
@@ -179,7 +182,7 @@ const deleteMapAndAssociatedResources = (action$, store) =>
 
             }
             return Rx.Observable.from(actions);
-        }).startWith(mapDeleting(resourceId));
+        }).startWith(mapDeleting(mapId));
     });
 
 const mapCreatedNotificationEpic = action$ =>
@@ -187,7 +190,7 @@ const mapCreatedNotificationEpic = action$ =>
         .concat(() => action$.ofType(CLEAR_NOTIFICATIONS))
         .switchMap(() => Rx.Observable.of(basicSuccess({message: "maps.feedback.successSavedMap"})));
 
-const fetchdataForDetailsPanel = (action$, store) =>
+const fetchDataForDetailsPanel = (action$, store) =>
     action$.ofType(OPEN_DETAILS_PANEL)
     .switchMap(() => {
         const state = store.getState();
@@ -219,10 +222,10 @@ const closeDetailsPanelEpic = (action$) =>
     );
 module.exports = {
     closeDetailsPanelEpic,
-    fetchdataForDetailsPanel,
+    fetchDataForDetailsPanel,
     mapCreatedNotificationEpic,
-    deleteMapAndAssociatedResources,
+    deleteMapAndAssociatedResourcesEpic,
     setDetailsChangedEpic,
-    fetchDetailsFromResource,
+    fetchDetailsFromResourceEpic,
     saveResourceDetailsEpic
 };
