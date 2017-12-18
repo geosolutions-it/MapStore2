@@ -31,7 +31,7 @@
             "layers": "Couches"
         },
         "details": {
-            "title": "Détails"
+            "title": "Info sur cette carte"
         },
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
