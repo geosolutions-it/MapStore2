@@ -8,7 +8,7 @@
 
 /*eslint-disable */
 
-const{Table} = require('react-bootstrap');
+const Bootstrap = require('react-bootstrap');
 const React = require('react');
 
 const RenderTemplate = function(comp, props) {

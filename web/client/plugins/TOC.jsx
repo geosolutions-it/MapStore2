@@ -477,7 +477,7 @@ const API = {
  * "name": "TOC",
  *      "cfg": {
  *          "metadataTemplate": ["<div id={model.identifier}>",
- *              "<Table className='responsive'>",
+ *              "<Bootstrap.Table className='responsive'>",
  *                  "<thead>",
  *                  "<tr>",
  *                      "<th>Campo</th><th>Valore</th>",
@@ -503,7 +503,7 @@ const API = {
  *                          "<td>Creator</td><td>{model.creator}</td>",
  *                      "</tr>",
  *                  "</tbody>",
- *              "</Table>",
+ *              "</Bootstrap.Table>",
  *          "</div>"]
  *      }
  *  }
