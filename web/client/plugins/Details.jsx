@@ -6,9 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-
 const React = require('react');
-
 const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
@@ -23,10 +21,9 @@ const {
     mapDetailsUriFromIdSelector
 } = require('../selectors/maps');
 /**
- * Details plugin used forfetching details of the map
+ * Details plugin used for fetching details of the map
  * @class
  * @memberof plugins
- * @prop {node} [title] the title of the page
  */
 
 module.exports = {
