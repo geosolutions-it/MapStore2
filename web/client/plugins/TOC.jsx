@@ -411,6 +411,7 @@ class LayerTree extends React.Component {
  * @prop {boolean} cfg.activateSortLayer: activate drag and drob to sort layers, default `true`
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
  * @prop {object} cfg.layerOptions: options to pass to the layer.
+ * @prop {boolean} cfg.showExpandTitle shows full length title in the legend. default `false`.
  * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
  * For instance you can pass some stying props to the legend.
  * this example is to make the legend scrollable horizontally
