@@ -835,6 +835,18 @@ describe('FilterUtils', () => {
         expect(FilterUtils.cqlBooleanField("attribute_1", "=", undefined)).toBe("");
         expect(FilterUtils.cqlBooleanField("attribute_1", "=", null)).toBe("");
     });
+    it('Check if cqlStringField(attribute, operator, value)', () => {
+        // testing operator =
+        expect(FilterUtils.cqlStringField("attribute_1", "=", "Alabama")).toBe("\"attribute_1\"='Alabama'");
+        // test escape single quotes
+        expect(FilterUtils.cqlStringField("attribute_1", "=", "PRE'")).toBe("\"attribute_1\"='PRE'''");
+        // test isNull
+        expect(FilterUtils.cqlStringField("attribute_1", "isNull", "")).toBe("isNull(\"attribute_1\")=true");
+        // test ilike
+        expect(FilterUtils.cqlStringField("attribute_1", "ilike", "A")).toBe("strToLowerCase(\"attribute_1\") LIKE '%a%'");
+        // test LIKE
+        expect(FilterUtils.cqlStringField("attribute_1", "like", "A")).toBe("\"attribute_1\" LIKE '%A%'");
+    });
     it('Check if ogcBooleanField(attribute, operator, value, nsplaceholder)', () => {
         // testing operators
         expect(FilterUtils.ogcBooleanField("attribute_1", "=", true, "ogc"))
