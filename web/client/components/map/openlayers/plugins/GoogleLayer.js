@@ -44,11 +44,13 @@ Layers.registerType('google', {
         let setCenter = function() {
             if (mapContainer.style.visibility !== 'hidden') {
                 const center = ol.proj.transform(map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
-                gmaps[mapId].setCenter(new google.maps.LatLng(center[1], center[0]));
+                if (gmaps[mapId]) {
+                    gmaps[mapId].setCenter(new google.maps.LatLng(center[1], center[0]));
+                }
             }
         };
         let setZoom = function() {
-            if (mapContainer.style.visibility !== 'hidden') {
+            if (gmaps[mapId] && mapContainer.style.visibility !== 'hidden') {
                 gmaps[mapId].setZoom(map.getView().getZoom());
             }
         };
@@ -122,15 +124,17 @@ Layers.registerType('google', {
         setZoom();
 
         let viewport = map.getViewport();
-        let oldTrans = document.getElementById(mapId + 'gmaps').style.transform;
+        const el = document.getElementById(mapId + 'gmaps');
+        let oldTrans = el && el.style && el.style.transform;
 
         let mousedown = false;
         let mousemove = false;
 
         let resizeGoogleLayerIfRotated = function() {
             let degrees = /[\+\-]?\d+\.?\d*/i;
-            let newTrans = document.getElementById(mapId + 'gmaps').style.transform;
-            if (newTrans !== oldTrans && newTrans.indexOf('rotate') !== -1) {
+            const newEl = document.getElementById(mapId + 'gmaps');
+            let newTrans = newEl && newEl.style && newEl.style.transform;
+            if ((newTrans || oldTrans) && newTrans !== oldTrans && newTrans.indexOf('rotate') !== -1) {
                 let rotation = parseFloat(newTrans.match(degrees)[0]);
                 let size = calculateRotatedSize(-rotation, map.getSize());
                 mapContainer.style.width = size.width + 'px';
@@ -149,7 +153,8 @@ Layers.registerType('google', {
             if (mousemove && mousedown) {
                 resizeGoogleLayerIfRotated();
             }
-            oldTrans = document.getElementById(mapId + 'gmaps').style.transform;
+            const oldEl = document.getElementById(mapId + 'gmaps');
+            oldTrans = oldEl && oldEl.style && oldEl.style.transform;
             mousedown = false;
         });
         viewport.addEventListener(moveEvent, () => {
