@@ -160,8 +160,7 @@
               }
             }
         ],
-
-        "desktop": [
+        "desktop": [ "Details",
           {
             "name": "Map",
             "cfg": {

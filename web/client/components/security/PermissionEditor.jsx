@@ -198,7 +198,6 @@ class PermissionEditor extends React.Component {
         }
         return (
             <div>
-                <b style={{cursor: "default"}} ><Message msgId="groups" /> <Message msgId="permissions" /></b>
                 <Table className="permissions-table" stripped condensed hover>
                     <thead>
                         <tr>

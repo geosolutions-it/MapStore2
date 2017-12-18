@@ -61,6 +61,8 @@ describe('Test map selectors', () => {
     it('test mapIdSelector', () => {
         const props = mapIdSelector(state);
         expect(props).toBe(123);
+        const propsEmpty = mapIdSelector({});
+        expect(propsEmpty).toBe(null);
     });
 
     it('test mapVersionSelector', () => {

@@ -30,6 +30,9 @@
             "updating": "Rafraichissement...",
             "layers": "Couches"
         },
+        "details": {
+            "title": "Détails"
+        },
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
             "title": "Titre",
@@ -104,6 +107,8 @@
         "elevation": "Elévation",
         "close": "Fermer",
         "cancel": "Annuler",
+        "no": "Non",
+        "yes": "Oui",
         "confirm": "Confirmer",
         "confirmTitle": "Confirmez-vous?",
         "pageInfo": "{total, plural, =0 {aucun objet} =1 {{total} objet parmi {total}} other {objets {start}-{end} parmi {total}}}",
@@ -193,7 +198,25 @@
         },
         "newMap": "Nouvelle carte",
 		"maps": {
-			"search": "rechercher des cartes ..."
+            "feedback": {
+                "successSavedMap": "La carte a été créée correctement",
+                "errorDeletingMap": "Erreur lors de la suppression de cette carte avec l'ID: ",
+                "errorDeletingThumbnailOfMap": "Erreur lors de la suppression de la vignette de la carte avec l'ID: ",
+                "errorDeletingDetailsOfMap": "Erreur lors de la suppression des détails de la carte avec l'ID: ",
+                "allResDeleted": "Ont été supprimées avec succès toutes les ressources associées à cette carte: ",
+                "errorFetchingDetailsOfMap": "Erreur lors de la récupération des détails de la carte avec l'ID: ",
+                "details": {
+                    "deletedSuccesfully": "Les détails ont été supprimés correctement",
+                    "savedSuccesfully": "Les détails ont été supprimés correctement",
+                    "updatedSuccesfully": "Les détails ont été mis à jour correctement"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "La vignette a été supprimée correctement",
+                    "savedSuccesfully": "La vignette a été supprimée correctement",
+                    "updatedSuccesfully": "La vignette a été mise à jour correctement"
+                }
+            },
+            "search": "rechercher des cartes ..."
 		},
         "map": {
             "loading": "Chargement...",
@@ -230,6 +253,21 @@
                 "canWrite": "peut éditer",
                 "noResult": "aucun résultat trouvé",
                 "title": "groupes autorisés"
+            },
+            "details": {
+                "back": "Arrière",
+                "save": "Sauvegarder",
+                "show": "Montrer la fiche détaillée",
+                "add": "Ajouter de nouveaux détails",
+                "edit": "Modifier les détails",
+                "title": "Fiche de détails",
+                "undo": "Annuler supprimer",
+                "showPreview": "Afficher l'aperçu",
+                "hidePreview": "Masquer l'aperçu",
+                "delete": "Supprimer la fiche détaillée",
+                "titleUnsavedChanges": "Êtes-vous sûr de fermer sans enregistrer vos modifications?",
+                "sureToClose": "Êtes-vous sûr de fermer sans enregistrer vos modifications?",
+                "fieldsChanged": "Certains champs ont été modifiés"
             }
         },
         "toc": {

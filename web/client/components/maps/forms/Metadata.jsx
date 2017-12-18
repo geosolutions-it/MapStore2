@@ -53,7 +53,8 @@ class Metadata extends React.Component {
                     type="text"
                     onChange={this.changeName}
                     placeholder={this.props.namePlaceholderText}
-                    defaultValue={this.props.map ? this.props.map.name : ""} />
+                    defaultValue={this.props.map ? this.props.map.name : ""}
+                    value={this.props.map && this.props.map.metadata && this.props.map.metadata.name || ""}/>
             </FormGroup>
             <FormGroup>
                 <ControlLabel>{this.props.descriptionFieldText}</ControlLabel>
@@ -62,7 +63,8 @@ class Metadata extends React.Component {
                     type="text"
                     onChange={this.changeDescription}
                     placeholder={this.props.descriptionPlaceholderText}
-                    defaultValue={this.props.map ? this.props.map.description : ""} />
+                    defaultValue={this.props.map ? this.props.map.description : ""}
+                    value={this.props.map && this.props.map.metadata && this.props.map.metadata.description || ""}/>
             </FormGroup>
         </form>);
     }
