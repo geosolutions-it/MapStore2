@@ -145,6 +145,7 @@ class LayerTree extends React.Component {
         updateNode: PropTypes.func,
         removeNode: PropTypes.func,
         activateTitleTooltip: PropTypes.bool,
+        showExpandTitle: PropTypes.bool,
         activateOpacityTool: PropTypes.bool,
         activateSortLayer: PropTypes.bool,
         activateFilterLayer: PropTypes.bool,
@@ -198,6 +199,7 @@ class LayerTree extends React.Component {
         selectedNodes: [],
         activateOpacityTool: true,
         activateTitleTooltip: true,
+        showExpandTitle: false,
         activateSortLayer: true,
         activateFilterLayer: true,
         activateMapTitle: true,
@@ -267,6 +269,7 @@ class LayerTree extends React.Component {
             <DefaultLayer
                 {...this.props.layerOptions}
                 titleTooltip={this.props.activateTitleTooltip}
+                showExpandTitle={this.props.showExpandTitle}
                 onToggle={this.props.onToggleLayer}
                 activateOpacityTool={this.props.activateOpacityTool}
                 onContextMenu={this.props.onContextMenu}

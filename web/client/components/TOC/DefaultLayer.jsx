@@ -37,7 +37,8 @@ class DefaultLayer extends React.Component {
         selectedNodes: PropTypes.array,
         filterText: PropTypes.string,
         onUpdateNode: PropTypes.func,
-        titleTooltip: PropTypes.bool
+        titleTooltip: PropTypes.bool,
+        showExpandTitle: PropTypes.bool
     };
 
     static defaultProps = {
@@ -55,7 +56,8 @@ class DefaultLayer extends React.Component {
         selectedNodes: [],
         filterText: '',
         onUpdateNode: () => {},
-        titleTooltip: false
+        titleTooltip: false,
+        showExpandTitle: false
     };
 
     renderCollapsible = () => {
@@ -63,8 +65,10 @@ class DefaultLayer extends React.Component {
         return (
             <div key="legend" position="collapsible" className="collapsible-toc">
                 <Grid fluid>
+                    {this.props.showExpandTitle ? <Row><Col xs={12} className="toc-full-title">{this.getTitle(this.props.node)}</Col></Row> : null}
                     {this.props.activateOpacityTool ?
                     <Row>
+
                         <Col xs={12} className="mapstore-slider with-tooltip">
                             <Slider start={[layerOpacity]}
                                 disabled={!this.props.node.visibility}
@@ -146,7 +150,10 @@ class DefaultLayer extends React.Component {
 
         return !this.props.filterText ? this.renderNode(grab, hide, selected, error, warning, other) : filteredNode;
     }
-
+    getTitle = (layer) => {
+        const translation = isObject(layer.title) ? layer.title[this.props.currentLocale] || layer.title.default : layer.title;
+        return translation || layer.name;
+    }
     filterLayers = (layer) => {
         const translation = isObject(layer.title) ? layer.title[this.props.currentLocale] || layer.title.default : layer.title;
         const title = translation || layer.name;
