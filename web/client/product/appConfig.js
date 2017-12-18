@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+const {setSupportedLocales} = require('../epics/localconfig');
 
 module.exports = {
     pages: [{
@@ -65,6 +66,9 @@ module.exports = {
             mapInfo: {enabled: true, infoFormat: 'application/json' },
             mousePosition: {enabled: true, crs: "EPSG:4326", showCenter: true}
         }
+    },
+    appEpics: {
+        setSupportedLocales
     },
     storeOpts: {
         persist: {

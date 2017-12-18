@@ -29,6 +29,9 @@
             "updating": "Updating...",
             "layers": "layers"
         },
+        "localeErrors": {
+            "404": "Translation file not found"
+        },
         "layerProperties": {
             "windowTitle": "Layer Properties",
             "title": "Title",

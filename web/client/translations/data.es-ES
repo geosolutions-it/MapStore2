@@ -29,6 +29,9 @@
             "updating": "Updating...",
             "layers": "layers"
         },
+        "localeErrors": {
+            "404": "Archivo de traducción no encontrado"
+        },
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
             "title": "Título",
