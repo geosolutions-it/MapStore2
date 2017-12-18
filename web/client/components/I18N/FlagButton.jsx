@@ -32,14 +32,21 @@ class LangBar extends React.Component {
 
     render() {
         let tooltip = <Tooltip id={"flag-button." + this.props.code}>{this.props.label}</Tooltip>;
-        return (<OverlayTrigger key={"overlay-" + this.props.code} overlay={tooltip}>
+        let imgSrc;
+        try {
+            imgSrc = require('./images/flags/' + this.props.code + '.png');
+        } catch(e) {
+            imgSrc = null;
+        }
+
+        return imgSrc ? (<OverlayTrigger key={"overlay-" + this.props.code} overlay={tooltip}>
             <Button
                 key={this.props.code}
                 onClick={this.launchFlagAction.bind(this, this.props.code)}
                 active={this.props.active}>
-                <img src={require('./images/flags/' + this.props.code + '.png')} alt={this.props.label}/>
+                <img src={imgSrc} alt={this.props.label}/>
             </Button>
-        </OverlayTrigger>);
+        </OverlayTrigger>) : null;
     }
 
     launchFlagAction = (code) => {

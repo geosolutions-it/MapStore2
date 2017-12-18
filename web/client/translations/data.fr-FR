@@ -30,6 +30,9 @@
             "updating": "Rafraichissement...",
             "layers": "Couches"
         },
+        "localeErrors": {
+            "404": "Fichier de traduction introuvable"
+        },
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
             "title": "Titre",
