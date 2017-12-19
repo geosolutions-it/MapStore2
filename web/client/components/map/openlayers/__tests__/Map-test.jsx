@@ -87,6 +87,15 @@ describe('OpenlayersMap', () => {
         }, 500);
     });
 
+    it('normalized CRS', () => {
+        const comp = (<OpenlayersMap projection="EPSG:900913" center={{y: 43.9, x: 10.3}} zoom={11}
+            />);
+
+        const map = ReactDOM.render(comp, document.getElementById("map"));
+        expect(map).toExist();
+        expect(map.map.getView().getProjection().getCode()).toBe('EPSG:3857');
+    });
+
     it('click on feature', (done) => {
         const testHandlers = {
             handler: () => {}

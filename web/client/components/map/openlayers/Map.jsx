@@ -343,7 +343,7 @@ class OpenlayersMap extends React.Component {
 
     createView = (center, zoom, projection, options) => {
         const viewOptions = assign({}, {
-            projection: projection,
+            projection: CoordinatesUtils.normalizeSRS(projection),
             center: [center.x, center.y],
             zoom: zoom
         }, options || {});
