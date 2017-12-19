@@ -65,4 +65,15 @@ describe('Test correctness of the CSW APIs', () => {
             }
         });
     });
+    it('getRecordsById Error', (done) => {
+        API.getRecordById('base/web/client/test-resources/csw/getRecordsResponseException.xml').then((result) => {
+            try {
+                expect(result).toExist();
+                expect(result.error).toExist();
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
 });
