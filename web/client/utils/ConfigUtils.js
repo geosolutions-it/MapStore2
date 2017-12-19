@@ -144,24 +144,10 @@ var ConfigUtils = {
     },
 
     getCenter: function(center, projection) {
-        var retval;
-        if ((center.x || center.x === 0) && (center.y || center.y === 0) && center.crs) {
-            if (center.crs !== "EPSG:4326") {
-                let xy = Proj4js.toPoint([center.x, center.y]);
-                const epsgMap = new Proj4js.Proj(center.crs);
-                Proj4js.transform(epsgMap, epsg4326, xy);
-                retval = {y: xy.y, x: xy.x, crs: "EPSG:4326"};
-            } else {
-                retval = center;
-            }
-            return retval;
-        }
-        let xy = Proj4js.toPoint(center);
-        if (projection) {
-            const epsgMap = new Proj4js.Proj(projection);
-            Proj4js.transform(epsgMap, epsg4326, xy);
-        }
-        return {y: xy.y, x: xy.x, crs: "EPSG:4326"};
+        const point = isArray(center) ? {x: center[0], y: center[1]} : center;
+        const crs = center.crs || projection || 'EPSG:4326';
+        const transformed = crs !== 'EPSG:4326' ? Proj4js.transform(new Proj4js.Proj(crs), epsg4326, point) : point;
+        return assign({}, transformed, {crs: "EPSG:4326"});
     },
     normalizeConfig: function(config) {
         const {layers, groups, plugins, ...other} = config;
