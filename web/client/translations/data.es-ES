@@ -245,7 +245,7 @@
             "toolTrashLayersTooltip": "Remove selected layers",
             "toolFeaturesGridTooltip": "Open Attribute Table",
             "noFilteredResults": "No results",
-            "filterPlaceholder": "Filter layers",
+            "filterPlaceholder": "Capas de filtro",
             "clearFilter": "Clear filter",
             "toolReloadLayerTooltip": "Force reload of selected layer",
             "toolReloadLayersTooltip": "Force reload of selected layers",
