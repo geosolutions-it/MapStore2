@@ -12,14 +12,12 @@ const assign = require('object-assign');
 const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
 const {mapFromIdSelector} = require('../selectors/maps');
-const {mapIdSelector} = require('../selectors/map');
+const {mapIdSelector, mapInfoDetailsUriFromIdSelector} = require('../selectors/map');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {currentMapDetailsTextSelector} = require('../selectors/currentMap');
 const {openDetailsPanel, closeDetailsPanel} = require("../actions/maps");
 const {get} = require("lodash");
-const {
-    mapDetailsUriFromIdSelector
-} = require('../selectors/maps');
+
 /**
  * Details plugin used for fetching details of the map
  * @class
@@ -43,7 +41,7 @@ module.exports = {
             action: openDetailsPanel,
             selector: (state) => {
                 const mapId = mapIdSelector(state);
-                const detailsUri = mapId && mapDetailsUriFromIdSelector(state, mapId);
+                const detailsUri = mapId && mapInfoDetailsUriFromIdSelector(state, mapId);
                 if (detailsUri) {
                     return {};
                 }

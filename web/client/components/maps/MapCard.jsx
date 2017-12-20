@@ -11,7 +11,6 @@ const Message = require('../I18N/Message');
 const GridCard = require('../misc/GridCard');
 const thumbUrl = require('./style/default.jpg');
 const assign = require('object-assign');
-
 const ConfirmModal = require('./modals/ConfirmModal');
 const LocaleUtils = require('../../utils/LocaleUtils');
 
@@ -42,8 +41,7 @@ class MapCard extends React.Component {
             backgroundRepeat: "repeat-x"
         },
         detailsSheetActions: {
-            onToggleDetailsSheet: () => {},
-            onOpenOrFetchDetails: () => {}
+            onToggleDetailsSheet: () => {}
         },
         // CALLBACKS
         onMapDelete: ()=> {},
@@ -91,7 +89,6 @@ class MapCard extends React.Component {
                     onClick: (evt) => {
                         this.stopPropagate(evt);
                         this.onEdit(this.props.map, true);
-                        this.props.detailsSheetActions.onOpenOrFetchDetails({open: false, fetch: true});
                     },
                     glyph: "wrench",
                     disabled: this.props.map.updating,
@@ -104,13 +101,9 @@ class MapCard extends React.Component {
                 onClick: (evt) => {
                     this.stopPropagate(evt);
                     this.onEdit(this.props.map, false);
-                    if (!this.props.map.detailsText) {
-                        this.props.detailsSheetActions.onOpenOrFetchDetails({open: true, fetch: true, readOnly: true});
-                    } else {
-                        this.props.detailsSheetActions.onToggleDetailsSheet(true);
-                    }
+                    this.props.detailsSheetActions.onToggleDetailsSheet(true);
                 },
-                glyph: "chevron-up",
+                glyph: "sheet",
                 tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.show")
             });
         }

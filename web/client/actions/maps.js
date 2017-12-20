@@ -45,7 +45,6 @@ const SAVE_DETAILS = 'MAPS:SAVE_DETAILS';
 const DELETE_DETAILS = 'MAPS:DELETE_DETAILS';
 const SET_DETAILS_CHANGED = 'MAPS:SET_DETAILS_CHANGED';
 const SAVE_RESOURCE_DETAILS = 'MAPS:SAVE_RESOURCE_DETAILS';
-const OPEN_OR_FETCH_DETAILS = 'MAPS:OPEN_OR_FETCH_DETAILS';
 const DO_NOTHING = 'MAPS:DO_NOTHING';
 const DELETE_MAP = 'MAPS:DELETE_MAP';
 const BACK_DETAILS = 'MAPS:BACK_DETAILS';
@@ -53,6 +52,7 @@ const UNDO_DETAILS = 'MAPS:UNDO_DETAILS';
 const SET_UNSAVED_CHANGES = 'MAPS:SET_UNSAVED_CHANGES';
 const OPEN_DETAILS_PANEL = 'DETAILS:OPEN_DETAILS_PANEL';
 const CLOSE_DETAILS_PANEL = 'DETAILS:CLOSE_DETAILS_PANEL';
+const DETAILS_LOADED = 'DETAILS:DETAILS_LOADED';
 
 
 /**
@@ -754,19 +754,6 @@ function setDetailsChanged(detailsChanged) {
     };
 }
 /**
- * open details
- * @memberof actions.maps
- * @return {action}        type `OPEN_AND_FETCH_DETAILS`
-*/
-function openOrFetchDetails({open, fetch, readOnly = false}) {
-    return {
-        type: OPEN_OR_FETCH_DETAILS,
-        open,
-        fetch,
-        readOnly
-    };
-}
-/**
  * back details
  * @memberof actions.maps
  * @return {action}        type `BACK_DETAILS`
@@ -819,6 +806,18 @@ function closeDetailsPanel() {
     };
 }
 /**
+ * detailsLoaded
+ * @memberof actions.maps
+ * @return {action}        type `DETAILS_LOADED`
+*/
+function detailsLoaded(mapId, detailsUri) {
+    return {
+        type: DETAILS_LOADED,
+        mapId,
+        detailsUri
+    };
+}
+/**
  * do nothing action
  * @memberof actions.maps
  * @return {action}        type `DO_NOTHING`
@@ -865,7 +864,6 @@ module.exports = {
     deleteDetails, DELETE_DETAILS,
     setDetailsChanged, SET_DETAILS_CHANGED,
     saveResourceDetails, SAVE_RESOURCE_DETAILS,
-    openOrFetchDetails, OPEN_OR_FETCH_DETAILS,
     backDetails, BACK_DETAILS,
     undoDetails, UNDO_DETAILS,
     doNothing, DO_NOTHING,
@@ -873,6 +871,7 @@ module.exports = {
     openDetailsPanel, OPEN_DETAILS_PANEL,
     closeDetailsPanel, CLOSE_DETAILS_PANEL,
     deleteMap, DELETE_MAP,
+    detailsLoaded, DETAILS_LOADED,
     metadataChanged,
     loadMaps,
     mapsLoading,

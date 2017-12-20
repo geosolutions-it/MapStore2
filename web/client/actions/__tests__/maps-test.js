@@ -18,7 +18,6 @@ const {
     deleteDetails, DELETE_DETAILS,
     setDetailsChanged, SET_DETAILS_CHANGED,
     saveResourceDetails, SAVE_RESOURCE_DETAILS,
-    openOrFetchDetails, OPEN_OR_FETCH_DETAILS,
     backDetails, BACK_DETAILS,
     undoDetails, UNDO_DETAILS,
     doNothing, DO_NOTHING,
@@ -26,6 +25,7 @@ const {
     openDetailsPanel, OPEN_DETAILS_PANEL,
     closeDetailsPanel, CLOSE_DETAILS_PANEL,
     MAP_UPDATING, mapUpdating,
+    DETAILS_LOADED, detailsLoaded,
     PERMISSIONS_UPDATED, permissionsUpdated,
     ATTRIBUTE_UPDATED, attributeUpdated,
     SAVE_MAP, saveMap,
@@ -333,16 +333,6 @@ describe('Test correctness of the maps actions', () => {
         expect(a.type).toBe(SET_DETAILS_CHANGED);
         expect(a.detailsChanged).toBe(detailsChanged);
     });
-    it('openOrFetchDetails', () => {
-        const open = true;
-        const fetch = true;
-        const readOnly = true;
-        const a = openOrFetchDetails({open, fetch, readOnly});
-        expect(a.type).toBe(OPEN_OR_FETCH_DETAILS);
-        expect(a.open).toBe(open);
-        expect(a.fetch).toBe(fetch);
-        expect(a.readOnly).toBe(readOnly);
-    });
     it('backDetails', () => {
         const backupDetails = true;
         const a = backDetails(backupDetails);
@@ -374,6 +364,14 @@ describe('Test correctness of the maps actions', () => {
     it('saveResourceDetails', () => {
         const a = saveResourceDetails();
         expect(a.type).toBe(SAVE_RESOURCE_DETAILS);
+    });
+    it('detailsLoaded', () => {
+        const mapId = 1;
+        const detailsUri = "sada/da/";
+        const a = detailsLoaded(mapId, detailsUri);
+        expect(a.type).toBe(DETAILS_LOADED);
+        expect(a.detailsUri).toBe(detailsUri);
+        expect(a.mapId).toBe(mapId);
     });
 
 });

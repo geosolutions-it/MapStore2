@@ -58,7 +58,6 @@ describe('This test for MapCard', () => {
         let component = TestUtils.renderIntoDocument(<MapCard viewerUrl="viewer" id={1} map={{id: 1, name: testName, description: testDescription, details: null, canEdit: true}} mapType="leaflet"/>);
         const handlers = {
             onToggleDetailsSheet: () => {},
-            onOpenOrFetchDetails: () => {},
             onEdit: () => {}
         };
         let spy = expect.spyOn(handlers, "onToggleDetailsSheet");

@@ -13,12 +13,12 @@ const {createEpicMiddleware, combineEpics } = require('redux-observable');
 const {
     saveDetails, SET_DETAILS_CHANGED, mapCreated,
     CLOSE_DETAILS_PANEL, closeDetailsPanel,
-    openDetailsPanel, UPDATE_DETAILS, openOrFetchDetails,
-    TOGGLE_DETAILS_SHEET, MAP_DELETING, MAP_DELETED, deleteMap
+    openDetailsPanel, UPDATE_DETAILS,
+    MAP_DELETING, MAP_DELETED, deleteMap
 } = require('../../actions/maps');
 const {clear, SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {TOGGLE_CONTROL} = require('../../actions/controls');
-const {RESET_CURRENT_MAP} = require('../../actions/currentMap');
+const {RESET_CURRENT_MAP, editMap} = require('../../actions/currentMap');
 const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
 
 const {
@@ -66,6 +66,13 @@ const mapsState = {
     },
     mapInitialConfig: {
         mapId
+    },
+    map: {
+        present: {
+            info: {
+                details: encodeURIComponent(detailsUri)
+            }
+        }
     }
 };
 describe('maps Epics', () => {
@@ -178,10 +185,14 @@ describe('maps Epics', () => {
         }, mapsState);
     });
     it('test fetchDataForDetailsPanel with Error', (done) => {
-        testEpic(addTimeoutEpic(fetchDataForDetailsPanel), 1, openDetailsPanel(), actions => {
-            expect(actions.length).toBe(1);
+        testEpic(addTimeoutEpic(fetchDataForDetailsPanel), 2, openDetailsPanel(), actions => {
+            expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
+                    case TOGGLE_CONTROL:
+                        expect(action.control).toBe("details");
+                        expect(action.property).toBe("enabled");
+                        break;
                     case SHOW_NOTIFICATION:
                         expect(action.message).toBe("errorFetchingDetailsOfMap 1");
                         break;
@@ -202,12 +213,17 @@ describe('maps Epics', () => {
             },
             mapInitialConfig: {
                 mapId
+            },
+            map: {
+                present: {
+                    info: {}
+                }
             }
         });
     });
-    it('test fetchDetailsFromResourceEpic, map without saved Details, fetch true, open and readOnly false', (done) => {
+    it('test fetchDetailsFromResourceEpic, map without saved Details', (done) => {
         delete map1.details;
-        testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 1, openOrFetchDetails({open: false, fetch: true}), actions => {
+        testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 1, editMap({}, true), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
@@ -227,57 +243,9 @@ describe('maps Epics', () => {
             }
         });
     });
-    it('test fetchDetailsFromResourceEpic, map without saved Details, open and fetch true, readOnly false', (done) => {
-        testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 2, openOrFetchDetails({open: true, fetch: true}), actions => {
-            expect(actions.length).toBe(2);
-            actions.map((action) => {
-                switch (action.type) {
-                    case UPDATE_DETAILS:
-                        expect(action.detailsText).toBe("");
-                        expect(action.originalDetails).toBe("");
-                        expect(action.doBackup).toBe(true);
-                        break;
-                    case TOGGLE_DETAILS_SHEET:
-                        expect(action.detailsSheetReadOnly).toBe(false);
-                        break;
-                    default:
-                        expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {
-            currentMap: {
-                id: mapId
-            }
-        });
-    });
-    it('test fetchDetailsFromResourceEpic, map without saved Details, open fetch readOnly true', (done) => {
-        testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 2, openOrFetchDetails({open: true, fetch: true, readOnly: true}), actions => {
-            expect(actions.length).toBe(2);
-            actions.map((action) => {
-                switch (action.type) {
-                    case UPDATE_DETAILS:
-                        expect(action.detailsText).toBe("");
-                        expect(action.originalDetails).toBe("");
-                        expect(action.doBackup).toBe(true);
-                        break;
-                    case TOGGLE_DETAILS_SHEET:
-                        expect(action.detailsSheetReadOnly).toBe(true);
-                        break;
-                    default:
-                        expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {
-            currentMap: {
-                id: mapId,
-                details: "NODATA"
-            }
-        });
-    });
-    it('test fetchDetailsFromResourceEpic, map with saved Details, fetch true, open and readOnly false', (done) => {
-        testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 1, openOrFetchDetails({open: false, fetch: true}), actions => {
+
+    it('test fetchDetailsFromResourceEpic, map with saved Details', (done) => {
+        testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 1, editMap({}, true), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
@@ -298,58 +266,9 @@ describe('maps Epics', () => {
             }
         });
     });
-    it('test fetchDetailsFromResourceEpic, map with saved Details, open and fetch true, readOnly false', (done) => {
-        testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 2, openOrFetchDetails({open: true, fetch: true}), actions => {
-            expect(actions.length).toBe(2);
-            actions.map((action) => {
-                switch (action.type) {
-                    case UPDATE_DETAILS:
-                        expect(action.detailsText.indexOf(detailsText)).toNotBe(-1);
-                        expect(action.originalDetails.indexOf(detailsText)).toNotBe(-1);
-                        expect(action.doBackup).toBe(true);
-                        break;
-                    case TOGGLE_DETAILS_SHEET:
-                        expect(action.detailsSheetReadOnly).toBe(false);
-                        break;
-                    default:
-                        expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {
-            currentMap: {
-                id: mapId,
-                details: encodeURIComponent(detailsUri)
-            }
-        });
-    });
-    it('test fetchDetailsFromResourceEpic, map with saved Details, open, readOnly, fetch true', (done) => {
-        testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 2, openOrFetchDetails({open: true, fetch: true, readOnly: true}), actions => {
-            expect(actions.length).toBe(2);
-            actions.map((action) => {
-                switch (action.type) {
-                    case UPDATE_DETAILS:
-                        expect(action.detailsText.indexOf(detailsText)).toNotBe(-1);
-                        expect(action.originalDetails.indexOf(detailsText)).toNotBe(-1);
-                        expect(action.doBackup).toBe(true);
-                        break;
-                    case TOGGLE_DETAILS_SHEET:
-                        expect(action.detailsSheetReadOnly).toBe(true);
-                        break;
-                    default:
-                        expect(true).toBe(false);
-                }
-            });
-            done();
-        }, {
-            currentMap: {
-                id: mapId,
-                details: encodeURIComponent(detailsUri)
-            }
-        });
-    });
+
     it('test fetchDetailsFromResourceEpic, withError', (done) => {
-        testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 1, openOrFetchDetails({open: true, fetch: true, readOnly: true}), actions => {
+        testEpic(addTimeoutEpic(fetchDetailsFromResourceEpic), 1, editMap({}, true), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
@@ -365,7 +284,7 @@ describe('maps Epics', () => {
             locale,
             currentMap: {
                 id: mapId,
-                details: "wrong/uri/4"
+                details: "wrong/uri/sfdsdfs"
             }
         });
     });

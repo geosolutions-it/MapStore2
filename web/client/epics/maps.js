@@ -12,16 +12,18 @@ const {CLEAR_NOTIFICATIONS} = require('../actions/notifications');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
 const LocaleUtils = require('../utils/LocaleUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
+const { MAP_INFO_LOADED } = require('../actions/config');
+
 const {
     SAVE_DETAILS, SAVE_RESOURCE_DETAILS, MAP_CREATED,
-    OPEN_OR_FETCH_DETAILS, DELETE_MAP, OPEN_DETAILS_PANEL,
+    DELETE_MAP, OPEN_DETAILS_PANEL,
     CLOSE_DETAILS_PANEL,
-    setDetailsChanged, updateDetails, toggleDetailsSheet,
+    setDetailsChanged, updateDetails,
     mapDeleting, mapDeleted, loadMaps,
-    doNothing
+    doNothing, detailsLoaded
 } = require('../actions/maps');
 const {
-    resetCurrentMap
+    resetCurrentMap, EDIT_MAP
 } = require('../actions/currentMap');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {toggleControl} = require('../actions/controls');
@@ -30,7 +32,7 @@ const {
     mapDetailsUriFromIdSelector, isMapsLastPageSelector
 } = require('../selectors/maps');
 const {
-    mapIdSelector
+    mapIdSelector, mapInfoDetailsUriFromIdSelector
 } = require('../selectors/map');
 const {
     currentMapDetailsTextSelector, currentMapIdSelector,
@@ -106,18 +108,11 @@ const saveResourceDetailsEpic = (action$, store) =>
     Epics used to fetch and/or open the details modal
 */
 const fetchDetailsFromResourceEpic = (action$, store) =>
-    action$.ofType(OPEN_OR_FETCH_DETAILS)
-    .filter(a => a.fetch)
-    .switchMap((a) => {
+    action$.ofType(EDIT_MAP)
+    .switchMap(() => {
         const state = store.getState();
         const detailsUri = currentMapDetailsUriSelector(state);
         if (!detailsUri || detailsUri === "NODATA") {
-            if (a.open) {
-                return Rx.Observable.of(
-                    updateDetails("", true, ""),
-                    toggleDetailsSheet(a.readOnly)
-                );
-            }
             return Rx.Observable.of(
                 updateDetails("", true, "")
             );
@@ -126,12 +121,6 @@ const fetchDetailsFromResourceEpic = (action$, store) =>
         return Rx.Observable.fromPromise(GeoStoreApi.getData(detailsId)
             .then(data => data))
             .switchMap((details) => {
-                if (a.open) {
-                    return Rx.Observable.of(
-                        updateDetails(details, true, details),
-                        toggleDetailsSheet(a.readOnly)
-                    );
-                }
                 return Rx.Observable.of(
                     updateDetails(details, true, details)
                 );
@@ -195,13 +184,12 @@ const fetchDataForDetailsPanel = (action$, store) =>
     .switchMap(() => {
         const state = store.getState();
         const mapId = mapIdSelector(state);
-        const detailsUri = mapDetailsUriFromIdSelector(state, mapId);
+        const detailsUri = mapInfoDetailsUriFromIdSelector(state);
         const detailsId = getIdFromUri(detailsUri);
         return Rx.Observable.fromPromise(GeoStoreApi.getData(detailsId)
             .then(data => data))
             .switchMap((details) => {
                 return Rx.Observable.from( [
-                        toggleControl("details", "enabled"),
                         closeFeatureGrid(),
                         updateDetails(details, true, details
                     )]
@@ -211,7 +199,7 @@ const fetchDataForDetailsPanel = (action$, store) =>
                 return Rx.Observable.of(basicError({
                     message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorFetchingDetailsOfMap") + mapId}));
             });
-    });
+    }).startWith(toggleControl("details", "enabled"));
 
 const closeDetailsPanelEpic = (action$) =>
     action$.ofType(CLOSE_DETAILS_PANEL)
@@ -220,7 +208,24 @@ const closeDetailsPanelEpic = (action$) =>
                 resetCurrentMap()
             ])
     );
+const storeDetailsInfoEpic = (action$, store) =>
+    action$.ofType(MAP_INFO_LOADED)
+    .switchMap(() => {
+        const mapId = mapIdSelector(store.getState());
+        return Rx.Observable.fromPromise(
+            GeoStoreApi.getResourceAttribute(mapId, "details")
+            .then(res => res.data)
+        )
+        .switchMap((details) => {
+            return Rx.Observable.of(
+                    detailsLoaded(mapId, details)
+                );
+        });
+    });
+
+
 module.exports = {
+    storeDetailsInfoEpic,
     closeDetailsPanelEpic,
     fetchDataForDetailsPanel,
     mapCreatedNotificationEpic,

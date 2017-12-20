@@ -112,6 +112,15 @@ var Api = {
                 }
             }, options)));
     },
+    getResourceAttribute: function(resourceId, name, options = {}) {
+        return axios.get(
+            "resources/resource/" + resourceId + "/attributes/" + name,
+            this.addBaseUrl(_.merge({
+                headers: {
+                    'Content-Type': "application/xml"
+                }
+            }, options)));
+    },
     putResourceMetadata: function(resourceId, newName, newDescription, options) {
         return axios.put(
             "resources/resource/" + resourceId,

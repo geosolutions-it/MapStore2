@@ -12,6 +12,7 @@ const {Glyphicon, Panel} = require('react-bootstrap');
 const ContainerDimensions = require('react-container-dimensions').default;
 const Dock = require('react-dock').default;
 const BorderLayout = require('../layout/BorderLayout');
+const Spinner = require('react-spinkit');
 
 class DetailsPanel extends React.Component {
     static propTypes = {
@@ -70,10 +71,11 @@ class DetailsPanel extends React.Component {
                 <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
                     <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
                         <BorderLayout>
-                            {this.props.detailsText &&
-                                <div className="ms-details-preview-container">
-                                    <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: this.props.detailsText }} />
-                                </div>}
+                            <div className="ms-details-preview-container">
+                                    {!this.props.detailsText ?
+                                        <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> :
+                                        <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: this.props.detailsText }} />}
+                            </div>
                         </BorderLayout>
                     </Panel>
                 </Dock>

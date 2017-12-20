@@ -15,13 +15,12 @@ const Portal = require('../../misc/Portal');
 const ResizableModal = require('../../misc/ResizableModal');
 require('react-quill/dist/quill.snow.css');
 require('./css/modals.css');
-
+const Spinner = require('react-spinkit');
 const {Grid, Row, Col} = require('react-bootstrap');
 const Message = require('../../I18N/Message');
 const Toolbar = require('../../misc/toolbar/Toolbar');
-const Spinner = require('react-spinkit');
 const LocaleUtils = require('../../../utils/LocaleUtils');
-// const axios = require('../../../libs/ajax');
+
 
 /**
  * A Modal window to show map metadata form
@@ -88,7 +87,6 @@ class MetadataModal extends React.Component {
             onUndoDetails: () => {},
             onToggleGroupProperties: () => {},
             onToggleUnsavedChangesModal: () => {},
-            onOpenOrFetchDetails: () => {},
             onToggleDetailsSheet: () => {},
             onUpdateDetails: () => {},
             onDeleteDetails: () => {},
@@ -203,7 +201,7 @@ class MetadataModal extends React.Component {
                         show
                         >
                         <div className="ms-detail-body">
-                            <div className="ql-editor" dangerouslySetInnerHTML={{__html: this.props.map.detailsText || ''}} />
+                            {!this.props.map.detailsText ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : <div className="ql-editor" dangerouslySetInnerHTML={{__html: this.props.map.detailsText || ''}} />}
                         </div>
                     </ResizableModal>
                 ) : (<ResizableModal
@@ -288,7 +286,7 @@ class MetadataModal extends React.Component {
                         <Col xs={6}>
                             <div className="ms-details-sheet">
                                 <div className="pull-right">
-                                    <Toolbar
+                                    {!this.props.map.detailsText ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : <Toolbar
                                         btnDefaultProps={{ className: 'square-button-md no-border'}}
                                         buttons={[
                                             {
@@ -306,22 +304,15 @@ class MetadataModal extends React.Component {
                                                 tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.add"),
                                                 visible: !this.props.map.detailsText,
                                                 onClick: () => {
-                                                    if (!this.props.map.detailsText) {
-                                                        this.props.detailsSheetActions.onOpenOrFetchDetails({fetch: false, open: true});
-                                                        this.props.detailsSheetActions.onToggleDetailsSheet(false);
-                                                    } else {
-                                                        this.props.detailsSheetActions.onToggleDetailsSheet(false);
-                                                    }
+                                                    this.props.detailsSheetActions.onToggleDetailsSheet(false);
                                                 }
                                             }, {
                                                 glyph: 'pencil',
                                                 tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.edit"),
                                                 visible: !!this.props.map.detailsText,
                                                 onClick: () => {
-                                                    if (!this.props.map.detailsText) {
-                                                        this.props.detailsSheetActions.onOpenOrFetchDetails({fetch: true, open: true});
-                                                    } else {
-                                                        this.props.detailsSheetActions.onToggleDetailsSheet(false);
+                                                    this.props.detailsSheetActions.onToggleDetailsSheet(false);
+                                                    if (this.props.map.detailsText) {
                                                         this.props.detailsSheetActions.onUpdateDetails(this.props.map.detailsText, true);
                                                     }
                                                 }
@@ -330,7 +321,7 @@ class MetadataModal extends React.Component {
                                                 tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.delete"),
                                                 visible: !!this.props.map.detailsText,
                                                 onClick: () => { this.props.detailsSheetActions.onDeleteDetails(); }
-                                            }]}/>
+                                            }]}/>}
                                 </div>
                             </div>
                         </Col>
