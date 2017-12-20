@@ -971,8 +971,11 @@
             }
         },
         "widgets": {
+            "selectWidgetType": {
+                "title": "Select Widget Type"
+            },
             "selectChartType": {
-                "title": "Select the widget type"
+                "title": "Select the Chart type"
             },
             "title": "Title",
             "description": "Description",

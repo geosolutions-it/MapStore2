@@ -5,28 +5,25 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
 const React = require('react');
-const SideGrid = require('../../components/misc/cardgrids/SideGrid');
-const {Glyphicon} = require('react-bootststrap');
+const {onEditorChange} = require('../../actions/widgets');
+const {connect} = require('react-redux');
+const BorderLayout = require('../../components/layout/BorderLayout');
+const BuilderHeader = require('./BuilderHeader');
+const TypeSelector = connect(
+    () => {},
+    {
+        onSelect: (type) => onEditorChange("widgetType", type)
+    }
+)(require('../../components/widgets/builder/WidgetTypeSelector'));
 
-const DEFAULT_TYPES = [{
-    title: "Chart",
-    type: "chart",
-    glyph: "stats"
-}, {
-    title: "Text",
-    type: "text",
-    glyph: "sheet"
-}];
+/**
+ * Builder page that shows the type selector
+ */
+module.exports = ({enabled} = {}) =>
 
-module.exports = ({widgetTypes = DEFAULT_TYPES, onSelect= () => {}}) =>
-(<SideGrid
-    key="content"
-    onItemClick={item => {onSelect(item.type); }}
-    items={widgetTypes &&
-        widgetTypes.map( item =>
-            ({
-                ...item,
-                preview: <Glyphicon glyph={item.glyph} />
-        }))} />);
+    (<BorderLayout
+        header={<BuilderHeader />}
+        >
+        {enabled ? <TypeSelector /> : null}
+    </BorderLayout>);

@@ -10,8 +10,8 @@ const Message = require('../../I18N/Message');
 const TableView = require('./TableView');
 const ChartView = require('./ChartView');
 const InfoPopover = require('./InfoPopover');
-const BorderLayout = require('../../layout/BorderLayout');
 const ConfirmModal = require('../../maps/modals/ConfirmModal');
+const WidgetContainer = require('./WidgetContainer');
 const {
      Glyphicon,
      ButtonToolbar,
@@ -43,35 +43,31 @@ module.exports = ({
     onEdit= () => {},
     onDelete=() => {},
     ...props}) =>
-    (<div className="mapstore-widget-card" id={`widget-chart-${id}`}>
-        <BorderLayout header={(<div className="mapstore-widget-info">
-                    <div className="mapstore-widget-header">
-                        {renderHeaderLeftTopItem({loading, title, description, showTable, toggleTableView})}
-                        <span className="widget-title">{title}</span>
-                        <span className="mapstore-widget-options">
-                            {showTable
-                                ? null : <ButtonToolbar>
-                                <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
-                                    <MenuItem onClick={() => toggleTableView()} eventKey="1"><Glyphicon glyph="features-grid"/>&nbsp;<Message msgId="widgets.widget.menu.showChartData" /></MenuItem>
-                                    <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>
-                                    <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash"/>&nbsp;<Message msgId="widgets.widget.menu.delete" /></MenuItem>
-                                    <MenuItem onClick={() => exportCSV({data, title})} eventKey="4"><Glyphicon className="exportCSV" glyph="download"/>&nbsp;<Message msgId="widgets.widget.menu.downloadData" /></MenuItem>
-                                    <MenuItem onClick={() => exportImage({widgetDivId: `widget-chart-${id}`, title})} eventKey="4"><Glyphicon className="exportImage" glyph="download"/>&nbsp;<Message msgId="widgets.widget.menu.exportImage" /></MenuItem>
-                                </DropdownButton>
-                            </ButtonToolbar>}
-                        </span>
-                    </div>
-                </div>)}>
-                {showTable
-                    ? <TableView data={data} {...props}/>
-                : <ChartView id={id} isAnimationActive={!loading} loading={loading} data={data} series={series} iconFit {...props} />}
-                {confirmDelete ? <ConfirmModal
-                    confirmText={<Message msgId="widgets.widget.menu.delete" />}
-                    titleText={<Message msgId="widgets.widget.menu.delete" />}
-                    body={<Message msgId="widgets.widget.menu.confirmDelete" />}
-                    show={confirmDelete}
-                    onClose={() => toggleDeleteConfirm(false)}
-                    onConfirm={() => onDelete(id) }/> : null}
-        </BorderLayout>
-    </div>
+    (<WidgetContainer
+        id={`widget-chart-${id}`}
+        title={title}
+        topLeftItems={renderHeaderLeftTopItem({loading, title, description, showTable, toggleTableView})}
+        topRightItems={showTable
+            ? null : <ButtonToolbar>
+            <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
+                <MenuItem onClick={() => toggleTableView()} eventKey="1"><Glyphicon glyph="features-grid"/>&nbsp;<Message msgId="widgets.widget.menu.showChartData" /></MenuItem>
+                <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>
+                <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash"/>&nbsp;<Message msgId="widgets.widget.menu.delete" /></MenuItem>
+                <MenuItem onClick={() => exportCSV({data, title})} eventKey="4"><Glyphicon className="exportCSV" glyph="download"/>&nbsp;<Message msgId="widgets.widget.menu.downloadData" /></MenuItem>
+                <MenuItem onClick={() => exportImage({widgetDivId: `widget-chart-${id}`, title})} eventKey="4"><Glyphicon className="exportImage" glyph="download"/>&nbsp;<Message msgId="widgets.widget.menu.exportImage" /></MenuItem>
+            </DropdownButton>
+        </ButtonToolbar>}
+        >
+        {showTable
+            ? <TableView data={data} {...props}/>
+        : <ChartView id={id} isAnimationActive={!loading} loading={loading} data={data} series={series} iconFit {...props} />}
+        {confirmDelete ? <ConfirmModal
+            confirmText={<Message msgId="widgets.widget.menu.delete" />}
+            titleText={<Message msgId="widgets.widget.menu.delete" />}
+            body={<Message msgId="widgets.widget.menu.confirmDelete" />}
+            show={confirmDelete}
+            onClose={() => toggleDeleteConfirm(false)}
+            onConfirm={() => onDelete(id) }/> : null}
+        </WidgetContainer>
+
 );

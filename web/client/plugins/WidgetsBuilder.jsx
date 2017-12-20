@@ -20,7 +20,7 @@ const PropTypes = require('prop-types');
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
-const Builder = require('./widgetbuilder/ChartBuilder');
+const Builder = require('./widgetbuilder/WidgetTypeBuilder');
 
 
 class SideBarComponent extends React.Component {

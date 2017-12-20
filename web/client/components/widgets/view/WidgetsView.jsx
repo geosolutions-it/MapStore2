@@ -21,7 +21,7 @@ require('react-grid-layout-resize-prevent-collision/css/styles.css');
 require('react-grid-layout-resize-prevent-collision/css/styles.css');
 
 const ChartWidget = dependenciesToFilter(wpsChart(enhanceChartWidget(require('../widget/ChartWidget'))));
-
+const TextWidget = require('../widget/TextWidget');
 module.exports = pure(({
     id,
     width,
@@ -57,12 +57,14 @@ module.exports = pure(({
         cols={{lg: 6, md: 6, sm: 4, xs: 2, xxs: 1}}>
      {widgets.map( w => {
          return (<div key={w.id} data-grid={w.dataGrid} >
-              <ChartWidget {...w}
+              {w.widgetType === "text"
+                  ? <TextWidget />
+                  : <ChartWidget {...w}
                   exportCSV={exportCSV}
                   dependencies={dependencies}
                   exportImage={exportImage}
                   onDelete={() => deleteWidget(w)}
-                  onEdit={() => editWidget(w)} />
+                  onEdit={() => editWidget(w)} />}
          </div>);
      })}
  </ResponsiveReactGridLayout>));
