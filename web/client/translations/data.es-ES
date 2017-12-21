@@ -634,6 +634,8 @@
             "add": "Nueva",
             "filter": "Filtrar las anotaciones...",
             "undo": "¿Estás seguro de que quieres abandonar la sesión de edición de anotaciones?",
+            "zoomToTooltip": "Haga clic para ampliar la anotación",
+            "zoomTo": "Zoom",
             "field": {
                 "title": "Título",
                 "description": "Descripción"

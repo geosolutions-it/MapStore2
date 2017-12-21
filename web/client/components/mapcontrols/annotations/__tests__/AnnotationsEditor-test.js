@@ -47,6 +47,31 @@ describe("test the AnnotationsEditor Panel", () => {
         expect(viewerNode.innerHTML.indexOf('<i>desc</i>') !== -1).toBe(true);
     });
 
+    it('test display annotation with component field', () => {
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+        const MyComponent = (props) => {
+            return <span>my feature: {props.annotation.id}</span>;
+        };
+        const viewer = ReactDOM.render(<AnnotationsEditor feature={feature} {...feature} config={{fields: [
+            {
+                name: 'custom',
+                type: 'component',
+                value: MyComponent,
+                showLabel: false,
+                editable: false
+            }
+        ]}}/>, document.getElementById("container"));
+        expect(viewer).toExist();
+
+        const viewerNode = ReactDOM.findDOMNode(viewer);
+        expect(viewerNode).toExist();
+        expect(viewerNode.innerText.indexOf('my feature: 1') !== -1).toBe(true);
+    });
+
     it('test editing annotation', () => {
         const feature = {
             id: "1",

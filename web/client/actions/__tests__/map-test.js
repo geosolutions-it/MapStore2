@@ -19,6 +19,7 @@ var {
     CREATION_ERROR_LAYER,
     UPDATE_VERSION,
     INIT_MAP,
+    ZOOM_TO_EXTENT,
     creationError,
     changeMapView,
     clickOnMap,
@@ -29,7 +30,8 @@ var {
     changeMapStyle,
     changeRotation,
     updateVersion,
-    initMap
+    initMap,
+    zoomToExtent
 } = require('../map');
 
 describe('Test correctness of the map actions', () => {
@@ -85,6 +87,16 @@ describe('Test correctness of the map actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_ZOOM_LVL);
         expect(retval.zoom).toBe(testVal);
+    });
+
+    it('zoom to extent', () => {
+        const retval = zoomToExtent([-30, -30, 30, 30], 'EPSG:4326', 18);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(ZOOM_TO_EXTENT);
+        expect(retval.extent).toExist();
+        expect(retval.crs).toBe('EPSG:4326');
+        expect(retval.maxZoom).toBe(18);
     });
 
     it('changes map crs', () => {

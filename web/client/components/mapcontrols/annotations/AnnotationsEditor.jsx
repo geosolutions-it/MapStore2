@@ -38,6 +38,7 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {boolean} drawing flag to state status of drawing during editing
  * @prop {boolean} styling flag to state status of styling during editing
  * @prop {object} errors key/value set of validation errors (field_name: error_id)
+ * @prop {object} feature object with the annotation properties
  * @prop {bool} showBack shows / hides the back button
  * @prop {function} onEdit triggered when the user clicks on the edit button
  * @prop {function} onCancelEdit triggered when the user cancels current editing session
@@ -50,7 +51,7 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {function} onStyleGeometry triggered when the user clicks on the style button
  * @prop {function} onSetStyle triggered when the user changes a style property
  *
- * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property.
+ * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
 class AnnotationsEditor extends React.Component {
     static displayName = 'AnnotationsEditor';
@@ -74,13 +75,15 @@ class AnnotationsEditor extends React.Component {
         styling: PropTypes.bool,
         errors: PropTypes.object,
         showBack: PropTypes.bool,
-        config: PropTypes.object
+        config: PropTypes.object,
+        feature: PropTypes.object
     };
 
     static defaultProps = {
         config: defaultConfig,
         errors: {},
-        showBack: false
+        showBack: false,
+        feature: {}
     };
 
     state = {
@@ -91,6 +94,21 @@ class AnnotationsEditor extends React.Component {
         if (newProps.id !== this.props.id) {
             this.setState({
                 editedFields: {}
+            });
+        }
+    }
+
+    componentWillUpdate(newProps) {
+        const editing = this.props.editing && (this.props.editing.properties.id === this.props.id);
+        const newEditing = newProps.editing && (newProps.editing.properties.id === newProps.id);
+
+        if (!editing && newEditing) {
+            const newConfig = assign({}, defaultConfig, newProps.config);
+            this.setState({
+                editedFields: newConfig.fields
+                    .reduce((a, field) => {
+                        return assign({}, a, { [field.name]: newProps[field.name] });
+                    }, {})
             });
         }
     }
@@ -109,7 +127,7 @@ class AnnotationsEditor extends React.Component {
                     <span><p key={field.name} className={"mapstore-annotations-info-viewer-item mapstore-annotations-info-viewer-" + field.name + ' ' + additionalCls}>
                         {field.showLabel ? <label><Message msgId={"annotations.field." + field.name}/></label> : null}
                         {isError ? this.renderErrorOn(field.name) : ''}
-                        {this.renderProperty(field, this.props[field.name], editing)}
+                        {this.renderProperty(field, this.props[field.name] || field.value, editing)}
                     </p>
                     </span>
                 );
@@ -179,6 +197,9 @@ class AnnotationsEditor extends React.Component {
             switch (field.type) {
                 case 'html':
                     return <ReactQuill readOnly={this.props.drawing} value={fieldValue || ''} onChange={(val) => this.change(field.name, val)}/>;
+                case 'component':
+                    const Component = fieldValue;
+                    return <prop editing value={<Component annotation={this.props.feature} />} onChange={(e) => this.change(field.name, e.target.value)} />;
                 default:
                     return <FormControl disabled={this.props.drawing} value={fieldValue || ''} onChange={(e) => this.change(field.name, e.target.value)}/>;
             }
@@ -187,6 +208,9 @@ class AnnotationsEditor extends React.Component {
         switch (field.type) {
             case 'html':
                 return <span dangerouslySetInnerHTML={{__html: fieldValue} }/>;
+            case 'component':
+                const Component = fieldValue;
+                return <Component annotation={this.props.feature} />;
             default:
                 return fieldValue;
         }

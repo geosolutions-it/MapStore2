@@ -98,6 +98,9 @@ function mapConfig(state = null, action) {
                     // NOTE: STATE should contain size !!!
                 zoom = MapUtils.getZoomForExtent(mapBBounds, state.size, 0, 21, null);
             }
+            if (action.maxZoom && zoom > action.maxZoom) {
+                zoom = action.maxZoom;
+            }
             let newbounds = {minx: bounds[0], miny: bounds[1], maxx: bounds[2], maxy: bounds[3]};
             let newbbox = assign({}, state.bbox, {bounds: newbounds});
             return assign({}, state, {

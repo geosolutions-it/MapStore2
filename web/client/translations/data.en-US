@@ -632,6 +632,8 @@
             "filter": "Filter annotations...",
             "undo": "Are you sure you want to abandon the annotation editing session?",
             "title": "Annotations",
+            "zoomToTooltip": "Click to zoom on annotation",
+            "zoomTo": "Zoom",
             "field": {
                 "title": "Title",
                 "description": "Description"
