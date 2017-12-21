@@ -14,7 +14,7 @@ const Message = require('../components/I18N/Message');
 const {mapFromIdSelector} = require('../selectors/maps');
 const {mapIdSelector, mapInfoDetailsUriFromIdSelector} = require('../selectors/map');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-const {currentMapDetailsTextSelector} = require('../selectors/currentMap');
+const {currentMapDetailsTextSelector} = require('../selectors/currentmap');
 const {openDetailsPanel, closeDetailsPanel} = require("../actions/maps");
 const {get} = require("lodash");
 
