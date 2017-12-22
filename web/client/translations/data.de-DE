@@ -213,7 +213,11 @@
                     "deletedSuccesfully": "Das Vorschaubild wurde korrekt entfernt",
                     "savedSuccesfully": "Das Vorschaubild wurde korrekt entfernt",
                     "updatedSuccesfully": "Das Thumbnail wurde korrekt aktualisiert"
-                }
+                },
+                "errorWhenSaving": "Beim Speichern ist ein Fehler aufgetreten",
+                "errorWhenUpdating": "Während des Aktualisierungsprozesses ist ein Fehler aufgetreten",
+                "errorWhenDeleting": "Beim Löschen ist ein Fehler aufgetreten",
+                "errorSizeExceeded": "Bitte verkleinern Sie die Größe der Details oder die Qualität der Bilder"
             },
             "search": "Suche nach Karten..."
         },

@@ -50,6 +50,7 @@ class ResizableModal extends React.Component {
         buttons: PropTypes.array,
         size: PropTypes.string,
         showClose: PropTypes.bool,
+        disabledClose: PropTypes.bool,
         bodyClassName: PropTypes.string
     };
 
@@ -59,6 +60,7 @@ class ResizableModal extends React.Component {
         title: '',
         clickOutEnabled: true,
         showClose: true,
+        disabledClose: false,
         fullscreen: false,
         fullscreenType: 'full',
         buttons: [],
@@ -101,7 +103,8 @@ class ResizableModal extends React.Component {
                                 <Glyphicon
                                     glyph="1-close"
                                     className="ms-header-btn"
-                                    onClick={this.props.onClose}/>
+                                    onClick={this.props.onClose}
+                                    disabled={this.props.disabledClose}/>
                             }
                         </h4>
                     </span>

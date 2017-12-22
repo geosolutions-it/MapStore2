@@ -213,7 +213,11 @@
                     "deletedSuccesfully": "L'anteprima è stata eliminata correttamente",
                     "savedSuccesfully": "L'anteprima è stata salvata correttamente",
                     "updatedSuccesfully": "L'anteprima è stata aggiornata correttamente"
-                }
+                },
+                "errorWhenSaving": "C'è stato un errore durante il salvataggio",
+                "errorWhenUpdating": "C'è stato un errore durante l'aggiornamento",
+                "errorWhenDeleting": "C'è stato un errore durante la cancellazione",
+                "errorSizeExceeded": "Riduci il contenuto o la qualità delle immagini"
             },
 			"search": "Cerca mappe..."
 		},

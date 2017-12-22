@@ -214,7 +214,11 @@
                     "deletedSuccesfully": "La vignette a été supprimée correctement",
                     "savedSuccesfully": "La vignette a été supprimée correctement",
                     "updatedSuccesfully": "La vignette a été mise à jour correctement"
-                }
+                },
+                "errorWhenSaving": "Une erreur est survenue lors du processus d'enregistrement",
+                "errorWhenUpdating": "Une erreur s'est produite lors du processus de mise à jour",
+                "errorWhenDeleting": "Une erreur s'est produite lors du processus de suppression",
+                "errorSizeExceeded": "S'il vous plaît, réduisez la taille des détails ou la qualité des images"
             },
             "search": "rechercher des cartes ..."
 		},

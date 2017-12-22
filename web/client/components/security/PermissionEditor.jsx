@@ -30,6 +30,7 @@ class PermissionEditor extends React.Component {
         onAddPermission: PropTypes.func,
         buttonSize: PropTypes.string,
         includeCloseButton: PropTypes.bool,
+        disabled: PropTypes.bool,
         map: PropTypes.object,
         style: PropTypes.object,
         fluid: PropTypes.bool,
@@ -51,6 +52,7 @@ class PermissionEditor extends React.Component {
     };
 
     static defaultProps = {
+        disabled: true,
         id: "PermissionEditor",
         onGroupsChange: ()=> {},
         onAddPermission: ()=> {},
@@ -238,7 +240,7 @@ class PermissionEditor extends React.Component {
                             <td style={{width: "50px"}}>
                                 <Button
                                     ref="buttonAdd"
-                                    disabled={!(this.props.newGroup && this.props.newGroup.id && this.props.newGroup.id.toString())}
+                                    disabled={!(this.props.newGroup && this.props.newGroup.id && this.props.newGroup.id.toString()) || this.props.disabled}
                                     bsSize="small"
                                     bsStyle="success"
                                     onClick={this.onAddPermission} ><Glyphicon style={{fontSize: "22px"}} glyph="plus"/></Button>

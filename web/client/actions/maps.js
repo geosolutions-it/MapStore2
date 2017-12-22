@@ -53,6 +53,7 @@ const SET_UNSAVED_CHANGES = 'MAPS:SET_UNSAVED_CHANGES';
 const OPEN_DETAILS_PANEL = 'DETAILS:OPEN_DETAILS_PANEL';
 const CLOSE_DETAILS_PANEL = 'DETAILS:CLOSE_DETAILS_PANEL';
 const DETAILS_LOADED = 'DETAILS:DETAILS_LOADED';
+const DETAILS_SAVING = 'DETAILS:DETAILS_SAVING';
 
 
 /**
@@ -455,6 +456,7 @@ function updateMapMetadata(resourceId, newName, newDescription, onReset, options
             dispatch(mapMetadataUpdated(resourceId, newName, newDescription, "success"));
             if (onReset) {
                 dispatch(onReset);
+                dispatch(onDisplayMetadataEdit(false));
                 dispatch(resetCurrentMap());
             }
         }).catch((e) => {
@@ -524,8 +526,8 @@ function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categor
         let metadata = {
             name: nameThumbnail
         };
+        let state = getState();
         return GeoStoreApi.createResource(metadata, dataThumbnail, categoryThumbnail, options).then((response) => {
-            let state = getState();
             let groups = userGroupSecuritySelector(state);
             let index = findIndex(groups, function(g) { return g.groupName === "everyone"; });
             let group;
@@ -584,39 +586,40 @@ function saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbna
         }
         if (!isNil(dataThumbnail) && !isNil(metadataMap)) {
             dispatch(createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap,
-                updateMapMetadata(resourceIdMap, metadataMap.name, metadataMap.description, onDisplayMetadataEdit(false), options), null, options));
+                updateMapMetadata(resourceIdMap, metadataMap.name, metadataMap.description, !detailsChanged ? onDisplayMetadataEdit(false) : null, options), null, options, detailsChanged));
         } else if (!isNil(dataThumbnail)) {
-            dispatch(createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, null, onDisplayMetadataEdit(false), options));
+            dispatch(createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, null, !detailsChanged ? onDisplayMetadataEdit(false) : null, options));
         } else if (!isNil(metadataMap)) {
-            dispatch(updateMapMetadata(resourceIdMap, metadataMap.name, metadataMap.description, onDisplayMetadataEdit(false), options));
-        } else {
-            dispatch(resetUpdating(resourceIdMap));
-            dispatch(onDisplayMetadataEdit(false));
+            dispatch(updateMapMetadata(resourceIdMap, metadataMap.name, metadataMap.description, !detailsChanged ? onDisplayMetadataEdit(false) : null, options));
         }
-        // launch this only if details has changed
-
-        dispatch(resetCurrentMap());
+        if (isNil(dataThumbnail) && isNil(metadataMap) && !detailsChanged) {
+            dispatch(resetUpdating(resourceIdMap));
+            /*dispatch(onDisplayMetadataEdit(false));
+            dispatch(resetCurrentMap());*/
+        }
     };
 }
 
 /**
- * Deletes a thubnail.
+ * Deletes a thumbnail.
  * @memberof actions.maps
  * @param  {number} resourceId    the id of the thumbnail
  * @param  {number} resourceIdMap the id of the map
  * @param  {object} [options]       options for the request, if any
  * @return {thunk}               performs thumbnail cancellation
  */
-function deleteThumbnail(resourceId, resourceIdMap, options) {
+function deleteThumbnail(resourceId, resourceIdMap, options, reset) {
     return (dispatch) => {
+        dispatch(mapUpdating(resourceIdMap));
         GeoStoreApi.deleteResource(resourceId, options).then(() => {
-            dispatch(mapUpdating(resourceIdMap));
             if (resourceIdMap) {
                 dispatch(updateAttribute(resourceIdMap, "thumbnail", "NODATA", "STRING", options));
-                dispatch(resetUpdating(resourceIdMap));
+                if (reset) {
+                    dispatch(resetUpdating(resourceIdMap));
+                }
             }
-            dispatch(onDisplayMetadataEdit(false));
-            dispatch(resetCurrentMap());
+            /*dispatch(onDisplayMetadataEdit(false));
+            dispatch(resetCurrentMap());*/
         }).catch((e) => {
             // Even if is not possible to delete the Thumbnail from geostore -> reset the attribute in order to display the default thumbnail
             if (e.status === 403) {
@@ -818,6 +821,17 @@ function detailsLoaded(mapId, detailsUri) {
     };
 }
 /**
+ * detailsSaving
+ * @memberof actions.maps
+ * @return {action}        type `DETAILS_SAVING`
+*/
+function detailsSaving(saving) {
+    return {
+        type: DETAILS_SAVING,
+        saving
+    };
+}
+/**
  * do nothing action
  * @memberof actions.maps
  * @return {action}        type `DO_NOTHING`
@@ -872,6 +886,7 @@ module.exports = {
     closeDetailsPanel, CLOSE_DETAILS_PANEL,
     deleteMap, DELETE_MAP,
     detailsLoaded, DETAILS_LOADED,
+    detailsSaving, DETAILS_SAVING,
     metadataChanged,
     loadMaps,
     mapsLoading,

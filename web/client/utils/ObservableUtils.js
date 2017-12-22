@@ -8,11 +8,6 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const LocaleUtils = require('../utils/LocaleUtils');
 const {basicSuccess, basicError} = require('../utils/NotificationUtils');
 
-const catchGeoStoreApi = e => {
-    return Rx.Observable.of(basicError({
-        message: "warning: " + e.status + "  " + e.data
-    }));
-};
 class OGCError extends Error {
     constructor(message, code) {
         super(message);
@@ -62,7 +57,7 @@ const createAssociatedResource = ({attribute, permissions, mapId, metadata, valu
                 actions.push(basicSuccess({message: LocaleUtils.getMessageById(messages, "maps.feedback." + attribute + ".savedSuccesfully" ) }));
                 return Rx.Observable.from(actions);
             })
-        .catch(catchGeoStoreApi);
+        .catch(() => Rx.Observable.of(basicError({message: "maps.feedback.errorWhenSaving"})));
 };
 
 const updateAssociatedResource = ({permissions, resourceId, value, attribute, options, messages} = {}) => {
@@ -74,8 +69,7 @@ const updateAssociatedResource = ({permissions, resourceId, value, attribute, op
                 actions.push(updatePermissions(id, permissions));
                 return Rx.Observable.from(actions);
             })
-        .catch(catchGeoStoreApi);
-
+        .catch(() => Rx.Observable.of(basicError({message: "maps.feedback.errorWhenUpdating"})));
 };
 const deleteAssociatedResource = ({mapId, attribute, type, resourceId, options, messages} = {}) => {
     return Rx.Observable.fromPromise(GeoStoreApi.deleteResource(resourceId, options)
@@ -90,7 +84,7 @@ const deleteAssociatedResource = ({mapId, attribute, type, resourceId, options, 
                 actions.push(doNothing());
                 return Rx.Observable.from(actions);
             })
-        .catch(catchGeoStoreApi);
+        .catch(() => Rx.Observable.of(basicError({message: "maps.feedback.errorWhenDeleting"})));
 };
 
 const deleteResourceById = (resId, options) => resId ?

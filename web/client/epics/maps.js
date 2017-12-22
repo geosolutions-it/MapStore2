@@ -20,7 +20,8 @@ const {
     CLOSE_DETAILS_PANEL,
     setDetailsChanged, updateDetails,
     mapDeleting, mapDeleted, loadMaps,
-    doNothing, detailsLoaded
+    doNothing, detailsLoaded, detailsSaving, onDisplayMetadataEdit,
+    RESET_UPDATING, resetUpdating, toggleDetailsSheet
 } = require('../actions/maps');
 const {
     resetCurrentMap, EDIT_MAP
@@ -48,19 +49,27 @@ const {manageMapResource, deleteResourceById, getIdFromUri} = require('../utils/
 const ConfigUtils = require('../utils/ConfigUtils');
 
 /**
-    If details are changed from the original ones then set unsavedCahnges to true
+    If details are changed from the original ones then set unsavedChanges to true
 */
 const setDetailsChangedEpic = (action$, store) =>
     action$.ofType(SAVE_DETAILS)
     .switchMap((a) => {
+        let actions = [];
         const state = store.getState();
         const detailsUri = currentMapDetailsUriSelector(state);
+        if (a.detailsText.length <= 500000) {
+            actions.push(toggleDetailsSheet(true));
+        } else {
+            actions.push(basicError({message: "maps.feedback.errorSizeExceeded"}));
+        }
         if (!detailsUri) {
-            return Rx.Observable.of(setDetailsChanged(a.detailsText !== "<p><br></p>"));
+            actions.push(setDetailsChanged(a.detailsText !== "<p><br></p>"));
+            return Rx.Observable.from(actions);
         }
         const originalDetails = currentMapOriginalDetailsTextSelector(state);
         const currentDetails = currentMapDetailsTextSelector(state);
-        return Rx.Observable.of(setDetailsChanged(originalDetails !== currentDetails));
+        actions.push(setDetailsChanged(originalDetails !== currentDetails));
+        return Rx.Observable.from(actions);
     });
 
 
@@ -101,7 +110,7 @@ const saveResourceDetailsEpic = (action$, store) =>
         }
         return manageMapResource({
             ...params
-        });
+        }).concat([detailsSaving(false), resetUpdating(mapId)]).startWith(detailsSaving(true));
     });
 
 /**
@@ -194,17 +203,24 @@ const fetchDataForDetailsPanel = (action$, store) =>
                         updateDetails(details, true, details
                     )]
                 );
-            })
+            }).startWith(toggleControl("details", "enabled"))
             .catch(() => {
                 return Rx.Observable.of(basicError({
                     message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorFetchingDetailsOfMap") + mapId}));
             });
-    }).startWith(toggleControl("details", "enabled"));
+    });
 
 const closeDetailsPanelEpic = (action$) =>
     action$.ofType(CLOSE_DETAILS_PANEL)
     .switchMap(() => Rx.Observable.from( [
                 toggleControl("details", "enabled"),
+                resetCurrentMap()
+            ])
+    );
+const resetCurrentMapEpic = (action$) =>
+    action$.ofType(RESET_UPDATING)
+    .switchMap(() => Rx.Observable.from( [
+                onDisplayMetadataEdit(false),
                 resetCurrentMap()
             ])
     );
@@ -214,9 +230,14 @@ const storeDetailsInfoEpic = (action$, store) =>
         const mapId = mapIdSelector(store.getState());
         return Rx.Observable.fromPromise(
             GeoStoreApi.getResourceAttribute(mapId, "details")
-            .then(res => res.data)
+            .then(res => res.data).catch(() => {
+                return null;
+            })
         )
         .switchMap((details) => {
+            if (!details) {
+                return Rx.Observable.empty();
+            }
             return Rx.Observable.of(
                     detailsLoaded(mapId, details)
                 );
@@ -225,6 +246,7 @@ const storeDetailsInfoEpic = (action$, store) =>
 
 
 module.exports = {
+    resetCurrentMapEpic,
     storeDetailsInfoEpic,
     closeDetailsPanelEpic,
     fetchDataForDetailsPanel,

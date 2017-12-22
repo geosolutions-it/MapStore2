@@ -14,7 +14,7 @@ const {
     saveDetails, SET_DETAILS_CHANGED, mapCreated,
     CLOSE_DETAILS_PANEL, closeDetailsPanel,
     openDetailsPanel, UPDATE_DETAILS,
-    MAP_DELETING, MAP_DELETED, deleteMap
+    MAP_DELETING, MAP_DELETED, deleteMap, TOGGLE_DETAILS_SHEET
 } = require('../../actions/maps');
 const {clear, SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {TOGGLE_CONTROL} = require('../../actions/controls');
@@ -108,8 +108,9 @@ describe('maps Epics', () => {
         setTimeout( () => {
             try {
                 const actions = store.getActions();
-                expect(actions.length).toBe(2);
-                expect(actions[1].type).toBe(SET_DETAILS_CHANGED);
+                expect(actions.length).toBe(3);
+                expect(actions[1].type).toBe(TOGGLE_DETAILS_SHEET);
+                expect(actions[2].type).toBe(SET_DETAILS_CHANGED);
             } catch (e) {
                 return done(e);
             }
@@ -124,6 +125,9 @@ describe('maps Epics', () => {
                 switch (action.type) {
                     case SET_DETAILS_CHANGED:
                         expect(action.detailsChanged).toBe(false);
+                        break;
+                    case TOGGLE_DETAILS_SHEET:
+                        expect(action.detailsSheetReadOnly).toBe(true);
                         break;
                     default:
                         expect(true).toBe(false);

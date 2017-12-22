@@ -52,6 +52,7 @@ class Metadata extends React.Component {
                     key="mapName"
                     type="text"
                     onChange={this.changeName}
+                    disabled={this.props.map.saving}
                     placeholder={this.props.namePlaceholderText}
                     defaultValue={this.props.map ? this.props.map.name : ""}
                     value={this.props.map && this.props.map.metadata && this.props.map.metadata.name || ""}/>
@@ -62,6 +63,7 @@ class Metadata extends React.Component {
                     key="mapDescription"
                     type="text"
                     onChange={this.changeDescription}
+                    disabled={this.props.map.saving}
                     placeholder={this.props.descriptionPlaceholderText}
                     defaultValue={this.props.map ? this.props.map.description : ""}
                     value={this.props.map && this.props.map.metadata && this.props.map.metadata.description || ""}/>

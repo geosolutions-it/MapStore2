@@ -37,7 +37,7 @@ describe('This test for Thumbnail', () => {
     });
 
     it('creates the component with defaults, loading=false', () => {
-        const thumbnailItem = ReactDOM.render(<Thumbnail loading={false}/>, document.getElementById("container"));
+        const thumbnailItem = ReactDOM.render(<Thumbnail loading={false} map={{saving: false}}/>, document.getElementById("container"));
         expect(thumbnailItem).toExist();
 
         const thumbnailItemDom = ReactDOM.findDOMNode(thumbnailItem);

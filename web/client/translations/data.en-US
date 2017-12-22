@@ -213,7 +213,11 @@
                     "deletedSuccesfully": "The thumbnail have been removed correctly",
                     "savedSuccesfully": "The thumbnail have been saved correctly",
                     "updatedSuccesfully": "The thumbnail have been updated correctly"
-                }
+                },
+                "errorWhenSaving": "An error occurred during saving process",
+                "errorWhenUpdating": "An error occurred during updating process",
+                "errorWhenDeleting": "An error occurred during deleting process",
+                "errorSizeExceeded": "Please, reduce the size of the details or the quality of the images"
             },
 			"search": "search for maps..."
 		},

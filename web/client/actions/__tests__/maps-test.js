@@ -39,7 +39,7 @@ const {
     METADATA_CHANGED, metadataChanged,
     updateAttribute, saveAll
 } = require('../maps');
-const {RESET_CURRENT_MAP} = require('../currentMap');
+
 let GeoStoreDAO = require('../../api/GeoStoreDAO');
 let oldAddBaseUri = GeoStoreDAO.addBaseUrl;
 
@@ -90,9 +90,9 @@ describe('Test correctness of the maps actions', () => {
         let count = 0;
         retFun((action) => {
             switch (count) {
-            case 0: expect(action.type).toBe(MAP_UPDATING); break;
-            case 1: expect(action.type).toBe("NONE"); break;
-            default: done();
+                case 0: expect(action.type).toBe(MAP_UPDATING); break;
+                case 1: expect(action.type).toBe("NONE"); break;
+                default: done();
             }
             count++;
         }, () => {});
@@ -107,9 +107,6 @@ describe('Test correctness of the maps actions', () => {
             switch (count) {
             case 0: expect(action.type).toBe(MAP_UPDATING); break;
             case 1: expect(action.type).toBe("NONE"); break;
-            case 2: expect(action.type).toBe(RESET_UPDATING); break;
-            case 3: expect(action.type).toBe(DISPLAY_METADATA_EDIT); break;
-            case 4: expect(action.type).toBe(RESET_CURRENT_MAP); done(); break;
             default: done();
             }
             count++;
@@ -125,10 +122,7 @@ describe('Test correctness of the maps actions', () => {
             switch (count) {
             case 0: expect(action.type).toBe(MAP_UPDATING); break;
             case 1: expect(action.type).toBe("NONE"); break;
-            case 2: expect(action.type).toBe(SAVE_RESOURCE_DETAILS); break;
-            case 3: expect(action.type).toBe(RESET_UPDATING); break;
-            case 4: expect(action.type).toBe(DISPLAY_METADATA_EDIT); break;
-            case 5: expect(action.type).toBe(RESET_CURRENT_MAP); done(); break;
+            case 2: expect(action.type).toBe(SAVE_RESOURCE_DETAILS); done(); break;
             default: done();
             }
             count++;

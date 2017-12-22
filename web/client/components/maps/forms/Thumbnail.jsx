@@ -134,17 +134,17 @@ class Thumbnail extends React.Component {
         const category = "THUMBNAIL";
         // user removed the thumbnail (the original url is present but not the preview)
         if (this.props.map && !data && this.props.map.thumbnail && !this.refs.imgThumbnail && !metadata) {
-            this.deleteThumbnail(this.props.map.thumbnail, this.props.map.id);
+            this.deleteThumbnail(this.props.map.thumbnail, this.props.map.id, true);
         // there is a thumbnail to upload
         }
         if (this.props.map && !data && this.props.map.newThumbnail && !this.refs.imgThumbnail && metadata) {
-            this.deleteThumbnail(this.props.map.thumbnail, this.props.map.id);
+            this.deleteThumbnail(this.props.map.thumbnail, this.props.map.id, false);
             this.props.onSaveAll(map, metadata, name, data, category, this.props.map.id);
         // there is a thumbnail to upload
         }
         // remove old one if present
         if (this.props.map.newThumbnail && data && this.refs.imgThumbnail) {
-            this.deleteThumbnail(this.props.map.thumbnail, null);
+            this.deleteThumbnail(this.props.map.thumbnail, null, false);
             // create the new one (and update the thumbnail attribute)
             this.props.onSaveAll(map, metadata, name, data, category, this.props.map.id);
         }
@@ -154,7 +154,7 @@ class Thumbnail extends React.Component {
         }
         if (!this.props.map.newThumbnail && !data && !this.refs.imgThumbnail) {
             if (this.props.map.thumbnail && metadata) {
-                this.deleteThumbnail(this.props.map.thumbnail, this.props.map.id);
+                this.deleteThumbnail(this.props.map.thumbnail, this.props.map.id, false);
             }
             this.props.onSaveAll(map, metadata, name, data, category, this.props.map.id);
         }
@@ -193,7 +193,9 @@ class Thumbnail extends React.Component {
         return (
             this.props.loading ? <div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/></div> :
 
-                <div className="dropzone-thumbnail-container">
+                <div className="dropzone-thumbnail-container" style={{
+                        pointerEvents: this.props.map.saving ? "none" : "auto"
+                    }}>
                     <label className="control-label"><Message msgId="map.thumbnail"/></label>
                     <Dropzone multiple={false} className="dropzone alert alert-info" rejectClassName="alert-danger" onDrop={this.onDrop}>
                     { this.getThumbnailUrl() ?

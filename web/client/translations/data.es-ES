@@ -213,7 +213,11 @@
                     "deletedSuccesfully": "La miniatura ha sido eliminada correctamente",
                     "savedSuccesfully": "La miniatura ha sido eliminada correctamente",
                     "updatedSuccesfully": "La miniatura se ha actualizado correctamente"
-                }
+                },
+                "errorWhenSaving": "Se produjo un error durante el proceso de guardado",
+                "errorWhenUpdating": "Se produjo un error durante el proceso de actualización",
+                "errorWhenDeleting": "Se produjo un error durante el proceso de eliminación",
+                "errorSizeExceeded": "Por favor, reduzca el tamaño de los detalles o la calidad de las imágenes"
             },
 			"search": "buscador de mapas ..."
 		},

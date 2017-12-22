@@ -37,7 +37,8 @@ const {
     TOGGLE_UNSAVED_CHANGES,
     SET_DETAILS_CHANGED,
     SET_UNSAVED_CHANGES,
-    METADATA_CHANGED
+    METADATA_CHANGED,
+    DETAILS_SAVING
 } = require('../actions/maps');
 
 const assign = require('object-assign');
@@ -166,10 +167,16 @@ function currentMap(state = {}, action) {
         });
     }
     case SAVE_DETAILS: {
-        return assign({}, state, {
+        return action.detailsText.length <= 500000 ? assign({}, state, {
             detailsText: action.detailsText,
             detailsBackup: "",
             detailsDeleted: false
+        }) : state;
+    }
+    case DETAILS_SAVING: {
+        return assign({}, state, {
+            saving: action.saving/*,
+            unsavedChanges: action.saving === false ? true : state.unsavedChanges*/
         });
     }
     case DELETE_DETAILS: {

@@ -17,6 +17,7 @@ require('react-quill/dist/quill.snow.css');
 require('./css/modals.css');
 const Spinner = require('react-spinkit');
 const {Grid, Row, Col} = require('react-bootstrap');
+const {isNil} = require('lodash');
 const Message = require('../../I18N/Message');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const LocaleUtils = require('../../../utils/LocaleUtils');
@@ -221,7 +222,6 @@ class MetadataModal extends React.Component {
                     }, {
                         text: LocaleUtils.getMessageById(this.context.messages, "map.details.save"),
                         onClick: () => {
-                            this.props.detailsSheetActions.onToggleDetailsSheet(true);
                             this.props.detailsSheetActions.onSaveDetails(this.props.map.detailsText);
                         }
                     }]}>
@@ -286,26 +286,30 @@ class MetadataModal extends React.Component {
                         <Col xs={6}>
                             <div className="ms-details-sheet">
                                 <div className="pull-right">
-                                    {!this.props.map.detailsText ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : <Toolbar
+                                    {this.props.map.saving ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : null}
+                                    {isNil(this.props.map.detailsText) ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : <Toolbar
                                         btnDefaultProps={{ className: 'square-button-md no-border'}}
                                         buttons={[
                                             {
                                                 glyph: !this.props.map.hideGroupProperties ? 'eye-close' : 'eye-open',
                                                 tooltip: !this.props.map.hideGroupProperties ? LocaleUtils.getMessageById(this.context.messages, "map.details.showPreview") : LocaleUtils.getMessageById(this.context.messages, "map.details.hidePreview"),
                                                 visible: !!this.props.map.detailsText,
-                                                onClick: () => { this.props.detailsSheetActions.onToggleGroupProperties(); }
+                                                onClick: () => { this.props.detailsSheetActions.onToggleGroupProperties(); },
+                                                disabled: this.props.map.saving
                                             }, {
                                                 glyph: 'undo',
                                                 tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.undo"),
                                                 visible: !!this.props.map.detailsBackup,
-                                                onClick: () => { this.props.detailsSheetActions.onUndoDetails(this.props.map.detailsBackup); }
+                                                onClick: () => { this.props.detailsSheetActions.onUndoDetails(this.props.map.detailsBackup); },
+                                                disabled: this.props.map.saving
                                             }, {
                                                 glyph: 'pencil-add',
                                                 tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.add"),
                                                 visible: !this.props.map.detailsText,
                                                 onClick: () => {
                                                     this.props.detailsSheetActions.onToggleDetailsSheet(false);
-                                                }
+                                                },
+                                                disabled: this.props.map.saving
                                             }, {
                                                 glyph: 'pencil',
                                                 tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.edit"),
@@ -315,12 +319,14 @@ class MetadataModal extends React.Component {
                                                     if (this.props.map.detailsText) {
                                                         this.props.detailsSheetActions.onUpdateDetails(this.props.map.detailsText, true);
                                                     }
-                                                }
+                                                },
+                                                disabled: this.props.map.saving
                                             }, {
                                                 glyph: 'trash',
                                                 tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.delete"),
                                                 visible: !!this.props.map.detailsText,
-                                                onClick: () => { this.props.detailsSheetActions.onDeleteDetails(); }
+                                                onClick: () => { this.props.detailsSheetActions.onDeleteDetails(); },
+                                                disabled: this.props.map.saving
                                             }]}/>}
                                 </div>
                             </div>
@@ -346,6 +352,7 @@ class MetadataModal extends React.Component {
             }
             return (
                 <PermissionEditor
+                    disabled={this.props.map.saving}
                     map={this.props.map}
                     user={this.props.user}
                     availablePermissions ={this.props.availablePermissions}
@@ -385,11 +392,14 @@ class MetadataModal extends React.Component {
             bodyClassName="ms-flex modal-properties-container"
             buttons={[{
                 text: LocaleUtils.getMessageById(this.context.messages, "close"),
-                onClick: this.onCloseMapPropertiesModal
+                onClick: this.onCloseMapPropertiesModal,
+                disabled: this.props.map.saving
             }, {
                 text: LocaleUtils.getMessageById(this.context.messages, "save"),
-                onClick: () => { this.onSave(); }
+                onClick: () => { this.onSave(); },
+                disabled: this.props.map.saving
             }]}
+            showClose={!this.props.map.saving}
             onClose={this.onCloseMapPropertiesModal}>
             <Grid fluid>
                 <div className="ms-map-properties">
