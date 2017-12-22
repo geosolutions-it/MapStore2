@@ -70,20 +70,23 @@ class AnnotationsEditor extends React.Component {
         onDeleteGeometry: PropTypes.func,
         onStyleGeometry: PropTypes.func,
         onSetStyle: PropTypes.func,
+        onZoom: PropTypes.func,
         editing: PropTypes.object,
         drawing: PropTypes.bool,
         styling: PropTypes.bool,
         errors: PropTypes.object,
         showBack: PropTypes.bool,
         config: PropTypes.object,
-        feature: PropTypes.object
+        feature: PropTypes.object,
+        maxZoom: PropTypes.number
     };
 
     static defaultProps = {
         config: defaultConfig,
         errors: {},
         showBack: false,
-        feature: {}
+        feature: {},
+        maxZoom: 18
     };
 
     state = {
@@ -143,6 +146,7 @@ class AnnotationsEditor extends React.Component {
 
     renderViewButtons = () => {
         return (<ButtonGroup className="mapstore-annotations-info-viewer-buttons">
+                <Button bsStyle="primary" onClick={this.zoom}><Glyphicon glyph="zoom-to" />&nbsp;<Message msgId="annotations.zoomTo" /></Button>
                 <Button bsStyle="primary" onClick={() => this.props.onEdit(this.props.id, this.props.config.multiGeometry ? 'MultiPoint' : 'Point')}><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="annotations.edit"/></Button>
                 <Button bsStyle="primary" onClick={() => this.props.onRemove(this.props.id)}><Glyphicon glyph="ban-circle"/>&nbsp;<Message msgId="annotations.remove"/></Button>
                 {this.props.showBack ? <Button bsStyle="primary" onClick={() => this.props.onCancel()}><Glyphicon glyph="back"/>&nbsp;<Message msgId="annotations.back"/></Button> : null }
@@ -284,6 +288,18 @@ class AnnotationsEditor extends React.Component {
                 {this.renderBody(editing)}
             </div>
         );
+    }
+
+    zoom = () => {
+        if (this.props.feature.geometry.type === 'MultiPoint') {
+            const extent = this.props.feature.geometry.coordinates.reduce((previous, current) => {
+                return [Math.min(previous[0], current[0]), Math.min(previous[1], current[1]), Math.max(previous[2], current[0]), Math.max(previous[3], current[1])];
+            }, [180, 90, -180, -90]);
+            this.props.onZoom(extent, 'EPSG:4326', this.props.maxZoom);
+        } else {
+            const coords = this.props.feature.geometry.coordinates;
+            this.props.onZoom([coords[0], coords[1], coords[0], coords[1]], 'EPSG:4326', this.props.maxZoom);
+        }
     }
 
     cancelEdit = () => {

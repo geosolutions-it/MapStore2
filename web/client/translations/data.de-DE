@@ -633,7 +633,6 @@
             "add": "Neue",
             "filter": "Filtern die annotationen...",
             "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
-            "zoomToTooltip": "Klicken Sie, um die Annotation zu vergrößern",
             "zoomTo": "Zoom",
             "field": {
                 "title": "Titel",

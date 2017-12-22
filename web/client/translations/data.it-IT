@@ -633,7 +633,6 @@
             "filter": "Filtra le annotazioni...",
             "undo": "Sei sicuro di voler abbandonare la modifica in corso?",
             "title": "Annotazioni",
-            "zoomToTooltip": "Click per fare zoom sull'annotazione",
             "zoomTo": "Zoom",
             "field": {
                 "title": "Titolo",

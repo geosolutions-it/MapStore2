@@ -105,7 +105,7 @@ describe("test the AnnotationsEditor Panel", () => {
             onRemove={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
 
-        let editButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[0]);
+        let editButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[1]);
 
         expect(editButton).toExist();
         TestUtils.Simulate.click(editButton);
@@ -133,7 +133,7 @@ describe("test the AnnotationsEditor Panel", () => {
             onRemove={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
 
-        let removeButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[1]);
+        let removeButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[2]);
 
         expect(removeButton).toExist();
         TestUtils.Simulate.click(removeButton);
@@ -445,5 +445,35 @@ describe("test the AnnotationsEditor Panel", () => {
 
         expect(spySetStyle.calls.length).toEqual(1);
         expect(spySetStyle.calls[0].arguments[0]).toExist();
+    });
+
+    it('test annotation zoom', () => {
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>',
+            geometry: {
+                type: 'Point',
+                coordinates: [45, 13]
+            }
+        };
+
+        const testHandlers = {
+            onZoom: () => { }
+        };
+
+        const spyZoom = expect.spyOn(testHandlers, 'onZoom');
+
+        const viewer = ReactDOM.render(<AnnotationsEditor feature={feature} {...feature} onZoom={testHandlers.onZoom}/>, document.getElementById("container"));
+        expect(viewer).toExist();
+
+        const viewerNode = ReactDOM.findDOMNode(viewer);
+        expect(viewerNode).toExist();
+        const zoomButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(viewer, "mapstore-annotations-info-viewer-buttons")[0]).querySelector('button');
+
+        expect(zoomButton).toExist();
+        TestUtils.Simulate.click(zoomButton);
+
+        expect(spyZoom.calls.length).toEqual(1);
     });
 });

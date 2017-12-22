@@ -25,55 +25,8 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
 
 const { zoomToExtent } = require('../actions/map');
 
-const { annotationsInfoSelector, annotationsListSelector, annotationSelector} = require('../selectors/annotations');
+const { annotationsInfoSelector, annotationsListSelector } = require('../selectors/annotations');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-
-const ZoomToAnnotation = connect(annotationSelector, {
-    onZoom: zoomToExtent
-})(require('../components/mapcontrols/annotations/ZoomToAnnotation'));
-
-const ZoomToAnnotationInfo = connect(() => { }, {
-    onZoom: zoomToExtent
-})(require('../components/mapcontrols/annotations/ZoomToAnnotation'));
-
-const baseFields = [
-    {
-        name: 'zoom',
-        type: 'component',
-        showLabel: false,
-        editable: false
-    },
-    {
-        name: 'title',
-        type: 'text',
-        validator: (val) => val,
-        validateError: 'annotations.mandatory',
-        showLabel: false,
-        editable: true
-    },
-    {
-        name: 'description',
-        type: 'html',
-        showLabel: true,
-        editable: true
-    }
-];
-
-const fields = baseFields.map(f => assign({}, f, f.name === 'zoom' ? {
-    value: ZoomToAnnotation
-} : {}));
-
-const fieldsInfo = baseFields.map(f => assign({}, f, f.name === 'zoom' ? {
-    value: ZoomToAnnotationInfo
-} : {}));
-
-const infoViewerSelector = createSelector([
-    annotationsInfoSelector
-], (info) => (assign({}, info, {
-    config: assign({}, info.config || {}, {
-        fields: fieldsInfo
-    })
-})));
 
 const AnnotationsEditor = connect(annotationsInfoSelector,
 {
@@ -88,10 +41,11 @@ const AnnotationsEditor = connect(annotationsInfoSelector,
     onCancelStyle: restoreStyle,
     onSaveStyle: toggleStyle,
     onSetStyle: setStyle,
-    onDeleteGeometry: removeAnnotationGeometry
+    onDeleteGeometry: removeAnnotationGeometry,
+    onZoom: zoomToExtent
 })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
 
-const AnnotationsInfoViewer = connect(infoViewerSelector,
+const AnnotationsInfoViewer = connect(annotationsInfoSelector,
 {
     onEdit: editAnnotation,
     onCancelEdit: cancelEditAnnotation,
@@ -103,7 +57,8 @@ const AnnotationsInfoViewer = connect(infoViewerSelector,
     onCancelStyle: restoreStyle,
     onSaveStyle: toggleStyle,
     onSetStyle: setStyle,
-    onDeleteGeometry: removeAnnotationGeometry
+    onDeleteGeometry: removeAnnotationGeometry,
+    onZoom: zoomToExtent
 })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
 
 const panelSelector = createSelector([annotationsListSelector], (list) => ({
@@ -223,12 +178,6 @@ const AnnotationsPlugin = connect(annotationsSelector, {
 
 module.exports = {
     AnnotationsPlugin: assign(AnnotationsPlugin, {
-        cfg: {
-            config: {
-                fields
-            }
-        }
-    }, {
         BurgerMenu: {
             name: 'annotations',
             position: 2000,
