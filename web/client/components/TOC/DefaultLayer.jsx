@@ -38,7 +38,7 @@ class DefaultLayer extends React.Component {
         filterText: PropTypes.string,
         onUpdateNode: PropTypes.func,
         titleTooltip: PropTypes.bool,
-        showExpandTitle: PropTypes.bool
+        showFullTitleOnExpand: PropTypes.bool
     };
 
     static defaultProps = {
@@ -57,7 +57,7 @@ class DefaultLayer extends React.Component {
         filterText: '',
         onUpdateNode: () => {},
         titleTooltip: false,
-        showExpandTitle: false
+        showFullTitleOnExpand: false
     };
 
     renderCollapsible = () => {
@@ -65,7 +65,7 @@ class DefaultLayer extends React.Component {
         return (
             <div key="legend" position="collapsible" className="collapsible-toc">
                 <Grid fluid>
-                    {this.props.showExpandTitle ? <Row><Col xs={12} className="toc-full-title">{this.getTitle(this.props.node)}</Col></Row> : null}
+                    {this.props.showFullTitleOnExpand ? <Row><Col xs={12} className="toc-full-title">{this.getTitle(this.props.node)}</Col></Row> : null}
                     {this.props.activateOpacityTool ?
                     <Row>
 

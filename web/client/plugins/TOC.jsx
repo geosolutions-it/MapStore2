@@ -145,7 +145,7 @@ class LayerTree extends React.Component {
         updateNode: PropTypes.func,
         removeNode: PropTypes.func,
         activateTitleTooltip: PropTypes.bool,
-        showExpandTitle: PropTypes.bool,
+        showFullTitleOnExpand: PropTypes.bool,
         activateOpacityTool: PropTypes.bool,
         activateSortLayer: PropTypes.bool,
         activateFilterLayer: PropTypes.bool,
@@ -199,7 +199,7 @@ class LayerTree extends React.Component {
         selectedNodes: [],
         activateOpacityTool: true,
         activateTitleTooltip: true,
-        showExpandTitle: false,
+        showFullTitleOnExpand: false,
         activateSortLayer: true,
         activateFilterLayer: true,
         activateMapTitle: true,
@@ -269,7 +269,7 @@ class LayerTree extends React.Component {
             <DefaultLayer
                 {...this.props.layerOptions}
                 titleTooltip={this.props.activateTitleTooltip}
-                showExpandTitle={this.props.showExpandTitle}
+                showFullTitleOnExpand={this.props.showFullTitleOnExpand}
                 onToggle={this.props.onToggleLayer}
                 activateOpacityTool={this.props.activateOpacityTool}
                 onContextMenu={this.props.onContextMenu}
@@ -411,7 +411,7 @@ class LayerTree extends React.Component {
  * @prop {boolean} cfg.activateSortLayer: activate drag and drob to sort layers, default `true`
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
  * @prop {object} cfg.layerOptions: options to pass to the layer.
- * @prop {boolean} cfg.showExpandTitle shows full length title in the legend. default `false`.
+ * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
  * For instance you can pass some stying props to the legend.
  * this example is to make the legend scrollable horizontally

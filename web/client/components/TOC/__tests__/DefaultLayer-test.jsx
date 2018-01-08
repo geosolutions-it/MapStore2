@@ -231,7 +231,7 @@ describe('test DefaultLayer module component', () => {
             opacity: 0.5
         };
 
-        let comp = ReactDOM.render(<Layer showExpandTitle visibilityCheckType="checkbox" node={l} />,
+        let comp = ReactDOM.render(<Layer showFullTitleOnExpand visibilityCheckType="checkbox" node={l} />,
             document.getElementById("container"));
         expect(comp).toExist();
         let domNode = ReactDOM.findDOMNode(comp);
