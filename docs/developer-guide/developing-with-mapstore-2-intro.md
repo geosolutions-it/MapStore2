@@ -9,7 +9,7 @@ This section is about developing your own application using the MapStore2 framew
  * [Code Conventions](code-conventions)
  * [Developers FAQ](dev-faq)
  * [How to customize the Theme](customize-theme)
- * [How to add a new language](add-new-language)
+ * [Internazionalization](internazionalization)
 
 ## Developing using plugins
 

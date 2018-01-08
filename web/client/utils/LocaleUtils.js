@@ -1,5 +1,5 @@
-/**
- * Copyright 2015, GeoSolutions Sas.
+/*
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -19,9 +19,8 @@ const nl = require('react-intl/locale-data/nl');
 addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl]);
 
 /*
- * it, en, fr, de, es are the default locales and it is preferrable to change them via configuration.
- * if you want to change it please add your supported locales in the configuration file localConfig.json
- * Please, read documentation guides on how to do this.
+ * it, en, fr, de, es are the default locales and it is preferrable to customize them via configuration.
+ * if you want to change it please read documentation guide on how to do this.
 */
 let supportedLocales = {
     "it": {
