@@ -42,6 +42,7 @@ const {
     CHANGE_SPATIAL_ATTRIBUTE,
     TOGGLE_AUTOCOMPLETE_MENU,
     SET_AUTOCOMPLETE_MODE,
+    CHANGE_SPATIAL_FILTER_VALUE,
     setAutocompleteMode,
     toggleMenu,
     changeDwithinValue,
@@ -76,7 +77,8 @@ const {
     simpleFilterFieldUpdate,
     addSimpleFilterField,
     removeSimpleFilterField,
-    removeAllSimpleFilterFields
+    removeAllSimpleFilterFields,
+    changeSpatialFilterValue
 } = require('../queryform');
 
 describe('Test correctness of the queryform actions', () => {
@@ -405,5 +407,28 @@ describe('Test correctness of the queryform actions', () => {
 
         expect(retval).toExist();
         expect(retval.type).toBe(REMOVE_ALL_SIMPLE_FILTER_FIELDS);
+    });
+    it('removeAllSimpleFilterFields', () => {
+        const arg = {
+            collectGeometries: {},
+            options: {},
+            feature: { geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }},
+            srsName: {},
+            style: {}
+        };
+        let retval = changeSpatialFilterValue(arg);
+
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_SPATIAL_FILTER_VALUE);
+        expect(retval.geometry).toBe(arg.feature.geometry);
+        expect(retval.collectGeometries).toBe(arg.collectGeometries);
+        expect(retval.options).toBe(arg.options);
+        expect(retval.feature).toBe(arg.feature);
+        expect(retval.srsName).toBe(arg.srsName);
+        expect(retval.style).toBe(arg.style);
+
     });
 });

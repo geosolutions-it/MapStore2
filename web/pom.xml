@@ -99,6 +99,8 @@
                                     <include>**/*.less</include>
                                 </includes>
                                 <excludes>
+                                    <exclude>node_modules/*</exclude>
+                                    <exclude>node_modules/**/*</exclude>
                                     <exclude>**/libs/Cesium/**/*</exclude>
                                     <exclude>**/test-resources/*</exclude>
                                 </excludes>

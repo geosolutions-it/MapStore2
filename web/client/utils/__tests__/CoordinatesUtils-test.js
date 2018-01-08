@@ -7,7 +7,7 @@
  */
 var expect = require('expect');
 var CoordinatesUtils = require('../CoordinatesUtils');
-var Proj4js = require('proj4');
+var Proj4js = require('proj4').default;
 
 describe('CoordinatesUtils', () => {
     afterEach((done) => {
@@ -384,7 +384,7 @@ describe('CoordinatesUtils', () => {
 
     it('test getViewportGeometry projection EPSG:900913 world view', () => {
 
-        /*EPSG:900913 -20037508.342789244 - 20037508.342789244 | EPSG:4326 -180 | 180*/
+        // EPSG:900913 -20037508.342789244 - 20037508.342789244 | EPSG:4326 -180 | 180
         expect(CoordinatesUtils.getViewportGeometry({
             minx: -77527937.55286229,
             miny: -32150025.592971414,
@@ -440,5 +440,13 @@ describe('CoordinatesUtils', () => {
             maxy: 43.96119355022118
         });
     });
-
+    it('test fetchProjRemotely with fake url', () => {
+        expect(typeof CoordinatesUtils.fetchProjRemotely("EPSG:3044", "base/web/client/test-resources/wms/projDef_3044.txt")).toBe("object");
+        expect(CoordinatesUtils.fetchProjRemotely("EPSG:3044", "base/web/client/test-resources/wms/projDef_3044.txt") instanceof Promise).toBeTruthy();
+    });
+    it('test determineCrs', () => {
+        expect(CoordinatesUtils.determineCrs("EPSG:4326")).toNotBe(null);
+        expect(CoordinatesUtils.determineCrs("EPSG:3004")).toBe(null);
+        expect(CoordinatesUtils.determineCrs({crs: "EPSG:3004"}).crs).toBe("EPSG:3004");
+    });
 });

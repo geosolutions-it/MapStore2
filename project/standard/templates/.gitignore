@@ -1,0 +1,10 @@
+node_modules/
+dist/
+target/
+*.sublime-*
+npm-debug.log
+coverage/
+web/.classpath
+web/.project
+backend/.classpath
+backend/.project

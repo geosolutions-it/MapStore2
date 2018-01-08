@@ -1,5 +1,154 @@
 /* query panel */
 
+.shadow-soft-up {
+    -webkit-box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06), 0 -4px 8px rgba(0, 0, 0, 0.12);
+	-moz-box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06), 0 -4px 8px rgba(0, 0, 0, 0.12);
+	box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06), 0 -4px 8px rgba(0, 0, 0, 0.12);
+}
+
+.select-in-string {
+    .rw-combobox {
+        display: inline-block;
+        min-width: 80px;
+    }
+}
+
+.mapstore-string-select {
+    position: relative;
+    display: inline-block;
+    transition: 0.1s;
+    z-index: 10;
+    &:hover {
+        transform: scale(1.05);
+        z-index: 12;
+    }
+    strong {
+        text-decoration: underline;
+    }
+
+    cursor: pointer;
+    .glyphicon-chevron-down {
+        font-size: 10px;
+        margin-left: 2px;
+
+    }
+    .m-options {
+        position: absolute;
+        background-color: @ms2-color-background;
+        .shadow-soft;
+        z-index: 10;
+        ul {
+            margin: 0;
+            padding: 5px 0;
+            li {
+                list-style-type: none;
+                padding: 0 10px;
+                min-width: @square-btn-size;
+                height: auto;
+                &:hover {
+                    color: @ms2-color-text-primary;
+                    background-color: @ms2-color-primary;
+                }
+            }
+        }
+    }
+}
+
+.m-caption {
+    font-style: italic;
+    font-family: serif;
+}
+
+.mapstore-query-builder {
+    z-index: 20;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: @ms2-color-background;
+    .shadow-soft;
+
+    .m-header {
+        .shadow-soft;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .m-footer {
+        .shadow-soft-up;
+        z-index: 10;
+    }
+
+    .ms2-border-layout-body {
+        background-color: @ms2-color-background;
+    }
+    .ms2-border-layout-body {
+        padding: @square-btn-small-size;
+
+        .mapstore-switch-panel {
+            margin-bottom: @square-btn-small-size;
+            padding: 0 @square-btn-small-size / 2;
+            border: none;
+            .shadow-soft;
+            .panel-title {
+                font-weight: bold;
+            }
+
+        }
+
+        .mapstore-conditions-group {
+            margin-bottom: @square-btn-small-size /2;
+            .col-xs-2 {
+                padding: 0;
+            }
+            .mapstore-conditions-group {
+                padding-bottom: 5px;
+                padding-left: @square-btn-small-size;
+                border-left: 2px solid contrast(@ms2-color-background);
+                .shadow-soft;
+
+            }
+            .remove-filter-button {
+                background: none;
+            }
+            margin-bottom: @square-btn-small-size /2;
+            .col-xs-2 {
+                padding: 0;
+            }
+
+        }
+    }
+
+    .query-content .filter-field-row {
+        padding-left: 0;
+        padding-right: 0;
+        height: 52px;
+        .filter-logig-header-text {
+            height: 52px;
+        }
+        & > div {
+            padding-left: 7px;
+        }
+        & > div:not(:last-child) {
+            padding-right: 0px;
+        }
+    }
+    .m-label {
+        margin-top:( @square-btn-size - @square-btn-medium-size) / 2;
+        height: @square-btn-medium-size;
+        line-height: @square-btn-medium-size;
+    }
+    .filter-field-fixed-row {
+        height: 52px;
+    }
+}
+
+/* QUERY BUILDER */
+
+/* OLD QUERY PANEL PROPS - TO REVIEW */
 .query-form-panel-container {
      background-color: darken(@ms2-color-background, 2%);
  }
@@ -40,28 +189,4 @@
 #mapstore-drawermenu #query-form-panel .querypanel > .query-filter-container {
 	margin-right: 60px;
 	margin-left: 10px;
-}
-
-#query-form-panel .querypanel {
-	background-color: darken(@ms2-color-background, 2%);
-}
-
-#query-form-panel .query-content > .container-fluid {
-	border-top: 1px dashed @ms2-color-shade-lighter;
-}
-
-#query-form-panel .querypanel > .query-filter-container {
-	border-bottom: 1px solid @ms2-color-shade-lighter;
-}
-
-#query-form-panel hr {
-	border-top: 1px dashed @ms2-color-shade-lighter;
-}
-
-#mapstore-drawermenu #query-form-panel .glyphicon {
-	font-size: @icon-size-sm;
-}
-
-#query-form-panel input.form-control {
-	border: 1px solid @ms2-color-shade-lighter;
 }

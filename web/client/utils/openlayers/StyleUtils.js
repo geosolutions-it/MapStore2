@@ -62,6 +62,19 @@ const toVectorStyle = function(layer, style) {
                 })});
             break;
         }
+        case 'GeometryCollection': {
+            newLayer.nativeStyle = new ol.style.Style({
+                radius: style.radius,
+                stroke: stroke,
+                fill: fill,
+                image: new ol.style.Circle({
+                    radius: style.radius,
+                    fill: fill,
+                    stroke: stroke
+                })
+            });
+            break;
+        }
         default: {
             newLayer.style = null;
         }

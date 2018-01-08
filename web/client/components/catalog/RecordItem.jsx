@@ -54,14 +54,14 @@ class RecordItem extends React.Component {
         record: PropTypes.object,
         authkeyParamNames: PropTypes.array,
         showGetCapLinks: PropTypes.bool,
-        zoomToLayer: PropTypes.bool
+        zoomToLayer: PropTypes.bool,
+        catalogURL: PropTypes.string
     };
 
     static defaultProps = {
         buttonSize: "small",
         crs: "EPSG:3857",
         currentLocale: 'en-US',
-        mapType: "leaflet",
         onCopy: () => {},
         onError: () => {},
         onLayerAdd: () => {},
@@ -237,7 +237,8 @@ class RecordItem extends React.Component {
                 },
                 links: this.getLinks(this.props.record),
                 params: params,
-                allowedSRS: allowedSRS
+                allowedSRS: allowedSRS,
+                catalogURL: this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier
             });
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;

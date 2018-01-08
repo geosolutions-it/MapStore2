@@ -235,7 +235,6 @@
             "toggleLayerVisibility": "Activar / desactivar la visibilidad del mapa",
             "displayLegendAndTools": "Mostrar la leyenda y las herramientas",
             "zoomToLayerExtent": "Zoom sobre la extensión del mapa",
-
             "addLayer": "Añadir capa",
             "toolZoomToLayerTooltip": "Zoom to selected layer extent",
             "toolZoomToLayersTooltip": "Zoom to selected layers extent",
@@ -245,7 +244,7 @@
             "toolTrashLayersTooltip": "Remove selected layers",
             "toolFeaturesGridTooltip": "Open Attribute Table",
             "noFilteredResults": "No results",
-            "filterPlaceholder": "Filter layers",
+            "filterPlaceholder": "Capas de filtro",
             "clearFilter": "Clear filter",
             "toolReloadLayerTooltip": "Force reload of selected layer",
             "toolReloadLayersTooltip": "Force reload of selected layers",
@@ -273,6 +272,13 @@
                 "search": "Refrescar las optiones de búsqueda",
                 "title": "Refrescar el título",
                 "dimensions": "Refrescar las dimensiones"
+            },
+            "layerMetadata": {
+                "toolLayerMetadataTooltip": "Mostrar los metadatos de la capa seleccionada",
+                "layerMetadataPanelTitle": "Metadatos de capa",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Error en la búsqueda de metadatos"
+                }
             }
         },
         "print":{
@@ -553,7 +559,7 @@
                 "filterType": "Tipo de filtro",
                 "geometric_operation": "Operación geométrica",
                 "combo_placeholder": "Select...",
-                "spatial_filter_header": "Filtro espacial",
+                "spatial_filter_header": "Region de interes",
                 "draw_start_label": "Dibuje la región de interés en el mapa",
                 "dwithin_label": "metros",
                 "details": {
@@ -569,6 +575,7 @@
                 "methods": {
                     "zone": "Zona",
                     "viewport": "Viewport",
+                    "regions": "Regiones",
                     "box": "Rectángulo",
                     "buffer": "Buffer",
                     "circle": "Círculo",
@@ -580,6 +587,15 @@
                     "contains": "Está contenido",
                     "dwithin": "Distancia desde",
                     "within": "Contiene"
+                }
+            },
+            "crossLayerFilter": {
+                "title": "Filtro de capa",
+                "targetLayer": "Capa objetivo",
+                "clear": "Eliminar filtro",
+                "operation": "Operación",
+                "errors": {
+                    "noCrossLayerAvailable": "El filtro de capa no está disponible para la capa seleccionada"
                 }
             }
         },
@@ -707,15 +723,15 @@
             "taintedMessage": "La funcionalidad de guardar está limitada por las restricciones de seguridad del navegador. Para un mejor resultado, clique con el botón derecho del ratón en la vista previa y selecionar 'Guardar como ...' (en firefox y chrome)"
         },
         "shapefile": {
-            "title": "Añadir fichero shape local",
-            "tooltip": "Añadir fichero shape local al mapa.",
-            "placeholder": "Ponga aqui sus fichero  o clique  para selecionar los shapefile  a importar. (Shapefiles deben estar dentro de un zip)",
+            "title": "Añadir fichero archivo local",
+            "tooltip": "Añadir fichero archivo local al mapa.",
+            "placeholder": "Ponga aqui sus fichero  o clique  para selecionar los archivo local a importar. (archivos compatibles: Shapefiles deben estar dentro de un zip, KML/KMZ e GPX)",
             "defaultStyle": "Estilo por defecto",
             "zoom": "Zoom sobre el fichero shape",
             "error": {
-                "select": "Seleccionar uno o más ficheros zip",
-                "shapeFileParsingError": "No se puede cargar el shapefile El archivo podría dañarse o no estar bien formado",
-                "genericLoadError": "No se puede cargar el shapefile en el mapa"
+                "select": "Seleccionar uno o más archivo local. (archivos compatibles: Shapefiles deben estar dentro de un zip, KML/KMZ e GPX)",
+                "shapeFileParsingError": "No se puede cargar el archivo local El archivo podría dañarse o no estar bien formado",
+                "genericLoadError": "No se puede cargar el archivo local en el mapa"
             },
             "add": "Añadir",
             "cancel": "Cancelar",
@@ -908,6 +924,7 @@
             },
             "noFeaturesAvailable": "No hay resultados disponibles",
             "errorSaving": "Se ha producido un error al guardar la operación",
+            "errorProjFetch": "Error al recuperar la definición de la cadena proj4 de spatialreference.org. La herramienta de sincronización no puede aplicar el filtro espacial.",
             "notSupportedGeometryTitle": "Geometry type not supported ",
             "notSupportedGeometry": "Current layer geometry type is not supported by editing but you can still edit attributes",
             "yesButton": "Si",

@@ -1,13 +1,13 @@
 language: node_js
 node_js:
-  - 4
+  - 7
 script: npm run travis
 addons:
   firefox: latest
 before_install:
     - export DISPLAY=:99.0
     - sh -e /etc/init.d/xvfb start
-    - if [[ `npm -v` != 3* ]]; then npm i -g npm@3; fi
+    - node -v
     - npm -v
 branches:
   only:

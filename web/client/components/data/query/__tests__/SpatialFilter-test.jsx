@@ -65,9 +65,8 @@ describe('SpatialFilter', () => {
         const spatialFilterDOMNode = expect(ReactDOM.findDOMNode(spatialfilter));
         expect(spatialFilterDOMNode).toExist();
 
-        let spatialPanel = spatialFilterDOMNode.actual.childNodes[0].childNodes[1].id;
+        let spatialPanel = spatialFilterDOMNode.actual.querySelector('.mapstore-switch-panel');
         expect(spatialPanel).toExist();
-        expect(spatialPanel).toBe("spatialFilterPanel");
 
         let combosPanel = spatialFilterDOMNode.actual.getElementsByClassName('panel-body');
         expect(combosPanel).toExist();
@@ -78,7 +77,7 @@ describe('SpatialFilter', () => {
 
         let logicHeader = containerFluid.childNodes[0];
         expect(logicHeader).toExist();
-        expect(logicHeader.className).toBe("logicHeader filter-field-row row");
+        expect(logicHeader.className).toBe("logicHeader filter-field-row filter-field-fixed-row row");
 
         let operationPanelRows = combosPanel[2].getElementsByClassName('row');
         expect(operationPanelRows.length).toBe(2);

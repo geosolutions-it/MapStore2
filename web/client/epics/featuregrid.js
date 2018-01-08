@@ -8,10 +8,14 @@
 const Rx = require('rxjs');
 const {get, head, isEmpty, find} = require('lodash');
 const { LOCATION_CHANGE } = require('react-router-redux');
+const Proj4js = require('proj4').default;
+const proj4 = Proj4js;
 const axios = require('../libs/ajax');
 const bbox = require('@turf/bbox');
 const {fidFilter} = require('../utils/ogc/Filter/filter');
 const {getDefaultFeatureProjection} = require('../utils/FeatureGridUtils');
+const CoordinatesUtils = require('../utils/CoordinatesUtils');
+const LayersUtils = require('../utils/LayersUtils');
 const {isSimpleGeomType} = require('../utils/MapUtils');
 const assign = require('object-assign');
 const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../actions/draw');
@@ -19,11 +23,12 @@ const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {setControlProperty} = require('../actions/controls');
 const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS} = require('../actions/wfsquery');
-const {reset, QUERY_FORM_RESET, QUERY_FORM_SEARCH} = require('../actions/queryform');
+const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 
 const {BROWSE_DATA, changeLayerProperties, refreshLayerVersion} = require('../actions/layers');
 const {purgeMapInfoResults} = require('../actions/mapInfo');
+const {getCapabilities, parseLayerCapabilities} = require('../api/WMS');
 
 const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
     saveSuccess, saveError, clearChanges, setLayer, clearSelection, toggleViewMode, toggleTool,
@@ -31,7 +36,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
-    STOP_SYNC_WMS} = require('../actions/featuregrid');
+    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter} = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL, resetControls} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
@@ -44,11 +49,29 @@ const {queryPanelSelector} = require('../selectors/controls');
 const {error, warning} = require('../actions/notifications');
 const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive} = require('../selectors/query');
 
+const {getLayerFromId} = require('../selectors/layers');
+
 const {interceptOGCError} = require('../utils/ObservableUtils');
 
 const {gridUpdateToQueryUpdate} = require('../utils/FeatureGridUtils');
 
-
+const {queryFormUiStateSelector} = require('../selectors/queryform');
+/**
+@return a spatial filter with coordinates reprojeted to nativeCrs
+*/
+const reprojectFilterInNativeCrs = (filter, nativeCrs) => {
+    let newCoords = CoordinatesUtils.reprojectGeoJson(filter.spatialField.geometry, filter.spatialField.geometry.projection || "EPSG:3857", nativeCrs).coordinates;
+    return {
+        ...filter,
+        spatialField: {
+            ...filter.spatialField,
+            geometry: {
+                ...filter.spatialField.geometry,
+                coordinates: newCoords
+            }
+        }
+    };
+};
 const setupDrawSupport = (state, original) => {
     const defaultFeatureProj = getDefaultFeatureProjection();
     let drawOptions; let geomType;
@@ -146,8 +169,9 @@ const createLoadPageFlow = (store) => ({page, size} = {}) => {
     ));
 };
 
-const createInitialQueryFlow = (action$, store, {url, name} = {}) => {
-    const createInitialQuery = () => createQuery(url, {
+const createInitialQueryFlow = (action$, store, {url, name, id} = {}) => {
+    const filterObj = get(store.getState(), `featuregrid.advancedFilters.${id}`);
+    const createInitialQuery = () => createQuery(url, filterObj || {
         featureTypeName: name,
         filterType: 'OGC',
         ogcVersion: '1.1.0'
@@ -166,6 +190,10 @@ const createInitialQueryFlow = (action$, store, {url, name} = {}) => {
 const addFilterToWMSLayer = (layer, filter) => {
     return changeLayerProperties(layer, {filterObj: filter});
 };
+// Create action to add nativeCrs to wms layer
+const addNativeCrsLayer = (layer, nativeCrs = "") => {
+    return changeLayerProperties(layer, {nativeCrs});
+};
 const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
     return changeLayerProperties(f.selectedLayer, {filterObj: undefined});
 };
@@ -177,20 +205,20 @@ const removeFilterFromWMSLayer = ({featuregrid: f} = {}) => {
  */
 module.exports = {
     featureGridBrowseData: (action$, store) =>
-        action$.ofType(BROWSE_DATA).switchMap( ({layer}) =>
-            Rx.Observable.of(
+        action$.ofType(BROWSE_DATA).switchMap( ({layer}) => {
+            const currentTypeName = get(store.getState(), "query.typeName");
+            return Rx.Observable.of(
                 setControlProperty('drawer', 'enabled', false),
                 setLayer(layer.id),
                 openFeatureGrid()
-            ).merge(
-                createInitialQueryFlow(action$, store, layer)
-            ).merge(
-                get(store.getState(), "query.typeName") !== name
-                    ? Rx.Observable.of(reset())
-                    : Rx.Observable.empty()
-
-            )
-        ),
+                ).merge(
+                    createInitialQueryFlow(action$, store, layer)
+                )
+                .merge(
+                    Rx.Observable.of(reset())
+                    .filter(() => currentTypeName !== layer.name)
+                );
+        }),
     /**
      * Intercepts layer selection to set it's id in the status and retrieve it later
      * @memberof epics.featuregrid
@@ -497,31 +525,27 @@ module.exports = {
     onOpenAdvancedSearch: (action$, store) =>
         action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
             return Rx.Observable.of(
+                loadFilter(get(store.getState(), `featuregrid.advancedFilters.${selectedLayerIdSelector(store.getState())}`)),
                 closeFeatureGrid(),
                 setControlProperty('queryPanel', "enabled", true)
-            ).merge(
-                action$.ofType(QUERY_FORM_RESET) // ON RESET YOU HAVE TO PERFORM A SEARCH AGAIN WHEN BACK
-                    .switchMap(() => action$.ofType(TOGGLE_CONTROL)
-                    .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
-                    .switchMap( () => createInitialQueryFlow(action$, store, {
-                        url: get(store.getState(), "query.url"),
-                        name: get(store.getState(), "query.typeName")
-                    }))))
+            )
             .merge(
                 Rx.Observable.race(
                     action$.ofType(QUERY_FORM_SEARCH).mergeMap((action) =>
                         Rx.Observable.of(
                             createQuery(action.searchUrl, action.filterObj),
+                            storeAdvancedSearchFilter(assign({}, queryFormUiStateSelector(store.getState()), action.filterObj)),
                             setControlProperty('queryPanel', "enabled", false),
                             openFeatureGrid()
                         )
                     ),
                     action$.ofType(TOGGLE_CONTROL)
                         .filter(({control, property} = {}) => control === "queryPanel" && (!property || property === "enabled"))
-                        .mergeMap(() =>
-                            Rx.Observable.of(
-                                openFeatureGrid()
-                            )
+                        .mergeMap(() => {
+                            const {drawStatus} = (store.getState()).draw || {};
+                            const acts = drawStatus !== 'clean' ? [changeDrawingStatus("clean", "", "featureGrid", [], {})] : [];
+                            return Rx.Observable.from(acts.concat(openFeatureGrid()));
+                        }
                     )
                 ).takeUntil(action$.ofType(OPEN_FEATURE_GRID, LOCATION_CHANGE))
             );
@@ -543,11 +567,50 @@ module.exports = {
         }),
     /**
      * start sync filter with wms layer
+     *
+     * Since the CQL_FILTER must be projected in the native crs of the layer
+     * if this info is missing and sync is active we need to perform a getCapabilites
+     * to the single layer in order to fetch this data. see #2210 issue.
      */
      startSyncWmsFilter: (action$, store) =>
         action$.ofType(TOGGLE_SYNC_WMS)
         .filter( () => isSyncWmsActive(store.getState()))
-        .switchMap(() => Rx.Observable.of({type: START_SYNC_WMS})),
+        .switchMap(() => {
+            const state = store.getState();
+            const layerId = selectedLayerIdSelector(state);
+            const objLayer = getLayerFromId(store.getState(), layerId);
+            if (!objLayer.nativeCrs) {
+                const reqUrl = LayersUtils.getCapabilitiesUrl(objLayer);
+                // update layer with nativeCrs if fetched otherwise display a warning
+                return Rx.Observable.fromPromise(
+                    getCapabilities(reqUrl, false)
+                    .then((capabilities) => {
+                        const layerCapability = parseLayerCapabilities(capabilities, objLayer);
+                        return head(layerCapability.crs) || "EPSG:3857";
+                    })).switchMap((nativeCrs) => {
+                        if (!CoordinatesUtils.determineCrs(nativeCrs)) {
+                            const EPSG = nativeCrs.split(":").length === 2 ? nativeCrs.split(":")[1] : "3857";
+                            return Rx.Observable.fromPromise(CoordinatesUtils.fetchProjRemotely(nativeCrs, CoordinatesUtils.getProjUrl(EPSG))
+                                .then(res => {
+                                    proj4.defs(nativeCrs, res.data);
+                                    return [addNativeCrsLayer(layerId, nativeCrs), startSyncWMS()];
+                                })).switchMap(actions => Rx.Observable.from(actions))
+                                .catch(() => {
+                                    return Rx.Observable.of(
+                                        warning({
+                                            title: "notification.warning",
+                                            message: "featuregrid.errorProjFetch",
+                                            position: "tc",
+                                            autoDismiss: 5
+                                        }),
+                                        startSyncWMS());
+                                });
+                        }
+                        return Rx.Observable.of(addNativeCrsLayer(layerId, nativeCrs), startSyncWMS());
+                    });
+            }
+            return Rx.Observable.of(startSyncWMS());
+        }),
     /**
      * stop sync filter with wms layer
      */
@@ -556,7 +619,8 @@ module.exports = {
         .filter( () => !isSyncWmsActive(store.getState()))
         .switchMap(() => Rx.Observable.from([removeFilterFromWMSLayer(store.getState()), {type: STOP_SYNC_WMS}])),
     /**
-     * Sync map with filter
+     * Sync map with filter.
+     *
      */
     syncMapWmsFilter: (action$, store) =>
         action$.ofType(QUERY_CREATE, UPDATE_QUERY).
@@ -566,8 +630,25 @@ module.exports = {
             })
             .switchMap(() => {
                 const {query: q, featuregrid: f} = store.getState();
+                const layerId = (f || {}).selectedLayer;
                 const filter = (q || {}).filterObj;
-                const layer = (f || {}).selectedLayer;
-                return Rx.Observable.merge(Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a), action$.ofType(START_SYNC_WMS)).map(() => addFilterToWMSLayer(layer, filter));
+                return Rx.Observable.merge(
+                    Rx.Observable.of(isSyncWmsActive(store.getState())).filter(a => a),
+                    action$.ofType(START_SYNC_WMS))
+                    .mergeMap(() => {
+                        // if a spatial filter is present AND native crs is not present, we call the getCapabilites
+                        if (filter && filter.spatialField && filter.spatialField.geometry && filter.spatialField.geometry.coordinates && filter.spatialField.geometry.coordinates[0]) {
+                            const objLayer = getLayerFromId(store.getState(), layerId);
+                            if (!objLayer.nativeCrs) {
+                                const onlyAttributeFilter = {
+                                    ...filter,
+                                    spatialField: undefined
+                                };
+                                return Rx.Observable.of(addFilterToWMSLayer(layerId, onlyAttributeFilter));
+                            }
+                            return Rx.Observable.of(addFilterToWMSLayer(layerId, reprojectFilterInNativeCrs(filter, objLayer.nativeCrs)));
+                        }
+                        return Rx.Observable.of(addFilterToWMSLayer(layerId, filter));
+                    });
             })
 };

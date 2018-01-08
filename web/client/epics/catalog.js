@@ -7,11 +7,13 @@
 */
 
 const Rx = require('rxjs');
-const {ADD_SERVICE, DELETE_SERVICE, deleteCatalogService, addCatalogService, savingService} = require('../actions/catalog');
+const {ADD_SERVICE, GET_METADATA_RECORD_BY_ID, DELETE_SERVICE, deleteCatalogService, addCatalogService, savingService} = require('../actions/catalog');
+const {showLayerMetadata} = require('../actions/layers');
 const {error, success} = require('../actions/notifications');
 const {SET_CONTROL_PROPERTY} = require('../actions/controls');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {newServiceSelector, selectedServiceSelector, servicesSelector} = require('../selectors/catalog');
+const {getSelectedLayer} = require('../selectors/layers');
 const axios = require('../libs/ajax');
 
    /**
@@ -119,5 +121,40 @@ module.exports = (API) => ({
             .filter((action) => action.control === "metadataexplorer" && action.value)
             .switchMap(() => {
                 return Rx.Observable.of(closeFeatureGrid());
+            }),
+        getMetadataRecordById: (action$, store) =>
+            action$.ofType(GET_METADATA_RECORD_BY_ID)
+            .switchMap(() => {
+                const state = store.getState();
+                const layer = getSelectedLayer(state);
+                return Rx.Observable.fromPromise(
+                    API.csw.getRecordById(layer.catalogURL)
+                )
+                .switchMap((actions) => {
+                    if (actions && actions.error) {
+                        return Rx.Observable.of(error({
+                                title: "notification.warning",
+                                message: actions.error,
+                                autoDismiss: 6,
+                                position: "tc"
+                            }), showLayerMetadata({}, false));
+                    }
+                    if (actions && actions.dc) {
+                        return Rx.Observable.of(
+                            showLayerMetadata(actions.dc, false)
+                        );
+                    }
+                })
+                .startWith(
+                    showLayerMetadata({}, true)
+                )
+                .catch(() => {
+                    return Rx.Observable.of(error({
+                            title: "notification.warning",
+                            message: "toc.layerMetadata.notification.warnigGetMetadataRecordById",
+                            autoDismiss: 6,
+                            position: "tc"
+                        }), showLayerMetadata({}, false));
+                });
             })
 });

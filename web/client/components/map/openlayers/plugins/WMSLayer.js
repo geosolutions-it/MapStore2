@@ -6,9 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/openlayers/Layers');
-var ol = require('openlayers');
-var objectAssign = require('object-assign');
+const Layers = require('../../../../utils/openlayers/Layers');
+const ol = require('openlayers');
+const {isNil} = require('lodash');
+const objectAssign = require('object-assign');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
 const {isArray} = require('lodash');
@@ -16,6 +17,11 @@ const FilterUtils = require('../../../../utils/FilterUtils');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const mapUtils = require('../../../../utils/MapUtils');
 
+/**
+    @param {object} options of the layer
+    @return the Openlayers options from the layers ones and/or default.
+    tiled params must be tru if not defined
+*/
 function wmsToOpenlayersOptions(options) {
     const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
     // NOTE: can we use opacity to manage visibility?
@@ -26,7 +32,7 @@ function wmsToOpenlayersOptions(options) {
         TRANSPARENT: options.transparent !== undefined ? options.transparent : true,
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
-        TILED: options.tiled || false,
+        TILED: !isNil(options.tiled) ? options.tiled : true,
         VERSION: options.version || "1.3.0",
         CQL_FILTER
     }, objectAssign(

@@ -244,7 +244,7 @@
             "toolTrashLayersTooltip": "Rimuovi livelli selezionati",
             "toolFeaturesGridTooltip": "Apri tabella degli attributi",
             "noFilteredResults": "Nessun risultato",
-            "filterPlaceholder": "Filtra livelli",
+            "filterPlaceholder": "Filtra layers",
             "clearFilter": "Pulisci filtro",
             "toolReloadLayerTooltip": "Forza caricamento del livello selezionato",
             "toolReloadLayersTooltip": "Forza caricamento dei livelli selezionati",
@@ -272,6 +272,13 @@
                 "search": "Aggiorna opzioni di ricerca",
                 "title": "Aggiorna il titolo del layer",
                 "dimensions": "Aggiorna le dimensioni aggiuntive"
+            },
+            "layerMetadata": {
+                "toolLayerMetadataTooltip": "Mostra i metadati del layer selezionato",
+                "layerMetadataPanelTitle": "Metadati del layer",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Errore nella ricerca dei metadati"
+                }
             }
         },
         "print":{
@@ -552,7 +559,7 @@
                 "filterType": "Tipo di filtro",
                 "geometric_operation": "Operazione Geometrica",
                 "combo_placeholder": "Seleziona...",
-                "spatial_filter_header": "Filtro Spaziale",
+                "spatial_filter_header": "Regione di interesse",
                 "draw_start_label": "Disegna sulla mappa l'area di interesse",
                 "dwithin_label": "metri",
                 "details": {
@@ -568,6 +575,7 @@
                 "methods": {
                     "zone": "Zona",
                     "viewport": "Viewport",
+                    "regions": "Regioni",
                     "box": "Rettangolo",
                     "buffer": "Buffer",
                     "circle": "Cerchio",
@@ -579,6 +587,15 @@
                     "contains": "E' contenuto",
                     "dwithin": "Distanza da",
                     "within": "Contiene"
+                }
+            },
+            "crossLayerFilter": {
+                "title": "Filtra usando un livello",
+                "targetLayer": "Livello Filtro",
+                "clear": "Pulisci Filtro",
+                "operation": "Operazione",
+                "errors": {
+                    "noCrossLayerAvailable": "L'operazione di filtraggio usando un livello non è supportata per il layer selezionato"
                 }
             }
         },
@@ -706,15 +723,15 @@
             "taintedMessage": "La funzionalità di salvataggio dell'istantanea è limitata a causa di alcune regole di sicurezza. Per un risultato migliore cliccare con il tasto destro sull'anteprima e selezionare  'Salva immagine con nome' (supportato solo da Mozilla Firefox e Google Chrome)"
         },
         "shapefile": {
-            "title": "Carica Shapefile",
-            "tooltip": "Aggiungi uno shapefile alla mappa.",
-            "placeholder": "Trascina qui i file o fai click per selezionare gli shapefile da importare.(gli shapefiles devono essere contenuti in archivi zip)",
+            "title": "Carica files vettoriali",
+            "tooltip": "Aggiungi uno file vettoriale alla mappa.",
+            "placeholder": "Trascina qui i file o fai click per selezionare i file vettoriali da importare.(file supportati: SHAPEFILES contenuti in archivi zip, KML/KMZ e GPX)",
             "defaultStyle": "Stile di default",
-            "zoom": "Zoom sugli shapefile",
+            "zoom": "Zoom sui file",
             "error": {
-                "select": "Seleziona Shapefile compresso",
-                "shapeFileParsingError": "Non è stato possibile caricare lo shapefile. Il file potrebbe essere danneggiato o non corretto",
-                "genericLoadError": "Lo shapefile non è stato caricato correttamente sulla mappa"
+                "select": "Seleziona file corretto. File supportati: SHAPEFILES contenuti in archivi zip, KML/KMZ e GPX)",
+                "shapeFileParsingError": "Non è stato possibile caricare il file. Il file potrebbe essere danneggiato o non corretto",
+                "genericLoadError": "Il file non è stato caricato correttamente sulla mappa"
             },
             "add": "Importa",
             "cancel": "Annulla",
@@ -907,6 +924,7 @@
             },
             "noFeaturesAvailable": "Nessun risultato disponibile",
             "errorSaving": "C'è stato un errore durante il salvataggio",
+            "errorProjFetch": "Errore durante il recupero della definizione della stringa proj dal sito spatialreference.org. Lo strumento di sincronizzazione non può applicare il filtro spaziale.",
             "notSupportedGeometryTitle": "Tipo di geometria non supportato",
             "notSupportedGeometry": "Il tipo di geometria del layer corrente non è supportato dall'editing ma è ancora possibile modificare gli attributi",
             "yesButton": "Si",

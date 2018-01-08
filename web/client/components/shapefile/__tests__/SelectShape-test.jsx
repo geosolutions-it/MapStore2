@@ -61,6 +61,57 @@ describe("Test the select shapefile component", () => {
         TestUtils.Simulate.drop(content, { dataTransfer: { files } });
     });
 
+    it('upload KML file', (done) => {
+        const handler = () => {
+            done();
+        };
+        const cmp = ReactDOM.render(<SelectShape onShapeChoosen={handler}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        const dom = ReactDOM.findDOMNode(cmp);
+        expect(dom.getElementsByTagName('input').length).toBe(1);
+        const content = TestUtils.findRenderedDOMComponentWithClass(cmp, 'dropzone-content');
+        const files = [{
+            name: 'file1.kml',
+            size: 1111,
+            type: 'application/vnd.google-earth.kml+xml'
+        }];
+        TestUtils.Simulate.drop(content, { dataTransfer: { files } });
+    });
+
+    it('upload KMZ file', (done) => {
+        const handler = () => {
+            done();
+        };
+        const cmp = ReactDOM.render(<SelectShape onShapeChoosen={handler}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        const dom = ReactDOM.findDOMNode(cmp);
+        expect(dom.getElementsByTagName('input').length).toBe(1);
+        const content = TestUtils.findRenderedDOMComponentWithClass(cmp, 'dropzone-content');
+        const files = [{
+            name: 'file1.kmz',
+            size: 1111,
+            type: 'application/vnd.google-earth.kmz'
+        }];
+        TestUtils.Simulate.drop(content, { dataTransfer: { files } });
+    });
+
+    it('upload GPX file', (done) => {
+        const handler = () => {
+            done();
+        };
+        const cmp = ReactDOM.render(<SelectShape onShapeChoosen={handler}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        const dom = ReactDOM.findDOMNode(cmp);
+        expect(dom.getElementsByTagName('input').length).toBe(1);
+        const content = TestUtils.findRenderedDOMComponentWithClass(cmp, 'dropzone-content');
+        const files = [{
+            name: 'file1.gpx',
+            size: 1111,
+            type: ''
+        }];
+        TestUtils.Simulate.drop(content, { dataTransfer: { files } });
+    });
+
     it('upload wrong mime, right file', (done) => {
         const handler = () => {
             done();
@@ -71,6 +122,7 @@ describe("Test the select shapefile component", () => {
         expect(dom.getElementsByTagName('input').length).toBe(1);
         const content = TestUtils.findRenderedDOMComponentWithClass(cmp, 'dropzone-content');
         const files = [b64toBlob('UEsDBAoAAAAAACGPaktDvrfoAQAAAAEAAAAKAAAAc2FtcGxlLnR4dGFQSwECPwAKAAAAAAAhj2pLQ7636AEAAAABAAAACgAkAAAAAAAAACAAAAAAAAAAc2FtcGxlLnR4dAoAIAAAAAAAAQAYAGILh+1EWtMBy3f86URa0wHLd/zpRFrTAVBLBQYAAAAAAQABAFwAAAApAAAAAAA=', 'application/pdf')];
+        files[0].name = 'test.zip';
         TestUtils.Simulate.drop(content, { dataTransfer: { files } });
     });
 

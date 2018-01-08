@@ -26,9 +26,9 @@
             "label": "Version"
         },
         "autorefresh": {
-            "of": "of",
-            "updating": "Updating...",
-            "layers": "layers"
+            "of": "de",
+            "updating": "Rafraichissement...",
+            "layers": "Couches"
         },
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
@@ -40,7 +40,7 @@
             "display": "Affichage",
             "style": "Style",
             "transparent": "Transparent",
-            "singleTile": "Single Tile",
+            "singleTile": "Tuile unique",
             "cached": "Utiliser les options de cache",
             "styleCustom": "Utilisez un style nommé \"{value} \"",
             "styleListLoadError": "Une erreur s'est produite lors du chargement de la liste de styles",
@@ -52,21 +52,21 @@
             "confirmDelete": "Êtes-vous sûr?",
             "featureTypeError": "Impossible de charger les attributs de calque",
             "elevation": "élévation",
-            "titleTranslations": "Title translations",
-            "groupProperties": "Group properties",
-            "featureInfo": "Feature Info",
+            "titleTranslations": "Traductions du titre",
+            "groupProperties": "Propriétés du groupe",
+            "featureInfo": "Informations attributaires de l'objet",
             "featureInfoFormatLbl": "Information, format de la réponse",
             "legenderror": "La légende n'est pas disponible"
         },
         "notification": {
-            "update": "Update",
-            "warning": "Warning",
-            "success": "Success",
+            "update": "Mise à jour",
+            "warning": "Avertissement",
+            "success": "Succès",
             "backgroundLayerNotSupported": "L'arrière-plan précédemment sélectionné est pas pris en charge pour ce type de carte. Le premier disponible est ensuite utilisée.",
             "noBackgroundLayerSupported": "Il n'y a pas de couches de fond supportées pour ce type de carte.",
-            "updateOldMap": "This is an old map, thus not all the functionalities can be enabled. Click on update button in order to update the map or simply dismiss this notification if you don't want to update it.",
-            "warningSaveUpdatedMap": "Some layers haven't been updated correctly",
-            "saveUpdatedMap": "All the layers have been successfully updated"
+            "updateOldMap": "Ceci est une carte ancienne, toutes les fonctionnalités ne peuvent pas s'y retrouver. Cliquer sur le bouton de mise à jour pour rafraichir la carte ou ne tenez pas compte de cet avertissement pour ne pas rafraichir la carte.",
+            "warningSaveUpdatedMap": "Certaines couches n'ont pas été mises à jour correctement",
+            "saveUpdatedMap": "Toutes les couches ont bien été mises à jour"
         },
         "dock": {
             "row": "{rowsSelected} ligne sélectionné",
@@ -77,12 +77,11 @@
             "tooltipActivate": "Entrez le mode 3D"
         },
         "cookie":{
-            "info": "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.",
-            "moreDetailsButton": "More Details",
-            "leave": "Leave",
-            "accept": "Accept"
+            "info": "Ce site fait usage de cookies pour améliorer votre expérience. Nous supposons que vous êtes d'accord avec cela, mais vous êtes libres de le refuser.",
+            "moreDetailsButton": "Plus de détails",
+            "leave": "Quitter",
+            "accept": "Accepter"
         },
-        "enable": "Activer",
         "background": "Fond de plan",
         "language": "langue",
         "mousePositionCoordinates": "Coordonnées",
@@ -95,7 +94,7 @@
         "settings": "Réglages",
         "help": "Aide",
         "gohome": "Retour",
-        "back": "Back to the Importer",
+        "back": "Retour à l'import",
         "printbutton": "Imprimer",
         "annotationsbutton": "Annotations",
         "noresultfound": "Aucun résultat trouvé",
@@ -109,8 +108,8 @@
         "confirmTitle": "Confirmez-vous?",
         "pageInfo": "{total, plural, =0 {aucun objet} =1 {{total} objet parmi {total}} other {objets {start}-{end} parmi {total}}}",
         "loading": "Chargement...",
-        "group": "Group",
-        "groups": "Groups",
+        "group": "Groupe",
+        "groups": "Groupes",
         "permission": "Permission",
         "permissions": "Permissions",
         "global": {
@@ -128,7 +127,7 @@
             "description": "MapStore 2 est développé pour créer, sauvegarder et partager de façon simple et intuitive cartes et assemblages créés à partir du contenu de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce.<br/>Visitez notre <a href=\"/mapstore/docs/\">page d'accueil</a> pour plus de détails.",
             "Applications": "Applications",
             "Examples": "Exemples",
-            "LinkedinGroup": "Mapstore Linkedin groupe",
+            "LinkedinGroup": "Groupe Linkedin Mapstore",
             "scrollTop": "Retour en haut de la page",
             "ml": {
                 "title": "Restez au fait des derniers développements via les mailing lists",
@@ -237,31 +236,30 @@
             "toggleLayerVisibility": "Activer / désactiver la visibilité du calque",
             "displayLegendAndTools": "Afficher la légende et les outils",
             "zoomToLayerExtent": "Zoomer sur l'étendue du calque",
-
-            "addLayer": "Añadir capa",
-            "toolZoomToLayerTooltip": "Zoom to selected layer extent",
-            "toolZoomToLayersTooltip": "Zoom to selected layers extent",
-            "toolLayerSettingsTooltip": "Selected layer settings",
-            "toolGroupSettingsTooltip": "Selected group settings",
-            "toolTrashLayerTooltip": "Remove selected layer",
-            "toolTrashLayersTooltip": "Remove selected layers",
-            "toolFeaturesGridTooltip": "Open Attribute Table",
-            "noFilteredResults": "No results",
-            "filterPlaceholder": "Filter layers",
-            "clearFilter": "Clear filter",
-            "toolReloadLayerTooltip": "Force reload of selected layer",
-            "toolReloadLayersTooltip": "Force reload of selected layers",
-            "statusIconOpen": "Close group",
-            "statusIconClose": "Open group",
-            "grabLayerIcon": "Grab and sort layer",
-            "grabGroupIcon": "Grab and sort group",
-            "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
+            "addLayer": "Ajouter la couche",
+            "toolZoomToLayerTooltip": "Zoomer sur l'extension de la couche sélectionnée",
+            "toolZoomToLayersTooltip": "Zoomer sur l'extension des couches sélectionnées",
+            "toolLayerSettingsTooltip": "Réglages de la couche sélectionnée",
+            "toolGroupSettingsTooltip": "Réglages du groupe de couches sélectionné",
+            "toolTrashLayerTooltip": "Retirer la couche sélectionnée",
+            "toolTrashLayersTooltip": "Retirer les couches sélectionnées",
+            "toolFeaturesGridTooltip": "Ouvrir la table attributaires",
+            "noFilteredResults": "Pas de résultats",
+            "filterPlaceholder": "Filtrer les couches",
+            "clearFilter": "Supprimer le filtre",
+            "toolReloadLayerTooltip": "Forcer la recharge de la couche sélectionnée",
+            "toolReloadLayersTooltip": "Forcer la recharge des couches sélectionnées",
+            "statusIconOpen": "Fermer le groupe de couches",
+            "statusIconClose": "Ouvrir le groupe de couches",
+            "grabLayerIcon": "Attraper et déplacer la couche",
+            "grabGroupIcon": "Attraper et déplacer le groupe",
+            "toggleLayerVisibilityWarning": "Inverser la visibilité de la couche, attention: la couche ne s'est pas chargée correctement",
             "createWidget": "Créer un widget pour le calque sélectionné",
             "editLayerProperties": "Modifier les propriétés de la couche",
             "browseData": "Ouvrir la table d'attribut",
             "searchFeatures": "Recherche sur ce calque ...",
             "removeLayer": "Supprimer la couche",
-            "loadingerror": "La couche n'a pas été chargée correctement ou pas disponible",
+            "loadingerror": "La couche n'a pas été chargée correctement",
             "measure": "Mesurer",
             "backgroundSwitcher": "Fond de plan",
             "layers": "Couches",
@@ -275,6 +273,13 @@
                 "search": "Mettre à jour les options de recherche",
                 "title": "Mettre à jour le titre",
                 "dimensions": "Mettre à jour les dimensions"
+            },
+            "layerMetadata": {
+                "toolLayerMetadataTooltip": "Afficher les métadonnées de la couche sélectionnée",
+                "layerMetadataPanelTitle": "Métadonnées de couche",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Erreur dans la recherche de métadonnées"
+                }
             }
         },
         "print":{
@@ -306,17 +311,17 @@
             "layoutWarning": "Mise en page impossible"
         },
         "backgroundSwither":{
-            "tooltip": "Selection du fond de plan"
+            "tooltip": "Sélection du fond de plan"
         },
         "info":{
-            "tooltip": "Interroger les objects sur la carte"
+            "tooltip": "Interroger les objets sur la carte"
         },
         "expandtoolbar": {
             "tooltip": "Agrandir / Réduire"
         },
         "getFeatureInfoTitle": "Informations de l'objet",
         "identifyTitle": "Informations de l'objet",
-        "identifyNoQueryableLayers": "Aucune couche active requise",
+        "identifyNoQueryableLayers": "Aucune couche active rencontrée",
         "identifyRevGeocodeHeader": "Coordonnées",
         "identifyRevGeocodeModalTitle": "Adresse",
         "identifyRevGeocodeSubmitText": "Plus d'Informations",
@@ -556,7 +561,7 @@
                 "filterType": "Type de filtre",
                 "geometric_operation": "Opération géométrique",
                 "combo_placeholder": "Sélectionner...",
-                "spatial_filter_header": "Filtre spatial",
+                "spatial_filter_header": "Région d'intérêt",
                 "draw_start_label": "Dessiner la région d'intérêt sur la carte",
                 "dwithin_label": "mètres",
                 "details": {
@@ -572,6 +577,7 @@
                 "methods": {
                     "zone": "Zone",
                     "viewport": "Viewport",
+                    "regions": "Régions",
                     "box": "Rectangle",
                     "buffer": "Zone tampon",
                     "circle": "Cercle",
@@ -583,6 +589,15 @@
                     "contains": "Est contenu",
                     "dwithin": "Distance de",
                     "within": "Contient"
+                }
+            },
+            "crossLayerFilter": {
+                "title": "Filtre de couche",
+                "targetLayer": "Couche cible",
+                "clear": "Effacer le filtre",
+                "operation": "Opération",
+                "errors": {
+                    "noCrossLayerAvailable": "Le filtrage croisé n'est pas disponible pour le calque sélectionné"
                 }
             }
         },
@@ -710,13 +725,13 @@
             "taintedMessage": "La fonctionnalité de sauvegarde est limitée pour les limitations de sécurité du navigateur. Pour un meilleur résultat, cliquez avec le bouton droit de la souris sur l'aperçu et sélectionnez 'Enregistrer l'image sous...' (prise en charge par Firefox et Chrome)"
         },
         "shapefile": {
-            "title": "Ajouter un fichier Shape local",
-            "tooltip": "Ajouter un fichier Shape local à la carte.",
-            "placeholder": "Déposez vos fichiers ici ou cliquez sur pour sélectionner les shapefiles à importer. (Shapefiles doivent être contenus dans des archives zip)",
+            "title": "Ajouter un fichier fichiers vectoriels",
+            "tooltip": "Ajouter un fichier fichiers vectoriels à la carte.",
+            "placeholder": "Déposez vos fichiers ici ou cliquez sur pour sélectionner les fichiers vectoriels à importer. (Shapefiles doivent être contenus dans des archives zip, KML/KMZ e GPX)",
             "defaultStyle": "Style par défaut",
             "zoom": "Zoomer sur le fichier shape",
             "error": {
-                "select": "Sélectionner un ou plusieurs fichiers zip",
+                "select": "Sélectionnez le bon fichier. (Shapefiles doivent être contenus dans des archives zip, KML/KMZ e GPX)",
                 "shapeFileParsingError": "Impossible de charger le fichier de formes. Le fichier pourrait être endommagé ou mal formé",
                 "genericLoadError": "Impossible de charger le fichier de formes sur la carte"
             },
@@ -763,14 +778,14 @@
             }
         },
         "uploader": {
-            "filename": "File Name",
+            "filename": "Nom du fichier",
             "type": "Type",
-            "lastModified": "Last Modified",
-            "filesize": "Size",
-            "beforeUpload": "Doing pre-upload operations... ",
-            "uploadingFiles": "Uploading Files...",
-            "dropfile": "drop files here to upload",
-            "dropfileImport": "drop here files to add it to this process"
+            "lastModified": "Date de dernière modification",
+            "filesize": "Taille",
+            "beforeUpload": "Réalisation de pré-envoi en cours... ",
+            "uploadingFiles": "Envoi des fichiers...",
+            "dropfile": "Déposer ici les fichiers à envoyer",
+            "dropfileImport": "Déposer ici les fichiers à ajouter au traitement"
         },
         "importer": {
             "title": "Importer des données",
@@ -911,6 +926,7 @@
             },
             "noFeaturesAvailable": "Aucune fonctionnalité disponible",
             "errorSaving": "Une erreur s'est produite lors de l'enregistrement de l'opération",
+            "errorProjFetch": "Erreur lors de la recuperation de la definition de la charne proj4 depuis spatialreference.org. L'outil de synchronisation ne peut pas appliquer le filtre spatial.",
             "notSupportedGeometryTitle": "Geometry type not supported ",
             "notSupportedGeometry": "Current layer geometry type is not supported by editing but you can still edit attributes",
             "yesButton": "Oui",
@@ -1060,7 +1076,6 @@
                 "bar": "Légende d'affichage",
                 "gauge": "Afficher les étiquettes"
             }
-
         },
         "wizard": {
             "next": "Suivant",
@@ -1084,7 +1099,7 @@
             "minlabel": "Dénominateur d'échelle minimum",
             "maxlabel": "Dénominateur d'échelle maximum",
             "maxerror": "La valeur max doit être plus grande que la valeur min",
-            "minerror": "La vleur min doit être plus petite que la valeur max",
+            "minerror": "La valeur min doit être plus petite que la valeur max",
             "none": "Aucun"
         },
         "markNameSelector": {
@@ -1105,9 +1120,9 @@
             "role": "Rôle",
             "user": "Utilisateur",
             "service": "Service",
-            "request": "Request",
-            "workspace": "Workspace",
-            "layer": "Layer",
+            "request": "Requête",
+            "workspace": "Espace de travail",
+            "layer": "Couche",
             "filters": "Filtres",
             "rules": "Règles",
             "access": "Accès",
@@ -1133,46 +1148,46 @@
             "cancelButton": "Annuler"
         },
         "tutorial": {
-            "title": "Tutorial",
-            "back": "Back",
-            "next": "Next",
-            "close": "Close",
-            "skip": "Skip",
-            "last": "Finish",
-            "start": "Start",
-            "checkbox": "don't show this message again",
-            "error": "Error: target not found",
+            "title": "Tutoriel",
+            "back": "Retour",
+            "next": "Suivant",
+            "close": "Fermer",
+            "skip": "Passer",
+            "last": "Terminer",
+            "start": "Commencer",
+            "checkbox": "Ne plus me montrer ce message",
+            "error": "Erreur: ressource non trouvée",
             "intro": {
-                "title": "Welcome on MapStore2",
-                "text": "framework to build web mapping applications using standard mapping libraries, such as OpenLayers 3 and Leaflet."
+                "title": "Bienvenue dans MapStore2",
+                "text": "Environnement de développement d'applications cartographiques en ligne utilisant des librairies cartographiques standards, telles qu'OpenLayers 3 et Leaflet."
             },
             "drawerMenu": {
-                "title": "Main menu",
-                "text": "You can find information and tools to manage layer"
+                "title": "Menu Principal",
+                "text": "Le catalogue des données ainsi que la légende de la carte se trouvent ici"
             },
             "searchBar": {
-                "title": "Search Bar",
-                "text": "Write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+                "title": "Recherche d'adresse",
+                "text": "Tapez l'adresse recherchée, par ex. Rue du progrès 80; vous pouvez aussi entrer des coordonnées au format 43.87,10.20"
             },
             "home": {
-                "title": "Home",
-                "text": "Click to go to homepage"
+                "title": "Page de démarrage",
+                "text": "Cliquer pour retourner à la page de démarrage"
             },
             "searchButton": {
-                "title": "Search",
-                "text": "Click to open the search bar, then write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+                "title": "Recherche d'adresse",
+                "text": "Tapez l'adresse recherchée, par ex. Rue du progrès 80; vous pouvez aussi entrer des coordonnées au format 43.87,10.20"
             },
             "burgerMenu": {
-                "title": "Option Menu",
-                "text": "You can find options, settings and help"
+                "title": "Menu Options",
+                "text": "Les outils d'ajout de catalogue externe, de sauvegarde de carte, de choix linguistique et de paramétrage de BruGIS se trouvent ici"
             },
             "zoomInButton": {
                 "title": "Zoom In",
-                "text": "Click to enlarge the map"
+                "text": "Cliquez pour aggrandir la carte"
             },
             "zoomOutButton": {
                 "title": "Zoom Out",
-                "text": "Click to reduce the map"
+                "text": "Cliquez pour diminuer la carte"
             },
             "fullscreen": {
                 "title": "Basculer en plein écran",
@@ -1180,46 +1195,46 @@
             },
             "identifyButton": {
                 "title": "Info",
-                "text": "Press the button to activate the tool, then click on the map to retrieve information from layers"
+                "text": "Cliquez le bouton pour activer l'outil, cliquez ensuite dans la carte pour obtenir plus d'information"
             },
             "mapType": {
-                "title": "Library",
-                "text": "You can choose Leaflet or OpenLayers to render your maps"
+                "title": "Librairie",
+                "text": "Choisissez Leaflet ou OpenLayers pour afficher vos cartes"
             },
             "mapsGrid": {
-                "title": "Maps",
-                "text": "Here some examples of MapStore2. Click on an image to try the demo."
+                "title": "Cartes",
+                "text": "Quelques exemples de MapStore2. Cliquez sur une image pour lancer la démo."
             },
             "examples": {
-                "title": "Custom Application",
-                "text": "You can use components and plugins of MapStore2 to build custom applications"
+                "title": "Application sur mesure",
+                "text": "Utilisez les composants et outils de MapStore2 pour construire votre application personnalisée"
             },
             "introCesium": {
-                "title": "3D map instructions",
-                "text": "Click on next button to start the tutorial"
+                "title": "Instructions carte 3D",
+                "text": "Cliquez le bouton suivant pour démarrer le tutoriel"
             },
             "cesium": {
-                "title": "Interactions with the Map",
-                "pan": "Pan view",
-                "zoom": "Zoom view",
-                "tilt": "Tilt view",
-                "rotate": "Rotate view",
-                "oneDrag": "One finger drag",
-                "twoPinch": "Two finger pinch",
-                "twoDragSame": "Two finger drag, same direction",
-                "twoDragOpposite": "Two finger drag, opposite direction",
-                "leftClick": "Left click + drag",
-                "rightClick": "Right click + drag, or Mouse wheel scroll",
-                "middleClick": "Middle click + drag, or CTRL + Left/Right click + drag"
+                "title": "Interactions avec la carte",
+                "pan": "Panner la vue",
+                "zoom": "Zoomer dans la vue",
+                "tilt": "Incliner la vue",
+                "rotate": "Tourner la vue",
+                "oneDrag": "Déplacer à un doigt",
+                "twoPinch": "Echelle à deux doigts",
+                "twoDragSame": "Déplacer à deux doigts, dans la même direction",
+                "twoDragOpposite": "Déplacer à deux doigts, directions opposées",
+                "leftClick": "Clic gauche + déplacer",
+                "rightClick": "Clic droit + déplacer, ou molette souris",
+                "middleClick": "Clic central + déplacer, ou CTRL + clic Gauche/Droit + déplacer"
 
             },
             "cesiumCompass": {
-                "title": "Compass",
-                "text": "You can use the compass to orbit around the globe. Drag to rotate the map"
+                "title": "boussole",
+                "text": "Vous pouvez utiliser la boussole pour vous déplacer sur le globe. Déplacer pour bouger la carte"
             },
             "cesiumNavigation": {
                 "title": "Navigation",
-                "text": "Here you can find the zoom in and zoom out buttons"
+                "text": "Vous trouverez ici les boutons de zoom in et zoom out"
             }
         }
     }

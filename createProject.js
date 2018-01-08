@@ -1,115 +1,55 @@
-const projectName = process.argv[2];
-const projectVersion = process.argv[3];
-const projectDescription = process.argv[4];
-const repoURL = process.argv[5];
-const outFolder = process.argv[6];
+const projectType = process.argv[2];
+const projectName = process.argv[3];
+const projectVersion = process.argv[4];
+const projectDescription = process.argv[5];
+const repoURL = process.argv[6];
+const outFolder = process.argv[7];
+const project = require('./projectLib');
+const denodeify = require('denodeify');
 
-if (!projectName || !projectVersion || !projectDescription || !repoURL || !outFolder) {
-    console.log('Usage: node ./createProject.js <projectName> <projectVersion> <projectDescription> <GitHUB repo URL> <outputFolder>');
-    process.exit(1);
+if (!projectType || !projectName || !projectVersion || !projectDescription || !repoURL || !outFolder) {
+    process.stdout.write('Usage: node ./createProject.js <projectType> <projectName> <projectVersion> <projectDescription> <GitHUB repo URL> <outputFolder>\n');
+    throw new Error("Wrong parameters!");
 }
 
 const fs = require('fs');
-const ncp = require('ncp').ncp;
+const mkdirp = denodeify(require('mkdirp'));
+const readdir = denodeify(fs.readdir);
 
-const mkdirp = require('mkdirp');
-
-const initGit = () => {
-    console.log('Creating git repo...');
-
-    const git = require('simple-git')( outFolder );
-    git.init(function() {
-        git.submoduleAdd('https://github.com/geosolutions-it/MapStore2.git', 'MapStore2', function() {
-            console.log('git repo OK...');
-        });
-    });
+const options = {
+    name: projectName,
+    version: projectVersion,
+    description: projectDescription,
+    repository: repoURL,
+    scripts: require('./projectScripts.json')
 };
 
-const copyTemplates = (level, path, callback) => {
-    console.log('Copying templated files...');
-    fs.readdir('./project' + path, function(err, files) {
-        if (err) {
-            return console.log(err);
-        }
-        files.forEach(function(file, index) {
-            fs.stat('./project' + path + '/' + file, function(err, stats) {
-            if (err) {
-                return console.log(err);
-            }
-            if (stats.isFile()) {
-                fs.readFile('./project' + path + '/' + file, 'UTF-8', function(err, data) {
-                    data = data.replace(/__PROJECTNAME__/g, projectName);
-                    data = data.replace(/__PROJECTDESCRIPTION__/g, projectDescription);
-                    data = data.replace(/__REPOURL__/g, repoURL);
+const projectFolder = './project/' + projectType;
 
-                    mkdirp(outFolder + path, function(err) {
-                        if (err) console.error(err);
-                        else {
-                            fs.writeFile(outFolder + path + '/' + file, data, 'UTF-8', function(err) {
-                                if (err) {
-                                    return console.log(err);
-                                }
-                                console.log('Copied ' + file);
-                                if (level === 0 && index === files.length - 1) {
-                                    initGit();
-                                } else if (index === files.length - 1 && callback) {
-                                    callback.call();
-                                }
-                            });
-                        }
-                    });
-                });
-            } else if (stats.isDirectory()) {
-                if (file !== 'static') {
-                    copyTemplates(level + 1, path + '/' + file, function() {
-                        if (level === 0 && index === files.length - 1) {
-                            initGit();
-                        } else if (index === files.length - 1 && callback) {
-                            callback.call();
-                        }
-                    });
-                }
-            }
-        });
-        });
+readdir(projectFolder)
+    .then(() => {
+        return mkdirp(outFolder);
+    })
+    .then(() => {
+        process.stdout.write('Out folder created (' + outFolder + ')\n');
+        return project.createPackageJSON(options, outFolder);
+    })
+    .then(() => {
+        process.stdout.write('package.json file created\n');
+        return project.copyStaticFiles(projectFolder + '/static', outFolder, options, ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE.txt', '.babelrc']);
+    })
+    .then(() => {
+        process.stdout.write('Static files copied\n');
+        process.stdout.write('Copying template files\n');
+        return project.copyTemplates(projectFolder + '/templates', outFolder, options);
+    })
+    .then(() => {
+        process.stdout.write('Templates copied\n');
+        return project.initGit(outFolder);
+    })
+    .then(() => {
+        process.stdout.write('git repo OK!\n');
+    })
+    .catch((err) => {
+        process.stderr.write(err + '\n');
     });
-};
-
-const copyStaticFiles = () => {
-    console.log('Copying static files...');
-    var copied = 0;
-    ['.editorconfig', '.eslintrc', '.eslintignore', 'LICENSE.txt', '.babelrc'].map(function(fileName) {
-        const toWrite = fs.createWriteStream(outFolder + '/' + fileName);
-        fs.createReadStream(fileName).pipe(toWrite);
-        console.log('Copied ' + fileName);
-        return toWrite;
-    }).forEach(function(stream) {
-        stream.on('finish', function() {
-            copied++;
-            if (copied === 4) {
-                ncp('./project/static', outFolder, function(err) {
-                    if (err) {
-                        return console.log(err);
-                    }
-                    copyTemplates(0, '');
-                });
-            }
-        });
-    });
-};
-
-function createPackageJSON() {
-    console.log('Creating package.json...');
-
-    const packageJSON = require('./package.json');
-    packageJSON.name = projectName;
-    packageJSON.version = projectVersion;
-    packageJSON.description = projectDescription;
-    packageJSON.repository = repoURL;
-    packageJSON.scripts = require('./projectScripts.json');
-
-    fs.writeFile(outFolder + '/package.json', JSON.stringify(packageJSON, null, 4), copyStaticFiles);
-    console.log('package.json OK');
-}
-
-createPackageJSON();

@@ -28,7 +28,6 @@ module.exports = {
         path: "/manager/:tool",
         component: require('./pages/Manager')
     }],
-    pluginsDef: require('./plugins.js'),
     initialState: {
         defaultState: {
             mousePosition: {enabled: false},

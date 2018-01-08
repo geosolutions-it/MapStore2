@@ -49,13 +49,20 @@ class SelectShape extends React.Component {
 
     tryUnzip = (file) => {
         return FileUtils.readZip(file).then((buffer) => {
-            return new JSZip(buffer);
+            var zip = new JSZip();
+            return zip.loadAsync(buffer);
         });
     };
 
-    isZip = (file) => {
+    checkFileType = (file) => {
         return new Promise((resolve, reject) => {
-            if (file.type === 'application/zip' || file.type === 'application/x-zip-compressed') {
+            const ext = FileUtils.recognizeExt(file.name);
+            const type = file.type || FileUtils.MIME_LOOKUPS[ext];
+            if (type === 'application/x-zip-compressed' ||
+                type === 'application/zip' ||
+                type === 'application/vnd.google-earth.kml+xml' ||
+                type === 'application/vnd.google-earth.kmz' ||
+                type === 'application/gpx+xml') {
                 resolve();
             } else {
                 this.tryUnzip(file).then(resolve).catch(reject);
@@ -64,7 +71,7 @@ class SelectShape extends React.Component {
     };
 
     checkfile = (files) => {
-        Promise.all(files.map(file => this.isZip(file))).then(() => {
+        Promise.all(files.map(file => this.checkFileType(file))).then(() => {
             if (this.props.error) {
                 this.props.onShapeError(null);
             }

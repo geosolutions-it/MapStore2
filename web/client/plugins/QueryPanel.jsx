@@ -8,7 +8,7 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
-const {Button, Glyphicon} = require('react-bootstrap');
+
 const Sidebar = require('react-sidebar').default;
 const {createSelector} = require('reselect');
 const {changeLayerProperties, changeGroupProperties, toggleNode,
@@ -21,12 +21,16 @@ const {zoomToExtent} = require('../actions/map');
 const {toggleControl} = require('../actions/controls');
 
 const {groupsSelector} = require('../selectors/layers');
+const {
+    crossLayerFilterSelector,
+    availableCrossLayerFilterLayersSelector
+} = require('../selectors/queryform');
 
 const LayersUtils = require('../utils/LayersUtils');
 
 // include application component
 const QueryBuilder = require('../components/data/query/QueryBuilder');
-
+const QueryPanelHeader = require('../components/data/query/QueryPanelHeader');
 const {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic} = require('../epics/wfsquery');
 const autocompleteEpics = require('../epics/autocomplete');
 const {bindActionCreators} = require('redux');
@@ -44,11 +48,18 @@ const {
     changeCascadingValue,
     expandAttributeFilterPanel,
     expandSpatialFilterPanel,
+    expandCrossLayerFilterPanel,
     selectSpatialMethod,
     selectViewportSpatialMethod,
     selectSpatialOperation,
     removeSpatialSelection,
+    changeSpatialFilterValue,
     showSpatialSelectionDetails,
+    setCrossLayerFilterParameter,
+    addCrossLayerFilterField,
+    updateCrossLayerFilterField,
+    removeCrossLayerFilterField,
+    resetCrossLayerFilter,
     search,
     reset,
     changeDwithinValue,
@@ -64,7 +75,7 @@ const {
     changeDrawingStatus,
     endDrawing
 } = require('../actions/draw');
-
+const onReset = reset.bind(null, "query");
 // connecting a Dumb component to the store
 // makes it a smart component
 // we both connect state => props
@@ -83,6 +94,12 @@ const SmartQueryForm = connect((state) => {
         toolbarEnabled: state.queryform.toolbarEnabled,
         attributePanelExpanded: state.queryform.attributePanelExpanded,
         autocompleteEnabled: state.queryform.autocompleteEnabled,
+        crossLayerExpanded: state.queryform.crossLayerExpanded,
+        crossLayerFilterOptions: {
+            layers: availableCrossLayerFilterLayersSelector(state),
+            crossLayerFilter: crossLayerFilterSelector(state),
+            ...(state.queryform.crossLayerFilterOptions || {})
+        },
         maxFeaturesWPS: state.queryform.maxFeaturesWPS,
         spatialPanelExpanded: state.queryform.spatialPanelExpanded,
         featureTypeConfigUrl: state.query && state.query.url,
@@ -112,6 +129,7 @@ const SmartQueryForm = connect((state) => {
             onExpandAttributeFilterPanel: expandAttributeFilterPanel
         }, dispatch),
         spatialFilterActions: bindActionCreators({
+            onChangeSpatialFilterValue: changeSpatialFilterValue,
             onExpandSpatialFilterPanel: expandSpatialFilterPanel,
             onSelectSpatialMethod: selectSpatialMethod,
             onSelectViewportSpatialMethod: selectViewportSpatialMethod,
@@ -127,8 +145,16 @@ const SmartQueryForm = connect((state) => {
         }, dispatch),
         queryToolbarActions: bindActionCreators({
             onQuery: search,
-            onReset: reset,
+            onReset,
             onChangeDrawingStatus: changeDrawingStatus
+        }, dispatch),
+        crossLayerFilterActions: bindActionCreators({
+            expandCrossLayerFilterPanel,
+            setCrossLayerFilterParameter,
+            addCrossLayerFilterField,
+            updateCrossLayerFilterField,
+            removeCrossLayerFilterField,
+            resetCrossLayerFilter
         }, dispatch)
     };
 })(QueryBuilder);
@@ -243,9 +269,9 @@ class QueryPanel extends React.Component {
     };
 
     renderQueryPanel = () => {
-        return (<div>
-            <Button id="toc-query-close-button" bsStyle="primary" key="menu-button" className="square-button" onClick={() => this.props.onToggleQuery()}><Glyphicon glyph="arrow-left"/></Button>
+        return (<div className="mapstore-query-builder">
             <SmartQueryForm
+                header={<QueryPanelHeader onToggleQuery={this.props.onToggleQuery} />}
                 spatialOperations={this.props.spatialOperations}
                 spatialMethodOptions={this.props.spatialMethodOptions}
                 featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}/>
@@ -257,6 +283,66 @@ class QueryPanel extends React.Component {
     }
 }
 
+/**
+ * @class
+ * @classdesc
+ * QueryPanelPlugin allow to query a layer in different ways, using attributes of that layer, spatial filters
+ * @name QueryPanel
+ * @memberof plugins
+ * @prop {boolean} cfg.activateQueryTool: Activate query tool options, default `false`
+ * @prop {object[]} cfg.spatialMethodOptions: The list of geometric methods use to create/draw the spatial filter <br/>
+ * Here you can configure a list of methods used to draw (BBOX, Circle, Polygon) or create (Viewport and wfsGeocoder types) regarding the wfsGeocoder. <br/>The options for wfsGeocoder are:
+ * - id: id of the method
+ * - name: label used in the DropdownList
+ * - type: must be wfsGeocoder
+ * - customItemClassName: a custom class for used for this method in the DropdownList
+ * - filterProps:
+ *   - blacklist {string[]} a list of banned words excluded from the wfs search
+ *   - maxFeatures {number} the maximum features fetched per request
+ *   - predicate {string} the cql predicate
+ *   - queriableAttributes {string[]} list of attributes to query on.
+ *   - typeName {string} the workspace + layer name on geosever
+ *   - valueField {string} the attribute from features properties used as value/label in the autocomplete list
+ *   - srsName {string} The projection of the requested features fetched via wfs
+ *
+ * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
+ *
+ * @example
+ * // This example configure a layer with polyogns geometry as spatial filter method
+ * "spatialOperations": [
+ *      {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
+ *      {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},
+ *      {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
+ *      {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"},
+ *      {"id": "DWITHIN", "name": "queryform.spatialfilter.operations.dwithin"}
+ * ],
+ * "spatialMethodOptions": [
+ *    {"id": "Viewport", "name": "queryform.spatialfilter.methods.viewport"},
+ *    {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
+ *    {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
+ *    {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"},
+ *    {
+ *        "id": "methodId",
+ *        "name": "methodName",
+ *        "type": "wfsGeocoder",
+ *        "url": "urlToGeoserver",
+ *        "crossLayer": { // if this is present, allows to optimize the filter using crossLayerFilter functinalities instead of geometry. The server must support them
+ *           "cqlTemplate": "ATTRIBUTE_Y = '${properties.ATTRIBUTE_Y}'", // a template to generate the filter from the feature properties
+ *           "geometryName": "GEOMETRY",
+ *           "typeName": "workspace:typeName"
+ *        },
+ *        "filterProps": {
+ *            "blacklist": [],
+ *            "maxFeatures": 5,
+ *            "predicate": "LIKE",
+ *            "queriableAttributes": ["ATTRIBUTE_X"],
+ *            "typeName": "workspace:typeName",
+ *            "valueField": "ATTRIBUTE_Y",
+ *            "srsName": "ESPG:3857"
+ *        },
+ *        "customItemClassName": "customItemClassName"
+ *    }
+ */
 const QueryPanelPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
     layerPropertiesChangeHandler: changeLayerProperties,
@@ -280,5 +366,5 @@ module.exports = {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
     },
-    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics}
+    epics: {featureTypeSelectedEpic, wfsQueryEpic, viewportSelectedEpic, redrawSpatialFilterEpic, ...autocompleteEpics, ...require('../epics/queryform')}
 };

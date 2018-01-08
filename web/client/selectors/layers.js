@@ -62,6 +62,7 @@ const getSelectedLayer = state => {
 };
 const layerFilterSelector = (state) => state.layers && state.layers.filter || '';
 const layerSettingSelector = (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}};
+const layerMetadataSelector = (state) => state.layers && state.layers.layerMetadata || {expanded: false, metadataRecord: {}, maskLoading: false};
 
 const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
 const currentBackgroundSelector = (state) => {
@@ -87,6 +88,7 @@ module.exports = {
     getSelectedLayers,
     layerFilterSelector,
     layerSettingSelector,
+    layerMetadataSelector,
     backgroundControlsSelector,
     currentBackgroundSelector,
     tempBackgroundSelector

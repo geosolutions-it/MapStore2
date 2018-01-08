@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<csw:GetRecordByIdResponse xmlns:csw="http://www.opengis.net/cat/csw/2.0.2">
+  <csw:Record xmlns:geonet="http://www.fao.org/geonetwork" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:ows="http://www.opengis.net/ows" xmlns:dct="http://purl.org/dc/terms/">
+    <dc:identifier>msg_rss_micro</dc:identifier>
+    <dc:title>msg_rss_micro runs from 2016-05-03T09:35:00 UTC to 2016-05-03T09:35:00 UTC</dc:title>
+    <dc:type>dataset</dc:type>
+    <dc:subject>msg</dc:subject>
+    <dc:subject>rss</dc:subject>
+    <dc:subject>micro</dc:subject>
+    <dc:subject>2016-05-03</dc:subject>
+    <dc:subject>09:35:00</dc:subject>
+    <dc:subject>climatologyMeteorologyAtmosphere</dc:subject>
+    <dc:format>GeoTIFF</dc:format>
+    <dct:abstract>msg_rss_micro runs from 2016-05-03T09:35:00 to 2016-05-03T09:35:00 UTC every 5 minutes</dct:abstract>
+    <dc:rights>otherRestrictions</dc:rights>
+    <dc:language>ita</dc:language>
+    <dc:source>Run startup timestamp 2016-05-03T09:35:00</dc:source>
+    <dc:format>GeoTIFF</dc:format>
+    <ows:BoundingBox crs="urn:ogc:def:crs:EPSG::WGS 84 (EPSG:4326)">
+      <ows:LowerCorner>38.0020439448139 26.9959121103728</ows:LowerCorner>
+      <ows:UpperCorner>-22 65</ows:UpperCorner>
+    </ows:BoundingBox>
+    <dc:URI protocol="OGC:WMS-1.1.1-http-get-map" name="msg_rss_micro" description="msg_rss_micro computed on 2016-05-03T09:35:00.000Z">http://geoportale.lamma.rete.toscana.it/geoserver/MSG_RSS_RGB/ows</dc:URI>
+    <dc:URI protocol="image/png" name="thumbnail">http://159.213.57.108/MSG_RSS_RGB/msg_rss_micro_s.png</dc:URI>
+  </csw:Record>
+</csw:GetRecordByIdResponse>

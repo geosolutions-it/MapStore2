@@ -189,6 +189,94 @@ describe('Test DrawSupport', () => {
         });
         expect(spyChangeStatus.calls.length).toBe(1);
     });
+    it('translate disabled when not editing', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Polygon',
+                coordinates: [[
+                  [13, 43],
+                  [15, 43],
+                  [15, 44],
+                  [13, 44]
+                ]]
+            },
+            properties: {
+                'name': "some name"
+            }
+        };
+
+
+        const support = ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport features={[feature]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Some" options={{
+                    drawEnabled: false, editEnabled: false}}
+                />, document.getElementById("container"));
+        expect(support.translateInteraction).toNotExist();
+    });
+    it('translate disabled when Polygon', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Polygon',
+                coordinates: [[
+                  [13, 43],
+                  [15, 43],
+                  [15, 44],
+                  [13, 44]
+                ]]
+            },
+            properties: {
+                'name': "some name"
+            }
+        };
+
+
+        const support = ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport features={[feature]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Polygon" options={{
+                    drawEnabled: false, editEnabled: true}}
+                />, document.getElementById("container"));
+        expect(support.translateInteraction).toNotExist();
+    });
 
     it('end drawing', () => {
         const fakeMap = {
@@ -875,6 +963,67 @@ describe('Test DrawSupport', () => {
         ReactDOM.render(
             <DrawSupport features={[geoJSON]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Point" options={{
                     drawEnabled: true}}
+                    onEndDrawing={testHandlers.onEndDrawing}
+                    onChangeDrawingStatus={testHandlers.onStatusChange}
+                    onGeometryChanged={testHandlers.onGeometryChanged}
+                />, document.getElementById("container"));
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: feature
+        });
+        expect(spyEnd.calls.length).toBe(1);
+        expect(spyChangeStatus.calls.length).toBe(1);
+        expect(spyChange.calls.length).toBe(1);
+    });
+    it('draw or edit, update spatial field', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+
+        const testHandlers = {
+            onEndDrawing: () => {},
+            onStatusChange: () => {},
+            onGeometryChanged: () => {}
+        };
+        const geoJSON = {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [13, 43]
+            },
+            properties: {
+                'name': "some name"
+            }
+        };
+        const feature = new ol.Feature({
+              geometry: new ol.geom.Point(13.0, 43.0),
+              name: 'My Point'
+        });
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const spyChange = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
+
+        const support = ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport features={[geoJSON]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Point" options={{
+                    drawEnabled: true,
+                    updateSpatialField: true
+                }}
                     onEndDrawing={testHandlers.onEndDrawing}
                     onChangeDrawingStatus={testHandlers.onStatusChange}
                     onGeometryChanged={testHandlers.onGeometryChanged}

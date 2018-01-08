@@ -90,7 +90,8 @@ class LeafletMap extends React.Component {
             scrollWheelZoom: false,
             doubleClickZoom: false,
             boxZoom: false,
-            tap: false
+            tap: false,
+            attributionControl: false
         }, {maxZoom: 23}, this.props.mapOptions, this.crs ? {crs: this.crs} : {});
 
         const map = L.map(this.props.id, assign({zoomControl: this.props.zoomControl}, mapOptions) ).setView([this.props.center.y, this.props.center.x],
@@ -326,10 +327,10 @@ class LeafletMap extends React.Component {
         var center = this.map.getCenter();
         this.props.onMapViewChanges({x: center.lng, y: center.lat, crs: "EPSG:4326"}, this.map.getZoom(), {
             bounds: {
-                minx: bbox[0],
-                miny: bbox[1],
-                maxx: bbox[2],
-                maxy: bbox[3]
+                minx: parseFloat(bbox[0]),
+                miny: parseFloat(bbox[1]),
+                maxx: parseFloat(bbox[2]),
+                maxy: parseFloat(bbox[3])
             },
             crs: 'EPSG:4326',
             rotation: 0
@@ -375,10 +376,10 @@ class LeafletMap extends React.Component {
             let bbox = new L.LatLngBounds(southWest, northEast).toBBoxString().split(',');
             return {
                 bounds: {
-                    minx: bbox[0],
-                    miny: bbox[1],
-                    maxx: bbox[2],
-                    maxy: bbox[3]
+                    minx: parseFloat(bbox[0]),
+                    miny: parseFloat(bbox[1]),
+                    maxx: parseFloat(bbox[2]),
+                    maxy: parseFloat(bbox[3])
                 },
                 crs: 'EPSG:4326',
                 rotation: 0

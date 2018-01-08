@@ -11,6 +11,9 @@ const React = require('react');
 const GroupField = require('./GroupField');
 const SpatialFilter = require('./SpatialFilter');
 const QueryToolbar = require('./QueryToolbar');
+const crossLayerFilterEnhancer = require('./enhancers/crossLayerFilter');
+const CrossLayerFilter = crossLayerFilterEnhancer(require('./CrossLayerFilter'));
+const BorderLayout = require('../../layout/BorderLayout');
 
 const Spinner = require('react-spinkit');
 
@@ -33,6 +36,7 @@ class QueryBuilder extends React.Component {
         addButtonIcon: PropTypes.string,
         attributePanelExpanded: PropTypes.bool,
         spatialPanelExpanded: PropTypes.bool,
+        crossLayerExpanded: PropTypes.bool,
         showDetailsPanel: PropTypes.bool,
         toolbarEnabled: PropTypes.bool,
         searchUrl: PropTypes.string,
@@ -51,11 +55,14 @@ class QueryBuilder extends React.Component {
         sortOptions: PropTypes.object,
         spatialOperations: PropTypes.array,
         spatialMethodOptions: PropTypes.array,
+        crossLayerFilterOptions: PropTypes.object,
+        crossLayerFilterActions: PropTypes.object,
         hits: PropTypes.bool,
         maxHeight: PropTypes.number,
         allowEmptyFilter: PropTypes.bool,
         autocompleteEnabled: PropTypes.bool,
-        emptyFilterWarning: PropTypes.bool
+        emptyFilterWarning: PropTypes.bool,
+        header: PropTypes.node
     };
 
     static defaultProps = {
@@ -70,7 +77,8 @@ class QueryBuilder extends React.Component {
         spatialOperations: [],
         featureTypeError: "",
         spatialField: {},
-        removeButtonIcon: "glyphicon glyphicon-remove",
+        crossLayerFilter: null,
+        removeButtonIcon: "trash",
         addButtonIcon: "glyphicon glyphicon-plus",
         attributePanelExpanded: true,
         spatialPanelExpanded: true,
@@ -108,6 +116,12 @@ class QueryBuilder extends React.Component {
             onEndDrawing: () => {},
             onChangeDwithinValue: () => {}
         },
+        crossLayerFilterOptions: {
+
+        },
+        crossLayerFilterActions: {
+
+        },
         queryToolbarActions: {
             onQuery: () => {},
             onReset: () => {},
@@ -119,28 +133,35 @@ class QueryBuilder extends React.Component {
         if (this.props.featureTypeError !== "") {
             return <div style={{margin: "0 auto", "text-align": "center"}}>{this.props.featureTypeErrorText}</div>;
         }
+
+        const header = (<div className="m-header">{this.props.header}
+            <QueryToolbar
+                sendFilters={{
+                    attributeFilter: this.props.attributePanelExpanded,
+                    spatialFilter: this.props.spatialPanelExpanded,
+                    crossLayerFilter: this.props.crossLayerExpanded
+                }}
+                params={this.props.params}
+                filterFields={this.props.filterFields}
+                groupFields={this.props.groupFields}
+                spatialField={this.props.spatialField}
+                toolbarEnabled={this.props.toolbarEnabled}
+                searchUrl={this.props.searchUrl}
+                showGeneratedFilter={this.props.showGeneratedFilter}
+                featureTypeName={this.props.featureTypeName}
+                ogcVersion={this.props.ogcVersion}
+                filterType={this.props.filterType}
+                actions={this.props.queryToolbarActions}
+                resultTitle={this.props.resultTitle}
+                pagination={this.props.pagination}
+                sortOptions={this.props.sortOptions}
+                crossLayerFilter={this.props.crossLayerFilterOptions.crossLayerFilter}
+                hits={this.props.hits}
+                allowEmptyFilter={this.props.allowEmptyFilter}
+                emptyFilterWarning={this.props.emptyFilterWarning}
+            /></div>);
         return this.props.attributes.length > 0 ?
-            <div id="query-form-panel">
-                <QueryToolbar
-                    params={this.props.params}
-                    filterFields={this.props.filterFields}
-                    groupFields={this.props.groupFields}
-                    spatialField={this.props.spatialField}
-                    toolbarEnabled={this.props.toolbarEnabled}
-                    searchUrl={this.props.searchUrl}
-                    showGeneratedFilter={this.props.showGeneratedFilter}
-                    featureTypeName={this.props.featureTypeName}
-                    ogcVersion={this.props.ogcVersion}
-                    filterType={this.props.filterType}
-                    actions={this.props.queryToolbarActions}
-                    resultTitle={this.props.resultTitle}
-                    pagination={this.props.pagination}
-                    sortOptions={this.props.sortOptions}
-                    hits={this.props.hits}
-                    allowEmptyFilter={this.props.allowEmptyFilter}
-                    emptyFilterWarning={this.props.emptyFilterWarning}
-                    />
-                <div className="querypanel" style={{maxHeight: this.props.maxHeight - 170}}>
+            <BorderLayout header={header} className="mapstore-query-builder" id="query-form-panel">
                     <GroupField
                         autocompleteEnabled={this.props.autocompleteEnabled}
                         maxFeaturesWPS={this.props.maxFeaturesWPS}
@@ -160,8 +181,15 @@ class QueryBuilder extends React.Component {
                         spatialPanelExpanded={this.props.spatialPanelExpanded}
                         showDetailsPanel={this.props.showDetailsPanel}
                         actions={this.props.spatialFilterActions}/>
-                </div>
-            </div>
+                    <CrossLayerFilter
+                        spatialOperations={this.props.spatialOperations}
+                        crossLayerExpanded={this.props.crossLayerExpanded}
+                        searchUrl={this.props.searchUrl}
+                        featureTypeName={this.props.featureTypeName}
+                        {...this.props.crossLayerFilterOptions}
+                        {...this.props.crossLayerFilterActions}
+                        />
+            </BorderLayout>
          : <div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce" overrideSpinnerClassName="spinner"/></div>;
     }
 }

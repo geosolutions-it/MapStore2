@@ -58,10 +58,30 @@ class ShapeFileUploadAndStyle extends React.Component {
 
     static defaultProps = {
         shapeLoading: () => {},
-        readFiles: files => files.map((file) => {
-            return FileUtils.readZip(file).then((buffer) => {
-                return FileUtils.shpToGeoJSON(buffer);
-            });
+        readFiles: (files) => files.map((file) => {
+            const ext = FileUtils.recognizeExt(file.name);
+            const type = file.type || FileUtils.MIME_LOOKUPS[ext];
+            if (type === 'application/vnd.google-earth.kml+xml') {
+                return FileUtils.readKml(file).then((xml) => {
+                    return FileUtils.kmlToGeoJSON(xml);
+                });
+            }
+            if (type === 'application/gpx+xml') {
+                return FileUtils.readKml(file).then((xml) => {
+                    return FileUtils.gpxToGeoJSON(xml);
+                });
+            }
+            if (type === 'application/vnd.google-earth.kmz') {
+                return FileUtils.readKmz(file).then((xml) => {
+                    return FileUtils.kmlToGeoJSON(xml);
+                });
+            }
+            if (type === 'application/x-zip-compressed' ||
+                type === 'application/zip' ) {
+                return FileUtils.readZip(file).then((buffer) => {
+                    return FileUtils.shpToGeoJSON(buffer);
+                });
+            }
         }),
         mapType: "leaflet",
         buttonSize: "small",
@@ -79,9 +99,46 @@ class ShapeFileUploadAndStyle extends React.Component {
         StyleUtils = require('../../utils/StyleUtils')(this.props.mapType);
     }
 
+    getGeometryType = (geometry) => {
+        if (geometry && geometry.type === 'GeometryCollection') {
+            return geometry.geometries.reduce((previous, g) => {
+                if (g && g.type === previous) {
+                    return previous;
+                }
+                return g.type;
+            }, null);
+        }
+        if (geometry) {
+            switch (geometry.type) {
+                case 'Polygon':
+                case 'MultiPolygon': {
+                    return 'Polygon';
+                }
+                case 'MultiLineString':
+                case 'LineString': {
+                    return 'LineString';
+                }
+                case 'Point':
+                case 'MultiPoint': {
+                    return 'Point';
+                }
+                default: {
+                    return null;
+                }
+            }
+        }
+        return null;
+    };
+
     getGeomType = (layer) => {
         if (layer && layer.features && layer.features[0].geometry) {
-            return layer.features[0].geometry.type;
+            return layer.features.reduce((previous, f) => {
+                const currentType = this.getGeometryType(f.geometry);
+                if (previous) {
+                    return currentType === previous ? previous : 'GeometryCollection';
+                }
+                return currentType;
+            }, null);
         }
     };
 
@@ -152,7 +209,7 @@ class ShapeFileUploadAndStyle extends React.Component {
         this.props.shapeLoading(true);
         let queue = this.props.readFiles(files);
         Promise.all(queue).then((geoJsons) => {
-            let ls = geoJsons.reduce((layers, geoJson) => {
+            let ls = geoJsons.filter((element) => element[0].features.length !== 0).reduce((layers, geoJson) => {
                 if (geoJson) {
                     return layers.concat(geoJson.map((layer) => {
                         return LayersUtils.geoJSONToLayer(layer, this.props.createId(layer, geoJson));
@@ -180,28 +237,18 @@ class ShapeFileUploadAndStyle extends React.Component {
         }
         Promise.resolve(this.props.addShapeLayer( styledLayer )).then(() => {
             this.props.shapeLoading(false);
-
-            // calculates the bbox that contains all shapefiles added
-            const bbox = this.props.layers[0].features.reduce((bboxtotal, feature) => {
-                if (feature.geometry.bbox && feature.geometry.bbox[0] && feature.geometry.bbox[1] && feature.geometry.bbox[2] && feature.geometry.bbox[3] ) {
-                    return [
-                        Math.min(bboxtotal[0], feature.geometry.bbox[0]),
-                        Math.min(bboxtotal[1], feature.geometry.bbox[1]),
-                        Math.max(bboxtotal[2], feature.geometry.bbox[2]),
-                        Math.max(bboxtotal[3], feature.geometry.bbox[3])
-                    ] || bboxtotal;
-                } else if (feature.geometry && feature.geometry.type === "Point" && feature.geometry.coordinates && feature.geometry.coordinates.length >= 2) {
-                    return [Math.min(bboxtotal[0], feature.geometry.coordinates[0]),
-                        Math.min(bboxtotal[1], feature.geometry.coordinates[1]),
-                        Math.max(bboxtotal[2], feature.geometry.coordinates[0]),
-                        Math.max(bboxtotal[3], feature.geometry.coordinates[1])
-                    ];
-                }
-                return bboxtotal;
-            }, this.props.bbox);
+            let bbox = [];
+            if (this.props.layers[0].bbox && this.props.bbox) {
+                bbox = [
+                    Math.min(this.props.bbox[0], this.props.layers[0].bbox.bounds.minx),
+                    Math.min(this.props.bbox[1], this.props.layers[0].bbox.bounds.miny),
+                    Math.max(this.props.bbox[2], this.props.layers[0].bbox.bounds.maxx),
+                    Math.max(this.props.bbox[3], this.props.layers[0].bbox.bounds.maxy)
+                ];
+            }
             if (this.state.zoomOnShapefiles) {
-                this.props.updateShapeBBox(bbox);
-                this.props.onZoomSelected(bbox, "EPSG:4326");
+                this.props.updateShapeBBox(bbox && bbox.length ? bbox : this.props.bbox);
+                this.props.onZoomSelected(bbox && bbox.length ? bbox : this.props.bbox, "EPSG:4326");
             }
             this.props.onShapeSuccess(this.props.layers[0].name + LocaleUtils.getMessageById(this.context.messages, "shapefile.success"));
             this.props.onLayerAdded(this.props.selected);

@@ -52,6 +52,14 @@ const MODES = {
 };
 const START_SYNC_WMS = 'FEATUREGRID:START_SYNC_WMS';
 const STOP_SYNC_WMS = 'FEATUREGRID:STOP_SYNC_WMS';
+const STORE_ADVANCED_SEARCH_FILTER = 'STORE_ADVANCED_SEARCH_FILTER';
+
+function storeAdvancedSearchFilter(filterObj) {
+    return {
+        type: STORE_ADVANCED_SEARCH_FILTER,
+        filterObj
+    };
+}
 
 
 function initPlugin(options = {}) {
@@ -282,6 +290,11 @@ function zoomAll() {
         type: ZOOM_ALL
     };
 }
+function startSyncWMS() {
+    return {
+        type: START_SYNC_WMS
+    };
+}
 function sizeChange(size, dockProps) {
     return {
         type: SIZE_CHANGE,
@@ -353,6 +366,7 @@ module.exports = {
     toggleEditMode,
     toggleViewMode,
     initPlugin, INIT_PLUGIN,
-    START_SYNC_WMS,
-    STOP_SYNC_WMS
+    START_SYNC_WMS, startSyncWMS,
+    STOP_SYNC_WMS,
+    storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER
 };

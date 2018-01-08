@@ -200,6 +200,16 @@ describe('ConfigUtils', () => {
         expect(center.y).toExist();
         expect(center.x).toExist();
         expect(center.crs).toBe('EPSG:4326');
+        expect(Math.round(center.x)).toBe(13);
+        expect(Math.round(center.y)).toBe(39);
+
+        center = ConfigUtils.getCenter([1459732, 4786738], 'EPSG:900913');
+        expect(center).toExist();
+        expect(center.y).toExist();
+        expect(center.x).toExist();
+        expect(center.crs).toBe('EPSG:4326');
+        expect(Math.round(center.x)).toBe(13);
+        expect(Math.round(center.y)).toBe(39);
     });
 
     it('getConfigurationOptions', () => {

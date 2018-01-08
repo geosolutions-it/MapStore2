@@ -8,8 +8,8 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 
-const {Row, Col, Panel, FormControl, Button, Glyphicon} = require('react-bootstrap');
-
+const {Row, Col, FormControl} = require('react-bootstrap');
+const SwitchPanel = require('../../misc/switch/SwitchPanel');
 const I18N = require('../../I18N/I18N');
 
 const assign = require('object-assign');
@@ -206,18 +206,6 @@ class GeometryDetails extends React.Component {
             radius: Math.round(geometry.radius * 100) / 100
         };
     };
-
-    renderHeader = () => {
-        return (
-            <div className="detail-header">
-                <span>
-                    <span className="detail-title"><I18N.Message msgId={"queryform.spatialfilter.details.details_header"}/></span>
-                    <Button onClick={() => this.onClosePanel(false)} className="remove-filter-button"><Glyphicon glyph="glyphicon glyphicon-remove"/></Button>
-                </span>
-            </div>
-        );
-    };
-
     renderCoordinateField = (value, name) => {
         return (
             <div>
@@ -286,16 +274,6 @@ class GeometryDetails extends React.Component {
                                 <span/>
                             </Col>
                         </Row>
-                        <Row>
-                            <Col>
-                                <Button id="save-bbox" className="filter-buttons" bsSize="xs" onClick={() => this.onModifyGeometry()}>
-                                    <Glyphicon glyph="glyphicon glyphicon-ok"/><I18N.Message msgId={"confirm"}/>
-                                </Button>
-                                <Button id="reset-bbox" className="filter-buttons" bsSize="xs" onClick={() => this.resetBBOX()}>
-                                    <Glyphicon glyph="glyphicon glyphicon-refresh"/><I18N.Message msgId={"queryform.reset"}/>
-                                </Button>
-                        </Col>
-                        </Row>
                     </div>
                     <span>
                         <hr width="90%"/>
@@ -351,16 +329,6 @@ class GeometryDetails extends React.Component {
                                 <span/>
                             </Col>
                         </Row>
-                        <Row>
-                            <Col>
-                                <Button id="save-radius" className="filter-buttons" bsSize="xs" onClick={() => this.onModifyGeometry()}>
-                                    <Glyphicon glyph="glyphicon glyphicon-ok"/><I18N.Message msgId={"confirm"}/>
-                                </Button>
-                                <Button id="reset-radius" className="filter-buttons" bsSize="xs" onClick={() => this.resetCircle()}>
-                                    <Glyphicon glyph="glyphicon glyphicon-refresh"/><I18N.Message msgId={"queryform.reset"}/>
-                                </Button>
-                            </Col>
-                        </Row>
                     </div>
                     <span>
                         <hr width="90%"/>
@@ -375,10 +343,23 @@ class GeometryDetails extends React.Component {
 
     render() {
         return (
-            <Panel className="details-panel" bsStyle="primary">
-                {this.renderHeader()}
+            <SwitchPanel buttons={[{
+                key: 'confirm',
+                glyph: 'ok',
+                tooltipId: 'confirm',
+                onClick: () => this.onModifyGeometry()
+            }, {
+                key: 'reset',
+                tooltipId: 'queryform.reset',
+                glyph: 'clear-filter',
+                onClick: () => this.resetBBOX()
+            }, {
+                key: 'close',
+                glyph: '1-close',
+                onClick: () => this.onClosePanel(false)
+            }]} title={<I18N.Message msgId={"queryform.spatialfilter.details.details_header"}/>} locked expanded className="details-panel" bsStyle="primary">
                 {this.renderDetailsContent()}
-            </Panel>
+            </SwitchPanel>
         );
     }
 

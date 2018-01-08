@@ -8,7 +8,7 @@
 
 var {LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
     TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, ADD_LAYER, REMOVE_LAYER,
-    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, REFRESH_LAYERS, LAYERS_REFRESH_ERROR, LAYERS_REFRESHED, CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS
+    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, REFRESH_LAYERS, LAYERS_REFRESH_ERROR, LAYERS_REFRESHED, CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA
     } = require('../actions/layers');
 
 const {TOGGLE_CONTROL} = require('../actions/controls');
@@ -243,7 +243,7 @@ function layers(state = [], action) {
             });
         }
         case HIDE_SETTINGS: {
-            let settings = assign({}, state.Settings, {
+            let settings = assign({}, state.settings, {
                 expanded: false,
                 node: null,
                 nodeType: null,
@@ -319,12 +319,36 @@ function layers(state = [], action) {
                     node: null,
                     nodeType: null,
                     options: {}
+                },
+                layerMetadata: {
+                    expanded: false,
+                    metadataRecord: {},
+                    maskLoading: false
                 }
             });
         }
         case FILTER_LAYERS: {
             return assign({}, state, {
                 filter: action.text || ''
+            });
+        }
+        case SHOW_LAYER_METADATA: {
+            let layerMetadata = assign({}, state.layerMetadata, {
+                metadataRecord: action.metadataRecord,
+                expanded: true,
+                maskLoading: action.maskLoading
+            });
+            return assign({}, state, {
+                layerMetadata
+            });
+        }
+        case HIDE_LAYER_METADATA: {
+            let layerMetadata = assign({}, state.layerMetadata, {
+                metadataRecord: {},
+                expanded: false
+            });
+            return assign({}, state, {
+                layerMetadata
             });
         }
         default:

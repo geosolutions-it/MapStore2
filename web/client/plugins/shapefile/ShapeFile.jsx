@@ -67,6 +67,7 @@ class ShapeFile extends React.Component {
         const stylers = {
             Polygon: <StylePolygon/>,
             MultiPolygon: <StylePolygon/>,
+            GeometryCollection: <StylePolygon/>,
             LineString: <StylePolyline/>,
             MultiLineString: <StylePolyline/>,
             MultiPoint: <StylePoint/>,

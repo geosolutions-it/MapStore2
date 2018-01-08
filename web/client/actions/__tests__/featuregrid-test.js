@@ -37,7 +37,9 @@ const {
     zoomAll, ZOOM_ALL,
     openAdvancedSearch, OPEN_ADVANCED_SEARCH,
     initPlugin, INIT_PLUGIN,
-    sizeChange, SIZE_CHANGE
+    sizeChange, SIZE_CHANGE,
+    START_SYNC_WMS, startSyncWMS,
+    storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER
 } = require('../featuregrid');
 
 const idFeature = "2135";
@@ -223,6 +225,11 @@ describe('Test correctness of featurgrid actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(ZOOM_ALL);
     });
+    it('Test startSyncWMS', () => {
+        const retval = startSyncWMS();
+        expect(retval).toExist();
+        expect(retval.type).toBe(START_SYNC_WMS);
+    });
     it('Test openAdvancedSearch', () => {
         const retval = openAdvancedSearch();
         expect(retval).toExist();
@@ -243,5 +250,12 @@ describe('Test correctness of featurgrid actions', () => {
         expect(retval.type).toBe(SIZE_CHANGE);
         expect(retval.size).toBe(size);
         expect(retval.dockProps).toEqual(dockProps);
+    });
+    it('Test storeAdvancedSearchFilter', () => {
+        const filterObj = {name: "A"};
+        const retval = storeAdvancedSearchFilter(filterObj);
+        expect(retval).toExist();
+        expect(retval.type).toBe(STORE_ADVANCED_SEARCH_FILTER);
+        expect(retval.filterObj).toBe(filterObj);
     });
 });

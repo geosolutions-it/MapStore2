@@ -7,6 +7,7 @@
  */
 
 const assign = require('object-assign');
+const toBbox = require('turf-bbox');
 const {isString, isObject, isArray, head, isEmpty} = require('lodash');
 const REG_GEOSERVER_RULE = /\/[\w- ]*geoserver[\w- ]*\//;
 const findGeoServerName = ({url, regex = REG_GEOSERVER_RULE}) => {
@@ -300,6 +301,7 @@ const LayersUtils = {
         return mapState;
     },
     geoJSONToLayer: (geoJSON, id) => {
+        const bbox = toBbox(geoJSON);
         return {
             type: 'vector',
             visibility: true,
@@ -307,6 +309,15 @@ const LayersUtils = {
             id,
             name: geoJSON.fileName,
             hideLoading: true,
+            bbox: {
+                bounds: {
+                    minx: bbox[0],
+                    miny: bbox[1],
+                    maxx: bbox[2],
+                    maxy: bbox[3]
+                },
+                crs: "EPSG:4326"
+            },
             features: geoJSON.features.map((feature, idx) => {
                 if (!feature.id) {
                     feature.id = idx;
@@ -341,6 +352,7 @@ const LayersUtils = {
             type: layer.type,
             url: layer.url,
             bbox: layer.bbox,
+            nativeCrs: layer.nativeCrs,
             visibility: layer.loadingError === 'Error' ? true : layer.visibility,
             singleTile: layer.singleTile || false,
             allowedSRS: layer.allowedSRS,
@@ -352,6 +364,7 @@ const LayersUtils = {
             hideLoading: layer.hideLoading || false,
             handleClickOnLayer: layer.handleClickOnLayer || false,
             featureInfo: layer.featureInfo,
+            catalogURL: layer.catalogURL,
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },

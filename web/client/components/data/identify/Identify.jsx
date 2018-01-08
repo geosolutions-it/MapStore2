@@ -126,7 +126,11 @@ class Identify extends React.Component {
     state = {
         fullClass: ''
     };
-
+    componentDidMount() {
+        if (this.props.enabled) {
+            this.props.changeMousePointer('pointer');
+        }
+    }
     componentWillReceiveProps(newProps) {
         if (this.needsRefresh(newProps)) {
             if (!newProps.point.modifiers || newProps.point.modifiers.ctrl !== true || !newProps.allowMultiselection) {

@@ -106,50 +106,6 @@ describe('FilterUtils', () => {
                 rowId: "1",
                 type: "list",
                 value: "value1"
-            }, {
-                groupId: 1,
-                attribute: "attribute2",
-                exception: null,
-                operator: "=",
-                rowId: "2",
-                type: "list",
-                value: "value2"
-            },
-            {
-                groupId: 1,
-                attribute: "attribute3",
-                exception: null,
-                operator: "=",
-                rowId: "3",
-                type: "number",
-                value: "value1"
-            },
-            {
-                groupId: 1,
-                attribute: "attribute4",
-                exception: null,
-                operator: "><",
-                rowId: "4",
-                type: "number",
-                value: {lowBound: 10, upBound: 20}
-            },
-            {
-                attribute: "attribute5",
-                exception: null,
-                operator: "isNull",
-                groupId: 1,
-                rowId: "5",
-                type: "string",
-                value: ''
-            },
-            {
-                attribute: "attribute5",
-                exception: null,
-                operator: "ilike",
-                groupId: 1,
-                rowId: "6",
-                type: "string",
-                value: 'pa'
             }],
             groupFields: [{
                 id: 1,
@@ -161,13 +117,13 @@ describe('FilterUtils', () => {
                 attribute: "the_geom",
                 geometry: {
                     center: [1, 1],
-                    coordinates: [
+                    coordinates: [[
                         [1, 2],
                         [2, 3],
                         [3, 4],
                         [4, 5],
                         [5, 6]
-                    ],
+                    ]],
                     extent: [
                         1, 2, 3, 4, 5
                     ],
@@ -182,6 +138,7 @@ describe('FilterUtils', () => {
 
         let filter = FilterUtils.toCQLFilter(filterObj);
         expect(filter).toExist();
+        expect(filter).toBe("(\"attribute1\"='value1') AND (INTERSECTS(the_geom, Polygon((1 2, 2 3, 3 4, 4 5, 5 6, 1 2))))");
     });
     it('Check for pagination wfs 1.1.0', () => {
         let filterObj = {
@@ -690,6 +647,64 @@ describe('FilterUtils', () => {
         let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj);
         expect(filter).toEqual(expected);
     });
+    it('Check SpatialFilterField OGC collectGeometries', () => {
+        let filterObj = {
+            spatialField: {
+                "operation": "INTERSECTS",
+                "attribute": "geometry",
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "TEST",
+                        cqlFilter: "INCLUDE",
+                        geometryName: "GEOMETRY"
+                    }
+                },
+                "geometry": {
+                    "type": "Point",
+                    "projection": "EPSG:4326",
+                    "coordinates": [1, 1]
+                }
+            }
+        };
+        const expectedGeom = "<ogc:Intersects>"
+         + '<ogc:PropertyName>geometry</ogc:PropertyName>'
+         + '<ogc:Function name="collectGeometries">'
+         + '<ogc:Function name="queryCollection">'
+         + '<ogc:Literal>TEST</ogc:Literal>'
+         + '<ogc:Literal>GEOMETRY</ogc:Literal>'
+         + '<ogc:Literal>INCLUDE</ogc:Literal>'
+         + '</ogc:Function></ogc:Function>'
+         + "</ogc:Intersects>";
+        let expected =
+            '<wfs:GetFeature service="WFS" version="2.0" xmlns:wfs="http://www.opengis.net/wfs/2.0" xmlns:fes="http://www.opengis.net/fes/2.0" xmlns:gml="http://www.opengis.net/gml/3.2" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.opengis.net/wfs/2.0 http://schemas.opengis.net/wfs/2.0/wfs.xsd http://www.opengis.net/gml/3.2 http://schemas.opengis.net/gml/3.2.1/gml.xsd"><wfs:Query typeNames="ft_name_test" srsName="EPSG:4326"><fes:Filter>'
+            + expectedGeom
+            + '</fes:Filter></wfs:Query></wfs:GetFeature>';
+        let filter = FilterUtils.toOGCFilter("ft_name_test", filterObj);
+        expect(filter).toEqual(expected);
+    });
+    it('Check SpatialFilterField CQL collectGeometries', () => {
+        let filterObj = {
+            spatialField: {
+                "operation": "INTERSECTS",
+                "attribute": "geometry",
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "TEST",
+                        cqlFilter: "INCLUDE",
+                        geometryName: "GEOMETRY"
+                    }
+                },
+                "geometry": {
+                    "type": "Point",
+                    "projection": "EPSG:4326",
+                    "coordinates": [1, 1]
+                }
+            }
+        };
+
+        let filter = FilterUtils.toCQLFilter(filterObj);
+        expect(filter).toEqual('(INTERSECTS(geometry, collectGeometries(queryCollection(\'TEST\', \'GEOMETRY\',\'INCLUDE\'))))');
+    });
     it('Check SpatialFilterField cql', () => {
         let filterObj = {
             simpleFilterFields: [{
@@ -820,6 +835,18 @@ describe('FilterUtils', () => {
         expect(FilterUtils.cqlBooleanField("attribute_1", "=", undefined)).toBe("");
         expect(FilterUtils.cqlBooleanField("attribute_1", "=", null)).toBe("");
     });
+    it('Check if cqlStringField(attribute, operator, value)', () => {
+        // testing operator =
+        expect(FilterUtils.cqlStringField("attribute_1", "=", "Alabama")).toBe("\"attribute_1\"='Alabama'");
+        // test escape single quotes
+        expect(FilterUtils.cqlStringField("attribute_1", "=", "PRE'")).toBe("\"attribute_1\"='PRE'''");
+        // test isNull
+        expect(FilterUtils.cqlStringField("attribute_1", "isNull", "")).toBe("isNull(\"attribute_1\")=true");
+        // test ilike
+        expect(FilterUtils.cqlStringField("attribute_1", "ilike", "A")).toBe("strToLowerCase(\"attribute_1\") LIKE '%a%'");
+        // test LIKE
+        expect(FilterUtils.cqlStringField("attribute_1", "like", "A")).toBe("\"attribute_1\" LIKE '%A%'");
+    });
     it('Check if ogcBooleanField(attribute, operator, value, nsplaceholder)', () => {
         // testing operators
         expect(FilterUtils.ogcBooleanField("attribute_1", "=", true, "ogc"))
@@ -840,6 +867,75 @@ describe('FilterUtils', () => {
         expect(FilterUtils.ogcBooleanField("attribute_1", "=", null, "ogc")).toBe("");
 
     });
+    it('Calculate CQL filter for number with value 0', () => {
+        let filterObj = {
+            filterFields: [
+            {
+                groupId: 1,
+                attribute: "attribute3",
+                exception: null,
+                operator: "=",
+                rowId: "3",
+                type: "number",
+                value: 0
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }]
+        };
 
+        let filter = FilterUtils.toCQLFilter(filterObj);
+        expect(filter).toExist();
+        expect(filter).toBe("(\"attribute3\" = \'0\')");
+    });
+    it('Calculate CQL filter for string  and LIKE operator', () => {
+        let filterObj = {
+            filterFields: [
+            {
+                groupId: 1,
+                attribute: "attribute3",
+                exception: null,
+                operator: "LIKE",
+                rowId: "3",
+                type: "string",
+                value: "val"
+            }],
+            groupFields: [{
+                id: 1,
+                index: 0,
+                logic: "OR"
+            }]
+        };
 
+        let filter = FilterUtils.toCQLFilter(filterObj);
+        expect(filter).toExist();
+        expect(filter).toBe("(\"attribute3\" LIKE \'%val%\')");
+    });
+    it('getCrossLayerCqlFilter', () => {
+        const filter = FilterUtils.getCrossLayerCqlFilter({
+            collectGeometries: {
+                queryCollection: {
+                        filterFields: [
+                        {
+                            groupId: 1,
+                            attribute: "attribute3",
+                            exception: null,
+                            operator: "LIKE",
+                            rowId: "3",
+                            type: "string",
+                            value: "val"
+                        }],
+                        groupFields: [{
+                            id: 1,
+                            index: 0,
+                            logic: "OR"
+                        }]
+                }
+            }
+        });
+        expect(filter).toExist();
+        expect(filter).toBe("(\"attribute3\" LIKE \'%val%\')");
+    });
 });
