@@ -3,6 +3,8 @@ module.exports = ({files, path, testFile, singleRun}) => ({
 
     browserNoActivityTimeout: 30000,
 
+    reportSlowerThan: 100,
+
     singleRun,
 
     frameworks: [ 'mocha' ],
