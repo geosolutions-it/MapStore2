@@ -273,6 +273,13 @@
                 "search": "Mettre à jour les options de recherche",
                 "title": "Mettre à jour le titre",
                 "dimensions": "Mettre à jour les dimensions"
+            },
+            "layerMetadata": {
+                "toolLayerMetadataTooltip": "Afficher les métadonnées de la couche sélectionnée",
+                "layerMetadataPanelTitle": "Métadonnées de couche",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Erreur dans la recherche de métadonnées"
+                }
             }
         },
         "print":{

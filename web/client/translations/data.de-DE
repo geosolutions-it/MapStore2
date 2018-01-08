@@ -272,6 +272,13 @@
                 "search": "Suchoptionen aktualisieren",
                 "title": "Titel aktualisieren",
                 "dimensions": "Dimensionen aktualisieren"
+            },
+            "layerMetadata": {
+                "toolLayerMetadataTooltip": "Zeigen Sie die Metadaten der ausgewählten Ebene an",
+                "layerMetadataPanelTitle": "Ebenenmetadaten",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Fehler bei der Metadatensuche"
+                }
             }
         },
         "print":{

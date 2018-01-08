@@ -251,6 +251,13 @@
                 "search": "De zoekopties bijwerken",
                 "title": "De titet bijwerken",
                 "dimensions": "De dimensies bijwerken"
+            },
+            "layerMetadata": {
+                "toolLayerMetadataTooltip": "Toon de metadata van de geselecteerde laag",
+                "layerMetadataPanelTitle": "Metagegevens van de laag",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Fout bij zoeken naar metadata"
+                }
             }
         },
         "print":{

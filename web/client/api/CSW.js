@@ -28,6 +28,59 @@ const parseUrl = (url) => {
  */
 var Api = {
     parseUrl,
+    getRecordById: function(catalogURL) {
+        return new Promise((resolve) => {
+            require.ensure(['../utils/ogc/CSW'], () => {
+                resolve(axios.get(catalogURL)
+                    .then((response) => {
+                        if (response) {
+                            const {unmarshaller} = require('../utils/ogc/CSW');
+                            const json = unmarshaller.unmarshalString(response.data);
+                            if (json && json.name && json.name.localPart === "GetRecordByIdResponse" && json.value && json.value.abstractRecord) {
+                                let dcElement = json.value.abstractRecord[0].value.dcElement;
+                                if (dcElement) {
+                                    let dc = {
+                                        references: []
+                                    };
+                                    for (let j = 0; j < dcElement.length; j++) {
+                                        let dcel = dcElement[j];
+                                        let elName = dcel.name.localPart;
+                                        let finalEl = {};
+                                        /* Some services (e.g. GeoServer) support http://schemas.opengis.net/csw/2.0.2/record.xsd only
+                                        * Usually they publish the WMS URL at dct:"references" with scheme=OGC:WMS
+                                        * So we place references as they are.
+                                        */
+                                        if (elName === "references" && dcel.value) {
+                                            let urlString = dcel.value.content && ConfigUtils.cleanDuplicatedQuestionMarks(dcel.value.content[0]) || dcel.value.content || dcel.value;
+                                            finalEl = {
+                                                value: urlString,
+                                                scheme: dcel.value.scheme
+                                            };
+                                        } else {
+                                            finalEl = dcel.value.content && dcel.value.content[0] || dcel.value.content || dcel.value;
+                                        }
+                                        if (dc[elName] && Array.isArray(dc[elName])) {
+                                            dc[elName].push(finalEl);
+                                        } else if (dc[elName]) {
+                                            dc[elName] = [dc[elName], finalEl];
+                                        } else {
+                                            dc[elName] = finalEl;
+                                        }
+                                    }
+                                    return {dc};
+                                }
+                            } else if (json && json.name && json.name.localPart === "ExceptionReport") {
+                                return {
+                                    error: json.value.exception && json.value.exception.length && json.value.exception[0].exceptionText || 'GenericError'
+                                };
+                            }
+                            return null;
+                        }
+                        return null;
+                    }));
+            });
+        });
+    },
     getRecords: function(url, startPosition, maxRecords, filter) {
         return new Promise((resolve) => {
             require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {

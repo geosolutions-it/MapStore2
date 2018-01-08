@@ -7,8 +7,8 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Babel = require('babel-standalone');
 const {isEqual} = require("lodash");
+const TemplateUtils = require('../../../../utils/TemplateUtils');
 
 class Template extends React.Component {
     static propTypes = {
@@ -47,17 +47,22 @@ class Template extends React.Component {
 
     /*eslint-enable */
     render() {
-        let content = this.props.renderContent ? this.props.renderContent(this.comp, this.props) : this.renderContent();
-        return React.isValidElement(content) ? content : null;
+        if (this.comp) {
+            let content = this.props.renderContent ? this.props.renderContent(this.comp, this.props) : this.renderContent();
+            return React.isValidElement(content) ? content : null;
+        }
+        return null;
     }
 
     parseTemplate = (temp) => {
-        let template = typeof temp === 'function' ? temp() : temp;
-        try {
-            this.comp = Babel.transform(template, { presets: ['es2015', 'react', 'stage-0'] }).code;
-        } catch (e) {
-            this.props.onError(e.message);
-        }
+        TemplateUtils.parseTemplate(temp, (comp, error) => {
+            if (error) {
+                this.props.onError(error.message);
+            } else {
+                this.comp = comp;
+                this.forceUpdate();
+            }
+        });
     };
 }
 
