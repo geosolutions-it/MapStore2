@@ -45,8 +45,7 @@ module.exports = (plugins) => {
                 .switchMap((layer) => Rx.Observable.of(
                     clearChanges(),
                     browseData({
-                        ...getLayerFromId(store.getState(), layer.id),
-                        url: 'http://demo.geo-solutions.it:80/geoserver/wfs'
+                        ...getLayerFromId(store.getState(), layer.id)
                     })
         ))
     }, plugins);
