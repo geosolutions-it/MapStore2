@@ -452,6 +452,7 @@ describe("test the AnnotationsEditor Panel", () => {
             id: "1",
             title: 'mytitle',
             description: '<span><i>desc</i></span>',
+            type: 'Feature',
             geometry: {
                 type: 'Point',
                 coordinates: [45, 13]
@@ -461,7 +462,6 @@ describe("test the AnnotationsEditor Panel", () => {
         const testHandlers = {
             onZoom: () => { }
         };
-
         const spyZoom = expect.spyOn(testHandlers, 'onZoom');
 
         const viewer = ReactDOM.render(<AnnotationsEditor feature={feature} {...feature} onZoom={testHandlers.onZoom}/>, document.getElementById("container"));

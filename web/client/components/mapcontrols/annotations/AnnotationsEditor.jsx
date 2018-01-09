@@ -28,6 +28,8 @@ const Select = require('react-select');
 const PluginsUtils = require('../../../utils/PluginsUtils');
 const defaultConfig = require('./AnnotationsConfig');
 
+const bbox = require('@turf/bbox');
+
 /**
  * (Default) Viewer / Editor for Annotations.
  * @memberof components.mapControls.annotations
@@ -291,15 +293,8 @@ class AnnotationsEditor extends React.Component {
     }
 
     zoom = () => {
-        if (this.props.feature.geometry.type === 'MultiPoint') {
-            const extent = this.props.feature.geometry.coordinates.reduce((previous, current) => {
-                return [Math.min(previous[0], current[0]), Math.min(previous[1], current[1]), Math.max(previous[2], current[0]), Math.max(previous[3], current[1])];
-            }, [180, 90, -180, -90]);
-            this.props.onZoom(extent, 'EPSG:4326', this.props.maxZoom);
-        } else {
-            const coords = this.props.feature.geometry.coordinates;
-            this.props.onZoom([coords[0], coords[1], coords[0], coords[1]], 'EPSG:4326', this.props.maxZoom);
-        }
+        const extent = bbox(this.props.feature);
+        this.props.onZoom(extent, 'EPSG:4326', this.props.maxZoom);
     }
 
     cancelEdit = () => {
