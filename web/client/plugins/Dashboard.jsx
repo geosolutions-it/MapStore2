@@ -8,6 +8,7 @@
 
 const React = require('react');
 const {connect} = require('react-redux');
+const {compose, withProps} = require('recompose');
 const {createSelector} = require('reselect');
 const {mapIdSelector} = require('../selectors/map');
 const {getDashboardWidgets, dependenciesSelector, getDashboardWidgetsLayout} = require('../selectors/widgets');
@@ -15,25 +16,34 @@ const {editWidget, deleteWidget, changeLayout, exportCSV, exportImage} = require
 const ContainerDimensions = require('react-container-dimensions').default;
 
 const PropTypes = require('prop-types');
-const WidgetsView = connect(
-    createSelector(
-        mapIdSelector,
-        getDashboardWidgets,
-        getDashboardWidgetsLayout,
-        dependenciesSelector,
-        (id, widgets, layouts, dependencies) => ({
-            id,
-            widgets,
-            layouts,
-            dependencies
-        })
-    ), {
-        editWidget,
-        exportCSV,
-        exportImage,
-        deleteWidget,
-        onLayoutChange: changeLayout
-    }
+const WidgetsView = compose(
+
+    connect(
+        createSelector(
+            mapIdSelector,
+            getDashboardWidgets,
+            getDashboardWidgetsLayout,
+            dependenciesSelector,
+            (id, widgets, layouts, dependencies) => ({
+                id,
+                widgets,
+                layouts,
+                dependencies
+            })
+        ), {
+            editWidget,
+            exportCSV,
+            exportImage,
+            deleteWidget,
+            onLayoutChange: changeLayout
+        }
+    ),
+    withProps(() => ({
+        style: {
+            height: "100%",
+            overflow: "auto"
+        }
+    }))
 )(require('../components/dashboard/Dashboard'));
 
 
@@ -50,7 +60,7 @@ class Widgets extends React.Component {
     }
 }
 
-const DashboardPlugin = connect(()=> {})(Widgets);
+const DashboardPlugin = connect(()=> ({}))(Widgets);
 
 module.exports = {
     DashboardPlugin,

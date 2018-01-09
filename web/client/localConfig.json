@@ -458,7 +458,12 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "Attribution", "Dashboard"],
+        }, "ManagerMenu", "Login", "Language", "Attribution", {
+          "name": "DashboardEditor",
+          "cfg": {
+            "containerPosition": "columns"
+          }
+        },"Dashboard"],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }

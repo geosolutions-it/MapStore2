@@ -10,7 +10,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 
 const expect = require('expect');
-const WidgetsBuilder = require('../WidgetsBuilder');
+const WidgetBuilder = require('../WidgetBuilder');
 describe('WidgetsBuilder component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -22,14 +22,14 @@ describe('WidgetsBuilder component', () => {
         setTimeout(done);
     });
     it('WidgetsBuilder rendering with defaults', () => {
-        ReactDOM.render(<WidgetsBuilder />, document.getElementById("container"));
+        ReactDOM.render(<WidgetBuilder />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
         expect(el).toExist();
         expect(container.querySelector('.chart-options-form')).toNotExist();
     });
     it('WidgetsBuilder rendering chart options', () => {
-        ReactDOM.render(<WidgetsBuilder step={1} />, document.getElementById("container"));
+        ReactDOM.render(<WidgetBuilder step={1} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.chart-options-form');
         expect(el).toExist();

@@ -8,7 +8,7 @@
 
 const React = require('react');
 const SideGrid = require('../../misc/cardgrids/SideGrid');
-const {Glyphicon} = require('react-bootstrap');
+const FitIcon = require('../../misc/FitIcon');
 
 const DEFAULT_TYPES = [{
     title: "Chart",
@@ -31,5 +31,5 @@ module.exports = ({widgetTypes = DEFAULT_TYPES, typeFilter = () => true, onSelec
         widgetTypes.filter(typeFilter).map( item =>
             ({
                 ...item,
-                preview: <Glyphicon glyph={item.glyph} />
+                preview: <FitIcon glyph={item.glyph} />
         }))} />);

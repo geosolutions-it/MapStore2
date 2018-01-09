@@ -17,7 +17,7 @@ const wizardStateToProps = ( stateProps = {}, dispatchProps = {}, ownProps = {})
              layer: stateProps.layer,
              url: stateProps.layer && stateProps.layer.url,
              ...(stateProps.editorData || {})
-         })
+         }, ownProps.target)
      });
 const wizardSelector = createSelector(
      getWidgetLayer,

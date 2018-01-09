@@ -7,8 +7,26 @@
  */
 const React = require('react');
 const ReactQuill = require('react-quill');
+const {wizardHanlders} = require('../../../misc/wizard/enhancers');
+const WidgetOptions = require('./common/WidgetOptions');
+const Wizard = wizardHanlders(require('../../../misc/wizard/WizardContainer'));
+
 
 module.exports = ({
-    onChange = () => {},
-    value = ''
-} = {}) => (<ReactQuill value={value} onChange={(val) => onChange(val)}/>);
+    onChange = () => {}, onFinish = () => {}, setPage= () => {},
+    step=0,
+    editorData = {}
+} = {}) => (
+    <Wizard
+        step={step}
+        setPage={setPage}
+        onFinish={onFinish}
+        hideButtons>
+        <ReactQuill value={editorData && editorData.text || ''} onChange={(val) => onChange("text", val)}/>
+        <WidgetOptions
+            key="widget-options"
+            data={editorData}
+            onChange={onChange}
+        />
+</Wizard>
+    );

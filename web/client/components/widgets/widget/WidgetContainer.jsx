@@ -6,11 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const Message = require('../../I18N/Message');
 const BorderLayout = require('../../layout/BorderLayout');
+const ConfirmModal = require('../../maps/modals/ConfirmModal');
 
 module.exports = ({
     id,
     title,
+    confirmDelete= false,
+    toggleDeleteConfirm = () => {},
+    onDelete=() => {},
     topLeftItems,
     topRightItems,
     children
@@ -27,5 +32,12 @@ module.exports = ({
                 </div>)}>
                 {children}
         </BorderLayout>
+        {confirmDelete ? <ConfirmModal
+            confirmText={<Message msgId="widgets.widget.menu.delete" />}
+            titleText={<Message msgId="widgets.widget.menu.delete" />}
+            body={<Message msgId="widgets.widget.menu.confirmDelete" />}
+            show={confirmDelete}
+            onClose={() => toggleDeleteConfirm(false)}
+            onConfirm={() => onDelete(id) }/> : null}
     </div>
 );

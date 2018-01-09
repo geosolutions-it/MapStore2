@@ -58,7 +58,10 @@ function widgetsReducer(state = emptyState, action) {
 
         }
         case EDIT: {
-            return set(`builder.editor`, action.widget, state);
+            return set(`builder.editor`, {
+                ...action.widget,
+                // for backward compatibility for widgets without this
+                widgetType: action.widget && action.widget.widgetType || 'chart'}, state);
         }
         case EDITOR_CHANGE: {
             return set(`builder.editor.${action.key}`, action.value, state);

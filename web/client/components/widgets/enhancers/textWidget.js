@@ -5,7 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
-module.exports = ({ } = {}) => (<div>
-        <div></div>
-</div>);
+const {compose} = require('recompose');
+const deleteWidget = require('./deleteWidget');
+module.exports = compose(
+   deleteWidget
+);

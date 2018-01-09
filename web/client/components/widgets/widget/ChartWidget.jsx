@@ -10,7 +10,7 @@ const Message = require('../../I18N/Message');
 const TableView = require('./TableView');
 const ChartView = require('./ChartView');
 const InfoPopover = require('./InfoPopover');
-const ConfirmModal = require('../../maps/modals/ConfirmModal');
+
 const WidgetContainer = require('./WidgetContainer');
 const {
      Glyphicon,
@@ -47,6 +47,9 @@ module.exports = ({
         id={`widget-chart-${id}`}
         title={title}
         topLeftItems={renderHeaderLeftTopItem({loading, title, description, showTable, toggleTableView})}
+        confirmDelete={confirmDelete}
+        onDelete={onDelete}
+        toggleDeleteConfirm = {toggleDeleteConfirm}
         topRightItems={showTable
             ? null : <ButtonToolbar>
             <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
@@ -61,13 +64,6 @@ module.exports = ({
         {showTable
             ? <TableView data={data} {...props}/>
         : <ChartView id={id} isAnimationActive={!loading} loading={loading} data={data} series={series} iconFit {...props} />}
-        {confirmDelete ? <ConfirmModal
-            confirmText={<Message msgId="widgets.widget.menu.delete" />}
-            titleText={<Message msgId="widgets.widget.menu.delete" />}
-            body={<Message msgId="widgets.widget.menu.confirmDelete" />}
-            show={confirmDelete}
-            onClose={() => toggleDeleteConfirm(false)}
-            onConfirm={() => onDelete(id) }/> : null}
         </WidgetContainer>
 
 );

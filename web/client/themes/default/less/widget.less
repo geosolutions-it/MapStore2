@@ -1,8 +1,8 @@
-.widget-card-on-map {
-    &.react-grid-layout {
+.widget-container {
+    &.react-grid-layout.on-map {
         pointer-events: none;
     }
-    &.react-grid-layout > * {
+    &.react-grid-layout.on-map > * {
         pointer-events: auto;
     }
     .mapstore-widget-card {
@@ -42,6 +42,9 @@
                 font-size: 14px;
                 color: @ms2-color-primary;
             }
+        }
+        .mapstore-widget-default-content {
+            margin: 10px 5%;
         }
         .mapstore-widget-description {
             text-align: center;

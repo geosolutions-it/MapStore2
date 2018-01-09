@@ -37,7 +37,7 @@ module.exports = compose(
            renderComponent(WidgetTypeSelector),
            () => ({widgetType, ...props} = {}) => {
                const Builder = Builders[widgetType];
-               return <Builder {...props} />;
+               return <Builder {...props} widgetType={widgetType} />;
            }
     )
 )();
