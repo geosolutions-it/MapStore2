@@ -11,6 +11,8 @@ const {updateCurrentMapPermissions, updateCurrentMapGroups} = require('./current
 const ConfigUtils = require('../utils/ConfigUtils');
 const assign = require('object-assign');
 const {get, findIndex} = require('lodash');
+const {error: notificationError, success: notificationSuccess} = require('./notifications');
+const {getErrorMessage} = require('../utils/LocaleUtils');
 
 const MAPS_LIST_LOADED = 'MAPS_LIST_LOADED';
 const MAPS_LIST_LOADING = 'MAPS_LIST_LOADING';
@@ -407,15 +409,25 @@ function loadAvailableGroups(user) {
  * @param  {number} resourceId the id of the map to update
  * @param  {object} content    the new content
  * @param  {object} [options]   options for the request
- * @return {thunk}  dispatches mapUpdating or loadError
+ * @return {thunk}  dispatches notificationSuccess or loadError and notificationError
  */
 function updateMap(resourceId, content, options) {
     return (dispatch) => {
         dispatch(mapUpdating(resourceId, content));
         GeoStoreApi.putResource(resourceId, content, options).then(() => {
-            // dispatch(mapUpdated(resourceId, content, "success")); // TODO wrong usage, use another action
+            dispatch(notificationSuccess({
+                title: 'map.savedMapTitle',
+                message: 'map.savedMapMessage',
+                autoDismiss: 6,
+                position: 'tc'
+            }));
         }).catch((e) => {
             dispatch(loadError(e));
+            dispatch(notificationError({
+                ...getErrorMessage(e, 'geostore', 'mapsError'),
+                autoDismiss: 6,
+                position: 'tc'
+            }));
         });
     };
 }
@@ -626,8 +638,19 @@ function createMap(metadata, content, thumbnail, options) {
             }
             dispatch(mapCreated(response.data, assign({id: response.data, canDelete: true, canEdit: true, canCopy: true}, metadata), content));
             dispatch(onDisplayMetadataEdit(false));
+            dispatch(notificationSuccess({
+                title: 'map.savedMapTitle',
+                message: 'map.savedMapMessage',
+                autoDismiss: 6,
+                position: 'tc'
+            }));
         }).catch((e) => {
             dispatch(mapError(e));
+            dispatch(notificationError({
+                ...getErrorMessage(e, 'geostore', 'mapsError'),
+                autoDismiss: 6,
+                position: 'tc'
+            }));
         });
     };
 }

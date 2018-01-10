@@ -21,6 +21,8 @@
         "enable": "Aktiviere",
         "layers": "Ebenen",
         "warning": "Warnung",
+        "errorTitleDefault": "Fehler",
+        "errorDefault": "Ein Fehler ist aufgetreten",
         "version": {
             "label": "Version"
         },
@@ -209,6 +211,8 @@
             "errorFormat": "Unterstützte Formate: png/jpg",
             "errorSize": "Maximal zulässige Größe: 500kb",
             "error": "Das bereitgestellte Bild ist ungültig",
+            "savedMapTitle": "Gespeicherte Karte",
+            "savedMapMessage": "Karte wurde korrekt gespeichert",
             "thumbnailError": {
                 "error403": "Du hast keine Berechtigung um Thumbnails hochzuladen",
                 "error404": "Es gab einen Fehler während der Erstellung des Thumbnails",
@@ -216,9 +220,11 @@
                 "errorDefault": "Netzwerk Fehler"
             },
             "mapError": {
+                "errorTitle": "Aktuelle Karte kann nicht gespeichert werden",
                 "error403": "Du hast keine Berechtigung die Karte zu aktualisieren",
                 "error404": "Es gab einen Fehler während der Erstellung der Karte",
                 "error409": "Eine Karte mit diesem Namen existiert bereits",
+                "error500": "Interner Serverfehler. Überprüfen Sie, ob die Größe der Kartenkonfigurationsdatei den festgelegten Grenzwert überschreitet",
                 "errorDefault": "Netzwerk Fehler"
             },
             "permissions": {

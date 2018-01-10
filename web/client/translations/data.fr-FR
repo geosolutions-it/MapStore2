@@ -22,6 +22,8 @@
         "enable": "Activer",
         "layers": "Couches",
         "warning": "Attention",
+        "errorTitleDefault": "Erreur",
+        "errorDefault": "Une erreur est survenue",
         "version": {
             "label": "Version"
         },
@@ -210,6 +212,8 @@
             "errorFormat": "Formats supportés: png/jpg",
             "errorSize": "taille maximum autorisée: 500kb",
             "error": "L'image fournie est pas valide",
+            "savedMapTitle": "Carte Sauvegardée",
+            "savedMapMessage": "La carte a été enregistrée correctement",
             "thumbnailError": {
                 "error403": "Une erreur est survenue lors de la suppression de la vignette",
                 "error404": "Une erreur est survenue lors de la création de la vignette",
@@ -217,9 +221,11 @@
                 "errorDefault": "Une erreur est survenue sur le serveur"
             },
             "mapError": {
+                "errorTitle": "Impossible d'enregistrer la carte actuelle",
                 "error403": "Une erreur est survenue lors de la suppression de la carte",
                 "error404": "Une erreur est survenue lors de la création de la carte",
                 "error409": "Nom de la carte déjà choisie",
+                "error500": "Erreur Interne du Serveur. Vérifier si la taille du fichier de configuration de la carte dépasse la limite fixée",
                 "errorDefault": "Une erreur est survenue sur le serveur"
             },
             "permissions": {

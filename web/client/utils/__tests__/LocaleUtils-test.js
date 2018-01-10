@@ -34,4 +34,19 @@ describe('LocaleUtils', () => {
     it('getSupportedLocales', () => {
         expect(LocaleUtils.getSupportedLocales()).toExist();
     });
+
+    it('getErrorMessage', () => {
+        expect(LocaleUtils.getErrorMessage({status: 409}, 'geostore', 'mapsError')).toEqual({
+            title: 'map.mapError.errorTitle',
+            message: 'map.mapError.error409'
+        });
+        expect(LocaleUtils.getErrorMessage({status: 0}, 'geostore', 'mapsError')).toEqual({
+            title: 'map.mapError.errorTitle',
+            message: 'map.mapError.errorDefault'
+        });
+        expect(LocaleUtils.getErrorMessage()).toEqual({
+            title: 'errorTitleDefault',
+            message: 'errorDefault'
+        });
+    });
 });
