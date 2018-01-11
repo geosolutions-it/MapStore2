@@ -134,10 +134,12 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     devServer: {
         proxy: {
             '/rest/geostore': {
-                target: "http://dev.mapstore2.geo-solutions.it/mapstore"
+                target: "https://dev.mapstore2.geo-solutions.it/mapstore",
+                secure: false
             },
             '/proxy': {
-                target: "http://dev.mapstore2.geo-solutions.it/mapstore"
+                target: "https://dev.mapstore2.geo-solutions.it/mapstore",
+                secure: false
             },
             '/docs': {
                 target: "http://localhost:8081",
