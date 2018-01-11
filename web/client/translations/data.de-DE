@@ -245,7 +245,7 @@
             "toolFeaturesGridTooltip": "Open Attribute Table",
             "noFilteredResults": "No results",
             "filterPlaceholder": "Ebenen filtern",
-            "clearFilter": "Clear filter",
+            "clearFilter": "Filter löschen",
             "toolReloadLayerTooltip": "Force reload of selected layer",
             "toolReloadLayersTooltip": "Force reload of selected layers",
             "statusIconOpen": "Close group",

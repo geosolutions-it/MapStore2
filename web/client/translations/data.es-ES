@@ -245,7 +245,7 @@
             "toolFeaturesGridTooltip": "Open Attribute Table",
             "noFilteredResults": "No results",
             "filterPlaceholder": "Capas de filtro",
-            "clearFilter": "Clear filter",
+            "clearFilter": "Filtro claro",
             "toolReloadLayerTooltip": "Force reload of selected layer",
             "toolReloadLayersTooltip": "Force reload of selected layers",
             "statusIconOpen": "Close group",
