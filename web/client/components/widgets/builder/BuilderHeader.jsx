@@ -12,7 +12,7 @@ const Message = require('../../I18N/Message');
 
 module.exports = ({onClose = () => {}, children} = {}) =>
 (<div className="mapstore-flex-container">
-    <div className="m-header">
+    <div className="m-header bg-body widgets-builder-header">
         <Row>
         <Col md={12} className="text-center" style={{overflow: 'hidden', lineHeight: '52px'}}>
              <Button onClick={() => onClose()} className="pull-left square-button no-border ">

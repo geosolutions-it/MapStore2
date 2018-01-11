@@ -34,6 +34,7 @@ class SideBarComponent extends React.Component {
          position: PropTypes.string,
          onMount: PropTypes.func,
          onUnmount: PropTypes.func,
+         onClose: PropTypes.func,
          dimMode: PropTypes.string,
          src: PropTypes.string,
          style: PropTypes.object,
@@ -50,6 +51,7 @@ class SideBarComponent extends React.Component {
          position: "left",
          onMount: () => {},
          onUnmount: () => {},
+         onClose: () => {},
          layout: {}
      };
     componentDidMount() {
@@ -71,7 +73,7 @@ class SideBarComponent extends React.Component {
             fluid={this.props.fluid}
             dockStyle={{...this.props.layout, background: "white" /* TODO set it to undefined when you can inject a class inside Dock, to use theme */}}
         >
-        <Builder enabled={this.props.enabled} />
+        <Builder enabled={this.props.enabled} onClose={this.props.onClose}/>
         </Dock>);
 
     }
@@ -86,7 +88,8 @@ const Plugin = connect(
             layout
     })), {
         onMount: () => setControlProperty("widgetBuilder", "available", true),
-        onUnmount: () => setControlProperty("widgetBuilder", "available", false)
+        onUnmount: () => setControlProperty("widgetBuilder", "available", false),
+        onClose: setControlProperty.bind(null, "widgetBuilder", "enabled", false, false)
     }
 
 )(SideBarComponent);

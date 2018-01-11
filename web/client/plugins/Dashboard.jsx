@@ -17,7 +17,6 @@ const ContainerDimensions = require('react-container-dimensions').default;
 
 const PropTypes = require('prop-types');
 const WidgetsView = compose(
-
     connect(
         createSelector(
             mapIdSelector,
@@ -60,7 +59,7 @@ class Widgets extends React.Component {
     }
 }
 
-const DashboardPlugin = connect(()=> ({}))(Widgets);
+const DashboardPlugin = Widgets;
 
 module.exports = {
     DashboardPlugin,

@@ -10,21 +10,21 @@ const React = require('react');
 
 const {createSelector} = require('reselect');
 const {connect} = require('react-redux');
-const {widgetBuilderSelector} = require('../selectors/controls');
-
 const PropTypes = require('prop-types');
 
-
-const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+const {editingSelector} = require('../selectors/dashboard');
 
 const Builder = require('./widgetbuilder/WidgetTypeBuilder');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
+const {createWidget} = require('../actions/widgets');
+
+const {setEditing, setEditorAvailable} = require('../actions/dashboard');
 
 
-class SideBarComponent extends React.Component {
+class DashboardEditorComponent extends React.Component {
      static propTypes = {
          id: PropTypes.string,
-         enabled: PropTypes.bool,
+         editing: PropTypes.bool,
          limitDockHeight: PropTypes.bool,
          fluid: PropTypes.bool,
          zIndex: PropTypes.number,
@@ -32,14 +32,15 @@ class SideBarComponent extends React.Component {
          position: PropTypes.string,
          onMount: PropTypes.func,
          onUnmount: PropTypes.func,
+         setEditing: PropTypes.func,
+         onAddWidget: PropTypes.func,
          dimMode: PropTypes.string,
          src: PropTypes.string,
-         style: PropTypes.object,
-         layout: PropTypes.object
+         style: PropTypes.object
      };
      static defaultProps = {
          id: "dashboard-editor",
-         enabled: false,
+         editing: false,
          dockSize: 500,
          limitDockHeight: true,
          zIndex: 10000,
@@ -48,7 +49,8 @@ class SideBarComponent extends React.Component {
          position: "left",
          onMount: () => {},
          onUnmount: () => {},
-         layout: {}
+         onAddWidget: () => {},
+         setEditing: () => {}
      };
     componentDidMount() {
         this.props.onMount();
@@ -65,32 +67,33 @@ class SideBarComponent extends React.Component {
             tooltipPosition: 'right',
             visible: true,
             onClick: () => {
-                this.setState({
-                    enabled: !(this.state && this.state.enabled)
-                });
+                this.props.onAddWidget();
             }
         }];
-        return (<div className="ms-vertical-toolbar" style={{order: -1}} id={this.props.id}>
-        <Toolbar btnGroupProps={{vertical: true}} btnDefaultProps={{ className: 'square-button', bsStyle: 'primary'}} buttons={buttons}/>
-
-        {this.state && this.state.enabled ? <Builder enabled={this.state && this.state.enabled} /> : null}
-        </div>);
-
+        const boxShadow = "0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12)";
+        return this.props.editing
+                ? <div style={{width: "500px", order: -1, boxShadow}}><Builder enabled={this.props.editing} onClose={() => this.props.setEditing(false)}/></div>
+                : (<div className="ms-vertical-toolbar" style={{order: -1, boxShadow, padding: "10px"}} id={this.props.id}>
+                    <Toolbar btnGroupProps={{vertical: true}} btnDefaultProps={{ className: 'square-button', bsStyle: 'primary'}} buttons={buttons}/>
+                    </div>);
     }
 }
 
 const Plugin = connect(
     createSelector(
-        widgetBuilderSelector,
-        state => mapLayoutValuesSelector(state, {height: true}),
-        state => state && state.controls && state.controls.dashboardBuilder && state.controls.dashboardBuilder.enabled,
-        (enabled, layout) => ({
-            enabled: true,
-            layout
-    }))
-
-)(SideBarComponent);
+        editingSelector,
+        editing => ({editing})
+    ), {
+        setEditing,
+        onAddWidget: createWidget,
+        onMount: () => setEditorAvailable(true),
+        onUnmount: () => setEditorAvailable(false)
+    }
+)(DashboardEditorComponent);
 module.exports = {
     DashboardEditorPlugin: Plugin,
-    epics: require('../epics/widgetsbuilder')
+    reducers: {
+        dashboard: require('../reducers/dashboard')
+    },
+    epics: require('../epics/dashboard')
 };

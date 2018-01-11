@@ -6,25 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {onEditorChange} = require('../../actions/widgets');
-const {connect} = require('react-redux');
+
+const Catalog = require('./Catalog');
 const BorderLayout = require('../../components/layout/BorderLayout');
 const BuilderHeader = require('./BuilderHeader');
-const TypeSelector = connect(
-    () => {},
-    {
-        onSelect: (type) => onEditorChange("widgetType", type)
-    }
-)(require('../../components/widgets/builder/WidgetTypeSelector'));
-
 /**
- * Builder page that shows the type selector
+ * Builder page that allows layer's selection
  */
-module.exports = ({enabled, onClose = () => {}} = {}) =>
+module.exports = ({onClose = () => {}} = {}) =>
 
     (<BorderLayout
         className="bg-body"
         header={<BuilderHeader onClose={onClose}/>}
         >
-        {enabled ? <TypeSelector /> : null}
+        <Catalog />
     </BorderLayout>);

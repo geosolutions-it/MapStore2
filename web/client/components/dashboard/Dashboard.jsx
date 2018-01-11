@@ -14,7 +14,7 @@ module.exports =
             ({widgets = []} = {}) => widgets.length === 0,
             () => ({
                 glyph: "dashboard",
-                title: "The dashboard is empty"
+                title: "The dashboard is empty" // TODO i18n
             })
         )
     )(require('../widgets/view/WidgetsView'));

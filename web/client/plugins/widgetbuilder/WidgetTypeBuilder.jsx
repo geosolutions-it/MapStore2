@@ -35,9 +35,9 @@ module.exports = compose(
         branch(
            ({widgetType} = {}) => !widgetType,
            renderComponent(WidgetTypeSelector),
-           () => ({widgetType, ...props} = {}) => {
+           () => ({widgetType, onClose=() => {}, ...props} = {}) => {
                const Builder = Builders[widgetType];
-               return <Builder {...props} widgetType={widgetType} />;
+               return <Builder {...props} onClose={onClose} widgetType={widgetType} />;
            }
     )
 )();

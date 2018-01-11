@@ -22,6 +22,7 @@ const {LOCATION_CHANGE} = require('react-router-redux');
 
 const {featureTypeSelected} = require('../actions/wfsquery');
 const {getWidgetLayer, getEditingWidgetFilter} = require('../selectors/widgets');
+const {widgetBuilderAvailable} = require('../selectors/controls');
 const getFTSelectedArgs = (state) => {
     let layer = getWidgetLayer(state);
     let url = layer.search && layer.search.url;
@@ -29,14 +30,17 @@ const getFTSelectedArgs = (state) => {
     return [url, typeName];
 };
 module.exports = {
-    openWidgetEditor: action$ => action$.ofType(NEW, EDIT)
+    openWidgetEditor: (action$, {getState = () => {}} = {}) => action$.ofType(NEW, EDIT)
+        .filter(() => widgetBuilderAvailable(getState()))
         .switchMap(() => Rx.Observable.of(
             setControlProperty("widgetBuilder", "enabled", true),
             setControlProperty("metadataexplorer", "enabled", false)
     )),
-    closeWidgetEditorOnFinish: action$ => action$.ofType(INSERT, ADD_LAYER)
+    closeWidgetEditorOnFinish: (action$, {getState = () => {}} = {}) => action$.ofType(INSERT, ADD_LAYER)
+        .filter(() => widgetBuilderAvailable(getState()))
         .switchMap(() => Rx.Observable.of(setControlProperty("widgetBuilder", "enabled", false))),
-    initEditorOnNew: action$ => action$.ofType(NEW)
+    initEditorOnNew: (action$, {getState = () => {}} = {}) => action$.ofType(NEW)
+        .filter(() => widgetBuilderAvailable(getState()))
         .switchMap((w) => Rx.Observable.of(editNewWidget({
             legend: false,
             mapSync: true,
@@ -44,13 +48,11 @@ module.exports = {
         }, {step: 0}))),
     /**
      * Manages interaction with QueryPanel and widgetBuilder
-     * @param  {[type]} action$      [description]
-     * @param  {[type]} [getState=(] [description]
-     * @return {[type]}              [description]
      */
     handleWidgetsFilterPanel: (action$, {getState = () => {}} = {}) =>
         action$.ofType(OPEN_FILTER_EDITOR)
-            .switchMap( () =>
+            .filter(() => widgetBuilderAvailable(getState()))
+            .switchMap(() =>
                 // open and setup query form
                 Rx.Observable.of(
                     featureTypeSelected(...getFTSelectedArgs(getState())),
