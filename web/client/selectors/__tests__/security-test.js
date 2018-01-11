@@ -11,7 +11,9 @@ const {
     userSelector,
     userRoleSelector,
     isAdminUserSelector,
-    rulesSelector
+    rulesSelector,
+    userGroupSecuritySelector,
+    userParamsSelector
 } = require('../security');
 const id = 1833;
 const name = 'teo';
@@ -76,6 +78,17 @@ describe('Test security selectors', () => {
     it('test rulesSelector user ', () => {
         const rules = rulesSelector(initialState);
         expect(rules).toExist();
+    });
+    it('test userGroupSecuritySelector ', () => {
+        const group = userGroupSecuritySelector(initialState);
+        expect(group).toExist();
+        expect(group.id).toBe(479);
+    });
+    it('test userParamsSelector ', () => {
+        const userParams = userParamsSelector(initialState);
+        expect(userParams).toExist();
+        expect(userParams.id).toBe(id);
+        expect(userParams.name).toBe(name);
     });
 
 });

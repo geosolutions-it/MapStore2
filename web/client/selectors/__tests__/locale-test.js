@@ -7,11 +7,16 @@
 */
 
 const expect = require('expect');
-const {currentLocaleSelector} = require('../locale');
+const {currentLocaleSelector, currentMessagesSelector } = require('../locale');
 
 const state = {
     locale: {
-        current: 'en-US'
+        current: 'en-US',
+        messages: {
+            "details": {
+                "title": "Details"
+            }
+        }
     }
 };
 
@@ -20,5 +25,10 @@ describe('Test locale selectors', () => {
         const currentLocale = currentLocaleSelector(state);
         expect(currentLocale).toExist();
         expect(currentLocale).toBe(state.locale.current);
+    });
+    it('test currentMessagesSelector ', () => {
+        const messages = currentMessagesSelector(state);
+        expect(messages).toExist();
+        expect(messages.details.title).toBe("Details");
     });
 });

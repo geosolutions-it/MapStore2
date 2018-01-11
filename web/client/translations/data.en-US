@@ -29,6 +29,9 @@
             "updating": "Updating...",
             "layers": "layers"
         },
+        "details": {
+            "title": "About this map"
+        },
         "layerProperties": {
             "windowTitle": "Layer Properties",
             "title": "Title",
@@ -103,6 +106,8 @@
         "elevation": "Elevation",
         "close": "Close",
         "cancel": "Cancel",
+        "no": "No",
+        "yes": "Yes",
         "confirm": "Confirm",
         "confirmTitle": "Do you confirm?",
         "pageInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {Items {start}-{end} of {total}}}",
@@ -192,6 +197,28 @@
         },
         "newMap": "New Map",
 		"maps": {
+            "feedback": {
+                "successSavedMap": "The map has been created correctly",
+                "errorDeletingMap": "Error when deleting this map with id: ",
+                "errorDeletingThumbnailOfMap": "Error when deleting thumbnail for the map with id: ",
+                "errorDeletingDetailsOfMap": "Error when deleting details for the map with id: ",
+                "allResDeleted": "Have been deleted successfully all resources associated with this map: ",
+                "errorFetchingDetailsOfMap": "Error when fetching details for the map with id: ",
+                "details": {
+                    "deletedSuccesfully": "The details have been removed correctly",
+                    "savedSuccesfully": "The details have been saved correctly",
+                    "updatedSuccesfully": "The details have been updated correctly"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "The thumbnail have been removed correctly",
+                    "savedSuccesfully": "The thumbnail have been saved correctly",
+                    "updatedSuccesfully": "The thumbnail have been updated correctly"
+                },
+                "errorWhenSaving": "An error occurred during saving process",
+                "errorWhenUpdating": "An error occurred during updating process",
+                "errorWhenDeleting": "An error occurred during deleting process",
+                "errorSizeExceeded": "Please, reduce the size of the details or the quality of the images"
+            },
 			"search": "search for maps..."
 		},
         "map": {
@@ -229,6 +256,21 @@
                 "canWrite": "can edit",
                 "noResult": "no results found",
                 "title": "Permissions Groups"
+            },
+            "details": {
+                "back": "Back",
+                "save": "Save",
+                "show": "Show details sheet",
+                "add": "Add New Details",
+                "edit": "Edit Details",
+                "title": "Details Sheet",
+                "undo": "Undo remove",
+                "showPreview": "Show preview",
+                "hidePreview": "Hide preview",
+                "delete": "Delete details sheet",
+                "titleUnsavedChanges": "Are you sure to close without save your changes?",
+                "sureToClose": "Are you sure to close without save your changes?",
+                "fieldsChanged": "Some fields has been changed"
             }
         },
         "toc": {

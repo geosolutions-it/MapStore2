@@ -14,6 +14,7 @@ const PermissionEditor = require('../PermissionEditor');
 
 let setupEditor = (docElement, actions) => {
     return ReactDOM.render(<PermissionEditor
+        disabled={false}
         {...actions}
         map={{
             permissions: {
