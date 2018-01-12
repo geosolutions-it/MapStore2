@@ -67,4 +67,24 @@ describe('Identity Viewers', () => {
         expect(cmpDom.innerHTML.indexOf('myname') !== -1).toBe(true);
         expect(cmpDom.innerHTML.indexOf('mydescription') !== -1).toBe(true);
     });
+
+    it('test JSONViewer with custom row viewer', () => {
+        const MyRowViewer = (props) => {
+            return <span>This is my viewer: {props.feature.id}</span>;
+        };
+        const cmp = ReactDOM.render(<JSONViewer rowViewer={MyRowViewer} response={{
+            features: [{
+                id: 1,
+                properties: {
+                    name: 'myname',
+                    description: 'mydescription'
+                }
+            }]
+        }} />, document.getElementById("container"));
+        expect(cmp).toExist();
+
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        expect(cmpDom).toExist();
+        expect(cmpDom.innerText.indexOf('This is my viewer: 1') !== -1).toBe(true);
+    });
 });

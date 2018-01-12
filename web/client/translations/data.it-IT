@@ -640,6 +640,7 @@
             "filter": "Filtra le annotazioni...",
             "undo": "Sei sicuro di voler abbandonare la modifica in corso?",
             "title": "Annotazioni",
+            "zoomTo": "Zoom",
             "field": {
                 "title": "Titolo",
                 "description": "Descrizione"
