@@ -9,6 +9,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {head} = require('lodash');
 const L = require('leaflet');
+const circleToPolygon = require('circle-to-polygon');
 require('leaflet-draw');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
 const {boundsToOLExtent} = require('../../../utils/DrawSupportUtils');
@@ -140,6 +141,7 @@ class DrawSupport extends React.Component {
             // but for first time we need to do this!
             geoJesonFt.projection = "EPSG:4326";
             projection = "EPSG:3857";
+            const polygon = circleToPolygon([center[0], center[1]], radius, 100);
             extent = CoordinatesUtils.reprojectBbox(extent, "EPSG:4326", projection);
             center = CoordinatesUtils.reproject(center, "EPSG:4326", projection);
             geoJesonFt.radius = radius;
@@ -148,7 +150,7 @@ class DrawSupport extends React.Component {
             center = CoordinatesUtils.reproject(center, projection, "EPSG:4326");
             tempCoordinates = CoordinatesUtils.reprojectGeoJson({type: "Feature", geometry: {type: "Polygon", coordinates}}, projection, "EPSG:4326");
             projection = "EPSG:4326";
-            coordinates = tempCoordinates.geometry.coordinates;
+            coordinates = polygon.coordinates || tempCoordinates.geometry.coordinates;
             center = [center.x, center.y];
             type = "Polygon";
         }
