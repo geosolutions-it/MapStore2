@@ -1210,7 +1210,7 @@
                 "title": "Karten",
                 "text": "Hier einige Beispiele von MapStore2. Klicken Sie auf ein Bild, um die Demo zu testen."
             },
-            "Beispiele": {
+            "examples": {
                 "title": "benutzerdefinierte Anwendung",
                 "text": "Sie können Komponenten und Plugins von MapStore2 verwenden, um benutzerdefinierte Anwendungen zu erstellen"
             },
