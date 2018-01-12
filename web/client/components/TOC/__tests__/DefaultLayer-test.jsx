@@ -178,7 +178,7 @@ describe('test DefaultLayer module component', () => {
         expect(tool.getAttribute('disabled')).toBe('true');
     });
 
-    it('tests disable lagend and opaicty tools', () => {
+    it('tests disable legend and opacity tools', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -199,7 +199,7 @@ describe('test DefaultLayer module component', () => {
         expect(button.length).toBe(0);
     });
 
-    it('tests disable opaicty tools', () => {
+    it('tests disable opacity tools', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
@@ -220,6 +220,31 @@ describe('test DefaultLayer module component', () => {
         expect(button.length).toBe(1);
         const slider = domNode.getElementsByClassName("mapstore-slider");
         expect(slider.length).toBe(0);
+    });
+    it('show full title', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            storeIndex: 9,
+            type: 'wms',
+            opacity: 0.5
+        };
+
+        let comp = ReactDOM.render(<Layer showFullTitleOnExpand visibilityCheckType="checkbox" node={l} />,
+            document.getElementById("container"));
+        expect(comp).toExist();
+        let domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        let title = domNode.getElementsByClassName("toc-full-title");
+        expect(title.length).toBe(1);
+        comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} />,
+            document.getElementById("container"));
+        domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        title = domNode.getElementsByClassName("toc-full-title");
+        expect(title.length).toBe(0);
+
     });
 
 });
