@@ -52,21 +52,12 @@ const DATE_FORMATS = {
     "nl-NL": "dd/MM/yyyy"
 };
 
-const errorParser = {
-    geostore: {
-        mapsError: e => {
-            if (e.status === 403 || e.status === 404 || e.status === 409 || e.status === 500) {
-                return {
-                    title: 'map.mapError.errorTitle',
-                    message: 'map.mapError.error' + e.status
-                };
-            }
-            return {
-                title: 'map.mapError.errorTitle',
-                message: 'map.mapError.errorDefault'
-            };
-        }
-    }
+const servicesErrorParser = {
+    geostore: require('../api/GeoStoreDAO').errorParser
+};
+
+const getErrorParser = service => {
+    return servicesErrorParser[service];
 };
 /**
  * Utilities for locales.
@@ -137,7 +128,8 @@ const LocaleUtils = {
      * @return {object} {title, message}
      */
     getErrorMessage: (e, service, section) => {
-        return service && section && errorParser[service] && errorParser[service][section] && errorParser[service][section](e) || {
+        const errorParser = getErrorParser(service);
+        return service && section && errorParser && errorParser[section] && errorParser[section](e) || {
             title: 'errorTitleDefault',
             message: 'errorDefault'
         };

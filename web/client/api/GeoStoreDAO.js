@@ -351,6 +351,25 @@ var Api = {
             postUser.attribute = postUser.attribute && postUser.attribute.length > 0 ? [...postUser.attribute, uuidAttr] : [uuidAttr];
             return postUser;
         }
+    },
+    errorParser: {
+        /**
+         * Returns localized message for geostore map errors
+         * @param  {object} e error object
+         * @return {object} {title, message}
+         */
+        mapsError: e => {
+            if (e.status === 403 || e.status === 404 || e.status === 409 || e.status === 500) {
+                return {
+                    title: 'map.mapError.errorTitle',
+                    message: 'map.mapError.error' + e.status
+                };
+            }
+            return {
+                title: 'map.mapError.errorTitle',
+                message: 'map.mapError.errorDefault'
+            };
+        }
     }
 };
 

@@ -40,4 +40,15 @@ describe('Test correctness of the GeoStore APIs', () => {
         const user2 = API.utils.initUser(originalUser2);
         expect(user2.attribute.length).toBe(2);
     });
+
+    it('test error parser', () => {
+        expect(API.errorParser.mapsError({status: 409})).toEqual({
+            title: 'map.mapError.errorTitle',
+            message: 'map.mapError.error409'
+        });
+        expect(API.errorParser.mapsError({status: 400})).toEqual({
+            title: 'map.mapError.errorTitle',
+            message: 'map.mapError.errorDefault'
+        });
+    });
 });
