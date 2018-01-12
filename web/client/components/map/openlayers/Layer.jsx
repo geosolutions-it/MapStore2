@@ -25,7 +25,8 @@ class OpenlayersLayer extends React.Component {
         onCreationError: PropTypes.func,
         onLayerLoad: PropTypes.func,
         position: PropTypes.number,
-        observables: PropTypes.array
+        observables: PropTypes.array,
+        securityToken: PropTypes.string
     };
 
     static defaultProps = {
@@ -40,7 +41,7 @@ class OpenlayersLayer extends React.Component {
         this.valid = true;
         this.tilestoload = 0;
         this.imagestoload = 0;
-        this.createLayer(this.props.type, this.props.options, this.props.position);
+        this.createLayer(this.props.type, this.props.options, this.props.position, this.props.securityToken);
     }
 
     componentWillReceiveProps(newProps) {
@@ -108,18 +109,19 @@ class OpenlayersLayer extends React.Component {
         }
     };
 
-    generateOpts = (options, position, srs) => {
+    generateOpts = (options, position, srs, securityToken) => {
         return assign({}, options, _.isNumber(position) ? {zIndex: position} : null, {
             srs,
             onError: () => {
                 this.props.onCreationError(options);
-            }
+            },
+            securityToken
         });
     };
 
-    createLayer = (type, options, position) => {
+    createLayer = (type, options, position, securityToken) => {
         if (type) {
-            const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs));
+            const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs), securityToken);
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
             if (this.layer && !this.layer.detached) {
                 this.addLayer(options);
@@ -130,7 +132,7 @@ class OpenlayersLayer extends React.Component {
 
     updateLayer = (newProps, oldProps) => {
         // optimization to avoid to update the layer if not necessary
-        if (newProps.position === oldProps.position && newProps.srs === oldProps.srs) {
+        if (newProps.position === oldProps.position && newProps.srs === oldProps.srs && newProps.securityToken === oldProps.securityToken ) {
             // check if options are the same, except loading
             if (newProps.options === oldProps.options) return;
             if (_.isEqual( _.omit(newProps.options, ["loading"]), _.omit(oldProps.options, ["loading"]) ) ) {
@@ -140,8 +142,8 @@ class OpenlayersLayer extends React.Component {
         const newLayer = Layers.updateLayer(
             this.props.type,
             this.layer,
-            this.generateOpts(newProps.options, newProps.position, newProps.projection),
-            this.generateOpts(oldProps.options, oldProps.position, oldProps.projection),
+            this.generateOpts(newProps.options, newProps.position, newProps.projection, newProps.securityToken),
+            this.generateOpts(oldProps.options, oldProps.position, oldProps.projection, oldProps.securityToken),
             this.props.map,
             this.props.mapId);
         if (newLayer) {

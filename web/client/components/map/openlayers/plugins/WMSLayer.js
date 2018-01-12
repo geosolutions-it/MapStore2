@@ -60,7 +60,7 @@ Layers.registerType('wms', {
     create: (options, map) => {
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
         const queryParameters = wmsToOpenlayersOptions(options) || {};
-        urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
+        urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
         if (options.singleTile) {
             return new ol.layer.Image({
                 opacity: options.opacity !== undefined ? options.opacity : 1,
@@ -124,10 +124,10 @@ Layers.registerType('wms', {
             if (changed) {
                 layer.getSource().updateParams(objectAssign(newParams, newOptions.params));
             }
-            if (oldOptions.singleTile !== newOptions.singleTile) {
+            if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken) {
                 const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
                 const queryParameters = wmsToOpenlayersOptions(newOptions) || {};
-                urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
+                urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, newOptions.securityToken));
                 let newLayer;
                 if (newOptions.singleTile) {
                     // return the Image Layer with the related source

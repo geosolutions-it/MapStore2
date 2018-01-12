@@ -136,18 +136,18 @@ Layers.registerType('wms', {
     create: (options) => {
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
         const queryParameters = wmsToLeafletOptions(options) || {};
-        urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
+        urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
         if (options.singleTile) {
             return L.nonTiledLayer.wmsCustom(urls[0], queryParameters);
         }
         return L.tileLayer.multipleUrlWMS(urls, queryParameters);
     },
     update: function(layer, newOptions, oldOptions) {
-        if (oldOptions.singleTile !== newOptions.singleTile) {
+        if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken) {
             let newLayer;
             const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
             const queryParameters = wmsToLeafletOptions(newOptions) || {};
-            urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
+            urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, newOptions.securityToken));
             if (newOptions.singleTile) {
                 // return the nonTiledLayer
                 newLayer = L.nonTiledLayer.wmsCustom(urls[0], queryParameters);
