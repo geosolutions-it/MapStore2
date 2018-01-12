@@ -619,7 +619,13 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Please insert username and password",
                 "usernamePwdIncorrect":"Username or password incorrect"
-            }
+            },
+            "detailsName": "Name",
+            "detailsRole": "Role",
+            "detailsGroups": "Groups",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Company",
+            "detailsNotes": "Notes"
         },
         "annotations": {
             "edit": "Edit",

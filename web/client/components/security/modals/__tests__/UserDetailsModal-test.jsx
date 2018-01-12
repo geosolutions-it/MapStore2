@@ -24,12 +24,12 @@ describe("Test user details modal", () => {
     });
 
     it('creates component with defaults', () => {
-        const cmp = ReactDOM.render(<UDModal options={{animation: false}}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<UDModal />, document.getElementById("container"));
         expect(cmp).toExist();
     });
 
     it('creates component to show', () => {
-        const cmp = ReactDOM.render(<UDModal options={{animation: false}} show userDetails={{user: {name: "user"}}}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<UDModal show user={{user: {name: "user"}}}/>, document.getElementById("container"));
         expect(cmp).toExist();
     });
 
@@ -70,8 +70,8 @@ describe("Test user details modal", () => {
         };
         const cmp = ReactDOM.render(<UDModal options={{animation: false}} show displayAttributes={displayAttributes} user={testUser}/>, document.getElementById("container"));
         expect(cmp).toExist();
-        const modalDOM = document.getElementsByClassName('modal')[0];
+        const modalDOM = document.getElementsByClassName('ms-resizable-modal')[0];
 
-        expect(modalDOM.getElementsByTagName('th').length).toEqual(2);
+        expect(modalDOM.getElementsByClassName('row').length).toEqual(6);
     });
 });
