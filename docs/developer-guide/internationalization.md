@@ -1,13 +1,17 @@
 # Introduction
-MapStore2 offers the support for internationalization (I18N). To provide this functionality MapStore uses [react-intl](https://github.com/yahoo/react-intl).
+MapStore2 offers the support for internationalization (I18N). To provide this functionality MapStore2 uses [react-intl](https://github.com/yahoo/react-intl).
 In this section you can find which configuration and JS files are involved in the I18N system.
 
-## How internationalization works in MapStore2
-MapStore2 first checks the browser's language. If it is not supported, MapStore2 will use its default language (english) or the first one available, as last choice.
+## How MapStore2 chooses the current language
+MapStore2 first checks the browser's language. If it is not supported, MapStore2 will be visible in english, if present, or the first language available.
 Anyway the locale can be forced using a flag locale=codeLang where codeLang can be one en,it,de...
-A user can change the selected language from the home page or from the settings panel in the map page. MapStore2 will load the proper files to update the page localized in the selected language.
+e.g.
+```
+localhost:8081/?locale=en#/
+```
+A user can change the selected language from UI. MapStore2 will load the proper files to update the page localized in the selected language.
 
-# Where
+## Configuration files
 To provide support to a specific language MapStore2 need to have the necessary setup in the LocaleUtils.js file (see below [section for details about to configure this file]).
 In addition you need the proper translations files.
 
@@ -19,13 +23,18 @@ Let's imagine that the variable code is 'en', CODE is 'EN' standing for english.
 # How to configure supported languages in MapStore2
 You can configure MapStore2 to provide to the user only a restricted list of selectable languages by setting "initialState.defaultState.locales" variable in `localConfig.json`. e.g :
 ```
-"en": {
-    code: "en-EN",
-    description: "English"
-},
-"it": {
-    code: "it-IT",
-    description: "Italiano"
+"defaultState":
+{
+    "locales": {
+        "en": {
+            code: "en-EN",
+            description: "English"
+        },
+        "it": {
+            code: "it-IT",
+            description: "Italiano"
+        }
+    }
 }
 ```
 Setting locales in localConfig.json file is doable only for supported locales present in LocaleUtils.js.
@@ -34,10 +43,10 @@ You can customize the messages by editing the data.code-CODE files.
 
 # How to add a new language
 Let's say we want to add the russian language.
-In order to add a new language to MapStore 2 you need to follow these steps:
+In order to add a new language to MapStore2 you need to follow these steps:
 
-1. Update the localConfig.json file in `web\client` adding the support for the new language
- - add an entry in the supportedLocales object like
+1. Update the localConfig.json file in `web\client` folder adding the new language entry
+ - add the following in the "initialState.defaultState.locales" object
     ```
     "ru": {
         code: "ru-RU",
@@ -59,5 +68,5 @@ In order to add a new language to MapStore 2 you need to follow these steps:
     addLocaleData([...en, ...it, ...fr, ...de, ...es, ...ru]);
     ```
 1. add the relative flag inside `web\client\components\I18N\images\flags` naming it ru-RU.png
-1. add the russian translations inside `web\client\translations` naming it data.ru-RU (remember to change the locale property into ru-RU)
+1. add the russian translations inside `web\client\translations` naming it data.ru-RU (remember to change the locale property of this file into ru-RU)
 1. create a fragment, related to the cookie module, inside `web\client\translations\fragments\cookie` naming it cookieDetails-ru-RU.html
