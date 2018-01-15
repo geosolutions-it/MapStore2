@@ -67,4 +67,14 @@ describe('PropertiesViewer', () => {
         }, true)).toBe(true);
     });
 
+    it('test feature isexcluded', () => {
+        const cmp = ReactDOM.render(<PropertiesViewer feature={"myfeature"} title="testTitle" />, document.getElementById("container"));
+        expect(cmp).toExist();
+
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        expect(cmpDom).toExist();
+
+        expect(cmpDom.innerText.indexOf('myfeature')).toBe(-1);
+    });
+
 });

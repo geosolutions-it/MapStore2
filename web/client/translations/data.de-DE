@@ -1153,46 +1153,46 @@
             "cancelButton": "Abbrechen"
         },
         "tutorial": {
-            "title": "Tutorial",
-            "back": "Back",
-            "next": "Next",
-            "close": "Close",
-            "skip": "Skip",
-            "last": "Finish",
-            "start": "Start",
-            "checkbox": "don't show this message again",
-            "error": "Error: target not found",
+            "title": "Anleitung",
+            "back": "zurück",
+            "next": "nächste",
+            "close": "schließen",
+            "skip": "springen",
+            "last": "Ende",
+            "start": "Anfang",
+            "checkbox": "Zeige diese Nachricht nicht mehr an",
+            "error": "Fehler: Ziel wurde nicht gefunden",
             "intro": {
-                "title": "Welcome on MapStore2",
-                "text": "framework to build web mapping applications using standard mapping libraries, such as OpenLayers 3 and Leaflet."
+                "title": "Willkommen bei MapStore2",
+                "text": "Framework zum Erstellen von Web Mapping-Anwendungen mit Standard-Mapping-Bibliotheken wie OpenLayers 3 und Leaflet."
             },
             "drawerMenu": {
-                "title": "Main menu",
-                "text": "You can find information and tools to manage layer"
+                "title": "Hauptmenü",
+                "text": "Sie können Informationen und Tools zum Verwalten der Ebene finden"
             },
             "searchBar": {
-                "title": "Search Bar",
-                "text": "Write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+                "title": "Suchleiste",
+                "text": "Schreibe die Adresse des gesuchten Ortes z.B. '1. Allee, New York'. Sie können auch Koordinaten in diesem Format einfügen: 43.87.10.20"
             },
             "home": {
-                "title": "Home",
-                "text": "Click to go to homepage"
+                "title": "Zuhause",
+                "text": "Klicken Sie hier, um zur Startseite zu gelangen"
             },
             "searchButton": {
-                "title": "Search",
-                "text": "Click to open the search bar, then write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+                "title": "Suche",
+                "text": "Schreibe die Adresse des gesuchten Ortes z.B. '1. Allee, New York'. Sie können auch Koordinaten in diesem Format einfügen: 43.87.10.20"
             },
             "burgerMenu": {
-                "title": "Option Menu",
-                "text": "You can find options, settings and help"
+                "title": "Optionsmenü",
+                "text": "Sie können Optionen, Einstellungen und Hilfe finden"
             },
             "zoomInButton": {
                 "title": "Zoom In",
-                "text": "Click to enlarge the map"
+                "text": "Klicken Sie, um die Karte zu vergrößern"
             },
             "zoomOutButton": {
                 "title": "Zoom Out",
-                "text": "Click to reduce the map"
+                "text": "Klicken Sie, um die Karte zu verkleinern"
             },
             "fullscreen": {
                 "title": "Vollbild",
@@ -1200,46 +1200,46 @@
             },
             "identifyButton": {
                 "title": "Info",
-                "text": "Press the button to activate the tool, then click on the map to retrieve information from layers"
+                "text": "Drücken Sie die Taste, um das Werkzeug zu aktivieren, und klicken Sie dann auf die Karte, um Informationen aus den Layern abzurufen"
             },
             "mapType": {
-                "title": "Library",
-                "text": "You can choose Leaflet or OpenLayers to render your maps"
+                "title": "Bibliothek",
+                "text": "Sie können Leaflet oder OpenLayers auswählen, um Ihre Karten zu rendern"
             },
             "mapsGrid": {
-                "title": "Maps",
-                "text": "Here some examples of MapStore2. Click on an image to try the demo."
+                "title": "Karten",
+                "text": "Hier einige Beispiele von MapStore2. Klicken Sie auf ein Bild, um die Demo zu testen."
             },
             "examples": {
-                "title": "Custom Application",
-                "text": "You can use components and plugins of MapStore2 to build custom applications"
+                "title": "benutzerdefinierte Anwendung",
+                "text": "Sie können Komponenten und Plugins von MapStore2 verwenden, um benutzerdefinierte Anwendungen zu erstellen"
             },
             "introCesium": {
-                "title": "3D map instructions",
-                "text": "Click on next button to start the tutorial"
+                "title": "3D Kartenanweisungen",
+                "text": "Klicken Sie auf Weiter, um das Tutorial zu starten"
             },
             "cesium": {
-                "title": "Interactions with the Map",
-                "pan": "Pan view",
-                "zoom": "Zoom view",
-                "tilt": "Tilt view",
-                "rotate": "Rotate view",
-                "oneDrag": "One finger drag",
-                "twoPinch": "Two finger pinch",
-                "twoDragSame": "Two finger drag, same direction",
-                "twoDragOpposite": "Two finger drag, opposite direction",
-                "leftClick": "Left click + drag",
-                "rightClick": "Right click + drag, or Mouse wheel scroll",
-                "middleClick": "Middle click + drag, or CTRL + Left/Right click + drag"
+                "title": "Interaktionen mit der Karte",
+                "pan": "Verschieben",
+                "zoom": "Zoom-Ansicht",
+                "tilt": "Kippansicht",
+                "rotate": "Ansicht drehen",
+                "oneDrag": "ein Finger ziehen",
+                "twoPinch": "Zwei Finger Prise",
+                "twoDragSame": "Ziehen mit zwei Fingern, gleiche Richtung",
+                "twoDragOpposite": "Ziehen mit zwei Fingern, entgegengesetzte Richtung",
+                "leftClick": "Linksklick + Ziehen",
+                "rightClick": "Rechtsklicke + Ziehen oder Mausrad scrollen",
+                "middleClick": "Mittlerer Klick + Ziehen, oder STRG + Links / Rechts klicken + ziehen"
 
             },
             "cesiumCompass": {
-                "title": "Compass",
-                "text": "You can use the compass to orbit around the globe. Drag to rotate the map"
+                "title": "Kompass",
+                "text": "Sie können den Kompass verwenden, um den Globus zu umkreisen. Ziehen Sie, um die Karte zu drehen"
             },
             "cesiumNavigation": {
                 "title": "Navigation",
-                "text": "Here you can find the zoom in and zoom out buttons"
+                "text": "Hier finden Sie die Schaltflächen zum Vergrößern und Verkleinern"
             }
         }
     }

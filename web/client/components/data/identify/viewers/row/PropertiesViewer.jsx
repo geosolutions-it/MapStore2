@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {isString} = require('lodash');
 
-const alwaysExcluded = ["exclude", "titleStyle", "listStyle", "componentStyle", "title"];
+const alwaysExcluded = ["exclude", "titleStyle", "listStyle", "componentStyle", "title", "feature"];
 
 class PropertiesViewer extends React.Component {
     static displayName = 'PropertiesViewer';
