@@ -6,18 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var Layers = require('../../../../utils/cesium/Layers');
-var ConfigUtils = require('../../../../utils/ConfigUtils');
+const Layers = require('../../../../utils/cesium/Layers');
+const ConfigUtils = require('../../../../utils/ConfigUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
 const WMTSUtils = require('../../../../utils/WMTSUtils');
-var Cesium = require('../../../../libs/cesium');
-var assign = require('object-assign');
-var {isObject, isArray, slice, get} = require('lodash');
-
-function getWMTSURLs( urls ) {
-    return urls.map((url) => url.split("\?")[0]);
-}
-
+const Cesium = require('../../../../libs/cesium');
+const {getAuthenticationParam, getURLs} = require('../../../../utils/LayersUtils');
+const assign = require('object-assign');
+const {isObject, isArray, slice, get} = require('lodash');
+const urlParser = require('url');
 
 function splitUrl(originalUrl) {
     let url = originalUrl;
@@ -111,8 +108,10 @@ function wmtsToCesiumOptions(options) {
     }
     // NOTE: can we use opacity to manage visibility?
     const isValid = isValidTile(options.matrixIds && options.matrixIds[tileMatrixSet]);
+    const queryParametersString = urlParser.format({ query: {...getAuthenticationParam(options)}});
+
     return assign({
-        url: getWMTSURLs(isArray(options.url) ? options.url : [options.url]), // TODO subdomain support, if use {s} switches to RESTFul mode
+        url: getURLs(isArray(options.url) ? options.url : [options.url], queryParametersString), // TODO subdomain support, if use {s} switches to RESTFul mode
         format: options.format || 'image/png',
         isValid,
         // tileDiscardPolicy: {
@@ -128,11 +127,12 @@ function wmtsToCesiumOptions(options) {
         tileWidth: options.tileWidth || options.tileSize || 256,
         tileHeight: options.tileHeight || options.tileSize || 256,
         tileMatrixSetID: tileMatrixSet,
-        maximumLevel: 30
+        maximumLevel: 30,
+        parameters: {...getAuthenticationParam(options)}
     });
 }
 
-const createLayer = (options) => {
+const createLayer = options => {
     let layer;
     const cesiumOptions = wmtsToCesiumOptions(options);
     layer = new Cesium.WebMapTileServiceImageryProvider(cesiumOptions);
@@ -147,4 +147,11 @@ const createLayer = (options) => {
     return layer;
 };
 
-Layers.registerType('wmts', createLayer);
+const updateLayer = (layer, newOptions, oldOptions) => {
+    if (newOptions.securityToken !== oldOptions.securityToken) {
+        return createLayer(newOptions);
+    }
+    return null;
+};
+
+Layers.registerType('wmts', {create: createLayer, update: updateLayer});

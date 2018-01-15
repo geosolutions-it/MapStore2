@@ -24,6 +24,9 @@ require('../plugins/BingLayer');
 require('../plugins/MapQuest');
 require('../plugins/VectorLayer');
 
+const SecurityUtils = require('../../../../utils/SecurityUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils');
+
 describe('Leaflet layer', () => {
     let map;
 
@@ -561,5 +564,160 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
 
+    });
+
+    it('test wms security token', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms"
+        };
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        ConfigUtils.setConfigProp('authenticationRules', [
+            {
+                urlPattern: '.*geostore.*',
+                method: 'bearer'
+            }, {
+                urlPattern: '\\/geoserver.*',
+                authkeyParamName: 'ms2-authkey',
+                method: 'authkey'
+            }
+        ]);
+
+        SecurityUtils.setStore({
+            getState: () => ({
+                security: {
+                    token: "########-####-####-####-###########"
+                }
+            })
+        });
+        let layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={options}
+            map={map}
+            securityToken="########-####-####-####-###########"/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        let lcount = 0;
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmsParams['ms2-authkey']).toBe("########-####-####-####-###########");
+
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={options}
+            map={map}
+            securityToken=""/>, document.getElementById("container"));
+        expect(layer.layer.wmsParams['ms2-authkey']).toBe(undefined);
+
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={options}
+            map={map}
+            securityToken="########-####-$$$$-####-###########"/>, document.getElementById("container"));
+
+        expect(layer.layer.wmsParams['ms2-authkey']).toBe("########-####-$$$$-####-###########");
+    });
+
+    it('test wmts security token', () => {
+        const options = {
+            type: 'wmts',
+            visibility: true,
+            name: 'nurc:Arc_Sample',
+            group: 'Meteo',
+            format: 'image/png',
+            tileMatrixSet: [
+                {
+                    'TileMatrix': [],
+                    'ows:Identifier': 'EPSG:900913',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts'
+        };
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        ConfigUtils.setConfigProp('authenticationRules', [
+            {
+                urlPattern: '.*geostore.*',
+                method: 'bearer'
+            }, {
+                urlPattern: '\\/geoserver.*',
+                authkeyParamName: 'ms2-authkey',
+                method: 'authkey'
+            }
+        ]);
+
+        SecurityUtils.setStore({
+            getState: () => ({
+                security: {
+                    token: "########-####-####-####-###########"
+                }
+            })
+        });
+        let layer = ReactDOM.render(<LeafLetLayer
+            type="wmts"
+            options={options}
+            map={map}
+            securityToken="########-####-####-####-###########"/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        let lcount = 0;
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmtsParams['ms2-authkey']).toBe("########-####-####-####-###########");
+
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wmts"
+            options={options}
+            map={map}
+            securityToken=""/>, document.getElementById("container"));
+
+        expect(layer.layer.wmtsParams['ms2-authkey']).toBe(undefined);
+
+        layer = ReactDOM.render(<LeafLetLayer
+            type="wmts"
+            options={options}
+            map={map}
+            securityToken="########-####-$$$$-####-###########"/>, document.getElementById("container"));
+
+        expect(layer.layer.wmtsParams['ms2-authkey']).toBe("########-####-$$$$-####-###########");
+    });
+
+    it('switches a wms layer to singleTile for leaflet map', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/wms",
+            "maxZoom": 23,
+            "singleTile": false
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <LeafLetLayer type="wms"
+                 options={options} map={map}/>, document.getElementById("container"));
+        var lcount = 0;
+
+        expect(layer).toExist();
+
+        const newOptions = assign({}, options, {
+            singleTile: true
+        });
+        layer = ReactDOM.render(
+            <LeafLetLayer type="wms"
+                 options={newOptions} map={map}/>, document.getElementById("container"));
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() {lcount++; });
+        expect(lcount).toBe(1);
+        expect(layer.layer.options.maxZoom).toBe(23);
     });
 });

@@ -12,6 +12,9 @@ const PagedComboboxWithFeatures = require('./combobox/PagedComboboxWithFeatures'
 const {generateTemplateString} = require('../../utils/TemplateUtils');
 const {setObservableConfig, mapPropsStreamWithConfig, compose, withStateHandlers, withPropsOnChange, withHandlers} = require('recompose');
 const rxjsConfig = require('recompose/rxjsObservableConfig').default;
+
+const {escapeCQLStrings} = require('../../utils/FilterUtils');
+
 setObservableConfig(rxjsConfig);
 const mapPropsStream = mapPropsStreamWithConfig(rxjsConfig);
 
@@ -128,7 +131,7 @@ const addStateHandlers = compose(
                                     queryCollection: {
                                         typeName: options.crossLayer.typeName,
                                         geometryName: options.crossLayer.geometryName,
-                                        cqlFilter: generateTemplateString(options.crossLayer.cqlTemplate || "")(feature)
+                                        cqlFilter: generateTemplateString(options.crossLayer.cqlTemplate || "", escapeCQLStrings)(feature)
                                     }
                                 }
                             : undefined

@@ -131,7 +131,8 @@ class MapPlugin extends React.Component {
         projectionDefs: PropTypes.array,
         toolsOptions: PropTypes.object,
         actions: PropTypes.object,
-        features: PropTypes.array
+        features: PropTypes.array,
+        securityToken: PropTypes.string
     };
 
     static defaultProps = {
@@ -161,7 +162,8 @@ class MapPlugin extends React.Component {
                 },
                 layers: [{type: "osm"}]
             }
-        }
+        },
+        securityToken: ''
     };
 
     componentWillMount() {
@@ -206,7 +208,7 @@ class MapPlugin extends React.Component {
         const projection = this.props.map.projection || 'EPSG:3857';
         return this.props.layers.map((layer, index) => {
             return (
-                <plugins.Layer type={layer.type} srs={projection} position={index} key={layer.id || layer.name} options={layer}>
+                <plugins.Layer type={layer.type} srs={projection} position={index} key={layer.id || layer.name} options={layer} securityToken={this.props.securityToken}>
                     {this.renderLayerContent(layer, projection)}
                 </plugins.Layer>
             );
@@ -289,19 +291,23 @@ class MapPlugin extends React.Component {
 const {mapSelector, projectionDefsSelector} = require('../selectors/map');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
 const {selectedFeatures} = require('../selectors/highlight');
+const {securityTokenSelector} = require('../selectors/security');
+
 const selector = createSelector(
     [
         projectionDefsSelector,
         mapSelector,
         layerSelectorWithMarkers,
         selectedFeatures,
-        (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data
-    ], (projectionDefs, map, layers, features, loadingError) => ({
+        (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data,
+        securityTokenSelector
+    ], (projectionDefs, map, layers, features, loadingError, securityToken) => ({
         projectionDefs,
         map,
         layers,
         features,
-        loadingError
+        loadingError,
+        securityToken
     })
 );
 module.exports = {

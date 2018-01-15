@@ -11,6 +11,7 @@ var LeafletMap = require('../Map.jsx');
 var LeafLetLayer = require('../Layer.jsx');
 var expect = require('expect');
 var mapUtils = require('../../../../utils/MapUtils');
+const {isNumber} = require('lodash');
 require('leaflet-draw');
 
 require('../../../../utils/leaflet/Layers');
@@ -223,10 +224,17 @@ describe('LeafletMap', () => {
         expect(bbox).toExist();
         expect(mapBbox).toExist();
         expect(bbox.bounds).toExist();
-        expect(bbox.bounds.minx).toBe(mapBbox[0]);
-        expect(bbox.bounds.miny).toBe(mapBbox[1]);
-        expect(bbox.bounds.maxx).toBe(mapBbox[2]);
-        expect(bbox.bounds.maxy).toBe(mapBbox[3]);
+
+        expect(isNumber(bbox.bounds.minx)).toBe(true);
+        expect(isNumber(bbox.bounds.miny)).toBe(true);
+        expect(isNumber(bbox.bounds.maxx)).toBe(true);
+        expect(isNumber(bbox.bounds.maxy)).toBe(true);
+
+        expect(Math.round(bbox.bounds.minx)).toBe(Math.round(parseFloat(mapBbox[0])));
+        expect(Math.round(bbox.bounds.miny)).toBe(Math.round(parseFloat(mapBbox[1])));
+        expect(Math.round(bbox.bounds.maxx)).toBe(Math.round(parseFloat(mapBbox[2])));
+        expect(Math.round(bbox.bounds.maxy)).toBe(Math.round(parseFloat(mapBbox[3])));
+
         expect(bbox.crs).toExist();
         // in the case of leaflet the bounding box CRS should always be "EPSG:4326" and the roation 0
         expect(bbox.crs).toBe("EPSG:4326");

@@ -169,18 +169,23 @@ const Api = {
     textSearch: function(url, startPosition, maxRecords, text) {
         return Api.getRecords(url, startPosition, maxRecords, text);
     },
-    parseLayerCapabilities: function(capabilities, layer) {
-        const layers = _.get(capabilities, "capability.layer.layer");
-        return _.head(layers.filter( ( capability ) => {
-            if (layer.name.split(":").length === 2 && capability.name && capability.name.split(":").length === 2 ) {
-                return layer.name === capability.name;
-            } else if (capability.name && capability.name.split(":").length === 2) {
-                return (layer.name === capability.name.split(":")[1]);
-            } else if (layer.name.split(":").length === 2) {
-                return layer.name.split(":")[1] === capability.name;
+    parseLayerCapabilities: function(capabilities, layer, lyrs) {
+        const layers = castArray(lyrs || _.get(capabilities, "capability.layer.layer"));
+        return layers.reduce((previous, capability) => {
+            if (previous) {
+                return previous;
             }
-            return layer.name === capability.name;
-        }));
+            if (!capability.name && capability.layer) {
+                return this.parseLayerCapabilities(capabilities, layer, castArray(capability.layer));
+            } else if (layer.name.split(":").length === 2 && capability.name && capability.name.split(":").length === 2) {
+                return layer.name === capability.name && capability;
+            } else if (capability.name && capability.name.split(":").length === 2) {
+                return (layer.name === capability.name.split(":")[1]) && capability;
+            } else if (layer.name.split(":").length === 2) {
+                return layer.name.split(":")[1] === capability.name && capability;
+            }
+            return layer.name === capability.name && capability;
+        }, null);
     },
     getBBox: function(record, bounds) {
         let layer = record;

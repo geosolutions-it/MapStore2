@@ -128,10 +128,11 @@ class OpenlayersMap extends React.Component {
                 map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
                     if (layer && layer.get('handleClickOnLayer')) {
                         layerInfo = layer.get('msId');
+                        const geom = feature.getGeometry();
+                        // TODO getFirstCoordinate makes sense only for points, maybe centroid is more appropriate
+                        const getCoord = geom.getType() === "GeometryCollection" ? geom.getGeometries()[0].getFirstCoordinate() : geom.getFirstCoordinate();
+                        coords = ol.proj.toLonLat(getCoord, this.props.projection);
                     }
-                    const geom = feature.getGeometry();
-                    const getCoord = geom.getType() === "GeometryCollection" ? geom.getGeometries()[0].getFirstCoordinate() : geom.getFirstCoordinate();
-                    coords = ol.proj.toLonLat(getCoord, this.props.projection);
                     tLng = CoordinatesUtils.normalizeLng(coords[0]);
                 });
                 this.props.onClick({
@@ -342,7 +343,7 @@ class OpenlayersMap extends React.Component {
 
     createView = (center, zoom, projection, options) => {
         const viewOptions = assign({}, {
-            projection: projection,
+            projection: CoordinatesUtils.normalizeSRS(projection),
             center: [center.x, center.y],
             zoom: zoom
         }, options || {});

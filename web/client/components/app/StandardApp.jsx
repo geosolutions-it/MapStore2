@@ -8,7 +8,7 @@
 const React = require('react');
 const {Provider} = require('react-redux');
 const PropTypes = require('prop-types');
-const proj4 = require('proj4');
+const proj4 = require('proj4').default;
 
 const {changeBrowserProperties} = require('../../actions/browser');
 const {loadLocale} = require('../../actions/locale');

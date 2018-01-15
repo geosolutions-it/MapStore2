@@ -6,11 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {connect} = require('react-redux');
-const {downloadFeatures, onDownloadOptionChange} = require('../actions/wfsdownload');
+const {downloadFeatures, onDownloadOptionChange, onFormatOptionsFetch} = require('../actions/wfsdownload');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 
 const {createSelector} = require('reselect');
 const {wfsURL, wfsFilter} = require('../selectors/query');
+const {getSelectedLayer} = require('../selectors/layers');
 
 const DownloadDialog = require('../components/data/download/DownloadDialog');
 /**
@@ -48,16 +49,23 @@ module.exports = {
             state => state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.enabled,
             state => state && state.wfsdownload && state.wfsdownload.downloadOptions,
             state => state && state.wfsdownload && state.wfsdownload.loading,
-            (url, filterObj, enabled, downloadOptions, loading) => ({
+            state => state && state.wfsdownload && state.wfsdownload.wfsFormats,
+            state => state && state.wfsdownload && state.wfsdownload.formatsLoading,
+            getSelectedLayer,
+            (url, filterObj, enabled, downloadOptions, loading, wfsFormats, formatsLoading, layer) => ({
                 url,
                 filterObj,
                 enabled,
                 downloadOptions,
-                loading
+                loading,
+                wfsFormats,
+                formatsLoading,
+                layer
             })
     ), {
         onExport: downloadFeatures,
         onDownloadOptionChange,
+        onFormatOptionsFetch,
         onMount: () => setControlProperty("wfsdownload", "available", true),
         onUnmount: () => setControlProperty("wfsdownload", "available", false),
         onClose: () => toggleControl("wfsdownload")

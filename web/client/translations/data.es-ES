@@ -235,25 +235,24 @@
             "toggleLayerVisibility": "Activar / desactivar la visibilidad del mapa",
             "displayLegendAndTools": "Mostrar la leyenda y las herramientas",
             "zoomToLayerExtent": "Zoom sobre la extensión del mapa",
-
             "addLayer": "Añadir capa",
-            "toolZoomToLayerTooltip": "Zoom to selected layer extent",
-            "toolZoomToLayersTooltip": "Zoom to selected layers extent",
-            "toolLayerSettingsTooltip": "Selected layer settings",
-            "toolGroupSettingsTooltip": "Selected group settings",
-            "toolTrashLayerTooltip": "Remove selected layer",
-            "toolTrashLayersTooltip": "Remove selected layers",
-            "toolFeaturesGridTooltip": "Open Attribute Table",
-            "noFilteredResults": "No results",
-            "filterPlaceholder": "Filter layers",
-            "clearFilter": "Clear filter",
-            "toolReloadLayerTooltip": "Force reload of selected layer",
-            "toolReloadLayersTooltip": "Force reload of selected layers",
-            "statusIconOpen": "Close group",
-            "statusIconClose": "Open group",
-            "grabLayerIcon": "Grab and sort layer",
-            "grabGroupIcon": "Grab and sort group",
-            "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
+            "toolZoomToLayerTooltip": "Zoom a la extensión de capa seleccionada",
+            "toolZoomToLayersTooltip": "Zoom a la extensión de capas seleccionadas",
+            "toolLayerSettingsTooltip": "Configuración de capa seleccionada",
+            "toolGroupSettingsTooltip": "Configuraciones de grupos seleccionados",
+            "toolTrashLayerTooltip": "Eliminar la capa seleccionada",
+            "toolTrashLayersTooltip": "Eliminar capas seleccionadas",
+            "toolFeaturesGridTooltip": "Abrir la tabla de atributos",
+            "noFilteredResults": "Capas de filtro",
+            "filterPlaceholder": "Capas de filtro",
+            "clearFilter": "Filtro claro",
+            "toolReloadLayerTooltip": "Fuerza la recarga de la capa seleccionada",
+            "toolReloadLayersTooltip": "Fuerza la recarga de las capas seleccionadas",
+            "statusIconOpen": "Grupo cerrado",
+            "statusIconClose": "Grupo abierto",
+            "grabLayerIcon": "Coge y clasifica la capa",
+            "grabGroupIcon": "Coge y ordenar grupo",
+            "toggleLayerVisibilityWarning": "Alternar la visibilidad de la capa, Advertencia: la capa no se cargó correctamente",
             "createWidget": "Crea un widget para la capa seleccionada",
             "editLayerProperties": "Modificar las propiedades de la capa",
             "browseData": "Abrir la tabla de atributos",
@@ -273,6 +272,13 @@
                 "search": "Refrescar las optiones de búsqueda",
                 "title": "Refrescar el título",
                 "dimensions": "Refrescar las dimensiones"
+            },
+            "layerMetadata": {
+                "toolLayerMetadataTooltip": "Mostrar los metadatos de la capa seleccionada",
+                "layerMetadataPanelTitle": "Metadatos de capa",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Error en la búsqueda de metadatos"
+                }
             }
         },
         "print":{
@@ -614,7 +620,13 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Por favor, intoduzca su clave y contraseña",
                 "usernamePwdIncorrect":"Ususario o clave incorrectos"
-            }
+            },
+            "detailsName": "Nombre",
+            "detailsRole": "Rol",
+            "detailsGroups": "Grupos",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Empresa",
+            "detailsNotes": "Notas"
         },
         "annotations": {
             "edit": "Editar",
@@ -634,6 +646,7 @@
             "add": "Nueva",
             "filter": "Filtrar las anotaciones...",
             "undo": "¿Estás seguro de que quieres abandonar la sesión de edición de anotaciones?",
+            "zoomTo": "Zoom",
             "field": {
                 "title": "Título",
                 "description": "Descripción"
@@ -717,15 +730,15 @@
             "taintedMessage": "La funcionalidad de guardar está limitada por las restricciones de seguridad del navegador. Para un mejor resultado, clique con el botón derecho del ratón en la vista previa y selecionar 'Guardar como ...' (en firefox y chrome)"
         },
         "shapefile": {
-            "title": "Añadir fichero shape local",
-            "tooltip": "Añadir fichero shape local al mapa.",
-            "placeholder": "Ponga aqui sus fichero  o clique  para selecionar los shapefile  a importar. (Shapefiles deben estar dentro de un zip)",
+            "title": "Añadir fichero archivo local",
+            "tooltip": "Añadir fichero archivo local al mapa.",
+            "placeholder": "Ponga aqui sus fichero  o clique  para selecionar los archivo local a importar. (archivos compatibles: Shapefiles deben estar dentro de un zip, KML/KMZ e GPX)",
             "defaultStyle": "Estilo por defecto",
             "zoom": "Zoom sobre el fichero shape",
             "error": {
-                "select": "Seleccionar uno o más ficheros zip",
-                "shapeFileParsingError": "No se puede cargar el shapefile El archivo podría dañarse o no estar bien formado",
-                "genericLoadError": "No se puede cargar el shapefile en el mapa"
+                "select": "Seleccionar uno o más archivo local. (archivos compatibles: Shapefiles deben estar dentro de un zip, KML/KMZ e GPX)",
+                "shapeFileParsingError": "No se puede cargar el archivo local El archivo podría dañarse o no estar bien formado",
+                "genericLoadError": "No se puede cargar el archivo local en el mapa"
             },
             "add": "Añadir",
             "cancel": "Cancelar",

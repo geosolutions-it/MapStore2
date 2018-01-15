@@ -136,40 +136,32 @@ Layers.registerType('wms', {
     create: (options) => {
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
         const queryParameters = wmsToLeafletOptions(options) || {};
-        urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters));
+        urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
         if (options.singleTile) {
             return L.nonTiledLayer.wmsCustom(urls[0], queryParameters);
         }
         return L.tileLayer.multipleUrlWMS(urls, queryParameters);
     },
     update: function(layer, newOptions, oldOptions) {
+        if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken) {
+            let newLayer;
+            const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
+            const queryParameters = wmsToLeafletOptions(newOptions) || {};
+            urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, newOptions.securityToken));
+            if (newOptions.singleTile) {
+                // return the nonTiledLayer
+                newLayer = L.nonTiledLayer.wmsCustom(urls[0], queryParameters);
+            } else {
+                newLayer = L.tileLayer.multipleUrlWMS(urls, queryParameters);
+            }
+            return newLayer;
+        }
         // find the options that make a parameter change
         let oldqueryParameters = WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(oldOptions));
         let newQueryParameters = WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(newOptions));
         let newParameters = Object.keys(newQueryParameters).filter((key) => {return newQueryParameters[key] !== oldqueryParameters[key]; });
         let removeParams = Object.keys(oldqueryParameters).filter((key) => { return oldqueryParameters[key] !== newQueryParameters[key]; });
         let newParams = {};
-        let newLayer;
-        if (oldOptions.singleTile !== newOptions.singleTile) {
-            const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
-            urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, newQueryParameters));
-            if (newOptions.singleTile) {
-                // return the nonTiledLayer
-                newLayer = L.nonTiledLayer.wmsCustom(urls[0], newQueryParameters);
-            } else {
-                newLayer = L.tileLayer.multipleUrlWMS(urls, newQueryParameters);
-            }
-            if ( newParameters.length > 0 ) {
-                newParams = newParameters.reduce( (accumulator, currentValue) => {
-                    return objectAssign({}, accumulator, {[currentValue]: newQueryParameters[currentValue] });
-                }, newParams);
-                // set new options as parameters, merged with params
-                newLayer.setParams(objectAssign(newParams, newParams.params, newOptions.params));
-            } else if (!isEqual(newOptions.params, oldOptions.params)) {
-                newLayer.setParams(newOptions.params);
-            }
-            return newLayer;
-        }
         if (removeParams.length > 0) {
             layer.removeParams(removeParams, newParameters.length > 0);
         }

@@ -25,3 +25,47 @@
 .user-status .glyphicon-minus-sign {
     color: @ms2-color-danger;
 }
+
+.ms-user-details-table {
+    padding: 15px;
+    .row {
+        border-bottom: 1px solid @ms2-color-shade-lighter;
+        min-height: @square-btn-size;
+        display: flex;
+
+        .col-sm-6 {
+            text-align: right;
+            display: flex;
+            flex: 1;
+            align-items: center;
+            &:last-child {
+                flex-direction: column;
+                * {
+                    align-self: flex-end;
+                    margin: auto 0;
+                }
+            }
+        }
+
+    }
+}
+
+@media (max-width: 505px) {
+    .ms-user-details-table {
+        .row {
+            flex-direction: column;
+            padding-bottom: 5px;
+            .col-sm-6 {
+                &:first-child {
+                    margin: 5px 0;
+                }
+                &:last-child {
+                    * {
+                        align-self: flex-start;
+                    }
+                }
+            }
+
+        }
+    }
+}

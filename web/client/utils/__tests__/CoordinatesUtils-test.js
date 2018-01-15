@@ -7,7 +7,7 @@
  */
 var expect = require('expect');
 var CoordinatesUtils = require('../CoordinatesUtils');
-var Proj4js = require('proj4');
+var Proj4js = require('proj4').default;
 
 describe('CoordinatesUtils', () => {
     afterEach((done) => {

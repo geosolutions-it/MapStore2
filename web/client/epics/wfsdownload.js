@@ -1,12 +1,39 @@
-const {DOWNLOAD_FEATURES, onDownloadFinished} = require('../actions/wfsdownload');
+const {FORMAT_OPTIONS_FETCH, DOWNLOAD_FEATURES, onDownloadFinished, updateFormats} = require('../actions/wfsdownload');
 const {TOGGLE_CONTROL, toggleControl} = require('../actions/controls');
 const {error} = require('../actions/notifications');
 const Rx = require('rxjs');
-const {get} = require('lodash');
+const {get, find, pick, toPairs} = require('lodash');
 const {saveAs} = require('file-saver');
 const axios = require('axios');
 const FilterUtils = require('../utils/FilterUtils');
 const {getByOutputFormat} = require('../utils/FileFormatUtils');
+const {getLayerWFSCapabilities} = require('../observables/wfs');
+
+const DOWNLOAD_FORMATS_LOOKUP = {
+	"gml3": "GML3.1",
+	"GML2": "GML2",
+	"application/vnd.google-earth.kml+xml": "KML",
+	"OGR-CSV": "OGR-CSV",
+	"OGR-FileGDB": "OGR-GeoDatabase",
+	"OGR-GPKG": "OGR-GeoPackage",
+	"OGR-KML": "OGR-KML",
+	"OGR-MIF": "OGR-MIF",
+	"OGR-TAB": "OGR-TAB",
+	"SHAPE-ZIP": "Shapefile",
+	"gml32": "GML3.2",
+	"application/json": "GeoJSON",
+	"csv": "CSV",
+	"application/x-gpkg": "GeoPackage"
+};
+
+const hasOutputFormat = (data) => {
+    const operation = get(data, "WFS_Capabilities.OperationsMetadata.Operation");
+    const getFeature = find(operation, function(o) { return o.name === 'GetFeature'; });
+    const parameter = get(getFeature, "Parameter");
+    const outputFormatValue = find(parameter, function(o) { return o.name === 'outputFormat'; }).Value;
+    const pickedObj = pick(DOWNLOAD_FORMATS_LOOKUP, outputFormatValue);
+    return toPairs(pickedObj).map(([prop, value]) => ({ name: prop, label: value }));
+};
 
 const getWFSFeature = ({url, filterObj = {}, downloadOptions= {}} = {}) => {
     const data = FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, false, null, null, downloadOptions.selectedSrs);
@@ -41,6 +68,14 @@ const str2bytes = (str) => {
 };
 */
 module.exports = {
+    fetchFormatsWFSDownload: (action$) =>
+        action$.ofType(FORMAT_OPTIONS_FETCH)
+            .switchMap( action => {
+                return getLayerWFSCapabilities(action)
+                .map((data) => {
+                    return updateFormats(hasOutputFormat(data));
+                });
+            }),
     startFeatureExportDownload: (action$, store) =>
         action$.ofType(DOWNLOAD_FEATURES).switchMap(action =>
             getWFSFeature({

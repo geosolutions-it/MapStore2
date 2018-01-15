@@ -1,14 +1,6 @@
 ### Description
 A few sentences describing the overall goals of the issue.
 
-### Depends On (optional)
- - A list of other involved issues (with link)
- - ...
-
-### Please indicate if this issue is related to a bug or a new feature request
-- [ ] Bug
-- [ ] New Feature
-
 ### In case of Bug (otherwise remove this paragraph)
 
 *Browser Affected*
@@ -34,12 +26,5 @@ A few sentences describing the overall goals of the issue.
 *Current Result*
 
 - Describe here the current behavior
-
-### In case of New Feature (otherwise remove this paragraph)
-
-*Acceptance Criteria - AC*
-
-- Describe the list of Acceptance Criteria
-- ...
 
 ### Other useful information (optional):

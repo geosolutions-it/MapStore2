@@ -39,4 +39,10 @@ describe('TemplateUtils', () => {
         expect(templateResult3).toBe("this is a second TEST");
 
     });
+    it('test escape function', () => {
+        let templateFunction = TemplateUtils.generateTemplateString("this is a ${test}", a => a + "2");
+        expect(templateFunction).toExist();
+        let templateResult = templateFunction({test: "TEST"});
+        expect(templateResult).toBe("this is a TEST2");
+    });
 });

@@ -63,6 +63,9 @@
         ]
     },
     "printUrl": "https://demo.geo-solutions.it/geoserver/pdf/info.json",
-    "proxyUrl": "/mapstore/proxy/?url=",
+    "proxyUrl": {
+        "url": "/proxy/?url=",
+        "useCORS": ["http://demo.geo-solutions.it:80/geoserver", "http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver"]
+    },
     "translationsPath": "../../translations"
 }

@@ -9,7 +9,7 @@
 const ConfigUtils = require('./ConfigUtils');
 const URL = require('url');
 const assign = require('object-assign');
-const {head} = require('lodash');
+const {head, isNil} = require('lodash');
 
 /**
  * This utility class will get information about the current logged user directly from the store.
@@ -159,13 +159,13 @@ const SecurityUtils = {
      * This method will add query parameter based authentications to an object
      * containing query paramaters.
      */
-    addAuthenticationParameter: function(url, parameters) {
+    addAuthenticationParameter: function(url, parameters, securityToken) {
         if (!url || !this.isAuthenticationActivated()) {
             return parameters;
         }
         switch (this.getAuthenticationMethod(url)) {
         case 'authkey':
-            const token = this.getToken();
+            const token = !isNil(securityToken) ? securityToken : this.getToken();
             if (!token) {
                 return parameters;
             }

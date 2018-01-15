@@ -123,6 +123,7 @@
             "web/client/components/misc/sidebar/Sidebar.jsx",
             "web/client/components/misc/toolbar/Toolbar.jsx",
             "web/client/components/misc/EmptyView.jsx",
+            "web/client/components/misc/ResizableModal.jsx",
 
             "web/client/actions/index.jsdoc",
             "web/client/actions/controls.js",

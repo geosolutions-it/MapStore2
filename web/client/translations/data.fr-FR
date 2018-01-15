@@ -273,6 +273,13 @@
                 "search": "Mettre à jour les options de recherche",
                 "title": "Mettre à jour le titre",
                 "dimensions": "Mettre à jour les dimensions"
+            },
+            "layerMetadata": {
+                "toolLayerMetadataTooltip": "Afficher les métadonnées de la couche sélectionnée",
+                "layerMetadataPanelTitle": "Métadonnées de couche",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Erreur dans la recherche de métadonnées"
+                }
             }
         },
         "print":{
@@ -612,6 +619,7 @@
             "add": "Nouvelle",
             "filter": "Filtrer les annotations...",
             "undo": "Êtes-vous sûr de vouloir abandonner la session d'édition d'annotation?",
+            "zoomTo": "Zoom",
             "field": {
                 "title": "titre",
                 "description": "Description"
@@ -638,7 +646,13 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Merci d'entrer vos nom d'utilisateur et mot de passe",
                 "usernamePwdIncorrect":"Nom d'utilisateur ou mot de passe incorrect"
-            }
+            },
+            "detailsName": "Nom",
+            "detailsRole": "Rôle",
+            "detailsGroups": "Groupes",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Compagnie",
+            "detailsNotes": "Remarques"
         },
         "users": {
             "title": "Gérer les comptes",
@@ -718,13 +732,13 @@
             "taintedMessage": "La fonctionnalité de sauvegarde est limitée pour les limitations de sécurité du navigateur. Pour un meilleur résultat, cliquez avec le bouton droit de la souris sur l'aperçu et sélectionnez 'Enregistrer l'image sous...' (prise en charge par Firefox et Chrome)"
         },
         "shapefile": {
-            "title": "Ajouter un fichier Shape local",
-            "tooltip": "Ajouter un fichier Shape local à la carte.",
-            "placeholder": "Déposez vos fichiers ici ou cliquez sur pour sélectionner les shapefiles à importer. (Shapefiles doivent être contenus dans des archives zip)",
+            "title": "Ajouter un fichier fichiers vectoriels",
+            "tooltip": "Ajouter un fichier fichiers vectoriels à la carte.",
+            "placeholder": "Déposez vos fichiers ici ou cliquez sur pour sélectionner les fichiers vectoriels à importer. (Shapefiles doivent être contenus dans des archives zip, KML/KMZ e GPX)",
             "defaultStyle": "Style par défaut",
             "zoom": "Zoomer sur le fichier shape",
             "error": {
-                "select": "Sélectionner un ou plusieurs fichiers zip",
+                "select": "Sélectionnez le bon fichier. (Shapefiles doivent être contenus dans des archives zip, KML/KMZ e GPX)",
                 "shapeFileParsingError": "Impossible de charger le fichier de formes. Le fichier pourrait être endommagé ou mal formé",
                 "genericLoadError": "Impossible de charger le fichier de formes sur la carte"
             },

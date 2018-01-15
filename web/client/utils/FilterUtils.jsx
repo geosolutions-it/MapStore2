@@ -10,6 +10,7 @@ const {processOGCGeometry, pointElement, polygonElement, lineStringElement, clos
 const {wfsToGmlVersion} = require('./ogc/WFS/base');
 const {ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators} = require("./ogc/Filter/operators");
 const {get, isNil, isUndefined, isArray} = require('lodash');
+const escapeCQLStrings = str => str && str.replace ? str.replace(/\'/g, "''") : str;
 
 const checkOperatorValidity = (value, operator) => {
     return (!isNil(value) && operator !== "isNull" || !isUndefined(value) && operator === "isNull");
@@ -240,7 +241,7 @@ const processOGCSimpleFilterField = (field, nsplaceholder) => {
     return filter;
 };
 
-const cqlQueryCollection = ({typeName, geometryName, cqlFilter= "INCLUDE"} = {}) => `queryCollection('${typeName}', '${geometryName}','${cqlFilter.replace(/\'/g, "''")}')`;
+const cqlQueryCollection = ({typeName, geometryName, cqlFilter= "INCLUDE"} = {}) => `queryCollection('${typeName}', '${geometryName}','${escapeCQLStrings(cqlFilter)}')`;
 const cqlCollectGeometries = (content) => `collectGeometries(${content})`;
 const FilterUtils = {
     checkOperatorValidity,
@@ -716,7 +717,7 @@ const FilterUtils = {
         }
         return fieldFilter;
     },
-
+    escapeCQLStrings,
     cqlStringField: function(attribute, operator, value) {
         let fieldFilter;
         const wrappedAttr = wrapAttributeWithDoubleQuotes(attribute);
@@ -724,13 +725,13 @@ const FilterUtils = {
             if (operator === "isNull") {
                 fieldFilter = "isNull(" + wrappedAttr + ")=true";
             } else if (operator === "=") {
-                let val = "'" + value + "'";
+                let val = "'" + escapeCQLStrings(value) + "'";
                 fieldFilter = wrappedAttr + operator + val;
             } else if (operator === "ilike") {
-                let val = "'%" + value.toLowerCase() + "%'";
+                let val = "'%" + escapeCQLStrings(value).toLowerCase() + "%'";
                 fieldFilter = "strToLowerCase(" + wrappedAttr + ") LIKE " + val;
             } else {
-                let val = "'%" + value + "%'";
+                let val = "'%" + escapeCQLStrings(value) + "%'";
                 fieldFilter = wrappedAttr + " LIKE " + val;
             }
         }

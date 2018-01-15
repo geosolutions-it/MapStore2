@@ -17,27 +17,44 @@ module.exports = {
     generateTemplateString: (function() {
         var cache = {};
 
-        function generateTemplate(template) {
+        function generateTemplate(template, escapeFn) {
 
             var fn = cache[template];
-
-            if (!fn) {
+            // if escapeFn is defined, no cache is used
+            if (!fn || escapeFn) {
                 fn = (map) => {
 
                     let sanitized = template
                     .replace(/\$\{([\s]*[^;\s\{]+[\s]*)\}/g, (_, match) => {
-                        return match.trim().split(".").reduce((a, b) => {
+                        const escapeFunction = escapeFn || (a => a);
+                        return escapeFunction(match.trim().split(".").reduce((a, b) => {
                             return a && a[b];
-                        }, map);
+                        }, map));
                     });
 
                     return isString(sanitized) && sanitized || '';
                 };
-                cache[template] = fn;
+                if (!escapeFn) {
+                    cache[template] = fn;
+                }
+
 
             }
             return fn;
         }
         return generateTemplate;
-    })()
+    })(),
+
+    parseTemplate: function(temp, callback) {
+        require.ensure(['babel-standalone'], function() {
+            const Babel = require('babel-standalone');
+            let template = typeof temp === 'function' ? temp() : temp;
+            try {
+                const comp = Babel.transform(template, { presets: ['es2015', 'react', 'stage-0'] }).code;
+                callback(comp);
+            } catch (e) {
+                callback(null, e);
+            }
+        });
+    }
 };

@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 const assign = require('object-assign');
-const Proj4js = require('proj4');
+const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const {toggleEditMode, toggleViewMode, openFeatureGrid, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid, GEOMETRY_CHANGED, openAdvancedSearch} = require('../../actions/featuregrid');
@@ -1296,7 +1296,7 @@ describe('featuregrid Epics', () => {
                     case CHANGE_LAYER_PROPERTIES: {
                         const firstPoint = [parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][0] * 1000000), 10) / 1000000, parseInt('' + (action.newProperties.filterObj.spatialField.geometry.coordinates[0][0][1] * 100000), 10) / 100000 ];
                         expect(firstPoint[0]).toBe(483245.221897);
-                        expect(firstPoint[1]).toBe(4920603.15079);
+                        expect(firstPoint[1]).toBe(4920603.15056);
                         break;
                     }
                     default:

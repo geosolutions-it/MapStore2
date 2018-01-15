@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Proj4js = require('proj4');
+const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const axios = require('../libs/ajax');
 const assign = require('object-assign');

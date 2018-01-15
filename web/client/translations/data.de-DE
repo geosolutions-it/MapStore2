@@ -236,23 +236,23 @@
             "displayLegendAndTools": "Legende und Werkzeuge zeigen",
             "zoomToLayerExtent": "Zoome auf Ausdehung der Ebene",
             "addLayer": "Ebene hinzufügen",
-            "toolZoomToLayerTooltip": "Zoom to selected layer extent",
-            "toolZoomToLayersTooltip": "Zoom to selected layers extent",
-            "toolLayerSettingsTooltip": "Selected layer settings",
-            "toolGroupSettingsTooltip": "Selected group settings",
-            "toolTrashLayerTooltip": "Remove selected layer",
-            "toolTrashLayersTooltip": "Remove selected layers",
-            "toolFeaturesGridTooltip": "Open Attribute Table",
-            "noFilteredResults": "No results",
-            "filterPlaceholder": "Filter layers",
-            "clearFilter": "Clear filter",
-            "toolReloadLayerTooltip": "Force reload of selected layer",
-            "toolReloadLayersTooltip": "Force reload of selected layers",
-            "statusIconOpen": "Close group",
-            "statusIconClose": "Open group",
-            "grabLayerIcon": "Grab and sort layer",
-            "grabGroupIcon": "Grab and sort group",
-            "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
+            "toolZoomToLayerTooltip": "Zoom auf den ausgewählten Ebenen",
+            "toolZoomToLayersTooltip": "Zoom auf ausgewählte Ebenen",
+            "toolLayerSettingsTooltip": "Ausgewählte Ebeneneinstellungen",
+            "toolGroupSettingsTooltip": "Ausgewählte Gruppeneinstellungen",
+            "toolTrashLayerTooltip": "Entferne die ausgewählte Ebene",
+            "toolTrashLayersTooltip": "Entferne ausgewählte Ebenen",
+            "toolFeaturesGridTooltip": "Öffnen Sie die Attributtabelle",
+            "noFilteredResults": "Keine Ergebnisse",
+            "filterPlaceholder": "Ebenen filtern",
+            "clearFilter": "Filter löschen",
+            "toolReloadLayerTooltip": "Erneutes Laden der ausgewählten Ebene erzwingen",
+            "toolReloadLayersTooltip": "Erzwinge das erneute Laden ausgewählter Ebenen",
+            "statusIconOpen": "Gruppe schließen",
+            "statusIconClose": "Gruppe öffnen",
+            "grabLayerIcon": "Grab und sortieren Schicht",
+            "grabGroupIcon": "Grab und sortiere Gruppe",
+            "toggleLayerVisibilityWarning": "Layer-Sichtbarkeit ändern, Warnung: Layer wurde nicht richtig geladen",
             "createWidget": "Erstellen Sie ein Widget für die ausgewählte Ebene",
             "editLayerProperties": "Ändere Ebenen Eigenschaften",
             "browseData": "öffnen Sie die Attributtabelle",
@@ -272,6 +272,13 @@
                 "search": "Suchoptionen aktualisieren",
                 "title": "Titel aktualisieren",
                 "dimensions": "Dimensionen aktualisieren"
+            },
+            "layerMetadata": {
+                "toolLayerMetadataTooltip": "Zeigen Sie die Metadaten der ausgewählten Ebene an",
+                "layerMetadataPanelTitle": "Ebenenmetadaten",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Fehler bei der Metadatensuche"
+                }
             }
         },
         "print":{
@@ -613,7 +620,13 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Bitte gib Benutzernamen und Password ein",
                 "usernamePwdIncorrect":"Benutzername oder Passwort inkorrekt"
-            }
+            },
+            "detailsName": "Name",
+            "detailsRole": "Rolle",
+            "detailsGroups": "Gruppen",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Unternehmen",
+            "detailsNotes": "Anmerkungen"
         },
         "annotations": {
             "edit": "Bearbeiten",
@@ -633,6 +646,7 @@
             "add": "Neue",
             "filter": "Filtern die annotationen...",
             "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
+            "zoomTo": "Zoom",
             "field": {
                 "title": "Titel",
                 "description": "Beschreibung"
@@ -716,13 +730,13 @@
             "taintedMessage": "Die Snapshot Speichern Funktionalität ist aufgrund von Browser Sicherheits Beschränkungen eingeschränkt. Für ein besseres Ergebnis klicke mit der rechten Maustaste auf die Vorschau und wähle 'Bild speichern unter'(unterstützt von Firefox und Chrome)"
         },
         "shapefile": {
-            "title": "Shapefile hochladen",
-            "tooltip": "Füge der Karte ein Shapefile hinzu.",
-            "placeholder": "Ziehe deine Dateien hierher oder klicke Shapefile(s) die importiert werden sollen.(Shapefiles müssen in Zip-Archiven enthalten sein)",
+            "title": "Vektor-Dateien hochladen",
+            "tooltip": "Füge der Karte ein Vektor-Dateien hinzu.",
+            "placeholder": "Ziehe deine Dateien hierher oder klicke Vektor-Dateien die importiert werden sollen.(Shapefiles müssen in Zip-Archiven enthalten sein, KML/KMZ e GPX)",
             "defaultStyle": "Standardstil",
             "zoom": "Zoome auf Shapefiles",
             "error": {
-                "select": "Wähle ein oder mehrere Zip Archive",
+                "select": "Wählen Sie die richtige Datei aus",
                 "shapeFileParsingError": "Das Shapefile kann nicht geladen werden. Die Datei könnte beschädigt oder nicht gut geformt sein",
                 "genericLoadError": "Das Shapefile kann nicht auf der Karte geladen werden"
             },
