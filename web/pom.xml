@@ -95,10 +95,6 @@
                                 <includes>
                                     <include>index.html</include>
                                 </includes>
-                                <excludes>
-                                    <exclude>MapStore2/*</exclude>
-                                    <exclude>MapStore2/**/*</exclude>
-                                </excludes>
                             </resource>
                         </resources>
                     </configuration>
