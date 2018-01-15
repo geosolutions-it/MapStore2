@@ -3,7 +3,7 @@ const INFO_FORMATS = {
     "TEXT": "text/plain",
     "HTML": "text/html",
     "JSONP": "text/javascript",
-    "JSON": "application/json",
+    "PROPERTIES": "application/json",
     "GML2": "application/vnd.ogc.gml",
     "GML3": "application/vnd.ogc.gml/3.1.1"
 };
@@ -70,7 +70,7 @@ const Validator = {
             return responses.filter((res) => res.response === "" || typeof res.response === "string" && res.response.indexOf("no features were found") === 0 || res.response && (typeof res.response === "string" && res.response.indexOf("<?xml") === 0));
         }
     },
-    JSON: {
+    PROPERTIES: {
         /**
          *Parse the JSON to get only the valid json responses
          */
