@@ -14,12 +14,13 @@ const reducePropsToState = (props) => {
     const innermostProps = props[props.length - 1];
     if (innermostProps && innermostProps.version) {
         return {
-            version: innermostProps.version !== "${mapstore2.version}\n" ? "?" + innermostProps.version : '',
+            version: innermostProps.version.indexOf('${mapstore2.version}') === -1 ? "?" + innermostProps.version : '',
             theme: innermostProps.theme || 'default',
             themeElement: innermostProps.themeElement || 'theme_stylesheet',
             prefix: innermostProps.prefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2',
             prefixContainer: innermostProps.prefixContainer && document.querySelector(innermostProps.prefixContainer) || document.body,
-            path: innermostProps.path || 'dist/themes'
+            path: innermostProps.path || 'dist/themes',
+            onLoad: innermostProps.onLoad || null
         };
     }
     return null;
@@ -34,10 +35,15 @@ const handleStateChangeOnClient = (themeCfg) => {
             link.setAttribute("rel", "stylesheet");
             link.setAttribute("id", themeCfg.themeElement);
             document.head.insertBefore(link, document.head.firstChild);
+            const basePath = link.href && link.href.substring(0, link.href.lastIndexOf("/")) || themeCfg.path;
+            link.setAttribute('href', basePath + "/" + themeCfg.theme + ".css" + themeCfg.version);
         }
-        const basePath = link.href && link.href.substring(0, link.href.lastIndexOf("/")) || themeCfg.path;
-        link.setAttribute('href', basePath + "/" + themeCfg.theme + ".css" + themeCfg.version);
 
+        if (themeCfg.onLoad && !link.onload) {
+            link.onload = () => {
+                themeCfg.onLoad();
+            };
+        }
         const prefixContainer = themeCfg.prefixContainer;
         const prefix = themeCfg.prefix;
 
@@ -51,7 +57,8 @@ const handleStateChangeOnClient = (themeCfg) => {
 class Theme extends React.Component {
     static propTypes = {
         theme: PropTypes.string.isRequired,
-        version: PropTypes.string
+        version: PropTypes.string,
+        onLoad: PropTypes.func
     };
 
     static defaultProps = {

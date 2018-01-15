@@ -17,6 +17,7 @@ module.exports = (config, pluginsDef) => {
         const {loadMaps} = require('../actions/maps');
         const {loadVersion} = require('../actions/version');
         const {versionSelector} = require('../selectors/version');
+        const {loadAfterThemeSelector} = require('../selectors/config');
         const StandardApp = require('../components/app/StandardApp');
 
         const {pages, initialState, storeOpts, appEpics = {}} = config;
@@ -24,7 +25,8 @@ module.exports = (config, pluginsDef) => {
         const StandardRouter = connect((state) => ({
             locale: state.locale || {},
             pages,
-            version: versionSelector(state)
+            version: versionSelector(state),
+            loadAfterTheme: loadAfterThemeSelector(state)
         }))(require('../components/app/StandardRouter'));
 
         const {updateMapLayoutEpic} = require('../epics/maplayout');
