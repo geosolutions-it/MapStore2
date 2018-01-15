@@ -21,6 +21,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const assign = require('object-assign');
 const {spatialFieldMethodSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
 const {changeDrawingStatus} = require('../actions/draw');
+const {isLeaflet} = require('../selectors/maptype');
 const {INIT_QUERY_PANEL} = require('../actions/wfsquery');
 
 const {isObject} = require('lodash');
@@ -215,20 +216,22 @@ const redrawSpatialFilterEpic = (action$, store) =>
         const method = spatialFieldMethodSelector(state);
         const geom = spatialFieldGeomSelector(state);
         let feature;
+        let proj;
         if (method === "Circle" && geom ) {
-            const point = CoordinatesUtils.reproject(geom.center, "EPSG:4326", "EPSG:3857");
+            proj = "EPSG:3857";
+            const point = CoordinatesUtils.reproject(geom.center, geom.projection, proj);
             const center = [point.x, point.y];
             feature = {
                 type: "Feature",
                 geometry: {
-                    type: "Polygon",
-                    coordinates: [[center]],
+                    type: isLeaflet(state) ? "Point" : "Polygon",
+                    coordinates: isLeaflet(state) ? center : [[center]],
                     center: {
                         x: center[0],
                         y: center[1],
-                        srs: "EPSG:3857"
+                        srs: proj
                     },
-                    projection: "EPSG:3857",
+                    projection: proj,
                     radius: geom.radius
                 }
             };
@@ -240,8 +243,9 @@ const redrawSpatialFilterEpic = (action$, store) =>
                     coordinates: spatialFieldGeomCoordSelector(state)
                 }
             };
+            proj = spatialFieldGeomProjSelector(state);
         }
-        let drawSpatialFilter = geom ? changeDrawingStatus("replace", method, "queryform", [feature], {featureProjection: spatialFieldGeomProjSelector(state), drawEnabled: false, editEnabled: false}) : changeDrawingStatus("clean", method, "queryform", [], {drawEnabled: false, editEnabled: false});
+        let drawSpatialFilter = geom ? changeDrawingStatus("drawOrEdit", method, "queryform", [feature], {featureProjection: proj, drawEnabled: false, editEnabled: false}) : changeDrawingStatus("clean", method, "queryform", [], {drawEnabled: false, editEnabled: false});
          // if a geometry is present it will redraw the spatial field
         return Rx.Observable.of(drawSpatialFilter);
     });
