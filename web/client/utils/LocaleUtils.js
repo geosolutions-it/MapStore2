@@ -52,13 +52,8 @@ const DATE_FORMATS = {
     "nl-NL": "dd/MM/yyyy"
 };
 
-const servicesErrorParser = {
-    geostore: require('../api/GeoStoreDAO').errorParser
-};
+let errorParser = {};
 
-const getErrorParser = service => {
-    return servicesErrorParser[service];
-};
 /**
  * Utilities for locales.
  * @memberof utils
@@ -121,6 +116,14 @@ const LocaleUtils = {
         return message;
     },
     /**
+     * Registre a parser to translate error services
+     * @param type {string} name of the service
+     * @param parser {object} custom parser of the service
+     */
+    registerErrorParser: (type, parser) => {
+        errorParser[type] = parser;
+    },
+    /**
      * Return localized id of error messages
      * @param e {object} error
      * @param service {string} service that thrown the error
@@ -128,8 +131,7 @@ const LocaleUtils = {
      * @return {object} {title, message}
      */
     getErrorMessage: (e, service, section) => {
-        const errorParser = getErrorParser(service);
-        return service && section && errorParser && errorParser[section] && errorParser[section](e) || {
+        return service && section && errorParser[service] && errorParser[service][section] && errorParser[service][section](e) || {
             title: 'errorTitleDefault',
             message: 'errorDefault'
         };
