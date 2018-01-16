@@ -181,6 +181,62 @@ describe('This test for RecordItem', () => {
         expect(actionsSpy2.calls.length).toBe(1);
     });
 
+    it('check event handlers with catalogUrl and csw service', () => {
+        let actions = {
+            onLayerAdd: () => {
+
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        const item = ReactDOM.render(<ReactItem
+            record={sampleRecord}
+            onLayerAdd={actions.onLayerAdd}
+            catalogURL="fakeURL"
+            catalogType="csw"
+            />, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        expect(itemDom.className).toBe('record-item panel panel-default');
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[0].catalogURL).toExist();
+    });
+
+    it('check event handlers with catalogUrl and wms service', () => {
+        let actions = {
+            onLayerAdd: () => {
+
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        const item = ReactDOM.render(<ReactItem
+            record={sampleRecord}
+            onLayerAdd={actions.onLayerAdd}
+            catalogURL="fakeURL"
+            catalogType="wms"
+        />, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        expect(itemDom.className).toBe('record-item panel panel-default');
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
+    });
+
     it('test create record item with no get capabilities links', () => {
         // instanciating a record item component
         const component = ReactDOM.render(<ReactItem record={sampleRecord} showGetCapLinks/>,
