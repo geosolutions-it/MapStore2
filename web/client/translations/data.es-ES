@@ -274,6 +274,12 @@
                 "dimensions": "Refrescar las dimensiones"
             },
             "layerMetadata": {
+                "identifier": "Identificador",
+                "title": "Título",
+                "abstract": "Abstracto",
+                "subject": "Asunto",
+                "type": "Tipo",
+                "creator": "Creador",
                 "toolLayerMetadataTooltip": "Mostrar los metadatos de la capa seleccionada",
                 "layerMetadataPanelTitle": "Metadatos de capa",
                 "notification": {

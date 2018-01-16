@@ -275,6 +275,12 @@
                 "dimensions": "Mettre à jour les dimensions"
             },
             "layerMetadata": {
+                "identifier": "Identifiant",
+                "title": "Titre",
+                "abstract": "Résumé",
+                "subject": "Sujet",
+                "type": "Type",
+                "creator": "Créateur",
                 "toolLayerMetadataTooltip": "Afficher les métadonnées de la couche sélectionnée",
                 "layerMetadataPanelTitle": "Métadonnées de couche",
                 "notification": {

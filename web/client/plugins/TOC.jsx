@@ -130,7 +130,7 @@ class LayerTree extends React.Component {
         groups: PropTypes.array,
         settings: PropTypes.object,
         layerMetadata: PropTypes.object,
-        metadataTemplate: PropTypes.array,
+        metadataTemplate: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object, PropTypes.func]),
         refreshMapEnabled: PropTypes.bool,
         groupStyle: PropTypes.object,
         groupPropertiesChangeHandler: PropTypes.func,
@@ -259,7 +259,7 @@ class LayerTree extends React.Component {
         activateAddLayerButton: false,
         catalogActive: false,
         refreshLayerVersion: () => {},
-        metadataTemplate: []
+        metadataTemplate: null
     };
 
     getNoBackgroundLayers = (group) => {
@@ -485,7 +485,7 @@ const API = {
  * @memberof plugins
  * @name TOC
  * @class
- * @prop {array[]} metadataTemplate custom template for displaying metadata
+ * @prop {string[]|string|object|function} metadataTemplate custom template for displaying metadata
  * @example
  * {
  * "name": "TOC",

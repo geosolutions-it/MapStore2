@@ -8,11 +8,10 @@
 const React = require('react');
 const expect = require('expect');
 const ReactDOM = require('react-dom');
-const Template = require('../../../../data/template/jsx/Template');
-const RenderTemplate = require("../index");
+const Localized = require('../../../../I18N/Localized');
 const {Promise} = require('es6-promise');
 
-const metadataTemplate = require("../MetadataTemplate");
+const MetadataTemplate = require("../MetadataTemplate");
 
 describe("Test Layer Metadata JSX Template", () => {
     beforeEach((done) => {
@@ -40,10 +39,9 @@ describe("Test Layer Metadata JSX Template", () => {
             expanded: true
         };
         let comp = ReactDOM.render(
-            <Template
+            <MetadataTemplate
                 model={layerMetadata.metadataRecord}
-                template={metadataTemplate}
-                renderContent={RenderTemplate}/>, document.getElementById("container"));
+                />, document.getElementById("container"));
         new Promise((resolve) => {
             require.ensure(['babel-standalone'], () => {
                 resolve(comp);
@@ -54,6 +52,47 @@ describe("Test Layer Metadata JSX Template", () => {
                 expect(cmpDom).toExist();
                 expect(cmpDom.id).toExist();
                 expect(cmpDom.id).toBe("msg_rss_micro");
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
+
+    it('Test Layer Metadata default Template translations', (done) => {
+
+        const layerMetadata = {
+            metadataRecord: {
+                "identifier": "msg_rss_micro",
+                "title": "msg_rss_micro runs from 2016-05-03T09:35:00 UTC to 2016-05-03T09:35:00 UTC",
+                "format": "GeoTIFF",
+                "abstract": "msg_rss_micro runs from 2016-05-03T09:35:00 to 2016-05-03T09:35:00 UTC every 5 minutes",
+                "language": "ita",
+                "source": "Run startup timestamp 2016-05-03T09:35:00"
+            },
+            expanded: true
+        };
+        const messages = {
+            "toc": {
+                "layerMetadata": {
+                    "identifier": "MyIdentifier"
+                }
+            }
+        };
+        let comp = ReactDOM.render(
+            <Localized locale="en" messages={messages}>
+                <MetadataTemplate
+                model={layerMetadata.metadataRecord}
+                 /></Localized>, document.getElementById("container"));
+        new Promise((resolve) => {
+            require.ensure(['babel-standalone'], () => {
+                resolve(comp);
+            });
+        }).then(() => {
+            try {
+                const cmpDom = document.getElementById("msg_rss_micro");
+                expect(cmpDom).toExist();
+                expect(cmpDom.innerText.indexOf("MyIdentifier") !== -1).toBe(true);
                 done();
             } catch (ex) {
                 done(ex);
