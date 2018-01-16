@@ -47,7 +47,7 @@ This is the main structure:
       "defaultState": {
           ...
       },
-      // mobile override (defined properties will overide default in mobile mode)
+      // mobile override (defined properties will override default in mobile mode)
       "mobile": {
           ...
       }
@@ -67,3 +67,59 @@ This is the main structure:
 If you are building your own app, you can choose to create your custom modes or force one of them by passing the `mode` parameter in the query string.
 
 For configuring plugins, see the [Configuring Plugins Section](plugins-documentation) and the [plugin reference page](./api/plugins)
+
+## Explanation of some config properties
+
+- initialState is an object that will initialize the state with some default values and this WILL OVERRIDE the initialState imposed by plugins & reducers.
+
+### initialState configuration
+It can contain:
+1. a defaultState valid for every mode
+1. a piece of state for each mode (mobile, desktop, embedded)
+
+Inside defaultState you can set default catalog services adding the following key
+```
+"catalog": {
+    "default": {
+        "newService": {
+            "url": "",
+            "type": "wms",
+            "title": "",
+            "isNew": true,
+            "autoload": false
+        },
+        "selectedService": "Demo CSW Service",
+        "services": {
+            "Demo CSW Service": {
+                "url": "https://demo.geo-solutions.it/geoserver/csw",
+                "type": "csw",
+                "title": "A title for Demo CSW Service",
+                "autoload": true
+            },
+            "Demo WMS Service": {
+                "url": "https://demo.geo-solutions.it/geoserver/wms",
+                "type": "wms",
+                "title": "A title for Demo WMS Service",
+                "autoload": false
+            },
+            "Demo WMTS Service": {
+                "url": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts",
+                "type": "wmts",
+                "title": "A title for Demo WMTS Service",
+                "autoload": false
+            }
+        }
+    }
+}
+```
+Set `selectedService` value to one of the ID of the services object ("Demo CSW Service" for example). This will become the default service opened and used in the catalog panel.
+For each service set the key of the service as the ID.
+    "ID_CATALOG_SERVICE": {
+        "url": the url pointing to the catalog web service,
+        "type": the type of webservice used. (this need to be consistent with the web service pointed by the url),
+        "title": the label used for recognizing th catalog service,
+        "autoload": if true, when selected or when catalog panel is opened it will trigger an automatic search of the layers. if false, search must be manually performed.
+    }
+Be careful to use unique IDs
+Future implementations will try to detect the type from the url.
+newService is used internally as the starting object for an empty service.
