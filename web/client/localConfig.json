@@ -1,5 +1,4 @@
 {
-
     "proxyUrl": {
         "url": "proxy/?url=",
         "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver"]
@@ -11,6 +10,7 @@
     "initialMapFilter": "",
     "ignoreMobileCss": false,
     "useAuthenticationRules": true,
+    "loadAfterTheme": false,
     "defaultMapOptions": {
       "cesium": {
           "flyTo": true,

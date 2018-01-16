@@ -41,6 +41,8 @@ This is the main structure:
     "urlPattern": "\\/geoserver.*",
     "method": "authkey"
   },
+  // flag for postponing mapstore 2 load time after theme
+  "loadAfterTheme": false,
   // optional state initializer (it will override the one defined in appConfig.js)
   "initialState": {
       // default initial state for every mode (will override initialState imposed by plugins reducers)
@@ -67,3 +69,8 @@ This is the main structure:
 If you are building your own app, you can choose to create your custom modes or force one of them by passing the `mode` parameter in the query string.
 
 For configuring plugins, see the [Configuring Plugins Section](plugins-documentation) and the [plugin reference page](./api/plugins)
+
+
+## Explanation of some config properties
+
+- loadAfterTheme is a flag that allows to load mapstore.js after the theme which can be versioned or not(default.css). default is false

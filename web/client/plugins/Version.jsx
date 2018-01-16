@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -8,8 +7,9 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
-
+const {versionSelector} = require('../selectors/version');
 const Message = require('../components/I18N/Message');
 
 /**
@@ -20,7 +20,7 @@ const Message = require('../components/I18N/Message');
   *
   */
 const Version = connect((state) => ({
-    version: state.version && state.version.current
+    version: versionSelector(state)
 }))(
 class extends React.Component {
     static propTypes = {

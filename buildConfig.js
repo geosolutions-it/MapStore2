@@ -6,7 +6,7 @@ const NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
-
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publicPath, cssPrefix) => ({
     entry: assign({
         'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
@@ -15,7 +15,8 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     output: {
         path: paths.dist,
         publicPath,
-        filename: "[name].js"
+        filename: "[name].js",
+        chunkFilename: prod ? "[name].[hash].chunk.js" : "[name].js"
     },
     plugins: [
         new CopyWebpackPlugin([
@@ -45,7 +46,12 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
         new NoEmitOnErrorsPlugin(),
         extractThemesPlugin
-    ].concat(prod ? [new ParallelUglifyPlugin({
+    ].concat(prod ? [new HtmlWebpackPlugin({
+            template: path.join(paths.framework, 'indexTemplate.html'),
+            chunks: ['mapstore2'],
+            inject: true,
+            hash: true
+    })] : []).concat(prod ? [new ParallelUglifyPlugin({
         uglifyJS: {
             sourceMap: false,
             compress: {warnings: false},
@@ -129,7 +135,10 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
                 }],
                 include: paths.code
             }
-        ]
+        ].concat(prod ? [{
+                test: /\.html$/,
+                loader: 'html-loader'
+        }] : [])
     },
     devServer: {
         proxy: {
