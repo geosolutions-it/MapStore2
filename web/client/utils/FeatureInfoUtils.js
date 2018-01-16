@@ -4,6 +4,7 @@ const INFO_FORMATS = {
     "HTML": "text/html",
     "JSONP": "text/javascript",
     "PROPERTIES": "application/json",
+    "JSON": "application/json",
     "GML2": "application/vnd.ogc.gml",
     "GML3": "application/vnd.ogc.gml/3.1.1"
 };
@@ -68,6 +69,20 @@ const Validator = {
          */
         getNoValidResponses(responses) {
             return responses.filter((res) => res.response === "" || typeof res.response === "string" && res.response.indexOf("no features were found") === 0 || res.response && (typeof res.response === "string" && res.response.indexOf("<?xml") === 0));
+        }
+    },
+    JSON: {
+        /**
+         *Parse the JSON to get only the valid json responses
+         */
+        getValidResponses(responses) {
+            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
+        },
+        /**
+         * Parse the JSON to get only the NOT valid json responses
+         */
+        getNoValidResponses(responses) {
+            return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
         }
     },
     PROPERTIES: {
