@@ -16,7 +16,7 @@ const MapInfoUtils = {
      * specifies which info formats are currently supported
      */
     //           default format ↴
-    AVAILABLE_FORMAT: ['TEXT', 'JSON', 'HTML'],
+    AVAILABLE_FORMAT: ['TEXT', 'PROPERTIES', 'HTML'],
 
     VIEWERS: {},
     /**
@@ -150,6 +150,7 @@ const MapInfoUtils = {
     },
     getViewers() {
         return {
+            [FeatureInfoUtils.INFO_FORMATS.PROPERTIES]: require('../components/data/identify/viewers/JSONViewer'),
             [FeatureInfoUtils.INFO_FORMATS.JSON]: require('../components/data/identify/viewers/JSONViewer'),
             [FeatureInfoUtils.INFO_FORMATS.HTML]: require('../components/data/identify/viewers/HTMLViewer'),
             [FeatureInfoUtils.INFO_FORMATS.TEXT]: require('../components/data/identify/viewers/TextViewer')

@@ -34,7 +34,7 @@ describe('MapInfoUtils', () => {
         let testData = {
             "TEXT": "text/plain",
             "HTML": "text/html",
-            "JSON": "application/json"
+            "PROPERTIES": "application/json"
         };
         let results = getAvailableInfoFormat();
         expect(results).toExist();
@@ -49,7 +49,7 @@ describe('MapInfoUtils', () => {
     });
 
     it('getAvailableInfoFormatLabels', () => {
-        let testData = ['TEXT', 'JSON', 'HTML'];
+        let testData = ['TEXT', 'PROPERTIES', 'HTML'];
         let results = getAvailableInfoFormatLabels();
         expect(results).toExist();
         expect(results.length).toBe(3);
@@ -195,7 +195,7 @@ describe('MapInfoUtils', () => {
             name: "layer",
             url: "http://localhost",
             featureInfo: {
-                format: "JSON",
+                format: "PROPERTIES",
                 viewer: {
                     type: 'customViewer'
                 }
@@ -273,7 +273,7 @@ describe('MapInfoUtils', () => {
             name: "layer",
             url: "http://localhost",
             featureInfo: {
-                format: "JSON",
+                format: "PROPERTIES",
                 viewer: {
                     type: 'customViewer'
                 }
@@ -322,7 +322,7 @@ describe('MapInfoUtils', () => {
                 "resolution": 152.8740565703525,
                 "buffer": 2
             },
-            "format": "JSON"
+            "format": "PROPERTIES"
             }
         ];
 
