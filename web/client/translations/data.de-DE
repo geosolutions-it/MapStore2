@@ -274,6 +274,12 @@
                 "dimensions": "Dimensionen aktualisieren"
             },
             "layerMetadata": {
+                "identifier": "Kennung",
+                "title": "Titel",
+                "abstract": "Abstrakt",
+                "subject": "Betreff",
+                "type": "Typ",
+                "creator": "Schöpfer",
                 "toolLayerMetadataTooltip": "Zeigen Sie die Metadaten der ausgewählten Ebene an",
                 "layerMetadataPanelTitle": "Ebenenmetadaten",
                 "notification": {

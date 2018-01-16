@@ -253,6 +253,12 @@
                 "dimensions": "De dimensies bijwerken"
             },
             "layerMetadata": {
+                "identifier": "Identifier",
+                "title": "Title",
+                "abstract": "Abstract",
+                "subject": "Subject",
+                "type": "Type",
+                "creator": "Creator",
                 "toolLayerMetadataTooltip": "Toon de metadata van de geselecteerde laag",
                 "layerMetadataPanelTitle": "Metagegevens van de laag",
                 "notification": {

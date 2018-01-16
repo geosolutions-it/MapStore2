@@ -273,6 +273,12 @@
                 "dimensions": "Update dimensions"
             },
             "layerMetadata": {
+                "identifier": "Identifier",
+                "title": "Title",
+                "abstract": "Abstract",
+                "subject": "Subject",
+                "type": "Type",
+                "creator": "Creator",
                 "toolLayerMetadataTooltip": "Show the selected layer's metadata",
                 "layerMetadataPanelTitle": "Layer metadata",
                 "notification": {

@@ -8,29 +8,24 @@
 
 const MetadataTemplate = "<div id={model.identifier}>" +
         "<Bootstrap.Table>" +
-            "<thead>" +
-            "<tr>" +
-                "<th>Campo</th><th>Valore</th>" +
-            "</tr>" +
-            "</thead>" +
             "<tbody>" +
                 "<tr>" +
-                    "<td>Identifier</td><td>{model.identifier}</td>" +
+                    "<td><Message msgId=\"toc.layerMetadata.identifier\"/></td><td>{model.identifier}</td>" +
                 "</tr>" +
                 "<tr>" +
-                    "<td>Title</td><td>{model.title}</td>" +
+                    "<td><Message msgId=\"toc.layerMetadata.title\"/></td><td>{model.title}</td>" +
                 "</tr>" +
                 "<tr>" +
-                    "<td>Abstract</td><td>{model.abstract}</td>" +
+                    "<td><Message msgId=\"toc.layerMetadata.abstract\"/></td><td>{model.abstract}</td>" +
                 "</tr>" +
                 "<tr>" +
-                    "<td>Subject</td><td>{Array.isArray(model.subject) ? model.subject.map((value, i) => <ul key={'meta'+i}><li key={i}>{value}</li></ul>) : model.subject}</td>" +
+                    "<td><Message msgId=\"toc.layerMetadata.subject\"/></td><td>{Array.isArray(model.subject) ? model.subject.map((value, i) => <ul key={'meta'+i}><li key={i}>{value}</li></ul>) : model.subject}</td>" +
                 "</tr>" +
                 "<tr>" +
-                    "<td>Type</td><td>{model.type}</td>" +
+                    "<td><Message msgId=\"toc.layerMetadata.type\"/></td><td>{model.type}</td>" +
                 "</tr>" +
                 "<tr>" +
-                    "<td>Creator</td><td>{model.creator}</td>" +
+                    "<td><Message msgId=\"toc.layerMetadata.creator\"/></td><td>{model.creator}</td>" +
                 "</tr>" +
             "</tbody>" +
         "</Bootstrap.Table>" +

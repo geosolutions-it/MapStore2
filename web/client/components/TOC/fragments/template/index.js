@@ -9,6 +9,8 @@
 /*eslint-disable */
 
 const Bootstrap = require('react-bootstrap');
+const Message = require('../../../I18N/Message');
+
 const React = require('react');
 
 const RenderTemplate = function(comp, props) {

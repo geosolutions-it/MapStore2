@@ -274,6 +274,12 @@
                 "dimensions": "Aggiorna le dimensioni aggiuntive"
             },
             "layerMetadata": {
+                "identifier": "Identificativo",
+                "title": "Titolo",
+                "abstract": "Abstract",
+                "subject": "Oggetto",
+                "type": "Tipo",
+                "creator": "Creatore",
                 "toolLayerMetadataTooltip": "Mostra i metadati del layer selezionato",
                 "layerMetadataPanelTitle": "Metadati del layer",
                 "notification": {
