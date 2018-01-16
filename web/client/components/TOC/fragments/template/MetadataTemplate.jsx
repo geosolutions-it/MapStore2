@@ -36,7 +36,7 @@ class MetadataTemplate extends React.Component {
                          <td><Message msgId="toc.layerMetadata.abstract"/></td><td>{model.abstract}</td>
                      </tr>
                      <tr>
-                         <td><Message msgId="toc.layerMetadata.subject"/></td><td>{isArray(model.subject) ? model.subject.map((value, i) => <ul key={'meta' + i}><li key={i}>{value}</li></ul>) : model.subject}</td> 
+                         <td><Message msgId="toc.layerMetadata.subject"/></td><td>{isArray(model.subject) ? model.subject.map((value, i) => <ul key={'meta' + i}><li key={i}>{value}</li></ul>) : model.subject}</td>
              </tr>
                  <tr>
                      <td><Message msgId="toc.layerMetadata.type"/></td><td>{model.type}</td>
