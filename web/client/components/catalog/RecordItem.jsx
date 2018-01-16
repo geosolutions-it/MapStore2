@@ -10,34 +10,13 @@ const PropTypes = require('prop-types');
 const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button, Glyphicon} = require('react-bootstrap');
-const {head, memoize, isObject} = require('lodash');
-const assign = require('object-assign');
+const {isObject} = require('lodash');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const ConfigUtils = require('../../utils/ConfigUtils');
+const {getRecordLinks, recordToLayer, extractOGCServicesReferences, buildSRSMap, removeParameters} = require('../../utils/CatalogUtils');
 
 const defaultThumb = require('./img/default.jpg');
-
-const buildSRSMap = memoize((srs) => {
-    return srs.reduce((previous, current) => {
-        return assign(previous, {[current]: true});
-    }, {});
-});
-
-const removeParameters = (url, skip) => {
-    const urlparts = url.split('?');
-    const params = {};
-    if (urlparts.length >= 2 && urlparts[1]) {
-        const pars = urlparts[1].split(/[&;]/g);
-        pars.forEach((par) => {
-            const param = par.split('=');
-            if (skip.indexOf(param[0].toLowerCase()) === -1) {
-                params[param[0]] = param[1];
-            }
-        });
-    }
-    return {url: urlparts[0], params};
-};
 
 require("./RecordItem.css");
 
@@ -81,38 +60,6 @@ class RecordItem extends React.Component {
         document.removeEventListener('click', this.handleClick, false);
     }
 
-    getLinks = (record) => {
-        let wmsGetCap = head(record.references.filter(reference => reference.type &&
-            reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
-        let wfsGetCap = head(record.references.filter(reference => reference.type &&
-            reference.type.indexOf("OGC:WFS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
-        let wmtsGetCap = head(record.references.filter(reference => reference.type &&
-            reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
-        let links = [];
-        if (wmsGetCap) {
-            links.push({
-                type: "WMS_GET_CAPABILITIES",
-                url: wmsGetCap.url,
-                labelId: 'catalog.wmsGetCapLink'
-            });
-        }
-        if (wmtsGetCap) {
-            links.push({
-                type: "WMTS_GET_CAPABILITIES",
-                url: wmtsGetCap.url,
-                labelId: 'catalog.wmtsGetCapLink'
-            });
-        }
-        if (wfsGetCap) {
-            links.push({
-                type: "WFS_GET_CAPABILITIES",
-                url: wfsGetCap.url,
-                labelId: 'catalog.wfsGetCapLink'
-            });
-        }
-        return links;
-    };
-
     getTitle = (title) => {
         return isObject(title) ? title[this.props.currentLocale] || title.default : title || '';
     };
@@ -130,12 +77,10 @@ class RecordItem extends React.Component {
             return null;
         }
         // let's extract the references we need
-        let wms = head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMS"
-            || reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-map") > -1)));
-        let wmts = head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMTS"
-            || reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-map") > -1)));
+        const {wms, wmts} = extractOGCServicesReferences(record);
         // let's create the buttons
         let buttons = [];
+        // TODO addLayer and addwmtsLayer do almost the same thing and they should be unified
         if (wms) {
             buttons.push(
                 <Button
@@ -162,9 +107,9 @@ class RecordItem extends React.Component {
                 </Button>
             );
         }
-        // creating get capbilities links that will be used to share layers info
+        // create get capabilities links that will be used to share layers info
         if (this.props.showGetCapLinks) {
-            let links = this.getLinks(record);
+            let links = getRecordLinks(record);
             if (links.length > 0) {
                 buttons.push(<SharingLinks key="sharing-links" popoverContainer={this} links={links}
                     onCopy={this.props.onCopy} buttonSize={this.props.buttonSize} addAuthentication={this.props.addAuthentication}/>);
@@ -213,33 +158,16 @@ class RecordItem extends React.Component {
     };
 
     addLayer = (wms) => {
-        const {url, params} = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wms.url), ["request", "layer", "service", "version"].concat(this.props.authkeyParamNames));
+        const {url} = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wms.url), ["request", "layer", "service", "version"].concat(this.props.authkeyParamNames));
         const allowedSRS = buildSRSMap(wms.SRS);
         if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
         } else {
-            this.props.onLayerAdd({
-                type: "wms",
-                url: url,
-                visibility: true,
-                dimensions: this.props.record.dimensions || [],
-                name: wms.params && wms.params.name,
-                title: this.props.record.title || wms.params && wms.params.name,
-                description: this.props.record.description || "",
-                bbox: {
-                    crs: this.props.record.boundingBox.crs,
-                    bounds: {
-                        minx: this.props.record.boundingBox.extent[0],
-                        miny: this.props.record.boundingBox.extent[1],
-                        maxx: this.props.record.boundingBox.extent[2],
-                        maxy: this.props.record.boundingBox.extent[3]
-                    }
-                },
-                links: this.getLinks(this.props.record),
-                params: params,
-                allowedSRS: allowedSRS,
-                catalogURL: this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier
-            });
+            this.props.onLayerAdd(
+                recordToLayer(this.props.record, "wms", {
+                    url,
+                    catalogURL: this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier
+                }));
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
                 let crs = this.props.record.boundingBox.crs;
@@ -249,33 +177,14 @@ class RecordItem extends React.Component {
     };
 
     addwmtsLayer = (wmts) => {
-        const {url, params} = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wmts.url), ["request", "layer"].concat(this.props.authkeyParamNames));
+        const {url} = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wmts.url), ["request", "layer"].concat(this.props.authkeyParamNames));
         const allowedSRS = buildSRSMap(wmts.SRS);
         if (wmts.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
         } else {
-            this.props.onLayerAdd({
-                type: "wmts",
-                url: url,
-                visibility: true,
-                name: wmts.params && wmts.params.name,
-                title: this.props.record.title || wmts.params && wmts.params.name,
-                matrixIds: this.props.record.matrixIds || [],
-                description: this.props.record.description || "",
-                tileMatrixSet: this.props.record.tileMatrixSet || [],
-                bbox: {
-                    crs: this.props.record.boundingBox.crs,
-                    bounds: {
-                        minx: this.props.record.boundingBox.extent[0],
-                        miny: this.props.record.boundingBox.extent[1],
-                        maxx: this.props.record.boundingBox.extent[2],
-                        maxy: this.props.record.boundingBox.extent[3]
-                    }
-                },
-                links: this.getLinks(this.props.record),
-                params: params,
-                allowedSRS: allowedSRS
-            });
+            this.props.onLayerAdd(recordToLayer(this.props.record, "wmts", {
+                url
+            }));
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
                 let crs = this.props.record.boundingBox.crs;
