@@ -8,12 +8,10 @@
 const React = require('react');
 const expect = require('expect');
 const ReactDOM = require('react-dom');
-const Template = require('../../../../data/template/jsx/Template');
 const Localized = require('../../../../I18N/Localized');
-const RenderTemplate = require("../index");
 const {Promise} = require('es6-promise');
 
-const metadataTemplate = require("../MetadataTemplate");
+const MetadataTemplate = require("../MetadataTemplate");
 
 describe("Test Layer Metadata JSX Template", () => {
     beforeEach((done) => {
@@ -41,10 +39,9 @@ describe("Test Layer Metadata JSX Template", () => {
             expanded: true
         };
         let comp = ReactDOM.render(
-            <Template
+            <MetadataTemplate
                 model={layerMetadata.metadataRecord}
-                template={metadataTemplate}
-                renderContent={RenderTemplate}/>, document.getElementById("container"));
+                />, document.getElementById("container"));
         new Promise((resolve) => {
             require.ensure(['babel-standalone'], () => {
                 resolve(comp);
@@ -84,10 +81,9 @@ describe("Test Layer Metadata JSX Template", () => {
         };
         let comp = ReactDOM.render(
             <Localized locale="en" messages={messages}>
-            <Template
+                <MetadataTemplate
                 model={layerMetadata.metadataRecord}
-                template={metadataTemplate}
-                renderContent={RenderTemplate} /></Localized>, document.getElementById("container"));
+                 /></Localized>, document.getElementById("container"));
         new Promise((resolve) => {
             require.ensure(['babel-standalone'], () => {
                 resolve(comp);

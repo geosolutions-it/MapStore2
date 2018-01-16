@@ -30,7 +30,7 @@ class Toolbar extends React.Component {
         style: PropTypes.object,
         settings: PropTypes.object,
         layerMetadata: PropTypes.object,
-        metadataTemplate: PropTypes.array
+        metadataTemplate: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object, PropTypes.func])
     };
 
     static defaultProps = {
@@ -103,7 +103,7 @@ class Toolbar extends React.Component {
         },
         settings: {},
         layerMetadata: {},
-        metadataTemplate: []
+        metadataTemplate: null
     };
 
     state = {
