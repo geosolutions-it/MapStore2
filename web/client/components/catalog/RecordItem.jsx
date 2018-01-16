@@ -55,7 +55,8 @@ class RecordItem extends React.Component {
         authkeyParamNames: PropTypes.array,
         showGetCapLinks: PropTypes.bool,
         zoomToLayer: PropTypes.bool,
-        catalogURL: PropTypes.string
+        catalogURL: PropTypes.string,
+        catalogType: PropTypes.string
     };
 
     static defaultProps = {
@@ -238,7 +239,7 @@ class RecordItem extends React.Component {
                 links: this.getLinks(this.props.record),
                 params: params,
                 allowedSRS: allowedSRS,
-                catalogURL: this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier
+                catalogURL: this.props.catalogType === 'csw' ? this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier : null
             });
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
