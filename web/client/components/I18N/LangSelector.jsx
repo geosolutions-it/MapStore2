@@ -21,7 +21,7 @@ class LangSelector extends React.Component {
 
     static defaultProps = {
         id: "mapstore-langselector",
-        locales: LocaleUtils.getSupportedLocales(),
+        locales: {},
         currentLocale: 'en-US',
         onLanguageChange: function() {}
     };
@@ -30,10 +30,11 @@ class LangSelector extends React.Component {
         var val;
         var label;
         var list = [];
-        for (let lang in this.props.locales) {
-            if (this.props.locales.hasOwnProperty(lang)) {
-                val = this.props.locales[lang].code;
-                label = this.props.locales[lang].description;
+        let locales = LocaleUtils.getSupportedLocales();
+        for (let lang in locales) {
+            if (locales.hasOwnProperty(lang)) {
+                val = locales[lang].code;
+                label = locales[lang].description;
                 list.push(<option value={val} key={val}>{label}</option>);
             }
         }

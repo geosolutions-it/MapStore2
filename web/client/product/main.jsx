@@ -30,12 +30,13 @@ module.exports = (config, pluginsDef) => {
         }))(require('../components/app/StandardRouter'));
 
         const {updateMapLayoutEpic} = require('../epics/maplayout');
+        const {setSupportedLocales} = require('../epics/localconfig');
 
         const appStore = require('../stores/StandardStore').bind(null, initialState, {
             maptype: require('../reducers/maptype'),
             maps: require('../reducers/maps'),
             maplayout: require('../reducers/maplayout')
-        }, {...appEpics, updateMapLayoutEpic});
+        }, {...appEpics, updateMapLayoutEpic, setSupportedLocales});
 
         const initialActions = [
             () => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*"),

@@ -31,6 +31,9 @@
             "updating": "In aggiornamento...",
             "layers": "layers"
         },
+        "localeErrors": {
+            "404": "File di traduzione non trovato"
+        },
         "layerProperties": {
             "windowTitle": "Proprietà del livello",
             "title": "Titolo",

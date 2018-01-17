@@ -29,6 +29,9 @@
             "updating": "Wordt bijgewerkt...",
             "layers": "lagen"
         },
+        "localeErrors": {
+            "404": "Vertaalbestand niet gevonden"
+        },
         "layerProperties": {
             "windowTitle": "Eigenschappen van de laag",
             "title": "Titel",

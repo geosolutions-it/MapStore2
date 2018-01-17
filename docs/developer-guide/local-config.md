@@ -48,6 +48,19 @@ This is the main structure:
       // default initial state for every mode (will override initialState imposed by plugins reducers)
       "defaultState": {
           ...
+          // if you want to customize the supported locales put here the languages you want and follow instruction linked below
+          "locales": {
+            "supportedLocales": {
+              "it": {
+                "code": "it-IT",
+                "description": "Italiano"
+              },
+              "en": {
+                "code": "en-US",
+                "description": "English"
+              }
+          }
+        }
       },
       // mobile override (defined properties will overide default in mobile mode)
       "mobile": {
@@ -67,6 +80,8 @@ This is the main structure:
 ],
   ```
 If you are building your own app, you can choose to create your custom modes or force one of them by passing the `mode` parameter in the query string.
+
+For adding a new locale or configuring currently supported locales, go check [this](internationalization) out.
 
 For configuring plugins, see the [Configuring Plugins Section](plugins-documentation) and the [plugin reference page](./api/plugins)
 

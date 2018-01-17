@@ -63,15 +63,21 @@ class General extends React.Component {
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel><Message msgId="layerProperties.titleTranslations" /></ControlLabel>
-                    {Object.keys(locales).map((a) =>
-                        <InputGroup key={a}>
-                            <InputGroup.Addon><img src={require('../../../I18N/images/flags/' + locales[a].code + '.png')} alt={locales[a].description}/></InputGroup.Addon>
+                    {Object.keys(locales).map((a) => {
+                        let flagImgSrc;
+                        try {
+                            flagImgSrc = require('../../../I18N/images/flags/' + locales[a].code + '.png');
+                        } catch(e) {
+                            flagImgSrc = false;
+                        }
+                        return flagImgSrc ? (<InputGroup key={a}>
+                            <InputGroup.Addon><img src={flagImgSrc} alt={locales[a].description}/></InputGroup.Addon>
                             <FormControl
                                 placeholder={locales[a].description}
                                 value={translations[locales[a].code] ? translations[locales[a].code] : ''}
                                 type="text"
                                 onChange={this.updateTranslation.bind(null, locales[a].code)}/>
-                        </InputGroup>
+                    </InputGroup>) : null; }
                     )}
                 </FormGroup>
                 <FormGroup>
