@@ -463,7 +463,12 @@
           "cfg": {
             "containerPosition": "columns"
           }
-        },"Dashboard"],
+        }, {
+          "name": "QueryPanel",
+          "cfg": {
+            "containerPosition": "columns"
+          }
+        }, "Dashboard"],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }

@@ -7,9 +7,9 @@
  */
 const React = require('react');
 const { Col, FormGroup, FormControl, Grid, Row } = require('react-bootstrap');
-module.exports = ({onChange = () => {}}) =>
+module.exports = ({onSearchTextChange = () => {}, searchText}) =>
 ( <Grid fluid><Row><Col xs={12}>
     <FormGroup controlId="stats-title">
-        <FormControl type="text" placeholder="Search..." onChange={(e) => onChange(e.currentTarget.value)}/>
+        <FormControl type="text" placeholder="Search..." value={searchText} onChange={(e) => onSearchTextChange(e.currentTarget.value)}/>
     </FormGroup>
 </Col></Row></Grid>);

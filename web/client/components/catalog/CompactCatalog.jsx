@@ -6,17 +6,20 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {compose, mapPropsStream, withState} = require('recompose');
+const {compose, mapPropsStream} = require('recompose');
 const Rx = require('rxjs');
 
 const API = {
-    "csw": require('../../api/CSW')
+    "csw": require('../../api/CSW'),
+    "wms": require('../../api/WMS'),
+    "wmts": require('../../api/WMTS')
 };
 
 const BorderLayout = require('../layout/BorderLayout');
 const withVirtualScroll = require('../misc/enhancers/infiniteScroll/withInfiniteScroll');
 const loadingState = require('../misc/enhancers/loadingState');
 const emptyState = require('../misc/enhancers/emptyState');
+const withControllableState = require('../misc/enhancers/withControllableState');
 const CatalogForm = require('./CatalogForm');
 const {getCatalogRecords} = require('../../utils/CatalogUtils');
 const Icon = require('../misc/FitIcon');
@@ -29,8 +32,8 @@ const SideGrid = compose(
 /*
  * converts record item into a item for SideGrid
  */
-const resToProps = res => ({
-    items: (res.records || []).map((record = {}) => ({
+const resToProps = ({records, result = {}}) => ({
+    items: (records || []).map((record = {}) => ({
         title: record.title,
         caption: record.identifier,
         description: record.description,
@@ -38,7 +41,7 @@ const resToProps = res => ({
         record
     })),
     loading: false,
-    total: res.numberOfRecordsMatched
+    total: result && result.numberOfRecordsMatched
 });
 const PAGE_SIZE = 10;
 /*
@@ -49,23 +52,31 @@ const loadPage = ({text, catalog = {}}, page = 0) => Rx.Observable
     .map((result) => ({result, records: getCatalogRecords(catalog.type, result || [])}))
     .map(resToProps);
 const scrollSpyOptions = {querySelector: ".ms2-border-layout-body", pageSize: PAGE_SIZE};
+/**
+ * Compat catalog : Reusable catalog component, with infinite scroll.
+ * @name CompactCatalog
+ * @memberof components.catalog
+ * @prop {string} searchText the search text (if you want to control it)
+ * @prop {function} setSearchText handler to get search text changes (if not defined, the component will control the text by it's own)
+ * @prop {object} catalog the definition of the selected catalog as `{type: "wms"|"wmts"|"csw", URL: "..."}`
+ */
 module.exports = compose(
-        withState('searchText', "setSearchText", ""),
+        withControllableState('searchText', "setSearchText", ""),
         withVirtualScroll({loadPage, scrollSpyOptions}),
         mapPropsStream( props$ =>
             props$.merge(props$.take(1).switchMap(({catalog, loadFirst = () => {} }) =>
                 props$
                     .debounceTime(500)
                     .startWith({searchText: "", catalog})
-                    .distinct(({searchText} = {}) => searchText)
+                    .distinctUntilKeyChanged('searchText')
                     .do(({searchText, catalog: nextCatalog} = {}) => loadFirst({text: searchText, catalog: nextCatalog}))
                     .ignoreElements()
         )))
 
 )(({setSearchText = () => {}, selected, onRecordSelected, loading, searchText, items= [], total, catalog}) => {
     return (<BorderLayout
-                header={<CatalogForm searchText={searchText} onChange={setSearchText}/>}
+                header={<CatalogForm searchText={searchText} onSearchTextChange={setSearchText}/>}
                 footer={<div>Record Matched: {items.length} of {total} - {loading ? <div className="toc-inline-loader"></div> : null}</div>}>
-                <SideGrid items={items.map(i => i === selected ? {...i, selected: selected.identifier === i.identifier} : i)} loading={loading} onItemClick={({record} = {}) => onRecordSelected(record, catalog)}/>
+                <SideGrid items={items.map(i => i === selected || selected && i && i.record && selected.identifier === i.record.identifier ? {...i, selected: true} : i)} loading={loading} onItemClick={({record} = {}) => onRecordSelected(record, catalog)}/>
             </BorderLayout>);
 });

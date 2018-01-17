@@ -25,6 +25,7 @@ module.exports = {
     getDashboardWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
     getDashboardWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
     getEditingWidget,
+    getEditingWidgetLayer: state => get(getEditingWidget(state), "layer"),
     getEditingWidgetFilter: state => get(getEditingWidget(state), "filter"),
     getEditorSettings,
     getWidgetLayer: createSelector(
