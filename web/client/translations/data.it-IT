@@ -21,6 +21,8 @@
         "enable": "Abilita",
         "layers": "Livelli",
         "warning": "Attenzione",
+        "errorTitleDefault": "Errore",
+        "errorDefault": "Si è verificato un errore",
         "version": {
             "label": "Versione"
         },
@@ -209,6 +211,8 @@
             "errorFormat": "Formati supportati: png/jpg",
             "errorSize": "Dimensione massima consentita: 500kb",
             "error": "L'immagine fornita non è valida",
+            "savedMapTitle": "Mappa Salvata",
+            "savedMapMessage": "La mappa è stata salvata correttamente",
             "thumbnailError": {
                 "error403": "Non disponi dei permessi per aggiornare la thumbnail",
                 "error404": "Non è stato possibile creare la thumbnail sul server",
@@ -216,9 +220,11 @@
                 "errorDefault": "Errore di rete"
             },
             "mapError": {
+                "errorTitle": "Non è stato possibile salvare la mappa",
                 "error403": "Non disponi dei permessi per aggiornare la mappa",
                 "error404": "Non è stato possibile creare la mappa sul server",
                 "error409": "Una mappa con questo nome esiste già",
+                "error500": "Errore interno del server. Verificare se la dimensione della configurazione di mappa supera il limite fissato",
                 "errorDefault": "Errore di rete"
             },
             "permissions": {

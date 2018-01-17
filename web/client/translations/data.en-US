@@ -21,6 +21,8 @@
         "enable": "Enable",
         "layers": "Layers",
         "warning": "Warning",
+        "errorTitleDefault": "Error",
+        "errorDefault": "An error occurred",
         "version": {
             "label": "Version"
         },
@@ -209,6 +211,8 @@
             "errorFormat": "Supported formats: png/jpg",
             "errorSize": "Max allowed size: 500kb",
             "error": "The provided image is invalid",
+            "savedMapTitle": "Saved Map",
+            "savedMapMessage": "Map has been saved correctly",
             "thumbnailError": {
                 "error403": "You are not allowed to update the thumbnail",
                 "error404": "An error occurred while creating the thumbnail",
@@ -216,9 +220,11 @@
                 "errorDefault": "Network error"
             },
             "mapError": {
+                "errorTitle": "Cannot save current map",
                 "error403": "You are not allowed to update the map",
                 "error404": "An error occurred while creating the map",
                 "error409": "A map with this name already exists",
+                "error500": "Internal Server Error. Verify if map configuration file size exceeds fixed limit",
                 "errorDefault": "Network error"
             },
             "permissions": {

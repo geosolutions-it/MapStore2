@@ -21,6 +21,8 @@
         "enable": "Activar",
         "layers": "Capas",
         "warning": "Atención",
+        "errorTitleDefault": "Error",
+        "errorDefault": "Ocurrió un error",
         "version": {
             "label": "Versión"
         },
@@ -209,6 +211,8 @@
             "errorFormat": "Formatos soportados: png/jpg",
             "errorSize": "Tamaño máximo admitido: 500kb",
             "error": "La imagen proporcionada es inválida",
+            "savedMapTitle": "Mapa Guardado",
+            "savedMapMessage": "El mapa se ha guardado correctamente",
             "thumbnailError": {
                 "error403": "Error al modificar la viñeta",
                 "error404": "Error al crear la viñeta",
@@ -216,9 +220,11 @@
                 "errorDefault": "Error de red"
             },
             "mapError": {
+                "errorTitle": "No se puede guardar el mapa actual",
                 "error403": "Error al modificar el mapa",
                 "error404": "Error al crear el mapa",
                 "error409": "Nombre del mapa repetido",
+                "error500": "Error de servidor interno. Verificar si el tamaño del archivo de configuración del mapa excede el límite fijado",
                 "errorDefault": "Error de red"
             },
             "permissions": {

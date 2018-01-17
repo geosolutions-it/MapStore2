@@ -51,6 +51,13 @@ const DATE_FORMATS = {
     "it-IT": "dd/MM/yyyy",
     "nl-NL": "dd/MM/yyyy"
 };
+
+let errorParser = {};
+
+/**
+ * Utilities for locales.
+ * @memberof utils
+ */
 const LocaleUtils = {
     ensureIntl(callback) {
         require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js', 'intl/locale-data/jsonp/de.js', 'intl/locale-data/jsonp/es.js', 'intl/locale-data/jsonp/nl.js'], (require) => {
@@ -107,6 +114,27 @@ const LocaleUtils = {
             message = message ? message[part] : null;
         });
         return message;
+    },
+    /**
+     * Registre a parser to translate error services
+     * @param type {string} name of the service
+     * @param parser {object} custom parser of the service
+     */
+    registerErrorParser: (type, parser) => {
+        errorParser[type] = parser;
+    },
+    /**
+     * Return localized id of error messages
+     * @param e {object} error
+     * @param service {string} service that thrown the error
+     * @param section {string} section where the error happens
+     * @return {object} {title, message}
+     */
+    getErrorMessage: (e, service, section) => {
+        return service && section && errorParser[service] && errorParser[service][section] && errorParser[service][section](e) || {
+            title: 'errorTitleDefault',
+            message: 'errorDefault'
+        };
     }
 };
 

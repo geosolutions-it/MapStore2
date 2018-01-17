@@ -11,6 +11,7 @@ const assign = require('object-assign');
 const uuidv1 = require('uuid/v1');
 const ConfigUtils = require('../utils/ConfigUtils');
 const {utfEncode} = require('../utils/EncodeUtils');
+const {registerErrorParser} = require('../utils/LocaleUtils');
 
 let parseOptions = (opts) => opts;
 
@@ -33,10 +34,32 @@ const encodeContent = function(content) {
     return utfEncode(content);
 };
 
+const errorParser = {
+    /**
+     * Returns localized message for geostore map errors
+     * @param  {object} e error object
+     * @return {object} {title, message}
+     */
+    mapsError: e => {
+        if (e.status === 403 || e.status === 404 || e.status === 409 || e.status === 500) {
+            return {
+                title: 'map.mapError.errorTitle',
+                message: 'map.mapError.error' + e.status
+            };
+        }
+        return {
+            title: 'map.mapError.errorTitle',
+            message: 'map.mapError.errorDefault'
+        };
+    }
+};
+
+registerErrorParser('geostore', {...errorParser});
+
 /**
  * API for local config
  */
-var Api = {
+const Api = {
     authProviderName: "geostore",
     addBaseUrl: function(options) {
         return assign(options || {}, {baseURL: ConfigUtils.getDefaults().geoStoreUrl});
@@ -351,7 +374,8 @@ var Api = {
             postUser.attribute = postUser.attribute && postUser.attribute.length > 0 ? [...postUser.attribute, uuidAttr] : [uuidAttr];
             return postUser;
         }
-    }
+    },
+    errorParser
 };
 
 module.exports = Api;
