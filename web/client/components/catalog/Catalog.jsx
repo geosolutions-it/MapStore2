@@ -269,7 +269,7 @@ class Catalog extends React.Component {
     };
     getServices = () => {
         return Object.keys(this.props.services).map(s => {
-            return assign({}, this.props.services[s], {label: this.props.services[s].title, value: this.props.services[s].title});
+            return assign({}, this.props.services[s], {label: this.props.services[s].title, value: s});
         });
     };
     render() {
@@ -289,7 +289,7 @@ class Catalog extends React.Component {
                                             clearable
                                             options={this.getServices()}
                                             value={this.props.selectedService}
-                                            onChange={(val) => this.props.onChangeSelectedService(val && val.title ? val.title : "")}
+                                            onChange={(val) => this.props.onChangeSelectedService(val && val.value ? val.value : "")}
                                             placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.servicePlaceholder")} />
 
                                         {this.isValidServiceSelected() ? (<InputGroup.Addon className="btn"

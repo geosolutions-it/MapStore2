@@ -62,7 +62,7 @@ This is the main structure:
           }
         }
       },
-      // mobile override (defined properties will overide default in mobile mode)
+      // mobile override (defined properties will override default in mobile mode)
       "mobile": {
           ...
       }
@@ -85,7 +85,61 @@ For adding a new locale or configuring currently supported locales, go check [th
 
 For configuring plugins, see the [Configuring Plugins Section](plugins-documentation) and the [plugin reference page](./api/plugins)
 
-
 ## Explanation of some config properties
+- **loadAfterTheme** is a flag that allows to load mapstore.js after the theme which can be versioned or not(default.css). default is false
+- **initialState** is an object that will initialize the state with some default values and this WILL OVERRIDE the initialState imposed by plugins & reducers.
 
-- loadAfterTheme is a flag that allows to load mapstore.js after the theme which can be versioned or not(default.css). default is false
+### initialState configuration
+It can contain:
+1. a defaultState valid for every mode
+1. a piece of state for each mode (mobile, desktop, embedded)
+
+Inside defaultState you can set default catalog services adding the following key
+```
+"catalog": {
+  "default": {
+    "newService": {
+      "url": "",
+      "type": "wms",
+      "title": "",
+      "isNew": true,
+      "autoload": false
+    },
+    "selectedService": "Demo CSW Service",
+    "services": {
+      "Demo CSW Service": {
+        "url": "https://demo.geo-solutions.it/geoserver/csw",
+        "type": "csw",
+        "title": "A title for Demo CSW Service",
+        "autoload": true
+      },
+      "Demo WMS Service": {
+        "url": "https://demo.geo-solutions.it/geoserver/wms",
+        "type": "wms",
+        "title": "A title for Demo WMS Service",
+        "autoload": false
+      },
+      "Demo WMTS Service": {
+        "url": "https://demo.geo-solutions.it/geoserver/gwc/service/wmts",
+        "type": "wmts",
+        "title": "A title for Demo WMTS Service",
+        "autoload": false
+      }
+    }
+  }
+}
+```
+Set `selectedService` value to one of the ID of the services object ("Demo CSW Service" for example).
+<br>This will become the default service opened and used in the catalog panel.
+<br>For each service set the key of the service as the ID.
+```
+"ID_CATALOG_SERVICE": {
+  "url": "the url pointing to the catalog web service",
+  "type": "the type of webservice used. (this need to be consistent with the web service pointed by the url)",
+  "title": "the label used for recognizing the catalog service",
+  "autoload": "if true, when selected or when catalog panel is opened it will trigger an automatic search of the layers. if false, search must be manually performed."
+}
+```
+<br>Be careful to use unique IDs
+<br>Future implementations will try to detect the type from the url.
+<br>newService is used internally as the starting object for an empty service.
