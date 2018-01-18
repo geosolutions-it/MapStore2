@@ -182,7 +182,7 @@ describe('maps Epics', () => {
                         expect(action.property).toBe("enabled");
                         break;
                     case SHOW_NOTIFICATION:
-                        expect(action.message).toBe("errorFetchingDetailsOfMap 1");
+                        expect(action.message).toBe("errorFetchingDetailsOfMap ");
                         break;
                     default:
                         expect(true).toBe(false);
@@ -261,7 +261,7 @@ describe('maps Epics', () => {
             actions.map((action) => {
                 switch (action.type) {
                     case SHOW_NOTIFICATION:
-                        expect(action.message).toBe("errorFetchingDetailsOfMap 1");
+                        expect(action.message).toBe("errorFetchingDetailsOfMap ");
                         break;
                     default:
                         expect(true).toBe(false);
@@ -273,6 +273,9 @@ describe('maps Epics', () => {
             currentMap: {
                 id: mapId,
                 details: "wrong/uri/sfdsdfs"
+            },
+            maps: {
+                results: [map1]
             }
         });
     });
@@ -285,13 +288,13 @@ describe('maps Epics', () => {
                 switch (action.type) {
                     case SHOW_NOTIFICATION:
                         if (i === 1) {
-                            expect(action.message).toBe("errorDeletingDetailsOfMap " + mapId);
+                            expect(action.message).toBe("errorDeletingDetailsOfMap name");
                         }
                         if (i === 2) {
-                            expect(action.message).toBe("errorDeletingThumbnailOfMap " + mapId);
+                            expect(action.message).toBe("errorDeletingThumbnailOfMap name");
                         }
                         if (i === 3) {
-                            expect(action.message).toBe("errorDeletingMap " + mapId);
+                            expect(action.message).toBe("errorDeletingMap name");
                         }
                         break;
                     case MAP_DELETING:
@@ -327,7 +330,7 @@ describe('maps Epics', () => {
             actions.map((action) => {
                 switch (action.type) {
                     case SHOW_NOTIFICATION:
-                        expect(action.message).toBe("allResDeleted " + mapId8);
+                        expect(action.message).toBe("allResDeleted name");
                         break;
                     case MAP_DELETING:
                         expect(action.resourceId).toBe(mapId8);
@@ -362,10 +365,10 @@ describe('maps Epics', () => {
                 switch (action.type) {
                     case SHOW_NOTIFICATION:
                         if (i === 1) {
-                            expect(action.message).toBe("errorDeletingDetailsOfMap " + mapId8);
+                            expect(action.message).toBe("errorDeletingDetailsOfMap name");
                         }
                         if (i === 2) {
-                            expect(action.message).toBe("errorDeletingThumbnailOfMap " + mapId8);
+                            expect(action.message).toBe("errorDeletingThumbnailOfMap name");
                         }
                         break;
                     case MAP_DELETING:
@@ -402,7 +405,7 @@ describe('maps Epics', () => {
             actions.filter(a => !!a.type).map((action) => {
                 switch (action.type) {
                     case SHOW_NOTIFICATION:
-                        expect(action.message).toBe("allResDeleted " + mapId8);
+                        expect(action.message).toBe("allResDeleted name");
                         break;
                     case MAP_DELETING:
                         expect(action.resourceId).toBe(mapId8);
