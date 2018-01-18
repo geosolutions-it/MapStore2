@@ -252,6 +252,7 @@
             "toolTrashLayerTooltip": "Entferne die ausgewählte Ebene",
             "toolTrashLayersTooltip": "Entferne ausgewählte Ebenen",
             "toolFeaturesGridTooltip": "Öffnen Sie die Attributtabelle",
+            "toolDownloadTooltip": "Layerdaten exportieren",
             "noFilteredResults": "Keine Ergebnisse",
             "filterPlaceholder": "Ebenen filtern",
             "clearFilter": "Filter löschen",

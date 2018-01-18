@@ -25,6 +25,7 @@ const REFRESH_LAYERS = 'REFRESH_LAYERS';
 const LAYERS_REFRESHED = 'LAYERS_REFRESHED';
 const LAYERS_REFRESH_ERROR = 'LAYERS_REFRESH_ERROR';
 const BROWSE_DATA = 'LAYERS:BROWSE_DATA';
+const DOWNLOAD = 'LAYERS:DOWNLOAD';
 const CLEAR_LAYERS = 'LAYERS:CLEAR_LAYERS';
 const SELECT_NODE = 'LAYERS:SELECT_NODE';
 const FILTER_LAYERS = 'LAYERS:FILTER_LAYERS';
@@ -189,6 +190,12 @@ function browseData(layer) {
         layer
     };
 }
+function download(layer) {
+    return {
+        type: DOWNLOAD,
+        layer
+    };
+}
 function clearLayers() {
     return {
         type: CLEAR_LAYERS
@@ -227,8 +234,10 @@ function hideLayerMetadata() {
 
 module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode, contextNode,
     updateNode, layerLoading, layerLoad, layerError, addLayer, removeLayer, showSettings, hideSettings, updateSettings, refreshLayers,
-    layersRefreshed, layersRefreshError, refreshLayerVersion, browseData, clearLayers, selectNode, filterLayers, showLayerMetadata, hideLayerMetadata,
+    layersRefreshed, layersRefreshError, refreshLayerVersion, browseData, clearLayers, selectNode, filterLayers, showLayerMetadata,
+    hideLayerMetadata, download,
     CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
     REMOVE_NODE, UPDATE_NODE, LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, ADD_LAYER, REMOVE_LAYER,
-    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, CONTEXT_NODE, REFRESH_LAYERS, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, BROWSE_DATA, CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA
+    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, CONTEXT_NODE, REFRESH_LAYERS, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, BROWSE_DATA, DOWNLOAD,
+    CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA
 };

@@ -252,6 +252,7 @@
             "toolTrashLayerTooltip": "Rimuovi livello selezionato",
             "toolTrashLayersTooltip": "Rimuovi livelli selezionati",
             "toolFeaturesGridTooltip": "Apri tabella degli attributi",
+            "toolDownloadTooltip": "Esporta i dati del livello",
             "noFilteredResults": "Nessun risultato",
             "filterPlaceholder": "Filtra layers",
             "clearFilter": "Pulisci filtro",
