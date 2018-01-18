@@ -11,12 +11,12 @@ var expect = require('expect');
 const configureMockStore = require('redux-mock-store').default;
 const {createEpicMiddleware, combineEpics } = require('redux-observable');
 const {
-    saveDetails, SET_DETAILS_CHANGED, mapCreated,
+    saveDetails, SET_DETAILS_CHANGED,
     CLOSE_DETAILS_PANEL, closeDetailsPanel,
     openDetailsPanel, UPDATE_DETAILS,
     MAP_DELETING, MAP_DELETED, deleteMap, TOGGLE_DETAILS_SHEET
 } = require('../../actions/maps');
-const {clear, SHOW_NOTIFICATION} = require('../../actions/notifications');
+const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {TOGGLE_CONTROL} = require('../../actions/controls');
 const {RESET_CURRENT_MAP, editMap} = require('../../actions/currentMap');
 const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
