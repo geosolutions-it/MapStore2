@@ -21,7 +21,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const assign = require('object-assign');
 const {spatialFieldMethodSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
 const {changeDrawingStatus} = require('../actions/draw');
-const {isLeaflet} = require('../selectors/maptype');
+
 const {INIT_QUERY_PANEL} = require('../actions/wfsquery');
 
 const {isObject} = require('lodash');
@@ -224,14 +224,14 @@ const redrawSpatialFilterEpic = (action$, store) =>
             feature = {
                 type: "Feature",
                 geometry: {
-                    type: isLeaflet(state) ? "Point" : "Polygon",
-                    coordinates: isLeaflet(state) ? center : [[center]],
+                    type: "Polygon", // isLeaflet(state) ? "Point" : "Polygon",
+                    coordinates: geom.coordinates, // isLeaflet(state) ? center : [[center]],
                     center: {
                         x: center[0],
                         y: center[1],
-                        srs: proj
+                        srs: geom.projection
                     },
-                    projection: proj,
+                    projection: geom.projection,
                     radius: geom.radius
                 }
             };

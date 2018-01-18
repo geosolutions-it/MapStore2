@@ -92,6 +92,7 @@
     "bootstrap": "3.3.5",
     "canvas-to-blob": "0.0.0",
     "canvg-browser": "1.0.0",
+    "circle-to-polygon": "^1.0.0",
     "classnames": "2.2.5",
     "codemirror": "5.18.2",
     "colorbrewer": "1.0.0",
