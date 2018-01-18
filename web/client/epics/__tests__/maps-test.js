@@ -22,10 +22,10 @@ const {RESET_CURRENT_MAP, editMap} = require('../../actions/currentMap');
 const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
 
 const {
-    setDetailsChangedEpic, mapCreatedNotificationEpic,
+    setDetailsChangedEpic,
     closeDetailsPanelEpic, fetchDataForDetailsPanel,
     fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic} = require('../maps');
-const rootEpic = combineEpics(setDetailsChangedEpic, mapCreatedNotificationEpic, closeDetailsPanelEpic);
+const rootEpic = combineEpics(setDetailsChangedEpic, closeDetailsPanelEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
@@ -84,23 +84,7 @@ describe('maps Epics', () => {
     afterEach(() => {
         epicMiddleware.replaceEpic(rootEpic);
     });
-    it('test mapCreatedNotificationEpic', (done) => {
 
-        store.dispatch(mapCreated(1, {name: "name", description: "description"}, "content", null));
-        store.dispatch(clear());
-
-        setTimeout( () => {
-            try {
-                const actions = store.getActions();
-                expect(actions.length).toBe(3);
-                expect(actions[1].type).toBe(SHOW_NOTIFICATION);
-            } catch (e) {
-                return done(e);
-            }
-            done();
-        }, 100);
-
-    });
     it('test setDetailsChangedEpic', (done) => {
 
         store.dispatch(saveDetails("<p>some details</p>"));
