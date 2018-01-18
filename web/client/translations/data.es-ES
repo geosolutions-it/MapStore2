@@ -252,6 +252,7 @@
             "toolTrashLayerTooltip": "Eliminar la capa seleccionada",
             "toolTrashLayersTooltip": "Eliminar capas seleccionadas",
             "toolFeaturesGridTooltip": "Abrir la tabla de atributos",
+            "toolDownloadTooltip": "Exportar datos de capa",
             "noFilteredResults": "Capas de filtro",
             "filterPlaceholder": "Capas de filtro",
             "clearFilter": "Filtro claro",

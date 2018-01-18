@@ -13,10 +13,11 @@ const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
-       browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata} = require('../actions/layers');
+       browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
+    download} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
-const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector} = require('../selectors/layers');
+const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector, wfsDownloadSelector} = require('../selectors/layers');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
@@ -70,6 +71,7 @@ const tocSelector = createSelector(
         groupsSelector,
         layerSettingSelector,
         layerMetadataSelector,
+        wfsDownloadSelector,
         mapSelector,
         currentLocaleSelector,
         selectedNodesSelector,
@@ -79,11 +81,12 @@ const tocSelector = createSelector(
         activeSelector,
         widgetBuilderAvailable,
         generalInfoFormatSelector
-    ], (enabled, groups, settings, layerMetadata, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat) => ({
+    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat) => ({
         enabled,
         groups,
         settings,
         layerMetadata,
+        wfsdownload,
         currentZoomLvl: map && map.zoom,
         scales: mapUtils.getScales(
             map && map.projection || 'EPSG:3857',
@@ -130,6 +133,7 @@ class LayerTree extends React.Component {
         groups: PropTypes.array,
         settings: PropTypes.object,
         layerMetadata: PropTypes.object,
+        wfsdownload: PropTypes.object,
         metadataTemplate: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object, PropTypes.func]),
         refreshMapEnabled: PropTypes.bool,
         groupStyle: PropTypes.object,
@@ -139,6 +143,7 @@ class LayerTree extends React.Component {
         onToggleLayer: PropTypes.func,
         onContextMenu: PropTypes.func,
         onBrowseData: PropTypes.func,
+        onDownload: PropTypes.func,
         onSelectNode: PropTypes.func,
         selectedNodes: PropTypes.array,
         onZoomToExtent: PropTypes.func,
@@ -162,6 +167,7 @@ class LayerTree extends React.Component {
         activateLegendTool: PropTypes.bool,
         activateZoomTool: PropTypes.bool,
         activateQueryTool: PropTypes.bool,
+        activateDownloadTool: PropTypes.bool,
         activateSettingsTool: PropTypes.bool,
         activateMetedataTool: PropTypes.bool,
         activateWidgetTool: PropTypes.bool,
@@ -224,6 +230,7 @@ class LayerTree extends React.Component {
         activateMetedataTool: true,
         activateRemoveLayer: true,
         activateQueryTool: false,
+        activateDownloadTool: false,
         activateWidgetTool: false,
         visibilityCheckType: "glyph",
         settingsOptions: {
@@ -328,12 +335,14 @@ class LayerTree extends React.Component {
                             generalInfoFormat={this.props.generalInfoFormat}
                             settings={this.props.settings}
                             layerMetadata={this.props.layerMetadata}
+                            wfsdownload={this.props.wfsdownload}
                             metadataTemplate={this.props.metadataTemplate}
                             activateTool={{
                                 activateToolsContainer: this.props.activateToolsContainer,
                                 activateRemoveLayer: this.props.activateRemoveLayer,
                                 activateZoomTool: this.props.activateZoomTool,
                                 activateQueryTool: this.props.activateQueryTool,
+                                activateDownloadTool: this.props.activateDownloadTool,
                                 activateSettingsTool: this.props.activateSettingsTool,
                                 activateAddLayer: this.props.activateAddLayerButton && !this.props.catalogActive,
                                 includeDeleteButtonInSettings: false,
@@ -367,6 +376,7 @@ class LayerTree extends React.Component {
                                     GROUP: <Message msgId="toc.toolGroupSettingsTooltip"/>
                                 },
                                 featuresGridTooltip: <Message msgId="toc.toolFeaturesGridTooltip"/>,
+                                downloadToolTooltip: <Message msgId="toc.toolDownloadTooltip" />,
                                 trashTooltip: {
                                     LAYER: <Message msgId="toc.toolTrashLayerTooltip"/>,
                                     LAYERS: <Message msgId="toc.toolTrashLayersTooltip"/>
@@ -382,6 +392,7 @@ class LayerTree extends React.Component {
                                 onZoom: this.props.onZoomToExtent,
                                 onNewWidget: this.props.onNewWidget,
                                 onBrowseData: this.props.onBrowseData,
+                                onDownload: this.props.onDownload,
                                 onUpdate: this.props.updateNode,
                                 onRemove: this.props.removeNode,
                                 onClear: this.props.onSelectNode,
@@ -433,6 +444,7 @@ class LayerTree extends React.Component {
  * @prop {boolean} cfg.activateSettingsTool: activate settings of layers and groups, default `true`
  * @prop {boolean} cfg.activateRemoveLayer: activate remove layer tool, default `true`
  * @prop {boolean} cfg.activateQueryTool: activate query tool options, default `false`
+ * @prop {boolean} cfg.activateDownloadTool: activate a button to download layer data through wfs, default `false`
  * @prop {boolean} cfg.activateSortLayer: activate drag and drob to sort layers, default `true`
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
  * @prop {object} cfg.layerOptions: options to pass to the layer.
@@ -461,6 +473,7 @@ const TOCPlugin = connect(tocSelector, {
     onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
     onContextMenu: contextNode,
     onBrowseData: browseData,
+    onDownload: download,
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,
     onZoomToExtent: zoomToExtent,

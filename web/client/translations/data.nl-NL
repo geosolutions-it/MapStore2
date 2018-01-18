@@ -243,6 +243,7 @@
             "loadingerror": "De laag is niet correct geladen",
             "measure": "Meten",
             "backgroundSwitcher": "achtergrond kaart",
+            "toolDownloadTooltip": "Export layer data",
             "layers": "Lagen",
             "drawerButton": "Lagen",
             "refreshTitle": "Lagen bijwerken",

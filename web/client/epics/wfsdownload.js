@@ -1,5 +1,7 @@
-const {FORMAT_OPTIONS_FETCH, DOWNLOAD_FEATURES, onDownloadFinished, updateFormats} = require('../actions/wfsdownload');
+const { FORMAT_OPTIONS_FETCH, DOWNLOAD_FEATURES, onDownloadFinished, updateFormats, onDownloadOptionChange} = require('../actions/wfsdownload');
 const {TOGGLE_CONTROL, toggleControl} = require('../actions/controls');
+const {DOWNLOAD} = require('../actions/layers');
+const {createQuery} = require('../actions/wfsquery');
 const {error} = require('../actions/notifications');
 const Rx = require('rxjs');
 const {get, find, pick, toPairs} = require('lodash');
@@ -68,6 +70,15 @@ const str2bytes = (str) => {
 };
 */
 module.exports = {
+    openDownloadTool: (action$) =>
+        action$.ofType(DOWNLOAD)
+            .switchMap((action) => {
+                return Rx.Observable.from([
+                    toggleControl("wfsdownload"),
+                    onDownloadOptionChange("singlePage", false),
+                    createQuery(action.layer.url, {featureTypeName: action.layer.name})
+                ]);
+            }),
     fetchFormatsWFSDownload: (action$) =>
         action$.ofType(FORMAT_OPTIONS_FETCH)
             .switchMap( action => {
