@@ -8,14 +8,13 @@
 
 const Rx = require('rxjs');
 const uuidv1 = require('uuid/v1');
-const {CLEAR_NOTIFICATIONS} = require('../actions/notifications');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
 const LocaleUtils = require('../utils/LocaleUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
 const { MAP_INFO_LOADED } = require('../actions/config');
 
 const {
-    SAVE_DETAILS, SAVE_RESOURCE_DETAILS, MAP_CREATED,
+    SAVE_DETAILS, SAVE_RESOURCE_DETAILS,
     DELETE_MAP, OPEN_DETAILS_PANEL,
     CLOSE_DETAILS_PANEL,
     setDetailsChanged, updateDetails,
@@ -30,7 +29,7 @@ const {closeFeatureGrid} = require('../actions/featuregrid');
 const {toggleControl} = require('../actions/controls');
 const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
-    mapDetailsUriFromIdSelector, isMapsLastPageSelector
+    mapDetailsUriFromIdSelector, isMapsLastPageSelector, mapNameSelector
 } = require('../selectors/maps');
 const {
     mapIdSelector, mapInfoDetailsUriFromIdSelector
@@ -121,6 +120,8 @@ const fetchDetailsFromResourceEpic = (action$, store) =>
     .switchMap(() => {
         const state = store.getState();
         const detailsUri = currentMapDetailsUriSelector(state);
+        const mapId = mapIdSelector(state);
+        const name = mapNameSelector(state, mapId);
         if (!detailsUri || detailsUri === "NODATA") {
             return Rx.Observable.of(
                 updateDetails("", true, "")
@@ -135,7 +136,7 @@ const fetchDetailsFromResourceEpic = (action$, store) =>
                 );
             }).catch(() => {
                 return Rx.Observable.of(basicError({
-                    message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorFetchingDetailsOfMap") + currentMapIdSelector(store.getState())}));
+                    message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorFetchingDetailsOfMap") + name}));
             });
     });
 
@@ -146,6 +147,7 @@ const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
         const mapId = action.resourceId;
         const options = action.options;
         const detailsUri = mapDetailsUriFromIdSelector(state, mapId);
+        const name = mapNameSelector(state, mapId);
         const thumbnailUri = mapThumbnailsUriFromIdSelector(state, mapId);
         const detailsId = getIdFromUri(detailsUri);
         const thumbnailsId = getIdFromUri(thumbnailUri);
@@ -160,13 +162,13 @@ const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
         ).concatMap(([details, thumbnail, map]) => {
             let actions = [];
             if (details.resType === "error") {
-                actions.push(basicError({message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorDeletingDetailsOfMap") + mapId }));
+                actions.push(basicError({message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorDeletingDetailsOfMap") + name }));
             }
             if (thumbnail.resType === "error") {
-                actions.push(basicError({message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorDeletingThumbnailOfMap") + mapId }));
+                actions.push(basicError({message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorDeletingThumbnailOfMap") + name }));
             }
             if (map.resType === "error") {
-                actions.push(basicError({message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorDeletingMap") + mapId }));
+                actions.push(basicError({message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorDeletingMap") + name }));
                 actions.push(mapDeleted(mapId, "failure", map.error));
             }
             if (map.resType === "success") {
@@ -176,23 +178,19 @@ const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
                 }
             }
             if (map.resType === "success" && details.resType === "success" && thumbnail.resType === "success") {
-                actions.push(basicSuccess({ message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.allResDeleted") + mapId }));
+                actions.push(basicSuccess({ message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.allResDeleted") + name }));
 
             }
             return Rx.Observable.from(actions);
         }).startWith(mapDeleting(mapId));
     });
 
-const mapCreatedNotificationEpic = action$ =>
-    action$.ofType(MAP_CREATED)
-        .concat(() => action$.ofType(CLEAR_NOTIFICATIONS))
-        .switchMap(() => Rx.Observable.of(basicSuccess({message: "maps.feedback.successSavedMap"})));
-
 const fetchDataForDetailsPanel = (action$, store) =>
     action$.ofType(OPEN_DETAILS_PANEL)
     .switchMap(() => {
         const state = store.getState();
         const mapId = mapIdSelector(state);
+        const name = mapNameSelector(state, mapId);
         const detailsUri = mapInfoDetailsUriFromIdSelector(state);
         const detailsId = getIdFromUri(detailsUri);
         return Rx.Observable.fromPromise(GeoStoreApi.getData(detailsId)
@@ -206,7 +204,7 @@ const fetchDataForDetailsPanel = (action$, store) =>
             }).startWith(toggleControl("details", "enabled"))
             .catch(() => {
                 return Rx.Observable.of(basicError({
-                    message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorFetchingDetailsOfMap") + mapId}));
+                    message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorFetchingDetailsOfMap") + name}));
             });
     });
 
@@ -250,7 +248,6 @@ module.exports = {
     storeDetailsInfoEpic,
     closeDetailsPanelEpic,
     fetchDataForDetailsPanel,
-    mapCreatedNotificationEpic,
     deleteMapAndAssociatedResourcesEpic,
     setDetailsChangedEpic,
     fetchDetailsFromResourceEpic,
