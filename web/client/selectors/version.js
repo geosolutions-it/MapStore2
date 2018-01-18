@@ -7,8 +7,9 @@
 */
 
 const versionSelector = (state) => state.version && state.version.current || '';
-
+const validateVersion = version => version && version.indexOf('${mapstore2.version}') === -1 && version.indexOf('${mapstore2.version.error}') === -1 ? true : false;
 
 module.exports = {
-    versionSelector
+    versionSelector,
+    validateVersion
 };

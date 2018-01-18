@@ -12,23 +12,28 @@ const LocaleUtils = require('../utils/LocaleUtils');
 
 const startApp = () => {
     const StandardApp = require('../components/app/StandardApp');
-
+    const {loadVersion} = require('../actions/version');
+    const {versionSelector} = require('../selectors/version');
+    const {loadAfterThemeSelector} = require('../selectors/config');
     const {pages, pluginsDef, initialState, storeOpts} = require('./appConfigEmbedded');
 
     const StandardRouter = connect((state) => ({
         locale: state.locale || {},
-        pages
+        pages,
+        version: versionSelector(state),
+        loadAfterTheme: loadAfterThemeSelector(state)
     }))(require('../components/app/StandardRouter'));
 
     const appStore = require('../stores/StandardStore').bind(null, initialState, {
-        mode: (state = 'embedded') => state
+        mode: (state = 'embedded') => state,
+        version: require('../reducers/version')
     }, {});
 
     const appConfig = {
         storeOpts,
         appStore,
         pluginsDef,
-        initialActions: [],
+        initialActions: [loadVersion],
         appComponent: StandardRouter,
         printingEnabled: true
     };
