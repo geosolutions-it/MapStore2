@@ -7,7 +7,7 @@
 */
 
 const expect = require('expect');
-const {versionSelector} = require('../version');
+const {versionSelector, validateVersion} = require('../version');
 
 describe('Test version selector', () => {
     it('test versionSelector default', () => {
@@ -19,5 +19,10 @@ describe('Test version selector', () => {
         const version = versionSelector({version: { current}});
         expect(version).toExist();
         expect(version).toBe(current);
+    });
+    it('test validateVersion', () => {
+        expect(validateVersion('18e36c9e2ce1cbf57648907ec177e02f0118764d')).toBe(true);
+        expect(validateVersion('${mapstore2.version}')).toBe(false);
+        expect(validateVersion('${mapstore2.version.error}')).toBe(false);
     });
 });
