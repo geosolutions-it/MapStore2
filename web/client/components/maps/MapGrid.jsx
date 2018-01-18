@@ -32,6 +32,7 @@ class MapGrid extends React.Component {
         removeThumbnail: PropTypes.func,
         errorCurrentMap: PropTypes.func,
         updateCurrentMap: PropTypes.func,
+        detailsSheetActions: PropTypes.object,
         createThumbnail: PropTypes.func,
         deleteThumbnail: PropTypes.func,
         deleteMap: PropTypes.func,
@@ -56,6 +57,17 @@ class MapGrid extends React.Component {
         // CALLBACKS
         onChangeMapType: function() {},
         updateMapMetadata: () => {},
+        detailsSheetActions: {
+            onBackDetails: () => {},
+            onUndoDetails: () => {},
+            onToggleDetailsSheet: () => {},
+            onToggleGroupProperties: () => {},
+            onToggleUnsavedChangesModal: () => {},
+            onsetDetailsChanged: () => {},
+            onUpdateDetails: () => {},
+            onDeleteDetails: () => {},
+            onSaveDetails: () => {}
+        },
         createThumbnail: () => {},
         deleteThumbnail: () => {},
         errorCurrentMap: () => {},
@@ -70,7 +82,6 @@ class MapGrid extends React.Component {
         updatePermissions: () => {},
         groups: []
     };
-
     renderMaps = (maps, mapType) => {
         const viewerUrl = this.props.viewerUrl;
         return maps.map((map) => {
@@ -81,6 +92,7 @@ class MapGrid extends React.Component {
                     <MapCard viewerUrl={viewerUrl} mapType={mapType}
                         map={map}
                         onEdit={this.props.editMap}
+                        detailsSheetActions={this.props.detailsSheetActions}
                         onMapDelete={this.props.deleteMap}/>
                 </Col>;
         });
@@ -93,13 +105,15 @@ class MapGrid extends React.Component {
     renderMetadataModal = () => {
         if (this.props.metadataModal) {
             let MetadataModal = this.props.metadataModal;
-            return (<MetadataModal key="metadataModal" ref="metadataModal" show={this.props.currentMap && this.props.currentMap.displayMetadataEdit} onHide={this.props.resetCurrentMap}
-                onClose={this.props.resetCurrentMap}
+            return (<MetadataModal key="metadataModal" ref="metadataModal" show={this.props.currentMap && this.props.currentMap.displayMetadataEdit}
                 map={this.props.currentMap}
                 onSaveAll={this.props.saveAll}
                 onSave={this.props.saveMap}
+                onResetCurrentMap={this.props.resetCurrentMap}
                 onRemoveThumbnail={this.props.removeThumbnail}
+                onDisplayMetadataEdit={this.props.onDisplayMetadataEdit}
                 onDeleteThumbnail={this.props.deleteThumbnail}
+                detailsSheetActions={this.props.detailsSheetActions}
                 onCreateThumbnail={this.props.createThumbnail}
                 onErrorCurrentMap={this.props.errorCurrentMap}
                 onUpdateCurrentMap={this.props.updateCurrentMap}/>);

@@ -34,6 +34,9 @@
         "localeErrors": {
             "404": "Archivo de traducción no encontrado"
         },
+        "details": {
+            "title": "Información en este mapa"
+        },
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
             "title": "Título",
@@ -108,6 +111,8 @@
         "elevation": "Elevación",
         "close": "Cerrar",
         "cancel": "Cancelar",
+        "no": "No",
+        "yes": "Sí",
         "confirm": "Confirmar",
         "confirmTitle": "¿Lo confirma?",
         "pageInfo": "{total, plural, =0 {ningún item} =1 {{total} item de {total}} other {objets {start}-{end} de {total}}}",
@@ -197,6 +202,28 @@
         },
         "newMap": "Nuevo mapa",
 		"maps": {
+            "feedback": {
+                "successSavedMap": "El mapa ha sido creado correctamente",
+                "errorDeletingMap": "Error al eliminar este mapa con id: ",
+                "errorDeletingThumbnailOfMap": "Error al eliminar la miniatura del mapa con id: ",
+                "errorDeletingDetailsOfMap": "Error al eliminar los detalles del mapa con id: ",
+                "allResDeleted": "Se han eliminado con éxito todos los recursos asociados con este mapa: ",
+                "errorFetchingDetailsOfMap": "Error al recuperar detalles para el mapa con id: ",
+                "details": {
+                    "deletedSuccesfully": "Los detalles han sido eliminados correctamente",
+                    "savedSuccesfully": "Los detalles han sido eliminados correctamente",
+                    "updatedSuccesfully": "Los detalles se han actualizado correctamente"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "La miniatura ha sido eliminada correctamente",
+                    "savedSuccesfully": "La miniatura ha sido eliminada correctamente",
+                    "updatedSuccesfully": "La miniatura se ha actualizado correctamente"
+                },
+                "errorWhenSaving": "Se produjo un error durante el proceso de guardado",
+                "errorWhenUpdating": "Se produjo un error durante el proceso de actualización",
+                "errorWhenDeleting": "Se produjo un error durante el proceso de eliminación",
+                "errorSizeExceeded": "Por favor, reduzca el tamaño de los detalles o la calidad de las imágenes"
+            },
 			"search": "buscador de mapas ..."
 		},
         "map": {
@@ -238,6 +265,21 @@
                 "canWrite": "puedo editar",
                 "noResult": "nigún resultado encontrado",
                 "title": "Grupos de permisos"
+            },
+            "details": {
+                "back": "Espalda",
+                "save": "Salvar",
+                "show": "Mostrar hoja de detalles",
+                "add": "Agregar nuevos detalles",
+                "edit": "Editar detalles",
+                "title": "Hoja de detalles",
+                "undo": "Deshacer quitar",
+                "showPreview": "Mostrar vista previa",
+                "hidePreview": "Ocultar vista previa",
+                "delete": "Eliminar hoja de detalles",
+                "titleUnsavedChanges": "Estás seguro de cerrar sin guardar los cambios?",
+                "sureToClose": "Estás seguro de cerrar sin guardar los cambios?",
+                "fieldsChanged": "Algunos campos han sido cambiados"
             }
         },
         "toc": {

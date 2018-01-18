@@ -30,6 +30,7 @@ let parseUserGroups = (groupsObj) => {
     return groupsObj.User.groups.group.filter(obj => !!obj.id).map((obj) => _.pick(obj, ["id", "groupName", "description"]));
 };
 
+const boolToString = (b) => b ? "true" : "false";
 const encodeContent = function(content) {
     return utfEncode(content);
 };
@@ -77,7 +78,7 @@ const Api = {
     },
     getResourcesByCategory: function(category, query, options) {
         const q = query || "*";
-        const url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail"; // comma-separated list of wanted attributes
+        const url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail,details"; // comma-separated list of wanted attributes
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     getUserDetails: function(username, password, options) {
@@ -134,6 +135,15 @@ const Api = {
                 }
             }, options)));
     },
+    getResourceAttribute: function(resourceId, name, options = {}) {
+        return axios.get(
+            "resources/resource/" + resourceId + "/attributes/" + name,
+            this.addBaseUrl(_.merge({
+                headers: {
+                    'Content-Type': "application/xml"
+                }
+            }, options)));
+    },
     putResourceMetadata: function(resourceId, newName, newDescription, options) {
         return axios.put(
             "resources/resource/" + resourceId,
@@ -162,14 +172,14 @@ const Api = {
             if (rule.canRead || rule.canWrite) {
                 if (rule.user) {
                     payload = payload + "<SecurityRule>";
-                    payload = payload + "<canRead>" + (rule.canRead || rule.canWrite ? "true" : "false") + "</canRead>";
-                    payload = payload + "<canWrite>" + (rule.canWrite ? "true" : "false") + "</canWrite>";
+                    payload = payload + "<canRead>" + boolToString(rule.canRead || rule.canWrite) + "</canRead>";
+                    payload = payload + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>";
                     payload = payload + "<user><id>" + (rule.user.id || "") + "</id><name>" + (rule.user.name || "") + "</name></user>";
                     payload = payload + "</SecurityRule>";
                 } else if (rule.group) {
                     payload = payload + "<SecurityRule>";
-                    payload = payload + "<canRead>" + (rule.canRead || rule.canWrite ? "true" : "false") + "</canRead>";
-                    payload = payload + "<canWrite>" + (rule.canWrite ? "true" : "false") + "</canWrite>";
+                    payload = payload + "<canRead>" + boolToString(rule.canRead || rule.canWrite) + "</canRead>";
+                    payload = payload + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>";
                     payload = payload + "<group><id>" + (rule.group.id || "") + "</id><groupName>" + (rule.group.groupName || "") + "</groupName></group>";
                     payload = payload + "</SecurityRule>";
                 }

@@ -20,6 +20,11 @@
         border: none;
         .shadow;
 
+        &.ms-xs {
+            height: 30%;
+            top: 35%;
+        }
+
         &.ms-sm {
             height: 40%;
             top: 30%;
@@ -95,11 +100,15 @@
                 }
             }
 
-            .alert {
+            .ms-alert {
                 margin: 0;
                 flex: 1;
                 height: 100%;
                 overflow-y: auto;
+                display: flex;
+                .ms-alert-center {
+                    margin: auto;
+                }
             }
         }
 
