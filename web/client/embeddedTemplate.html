@@ -4,7 +4,7 @@
         <meta charset="UTF-8">
         <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Page with MapStore 2 API</title>
+        <title>MapStore 2 HomePage</title>
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway" type='text/css'>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.css" />
         <link rel="stylesheet" href="https://cdn.jslibs.mapstore2.geo-solutions.it/leaflet/0.2.4/leaflet.draw.css" />
@@ -13,30 +13,8 @@
         <!--script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.10/proj4.js"></script-->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/leaflet.js"></script>
         <script src="https://cdn.jslibs.mapstore2.geo-solutions.it/leaflet/0.2.4/leaflet.draw.js"></script>
-        <style>
-        #container {
-            position: absolute;
-            top: 100px;
-            left: 100px;
-            right: 100px;
-            bottom: 100px;
-        }
-        #mapstore2-embedded, #map, .fill {
-            width: 100%;
-            height: 100%;
-        }
-        </style>
     </head>
-    <body onload="init()">
-        <div id="container" class="ms2"></div>
-        <script id="ms2-api" src="__BASE__URL__dist/ms2-api.js__VERSION__"></script>
-        <script type="text/javascript">
-        function init() {
-            MapStore2.create('container',{
-                configUrl: "__CONFIG__URL__",
-                originalUrl: "__ORIGINAL_URL__"
-            });
-        }
-        </script>
+    <body>
+        <div id="container"></div>
     </body>
 </html>

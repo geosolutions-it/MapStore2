@@ -50,7 +50,8 @@ class SharePanel extends React.Component {
         showAPI: PropTypes.bool,
         onClose: PropTypes.func,
         getCount: PropTypes.func,
-        closeGlyph: PropTypes.string
+        closeGlyph: PropTypes.string,
+        version: PropTypes.string
     };
 
     static defaultProps = {
@@ -83,7 +84,7 @@ class SharePanel extends React.Component {
         const social = <ShareSocials sharedTitle={this.props.sharedTitle} shareUrl={shareUrl} getCount={this.props.getCount}/>;
         const direct = <div><ShareLink shareUrl={shareUrl}/><ShareQRCode shareUrl={shareUrl}/></div>;
         const code = (<div><ShareEmbed shareUrl={shareEmbeddedUrl} {...this.props.embedOptions} />
-        {this.props.showAPI ? <ShareApi shareUrl={shareApiUrl} shareConfigUrl={this.props.shareConfigUrl}/> : null}</div>);
+        {this.props.showAPI ? <ShareApi shareUrl={shareApiUrl} shareConfigUrl={this.props.shareConfigUrl} version={this.props.version}/> : null}</div>);
 
         const tabs = (<Tabs defaultActiveKey={1} id="sharePanel-tabs">
             <Tab eventKey={1} title={<Message msgId="share.direct" />}>{direct}</Tab>
