@@ -17,7 +17,8 @@ const CopyToClipboard = require('react-copy-to-clipboard');
 const Message = require('../../components/I18N/Message');
 const {Glyphicon, Col, Grid, Row, Tooltip, Button} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
-
+const {validateVersion} = require('../../selectors/version');
+const {trim} = require('lodash');
 
 // css required
 require('./share.css');
@@ -29,7 +30,8 @@ const codeApi = require('raw-loader!./api-template.raw');
 class ShareApi extends React.Component {
     static propTypes = {
         shareUrl: PropTypes.string,
-        shareConfigUrl: PropTypes.string
+        shareConfigUrl: PropTypes.string,
+        version: PropTypes.string
     };
 
     state = {copied: false};
@@ -38,7 +40,8 @@ class ShareApi extends React.Component {
         const parsedCode = codeApi
           .replace('__BASE__URL__', this.props.shareUrl)
           .replace('__CONFIG__URL__', this.props.shareConfigUrl)
-          .replace('__ORIGINAL_URL__', location.href);
+          .replace('__ORIGINAL_URL__', location.href)
+          .replace('__VERSION__', validateVersion(this.props.version) ? '?' + trim(this.props.version) : '');
         const tooltip = (<Tooltip placement="bottom" className="in" id="tooltip-bottom" style={{zIndex: 2001}}>
                              {this.state.copied ? <Message msgId="share.msgCopiedUrl"/> : <Message msgId="share.msgToCopyUrl"/>}
                          </Tooltip>);

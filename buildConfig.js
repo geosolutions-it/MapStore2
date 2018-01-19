@@ -51,6 +51,18 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
             chunks: ['mapstore2'],
             inject: true,
             hash: true
+    }), new HtmlWebpackPlugin({
+            template: path.join(paths.framework, 'embeddedTemplate.html'),
+            chunks: ['embedded'],
+            inject: true,
+            hash: true,
+            filename: 'embedded.html'
+    }), new HtmlWebpackPlugin({
+            template: path.join(paths.framework, 'apiTemplate.html'),
+            chunks: ['ms2-api'],
+            inject: 'head',
+            hash: true,
+            filename: 'api.html'
     })] : []).concat(prod ? [new ParallelUglifyPlugin({
         uglifyJS: {
             sourceMap: false,
