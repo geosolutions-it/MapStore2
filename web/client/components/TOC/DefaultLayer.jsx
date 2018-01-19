@@ -157,7 +157,7 @@ class DefaultLayer extends React.Component {
     filterLayers = (layer) => {
         const translation = isObject(layer.title) ? layer.title[this.props.currentLocale] || layer.title.default : layer.title;
         const title = translation || layer.name;
-        return title.toLowerCase().includes(this.props.filterText.toLowerCase());
+        return title.toLowerCase().indexOf(this.props.filterText.toLowerCase()) !== -1;
     }
 }
 
