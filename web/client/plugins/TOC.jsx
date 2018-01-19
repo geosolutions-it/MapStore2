@@ -62,7 +62,7 @@ const addFilteredAttributesGroups = (nodes, filters) => {
 const filterLayersByTitle = (layer, filterText, currentLocale) => {
     const translation = isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title;
     const title = translation || layer.name;
-    return title.toLowerCase().includes(filterText.toLowerCase());
+    return title.toLowerCase().indexOf(filterText.toLowerCase()) !== -1;
 };
 
 const tocSelector = createSelector(
