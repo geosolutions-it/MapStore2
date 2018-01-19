@@ -67,10 +67,10 @@ describe("The ShareEmbed component", () => {
         expect(textareaEmbed.value.indexOf('?' + version) !== -1).toBe(false);
     });
 
-    it('add version ${mapstore2.version.error} to API template', () => {
+    it('add no-version to API template', () => {
         const url = location.href;
         const shareConfigUrl = 'configurl';
-        const version = '${mapstore2.version.error}';
+        const version = 'no-version';
         const cmpSharePanel = ReactDOM.render(<ShareApi shareUrl={url} shareConfigUrl={shareConfigUrl} version={version}/>, document.getElementById("container"));
         expect(cmpSharePanel).toExist();
 

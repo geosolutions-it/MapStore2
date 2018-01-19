@@ -23,6 +23,6 @@ describe('Test version selector', () => {
     it('test validateVersion', () => {
         expect(validateVersion('18e36c9e2ce1cbf57648907ec177e02f0118764d')).toBe(true);
         expect(validateVersion('${mapstore2.version}')).toBe(false);
-        expect(validateVersion('${mapstore2.version.error}')).toBe(false);
+        expect(validateVersion('no-version')).toBe(false);
     });
 });

@@ -31,7 +31,7 @@ function version(state = null, action) {
     case LOAD_VERSION_ERROR: {
         return assign({}, state,
             {
-                current: '${mapstore2.version.error}'
+                current: 'no-version'
             }
         );
     }
