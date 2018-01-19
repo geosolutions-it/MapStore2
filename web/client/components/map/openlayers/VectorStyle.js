@@ -50,20 +50,14 @@ const defaultStyles = {
     })
   })],
   'GeometryCollection': () => [new ol.style.Style({
-    stroke: new ol.style.Stroke({
-      color: 'magenta',
-      width: 2
-    }),
-    fill: new ol.style.Fill({
-      color: 'magenta'
-    }),
-    image: new ol.style.Circle({
-      radius: 10,
-      fill: null,
       stroke: new ol.style.Stroke({
-        color: 'magenta'
+        color: 'blue',
+        lineDash: [4],
+        width: 3
+      }),
+      fill: new ol.style.Fill({
+        color: 'rgba(0, 0, 255, 0.1)'
       })
-    })
   })],
   'Circle': () => [new ol.style.Style({
     stroke: new ol.style.Stroke({

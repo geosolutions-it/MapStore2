@@ -31,9 +31,9 @@ class Feature extends React.Component {
 
     componentDidMount() {
         const format = new ol.format.GeoJSON();
-        const geometry = this.props.geometry && this.props.geometry.coordinates;
-
-        if (this.props.container && geometry) {
+        const hasGeometry = this.props.geometry && (this.props.geometry.coordinates || this.props.geometry.geometries);
+        // TODO this is similar very to the componentWillUpdate. We should unify that behiviour
+        if (this.props.container && hasGeometry) {
             this._feature = format.readFeatures({
                 type: this.props.type,
                 properties: this.props.properties,
@@ -55,9 +55,9 @@ class Feature extends React.Component {
         if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || !isEqual(newProps.style, this.props.style)) {
             this.removeFromContainer();
             const format = new ol.format.GeoJSON();
-            const geometry = newProps.geometry && newProps.geometry.coordinates;
+            const hasGeometry = newProps.geometry && (newProps.geometry.coordinates || newProps.geometry.geometries);
 
-            if (newProps.container && geometry) {
+            if (newProps.container && hasGeometry) {
                 this._feature = format.readFeatures({type: newProps.type, properties: newProps.properties, geometry: newProps.geometry, id: this.props.msId});
                 this._feature.forEach((f) => f.getGeometry().transform(newProps.featuresCrs, this.props.crs || 'EPSG:3857'));
                 this._feature.forEach((f) => {
