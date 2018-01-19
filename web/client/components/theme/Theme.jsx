@@ -9,12 +9,14 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const withSideEffect = require('react-side-effect');
 const ConfigUtils = require('../../utils/ConfigUtils');
+const {validateVersion} = require('../../selectors/version');
+const {trim} = require('lodash');
 
 const reducePropsToState = (props) => {
     const innermostProps = props[props.length - 1];
     if (innermostProps && innermostProps.version) {
         return {
-            version: innermostProps.version.indexOf('${mapstore2.version}') === -1 ? "?" + innermostProps.version : '',
+            version: validateVersion(innermostProps.version) ? "?" + trim(innermostProps.version) : '',
             theme: innermostProps.theme || 'default',
             themeElement: innermostProps.themeElement || 'theme_stylesheet',
             prefix: innermostProps.prefix || ConfigUtils.getConfigProp('themePrefix') || 'ms2',

@@ -15,4 +15,9 @@ describe('Test the version reducer', () => {
         var state = version({}, {type: 'CHANGE_VERSION', version: 'myVersion'});
         expect(state.current).toBe('myVersion');
     });
+
+    it('test error version load', () => {
+        var state = version({}, {type: 'LOAD_VERSION_ERROR', error: 'error'});
+        expect(state.current).toBe('no-version');
+    });
 });

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { CHANGE_VERSION } = require('../actions/version');
+const { CHANGE_VERSION, LOAD_VERSION_ERROR } = require('../actions/version');
 const assign = require('object-assign');
 
 /**
@@ -26,7 +26,14 @@ function version(state = null, action) {
             {
                 current: action.version
             }
-            );
+        );
+    }
+    case LOAD_VERSION_ERROR: {
+        return assign({}, state,
+            {
+                current: 'no-version'
+            }
+        );
     }
     default:
         return state;
