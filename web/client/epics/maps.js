@@ -88,7 +88,8 @@ const saveResourceDetailsEpic = (action$, store) =>
             attribute: "details",
             map: currentMapSelector(state),
             resource: null,
-            type: "STRING"
+            type: "STRING",
+            messages: currentMessagesSelector(state)
         };
         if (!detailsChanged) {
             return Rx.Observable.of(doNothing());
@@ -103,7 +104,6 @@ const saveResourceDetailsEpic = (action$, store) =>
                 optionsAttr: {},
                 optionsRes: {}
             };
-            params.messages = currentMessagesSelector(state);
         } else {
             params.optionsDel = {};
         }
