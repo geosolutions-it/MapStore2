@@ -81,6 +81,10 @@ class GeometryDetails extends React.Component {
     };
 
     onUpdateCircle = (value, name) => {
+        // TODO revert all the changes here
+        let projectedTempCircle = this.props.geometry.center.x === undefined ? {x: this.props.geometry.center[0], y: this.props.geometry.center[1]} : this.props.geometry.center;
+        let oldOlRadius = this.props.geometry.radius;
+        let leafletRadius = this.props.geometry.leafletRadius;
         this.tempCircle[name] = parseFloat(value);
 
         let center = !this.props.useMapProjection ?
@@ -91,12 +95,15 @@ class GeometryDetails extends React.Component {
         let geometry = {
             type: this.props.geometry.type,
             center: center,
-            coordinates: [center.x, center.y],
+            coordinates: [this.props.geometry.coordinates[0][0][0], this.props.geometry.coordinates[0][0][1]],
+            newCoordinates: [this.props.geometry.coordinates[0][0][0] + center.x - projectedTempCircle.x, this.props.geometry.coordinates[0][0][1] + center.y - projectedTempCircle.y],
             radius: this.tempCircle.radius,
+            oldOlRadius,
+            leafletRadius,
             projection: this.props.geometry.projection
         };
 
-        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry]);
+        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry], {featureProjection: this.props.geometry.projection});
     };
 
     onModifyGeometry = () => {

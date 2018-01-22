@@ -13,7 +13,7 @@ require('leaflet-draw');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
 const {boundsToOLExtent} = require('../../../utils/DrawSupportUtils');
 const assign = require('object-assign');
-
+const circleToPolygon = require('circle-to-polygon');
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
 const VectorUtils = require('../../../utils/leaflet/Vector');
@@ -127,6 +127,7 @@ class DrawSupport extends React.Component {
         } else {
             bounds = layer.getBounds();
         }
+        let projectedRadius;
         let extent = boundsToOLExtent(bounds);
         let center = bounds.getCenter();
         center = [center.lng, center.lat];
@@ -140,15 +141,24 @@ class DrawSupport extends React.Component {
             // but for first time we need to do this!
             geoJesonFt.projection = "EPSG:4326";
             projection = "EPSG:3857";
+            // coordinates = CoordinatesUtils.calculateCircleCoordinates(center, radius, 100);
+
+            /**
+                in order to be aligned with openlayers we use the projected radius as the model.
+                we need to convert it back to 4326 for leaflet
+            */
+            const polygonGeom = circleToPolygon(center, radius, 100);
+            let projectedNorthPoint = CoordinatesUtils.reproject(polygonGeom.coordinates[0][0], 'EPSG:4326', 'EPSG:3857');
+            let projectedCenter = CoordinatesUtils.reproject(center, 'EPSG:4326', 'EPSG:3857');
+            // TODO revert the changes here for the radius, MAYBE NOT
+            projectedRadius = Math.sqrt(Math.pow(projectedCenter.x - projectedNorthPoint.x, 2) + Math.pow(projectedCenter.y - projectedNorthPoint.y, 2));
+
             extent = CoordinatesUtils.reprojectBbox(extent, "EPSG:4326", projection);
             center = CoordinatesUtils.reproject(center, "EPSG:4326", projection);
             geoJesonFt.radius = radius;
-            coordinates = CoordinatesUtils.calculateCircleCoordinates(center, radius, 100);
-            extent = CoordinatesUtils.reprojectBbox(extent, projection, "EPSG:4326");
-            center = CoordinatesUtils.reproject(center, projection, "EPSG:4326");
-            tempCoordinates = CoordinatesUtils.reprojectGeoJson({type: "Feature", geometry: {type: "Polygon", coordinates}}, projection, "EPSG:4326");
-            projection = "EPSG:4326";
-            coordinates = tempCoordinates.geometry.coordinates;
+
+            tempCoordinates = CoordinatesUtils.reprojectGeoJson({type: "Feature", geometry: {type: "Polygon", coordinates: polygonGeom.coordinates}}, "EPSG:4326", projection);
+            coordinates = tempCoordinates.geometry.coordinates || polygonGeom.coordinates;
             center = [center.x, center.y];
             type = "Polygon";
         }
@@ -160,7 +170,8 @@ class DrawSupport extends React.Component {
             extent,
             center,
             coordinates,
-            radius,
+            radius: projectedRadius || radius,
+            leafletRadius: radius,
             projection
         };
         if (this.props.options && this.props.options.stopAfterDrawing) {
@@ -205,27 +216,64 @@ class DrawSupport extends React.Component {
         this.drawLayer = vector;
     };
 
-    addGeojsonLayer = ({features, projection, style}) => {
+    addGeojsonLayer = ({features, projection, style, drawMethod}) => {
         this.clean();
-        let geoJsonLayerGroup = L.geoJson(features, {style: (f) => {
+        let tempFeatures = features;
+        let convertedRadius;
+        if (drawMethod === "Circle") {
+            tempFeatures = features.map(f => {
+                return assign({}, f, {geometry: {...f.geometry, coordinates: [f.geometry.center.x, f.geometry.center.y], type: "Point"} });
+            });
+            const center4326 = CoordinatesUtils.reproject(features[0].geometry.center, projection, "EPSG:4326");
+            const point4326 = CoordinatesUtils.reproject({y: features[0].geometry.coordinates[0][0][1], x: features[0].geometry.coordinates[0][0][0]}, projection, "EPSG:4326");
+            const latlng = L.latLng(center4326.y, center4326.x);
+            const point = L.latLng(point4326.y, point4326.x);
+            convertedRadius = latlng.distanceTo(point);
+        }
+        let geoJsonLayerGroup = L.geoJson(tempFeatures, {style: (f) => {
             return f.style || style;
         }, pointToLayer: (f, latLng) => {
             let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, projection, "EPSG:4326");
+            if (drawMethod === "Circle") {
+                return L.circle(L.latLng(center.y, center.x), convertedRadius || f.geometry.radius || 5);
+            }
             return VectorUtils.pointToLayer(L.latLng(center.y, center.x), f, style);
-        }});
+        }
+        });
         this.drawLayer = geoJsonLayerGroup.addTo(this.props.map);
     };
 
 
     replaceFeatures = (newProps) => {
         if (!this.drawLayer) {
-            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
+            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style, drawMethod: newProps.drawMethod});
         } else {
             this.drawLayer.clearLayers();
-            if (this.props.drawMethod === "Circle") {
+            let tempFeatures = newProps.features;
+            if (newProps.drawMethod === "Circle") {
+                // TODO revert all the changes here
+                tempFeatures = newProps.features.map(f => {
+                    return assign({}, f, {coordinates: [f.center.x, f.center.y], type: "Point"});
+                });
+                let oldLeafletRadius;
+                oldLeafletRadius = newProps.features[0].leafletRadius;
+                let oldOpenlayersRadius = newProps.features[0].oldOlRadius;
+                let newOpenlayersRadius = newProps.features[0].radius;
+                let newLeafletRadius = (newOpenlayersRadius * oldLeafletRadius) / oldOpenlayersRadius;
+
+                if (newProps.features[0].coordinates !== newProps.features[0].newCoordinates) {
+                    let proj = newProps.options && newProps.options.featureProjection || "EPSG:4326";
+                    const newCenter4326 = CoordinatesUtils.reproject(newProps.features[0].center, proj, "EPSG:4326");
+                    const newPoint4326 = CoordinatesUtils.reproject({y: newProps.features[0].newCoordinates[1], x: newProps.features[0].newCoordinates[0]}, proj, "EPSG:4326");
+                    const newCenter = L.latLng(newCenter4326.y, newCenter4326.x);
+                    const newPoint = L.latLng(newPoint4326.y, newPoint4326.x);
+                    newLeafletRadius = newCenter.distanceTo(newPoint);
+                    // newLeafletRadius = oldLeafletRadius;
+                }
+
                 this.drawLayer.options.pointToLayer = (feature, latLng) => {
-                    let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, feature.projection || "EPSG:4326", "EPSG:4326");
-                    return L.circle(L.latLng(center.y, center.x), feature.radius || 5);
+                    let c = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, feature.projection || "EPSG:4326", "EPSG:4326");
+                    return L.circle(L.latLng(c.y, c.x), newLeafletRadius || oldLeafletRadius || feature.radius || 5);
                 };
                 this.drawLayer.options.style = {
                     color: '#ffcc33',
@@ -241,14 +289,14 @@ class DrawSupport extends React.Component {
                     return VectorUtils.pointToLayer(L.latLng(center.y, center.x), f, newProps.style);
                 };
             }
-            this.drawLayer.addData(this.convertFeaturesPolygonToPoint(newProps.features, this.props.drawMethod));
+            this.drawLayer.addData(tempFeatures);
         }
     };
 
     addDrawInteraction = (newProps) => {
         this.removeAllInteractions();
         if (newProps.drawMethod === "Point" || newProps.drawMethod === "MultiPoint") {
-            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
+            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style, drawMethod: newProps.drawMethod});
         } else {
             this.addLayer(newProps);
         }
@@ -335,7 +383,7 @@ class DrawSupport extends React.Component {
         }
         const props = assign({}, newProps, {features: [newFeature ? newFeature : {}]});
         if (!this.drawLayer) {
-            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
+            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style, drawMethod: newProps.drawMethod});
         } else {
             this.drawLayer.clearLayers();
             this.drawLayer.addData(this.convertFeaturesPolygonToPoint(props.features, props.drawMethod));
@@ -351,7 +399,7 @@ class DrawSupport extends React.Component {
     addEditInteraction = (newProps) => {
         this.clean();
 
-        this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
+        this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style, drawMethod: newProps.drawMethod});
 
         let allLayers = this.drawLayer.getLayers();
         allLayers.forEach(l => {
