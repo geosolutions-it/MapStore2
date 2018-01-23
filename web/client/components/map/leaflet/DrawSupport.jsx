@@ -39,6 +39,7 @@ const toProjectedCircle = (mRadius, center, projection) => {
         const checkPoint = CoordinatesUtils.reproject([center[0] + lonRadius, center[1]], "EPSG:4326", projection);
         return {
             center: projCenter,
+            srs: projection,
             radius: Math.sqrt(Math.pow(projCenter.x - checkPoint.x, 2) + Math.pow(projCenter.y - checkPoint.y, 2))
         };
     }
