@@ -130,18 +130,18 @@ module.exports = (API) => ({
                 return Rx.Observable.fromPromise(
                     API.csw.getRecordById(layer.catalogURL)
                 )
-                .switchMap((actions) => {
-                    if (actions && actions.error) {
+                .switchMap((action) => {
+                    if (action && action.error) {
                         return Rx.Observable.of(error({
                                 title: "notification.warning",
-                                message: actions.error,
+                                message: "toc.layerMetadata.notification.warnigGetMetadataRecordById",
                                 autoDismiss: 6,
                                 position: "tc"
                             }), showLayerMetadata({}, false));
                     }
-                    if (actions && actions.dc) {
+                    if (action && action.dc) {
                         return Rx.Observable.of(
-                            showLayerMetadata(actions.dc, false)
+                            showLayerMetadata(action.dc, false)
                         );
                     }
                 })
