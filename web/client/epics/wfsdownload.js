@@ -88,13 +88,14 @@ module.exports = {
                 });
             }),
     startFeatureExportDownload: (action$, store) =>
-        action$.ofType(DOWNLOAD_FEATURES).switchMap(action =>
-            getWFSFeature({
+        action$.ofType(DOWNLOAD_FEATURES).switchMap(action => {
+            const {virtualScroll= false} = (store.getState()).featuregrid;
+            return getWFSFeature({
                     url: action.url,
                     downloadOptions: action.downloadOptions,
                     filterObj: {
                         ...action.filterObj,
-                        pagination: get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null
+                        pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null
                     }
                 })
                 .do(({data, headers}) => {
@@ -111,7 +112,7 @@ module.exports = {
                             downloadOptions: action.downloadOptions,
                             filterObj: {
                                 ...action.filterObj,
-                                pagination: get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
+                                pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                                 sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState()))
                             }
                         }).do(({data, headers}) => {
@@ -135,9 +136,8 @@ module.exports = {
                         position: "tr"
                     }),
                     onDownloadFinished())
-                )
-
-        ),
+                );
+        }),
     closeExportDownload: (action$, store) =>
         action$.ofType(TOGGLE_CONTROL)
         .filter((a) => a.control === "queryPanel" && !store.getState().controls.queryPanel.enabled && store.getState().controls.wfsdownload.enabled)

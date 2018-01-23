@@ -32,7 +32,8 @@ module.exports = class extends React.Component {
             onChange: PropTypes.func,
             defaultSrs: PropTypes.string,
             layer: PropTypes.object,
-            formatsLoading: PropTypes.bool
+            formatsLoading: PropTypes.bool,
+            virtualScroll: React.PropTypes.bool
     };
 
     static defaultProps = {
@@ -40,7 +41,8 @@ module.exports = class extends React.Component {
         formatsLoading: false,
         wfsFormats: [],
         formats: [],
-        srsList: []
+        srsList: [],
+        virtualScroll: false
     };
 
     getSelectedFormat = () => {
@@ -80,9 +82,9 @@ module.exports = class extends React.Component {
                 value={this.getSelectedSRS()}
                 onChange={(sel) => this.props.onChange("selectedSrs", sel.value)}
                 options={this.props.srsList.map(f => ({value: f.name, label: f.label || f.name}))} />
-            <Checkbox checked={this.props.downloadOptions.singlePage} onChange={() => this.props.onChange("singlePage", !this.props.downloadOptions.singlePage ) }>
+            {this.props.virtualScroll ? null : <Checkbox checked={this.props.downloadOptions.singlePage} onChange={() => this.props.onChange("singlePage", !this.props.downloadOptions.singlePage ) }>
                 <Message msgId="wfsdownload.downloadonlycurrentpage" />
-            </Checkbox>
+            </Checkbox>}
         </form>);
     }
 };

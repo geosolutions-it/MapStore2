@@ -7,12 +7,12 @@
  */
 const React = require('react');
 const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
+const {createSelector, createStructuredSelector} = require('reselect');
 const {bindActionCreators} = require('redux');
 const {get} = require('lodash');
 
 const Grid = require('../components/data/featuregrid/FeatureGrid');
-const {resultsSelector, describeSelector, wfsURLSelector, typeNameSelector} = require('../selectors/query');
+const {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} = require('../selectors/query');
 const {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector, getDockSize} = require('../selectors/featuregrid');
 const { toChangesMap} = require('../utils/FeatureGridUtils');
 const {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} = require('./featuregrid/panels/index');
@@ -149,10 +149,19 @@ const FeatureDock = (props = {
                 key={"feature-grid-container"}
                 columnSettings={props.attributes}
                 gridEvents={props.gridEvents}
+                pageEvents={props.pageEvents}
                 describeFeatureType={props.describe}
                 features={props.features}
                 minHeight={600}
-                tools={props.gridTools}/>
+                tools={props.gridTools}
+                pagination={props.pagination}
+                pages={props.pages}
+                virtualScroll={props.virtualScroll}
+                maxStoredPages={props.maxStoredPages}
+                vsOverScan={props.vsOverScan}
+                scrollDebounce={props.scrollDebounce}
+                size={props.size}
+                />
         </BorderLayout> }
 
         </ContainerDimensions>
@@ -164,7 +173,7 @@ const selector = createSelector(
     state => get(state, "queryform.autocompleteEnabled"),
     state => wfsURLSelector(state),
     state => typeNameSelector(state),
-    resultsSelector,
+    state => get(state, 'featuregrid.features') || EMPTY_ARR,
     describeSelector,
     state => get(state, "featuregrid.attributes"),
     state => get(state, "featuregrid.tools"),
@@ -175,7 +184,10 @@ const selector = createSelector(
     hasChangesSelector,
     state => get(state, 'featuregrid.focusOnEdit') || [],
     state => get(state, 'featuregrid.enableColumnFilters'),
-    (open, autocompleteEnabled, url, typeName, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters) => ({
+    createStructuredSelector(paginationInfo),
+    state => get(state, 'featuregrid.pages'),
+    state => get(state, 'featuregrid.pagination.size'),
+    (open, autocompleteEnabled, url, typeName, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters, pagination, pages, size) => ({
         open,
         autocompleteEnabled,
         url,
@@ -190,7 +202,10 @@ const selector = createSelector(
         mode,
         focusOnEdit,
         enableColumnFilters,
-        changes: toChangesMap(changes)
+        changes: toChangesMap(changes),
+        pagination,
+        pages,
+        size
     })
 );
 const EditorPlugin = connect(selector,

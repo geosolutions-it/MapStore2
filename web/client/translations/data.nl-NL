@@ -848,6 +848,7 @@
             "deselectall": "Deselecteer alles",
             "backtosearch": "Terug naar zoeken",
             "resultInfo": "{total, plural, =0 {geen enkel object} =1 {{total} van {total}} other {{start}-{end} van {total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {geen enkel object} =1 {{total} van {total}} other {{total}}}",
             "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} van {totalPages}} other {Page {page} van {totalPages}}}",
             "pagination": {
                 "page": "Bladzijde",
