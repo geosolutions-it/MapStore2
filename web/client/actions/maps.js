@@ -55,6 +55,7 @@ const UNDO_DETAILS = 'MAPS:UNDO_DETAILS';
 const SET_UNSAVED_CHANGES = 'MAPS:SET_UNSAVED_CHANGES';
 const OPEN_DETAILS_PANEL = 'DETAILS:OPEN_DETAILS_PANEL';
 const CLOSE_DETAILS_PANEL = 'DETAILS:CLOSE_DETAILS_PANEL';
+const TOGGLE_DETAILS_EDITABILITY = 'DETAILS:TOGGLE_DETAILS_EDITABILITY';
 const DETAILS_LOADED = 'DETAILS:DETAILS_LOADED';
 const DETAILS_SAVING = 'DETAILS:DETAILS_SAVING';
 
@@ -177,6 +178,16 @@ function mapUpdating(resourceId) {
     return {
         type: MAP_UPDATING,
         resourceId
+    };
+}
+/**
+ * Toggle editability of details for the current map
+ * @memberof actions.maps
+ * @return {action}            type `TOGGLE_DETAILS_EDITABILITY`
+ */
+function toggleDetailsEditability() {
+    return {
+        type: TOGGLE_DETAILS_EDITABILITY
     };
 }
 
@@ -403,6 +414,7 @@ function loadPermissions(mapId) {
             dispatch(permissionsLoaded(response, mapId));
             dispatch(updateCurrentMapPermissions(response));
         }).catch((e) => {
+            dispatch(permissionsLoaded(null, mapId));
             dispatch(loadError(e));
         });
     };
@@ -911,6 +923,7 @@ module.exports = {
     deleteMap, DELETE_MAP,
     detailsLoaded, DETAILS_LOADED,
     detailsSaving, DETAILS_SAVING,
+    toggleDetailsEditability, TOGGLE_DETAILS_EDITABILITY,
     metadataChanged,
     loadMaps,
     mapsLoading,

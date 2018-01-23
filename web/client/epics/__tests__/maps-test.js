@@ -182,7 +182,7 @@ describe('maps Epics', () => {
                         expect(action.property).toBe("enabled");
                         break;
                     case SHOW_NOTIFICATION:
-                        expect(action.message).toBe("errorFetchingDetailsOfMap ");
+                        expect(action.message).toBe("maps.feedback.errorFetchingDetailsOfMap");
                         break;
                     default:
                         expect(true).toBe(false);
@@ -194,7 +194,7 @@ describe('maps Epics', () => {
                 messages: {
                     maps: {
                         feedback: {
-                            errorFetchingDetailsOfMap: "errorFetchingDetailsOfMap "
+                            errorFetchingDetailsOfMap: "maps.feedback.errorFetchingDetailsOfMap"
                         }
                     }
                 }
@@ -261,7 +261,7 @@ describe('maps Epics', () => {
             actions.map((action) => {
                 switch (action.type) {
                     case SHOW_NOTIFICATION:
-                        expect(action.message).toBe("errorFetchingDetailsOfMap ");
+                        expect(action.message).toBe("maps.feedback.errorFetchingDetailsOfMap");
                         break;
                     default:
                         expect(true).toBe(false);
@@ -288,13 +288,13 @@ describe('maps Epics', () => {
                 switch (action.type) {
                     case SHOW_NOTIFICATION:
                         if (i === 1) {
-                            expect(action.message).toBe("errorDeletingDetailsOfMap name");
+                            expect(action.message).toBe("maps.feedback.errorDeletingDetailsOfMap");
                         }
                         if (i === 2) {
-                            expect(action.message).toBe("errorDeletingThumbnailOfMap name");
+                            expect(action.message).toBe("maps.feedback.errorDeletingThumbnailOfMap");
                         }
                         if (i === 3) {
-                            expect(action.message).toBe("errorDeletingMap name");
+                            expect(action.message).toBe("maps.feedback.errorDeletingMap");
                         }
                         break;
                     case MAP_DELETING:
@@ -330,7 +330,7 @@ describe('maps Epics', () => {
             actions.map((action) => {
                 switch (action.type) {
                     case SHOW_NOTIFICATION:
-                        expect(action.message).toBe("allResDeleted name");
+                        expect(action.message).toBe("maps.feedback.allResDeleted");
                         break;
                     case MAP_DELETING:
                         expect(action.resourceId).toBe(mapId8);
@@ -365,10 +365,10 @@ describe('maps Epics', () => {
                 switch (action.type) {
                     case SHOW_NOTIFICATION:
                         if (i === 1) {
-                            expect(action.message).toBe("errorDeletingDetailsOfMap name");
+                            expect(action.message).toBe("maps.feedback.errorDeletingDetailsOfMap");
                         }
                         if (i === 2) {
-                            expect(action.message).toBe("errorDeletingThumbnailOfMap name");
+                            expect(action.message).toBe("maps.feedback.errorDeletingThumbnailOfMap");
                         }
                         break;
                     case MAP_DELETING:
@@ -405,7 +405,7 @@ describe('maps Epics', () => {
             actions.filter(a => !!a.type).map((action) => {
                 switch (action.type) {
                     case SHOW_NOTIFICATION:
-                        expect(action.message).toBe("allResDeleted name");
+                        expect(action.message).toBe("maps.feedback.allResDeleted");
                         break;
                     case MAP_DELETING:
                         expect(action.resourceId).toBe(mapId8);

@@ -5,7 +5,6 @@ const {stripPrefix} = require('xml2js/lib/processors');
 const GeoStoreApi = require('../api/GeoStoreDAO');
 const {updatePermissions, updateAttribute, doNothing} = require('../actions/maps');
 const ConfigUtils = require('../utils/ConfigUtils');
-const LocaleUtils = require('../utils/LocaleUtils');
 const {basicSuccess, basicError} = require('../utils/NotificationUtils');
 
 class OGCError extends Error {
@@ -41,7 +40,7 @@ const getIdFromUri = (uri) => {
     const decodedUri = decodeURIComponent(uri);
     return /\d+/.test(decodedUri) ? decodedUri.match(/\d+/)[0] : null;
 };
-const createAssociatedResource = ({attribute, permissions, mapId, metadata, value, category, type, optionsRes, optionsAttr, messages} = {}) => {
+const createAssociatedResource = ({attribute, permissions, mapId, metadata, value, category, type, optionsRes, optionsAttr} = {}) => {
     return Rx.Observable.fromPromise(
             GeoStoreApi.createResource(metadata, value, category, optionsRes)
             .then(res => res.data))
@@ -54,30 +53,30 @@ const createAssociatedResource = ({attribute, permissions, mapId, metadata, valu
                 // UPDATE resource map with new attribute
                 actions.push(updateAttribute(mapId, attribute, encodedResourceUri, type, optionsAttr));
                 // display a success message
-                actions.push(basicSuccess({message: LocaleUtils.getMessageById(messages, "maps.feedback." + attribute + ".savedSuccesfully" ) }));
+                actions.push(basicSuccess({message: "maps.feedback." + attribute + ".savedSuccesfully" }));
                 return Rx.Observable.from(actions);
             })
         .catch(() => Rx.Observable.of(basicError({message: "maps.feedback.errorWhenSaving"})));
 };
 
-const updateAssociatedResource = ({permissions, resourceId, value, attribute, options, messages} = {}) => {
+const updateAssociatedResource = ({permissions, resourceId, value, attribute, options} = {}) => {
     return Rx.Observable.fromPromise(GeoStoreApi.putResource(resourceId, value, options)
             .then(res => res.data))
             .switchMap((id) => {
                 let actions = [];
-                actions.push(basicSuccess({ message: LocaleUtils.getMessageById(messages, "maps.feedback." + attribute + ".updatedSuccesfully" )}));
+                actions.push(basicSuccess({ message: "maps.feedback." + attribute + ".updatedSuccesfully"}));
                 actions.push(updatePermissions(id, permissions));
                 return Rx.Observable.from(actions);
             })
         .catch(() => Rx.Observable.of(basicError({message: "maps.feedback.errorWhenUpdating"})));
 };
-const deleteAssociatedResource = ({mapId, attribute, type, resourceId, options, messages} = {}) => {
+const deleteAssociatedResource = ({mapId, attribute, type, resourceId, options} = {}) => {
     return Rx.Observable.fromPromise(GeoStoreApi.deleteResource(resourceId, options)
             .then(res => res.status === 204))
             .switchMap((deleted) => {
                 let actions = [];
                 if (deleted) {
-                    actions.push(basicSuccess({ message: LocaleUtils.getMessageById(messages, "maps.feedback." + attribute + ".deletedSuccesfully" ) }));
+                    actions.push(basicSuccess({ message: "maps.feedback." + attribute + ".deletedSuccesfully" }));
                     actions.push(updateAttribute(mapId, attribute, "NODATA", type, options));
                     return Rx.Observable.from(actions);
                 }

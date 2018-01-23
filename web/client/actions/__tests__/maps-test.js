@@ -32,6 +32,7 @@ const {
     DISPLAY_METADATA_EDIT, onDisplayMetadataEdit,
     RESET_UPDATING, resetUpdating,
     THUMBNAIL_ERROR, thumbnailError,
+    TOGGLE_DETAILS_EDITABILITY, toggleDetailsEditability,
     MAPS_SEARCH_TEXT_CHANGED, mapsSearchTextChanged,
     MAPS_LIST_LOAD_ERROR, loadError,
     MAP_ERROR, mapError, updatePermissions,
@@ -243,6 +244,10 @@ describe('Test correctness of the maps actions', () => {
         const a = mapsSearchTextChanged("TEXT");
         expect(a.type).toBe(MAPS_SEARCH_TEXT_CHANGED);
         expect(a.text).toBe("TEXT");
+    });
+    it('toggleDetailsEditability', () => {
+        const a = toggleDetailsEditability();
+        expect(a.type).toBe(TOGGLE_DETAILS_EDITABILITY);
     });
     it('loadError', () => {
         const a = loadError();

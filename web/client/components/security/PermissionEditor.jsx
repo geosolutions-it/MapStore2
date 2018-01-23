@@ -179,13 +179,13 @@ class PermissionEditor extends React.Component {
                             key={"deleteButton" + index}
                             ref="deleteButton"
                             bsStyle="danger"
+                            disabled={this.props.disabled}
                             onClick={this.onChangePermission.bind(this, index, "delete")}><Glyphicon glyph="1-close"/></Button>
                     </td>
                 </tr>
             );
         });
     };
-
     render() {
         // Hack to convert map permissions to a simpler format, TODO: remove this
         if (this.props.map && this.props.map.permissions && this.props.map.permissions.SecurityRuleList && this.props.map.permissions.SecurityRuleList.SecurityRule) {
@@ -240,7 +240,7 @@ class PermissionEditor extends React.Component {
                             <td style={{width: "50px"}}>
                                 <Button
                                     ref="buttonAdd"
-                                    disabled={!(this.props.newGroup && this.props.newGroup.id && this.props.newGroup.id.toString()) || this.props.disabled}
+                                    disabled={this.props.disabled || !(this.props.newGroup && this.props.newGroup.id && this.props.newGroup.id.toString())}
                                     bsSize="small"
                                     bsStyle="success"
                                     onClick={this.onAddPermission} ><Glyphicon style={{fontSize: "22px"}} glyph="plus"/></Button>
@@ -252,6 +252,9 @@ class PermissionEditor extends React.Component {
         );
     }
 
+    disablePermission(a, b) {
+        return a || !b;
+    }
     isPermissionPresent = (group) => {
         return this.props.map && this.props.map.permissions && this.props.map.permissions.SecurityRuleList && this.props.map.permissions.SecurityRuleList.SecurityRule &&
             _.findIndex(this.props.map.permissions.SecurityRuleList.SecurityRule, (o) => o.group && o.group.groupName === group) >= 0;

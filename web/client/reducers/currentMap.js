@@ -38,7 +38,8 @@ const {
     SET_DETAILS_CHANGED,
     SET_UNSAVED_CHANGES,
     METADATA_CHANGED,
-    DETAILS_SAVING
+    DETAILS_SAVING,
+    TOGGLE_DETAILS_EDITABILITY
 } = require('../actions/maps');
 
 const assign = require('object-assign');
@@ -58,6 +59,11 @@ function currentMap(state = {}, action) {
             },
             hideGroupProperties: false,
             detailsSheetReadOnly: true });
+    }
+    case TOGGLE_DETAILS_EDITABILITY: {
+        return assign({}, state, {
+            editDetailsDisabled: !state.editDetailsDisabled
+        });
     }
     case UPDATE_CURRENT_MAP: {
         return assign({}, state, {

@@ -53,6 +53,7 @@ class MetadataModal extends React.Component {
         map: PropTypes.object,
         style: PropTypes.object,
         fluid: PropTypes.bool,
+        modalSize: PropTypes.string,
         // I18N
         errorImage: PropTypes.oneOfType([PropTypes.string, PropTypes.element]),
         errorMessages: PropTypes.object,
@@ -80,6 +81,7 @@ class MetadataModal extends React.Component {
 
     static defaultProps = {
         id: "MetadataModal",
+        modalSize: "",
         loadPermissions: () => {},
         loadAvailableGroups: () => {},
         onSave: ()=> {},
@@ -313,7 +315,7 @@ class MetadataModal extends React.Component {
                                             }, {
                                                 glyph: 'pencil',
                                                 tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.edit"),
-                                                visible: !!this.props.map.detailsText,
+                                                visible: !!this.props.map.detailsText && !this.props.map.editDetailsDisabled,
                                                 onClick: () => {
                                                     this.props.detailsSheetActions.onToggleDetailsSheet(false);
                                                     if (this.props.map.detailsText) {
@@ -352,7 +354,7 @@ class MetadataModal extends React.Component {
             }
             return (
                 <PermissionEditor
-                    disabled={this.props.map.saving}
+                    disabled={!!this.props.map.saving}
                     map={this.props.map}
                     user={this.props.user}
                     availablePermissions ={this.props.availablePermissions}
@@ -386,6 +388,7 @@ class MetadataModal extends React.Component {
         return (<Portal>
             <ResizableModal
             id={this.props.id}
+            size={this.props.modalSize}
             title={LocaleUtils.getMessageById(this.context.messages, "manager.editMapMetadata") }
             show={this.props.show && !this.props.map.showDetailEditor && !this.props.map.showUnsavedChanges}
             clickOutEnabled

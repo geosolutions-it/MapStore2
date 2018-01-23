@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -9,7 +9,6 @@
 const Rx = require('rxjs');
 const uuidv1 = require('uuid/v1');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
-const LocaleUtils = require('../utils/LocaleUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
 const { MAP_INFO_LOADED } = require('../actions/config');
 
@@ -18,7 +17,7 @@ const {
     DELETE_MAP, OPEN_DETAILS_PANEL,
     CLOSE_DETAILS_PANEL,
     setDetailsChanged, updateDetails,
-    mapDeleting, mapDeleted, loadMaps,
+    mapDeleting, toggleDetailsEditability, mapDeleted, loadMaps,
     doNothing, detailsLoaded, detailsSaving, onDisplayMetadataEdit,
     RESET_UPDATING, resetUpdating, toggleDetailsSheet
 } = require('../actions/maps');
@@ -29,7 +28,7 @@ const {closeFeatureGrid} = require('../actions/featuregrid');
 const {toggleControl} = require('../actions/controls');
 const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
-    mapDetailsUriFromIdSelector, isMapsLastPageSelector, mapNameSelector
+    mapDetailsUriFromIdSelector, isMapsLastPageSelector
 } = require('../selectors/maps');
 const {
     mapIdSelector, mapInfoDetailsUriFromIdSelector
@@ -39,9 +38,6 @@ const {
     currentMapDetailsUriSelector, currentMapSelector,
     currentMapDetailsChangedSelector, currentMapOriginalDetailsTextSelector
 } = require('../selectors/currentmap');
-const {
-    currentMessagesSelector
-} = require('../selectors/locale');
 
 const {userParamsSelector} = require('../selectors/security');
 const {manageMapResource, deleteResourceById, getIdFromUri} = require('../utils/ObservableUtils');
@@ -88,8 +84,7 @@ const saveResourceDetailsEpic = (action$, store) =>
             attribute: "details",
             map: currentMapSelector(state),
             resource: null,
-            type: "STRING",
-            messages: currentMessagesSelector(state)
+            type: "STRING"
         };
         if (!detailsChanged) {
             return Rx.Observable.of(doNothing());
@@ -119,9 +114,8 @@ const fetchDetailsFromResourceEpic = (action$, store) =>
     action$.ofType(EDIT_MAP)
     .switchMap(() => {
         const state = store.getState();
+        const mapId = currentMapIdSelector(state);
         const detailsUri = currentMapDetailsUriSelector(state);
-        const mapId = mapIdSelector(state);
-        const name = mapNameSelector(state, mapId);
         if (!detailsUri || detailsUri === "NODATA") {
             return Rx.Observable.of(
                 updateDetails("", true, "")
@@ -135,8 +129,10 @@ const fetchDetailsFromResourceEpic = (action$, store) =>
                     updateDetails(details, true, details)
                 );
             }).catch(() => {
-                return Rx.Observable.of(basicError({
-                    message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorFetchingDetailsOfMap") + name}));
+                return Rx.Observable.of(
+                    basicError({ message: "maps.feedback.errorFetchingDetailsOfMap"}),
+                    updateDetails("NO DETAILS AVAILABLE", true, "NO DETAILS AVAILABLE"),
+                    toggleDetailsEditability(mapId));
             });
     });
 
@@ -147,7 +143,6 @@ const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
         const mapId = action.resourceId;
         const options = action.options;
         const detailsUri = mapDetailsUriFromIdSelector(state, mapId);
-        const name = mapNameSelector(state, mapId);
         const thumbnailUri = mapThumbnailsUriFromIdSelector(state, mapId);
         const detailsId = getIdFromUri(detailsUri);
         const thumbnailsId = getIdFromUri(thumbnailUri);
@@ -162,13 +157,13 @@ const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
         ).concatMap(([details, thumbnail, map]) => {
             let actions = [];
             if (details.resType === "error") {
-                actions.push(basicError({message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorDeletingDetailsOfMap") + name }));
+                actions.push(basicError({message: "maps.feedback.errorDeletingDetailsOfMap"}));
             }
             if (thumbnail.resType === "error") {
-                actions.push(basicError({message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorDeletingThumbnailOfMap") + name }));
+                actions.push(basicError({message: "maps.feedback.errorDeletingThumbnailOfMap"}));
             }
             if (map.resType === "error") {
-                actions.push(basicError({message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorDeletingMap") + name }));
+                actions.push(basicError({message: "maps.feedback.errorDeletingMap"}));
                 actions.push(mapDeleted(mapId, "failure", map.error));
             }
             if (map.resType === "success") {
@@ -178,7 +173,7 @@ const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
                 }
             }
             if (map.resType === "success" && details.resType === "success" && thumbnail.resType === "success") {
-                actions.push(basicSuccess({ message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.allResDeleted") + name }));
+                actions.push(basicSuccess({ message: "maps.feedback.allResDeleted"}));
 
             }
             return Rx.Observable.from(actions);
@@ -189,8 +184,6 @@ const fetchDataForDetailsPanel = (action$, store) =>
     action$.ofType(OPEN_DETAILS_PANEL)
     .switchMap(() => {
         const state = store.getState();
-        const mapId = mapIdSelector(state);
-        const name = mapNameSelector(state, mapId);
         const detailsUri = mapInfoDetailsUriFromIdSelector(state);
         const detailsId = getIdFromUri(detailsUri);
         return Rx.Observable.fromPromise(GeoStoreApi.getData(detailsId)
@@ -204,7 +197,7 @@ const fetchDataForDetailsPanel = (action$, store) =>
             }).startWith(toggleControl("details", "enabled"))
             .catch(() => {
                 return Rx.Observable.of(basicError({
-                    message: LocaleUtils.getMessageById(state.locale.messages, "maps.feedback.errorFetchingDetailsOfMap") + name}));
+                    message: "maps.feedback.errorFetchingDetailsOfMap"}));
             });
     });
 

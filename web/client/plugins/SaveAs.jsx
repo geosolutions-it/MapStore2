@@ -119,6 +119,7 @@ class SaveAs extends React.Component {
                 metadata={this.props.metadata}
                 displayPermissionEditor={false}
                 showDetailsRow={false}
+                modalSize="sm"
                 show={this.props.currentMap.displayMetadataEdit}
                 onEdit={this.props.editMap}
                 onUpdateCurrentMap={this.props.onUpdateCurrentMap}
