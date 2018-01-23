@@ -72,8 +72,7 @@ class StandardRouter extends React.Component {
                         </ConnectedRouter>
                     </Localized>) :
                         (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
-                        <div className="_ms2_init_text _ms2_init_center">Loading</div></span>
-                    )}
+                        <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>)}
                 </Theme>
                 <Debug/>
             </div>

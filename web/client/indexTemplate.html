@@ -6,32 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no">
     <title>MapStore 2 HomePage</title>
     <style>
+    body {
+      margin: 0;
+    }
     ._ms2_init_center {
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        overflow: show;
-        margin: auto;
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+      overflow: show;
+      margin: auto;
+      display: flex;
+      align-items: center;
     }
     ._ms2_init_spinner {
-        height: 4em;
-        width: 4em;
+      height: 176px;
+      width: 176px;
     }
     ._ms2_init_spinner > div,
     ._ms2_init_spinner > div:after {
       border-radius: 50%;
-      width: 10em;
-      height: 10em;
+      width: 176px;
+      height: 176px;
     }
     ._ms2_init_spinner > div {
-      margin: -3em -4em;
-      font-size: 16px;
-      position: relative;
+      box-sizing: border-box;
       text-indent: -9999em;
-      border: 1.1em solid rgba(119,119,119, 0.2);
-      border-left: 1.1em solid #777777;
+      border: 16px solid rgba(119,119,119, 0.2);
+      border-left: 16px solid #777777;
       -webkit-transform: translateZ(0);
       -ms-transform: translateZ(0);
       transform: translateZ(0);
@@ -59,24 +62,24 @@
       }
     }
     ._ms2_init_text {
-        -webkit-animation: _ms2_init_text_anim 2s linear 0s infinite normal;
-        animation: _ms2_init_text_anim 2s linear 0s infinite normal;
-        color: #6F6F6f;
-        font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
-        font-size: 20px;
-        font-weight: bold;
-        height: 0.75em;
-        width:  6em;
-        text-align: center;
-        margin: auto;
-        z-index: 1000;
+      -webkit-animation: _ms2_init_text_anim 2s linear 0s infinite normal;
+      animation: _ms2_init_text_anim 2s linear 0s infinite normal;
+      color: #6F6F6f;
+      font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+      font-size: 20px;
+      font-weight: bold;
+      height: 0.75em;
+      width:  6em;
+      text-align: center;
+      margin: auto;
+      z-index: 1000;
     }
     @keyframes _ms2_init_text_anim {
-        0%  {opacity: 0}
-        20% {opacity: 0}
-        50% {opacity: 1}
-        70% {opacity: .75}
-        100%{opacity: 0}
+      0%  {opacity: 0}
+      20% {opacity: 0}
+      50% {opacity: 1}
+      70% {opacity: .75}
+      100%{opacity: 0}
     }
     </style>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway" type='text/css'>
