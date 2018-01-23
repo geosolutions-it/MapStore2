@@ -203,12 +203,13 @@
         "newMap": "New Map",
 		"maps": {
             "feedback": {
+                "noDetailsAvailable": "Details not available",
                 "successSavedMap": "The map has been created correctly",
-                "errorDeletingMap": "Error when deleting this map with id: ",
-                "errorDeletingThumbnailOfMap": "Error when deleting thumbnail for the map with id: ",
-                "errorDeletingDetailsOfMap": "Error when deleting details for the map with id: ",
-                "allResDeleted": "Have been deleted successfully all resources associated with this map: ",
-                "errorFetchingDetailsOfMap": "Error when fetching details for the map with id: ",
+                "errorDeletingMap": "Error when deleting this map",
+                "errorDeletingThumbnailOfMap": "Error when deleting thumbnail for this map",
+                "errorDeletingDetailsOfMap": "Error when deleting details for this map",
+                "allResDeleted": "All resources associated with this map have been deleted successfully",
+                "errorFetchingDetailsOfMap": "Error when fetching details for this map",
                 "details": {
                     "deletedSuccesfully": "The details have been removed correctly",
                     "savedSuccesfully": "The details have been saved correctly",

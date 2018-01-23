@@ -204,12 +204,13 @@
         "newMap": "Nouvelle carte",
 		"maps": {
             "feedback": {
+                "noDetailsAvailable": "Détails de la carte non disponibles",
                 "successSavedMap": "La carte a été créée correctement",
-                "errorDeletingMap": "Erreur lors de la suppression de cette carte avec l'ID: ",
-                "errorDeletingThumbnailOfMap": "Erreur lors de la suppression de la vignette de la carte avec l'ID: ",
-                "errorDeletingDetailsOfMap": "Erreur lors de la suppression des détails de la carte avec l'ID: ",
-                "allResDeleted": "Ont été supprimées avec succès toutes les ressources associées à cette carte: ",
-                "errorFetchingDetailsOfMap": "Erreur lors de la récupération des détails de la carte avec l'ID: ",
+                "errorDeletingMap": "Erreur lors de la suppression de cette carte",
+                "errorDeletingThumbnailOfMap": "Erreur lors de la suppression de la vignette pour cette carte",
+                "errorDeletingDetailsOfMap": "Erreur lors de la suppression des détails de cette carte",
+                "allResDeleted": "Toutes les ressources associées à cette carte ont été supprimées avec succès",
+                "errorFetchingDetailsOfMap": "Erreur lors de l'extraction des détails de cette carte",
                 "details": {
                     "deletedSuccesfully": "Les détails ont été supprimés correctement",
                     "savedSuccesfully": "Les détails ont été supprimés correctement",

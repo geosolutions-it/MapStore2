@@ -203,12 +203,13 @@
         "newMap": "Nuova Mappa",
 		"maps": {
             "feedback": {
+                "noDetailsAvailable": "Dettagli della mappa non disponibili",
                 "successSavedMap": "La mappa è stata salvata correttamente",
-                "errorDeletingMap": "Errore durante l'eliminazione della mappa con id: ",
-                "errorDeletingThumbnailOfMap": "Errore durante l'eliminazione dell'anteprima della mappa con id: ",
-                "errorDeletingDetailsOfMap": "Errore durante l'eliminazione dei dettagli della mappa con id: ",
-                "allResDeleted": "Sono state eliminate tutte le risorse associate a questa mappa: ",
-                "errorFetchingDetailsOfMap": "Errore durante il recupero dei dettagli della mappa con id: ",
+                "errorDeletingMap": "Errore durante l'eliminazione di questa mappa",
+                "errorDeletingThumbnailOfMap": "Errore durante l'eliminazione dell'anteprima di questa mappa",
+                "errorDeletingDetailsOfMap": "Errore durante l'eliminazione dei dettagli di questa mappa",
+                "allResDeleted": "Sono state eliminate tutte le risorse associate a questa mappa",
+                "errorFetchingDetailsOfMap": "Errore durante il recupero dei dettagli di questa mappa",
                 "details": {
                     "deletedSuccesfully": "I dettagli sono stati eliminati correttamente",
                     "savedSuccesfully": "I dettagli sono stati salvati correttamente",
