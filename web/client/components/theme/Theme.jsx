@@ -37,8 +37,14 @@ const handleStateChangeOnClient = (themeCfg) => {
             link.setAttribute("rel", "stylesheet");
             link.setAttribute("id", themeCfg.themeElement);
             document.head.insertBefore(link, document.head.firstChild);
-            const basePath = link.href && link.href.substring(0, link.href.lastIndexOf("/")) || themeCfg.path;
-            link.setAttribute('href', basePath + "/" + themeCfg.theme + ".css" + themeCfg.version);
+        }
+        const basePath = link.href && link.href.substring(0, link.href.lastIndexOf("/")) || themeCfg.path;
+        const currentPath = link.href && link.href.substring(link.href.lastIndexOf("/"), link.href.length) || '';
+        const newPath = "/" + themeCfg.theme + ".css" + themeCfg.version;
+        if (currentPath !== newPath) {
+            link.setAttribute('href', basePath + newPath);
+        } else if (currentPath === newPath && themeCfg.onLoad && !link.onload) {
+            themeCfg.onLoad();
         }
 
         if (themeCfg.onLoad && !link.onload) {
@@ -46,6 +52,7 @@ const handleStateChangeOnClient = (themeCfg) => {
                 themeCfg.onLoad();
             };
         }
+
         const prefixContainer = themeCfg.prefixContainer;
         const prefix = themeCfg.prefix;
 

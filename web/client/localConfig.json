@@ -10,7 +10,7 @@
     "initialMapFilter": "",
     "ignoreMobileCss": false,
     "useAuthenticationRules": true,
-    "loadAfterTheme": false,
+    "loadAfterTheme": true,
     "defaultMapOptions": {
       "cesium": {
           "flyTo": true,
