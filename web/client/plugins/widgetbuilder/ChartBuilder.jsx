@@ -9,7 +9,6 @@
 const React = require('react');
 const {connect} = require('react-redux');
 
-
 const {compose, renameProps, branch, renderComponent} = require('recompose');
 
 const BorderLayout = require('../../components/layout/BorderLayout');
@@ -20,8 +19,7 @@ const builderConfiguration = require('../../components/widgets/enhancers/builder
 
 const {
     wizardStateToProps,
-    wizardSelector,
-    getDashboardLayer
+    wizardSelector
 } = require('./commons');
 
 const Builder = connect(
@@ -52,15 +50,15 @@ const Toolbar = connect(wizardSelector, {
 
 /*
  * in case you don't have a layer selected (e.g. dashboard) the chartbuilder
- * prompt a catalog view to allow layer selection
+ * prompts a catalog view to allow layer selection
  */
 const chooseLayerEhnancer = compose(
-    connect(getDashboardLayer),
+    connect(wizardSelector),
     branch(
         ({layer} = {}) => !layer,
-        renderComponent(require('./LayerSelector')
+            renderComponent(require('./LayerSelector'))
     )
-));
+);
 
 module.exports = chooseLayerEhnancer(({enabled, onClose = () => {}} = {}) =>
 

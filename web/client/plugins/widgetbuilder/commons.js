@@ -31,9 +31,11 @@ const wizardSelector = createSelector(
          dependencies
      })
  );
-const getDashboardLayer = createSelector(getEditingWidget, ({layer}) => ({layer}));
+const dashboardSelector = createSelector(getEditingWidget, ({layer}) => ({layer}));
+
 module.exports = {
-    getDashboardLayer,
+    getWidgetLayer,
+    dashboardSelector,
     wizardStateToProps,
     wizardSelector
 };

@@ -2,6 +2,7 @@ const {get, isEqualWith} = require('lodash');
 const {mapSelector} = require('./map');
 const {getSelectedLayer} = require('./layers');
 const {DEFAULT_TARGET} = require('../actions/widgets');
+const {isDashboardAvailable, isDashboardEditing} = require('./dashboard');
 const {defaultMemoize, createSelector, createSelectorCreator} = require('reselect');
 
 const isShallowEqual = (el1, el2) => {
@@ -19,6 +20,13 @@ const getEditorSettings = state => get(state, "widgets.builder.settings");
 const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
 const getDependenciesKeys = s => Object.keys(getDependenciesMap(s)).map(k => getDependenciesMap(s)[k]);
 const getEditingWidget = state => get(state, "widgets.builder.editor");
+const getWidgetLayer = createSelector(
+    getEditingWidget,
+    getSelectedLayer,
+    state => isDashboardAvailable(state) && isDashboardEditing(state),
+    ({layer} = {}, selectedLayer, dashboardEditing) => layer || !dashboardEditing && selectedLayer
+);
+
 module.exports = {
     getFloatingWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
     getFloatingWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
@@ -28,11 +36,7 @@ module.exports = {
     getEditingWidgetLayer: state => get(getEditingWidget(state), "layer"),
     getEditingWidgetFilter: state => get(getEditingWidget(state), "filter"),
     getEditorSettings,
-    getWidgetLayer: createSelector(
-        getEditingWidget,
-        getSelectedLayer,
-        ({layer} = {}, selectedLayer) => layer || selectedLayer
-    ),
+    getWidgetLayer,
     dependenciesSelector: createShallowSelector(
         getDependenciesMap,
         getDependenciesKeys,

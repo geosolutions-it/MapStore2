@@ -7,21 +7,19 @@
  */
 
 const React = require('react');
-const Dock = require('react-dock').default;
-const {createSelector} = require('reselect');
-const {connect} = require('react-redux');
-const {widgetBuilderSelector} = require('../selectors/controls');
+const PropTypes = require('prop-types');
 
+const Dock = require('react-dock').default;
+
+const {connect} = require('react-redux');
+const {createSelector} = require('reselect');
 
 const {setControlProperty} = require('../actions/controls');
 
-const PropTypes = require('prop-types');
-
-
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+const {widgetBuilderSelector} = require('../selectors/controls');
 
 const Builder = require('./widgetbuilder/WidgetTypeBuilder');
-
 
 class SideBarComponent extends React.Component {
      static propTypes = {

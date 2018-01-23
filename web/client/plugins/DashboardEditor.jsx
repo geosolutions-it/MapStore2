@@ -12,9 +12,10 @@ const {createSelector} = require('reselect');
 const {connect} = require('react-redux');
 const PropTypes = require('prop-types');
 
-const {editingSelector} = require('../selectors/dashboard');
+const {isDashboardEditing} = require('../selectors/dashboard');
+const {dashboardSelector} = require('./widgetbuilder/commons');
 
-const Builder = require('./widgetbuilder/WidgetTypeBuilder');
+const Builder = connect(dashboardSelector)(require('./widgetbuilder/WidgetTypeBuilder'));
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const {createWidget} = require('../actions/widgets');
 
@@ -81,7 +82,7 @@ class DashboardEditorComponent extends React.Component {
 
 const Plugin = connect(
     createSelector(
-        editingSelector,
+        isDashboardEditing,
         editing => ({editing})
     ), {
         setEditing,

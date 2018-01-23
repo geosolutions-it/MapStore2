@@ -25,7 +25,7 @@ const {
     QUERY_FORM_SEARCH
 } = require('../actions/queryform');
 const {
-    editingSelector: isEditing,
+    isDashboardEditing,
     isDashboardAvailable = () => true
 } = require('../selectors/dashboard');
 const {
@@ -54,7 +54,7 @@ module.exports = {
         }, {step: 0}))),
     closeDashboardEditorOnExit: (action$, {getState = () => {}} = {}) => action$.ofType(LOCATION_CHANGE)
         .filter( () => isDashboardAvailable(getState()))
-        .filter( () => isEditing(getState()) )
+        .filter( () => isDashboardEditing(getState()) )
         .switchMap(() => Rx.Observable.of(setEditing(false))),
      /**
       * Manages interaction with QueryPanel and Dashboard
