@@ -38,9 +38,16 @@ const Dock = connect(createSelector(
   * @class
   * @prop {object} cfg.customEditorsOptions Set of options used to connect the custom editors to the featuregrid
   * @prop {object} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode
+  * @prop {boolean} cfg.virtualScroll defualt true. When false the grid uses paging mechanism otherwise virtual scroll is enabled
+  * @prop {number} cfg.maxStoredPages default 5. In virtual Scroll mode determines the size of the loaded pages cache
+  * @prop {number} cfg.vsOverScan default 20. Number of rows to load above/below the visible slice of the grid
+  * @prop {number} cfg.scrollDebounce default 50. In milliseconds the debounce interval between two scroll event
   * @classdesc
-  * FeatureEditor Plugin Provides functionalities to browse/edit data via WFS. It can be configured passing custom editors
-  * <br/>Rules are applied in order and the first rule that match the regex wins.
+  * FeatureEditor Plugin Provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
+  * <br/>virtual scroll mechanisms. By defualt virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
+  * <br/>sets the size of loaded pages cache, while vsOverscan and scrollDebounce parmas determine the behavior of grid scrolling
+  * <br/>and of row loading.
+  * <br/>Furthermore it can be configured passing custom editors. Rules are applied in order and the first rule that match the regex wins
   * <br/>That means that for those conditions it is used the custom editor specified in the editor param.
   * <br/>All the conditions inside a rule must match to apply the editor.
   * <br/>If no rule is applied then it will be used the default editor based on the dataType of that column.

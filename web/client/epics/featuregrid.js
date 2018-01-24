@@ -53,7 +53,7 @@ const {getLayerFromId} = require('../selectors/layers');
 
 const {interceptOGCError} = require('../utils/ObservableUtils');
 
-const {gridUpdateToQueryUpdate, getIdxFarhestEl, removePageFeatures, removePage} = require('../utils/FeatureGridUtils');
+const {gridUpdateToQueryUpdate, getIdxFarthestEl, removePageFeatures, removePage} = require('../utils/FeatureGridUtils');
 
 const {queryFormUiStateSelector} = require('../selectors/queryform');
 /**
@@ -705,12 +705,12 @@ module.exports = {
                         if ( nSpaces > 0) {
                             const firstRow = startPage * size;
                             const lastRow = endPage * size;
-                            // Remove the farhest page from last loaded pages
+                            // Remove the farthest page from last loaded pages
                             const averageIdx = firstRow + (lastRow - firstRow) / 2;
                             for (let i = 0; i < nSpaces; i++) {
-                                const idxFarhestEl = getIdxFarhestEl(averageIdx, pages, firstRow, lastRow);
-                                const idxToRemove = idxFarhestEl * size;
-                                oldPages = removePage(idxFarhestEl, oldPages);
+                                const idxFarthestEl = getIdxFarthestEl(averageIdx, pages, firstRow, lastRow);
+                                const idxToRemove = idxFarthestEl * size;
+                                oldPages = removePage(idxFarthestEl, oldPages);
                                 features = removePageFeatures(features, idxToRemove, size);
                             }
                         }

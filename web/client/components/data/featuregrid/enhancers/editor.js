@@ -13,7 +13,7 @@ const {getRowIdx} = require('../../../../utils/FeatureGridUtils');
 const loadMoreFeaturesStream = $props => {
     return $props
         .distinctUntilChanged(({features: oF, pages: oPages, isFocused: oFocused}, {features: nF, pages: nPages, isFocused: nFocused}) => oF === nF && oFocused === nFocused && oPages === nPages)
-        .switchMap(({size, pageEvents, isFocused, pages, pagination, vsOverScan = 10, scrollDebounce = 200, onGridScroll$}) => {
+        .switchMap(({size, pageEvents, isFocused, pages, pagination, vsOverScan = 20, scrollDebounce = 50, onGridScroll$}) => {
             return onGridScroll$
                 .debounceTime(scrollDebounce)
                 .filter(() => !isFocused)
@@ -56,7 +56,8 @@ const featuresToGrid = compose(
         changes: {},
         focusOnEdit: true,
         editors,
-        dataStreamFactory
+        dataStreamFactory,
+        virtualScroll: true
     }),
     withPropsOnChange("showDragHandle", ({showDragHandle = false} = {}) => ({
         className: showDragHandle ? 'feature-grid-drag-handle-show' : 'feature-grid-drag-handle-hide'
@@ -115,7 +116,7 @@ const featuresToGrid = compose(
         props => ({
             columns: getToolColumns(props.tools, props.rowGetter, props.describeFeatureType, props.actionOpts)
                 .concat(featureTypeToGridColumns(props.describeFeatureType, props.columnSettings, {
-                    editable: props.mode === "EDIT", // TODO REMEMBER TO REMOVE IT'S just to test editing
+                    editable: props.mode === "EDIT",
                     sortable: !props.isFocused
                 }, {
                     getEditor: (desc) => {

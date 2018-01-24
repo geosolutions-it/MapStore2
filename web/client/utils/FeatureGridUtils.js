@@ -177,9 +177,9 @@ module.exports = {
         }
         return [firstMissingPage, lastMissingPage].filter(p => p !== undefined);
     },
-    getIdxFarhestEl: (startIdx, pages = [], firstRow, lastRow) => {
+    getIdxFarthestEl: (startIdx, pages = [], firstRow, lastRow) => {
         return pages.map(val => firstRow <= val && val <= lastRow ? 0 : Math.abs(val - startIdx)).reduce((i, distance, idx, vals) => distance > vals[i] && idx || i, 0);
     },
-    removePage: (idxFarhestEl, pages) => pages.filter( (el, i) => i !== idxFarhestEl),
+    removePage: (idxFarthestEl, pages) => pages.filter( (el, i) => i !== idxFarthestEl),
     removePageFeatures: (features, idxToRemove, size) => features.filter((el, i) => i < idxToRemove || i >= idxToRemove + size)
 };

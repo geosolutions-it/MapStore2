@@ -13,6 +13,10 @@ class DataGrid extends Grid {
     static propTypes = {
         displayFilters: PropTypes.bool
     }
+    constructor(props) {
+        super(props);
+        this.handleSort = this._handleSort.bind(this);
+    }
     componentDidMount() {
         this.setCanvasListner();
         if (this.props.displayFilters) {
@@ -51,6 +55,12 @@ class DataGrid extends Grid {
             if (!this.props.isFocused && this.canvas) {
                 this.scroll = this.canvas.scrollTop;
             }
+        }
+    }
+    _handleSort(columnKey, direction) {
+        super.handleSort(columnKey, direction);
+        if (this.canvas) {
+            this.canvas.scrollTop = 0;
         }
     }
     scrollListener = () => {
