@@ -181,11 +181,12 @@ describe('Test Feature', () => {
                  container={container}
                  featuresCrs={"EPSG:4326"}
                  crs={"EPSG:4326"}
+                 style={{}}
                  />, document.getElementById("container"));
 
         style = layer._feature[0].getStyle();
-        expect(style).toNotExist();
-
+        expect(style).toExist();
+        // change geometry
         layer = ReactDOM.render(
             <Feature type="vector"
                  options={options}
@@ -198,9 +199,108 @@ describe('Test Feature', () => {
                  crs={"EPSG:4326"}
                  style={{}}
                  />, document.getElementById("container"));
+        const count = container.getSource().getFeatures().length;
+        expect(count).toBe(1);
+    });
+    it('updating a feature with no msId', () => {
+        var options = {
+            crs: 'EPSG:4326',
+            features: {
+                type: 'FeatureCollection',
+                crs: {
+                    'type': 'name',
+                    'properties': {
+                        'name': 'EPSG:4326'
+                    }
+                },
+                features: [
+                    {
+                        type: 'Feature',
+                        geometry: {
+                            type: 'Polygon',
+                            coordinates: [[
+                              [13, 43],
+                              [15, 43],
+                              [15, 44],
+                              [13, 44]
+                            ]]
+                        },
+                        properties: {
+                            'name': "some name"
+                        }
+                    }
+                ]
+            }
+        };
+        const source = new ol.source.Vector({
+            features: []
+        });
+        let container = new ol.layer.Vector({
+            source: source,
+            visible: true,
+            zIndex: 1
+        });
+        const geometry = options.features.features[0].geometry;
+        const type = options.features.features[0].type;
+        const properties = options.features.features[0].properties;
+
+        // create layers
+        let layer = ReactDOM.render(
+            <Feature type="vector"
+                 options={options}
+                 geometry={geometry}
+                 type={type}
+                 properties={properties}
+                 container={container}
+                 featuresCrs={"EPSG:4326"}
+                 crs={"EPSG:4326"}
+                 />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        // count layers
+        expect(container.getSource().getFeatures().length === 1 );
+
+        let style = layer._feature[0].getStyle();
+        expect(style).toNotExist();
+
+        options.features.features[0].properties.name = 'other name';
+        const newGeometry = {
+            ...geometry,
+            coordinates: [ [0, 0],
+            [0, 1],
+            [1, 1],
+            [1, 1]]
+        };
+        layer = ReactDOM.render(
+            <Feature type="vector"
+                 options={options}
+                 geometry={newGeometry}
+                 type={type}
+                 properties={properties}
+                 container={container}
+                 featuresCrs={"EPSG:4326"}
+                 crs={"EPSG:4326"}
+                 />, document.getElementById("container"));
+
+        style = layer._feature[0].getStyle();
+        expect(style).toNotExist();
+
+        layer = ReactDOM.render(
+            <Feature type="vector"
+                 options={options}
+                 geometry={geometry}
+                 type={type}
+                 properties={properties}
+                 container={container}
+                 featuresCrs={"EPSG:4326"}
+                 crs={"EPSG:4326"}
+                 style={{}}
+                 />, document.getElementById("container"));
 
         style = layer._feature[0].getStyle();
         expect(style).toExist();
+        const count = container.getSource().getFeatures().length;
+        expect(count).toBe(1);
     });
 
     it('adding a feature with geom type GeometryCollections to a vector layer', () => {
