@@ -673,7 +673,7 @@ module.exports = {
                         return Rx.Observable.of(addFilterToWMSLayer(layerId, filter));
                     });
             }),
-    virtualScrolLoadFeatures: (action$, {getState}) =>
+    virtualScrollLoadFeatures: (action$, {getState}) =>
         action$.ofType(LOAD_MORE_FEATURES)
         .filter(() => !featureLoadingSelector(getState()))
         .switchMap( ac => {

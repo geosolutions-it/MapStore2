@@ -27,6 +27,7 @@ const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery')
 
 const {setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeRightPanelOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing, syncMapWmsFilter, onOpenAdvancedSearch, virtualScrolLoadFeatures} = require('../featuregrid');
 
+
 const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
 const {isEmpty, isNil} = require('lodash');
 const filterObj = {
@@ -1456,7 +1457,7 @@ describe('featuregrid Epics', () => {
             done();
         }, newState);
     });
-    it('test virtualScrolLoadFeatures to dispatch query action', (done) => {
+    it('test virtualScrollLoadFeatures to dispatch query action', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
                 open: true,
@@ -1473,7 +1474,7 @@ describe('featuregrid Epics', () => {
         };
 
         const newState = assign({}, state, stateFeaturegrid);
-        testEpic(virtualScrolLoadFeatures, 1, [moreFeatures({startPage: 0, endPage: 2})], actions => {
+        testEpic(virtualScrollLoadFeatures, 1, [moreFeatures({startPage: 0, endPage: 2})], actions => {
 
             expect(actions.length).toBe(1);
             actions.map((action) => {
@@ -1489,7 +1490,7 @@ describe('featuregrid Epics', () => {
             done();
         }, newState);
     });
-    it('test virtualScrolLoadFeatures to emit GRID_QUERY_RESULT on query success', (done) => {
+    it('test virtualScrollLoadFeatures to emit GRID_QUERY_RESULT on query success', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
                 open: true,
@@ -1506,7 +1507,7 @@ describe('featuregrid Epics', () => {
             }
         };
         const newState = assign({}, state, stateFeaturegrid);
-        testEpic(virtualScrolLoadFeatures, 2, [moreFeatures({startPage: 0, endPage: 2}), querySearchResponse({features: Array(30)}, " ", {pagination: {startIndex: 0, maxFeatures: 30}})], actions => {
+        testEpic(virtualScrollLoadFeatures, 2, [moreFeatures({startPage: 0, endPage: 2}), querySearchResponse({features: Array(30)}, " ", {pagination: {startIndex: 0, maxFeatures: 30}})], actions => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
                 switch (action.type) {
