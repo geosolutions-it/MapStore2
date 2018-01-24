@@ -20,6 +20,7 @@ const {Grid, Row, Col} = require('react-bootstrap');
 const {isNil} = require('lodash');
 const Message = require('../../I18N/Message');
 const Toolbar = require('../../misc/toolbar/Toolbar');
+const {NO_DETAILS_AVAILABLE} = require('../../../actions/maps');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 
 
@@ -200,7 +201,7 @@ class MetadataModal extends React.Component {
                         onClose={() => {
                             this.props.onResetCurrentMap();
                         }}
-                        title={LocaleUtils.getMessageById(this.context.messages, "map.details.title") + ' - ' + this.props.map.name}
+                        title={<Message msgId="map.details.title" msgParams={{name: this.props.map.name }}/>}
                         show
                         >
                         <div className="ms-detail-body">
@@ -209,7 +210,7 @@ class MetadataModal extends React.Component {
                     </ResizableModal>
                 ) : (<ResizableModal
                     show={!!this.props.map.showDetailEditor}
-                    title={LocaleUtils.getMessageById(this.context.messages, "map.details.title") + ' - ' + this.props.map.name}
+                    title={<Message msgId="map.details.title" msgParams={{name: this.props.map.name }}/>}
                     bodyClassName="ms-modal-quill-container"
                     size="lg"
                     clickOutEnabled={false}
@@ -217,12 +218,12 @@ class MetadataModal extends React.Component {
                     fullscreenType="full"
                     onClose={() => { this.props.detailsSheetActions.onBackDetails(this.props.map.detailsBackup); }}
                     buttons={[{
-                        text: LocaleUtils.getMessageById(this.context.messages, "map.details.back"),
+                        text: <Message msgId="map.details.back"/>,
                         onClick: () => {
                             this.props.detailsSheetActions.onBackDetails(this.props.map.detailsBackup);
                         }
                     }, {
-                        text: LocaleUtils.getMessageById(this.context.messages, "map.details.save"),
+                        text: <Message msgId="map.details.save"/>,
                         onClick: () => {
                             this.props.detailsSheetActions.onSaveDetails(this.props.map.detailsText);
                         }
@@ -250,17 +251,17 @@ class MetadataModal extends React.Component {
                     size="xs"
                     clickOutEnabled={false}
                     showClose={false}
-                    title={LocaleUtils.getMessageById(this.context.messages, "warning")}
+                    title={<Message msgId="warning"/>}
                     bodyClassName="modal-details-sheet-confirm"
                     show={!!this.props.map.showUnsavedChanges}
                     buttons={[{
-                        text: LocaleUtils.getMessageById(this.context.messages, "no"),
+                        text: <Message msgId="no"/>,
                         onClick: () => {
                             this.props.detailsSheetActions.onToggleUnsavedChangesModal();
                             this.props.onDisplayMetadataEdit(true);
                         }
                     }, {
-                        text: LocaleUtils.getMessageById(this.context.messages, "yes"),
+                        text: <Message msgId="yes"/>,
                         onClick: () => {
                             this.props.onResetCurrentMap();
                         }
@@ -282,7 +283,7 @@ class MetadataModal extends React.Component {
                     <Row>
                         <Col xs={6}>
                             <div className="m-label">
-                                {this.props.map.detailsText === "" ? <Message msgId="map.details.add"/> : <Message msgId="map.details.title"/>}
+                                {this.props.map.detailsText === "" ? <Message msgId="map.details.add"/> : <Message msgId="map.details.rowTitle"/>}
                             </div>
                         </Col>
                         <Col xs={6}>
@@ -294,19 +295,19 @@ class MetadataModal extends React.Component {
                                         buttons={[
                                             {
                                                 glyph: !this.props.map.hideGroupProperties ? 'eye-close' : 'eye-open',
-                                                tooltip: !this.props.map.hideGroupProperties ? LocaleUtils.getMessageById(this.context.messages, "map.details.showPreview") : LocaleUtils.getMessageById(this.context.messages, "map.details.hidePreview"),
                                                 visible: !!this.props.map.detailsText,
                                                 onClick: () => { this.props.detailsSheetActions.onToggleGroupProperties(); },
-                                                disabled: this.props.map.saving
+                                                disabled: this.props.map.saving,
+                                                tooltipId: !this.props.map.hideGroupProperties ? "map.details.showPreview" : "map.details.hidePreview"
                                             }, {
                                                 glyph: 'undo',
-                                                tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.undo"),
+                                                tooltipId: "map.details.undo",
                                                 visible: !!this.props.map.detailsBackup,
                                                 onClick: () => { this.props.detailsSheetActions.onUndoDetails(this.props.map.detailsBackup); },
                                                 disabled: this.props.map.saving
                                             }, {
                                                 glyph: 'pencil-add',
-                                                tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.add"),
+                                                tooltipId: "map.details.add",
                                                 visible: !this.props.map.detailsText,
                                                 onClick: () => {
                                                     this.props.detailsSheetActions.onToggleDetailsSheet(false);
@@ -314,7 +315,7 @@ class MetadataModal extends React.Component {
                                                 disabled: this.props.map.saving
                                             }, {
                                                 glyph: 'pencil',
-                                                tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.edit"),
+                                                tooltipId: "map.details.edit",
                                                 visible: !!this.props.map.detailsText && !this.props.map.editDetailsDisabled,
                                                 onClick: () => {
                                                     this.props.detailsSheetActions.onToggleDetailsSheet(false);
@@ -325,7 +326,7 @@ class MetadataModal extends React.Component {
                                                 disabled: this.props.map.saving
                                             }, {
                                                 glyph: 'trash',
-                                                tooltip: LocaleUtils.getMessageById(this.context.messages, "map.details.delete"),
+                                                tooltipId: "map.details.delete",
                                                 visible: !!this.props.map.detailsText,
                                                 onClick: () => { this.props.detailsSheetActions.onDeleteDetails(); },
                                                 disabled: this.props.map.saving
@@ -335,7 +336,10 @@ class MetadataModal extends React.Component {
                         </Col>
                     </Row>
                 </div>
-                {this.props.map.detailsText && <div className="ms-details-preview-container"><div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: this.props.map.detailsText }} /></div>}
+                {this.props.map.detailsText && <div className="ms-details-preview-container">
+                    {this.props.map.detailsText !== NO_DETAILS_AVAILABLE ? <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: this.props.map.detailsText}}/>
+                : <div className="ms-details-preview"> <Message msgId="maps.feedback.noDetailsAvailable"/></div>}
+                    </div>}
             </div>
         );
     }
@@ -389,16 +393,16 @@ class MetadataModal extends React.Component {
             <ResizableModal
             id={this.props.id}
             size={this.props.modalSize}
-            title={LocaleUtils.getMessageById(this.context.messages, "manager.editMapMetadata") }
+            title={<Message msgId="manager.editMapMetadata"/>}
             show={this.props.show && !this.props.map.showDetailEditor && !this.props.map.showUnsavedChanges}
             clickOutEnabled
             bodyClassName="ms-flex modal-properties-container"
             buttons={[{
-                text: LocaleUtils.getMessageById(this.context.messages, "close"),
+                text: <Message msgId="close"/>,
                 onClick: this.onCloseMapPropertiesModal,
                 disabled: this.props.map.saving
             }, {
-                text: LocaleUtils.getMessageById(this.context.messages, "save"),
+                text: <Message msgId="save"/>,
                 onClick: () => { this.onSave(); },
                 disabled: this.props.map.saving
             }]}

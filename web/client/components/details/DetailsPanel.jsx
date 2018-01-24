@@ -12,6 +12,8 @@ const {Glyphicon, Panel} = require('react-bootstrap');
 const ContainerDimensions = require('react-container-dimensions').default;
 const Dock = require('react-dock').default;
 const BorderLayout = require('../layout/BorderLayout');
+const {NO_DETAILS_AVAILABLE} = require('../../actions/maps');
+const LocaleUtils = require('../../utils/LocaleUtils');
 const Spinner = require('react-spinkit');
 
 class DetailsPanel extends React.Component {
@@ -28,6 +30,11 @@ class DetailsPanel extends React.Component {
         detailsText: PropTypes.string,
         dockStyle: PropTypes.object
     }
+
+    static contextTypes = {
+        messages: PropTypes.object
+    };
+
     static defaultProps = {
         id: "mapstore-details",
         panelStyle: {
@@ -74,7 +81,8 @@ class DetailsPanel extends React.Component {
                             <div className="ms-details-preview-container">
                                     {!this.props.detailsText ?
                                         <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> :
-                                        <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html: this.props.detailsText }} />}
+                                        <div className="ms-details-preview" dangerouslySetInnerHTML={{ __html:
+                                                this.props.detailsText === NO_DETAILS_AVAILABLE ? LocaleUtils.getMessageById(this.context.messages, "maps.feedback.noDetailsAvailable") : this.props.detailsText }} />}
                             </div>
                         </BorderLayout>
                     </Panel>

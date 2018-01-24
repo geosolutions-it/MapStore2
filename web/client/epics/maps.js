@@ -15,7 +15,7 @@ const { MAP_INFO_LOADED } = require('../actions/config');
 const {
     SAVE_DETAILS, SAVE_RESOURCE_DETAILS,
     DELETE_MAP, OPEN_DETAILS_PANEL,
-    CLOSE_DETAILS_PANEL,
+    CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE,
     setDetailsChanged, updateDetails,
     mapDeleting, toggleDetailsEditability, mapDeleted, loadMaps,
     doNothing, detailsLoaded, detailsSaving, onDisplayMetadataEdit,
@@ -30,9 +30,7 @@ const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
     mapDetailsUriFromIdSelector, isMapsLastPageSelector
 } = require('../selectors/maps');
-const {
-    currentMessagesSelector
-} = require('../selectors/locale');
+
 const {
     mapIdSelector, mapInfoDetailsUriFromIdSelector
 } = require('../selectors/map');
@@ -45,7 +43,6 @@ const {
 const {userParamsSelector} = require('../selectors/security');
 const {manageMapResource, deleteResourceById, getIdFromUri} = require('../utils/ObservableUtils');
 const ConfigUtils = require('../utils/ConfigUtils');
-const LocaleUtils = require('../utils/LocaleUtils');
 
 /**
     If details are changed from the original ones then set unsavedChanges to true
@@ -133,10 +130,9 @@ const fetchDetailsFromResourceEpic = (action$, store) =>
                     updateDetails(details, true, details)
                 );
             }).catch(() => {
-                const noDetails = LocaleUtils.getMessageById(currentMessagesSelector(state), "maps.feedback.noDetailsAvailable");
                 return Rx.Observable.of(
                     basicError({ message: "maps.feedback.errorFetchingDetailsOfMap"}),
-                    updateDetails(noDetails, true, noDetails),
+                    updateDetails(NO_DETAILS_AVAILABLE, true, NO_DETAILS_AVAILABLE),
                     toggleDetailsEditability(mapId));
             });
     });
@@ -201,10 +197,9 @@ const fetchDataForDetailsPanel = (action$, store) =>
                 );
             }).startWith(toggleControl("details", "enabled"))
             .catch(() => {
-                const noDetails = LocaleUtils.getMessageById(currentMessagesSelector(state), "maps.feedback.noDetailsAvailable");
                 return Rx.Observable.of(
                     basicError({message: "maps.feedback.errorFetchingDetailsOfMap"}),
-                    updateDetails(noDetails, true, noDetails)
+                    updateDetails(NO_DETAILS_AVAILABLE, true, NO_DETAILS_AVAILABLE)
                 );
             });
     });

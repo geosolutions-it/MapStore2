@@ -7,9 +7,7 @@
 */
 
 const currentLocaleSelector = (state) => state.locale && state.locale.current || 'en-US';
-const currentMessagesSelector = (state) => state.locale && state.locale.messages || {};
 
 module.exports = {
-    currentLocaleSelector,
-    currentMessagesSelector
+    currentLocaleSelector
 };
