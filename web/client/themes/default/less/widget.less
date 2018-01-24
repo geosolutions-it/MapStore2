@@ -6,7 +6,7 @@
         pointer-events: auto;
     }
     .mapstore-widget-card {
-        background: #fff;
+        background: @ms2-color-background;
         margin: 20px 0;
         overflow: visible;
         position: absolute;
@@ -28,8 +28,8 @@
             margin: 10px 5%;
             font-size: 22px;
             font-weight: bold;
-            border-bottom: 1px solid #ddd;
-            color: #078aa3;
+            border-bottom: 1px solid @ms2-color-shade-lighter;
+            color: @ms2-color-primary;
             .widget-title {
                 text-overflow: ellipsis;
                 width: calc(100% - 30px);
@@ -51,7 +51,7 @@
         .mapstore-widget-options {
             position: absolute;
             font-size: 18px;
-            color: #078aa3;
+            color: @ms2-color-primary;
             right: 20px;
         }
         .widget-menu {
