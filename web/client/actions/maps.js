@@ -9,10 +9,14 @@
 const GeoStoreApi = require('../api/GeoStoreDAO');
 const {updateCurrentMapPermissions, updateCurrentMapGroups} = require('./currentMap');
 const ConfigUtils = require('../utils/ConfigUtils');
+const {userGroupSecuritySelector, userSelector} = require('../selectors/security');
+const {currentMapDetailsChangedSelector} = require('../selectors/currentmap');
+const {resetCurrentMap} = require('./currentMap');
 const assign = require('object-assign');
-const {get, findIndex} = require('lodash');
+
 const {error: notificationError, success: notificationSuccess} = require('./notifications');
 const {getErrorMessage} = require('../utils/LocaleUtils');
+const {findIndex, isNil} = require('lodash');
 
 const MAPS_LIST_LOADED = 'MAPS_LIST_LOADED';
 const MAPS_LIST_LOADING = 'MAPS_LIST_LOADING';
@@ -34,18 +38,37 @@ const RESET_UPDATING = 'RESET_UPDATING';
 const SAVE_MAP = 'SAVE_MAP';
 const PERMISSIONS_LIST_LOADING = 'PERMISSIONS_LIST_LOADING';
 const PERMISSIONS_LIST_LOADED = 'PERMISSIONS_LIST_LOADED';
-const RESET_CURRENT_MAP = 'RESET_CURRENT_MAP';
 const MAPS_SEARCH_TEXT_CHANGED = 'MAPS_SEARCH_TEXT_CHANGED';
 const METADATA_CHANGED = 'METADATA_CHANGED';
+const TOGGLE_DETAILS_SHEET = 'MAPS:TOGGLE_DETAILS_SHEET';
+const TOGGLE_GROUP_PROPERTIES = 'MAPS:TOGGLE_GROUP_PROPERTIES';
+const TOGGLE_UNSAVED_CHANGES = 'MAPS:TOGGLE_UNSAVED_CHANGES';
+const UPDATE_DETAILS = 'MAPS:UPDATE_DETAILS';
+const SAVE_DETAILS = 'MAPS:SAVE_DETAILS';
+const DELETE_DETAILS = 'MAPS:DELETE_DETAILS';
+const SET_DETAILS_CHANGED = 'MAPS:SET_DETAILS_CHANGED';
+const SAVE_RESOURCE_DETAILS = 'MAPS:SAVE_RESOURCE_DETAILS';
+const DO_NOTHING = 'MAPS:DO_NOTHING';
+const DELETE_MAP = 'MAPS:DELETE_MAP';
+const BACK_DETAILS = 'MAPS:BACK_DETAILS';
+const UNDO_DETAILS = 'MAPS:UNDO_DETAILS';
+const SET_UNSAVED_CHANGES = 'MAPS:SET_UNSAVED_CHANGES';
+const OPEN_DETAILS_PANEL = 'DETAILS:OPEN_DETAILS_PANEL';
+const CLOSE_DETAILS_PANEL = 'DETAILS:CLOSE_DETAILS_PANEL';
+const TOGGLE_DETAILS_EDITABILITY = 'DETAILS:TOGGLE_DETAILS_EDITABILITY';
+const DETAILS_LOADED = 'DETAILS:DETAILS_LOADED';
+const DETAILS_SAVING = 'DETAILS:DETAILS_SAVING';
+const NO_DETAILS_AVAILABLE = "NO_DETAILS_AVAILABLE";
+
 
 /**
- * reset current map metadata, `RESET_CURRENT_MAP`
+ * saves details section in the resurce map on geostore
  * @memberof actions.maps
- * @return {action} of type `RESET_CURRENT_MAP`
- */
-function resetCurrentMap() {
+ * @return {action}        type `SAVE_RESOURCE_DETAILS`
+*/
+function saveResourceDetails() {
     return {
-        type: RESET_CURRENT_MAP
+        type: SAVE_RESOURCE_DETAILS
     };
 }
 
@@ -156,6 +179,16 @@ function mapUpdating(resourceId) {
     return {
         type: MAP_UPDATING,
         resourceId
+    };
+}
+/**
+ * Toggle editability of details for the current map
+ * @memberof actions.maps
+ * @return {action}            type `TOGGLE_DETAILS_EDITABILITY`
+ */
+function toggleDetailsEditability() {
+    return {
+        type: TOGGLE_DETAILS_EDITABILITY
     };
 }
 
@@ -382,6 +415,7 @@ function loadPermissions(mapId) {
             dispatch(permissionsLoaded(response, mapId));
             dispatch(updateCurrentMapPermissions(response));
         }).catch((e) => {
+            dispatch(permissionsLoaded(null, mapId));
             dispatch(loadError(e));
         });
     };
@@ -448,6 +482,7 @@ function updateMapMetadata(resourceId, newName, newDescription, onReset, options
             dispatch(mapMetadataUpdated(resourceId, newName, newDescription, "success"));
             if (onReset) {
                 dispatch(onReset);
+                dispatch(onDisplayMetadataEdit(false));
                 dispatch(resetCurrentMap());
             }
         }).catch((e) => {
@@ -517,9 +552,9 @@ function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categor
         let metadata = {
             name: nameThumbnail
         };
+        let state = getState();
         return GeoStoreApi.createResource(metadata, dataThumbnail, categoryThumbnail, options).then((response) => {
-            let state = getState();
-            let groups = get(state, "security.user.groups.group");
+            let groups = userGroupSecuritySelector(state);
             let index = findIndex(groups, function(g) { return g.groupName === "everyone"; });
             let group;
             if (index < 0 && groups && groups.groupName === "everyone") {
@@ -527,7 +562,7 @@ function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categor
             } else {
                 group = groups[index];
             }
-            let user = get(state, "security.user");
+            let user = userSelector(state);
             let userPermission = {
                 canRead: true,
                 canWrite: true
@@ -564,46 +599,53 @@ function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categor
  * @param  {string} dataThumbnail     the data to save for the thubnail
  * @param  {string} categoryThumbnail the category for the thumbnails
  * @param  {number} resourceIdMap     the id of the map
- * @param  {object} [options]           options for the request
- * @return {thunk}                   perform the update and dispatch proper actions
+ * @param  {object} [options]         options for the request
+ * @return {thunk}                    perform the update and dispatch proper actions
  */
 function saveAll(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, options) {
-    return (dispatch) => {
+    return (dispatch, getState) => {
         dispatch(mapUpdating(resourceIdMap));
         dispatch(updatePermissions(resourceIdMap));
-        if (dataThumbnail !== null && metadataMap !== null) {
-            dispatch(createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap,
-                updateMapMetadata(resourceIdMap, metadataMap.name, metadataMap.description, onDisplayMetadataEdit(false), options), null, options));
-        } else if (dataThumbnail !== null) {
-            dispatch(createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, null, onDisplayMetadataEdit(false), options));
-        } else if (metadataMap !== null) {
-            dispatch(updateMapMetadata(resourceIdMap, metadataMap.name, metadataMap.description, onDisplayMetadataEdit(false), options));
-        } else {
-            dispatch(resetUpdating(resourceIdMap));
-            dispatch(onDisplayMetadataEdit(false));
+        const detailsChanged = currentMapDetailsChangedSelector(getState());
+        if (detailsChanged) {
+            dispatch(saveResourceDetails());
         }
-        dispatch(resetCurrentMap());
+        if (!isNil(dataThumbnail) && !isNil(metadataMap)) {
+            dispatch(createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap,
+                updateMapMetadata(resourceIdMap, metadataMap.name, metadataMap.description, !detailsChanged ? onDisplayMetadataEdit(false) : null, options), null, options, detailsChanged));
+        } else if (!isNil(dataThumbnail)) {
+            dispatch(createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categoryThumbnail, resourceIdMap, null, !detailsChanged ? onDisplayMetadataEdit(false) : null, options));
+        } else if (!isNil(metadataMap)) {
+            dispatch(updateMapMetadata(resourceIdMap, metadataMap.name, metadataMap.description, !detailsChanged ? onDisplayMetadataEdit(false) : null, options));
+        }
+        if (isNil(dataThumbnail) && isNil(metadataMap) && !detailsChanged) {
+            dispatch(resetUpdating(resourceIdMap));
+            /*dispatch(onDisplayMetadataEdit(false));
+            dispatch(resetCurrentMap());*/
+        }
     };
 }
 
 /**
- * Deletes a thubnail.
+ * Deletes a thumbnail.
  * @memberof actions.maps
  * @param  {number} resourceId    the id of the thumbnail
  * @param  {number} resourceIdMap the id of the map
  * @param  {object} [options]       options for the request, if any
  * @return {thunk}               performs thumbnail cancellation
  */
-function deleteThumbnail(resourceId, resourceIdMap, options) {
+function deleteThumbnail(resourceId, resourceIdMap, options, reset) {
     return (dispatch) => {
+        dispatch(mapUpdating(resourceIdMap));
         GeoStoreApi.deleteResource(resourceId, options).then(() => {
-            dispatch(mapUpdating(resourceIdMap));
             if (resourceIdMap) {
                 dispatch(updateAttribute(resourceIdMap, "thumbnail", "NODATA", "STRING", options));
-                dispatch(resetUpdating(resourceIdMap));
+                if (reset) {
+                    dispatch(resetUpdating(resourceIdMap));
+                }
             }
-            dispatch(onDisplayMetadataEdit(false));
-            dispatch(resetCurrentMap());
+            /*dispatch(onDisplayMetadataEdit(false));
+            dispatch(resetCurrentMap());*/
         }).catch((e) => {
             // Even if is not possible to delete the Thumbnail from geostore -> reset the attribute in order to display the default thumbnail
             if (e.status === 403) {
@@ -636,6 +678,7 @@ function createMap(metadata, content, thumbnail, options) {
             if (thumbnail && thumbnail.data) {
                 dispatch(createThumbnail(null, null, thumbnail.name, thumbnail.data, thumbnail.category, resourceId, options));
             }
+
             dispatch(mapCreated(response.data, assign({id: response.data, canDelete: true, canEdit: true, canCopy: true}, metadata), content));
             dispatch(onDisplayMetadataEdit(false));
             dispatch(notificationSuccess({
@@ -663,19 +706,180 @@ function createMap(metadata, content, thumbnail, options) {
  * @return {thunk}             performs the delete operations and dispatches mapDeleted and loadMaps
  */
 function deleteMap(resourceId, options) {
-    return (dispatch, getState) => {
-        dispatch(mapDeleting(resourceId));
-        GeoStoreApi.deleteResource(resourceId, options).then(() => {
-            dispatch(mapDeleted(resourceId, "success"));
-            let state = getState && getState();
-            if ( state && state.maps && state.maps.totalCount === state.maps.start) {
-                dispatch(loadMaps(false, state.maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*"));
-            }
-        }).catch((e) => {
-            dispatch(mapDeleted(resourceId, "failure", e));
-        });
+    return {
+        type: DELETE_MAP,
+        resourceId,
+        options
     };
 }
+
+/**
+ * Toggles details modal
+ * @memberof actions.maps
+ * @return {action}        type `TOGGLE_DETAILS_SHEET`
+*/
+function toggleDetailsSheet(detailsSheetReadOnly) {
+    return {
+        type: TOGGLE_DETAILS_SHEET,
+        detailsSheetReadOnly
+    };
+}
+/**
+ * Toggles groups properties section
+ * @memberof actions.maps
+ * @return {action}        type `TOGGLE_GROUP_PROPERTIES`
+*/
+function toggleGroupProperties() {
+    return {
+        type: TOGGLE_GROUP_PROPERTIES
+    };
+}
+/**
+ * Toggles unsaved changes modal
+ * @memberof actions.maps
+ * @return {action}        type `TOGGLE_UNSAVED_CHANGES`
+*/
+function toggleUnsavedChanges() {
+    return {
+        type: TOGGLE_UNSAVED_CHANGES
+    };
+}
+/**
+ * updates details section
+ * @memberof actions.maps
+ * @return {action}        type `UPDATE_DETAILS`
+*/
+function updateDetails(detailsText, doBackup, originalDetails) {
+    return {
+        type: UPDATE_DETAILS,
+        detailsText,
+        doBackup,
+        originalDetails
+    };
+}
+
+/**
+ * saves details section in the map state
+ * @memberof actions.maps
+ * @prop {string} detailsText string generated from html
+ * @return {action}        type `SAVE_DETAILS`
+*/
+function saveDetails(detailsText) {
+    return {
+        type: SAVE_DETAILS,
+        detailsText
+    };
+}
+
+/**
+ * deletes details section in the map state
+ * @memberof actions.maps
+ * @return {action}        type `DELETE_DETAILS`
+*/
+function deleteDetails() {
+    return {
+        type: DELETE_DETAILS
+    };
+}
+/**
+ * set unsaved changes in the current map state, type `SET_DETAILS_CHANGED`
+ * @memberof actions.maps
+ * @prop {boolean} detailsChanged flag used to trigger the opening of the unsavedChangesModal
+ * @return {action}        type `SET_DETAILS_CHANGED`
+*/
+function setDetailsChanged(detailsChanged) {
+    return {
+        type: SET_DETAILS_CHANGED,
+        detailsChanged
+    };
+}
+/**
+ * back details
+ * @memberof actions.maps
+ * @return {action}        type `BACK_DETAILS`
+*/
+function backDetails(backupDetails) {
+    return {
+        type: BACK_DETAILS,
+        backupDetails
+    };
+}
+/**
+ * undo details
+ * @memberof actions.maps
+ * @return {action}        type `UNDO_DETAILS`
+*/
+function undoDetails() {
+    return {
+        type: UNDO_DETAILS
+    };
+}
+/**
+ * setUnsavedChanged
+ * @memberof actions.maps
+ * @return {action}        type `SET_UNSAVED_CHANGES`
+*/
+function setUnsavedChanged(value) {
+    return {
+        type: SET_UNSAVED_CHANGES,
+        value
+    };
+}
+/**
+ * openDetailsPanel
+ * @memberof actions.maps
+ * @return {action}        type `OPEN_DETAILS_PANEL`
+*/
+function openDetailsPanel() {
+    return {
+        type: OPEN_DETAILS_PANEL
+    };
+}
+/**
+ * closeDetailsPanel
+ * @memberof actions.maps
+ * @return {action}        type `CLOSE_DETAILS_PANEL`
+*/
+function closeDetailsPanel() {
+    return {
+        type: CLOSE_DETAILS_PANEL
+    };
+}
+/**
+ * detailsLoaded
+ * @memberof actions.maps
+ * @return {action}        type `DETAILS_LOADED`
+*/
+function detailsLoaded(mapId, detailsUri) {
+    return {
+        type: DETAILS_LOADED,
+        mapId,
+        detailsUri
+    };
+}
+/**
+ * detailsSaving
+ * @memberof actions.maps
+ * @return {action}        type `DETAILS_SAVING`
+*/
+function detailsSaving(saving) {
+    return {
+        type: DETAILS_SAVING,
+        saving
+    };
+}
+/**
+ * do nothing action
+ * @memberof actions.maps
+ * @return {action}        type `DO_NOTHING`
+*/
+function doNothing() {
+    return {
+        type: DO_NOTHING
+    };
+}
+
+
 /**
  * Actions for maps
  * @name actions.maps
@@ -701,9 +905,27 @@ module.exports = {
     DISPLAY_METADATA_EDIT,
     RESET_UPDATING,
     MAP_ERROR,
-    RESET_CURRENT_MAP,
     MAPS_SEARCH_TEXT_CHANGED,
     METADATA_CHANGED,
+    NO_DETAILS_AVAILABLE,
+    toggleDetailsSheet, TOGGLE_DETAILS_SHEET,
+    toggleGroupProperties, TOGGLE_GROUP_PROPERTIES,
+    toggleUnsavedChanges, TOGGLE_UNSAVED_CHANGES,
+    updateDetails, UPDATE_DETAILS,
+    saveDetails, SAVE_DETAILS,
+    deleteDetails, DELETE_DETAILS,
+    setDetailsChanged, SET_DETAILS_CHANGED,
+    saveResourceDetails, SAVE_RESOURCE_DETAILS,
+    backDetails, BACK_DETAILS,
+    undoDetails, UNDO_DETAILS,
+    doNothing, DO_NOTHING,
+    setUnsavedChanged, SET_UNSAVED_CHANGES,
+    openDetailsPanel, OPEN_DETAILS_PANEL,
+    closeDetailsPanel, CLOSE_DETAILS_PANEL,
+    deleteMap, DELETE_MAP,
+    detailsLoaded, DETAILS_LOADED,
+    detailsSaving, DETAILS_SAVING,
+    toggleDetailsEditability, TOGGLE_DETAILS_EDITABILITY,
     metadataChanged,
     loadMaps,
     mapsLoading,
@@ -714,7 +936,6 @@ module.exports = {
     updateMap,
     updateMapMetadata,
     mapMetadataUpdated,
-    deleteMap,
     deleteThumbnail,
     createThumbnail,
     mapUpdating,
@@ -732,7 +953,6 @@ module.exports = {
     saveAll,
     onDisplayMetadataEdit,
     resetUpdating,
-    resetCurrentMap,
     mapError,
     mapsSearchTextChanged,
     updateAttribute

@@ -13,6 +13,7 @@ const Dialog = require('./Dialog');
 const Toolbar = require('./toolbar/Toolbar');
 
 const sizes = {
+    xs: ' ms-xs',
     sm: ' ms-sm',
     md: '',
     lg: ' ms-lg'
@@ -42,7 +43,7 @@ const fullscreen = {
  * @memberof components.ResizableModal
  * @class
  * @prop {bool} show show modal. Default false
- * @prop {bool} fullscreen enable fullscreen. Default false
+ * @prop {bool} showFullscreen enable fullscreen. Default false
  * @prop {bool} clickOutEnabled click on background overlay to close modal. Default true
  * @prop {string} fullscreenType type of fullscreen sm, lg or md/empty.
  * @prop {function} onClose callback on close.
@@ -55,13 +56,15 @@ const fullscreen = {
 class ResizableModal extends React.Component {
     static propTypes = {
         show: PropTypes.bool,
-        fullscreen: PropTypes.bool,
+        showFullscreen: PropTypes.bool,
         clickOutEnabled: PropTypes.bool,
         fullscreenType: PropTypes.string,
         onClose: PropTypes.func,
         title: PropTypes.node,
         buttons: PropTypes.array,
         size: PropTypes.string,
+        showClose: PropTypes.bool,
+        disabledClose: PropTypes.bool,
         bodyClassName: PropTypes.string
     };
 
@@ -70,7 +73,9 @@ class ResizableModal extends React.Component {
         onClose: () => {},
         title: '',
         clickOutEnabled: true,
-        fullscreen: false,
+        showClose: true,
+        disabledClose: false,
+        showFullscreen: false,
         fullscreenType: 'full',
         buttons: [],
         size: '',
@@ -84,7 +89,7 @@ class ResizableModal extends React.Component {
     render() {
         // TODO VERIFY that the dialog id can be customizable or a fixed value
         const sizeClassName = sizes[this.props.size] || '';
-        const fullscreenClassName = this.props.fullscreen && this.state.fullscreen === 'expanded' && fullscreen.className[this.props.fullscreenType] || '';
+        const fullscreenClassName = this.props.showFullscreen && this.state.fullscreen === 'expanded' && fullscreen.className[this.props.fullscreenType] || '';
         return (
             <span className={this.props.show ? "modal-fixed" : ""}>
                 <Dialog
@@ -98,7 +103,7 @@ class ResizableModal extends React.Component {
                     <span role="header">
                         <h4 className="modal-title">
                             <div className="ms-title">{this.props.title}</div>
-                            {this.props.fullscreen && fullscreen.className[this.props.fullscreenType] &&
+                            {this.props.showFullscreen && fullscreen.className[this.props.fullscreenType] &&
                                 <Glyphicon
                                     className="ms-header-btn"
                                     onClick={() => {
@@ -108,11 +113,12 @@ class ResizableModal extends React.Component {
                                     }}
                                     glyph={fullscreen.glyph[this.state.fullscreen][this.props.fullscreenType]}/>
                             }
-                            {this.props.onClose &&
+                            {this.props.showClose && this.props.onClose &&
                                 <Glyphicon
                                     glyph="1-close"
                                     className="ms-header-btn"
-                                    onClick={this.props.onClose}/>
+                                    onClick={this.props.onClose}
+                                    disabled={this.props.disabledClose}/>
                             }
                         </h4>
                     </span>

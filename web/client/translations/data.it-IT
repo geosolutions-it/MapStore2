@@ -34,6 +34,9 @@
         "localeErrors": {
             "404": "File di traduzione non trovato"
         },
+        "details": {
+            "title": "Info su questa mappa"
+        },
         "layerProperties": {
             "windowTitle": "Proprietà del livello",
             "title": "Titolo",
@@ -108,6 +111,8 @@
         "elevation": "Elevazione",
         "close": "Chiudi",
         "cancel": "Annulla",
+        "no": "No",
+        "yes": "Si",
         "confirm": "Conferma",
         "confirmTitle": "Confermi?",
         "pageInfo": "{total, plural, =0 {Nessun Elemento} =1 {{total} Elemento di {total}} other {Elementi {start}-{end} di {total}}}",
@@ -197,6 +202,29 @@
         },
         "newMap": "Nuova Mappa",
 		"maps": {
+            "feedback": {
+                "noDetailsAvailable": "Dettagli della mappa non disponibili",
+                "successSavedMap": "La mappa è stata salvata correttamente",
+                "errorDeletingMap": "Errore durante l'eliminazione di questa mappa",
+                "errorDeletingThumbnailOfMap": "Errore durante l'eliminazione dell'anteprima di questa mappa",
+                "errorDeletingDetailsOfMap": "Errore durante l'eliminazione dei dettagli di questa mappa",
+                "allResDeleted": "Sono state eliminate tutte le risorse associate a questa mappa",
+                "errorFetchingDetailsOfMap": "Errore durante il recupero dei dettagli di questa mappa",
+                "details": {
+                    "deletedSuccesfully": "I dettagli sono stati eliminati correttamente",
+                    "savedSuccesfully": "I dettagli sono stati salvati correttamente",
+                    "updatedSuccesfully": "I dettagli sono stati aggiornati correttamente"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "L'anteprima è stata eliminata correttamente",
+                    "savedSuccesfully": "L'anteprima è stata salvata correttamente",
+                    "updatedSuccesfully": "L'anteprima è stata aggiornata correttamente"
+                },
+                "errorWhenSaving": "C'è stato un errore durante il salvataggio",
+                "errorWhenUpdating": "C'è stato un errore durante l'aggiornamento",
+                "errorWhenDeleting": "C'è stato un errore durante la cancellazione",
+                "errorSizeExceeded": "Riduci il contenuto o la qualità delle immagini"
+            },
 			"search": "Cerca mappe..."
 		},
         "map": {
@@ -238,6 +266,22 @@
                 "canWrite": "Può modificare",
                 "noResult": "Nessun gruppo rimasto",
                 "title": "Permessi dei gruppi"
+            },
+            "details": {
+                "back": "Indietro",
+                "save": "Salva",
+                "show": "Mostra i dettagli",
+                "add": "Aggiungi dettagli",
+                "edit": "Modifica dettagli",
+                "rowTitle": "Dettagli",
+                "title": "Dettagli - {name}",
+                "undo": "Annulla eliminazione",
+                "showPreview": "Mostra anteprima",
+                "hidePreview": "Nascondi anteprima",
+                "delete": "Elimina dettagli",
+                "titleUnsavedChanges": "Sicuro di chiudere senza salvare?",
+                "sureToClose": "Sicuro di chiudere senza salvare?",
+                "fieldsChanged": "Alcuni dati sono cambiati"
             }
         },
         "toc": {

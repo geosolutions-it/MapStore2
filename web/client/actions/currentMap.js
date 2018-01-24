@@ -15,19 +15,20 @@ const REMOVE_THUMBNAIL = 'REMOVE_THUMBNAIL';
 const RESET_CURRENT_MAP = 'RESET_CURRENT_MAP';
 const ADD_CURRENT_MAP_PERMISSION = 'ADD_CURRENT_MAP_PERMISSION';
 
-function editMap(map) {
+function editMap(map, openModalProperties) {
     return {
         type: EDIT_MAP,
-        map
+        map,
+        openModalProperties
     };
 }
 
-// update the thumbnail and the files property of the currentMap
-function updateCurrentMap(files, thumbnail) {
+// update the thumbnail and the thumbnailData property of the currentMap
+function updateCurrentMap(thumbnailData, thumbnail) {
     return {
         type: UPDATE_CURRENT_MAP,
         thumbnail,
-        files
+        thumbnailData
     };
 }
 
@@ -60,6 +61,11 @@ function removeThumbnail(resourceId) {
     };
 }
 
+/**
+ * reset current map , `RESET_CURRENT_MAP`
+ * @memberof actions.maps
+ * @return {action} of type `RESET_CURRENT_MAP`
+ */
 function resetCurrentMap() {
     return {
         type: RESET_CURRENT_MAP
