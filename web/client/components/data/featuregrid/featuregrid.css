@@ -14,3 +14,6 @@
     background-color: "gray";
     opacity: 0.5;
 }
+.empty-row .react-grid-Cell__value .glyphicon-exclamation-mark{
+    opacity: 0;
+}
