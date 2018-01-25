@@ -95,7 +95,42 @@ describe('OpenlayersMap', () => {
         expect(map).toExist();
         expect(map.map.getView().getProjection().getCode()).toBe('EPSG:3857');
     });
-
+    it('click on feature', (done) => {
+        const testHandlers = {
+            handler: () => {}
+        };
+        const spy = expect.spyOn(testHandlers, 'handler');
+        const comp = (<OpenlayersMap projection="EPSG:4326" center={{y: 43.9, x: 10.3}} zoom={11}
+            onClick={testHandlers.handler}/>);
+        const map = ReactDOM.render(comp, document.getElementById("map"));
+        expect(map).toExist();
+        setTimeout(() => {
+            map.map.forEachFeatureAtPixel = (pixel, callback) => {
+                callback.call(null, {
+                    feature: new ol.Feature({
+                        geometry: new ol.geom.Point([10.3, 43.9]),
+                        name: 'My Point'
+                    }),
+                    getGeometry: () => {
+                        return {
+                            getFirstCoordinate: () => [10.3, 43.9],
+                            getType: () => {
+                                return 'Point';
+                            }
+                        };
+                    }
+                });
+            };
+            map.map.dispatchEvent({
+                type: 'singleclick',
+                coordinate: [10.3, 43.9],
+                pixel: map.map.getPixelFromCoordinate([10.3, 43.9]),
+                originalEvent: {}
+            });
+            expect(spy.calls.length).toEqual(1);
+            done();
+        }, 500);
+    });
     it('disable single click', (done) => {
         const testHandlers = {
             handler: () => {}
@@ -287,24 +322,6 @@ describe('OpenlayersMap', () => {
             expect(spy.calls[1].arguments[3].width).toExist();
             done();
         });
-    });
-    it('preserve listeners scope', (done) => {
-        const map = ReactDOM.render(
-            <OpenlayersMap
-                center={{y: 43.9, x: 10.3}}
-                zoom={11}
-            />
-        , document.getElementById("map"));
-
-        const olMap = map.map;
-        olMap.getView().setZoom(12);
-        const scopeObj = {test: "TEST"};
-        const handler = function() {
-            expect(this).toExist();
-            expect(this.test).toBe("TEST");
-            done();
-        };
-        olMap.on('moveend', handler, scopeObj);
     });
 
     it('check if the map changes when receive new props', () => {
