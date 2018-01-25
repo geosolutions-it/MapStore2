@@ -63,6 +63,32 @@ class DataGrid extends Grid {
             this.canvas.scrollTop = 0;
         }
     }
+    getHeaderRows = () => {
+        const _this4 = this;
+        let rows = [{ ref: function ref(node) {
+            _this4.row = node;
+            return node;
+        }, height: this.props.headerRowHeight || this.props.rowHeight, rowType: 'header' }];
+        if (this.state.canFilter === true) {
+            rows.push({
+                ref: function ref(node) {
+                    _this4.filterRow = node;
+                    return node;
+                },
+                filterable: true,
+                onFilterChange: this._onAddFilter,
+                height: this.props.headerFiltersHeight,
+                rowType: 'filter'
+            });
+        }
+        return rows;
+    }
+    _onAddFilter = (filter) => {
+        this.props.onAddFilter(filter);
+        if (this.canvas) {
+            this.canvas.scrollTop = 0;
+        }
+    }
     scrollListener = () => {
         if (!this.props.isFocused) {
             this.scroll = this.canvas.scrollTop;
