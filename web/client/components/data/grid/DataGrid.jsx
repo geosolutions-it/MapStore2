@@ -16,6 +16,7 @@ class DataGrid extends Grid {
     constructor(props) {
         super(props);
         this.handleSort = this._handleSort.bind(this);
+        this.getHeaderRows = this._getHeaderRows.bind(this);
     }
     componentDidMount() {
         this.setCanvasListner();
@@ -63,25 +64,10 @@ class DataGrid extends Grid {
             this.canvas.scrollTop = 0;
         }
     }
-    getHeaderRows = () => {
-        const _this4 = this;
-        let rows = [{ ref: function ref(node) {
-            _this4.row = node;
-            return node;
-        }, height: this.props.headerRowHeight || this.props.rowHeight, rowType: 'header' }];
-        if (this.state.canFilter === true) {
-            rows.push({
-                ref: function ref(node) {
-                    _this4.filterRow = node;
-                    return node;
-                },
-                filterable: true,
-                onFilterChange: this._onAddFilter,
-                height: this.props.headerFiltersHeight,
-                rowType: 'filter'
-            });
-        }
-        return rows;
+    _getHeaderRows() {
+        return super.getHeaderRows().map(r =>
+            r.rowType === 'filter' && {...r, onFilterChange: this._onAddFilter} || r
+            );
     }
     _onAddFilter = (filter) => {
         this.props.onAddFilter(filter);
