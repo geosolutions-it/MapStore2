@@ -227,6 +227,70 @@ describe('Leaflet DrawSupport', () => {
         expect(circle).toExist();
         expect(circle._mRadius).toBe(RADIUS);
     });
+    it('test draw replace with circle in EPSG:3857', (done) => {
+        const RADIUS = 500000;
+        const L_RADIUS = 384644.03167441016;
+        const CENTER = {lng: 997422.6375077313, lat: 4823889.328196847};
+        const L_CENTER = {lng: 8.96, lat: 39.71};
+        const layer = L.circle(L.latLng(L_CENTER.lat, L_CENTER.lng), L_RADIUS);
+
+        let map = L.map("map", {
+            center: [51.505, -0.09],
+            zoom: 13
+        });
+        let cmp = ReactDOM.render(
+            <DrawSupport
+                map={map}
+                drawOwner="me"
+                drawStatus="create"
+                drawMethod="Circle"
+                options={{editEnabled: true}}
+            />
+        , msNode);
+        let featureData;
+        cmp.drawLayer = { options: {}, addData: function(data) {featureData = data; return true; }, toGeoJSON: function() { return featureData; }, clearLayers: () => {}};
+        cmp.onDrawCreated.call(cmp, {layer: layer, layerType: "circle"});
+        cmp = ReactDOM.render(
+            <DrawSupport
+                map={map}
+                drawOwner="me"
+                drawStatus="create"
+                drawMethod="Circle"
+                options={{editEnabled: false}}
+            />
+        , msNode);
+        expect(cmp).toExist();
+        cmp = ReactDOM.render(
+            <DrawSupport
+                map={map}
+                drawOwner="me"
+                drawStatus="replace"
+                drawMethod="Circle"
+                onEndDrawing={(geom) => {
+                    expect(geom).toExist();
+                    expect(isNaN(geom.coordinates[0][0][0])).toBe(false);
+                    expect(Math.floor(geom.radius)).toBe(RADIUS);
+                    done();
+                }}
+                features={[{
+                    projection: "EPSG:3857",
+                    radius: RADIUS,
+                    center: {x: CENTER.lng, y: CENTER.lat},
+                    type: "Circle"}
+                ]}
+                options={{featureProjection: "EPSG:3857"}}
+            />
+        , msNode);
+        expect(cmp.drawLayer.options).toExist();
+        expect(cmp.drawLayer.options.pointToLayer).toExist();
+        // verify the pointToLayer still exists and creates circle after replace
+        const circle = cmp.drawLayer.options.pointToLayer({radius: RADIUS, projection: "EPSG:3857"}, CENTER);
+        expect(circle).toExist();
+        // verify that the radius is changed as expected
+        expect(Math.floor(circle._mRadius)).toBe(Math.floor(L_RADIUS));
+
+        cmp.onDrawCreated({layer, layerType: "circle"});
+    });
     it('test editEnabled=true', () => {
         let map = L.map("map", {
             center: [51.505, -0.09],
