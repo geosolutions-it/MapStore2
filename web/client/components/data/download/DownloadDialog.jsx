@@ -27,7 +27,8 @@ class DownloadDialog extends React.Component {
         srsList: PropTypes.array,
         defaultSrs: PropTypes.string,
         layer: PropTypes.object,
-        formatsLoading: PropTypes.bool
+        formatsLoading: PropTypes.bool,
+        virtualScroll: PropTypes.bool
     };
 
     static defaultProps = {
@@ -45,7 +46,8 @@ class DownloadDialog extends React.Component {
         srsList: [
             {name: "native", label: "Native"},
             {name: "EPSG:4326", label: "WGS84"}
-        ]
+        ],
+        virtualScroll: false
     };
 
     componentDidMount() {
@@ -80,7 +82,8 @@ class DownloadDialog extends React.Component {
                     formats={this.props.formats}
                     srsList={this.props.srsList}
                     defaultSrs={this.props.defaultSrs}
-                    layer={this.props.layer}/>
+                    layer={this.props.layer}
+                    virtualScroll={this.props.virtualScroll}/>
                 </div>
             <div role="footer">
                 <Button

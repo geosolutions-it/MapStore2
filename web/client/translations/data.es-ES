@@ -982,6 +982,7 @@
             "deselectall": "Deseleccionar todos",
             "backtosearch": "Volver a la búsqueda",
             "resultInfo": "{total, plural, =0 {nada} =1 {{total} de {total}} other {{start}-{end} de {total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {nada} =1 {{total} de {total}} other { {total}}}",
             "pageInfo": "{totalPages, plural, =0 {ningúna Página} =1 {Página {totalPages} de {totalPages}} other {Seite {page} de {totalPages}}}",
             "pagination": {
                 "page": "Página",

@@ -52,7 +52,8 @@ module.exports = {
             state => state && state.wfsdownload && state.wfsdownload.wfsFormats,
             state => state && state.wfsdownload && state.wfsdownload.formatsLoading,
             getSelectedLayer,
-            (url, filterObj, enabled, downloadOptions, loading, wfsFormats, formatsLoading, layer) => ({
+            state => state && state.featuregrid && state.featuregrid.virtualScroll,
+            (url, filterObj, enabled, downloadOptions, loading, wfsFormats, formatsLoading, layer, virtualScroll) => ({
                 url,
                 filterObj,
                 enabled,
@@ -60,7 +61,8 @@ module.exports = {
                 loading,
                 wfsFormats,
                 formatsLoading,
-                layer
+                layer,
+                virtualScroll
             })
     ), {
         onExport: downloadFeatures,

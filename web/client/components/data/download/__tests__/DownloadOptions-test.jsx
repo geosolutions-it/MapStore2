@@ -49,4 +49,10 @@ describe('Test for DownloadOptions component', () => {
         expect(events.onChange).toHaveBeenCalled();
 
     });
+    it('singlePage checkbox not to render in virtualScroll mode', () => {
+        ReactDOM.render(<DownloadOptions virtualScroll downloadOptions={{selectedFormat: "test"}} formats={[{name: "test"}]}/>, document.getElementById("container"));
+        const check = document.querySelector('input[type=checkbox]');
+        expect(check).toNotExist();
+
+    });
 });

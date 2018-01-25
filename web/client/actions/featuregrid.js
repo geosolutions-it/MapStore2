@@ -53,6 +53,15 @@ const MODES = {
 const START_SYNC_WMS = 'FEATUREGRID:START_SYNC_WMS';
 const STOP_SYNC_WMS = 'FEATUREGRID:STOP_SYNC_WMS';
 const STORE_ADVANCED_SEARCH_FILTER = 'STORE_ADVANCED_SEARCH_FILTER';
+const LOAD_MORE_FEATURES = "LOAD_MORE_FEATURES";
+const GRID_QUERY_RESULT = 'FEATUREGRID:QUERY_RESULT';
+
+function fatureGridQueryResult(features, pages) {
+    return {
+        type: GRID_QUERY_RESULT,
+        features, pages
+    };
+}
 
 function storeAdvancedSearchFilter(filterObj) {
     return {
@@ -302,6 +311,12 @@ function sizeChange(size, dockProps) {
         dockProps
     };
 }
+const moreFeatures = (pages) => {
+    return {
+        type: LOAD_MORE_FEATURES,
+        pages
+    };
+};
 module.exports = {
     SELECT_FEATURES,
     DESELECT_FEATURES,
@@ -368,5 +383,7 @@ module.exports = {
     initPlugin, INIT_PLUGIN,
     START_SYNC_WMS, startSyncWMS,
     STOP_SYNC_WMS,
-    storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER
+    storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER,
+    moreFeatures, LOAD_MORE_FEATURES,
+    fatureGridQueryResult, GRID_QUERY_RESULT
 };

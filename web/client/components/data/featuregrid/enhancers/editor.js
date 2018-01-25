@@ -1,12 +1,47 @@
-const {featureTypeToGridColumns, getToolColumns, getRow, getGridEvents, applyAllChanges, createNewAndEditingFilter} = require('../../../../utils/FeatureGridUtils');
+const {featureTypeToGridColumns, getToolColumns, getRow, getRowVirtual, getGridEvents, applyAllChanges, createNewAndEditingFilter} = require('../../../../utils/FeatureGridUtils');
 const EditorRegistry = require('../../../../utils/featuregrid/EditorRegistry');
-const {compose, withPropsOnChange, withHandlers, defaultProps} = require('recompose');
+const {compose, withPropsOnChange, withHandlers, defaultProps, createEventHandler} = require('recompose');
 const {isNil} = require('lodash');
 const {getFilterRenderer} = require('../filterRenderers');
 const {getFormatter} = require('../formatters');
 const {manageFilterRendererState} = require('../enhancers/filterRenderers');
 
+const propsStreamFactory = require('../../../misc/enhancers/propsStreamFactory');
+
 const editors = require('../editors');
+const {getRowIdx} = require('../../../../utils/FeatureGridUtils');
+const loadMoreFeaturesStream = $props => {
+    return $props
+        .distinctUntilChanged(({features: oF, pages: oPages, isFocused: oFocused}, {features: nF, pages: nPages, isFocused: nFocused}) => oF === nF && oFocused === nFocused && oPages === nPages)
+        .switchMap(({size, pageEvents, isFocused, pages, pagination, vsOverScan = 20, scrollDebounce = 50, onGridScroll$}) => {
+            return onGridScroll$
+                .debounceTime(scrollDebounce)
+                .filter(() => !isFocused)
+                .map(({firstRowIdx, lastRowIdx}) => {
+                    const fr = firstRowIdx - vsOverScan < 0 ? 0 : firstRowIdx - vsOverScan;
+                    const lr = lastRowIdx + vsOverScan > pagination.totalFeatures - 1 ? pagination.totalFeatures - 1 : lastRowIdx + vsOverScan;
+                    const startPage = Math.floor(fr / size);
+                    const endPage = Math.floor(lr / size);
+                    let shouldLoad = false;
+                    for (let i = startPage; i <= endPage && !shouldLoad; i++) {
+                        if (getRowIdx(i * size, pages, size) === -1) {
+                            shouldLoad = true;
+                        }
+                    }
+                    return shouldLoad && {startPage, endPage};
+                })
+                .filter((l) => l)
+                .do((p) => pageEvents.moreFeatures(p));
+        });
+};
+
+const dataStreamFactory = $props => {
+    const {handler: onGridScroll, stream: onGridScroll$} = createEventHandler();
+    const $p = $props
+        .filter(({virtualScroll}) => virtualScroll).map(o => ({...o, onGridScroll$ }));
+    return loadMoreFeaturesStream($p).startWith({}).map( o => ({...o, onGridScroll}));
+};
+
 const featuresToGrid = compose(
     defaultProps({
         autocompleteEnabled: false,
@@ -20,7 +55,9 @@ const featuresToGrid = compose(
         select: [],
         changes: {},
         focusOnEdit: true,
-        editors
+        editors,
+        dataStreamFactory,
+        virtualScroll: true
     }),
     withPropsOnChange("showDragHandle", ({showDragHandle = false} = {}) => ({
         className: showDragHandle ? 'feature-grid-drag-handle-show' : 'feature-grid-drag-handle-hide'
@@ -30,7 +67,7 @@ const featuresToGrid = compose(
         props => ({displayFilters: props.enableColumnFilters})
     ),
     withPropsOnChange(
-        ["editingAllowedRoles"],
+        ["editingAllowedRoles", "virtualScroll"],
         props => ({
             editingAllowedRoles: props.editingAllowedRoles,
             initPlugin: props.initPlugin
@@ -68,12 +105,12 @@ const featuresToGrid = compose(
         })
     ),
     withPropsOnChange(
-        ["features", "newFeatures", "changes", "focusOnEdit"],
+        ["features", "newFeatures", "isFocused", "virualScroll"],
         props => ({
-            rowsCount: props.rows && props.rows.length || 0
+            rowsCount: ( props.isFocused || !props.virtualScroll) && props.rows && props.rows.length || (props.pagination && props.pagination.totalFeatures) || 0
         })
     ),
-    withHandlers({rowGetter: props => i => getRow(i, props.rows)}),
+    withHandlers({rowGetter: props => props.virtualScroll && (i => getRowVirtual(i, props.rows, props.pages, props.size)) || (i => getRow(i, props.rows))}),
     withPropsOnChange(
         ["describeFeatureType", "columnSettings", "tools", "actionOpts", "mode", "isFocused"],
         props => ({
@@ -150,7 +187,8 @@ const featuresToGrid = compose(
                 ...gridOpts
             };
         }
-    )
+    ),
+    propsStreamFactory
 );
 module.exports = {
     featuresToGrid
