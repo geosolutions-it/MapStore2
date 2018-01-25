@@ -66,14 +66,16 @@ class DataGrid extends Grid {
     }
     _getHeaderRows() {
         return super.getHeaderRows().map(r =>
-            r.rowType === 'filter' && {...r, onFilterChange: this._onAddFilter} || r
+            r.rowType === 'filter' && {...r,
+                onFilterChange: (f) => {
+                    if (r.onFilterChange) {
+                        r.onFilterChange(f);
+                    }
+                    if (this.canvas) {
+                        this.canvas.scrollTop = 0;
+                    }
+                }} || r
             );
-    }
-    _onAddFilter = (filter) => {
-        this.props.onAddFilter(filter);
-        if (this.canvas) {
-            this.canvas.scrollTop = 0;
-        }
     }
     scrollListener = () => {
         if (!this.props.isFocused) {
