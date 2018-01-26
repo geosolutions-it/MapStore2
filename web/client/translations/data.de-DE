@@ -74,7 +74,7 @@
         "cookie":{
             "info": "Diese Webseite verwendet Cookies damit Sie diese einwandfrei nutzen können. Wir gehen davon aus, dass sie damit einverstanden sind, andernfalls können Sie die Webseite verlassen.",
             "moreDetailsButton": "Mehr Details",
-            "leave": "Webseite verlassen",
+            "leave": "Verlassen",
             "accept": "Annehmen"
         },
         "background": "Hintergrund",
