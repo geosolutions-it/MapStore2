@@ -167,4 +167,68 @@ describe('Test Feature', () => {
         expect(container.getSource().getFeatures()[0].getGeometry()).toExist();
         expect(container.getSource().getFeatures()[0].getGeometry().getType()).toBe("GeometryCollection");
     });
+    it('support for geometry collection', () => {
+        const options = {
+            crs: 'EPSG:4326',
+            features: {
+                type: 'FeatureCollection',
+                crs: {
+                    'type': 'name',
+                    'properties': {
+                        'name': 'EPSG:4326'
+                    }
+                },
+                features: [
+                    {
+                        type: 'Feature',
+                        geometry: { "type": "GeometryCollection",
+                            "geometries": [
+                              { "type": "Point",
+                                "coordinates": [100.0, 0.0]
+                                },
+                              { "type": "LineString",
+                                "coordinates": [ [101.0, 0.0], [102.0, 1.0] ]
+                                }
+                            ]
+                        },
+                        properties: {
+                            'name': "some name"
+                        }
+                    }
+                ]
+            }
+        };
+        const source = new ol.source.Vector({
+            features: []
+        });
+        const msId = "vectorid";
+        const container = new ol.layer.Vector({
+            msId,
+            source: source,
+            visible: true,
+            zIndex: 1
+        });
+        const geometry = options.features.features[0].geometry;
+        const type = options.features.features[0].type;
+        const properties = options.features.features[0].properties;
+
+        // create layers
+        const layer = ReactDOM.render(
+            <Feature type="vector"
+                 options={options}
+                 geometry={geometry}
+                 type={type}
+                 properties={properties}
+                 msId={msId}
+                 container={container}
+                 featuresCrs={"EPSG:4326"}
+                 crs={"EPSG:4326"}
+                 />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        // count layers
+        expect(container.getSource().getFeatures().length === 1 );
+        expect(container.getSource().getFeatures()[0].getGeometry()).toExist();
+        expect(container.getSource().getFeatures()[0].getGeometry().getType()).toBe("GeometryCollection");
+    });
 });
