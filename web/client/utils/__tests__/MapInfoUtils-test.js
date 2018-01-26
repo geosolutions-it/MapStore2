@@ -17,7 +17,8 @@ var {
     getValidator,
     getViewer,
     setViewer,
-    getLabelFromValue
+    getLabelFromValue,
+    getDefaultInfoFormatValueFromLayer
 } = require('../MapInfoUtils');
 
 const CoordinatesUtils = require('../CoordinatesUtils');
@@ -342,4 +343,10 @@ describe('MapInfoUtils', () => {
         let label = getLabelFromValue("text_or_something_else");
         expect(label).toBe("TEXT");
     });
+});
+it('getDefaultInfoFormatValueFromLayer', () => {
+    const jsonFormat = getDefaultInfoFormatValueFromLayer({featureInfo: {format: "JSON"}}, {});
+    expect(jsonFormat).toBe('application/json');
+    const htmlFormat = getDefaultInfoFormatValueFromLayer({}, {format: "text/html"});
+    expect(htmlFormat).toBe('text/html');
 });

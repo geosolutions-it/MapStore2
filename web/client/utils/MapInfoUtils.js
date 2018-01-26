@@ -60,14 +60,12 @@ const MapInfoUtils = {
     /**
      * @return {string} the info format value from layer, otherwise the info format in settings
      */
-    getDefaultInfoFormatValueFromLayer(layer, props) {
-        if (layer.featureInfo
+    getDefaultInfoFormatValueFromLayer: (layer, props) =>
+        layer.featureInfo
             && layer.featureInfo.format
-            && MapInfoUtils.getAvailableInfoFormat()[layer.featureInfo.format]) {
-            return MapInfoUtils.getAvailableInfoFormat()[layer.featureInfo.format];
-        }
-        return props.format || 'application/json';
-    },
+            && INFO_FORMATS[layer.featureInfo.format]
+            || props.format
+            || 'application/json',
     getLayerFeatureInfoViewer(layer) {
         if (layer.featureInfo
             && layer.featureInfo.viewer) {
