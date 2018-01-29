@@ -43,4 +43,40 @@ describe("The ShareEmbed component", () => {
         expect(textareaEmbed.value.indexOf(shareConfigUrl) !== -1).toBe(true);
     });
 
+    it('add version to API template', () => {
+        const url = location.href;
+        const shareConfigUrl = 'configurl';
+        const version = '18e36c9e2ce1cbf57648907ec177e02f0118764d';
+        const cmpSharePanel = ReactDOM.render(<ShareApi shareUrl={url} shareConfigUrl={shareConfigUrl} version={version}/>, document.getElementById("container"));
+        expect(cmpSharePanel).toExist();
+
+        const textareaEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "textarea")[0]);
+        expect(textareaEmbed).toExist();
+        expect(textareaEmbed.value.indexOf('?' + version) !== -1).toBe(true);
+    });
+
+    it('add version ${mapstore2.version} to API template', () => {
+        const url = location.href;
+        const shareConfigUrl = 'configurl';
+        const version = '${mapstore2.version}';
+        const cmpSharePanel = ReactDOM.render(<ShareApi shareUrl={url} shareConfigUrl={shareConfigUrl} version={version}/>, document.getElementById("container"));
+        expect(cmpSharePanel).toExist();
+
+        const textareaEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "textarea")[0]);
+        expect(textareaEmbed).toExist();
+        expect(textareaEmbed.value.indexOf('?' + version) !== -1).toBe(false);
+    });
+
+    it('add no-version to API template', () => {
+        const url = location.href;
+        const shareConfigUrl = 'configurl';
+        const version = 'no-version';
+        const cmpSharePanel = ReactDOM.render(<ShareApi shareUrl={url} shareConfigUrl={shareConfigUrl} version={version}/>, document.getElementById("container"));
+        expect(cmpSharePanel).toExist();
+
+        const textareaEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "textarea")[0]);
+        expect(textareaEmbed).toExist();
+        expect(textareaEmbed.value.indexOf('?' + version) !== -1).toBe(false);
+    });
+
 });

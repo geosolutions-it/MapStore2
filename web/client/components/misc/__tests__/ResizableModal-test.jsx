@@ -42,7 +42,7 @@ describe('ResizableModal component', () => {
     });
 
     it('ResizableModal rendering with fullscreen', () => {
-        let cmp = ReactDOM.render(<ResizableModal show fullscreen/>, document.getElementById("container"));
+        let cmp = ReactDOM.render(<ResizableModal show showFullscreen/>, document.getElementById("container"));
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         const modalEl = document.getElementById('ms-resizable-modal');
@@ -56,12 +56,12 @@ describe('ResizableModal component', () => {
         ReactTestUtils.Simulate.click(headButtons[0]);
         expect(document.querySelector('.ms-fullscreen')).toExist();
 
-        cmp = ReactDOM.render(<ResizableModal show fullscreen fullscreenType="vertical"/>, document.getElementById("container"));
+        cmp = ReactDOM.render(<ResizableModal show showFullscreen fullscreenType="vertical"/>, document.getElementById("container"));
         headButtons = document.getElementsByClassName('ms-header-btn');
         expect(headButtons.length).toBe(2);
         expect(headButtons[0].getAttribute('class')).toBe('ms-header-btn glyphicon glyphicon-resize-vertical');
 
-        cmp = ReactDOM.render(<ResizableModal show fullscreen fullscreenType="horizontal"/>, document.getElementById("container"));
+        cmp = ReactDOM.render(<ResizableModal show showFullscreen fullscreenType="horizontal"/>, document.getElementById("container"));
         headButtons = document.getElementsByClassName('ms-header-btn');
         expect(headButtons.length).toBe(2);
         expect(headButtons[0].getAttribute('class')).toBe('ms-header-btn glyphicon glyphicon-resize-horizontal');

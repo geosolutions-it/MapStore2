@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -7,6 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
+const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector, createStructuredSelector} = require('reselect');
@@ -68,6 +68,8 @@ class SaveAs extends React.Component {
         onCreateThumbnail: PropTypes.func,
         onUpdateCurrentMap: PropTypes.func,
         onErrorCurrentMap: PropTypes.func,
+        onResetCurrentMap: PropTypes.func,
+        onDisplayMetadataEdit: PropTypes.func,
         onSave: PropTypes.func,
         editMap: PropTypes.func,
         resetCurrentMap: PropTypes.func,
@@ -84,6 +86,7 @@ class SaveAs extends React.Component {
     static defaultProps = {
         additionalOptions: {},
         onMapSave: () => {},
+        onDisplayMetadataEdit: () => {},
         loadMapInfo: () => {},
         show: false
     };
@@ -115,13 +118,16 @@ class SaveAs extends React.Component {
                 metadataChanged={this.props.metadataChanged}
                 metadata={this.props.metadata}
                 displayPermissionEditor={false}
+                showDetailsRow={false}
+                modalSize="sm"
                 show={this.props.currentMap.displayMetadataEdit}
                 onEdit={this.props.editMap}
                 onUpdateCurrentMap={this.props.onUpdateCurrentMap}
                 onErrorCurrentMap={this.props.onErrorCurrentMap}
                 onHide={this.close}
-                onClose={this.close}
                 map={map}
+                onDisplayMetadataEdit={this.props.onDisplayMetadataEdit}
+                onResetCurrentMap={this.props.resetCurrentMap}
                 onSave={this.saveMap}
             />
         );
@@ -179,7 +185,7 @@ module.exports = {
                 position: 900,
                 text: <Message msgId="saveAs"/>,
                 icon: <Glyphicon glyph="floppy-open"/>,
-                action: editMap.bind(null, {}),
+            action: editMap.bind(null, {}, true),
                 selector: (state) => {
                     if (state && state.controls && state.controls.saveAs && state.controls.saveAs.allowedRoles) {
                         return indexOf(state.controls.saveAs.allowedRoles, state && state.security && state.security.user && state.security.user.role) !== -1 ? {} : { style: {display: "none"} };

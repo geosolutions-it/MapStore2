@@ -1,5 +1,6 @@
-const {changePage} = require('../../actions/featuregrid');
+const {changePage, moreFeatures} = require('../../actions/featuregrid');
 
 module.exports = {
-    onPageChange: (page, size) => changePage(page, size)
+    onPageChange: (page, size) => changePage(page, size),
+    moreFeatures
 };

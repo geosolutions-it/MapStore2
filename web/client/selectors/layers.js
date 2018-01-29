@@ -63,6 +63,7 @@ const getSelectedLayer = state => {
 const layerFilterSelector = (state) => state.layers && state.layers.filter || '';
 const layerSettingSelector = (state) => state.layers && state.layers.settings || {expanded: false, options: {opacity: 1}};
 const layerMetadataSelector = (state) => state.layers && state.layers.layerMetadata || {expanded: false, metadataRecord: {}, maskLoading: false};
+const wfsDownloadSelector = (state) => state.controls && state.controls.wfsdownload ? { expanded: state.controls.wfsdownload.enabled } : {expanded: false};
 
 const backgroundControlsSelector = (state) => (state.controls && state.controls.backgroundSelector) || {};
 const currentBackgroundSelector = (state) => {
@@ -89,6 +90,7 @@ module.exports = {
     layerFilterSelector,
     layerSettingSelector,
     layerMetadataSelector,
+    wfsDownloadSelector,
     backgroundControlsSelector,
     currentBackgroundSelector,
     tempBackgroundSelector

@@ -17,6 +17,7 @@ const LOCALE_LOAD_ERROR = 'LOCALE_LOAD_ERROR';
 
 const {castArray, merge} = require('lodash');
 const {Promise} = require('es6-promise');
+const {error} = require('./notifications');
 
 function changeLocale(data) {
     return {
@@ -56,6 +57,15 @@ function loadLocale(translationFolder, language) {
             }, {})));
         }).catch((e) => {
             dispatch(localeError(e));
+            dispatch(error({
+                title: "notification.warning",
+                message: e.status === 404 ? "localeErrors.404" : "Error loading locale",
+                action: {
+                    label: "notification.warning"
+                },
+                position: "tc"
+            }));
+
         });
     };
 }

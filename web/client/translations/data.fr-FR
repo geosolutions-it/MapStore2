@@ -22,6 +22,8 @@
         "enable": "Activer",
         "layers": "Couches",
         "warning": "Attention",
+        "errorTitleDefault": "Erreur",
+        "errorDefault": "Une erreur est survenue",
         "version": {
             "label": "Version"
         },
@@ -29,6 +31,12 @@
             "of": "de",
             "updating": "Rafraichissement...",
             "layers": "Couches"
+        },
+        "localeErrors": {
+            "404": "Fichier de traduction introuvable"
+        },
+        "details": {
+            "title": "Info sur cette carte"
         },
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
@@ -104,6 +112,8 @@
         "elevation": "Elévation",
         "close": "Fermer",
         "cancel": "Annuler",
+        "no": "Non",
+        "yes": "Oui",
         "confirm": "Confirmer",
         "confirmTitle": "Confirmez-vous?",
         "pageInfo": "{total, plural, =0 {aucun objet} =1 {{total} objet parmi {total}} other {objets {start}-{end} parmi {total}}}",
@@ -193,7 +203,30 @@
         },
         "newMap": "Nouvelle carte",
 		"maps": {
-			"search": "rechercher des cartes ..."
+            "feedback": {
+                "noDetailsAvailable": "Détails de la carte non disponibles",
+                "successSavedMap": "La carte a été créée correctement",
+                "errorDeletingMap": "Erreur lors de la suppression de cette carte",
+                "errorDeletingThumbnailOfMap": "Erreur lors de la suppression de la vignette pour cette carte",
+                "errorDeletingDetailsOfMap": "Erreur lors de la suppression des détails de cette carte",
+                "allResDeleted": "Toutes les ressources associées à cette carte ont été supprimées avec succès",
+                "errorFetchingDetailsOfMap": "Erreur lors de l'extraction des détails de cette carte",
+                "details": {
+                    "deletedSuccesfully": "Les détails ont été supprimés correctement",
+                    "savedSuccesfully": "Les détails ont été supprimés correctement",
+                    "updatedSuccesfully": "Les détails ont été mis à jour correctement"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "La vignette a été supprimée correctement",
+                    "savedSuccesfully": "La vignette a été supprimée correctement",
+                    "updatedSuccesfully": "La vignette a été mise à jour correctement"
+                },
+                "errorWhenSaving": "Une erreur est survenue lors du processus d'enregistrement",
+                "errorWhenUpdating": "Une erreur s'est produite lors du processus de mise à jour",
+                "errorWhenDeleting": "Une erreur s'est produite lors du processus de suppression",
+                "errorSizeExceeded": "S'il vous plaît, réduisez la taille des détails ou la qualité des images"
+            },
+            "search": "rechercher des cartes ..."
 		},
         "map": {
             "loading": "Chargement...",
@@ -210,6 +243,8 @@
             "errorFormat": "Formats supportés: png/jpg",
             "errorSize": "taille maximum autorisée: 500kb",
             "error": "L'image fournie est pas valide",
+            "savedMapTitle": "Carte Sauvegardée",
+            "savedMapMessage": "La carte a été enregistrée correctement",
             "thumbnailError": {
                 "error403": "Une erreur est survenue lors de la suppression de la vignette",
                 "error404": "Une erreur est survenue lors de la création de la vignette",
@@ -217,9 +252,11 @@
                 "errorDefault": "Une erreur est survenue sur le serveur"
             },
             "mapError": {
+                "errorTitle": "Impossible d'enregistrer la carte actuelle",
                 "error403": "Une erreur est survenue lors de la suppression de la carte",
                 "error404": "Une erreur est survenue lors de la création de la carte",
                 "error409": "Nom de la carte déjà choisie",
+                "error500": "Erreur Interne du Serveur. Vérifier si la taille du fichier de configuration de la carte dépasse la limite fixée",
                 "errorDefault": "Une erreur est survenue sur le serveur"
             },
             "permissions": {
@@ -230,6 +267,22 @@
                 "canWrite": "peut éditer",
                 "noResult": "aucun résultat trouvé",
                 "title": "groupes autorisés"
+            },
+            "details": {
+                "back": "Arrière",
+                "save": "Sauvegarder",
+                "show": "Montrer la fiche détaillée",
+                "add": "Ajouter de nouveaux détails",
+                "edit": "Modifier les détails",
+                "rowTitle": "Fiche de détails",
+                "title": "Fiche de détails - {name}",
+                "undo": "Annuler supprimer",
+                "showPreview": "Afficher l'aperçu",
+                "hidePreview": "Masquer l'aperçu",
+                "delete": "Supprimer la fiche détaillée",
+                "titleUnsavedChanges": "Êtes-vous sûr de fermer sans enregistrer vos modifications?",
+                "sureToClose": "Êtes-vous sûr de fermer sans enregistrer vos modifications?",
+                "fieldsChanged": "Certains champs ont été modifiés"
             }
         },
         "toc": {
@@ -244,6 +297,7 @@
             "toolTrashLayerTooltip": "Retirer la couche sélectionnée",
             "toolTrashLayersTooltip": "Retirer les couches sélectionnées",
             "toolFeaturesGridTooltip": "Ouvrir la table attributaires",
+            "toolDownloadTooltip": "Exporter les données de la couche",
             "noFilteredResults": "Pas de résultats",
             "filterPlaceholder": "Filtrer les couches",
             "clearFilter": "Supprimer le filtre",
@@ -275,6 +329,12 @@
                 "dimensions": "Mettre à jour les dimensions"
             },
             "layerMetadata": {
+                "identifier": "Identifiant",
+                "title": "Titre",
+                "abstract": "Résumé",
+                "subject": "Sujet",
+                "type": "Type",
+                "creator": "Créateur",
                 "toolLayerMetadataTooltip": "Afficher les métadonnées de la couche sélectionnée",
                 "layerMetadataPanelTitle": "Métadonnées de couche",
                 "notification": {
@@ -924,6 +984,7 @@
             "deselectall": "Tout désélectionner",
             "backtosearch": "Retour à la recherche",
             "resultInfo": "{total, plural, =0 {aucun objet} =1 {{total} de {total}} other {{start}-{end} de {total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {aucun objet} =1 {{total} de {total}} other {{total} Objets}}",
             "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} de {totalPages}} other {Page {page} de {totalPages}}}",
             "pagination": {
                 "page": "Page",

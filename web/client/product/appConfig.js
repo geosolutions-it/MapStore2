@@ -39,6 +39,9 @@ module.exports = {
                 help: {
                     enabled: false
                 },
+                details: {
+                    enabled: false
+                },
                 print: {
                     enabled: false
                 },
@@ -70,6 +73,7 @@ module.exports = {
             mousePosition: {enabled: true, crs: "EPSG:4326", showCenter: true}
         }
     },
+    appEpics: {},
     storeOpts: {
         persist: {
             whitelist: ['security']

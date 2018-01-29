@@ -12,7 +12,27 @@ const {getFeatureTypeProperties, isGeometryType, isValid, isValidValueForPropert
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
 const getPropertyName = (name, describe) => name === "geometry" ? getGeometryName(describe) : name;
 
+const getBlockIdx = (indexes = [], size = 0, rowIdx) => findIndex(indexes, (startIdx) => startIdx <= rowIdx && rowIdx < startIdx + size);
+
+/** Features are stored in an array grupped by block of pages. The page could be loaded unorderd
+ * This function recover the correct rowIndex in features, given the array of indexes
+ * of loaded page and the page size.
+ * @param  {int}   rowIdx React-data-grid idex to search
+ * @param  {Array} idxes  Array of loaded pages start index
+ * @param  {size}  size   Page size
+ * @return {int}          The new correspondinx index in features array or -1 if not present
+ */
+const getRowIdx = (rowIdx, indexes, size) => {
+    const blockIdx = getBlockIdx(indexes, size, rowIdx);
+    return blockIdx === -1 ? blockIdx : blockIdx * size + rowIdx - indexes[blockIdx];
+};
+
+// const getRow = (i, rows) => rows[i];
+const EMPTY_ROW = {id: "empty_row", get: () => undefined};
+
+const getRowVirtual = (i, rows, pages = [], size) => rows[getRowIdx(i, pages, size)] || {...EMPTY_ROW};
 const getRow = (i, rows) => rows[i];
+
 /* eslint-disable */
 
 const toChangesMap = (changesArray) => changesArray.reduce((changes, c) => ({
@@ -56,6 +76,8 @@ const upsertFilterField = (filterFields = [], filter, newObject) => {
     return [...filterFields, newObject];
 };
 const getAttributeFields = (describe) => (getFeatureTypeProperties(describe) || []).filter( e => !isGeometryType(e));
+
+
 module.exports = {
     getAttributeFields,
     featureTypeToGridColumns: (
@@ -76,6 +98,7 @@ module.exports = {
                 filterRenderer: getFilterRenderer(desc, desc.name)
         })),
     getRow,
+    getRowVirtual,
     /**
      * Create a column from the configruation. Maps the events to call a function with the whole property
      * @param  {array} toolColumns Array of the tools configurations
@@ -130,5 +153,33 @@ module.exports = {
                 })
                 : (oldFilterObj.filterFields || []).filter(field => field.attribute !== (attribute))
         };
-    }
+    },
+    toPage: ({startIndex = 0, maxFeatures = 1, totalFeatures = 0, resultSize} = {}) => ({
+        page: Math.ceil(startIndex / maxFeatures),
+        resultSize,
+        size: maxFeatures,
+        total: totalFeatures,
+        maxPages: Math.ceil(totalFeatures / maxFeatures) - 1
+    }),
+    getRowIdx,
+    getPagesToLoad: (startPage, endPage, pages, size) => {
+        let firstMissingPage;
+        let lastMissingPage;
+        for (let i = startPage; i <= endPage && firstMissingPage === undefined; i++) {
+            if (getRowIdx(i * size, pages, size) === -1) {
+                firstMissingPage = i;
+            }
+        }
+        for (let i = endPage; i >= startPage && lastMissingPage === undefined; i--) {
+            if (getRowIdx(i * size, pages, size) === -1) {
+                lastMissingPage = i;
+            }
+        }
+        return [firstMissingPage, lastMissingPage].filter(p => p !== undefined);
+    },
+    getIdxFarthestEl: (startIdx, pages = [], firstRow, lastRow) => {
+        return pages.map(val => firstRow <= val && val <= lastRow ? 0 : Math.abs(val - startIdx)).reduce((i, distance, idx, vals) => distance > vals[i] && idx || i, 0);
+    },
+    removePage: (idxFarthestEl, pages) => pages.filter( (el, i) => i !== idxFarthestEl),
+    removePageFeatures: (features, idxToRemove, size) => features.filter((el, i) => i < idxToRemove || i >= idxToRemove + size)
 };

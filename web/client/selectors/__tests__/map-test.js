@@ -7,7 +7,15 @@
 */
 
 const expect = require('expect');
-const {mapSelector, projectionSelector, mapVersionSelector, mapIdSelector, projectionDefsSelector, mapNameSelector} = require('../map');
+const {
+    mapSelector,
+    projectionSelector,
+    mapVersionSelector,
+    mapIdSelector,
+    projectionDefsSelector,
+    mapNameSelector,
+    mapInfoDetailsUriFromIdSelector
+} = require('../map');
 const center = {x: 1, y: 1};
 let state = {
         map: {center: center},
@@ -17,6 +25,20 @@ let state = {
     };
 
 describe('Test map selectors', () => {
+    it('test mapInfoDetailsUriFromIdSelector from config', () => {
+        const details = "rest%2Fgeostore%2Fdata%2F3495%2Fraw%3Fdecode%3Ddatauri";
+        const props = mapInfoDetailsUriFromIdSelector({
+            map: {
+                present: {
+                    info: {
+                        details
+                    }
+                }
+        }});
+
+        expect(props).toExist();
+        expect(props).toBe(details);
+    });
     it('test mapSelector from config', () => {
         const props = mapSelector({config: state});
 
@@ -61,6 +83,8 @@ describe('Test map selectors', () => {
     it('test mapIdSelector', () => {
         const props = mapIdSelector(state);
         expect(props).toBe(123);
+        const propsEmpty = mapIdSelector({});
+        expect(propsEmpty).toBe(null);
     });
 
     it('test mapVersionSelector', () => {

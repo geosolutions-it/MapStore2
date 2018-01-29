@@ -16,7 +16,7 @@ const MapInfoUtils = {
      * specifies which info formats are currently supported
      */
     //           default format ↴
-    AVAILABLE_FORMAT: ['TEXT', 'JSON', 'HTML'],
+    AVAILABLE_FORMAT: ['TEXT', 'PROPERTIES', 'HTML'],
 
     VIEWERS: {},
     /**
@@ -60,14 +60,12 @@ const MapInfoUtils = {
     /**
      * @return {string} the info format value from layer, otherwise the info format in settings
      */
-    getDefaultInfoFormatValueFromLayer(layer, props) {
-        if (layer.featureInfo
+    getDefaultInfoFormatValueFromLayer: (layer, props) =>
+        layer.featureInfo
             && layer.featureInfo.format
-            && MapInfoUtils.getAvailableInfoFormat()[layer.featureInfo.format]) {
-            return MapInfoUtils.getAvailableInfoFormat()[layer.featureInfo.format];
-        }
-        return props.format || 'application/json';
-    },
+            && INFO_FORMATS[layer.featureInfo.format]
+            || props.format
+            || 'application/json',
     getLayerFeatureInfoViewer(layer) {
         if (layer.featureInfo
             && layer.featureInfo.viewer) {
@@ -150,6 +148,7 @@ const MapInfoUtils = {
     },
     getViewers() {
         return {
+            [FeatureInfoUtils.INFO_FORMATS.PROPERTIES]: require('../components/data/identify/viewers/JSONViewer'),
             [FeatureInfoUtils.INFO_FORMATS.JSON]: require('../components/data/identify/viewers/JSONViewer'),
             [FeatureInfoUtils.INFO_FORMATS.HTML]: require('../components/data/identify/viewers/HTMLViewer'),
             [FeatureInfoUtils.INFO_FORMATS.TEXT]: require('../components/data/identify/viewers/TextViewer')

@@ -16,6 +16,7 @@ const TestUtils = require('react-dom/test-utils');
 const onToolsActions = {
     onZoom: () => {},
     onBrowseData: () => {},
+    onDownload: () => {},
     onUpdate: () => {},
     onRemove: () => {},
     onClear: () => {},
@@ -58,6 +59,7 @@ describe('TOC Toolbar', () => {
         const spyZoom = expect.spyOn(onToolsActions, 'onZoom');
         const spySettings = expect.spyOn(onToolsActions, 'onSettings');
         const spyBrowseData = expect.spyOn(onToolsActions, 'onBrowseData');
+        const spyDownload = expect.spyOn(onToolsActions, 'onDownload');
         const selectedLayers = [{
             id: 'l001',
             title: 'layer001',
@@ -83,7 +85,7 @@ describe('TOC Toolbar', () => {
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(4);
+        expect(btn.length).toBe(5);
         TestUtils.Simulate.click(btn[0]);
         expect(spyZoom).toHaveBeenCalledWith({
             maxx: 10,
@@ -98,6 +100,13 @@ describe('TOC Toolbar', () => {
         TestUtils.Simulate.click(btn[2]);
         expect(spyBrowseData).toHaveBeenCalled();
         expect(spyBrowseData).toHaveBeenCalledWith({
+            url: selectedLayers[0].search.url,
+            name: selectedLayers[0].name,
+            id: selectedLayers[0].id
+        });
+        TestUtils.Simulate.click(btn[4]);
+        expect(spyDownload).toHaveBeenCalled();
+        expect(spyDownload).toHaveBeenCalledWith({
             url: selectedLayers[0].search.url,
             name: selectedLayers[0].name,
             id: selectedLayers[0].id
@@ -214,10 +223,10 @@ describe('TOC Toolbar', () => {
         const el = ReactDOM.findDOMNode(cmp);
         expect(el).toExist();
         const btn = el.getElementsByClassName("btn");
-        expect(btn.length).toBe(5);
+        expect(btn.length).toBe(6);
 
 
-        TestUtils.Simulate.click(btn[4]);
+        TestUtils.Simulate.click(btn[5]);
         expect(spyGetMetadataRecord).toHaveBeenCalled();
 
         TestUtils.Simulate.click(btn[3]);

@@ -31,21 +31,6 @@ class Feature extends React.Component {
 
     componentDidMount() {
         this.addFeatures(this.props);
-        const format = new ol.format.GeoJSON();
-        const geometry = this.props.geometry.type === "GeometryCollection" ? this.props.geometry && this.props.geometry.geometries : this.props.geometry && this.props.geometry.coordinates;
-
-        if (this.props.container && geometry) {
-            this._feature = format.readFeatures({
-                type: this.props.type,
-                properties: this.props.properties,
-                geometry: this.props.geometry,
-                id: this.props.msId});
-            this._feature.forEach((f) => f.getGeometry().transform(this.props.featuresCrs, this.props.crs || 'EPSG:3857'));
-            if (this.props.style && (this.props.style !== this.props.layerStyle)) {
-                this._feature.forEach((f) => { f.setStyle(getStyle({style: this.props.style})); });
-            }
-            this.props.container.getSource().addFeatures(this._feature);
-        }
     }
 
     shouldComponentUpdate(nextProps) {

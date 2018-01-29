@@ -178,6 +178,24 @@ describe('Test the CatalogUtils', () => {
         expect(records.length).toBe(1);
     });
 
+    it('csw with DC URI and WMS 1.3.0', () => {
+        const records = CatalogUtils.getCatalogRecords('csw', {
+            records: [{
+                dc: {
+                    URI: [{
+                        name: "thumbnail",
+                        value: "http://thumb"
+                    }, {
+                        name: "wms",
+                        protocol: "OGC:WMS-1.3.0-http-get-map",
+                        value: "http://geoserver"
+                    }]
+                }
+            }]
+        }, {});
+        expect(records.length).toBe(1);
+    });
+
     it('csw with DC references', () => {
         const records = CatalogUtils.getCatalogRecords('csw', {
             records: [{

@@ -1,5 +1,5 @@
-/**
- * Copyright 2015, GeoSolutions Sas.
+/*
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -18,6 +18,10 @@ const nl = require('react-intl/locale-data/nl');
 
 addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl]);
 
+/*
+ * it, en, fr, de, es are the default locales and it is preferrable to customize them via configuration.
+ * if you want to change it please read documentation guide on how to do this.
+*/
 let supportedLocales = {
     "it": {
         code: "it-IT",
@@ -35,7 +39,6 @@ let supportedLocales = {
         code: "de-DE",
         description: "Deutsch"
     },
-
     "es": {
         code: "es-ES",
         description: "Español"
@@ -51,6 +54,13 @@ const DATE_FORMATS = {
     "it-IT": "dd/MM/yyyy",
     "nl-NL": "dd/MM/yyyy"
 };
+
+let errorParser = {};
+
+/**
+ * Utilities for locales.
+ * @memberof utils
+ */
 const LocaleUtils = {
     ensureIntl(callback) {
         require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js', 'intl/locale-data/jsonp/de.js', 'intl/locale-data/jsonp/es.js', 'intl/locale-data/jsonp/nl.js'], (require) => {
@@ -107,6 +117,27 @@ const LocaleUtils = {
             message = message ? message[part] : null;
         });
         return message;
+    },
+    /**
+     * Registre a parser to translate error services
+     * @param type {string} name of the service
+     * @param parser {object} custom parser of the service
+     */
+    registerErrorParser: (type, parser) => {
+        errorParser[type] = parser;
+    },
+    /**
+     * Return localized id of error messages
+     * @param e {object} error
+     * @param service {string} service that thrown the error
+     * @param section {string} section where the error happens
+     * @return {object} {title, message}
+     */
+    getErrorMessage: (e, service, section) => {
+        return service && section && errorParser[service] && errorParser[service][section] && errorParser[service][section](e) || {
+            title: 'errorTitleDefault',
+            message: 'errorDefault'
+        };
     }
 };
 

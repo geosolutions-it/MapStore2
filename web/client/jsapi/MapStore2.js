@@ -162,6 +162,10 @@ const MapStore2 = {
         const options = merge({}, this.defaultOptions || {}, opts);
         const {initialState, storeOpts} = options;
 
+        const {loadVersion} = require('../actions/version');
+        const {versionSelector} = require('../selectors/version');
+        const {loadAfterThemeSelector} = require('../selectors/config');
+
         const pages = [{
             name: "embedded",
             path: "/",
@@ -173,14 +177,18 @@ const MapStore2 = {
 
         const StandardRouter = connect((state) => ({
             locale: state.locale || {},
-            pages
+            pages,
+            version: versionSelector(state),
+            loadAfterTheme: loadAfterThemeSelector(state)
         }))(require('../components/app/StandardRouter'));
         const actionTrigger = generateActionTrigger(options.startAction || "CHANGE_MAP_VIEW");
         triggerAction = actionTrigger.trigger;
-        const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {}, {
+        const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {
+            version: require('../reducers/version')
+        }, {
             jsAPIEpic: actionTrigger.epic
         });
-        const initialActions = getInitialActions(options);
+        const initialActions = [...getInitialActions(options), loadVersion];
         const appConfig = {
             storeOpts: assign({}, storeOpts, {notify: true}),
             appStore,

@@ -29,6 +29,9 @@
             "updating": "Wordt bijgewerkt...",
             "layers": "lagen"
         },
+        "localeErrors": {
+            "404": "Vertaalbestand niet gevonden"
+        },
         "layerProperties": {
             "windowTitle": "Eigenschappen van de laag",
             "title": "Titel",
@@ -240,6 +243,7 @@
             "loadingerror": "De laag is niet correct geladen",
             "measure": "Meten",
             "backgroundSwitcher": "achtergrond kaart",
+            "toolDownloadTooltip": "Export layer data",
             "layers": "Lagen",
             "drawerButton": "Lagen",
             "refreshTitle": "Lagen bijwerken",
@@ -253,6 +257,12 @@
                 "dimensions": "De dimensies bijwerken"
             },
             "layerMetadata": {
+                "identifier": "Identifier",
+                "title": "Title",
+                "abstract": "Abstract",
+                "subject": "Subject",
+                "type": "Type",
+                "creator": "Creator",
                 "toolLayerMetadataTooltip": "Toon de metadata van de geselecteerde laag",
                 "layerMetadataPanelTitle": "Metagegevens van de laag",
                 "notification": {
@@ -838,6 +848,7 @@
             "deselectall": "Deselecteer alles",
             "backtosearch": "Terug naar zoeken",
             "resultInfo": "{total, plural, =0 {geen enkel object} =1 {{total} van {total}} other {{start}-{end} van {total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {geen enkel object} =1 {{total} van {total}} other {{total}}}",
             "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} van {totalPages}} other {Page {page} van {totalPages}}}",
             "pagination": {
                 "page": "Bladzijde",

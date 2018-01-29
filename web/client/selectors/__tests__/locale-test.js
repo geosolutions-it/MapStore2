@@ -7,11 +7,16 @@
 */
 
 const expect = require('expect');
-const {currentLocaleSelector} = require('../locale');
+const {currentLocaleSelector } = require('../locale');
 
 const state = {
     locale: {
-        current: 'en-US'
+        current: 'en-US',
+        messages: {
+            "details": {
+                "title": "Details"
+            }
+        }
     }
 };
 

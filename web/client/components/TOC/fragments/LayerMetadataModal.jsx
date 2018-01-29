@@ -18,11 +18,13 @@ const Template = require('../../data/template/jsx/Template');
 const MetadataTemplate = require('./template/MetadataTemplate');
 const RenderTemplate = require("./template/index");
 
+const {isArray, isString} = require('lodash');
+
 class LayerMetadataModal extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         layerMetadata: PropTypes.object,
-        metadataTemplate: PropTypes.array,
+        metadataTemplate: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object, PropTypes.func]),
         hideLayerMetadata: PropTypes.func,
         closeGlyph: PropTypes.string,
         panelStyle: PropTypes.object,
@@ -34,7 +36,7 @@ class LayerMetadataModal extends React.Component {
     static defaultProps = {
         id: "mapstore-layer-settings-metadata",
         layerMetadata: {expanded: false},
-        metadataTemplate: [],
+        metadataTemplate: null,
         closeGlyph: "1-close",
         panelStyle: {},
         panelClassName: "toolbar-panel portal-dialog",
@@ -50,14 +52,22 @@ class LayerMetadataModal extends React.Component {
         this.props.hideLayerMetadata();
     };
 
+    getTemplate = () => {
+        const template = this.props.metadataTemplate || MetadataTemplate;
+        if (isArray(template) || isString(template)) {
+            const templateString = isArray(template) ? template.join('\n') : template;
+            return (<Template
+                model={this.props.layerMetadata.metadataRecord}
+                template={templateString}
+            renderContent={RenderTemplate} />);
+        }
+        const CustomTemplate = template;
+        return <CustomTemplate model={this.props.layerMetadata.metadataRecord}/>;
+    };
+
     renderBodyTemplate = () => {
         if (!this.props.layerMetadata.maskLoading) {
-            return (
-                <Template
-                    model={this.props.layerMetadata.metadataRecord}
-                    template={this.props.metadataTemplate && this.props.metadataTemplate.length ? this.props.metadataTemplate.join('\n') : MetadataTemplate}
-                    renderContent={RenderTemplate}/>
-            );
+            return this.getTemplate();
         }
         return null;
     };

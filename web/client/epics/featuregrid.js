@@ -6,14 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require('rxjs');
-const {get, head, isEmpty, find} = require('lodash');
+const {get, head, isEmpty, find, fill} = require('lodash');
 const { LOCATION_CHANGE } = require('react-router-redux');
 const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const axios = require('../libs/ajax');
 const bbox = require('@turf/bbox');
 const {fidFilter} = require('../utils/ogc/Filter/filter');
-const {getDefaultFeatureProjection} = require('../utils/FeatureGridUtils');
+const {getDefaultFeatureProjection, getPagesToLoad} = require('../utils/FeatureGridUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const LayersUtils = require('../utils/LayersUtils');
 const {isSimpleGeomType} = require('../utils/MapUtils');
@@ -22,7 +22,7 @@ const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../ac
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {setControlProperty} = require('../actions/controls');
-const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS} = require('../actions/wfsquery');
+const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 
@@ -36,7 +36,7 @@ const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURE
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
     openFeatureGrid, closeFeatureGrid, OPEN_FEATURE_GRID, CLOSE_FEATURE_GRID, CLOSE_FEATURE_GRID_CONFIRM, OPEN_ADVANCED_SEARCH, ZOOM_ALL, UPDATE_FILTER, START_SYNC_WMS,
-    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter} = require('../actions/featuregrid');
+    STOP_SYNC_WMS, startSyncWMS, storeAdvancedSearchFilter, fatureGridQueryResult, LOAD_MORE_FEATURES} = require('../actions/featuregrid');
 
 const {TOGGLE_CONTROL, resetControls} = require('../actions/controls');
 const {setHighlightFeaturesPath} = require('../actions/highlight');
@@ -47,13 +47,13 @@ const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasCha
 const {queryPanelSelector} = require('../selectors/controls');
 
 const {error, warning} = require('../actions/notifications');
-const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive} = require('../selectors/query');
+const {describeSelector, isDescribeLoaded, getFeatureById, wfsURL, wfsFilter, featureCollectionResultSelector, isSyncWmsActive, featureLoadingSelector} = require('../selectors/query');
 
 const {getLayerFromId} = require('../selectors/layers');
 
 const {interceptOGCError} = require('../utils/ObservableUtils');
 
-const {gridUpdateToQueryUpdate} = require('../utils/FeatureGridUtils');
+const {gridUpdateToQueryUpdate, getIdxFarthestEl, removePageFeatures, removePage} = require('../utils/FeatureGridUtils');
 
 const {queryFormUiStateSelector} = require('../selectors/queryform');
 /**
@@ -103,7 +103,7 @@ const setupDrawSupport = (state, original) => {
             ftId: feature.id
         };
         if (selectedFeaturesCount(state) === 1) {
-            if (feature.geometry === null) {
+            if (feature.geometry === null || feature.id === 'empty_row') {
                 return Rx.Observable.from([
                     drawSupportReset()
                 ]);
@@ -236,10 +236,13 @@ module.exports = {
             .concat(modeSelector(store.getState()) === MODES.VIEW ? Rx.Observable.of(toggleViewMode()) : Rx.Observable.empty())),
     /**
      * Create sorted queries on sort action
+     * With virtualSroll active reset to page 0 but the grid will reload
+     * to the current index
      * @memberof epics.featuregrid
      */
     featureGridSort: (action$, store) =>
-        action$.ofType(SORT_BY).switchMap( ({sortBy, sortOrder}) =>
+        action$.ofType(SORT_BY)
+        .switchMap( ({sortBy, sortOrder}) =>
             Rx.Observable.of( query(
                     wfsURL(store.getState()),
                     addPagination({
@@ -249,6 +252,11 @@ module.exports = {
                         getPagination(store.getState())
                     )
             ))
+            .merge(action$.ofType(QUERY_RESULT)
+                    .map((ra) => fatureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
+                    .takeUntil(action$.ofType(QUERY_ERROR))
+                    .take(1)
+                    )
         ),
     /**
      * Performs the query when the text filter is updated
@@ -266,7 +274,13 @@ module.exports = {
     featureGridChangePage: (action$, store) =>
         action$.ofType(CHANGE_PAGE)
             .merge(action$.ofType(UPDATE_QUERY).debounceTime(500).map(action => ({...action, page: 0})))
-            .switchMap(createLoadPageFlow(store)),
+            .switchMap((a) => createLoadPageFlow(store)(a)
+                .merge(action$.ofType(QUERY_RESULT)
+                    .map((ra) => fatureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
+                    .take(1)
+                    .takeUntil(action$.ofType(QUERY_ERROR))
+                )
+            ),
     /**
      * Reload the page on save success.
      * NOTE: The page is in the action.
@@ -281,13 +295,17 @@ module.exports = {
                     addPagination({
                             ...wfsFilter(store.getState())
                         },
-                        getPagination(store.getState(), {page, size})
+                        getPagination(store.getState(), {page: page, size})
                     )
                 ),
                 refreshLayerVersion(selectedLayerIdSelector(store.getState()))
-
-            ).merge(
-                action$.ofType(QUERY_RESULT).map(() => clearChanges())
+            )
+            .merge(action$.ofType(QUERY_RESULT)
+                .map((ra) => Rx.Observable.of(clearChanges(), fatureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
+                    )
+                .mergeAll()
+                .takeUntil(action$.ofType(QUERY_ERROR))
+                .take(2)
             )
         ),
     /**
@@ -396,10 +414,13 @@ module.exports = {
                     .switchMap(() => Rx.Observable.of(drawSupportReset())))
 
     ),
-    closeCatalogOnFeatureGridOpen: (action$) =>
+    closeRightPanelOnFeatureGridOpen: (action$) =>
         action$.ofType(OPEN_FEATURE_GRID)
             .switchMap( () => {
-                return Rx.Observable.of(setControlProperty('metadataexplorer', 'enabled', false));
+                return Rx.Observable.from(
+                    [setControlProperty('metadataexplorer', 'enabled', false),
+                    setControlProperty('annotations', 'enabled', false),
+                    setControlProperty('details', 'enabled', false)]);
             }),
     /**
      * intercept geometry changed events in draw support to update current
@@ -551,8 +572,9 @@ module.exports = {
             );
         }),
     onFeatureGridZoomAll: (action$, store) =>
-        action$.ofType(ZOOM_ALL).switchMap(() =>
+        action$.ofType(ZOOM_ALL).filter(() => !get(store.getState(), "featuregird.virtualScroll", false)).switchMap(() =>
             Rx.Observable.of(zoomToExtent(bbox(featureCollectionResultSelector(store.getState())), "EPSG:4326"))
+
     ),
     /**
      * reset controls on edit mode switch
@@ -650,5 +672,63 @@ module.exports = {
                         }
                         return Rx.Observable.of(addFilterToWMSLayer(layerId, filter));
                     });
-            })
+            }),
+    virtualScrollLoadFeatures: (action$, {getState}) =>
+        action$.ofType(LOAD_MORE_FEATURES)
+        .filter(() => !featureLoadingSelector(getState()))
+        .switchMap( ac => {
+            const state = getState();
+            const {startPage, endPage} = ac.pages;
+            const {pages, pagination} = state.featuregrid;
+            const size = get(pagination, "size");
+            const nPs = getPagesToLoad(startPage, endPage, pages, size);
+            const needPages = (nPs[1] - nPs[0] + 1 );
+            return Rx.Observable.of( query(wfsURL(state),
+                    addPagination({
+                                ...(wfsFilter(state))
+                                },
+                                {startIndex: nPs[0] * size, maxFeatures: needPages * size }
+                            )
+                    )).filter(() => nPs.length > 0)
+                .merge( action$.ofType(QUERY_RESULT)
+                    .filter(() => nPs.length > 0)
+                    .map((ra) => {
+                        let {features = [], maxStoredPages} = (getState()).featuregrid;
+                        let fts = get(ra, "result.features", []);
+                        if (fts.length !== needPages * size) {
+                            fts = fts.concat(fill(Array(needPages * size - fts.length), false));
+                        }
+                        const startIdx = get(ra, "filterObj.pagination.startIndex");
+                        let oldPages = pages;
+                        // Cached page should be less than the max of maxStoredPages or the number of page needed to fill the visible are of the grid
+                        const nSpaces = oldPages.length + needPages - Math.max(maxStoredPages, (endPage - startPage + 1));
+                        if ( nSpaces > 0) {
+                            const firstRow = startPage * size;
+                            const lastRow = endPage * size;
+                            // Remove the farthest page from last loaded pages
+                            const averageIdx = firstRow + (lastRow - firstRow) / 2;
+                            for (let i = 0; i < nSpaces; i++) {
+                                const idxFarthestEl = getIdxFarthestEl(averageIdx, pages, firstRow, lastRow);
+                                const idxToRemove = idxFarthestEl * size;
+                                oldPages = removePage(idxFarthestEl, oldPages);
+                                features = removePageFeatures(features, idxToRemove, size);
+                            }
+                        }
+                        let pagesLoaded = [];
+                        for (let i = 0; i < needPages; i++) {
+                            pagesLoaded.push(startIdx + (size * i));
+                        }
+                        const newPages = oldPages.concat(pagesLoaded);
+                        const newFts = features.concat(fts);
+                        return fatureGridQueryResult( newFts, newPages);
+                    }).take(1).takeUntil(action$.ofType(QUERY_ERROR))
+                ).merge(action$.ofType(FEATURE_LOADING).filter(() => nPs.length > 0)
+                // When loading we store the load more features request, on loading end we emit the last
+                    .filter(a => !a.isLoading)
+                    .withLatestFrom(action$.ofType(LOAD_MORE_FEATURES))
+                    .map((p) => p[1])
+                    .take(1)
+                    .takeUntil(action$.ofType(QUERY_ERROR))
+                );
+        })
 };

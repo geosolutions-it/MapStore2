@@ -154,6 +154,7 @@ describe('Test the MapUtils', () => {
                 params: {},
                 search: {},
                 singleTile: false,
+                thumbURL: "THUMB_URL",
                 title: "layer001",
                 type: "wms",
                 url: "",
@@ -225,6 +226,7 @@ describe('Test the MapUtils', () => {
                 }],
                 layers: [{
                     allowedSRS: {},
+                    thumbURL: "THUMB_URL",
                     availableStyles: undefined,
                     bbox: {},
                     capabilitiesURL: undefined,
@@ -262,6 +264,7 @@ describe('Test the MapUtils', () => {
                 },
                 {
                     allowedSRS: {},
+                    thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
                     capabilitiesURL: undefined,
@@ -299,6 +302,7 @@ describe('Test the MapUtils', () => {
                 },
                 {
                     allowedSRS: {},
+                    thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
                     capabilitiesURL: undefined,
@@ -449,6 +453,7 @@ describe('Test the MapUtils', () => {
                 }],
                 layers: [{
                     allowedSRS: {},
+                    thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
                     capabilitiesURL: undefined,
@@ -486,6 +491,7 @@ describe('Test the MapUtils', () => {
                 },
                 {
                     allowedSRS: {},
+                    thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
                     capabilitiesURL: undefined,
@@ -523,6 +529,7 @@ describe('Test the MapUtils', () => {
                 },
                 {
                     allowedSRS: {},
+                    thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
                     capabilitiesURL: undefined,

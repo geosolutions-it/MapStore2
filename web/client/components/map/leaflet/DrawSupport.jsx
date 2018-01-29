@@ -17,7 +17,73 @@ const assign = require('object-assign');
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
 const VectorUtils = require('../../../utils/leaflet/Vector');
+/**
+ * Converts the leaflet circle into the projected circle (usually in 3857)
+ * @param  {number} mRadius leaflet radius of circle
+ * @param  {array} center  The center point in EPSG:4326. Array [lng,lat]
+ * @return {object}        center and radius of the projected circle
+ */
+const toProjectedCircle = (mRadius, center, projection) => {
+    if (projection === "EPSG:4326") {
+        return {
+            center,
+            srs: projection,
+            radius: mRadius
+        };
+    }
 
+    // calculate
+    const lonRadius = (mRadius / 40075017) * 360 / Math.cos(L.LatLng.DEG_TO_RAD * (center[1]));
+    const projCenter = CoordinatesUtils.reproject(center, "EPSG:4326", projection);
+    if (lonRadius) {
+        const checkPoint = CoordinatesUtils.reproject([center[0] + lonRadius, center[1]], "EPSG:4326", projection);
+        return {
+            center: projCenter,
+            srs: projection,
+            radius: Math.sqrt(Math.pow(projCenter.x - checkPoint.x, 2) + Math.pow(projCenter.y - checkPoint.y, 2))
+        };
+    }
+    return {
+        center: projCenter,
+        srs: projection,
+        radius: mRadius
+    };
+
+};
+
+/**
+ * From projected circle into leaflet circle.
+ * @param  {number} radius                   Projected radius
+ * @param  {object} center                   `{lng: {number}, lat: {number}}`
+ * @param  {String} [projection="EPSG:4326"] projection from where to convert
+ * @return {object}                          center and radius of leaflet circle
+ */
+const toLeafletCircle = (radius, center, projection= "EPSG:4326") => {
+    if (projection === "EPSG:4326" || radius === undefined) {
+        return {
+            center,
+            projection,
+            radius
+        };
+    }
+    const leafletCenter = CoordinatesUtils.reproject({x: center.lng, y: center.lat}, projection, "EPSG:4326");
+    if (radius === undefined) {
+        return {
+            center: leafletCenter,
+            projection,
+            radius
+        };
+    }
+    const checkPoint = CoordinatesUtils.reproject([center.lng + radius, center.lat], projection, "EPSG:4326");
+
+    const lonRadius = Math.sqrt(Math.pow(leafletCenter.x - checkPoint.x, 2) + Math.pow(leafletCenter.y - checkPoint.y, 2));
+    const mRadius = lonRadius * Math.cos(L.LatLng.DEG_TO_RAD * leafletCenter.y) * 40075017 / 360;
+    return {
+        center: leafletCenter,
+        projection: "EPSG:4326",
+        radius: mRadius
+    };
+};
 /**
  * Component that allows to draw and edit geometries as (Point, LineString, Polygon, Rectangle, Circle, MultiGeometries)
  * @class DrawSupport
@@ -121,7 +187,6 @@ class DrawSupport extends React.Component {
         // let drawn geom stay on the map
         let geoJesonFt = layer.toGeoJSON();
         let bounds;
-        let tempCoordinates;
         if (evt.layerType === "marker") {
             bounds = L.latLngBounds(geoJesonFt.geometry.coordinates, geoJesonFt.geometry.coordinates);
         } else {
@@ -130,10 +195,10 @@ class DrawSupport extends React.Component {
         let extent = boundsToOLExtent(bounds);
         let center = bounds.getCenter();
         center = [center.lng, center.lat];
-        let radius = layer.getRadius ? layer.getRadius() : 0;
         let coordinates = geoJesonFt.geometry.coordinates;
         let projection = "EPSG:4326";
         let type = geoJesonFt.geometry.type;
+        let radius = layer.getRadius ? layer.getRadius() : 0;
         if (evt.layerType === "circle") {
             // Circle needs to generate path and needs to be projected before
             // When GeometryDetails update circle it's in charge to generete path
@@ -141,14 +206,11 @@ class DrawSupport extends React.Component {
             geoJesonFt.projection = "EPSG:4326";
             projection = "EPSG:3857";
             extent = CoordinatesUtils.reprojectBbox(extent, "EPSG:4326", projection);
-            center = CoordinatesUtils.reproject(center, "EPSG:4326", projection);
-            geoJesonFt.radius = radius;
+            const projCircle = toProjectedCircle(layer._mRadius, center, projection);
+            center = projCircle.center;
+            radius = projCircle.radius;
             coordinates = CoordinatesUtils.calculateCircleCoordinates(center, radius, 100);
-            extent = CoordinatesUtils.reprojectBbox(extent, projection, "EPSG:4326");
-            center = CoordinatesUtils.reproject(center, projection, "EPSG:4326");
-            tempCoordinates = CoordinatesUtils.reprojectGeoJson({type: "Feature", geometry: {type: "Polygon", coordinates}}, projection, "EPSG:4326");
-            projection = "EPSG:4326";
-            coordinates = tempCoordinates.geometry.coordinates;
+            geoJesonFt.radius = layer.getRadius ? layer.getRadius() : 0;
             center = [center.x, center.y];
             type = "Polygon";
         }
@@ -182,11 +244,10 @@ class DrawSupport extends React.Component {
 
     addLayer = (newProps) => {
         this.clean();
-
-        let vector = L.geoJson(null, {
+        const vector = L.geoJson(null, {
             pointToLayer: function(feature, latLng) {
-                let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, feature.projection || "EPSG:4326", "EPSG:4326");
-                return L.circle(L.latLng(center.y, center.x), feature.radius || 5);
+                const {center, radius} = toLeafletCircle(feature.radius, latLng, feature.projection);
+                return L.circle(center, radius || 5);
             },
             style: {
                 color: '#ffcc33',
@@ -224,8 +285,8 @@ class DrawSupport extends React.Component {
             this.drawLayer.clearLayers();
             if (this.props.drawMethod === "Circle") {
                 this.drawLayer.options.pointToLayer = (feature, latLng) => {
-                    let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, feature.projection || "EPSG:4326", "EPSG:4326");
-                    return L.circle(L.latLng(center.y, center.x), feature.radius || 5);
+                    const {center, radius} = toLeafletCircle(feature.radius, latLng, feature.projection);
+                    return L.circle(center, radius || 5);
                 };
                 this.drawLayer.options.style = {
                     color: '#ffcc33',
@@ -335,7 +396,17 @@ class DrawSupport extends React.Component {
         }
         const props = assign({}, newProps, {features: [newFeature ? newFeature : {}]});
         if (!this.drawLayer) {
-            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
+            /* Reprojection is needed to implement circle initial visualization after querypanel geometry reload (on reload the 100 points polygon is shown)
+             *
+             * We should, for the future draw a circle also on reload.
+             * NOTE: after some center or radius changes (e.g. )
+            */
+            this.addGeojsonLayer({
+                features: newProps.features && newProps.options.featureProjection && newProps.options.featureProjection !== "EPSG:4326"
+                    ? newProps.features.map(f => CoordinatesUtils.reprojectGeoJson(f, newProps.options.featureProjection, "EPSG:4326") )
+                    : newProps.features,
+                projection: newProps.options && newProps.options.featureProjection || "EPSG:4326",
+                style: newProps.style});
         } else {
             this.drawLayer.clearLayers();
             this.drawLayer.addData(this.convertFeaturesPolygonToPoint(props.features, props.drawMethod));
@@ -436,7 +507,15 @@ class DrawSupport extends React.Component {
 
     convertFeaturesPolygonToPoint = (features, method) => {
         return method === 'Circle' ? features.map((f) => {
-            return {...f, type: "Point"};
+            const {center, projection, radius} = ((f.center !== undefined && f.radius !== undefined) ? toLeafletCircle(f.radius, {lat: f.center.y, lng: f.center.x}, f.projection) : f);
+            return {
+                ...f,
+                coordinates: center ? [center.x, center.y] : f.coordinates,
+                center: center || f.center,
+                projection: projection || f.projection,
+                radius: radius !== undefined ? radius : f.radius,
+                type: "Point"
+            };
         }) : features;
 
     };

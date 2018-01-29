@@ -7,12 +7,18 @@
 */
 const PropTypes = require('prop-types');
 const React = require('react');
+const {bindActionCreators} = require('redux');
 const {connect} = require('react-redux');
-const {loadMaps, updateMapMetadata, deleteMap, createThumbnail, deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating, metadataChanged} = require('../actions/maps');
+const {loadMaps, updateMapMetadata, deleteMap, createThumbnail,
+    updateDetails, deleteDetails, saveDetails, toggleDetailsSheet, toggleGroupProperties, toggleUnsavedChanges, setDetailsChanged,
+    deleteThumbnail, saveMap, thumbnailError, saveAll, onDisplayMetadataEdit, resetUpdating, metadataChanged,
+    backDetails, undoDetails} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap, removeThumbnail, resetCurrentMap} = require('../actions/currentMap');
 const {mapTypeSelector} = require('../selectors/maptype');
 const ConfigUtils = require('../utils/ConfigUtils');
 
+const maptypeEpics = require('../epics/maptype');
+const mapsEpics = require('../epics/maps');
 const MapsGrid = connect((state) => {
     return {
         bsSize: "small",
@@ -21,22 +27,35 @@ const MapsGrid = connect((state) => {
         loading: state.maps && state.maps.loading,
         mapType: mapTypeSelector(state)
     };
-}, {
-    loadMaps,
-    updateMapMetadata,
-    editMap,
-    saveMap,
-    removeThumbnail,
-    onDisplayMetadataEdit,
-    resetUpdating,
-    saveAll,
-    updateCurrentMap,
-    errorCurrentMap,
-    thumbnailError,
-    createThumbnail,
-    deleteThumbnail,
-    deleteMap,
-    resetCurrentMap
+}, dispatch => {
+    return {
+        loadMaps: (...params) => dispatch(loadMaps(...params)),
+        updateMapMetadata: (...params) => dispatch(updateMapMetadata(...params)),
+        editMap: (...params) => dispatch(editMap(...params)),
+        saveMap: (...params) => dispatch(saveMap(...params)),
+        removeThumbnail: (...params) => dispatch(removeThumbnail(...params)),
+        onDisplayMetadataEdit: (...params) => dispatch(onDisplayMetadataEdit(...params)),
+        resetUpdating: (...params) => dispatch(resetUpdating(...params)),
+        saveAll: (...params) => dispatch(saveAll(...params)),
+        updateCurrentMap: (...params) => dispatch(updateCurrentMap(...params)),
+        errorCurrentMap: (...params) => dispatch(errorCurrentMap(...params)),
+        thumbnailError: (...params) => dispatch(thumbnailError(...params)),
+        createThumbnail: (...params) => dispatch(createThumbnail(...params)),
+        deleteThumbnail: (...params) => dispatch(deleteThumbnail(...params)),
+        deleteMap: (...params) => dispatch(deleteMap(...params)),
+        resetCurrentMap: (...params) => dispatch(resetCurrentMap(...params)),
+        detailsSheetActions: bindActionCreators({
+            onBackDetails: backDetails,
+            onUndoDetails: undoDetails,
+            onToggleDetailsSheet: toggleDetailsSheet,
+            onToggleGroupProperties: toggleGroupProperties,
+            onToggleUnsavedChangesModal: toggleUnsavedChanges,
+            onsetDetailsChanged: setDetailsChanged,
+            onUpdateDetails: updateDetails,
+            onSaveDetails: saveDetails,
+            onDeleteDetails: deleteDetails
+        }, dispatch)
+    };
 })(require('../components/maps/MapGrid'));
 
 const {loadPermissions, updatePermissions, loadAvailableGroups} = require('../actions/maps');
@@ -45,7 +64,7 @@ const {setControlProperty} = require('../actions/controls');
 
 const MetadataModal = connect(
     (state = {}) => ({
-        metadata: state.maps.metadata,
+        metadata: state.currentMap.metadata,
         availableGroups: state.currentMap && state.currentMap.availableGroups || [ ], // TODO: add message when array is empty
         newGroup: state.controls && state.controls.permissionEditor && state.controls.permissionEditor.newGroup,
         newPermission: state.controls && state.controls.permissionEditor && state.controls.permissionEditor.newPermission || "canRead",
@@ -141,7 +160,10 @@ module.exports = {
     }), {
         loadMaps
     })(Maps),
-    epics: require('../epics/maptype'),
+    epics: {
+        ...maptypeEpics,
+        ...mapsEpics
+    },
     reducers: {
         maps: require('../reducers/maps'),
         maptype: require('../reducers/maptype'),

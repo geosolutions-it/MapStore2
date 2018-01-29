@@ -7,6 +7,7 @@
 */
 
 const assign = require('object-assign');
+const {get} = require('lodash');
 
 const rulesSelector = (state) => {
     if (!state.security || !state.security.rules) {
@@ -29,12 +30,22 @@ const rulesSelector = (state) => {
 };
 
 const userSelector = (state) => state && state.security && state.security.user;
+const userGroupSecuritySelector = (state) => get(state, "security.user.groups.group");
 const userRoleSelector = (state) => userSelector(state) && userSelector(state).role;
+const userParamsSelector = (state) => {
+    const user = userSelector(state);
+    return {
+        id: user.id,
+        name: user.name
+    };
+};
 
 module.exports = {
     rulesSelector,
     userSelector,
+    userParamsSelector,
     userRoleSelector,
-    isAdminUserSelector: (state) => userRoleSelector(state) === "ADMIN",
-    securityTokenSelector: state => state.security && state.security.token
+    securityTokenSelector: state => state.security && state.security.token,
+    userGroupSecuritySelector,
+    isAdminUserSelector: (state) => userRoleSelector(state) === "ADMIN"
 };

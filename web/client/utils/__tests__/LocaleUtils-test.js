@@ -20,6 +20,29 @@ describe('LocaleUtils', () => {
     });
 
     it('getLocale', () => {
+        let supportedLocales = {
+            "it": {
+                code: "it-IT",
+                description: "Italiano"
+            },
+            "en": {
+                code: "en-US",
+                description: "English"
+            },
+            "fr": {
+                code: "fr-FR",
+                description: "Français"
+            },
+            "de": {
+                code: "de-DE",
+                description: "Deutsch"
+            },
+            "es": {
+                code: "es-ES",
+                description: "Español"
+            }
+        };
+        LocaleUtils.setSupportedLocales(supportedLocales);
         expect(LocaleUtils.getLocale({locale: 'it'})).toBe('it-IT');
         expect(LocaleUtils.getLocale({locale: 'en'})).toBe('en-US');
 
@@ -33,5 +56,20 @@ describe('LocaleUtils', () => {
 
     it('getSupportedLocales', () => {
         expect(LocaleUtils.getSupportedLocales()).toExist();
+    });
+
+    it('getErrorMessage', () => {
+        expect(LocaleUtils.getErrorMessage({status: 409}, 'geostore', 'mapsError')).toEqual({
+            title: 'map.mapError.errorTitle',
+            message: 'map.mapError.error409'
+        });
+        expect(LocaleUtils.getErrorMessage({status: 0}, 'geostore', 'mapsError')).toEqual({
+            title: 'map.mapError.errorTitle',
+            message: 'map.mapError.errorDefault'
+        });
+        expect(LocaleUtils.getErrorMessage()).toEqual({
+            title: 'errorTitleDefault',
+            message: 'errorDefault'
+        });
     });
 });

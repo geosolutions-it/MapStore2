@@ -3,6 +3,7 @@ const INFO_FORMATS = {
     "TEXT": "text/plain",
     "HTML": "text/html",
     "JSONP": "text/javascript",
+    "PROPERTIES": "application/json",
     "JSON": "application/json",
     "GML2": "application/vnd.ogc.gml",
     "GML3": "application/vnd.ogc.gml/3.1.1"
@@ -71,6 +72,20 @@ const Validator = {
         }
     },
     JSON: {
+        /**
+         *Parse the JSON to get only the valid json responses
+         */
+        getValidResponses(responses) {
+            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
+        },
+        /**
+         * Parse the JSON to get only the NOT valid json responses
+         */
+        getNoValidResponses(responses) {
+            return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
+        }
+    },
+    PROPERTIES: {
         /**
          *Parse the JSON to get only the valid json responses
          */

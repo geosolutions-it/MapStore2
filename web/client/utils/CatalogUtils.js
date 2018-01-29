@@ -54,12 +54,12 @@ const converters = {
                     const URI = isArray(dc.URI) ? dc.URI : (dc.URI && [dc.URI] || []);
                     let thumb = head([].filter.call(URI, (uri) => {return uri.name === "thumbnail"; }) );
                     thumbURL = thumb ? thumb.value : null;
-                    wms = head([].filter.call(URI, (uri) => { return uri.protocol === "OGC:WMS-1.1.1-http-get-map"; }));
+                    wms = head([].filter.call(URI, (uri) => { return uri.protocol && uri.protocol.match(/^OGC:WMS-(.*)-http-get-map/g); }));
                 }
                 // look in references objects
                 if (!wms && dc && dc.references && dc.references.length) {
                     let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
-                    wms = head([].filter.call( refs, (ref) => { return ref.scheme === "OGC:WMS-1.1.1-http-get-map" || ref.scheme === "OGC:WMS"; }));
+                    wms = head([].filter.call(refs, (ref) => { return ref.scheme && (ref.scheme.match(/^OGC:WMS-(.*)-http-get-map/g) || ref.scheme === "OGC:WMS"); }));
                     if (wms) {
                         let urlObj = urlUtil.parse(wms.value, true);
                         let layerName = urlObj.query && urlObj.query.layers;

@@ -36,7 +36,9 @@ const {
     UPDATE_FILTER,
     INIT_PLUGIN,
     SIZE_CHANGE,
-    STORE_ADVANCED_SEARCH_FILTER
+    STORE_ADVANCED_SEARCH_FILTER,
+    GRID_QUERY_RESULT,
+    LOAD_MORE_FEATURES
 } = require('../actions/featuregrid');
 const{
     FEATURE_TYPE_LOADED,
@@ -45,6 +47,7 @@ const{
 const{
     CHANGE_DRAWING_STATUS
 } = require('../actions/draw');
+
 const uuid = require('uuid');
 
 const emptyResultsState = {
@@ -134,9 +137,12 @@ function featuregrid(state = emptyResultsState, action) {
     switch (action.type) {
     case INIT_PLUGIN: {
         return assign({}, state, {
-            editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"]
+            editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"],
+            virtualScroll: !!action.options.virtualScroll,
+            maxStoredPages: action.options.maxStoredPages || 5
         });
     }
+    case LOAD_MORE_FEATURES:
     case CHANGE_PAGE: {
         return assign({}, state, {
             pagination: {
@@ -145,14 +151,16 @@ function featuregrid(state = emptyResultsState, action) {
             }
         });
     }
-    case SELECT_FEATURES:
+    case SELECT_FEATURES: {
+        const features = action.features.filter(f => f.id !== 'empty_row');
         if (state.multiselect && action.append) {
-            return assign({}, state, {select: action.append ? [...state.select, ...action.features] : action.features});
+            return assign({}, state, {select: action.append ? [...state.select, ...features] : features});
         }
-        if (action.features && state.select && state.select[0] && action.features[0] && state.select.length === 1 && isSameFeature(action.features[0], state.select[0])) {
+        if (features && state.select && state.select[0] && features[0] && state.select.length === 1 && isSameFeature(features[0], state.select[0])) {
             return state;
         }
-        return assign({}, state, {select: (action.features || []).splice(0, 1)});
+        return assign({}, state, {select: (features || []).splice(0, 1)});
+    }
     case TOGGLE_FEATURES_SELECTION:
         let keepValues = state.select.filter( f => !isPresent(f, action.features));
         // let removeValues = state.select.filter( f => isPresent(f, action.features));
@@ -356,6 +364,9 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case STORE_ADVANCED_SEARCH_FILTER : {
         return assign({}, state, {advancedFilters: assign({}, state.advancedFilters, {[state.selectedLayer]: action.filterObj})});
+    }
+    case GRID_QUERY_RESULT: {
+        return assign({}, state, {features: action.features || [], pages: action.pages || []});
     }
     default:
         return state;
