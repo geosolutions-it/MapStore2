@@ -58,7 +58,7 @@ module.exports = {
                     featureTypeSelected(...getFTSelectedArgs(getState())),
                     loadFilter(getEditingWidgetFilter(getState())),
                     setControlProperty("widgetBuilder", "enabled", false),
-                    setControlProperty('queryPanel', "enabled", true),
+                    setControlProperty('queryPanel', "enabled", true)
 
                 // wait for any filter update(search) or query form close event
                 ).concat(
