@@ -100,8 +100,8 @@ class QueryToolbar extends React.Component {
         }, {
             tooltipId: showTooltip ? "queryform.emptyfilter" : this.props.queryBtnMsgId,
             disabled: queryDisabled,
-            className: showTooltip ? "showWarning" : undefined,
             glyph: this.props.queryBtnGlyph,
+            className: showTooltip ? "square-button-md showWarning" : "square-button-md",
             id: "query-toolbar-query",
             onClick: this.search
         }];
