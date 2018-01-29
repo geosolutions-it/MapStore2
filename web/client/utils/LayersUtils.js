@@ -334,6 +334,7 @@ const LayersUtils = {
             id: layer.id,
             features: layer.features,
             format: layer.format,
+            thumbURL: layer.thumbURL,
             group: layer.group,
             search: layer.search,
             source: layer.source,
