@@ -164,36 +164,11 @@ class RecordItem extends React.Component {
         if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
         } else {
-<<<<<<< HEAD
             this.props.onLayerAdd(
                 recordToLayer(this.props.record, "wms", {
                     url,
-                    catalogURL: this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier
+                    catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ? this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier : null
                 }));
-=======
-            this.props.onLayerAdd({
-                type: "wms",
-                url: url,
-                visibility: true,
-                dimensions: this.props.record.dimensions || [],
-                name: wms.params && wms.params.name,
-                title: this.props.record.title || wms.params && wms.params.name,
-                description: this.props.record.description || "",
-                bbox: {
-                    crs: this.props.record.boundingBox.crs,
-                    bounds: {
-                        minx: this.props.record.boundingBox.extent[0],
-                        miny: this.props.record.boundingBox.extent[1],
-                        maxx: this.props.record.boundingBox.extent[2],
-                        maxy: this.props.record.boundingBox.extent[3]
-                    }
-                },
-                links: this.getLinks(this.props.record),
-                params: params,
-                allowedSRS: allowedSRS,
-                catalogURL: this.props.catalogType === 'csw' ? this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier : null
-            });
->>>>>>> master
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
                 let crs = this.props.record.boundingBox.crs;

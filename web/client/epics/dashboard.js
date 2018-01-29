@@ -34,7 +34,12 @@ const {
 } = require('../selectors/widgets');
 
 const {LOCATION_CHANGE} = require('react-router-redux');
-
+const getFTSelectedArgs = (state) => {
+    let layer = getEditingWidgetLayer(state);
+    let url = layer.search && layer.search.url;
+    let typeName = layer.name;
+    return [url, typeName];
+};
 
 module.exports = {
     openDashboardWidgetEditor: (action$, {getState = () => {}} = {}) => action$.ofType(NEW, EDIT)
@@ -64,10 +69,8 @@ module.exports = {
              .switchMap(() =>
                  // open and setup query form
                  Rx.Observable.of(
-                     featureTypeSelected(getEditingWidgetLayer()),
-                     loadFilter(getEditingWidgetFilter(getState())),
-                     setControlProperty("widgetBuilder", "enabled", false),
-                     setControlProperty('queryPanel', "enabled", true),
+                     featureTypeSelected(...getFTSelectedArgs(getState())),
+                     loadFilter(getEditingWidgetFilter(getState()))
 
                  // wait for any filter update(search) or query form close event
                  ).concat(
