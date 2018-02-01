@@ -86,7 +86,10 @@ class QueryToolbar extends React.Component {
             !fieldsWithValues && !this.props.spatialField.geometry;
 
 
-        const showTooltip = this.props.emptyFilterWarning && this.props.filterFields.filter((field) => field.value).length === 0 && !this.props.spatialField.geometry;
+        const showTooltip = this.props.emptyFilterWarning
+            && this.props.filterFields.filter((field) => field.value).length === 0
+            && !this.props.spatialField.geometry
+            && !(this.props.crossLayerFilter && this.props.crossLayerFilter.attribute && this.props.crossLayerFilter.operation);
 
         const buttons = [{
             tooltipId: "queryform.reset",
@@ -98,6 +101,7 @@ class QueryToolbar extends React.Component {
             tooltipId: showTooltip ? "queryform.emptyfilter" : this.props.queryBtnMsgId,
             disabled: queryDisabled,
             glyph: this.props.queryBtnGlyph,
+            className: showTooltip ? "square-button-md showWarning" : "square-button-md",
             id: "query-toolbar-query",
             onClick: this.search
         }];
