@@ -10,7 +10,7 @@ const React = require('react');
 
 const {Button, Glyphicon, Modal, FormGroup, Checkbox} = require('react-bootstrap');
 
-const Codemirror = require('react-codemirror');
+const {Controlled: Codemirror} = require('react-codemirror2');
 
 
 require('codemirror/lib/codemirror.css');
@@ -68,7 +68,7 @@ class ThemeCreator extends React.Component {
                     <Modal.Title>Live edit your own theme</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                  <Codemirror style={{width: '500px'}} key="code-mirror" value={this.state.code} onChange={this.updateCode} options={{
+                  <Codemirror style={{width: '500px'}} key="code-mirror" value={this.state.code} onBeforeChange={this.updateCode} options={{
                           mode: {name: "css"},
                           lineNumbers: true
                       }}/>
@@ -79,7 +79,7 @@ class ThemeCreator extends React.Component {
         </li>);
     }
 
-    updateCode = (newCode) => {
+    updateCode = (editor, data, newCode) => {
         this.setState({
             code: newCode
         });
