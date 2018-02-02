@@ -485,6 +485,12 @@
         }, "ManagerMenu", "Login", "Language", "Attribution", {
           "name": "DashboardEditor",
           "cfg": {
+             "catalog": {
+              "url": "https://demo.geo-solutions.it/geoserver/csw",
+              "type": "csw",
+              "title": "Demo CSW Service",
+              "autoload": true
+            },
             "containerPosition": "columns"
           }
         }, {
