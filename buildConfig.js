@@ -22,6 +22,9 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
         new CopyWebpackPlugin([
             { from: path.join(paths.base, 'node_modules', 'bootstrap', 'less'), to: path.join(paths.dist, "bootstrap", "less") }
         ]),
+		new CopyWebpackPlugin([
+            { from: path.join(paths.base, 'node_modules', 'react-nouislider', 'example'), to: path.join(paths.dist, "react-nouislider", "example") }
+        ]),
         new LoaderOptionsPlugin({
             debug: !prod,
             options: {
