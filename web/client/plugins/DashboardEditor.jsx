@@ -63,7 +63,7 @@ class DashboardEditorComponent extends React.Component {
     render() {
         const buttons = [{
             glyph: 'plus',
-            tooltip: 'Add a dashboard card',
+            tooltipId: 'dashboard.editor.addACardToTheDashboard',
             bsStyle: 'primary',
             tooltipPosition: 'right',
             visible: true,
@@ -71,11 +71,11 @@ class DashboardEditorComponent extends React.Component {
                 this.props.onAddWidget();
             }
         }];
-        const boxShadow = "0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12)";
+
         return this.props.editing
-                ? <div style={{width: "500px", order: -1, boxShadow}}><Builder enabled={this.props.editing} onClose={() => this.props.setEditing(false)}/></div>
-                : (<div className="ms-vertical-toolbar" style={{order: -1, boxShadow, padding: "10px"}} id={this.props.id}>
-                    <Toolbar btnGroupProps={{vertical: true}} btnDefaultProps={{ className: 'square-button', bsStyle: 'primary'}} buttons={buttons}/>
+                ? <div className="dashboard-editor de-builder"><Builder enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog}/></div>
+                : (<div className="ms-vertical-toolbar dashboard-editor de-toolbar" id={this.props.id}>
+                    <Toolbar btnGroupProps={{vertical: true}} btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}} buttons={buttons}/>
                     </div>);
     }
 }

@@ -7,6 +7,7 @@ module.exports = {
     newServiceSelector: (state) => get(state, "catalog.newService"),
     servicesSelector: (state) => get(state, "catalog.services"),
     newServiceTypeSelector: (state) => get(state, "catalog.newService.type", "csw"),
+    selectedCatalogSelector: (state) => get(state, `catalog.services[${get(state, 'catalog.selectedService')}]`),
     selectedServiceTypeSelector: (state) => get(state, `catalog.services.${get(state, 'catalog.selectedService')}.type`, "csw"),
     searchOptionsSelector: (state) => get(state, "catalog.searchOptions"),
     formatsSelector: (state) => get(state, "catalog.supportedFormats") || [{name: "csw", label: "CSW"}, {name: "wms", label: "WMS"}, {name: "wmts", label: "WMTS"}],

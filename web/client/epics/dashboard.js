@@ -70,9 +70,9 @@ module.exports = {
                  // open and setup query form
                  Rx.Observable.of(
                      featureTypeSelected(...getFTSelectedArgs(getState())),
-                     loadFilter(getEditingWidgetFilter(getState()))
-
-                 // wait for any filter update(search) or query form close event
+                     loadFilter(getEditingWidgetFilter(getState())),
+                     setControlProperty('queryPanel', "enabled", true)
+                     // wait for any filter update(search) or query form close event
                  ).concat(
                      Rx.Observable.race(
                          action$.ofType(QUERY_FORM_SEARCH).take(1),

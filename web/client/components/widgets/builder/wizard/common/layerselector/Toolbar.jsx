@@ -11,13 +11,14 @@ const React = require('react');
 const Toolbar = require('../../../../../misc/toolbar/Toolbar');
 
 module.exports = ({canProceed, selected, onProceed = () => {}} = {}) => (<Toolbar btnDefaultProps={{
+        className: "square-button-md",
         bsStyle: "primary",
         bsSize: "sm"
     }}
     buttons={[{
         onClick: onProceed,
         disabled: !canProceed,
-        tooltipId: canProceed ? "widgetNotAvaliable" : "use the selected layer",
+        tooltipId: "widgets.useTheSelectedLayer",
         visible: selected,
         glyph: "arrow-right"
     }]} />);

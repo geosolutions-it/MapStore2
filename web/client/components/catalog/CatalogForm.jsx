@@ -7,9 +7,14 @@
  */
 const React = require('react');
 const { Col, FormGroup, FormControl, Grid, Row } = require('react-bootstrap');
-module.exports = ({onSearchTextChange = () => {}, searchText}) =>
-( <Grid fluid><Row><Col xs={12}>
-    <FormGroup controlId="stats-title">
+const CatalogServiceSelector = require('./CatalogServiceSelector');
+module.exports = ({onSearchTextChange = () => {}, searchText, title, catalog, services, isValidServiceSelected}) =>
+( <Grid className="catalog-form" fluid><Row><Col xs={12}>
+    <h4 className="text-center">{title}</h4>
+    <FormGroup>
+        <CatalogServiceSelector servieces={services} catalog={catalog} isValidServiceSelected={isValidServiceSelected}/>
+    </FormGroup>
+    <FormGroup controlId="catalog-form">
         <FormControl type="text" placeholder="Search..." value={searchText} onChange={(e) => onSearchTextChange(e.currentTarget.value)}/>
     </FormGroup>
 </Col></Row></Grid>);

@@ -7,6 +7,8 @@
  */
 const React = require('react');
 const {compose, mapPropsStream} = require('recompose');
+const {isNil} = require('lodash');
+const Message = require('../I18N/Message');
 const Rx = require('rxjs');
 
 const API = {
@@ -48,7 +50,7 @@ const PAGE_SIZE = 10;
  * retrieves data from a catalog service
  */
 const loadPage = ({text, catalog = {}}, page = 0) => Rx.Observable
-    .fromPromise(API[catalog.type].textSearch(catalog.URL, page * PAGE_SIZE + (catalog.type === "csw" ? 1 : 0), PAGE_SIZE, text))
+    .fromPromise(API[catalog.type].textSearch(catalog.url, page * PAGE_SIZE + (catalog.type === "csw" ? 1 : 0), PAGE_SIZE, text))
     .map((result) => ({result, records: getCatalogRecords(catalog.type, result || [])}))
     .map(resToProps);
 const scrollSpyOptions = {querySelector: ".ms2-border-layout-body", pageSize: PAGE_SIZE};
@@ -70,13 +72,17 @@ module.exports = compose(
                     .startWith({searchText: "", catalog})
                     .distinctUntilKeyChanged('searchText')
                     .do(({searchText, catalog: nextCatalog} = {}) => loadFirst({text: searchText, catalog: nextCatalog}))
-                    .ignoreElements()
+                    .ignoreElements() // don't want to emit props
         )))
 
 )(({setSearchText = () => {}, selected, onRecordSelected, loading, searchText, items= [], total, catalog}) => {
     return (<BorderLayout
-                header={<CatalogForm searchText={searchText} onSearchTextChange={setSearchText}/>}
-                footer={<div>Record Matched: {items.length} of {total} - {loading ? <div className="toc-inline-loader"></div> : null}</div>}>
+                className="compat-catalog"
+                header={<CatalogForm title={<Message msgId={"catalog.title"} />} searchText={searchText} onSearchTextChange={setSearchText}/>}
+                footer={<div className="catalog-footer">
+                    <span>{loading ? <div className="toc-inline-loader"></div> : null}</span>
+                    {!isNil(total) ? <Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/> : null}
+                </div>}>
                 <SideGrid items={items.map(i => i === selected || selected && i && i.record && selected.identifier === i.record.identifier ? {...i, selected: true} : i)} loading={loading} onItemClick={({record} = {}) => onRecordSelected(record, catalog)}/>
             </BorderLayout>);
 });

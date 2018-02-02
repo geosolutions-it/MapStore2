@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const Message = require('../../components/I18N/Message');
 const {onEditorChange} = require('../../actions/widgets');
 const {connect} = require('react-redux');
 const BorderLayout = require('../../components/layout/BorderLayout');
@@ -24,7 +25,7 @@ module.exports = ({enabled, onClose = () => {}} = {}) =>
 
     (<BorderLayout
         className="bg-body"
-        header={<BuilderHeader onClose={onClose}/>}
+        header={<BuilderHeader onClose={onClose}><Message msgId="widgets.selectWidgetType" /></BuilderHeader>}
         >
         {enabled ? <TypeSelector /> : null}
     </BorderLayout>);

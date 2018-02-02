@@ -9,7 +9,12 @@ const React = require('react');
 const { Button, Row, Col, Glyphicon } = require('react-bootstrap');
 const Message = require('../../I18N/Message');
 
-
+/**
+ * Common header component for builder content. With close button and icon
+ * @name  BuilderHeader
+ * @memberof components.widgets.builder
+ * @prop {function} onClose
+ */
 module.exports = ({onClose = () => {}, children} = {}) =>
 (<div className="mapstore-flex-container">
     <div className="m-header bg-body widgets-builder-header">

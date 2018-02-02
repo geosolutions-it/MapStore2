@@ -86,6 +86,7 @@ module.exports = enhanceWizard(({onChange = () => {}, onFinish = () => {}, setPa
                 onChange("type", i);
             }}/>
         <ChartOptions
+            dependencies={dependencies}
             key="chart-options"
             featureTypeProperties={featureTypeProperties}
             types={types}

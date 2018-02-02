@@ -330,6 +330,4 @@ const CatalogUtils = {
         return converters[format] && converters[format](records, options) || null;
     }
 };
-
-
 module.exports = CatalogUtils;

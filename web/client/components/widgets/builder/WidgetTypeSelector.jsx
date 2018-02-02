@@ -7,19 +7,20 @@
  */
 
 const React = require('react');
+const Message = require('../../I18N/Message');
 const SideGrid = require('../../misc/cardgrids/SideGrid');
 const FitIcon = require('../../misc/FitIcon');
 
 const DEFAULT_TYPES = [{
-    title: "Chart",
+    title: <Message msgId={"widgets.types.chart.title"} />,
     type: "chart",
-    caption: "add a chart",
+    caption: <Message msgId={"widgets.types.chart.caption"} />,
     glyph: "stats"
 }, {
-    title: "Text",
+    title: <Message msgId={"widgets.types.chart.title"} />,
     type: "text",
     glyph: "sheet",
-    caption: "add a text"
+    caption: <Message msgId={"widgets.types.chart.caption"} />
 }];
 
 module.exports = ({widgetTypes = DEFAULT_TYPES, typeFilter = () => true, onSelect= () => {}}) =>

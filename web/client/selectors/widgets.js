@@ -37,6 +37,7 @@ module.exports = {
     getEditingWidgetFilter: state => get(getEditingWidget(state), "filter"),
     getEditorSettings,
     getWidgetLayer,
+    dashBoardDependenciesSelector: () => ({}), // TODO dashboard dependencies
     dependenciesSelector: createShallowSelector(
         getDependenciesMap,
         getDependenciesKeys,

@@ -41,7 +41,7 @@ const Builder = connect(
 
 const BuilderHeader = require('./BuilderHeader');
 const Toolbar = connect(wizardSelector, {
-        openFilterEditor: openFilterEditor,
+        openFilterEditor,
         setPage,
         insertWidget
     },
@@ -60,10 +60,10 @@ const chooseLayerEhnancer = compose(
     )
 );
 
-module.exports = chooseLayerEhnancer(({enabled, onClose = () => {}} = {}) =>
+module.exports = chooseLayerEhnancer(({enabled, onClose = () => {}, dependencies, ...props} = {}) =>
 
     (<BorderLayout
         header={<BuilderHeader onClose={onClose}><Toolbar onClose={onClose}/></BuilderHeader>}
         >
-        {enabled ? <Builder /> : null}
+        {enabled ? <Builder dependencies={dependencies} {...props}/> : null}
     </BorderLayout>));
