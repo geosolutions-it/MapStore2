@@ -132,7 +132,7 @@
     "react-addons-css-transition-group": "15.6.2",
     "react-addons-shallow-compare": "15.6.2",
     "react-bootstrap": "0.31.0",
-    "react-codemirror": "1.0.0",
+    "react-codemirror2": "4.0.0",
     "react-color": "2.11.3",
     "react-confirm-button": "0.0.2",
     "react-container-dimensions": "1.3.2",
@@ -165,7 +165,6 @@
     "react-side-effect": "1.1.0",
     "react-sidebar": "2.3.2",
     "react-sortable-items": "https://github.com/geosolutions-it/react-sortable-items/tarball/react15",
-    "wkt-parser": "https://github.com/geosolutions-it/wkt-parser/tarball/mapstore2_fixes",
     "react-spinkit": "2.1.2",
     "react-swipeable-views": "0.12.2",
     "react-twitter-widgets": "1.3.0",
@@ -189,6 +188,7 @@
     "url": "0.10.3",
     "uuid": "3.0.1",
     "w3c-schemas": "1.3.1",
+    "wkt-parser": "https://github.com/geosolutions-it/wkt-parser/tarball/mapstore2_fixes",
     "xml2js": "0.4.17"
   },
   "scripts": {
