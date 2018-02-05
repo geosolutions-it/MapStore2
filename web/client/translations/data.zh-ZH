@@ -1,0 +1,1231 @@
+{
+    "locale": "zh-ZH",
+    "messages": {
+        "Language": "语言",
+        "msgId0": "{name} took {numPhotos, plural, =0 {no photos} =1 {one photo} other {# photos}} on {takenDate, date, long}.",
+        "htmlTest": "{name} {surname}",
+        "about_title": "关于这个程序...",
+        "aboutLbl": "关于",
+        "about_p0-0": "MapStore 2 is a framework to build web mapping applications using standard mapping libraries, such as",
+        "about_p0-1": "and",
+        "about_p1": "MapStore 2 has several example applications:",
+        "about_ul0_li0": "MapViewer is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore)",
+        "about_ul0_li1": "MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on. For more information check the",
+        "about_h20": "许可",
+        "about_p3": "MapStore 2 is Free and Open Source software, it is based on OpenLayers 3, Leaflet and ReactJS, and is licensed under the Simplified BSD License.",
+        "about_p5-0": "For more information check",
+        "about_a0": "this",
+        "about_p5-1": "页.",
+        "about_h21": "Credits",
+        "about_p6": "MapStore2 is made by:",
+        "enable": "启用",
+        "layers": "图层",
+        "warning": "警告",
+        "version": {
+            "label": "版本"
+        },
+        "autorefresh": {
+            "of": "of",
+            "updating": "更新...",
+            "layers": "图层"
+        },
+        "layerProperties": {
+            "windowTitle": "图层属性",
+            "title": "标题",
+            "name": "名称",
+            "group": "组",
+            "general": "概括",
+            "description": "描述",
+            "display": "显示",
+            "style": "样式",
+            "transparent": "透明度",
+            "singleTile": "Single Tile",
+            "cached": "使用缓存选项",
+            "styleCustom": "Use style named \"{value}\"",
+            "styleListLoadError": "加载样式列表时出错",
+            "stylesRefreshList": "刷新样式列表",
+            "format": "格式",
+            "delete": "删除",
+            "deleteLayer":"删除图层",
+            "deleteLayerMessage": "你真的想删除这个层？",
+            "confirmDelete": "你确定?",
+            "featureTypeError": "无法加载图层属性",
+            "elevation": "海拔",
+            "titleTranslations": "标题 translations",
+            "groupProperties": "组属性",
+            "featureInfo": "特征信息",
+            "featureInfoFormatLbl": "确定响应格式",
+            "legenderror": "图例不可用"
+        },
+        "notification": {
+            "update": "更新",
+            "warning": "警告",
+            "success": "成功",
+            "backgroundLayerNotSupported": "以前选择的背景不支持这种类型的地图。 然后使用第一个可用的.",
+            "noBackgroundLayerSupported": "这种类型的地图没有受支持的背景层.",
+            "updateOldMap": "这是一个旧的地图，因此并不是所有的功能都可以启用。 点击更新按钮为了更新地图或简单地关闭此通知，如果你不想更新它。",
+            "warningSaveUpdatedMap": "某些图层尚未正确更新",
+            "saveUpdatedMap": "所有图层都已成功更新"
+        },
+        "dock": {
+            "row": "{rowsSelected} row selected",
+            "rows": "{rowsSelected} rows selected"
+        },
+        "globeswitcher": {
+            "tooltipDeactivate": "退出3D模式",
+            "tooltipActivate": "进入3D模式"
+        },
+        "cookie":{
+            "info": "本网站使用cookies来改善您的体验。 我们假设你没有问题，但是你可以选择退出。",
+            "moreDetailsButton": "更多详细信息",
+            "leave": "离开",
+            "accept": "接受"
+        },
+        "background": "背景",
+        "language": "语言",
+        "mousePositionCoordinates": "Coordinates indicator",
+        "mouseCoordinates": "坐标:",
+        "mousePositionCRS": "CRS:",
+        "mapScale": "Scale:",
+        "showMousePositionCoordinates": "显示/隐藏坐标",
+        "menu": "菜单",
+        "options": "选项",
+        "settings": "设置",
+        "help": "帮助",
+        "gohome": "跳转首页",
+        "back": "Back to the Importer",
+        "printbutton": "打印",
+        "annotationsbutton": "注释",
+        "noresultfound": "未找到结果",
+        "save": "保存",
+		"saveAs": "另存为...",
+        "opacity": "透明度",
+        "elevation": "海拔",
+        "close": "关闭",
+        "cancel": "取消",
+        "confirm": "确认",
+        "confirmTitle": "你确认吗?",
+        "pageInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {Items {start}-{end} of {total}}}",
+        "loading": "载入中...",
+        "group": "组",
+        "groups": "组",
+        "permission": "允许",
+        "permissions": "权限",
+        "global": {
+            "colors": {
+                "red": "{number, plural, =0 {Red} =1 {Red} other {Reds}}",
+                "blue": "{number, plural, =0 {Blue} =1 {Blue} other {Blues}}",
+                "green": "{number, plural, =0 {green} =1 {Green} other {Greens}}",
+                "brown": "{number, plural, =0 {Brown} =1 {Brown} other {Browns}}",
+                "purple": "{number, plural, =0 {Purple} =1 {Purple} other {Purples}}",
+                "random": "{number, plural, =0 {Random} =1 {Random} other {Random}}"
+            }
+        },
+        "home":{
+            "open": "打开",
+            "description": "MapStore 2 has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.<br/>Visit the <a href=\"/mapstore/docs/\">home page</a> for more details.",
+            "Applications": "应用",
+            "Examples": "例子",
+            "LinkedinGroup": "Mapstore Linkedin Group",
+            "scrollTop": "滚动到页面顶部",
+            "ml": {
+                "title": "Keep in touch and stay up-to-date with the mailing lists",
+                "subscribe_users": "Subscribe Users Mailing List",
+                "subscribe_devel": "Subscribe Developers Mailing List",
+                "visit_group": "Visit this group",
+                "subscribe": "Subscribe",
+                "email": "Email:"
+            },
+            "examples":{
+                "viewer":{
+                    "html":"<h3>Viewer</h3><p>Simple Viewer</p>"
+                },
+                "3dviewer":{
+                    "html":"<h3>3D Viewer</h3><p>Simple CesiumJS based 3D Viewer</p>"
+                },
+                "manager":{
+                    "html":"<h3>Manager</h3><p>Browse MapStore Maps</p>"
+                },
+                "mouseposition":{
+                    "html":"<h3>Mouse Position Control</h3><p>Custom examples</p>"
+                },
+                "scalebar":{
+                    "html":"<h3>Scale Control</h3><p>Custom examples</p>"
+                },
+                "layertree":{
+                    "html":"<h3>Advanced LayerTree</h3><p>Custom examples</p>"
+                },
+                "queryform":{
+                    "html":"<h3>Query Builder</h3><p>Custom examples</p>"
+                },
+                "featuregrid":{
+                    "html":"<h3>Feature Editor</h3><p>Custom examples</p>"
+                },
+                "print":{
+                    "html":"<h3>Printing</h3><p>Custom examples</p>"
+                },
+                "plugins":{
+                    "html":"<h3>Plugins</h3><p>Build your own application</p>"
+                },
+                "api":{
+                    "html":"<h3>API</h3><p>Use APIs to include a MapStore2 map in your application</p>"
+                },
+                "rasterstyler":{
+                    "html":"<h3>Raster Styler</h3><p>Style your raster layer</p>"
+                }
+            }
+        },
+        "cookiesPolicyNotification": {
+            "title": "本网站使用cookies",
+            "message": "通过继续使用我们的网站，您接受我们使用cookies。",
+            "confirm": "我同意"
+        },
+        "manager": {
+            "openInANewTab":"打开地图",
+            "deleteMap":"删除地图",
+            "deleteMapMessage": "你真的想删除这张地图吗？?",
+            "editMapMetadata":"编辑地图属性",
+            "mapTypes_combo": "选择地图查看器: ",
+            "theme_combo": "选择主题:",
+            "maps_title": "地图",
+            "locales_combo": "语言:"
+        },
+        "newMap": "新地图",
+		"maps": {
+			"search": "搜索地图..."
+		},
+        "map": {
+            "loading": "加载中...",
+            "loadingerror": "加载时出错",
+            "name": "名称",
+            "description": "描述",
+            "namePlaceholder": "地图名称",
+            "descriptionPlaceholder": "地图描述",
+            "saveTitle": "保存地图",
+            "saveText": "保存当前地图?",
+            "thumbnail": "缩略图",
+            "message": "拖放或单击以导入图像",
+            "suggestion": "(best 300px X 180px, max 500kb)",
+            "errorFormat": "Supported formats: png/jpg",
+            "errorSize": "Max allowed size: 500kb",
+            "error": "The provided image is invalid",
+            "thumbnailError": {
+                "error403": "You are not allowed to update the thumbnail",
+                "error404": "An error occurred while creating the thumbnail",
+                "error409": "A thumbnail with this name already exists",
+                "errorDefault": "Network error"
+            },
+            "mapError": {
+                "error403": "You are not allowed to update the map",
+                "error404": "An error occurred while creating the map",
+                "error409": "A map with this name already exists",
+                "errorDefault": "Network error"
+            },
+            "permissions": {
+                "noRules": "No rules",
+                "addRule": "Add a rule...",
+                "selectGroup": "Select a group...",
+                "canView": "can view",
+                "canWrite": "can edit",
+                "noResult": "no results found",
+                "title": "Permissions Groups"
+            }
+        },
+        "toc": {
+            "toggleLayerVisibility": "Toggle layer visibility",
+            "displayLegendAndTools": "Display legend and tools",
+            "zoomToLayerExtent": "Zoom to layer extent",
+            "addLayer": "Add Layer",
+            "toolZoomToLayerTooltip": "Zoom to selected layer extent",
+            "toolZoomToLayersTooltip": "Zoom to selected layers extent",
+            "toolLayerSettingsTooltip": "Selected layer settings",
+            "toolGroupSettingsTooltip": "Selected group settings",
+            "toolTrashLayerTooltip": "Remove selected layer",
+            "toolTrashLayersTooltip": "Remove selected layers",
+            "toolFeaturesGridTooltip": "Open Attribute Table",
+            "noFilteredResults": "No results",
+            "filterPlaceholder": "Filter layers",
+            "clearFilter": "Clear filter",
+            "toolReloadLayerTooltip": "Force reload of selected layer",
+            "toolReloadLayersTooltip": "Force reload of selected layers",
+            "statusIconOpen": "Close group",
+            "statusIconClose": "Open group",
+            "grabLayerIcon": "Grab and sort layer",
+            "grabGroupIcon": "Grab and sort group",
+            "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
+            "createWidget": "Create a widget for the selected layer",
+            "editLayerProperties": "Edit layer properties",
+            "browseData": "Open Attribute Table",
+            "removeLayer": "Remove layer",
+            "loadingerror": "The layer has not been loaded correctly or not available",
+            "measure": "Measure",
+            "backgroundSwitcher": "Backgrounds",
+            "layers": "Layers",
+            "drawerButton": "Layers",
+            "refreshTitle": "Update layers",
+            "refreshConfirm": "Update",
+            "refreshMessage": "Reload WMS layers configuration from the server(s)",
+            "refreshError": "Error updating layers: ",
+            "refreshOptions": {
+                "bbox": "Update BBOX",
+                "search": "Update search options",
+                "title": "Update title",
+                "dimensions": "Update dimensions"
+            }
+        },
+        "print":{
+            "paneltitle": "打印",
+            "layout": "Layout",
+            "sheetsize": "Sheet size:",
+            "legendoptions": "Legend options",
+            "submit": "Print",
+            "title": "标题",
+            "titleplaceholder": "Enter a title...",
+            "description": "描述",
+            "descriptionplaceholder": "Enter a description...",
+            "resolution": "Resolution:",
+            "defaultBackground": "Use OSM as background",
+            "printtooltip": "Print",
+            "alternatives": {
+                "legend": "Include legend",
+                "2pages": "Legend on distinct page",
+                "landscape": "Landscape",
+                "portrait": "Portrait"
+            },
+            "legend": {
+                "font": "Labels Config:",
+                "forceLabels": "Force Labels:",
+                "antiAliasing": "Font Anti Aliasing:",
+                "iconsSize": "Icons size:",
+                "dpi": "Dpi:"
+            },
+            "layoutWarning": "Not allowed layout"
+        },
+        "backgroundSwither":{
+            "tooltip": "Select Background"
+        },
+        "info":{
+            "tooltip": "Query objects on map"
+        },
+        "expandtoolbar": {
+            "tooltip": "Expand / Collapse"
+        },
+        "getFeatureInfoTitle": "Feature Info",
+        "identifyTitle": "Feature Info",
+        "identifyNoQueryableLayers": "No active queryable layer",
+        "identifyRevGeocodeHeader": "Coordinates",
+        "identifyRevGeocodeModalTitle": "Address",
+        "identifyRevGeocodeSubmitText": "More Info",
+        "identifyRevGeocodeCloseText": "Close",
+        "identifyRevGeocodeError": "Unable to geocode",
+        "getFeatureInfoError": {
+            "title": "Ooops! Something's wrong",
+            "text": "An error has occurred during this <b>GetFeatureInfo</b> request"
+        },
+        "noFeatureInfo": "There is no information available for the point you clicked",
+        "noInfoForLayers": "There are no features for the following layers: ",
+        "history":{
+            "barLabel": "Map history",
+            "undoBtnTooltip": "Go back",
+            "redoBtnTooltip": "Go forward"
+        },
+        "infoFormatLbl": "Identify response format",
+        "measureComponent": {
+            "Measure": "Measure",
+            "MeasureLength": "Measure Distance",
+            "MeasureArea": "Measure Area",
+            "MeasureBearing": "Measure Bearing",
+            "tooltip": "Measure length and area",
+            "title": "Measure",
+            "lengthButtonText": "Line",
+            "areaButtonText": "Area",
+            "resetButtonText": "Reset",
+            "lengthLabel": "Length",
+            "areaLabel": "Area",
+            "bearingLabel": "Bearing"
+        },
+        "search":{
+            "placeholder": "Search by location name or coordinates ...",
+            "searchservicesbutton": "Configure search services",
+            "configpaneltitle": "Create/edit a search service",
+            "serviceslistlabel": "Available services",
+            "overriedservice": "Override default services",
+            "addbtn": "Add",
+            "nextbtn": "Next",
+            "prevbtn": "Back",
+            "savebtn": "Save/Update",
+            "cancelbtn": "Cancel",
+            "confirmremove": "Delete?",
+            "cancelconfirm": "Are you sure?",
+            "s_name": "Name",
+            "s_title": "Title",
+            "s_description": "Description",
+            "s_priority": "Priority",
+            "s_url": "Service url",
+            "s_layer": "Layer",
+            "s_attributes": "Attributes",
+            "s_sort": "Sort by",
+            "s_max_features": "Max features",
+            "s_wfs_props_label" : "WFS service props",
+            "s_wfs_opt_props_label" : "Optional props",
+            "s_result_props_label": "Result display properties",
+            "s_priority_info": "Used to sort search results, higher values first. Nominatim results have priority = 5",
+            "serviceslistempty": "No custom services defined"
+        },
+        "drawLocal": {
+            "draw": {
+                "toolbar": {
+                    "actions": {
+                        "title": "Cancel drawing",
+                        "text": "Cancel"
+                    },
+                    "undo": {
+                        "title": "Delete last point drawn",
+                        "text": "Delete last point"
+                    },
+                    "buttons": {
+                        "polyline": "Draw a polyline",
+                        "polygon": "Draw a polygon",
+                        "rectangle": "Draw a rectangle",
+                        "circle": "Draw a circle",
+                        "marker": "Draw a marker"
+                    }
+                },
+                "handlers": {
+                    "circle": {
+                        "tooltip": {
+                            "start": "Click and drag to draw a circle."
+                        }
+                    },
+                    "marker": {
+                        "tooltip": {
+                            "start": "Click map to place a marker."
+                        }
+                    },
+                    "polygon": {
+                        "tooltip": {
+                            "start": "Click to start drawing a shape.",
+                            "cont": "Click to continue drawing a shape.",
+                            "end": "Click first point to close this shape."
+                        }
+                    },
+                    "polyline": {
+                        "error": "Error: shape edges must not cross!",
+                        "tooltip": {
+                            "start": "Click to start drawing a line.",
+                            "cont": "Click to continue drawing the line.",
+                            "end": "Click last point to finish the line."
+                        }
+                    },
+                    "rectangle": {
+                        "tooltip": {
+                            "start": "Click and drag to draw a rectangle."
+                        }
+                    },
+                    "simpleshape": {
+                        "tooltip": {
+                            "end": "Release the mouse to finish drawing."
+                        }
+                    }
+                }
+            },
+            "edit": {
+                "toolbar": {
+                    "actions": {
+                        "save": {
+                            "title": "Save changes.",
+                            "text": "Save"
+                        },
+                        "cancel": {
+                            "title": "Cancel editing, discards all changes.",
+                            "text": "Cancel"
+                        }
+                    },
+                    "buttons": {
+                        "edit": "Edit layers.",
+                        "editDisabled": "No layers to edit.",
+                        "remove": "Delete layers.",
+                        "removeDisabled": "No layers to delete."
+                    }
+                },
+                "handlers": {
+                    "edit": {
+                        "tooltip": {
+                            "text": "Drag handles or marker to edit feature.",
+                            "subtext": "Click cancel to undo changes."
+                        }
+                    },
+                    "remove": {
+                        "tooltip": {
+                            "text": "Click on a feature to remove it"
+                        }
+                    }
+                }
+            }
+        },
+        "locate": {
+            "tooltip": "Locate me",
+            "metersUnit": "meters",
+            "feetUnit": "feet",
+            "popup": "You are within {distance} {unit} from this point",
+            "outsideMapBoundsMsg": "You seem located outside the boundaries of the map"
+        },
+        "zoombuttons": {
+            "zoomInTooltip": "Increase Zoom",
+            "zoomOutTooltip": "Decrease Zoom",
+            "zoomAllTooltip": "Zoom To Max Extent"
+        },
+        "fullscreen": {
+            "tooltipActivate": "Switch to Full Screen",
+            "tooltipDeactivate": "Exit full screen",
+            "viewLargerMap": "View Larger Map"
+        },
+        "helptexts": {
+            "scaleBox": "This is the helptext for the ScaleBox",
+            "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
+            "zoomIn": "This is the helptext for the ZoomIn",
+            "zoomOut": "This is the helptext for the ZoomOut",
+            "searchBar": "Write the address of a place to find. e.g.  '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20",
+            "metadataexplorer": "This is the helptext for the MetadataExplorer",
+            "settingsPanel": "This is the helptext for the SettingsPanel",
+            "gohome": "This is the helptext for Home",
+            "measureComponent": "This is the helptext for the MeasureComponent",
+            "backgroundSwitcher": "This is the helptext for the BackgroundSwitcher",
+            "layerSwitcher": "This is the helptext for the LayerSwitcher",
+            "infoButton": "This is the helptext for the InfoButton",
+            "locateBtn": "This is the helptext for the LocateBtn",
+            "snapshot": "This is the helptext for the Snapshot",
+            "print": "This is the helptext for Print",
+            "shapefile": "This is the helptext for the Shapefile",
+            "rasterstyler": "Define min value, max value, number of classes and color ramp to generate a new classification for the selected raster layer",
+            "expandToolbar": "This is the helptext for Expand / Collapse",
+            "historyundo": "Use this button to go to the previous map zoom and location",
+            "historyredo": "Use this button to go to the next map zoom and location",
+            "vectorstyler": "Add rule and generate a new styled vector layer",
+            "styler": "Add rule and generate a new styled layer"
+        },
+        "queryform": {
+            "title": "Advanced Search",
+            "query": "Search",
+            "reset": "Reset",
+            "query_request_exception": "Request Error",
+            "config": {
+                "load_config_exception": "Error Loading Configuration"
+            },
+            "comboField": {
+                "default_placeholder": "Select..."
+            },
+            "form": {
+                "header": "Find in the dataset",
+                "dataset_header": "Dataset"
+            },
+            "emptyfilter": "No filter set. Searching could timeout if pagination is not supported by the server.",
+            "attributefilter":{
+                "add_condition": " Add Condition",
+                "add_group": " Add Group",
+                "group_label_a": "Match",
+                "group_label_b": "of the following conditions:",
+                "combo_placeholder": "Attribute",
+                "text_placeholder": "Type text to search",
+                "attribute_filter_header": "Attribute Filter",
+                "tooltipTextField": "use <b>*</b> for any number of any char</br>use <b>.</b> for a single char</br>use <b>!</b> to escape the above two (* and .)</br>",
+                "groupField": {
+                    "any": "any",
+                    "all": "all",
+                    "none": "none"
+                },
+                "numberfield": {
+                    "isRequired": "Field value required",
+                    "wrong_range": "Lower boundary must be lower than the upper boundary"
+                },
+                "datefield": {
+                    "wrong_date_range": "Start date must be earlier than end date"
+                },
+                "autocomplete": {
+                    "emptyList": "No results",
+                    "emptyFilter": "The filter returned no results",
+                    "open": "Open combobox"
+                }
+            },
+            "spatialfilter": {
+                "filterType": "Filter Type",
+                "geometric_operation": "Geometric Operation",
+                "combo_placeholder": "Select...",
+                "spatial_filter_header": "Region of interest",
+                "draw_start_label": "Draw the region of interest on the map",
+                "dwithin_label": "meters",
+                "details": {
+                    "detail_button_label": "Details",
+                    "details_header": "Selection Details",
+                    "details_bbox_label": "Edit the coordinates to modify the area",
+                    "details_circle_label": "Edit the numeric fields to modify the radius and center of the circle",
+                    "reset_bbox": "Reset",
+                    "save_bbox": "Save BBOX modifications",
+                    "save_radius": "Save the radius/center modifications",
+                    "radius": "Radius"
+                },
+                "methods": {
+                    "zone": "Zone",
+                    "viewport": "Viewport",
+                    "regions": "Regions",
+                    "box": "Rectangle",
+                    "buffer": "Buffer",
+                    "circle": "Circle",
+                    "poly": "Polygon"
+                },
+                "operations": {
+                    "intersects": "Intersects",
+                    "bbox": "BoundingBox",
+                    "contains": "Is contained",
+                    "dwithin": "Distance from",
+                    "within": "Contains"
+                }
+            },
+            "crossLayerFilter": {
+                "title": "Layer filter",
+                "targetLayer": "Target layer",
+                "clear": "Clear filter",
+                "operation": "Operation",
+                "errors": {
+                    "noCrossLayerAvailable": "Cross Layer Filtering is not available for the selected layer"
+                }
+            }
+        },
+        "user":{
+            "login": "Login",
+            "logout": "Logout",
+            "info": " Account Info",
+            "details": " User Details",
+            "noAttributesMessage": "There is no information related to your account",
+            "changePwd": "Change Password",
+            "newPwd": "New Password",
+            "retypePwd": "Retype Password",
+            "passwordMinlenght": "Your password must be at least {minSize} character",
+            "passwordCheckFail": "Passwords do not match!",
+            "passwordInvalid": "Invalid password",
+            "username": "Username",
+            "password": "Password",
+            "passwordChanged": "Password changed",
+            "passwordError": "Error changing password",
+            "signIn":"Sign-in",
+            "loginFail":"Login Fail",
+            "loginFailedStatusMessages": {
+                "usernamePwdInsert": "Please insert username and password",
+                "usernamePwdIncorrect":"Username or password incorrect"
+            }
+        },
+        "annotations": {
+            "edit": "Edit",
+            "remove": "Delete",
+            "save": "Save",
+            "cancel": "Cancel",
+            "back": "Back",
+            "addMarker": "Add a new point on the map",
+            "styleGeometry": "Choose a different style for points",
+            "deleteGeometry": "Remove existing points",
+            "removeannotation": "Do you want to remove the annotation?",
+            "removegeometry": "Do you want to remove all annotation points?",
+            "confirm": "Confirm",
+            "mandatory": "Mandatory field",
+            "emptygeometry": "Geometry cannot be empty",
+            "add": "New",
+            "filter": "Filter annotations...",
+            "undo": "Are you sure you want to abandon the annotation editing session?",
+            "title": "Annotations",
+            "field": {
+                "title": "Title",
+                "description": "Description"
+            }
+        },
+        "users": {
+            "title": "Manage Accounts",
+            "users": "Users",
+            "manageUsers": "Manage Users",
+            "searchUsers": "search for users...",
+            "newUser": "New User",
+            "editUser": "Edit user",
+            "deleteUser": "Delete User",
+            "statusTitle": "status",
+            "enabled": "Enabled",
+            "groupTitle": "Groups:",
+            "roleTitle": "Role",
+            "saveUser": "Save",
+            "savingUser": "Saving...",
+            "userSaved": "Saved!",
+            "createUser": "Create",
+            "creatingUser": "Creating...",
+            "userCreated": "Created!",
+            "deleting": "Deleting...",
+            "delete": "Delete",
+            "confirmDeleteUser": "Are you sure you want to delete this user?",
+            "errorDelete": "There was an error deleting this user:",
+            "errorSaving": "There was an error saving the user:",
+            "selectedGroups": "SELECTED GROUPS"
+        },
+        "usergroups": {
+          "searchGroups": "Search Groups...",
+          "groups": "Groups",
+          "nameLimit": "The name is limited to 255 characters.",
+          "descLimit": "The description is limited to 255 characters.",
+          "editGroup": "Edit Group",
+          "deleteGroup": "Delete Group",
+          "removeUser": "Remove User",
+          "newGroup": "New Group",
+          "manageGroups": "Manage Groups",
+          "description": "Description:",
+          "noDescriptionAvailable": "(No description)",
+          "groupName": "Group Name",
+          "groupDescription": "Description",
+          "saveGroup": "Save",
+          "createGroup": "Create",
+          "creatingGroup": "Creating...",
+          "groupMembers": "Members:",
+          "addMember": "Add Member:",
+          "noUsers": "No users for this group",
+          "errorSaving": "There was an error saving this group",
+          "errorDelete": "There was an error deleting this group",
+          "confirmDeleteGroup": "Are you sure you want to delete this group?"
+        },
+        "share":{
+            "title": "Share",
+            "titlePanel": "Share the map",
+            "socialIntro": "In your favourite social network",
+            "directLinkTitle": "Via a direct link",
+            "social": "Social",
+            "direct": "Link",
+            "code": "Embed",
+            "embeddedLinkTitle": "Via the embedded code",
+            "forceDrawer": "Show TOC",
+            "apiLinkTitle": "Using APIs",
+            "QRCodeLinkTitle": "qr code",
+            "msgCopiedUrl": "Copied",
+            "msgToCopyUrl": "Click to copy",
+            "sharedTitle": "Check out my new map: "
+        },
+        "snapshot": {
+            "title": "Snapshot Preview",
+            "save": "Save",
+            "tooltip": "Save a snapshot of the map.",
+            "googleBingError": "Google and Bing layers aren't available for the snapshot, due to copyright restrictions.",
+            "downloadingSnapshots": "pending snapshot generation",
+            "date": "Date",
+            "layers": "Layers",
+            "size": "Size",
+            "notsupported": "Snapshot not supported",
+            "taintedMessage": "Save snapshot functionality is limited due to some browser security rules. For better results right-click on the preview and select 'Save image as' (supported by Firefox and Chrome)."
+        },
+        "shapefile": {
+            "title": "Add Local Vector Files",
+            "tooltip": "Add a local Vector Files to the map.",
+            "placeholder": "Drop your files here or click to select the Vector Files to import. (supported files: shapefiles must be contained in zip archives, KML/KMZ e GPX)",
+            "defaultStyle": "Default style",
+            "zoom": "Zoom on the vector files",
+            "error": {
+                "select": "Select one or more files. (supported files: shapefiles must be contained in zip archives, KML/KMZ e GPX)",
+                "shapeFileParsingError": "Cannot load the vector file. The file could be damaged or not well formed",
+                "genericLoadError": "Cannot load the vector file on map"
+            },
+            "add": "Add",
+            "cancel": "Cancel",
+            "success": " correctly imported"
+        },
+        "catalog": {
+            "title": "Catalog",
+            "autoload": "Search on service selection",
+            "clearValueText": "Clear selection",
+            "noResultsText": "",
+            "tooltip": "Browse Catalog",
+            "addToMap": "Add To Map",
+            "getWMSLink": "Get WMS Link",
+            "error": "There was an error loading records from the catalog",
+            "pageInfo": "Results {start}-{end} of {total}",
+            "noRecordsMatched": "No record matched",
+            "wmsGetCapLink": "WMS",
+            "wfsGetCapLink": "WFS",
+            "share": "Share",
+            "copyToClipboard": "Copy to clipboard",
+            "copied": "Copied!",
+            "textSearchPlaceholder": "text to search...",
+            "search": "Search",
+            "delete": "Delete",
+            "reset": "Clear",
+            "options": "Options",
+            "srs_not_allowed": "The map coordinate system is not supported by this service",
+            "add": "Add",
+            "service": "Service",
+            "servicePlaceholder": "type a service",
+            "url": "Url",
+            "urlPlaceholder": "type a URL",
+            "type": "Type",
+            "serviceTitle": "Title",
+            "serviceTitlePlaceholder": "type a title",
+            "notification": {
+                "warningAddCatalogService": "Insert a valid url and title",
+                "addCatalogService": "Service added correctly",
+                "duplicatedServiceTitle": "A service with that title already exists. Please, change title",
+                "serviceDeletedCorrectly": "The service was deleted correctly",
+                "errorServiceUrl": "Service not available. Please, check the provided url"
+            }
+        },
+        "uploader": {
+            "filename": "File Name",
+            "type": "Type",
+            "lastModified": "Last Modified",
+            "filesize": "Size",
+            "beforeUpload": "Doing pre-upload operations... ",
+            "uploadingFiles": "Uploading Files...",
+            "dropfile": "drop files here to upload",
+            "dropfileImport": "drop files here to add them to this process"
+        },
+        "importer": {
+            "title": "Import Data",
+            "imports": "Import Sessions",
+            "importN": "Session {id}",
+            "creatingImportProcess": " Creating Import Session... ",
+            "dropfile": "drop files here to create a new importing session",
+            "dropfileImport": "drop files here to add them to this session",
+            "process": "Session",
+            "number": "#",
+            "workspace": {
+                "create": "Create",
+                "createWS": "create a new workspace: ",
+                "target": "target workspace: ",
+                "failure": "Error creating workspace: {statusWS}",
+                "success": "Workspace {statusWS} successfully created",
+                "select": "Select Target Workspace",
+                "new": "New workspace name..."
+            },
+            "import": {
+                "actions": "Actions",
+                "tasks": "Packages",
+                "runImport": "Run",
+                "deleteImport": "Delete Session",
+                "deleteTask": "Delete",
+                "status": "Status",
+                "archive": "Archive",
+                "deleting": "Deleting...",
+                "analyzing": "Analyzing package...",
+                "applyingPreset": "Applying Presets..."
+            },
+            "task": {
+                "panelTitle": "Import Package {id}",
+                "general": "General Info",
+                "status": "Status",
+                "updateMode": "Update Mode",
+                "originalData": "Original File",
+                "file": "File Name",
+                "format": "Format",
+                "targetStore": "Target Store",
+                "storeType": "Store Type",
+                "storeName": "Store Name",
+                "layer": "Layer",
+                "transforms": "Transformations Chain",
+                "update": "Update",
+                "run": "Import This Package",
+                "edit": "Edit Default Style",
+                "delete": "Delete This Package"
+            },
+            "transform": {
+                "panelTitle": "Transformation {id}",
+                "type": "Transformation Type",
+                "actions": "Actions",
+                "options": "Transformation Options",
+                "overviewlevels": "Overview Levels",
+                "delete": "Delete this transformation"
+            }
+        },
+        "rasterstyler": {
+            "tooltip": "Create and edit raster layer style",
+            "paneltitle": "Raster Styler",
+            "layerlabel": "Layer",
+            "typelabel": "Style Type",
+            "opacitylabel": "Opacity",
+            "redtitle": "Red",
+            "greentitle": "Green",
+            "bluetitle": "Blue",
+            "graytitle": "Gray",
+            "pseudobandtitle": "Band Selection",
+            "eqinttitle": "Equal Interval Classification",
+            "pseudotitle": "PseudoColor Settings",
+            "applybtn": "Apply Style"
+        },
+        "bandselector": {
+            "band": "Band",
+            "enhancement": "Enhancement",
+            "algorithmTitle": "Optional Algorithm",
+            "value": "Value",
+            "min": "Min",
+            "max": "Max",
+            "enha": {
+                "none": "None",
+                "Normalize": "Normalize",
+                "Histogram": "Histogram",
+                "GammaValue": "Gamma Correction"
+            },
+            "algorithm": {
+                "none": "None",
+                "StretchToMinimumMaximum": "Stretch",
+                "ClipToMinimumMaximum": "Clip",
+                "ClipToZero": "Clip To Zero"
+            }
+        },
+        "equalinterval": {
+            "min": "Min",
+            "max": "Max",
+            "classes": "Classes",
+            "ramp": "Color Ramp",
+            "classify": "Classify",
+            "maxerror": "Max value must be greater than min value",
+            "minerror": "Min value must be less than max value"
+        },
+        "colormapgrid": {
+            "color": "Color",
+            "quantity": "Quantity",
+            "label": "Label",
+            "minmaxerror": "The value must be between the values ​​of the previous and next cell"
+        },
+        "pseudocolorsettings": {
+            "type": "Type",
+            "extended": "Extended",
+            "colormap": "Color Map",
+            "add": "Add Entry",
+            "remove": "Remove Entry"
+        },
+        "rasterstyletype": {
+            "rgb": "Red Green Blue",
+            "gray": "GrayScale",
+            "pseudo": "PseudoColor",
+            "multi": "Multi Band",
+            "single": "Single Band"
+        },
+        "featuregrid": {
+            "columns": "Columns",
+            "header": "Search results list",
+            "tools": "Tool Panel",
+            "export": "Export",
+            "selectall": "Select All",
+            "deselectall": "Clear Selection",
+            "backtosearch": "Back to search",
+            "resultInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{start}-{end} of {total}}}",
+            "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} of {totalPages}} other {Page {page} of {totalPages}}}",
+            "pagination": {
+                "page": "Page",
+                "of":   "of",
+                "to":   "to",
+                "more": "more"
+            },
+            "noFeaturesAvailable": "No Features Available",
+            "errorSaving": "An error occured with saving operation",
+            "errorProjFetch": "Error retrieving the proj4 string definition from spatialreference.org. Synch tool cannot apply the spatial filter.",
+            "notSupportedGeometryTitle": "Geometry type not supported ",
+            "notSupportedGeometry": "Current layer geometry type is not supported by editing but you can still edit attributes",
+            "yesButton": "Yes",
+            "noButton": "No",
+            "deleteButton": "Delete",
+            "clear": "Are you sure to cancel all changes you have done?",
+            "featureClose": "Are you sure to close the feature grid?",
+            "delete": "Do you confirm to delete {count} features?",
+            "missingGeometry": "Missing geometry",
+            "filter": {
+                "placeholders": {
+                    "default": "Search...",
+                    "string": "Type text to filter...",
+                    "number": "Type number or expression..."
+                },
+                "tooltips": {
+                    "editMode": "Quick search is not available in edit mode",
+                    "default": "Search...",
+                    "string": "Type text to filter...",
+                    "number": "Type a number or an expression. Examples: 10, > 2, < 10"
+                }
+            },
+            "toolbar": {
+                "editMode": "Edit mode",
+                "advancedFilter": "Advanced Search",
+                "quitEditMode": "Quit edit mode",
+                "addNewFeatures": "Add New feature",
+                "editFeature": "Edit feature",
+                "drawGeom": "Draw feature",
+                "stopDrawGeom": "Cancel geometry cration",
+                "addGeom": "Add a shape to the existing geometry",
+                "deleteSelectedFeatures": "Delete selected features",
+                "saveChanges": "Save changes",
+                "saving": "Saving...",
+                "cancelChanges": "Cancel changes",
+                "deleteGeometry": "Delete geometry",
+                "downloadGridData": "Download grid data",
+                "hideShowColumns": "Hide/show columns",
+                "zoomAll": "Zoom to page extent",
+                "syncOnMap": "Sync map with fitler"
+            }
+        },
+        "wfsdownload": {
+            "title": "Export Data",
+            "format": "File Format",
+            "srs":  "Spatial Reference System",
+            "export": "Export",
+            "downloadonlycurrentpage": "Download only current page",
+            "error": {
+                "title": "Error during export",
+                "invalidOutputFormat": "The selected export format is not available"
+            }
+        },
+        "widgets": {
+            "selectChartType": {
+                "title": "Select the widget type"
+            },
+            "title": "Title",
+            "description": "Description",
+            "errors": {
+                "nodata": "No data available for the selected layer/filter",
+                "nodatainviewport": "No data in the current viewport",
+                "timeoutExpired": "The service took too much time to respond. Maybe the query is too complex or the server is busy",
+                "genericError": "There was an error during data retrival"
+            },
+            "builder": {
+                "header": {
+                    "title": "Widget"
+                },
+                "wizard": {
+                    "backToTypeSelection": "Back to type selection",
+                    "backToChartOptions": "Back to chart options",
+                    "configureChartOptions": "Configure chart options",
+                    "configureWidgetOptions": "Configure widget options",
+                    "updateWidget": "Update the widget",
+                    "addToTheMap": "Add the widget to the map"
+                },
+                "errors": {
+                    "noWidgetsAvailableTitle": "No Widgets available",
+                    "noWidgetsAvailableDescription": "<p>You can't create any widgets for the selected layer. This is probably because the layer is not suitable for the available widgets or the server doesn't expose all the needed services or information to generate widget. Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li>gs:aggregate process is not available</li></ul> )<p>"
+                },
+                "setupFilter": "Configure a filter for the widget data"
+            },
+            "widget": {
+                "menu": {
+                    "showChartData": "Show chart data",
+                    "edit": "Edit",
+                    "delete": "Delete",
+                    "confirmDelete": "Are you sure?",
+                    "downloadData": "Download Data",
+                    "exportImage": "Export Image"
+                }
+            },
+            "chartType": {
+                "bar": {
+                    "title": "Bar Chart",
+                    "description": "Create a bar chart to add to the map",
+                    "caption": "bar"
+                },
+                "pie": {
+                    "title": "Pie Chart",
+                    "description": "Create a pie chart to add to the map",
+                    "caption": "pie"
+                },
+                "line": {
+                    "title": "Line Chart",
+                    "description": "Create a line chart to add to the map",
+                    "caption": "line"
+                },
+                "gauge": {
+                    "title": "Gauge Chart",
+                    "description": "Create a gauge chart to add to the map",
+                    "caption": "gauge"
+                }
+            },
+            "chartOptionsTitle": "Chart Data",
+            "widgetOptionsTitle": "Widget Info",
+            "groupByAttributes": {
+                "line": "X Attribute",
+                "pie": "Group By",
+                "bar": "X Attribute",
+                "gauge": "Group By"
+            },
+            "aggregationAttribute": {
+                "line": "Y Attribute",
+                "pie": "Value",
+                "bar": "Y Attribute",
+                "gauge": "Value"
+            },
+            "aggregateFunction": {
+                "line": "Operation",
+                "pie": "Operation",
+                "bar": "Operation",
+                "gauge": "Operation"
+            },
+            "colorRamp": {
+                "line": "Color",
+                "pie": "Color Ramp",
+                "bar": "Color",
+                "gauge": "Color"
+            },
+            "mapSync": "Live Filter by viewport",
+            "displayLegend": {
+                "line": "Display Legend",
+                "pie": "Display Legend",
+                "bar": "Display Legend",
+                "gauge": "Display labels"
+            }
+
+        },
+        "wizard": {
+            "next": "Next",
+            "prev": "Previous",
+            "finish": "Finish"
+        },
+        "vectorstyler": {
+            "tooltip": "Create and edit vector layer style",
+            "paneltitle": "Vector Styler",
+            "layerlabel": "Layer",
+            "rulelabel": "Rules",
+            "namelabel": "Rule Name",
+            "symboltitle": "Symbol",
+            "labeltitle": "Label",
+            "conditiontitle": "Conditions",
+            "applybtn": "Apply Style",
+            "addrulebtn": "Add Rule",
+            "removerulebtn": "Remove Rule"
+        },
+        "scaledenominator": {
+            "minlabel": "Min Scale Denominator",
+            "maxlabel": "Max Scale Denominator",
+            "maxerror": "Max value must be greater than min value",
+            "minerror": "Min value must be less than max value",
+            "none": "None"
+        },
+        "markNameSelector": {
+            "circle": "Circle",
+            "square": "Square",
+            "triangle": "Triangle",
+            "star": "Star",
+            "cross": "Cross",
+            "x": "X"
+        },
+        "styler": {
+            "tooltip": "Create and edit layer style",
+            "paneltitle": "Styler",
+            "layerlabel": "Layer"
+        },
+        "rulesmanager": {
+            "title": "Access Rules",
+            "role": "Role",
+            "user": "User",
+            "service": "Service",
+            "request": "Request",
+            "workspace": "Workspace",
+            "layer": "Layer",
+            "filters": "Filters",
+            "rules": "Rules",
+            "access": "Access",
+            "newModal": "New Rule",
+            "editModal": "Edit Rule",
+            "newButton": "Create",
+            "editButton": "Save",
+            "close": "Close",
+            "previous": "previous",
+            "next": "next",
+            "errorLoadingRoles": "Error loading roles.",
+            "errorLoadingUsers": "Error loading users.",
+            "errorLoadingWorkspaces": "Error loading workspaces.",
+            "errorLoadingLayers": "Error loading layers.",
+            "errorLoadingRules": "Error loading rules.",
+            "errorMovingRules": "Error moving rules.",
+            "errorDeletingRules": "Error deleting rules.",
+            "errorAddingRule": "Error adding rule.",
+            "errorUpdatingRule": "Error updating rule.",
+            "deleteModal": "Delete Rules",
+            "selectedRulesDelete": "Delete selected rules ?",
+            "deleteButton": "Delete",
+            "cancelButton": "Cancel"
+        },
+        "tutorial": {
+            "title": "Tutorial",
+            "back": "Back",
+            "next": "Next",
+            "close": "Close",
+            "skip": "Skip",
+            "last": "Finish",
+            "start": "Start",
+            "checkbox": "don't show this message again",
+            "error": "Error: target not found",
+            "intro": {
+                "title": "Welcome on MapStore2",
+                "text": "framework to build web mapping applications using standard mapping libraries, such as OpenLayers 3 and Leaflet."
+            },
+            "drawerMenu": {
+                "title": "主菜单",
+                "text": "你可以找到信息和工具来管理图层"
+            },
+            "searchBar": {
+                "title": "Search Bar",
+                "text": "Write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+            },
+            "home": {
+                "title": "首页",
+                "text": "点击进入首页"
+            },
+            "searchButton": {
+                "title": "搜索",
+                "text": "Click to open the search bar, then write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+            },
+            "burgerMenu": {
+                "title": "选项菜单",
+                "text": "你可以找到选项，设置和帮助"
+            },
+            "zoomInButton": {
+                "title": "放大",
+                "text": "点击放大地图"
+            },
+            "zoomOutButton": {
+                "title": "缩小",
+                "text": "点击缩小地图"
+            },
+            "fullscreen": {
+                "title": "全屏",
+                "text": "点击进入全屏"
+            },
+            "identifyButton": {
+                "title": "Info",
+                "text": "Press the button to activate the tool, then click on the map to retrieve information from layers"
+            },
+            "mapType": {
+                "title": "Library",
+                "text": "You can choose Leaflet or OpenLayers to render your maps"
+            },
+            "mapsGrid": {
+                "title": "Maps",
+                "text": "Here some examples of MapStore2. Click on an image to try the demo."
+            },
+            "examples": {
+                "title": "Custom Application",
+                "text": "You can use components and plugins of MapStore2 to build custom applications"
+            },
+            "introCesium": {
+                "title": "3D map instructions",
+                "text": "Click on next button to start the tutorial"
+            },
+            "cesium": {
+                "title": "Interactions with the Map",
+                "pan": "Pan view",
+                "zoom": "Zoom view",
+                "tilt": "Tilt view",
+                "rotate": "Rotate view",
+                "oneDrag": "One finger drag",
+                "twoPinch": "Two finger pinch",
+                "twoDragSame": "Two finger drag, same direction",
+                "twoDragOpposite": "Two finger drag, opposite direction",
+                "leftClick": "Left click + drag",
+                "rightClick": "Right click + drag, or Mouse wheel scroll",
+                "middleClick": "Middle click + drag, or CTRL + Left/Right click + drag"
+
+            },
+            "cesiumCompass": {
+                "title": "Compass",
+                "text": "You can use the compass to orbit around the globe. Drag to rotate the map"
+            },
+            "cesiumNavigation": {
+                "title": "Navigation",
+                "text": "Here you can find the zoom in and zoom out buttons"
+            }
+        }
+    }
+}
