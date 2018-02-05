@@ -159,10 +159,10 @@ const Api = {
     putResource: function(resourceId, content, options) {
         return axios.put(
             "data/" + resourceId,
-            encodeContent(content),
+            content,
             this.addBaseUrl(_.merge({
                 headers: {
-                    'Content-Type': "text/plain;charset=utf-8"
+                    'Content-Type': typeof content === 'string' ? "text/plain; charset=utf-8" : 'application/json; charset=utf-8"'
                 }
             }, options)));
     },
@@ -217,7 +217,13 @@ const Api = {
                 "<Resource><description>" + description + "</description><metadata></metadata>" +
                 "<name>" + (name || "") + "</name><category><name>" + (category || "") + "</name></category>" +
                 attributesSection +
-                "<store><data><![CDATA[" + (data || "") + "]]></data></store></Resource>",
+                "<store><data><![CDATA[" + (
+                    data
+                        && (
+                            (typeof data === 'object')
+                                ? JSON.stringify(data)
+                                : data)
+                        || "") + "]]></data></store></Resource>",
             this.addBaseUrl(_.merge({
                 headers: {
                     'Content-Type': "application/xml"

@@ -155,7 +155,7 @@ class SaveAs extends React.Component {
         };
         if (metadata.name !== "") {
             thumbComponent.getThumbnailDataUri( (data) => {
-                this.props.onMapSave(metadata, JSON.stringify(this.createV2Map()), {
+                this.props.onMapSave(metadata, this.createV2Map(), {
                     data,
                     category: "THUMBNAIL",
                     name: thumbComponent.generateUUID()
