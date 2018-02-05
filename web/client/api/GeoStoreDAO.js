@@ -10,7 +10,7 @@ const _ = require('lodash');
 const assign = require('object-assign');
 const uuidv1 = require('uuid/v1');
 const ConfigUtils = require('../utils/ConfigUtils');
-const {utfEncode} = require('../utils/EncodeUtils');
+
 const {registerErrorParser} = require('../utils/LocaleUtils');
 
 let parseOptions = (opts) => opts;
@@ -31,9 +31,6 @@ let parseUserGroups = (groupsObj) => {
 };
 
 const boolToString = (b) => b ? "true" : "false";
-const encodeContent = function(content) {
-    return utfEncode(content);
-};
 
 const errorParser = {
     /**
@@ -155,7 +152,6 @@ const Api = {
                 }
             }, options)));
     },
-    encodeContent,
     putResource: function(resourceId, content, options) {
         return axios.put(
             "data/" + resourceId,
