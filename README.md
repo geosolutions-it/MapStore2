@@ -1,7 +1,7 @@
 [![Stories in Ready](https://badge.waffle.io/geosolutions-it/MapStore2.png?label=ready&title=Ready)](https://waffle.io/geosolutions-it/MapStore2)
 [![Build Status](https://travis-ci.org/geosolutions-it/MapStore2.svg?branch=master)](https://travis-ci.org/geosolutions-it/MapStore2)
 [![Coverage Status](https://coveralls.io/repos/geosolutions-it/MapStore2/badge.svg?branch=master&service=github)](https://coveralls.io/github/geosolutions-it/MapStore2?branch=master)
-[![Codacy Badge](https://www.codacy.com/project/badge/1648d484427346e2877006dc287379b6)](https://www.codacy.com/app/simone-giannecchini/MapStore2)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/1648d484427346e2877006dc287379b6)](https://app.codacy.com/app/geosolutions/MapStore2?utm_source=github.com&utm_medium=referral&utm_content=geosolutions-it/MapStore2&utm_campaign=badger)
 [![Inline docs](http://inch-ci.org/github/geosolutions-it/MapStore2.svg?branch=master)](http://inch-ci.org/github/geosolutions-it/MapStore2)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40mapstore2)](https://twitter.com/mapstore2)
 
