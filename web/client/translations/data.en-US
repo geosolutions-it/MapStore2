@@ -1048,9 +1048,17 @@
             }
         },
         "widgets": {
-            "selectWidgetType": {
-                "title": "Select Widget Type"
+            "types": {
+                "chart": {
+                    "title": "Chart",
+                    "caption": "add a chart"
+                },
+                "text": {
+                    "title": "Text",
+                    "caption": "add a text area"
+                }
             },
+            "selectWidgetType": "Select the widget type",
             "selectChartType": {
                 "title": "Select the Chart type"
             },
