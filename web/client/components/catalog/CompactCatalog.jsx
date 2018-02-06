@@ -75,10 +75,10 @@ module.exports = compose(
                     .ignoreElements() // don't want to emit props
         )))
 
-)(({setSearchText = () => {}, selected, onRecordSelected, loading, searchText, items= [], total, catalog}) => {
+)(({setSearchText = () => {}, selected, onRecordSelected, loading, searchText, items= [], total, catalog, services}) => {
     return (<BorderLayout
                 className="compat-catalog"
-                header={<CatalogForm title={<Message msgId={"catalog.title"} />} searchText={searchText} onSearchTextChange={setSearchText}/>}
+                header={<CatalogForm services={services ? services : [catalog]} title={<Message msgId={"catalog.title"} />} searchText={searchText} onSearchTextChange={setSearchText}/>}
                 footer={<div className="catalog-footer">
                     <span>{loading ? <div className="toc-inline-loader"></div> : null}</span>
                     {!isNil(total) ? <Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/> : null}

@@ -53,7 +53,7 @@ module.exports = compose(
         })
         )
     )
-)(({onClose = () => {}, setSelected = () => {}, onLayerChoice = () => {}, selected, canProceed, layer, catalog} = {}) =>
+)(({onClose = () => {}, setSelected = () => {}, onLayerChoice = () => {}, selected, canProceed, layer, catalog, catalogServices} = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
@@ -65,5 +65,5 @@ module.exports = compose(
             text={<HTML msgId="widgets.builder.errors.noWidgetsAvailableDescription"/>} /> : null}
     </BuilderHeader>}
         >
-        <Catalog selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)} />
+        <Catalog services={catalogServices} selected={selected} catalog={catalog} onRecordSelected={r => setSelected(r)} />
     </BorderLayout>));
