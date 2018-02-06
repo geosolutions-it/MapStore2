@@ -90,7 +90,7 @@ class Save extends React.Component {
         if (this.props.mapId) {
             if (this.props.map && this.props.layers) {
                 const resultingmap = MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions);
-                this.props.onMapSave(this.props.mapId, JSON.stringify(resultingmap));
+                this.props.onMapSave(this.props.mapId, resultingmap);
                 this.props.onClose();
             }
         }
