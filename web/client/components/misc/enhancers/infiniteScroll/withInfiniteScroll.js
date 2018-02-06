@@ -20,7 +20,7 @@ const withScrollSpy = require('./withScrollSpy');
  * @param  {function} loadPage           A function that returns the observable that emits the page loaded. the event emitted must have at least { items [ ...items of the new page], total: the total number of results}
  * @return {Observable}                    Stream of props {with items, loading, error, total}
  */
-const virtualScrollStream = (initialLoadStream$, loadMore$, loadPage) =>
+const infiniteScrollStream = (initialLoadStream$, loadMore$, loadPage) =>
     initialLoadStream$.switchMap( searchParams =>
         loadPage(searchParams, 0)
             .startWith({loading: true})
@@ -48,8 +48,8 @@ const virtualScrollStream = (initialLoadStream$, loadMore$, loadPage) =>
  *
  * To do that you must provide the following parameters:
  * @param  {function} loadPage         A function that returns an observable that emits props with at least `{items: [items of the page], total: 100}`
- * @param  {[type]} scrollSpyOptions [description]
- * @return {[type]}                  [description]
+ * @param  {object} scrollSpyOptions  Options for the `withInfiniteScroll` enhancer
+ * @return {HOC}                  The HOC to apply
  */
 module.exports = ({
     loadPage,
@@ -58,7 +58,7 @@ module.exports = ({
         mapPropsStream((props$) => {
             const {handler: onLoadMore, stream: loadMore$} = createEventHandler();
             const {handler: loadFirst, stream: initialStream} = createEventHandler();
-            return props$.combineLatest(virtualScrollStream(
+            return props$.combineLatest(infiniteScrollStream(
                 initialStream,
                 loadMore$,
                 loadPage

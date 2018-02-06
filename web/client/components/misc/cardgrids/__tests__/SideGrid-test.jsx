@@ -26,6 +26,7 @@ describe('SideGrid component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.msSideGrid');
         expect(el).toExist();
+        expect(el.querySelector(".items-list")).toExist();
     });
     it('Test SideGrid onItemClick', () => {
         const actions = {

@@ -14,7 +14,7 @@ const ReactDom = require('react-dom');
  * Scroll spy options are (wrapped in an object):
  * @param  {String}  [dataProp="items"]      the property for data to check
  * @param  {String}  querySelector           selector to get the element from the current component DOM element
- * @param  {Boolean} [closest=false]         if true, the querySelector will be used to search parent. see [closest](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest)
+ * @param  {Boolean} [closest=false]         if true, the querySelector will be used to search 1st parent. see [closest](https://developer.mozilla.org/en-US/docs/Web/API/Element/closest)
  * @param  {String}  [loadingProp="loading"] property to check for loading status. If props[loadingProp] is true, the scroll events will be stopped
  * @param  {Number}  [pageSize=10]           page size. It is used to count items and guess the next page number.
  * @param  {Number}  [offsetSize=200]        offset, in pixels, before the end of page to call the scroll spy. If the user scrolls the `onLoadMore` handler will be colled when he reaches the end_of_the_page - offsetSize pixels.
