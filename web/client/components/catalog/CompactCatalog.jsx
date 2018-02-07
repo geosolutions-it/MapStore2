@@ -47,7 +47,7 @@ const resToProps = ({records, result = {}}) => ({
 });
 const PAGE_SIZE = 10;
 /*
- * retrieves data from a catalog service
+ * retrieves data from a catalog service and converts to props
  */
 const loadPage = ({text, catalog = {}}, page = 0) => Rx.Observable
     .fromPromise(API[catalog.type].textSearch(catalog.url, page * PAGE_SIZE + (catalog.type === "csw" ? 1 : 0), PAGE_SIZE, text))
