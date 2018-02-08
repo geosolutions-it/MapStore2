@@ -75,14 +75,23 @@ module.exports = compose(
                     .ignoreElements() // don't want to emit props
         )))
 
-)(({setSearchText = () => {}, selected, onRecordSelected, loading, searchText, items= [], total, catalog, services}) => {
+)(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, showCatalogSelector}) => {
     return (<BorderLayout
                 className="compat-catalog"
-                header={<CatalogForm services={services ? services : [catalog]} title={<Message msgId={"catalog.title"} />} searchText={searchText} onSearchTextChange={setSearchText}/>}
+        header={<CatalogForm services={services ? services : [catalog]} showCatalogSelector={showCatalogSelector} title={<Message msgId={"catalog.title"} />} searchText={searchText} onSearchTextChange={setSearchText}/>}
                 footer={<div className="catalog-footer">
                     <span>{loading ? <div className="toc-inline-loader"></div> : null}</span>
                     {!isNil(total) ? <Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/> : null}
                 </div>}>
-                <SideGrid items={items.map(i => i === selected || selected && i && i.record && selected.identifier === i.record.identifier ? {...i, selected: true} : i)} loading={loading} onItemClick={({record} = {}) => onRecordSelected(record, catalog)}/>
+                <SideGrid
+                    items={items.map(i =>
+                        i === selected
+                        || selected
+                        && i && i.record
+                        && selected.identifier === i.record.identifier
+                            ? {...i, selected: true}
+                            : i)}
+                    loading={loading}
+                    onItemClick={({record} = {}) => onRecordSelected(record, catalog)}/>
             </BorderLayout>);
 });
