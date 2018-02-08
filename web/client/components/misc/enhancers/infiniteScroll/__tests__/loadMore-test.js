@@ -8,9 +8,8 @@
 const rxjsconfig = require('recompose/rxjsObservableConfig').default;
 const { setObservableConfig } = require('recompose');
 setObservableConfig(rxjsconfig);
-
 const {Observable} = require('rxjs');
-require('rxjs/add/operator/switchMap');
+
 const React = require('react');
 
 const ReactDOM = require('react-dom');
@@ -41,7 +40,7 @@ describe('loadMore enhancer', () => {
                     expect(props.items.length).toBe(20);
                     done();
                 }
-        }));
+            }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
 });

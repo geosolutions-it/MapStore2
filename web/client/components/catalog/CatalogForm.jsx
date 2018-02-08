@@ -8,6 +8,8 @@
 const React = require('react');
 const { Col, FormGroup, FormControl, Grid, Row } = require('react-bootstrap');
 const CatalogServiceSelector = require('./CatalogServiceSelector');
+const localizeProps = require('../misc/enhancers/localizedProps');
+const SearchInput = localizeProps("placeholder")(FormControl);
 module.exports = ({ onSearchTextChange = () => { }, searchText, title, catalog, services, isValidServiceSelected, showCatalogSelector}) =>
 ( <Grid className="catalog-form" fluid><Row><Col xs={12}>
     <h4 className="text-center">{title}</h4>
@@ -16,6 +18,6 @@ module.exports = ({ onSearchTextChange = () => { }, searchText, title, catalog, 
         <CatalogServiceSelector servieces={services} catalog={catalog} isValidServiceSelected={isValidServiceSelected}/>
     </FormGroup>) : null}
     <FormGroup controlId="catalog-form">
-        <FormControl type="text" placeholder="Search..." value={searchText} onChange={(e) => onSearchTextChange(e.currentTarget.value)}/>
+                <SearchInput type="text" placeholder="catalog.textSearchPlaceholder" value={searchText} onChange={(e) => onSearchTextChange(e.currentTarget.value)}/>
     </FormGroup>
 </Col></Row></Grid>);

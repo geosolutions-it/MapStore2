@@ -18,6 +18,7 @@ const API = {
 };
 
 const BorderLayout = require('../layout/BorderLayout');
+const LoadingSpinner = require('../misc/LoadingSpinner');
 const withVirtualScroll = require('../misc/enhancers/infiniteScroll/withInfiniteScroll');
 const loadingState = require('../misc/enhancers/loadingState');
 const emptyState = require('../misc/enhancers/emptyState');
@@ -28,7 +29,12 @@ const Icon = require('../misc/FitIcon');
 const defaultPreview = <Icon glyph="geoserver" padding={20}/>;
 const SideGrid = compose(
     loadingState(({loading, items = []} ) => items.length === 0 && loading),
-    emptyState(({loading, items = []} ) => items.length === 0 && !loading)
+    emptyState(
+        ({loading, items = []} ) => items.length === 0 && !loading,
+        {
+            title: <Message msgId="catalog.noRecordsMatched" />,
+            style: { transform: "translateY(50%)"}
+        })
 
 )(require('../misc/cardgrids/SideGrid'));
 /*
@@ -42,7 +48,6 @@ const resToProps = ({records, result = {}}) => ({
         preview: record.thumbnail ? <img src="thumbnail" /> : defaultPreview,
         record
     })),
-    loading: false,
     total: result && result.numberOfRecordsMatched
 });
 const PAGE_SIZE = 10;
@@ -80,8 +85,8 @@ module.exports = compose(
                 className="compat-catalog"
         header={<CatalogForm services={services ? services : [catalog]} showCatalogSelector={showCatalogSelector} title={<Message msgId={"catalog.title"} />} searchText={searchText} onSearchTextChange={setSearchText}/>}
                 footer={<div className="catalog-footer">
-                    <span>{loading ? <div className="toc-inline-loader"></div> : null}</span>
-                    {!isNil(total) ? <Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/> : null}
+                    <span>{loading ? <LoadingSpinner /> : null}</span>
+                    {!isNil(total) ? <span className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}
                 </div>}>
                 <SideGrid
                     items={items.map(i =>

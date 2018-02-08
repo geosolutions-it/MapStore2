@@ -9,6 +9,7 @@
 const React = require('react');
 
 const ContainerDimensions = require('react-container-dimensions').default;
+const Loader = require('./Loader');
 
 /**
  * Default Loading View component
@@ -18,16 +19,13 @@ const ContainerDimensions = require('react-container-dimensions').default;
  * @param  {String} [className="loader-container"] className for the container
  * @param  {Object} [contentStyle={}}]             object to customize content style
  */
-module.exports = ({width: ww, height: hh, className = "loader-container", contentStyle = {}, size="full"}) => (<div className={className} >
+module.exports = ({width: ww, height: hh, className = "loader-container", contentStyle = {}}) => (<div className={className} >
     <ContainerDimensions>
         {({width = 200, height= 200}) => {
             const w = ww || (height > 0 ? Math.min(width, height) : width);
             const h = hh || (height > 0 ? Math.min(width, height) : width);
-            const msize = Math.min(w, h);
-            return (<div
-                style={{width: msize, height: msize, display: "flex", margin: "auto", overflow: "hidden", padding: "10%", ...contentStyle}}>
-                <div className={`mapstore-${size}-size-loader`}></div>
-            </div>);
+            const size = Math.min(w, h);
+            return <Loader size={size} style={{ padding: size / 10, margin: "auto", display: "flex", ...contentStyle }} />;
         }}
     </ContainerDimensions>
 </div>);

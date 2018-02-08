@@ -47,6 +47,9 @@ module.exports = ({
         hasMore: () => true
     }
     findScrollDomNode = () => {
+        if (!this.isMounded) {
+            return null;
+        }
         let node = ReactDom.findDOMNode(this);
         if (node && closest && querySelector) {
             return node.closest(querySelector || "*");
@@ -54,6 +57,7 @@ module.exports = ({
         return node && (querySelector ? node.querySelector(querySelector) : node);
     }
     componentDidMount() {
+        this.isMounded = true;
         const div = this.findScrollDomNode();
         if (div) {
             div.addEventListener('scroll', this.onScroll, false);
@@ -70,6 +74,7 @@ module.exports = ({
         }
     }
     componentWillUnmount() {
+        this.isMounded = false;
         const div = this.findScrollDomNode();
         if (div) {
             div.removeEventListener('scroll', this.onScroll, false);
@@ -78,8 +83,8 @@ module.exports = ({
 
     onScroll = () => {
         const div = this.findScrollDomNode();
-        if (
-            (div.scrollTop + div.clientHeight) >= (div.scrollHeight - offsetSize)
+        if (div
+            && (div.scrollTop + div.clientHeight >= div.scrollHeight - offsetSize)
             && (dataProp // has data array (if dataprop has been defined)
                 ? this.props[dataProp] && this.props[dataProp].length
                 : true)

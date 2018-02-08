@@ -37,11 +37,18 @@ div#mapstore-globalspinner {
         height: @size;
     }
 }
-.mapstore-full-size-loader{
-	.mapstore-circle-loader(11px, 100%, @ms2-color-primary);
-}
 .mapstore-small-size-loader{
 	.mapstore-circle-loader(2px, 100%, @ms2-color-primary);
+}
+.mapstore-medium-size-loader{
+	.mapstore-circle-loader(6px, 100%, @ms2-color-primary);
+}
+.mapstore-full-size-loader{
+	.mapstore-circle-loader(12px, 100%, @ms2-color-primary);
+}
+.mapstore-inline-loader {
+    margin: @padding-left-square-md;
+    .mapstore-circle-loader(@icon-size-md/10, @icon-size-md, @ms2-color-primary);
 }
 @-webkit-keyframes mapstore-circle-load8 {
     0% {
