@@ -8,7 +8,7 @@
 const React = require('react');
 const expect = require('expect');
 const ReactDOM = require('react-dom');
-const {settingsLifecycle} = require('../tocitemssettings');
+const {settingsLifecycle} = require('../tocItemsSettings');
 const TestUtils = require('react-dom/test-utils');
 
 describe("test updateSettingsLifecycle", () => {
