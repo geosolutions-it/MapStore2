@@ -30,6 +30,7 @@ const getWidgetLayer = createSelector(
 module.exports = {
     getFloatingWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
     getFloatingWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
+    // let's use the same container for the moment
     getDashboardWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
     getDashboardWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
     getEditingWidget,
@@ -38,11 +39,18 @@ module.exports = {
     getEditorSettings,
     getWidgetLayer,
     dashBoardDependenciesSelector: () => ({}), // TODO dashboard dependencies
+    /**
+     * transforms dependencies in the form `{ k1: "path1", k1, "path2" }` into
+     * a map like `{k1: v1, k2: v2}` where `v1 = get("path1, state)`.
+     * Dependencies paths map comes from getDependenciesMap.
+     * map.... is a special path that brings to the map of mapstore.
+     */
     dependenciesSelector: createShallowSelector(
         getDependenciesMap,
         getDependenciesKeys,
         // produces the array of values of the keys in getDependenciesKeys
-        state => getDependenciesKeys(state).map(k => k.indexOf("map." === 0) ? get(mapSelector(state), k.slice(4)) : get(state, k) ),
+        state => getDependenciesKeys(state).map(k => k.indexOf("map.") === 0 ? get(mapSelector(state), k.slice(4)) : get(state, k) ),
+        // iterate the dependencies keys to set the dependencies values in a map
         (map, keys, values) => keys.reduce((acc, k, i) => ({
             ...acc,
             [Object.keys(map)[i]]: values[i]
