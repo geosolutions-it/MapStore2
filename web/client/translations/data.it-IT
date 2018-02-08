@@ -63,7 +63,22 @@
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa",
-            "legenderror": "Legenda non disponibile"
+            "legenderror": "Legenda non disponibile",
+            "editCustomFormat": "Edita formato",
+            "exampleOfResponse": "Esempio di risposta",
+            "changedSettings": "Proprietà modificate",
+            "changedSettingsAlert": "Stai chiudendo il pannello senza salvare le tue modifiche",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Mosta i risultati come testo",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Mosta i risultati come html",
+            "propertiesFormatTitle": "PROPRIETÀ",
+            "propertiesFormatDescription": "Mosta i risultati come lista di proprietà",
+            "customFormatTitle": "PERSONALIZZATO",
+            "customFormatDescription": "Personalizza il formato di risposta",
+            "customFormatInfoAlert1": "Click sul bottone di modifica per aggiungere un nuovo template.",
+            "customFormatInfoAlert2": "Usa ${ attribute } per aggiungere gli attributi da visualizzare",
+            "customFormatInfoAlertExample": "id della feature è ${ properties }"
         },
         "notification": {
             "update": "Aggiorna",

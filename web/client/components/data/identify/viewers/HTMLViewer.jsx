@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,7 +7,7 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-
+const PropTypes = require('prop-types');
 const HtmlRenderer = require('../../../misc/HtmlRenderer');
 
 const regexpBody = /^[\s\S]*<body>([\s\S]*)<\/body>[\s\S]*$/i;

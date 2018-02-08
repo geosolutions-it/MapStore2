@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,9 +7,10 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-
+const PropTypes = require('prop-types');
 const Slider = require('react-nouislider');
 const ElevationChart = require('./ElevationChart');
+const {Grid} = require('react-bootstrap');
 require('react-widgets/lib/less/react-widgets.less');
 require("./css/elevation.css");
 
@@ -20,7 +20,6 @@ module.exports = class extends React.Component {
         element: PropTypes.object,
         elevations: PropTypes.object,
         onChange: PropTypes.func,
-        appState: PropTypes.object,
         chartStyle: PropTypes.object,
         showElevationChart: PropTypes.bool
     };
@@ -84,7 +83,7 @@ module.exports = class extends React.Component {
     render() {
         const elevations = this.props.elevations;
         return (
-            <div>
+            <Grid fluid style={{paddingTop: 15, paddingBottom: 15}}>
                 <label
                     id="mapstore-elevation-label"
                     key="elevation-label"
@@ -98,7 +97,7 @@ module.exports = class extends React.Component {
                         {this.renderElevationsSlider(elevations)}
                     </div>
                 </div>
-            </div>
+            </Grid>
         );
     }
 

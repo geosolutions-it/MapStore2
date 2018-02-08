@@ -63,7 +63,23 @@
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Identify response format",
-            "legenderror": "Legend is not available"
+            "legenderror": "Legend is not available",
+            "editCustomFormat": "Edit custom format",
+            "exampleOfResponse": "Example of Response",
+            "changedSettings": "Changed Settings",
+            "changedSettingsAlert": "You are closing the settings panel without save your changes",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Shows feature info results as plain text",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Shows feature info results as html",
+            "propertiesFormatTitle": "PROPERTIES",
+            "propertiesFormatDescription": "Shows feature info results as properties list",
+            "customFormatTitle": "CUSTOM",
+            "customFormatDescription": "Customize feature info results format",
+            "customFormatInfoAlert1": "Click on edit button to add a new template.",
+            "customFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to be displayed",
+            "customFormatInfoAlertExample": "The id of the feature is ${ properties }"
+
         },
         "notification": {
             "update": "Update",

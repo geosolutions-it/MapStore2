@@ -22,6 +22,13 @@ const {changeMousePointer} = require('../actions/map');
 const {changeMapInfoFormat} = require('../actions/mapInfo');
 const {currentLocaleSelector} = require('../selectors/locale');
 
+const {compose, defaultProps} = require('recompose');
+const MapInfoUtils = require('../utils/MapInfoUtils');
+const loadingState = require('../components/misc/enhancers/loadingState');
+const {switchControlledDefaultViewer, defaultViewerHanlders, defaultViewerDefaultProps} = require('../components/data/identify/enhancers/defaultViewer');
+const {identifyLifecycle, switchControlledIdentify} = require('../components/data/identify/enhancers/identify');
+const defaultIdentifyButtons = require('./identify/defaultIdentifyButtons');
+const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const Message = require('./locale/Message');
 
 const assign = require('object-assign');
@@ -40,16 +47,85 @@ const selector = createSelector([
     (state) => state.mapInfo && state.mapInfo.showModalReverse,
     (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
     (state) => state.mapInfo && state.mapInfo.warning,
-    currentLocaleSelector
-
-], (enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale) => ({
-    enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale
+    currentLocaleSelector,
+    state => mapLayoutValuesSelector(state, {height: true})
+], (enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle) => ({
+    enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle
 }));
 // result panel
 
 const conditionalToggle = on.bind(null, purgeMapInfoResults(), (state) =>
     !(state.annotations && state.annotations.editing)
 , closeAnnotations);
+
+const DefaultViewer = compose(
+    switchControlledDefaultViewer,
+    defaultViewerDefaultProps,
+    defaultViewerHanlders,
+    loadingState(({responses}) => responses.length === 0)
+)(require('../components/data/identify/DefaultViewer'));
+
+const identifyDefaultProps = defaultProps({
+    enabled: false,
+    draggable: true,
+    collapsible: false,
+    format: MapInfoUtils.getDefaultInfoFormatValue(),
+    requests: [],
+    responses: [],
+    buffer: 2,
+    viewerOptions: {},
+    viewer: DefaultViewer,
+    purgeResults: () => {},
+    buildRequest: MapInfoUtils.buildIdentifyRequest,
+    localRequest: () => {},
+    sendRequest: () => {},
+    showMarker: () => {},
+    hideMarker: () => {},
+    noQueryableLayers: () => {},
+    clearWarning: () => {},
+    changeMousePointer: () => {},
+    showRevGeocode: () => {},
+    hideRevGeocode: () => {},
+    containerProps: {
+        continuous: false
+    },
+    showModalReverse: false,
+    reverseGeocodeData: {},
+    enableRevGeocode: true,
+    wrapRevGeocode: false,
+    queryableLayersFilter: MapInfoUtils.defaultQueryableFilter,
+    style: {},
+    point: {},
+    layer: null,
+    map: {},
+    layers: [],
+    maxItems: 10,
+    excludeParams: ["SLD_BODY"],
+    includeOptions: [
+        "buffer",
+        "cql_filter",
+        "filter",
+        "propertyName"
+    ],
+    panelClassName: "modal-dialog info-panel modal-content",
+    headerClassName: "modal-header",
+    bodyClassName: "modal-body info-wrap",
+    dock: true,
+    headerGlyph: "",
+    closeGlyph: "1-close",
+    className: "square-button",
+    allowMultiselection: false,
+    currentLocale: 'en-US',
+    fullscreen: false,
+    showTabs: true,
+    showCoords: true,
+    showLayerTitle: true,
+    position: 'right',
+    size: 660,
+    getButtons: defaultIdentifyButtons,
+    showFullscreen: false,
+    validator: MapInfoUtils.getValidator
+});
 
 /**
  * Identify plugin. This plugin allows to perform getfeature info.
@@ -66,52 +142,46 @@ const conditionalToggle = on.bind(null, purgeMapInfoResults(), (state) =>
  * @static
  *
  * @prop showIn {string[]} List of the plugins where to show the plugin
- * @prop bodyClass {string} class to assign to the feature info panel body
- * @prop cfg.style {object} inline css style
- * @prop cfg.draggable {boolean} draggable info window
- * @prop cfg.collapsible {boolean} collapsible info panel
- * @prop cfg {object} style
+ * @prop cfg.dock {bool} true shows dock panel, false shows modal
+ * @prop cfg.draggable {boolean} draggable info window, when modal
  * @prop cfg.viewerOptions {object}
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
  * @prop cfg.viewerOptions.header {expression} the geader of the viewer, expression from the context{expression}
- * @prop cfg.viewerOptions.collapsible {boolean} the single feature viewer is collapsible
  *
  * @example
  * {
  *   "name": "Identify",
  *   "showIn": ["Settings"],
  *   "cfg": {
- *       "style": {
- *           "position": "absolute",
- *           "width": "100%",
- *           "bottom": "0px",
- *           "zIndex": 1023,
- *           "maxHeight": "70%",
- *           "marginBottom": 0
- *       },
  *       "draggable": false,
- *       "collapsible": true,
+ *       "dock": true,
  *       "viewerOptions": {
- *       "container": "{context.ReactSwipe}",
- *       "header": "{context.SwipeHeader}",
- *       "collapsible": false
- *   },
- *   "bodyClass": "mobile-feature-info"
- *  }
+ *          "container": "{context.ReactSwipe}",
+ *          "header": "{context.SwipeHeader}"
+ *       }
+ *    }
  * }
  */
-const IdentifyPlugin = connect(selector, {
-    sendRequest: getFeatureInfo,
-    localRequest: getVectorInfo,
-    purgeResults: conditionalToggle,
-    changeMousePointer,
-    showMarker: showMapinfoMarker,
-    noQueryableLayers,
-    clearWarning,
-    hideMarker: hideMapinfoMarker,
-    showRevGeocode: showMapinfoRevGeocode,
-    hideRevGeocode: hideMapinfoRevGeocode
-})(require('../components/data/identify/Identify'));
+
+const IdentifyPlugin = compose(
+    connect(selector, {
+        sendRequest: getFeatureInfo,
+        localRequest: getVectorInfo,
+        purgeResults: conditionalToggle,
+        changeMousePointer,
+        showMarker: showMapinfoMarker,
+        noQueryableLayers,
+        clearWarning,
+        hideMarker: hideMapinfoMarker,
+        showRevGeocode: showMapinfoRevGeocode,
+        hideRevGeocode: hideMapinfoRevGeocode
+    }),
+    identifyDefaultProps,
+    switchControlledIdentify,
+    defaultViewerHanlders,
+    identifyLifecycle
+)(require('../components/data/identify/IdentifyContainer'));
+
 // configuration UI
 const FeatureInfoFormatSelector = connect((state) => ({
     infoFormat: state.mapInfo && state.mapInfo.infoFormat

@@ -16,6 +16,7 @@ const {isString, isObject} = require('lodash');
 const LocaleUtils = require('../../../../utils/LocaleUtils');
 const assign = require('object-assign');
 require('react-selectize/themes/index.css');
+const {Grid} = require('react-bootstrap');
 
 /**
  * General Settings form for layer
@@ -52,6 +53,7 @@ class General extends React.Component {
         const locales = LocaleUtils.getSupportedLocales();
         const translations = isObject(this.props.element.title) ? assign({}, this.props.element.title) : { 'default': this.props.element.title };
         return (
+            <Grid fluid style={{paddingTop: 15, paddingBottom: 15}}>
             <form ref="settings">
                 <FormGroup>
                     <ControlLabel><Message msgId="layerProperties.title" /></ControlLabel>
@@ -142,6 +144,7 @@ class General extends React.Component {
                         }}/>
                 </div> : null}
             </form>
+            </Grid>
         );
     }
 

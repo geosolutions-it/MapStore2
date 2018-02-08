@@ -10,13 +10,14 @@ const FeatureInfoUtils = require("./FeatureInfoUtils");
 const INFO_FORMATS = FeatureInfoUtils.INFO_FORMATS;
 const INFO_FORMATS_BY_MIME_TYPE = FeatureInfoUtils.INFO_FORMATS_BY_MIME_TYPE;
 const pointOnSurface = require('turf-point-on-surface');
+const {findIndex, has, trim, isString} = require('lodash');
 
 const MapInfoUtils = {
     /**
      * specifies which info formats are currently supported
      */
     //           default format ↴
-    AVAILABLE_FORMAT: ['TEXT', 'PROPERTIES', 'HTML'],
+    AVAILABLE_FORMAT: ['TEXT', 'PROPERTIES', 'HTML', 'CUSTOM'],
 
     VIEWERS: {},
     /**
@@ -73,6 +74,14 @@ const MapInfoUtils = {
         }
         return {};
     },
+    /**
+     * returns feature info options of layer
+     * @param layer {object} layer object
+     * @return {object} feature info options
+     */
+    getLayerFeatureInfo(layer) {
+        return layer && layer.featureInfo && {...layer.featureInfo} || {};
+    },
     clickedPointToGeoJson(clickedPoint) {
         if (!clickedPoint) {
             return [];
@@ -114,7 +123,8 @@ const MapInfoUtils = {
         if (MapInfoUtils.services[layer.type]) {
             let infoFormat = MapInfoUtils.getDefaultInfoFormatValueFromLayer(layer, props);
             let viewer = MapInfoUtils.getLayerFeatureInfoViewer(layer);
-            return MapInfoUtils.services[layer.type].buildRequest(layer, props, infoFormat, viewer);
+            const featureInfo = MapInfoUtils.getLayerFeatureInfo(layer);
+            return MapInfoUtils.services[layer.type].buildRequest(layer, props, infoFormat, viewer, featureInfo);
         }
         return {};
     },
@@ -183,6 +193,57 @@ const MapInfoUtils = {
      */
     setViewer: (type, viewer) => {
         MapInfoUtils.VIEWERS[type] = viewer;
+    },
+    /**
+     * returns new options filtered by include and exclude options
+     * @param layer {object} layer object
+     * @param includeOptions {array} options to include
+     * @param excludeParams {array} options to exclude
+     * @return {object} new filtered options
+     */
+    filterRequestParams: (layer, includeOptions, excludeParams) => {
+        let includeOpt = includeOptions || [];
+        let excludeList = excludeParams || [];
+        let options = Object.keys(layer).reduce((op, next) => {
+            if (next !== "params" && includeOpt.indexOf(next) !== -1) {
+                op[next] = layer[next];
+            } else if (next === "params" && excludeList.length > 0) {
+                let params = layer[next];
+                Object.keys(params).forEach((n) => {
+                    if (findIndex(excludeList, (el) => {return el === n; }) === -1) {
+                        op[n] = params[n];
+                    }
+                }, {});
+            }
+            return op;
+        }, {});
+        return options;
+    },
+    /**
+     * check if a string attribute is inside of a given object
+     * @param feature {object}
+     * @param attribute {string} name of attribue with dot notations
+     * @param start {array} substring start
+     * @param end {array} substring end
+     * @return {bool} true if feature contains the attribute
+     */
+    validateStringAttribute: (feature, attribute, start = 0, end = 0) => {
+        const path = isString(attribute) && trim(attribute.substring(start, attribute.length - end)) || '';
+        return has(feature, path);
+    },
+    /**
+     * returns a valid template
+     * @param template {string} text with attribute to validate
+     * @param feature {object} object to match attributes
+     * @param regex {regex}
+     * @param start {array} substring start
+     * @param end {array} substring end
+     * @return {string} templete without invalid attribute and html tag inside attribute, e.g. ${ <p>properties.id</p> } -> ${ properties.id }
+     */
+    getCleanTemplate: (template, feature, regex, start = 0, end = 0) => {
+        const matchVariables = isString(template) && template.match(regex);
+        const replacedTag = matchVariables && matchVariables.map(temp => ({ previous: temp, next: MapInfoUtils.validateStringAttribute(feature, temp.replace(/(<([^>]+)>)/ig, ''), start, end) && temp.replace(/(<([^>]+)>)/ig, '') || ''})) || null;
+        return replacedTag && replacedTag.reduce((temp, variable) => temp.replace(variable.previous, variable.next), template) || template || '';
     }
 };
 

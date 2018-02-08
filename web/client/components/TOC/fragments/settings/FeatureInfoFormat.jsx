@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -10,7 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {DropdownList} = require('react-widgets');
 const MapInfoUtils = require('../../../../utils/MapInfoUtils');
-
+const {Grid} = require('react-bootstrap');
 
 /**
  * FeatureInfoFormat shows the infoformat selected for that layer or the default one taken
@@ -29,13 +29,13 @@ module.exports = class extends React.Component {
         label: PropTypes.object,
         defaultInfoFormat: PropTypes.object,
         generalInfoFormat: PropTypes.string,
-        onInfoFormatChange: PropTypes.func
+        onChange: PropTypes.func
     };
 
     static defaultProps = {
         defaultInfoFormat: MapInfoUtils.getAvailableInfoFormat(),
         generalInfoFormat: "text/plain",
-        onInfoFormatChange: () => {}
+        onChange: () => {}
     };
 
     getInfoFormat = (infoFormats) => {
@@ -48,7 +48,7 @@ module.exports = class extends React.Component {
         const data = this.getInfoFormat(this.props.defaultInfoFormat);
         const checkDisabled = !!(this.props.element.featureInfo && this.props.element.featureInfo.viewer);
         return (
-            <div>
+            <Grid fluid style={{paddingTop: 15, paddingBottom: 15}}>
                 {this.props.element.type === "wms" ?
                 [(<label
                     id="mapstore-featureinfoformat-label"
@@ -64,13 +64,13 @@ module.exports = class extends React.Component {
                     defaultValue={data[0]}
                     disabled={checkDisabled}
                     onChange={(value) => {
-                        this.props.onInfoFormatChange("featureInfo", Object.assign({}, {
+                        this.props.onChange("featureInfo", Object.assign({}, {
                             ['format']: value,
                             ['viewer']: this.props.element.featureInfo ? this.props.element.featureInfo.viewer : undefined
                         }));
                     }} />
                 )] : null}
-            </div>
+            </Grid>
         );
     }
 };

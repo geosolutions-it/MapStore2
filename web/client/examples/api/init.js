@@ -40,6 +40,13 @@ function init() {
                 }
             },
             "Identify",
+            {
+                "name": "TOCItemsSettings",
+                "cfg": {
+                    "width": 300,
+                    "showFeatureInfoTab": false
+                }
+            },
             "FullScreen"
         ]};
     /*eslint-disable */

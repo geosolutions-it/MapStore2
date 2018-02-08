@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,12 +6,13 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
+const React = require('react');
+const PropTypes = require('prop-types');
 const Message = require('../../../I18N/Message');
 const Select = require('react-select');
 const {Button, Glyphicon, Alert} = require('react-bootstrap');
 const {findIndex} = require('lodash');
-
+const {Grid} = require('react-bootstrap');
 require('react-select/dist/react-select.css');
 
 /**
@@ -59,7 +59,9 @@ class WMSStyle extends React.Component {
         if (!(currentStyleIndex >= 0) && this.props.element.style) {
             options.push({label: this.props.element.style, value: this.props.element.style });
         }
-        return (<form ref="style">
+        return (
+            <Grid fluid style={{paddingTop: 15, paddingBottom: 15}}>
+            <form ref="style">
             <Select.Creatable
                     key="styles-dropdown"
                     options={options}
@@ -84,7 +86,8 @@ class WMSStyle extends React.Component {
                 {this.renderError()}
                 <Button bsStyle="primary" style={{"float": "right"}} onClick={() => this.props.retrieveLayerData(this.props.element)}><Glyphicon glyph="refresh" />&nbsp;<Message msgId="layerProperties.stylesRefreshList" /></Button>
                 <br />
-            </form>);
+            </form>
+            </Grid>);
     }
 
     updateEntry = (key, event) => {

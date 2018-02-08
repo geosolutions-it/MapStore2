@@ -222,3 +222,57 @@
     border-bottom: 1px solid @ms2-color-shade-lighter;
     border-top: 1px solid @ms2-color-shade-lighter;
 }
+
+.mapstore-side-card  {
+    &.ms-sm {
+        width: 100% !important;
+        height: @square-btn-size !important;
+        display: flex;
+        &.ms-dragging {
+            * {
+                display: none;
+            }
+        }
+        .mapstore-side-preview {
+            margin: 0 !important;
+            width: @square-btn-size !important;
+            height: @square-btn-size !important;
+            display: flex;
+            .glyphicon  {
+                margin: auto;
+                font-size: @icon-size;
+            }
+        }
+        .mapstore-side-card-info {
+            width: 100% !important;
+            height: 100% !important;
+            overflow: hidden;
+            .mapstore-side-card-title {
+                width: 100% !important;
+                font-size: @font-size-small !important;
+                margin: 0 !important;
+                height: @square-btn-size / 3 !important;
+                overflow: hidden;
+            }
+            .mapstore-side-card-desc {
+                width: 100% !important;
+                font-size: @font-size-small !important;
+                margin: 0 !important;
+                height: @square-btn-size / 3 !important;
+                overflow: hidden;
+    
+            }
+            .mapstore-side-card-caption {
+                display: none;
+            }
+        }
+        .mapstore-side-card-tool {
+            width: auto !important;
+        }
+        &.ms-selected {
+            color: @ms2-color-text-primary;
+            background-color: @ms2-color-primary;
+            .shadow-far;
+        }
+    }
+}

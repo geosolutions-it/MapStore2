@@ -1,0 +1,190 @@
+.ms-side-panel {
+    /* needed to set right position when embedded */
+    &.ms-absolute-dock {
+        > div {
+            position: absolute !important;
+            height: 100% !important;
+            > div {
+                position: absolute !important;
+            }
+        }
+    }
+    pre {
+        white-space: pre-wrap;
+    }
+    .ms-header {
+        z-index: 10;
+        background-color: @ms2-color-background;
+        .shadow-soft;
+        .btn {
+            .no-border;
+        }
+        .ms-close {
+            span {
+                display: block;
+                transition: 0.3s;
+            }
+            &:hover {
+                span {
+                    transform: scale(1.2);
+                }
+            }
+        }
+        .row {
+            .col-xs-12 {
+                & + .col-xs-12 {
+                    margin-top: 15px;
+                }
+            }
+            
+            .col-xs-6 {
+                .btn-group {
+                    float: right;
+                }
+            }
+            & + .row {
+                margin-top: 15px;
+                &:last-child {
+                    margin-bottom: 15px;
+                    &.ms-row-tab {
+                        margin-bottom: 0;
+                    }
+                }
+            }
+            .col-xs-12 {
+                padding: 0;
+            }
+            &:first-child {
+                display: flex;
+                color: @ms2-color-text;
+                background-color: @ms2-color-background;
+                & > * {
+                    padding: 0;
+                    width: auto;
+                }
+                .col-xs-8 {
+                    flex: 1;
+                    text-align: center;
+                    align-self: center;
+                    color: @ms2-color-text;
+                }
+            }
+        }
+        .nav-justified {
+            > li {
+                display: table-cell;
+                width: 1%;
+                
+                > a {
+                    margin-bottom: 0;
+                    border-bottom: 1px solid @nav-tabs-justified-link-border-color;
+                    border-radius: @border-radius-base @border-radius-base 0 0;
+                }
+
+                &:first-child {
+                    &.active > a,
+                    &.active > a:hover,
+                    &.active > a:focus {
+                        border-left-color: @nav-tabs-justified-active-link-border-color;
+                    }
+                }
+
+                &:last-child {
+                    &.active > a,
+                    &.active > a:hover,
+                    &.active > a:focus {
+                        border-right-color: @nav-tabs-justified-active-link-border-color;
+                    }
+                }
+            }
+
+            > .active > a,
+            > .active > a:hover,
+            > .active > a:focus {
+                border-bottom-color: @nav-tabs-justified-active-link-border-color;
+            }
+        }
+
+        &.ms-primary {
+            .row {
+                &:first-child {
+                    color: @ms2-color-text-primary;
+                    background-color: @ms2-color-primary;
+                    .col-xs-8 {
+                        color: @ms2-color-text-primary;
+                    }
+                }
+            }
+        }
+    }
+    .ms2-border-layout-content {
+        width: 100%;
+        .mapstore-widget-card {
+            height: 350px;
+            position: relative;
+            .shadow-soft;
+        }
+        .panel {
+            border: none;
+            .panel-heading {
+                border: none;
+            }
+        }
+    }
+}
+
+.ms-accordion {
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+    margin: 0;
+    a {
+        text-decoration: none;
+    }
+    .panel {
+        border: none;
+        box-shadow: none;
+        margin: 0;
+        &  + .panel {
+            margin: 0;
+        }
+        background-color: transparent;
+        .panel-heading {
+            padding: 0;
+            border: none;
+            background-color: transparent;
+            box-shadow: none;
+            margin: 8px 0 8px;
+            z-index: 10;
+            .mapstore-side-card {
+                margin: 0;
+            }
+        }
+        .panel-collapse {
+            .panel-body {
+                padding: 8px;
+                border: 1px solid @ms2-color-shade-lighter;
+
+            }
+        }
+    }
+    &.ms-fill-container {
+        height: 100%;
+        overflow: hidden;
+
+        .panel.ms-selected {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            .panel-collapse {
+                flex: 1;
+                display: flex;
+                .panel-body {
+                    flex: 1;
+                    overflow: auto;
+                }
+            }
+        }
+    }
+}

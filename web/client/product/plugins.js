@@ -79,7 +79,8 @@ module.exports = {
         MapFooterPlugin: require('../plugins/MapFooter'),
         AnnotationsPlugin: require('../plugins/Annotations'),
         WidgetsPlugin: require('../plugins/Widgets'),
-        WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder')
+        WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder'),
+        TOCItemsSettingsPlugin: require('../plugins/TOCItemsSettings')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

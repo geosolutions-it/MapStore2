@@ -12,8 +12,9 @@ const {ButtonGroup, Button, Glyphicon, Tooltip, OverlayTrigger} = require('react
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 const {head} = require('lodash');
 const ConfirmModal = require('../maps/modals/ConfirmModal');
-const SettingsModal = require('./fragments/SettingsModal');
-const GroupSettingsModal = require('./fragments/GroupSettingsModal');
+// removed from toolbar to avoid conflict with TOCItemsSettings
+// const SettingsModal = require('./fragments/SettingsModal');
+// const GroupSettingsModal = require('./fragments/GroupSettingsModal');
 const LayerMetadataModal = require('./fragments/LayerMetadataModal');
 
 class Toolbar extends React.Component {
@@ -135,7 +136,7 @@ class Toolbar extends React.Component {
         status = this.props.selectedLayers.length > 0 && this.props.selectedLayers.filter(l => l.loadingError === 'Error').length === this.props.selectedLayers.length ? 'LAYERS_LOAD_ERROR' : status;
         return status;
     }
-
+/*
     getSettingsModal = (status) => {
         return status === 'LAYER' ?
             (<SettingsModal
@@ -164,11 +165,11 @@ class Toolbar extends React.Component {
                 updateNode={this.props.onToolsActions.onUpdate}
                 updateSettings={this.props.onToolsActions.onUpdateSettings}
                 hideSettings={this.props.onToolsActions.onHideSettings}/>;
-    }
+    }*/
 
     render() {
         const status = this.getStatus();
-        const settingModal = status === 'GROUP' || status === 'LAYER' ? this.getSettingsModal(status) : null;
+        // const settingModal = status === 'GROUP' || status === 'LAYER' ? this.getSettingsModal(status) : null;
         const layerMetadataModal = (<LayerMetadataModal
                                 key="toollayermetadatamodal"
                                 layerMetadata={this.props.layerMetadata}
@@ -277,7 +278,7 @@ class Toolbar extends React.Component {
                 confirmText={this.props.text.confirmDeleteText}
                 cancelText={this.props.text.confirmDeleteCancelText}
                 body={this.props.text.confirmDeleteMessage} />
-            {settingModal}
+            {/*settingModal*/}
             {layerMetadataModal}
         </ButtonGroup>) : null;
     }

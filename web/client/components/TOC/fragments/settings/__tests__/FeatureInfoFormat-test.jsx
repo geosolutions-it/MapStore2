@@ -57,12 +57,12 @@ describe('test Layer Properties FeatureInfoFormat module component', () => {
         };
         const label = "label";
         const handlers = {
-            onInfoFormatChange() {}
+            onChange() {}
         };
-        let spy = expect.spyOn(handlers, "onInfoFormatChange");
+        let spy = expect.spyOn(handlers, "onChange");
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
-        const comp = ReactDOM.render(<FeatureInfoFormat element={l} label={label} onInfoFormatChange={handlers.onInfoFormatChange}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<FeatureInfoFormat element={l} label={label} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toExist();
         const span = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "span" );
         expect(span).toExist();
@@ -84,7 +84,7 @@ describe('test Layer Properties FeatureInfoFormat module component', () => {
         };
         const generalInfoFormat = "text/html";
         const label = "label";
-        const comp = ReactDOM.render(<FeatureInfoFormat element={l} label={label} generalInfoFormat={generalInfoFormat} onInfoFormatChange={() => {}}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<FeatureInfoFormat element={l} label={label} generalInfoFormat={generalInfoFormat} onChange={() => {}}/>, document.getElementById("container"));
         expect(comp).toExist();
         const div = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "div" );
         expect(div[2]).toExist();

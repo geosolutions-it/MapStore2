@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,11 +7,12 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-
+const PropTypes = require('prop-types');
 const Slider = require('react-nouislider');
 const {Label, Checkbox} = require('react-bootstrap');
 const {DropdownList} = require('react-widgets');
 const Message = require('../../../I18N/Message');
+const {Grid} = require('react-bootstrap');
 require('react-widgets/lib/less/react-widgets.less');
 module.exports = class extends React.Component {
     static propTypes = {
@@ -28,7 +28,7 @@ module.exports = class extends React.Component {
     };
 
     render() {
-        return (<div>
+        return (<Grid fluid style={{paddingTop: 15, paddingBottom: 15}}>
             {this.props.element.type === "wms" ?
             [(<label key="format-label" className="control-label"><Message msgId="layerProperties.format" /></label>),
             (<DropdownList
@@ -61,6 +61,6 @@ module.exports = class extends React.Component {
                         <Message msgId="layerProperties.singleTile"/>
                     </Checkbox>
                 </div>)] : null}
-        </div>);
+        </Grid>);
     }
 };

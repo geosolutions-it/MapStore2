@@ -100,4 +100,17 @@ describe('FeatureInfoUtils', () => {
         expect(notValidResults[0].response).toBe(emptyJSON);
     });
 
+    // **********************************
+    // CUSTOM
+    // **********************************
+    it('CUSTOM Validator', () => {
+        let results = FeatureInfoUtils.Validator.CUSTOM.getValidResponses([{response: validJSON}, {response: emptyJSON}]);
+        expect(results.length).toBe(1);
+        expect(results[0].response).toBe(validJSON);
+
+        let notValidResults = FeatureInfoUtils.Validator.CUSTOM.getNoValidResponses([{response: validJSON}, {response: emptyJSON}]);
+        expect(notValidResults.length).toBe(1);
+        expect(notValidResults[0].response).toBe(emptyJSON);
+    });
+
 });

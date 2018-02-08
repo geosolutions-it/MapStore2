@@ -63,7 +63,22 @@
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Indentificar el formato de respuesta",
-            "legenderror": "La leyenda no está disponible"
+            "legenderror": "La leyenda no está disponible",
+            "editCustomFormat": "Editar formato personalizado",
+            "exampleOfResponse": "Ejemplo de respuesta",
+            "changedSettings": "Configuraciones modificadas",
+            "changedSettingsAlert": "Está cerrando el panel de configuraciones sin guardar sus cambios",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Muestra resultados de información de funciones como texto sin formato",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Muestra resultados de información de funciones como html",
+            "propertiesFormatTitle": "PROPIEDADES",
+            "propertiesFormatDescription": "Muestra resultados de información de características como lista de propiedades",
+            "customFormatTitle": "PERSONALIZADO",
+            "customFormatDescription": "Personalizar formato de resultados de información de funciones",
+            "customFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
+            "customFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita mostrar",
+            "customFormatInfoAlertExample": "La identificación de la función es ${ properties }"
         },
         "notification": {
             "update": "Update",
