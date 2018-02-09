@@ -9,7 +9,7 @@ const React = require('react');
 const expect = require('expect');
 const ReactDOM = require('react-dom');
 const IdentifyContainer = require('../IdentifyContainer');
-// const TestUtils = require('react-dom/test-utils');
+const TestUtils = require('react-dom/test-utils');
 
 describe("test IdentifyContainer", () => {
     beforeEach((done) => {
@@ -81,5 +81,31 @@ describe("test IdentifyContainer", () => {
 
         alertModal = document.getElementsByClassName('ms-alert-center')[0];
         expect(alertModal).toNotExist();
+    });
+
+    it('test component with warning no queryable layer', () => {
+
+        const testHandlers = {
+            clearWarning: () => {}
+        };
+
+        const spyClearWarning = expect.spyOn(testHandlers, 'clearWarning');
+
+        ReactDOM.render(
+            <IdentifyContainer
+                warning={'NO_QUERYABLE_LAYERS'}
+                clearWarning={testHandlers.clearWarning}/>,
+            document.getElementById("container")
+        );
+
+        const alertModal = document.getElementsByClassName('ms-resizable-modal');
+        expect(alertModal.length).toBe(1);
+
+        const btns = alertModal[0].getElementsByClassName('btn');
+        expect(btns.length).toBe(1);
+
+        TestUtils.Simulate.click(btns[0]);
+        expect(spyClearWarning).toHaveBeenCalled();
+
     });
 });

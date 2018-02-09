@@ -13,7 +13,8 @@ const Message = require('../../I18N/Message');
 const MapInfoUtils = require('../../../utils/MapInfoUtils');
 const DockablePanel = require('../../misc/panels/DockablePanel');
 const GeocodeViewer = require('./GeocodeViewer');
-
+const ResizableModal = require('../../misc/ResizableModal');
+const Portal = require('../../misc/Portal');
 
 /**
  * Component for rendering Identify Container inside a Dockable contanier
@@ -47,7 +48,9 @@ module.exports = props => {
         point,
         dockStyle = {},
         draggable,
-        setIndex
+        setIndex,
+        warning,
+        clearWarning
     } = props;
 
     const latlng = point && point.latlng || null;
@@ -102,6 +105,25 @@ module.exports = props => {
                     responses={responses}
                     {...viewerOptions}/>
             </DockablePanel>
+            <Portal>
+                <ResizableModal
+                    fade
+                    title={<Message msgId="warning"/>}
+                    size="xs"
+                    show={warning}
+                    onClose={clearWarning}
+                    buttons={[{
+                        text: <Message msgId="close"/>,
+                        onClick: clearWarning,
+                        bsStyle: 'primary'
+                    }]}>
+                    <div className="ms-alert" style={{padding: 15}}>
+                        <div className="ms-alert-center text-center">
+                            <Message msgId="identifyNoQueryableLayers"/>
+                        </div>
+                    </div>
+                </ResizableModal>
+            </Portal>
         </span>
     );
 };
