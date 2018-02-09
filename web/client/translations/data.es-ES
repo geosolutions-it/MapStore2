@@ -310,7 +310,6 @@
             "createWidget": "Crea un widget para la capa seleccionada",
             "editLayerProperties": "Modificar las propiedades de la capa",
             "browseData": "Abrir la tabla de atributos",
-            "searchFeatures": "Buscar en el  mapa ...",
             "removeLayer": "Borrar la capa",
             "loadingerror": "La capa no se ha cargado correctamente o no está disponible",
             "measure": "Medidor",
@@ -814,6 +813,8 @@
             "getWMSLink": "Enlace WMS",
             "error": "A ocurrido un error cargando los datos del catálogo",
             "pageInfo": "{start}-{end} resultados desde {total}",
+            "resultInfo": "{total, plural, =0 No hay artículos} =1 {{total} artículo de {total}} other {{start}-{end} de {total}}}",
+            "pageInfoInfinite": "{total, plural, =undefined {} =0 {No hay resultados} =1 {{total} de {total} emparejados} other {Cargado {loaded} de {total} emparejados}}",
             "noRecordsMatched": "Ningún resultado encontrado",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
@@ -1047,6 +1048,17 @@
             }
         },
         "widgets": {
+             "types": {
+                "chart": {
+                    "title": "Gráfico",
+                    "caption": "agregar un gráfico"
+                },
+                "text": {
+                    "title": "Texto",
+                    "caption": "agregar un área de texto"
+                }
+            },
+            "selectWidgetType": "Seleccione el tipo de widget",
             "selectChartType": {
                 "title": "Seleccione el tipo de widget"
             },
