@@ -20,7 +20,7 @@ module.exports = ({onClose = () => {}, children} = {}) =>
     <div className="m-header bg-body widgets-builder-header">
         <Row>
         <Col md={12} className="text-center" style={{overflow: 'hidden', lineHeight: '52px'}}>
-             <Button onClick={() => onClose()} className="pull-left square-button no-border ">
+             <Button onClick={() => onClose()} className="pull-left on-close-btn square-button no-border ">
                 <Glyphicon glyph="1-close"/>
             </Button>
         <span style={{padding: '50px 0 0 0', fontSize: 16}}><Message msgId="widgets.builder.header.title" /></span>

@@ -35,7 +35,7 @@ describe('ChartOptions component', () => {
             onChange: () => {}
         };
         const spyonChange = expect.spyOn(actions, 'onChange');
-        ReactDOM.render(<ChartOptions featureTypeProperties={get(describeStates, "featureTypes[0].properties") } onChange={actions.onChange} />, document.getElementById("container"));
+        ReactDOM.render(<ChartOptions featureTypeProperties={get(describeStates, "featureTypes[0].properties") } onChange={actions.onChange} dependencies={{viewport: {}}}/>, document.getElementById("container"));
         const inputs = document.querySelectorAll('input');
         // simulate change with tab (for react-select)
         ReactTestUtils.Simulate.change(inputs[0], { target: { value: 'STATE_NAME' } });

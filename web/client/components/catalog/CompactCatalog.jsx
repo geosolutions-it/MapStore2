@@ -61,11 +61,18 @@ const loadPage = ({text, catalog = {}}, page = 0) => Rx.Observable
 const scrollSpyOptions = {querySelector: ".ms2-border-layout-body", pageSize: PAGE_SIZE};
 /**
  * Compat catalog : Reusable catalog component, with infinite scroll.
+ * You can simply pass the catalog to browse and the handler onRecordSelected.
+ * @example
+ * <CompactCatalog catalog={type: "csw", url: "..."} onSelected={selected => console.log(selected)} />
  * @name CompactCatalog
  * @memberof components.catalog
- * @prop {string} searchText the search text (if you want to control it)
- * @prop {function} setSearchText handler to get search text changes (if not defined, the component will control the text by it's own)
- * @prop {object} catalog the definition of the selected catalog as `{type: "wms"|"wmts"|"csw", URL: "..."}`
+ * @prop {object} catalog the definition of the selected catalog as `{type: "wms"|"wmts"|"csw", url: "..."}`
+ * @prop {object} selected the record selected. Passing this will show it as selected (highlighted) in the list. It will compare record's `identifier` property to guess the selected record in the list
+ * @prop {function} onRecordSelected
+ * @prop {boolean} showCatalogSelector if true shows the catalog selector - TODO
+ * @prop {array} services TODO allow selection of catalog from a list
+ * @prop {string} [searchText] the search text (if you want to control it)
+ * @prop {function} [setSearchText] handler to get search text changes (if not defined, the component will control the text by it's own)
  */
 module.exports = compose(
         withControllableState('searchText', "setSearchText", ""),

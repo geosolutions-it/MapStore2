@@ -23,7 +23,7 @@ describe('WidgetsView component', () => {
     it('WidgetsView rendering with defaults', () => {
         ReactDOM.render(<WidgetsView />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelector('.widget-card-on-map');
+        const el = container.querySelector('.widget-container');
         expect(el).toExist();
     });
     it('Test WidgetsView with widgets', () => {

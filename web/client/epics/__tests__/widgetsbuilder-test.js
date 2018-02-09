@@ -25,12 +25,12 @@ const {LOAD_FILTER, search} = require('../../actions/queryform');
 const {
     CHANGE_DRAWING_STATUS
 } = require('../../actions/draw');
-const {SET_CONTROL_PROPERTY} = require('../../actions/controls');
+const { SET_CONTROL_PROPERTY} = require('../../actions/controls');
 const {addLayer} = require('../../actions/layers');
 
 describe('widgetsbuilder epic', () => {
     it('openWidgetEditor with New', (done) => {
-        const startActions = [createWidget({id: "TEST"})];
+        const startActions = [createWidget({ id: "TEST" })];
         testEpic(openWidgetEditor, 2, startActions, actions => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
@@ -51,6 +51,12 @@ describe('widgetsbuilder epic', () => {
                 }
             });
             done();
+        }, {
+            controls: {
+                widgetBuilder: {
+                    available: true
+                }
+            }
         });
     });
     it('openWidgetEditor with edit', (done) => {
@@ -75,6 +81,12 @@ describe('widgetsbuilder epic', () => {
                 }
             });
             done();
+        }, {
+            controls: {
+                widgetBuilder: {
+                    available: true
+                }
+            }
         });
     });
 
@@ -97,6 +109,12 @@ describe('widgetsbuilder epic', () => {
                 }
             });
             done();
+        }, {
+            controls: {
+                widgetBuilder: {
+                    available: true
+                }
+            }
         });
 
 
@@ -120,6 +138,12 @@ describe('widgetsbuilder epic', () => {
                 }
             });
             done();
+        }, {
+            controls: {
+                widgetBuilder: {
+                    available: true
+                }
+            }
         });
     });
     it('initEditorOnNew', (done) => {
@@ -136,8 +160,14 @@ describe('widgetsbuilder epic', () => {
                     default:
                         done(new Error("Action not recognized"));
                 }
-            });
+            }, );
             done();
+        }, {
+            controls: {
+                widgetBuilder: {
+                    available: true
+                }
+            }
         });
     });
     it('handleWidgetsFilterPanel', (done) => {
@@ -169,6 +199,11 @@ describe('widgetsbuilder epic', () => {
         },
         // state
         {
+            controls: {
+                widgetBuilder: {
+                    available: true
+                }
+            },
             widgets: {
                 builder: {
                     editor: {
@@ -215,6 +250,11 @@ describe('widgetsbuilder epic', () => {
         },
         // state
         {
+            controls: {
+                widgetBuilder: {
+                    available: true
+                }
+            },
             widgets: {
                 builder: {
                     editor: {
