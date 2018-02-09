@@ -9,7 +9,14 @@
 const {withState, withHandlers, branch, defaultProps} = require('recompose');
 const MapInfoUtils = require('../../../../utils/MapInfoUtils');
 
-const defaultViewerHanlders = withHandlers({
+/**
+ * Enhancer for setting page index of Default Viewer in DefaultViewer/IdentifyContainer plugin
+ * - onNext: set next index
+ * - onPrevious: set previous index
+ * @memberof enhancers.defaultViewerHandlers
+ * @class
+ */
+const defaultViewerHandlers = withHandlers({
     onNext: ({index = 0, setIndex = () => {}, responses, format, validator}) => () => {
         setIndex(Math.min(validator(format).getValidResponses(responses).length - 1, index + 1));
     },
@@ -18,6 +25,12 @@ const defaultViewerHanlders = withHandlers({
     }
 });
 
+
+/**
+ * Enhancer to enable set index only if Component has header
+ * @memberof enhancers.switchControlledDefaultViewer
+ * @class
+ */
 const switchControlledDefaultViewer = branch(
     ({header}) => header,
     withState(
@@ -25,13 +38,18 @@ const switchControlledDefaultViewer = branch(
     )
 );
 
+/**
+ * Set the default props of DefaultViewer
+ * @memberof enhancers.defaultViewerDefaultProps
+ * @class
+ */
 const defaultViewerDefaultProps = defaultProps({
     format: MapInfoUtils.getDefaultInfoFormatValue(),
     validator: MapInfoUtils.getValidator
 });
 
 module.exports = {
-    defaultViewerHanlders,
+    defaultViewerHandlers,
     switchControlledDefaultViewer,
     defaultViewerDefaultProps
 };

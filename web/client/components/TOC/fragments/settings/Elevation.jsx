@@ -11,6 +11,8 @@ const PropTypes = require('prop-types');
 const Slider = require('react-nouislider');
 const ElevationChart = require('./ElevationChart');
 const {Grid} = require('react-bootstrap');
+const Message = require('../../../I18N/Message');
+const LayersUtils = require('../../../../utils/LayersUtils');
 require('react-widgets/lib/less/react-widgets.less');
 require("./css/elevation.css");
 
@@ -18,15 +20,19 @@ module.exports = class extends React.Component {
     static propTypes = {
         elevationText: PropTypes.node,
         element: PropTypes.object,
-        elevations: PropTypes.object,
+        getDimension: PropTypes.func,
         onChange: PropTypes.func,
         chartStyle: PropTypes.object,
-        showElevationChart: PropTypes.bool
+        showElevationChart: PropTypes.bool,
+        containerWidth: PropTypes.number
     };
 
     static defaultProps = {
         onChange: () => {},
-        showElevationChart: true
+        showElevationChart: true,
+        containerWidth: 500,
+        elevationText: <Message msgId="elevation"/>,
+        getDimension: LayersUtils.getDimension
     };
 
     shouldComponentUpdate(nextProps) {
@@ -38,7 +44,7 @@ module.exports = class extends React.Component {
             return (
                 <ElevationChart
                     elevations={elevations}
-                    chartStyle={this.props.chartStyle}/>
+                    chartStyle={{height: 200, width: this.props.containerWidth - 30, ...this.props.chartStyle}}/>
             );
         }
     };
@@ -52,7 +58,7 @@ module.exports = class extends React.Component {
         const lastVal = parseFloat(values[values.length - 1]);
         const start = this.props.element &&
                         this.props.element.params &&
-                        this.props.element.params[this.props.elevations.name] || values[0];
+                        this.props.element.params[elevations.name] || values[0];
         return (
             <div id="mapstore-elevation">
                 <Slider
@@ -73,7 +79,7 @@ module.exports = class extends React.Component {
                     tooltips={!this.props.showElevationChart}
                     onChange={(value) => {
                         this.props.onChange("params", Object.assign({}, {
-                            [this.props.elevations.name]: value[0]
+                            [elevations.name]: value[0]
                         }));
                     }}/>
             </div>
@@ -81,7 +87,7 @@ module.exports = class extends React.Component {
     };
 
     render() {
-        const elevations = this.props.elevations;
+        const elevations = this.props.getDimension(this.props.element.dimensions, 'elevation');
         return (
             <Grid fluid style={{paddingTop: 15, paddingBottom: 15}}>
                 <label
@@ -89,7 +95,7 @@ module.exports = class extends React.Component {
                     key="elevation-label"
                     className="control-label"
                     style={this.props.showElevationChart ? {marginBottom: "10px"} : {marginBottom: "90px"}}>
-                    {this.props.elevationText}: ({this.props.elevations.units})
+                    {this.props.elevationText}: ({elevations.units})
                 </label>
                 {this.renderElevationsChart(elevations)}
                 <div>

@@ -55,42 +55,6 @@ describe("test IdentifyContainer", () => {
         expect(viewer.innerHTML).toBe('2');
     });
 
-    it('test component reverse geocode enable/disable', () => {
-        ReactDOM.render(
-            <IdentifyContainer
-                enableRevGeocode
-                point={{latlng: {lat: 40, lng: 10}}}
-                enabled
-                reverseGeocodeData={{display_name: "test"}} />,
-            document.getElementById("container")
-        );
-
-        let coords = document.getElementsByClassName('ms-geocode-coords')[0];
-        expect(coords.innerHTML.indexOf('Lat:') !== -1).toBe(true);
-        expect(coords.innerHTML.indexOf('Long:') !== -1).toBe(true);
-
-        ReactDOM.render(
-            <IdentifyContainer
-                point={{latlng: {lat: 40, lng: 10}}}
-                enabled
-                reverseGeocodeData={{display_name: "test"}} />,
-            document.getElementById("container")
-        );
-        coords = document.getElementsByClassName('ms-geocode-coords');
-        expect(coords.length).toBe(0);
-
-        ReactDOM.render(
-            <IdentifyContainer
-                point={null}
-                enableRevGeocode
-                enabled
-                reverseGeocodeData={{display_name: "test"}} />,
-            document.getElementById("container")
-        );
-        coords = document.getElementsByClassName('ms-geocode-coords')[0];
-        expect(coords.innerHTML).toBe('');
-    });
-
     it('test component reverse geocode modal', () => {
         ReactDOM.render(
             <IdentifyContainer

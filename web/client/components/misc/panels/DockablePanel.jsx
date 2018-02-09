@@ -14,7 +14,8 @@ const ResizableModal = require('../ResizableModal');
 
 /**
  * Component for rendering a DockPanel or Modal based on dock props.
- * @memberof components.DockablePanel
+ * @memberof components.misc.panels
+ * @name DockablePanel
  * @class
  * @prop {bool} dock true renders a DockPanel and false a RisizableModal
  * @prop {bool} open show/hide component

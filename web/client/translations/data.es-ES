@@ -74,11 +74,11 @@
             "htmlFormatDescription": "Muestra resultados de información de funciones como html",
             "propertiesFormatTitle": "PROPIEDADES",
             "propertiesFormatDescription": "Muestra resultados de información de características como lista de propiedades",
-            "customFormatTitle": "PERSONALIZADO",
-            "customFormatDescription": "Personalizar formato de resultados de información de funciones",
-            "customFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
-            "customFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita mostrar",
-            "customFormatInfoAlertExample": "La identificación de la función es ${ properties }"
+            "templateFormatTitle": "TEMPLATE",
+            "templateFormatDescription": "Personalizar formato de resultados de información de funciones",
+            "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
+            "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita mostrar",
+            "templateFormatInfoAlertExample": "La identificación de la función es ${ properties }"
         },
         "notification": {
             "update": "Update",

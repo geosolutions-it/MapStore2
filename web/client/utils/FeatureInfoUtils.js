@@ -7,7 +7,7 @@ const INFO_FORMATS = {
     "JSON": "application/json",
     "GML2": "application/vnd.ogc.gml",
     "GML3": "application/vnd.ogc.gml/3.1.1",
-    "CUSTOM": "application/json"
+    "TEMPLATE": "application/json"
 };
 
 const INFO_FORMATS_BY_MIME_TYPE = {
@@ -114,7 +114,7 @@ const Validator = {
             return responses.filter((res) => {return !parseXMLResponse(res); });
         }
     },
-    CUSTOM: {
+    TEMPLATE: {
         /**
          *Parse the JSON to get only the valid json responses
          */

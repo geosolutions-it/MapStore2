@@ -24,7 +24,8 @@ module.exports = class extends React.Component {
     };
 
     static defaultProps = {
-        onChange: () => {}
+        onChange: () => {},
+        opacityText: <Message msgId="opacity"/>
     };
 
     render() {

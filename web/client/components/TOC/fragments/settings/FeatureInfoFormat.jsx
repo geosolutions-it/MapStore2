@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const {DropdownList} = require('react-widgets');
 const MapInfoUtils = require('../../../../utils/MapInfoUtils');
 const {Grid} = require('react-bootstrap');
-
+const Message = require('../../../I18N/Message');
 /**
  * FeatureInfoFormat shows the infoformat selected for that layer or the default one taken
  * from the general settings.
@@ -35,7 +35,8 @@ module.exports = class extends React.Component {
     static defaultProps = {
         defaultInfoFormat: MapInfoUtils.getAvailableInfoFormat(),
         generalInfoFormat: "text/plain",
-        onChange: () => {}
+        onChange: () => {},
+        label: <Message msgId="layerProperties.featureInfoFormatLbl"/>
     };
 
     getInfoFormat = (infoFormats) => {

@@ -8,7 +8,7 @@
 const React = require('react');
 const expect = require('expect');
 const ReactDOM = require('react-dom');
-const {defaultViewerHanlders, switchControlledDefaultViewer, defaultViewerDefaultProps} = require('../defaultViewer');
+const {defaultViewerHandlers, switchControlledDefaultViewer, defaultViewerDefaultProps} = require('../defaultViewer');
 const TestUtils = require('react-dom/test-utils');
 
 describe("test defaultViewer enhancers", () => {
@@ -46,7 +46,7 @@ describe("test defaultViewer enhancers", () => {
     });
 
     it('test defaultViewerHanlders onNext', done => {
-        const Component = defaultViewerHanlders(({onNext = () => {}, index = 0}) =>
+        const Component = defaultViewerHandlers(({onNext = () => {}, index = 0}) =>
             <span>
                 <div id="test-component-next" onClick={() => onNext()}>{index}</div>
             </span>
@@ -62,7 +62,7 @@ describe("test defaultViewer enhancers", () => {
     });
 
     it('test defaultViewerHanlders onPrevious', done => {
-        const Component = defaultViewerHanlders(({onPrevious = () => {}, index}) =>
+        const Component = defaultViewerHandlers(({onPrevious = () => {}, index}) =>
             <span>
                 <div id="test-component-previous" onClick={() => onPrevious()}>{index}</div>
             </span>

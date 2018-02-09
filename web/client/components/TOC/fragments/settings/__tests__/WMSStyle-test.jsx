@@ -60,12 +60,12 @@ describe('test  Layer Properties General module component', () => {
         };
         const handlers = {
             retrieveLayerData: () => {},
-            updateSettings: () => {}
+            onChange: () => {}
         };
         let spyRetrive = expect.spyOn(handlers, "retrieveLayerData");
-        let spyUpdate = expect.spyOn(handlers, "updateSettings");
+        let spyUpdate = expect.spyOn(handlers, "onChange");
 
-        const comp = ReactDOM.render(<WMSStyle element={l} settings={settings} retrieveLayerData={handlers.retrieveLayerData} updateSettings={handlers.updateSettings}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<WMSStyle element={l} settings={settings} retrieveLayerData={handlers.retrieveLayerData} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toExist();
         // refresh layers list button click
         const buttons = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "button" );

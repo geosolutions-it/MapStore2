@@ -75,11 +75,11 @@
             "htmlFormatDescription": "Affiche les résultats de l'info sur les fonctionnalités au format html",
             "propertiesFormatTitle": "PROPRIÉTÉS",
             "propertiesFormatDescription": "Affiche les résultats des informations sur les fonctionnalités sous forme de liste de propriétés",
-            "customFormatTitle": "PERSONNALISÉ",
-            "customFormatDescription": "Personnaliser le format des résultats d'informations sur les fonctionnalités",
-            "customFormatInfoAlert1": "Cliquez sur le bouton d'édition pour ajouter un nouveau modèle.",
-            "customFormatInfoAlert2": "Utilisez ${ attribute } pour envelopper les propriétés dont vous avez besoin",
-            "customFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }"
+            "templateFormatTitle": "TEMPLATE",
+            "templateFormatDescription": "Personnaliser le format des résultats d'informations sur les fonctionnalités",
+            "templateFormatInfoAlert1": "Cliquez sur le bouton d'édition pour ajouter un nouveau modèle.",
+            "templateFormatInfoAlert2": "Utilisez ${ attribute } pour envelopper les propriétés dont vous avez besoin",
+            "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }"
         },
         "notification": {
             "update": "Mise à jour",

@@ -25,7 +25,7 @@ const {currentLocaleSelector} = require('../selectors/locale');
 const {compose, defaultProps} = require('recompose');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const loadingState = require('../components/misc/enhancers/loadingState');
-const {switchControlledDefaultViewer, defaultViewerHanlders, defaultViewerDefaultProps} = require('../components/data/identify/enhancers/defaultViewer');
+const {switchControlledDefaultViewer, defaultViewerHandlers, defaultViewerDefaultProps} = require('../components/data/identify/enhancers/defaultViewer');
 const {identifyLifecycle, switchControlledIdentify} = require('../components/data/identify/enhancers/identify');
 const defaultIdentifyButtons = require('./identify/defaultIdentifyButtons');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
@@ -61,7 +61,7 @@ const conditionalToggle = on.bind(null, purgeMapInfoResults(), (state) =>
 const DefaultViewer = compose(
     switchControlledDefaultViewer,
     defaultViewerDefaultProps,
-    defaultViewerHanlders,
+    defaultViewerHandlers,
     loadingState(({responses}) => responses.length === 0)
 )(require('../components/data/identify/DefaultViewer'));
 
@@ -178,7 +178,7 @@ const IdentifyPlugin = compose(
     }),
     identifyDefaultProps,
     switchControlledIdentify,
-    defaultViewerHanlders,
+    defaultViewerHandlers,
     identifyLifecycle
 )(require('../components/data/identify/IdentifyContainer'));
 

@@ -10,7 +10,7 @@ const React = require('react');
 const {shouldUpdate} = require('recompose');
 
 const Viewers = {
-    CUSTOM: require('./CustomViewer'),
+    TEMPLATE: require('./TemplateViewer'),
     PROPERTIES: require('./PropertiesViewer')
 };
 

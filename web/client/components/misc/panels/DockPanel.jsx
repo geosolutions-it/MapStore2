@@ -14,7 +14,8 @@ const PanelHeader = require('./PanelHeader');
 
 /**
  * Component for rendering a DockPanel
- * @memberof components.DockPanel
+ * @memberof components.misc.panels
+ * @name DockPanel
  * @class
  * @prop {bool} fluid true calculates the size as a fraction of screen width/height
  * @prop {string} className additional class name

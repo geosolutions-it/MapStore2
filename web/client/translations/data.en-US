@@ -74,11 +74,11 @@
             "htmlFormatDescription": "Shows feature info results as html",
             "propertiesFormatTitle": "PROPERTIES",
             "propertiesFormatDescription": "Shows feature info results as properties list",
-            "customFormatTitle": "CUSTOM",
-            "customFormatDescription": "Customize feature info results format",
-            "customFormatInfoAlert1": "Click on edit button to add a new template.",
-            "customFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to be displayed",
-            "customFormatInfoAlertExample": "The id of the feature is ${ properties }"
+            "templateFormatTitle": "TEMPLATE",
+            "templateFormatDescription": "Customize feature info results format",
+            "templateFormatInfoAlert1": "Click on edit button to add a new template.",
+            "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to be displayed",
+            "templateFormatInfoAlertExample": "The id of the feature is ${ properties }"
 
         },
         "notification": {

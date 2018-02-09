@@ -40,7 +40,7 @@ describe('MapInfoUtils', () => {
             "TEXT": "text/plain",
             "HTML": "text/html",
             "PROPERTIES": "application/json",
-            "CUSTOM": "application/json"
+            "TEMPLATE": "application/json"
         };
         let results = getAvailableInfoFormat();
         expect(results).toExist();
@@ -55,7 +55,7 @@ describe('MapInfoUtils', () => {
     });
 
     it('getAvailableInfoFormatLabels', () => {
-        let testData = ['TEXT', 'PROPERTIES', 'HTML', 'CUSTOM'];
+        let testData = ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE'];
         let results = getAvailableInfoFormatLabels();
         expect(results).toExist();
         expect(results.length).toBe(4);

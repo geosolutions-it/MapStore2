@@ -17,19 +17,27 @@ const Portal = require('../misc/Portal');
 const {head, isObject} = require('lodash');
 const Message = require('../I18N/Message');
 
+/**
+ * Component for rendering TOC Settings as tabs inside a Dockable contanier
+ * @memberof components.TOC
+ * @name TOCItemsSettings
+ * @class
+ * @prop {dock} dock switch between Dockable Panel and Resizable Modal, default true (DockPanel)
+ * @prop {string} activeTab current active tab, should match the tab id
+ * @prop {function} getTabs must return an array of object representing the tabs, eg (props) => [{ id: 'general', Component: MyGeneralComponent}]
+ * @prop {string} className additional calss name
+ */
+
 module.exports = props => {
     const {
         className = '',
         activeTab = 'general',
         currentLocale = 'en-US',
-        generalInfoFormat = 'text/plain',
         width = 500,
         groups = [],
         element = {},
         settings = {},
-        chartStyle = {},
         getTabs = () => [],
-        getDimension = () => {},
         onSave = () => {},
         onClose = () => {},
         onHideSettings = () => {},
@@ -38,20 +46,16 @@ module.exports = props => {
         onRetrieveLayerData = () => {},
         onShowAlertModal = () => {},
         realtimeUpdate = true,
-        showElevationChart = true,
         alertModal = false,
-        showEditor = false,
-        onShowEditor = () => {},
-        onSelectCardItem = () => {},
-        selectedCardItems = () => {},
         dockStyle = {},
         dock = true,
         showFullscreen,
         draggable,
         position = 'left'
     } = props;
-    const elevationDim = getDimension(element.dimensions, 'elevation');
+
     const tabs = getTabs(props);
+
     return (
         <span>
             <DockablePanel
@@ -98,24 +102,14 @@ module.exports = props => {
                 ]}>
             {tabs.filter(tab => tab.id && tab.id === activeTab).filter(tab => tab.Component).map(tab => (
                 <tab.Component
+                    {...props}
                     key={'ms-tab-settings-body-' + tab.id}
-                    opacityText={<Message msgId="opacity"/>}
-                    label= {<Message msgId="layerProperties.featureInfoFormatLbl"/>}
-                    elevationText={<Message msgId="elevation"/>}
+                    containerWidth={width}
+                    element={element}
                     groups={groups}
-                    showEditor={showEditor}
                     nodeType={settings.nodeType}
                     settings={settings}
                     retrieveLayerData={onRetrieveLayerData}
-                    element={element}
-                    generalInfoFormat={generalInfoFormat}
-                    chartStyle={{height: 200, width: width - 30, ...chartStyle}}
-                    showElevationChart={showElevationChart}
-                    elevations={elevationDim}
-                    updateSettings={onUpdateParams}
-                    onShowEditor={onShowEditor}
-                    onSelectCardItem={onSelectCardItem}
-                    selectedCardItems={selectedCardItems}
                     onChange={(key, value) => onUpdateParams({[key]: value}, realtimeUpdate)}/>
             ))}
         </DockablePanel>

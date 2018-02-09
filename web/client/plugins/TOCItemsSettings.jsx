@@ -10,11 +10,10 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {layerSettingSelector, layersSelector, groupsSelector} = require('../selectors/layers');
 const {head, isArray} = require('lodash');
-const {withState, compose} = require('recompose');
+const {withState, compose, defaultProps} = require('recompose');
 const {hideSettings, updateSettings, updateNode} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {currentLocaleSelector} = require('../selectors/locale');
-const {generalInfoFormatSelector} = require("../selectors/mapinfo");
 const {updateSettingsLifecycle} = require("../components/TOC/enhancers/tocItemsSettings");
 const TOCItemsSettings = require('../components/TOC/TOCItemsSettings');
 const defaultSettingsTabs = require('./tocitemssettings/defaultSettingsTabs');
@@ -26,17 +25,13 @@ const tocItemsSettingsSelector = createSelector([
     layersSelector,
     groupsSelector,
     currentLocaleSelector,
-    generalInfoFormatSelector,
     state => mapLayoutValuesSelector(state, {height: true})
-], (settings, layers, groups, currentLocale, generalInfoFormat, dockStyle) => ({
+], (settings, layers, groups, currentLocale, dockStyle) => ({
     settings,
     element: settings.nodeType === 'layers' && isArray(layers) && head(layers.filter(layer => layer.id === settings.node)) ||
     settings.nodeType === 'groups' && isArray(groups) && head(groups.filter(group => group.id === settings.node)) || {},
     groups,
     currentLocale,
-    generalInfoFormat,
-    getTabs: defaultSettingsTabs,
-    getDimension: LayersUtils.getDimension,
     dockStyle
 }));
 
@@ -69,7 +64,11 @@ const TOCItemsSettingsPlugin = compose(
         onRetrieveLayerData: getLayerCapabilities
     }),
     withState('activeTab', 'onSetTab', 'general'),
-    updateSettingsLifecycle
+    updateSettingsLifecycle,
+    defaultProps({
+        getDimension: LayersUtils.getDimension,
+        getTabs: defaultSettingsTabs
+    })
 )(TOCItemsSettings);
 
 module.exports = {

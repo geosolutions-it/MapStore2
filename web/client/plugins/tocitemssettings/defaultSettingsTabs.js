@@ -10,10 +10,6 @@ const React = require('react');
 const Message = require('../../components/I18N/Message');
 const {defaultProps} = require('recompose');
 const {Glyphicon} = require('react-bootstrap');
-const General = require('../../components/TOC/fragments/settings/General');
-const Display = require('../../components/TOC/fragments/settings/Display');
-const WMSStyle = require('../../components/TOC/fragments/settings/WMSStyle');
-const Elevation = require('../../components/TOC/fragments/settings/Elevation');
 
 const HTMLViewer = require('../../components/data/identify/viewers/HTMLViewer');
 const TextViewer = require('../../components/data/identify/viewers/TextViewer');
@@ -22,43 +18,80 @@ const HtmlRenderer = require('../../components/misc/HtmlRenderer');
 
 const MapInfoUtils = require('../../utils/MapInfoUtils');
 
+const General = require('../../components/TOC/fragments/settings/General');
+const Display = require('../../components/TOC/fragments/settings/Display');
+const WMSStyle = require('../../components/TOC/fragments/settings/WMSStyle');
+const Elevation = require('../../components/TOC/fragments/settings/Elevation');
+const FeatureInfoEditor = require('../../components/TOC/fragments/settings/FeatureInfoEditor');
+
 const responses = {
     html: require('raw-loader!./featureInfoPreviews/responseHTML.txt'),
     json: JSON.parse(require('raw-loader!./featureInfoPreviews/responseJSON.txt')),
     text: require('raw-loader!./featureInfoPreviews/responseText.txt')
 };
 
+// <div><div><Message msgId="layerProperties.exampleOfResponse"/></div><br/>{Body && <Body template={this.props.element.featureInfo && this.props.element.featureInfo.template || ''} {...this.props}/>}</div>
+
 const formatCards = {
     TEXT: {
         titleId: 'layerProperties.textFormatTitle',
         descId: 'layerProperties.textFormatDescription',
         glyph: 'ext-txt',
-        body: () => <TextViewer response={responses.text}/>
+        body: () => (
+            <div>
+                <div><Message msgId="layerProperties.exampleOfResponse"/></div>
+                <br/>
+                <TextViewer response={responses.text}/>
+            </div>
+        )
     },
     HTML: {
         titleId: 'layerProperties.htmlFormatTitle',
         descId: 'layerProperties.htmlFormatDescription',
         glyph: 'ext-html',
-        body: () => <HTMLViewer response={responses.html}/>
+        body: () => (
+            <div>
+                <div><Message msgId="layerProperties.exampleOfResponse"/></div>
+                <br/>
+                <HTMLViewer response={responses.html}/>
+            </div>
+        )
     },
     PROPERTIES: {
         titleId: 'layerProperties.propertiesFormatTitle',
         descId: 'layerProperties.propertiesFormatDescription',
         glyph: 'ext-json',
-        body: () => <JSONViewer response={responses.json} />
+        body: () => (
+            <div>
+                <div><Message msgId="layerProperties.exampleOfResponse"/></div>
+                <br/>
+                <JSONViewer response={responses.json} />
+            </div>
+        )
     },
-    CUSTOM: {
-        titleId: 'layerProperties.customFormatTitle',
-        descId: 'layerProperties.customFormatDescription',
+    TEMPLATE: {
+        titleId: 'layerProperties.templateFormatTitle',
+        descId: 'layerProperties.templateFormatDescription',
         glyph: 'ext-empty',
-        body: ({template = ''}) => template && template !== '<p><br></p>' && <HtmlRenderer html={template}/>
-        || <div>
-            <p><i><Message msgId="layerProperties.customFormatInfoAlert1"/></i>&nbsp;<Glyphicon glyph="pencil"/></p>
-            <p><i><Message msgId="layerProperties.customFormatInfoAlert2" msgParams={{ attribute: '{ }'}}/></i></p>
-            <pre>
-                <Message msgId="layerProperties.customFormatInfoAlertExample" msgParams={{ properties: '{ properties.id }' }}/>
-            </pre>
-        </div>
+        body: ({template = '', ...props}) => (
+            <div>
+                <div><Message msgId="layerProperties.exampleOfResponse"/></div>
+                <br/>
+                <div>
+                    {template && template !== '<p><br></p>' ?
+                    <HtmlRenderer html={template}/>
+                    :
+                    <span>
+                        <p><Message msgId="layerProperties.templateFormatInfoAlert2" msgParams={{ attribute: '{ }'}}/></p>
+                        <pre>
+                            <Message msgId="layerProperties.templateFormatInfoAlertExample" msgParams={{ properties: '{ properties.id }' }}/>
+                        </pre>
+                        <p><small><Message msgId="layerProperties.templateFormatInfoAlert1"/></small>&nbsp;(&nbsp;<Glyphicon glyph="pencil"/>&nbsp;)</p>
+                    </span>}
+                    <FeatureInfoEditor template={template} {...props}/>
+                </div>
+            </div>
+        )
     }
 };
 
@@ -103,7 +136,7 @@ module.exports = ({showFeatureInfoTab = true, ...props}) => [
             {
                 glyph: 'pencil',
                 tooltipId: 'layerProperties.editCustomFormat',
-                visible: !props.showEditor && props.element && props.element.featureInfo && props.element.featureInfo.format === 'CUSTOM' || false,
+                visible: !props.showEditor && props.element && props.element.featureInfo && props.element.featureInfo.format === 'TEMPLATE' || false,
                 onClick: () => props.onShowEditor && props.onShowEditor(!props.showEditor)
             }
         ]
@@ -113,7 +146,7 @@ module.exports = ({showFeatureInfoTab = true, ...props}) => [
         titleId: 'layerProperties.elevation',
         tooltipId: 'layerProperties.elevation',
         glyph: '1-vector',
-        visible: props.settings.nodeType === 'layers' && props.element.type === "wms" && props.element.dimensions && props.elevationDim,
+        visible: props.settings.nodeType === 'layers' && props.element.type === "wms" && props.element.dimensions && props.getDimension && props.getDimension(props.element.dimensions, 'elevation'),
         Component: Elevation
     }
 ].filter(tab => tab.visible);

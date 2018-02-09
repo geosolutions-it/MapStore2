@@ -30,7 +30,8 @@ const fullscreenGlyph = {
 
 /**
  * Component for rendering a PanelHeader
- * @memberof components.PanelHeader
+ * @memberof components.misc.panels
+ * @name PanelHeader
  * @class
  * @prop {string} position side of the screen where the panel is located, top, bottom, left and right
  * @prop {function} onClose callback on click close icon

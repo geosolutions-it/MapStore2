@@ -9,6 +9,14 @@
 const {isNil, isEqual} = require('lodash');
 const {withState, withHandlers, compose, lifecycle} = require('recompose');
 
+/**
+ * Enhancer for settings state needed in TOCItemsSettings plugin
+ * - originalSettings and initialSettings are the settings of node needed in onUpdateParams
+ * - onShowAlertModal, alert modal appears on close in case of changes in TOCItemsSettings
+ * - onShowEditor, edit modal appears on format info in TOCItemsSettings
+ * @memberof enhancers.settingsState
+ * @class
+ */
 const settingsState = compose(
     withState('originalSettings', 'onUpdateOriginalSettings', {}),
     withState('initialSettings', 'onUpdateInitialSettings', {}),
@@ -16,6 +24,19 @@ const settingsState = compose(
     withState('showEditor', 'onShowEditor', false)
 );
 
+/**
+ * Basic toc settings lificycle used in TOCItemsSettings plugin with TOCItemsSettings component
+ * Handlers:
+ * - onUpdateParams: update settings by key and value of the current node
+ * - onClose: triggers onHideSettings only if the settings doesn't change, in case of changes will trigger onShowAlertModal
+ * - onSave: triggers onHideSettings
+ * Lifecycle:
+ * - componentWillMount: set original and initial settings of current node
+ * - componentWillReceiveProps: in case of missing description of node, it sends a get capabilities requiest to retrieve data of layer
+ * - componentWillUpdate: check if current settings are not expanded and next are expanded to restore initial and original settings of component
+ * @memberof enhancers.settingsLifecycle
+ * @class
+ */
 const settingsLifecycle = compose(
     withHandlers({
         onUpdateParams: props => (newParams, update = true) => {
@@ -97,6 +118,11 @@ const settingsLifecycle = compose(
 module.exports = {
     settingsState,
     settingsLifecycle,
+    /**
+     * Enhancer for compose together settings lifecycle and state
+     * @memberof enhancers.updateSettingsLifecycle
+     * @class
+     */
     updateSettingsLifecycle: compose(
         settingsState,
         settingsLifecycle

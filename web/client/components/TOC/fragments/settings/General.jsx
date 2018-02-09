@@ -23,7 +23,7 @@ const {Grid} = require('react-bootstrap');
  */
 class General extends React.Component {
     static propTypes = {
-        updateSettings: PropTypes.func,
+        onChange: PropTypes.func,
         element: PropTypes.object,
         groups: PropTypes.array,
         nodeType: PropTypes.string
@@ -31,7 +31,7 @@ class General extends React.Component {
 
     static defaultProps = {
         element: {},
-        updateSettings: () => {},
+        onChange: () => {},
         nodeType: 'layers'
     };
 
@@ -150,14 +150,14 @@ class General extends React.Component {
 
     updateEntry = (key, event) => {
         let value = event.target.value;
-        this.props.updateSettings({[key]: value});
+        this.props.onChange(key, value);
     };
 
     updateTranslation = (key, event) => {
         if (key === 'default' && isString(this.props.element.title)) {
-            this.props.updateSettings({title: event.target.value});
+            this.props.onChange('title', event.target.value);
         } else {
-            this.props.updateSettings({title: assign({}, isObject(this.props.element.title) ? this.props.element.title : {'default': this.props.element.title || ''}, {[key]: event.target.value})});
+            this.props.onChange('title', assign({}, isObject(this.props.element.title) ? this.props.element.title : {'default': this.props.element.title || ''}, {[key]: event.target.value}));
         }
     };
 }

@@ -21,7 +21,7 @@ require('react-select/dist/react-select.css');
 class WMSStyle extends React.Component {
     static propTypes = {
         retrieveLayerData: PropTypes.func,
-        updateSettings: PropTypes.func,
+        onChange: PropTypes.func,
         element: PropTypes.object,
         groups: PropTypes.array
     };
@@ -29,7 +29,7 @@ class WMSStyle extends React.Component {
     static defaultProps = {
         element: {},
         retrieveLayerData: () => {},
-        updateSettings: () => {}
+        onChange: () => {}
     };
 
     renderLegend = () => {
@@ -92,7 +92,7 @@ class WMSStyle extends React.Component {
 
     updateEntry = (key, event) => {
         let value = event.target.value;
-        this.props.updateSettings({[key]: value});
+        this.props.onChange(key, value);
     };
 }
 

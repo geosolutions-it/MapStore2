@@ -10,6 +10,11 @@ const {lifecycle, withHandlers, branch, withState, compose} = require('recompose
 const MapInfoUtils = require('../../../../utils/MapInfoUtils');
 const {isEqual, isArray} = require('lodash');
 
+/**
+ * Enhancer to enable set index only if Component has not header in viewerOptions props
+ * @memberof enhancers.switchControlledIdentify
+ * @class
+ */
 const switchControlledIdentify = branch(
     ({viewerOptions}) => !viewerOptions || (viewerOptions && !viewerOptions.header),
     withState(
@@ -17,6 +22,13 @@ const switchControlledIdentify = branch(
     )
 );
 
+/**
+ * Enhancer to enable set index only if Component has header
+ * - needsRefresh: check if current selected point if different of next point, if so return true
+ * - onClose: delete results, close identify panel and hide the marker on map
+ * @memberof enhancers.identifyHandlers
+ * @class
+ */
 const identifyHandlers = withHandlers({
     needsRefresh: () => (props, newProps) => {
         if (newProps.enabled && newProps.point && newProps.point.pixel) {
@@ -37,6 +49,16 @@ const identifyHandlers = withHandlers({
     }
 });
 
+/**
+ * Basic identify lificycle used in Identify plugin with IdentifyContainer component
+ * - componentDidMount: show cursor on map as pointer if enabled props is true
+ * - componentWillReceiveProps:
+ *      - sends new request only if needsRefresh returns true
+ *      - changes pointer enbale true/false
+ *      - set index to 0 to when responses are changed to avoid empty view if index is greather than current responses lenght
+ * @memberof enhancers.identifyLifecycle
+ * @class
+ */
 const identifyLifecycle = compose(
     identifyHandlers,
     lifecycle({

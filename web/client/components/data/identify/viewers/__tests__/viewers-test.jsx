@@ -88,13 +88,13 @@ describe('Identity Viewers', () => {
         expect(cmpDom.innerText.indexOf('This is my viewer: 1') !== -1).toBe(true);
     });
 
-    it('test JSONViewer with Markdown', () => {
+    it('test JSONViewer with TEMPLATE', () => {
         const cmp = ReactDOM.render(
         <JSONViewer
             layer={{
                 featureInfo: {
-                    format: 'CUSTOM',
-                    template: '<p id="my-custom-markdown">the property name is ${ properties.name }</p>'
+                    format: 'TEMPLATE',
+                    template: '<p id="my-template">the property name is ${ properties.name }</p>'
                 }
             }}
             response={{
@@ -111,18 +111,18 @@ describe('Identity Viewers', () => {
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
-        const markdownDOM = document.getElementById('my-custom-markdown');
-        expect(markdownDOM.innerHTML).toBe('the property name is myname');
+        const templateDOM = document.getElementById('my-template');
+        expect(templateDOM.innerHTML).toBe('the property name is myname');
 
     });
 
-    it('test JSONViewer with Markdown and missing properties', () => {
+    it('test JSONViewer with TEMPLATE and missing properties', () => {
         const cmp = ReactDOM.render(
         <JSONViewer
             layer={{
                 featureInfo: {
-                    format: 'CUSTOM',
-                    template: '<p id="my-custom-markdown">the property id is ${ properties.id }</p>'
+                    format: 'TEMPLATE',
+                    template: '<p id="my-template">the property id is ${ properties.id }</p>'
                 }
             }}
             response={{
@@ -139,18 +139,18 @@ describe('Identity Viewers', () => {
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
-        const markdownDOM = document.getElementById('my-custom-markdown');
-        expect(markdownDOM.innerHTML).toBe('the property id is ');
+        const templateDOM = document.getElementById('my-template');
+        expect(templateDOM.innerHTML).toBe('the property id is ');
 
     });
 
-    it('test JSONViewer with Markdown with tag inside variable', () => {
+    it('test JSONViewer with TEMPLATE with tag inside variable', () => {
         ReactDOM.render(
         <JSONViewer
             layer={{
                 featureInfo: {
-                    format: 'CUSTOM',
-                    template: '<p id="my-custom-markdown">the property name is ${<p>properties.name</p>}</p>'
+                    format: 'TEMPLATE',
+                    template: '<p id="my-template">the property name is ${<p>properties.name</p>}</p>'
                 }
             }}
             response={{
@@ -163,15 +163,15 @@ describe('Identity Viewers', () => {
                 }]
             }} />, document.getElementById("container"));
 
-        let markdownDOM = document.getElementById('my-custom-markdown');
-        expect(markdownDOM.innerHTML).toBe('the property name is myname');
+        let templateDOM = document.getElementById('my-template');
+        expect(templateDOM.innerHTML).toBe('the property name is myname');
 
         ReactDOM.render(
             <JSONViewer
                 layer={{
                     featureInfo: {
-                        format: 'CUSTOM',
-                        template: '<p id="my-custom-markdown">the property description is ${prope<p>rties.description</p>}</p>'
+                        format: 'TEMPLATE',
+                        template: '<p id="my-template">the property description is ${prope<p>rties.description</p>}</p>'
                     }
                 }}
                 response={{
@@ -184,17 +184,17 @@ describe('Identity Viewers', () => {
                     }]
                 }} />, document.getElementById("container"));
 
-        markdownDOM = document.getElementById('my-custom-markdown');
-        expect(markdownDOM.innerHTML).toBe('the property description is mydescription');
+        templateDOM = document.getElementById('my-template');
+        expect(templateDOM.innerHTML).toBe('the property description is mydescription');
     });
 
-    it('test JSONViewer with Markdown multiple features', () => {
+    it('test JSONViewer with TEMPLATE multiple features', () => {
         const cmp = ReactDOM.render(
         <JSONViewer
             layer={{
                 featureInfo: {
-                    format: 'CUSTOM',
-                    template: '<p class="my-custom-markdown">the property id is ${ id }</p>'
+                    format: 'TEMPLATE',
+                    template: '<p class="my-template">the property id is ${ id }</p>'
                 }
             }}
             response={{
@@ -217,18 +217,18 @@ describe('Identity Viewers', () => {
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
-        const markdownDOM = document.getElementsByClassName('my-custom-markdown');
-        expect(markdownDOM[0].innerHTML).toBe('the property id is 1');
-        expect(markdownDOM[1].innerHTML).toBe('the property id is 2');
+        const templateDOM = document.getElementsByClassName('my-template');
+        expect(templateDOM[0].innerHTML).toBe('the property id is 1');
+        expect(templateDOM[1].innerHTML).toBe('the property id is 2');
     });
 
-    it('test JSONViewer with Markdown but missing/empty template', () => {
+    it('test JSONViewer with TEMPLATE but missing/empty template', () => {
         // when template is missing, undefined or equal to <p><br></p> response is displayed in PROPERTIES format
         ReactDOM.render(
             <JSONViewer
                 layer={{
                     featureInfo: {
-                        format: 'CUSTOM'
+                        format: 'TEMPLATE'
                     }
                 }}
                 response={{
@@ -248,7 +248,7 @@ describe('Identity Viewers', () => {
             <JSONViewer
                 layer={{
                     featureInfo: {
-                        format: 'CUSTOM',
+                        format: 'TEMPLATE',
                         template: ''
                     }
                 }}
@@ -270,7 +270,7 @@ describe('Identity Viewers', () => {
             <JSONViewer
                 layer={{
                     featureInfo: {
-                        format: 'CUSTOM',
+                        format: 'TEMPLATE',
                         template: '<p><br></p>'
                     }
                 }}

@@ -7,59 +7,57 @@
  */
 
 const React = require('react');
-const PropTypes = require('prop-types');
-const {Button} = require('react-bootstrap');
-const Modal = require('../../misc/Modal');
+const ResizableModal = require('../../misc/ResizableModal');
+const Portal = require('../../misc/Portal');
+const Message = require('../../I18N/Message');
+const {Glyphicon, Row, Col} = require('react-bootstrap');
 
-const GeocodeViewer = (props) => {
-    if (props.latlng) {
+/**
+ * Component for rendering lat and lng of the current selected point
+ * @memberof components.data.identify
+ * @name GeocodeViewer
+ * @class
+ * @prop {bool} enableRevGeocode enable/disable the component
+ * @prop {function} hideRevGeocode called when click on close buttons
+ * @prop {bool} showModalReverse show/hide modal
+ * @prop {node} revGeocodeDisplayName text/info displayed on modal
+ */
+
+module.exports = ({latlng, enableRevGeocode, hideRevGeocode = () => {}, showModalReverse, revGeocodeDisplayName}) => {
+
+    let lngCorrected = null;
+    if (latlng) {
         /* lngCorrected is the converted longitude in order to have the value between
-           the range (-180 / +180).
-        */
-        let lngCorrected = Math.round(props.latlng.lng * 100000) / 100000;
+        the range (-180 / +180).*/
+        lngCorrected = latlng && Math.round(latlng.lng * 100000) / 100000;
         /* the following formula apply the converion */
         lngCorrected = lngCorrected - 360 * Math.floor(lngCorrected / 360 + 0.5);
-        return (
-            <div>
-                <span>Lat: {Math.round(props.latlng.lat * 100000) / 100000 } - Long: { lngCorrected }</span>
-                <Button
-                    style={{"float": "right"}}
-                    bsStyle="primary"
-                    bsSize="small"
-                    onClick={() => props.showRevGeocode({lat: props.latlng.lat, lng: lngCorrected})} >
-                    {props.identifyRevGeocodeSubmitText}
-                </Button>
-                <Modal {...props.modalOptions} show={props.showModalReverse} bsSize="large" container={document.getElementById("body")}>
-                    <Modal.Header>
-                        <Modal.Title>{props.identifyRevGeocodeModalTitle}</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body >
-                        <p>{props.revGeocodeDisplayName}</p>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button bsSize="small" style={{"float": "right"}} bsStyle="primary" onClick={props.hideRevGeocode}>{props.identifyRevGeocodeCloseText}</Button>
-                    </Modal.Footer>
-                </Modal>
-            </div>
-        );
     }
-    return <span/>;
-};
 
-GeocodeViewer.propTypes = {
-    latlng: PropTypes.object.isRequired,
-    showRevGeocode: PropTypes.func.isRequired,
-    showModalReverse: PropTypes.bool.isRequired,
-    identifyRevGeocodeModalTitle: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.object.isRequired]),
-    revGeocodeDisplayName: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
-    hideRevGeocode: PropTypes.func.isRequired,
-    identifyRevGeocodeSubmitText: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.object.isRequired]),
-    identifyRevGeocodeCloseText: PropTypes.oneOfType([PropTypes.string.isRequired, PropTypes.object.isRequired]),
-    modalOptions: PropTypes.object
+    return enableRevGeocode && latlng && lngCorrected ? (
+        <Row key="ms-geocode-coords" className="ms-geoscode-viewer text-center">
+            <Col xs={12}>
+                <div className="ms-geocode-coords">{latlng ? 'Lat: ' + (Math.round(latlng.lat * 100000) / 100000) + '- Long: ' + lngCorrected : null}</div>
+            </Col>
+            <Portal>
+                <ResizableModal
+                    fade
+                    title={<span><Glyphicon glyph="map-marker"/>&nbsp;<Message msgId="identifyRevGeocodeModalTitle" /></span>}
+                    size="xs"
+                    show={showModalReverse}
+                    onClose={hideRevGeocode}
+                    buttons={[{
+                        text: <Message msgId="close"/>,
+                        onClick: hideRevGeocode,
+                        bsStyle: 'primary'
+                    }]}>
+                    <div className="ms-alert" style={{padding: 15}}>
+                        <div className="ms-alert-center text-center">
+                            <div>{revGeocodeDisplayName}</div>
+                        </div>
+                    </div>
+                </ResizableModal>
+            </Portal>
+        </Row>
+    ) : null;
 };
-
-GeocodeViewer.defaultProps = {
-    modalOptions: {}
-};
-
-module.exports = GeocodeViewer;

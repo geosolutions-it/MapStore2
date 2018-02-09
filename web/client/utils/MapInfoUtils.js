@@ -17,7 +17,7 @@ const MapInfoUtils = {
      * specifies which info formats are currently supported
      */
     //           default format ↴
-    AVAILABLE_FORMAT: ['TEXT', 'PROPERTIES', 'HTML', 'CUSTOM'],
+    AVAILABLE_FORMAT: ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE'],
 
     VIEWERS: {},
     /**

@@ -12,7 +12,8 @@ const SideCard = require('../cardgrids/SideCard');
 
 /**
  * Component for rendering an Accordion with Side Card as header.
- * @memberof components.Accordion
+ * @memberof components.misc.panels
+ * @name Accordion
  * @class
  * @prop {string} activePanel current open panel, should match the panel id
  * @prop {bool} fillContainer fill the height of container without scroolbar

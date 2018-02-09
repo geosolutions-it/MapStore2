@@ -32,4 +32,4 @@ module.exports = props => [
             props.onNext();
         }
     }
-];
+].filter(btn => btn && btn.visible);

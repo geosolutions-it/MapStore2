@@ -7,22 +7,30 @@
  */
 
 const React = require('react');
-const {Glyphicon, Row, Col} = require('react-bootstrap');
+const {Row, Col} = require('react-bootstrap');
 const Toolbar = require('../../misc/toolbar/Toolbar');
-const ResizableModal = require('../../misc/ResizableModal');
-const Portal = require('../../misc/Portal');
 const Message = require('../../I18N/Message');
 const MapInfoUtils = require('../../../utils/MapInfoUtils');
 const DockablePanel = require('../../misc/panels/DockablePanel');
+const GeocodeViewer = require('./GeocodeViewer');
+
+
+/**
+ * Component for rendering Identify Container inside a Dockable contanier
+ * @memberof components.data.identify
+ * @name IdentifyContainer
+ * @class
+ * @prop {dock} dock switch between Dockable Panel and Resizable Modal, default true (DockPanel)
+ * @prop {function} viewer component that will be used as viewer of Identify
+ * @prop {object} viewerOptions options to use with the viewer, eg { header: MyHeader, container: MyContainer }
+ * @prop {function} getButtons must return an array of object representing the toolbar buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
+ */
 
 module.exports = props => {
     const {
-        enableRevGeocode,
         enabled,
         requests = [],
         onClose,
-        showModalReverse,
-        hideRevGeocode,
         responses = [],
         index,
         viewerOptions = {},
@@ -76,48 +84,24 @@ module.exports = props => {
                 style={dockStyle}
                 showFullscreen={showFullscreen}
                 header={[
-                    // verify if header or geocode exists to add toolbar header
-                    viewerOptions.header && !enableRevGeocode ? null :
-                    // geocode viewer
-                    <Row key="ms-geocode-coords" className="text-center">
-                        {enableRevGeocode && <Col xs={12}>
-                            <div className="ms-geocode-coords">{latlng ? 'Lat: ' + (Math.round(latlng.lat * 100000) / 100000) + '- Long: ' + lngCorrected : null}</div>
-                        </Col>}
-                        {buttons.length > 0 && <Col xs={12}>
+                    <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>,
+                    buttons.length > 0 ? (
+                    <Row className="text-center">
+                        <Col xs={12}>
                             <Toolbar
                                 btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
                                 buttons={buttons}/>
-                        </Col>}
-                    </Row>].filter(headRow => headRow)}>
-                    <Viewer
-                        index={index}
-                        setIndex={setIndex}
-                        format={format}
-                        missingResponses={missingResponses}
-                        responses={responses}
-                        {...viewerOptions}/>
+                        </Col>
+                    </Row>) : null
+                ].filter(headRow => headRow)}>
+                <Viewer
+                    index={index}
+                    setIndex={setIndex}
+                    format={format}
+                    missingResponses={missingResponses}
+                    responses={responses}
+                    {...viewerOptions}/>
             </DockablePanel>
-            {enableRevGeocode &&
-            // geocode modal
-            <Portal>
-                <ResizableModal
-                    fade
-                    title={<span><Glyphicon glyph="map-marker"/>&nbsp;<Message msgId="identifyRevGeocodeModalTitle" /></span>}
-                    size="xs"
-                    show={showModalReverse}
-                    onClose={hideRevGeocode}
-                    buttons={[{
-                        text: <Message msgId="close"/>,
-                        onClick: hideRevGeocode,
-                        bsStyle: 'primary'
-                    }]}>
-                    <div className="ms-alert" style={{padding: 15}}>
-                        <div className="ms-alert-center text-center">
-                            <div>{revGeocodeDisplayName}</div>
-                        </div>
-                    </div>
-                </ResizableModal>
-            </Portal>}
         </span>
     );
 };

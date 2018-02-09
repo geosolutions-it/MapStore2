@@ -32,14 +32,13 @@ const formatCards = {
         glyph: 'ext-json',
         body: () => <div className="test-preview"/>
     },
-    CUSTOM: {
-        titleId: 'layerProperties.customFormatTitle',
-        descId: 'layerProperties.customFormatDescription',
+    TEMPLATE: {
+        titleId: 'layerProperties.templateFormatTitle',
+        descId: 'layerProperties.templateFormatDescription',
         glyph: 'ext-empty',
         body: () => <div className="test-preview"/>
     }
 };
-
 
 describe("test FeatureInfo", () => {
     beforeEach((done) => {
@@ -60,14 +59,6 @@ describe("test FeatureInfo", () => {
         const modalEditor = document.getElementsByClassName('ms-resizable-modal');
         expect(modalEditor.length).toBe(0);
 
-    });
-
-    it('test rendering edit modal', () => {
-        ReactDOM.render(<FeatureInfo formatCards={formatCards} defaultInfoFormat={defaultInfoFormat} showEditor/>, document.getElementById("container"));
-        const testComponent = document.getElementsByClassName('test-preview');
-        expect(testComponent.length).toBe(4);
-        const modalEditor = document.getElementsByClassName('ms-resizable-modal');
-        expect(modalEditor.length).toBe(1);
     });
 
     it('test changes on click', done => {

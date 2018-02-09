@@ -10,18 +10,24 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const Accordion = require('../../../misc/panels/Accordion');
 const {Glyphicon} = require('react-bootstrap');
-const ReactQuill = require('react-quill');
-const ResizableModal = require('../../../misc/ResizableModal');
-const Portal = require('../../../misc/Portal');
 const Message = require('../../../I18N/Message');
+
+/**
+ * Component for rendering FeatureInfo an Accordion with current available format for get feature info
+ * @memberof components.TOC.fragments.settings
+ * @name FeatureInfo
+ * @class
+ * @prop {object} element data of the current selected node
+ * @prop {array} defaultInfoFormat array of formats
+ * @prop {object} formatCards object that represents the panels of accordion, e.g.: { FORMAT_NAME: { titleId: 'titleMsgId', descId: 'descMsgId', glyph: 'ext-empty', body: () => <div/> } }
+ * @prop {function} onChange called when a format has been selected
+ */
 
 module.exports = class extends React.Component {
     static propTypes = {
         element: PropTypes.object,
         defaultInfoFormat: PropTypes.object,
         onChange: PropTypes.func,
-        showEditor: PropTypes.bool,
-        onShowEditor: PropTypes.func,
         formatCards: PropTypes.object
     };
 
@@ -29,8 +35,6 @@ module.exports = class extends React.Component {
         element: {},
         defaultInfoFormat: [],
         onChange: () => {},
-        showEditor: false,
-        onShowEditor: () => {},
         formatCards: {}
     };
 
@@ -45,7 +49,7 @@ module.exports = class extends React.Component {
                     description: this.props.formatCards[infoFormat] && this.props.formatCards[infoFormat].descId && <Message msgId={this.props.formatCards[infoFormat].descId}/> || '',
                     size: 'sm'
                 },
-                body: <div><div><Message msgId="layerProperties.exampleOfResponse"/></div><br/>{Body && <Body template={this.props.element.featureInfo && this.props.element.featureInfo.template || ''} />}</div>
+                body: Body && <Body template={this.props.element.featureInfo && this.props.element.featureInfo.template || ''} {...this.props}/> || null
             };
         });
     }
@@ -67,35 +71,6 @@ module.exports = class extends React.Component {
                             viewer: this.props.element.featureInfo ? this.props.element.featureInfo.viewer : undefined
                         });
                     }}/>
-                <Portal>
-                    <ResizableModal
-                        fade
-                        show={this.props.showEditor}
-                        title={<Message msgId="layerProperties.editCustomFormat"/>}
-                        size="lg"
-                        showFullscreen
-                        clickOutEnabled={false}
-                        onClose={() => this.props.onShowEditor(!this.props.showEditor)}
-                        buttons={[
-                            {
-                                bsStyle: 'primary',
-                                text: <Message msgId="close"/>,
-                                onClick: () => this.props.onShowEditor(!this.props.showEditor)
-                            }
-                        ]}>
-                        <div id="ms-template-editor" className="ms-editor">
-                            <ReactQuill
-                                bounds="#ms-template-editor"
-                                defaultValue ={this.props.element.featureInfo && this.props.element.featureInfo.template || ''}
-                                onChange={template => {
-                                    this.props.onChange('featureInfo', {
-                                        ...(this.props.element && this.props.element.featureInfo || {}),
-                                        template
-                                    });
-                                }}/>
-                        </div>
-                    </ResizableModal>
-                </Portal>
             </span>
         );
     }
