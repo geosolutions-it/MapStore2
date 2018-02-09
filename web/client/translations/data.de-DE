@@ -310,7 +310,6 @@
             "createWidget": "Erstellen Sie ein Widget für die ausgewählte Ebene",
             "editLayerProperties": "Ändere Ebenen Eigenschaften",
             "browseData": "öffnen Sie die Attributtabelle",
-            "searchFeatures": "Auf dieser Ebene suchen...",
             "removeLayer": "Ebene entfernen",
             "loadingerror": "Diese Ebene wurde nicht korrekt geladen oder nicht verfügbar",
             "measure": "Messen",
@@ -814,6 +813,8 @@
             "getWMSLink": "WMS Link erhalten",
             "error": "Es gab einen Fehler beim Laden von Einträgen aus dem Katalog",
             "pageInfo": "Resultat {start}-{end} von {total}",
+            "resultInfo": "{total, plural, =0 {Keine Gegenstände} =1 {{total} von {total} stimmt überein} other {{start}-{end} von {total}}}",
+            "pageInfoInfinite": "{total, plural, =undefined {} =0 {Keine Ergebnisse} =1 {{total} von {total} stimmt überein} other {Geladen {loaded} von {total} übereinstimmend}",
             "noRecordsMatched": "Kein passender Eintrag",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
@@ -1047,8 +1048,20 @@
             }
         },
         "widgets": {
+
+            "types": {
+                "chart": {
+                    "title": "Grafik",
+                    "caption": "füge ein Diagramm hinzu"
+                },
+                "text": {
+                    "title": "Text",
+                    "caption": "Fügen Sie einen Textbereich hinzu"
+                }
+            },
+            "selectWidgetType": "Wählen Sie den Widgettyp",
             "selectChartType": {
-                "title": "Wählen Sie den Widgettyp"
+                "title": "Wählen Sie den Diagrammtyp aus"
             },
             "title": "Titel",
             "description": "Beschreibung",

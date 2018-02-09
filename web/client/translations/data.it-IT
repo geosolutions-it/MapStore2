@@ -310,7 +310,6 @@
             "createWidget": "Crea un widget per il livello selezionato",
             "editLayerProperties": "Modifica proprietà dal livello",
             "browseData": "Apri tabella degli attributi",
-            "searchFeatures": "Effettua una ricerca su questo livello...",
             "removeLayer": "Rimuovi livello",
             "loadingerror": "Il livello non è stato caricato correttamente o non disponible",
             "measure": "Misure",
@@ -814,6 +813,8 @@
             "getWMSLink": "Ottieni link WMS",
             "error": "C'è stato un errore durante il caricamento del catalogo",
             "pageInfo": "Risultati {start}-{end} di {total}",
+            "resultInfo": "{total, plural, =0 {Nessun Risultato} =1 {{total} Risultato di {total}} other {{start}-{end} di {total}}}",
+            "pageInfoInfinite": "{total, plural, =undefined {} =0 {Nessun Risultato} =1 {{total} risultato} other {Caricati {loaded} di {total} risultati}}",
             "noRecordsMatched": "Nessun risultato trovato",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
@@ -1047,6 +1048,17 @@
             }
         },
         "widgets": {
+            "types": {
+                "chart": {
+                    "title": "Grafico",
+                    "caption": "aggiungi un grafico"
+                },
+                "text": {
+                    "title": "Testo",
+                    "caption": "aggiungi un area di testo"
+                }
+            },
+            "selectWidgetType": "Seleziona il tipo di widget",
             "selectChartType": {
                 "title": "Seleziona il tipo di widget"
             },
