@@ -32,5 +32,5 @@ module.exports = ({widgetTypes = DEFAULT_TYPES, typeFilter = () => true, onSelec
         widgetTypes.filter(typeFilter).map( item =>
             ({
                 ...item,
-                preview: <FitIcon glyph={item.glyph} />
+                preview: <FitIcon glyph={item.glyph} padding={20} />
         }))} />);
