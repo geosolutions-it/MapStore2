@@ -87,6 +87,7 @@ describe('Test the mapConfig reducer', () => {
         expect(state.map.info).toExist();
         expect(state.map.info.details).toBe(detailsUri);
     });
+
     it('map created', () => {
         expect(mapConfig({
             map: {
@@ -96,8 +97,8 @@ describe('Test the mapConfig reducer', () => {
             }
         }, {type: MAP_CREATED, resourceId: 2})).toEqual({
             map: {
-                mapId: undefined,
-                newMapId: 2
+                mapId: 2,
+                version: 2
             }
         });
         expect(mapConfig({
@@ -106,8 +107,8 @@ describe('Test the mapConfig reducer', () => {
             }
         }, {type: MAP_CREATED, resourceId: 2})).toEqual({
             map: {
-                mapId: undefined,
-                newMapId: 2
+                mapId: 2,
+                version: 2
             }
         });
         expect(mapConfig({}, {type: MAP_CREATED, resourceId: 2})).toEqual({});

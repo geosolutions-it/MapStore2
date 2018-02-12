@@ -74,8 +74,8 @@ function mapConfig(state = null, action) {
     case MAP_CREATED: {
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         if (map) {
-            // set mapId to undefined to override the current map on save
-            map = assign({}, map, {mapId: undefined, newMapId: action.resourceId});
+            // version needed to avoid automapupdate to start
+            map = assign({}, map, {mapId: action.resourceId, version: 2});
             return assign({}, state, {map: map});
         }
     }

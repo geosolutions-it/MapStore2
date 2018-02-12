@@ -34,8 +34,7 @@ const selector = createSelector(mapSelector, mapOptionsToSaveSelector, layersSel
     mapId: map && map.mapId,
     layers,
     textSearchConfig,
-    groups,
-    newMapId: map && map.newMapId + ''
+    groups
 }));
 
 class Save extends React.Component {
@@ -50,8 +49,7 @@ class Save extends React.Component {
         layers: PropTypes.array,
         groups: PropTypes.array,
         params: PropTypes.object,
-        textSearchConfig: PropTypes.object,
-        newMapId: PropTypes.string
+        textSearchConfig: PropTypes.object
     };
 
     static defaultProps = {
@@ -89,10 +87,10 @@ class Save extends React.Component {
     }
 
     goForTheUpdate = () => {
-        if (this.props.mapId || this.props.newMapId) {
+        if (this.props.mapId) {
             if (this.props.map && this.props.layers) {
                 const resultingmap = MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions);
-                this.props.onMapSave(this.props.mapId || this.props.newMapId, resultingmap);
+                this.props.onMapSave(this.props.mapId, resultingmap);
                 this.props.onClose();
             }
         }
@@ -115,9 +113,9 @@ module.exports = {
                 // display the BurgerMenu button only if the map can be edited
                 selector: (state) => {
                     let map = state.map && state.map.present || state.map || state.config && state.config.map || null;
-                    if (map && (map.mapId || map.newMapId) && state && state.security && state.security.user) {
+                    if (map && map.mapId && state && state.security && state.security.user) {
                         if (state.maps && state.maps.results) {
-                            let mapId = map.mapId || map.newMapId + '';
+                            let mapId = map.mapId;
                             let currentMap = state.maps.results.filter(item=> item && '' + item.id === mapId);
                             if (currentMap && currentMap.length > 0 && currentMap[0].canEdit) {
                                 return { };
