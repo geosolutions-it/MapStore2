@@ -32,7 +32,7 @@ module.exports = (plugins, custom) => {
     };
     const rootEpic = combineEpics(plugins, {...standardEpics });
     const epicMiddleware = createEpicMiddleware(rootEpic);
-    
+
     const rootReducer = (state, action) => {
         if (action.type === 'LOADED_STATE') {
             return action.state;
