@@ -30,7 +30,7 @@ const isObj = o => typeof o === 'object';
 /**
  * Compares objects and call the callback with proper message
  * @param {object|string} a left term of comparison
- * @param {object|string} b right term of compacomparisonration
+ * @param {object|string} b right term of comparison
  * @param {string} path current path of the object
  * @param {function} callback function to call for errors or warnings
  */
@@ -101,6 +101,6 @@ files.forEach(file => {
 if (fail) {
     throw Error("i18n files failed");
 }
-log('## mandatory translations checks passed!! ##')
+log('## mandatory translations checks passed!! ##');
 
 
