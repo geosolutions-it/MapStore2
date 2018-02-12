@@ -17,10 +17,10 @@ const DEFAULT_TYPES = [{
     caption: <Message msgId={"widgets.types.chart.caption"} />,
     glyph: "stats"
 }, {
-    title: <Message msgId={"widgets.types.chart.title"} />,
+    title: <Message msgId={"widgets.types.text.title"} />,
     type: "text",
     glyph: "sheet",
-    caption: <Message msgId={"widgets.types.chart.caption"} />
+    caption: <Message msgId={"widgets.types.text.caption"} />
 }];
 
 module.exports = ({widgetTypes = DEFAULT_TYPES, typeFilter = () => true, onSelect= () => {}}) =>
