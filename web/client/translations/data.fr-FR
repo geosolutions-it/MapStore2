@@ -1158,6 +1158,9 @@
                 "gauge": "Afficher les étiquettes"
             }
         },
+        "dashboard": {
+            "emptyTitle": "Le tableau de bord est vide"
+        },
         "wizard": {
             "next": "Suivant",
             "prev": "Précédent",

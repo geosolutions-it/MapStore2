@@ -1155,6 +1155,9 @@
             }
 
         },
+        "dashboard": {
+            "emptyTitle": "La dashboard è vuota"
+        },
         "wizard": {
             "next": "Avanti",
             "prev": "Indietro",

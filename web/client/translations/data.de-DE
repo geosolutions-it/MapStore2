@@ -1156,6 +1156,9 @@
             }
 
         },
+        "dashboard": {
+            "emptyTitle": "Das Armaturenbrett ist leer"
+        },
         "wizard": {
             "next": "Nächster",
             "prev": "Bisherige",

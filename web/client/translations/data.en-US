@@ -1155,6 +1155,9 @@
             }
 
         },
+        "dashboard": {
+            "emptyTitle": "The dashboard is empty"
+        },
         "wizard": {
             "next": "Next",
             "prev": "Previous",

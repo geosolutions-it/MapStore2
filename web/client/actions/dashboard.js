@@ -1,5 +1,5 @@
 const SET_EDITOR_AVAILABLE = "DASHBOARD:SET_AVAILABLE";
-const SET_EDITING = "DASHBOARD:SET_EDITOR_AVAILABLE";
+const SET_EDITING = "DASHBOARD:SET_EDITING";
 module.exports = {
     SET_EDITING,
     setEditing: (editing) => ({type: SET_EDITING, editing }),

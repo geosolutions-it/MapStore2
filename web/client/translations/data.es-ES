@@ -1155,6 +1155,9 @@
             }
 
         },
+        "dashboard": {
+            "emptyTitle": "El tablero está vacío"
+        },
         "wizard": {
             "next": "Siguiente",
             "prev": "Anterior",
