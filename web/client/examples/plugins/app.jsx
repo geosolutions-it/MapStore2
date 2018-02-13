@@ -242,7 +242,7 @@ const startApp = () => {
                                         <option value="openlayers" key="openlayer">OpenLayers</option>
                                         <option value="cesium" key="cesium">CesiumJS</option>
                                     </FormControl>
-                                    <Theme path="../../dist/themes"/>
+                                    <Theme path="../../dist/themes" version="no_version"/>
                                     <label>Choose a theme</label>
                                     <ThemeSwitcher style={{width: "275px", marginTop: "5px"}}/>
                                   </FormGroup>

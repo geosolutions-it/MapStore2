@@ -1,5 +1,5 @@
 const Rx = require('rxjs');
-const {get, isNil} = require('lodash');
+const {get} = require('lodash');
 const {parseString} = require('xml2js');
 const {stripPrefix} = require('xml2js/lib/processors');
 const GeoStoreApi = require('../api/GeoStoreDAO');
@@ -36,10 +36,6 @@ const interceptOGCError = (observable) => observable.switchMap(response => {
     return Rx.Observable.of(response);
 });
 
-const getIdFromUri = (uri) => {
-    const decodedUri = decodeURIComponent(uri);
-    return /\d+/.test(decodedUri) ? decodedUri.match(/\d+/)[0] : null;
-};
 const createAssociatedResource = ({attribute, permissions, mapId, metadata, value, category, type, optionsRes, optionsAttr} = {}) => {
     return Rx.Observable.fromPromise(
             GeoStoreApi.createResource(metadata, value, category, optionsRes)
@@ -92,40 +88,10 @@ const deleteResourceById = (resId, options) => resId ?
         .catch((e) => {return {error: e, resType: "error"}; }) :
     Rx.Observable.of({resType: "success"});
 
-const manageMapResource = ({map = {}, attribute = "", resource = null, type = "STRING", optionsDel = {}, messages = {}} = {}) => {
-    const attrVal = map[attribute];
-    const mapId = map.id;
-    // create
-    if ((isNil(attrVal) || attrVal === "NODATA") && !isNil(resource)) {
-        return createAssociatedResource({...resource, attribute, mapId, type, messages});
-    }
-    if (isNil(resource)) {
-        // delete
-        return deleteAssociatedResource({
-            mapId,
-            attribute,
-            type,
-            resourceId: getIdFromUri(attrVal),
-            options: optionsDel,
-            messages});
-    }
-    // update
-    return updateAssociatedResource({
-        permissions: resource.permissions,
-        resourceId: getIdFromUri(attrVal),
-        value: resource.value,
-        attribute,
-        options: resource.optionsAttr,
-        messages});
-
-};
-
 module.exports = {
-    getIdFromUri,
     deleteResourceById,
     createAssociatedResource,
     updateAssociatedResource,
     deleteAssociatedResource,
-    interceptOGCError,
-    manageMapResource
+    interceptOGCError
 };

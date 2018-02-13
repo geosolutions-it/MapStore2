@@ -21,12 +21,6 @@ describe('Test correctness of the GeoStore APIs', () => {
         expect(result2.baseURL).toNotBe(null);
     });
 
-    it('check the content encoding', () => {
-        const result = API.encodeContent(JSON.stringify({
-            title: "With quotes'"
-        }));
-        expect(API.encodeContent(result).indexOf('\\')).toBe(-1);
-    });
     it('test user creation utils', () => {
         const originalUser = {name: "username", newPassword: "PASSWORD"};
         const user = API.utils.initUser(originalUser);

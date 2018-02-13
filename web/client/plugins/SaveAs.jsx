@@ -28,7 +28,6 @@ const MapUtils = require('../utils/MapUtils');
 const saveAsStateSelector = createStructuredSelector({
     show: state => state.controls && state.controls.saveAs && state.controls.saveAs.enabled,
     mapType: state => mapTypeSelector(state),
-    newMapId: state => state.currentMap && state.currentMap.newMapId,
     user: state => state.security && state.security.user,
     currentMap: state => state.currentMap,
     metadata: state => state.maps.metadata,
@@ -54,7 +53,6 @@ class SaveAs extends React.Component {
     static propTypes = {
         additionalOptions: PropTypes.object,
         show: PropTypes.bool,
-        newMapId: PropTypes.number,
         map: PropTypes.object,
         user: PropTypes.object,
         mapType: PropTypes.string,
@@ -103,10 +101,10 @@ class SaveAs extends React.Component {
         this.onMissingInfo(nextProps);
     }
 
-    onMissingInfo = (props) => {
-        let map = props.map;
-        if (map && props.currentMap.mapId && !this.props.newMapId) {
-            this.context.router.history.push("/viewer/" + props.mapType + "/" + props.currentMap.mapId);
+    onMissingInfo = (nextProps) => {
+        const map = nextProps.map;
+        if (map && nextProps.currentMap.mapId && this.props.currentMap.mapId !== nextProps.currentMap.mapId) {
+            this.context.router.history.push("/viewer/" + nextProps.mapType + "/" + nextProps.currentMap.mapId);
             this.props.resetCurrentMap();
         }
     };
@@ -155,7 +153,7 @@ class SaveAs extends React.Component {
         };
         if (metadata.name !== "") {
             thumbComponent.getThumbnailDataUri( (data) => {
-                this.props.onMapSave(metadata, JSON.stringify(this.createV2Map()), {
+                this.props.onMapSave(metadata, this.createV2Map(), {
                     data,
                     category: "THUMBNAIL",
                     name: thumbComponent.generateUUID()

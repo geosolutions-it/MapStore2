@@ -627,6 +627,7 @@
                     "details_bbox_label": "Edita le coordinate per modificare l'area",
                     "details_circle_label": "Edita i campi numerici per modificare raggio e centro del cerchio",
                     "reset": "Reimposta allo stato iniziale",
+                    "reset_bbox": "Reset",
                     "save_bbox": "Salva le modifiche al BBOX",
                     "save_radius": "Salva le modifiche al raggio e/o al centro",
                     "radius": "Raggio"

@@ -124,7 +124,7 @@ function currentMap(state = {}, action) {
         return assign({}, state, {updating: false});
     }
     case MAP_CREATED: {
-        return assign({}, state, {mapId: action.resourceId, newMapId: action.resourceId});
+        return assign({}, state, {mapId: action.resourceId});
     }
     case PERMISSIONS_LIST_LOADING: {
         return assign({}, state, {permissionLoading: true});

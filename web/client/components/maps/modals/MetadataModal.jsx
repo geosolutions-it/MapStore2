@@ -90,7 +90,6 @@ class MetadataModal extends React.Component {
             onBackDetails: () => {},
             onUndoDetails: () => {},
             onToggleGroupProperties: () => {},
-            onToggleUnsavedChangesModal: () => {},
             onToggleDetailsSheet: () => {},
             onUpdateDetails: () => {},
             onDeleteDetails: () => {},
@@ -165,7 +164,7 @@ class MetadataModal extends React.Component {
 
     onCloseMapPropertiesModal = () => {
         // TODO write only a single function used also in onClose property
-        if ( this.props.map.unsavedChanges) {
+        if (this.props.map.unsavedChanges && this.props.detailsSheetActions.onToggleUnsavedChangesModal) {
             this.props.detailsSheetActions.onToggleUnsavedChangesModal();
         } else {
             this.props.onDisplayMetadataEdit(false);
@@ -257,7 +256,9 @@ class MetadataModal extends React.Component {
                     buttons={[{
                         text: <Message msgId="no"/>,
                         onClick: () => {
-                            this.props.detailsSheetActions.onToggleUnsavedChangesModal();
+                            if (this.props.detailsSheetActions.onToggleUnsavedChangesModal) {
+                                this.props.detailsSheetActions.onToggleUnsavedChangesModal();
+                            }
                             this.props.onDisplayMetadataEdit(true);
                         }
                     }, {

@@ -27,8 +27,12 @@ module.exports = (plugins, custom) => {
         pluginsConfig: require('./reducers/config'),
         custom
     });
-    const rootEpic = combineEpics(plugins);
+    const standardEpics = {
+        ...require('../../epics/controls')
+    };
+    const rootEpic = combineEpics(plugins, {...standardEpics });
     const epicMiddleware = createEpicMiddleware(rootEpic);
+
     const rootReducer = (state, action) => {
         if (action.type === 'LOADED_STATE') {
             return action.state;
