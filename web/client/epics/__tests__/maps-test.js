@@ -24,7 +24,7 @@ const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
 const {
     setDetailsChangedEpic,
     closeDetailsPanelEpic, fetchDataForDetailsPanel,
-    fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic} = require('../maps');
+    fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic, getIdFromUri} = require('../maps');
 const rootEpic = combineEpics(setDetailsChangedEpic, closeDetailsPanelEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -432,6 +432,14 @@ describe('maps Epics', () => {
                 details: "wrong/uri/4"
             }
         });
+    });
+    it('test getIdFromUri', () => {
+        // /mapstore2/rest/geostore/data/578/raw?decode=datauri
+        expect(getIdFromUri('%2Fmapstore2%2Frest%2Fgeostore%2Fdata%2F613%2Fraw%3Fdecode%3Ddatauri')).toBe('578');
+        // rest/geostore/data/578/raw?id=1568321658464
+        expect(getIdFromUri('%2Fmapstore2%2Frest%2Fgeostore%2Fdata%2F613%2Fraw%3Fdecode%3Ddatauri')).toBe('578');
+        // rest/geostore/data/
+        expect(getIdFromUri('%2Fmapstore2%2Frest%2Fgeostore%2Fdata%2F613%2Fraw%3Fdecode%3Ddatauri')).toBe(null);
     });
 
 });
