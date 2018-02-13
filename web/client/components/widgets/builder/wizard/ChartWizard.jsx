@@ -7,18 +7,18 @@
   */
 const React = require('react');
 
-const {wizardHanlders} = require('../../misc/wizard/enhancers');
-const loadingState = require('../../misc/enhancers/loadingState')(({loading, data}) => loading || !data, {width: 500, height: 200});
+const {wizardHanlders} = require('../../../misc/wizard/enhancers');
+const loadingState = require('../../../misc/enhancers/loadingState')(({loading, data}) => loading || !data, {width: 500, height: 200});
 
-const ChartType = require('./wizard/chart/ChartType');
-const wfsChartOptions = require('./wizard/chart/wfsChartOptions');
-const ChartOptions = wfsChartOptions(require('./wizard/chart/ChartOptions'));
-const WidgetOptions = require('./wizard/chart/WidgetOptions');
-const sampleData = require('../enhancers/sampleChartData');
-const wpsChart = require('../enhancers/wpsChart');
-const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
-const emptyChartState = require('../enhancers/emptyChartState');
-const errorChartState = require('../enhancers/errorChartState');
+const ChartType = require('./chart/ChartType');
+const wfsChartOptions = require('./chart/wfsChartOptions');
+const ChartOptions = wfsChartOptions(require('./chart/ChartOptions'));
+const WidgetOptions = require('./common/WidgetOptions');
+const sampleData = require('../../enhancers/sampleChartData');
+const wpsChart = require('../../enhancers/wpsChart');
+const dependenciesToFilter = require('../../enhancers/dependenciesToFilter');
+const emptyChartState = require('../../enhancers/emptyChartState');
+const errorChartState = require('../../enhancers/errorChartState');
 const {compose, lifecycle} = require('recompose');
 const enhanchePreview = compose(
     dependenciesToFilter,
@@ -27,8 +27,8 @@ const enhanchePreview = compose(
     errorChartState,
     emptyChartState
 );
-const PreviewChart = enhanchePreview(require('../../charts/SimpleChart'));
-const SampleChart = sampleData(require('../../charts/SimpleChart'));
+const PreviewChart = enhanchePreview(require('../../../charts/SimpleChart'));
+const SampleChart = sampleData(require('../../../charts/SimpleChart'));
 
 const sampleProps = {
     width: 430,
@@ -38,7 +38,7 @@ const sampleProps = {
 
 const isChartOptionsValid = (options = {}) => options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes;
 
-const Wizard = wizardHanlders(require('../../misc/wizard/WizardContainer'));
+const Wizard = wizardHanlders(require('../../../misc/wizard/WizardContainer'));
 
 
 const renderPreview = ({data = {}, layer, dependencies={}, setValid = () => {}}) => isChartOptionsValid(data.options)
@@ -73,7 +73,7 @@ const enhanceWizard = compose(lifecycle({
         }
     }})
 );
-module.exports = enhanceWizard(({onChange = () => {}, onFinish = () => {}, setPage= () => {}, setValid, data = {}, layer ={}, step=0, types, featureTypeProperties, dependencies}) =>
+module.exports = enhanceWizard(({onChange = () => {}, onFinish = () => {}, setPage= () => {}, setValid = () => {}, data = {}, layer ={}, step=0, types, featureTypeProperties, dependencies}) =>
     (<Wizard
         step={step}
         setPage={setPage}
@@ -86,6 +86,7 @@ module.exports = enhanceWizard(({onChange = () => {}, onFinish = () => {}, setPa
                 onChange("type", i);
             }}/>
         <ChartOptions
+            dependencies={dependencies}
             key="chart-options"
             featureTypeProperties={featureTypeProperties}
             types={types}

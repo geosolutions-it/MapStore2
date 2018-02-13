@@ -27,6 +27,10 @@ module.exports = {
         name: "manager",
         path: "/manager/:tool",
         component: require('./pages/Manager')
+    }, {
+        name: "dashboard",
+        path: "/dashboard",
+        component: require('./pages/Dashboard')
     }],
     initialState: {
         defaultState: {

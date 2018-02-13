@@ -816,6 +816,8 @@
             "getWMSLink": "Lien WMS",
             "error": "Une erreur s'est produite lors du chargement des données du catalogue",
             "pageInfo": "{start}-{end} résultats parmi {total}",
+            "resultInfo": "{total, plural, =0 {Pas d'objet} =1 {{total} sur {total}} other {{start}-{end} sur {total}}}",
+            "pageInfoInfinite": "{total, plural, =undefined {} =0 {Aucun résultat} =1 {{total} sur {total} trouvés} other {chargé {loaded} sur {total} trouvés}}",
             "noRecordsMatched": "Aucun enregistrement correspondant",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
@@ -1050,6 +1052,17 @@
             }
         },
         "widgets": {
+            "types": {
+                "chart": {
+                    "title": "Graphique",
+                    "caption": "ajouter un graphique"
+                },
+                "text": {
+                    "title": "Texte",
+                    "caption": "ajouter une zone de texte"
+                }
+            },
+            "selectWidgetType": "Sélectionnez le type de widget",
             "selectChartType": {
                 "title": "Sélectionnez le type de widget"
             },
@@ -1144,6 +1157,9 @@
                 "bar": "Légende d'affichage",
                 "gauge": "Afficher les étiquettes"
             }
+        },
+        "dashboard": {
+            "emptyTitle": "Le tableau de bord est vide"
         },
         "wizard": {
             "next": "Suivant",

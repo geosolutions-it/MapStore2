@@ -76,6 +76,14 @@ const arrayDelete = (path, condition, object) => {
  * @name ImmutableUtils
  */
 module.exports = {
+    /**
+     * Set of lodash fp
+     * @param {string} path the path
+     * @param value the value to set
+     * @param
+     * @example
+     * set('a.b.c',2, {}); // returns {a: {b: {c: 2}}});
+     */
     set,
     arrayUpsert,
     arrayUpdate,

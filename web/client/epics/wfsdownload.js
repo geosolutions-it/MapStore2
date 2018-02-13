@@ -1,5 +1,14 @@
+/*
+ * Copyright 2017, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
 const { FORMAT_OPTIONS_FETCH, DOWNLOAD_FEATURES, onDownloadFinished, updateFormats, onDownloadOptionChange} = require('../actions/wfsdownload');
 const {TOGGLE_CONTROL, toggleControl} = require('../actions/controls');
+const {queryPanelSelector, wfsDownloadSelector} = require('../selectors/controls');
 const {DOWNLOAD} = require('../actions/layers');
 const {createQuery} = require('../actions/wfsquery');
 const {error} = require('../actions/notifications');
@@ -10,6 +19,7 @@ const axios = require('axios');
 const FilterUtils = require('../utils/FilterUtils');
 const {getByOutputFormat} = require('../utils/FileFormatUtils');
 const {getLayerWFSCapabilities} = require('../observables/wfs');
+
 
 const DOWNLOAD_FORMATS_LOOKUP = {
 	"gml3": "GML3.1",
@@ -140,6 +150,6 @@ module.exports = {
         }),
     closeExportDownload: (action$, store) =>
         action$.ofType(TOGGLE_CONTROL)
-        .filter((a) => a.control === "queryPanel" && !store.getState().controls.queryPanel.enabled && store.getState().controls.wfsdownload.enabled)
+        .filter((a) => a.control === "queryPanel" && !queryPanelSelector(store.getState()) && wfsDownloadSelector(store.getState()))
         .switchMap( () => Rx.Observable.of(toggleControl("wfsdownload")))
 };

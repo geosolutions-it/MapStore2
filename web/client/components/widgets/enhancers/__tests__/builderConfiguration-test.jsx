@@ -10,7 +10,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const expect = require('expect');
 const builderConfiguration = require('../builderConfiguration');
-const WidgetBuilder = builderConfiguration(require('../../builder/WidgetsBuilder'));
+const WidgetBuilder = builderConfiguration(require('../../builder/WidgetBuilder'));
 describe('widgets builderConfiguration enhancer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';

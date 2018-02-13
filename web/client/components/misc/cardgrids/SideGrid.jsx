@@ -11,7 +11,7 @@ const SideCard = require('./SideCard');
 const {Row, Col} = require('react-bootstrap');
 module.exports = ({items=[], colProps={xs: 12}, onItemClick = () => {}} = {}) =>
     (<div className="msSideGrid">
-        <Row>
+        <Row className="items-list">
             {items.map((item, i) =>
                 (<Col key={item.id || i} {...colProps}>
                     <SideCard

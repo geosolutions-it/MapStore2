@@ -20,6 +20,8 @@ class InfoPopover extends React.Component {
         id: PropTypes.string,
         title: PropTypes.string,
         text: PropTypes.string,
+        glyph: PropTypes.string,
+        bsStyle: PropTypes.string,
         placement: PropTypes.string,
         left: PropTypes.number,
         top: PropTypes.number
@@ -31,7 +33,9 @@ class InfoPopover extends React.Component {
         text: '',
         placement: 'right',
         left: 200,
-        top: 50
+        top: 50,
+        glyph: "question-sign",
+        bsStyle: 'info'
     };
 
     renderPopover() {
@@ -51,7 +55,7 @@ class InfoPopover extends React.Component {
         return (
             <span className="mapstore-info-popover">
                 <OverlayTrigger trigger={['hover', 'focus']} placement={this.props.placement} overlay={this.renderPopover()}>
-                    <Glyphicon glyph="question-sign"/>
+                    <Glyphicon className={`text-${this.props.bsStyle}`} glyph="question-sign"/>
                 </OverlayTrigger>
             </span>
         );
