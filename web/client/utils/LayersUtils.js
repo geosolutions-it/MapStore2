@@ -354,7 +354,7 @@ const LayersUtils = {
             url: layer.url,
             bbox: layer.bbox,
             nativeCrs: layer.nativeCrs,
-            visibility: layer.loadingError === 'Error' ? true : layer.visibility,
+            visibility: layer.visibility,
             singleTile: layer.singleTile || false,
             allowedSRS: layer.allowedSRS,
             matrixIds: layer.matrixIds,
