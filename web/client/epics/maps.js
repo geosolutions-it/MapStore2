@@ -44,11 +44,7 @@ const {userParamsSelector} = require('../selectors/security');
 const {deleteResourceById, createAssociatedResource, deleteAssociatedResource, updateAssociatedResource} = require('../utils/ObservableUtils');
 const ConfigUtils = require('../utils/ConfigUtils');
 
-const getIdFromUri = (uri, regex = /data\/(\d+)/) => {
-    const decodedUri = decodeURIComponent(uri);
-    const findDataDigit = regex.exec(decodedUri);
-    return findDataDigit && findDataDigit.length && findDataDigit.length > 1 ? findDataDigit[1] : null;
-};
+const {getIdFromUri} = require('../utils/MapUtils');
 
 const manageMapResource = ({map = {}, attribute = "", resource = null, type = "STRING", optionsDel = {}, messages = {}} = {}) => {
     const attrVal = map[attribute];
@@ -283,6 +279,5 @@ module.exports = {
     deleteMapAndAssociatedResourcesEpic,
     setDetailsChangedEpic,
     fetchDetailsFromResourceEpic,
-    saveResourceDetailsEpic,
-    getIdFromUri
+    saveResourceDetailsEpic
 };
