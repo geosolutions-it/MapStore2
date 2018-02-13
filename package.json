@@ -205,11 +205,10 @@
     "examples": "webpack-dev-server --progress --colors --port 8081 --hot --inline --content-base web/client --config examples-webpack.config.js",
     "test": "karma start ./karma.conf.single-run.js",
     "pretest": "npm run cleandoc && npm run lint",
-    "posttest": "npm run i18n",
     "continuoustest": "karma start ./karma.conf.continuous-test.js",
     "mvntest": "karma start ./karma.conf.single-run.js --reporters junit,dots,coverage",
     "lint": "eslint web/client --ext .jsx,.js",
-    "travis": "eslint web/client --ext .jsx,.js && karma start ./karma.conf.single-run.js --browsers Firefox --reporters dots,junit,coverage,coveralls && docma -c docma-config.json --dest web/docs"
+    "travis": "eslint web/client --ext .jsx,.js && npm run i18n && karma start ./karma.conf.single-run.js --browsers Firefox --reporters dots,junit,coverage,coveralls && docma -c docma-config.json --dest web/docs"
   },
   "author": "GeoSolutions",
   "license": "BSD-2-Clause"
