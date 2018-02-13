@@ -1,5 +1,5 @@
 const Rx = require('rxjs');
-const {get, isNil} = require('lodash');
+const {get} = require('lodash');
 const {parseString} = require('xml2js');
 const {stripPrefix} = require('xml2js/lib/processors');
 const GeoStoreApi = require('../api/GeoStoreDAO');

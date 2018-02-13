@@ -283,5 +283,6 @@ module.exports = {
     deleteMapAndAssociatedResourcesEpic,
     setDetailsChangedEpic,
     fetchDetailsFromResourceEpic,
-    saveResourceDetailsEpic
+    saveResourceDetailsEpic,
+    getIdFromUri
 };

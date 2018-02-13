@@ -280,8 +280,8 @@ describe('maps Epics', () => {
         });
     });
     it('test deleteMapAndAssociatedResourcesEpic, with map, details, thumbnail errors', (done) => {
-        map1.thumbnail = "wronguri/5/";
-        map1.details = "wronguri/6/";
+        map1.thumbnail = "wronguri/data/5/";
+        map1.details = "wronguri/data/6/";
         testEpic(addTimeoutEpic(deleteMapAndAssociatedResourcesEpic), 5, deleteMap(mapId, {}), actions => {
             expect(actions.length).toBe(5);
             actions.map((action, i) => {
@@ -318,7 +318,7 @@ describe('maps Epics', () => {
             },
             currentMap: {
                 id: mapId,
-                details: "wrong/uri/4"
+                details: "wrong/data/uri/4"
             }
         });
     });
@@ -357,8 +357,8 @@ describe('maps Epics', () => {
         });
     });
     it('test deleteMapAndAssociatedResourcesEpic, map deleted, but details, thumbnail errors', (done) => {
-        map8.thumbnail = "wronguri/5/";
-        map8.details = "wronguri/6/";
+        map8.thumbnail = "wronguri/data/5/";
+        map8.details = "wronguri/data/6/";
         testEpic(addTimeoutEpic(deleteMapAndAssociatedResourcesEpic), 6, deleteMap(mapId8, {}), actions => {
             expect(actions.length).toBe(6);
             actions.filter(a => !!a.type).map((action, i) => {
@@ -393,7 +393,7 @@ describe('maps Epics', () => {
             },
             currentMap: {
                 id: mapId8,
-                details: "wrong/uri/4"
+                details: "wrong/uri/data/4"
             }
         });
     });
@@ -435,11 +435,11 @@ describe('maps Epics', () => {
     });
     it('test getIdFromUri', () => {
         // /mapstore2/rest/geostore/data/578/raw?decode=datauri
-        expect(getIdFromUri('%2Fmapstore2%2Frest%2Fgeostore%2Fdata%2F613%2Fraw%3Fdecode%3Ddatauri')).toBe('578');
+        expect(getIdFromUri('%2Fmapstore2%2Frest%2Fgeostore%2Fdata%2F578%2Fraw%3Fdecode%3Ddatauri')).toBe('578');
         // rest/geostore/data/578/raw?id=1568321658464
-        expect(getIdFromUri('%2Fmapstore2%2Frest%2Fgeostore%2Fdata%2F613%2Fraw%3Fdecode%3Ddatauri')).toBe('578');
+        expect(getIdFromUri('rest%2Fgeostore%2Fdata%2F578%2Fraw%3Fid%3D1568321658464')).toBe('578');
         // rest/geostore/data/
-        expect(getIdFromUri('%2Fmapstore2%2Frest%2Fgeostore%2Fdata%2F613%2Fraw%3Fdecode%3Ddatauri')).toBe(null);
+        expect(getIdFromUri('rest%2Fgeostore%2Fdata%2F')).toBe(null);
     });
 
 });
