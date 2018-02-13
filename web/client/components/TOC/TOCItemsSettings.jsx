@@ -22,7 +22,7 @@ const Message = require('../I18N/Message');
  * @memberof components.TOC
  * @name TOCItemsSettings
  * @class
- * @prop {dock} dock switch between Dockable Panel and Resizable Modal, default true (DockPanel)
+ * @prop {boolean} dock switch between Dockable Panel and Resizable Modal, default true (DockPanel)
  * @prop {string} activeTab current active tab, should match the tab id
  * @prop {function} getTabs must return an array of object representing the tabs, eg (props) => [{ id: 'general', Component: MyGeneralComponent}]
  * @prop {string} className additional calss name

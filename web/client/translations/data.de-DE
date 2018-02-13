@@ -78,7 +78,8 @@
             "templateFormatDescription": "Passen Sie das Ergebnis der Feature-Informationen an",
             "templateFormatInfoAlert1": "Klicken Sie auf Bearbeiten, um eine neue Vorlage hinzuzufügen.",
             "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um die Eigenschaften zu umbrechen, die angezeigt werden sollen",
-            "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }"
+            "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
+            "templatePreview": "Vorschau template"
         },
         "notification": {
             "update": "Update",

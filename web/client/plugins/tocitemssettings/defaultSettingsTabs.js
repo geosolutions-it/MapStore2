@@ -30,8 +30,6 @@ const responses = {
     text: require('raw-loader!./featureInfoPreviews/responseText.txt')
 };
 
-// <div><div><Message msgId="layerProperties.exampleOfResponse"/></div><br/>{Body && <Body template={this.props.element.featureInfo && this.props.element.featureInfo.template || ''} {...this.props}/>}</div>
-
 const formatCards = {
     TEXT: {
         titleId: 'layerProperties.textFormatTitle',
@@ -75,7 +73,7 @@ const formatCards = {
         glyph: 'ext-empty',
         body: ({template = '', ...props}) => (
             <div>
-                <div><Message msgId="layerProperties.exampleOfResponse"/></div>
+                <div>{template && template !== '<p><br></p>' ? <Message msgId="layerProperties.templatePreview"/> : null}</div>
                 <br/>
                 <div>
                     {template && template !== '<p><br></p>' ?

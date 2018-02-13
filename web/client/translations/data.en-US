@@ -78,7 +78,8 @@
             "templateFormatDescription": "Customize feature info results format",
             "templateFormatInfoAlert1": "Click on edit button to add a new template.",
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to be displayed",
-            "templateFormatInfoAlertExample": "The id of the feature is ${ properties }"
+            "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
+            "templatePreview": "Template preview"
 
         },
         "notification": {

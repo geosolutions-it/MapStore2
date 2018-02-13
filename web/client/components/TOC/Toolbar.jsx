@@ -12,9 +12,6 @@ const {ButtonGroup, Button, Glyphicon, Tooltip, OverlayTrigger} = require('react
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 const {head} = require('lodash');
 const ConfirmModal = require('../maps/modals/ConfirmModal');
-// removed from toolbar to avoid conflict with TOCItemsSettings
-// const SettingsModal = require('./fragments/SettingsModal');
-// const GroupSettingsModal = require('./fragments/GroupSettingsModal');
 const LayerMetadataModal = require('./fragments/LayerMetadataModal');
 
 class Toolbar extends React.Component {
@@ -136,40 +133,9 @@ class Toolbar extends React.Component {
         status = this.props.selectedLayers.length > 0 && this.props.selectedLayers.filter(l => l.loadingError === 'Error').length === this.props.selectedLayers.length ? 'LAYERS_LOAD_ERROR' : status;
         return status;
     }
-/*
-    getSettingsModal = (status) => {
-        return status === 'LAYER' ?
-            (<SettingsModal
-                key="toolsettingsmodal"
-                options={this.props.options.modalOptions}
-                {...this.props.options.settingsOptions}
-                settings={this.props.settings}
-                element={this.props.selectedLayers[0]}
-                generalInfoFormat={this.props.generalInfoFormat}
-                retrieveLayerData={this.props.onToolsActions.onRetrieveLayerData}
-                updateSettings={this.props.onToolsActions.onUpdateSettings}
-                hideSettings={this.props.onToolsActions.onHideSettings}
-                updateNode={this.props.onToolsActions.onUpdate}
-                removeNode={this.props.onToolsActions.onRemove}
-                includeDeleteButton={this.props.activateTool.includeDeleteButtonInSettings}
-                chartStyle={this.props.style.chartStyle}
-                titleText={this.props.text.settingsText}
-                opacityText={this.props.text.opacityText}
-                elevationText={this.props.text.elevationText}
-                saveText={this.props.text.saveText}
-                closeText={this.props.text.closeText}
-                groups={this.props.groups}/>)
-            : <GroupSettingsModal
-                element={this.props.selectedGroups[this.props.selectedGroups.length - 1]}
-                settings={this.props.settings}
-                updateNode={this.props.onToolsActions.onUpdate}
-                updateSettings={this.props.onToolsActions.onUpdateSettings}
-                hideSettings={this.props.onToolsActions.onHideSettings}/>;
-    }*/
 
     render() {
         const status = this.getStatus();
-        // const settingModal = status === 'GROUP' || status === 'LAYER' ? this.getSettingsModal(status) : null;
         const layerMetadataModal = (<LayerMetadataModal
                                 key="toollayermetadatamodal"
                                 layerMetadata={this.props.layerMetadata}
@@ -278,7 +244,6 @@ class Toolbar extends React.Component {
                 confirmText={this.props.text.confirmDeleteText}
                 cancelText={this.props.text.confirmDeleteCancelText}
                 body={this.props.text.confirmDeleteMessage} />
-            {/*settingModal*/}
             {layerMetadataModal}
         </ButtonGroup>) : null;
     }

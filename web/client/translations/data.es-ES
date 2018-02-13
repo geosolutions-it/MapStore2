@@ -78,7 +78,8 @@
             "templateFormatDescription": "Personalizar formato de resultados de información de funciones",
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita mostrar",
-            "templateFormatInfoAlertExample": "La identificación de la función es ${ properties }"
+            "templateFormatInfoAlertExample": "La identificación de la función es ${ properties }",
+            "templatePreview": "Vista previa de template"
         },
         "notification": {
             "update": "Update",
