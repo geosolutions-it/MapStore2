@@ -73,8 +73,9 @@ function mapConfig(state = null, action) {
         return state;
     case MAP_CREATED: {
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
-        if (map && !map.mapId) {
-            map = assign({}, map, {newMapId: action.resourceId});
+        if (map) {
+            // version needed to avoid automapupdate to start
+            map = assign({}, map, {mapId: action.resourceId, version: 2});
             return assign({}, state, {map: map});
         }
     }

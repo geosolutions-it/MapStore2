@@ -222,7 +222,9 @@ const storeDetailsInfoEpic = (action$, store) =>
     action$.ofType(MAP_INFO_LOADED)
     .switchMap(() => {
         const mapId = mapIdSelector(store.getState());
-        return Rx.Observable.fromPromise(
+        return !mapId ?
+            Rx.Observable.empty() :
+            Rx.Observable.fromPromise(
             GeoStoreApi.getResourceAttribute(mapId, "details")
             .then(res => res.data).catch(() => {
                 return null;
