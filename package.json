@@ -195,6 +195,7 @@
     "doc": "docma -c docma-config.json --dest web/docs",
     "cleandoc": "rimraf web/docs && rimraf web/client/mapstore/docs",
     "doctest": "docma -c docma-config.json --dest web/client/mapstore/docs && echo documentation is accessible from the mapstore/docs path when running npm start",
+    "i18n": "node  utility/translations/findMissingTranslations.js",
     "postinstall": "node checkCesium.js",
     "clean": "rimraf ./web/client/dist",
     "compile": "npm run clean && mkdirp ./web/client/dist && webpack --progress --config prod-webpack.config.js",
@@ -207,7 +208,7 @@
     "continuoustest": "karma start ./karma.conf.continuous-test.js",
     "mvntest": "karma start ./karma.conf.single-run.js --reporters junit,dots,coverage",
     "lint": "eslint web/client --ext .jsx,.js",
-    "travis": "eslint web/client --ext .jsx,.js && karma start ./karma.conf.single-run.js --browsers Firefox --reporters dots,junit,coverage,coveralls && docma -c docma-config.json --dest web/docs"
+    "travis": "eslint web/client --ext .jsx,.js && npm run i18n && karma start ./karma.conf.single-run.js --browsers Firefox --reporters dots,junit,coverage,coveralls && docma -c docma-config.json --dest web/docs"
   },
   "author": "GeoSolutions",
   "license": "BSD-2-Clause"

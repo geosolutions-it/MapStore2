@@ -807,7 +807,7 @@
             "title": "Catalog",
             "autoload": "Search on service selection",
             "clearValueText": "Clear selection",
-            "noResultsText": "",
+            "noResultsText": "No result",
             "tooltip": "Browse Catalog",
             "addToMap": "Add To Map",
             "getWMSLink": "Get WMS Link",
