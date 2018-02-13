@@ -280,8 +280,8 @@ describe('maps Epics', () => {
         });
     });
     it('test deleteMapAndAssociatedResourcesEpic, with map, details, thumbnail errors', (done) => {
-        map1.thumbnail = "wronguri/5/";
-        map1.details = "wronguri/6/";
+        map1.thumbnail = "wronguri/data/5/";
+        map1.details = "wronguri/data/6/";
         testEpic(addTimeoutEpic(deleteMapAndAssociatedResourcesEpic), 5, deleteMap(mapId, {}), actions => {
             expect(actions.length).toBe(5);
             actions.map((action, i) => {
@@ -318,7 +318,7 @@ describe('maps Epics', () => {
             },
             currentMap: {
                 id: mapId,
-                details: "wrong/uri/4"
+                details: "wrong/data/uri/4"
             }
         });
     });
@@ -357,8 +357,8 @@ describe('maps Epics', () => {
         });
     });
     it('test deleteMapAndAssociatedResourcesEpic, map deleted, but details, thumbnail errors', (done) => {
-        map8.thumbnail = "wronguri/5/";
-        map8.details = "wronguri/6/";
+        map8.thumbnail = "wronguri/data/5/";
+        map8.details = "wronguri/data/6/";
         testEpic(addTimeoutEpic(deleteMapAndAssociatedResourcesEpic), 6, deleteMap(mapId8, {}), actions => {
             expect(actions.length).toBe(6);
             actions.filter(a => !!a.type).map((action, i) => {
@@ -393,7 +393,7 @@ describe('maps Epics', () => {
             },
             currentMap: {
                 id: mapId8,
-                details: "wrong/uri/4"
+                details: "wrong/uri/data/4"
             }
         });
     });

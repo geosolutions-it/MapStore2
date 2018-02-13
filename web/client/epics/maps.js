@@ -11,7 +11,7 @@ const uuidv1 = require('uuid/v1');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
 const { MAP_INFO_LOADED } = require('../actions/config');
-
+const {isNil} = require('lodash');
 const {
     SAVE_DETAILS, SAVE_RESOURCE_DETAILS,
     DELETE_MAP, OPEN_DETAILS_PANEL,
@@ -41,8 +41,38 @@ const {
 } = require('../selectors/currentmap');
 
 const {userParamsSelector} = require('../selectors/security');
-const {manageMapResource, deleteResourceById, getIdFromUri} = require('../utils/ObservableUtils');
+const {deleteResourceById, createAssociatedResource, deleteAssociatedResource, updateAssociatedResource} = require('../utils/ObservableUtils');
 const ConfigUtils = require('../utils/ConfigUtils');
+
+const {getIdFromUri} = require('../utils/MapUtils');
+
+const manageMapResource = ({map = {}, attribute = "", resource = null, type = "STRING", optionsDel = {}, messages = {}} = {}) => {
+    const attrVal = map[attribute];
+    const mapId = map.id;
+    // create
+    if ((isNil(attrVal) || attrVal === "NODATA") && !isNil(resource)) {
+        return createAssociatedResource({...resource, attribute, mapId, type, messages});
+    }
+    if (isNil(resource)) {
+        // delete
+        return deleteAssociatedResource({
+            mapId,
+            attribute,
+            type,
+            resourceId: getIdFromUri(attrVal),
+            options: optionsDel,
+            messages});
+    }
+    // update
+    return updateAssociatedResource({
+        permissions: resource.permissions,
+        resourceId: getIdFromUri(attrVal),
+        value: resource.value,
+        attribute,
+        options: resource.optionsAttr,
+        messages});
+
+};
 
 /**
     If details are changed from the original ones then set unsavedChanges to true
