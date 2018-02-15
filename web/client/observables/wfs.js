@@ -51,6 +51,37 @@ const toLayerCapabilitiesURL = ({name, search = {}, url} = {}) => {
 };
 
 module.exports = {
+    getFeature: () => Rx.Observable.of({ // TODO: this is a mock to implement
+        data: {
+            features: [{ CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" },
+                { CFCC: "A", "NAME": "A", "1": "sdfsdfsdfsdfsdf sdf sdf sdfdsf1", "2sdfsdfsdf": "sdfsdfsdf2", "3": "1dsfdsfsdfsdfs" }]
+        }
+    }),
     describeFeatureType: ({layer}) =>
         Rx.Observable.defer(() =>
             axios.get(toDescribeURL(layer))).let(interceptOGCError),

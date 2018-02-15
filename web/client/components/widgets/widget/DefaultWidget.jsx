@@ -8,10 +8,12 @@
 const React = require('react');
 const enhanceChartWidget = require('../enhancers/chartWidget');
 const enhanceTextWidget = require('../enhancers/deleteWidget');
+const enhanceTableWidget = require('../enhancers/tableWidget');
 const wpsChart = require('../enhancers/wpsChart');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const ChartWidget = dependenciesToFilter(wpsChart(enhanceChartWidget(require('./ChartWidget'))));
 const TextWidget = enhanceTextWidget(require('./TextWidget'));
+const TableWidget = dependenciesToFilter(enhanceTableWidget(require('./TableWidget')));
 module.exports = ({
     dependencies,
     exportCSV = () => {},
@@ -23,6 +25,13 @@ module.exports = ({
             ? (<TextWidget {...w}
                 onDelete={onDelete}
                 onEdit={onEdit}/>)
+            : w.widgetType === "table"
+            ? <TableWidget {...w}
+                exportCSV={exportCSV}
+                dependencies={dependencies}
+                onDelete={onDelete}
+                onEdit={onEdit}
+            />
             : (<ChartWidget {...w}
                 exportCSV={exportCSV}
                 dependencies={dependencies}

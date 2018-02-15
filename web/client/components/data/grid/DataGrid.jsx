@@ -13,6 +13,10 @@ class DataGrid extends Grid {
     static propTypes = {
         displayFilters: PropTypes.bool
     }
+    static defaultProps = {
+        onGridScroll: () => {},
+        overScan: {}
+    }
     constructor(props) {
         super(props);
         this.handleSort = this._handleSort.bind(this);
