@@ -34,6 +34,7 @@
         "localeErrors": {
             "404": "Translation file not found"
         },
+        "remove": "Delete",
         "layerProperties": {
             "windowTitle": "Layer Properties",
             "title": "Title",
@@ -394,6 +395,19 @@
             "s_priority_info": "Used to sort search results, higher values first. Nominatim results have priority = 5",
             "serviceslistempty": "No custom services defined"
         },
+        "draw": {
+            "fill": "Fill:",
+            "stroke": "Stroke:",
+            "strokeWidth": "Stroke Width:",
+            "font": {
+                "textColor": "text color",
+                "family": "font-family",
+                "size": "font-size",
+                "textAlign": "text align",
+                "style": "font-style",
+                "weight": "font-weight"
+            }
+        },
         "drawLocal": {
             "draw": {
                 "toolbar": {
@@ -648,11 +662,11 @@
             "save": "Save",
             "cancel": "Cancel",
             "back": "Back",
-            "addMarker": "Add a new point on the map",
-            "styleGeometry": "Choose a different style for points",
-            "deleteGeometry": "Remove existing points",
+            "addMarker": "Add a new feature on the map",
+            "styleGeometry": "Choose a different style for points, lines, polygons",
+            "deleteGeometry": "Remove existing geometry",
             "removeannotation": "Do you want to remove the annotation?",
-            "removegeometry": "Do you want to remove all annotation points?",
+            "removegeometry": "Do you want to remove all annotation features?",
             "confirm": "Confirm",
             "mandatory": "Mandatory field",
             "emptygeometry": "Geometry cannot be empty",
@@ -664,6 +678,12 @@
             "field": {
                 "title": "Title",
                 "description": "Description"
+            },
+            "titles": {
+                "marker": " Marker",
+                "line": " Line",
+                "polygon": " Polygon",
+                "text": " Text"
             }
         },
         "users": {

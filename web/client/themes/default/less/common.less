@@ -130,3 +130,27 @@ textarea {
 		}
     }
 }
+
+.mapstore-filter {
+       &.form-group {
+           margin: (@square-btn-size - @square-btn-medium-size)/2 0 0 0;
+           .input-group {
+               height: @square-btn-medium-size;
+               width: 100%;
+               input {
+                   height: @square-btn-medium-size;
+               }
+               .input-group-addon {
+                   position: absolute;
+                   z-index: 2;
+                   right: 0;
+                   border-color: transparent;
+                   background-color: transparent;
+               }
+
+               .close-filter {
+                   cursor: pointer;
+               }
+           }
+       }
+   }

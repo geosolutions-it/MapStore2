@@ -1,28 +1,32 @@
 /*
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
 const expect = require('expect');
 
 const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
 const {ADD_LAYER, UPDATE_NODE, CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
-const {CHANGE_DRAWING_STATUS, geometryChanged} = require('../../actions/draw');
+const {CHANGE_DRAWING_STATUS, geometryChanged, GEOMETRY_CHANGED} = require('../../actions/draw');
 const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
-const {configureMap} = require('../../actions/config');
+const {configureMap
+} = require('../../actions/config');
 const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation, setStyle, highlight, cleanHighlight,
-    toggleAdd, UPDATE_ANNOTATION_GEOMETRY} = require('../../actions/annotations');
-
+    toggleAdd, UPDATE_ANNOTATION_GEOMETRY, SHOW_TEXT_AREA, cancelText, stopDrawing
+} = require('../../actions/annotations');
+const {clickOnMap
+} = require('../../actions/map');
 const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
-    cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic, setStyleEpic, restoreStyleEpic, highlighAnnotationEpic,
-    cleanHighlightAnnotationEpic} = require('../annotations')({});
+    cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawGeomEpic, setStyleEpic, restoreStyleEpic, highlighAnnotationEpic,
+    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, stopDrawingMultiGeomEpic
+} = require('../annotations')({});
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
-    setStyleEpic, cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic, restoreStyleEpic, highlighAnnotationEpic,
-    cleanHighlightAnnotationEpic);
+    setStyleEpic, cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawGeomEpic, restoreStyleEpic, highlighAnnotationEpic,
+    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, stopDrawingMultiGeomEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
@@ -33,8 +37,15 @@ describe('annotations Epics', () => {
     beforeEach(() => {
         store = mockStore({
             annotations: {
+                config: {multiGeometry: false},
                 editing: {
-                    style: {}
+                    style: {},
+                    geometry: {
+                        type: "Point"
+                    }
+                },
+                drawingText: {
+                    drawing: true
                 },
                 originalStyle: {}
             },
@@ -44,6 +55,9 @@ describe('annotations Epics', () => {
                     features: [{
                         properties: {
                             id: '1'
+                        },
+                        geometry: {
+                            type: "Point"
                         }
                     }]
                 }]
@@ -67,7 +81,7 @@ describe('annotations Epics', () => {
                 flat: []
             }
         });
-        let action = saveAnnotation('1', {}, {});
+        let action = saveAnnotation('1', {}, {}, {}, true, {});
 
         store.subscribe(() => {
             const actions = store.getActions();
@@ -77,6 +91,18 @@ describe('annotations Epics', () => {
             }
         });
 
+        store.dispatch(action);
+    });
+    it('stop drawing when dropdownfeature type is opened', (done) => {
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        let action = stopDrawing();
         store.dispatch(action);
     });
 
@@ -107,7 +133,6 @@ describe('annotations Epics', () => {
         const action = editAnnotation('1')(store.dispatch, store.getState);
         store.dispatch(action);
     });
-
     it('remove annotation', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
@@ -173,7 +198,7 @@ describe('annotations Epics', () => {
         store.dispatch(action);
     });
 
-    it('end drawing marker', (done) => {
+    it('end drawing geom', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
             if (actions.length >= 2) {
@@ -182,6 +207,29 @@ describe('annotations Epics', () => {
             }
         });
         const action = geometryChanged([], 'annotations', false);
+        store.dispatch(action);
+    });
+    it('saving text annotation', (done) => {
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[0].type).toBe(GEOMETRY_CHANGED);
+                expect(actions[1].type).toBe(UPDATE_ANNOTATION_GEOMETRY);
+                done();
+            }
+        });
+        const action = geometryChanged([], 'annotations', false, true);
+        store.dispatch(action);
+    });
+    it('cancel text annotation', (done) => {
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        const action = cancelText();
         store.dispatch(action);
     });
 
@@ -209,6 +257,17 @@ describe('annotations Epics', () => {
         store.dispatch(action);
     });
 
+    it('add text epic', (done) => {
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(SHOW_TEXT_AREA);
+                done();
+            }
+        });
+        const action = clickOnMap({});
+        store.dispatch(action);
+    });
     it('clean highlight', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
@@ -233,7 +292,7 @@ describe('annotations Epics', () => {
                 flat: []
             }
         };
-        testEpic(addTimeoutEpic(cleanHighlightAnnotationEpic), 1, cleanHighlight('1'), actions => {
+        testEpic(addTimeoutEpic(cleanHighlightAnnotationEpic, 88), 1, cleanHighlight('1'), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {

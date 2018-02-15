@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -28,159 +28,212 @@ const FILTER_ANNOTATIONS = 'ANNOTATIONS:FILTER';
 const CLOSE_ANNOTATIONS = 'ANNOTATIONS:CLOSE';
 const CONFIRM_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CONFIRM_CLOSE';
 const CANCEL_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CANCEL_CLOSE';
+const STOP_DRAWING = 'ANNOTATIONS:STOP_DRAWING';
+const CHANGE_STYLER = 'ANNOTATIONS:CHANGE_STYLER';
+const UNSAVED_CHANGES = 'ANNOTATIONS:UNSAVED_CHANGES';
+const TOGGLE_CHANGES_MODAL = 'ANNOTATIONS:TOGGLE_CHANGES_MODAL';
+const CHANGED_PROPERTIES = 'ANNOTATIONS:CHANGED_PROPERTIES';
+const UNSAVED_STYLE = 'ANNOTATIONS:UNSAVED_STYLE';
+const TOGGLE_STYLE_MODAL = 'ANNOTATIONS:TOGGLE_STYLE_MODAL';
+const SHOW_TEXT_AREA = 'ANNOTATIONS:SHOW_TEXT_AREA';
+const ADD_TEXT = 'ANNOTATIONS:ADD_TEXT';
+const CANCEL_CLOSE_TEXT = 'ANNOTATIONS:CANCEL_CLOSE_TEXT';
+const SAVE_TEXT = 'ANNOTATIONS:SAVE_TEXT';
 
 const {head} = require('lodash');
 
-function editAnnotation(id, featureType) {
+function editAnnotation(id) {
     return (dispatch, getState) => {
+        const feature = head(head(getState().layers.flat.filter(l => l.id === 'annotations')).features.filter(f => f.properties.id === id));
         dispatch({
             type: EDIT_ANNOTATION,
-            feature: head(head(getState().layers.flat.filter(l => l.id === 'annotations')).features.filter(f => f.properties.id === id)),
-            featureType
+            feature,
+            featureType: feature.geometry.type
         });
     };
 }
-
-function newAnnotation(featureType) {
+function newAnnotation() {
     return {
-        type: NEW_ANNOTATION,
-        featureType
+        type: NEW_ANNOTATION
     };
 }
-
+function showTextArea() {
+    return {
+        type: SHOW_TEXT_AREA
+    };
+}
+function addText() {
+    return {
+        type: ADD_TEXT
+    };
+}
+function cancelText() {
+    return {
+        type: CANCEL_CLOSE_TEXT
+    };
+}
+function changedProperties(field, value) {
+    return {
+        type: CHANGED_PROPERTIES,
+        field,
+        value
+    };
+}
 function removeAnnotation(id) {
     return {
         type: REMOVE_ANNOTATION,
         id
     };
 }
-
 function removeAnnotationGeometry() {
     return {
         type: REMOVE_ANNOTATION_GEOMETRY
     };
 }
-
 function confirmRemoveAnnotation(id) {
     return {
         type: CONFIRM_REMOVE_ANNOTATION,
         id
     };
 }
-
 function cancelRemoveAnnotation() {
     return {
         type: CANCEL_REMOVE_ANNOTATION
     };
 }
-
 function cancelEditAnnotation() {
     return {
         type: CANCEL_EDIT_ANNOTATION
     };
 }
-
-function saveAnnotation(id, fields, geometry, style, newFeature) {
+function saveAnnotation(id, fields, geometry, style, newFeature, properties) {
     return {
         type: SAVE_ANNOTATION,
         id,
         fields,
         geometry,
         style,
-        newFeature
+        newFeature,
+        properties
     };
 }
-
-function toggleAdd() {
+function toggleAdd(featureType) {
     return {
-        type: TOGGLE_ADD
+        type: TOGGLE_ADD,
+        featureType
     };
 }
-
 function toggleStyle() {
     return {
         type: TOGGLE_STYLE
     };
 }
-
 function restoreStyle() {
     return {
         type: RESTORE_STYLE
     };
 }
-
 function setStyle(style) {
     return {
         type: SET_STYLE,
         style
     };
 }
-
-function updateAnnotationGeometry(geometry) {
+function updateAnnotationGeometry(geometry, textChanged) {
     return {
         type: UPDATE_ANNOTATION_GEOMETRY,
-        geometry
+        geometry,
+        textChanged
     };
 }
-
 function validationError(errors) {
     return {
         type: VALIDATION_ERROR,
         errors
     };
 }
-
 function highlight(id) {
     return {
         type: HIGHLIGHT,
         id
     };
 }
-
 function cleanHighlight() {
     return {
         type: CLEAN_HIGHLIGHT
     };
 }
-
 function showAnnotation(id) {
     return {
         type: SHOW_ANNOTATION,
         id
     };
 }
-
 function cancelShowAnnotation() {
     return {
         type: CANCEL_SHOW_ANNOTATION
     };
 }
-
 function filterAnnotations(filter) {
     return {
         type: FILTER_ANNOTATIONS,
         filter
     };
 }
-
 function closeAnnotations() {
     return {
         type: CLOSE_ANNOTATIONS
     };
 }
-
 function confirmCloseAnnotations() {
     return {
         type: CONFIRM_CLOSE_ANNOTATIONS
     };
 }
-
+function setUnsavedChanges(unsavedChanges) {
+    return {
+        type: UNSAVED_CHANGES,
+        unsavedChanges
+    };
+}
+function setUnsavedStyle(unsavedStyle) {
+    return {
+        type: UNSAVED_STYLE,
+        unsavedStyle
+    };
+}
 function cancelCloseAnnotations() {
     return {
         type: CANCEL_CLOSE_ANNOTATIONS
     };
 }
-
+function stopDrawing() {
+    return {
+        type: STOP_DRAWING
+    };
+}
+function toggleUnsavedChangesModal() {
+    return {
+        type: TOGGLE_CHANGES_MODAL
+    };
+}
+function toggleUnsavedStyleModal() {
+    return {
+        type: TOGGLE_STYLE_MODAL
+    };
+}
+function saveText(value) {
+    return {
+        type: SAVE_TEXT,
+        value
+    };
+}
+function changeStyler(stylerType) {
+    return {
+        type: CHANGE_STYLER,
+        stylerType
+    };
+}
 module.exports = {
     SHOW_ANNOTATION,
     EDIT_ANNOTATION,
@@ -204,6 +257,17 @@ module.exports = {
     CLOSE_ANNOTATIONS,
     CONFIRM_CLOSE_ANNOTATIONS,
     CANCEL_CLOSE_ANNOTATIONS,
+    STOP_DRAWING, stopDrawing,
+    CHANGE_STYLER, changeStyler,
+    UNSAVED_CHANGES, setUnsavedChanges,
+    UNSAVED_STYLE, setUnsavedStyle,
+    TOGGLE_CHANGES_MODAL, toggleUnsavedChangesModal,
+    TOGGLE_STYLE_MODAL, toggleUnsavedStyleModal,
+    CHANGED_PROPERTIES, changedProperties,
+    SHOW_TEXT_AREA, showTextArea,
+    ADD_TEXT, addText,
+    CANCEL_CLOSE_TEXT, cancelText,
+    SAVE_TEXT, saveText,
     editAnnotation,
     newAnnotation,
     removeAnnotation,

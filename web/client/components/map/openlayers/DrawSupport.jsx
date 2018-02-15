@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -8,12 +8,14 @@
 
 const React = require('react');
 const ol = require('openlayers');
-const {concat, head} = require('lodash');
+const {concat, head, find} = require('lodash');
 const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const uuid = require('uuid');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
 const {reprojectGeoJson} = require('../../../utils/CoordinatesUtils');
+const {hexToRgb} = require('../../../utils/ColorUtils');
+const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../utils/AnnotationsUtils');
 const VectorStyle = require('./VectorStyle');
 
 /**
@@ -32,6 +34,7 @@ const VectorStyle = require('./VectorStyle');
  * @prop {func} onEndDrawing action fired when a shape is drawn
 */
 
+// TODO FIX doc
 class DrawSupport extends React.Component {
     static propTypes = {
         map: PropTypes.object,
@@ -44,6 +47,7 @@ class DrawSupport extends React.Component {
         onGeometryChanged: PropTypes.func,
         onDrawStopped: PropTypes.func,
         onEndDrawing: PropTypes.func,
+        onTextChanged: PropTypes.func,
         style: PropTypes.object
     };
 
@@ -105,7 +109,7 @@ class DrawSupport extends React.Component {
                 if (f.style) {
                     let olFeature = this.toOlFeature(f);
                     if (olFeature) {
-                        olFeature.setStyle(this.toOlStyle(f.style, f.selected));
+                        olFeature.setStyle(f.style && f.style.type ? VectorStyle.getStyle(f) : this.toOlStyle(f.style, f.selected));
                     }
                 }
             });
@@ -113,12 +117,18 @@ class DrawSupport extends React.Component {
     };
 
     addLayer = (newProps, addInteraction) => {
+        let layerStyle = null;
+        if (newProps.style) {
+            layerStyle = newProps.style.type ? VectorStyle.getStyle(newProps, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.textValues || [] ) : this.toOlStyle(newProps.style, null, newProps.features[0] && newProps.features[0].type);
+        } else {
+            layerStyle = VectorStyle.getStyle({...newProps, style: {...DEFAULT_ANNOTATIONS_STYLES, type: this.convertGeometryTypeToStyleType(newProps.drawMethod) }}, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.textValues || [] );
+        }
         this.geojson = new ol.format.GeoJSON();
         this.drawSource = new ol.source.Vector();
         this.drawLayer = new ol.layer.Vector({
             source: this.drawSource,
             zIndex: 100000000,
-            style: this.toOlStyle(newProps.style)
+            style: layerStyle
         });
 
         this.props.map.addLayer(this.drawLayer);
@@ -131,23 +141,47 @@ class DrawSupport extends React.Component {
     };
 
     addFeatures = ({features, drawMethod, options}) => {
-        features.forEach((g) => {
-            let geometry = g;
-            if (geometry.geometry) {
-                geometry = reprojectGeoJson(geometry, this.props.options.featureProjection, this.props.map.getView().getProjection().getCode()).geometry;
+        features.forEach((f) => {
+            let geometry = f;
+            if (geometry.geometry && geometry.geometry.type !== "GeometryCollection") {
+                geometry = reprojectGeoJson(geometry, geometry.featureProjection, this.props.map.getView().getProjection().getCode()).geometry;
             }
-            const feature = new ol.Feature({
-                geometry: this.createOLGeometry(geometry)
-            });
-            this.drawSource.addFeature(feature);
+            if (geometry.type !== "GeometryCollection") {
+                const feature = new ol.Feature({
+                    geometry: this.createOLGeometry(geometry.geometry ? geometry.geometry : geometry)
+                });
+                feature.set("textGeometriesIndexes", f.properties && f.properties.textGeometriesIndexes);
+                feature.set("textValues", f.properties && f.properties.textValues);
+                this.drawSource.addFeature(feature);
+            }
         });
-        this.updateFeatureStyles(features);
+
         if (features.length === 0 && (options.editEnabled || options.drawEnabled)) {
             const feature = new ol.Feature({
                 geometry: this.createOLGeometry({type: drawMethod, coordinates: null})
             });
             this.drawSource.addFeature(feature);
+        } else {
+            if (features[0] && features[0].type === "GeometryCollection" ) {
+                this.drawSource = new ol.source.Vector({
+                    features: (new ol.format.GeoJSON()).readFeatures(features[0])
+                });
+                this.drawSource.getFeatures()[0].set("textGeometriesIndexes", features[0].properties && features[0].properties.textGeometriesIndexes);
+                this.drawSource.getFeatures()[0].set("textValues", features[0].properties && features[0].properties.textValues);
+                this.drawLayer.setSource(this.drawSource);
+            }
+            if (features[0] && features[0].geometry && features[0].geometry.type === "GeometryCollection" ) {
+                let feature = reprojectGeoJson(features[0], options.featureProjection, this.props.map.getView().getProjection().getCode()).geometry;
+                this.drawSource = new ol.source.Vector({
+                    features: (new ol.format.GeoJSON()).readFeatures(feature)
+                });
+                this.drawSource.getFeatures()[0].set("textGeometriesIndexes", features[0].properties && features[0].properties.textGeometriesIndexes);
+                this.drawSource.getFeatures()[0].set("textValues", features[0].properties && features[0].properties.textValues);
+                this.drawLayer.setSource(this.drawSource);
+            }
         }
+        this.updateFeatureStyles(features);
+
     };
 
     replaceFeatures = (newProps) => {
@@ -157,7 +191,11 @@ class DrawSupport extends React.Component {
             this.drawSource.clear();
             this.addFeatures(newProps);
             if (newProps.style) {
-                this.drawLayer.setStyle(this.toOlStyle(newProps.style));
+                /*let layerStyle = null;
+                if (newProps.style) {
+                    layerStyle = newProps.style.type ? VectorStyle.getStyle(newProps) : this.toOlStyle(newProps.style, null, newProps.features[0] && newProps.features[0].type);
+                }*/
+                this.drawLayer.setStyle(VectorStyle.getStyle(newProps, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.textValues || [] ));
             }
         }
     };
@@ -166,7 +204,7 @@ class DrawSupport extends React.Component {
         if (this.drawInteraction) {
             this.removeDrawInteraction();
         }
-        this.drawInteraction = new ol.interaction.Draw(this.drawPropertiesForGeometryType(drawMethod, maxPoints, this.drawSource));
+        this.drawInteraction = new ol.interaction.Draw(this.drawPropertiesForGeometryType(drawMethod, maxPoints, this.drawSource, this.props.style));
         this.props.map.disableEventListener('singleclick');
         this.drawInteraction.on('drawstart', function(evt) {
             this.sketchFeature = evt.feature;
@@ -201,11 +239,11 @@ class DrawSupport extends React.Component {
         }
         return geometry;
     };
-    handleDrawAndEdit = (drawMethod, startingPoint, maxPoints) => {
+    handleDrawAndEdit = (drawMethod, startingPoint, maxPoints, style) => {
         if (this.drawInteraction) {
             this.removeDrawInteraction();
         }
-        this.drawInteraction = new ol.interaction.Draw(this.drawPropertiesForGeometryType(getSimpleGeomType(drawMethod), maxPoints, isSimpleGeomType(drawMethod) ? this.drawSource : null ));
+        this.drawInteraction = new ol.interaction.Draw(this.drawPropertiesForGeometryType(getSimpleGeomType(drawMethod), maxPoints, isSimpleGeomType(drawMethod) ? this.drawSource : null, style ));
         this.props.map.disableEventListener('singleclick');
         this.drawInteraction.on('drawstart', function(evt) {
             this.sketchFeature = evt.feature;
@@ -215,43 +253,116 @@ class DrawSupport extends React.Component {
             }
         }, this);
         this.drawInteraction.on('drawend', function(evt) {
+            // let textIndex;
             this.sketchFeature = evt.feature;
             this.sketchFeature.set('id', uuid.v1());
-
-            if (!isSimpleGeomType(this.props.drawMethod)) {
-                let geom = evt.feature.getGeometry();
-                let g;
-                let features = head(this.drawSource.getFeatures());
-                if (features === undefined) {
-                    g = this.toMulti(this.createOLGeometry({type: drawMethod, coordinates: null}));
+            if (drawMethod === "Text" || drawMethod === "MultiPoint") {
+                let newDrawMethod = "MultiPoint";
+                let drawnGeom = evt.feature.getGeometry();
+                let previousGeometries;
+                let drawnFeatures = this.drawLayer.getSource().getFeatures();
+                let features = this.props.features;
+                let newMultiGeom = this.toMulti(this.createOLGeometry({type: newDrawMethod, coordinates: [drawnGeom.getCoordinates()]}));
+                let geomCollection;
+                if (features.length === 1 && !features[0].geometry) {
+                    previousGeometries = []; // this.toMulti(this.createOLGeometry({type: newDrawMethod, coordinates: null}));
+                //    textIndex = 0;
+                    geomCollection = new ol.geom.GeometryCollection([newMultiGeom]);
                 } else {
-                    g = this.toMulti(head(this.drawSource.getFeatures()).getGeometry());
-                }
-                switch (this.props.drawMethod) {
-                    case "MultiPoint": g.appendPoint(geom); break;
-                    case "MultiLineString": g.appendLineString(geom); break;
-                    case "MultiPolygon": {
-                        let coords = geom.getCoordinates();
-                        coords[0].push(coords[0][0]);
-                        geom.setCoordinates(coords);
-                        head(this.drawSource.getFeatures()).getGeometry().appendPolygon(geom);
-                        break;
+                    previousGeometries = this.toMulti(head(drawnFeatures).getGeometry());
+                    if (previousGeometries.getGeometries) {
+                    //    textIndex = previousGeometries.getGeometries().length;
+                        geomCollection = new ol.geom.GeometryCollection([...previousGeometries.getGeometries(), newMultiGeom]);
+                    } else {
+                    //    textIndex = 1;
+                        geomCollection = new ol.geom.GeometryCollection([previousGeometries, newMultiGeom]);
                     }
-                    default: break;
                 }
-                this.sketchFeature.setGeometry(g);
+                this.sketchFeature.setGeometry(geomCollection);
+            } else if (!isSimpleGeomType(drawMethod)) {
+                let drawnGeom = evt.feature.getGeometry();
+                let newMultiGeom;
+                let previousGeometries;
+                let geomCollection = null;
+                let drawnFeatures = this.drawLayer.getSource().getFeatures();
+                let features = this.props.features;
+                if (features.length === 1 && !features[0].geometry) {
+                    previousGeometries = this.toMulti(this.createOLGeometry({type: drawMethod, coordinates: null}));
+                } else {
+                    previousGeometries = this.toMulti(head(drawnFeatures).getGeometry());
+                }
+
+                // find geometry of same type
+                let geometries = drawnFeatures.map(f => {
+                    if (f.getGeometry().getType() === "GeometryCollection") {
+                        return f.getGeometry().getGeometries();
+                    }
+                    return f.getGeometry();
+                });
+                if (drawnFeatures[0].getGeometry().getType() === "GeometryCollection") {
+                    geometries = geometries[0];
+                }
+                let geomAlreadyPresent = find(geometries, (olGeom) => olGeom.getType() === drawMethod);
+                if (geomAlreadyPresent) {
+                    // append
+                    this.appendToMultiGeometry(drawMethod, geomAlreadyPresent, drawnGeom);
+                } else {
+                    // create new multi geom
+                    newMultiGeom = this.toMulti(this.createOLGeometry({type: drawMethod, coordinates: [drawnGeom.getCoordinates()]}));
+                }
+
+                if (drawnGeom.getType() !== getSimpleGeomType(previousGeometries.getType())) {
+                    if (geomAlreadyPresent) {
+                        let geoms = previousGeometries.getGeometries();
+                        let newGeoms = geoms.map(gg => {
+                            return gg.getType() === geomAlreadyPresent.getType() ? geomAlreadyPresent : gg;
+                        });
+                        geomCollection = new ol.geom.GeometryCollection(newGeoms);
+                    } else {
+                        if (previousGeometries.getType() === "GeometryCollection") {
+                            geomCollection = new ol.geom.GeometryCollection([...previousGeometries.getGeometries(), newMultiGeom]);
+                        } else {
+                            if (drawMethod === "Text") {
+                                geomCollection = new ol.geom.GeometryCollection([newMultiGeom]);
+                            } else {
+                                geomCollection = new ol.geom.GeometryCollection([previousGeometries, newMultiGeom]);
+                            }
+                        }
+                    }
+                    this.sketchFeature.setGeometry(geomCollection);
+                } else {
+                    this.sketchFeature.setGeometry(geomAlreadyPresent);
+                }
             }
-            const feature = this.fromOLFeature(this.sketchFeature, startingPoint);
-            // this.addModifyInteraction();
+            let feature = this.fromOLFeature(this.sketchFeature, startingPoint);
+            const vectorSource = new ol.source.Vector({
+                features: (new ol.format.GeoJSON()).readFeatures(feature)
+              });
+            this.drawLayer.setSource(vectorSource);
+        //     let previousTexts = this.drawLayer.getSource().getFeatures()[0].get("textGeometriesIndexes") || [];
+
+            // this.drawLayer.getSource().getFeatures()[0].set("textGeometriesIndexes", previousTexts.concat([textIndex]));
+            // this.drawLayer.getSource().getFeatures()[0].set("textValues", previousTexts.concat(["dsfgsdgsgs"]));
+
             const geojsonFormat = new ol.format.GeoJSON();
             let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), this.props.map.getView().getProjection().getCode(), this.props.options.featureProjection);
             if (newFeature.geometry.type === "Polygon") {
                 newFeature.geometry.coordinates[0].push(newFeature.geometry.coordinates[0][0]);
             }
-            this.props.onGeometryChanged([newFeature], this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "");
 
+            this.props.onGeometryChanged([newFeature], this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "", drawMethod === "Text");
             this.props.onEndDrawing(feature, this.props.drawOwner);
-            const newFeatures = isSimpleGeomType(this.props.drawMethod) ? this.props.features.concat([feature]) : [feature];
+            feature = reprojectGeoJson(feature, this.props.map.getView().getProjection().getCode(), this.props.options.featureProjection);
+            let properties = this.props.features[0].properties;
+            if (drawMethod === "Text") {
+                properties = assign({}, this.props.features[0].properties, {
+                        textValues: (this.props.features[0].properties.textValues || []).concat(["."]),
+                        textGeometriesIndexes: (this.props.features[0].properties.textGeometriesIndexes || []).concat([feature.geometry.geometries.length - 1])
+                    });
+            }
+            const newFeatures = isSimpleGeomType(this.props.drawMethod) ?
+                this.props.features.concat([{...feature, properties}]) :
+                [{...feature, properties}];
             if (this.props.options.stopAfterDrawing) {
                 this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner, newFeatures);
             } else {
@@ -268,26 +379,26 @@ class DrawSupport extends React.Component {
         this.setDoubleClickZoomEnabled(false);
     };
 
-    drawPropertiesForGeometryType = (geometryType, maxPoints, source) => {
+    drawPropertiesForGeometryType = (geometryType, maxPoints, source, style ) => {
         let drawBaseProps = {
             source,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
-            style: new ol.style.Style({
-                fill: new ol.style.Fill({
-                    color: 'rgba(255, 255, 255, 0.2)'
-                }),
+            style: style && VectorStyle.getStyle({style}, true) || this.toOlStyle(style) || new ol.style.Style({
                 stroke: new ol.style.Stroke({
-                    color: 'rgba(0, 0, 0, 0.5)',
-                    lineDash: [10, 10],
-                    width: 2
+                    color: hexToRgb("#ffcc33").concat([1]),
+                    lineDash: [10],
+                    width: 1
+                }),
+                fill: new ol.style.Fill( {
+                    color: hexToRgb("#ffffff").concat([0.2])
                 }),
                 image: new ol.style.Circle({
                     radius: 5,
                     stroke: new ol.style.Stroke({
-                        color: 'rgba(0, 0, 0, 0.7)'
+                        color: hexToRgb("#ffcc33").concat([1])
                     }),
                     fill: new ol.style.Fill({
-                        color: 'rgba(255, 255, 255, 0.2)'
+                        color: hexToRgb("#ffffff").concat([0.2])
                     })
                 })
             }),
@@ -325,15 +436,16 @@ class DrawSupport extends React.Component {
                 roiProps.geometryFunction = ol.interaction.Draw.createRegularPolygon(roiProps.maxPoints);
                 break;
             }
-            case "Point": case "LineString": case "Polygon": case "MultiPoint": case "MultiLineString": case "MultiPolygon": {
+            case "Point": case "Text": case "LineString": case "Polygon": case "MultiPoint": case "MultiLineString": case "MultiPolygon": case "GeometryCollection": {
                 if (geometryType === "LineString") {
                     roiProps.maxPoints = maxPoints;
                 }
-                roiProps.type = geometryType;
+                let geomType = geometryType === "Text" ? "Point" : geometryType;
+                roiProps.type = geomType;
                 roiProps.geometryFunction = (coordinates, geometry) => {
                     let geom = geometry;
                     if (!geom) {
-                        geom = this.createOLGeometry({type: geometryType, coordinates: null});
+                        geom = this.createOLGeometry({type: geomType, coordinates: null});
                     }
                     geom.setCoordinates(coordinates);
                     return geom;
@@ -412,7 +524,7 @@ class DrawSupport extends React.Component {
     addDrawOrEditInteractions = (newProps) => {
         this.clean();
         const newFeature = reprojectGeoJson(head(newProps.features), newProps.options.featureProjection, this.props.map.getView().getProjection().getCode());
-        const props = assign({}, newProps, {features: newFeature.geometry ? [newFeature.geometry] : []});
+        const props = assign({}, newProps, {features: newFeature.geometry ? [{...newFeature.geometry, properties: newFeature.properties}] : []});
         if (!this.drawLayer) {
             this.addLayer(props);
         } else {
@@ -423,13 +535,13 @@ class DrawSupport extends React.Component {
         if (newProps.options.editEnabled) {
             this.addModifyInteraction();
             // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
-            if (getSimpleGeomType(newProps.drawMethod) !== "Polygon") {
+            if (getSimpleGeomType(newProps.drawMethod) !== "Polygon" && getSimpleGeomType(newProps.drawMethod) !== "GeometryCollection") {
                 this.addTranslateInteraction();
             }
         }
 
         if (newProps.options.drawEnabled) {
-            this.handleDrawAndEdit(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints);
+            this.handleDrawAndEdit(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints, newProps.style);
         }
     };
 
@@ -512,28 +624,59 @@ class DrawSupport extends React.Component {
         let geometry = feature.getGeometry();
         let extent = geometry.getExtent();
         let center = ol.extent.getCenter(extent);
-        let coordinates = geometry.getCoordinates();
         let radius;
-
         let type = geometry.getType();
-        if (startingPoint) {
-            coordinates = concat(startingPoint, coordinates);
-            geometry.setCoordinates(coordinates);
+        if (geometry.getCoordinates) {
+            let coordinates = geometry.getCoordinates();
+            if (startingPoint) {
+                coordinates = concat(startingPoint, coordinates);
+                geometry.setCoordinates(coordinates);
+            }
+            if (this.props.drawMethod === "Circle") {
+                radius = Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
+            }
+            return assign({}, {
+                id: feature.get('id'),
+                type,
+                extent,
+                center,
+                coordinates,
+                radius,
+                style: this.fromOlStyle(feature.getStyle()),
+                projection: this.props.map.getView().getProjection().getCode()
+            });
         }
-
-        if (this.props.drawMethod === "Circle") {
-            radius = Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
-        }
-
+        let geometries = geometry.getGeometries().map(g => {
+            extent = g.getExtent();
+            center = ol.extent.getCenter(extent);
+            let coordinates = g.getCoordinates();
+            if (startingPoint) {
+                coordinates = concat(startingPoint, coordinates);
+                g.setCoordinates(coordinates);
+            }
+            if (this.props.drawMethod === "Circle") {
+                radius = Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
+            }
+            return assign({}, {
+                id: feature.get('id'),
+                type: g.getType(),
+                extent,
+                center,
+                coordinates,
+                radius,
+                style: this.fromOlStyle(feature.getStyle()),
+                projection: this.props.map.getView().getProjection().getCode()
+            });
+        });
+        type = "GeometryCollection";
         return assign({}, {
+            type: "Feature",
             id: feature.get('id'),
-            type,
-            extent,
-            center,
-            coordinates,
-            radius,
             style: this.fromOlStyle(feature.getStyle()),
-            projection: this.props.map.getView().getProjection().getCode()
+            geometry: {
+                type,
+                geometries
+            }
         });
     };
 
@@ -555,46 +698,53 @@ class DrawSupport extends React.Component {
         };
     };
 
-    toOlStyle = (style, selected) => {
-        let color = style && style.fillColor ? style.fillColor : [255, 255, 255, 0.2];
-        if (typeof color === 'string') {
-            color = this.hexToRgb(color);
+    toOlStyle = (style, selected, type) => {
+        let fillColor = style && style.fillColor ? style.fillColor : [255, 255, 255, 0.2];
+        if (typeof fillColor === 'string') {
+            fillColor = this.hexToRgb(fillColor).concat([style.fillOpacity >= 0 && style.fillOpacity <= 1 ? style.fillOpacity : 1]);
         }
 
         if (style && style.fillTransparency) {
-            color[3] = style.fillTransparency;
+            fillColor[3] = style.fillTransparency;
         }
 
-        let strokeColor = style && style.strokeColor ? style.strokeColor : '#ffcc33';
+        let strokeColor = style && (style.strokeColor || style.color) ? style.strokeColor || style.color : '#ffcc33';
         if (selected) {
             strokeColor = '#4a90e2';
         }
+        strokeColor = this.hexToRgb(strokeColor).concat([style && style.opacity || 1]);
+        let newStyle = new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: fillColor
+            }),
+            stroke: new ol.style.Stroke({
+                color: strokeColor,
+                width: style && (style.strokeWidth || style.weight) ? style.strokeWidth || style.weight : 2
+            }),
+            text: new ol.style.Text({
+                text: style && style.text ? style.text : '',
+                fill: new ol.style.Fill({ color: style && (style.strokeColor || style.color) ? style.strokeColor || style.color : '#000' }),
+                stroke: new ol.style.Stroke({ color: '#fff', width: 2 }),
+                font: style && style.fontSize ? style.fontSize + 'px helvetica' : ''
+            })
+        });
 
+
+        if (type === "GeometryCollection") {
+            return [...VectorStyle.getMarkerStyle({
+                    style: { iconGlyph: 'comment',
+                        iconShape: 'square',
+                        iconColor: 'blue' }
+                }), newStyle];
+        }
         if (style && (style.iconUrl || style.iconGlyph)) {
             return VectorStyle.getMarkerStyle({
                 style
             });
         }
 
-        return new ol.style.Style({
-            fill: new ol.style.Fill({
-                color: color
-            }),
-            stroke: new ol.style.Stroke({
-                color: strokeColor,
-                width: style && style.strokeWidth ? style.strokeWidth : 2
-            }),
-            image: new ol.style.Circle({
-                radius: style && style.strokeWidth ? style.strokeWidth : 5,
-                fill: new ol.style.Fill({ color: style && style.strokeColor ? style.strokeColor : '#ffcc33' })
-            }),
-            text: new ol.style.Text({
-                text: style && style.text ? style.text : '',
-                fill: new ol.style.Fill({ color: style && style.strokeColor ? style.strokeColor : '#000' }),
-                stroke: new ol.style.Stroke({ color: '#fff', width: 2 }),
-                font: style && style.fontSize ? style.fontSize + 'px helvetica' : ''
-            })
-        });
+
+        return newStyle;
     };
 
     hexToRgb = (hex) => {
@@ -630,7 +780,7 @@ class DrawSupport extends React.Component {
                 return reprojectGeoJson(geojsonFormat.writeFeatureObject(f.clone()), this.props.map.getView().getProjection().getCode(), this.props.options.featureProjection);
             });
 
-            this.props.onGeometryChanged(features, this.props.drawOwner);
+            this.props.onGeometryChanged(features, this.props.drawOwner, false, "editing"); // TODO FIX THIS
         });
         this.props.map.addInteraction(this.modifyInteraction);
     }
@@ -649,18 +799,24 @@ class DrawSupport extends React.Component {
                 return reprojectGeoJson(geojsonFormat.writeFeatureObject(f.clone()), this.props.map.getView().getProjection().getCode(), this.props.options.featureProjection);
             });
 
-            this.props.onGeometryChanged(features, this.props.drawOwner);
+            this.props.onGeometryChanged(features, this.props.drawOwner, this.props.drawOwner, false, this.props.drawMethod === "Text");
         });
         this.props.map.addInteraction(this.translateInteraction);
     }
 
-    createOLGeometry = ({type, coordinates, radius, center}) => {
-        let geometry;
+    createOLGeometry = ({type, coordinates, radius, center, geometries}) => {
+        if (type === "GeometryCollection") {
+            return geometries && geometries.length ? new ol.geom.GeometryCollection(geometries.map(g => this.olGeomFromType({type: g.type}))) : new ol.geom.GeometryCollection([]);
+        }
+        return this.olGeomFromType({type, coordinates, radius, center});
+    };
 
+    olGeomFromType = ({type, coordinates, radius, center}) => {
+        let geometry;
         switch (type) {
             case "Point": { geometry = new ol.geom.Point(coordinates ? coordinates : []); break; }
             case "LineString": { geometry = new ol.geom.LineString(coordinates ? coordinates : []); break; }
-            case "MultiPoint": { geometry = new ol.geom.MultiPoint(coordinates ? coordinates : []); break; }
+            case "MultiPoint": case "Text": { geometry = new ol.geom.MultiPoint(coordinates ? coordinates : []); break; }
             case "MultiLineString": { geometry = new ol.geom.MultiLineString(coordinates ? coordinates : []); break; }
             case "MultiPolygon": { geometry = new ol.geom.MultiPolygon(coordinates ? coordinates : []); break; }
             // defaults is Polygon
@@ -669,6 +825,27 @@ class DrawSupport extends React.Component {
             }
         }
         return geometry;
-    };
+    }
+    convertGeometryTypeToStyleType = (geomType) => {
+        switch (geomType) {
+            case "BBOX": return "LineString";
+            case "Circle": return "LineString";
+            default: return geomType;
+        }
+    }
+
+    appendToMultiGeometry = (drawMethod, geometry, drawnGeom) => {
+        switch (drawMethod) {
+            case "MultiPoint": geometry.appendPoint(drawnGeom); break;
+            case "MultiLineString": geometry.appendLineString(drawnGeom); break;
+            case "MultiPolygon": {
+                let coords = drawnGeom.getCoordinates();
+                coords[0].push(coords[0][0]);
+                drawnGeom.setCoordinates(coords);
+                geometry.appendPolygon(drawnGeom); break;
+            }
+            default: break;
+        }
+    }
 }
 module.exports = DrawSupport;

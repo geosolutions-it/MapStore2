@@ -1,122 +1,16 @@
-const PropTypes = require('prop-types');
-/**
- * Copyright 2015, GeoSolutions Sas.
+/*
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
+const PropTypes = require('prop-types');
 const React = require('react');
-const L = require('leaflet');
 const {isEqual} = require('lodash');
 
-const VectorUtils = require('../../../utils/leaflet/Vector');
-
-const coordsToLatLngF = function(coords) {
-    return new L.LatLng(coords[1], coords[0], coords[2]);
-};
-
-const coordsToLatLngs = function(coords, levelsDeep, coordsToLatLng) {
-    var latlngs = [];
-    var len = coords.length;
-    for (let i = 0, latlng; i < len; i++) {
-        latlng = levelsDeep ?
-                coordsToLatLngs(coords[i], levelsDeep - 1, coordsToLatLng) :
-                (coordsToLatLng || this.coordsToLatLng)(coords[i]);
-
-        latlngs.push(latlng);
-    }
-
-    return latlngs;
-};
-// Create a new Leaflet layer with custom icon marker or circleMarker
-const getPointLayer = function(pointToLayer, geojson, latlng, options) {
-    if (pointToLayer) {
-        return pointToLayer(geojson, latlng);
-    }
-    return VectorUtils.pointToLayer(latlng, geojson, options.style);
-};
-
-const geometryToLayer = function(geojson, options) {
-
-    var geometry = geojson.type === 'Feature' ? geojson.geometry : geojson;
-    var coords = geometry ? geometry.coordinates : null;
-    var layers = [];
-    var pointToLayer = options && options.pointToLayer;
-    var latlng;
-    var latlngs;
-    var i;
-    var len;
-    let coordsToLatLng = options && options.coordsToLatLng || coordsToLatLngF;
-
-    if (!coords && !geometry) {
-        return null;
-    }
-    let layer;
-    switch (geometry.type) {
-    case 'Point':
-        latlng = coordsToLatLng(coords);
-        layer = getPointLayer(pointToLayer, geojson, latlng, options);
-        layer.msId = geojson.id;
-        return layer;
-    case 'MultiPoint':
-        for (i = 0, len = coords.length; i < len; i++) {
-            latlng = coordsToLatLng(coords[i]);
-            layer = getPointLayer(pointToLayer, geojson, latlng, options);
-            layer.msId = geojson.id;
-            layers.push(layer);
-        }
-        return new L.FeatureGroup(layers);
-
-    case 'LineString':
-        latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
-        layer = new L.Polyline(latlngs, options.style);
-        layer.msId = geojson.id;
-        return layer;
-    case 'MultiLineString':
-        latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
-        for (i = 0, len = latlngs.length; i < len; i++) {
-            layer = new L.Polyline(latlngs[i], options.style);
-            layer.msId = geojson.id;
-            if (layer) {
-                layers.push(layer);
-            }
-        }
-        return new L.FeatureGroup(layers);
-    case 'Polygon':
-        latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
-        layer = new L.Polygon(latlngs, options.style);
-        layer.msId = geojson.id;
-        return layer;
-    case 'MultiPolygon':
-        latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
-        for (i = 0, len = latlngs.length; i < len; i++) {
-            layer = new L.Polygon(latlngs[i], options.style);
-            layer.msId = geojson.id;
-            if (layer) {
-                layers.push(layer);
-            }
-        }
-        return new L.FeatureGroup(layers);
-    case 'GeometryCollection':
-        for (i = 0, len = geometry.geometries.length; i < len; i++) {
-            layer = geometryToLayer({
-                geometry: geometry.geometries[i],
-                type: 'Feature',
-                properties: geojson.properties
-            }, options);
-
-            if (layer) {
-                layers.push(layer);
-            }
-        }
-        return new L.FeatureGroup(layers);
-
-    default:
-        throw new Error('Invalid GeoJSON object.');
-    }
-};
+const {geometryToLayer} = require('../../../utils/leaflet/Vector');
 
 class Feature extends React.Component {
     static propTypes = {
@@ -158,29 +52,17 @@ class Feature extends React.Component {
         return null;
     }
 
-    isMarker = (props) => {
-        return props.styleName === "marker" || (props.style && (props.style.iconUrl || props.style.iconGlyph));
-    };
-
     createLayer = (props) => {
         this._layer = geometryToLayer({
             type: props.type,
             geometry: props.geometry,
+            styleName: props.styleName,
             properties: props.properties,
             msId: props.msId
         }, {
-            style: props.style,
-            pointToLayer: !this.isMarker(props) ? function(feature, latlng) {
-                return L.circleMarker(latlng, props.style || {
-                    radius: 5,
-                    color: "red",
-                    weight: 1,
-                    opacity: 1,
-                    fillOpacity: 0
-                });
-            } : null
-        }
-        );
+            style: props.style
+        });
+
         props.container.addLayer(this._layer);
 
         this._layer.on('click', (event) => {

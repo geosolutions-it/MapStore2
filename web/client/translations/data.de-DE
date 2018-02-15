@@ -34,6 +34,7 @@
         "localeErrors": {
             "404": "Übersetzungsdatei nicht gefunden"
         },
+        "remove": "Löschen",
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",
             "title": "Titel",
@@ -395,6 +396,19 @@
             "s_priority_info": "Wird verwendet, um Suchergebnisse zu sortieren, höhere Werte zuerst. Nominatim Ergebnisse haben Priorität = 5",
             "serviceslistempty": "Keine benutzerdefinierten Services definiert"
         },
+        "draw": {
+            "fill": "Füllung:",
+            "stroke": "Linie:",
+            "strokeWidth": "Linienbreite:",
+            "font": {
+                "textColor": "textfarbe",
+                "family": "font-family",
+                "size": "font-size",
+                "textAlign": "ausrichtung des Textes",
+                "style": "font-style",
+                "weight": "font-weight"
+            }
+        },
         "drawLocal": {
             "draw": {
                 "toolbar": {
@@ -665,6 +679,12 @@
             "field": {
                 "title": "Titel",
                 "description": "Beschreibung"
+            },
+            "titles": {
+                "marker": " Marker",
+                "line": " Linie",
+                "polygon": " Polygon",
+                "text": " Text"
             }
         },
         "users": {

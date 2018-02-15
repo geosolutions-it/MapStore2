@@ -35,6 +35,7 @@
         "localeErrors": {
             "404": "Fichier de traduction introuvable"
         },
+        "remove": "Effacer",
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
             "title": "Titre",
@@ -396,6 +397,19 @@
             "s_priority_info": "Utilisé pour trier les résultats de recherche, des valeurs plus élevées en premier. Les résultats Nominatim ont priorité = 5",
             "serviceslistempty": "Aucun service personnalisé n'a été défini"
         },
+        "draw": {
+            "fill": "Remplissage:",
+            "stroke": "Ligne:",
+            "strokeWidth": "Largeur de ligne:",
+            "font": {
+                "textColor": "couleur du texte",
+                "family": "font-family",
+                "size": "font-size",
+                "textAlign": "alignement du texte",
+                "style": "font-style",
+                "weight": "font-weight"
+            }
+        },
         "drawLocal": {
             "draw": {
                 "toolbar": {
@@ -636,8 +650,14 @@
             "undo": "Êtes-vous sûr de vouloir abandonner la session d'édition d'annotation?",
             "zoomTo": "Zoom",
             "field": {
-                "title": "titre",
+                "title": "Titre",
                 "description": "Description"
+            },
+            "titles": {
+                "marker": " Marqueur",
+                "line": " Ligne",
+                "polygon": " Polygone",
+                "text": " Texte"
             }
         },
         "user":{

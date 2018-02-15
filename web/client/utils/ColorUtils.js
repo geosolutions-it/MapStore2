@@ -22,7 +22,7 @@ const ColorUtils = {
     },
     rgbToHex: function( r, g, b ) {
         if ( r instanceof Array ) { return ColorUtils.rgbToHex( r[0], r[1], r[2] ); }
-        return this.decToHex( r ) + ColorUtils.decToHex( g ) + ColorUtils.decToHex( b );
+        return "#" + ColorUtils.decToHex( r ) + ColorUtils.decToHex( g ) + ColorUtils.decToHex( b );
     },
     realToDec: function( n ) {
         return Math.min( 255, Math.round( n * 256 ) );
@@ -65,7 +65,7 @@ const ColorUtils = {
         const hsvToRgb = (h, s, v) => {
             let rgb = hsvToRgb(h, s, v);
             // return rgb;
-            return "#" + ColorUtils.rgbToHex(rgb);
+            return ColorUtils.rgbToHex(rgb);
         };
         for (let x = 0; x < total; x++) {
             r.push(hsvToRgb(i * x, 0.57, 0.63, x)); // you can also alternate the saturation and value for even more contrast between the colors
@@ -144,7 +144,7 @@ const ColorUtils = {
     hsvToHex: (h, s, v) => {
         let rgb = ColorUtils.hsvToRgb(h, s, v);
         // return rgb;
-        return "#" + ColorUtils.rgbToHex(rgb);
+        return ColorUtils.rgbToHex(rgb);
     },
     hexToHsv: function(h) {
         let hex = h;
@@ -155,6 +155,57 @@ const ColorUtils = {
             let rgb = ColorUtils.hexToRgb(hex);
             return ColorUtils.rgbToHsv(rgb);
         }
+    },
+    /**
+     * Return with position of a character in this.HCHARS string
+     * @private
+     * @param {Char} c
+     * @return {Integer}
+    */
+    getHCharPos: (c) => {
+        const HCHARS = '0123456789ABCDEF';
+        return HCHARS.indexOf( c.toUpperCase() );
+    },
+    /**
+     * Convert a hexa string to decimal
+     * @param {String} hex
+     * @return {Integer}
+    */
+    hexToDec: (hex) => {
+        const s = hex.split('');
+        return (ColorUtils.getHCharPos(s[0]) * 16 ) + (s.length === 2 ? ColorUtils.getHCharPos(s[1]) : 0);
+    },
+    /**
+     * Convert a hexa string to RGB color format
+     * hex can also contain #
+     * @param {String} hex
+     * @return {Array}
+	*/
+    hexToRgb: (hex) => {
+        let hexSymbol = 0;
+        if (hex[0] === "#") {
+            hexSymbol = 1;
+        }
+        if (hex.length <= 4) {
+            // shorhand format #CB2
+            return [ ColorUtils.hexToDec(hex.substr(0 + hexSymbol, 1)), ColorUtils.hexToDec(hex.substr(1 + hexSymbol, 1)), ColorUtils.hexToDec(hex.substr(2 + hexSymbol, 1)) ];
+        }
+        // long format #CCBB22
+        return [ ColorUtils.hexToDec(hex.substr(0 + hexSymbol, 2)), ColorUtils.hexToDec(hex.substr(2 + hexSymbol, 2)), ColorUtils.hexToDec(hex.substr(4 + hexSymbol, 2)) ];
+    },
+    /**
+    * Convert a hex string to RGB color format
+    * hex containing of #
+    * @param {String} hex
+    * @return {Object}
+    */
+    hexToRgbObj: (hex) => {
+        const rgb = ColorUtils.hexToRgb(hex);
+        return {
+            r: rgb[0],
+            g: rgb[1],
+            b: rgb[2]
+        };
     }
 };
 module.exports = ColorUtils;

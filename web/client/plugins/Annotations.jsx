@@ -14,51 +14,58 @@ const PropTypes = require('prop-types');
 
 const {Glyphicon} = require('react-bootstrap');
 const {on, toggleControl} = require('../actions/controls');
-
 const {createSelector} = require('reselect');
 
 const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnotation, removeAnnotation, cancelEditAnnotation,
     saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
     highlight, cleanHighlight, showAnnotation, cancelShowAnnotation, filterAnnotations, closeAnnotations,
-    cancelCloseAnnotations, confirmCloseAnnotations} =
+    cancelCloseAnnotations, confirmCloseAnnotations, stopDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal, changedProperties,
+    setUnsavedStyle, toggleUnsavedStyleModal, addText, cancelText, saveText} =
     require('../actions/annotations');
 
 const { zoomToExtent } = require('../actions/map');
 
 const { annotationsInfoSelector, annotationsListSelector } = require('../selectors/annotations');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
-
-const AnnotationsEditor = connect(annotationsInfoSelector,
-{
+const commonEditorActions = {
     onEdit: editAnnotation,
     onCancelEdit: cancelEditAnnotation,
-    onCancel: cancelShowAnnotation,
+    onChangeStyler: changeStyler,
+    onCleanHighlight: cleanHighlight,
     onError: validationError,
     onSave: saveAnnotation,
     onRemove: removeAnnotation,
     onAddGeometry: toggleAdd,
+    onCancelText: cancelText,
+    onAddText: addText,
+    onSaveText: saveText,
+    onSetUnsavedChanges: setUnsavedChanges,
+    onSetUnsavedStyle: setUnsavedStyle,
+    onChangeProperties: changedProperties,
+    onToggleUnsavedChangesModal: toggleUnsavedChangesModal,
+    onToggleUnsavedStyleModal: toggleUnsavedStyleModal,
     onStyleGeometry: toggleStyle,
     onCancelStyle: restoreStyle,
     onSaveStyle: toggleStyle,
     onSetStyle: setStyle,
+    onStopDrawing: stopDrawing,
     onDeleteGeometry: removeAnnotationGeometry,
     onZoom: zoomToExtent
+};
+const AnnotationsEditor = connect(annotationsInfoSelector,
+{
+    onCancel: cancelShowAnnotation,
+    ...commonEditorActions
 })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
 
 const AnnotationsInfoViewer = connect(annotationsInfoSelector,
 {
-    onEdit: editAnnotation,
+    onCancelRemove: cancelRemoveAnnotation,
     onCancelEdit: cancelEditAnnotation,
-    onError: validationError,
-    onSave: saveAnnotation,
-    onRemove: removeAnnotation,
-    onAddGeometry: toggleAdd,
-    onStyleGeometry: toggleStyle,
-    onCancelStyle: restoreStyle,
-    onSaveStyle: toggleStyle,
-    onSetStyle: setStyle,
-    onDeleteGeometry: removeAnnotationGeometry,
-    onZoom: zoomToExtent
+    onCancelClose: cancelCloseAnnotations,
+    onConfirmClose: confirmCloseAnnotations,
+    onConfirmRemove: confirmRemoveAnnotation,
+    ...commonEditorActions
 })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
 
 const panelSelector = createSelector([annotationsListSelector], (list) => ({
@@ -68,6 +75,10 @@ const panelSelector = createSelector([annotationsListSelector], (list) => ({
 
 const Annotations = connect(panelSelector, {
     onCancelRemove: cancelRemoveAnnotation,
+    onCancelStyle: restoreStyle,
+    onCancelEdit: cancelEditAnnotation,
+    onToggleUnsavedChangesModal: toggleUnsavedChangesModal,
+    onToggleUnsavedStyleModal: toggleUnsavedStyleModal,
     onConfirmRemove: confirmRemoveAnnotation,
     onCancelClose: cancelCloseAnnotations,
     onConfirmClose: confirmCloseAnnotations,
@@ -78,7 +89,6 @@ const Annotations = connect(panelSelector, {
     onFilter: filterAnnotations
 })(require('../components/mapcontrols/annotations/Annotations'));
 
-const {Panel} = require('react-bootstrap');
 const ContainerDimensions = require('react-container-dimensions').default;
 const Dock = require('react-dock').default;
 
@@ -100,6 +110,7 @@ class AnnotationsPanel extends React.Component {
         width: PropTypes.number
     };
 
+
     static defaultProps = {
         id: "mapstore-annotations-panel",
         active: false,
@@ -111,7 +122,7 @@ class AnnotationsPanel extends React.Component {
             overflow: "hidden",
             height: "100%"
         },
-        panelClassName: "catalog-panel",
+        panelClassName: "annotations-panel",
         toggleControl: () => {},
         closeGlyph: "1-close",
 
@@ -128,16 +139,17 @@ class AnnotationsPanel extends React.Component {
     };
 
     render() {
-        const panel = <Annotations {...this.props}/>;
-        const panelHeader = (<span><Glyphicon glyph="comment"/> <span className="annotations-panel-title"><Message msgId="annotations.title"/></span><button onClick={this.props.toggleControl} className="annotations-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph} /> : <span>×</span>}</button></span>);
         return this.props.active ? (
             <ContainerDimensions>
             { ({ width }) =>
-                <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
-                    <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
-                        {panel}
-                    </Panel>
-                </Dock>
+                <span className="ms-annotations-panel">
+                    <Dock
+                        dockStyle={this.props.dockStyle} {...this.props.dockProps}
+                        isVisible={this.props.active}
+                        size={this.props.width / width > 1 ? 1 : this.props.width / width} >
+                            <Annotations {...this.props} width={this.props.width}/>
+                    </Dock>
+                </span>
             }
             </ContainerDimensions>
         ) : null;
@@ -191,6 +203,5 @@ module.exports = {
     reducers: {
         annotations: require('../reducers/annotations')
     },
-    epics: require('../epics/annotations'
-)(AnnotationsInfoViewer)
+    epics: require('../epics/annotations')(AnnotationsInfoViewer)
 };
