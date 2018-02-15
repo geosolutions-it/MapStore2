@@ -57,6 +57,7 @@ class FeatureGrid extends React.PureComponent {
     };
     static defaultProps = {
         editingAllowedRoles: ["ADMIN"],
+        initPlugin: () => {},
         autocompleteEnabled: false,
         gridComponent: AdaptiveGrid,
         changes: {},

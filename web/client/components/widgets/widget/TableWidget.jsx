@@ -7,7 +7,8 @@
  */
 const React = require('react');
 const Message = require('../../I18N/Message');
-const FeatureGrid = require('../../data/featuregrid/FeatureGrid');
+const loadingState = require('../../misc/enhancers/loadingState');
+const FeatureGrid = loadingState(({describeFeatureType})=> !describeFeatureType)(require('../../data/featuregrid/FeatureGrid'));
 const InfoPopover = require('./InfoPopover');
 
 const WidgetContainer = require('./WidgetContainer');
@@ -35,7 +36,9 @@ module.exports = ({
     exportCSV = () => {},
     onEdit= () => {},
     onDelete=() => {},
-    ...props}) =>
+    describeFeatureType,
+    pagination
+    }) =>
     (<WidgetContainer
         id={`widget-chart-${id}`}
         title={title}
@@ -51,7 +54,11 @@ module.exports = ({
                 <MenuItem onClick={() => exportCSV({data, title})} eventKey="4"><Glyphicon className="exportCSV" glyph="download"/>&nbsp;<Message msgId="widgets.widget.menu.downloadData" /></MenuItem>
             </DropdownButton>
         </ButtonToolbar>}>
-        <FeatureGrid features={data} {...props} />
+        <FeatureGrid
+            features={data}
+            rowKey="id"
+            describeFeatureType={describeFeatureType}
+            pagination={pagination}/>
         </WidgetContainer>
 
 );

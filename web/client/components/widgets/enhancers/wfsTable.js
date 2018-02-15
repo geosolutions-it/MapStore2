@@ -15,37 +15,61 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     o1.propertyName === o2.propertyName;
 
 const getLayerUrl = l => l && l.wpsUrl || (l.search && l.search.url) || l.url;
-const dataStreamFactory = ($props) =>
-    $props
-        .filter(({layer = {}, options}) => layer.name && options && options.propertyName)
-        .distinctUntilChanged(
-            ({layer={}, options = {}, filter}, newProps) =>
-                getLayerUrl(layer) === getLayerUrl(layer)
-                && (newProps.layer && layer.name === newProps.layer.name)
-                && sameOptions(options, newProps.options)
-                && sameFilter(filter, newProps.filter))
-        .switchMap(
-            ({layer={}, options, filter, onLoad = () => {}, onLoadError = () => {}}) =>
-            Rx.Observable.forkJoin(
-                    getFeature({ layer, featureType: layer.name, params: { propertyName: options.propertyName }, filter }, {
-                        timeout: 15000
-                    }),
-                    describeFeatureType({layer})
-            )
-            .map(([response, describeFeatureType]) => ({
+const dataRetrieveStream = $props => $props
+    .filter(({ layer = {}, options }) => layer.name && options && options.propertyName)
+    .distinctUntilChanged(
+        ({ layer = {}, options = {}, filter }, newProps) =>
+            getLayerUrl(layer) === getLayerUrl(layer)
+            && (newProps.layer && layer.name === newProps.layer.name)
+            && sameOptions(options, newProps.options)
+            && sameFilter(filter, newProps.filter))
+    .switchMap(
+        ({
+            layer = {},
+            options,
+            filter,
+            onLoad = () => { },
+            onLoadError = () => { }
+        }) =>
+            getFeature({ layer, featureType: layer.name, params: { propertyName: options.propertyName }, filter }, {
+                timeout: 15000
+            })
+                .map((response) => ({
                     loading: false,
                     isAnimationActive: false,
                     error: undefined,
-                    describeFeatureType,
-                    features: response.data.features
+                    features: response.data.features,
+                    pagination: {
+                        totalFeatures: response.data.totalFeatures
+                    }
                 })).do(onLoad)
                 .catch((e) => Rx.Observable.of({
-                        loading: false,
-                        error: e,
-                        data: []
-                    }).do(onLoadError)
-                ).startWith({loading: true})
-        );
+                    loading: false,
+                    error: e,
+                    data: []
+                }).do(onLoadError)
+                )
+    );
+const describeStream = props$ =>
+    props$
+        .distinctUntilChanged(({ layer: layer1 } = {}, { layer: layer2 } = {}) => getLayerUrl(layer1) === getLayerUrl(layer2))
+        .switchMap( ({layer} = {}) => describeFeatureType({layer})
+        .map(r =>({describeFeatureType: r.data}) ))
+        .catch(e => Rx.Observable.of({
+            loading: false,
+            error: e
+        }));
+
+const dataStreamFactory = ($props) =>
+    describeStream($props)
+        .combineLatest(
+            dataRetrieveStream($props),
+            (p1, p2) => ({
+                ...p1,
+                ...p2
+            })
+        )
+    .startWith({ loading: true });
 module.exports = compose(
     withProps( () => ({
         dataStreamFactory
