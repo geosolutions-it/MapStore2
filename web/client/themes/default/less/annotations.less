@@ -43,16 +43,8 @@
     margin-bottom: 0;
 }
 
-.mapstore-annotations-panel-card {
-    height: 100px;
-    margin-top: 10px;
-    border: solid 1px #bbb;
-    padding: 10px;
-    overflow: hidden;
-    cursor: pointer;
-}
 
-.mapstore-annotations-panel-card:hover {
+.mapstore-side-card:hover {
     .shadow;
 }
 
@@ -73,12 +65,14 @@
     padding-top: 15px;
 }
 
-.mapstore-annotations-panel-card:hover > .mapstore-annotations-panel-card-thumbnail:after {
+.mapstore-side-card:hover .mapstore-annotations-panel-card-thumbnail:after {
     font-family: 'mapstore2';
     content: '\e165';
     position: relative;
-    left: 9px;
-    top: -64px;
+    color: black;
+    font-size: @font-size-small;
+    left: 4px;
+    top: -69px;
 }
 
 .extra-marker .marker-selected:after {
@@ -137,11 +131,11 @@
 .mapstore-right-panel .mapstore-json-viewer, .mapstore-right-panel .mapstore-annotations-info-viewer {
     height: 100%;
 }
-
+/*
 .mapstore-annotations-panel-card-title, .mapstore-annotations-info-viewer-title label  {
     font-size: 20px;
     font-weight: bold;
-}
+}*/
 
 .mapstore-annotations-panel-card-thumbnail:before {
     color: white;
@@ -185,8 +179,188 @@
 
 .mapstore-annotations-info-viewer-buttons {
     min-height: 45px;
+    .shadow-soft
 }
 
-.mapstore-annotations-info-viewer-styler-buttons {
-    text-align: right;
+
+// ANNOTATIONS ADDITION -- JAN 2018
+.ms-annotations-panel {
+    .form-group {
+        margin: 0;
+    }
+    .ms-header {
+        z-index: 10;
+        .row {
+            margin-bottom: 15px;
+            &:first-child {
+                padding: 0;
+                display: flex;
+                .col-xs-2 {
+                    padding: 0;
+                    width: auto;
+                }
+                .col-xs-8 {
+                    flex: 1;
+                    padding: 0;
+                    align-self: center;
+                    text-align: center;
+                }
+            }
+        }
+        .shadow-soft;
+
+        .ms-style-header {
+            padding: 0;
+            .col-xs-12 {
+                padding: 0;
+            }
+        }
+    }
+
+    .ms2-border-layout-content {
+        .row {
+            &:first-child {
+                margin-top: 15px;
+            }
+            margin-bottom: 15px;
+        }
+        .noTopMargin.row {
+            &:first-child {
+                margin-top: 0px;
+            }
+        }
+
+
+        .msSideGrid {
+            margin: 0 30px;
+            .mapstore-side-preview {
+                display: flex;
+                & > span {
+                    font-size: @icon-size * 2;
+                    margin: auto;
+                }
+            }
+            .mapstore-side-card-desc {
+                height: @square-btn-size;
+                overflow: hidden;
+            }
+        }
+
+        .ms-preview {
+            flex: 1;
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            h4 {
+                border-bottom: 1px solid @ms2-color-shade-lighter;
+            }
+            .ql-editor {
+                padding-top: 0;
+                padding-bottom: 0;
+            }
+            .row {
+                &:last-child {
+                    flex: 1;
+                    overflow-y: auto;
+                    margin-bottom: 0;
+                }
+            }
+        }
+
+        .ms-edit {
+            flex: 1;
+            display: flex;
+            height: 100%;
+            flex-direction: column;
+            .row {
+                &:last-child {
+                    flex: 1;
+                    overflow-y: auto;
+
+                    flex: 1;
+                    display: flex;
+                    flex-direction: column;
+
+                    #ms-ann-description-editor {
+                        flex: 1;
+                        display: flex;
+                        .quill  {
+                            flex: 1;
+                            display: flex;
+                            flex-direction: column;
+                            .ql-container {
+                                flex: 1;
+                                overflow-y: auto;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.ms-color-selector {
+    overflow: hidden;
+    height: @square-btn-medium-size;
+    width: 100%;
+    .shadow-soft;
+
+    & > div {
+        float: left;
+        margin: 4px;
+        height: @square-btn-medium-size - 8px;
+        width: ~"calc(100% - @{square-btn-medium-size} - 8px)";
+        background-image: linear-gradient(45deg, #dddddd 25%, transparent 25%), linear-gradient(-45deg, #dddddd 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #dddddd 75%), linear-gradient(-45deg, transparent 75%, #dddddd 75%);
+        background-size: 24px 24px;
+        background-position: 0 0, 0 12px, 12px -12px, -12px 0px;
+    }
+
+    .cp-swatch {
+        box-shadow: none;
+        height: @square-btn-medium-size - 8px;
+        width: 100%;
+
+        padding: 0;
+        border-radius: 0;
+        min-height: 0;
+
+    }
+
+    .cp-popover {
+        display: flex;
+        width: 100%;
+        height: 100%;
+        top: 0;
+        right: 0;
+        background-color: rgba(0,0,0,0.2);
+        .cp-cover {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        .sketch-picker {
+            margin: auto;
+        }
+    }
+
+    span {
+        float: right;
+        font-size: @icon-size-md;
+        padding: @padding-left-square-md;
+    }
+}
+
+
+
+
+// TODO MOVE THIS TO A PROEPR LESS FILE
+.ms-thumb-geom {
+    svg {
+        margin: auto;
+    }
+    width: @square-btn-size;
+    height: @square-btn-size;
 }

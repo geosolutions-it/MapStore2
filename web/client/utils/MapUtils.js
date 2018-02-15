@@ -374,7 +374,7 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
 
 function isSimpleGeomType(geomType) {
     switch (geomType) {
-        case "MultiPoint": case "MultiLineString": case "MultiPolygon": return false;
+        case "MultiPoint": case "MultiLineString": case "MultiPolygon": case "GeometryCollection": case "Text": return false;
         case "Point": case "LineString": case "Polygon": case "Circle": default: return true;
     }
 }
@@ -384,6 +384,8 @@ function getSimpleGeomType(geomType = "Point") {
         case "MultiPoint": return "Point";
         case "MultiLineString": return "LineString";
         case "MultiPolygon": return "Polygon";
+        case "GeometryCollection": return "GeometryCollection";
+        case "Text": return "Point";
         default: return geomType;
     }
 }

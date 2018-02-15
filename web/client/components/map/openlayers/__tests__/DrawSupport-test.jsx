@@ -10,6 +10,7 @@ const ReactDOM = require('react-dom');
 const expect = require('expect');
 const ol = require('openlayers');
 const DrawSupport = require('../DrawSupport');
+const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
 
 describe('Test DrawSupport', () => {
     beforeEach((done) => {
@@ -410,9 +411,11 @@ describe('Test DrawSupport', () => {
                   [13, 44]
                 ]]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
-            }
+            },
+            style: {type: "Polygon", "Polygon": DEFAULT_ANNOTATIONS_STYLES.Polygon}
         };
 
         const support = ReactDOM.render(
@@ -455,6 +458,7 @@ describe('Test DrawSupport', () => {
                   [13, 44]
                 ]]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
             }
@@ -495,6 +499,7 @@ describe('Test DrawSupport', () => {
                 type: 'Point',
                 coordinates: [13, 43]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
             }
@@ -535,6 +540,7 @@ describe('Test DrawSupport', () => {
                 type: 'LineString',
                 coordinates: [[13, 43], [14, 44]]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
             }
@@ -575,6 +581,7 @@ describe('Test DrawSupport', () => {
                 type: 'LineString',
                 coordinates: [[13, 43], [14, 44]]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
             }
@@ -615,6 +622,7 @@ describe('Test DrawSupport', () => {
                 type: 'Circle',
                 coordinates: [[13, 43], [14, 44]]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
             }
@@ -660,6 +668,7 @@ describe('Test DrawSupport', () => {
                   [13, 44]
                 ]]
             },
+            featureProjection: "EPSG:4326",
             properties: {
                 'name': "some name"
             }
@@ -691,7 +700,7 @@ describe('Test DrawSupport', () => {
         expect(style.getFill().getColor()[0]).toBe(255);
         expect(style.getFill().getColor()[1]).toBe(255);
         expect(style.getFill().getColor()[2]).toBe(0);
-        expect(style.getFill().getColor()[3]).toNotExist();
+        expect(style.getFill().getColor()[3]).toBe(1);
     });
 
     it('styling fill transparency', () => {
@@ -720,7 +729,11 @@ describe('Test DrawSupport', () => {
                 strokeColor: '#ff0'
             });
         expect(style).toExist();
-        expect(style.getStroke().getColor()).toBe('#ff0');
+        expect(style.getStroke().getColor().length).toBe(4);
+        expect(style.getStroke().getColor()[0]).toBe(255);
+        expect(style.getStroke().getColor()[1]).toBe(255);
+        expect(style.getStroke().getColor()[2]).toBe(0);
+        expect(style.getStroke().getColor()[3]).toBe(1);
     });
 
     it('styling icon url', () => {
