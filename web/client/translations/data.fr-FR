@@ -1085,6 +1085,8 @@
                     "configureWidgetOptions": "Configurer les options du widget",
                     "updateWidget": "Mettre à jour le widget",
                     "addToTheMap": "Ajouter le widget à la carte"
+                    "titlePlaceholder": "Entrez le titre...",
+                    "textPlaceholder": "Entrez le texte..."
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Aucun widget disponible",
