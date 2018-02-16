@@ -1,6 +1,5 @@
 var markerIcon = require('./img/marker-icon.png');
 var markerShadow = require('./img/marker-shadow.png');
-const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../utils/AnnotationsUtils');
 var ol = require('openlayers');
 // const {reprojectGeoJson} = require('../../../utils/CoordinatesUtils');
 
@@ -15,7 +14,56 @@ const image = new ol.style.Circle({
 const Icons = require('../../../utils/openlayers/Icons');
 const {hexToRgb} = require('../../../utils/ColorUtils');
 
+const STYLE_POINT = {
+    color: '#ffcc33',
+    opacity: 1,
+    weight: 3,
+    fillColor: '#ffffff',
+    fillOpacity: 0.2,
+    radius: 10
+};
+const STYLE_TEXT = {
+    fontStyle: 'normal',
+    fontSize: '14',
+    fontSizeUom: 'px',
+    fontFamily: 'FontAwesome',
+    fontWeight: 'normal',
+    font: "14px FontAwesome",
+    textAlign: 'center',
+    color: '#000000',
+    opacity: 1
+};
+const STYLE_LINE = {
+    color: '#ffcc33',
+    opacity: 1,
+    weight: 3,
+    fillColor: '#ffffff',
+    fillOpacity: 0.2,
+    editing: {
+        fill: 1
+    }
+};
+const STYLE_POLYGON = {
+    color: '#ffcc33',
+    opacity: 1,
+    weight: 3,
+    fillColor: '#ffffff',
+    fillOpacity: 0.2,
+    editing: {
+        fill: 1
+    }
+};
 const defaultStyles = {
+    "Text": STYLE_TEXT,
+    "Point": STYLE_POINT,
+    "MultiPoint": STYLE_POINT,
+    "LineString": STYLE_LINE,
+    "MultiLineString": STYLE_LINE,
+    "Polygon": STYLE_POLYGON,
+    "MultiPolygon": STYLE_POLYGON
+};
+
+const defaultOLStyles = {
   'Point': () => [new ol.style.Style({
       image: image
   })],
@@ -104,7 +152,7 @@ const defaultStyles = {
 };
 
 var styleFunction = function(feature, options) {
-    return defaultStyles[feature.getGeometry().getType()](options);
+    return defaultOLStyles[feature.getGeometry().getType()](options);
 };
 
 function getMarkerStyle(options) {
@@ -118,7 +166,7 @@ function getMarkerStyle(options) {
     return null;
 }
 
-const getValidStyle = (geomType, options = { style: DEFAULT_ANNOTATIONS_STYLES}, isDrawing, textValues ) => {
+const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, textValues, fallbackStyle ) => {
     let style;
     let tempStyle = options.style[geomType] || options.style;
     if (geomType === "MultiLineString" || geomType === "LineString") {
@@ -130,10 +178,10 @@ const getValidStyle = (geomType, options = { style: DEFAULT_ANNOTATIONS_STYLES},
             }),
             image: isDrawing ? image : null
             } : {
-                stroke: new ol.style.Stroke( DEFAULT_ANNOTATIONS_STYLES[geomType] && DEFAULT_ANNOTATIONS_STYLES[geomType].stroke ? DEFAULT_ANNOTATIONS_STYLES[geomType].stroke : {
-                    color: hexToRgb(options.style && DEFAULT_ANNOTATIONS_STYLES[geomType].color || "#0000FF").concat([DEFAULT_ANNOTATIONS_STYLES[geomType].opacity || 1]),
+                stroke: new ol.style.Stroke(defaultStyles[geomType] && defaultStyles[geomType].stroke ? defaultStyles[geomType].stroke : {
+                    color: hexToRgb(options.style && defaultStyles[geomType].color || "#0000FF").concat([defaultStyles[geomType].opacity || 1]),
                     lineDash: options.style.highlight ? [10] : [0],
-                    width: DEFAULT_ANNOTATIONS_STYLES[geomType].weight || 1
+                    width: defaultStyles[geomType].weight || 1
                 }) };
         return new ol.style.Style(style);
     }
@@ -173,6 +221,7 @@ const getValidStyle = (geomType, options = { style: DEFAULT_ANNOTATIONS_STYLES},
         };
         return new ol.style.Style(style);
     }
+    return fallbackStyle;
 };
 
 function getStyle(options, isDrawing = false, textValues = []) {
@@ -261,7 +310,7 @@ function getStyle(options, isDrawing = false, textValues = []) {
             };
             return style;
         }
-        return getValidStyle(geomType, options, isDrawing, textValues);
+        return getValidStyle(geomType, options, isDrawing, textValues, style);
     }
     // *************************************************************************
 
@@ -271,12 +320,12 @@ function getStyle(options, isDrawing = false, textValues = []) {
             switch (type) {
                 case "Point":
                 case "MultiPoint":
-                    return defaultStyles.marker(options);
+                    return defaultOLStyles.marker(options);
                 default:
                     break;
             }
         }
-        return defaultStyles[options.styleName](options);
+        return defaultOLStyles[options.styleName](options);
     } : style || styleFunction;
 }
 
@@ -284,5 +333,6 @@ function getStyle(options, isDrawing = false, textValues = []) {
 module.exports = {
     getStyle,
     getMarkerStyle,
-    styleFunction
+    styleFunction,
+    defaultStyles
 };

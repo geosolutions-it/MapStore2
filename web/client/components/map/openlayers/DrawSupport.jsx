@@ -14,8 +14,6 @@ const assign = require('object-assign');
 const uuid = require('uuid');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
 const {reprojectGeoJson} = require('../../../utils/CoordinatesUtils');
-const {hexToRgb} = require('../../../utils/ColorUtils');
-const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../utils/AnnotationsUtils');
 const VectorStyle = require('./VectorStyle');
 
 /**
@@ -63,7 +61,8 @@ class DrawSupport extends React.Component {
         onChangeDrawingStatus: () => {},
         onGeometryChanged: () => {},
         onDrawStopped: () => {},
-        onEndDrawing: () => {}
+        onEndDrawing: () => {},
+        onTextChanged: () => {}
     };
 
 /** Inside this lyfecycle method the status is checked to manipulate the behaviour of the DrawSupport.
@@ -81,19 +80,18 @@ class DrawSupport extends React.Component {
         if (this.drawLayer) {
             this.updateFeatureStyles(newProps.features);
         }
-
         if (!newProps.drawStatus && this.selectInteraction) {
             this.selectInteraction.getFeatures().clear();
         }
         if ( this.props.drawStatus !== newProps.drawStatus || this.props.drawMethod !== newProps.drawMethod || this.props.features !== newProps.features) {
             switch (newProps.drawStatus) {
-                case "create": this.addLayer(newProps); break;
+                case "create": this.addLayer(newProps); break; // deprecated, not used (addLayer is automatically called by other commands when needed)
                 case "start":/* only starts draw*/ this.addInteractions(newProps); break;
                 case "drawOrEdit": this.addDrawOrEditInteractions(newProps); break;
                 case "stop": /* only stops draw*/ this.removeDrawInteraction(); break;
                 case "replace": this.replaceFeatures(newProps); break;
                 case "clean": this.clean(); break;
-                case "cleanAndContinueDrawing": this.cleanAndContinueDrawing(); break;
+                case "cleanAndContinueDrawing": this.clean(true); break;
                 default : return;
             }
         }
@@ -105,7 +103,7 @@ class DrawSupport extends React.Component {
 
     updateFeatureStyles = (features) => {
         if (features && features.length > 0) {
-            features.map(f => {
+            features.forEach(f => {
                 if (f.style) {
                     let olFeature = this.toOlFeature(f);
                     if (olFeature) {
@@ -118,10 +116,12 @@ class DrawSupport extends React.Component {
 
     addLayer = (newProps, addInteraction) => {
         let layerStyle = null;
+        const styleType = this.convertGeometryTypeToStyleType(newProps.drawMethod);
         if (newProps.style) {
             layerStyle = newProps.style.type ? VectorStyle.getStyle(newProps, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.textValues || [] ) : this.toOlStyle(newProps.style, null, newProps.features[0] && newProps.features[0].type);
         } else {
-            layerStyle = VectorStyle.getStyle({...newProps, style: {...DEFAULT_ANNOTATIONS_STYLES, type: this.convertGeometryTypeToStyleType(newProps.drawMethod) }}, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.textValues || [] );
+            const style = VectorStyle.defaultStyles[styleType] || VectorStyle.defaultStyles;
+            layerStyle = VectorStyle.getStyle({ ...newProps, style: {...style, type: styleType }}, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.textValues || [] );
         }
         this.geojson = new ol.format.GeoJSON();
         this.drawSource = new ol.source.Vector();
@@ -366,7 +366,9 @@ class DrawSupport extends React.Component {
             if (this.props.options.stopAfterDrawing) {
                 this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner, newFeatures);
             } else {
-                this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner, newFeatures, this.props.options);
+                this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner,
+                    newFeatures.map((f) => reprojectGeoJson(f, this.props.options.featureProjection, this.props.map.getView().getProjection().getCode())),
+                    assign({}, this.props.options, { featureProjection: this.props.map.getView().getProjection().getCode()}));
             }
             if (this.selectInteraction) {
                 // TODO update also the selected features
@@ -379,26 +381,26 @@ class DrawSupport extends React.Component {
         this.setDoubleClickZoomEnabled(false);
     };
 
-    drawPropertiesForGeometryType = (geometryType, maxPoints, source, style ) => {
+    drawPropertiesForGeometryType = (geometryType, maxPoints, source) => {
         let drawBaseProps = {
             source,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
-            style: style && VectorStyle.getStyle({style}, true) || this.toOlStyle(style) || new ol.style.Style({
-                stroke: new ol.style.Stroke({
-                    color: hexToRgb("#ffcc33").concat([1]),
-                    lineDash: [10],
-                    width: 1
+            style: new ol.style.Style({
+                fill: new ol.style.Fill({
+                    color: 'rgba(255, 255, 255, 0.2)'
                 }),
-                fill: new ol.style.Fill( {
-                    color: hexToRgb("#ffffff").concat([0.2])
+                stroke: new ol.style.Stroke({
+                    color: 'rgba(0, 0, 0, 0.5)',
+                    lineDash: [10, 10],
+                    width: 2
                 }),
                 image: new ol.style.Circle({
                     radius: 5,
                     stroke: new ol.style.Stroke({
-                        color: hexToRgb("#ffcc33").concat([1])
+                        color: 'rgba(0, 0, 0, 0.7)'
                     }),
                     fill: new ol.style.Fill({
-                        color: hexToRgb("#ffffff").concat([0.2])
+                        color: 'rgba(255, 255, 255, 0.2)'
                     })
                 })
             }),
@@ -600,18 +602,10 @@ class DrawSupport extends React.Component {
         }
     };
 
-    clean = () => {
-        this.removeInteractions();
-
-        if (this.drawLayer) {
-            this.props.map.removeLayer(this.drawLayer);
-            this.geojson = null;
-            this.drawLayer = null;
-            this.drawSource = null;
+    clean = (continueDrawing) => {
+        if (!continueDrawing) {
+            this.removeInteractions();
         }
-    };
-
-    cleanAndContinueDrawing = () => {
         if (this.drawLayer) {
             this.props.map.removeLayer(this.drawLayer);
             this.geojson = null;
