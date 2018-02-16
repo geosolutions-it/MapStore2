@@ -134,7 +134,14 @@ const getJSONFeatureWA = (searchUrl, filterObj, { totalFeatures, sortOptions = {
             }
             throw error;
         });
-const getFeatureOtpions = ({totalFeatures, sortOptions, ...other} = {}) => other;
+const getFeatureOtpions = (obj) => Object.keys().reduce(
+    (acc, k) => k !== "totalFeatures" && k !== "sortOptions"
+        ? {
+        ...acc,
+        [k]: obj[k]
+        }
+        : acc
+    , {});
 /**
  * Same of `getJSONFeatureWA` but accepts the layer as first parameter.
  * Accepts also a filter as a string
