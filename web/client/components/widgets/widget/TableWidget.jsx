@@ -37,7 +37,8 @@ module.exports = ({
     onEdit= () => {},
     onDelete=() => {},
     describeFeatureType,
-    pagination
+    features,
+    pagination = {}
     }) =>
     (<WidgetContainer
         id={`widget-chart-${id}`}
@@ -55,7 +56,7 @@ module.exports = ({
             </DropdownButton>
         </ButtonToolbar>}>
         <FeatureGrid
-            features={data}
+            features={features}
             rowKey="id"
             describeFeatureType={describeFeatureType}
             pagination={pagination}/>

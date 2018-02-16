@@ -22,7 +22,7 @@ const assign = require('object-assign');
 const {spatialFieldMethodSelector, spatialFieldSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
 const {changeDrawingStatus} = require('../actions/draw');
 const {INIT_QUERY_PANEL} = require('../actions/wfsquery');
-const { getJSONFeatureWA} = require('../observables/wfs');
+const {getJSONFeatureWA} = require('../observables/wfs');
 const {describeFeatureTypeToAttributes} = require('../utils/FeatureTypeUtils');
 const extractInfo = (data) => {
     return {

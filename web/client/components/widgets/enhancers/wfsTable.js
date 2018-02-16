@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 const {compose, withProps} = require('recompose');
-const { getFeature, describeFeatureType} = require('../../../observables/wfs');
+const { getLayerJSONFeature, describeFeatureType} = require('../../../observables/wfs');
 const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
 const Rx = require('rxjs');
 
@@ -31,24 +31,26 @@ const dataRetrieveStream = $props => $props
             onLoad = () => { },
             onLoadError = () => { }
         }) =>
-            getFeature({ layer, featureType: layer.name, params: { propertyName: options.propertyName }, filter }, {
-                timeout: 15000
+            getLayerJSONFeature( layer, filter, {
+                timeout: 15000,
+                params: { propertyName: options.propertyName }
+                // TODO totalFeatures
+                // TODO sortOptions - default
             })
-                .map((response) => ({
+                .map((data) => ({
                     loading: false,
                     isAnimationActive: false,
                     error: undefined,
-                    features: response.data.features,
+                    features: data.features,
                     pagination: {
-                        totalFeatures: response.data.totalFeatures
+                        totalFeatures: data.totalFeatures
                     }
                 })).do(onLoad)
                 .catch((e) => Rx.Observable.of({
                     loading: false,
                     error: e,
                     data: []
-                }).do(onLoadError)
-                )
+                }).do(onLoadError))
     );
 const describeStream = props$ =>
     props$
@@ -60,16 +62,19 @@ const describeStream = props$ =>
             error: e
         }));
 
-const dataStreamFactory = ($props) =>
-    describeStream($props)
+const dataStreamFactory = ($props) => {
+    // TODO create event handler to trigger virtual scroll
+    return describeStream($props)
         .combineLatest(
-            dataRetrieveStream($props),
+            dataRetrieveStream($props)
+            .merge( ),
             (p1, p2) => ({
                 ...p1,
                 ...p2
             })
         )
     .startWith({ loading: true });
+};
 module.exports = compose(
     withProps( () => ({
         dataStreamFactory

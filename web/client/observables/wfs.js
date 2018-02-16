@@ -17,6 +17,8 @@ const {stripPrefix} = require('xml2js/lib/processors');
 const {interceptOGCError} = require('../utils/ObservableUtils');
 const {getCapabilitiesUrl} = require('../utils/LayersUtils');
 const FilterUtils = require('../utils/FilterUtils');
+const requestBuilder = require('../utils/ogc/WFS/RequestBuilder');
+const {getFeature, query} = requestBuilder({ wfsVersion: "1.1.0" });
 
 const toDescribeURL = ({name, search = {}, url} = {}) => {
     const parsed = urlUtil.parse(search.url || url, true);
@@ -54,7 +56,7 @@ const Url = require('url');
 const { isObject } = require('lodash');
 
 // this is a workaround for https://osgeo-org.atlassian.net/browse/GEOS-7233. can be removed when fixed
-const workaroundGEOS7233 = ({ totalFeatures, features, ...rest }, { startIndex, maxFeatures }, originalSize) => {
+const workaroundGEOS7233 = ({ totalFeatures, features, ...rest } = {}, { startIndex, maxFeatures } = {}, originalSize) => {
     if (originalSize > totalFeatures && originalSize === startIndex + features.length && totalFeatures === features.length) {
         return {
             ...rest,
@@ -74,9 +76,9 @@ const getWFSFilterData = (filterObj) => {
     if (typeof filterObj === 'string') {
         data = filterObj;
     } else {
-        data = filterObj.filterType === "OGC" ?
-            FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits) :
-            FilterUtils.toCQLFilter(filterObj);
+        data = filterObj.filterType === "OGC"
+            ? FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits)
+            : FilterUtils.toCQLFilter(filterObj);
     }
     return data;
 };
@@ -132,9 +134,27 @@ const getJSONFeatureWA = (searchUrl, filterObj, { totalFeatures, sortOptions = {
             }
             throw error;
         });
+const getFeatureOtpions = ({totalFeatures, sortOptions, ...other} = {}) => other;
+/**
+ * Same of `getJSONFeatureWA` but accepts the layer as first parameter.
+ * Accepts also a filter as a string
+ * @param {object} layer the layer to search
+ * @param {object|string} filter the filter object or string of the filter
+ * @param {object} options the optnions (pagination, totalFeatures and so on ...)
+ */
+const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter = {}, options) =>
+    getJSONFeatureWA(search.url || url,
+        typeof filter === 'object' ? {
+            ...filter,
+            typeName: name || filter.typeName
+        } : getFeature(
+                query(name, filter),
+                getFeatureOtpions(options)),
+    options);
 
 module.exports = {
     getJSONFeature,
+    getLayerJSONFeature,
     getJSONFeatureWA,
     describeFeatureType: ({layer}) =>
         Rx.Observable.defer(() =>
