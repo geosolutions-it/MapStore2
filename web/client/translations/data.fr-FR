@@ -1084,7 +1084,7 @@
                     "configureChartOptions": "Configurer les options de graphique",
                     "configureWidgetOptions": "Configurer les options du widget",
                     "updateWidget": "Mettre à jour le widget",
-                    "addToTheMap": "Ajouter le widget à la carte"
+                    "addToTheMap": "Ajouter le widget à la carte",
                     "titlePlaceholder": "Entrez le titre...",
                     "textPlaceholder": "Entrez le texte..."
                 },
