@@ -16,27 +16,14 @@ const getSaveTooltipId = (step, {id} = {}) => {
     }
     return "widgets.builder.wizard.addToTheMap";
 };
-const getNextTooltipId = () => {
-    return "widgets.builder.wizard.configureWidgetOptions";
-};
-const getBackTooltipId = () => "back"; // TODO I18N
-module.exports = ({step = 0, editorData = {}, onFinish = () => {}, setPage = () => {}} = {}) => (<Toolbar btnDefaultProps={{
+
+module.exports = ({step = 0, editorData = {}, onFinish = () => {}} = {}) => (<Toolbar btnDefaultProps={{
         bsStyle: "primary",
         bsSize: "sm"
     }}
     buttons={[{
-        onClick: () => setPage(Math.max(0, step - 1)),
-        visible: step > 0,
-        glyph: "arrow-left",
-        tooltipId: getBackTooltipId(step)
-    }, {
-        onClick: () => setPage(Math.min(step + 1, 2)),
-        visible: step === 0,
-        glyph: "arrow-right",
-        tooltipId: getNextTooltipId(step)
-    }, {
         onClick: () => onFinish(Math.min(step + 1, 1)),
-        visible: step === 1,
+        visible: step === 0,
         glyph: "floppy-disk",
         tooltipId: getSaveTooltipId(step, editorData)
     }]} />);

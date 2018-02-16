@@ -6,9 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const ReactQuill = require('react-quill');
 const {wizardHanlders} = require('../../../misc/wizard/enhancers');
-const WidgetOptions = require('./common/WidgetOptions');
+const TextOptions = require('./text/TextOptions');
 const Wizard = wizardHanlders(require('../../../misc/wizard/WizardContainer'));
 
 
@@ -22,8 +21,7 @@ module.exports = ({
         setPage={setPage}
         onFinish={onFinish}
         hideButtons>
-        <ReactQuill value={editorData && editorData.text || ''} onChange={(val) => onChange("text", val)}/>
-        <WidgetOptions
+        <TextOptions
             key="widget-options"
             data={editorData}
             onChange={onChange}
