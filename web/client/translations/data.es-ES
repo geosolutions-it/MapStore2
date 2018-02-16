@@ -37,6 +37,7 @@
         "details": {
             "title": "Información en este mapa"
         },
+        "remove": "Borrar",
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
             "title": "Título",
@@ -439,6 +440,19 @@
             "s_priority_info": "Usado para ordenar los resultados de búsqueda, de mayor a menor. Les resultados Nominatim tienen prioridad = 5",
             "serviceslistempty": "Ningún servicio personalizado definido"
         },
+        "draw": {
+            "fill": "Relleno:",
+            "stroke": "Línea:",
+            "strokeWidth": "Ancho de línea:",
+            "font": {
+                "textColor": "color del texto",
+                "family": "font-family",
+                "size": "font-size",
+                "textAlign": "alineación del texto",
+                "style": "font-style",
+                "weight": "font-weight"
+            }
+        },
         "drawLocal": {
             "draw": {
                 "toolbar": {
@@ -709,6 +723,12 @@
             "field": {
                 "title": "Título",
                 "description": "Descripción"
+            },
+            "titles": {
+                "marker": " Marcador",
+                "line": " Línea",
+                "polygon": " Polígono",
+                "text": " Texto"
             }
         },
         "users": {

@@ -27,9 +27,18 @@ var {
     getCurrentResolution,
     saveMapConfiguration,
     extractTileMatrixSetFromLayers,
-    getIdFromUri
+    getIdFromUri,
+    getSimpleGeomType,
+    isSimpleGeomType
 } = require('../MapUtils');
 
+const POINT = "Point";
+const LINE_STRING = "LineString";
+const POLYGON = "Polygon";
+const MULTI_POINT = "MultiPoint";
+const MULTI_LINE_STRING = "MultiLineString";
+const MULTI_POLYGON = "MultiPolygon";
+const GEOMETRY_COLLECTION = "GeometryCollection";
 describe('Test the MapUtils', () => {
     it('dpi2dpm', () => {
         const inch2mm = 25.4;
@@ -896,4 +905,26 @@ describe('Test the MapUtils', () => {
         expect(getIdFromUri('rest%2Fgeostore%2Fdata%2F')).toBe(null);
     });
 
+    it('isSimpleGeomType default true', () => {
+        expect(isSimpleGeomType(POINT)).toBeTruthy();
+        expect(isSimpleGeomType(LINE_STRING)).toBeTruthy();
+        expect(isSimpleGeomType(POLYGON)).toBeTruthy();
+        expect(isSimpleGeomType(GEOMETRY_COLLECTION)).toBe(false);
+        expect(isSimpleGeomType(MULTI_POINT)).toBe(false);
+        expect(isSimpleGeomType(MULTI_LINE_STRING)).toBe(false);
+        expect(isSimpleGeomType(MULTI_POLYGON)).toBe(false);
+        expect(isSimpleGeomType("Circle")).toBeTruthy();
+    });
+
+    it('getSimpleGeomType default Point', () => {
+        expect(getSimpleGeomType(POINT)).toBe(POINT);
+        expect(getSimpleGeomType(LINE_STRING)).toBe(LINE_STRING);
+        expect(getSimpleGeomType(POLYGON)).toBe(POLYGON);
+
+        expect(getSimpleGeomType(MULTI_POINT)).toBe(POINT);
+        expect(getSimpleGeomType(MULTI_LINE_STRING)).toBe(LINE_STRING);
+        expect(getSimpleGeomType(MULTI_POLYGON)).toBe(POLYGON);
+        expect(getSimpleGeomType(GEOMETRY_COLLECTION)).toBe(GEOMETRY_COLLECTION);
+
+    });
 });

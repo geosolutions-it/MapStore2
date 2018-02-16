@@ -63,6 +63,12 @@ class Feature extends React.Component {
                 geometry: props.geometry,
                 id: this.props.msId});
             this._feature.forEach((f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
+            if (props.properties && props.properties.textValues && props.properties.textGeometriesIndexes) {
+                this._feature.forEach((f) => {
+                    f.set("textValues", props.properties.textValues);
+                    f.set("textGeometriesIndexes", props.properties.textGeometriesIndexes);
+                });
+            }
             if (props.style && (props.style !== props.layerStyle)) {
                 this._feature.forEach((f) => { f.setStyle(getStyle({style: props.style})); });
             }

@@ -32,6 +32,17 @@ const {
     HIGHLIGHT,
     CLEAN_HIGHLIGHT,
     FILTER_ANNOTATIONS,
+    showTextArea, SHOW_TEXT_AREA,
+    addText, ADD_TEXT,
+    cancelText, CANCEL_CLOSE_TEXT,
+    changedProperties, CHANGED_PROPERTIES,
+    changeStyler, CHANGE_STYLER,
+    saveText, SAVE_TEXT,
+    toggleUnsavedStyleModal, TOGGLE_STYLE_MODAL,
+    stopDrawing, STOP_DRAWING,
+    toggleUnsavedChangesModal, TOGGLE_CHANGES_MODAL,
+    setUnsavedStyle, UNSAVED_STYLE,
+    setUnsavedChanges, UNSAVED_CHANGES,
     editAnnotation,
     removeAnnotation,
     confirmRemoveAnnotation,
@@ -58,7 +69,7 @@ const {
 
 describe('Test correctness of the annotations actions', () => {
     it('edit annotation', (done) => {
-        const result = editAnnotation('1', 'Point');
+        const result = editAnnotation('1');
         expect(result).toExist();
         expect(isFunction(result)).toBe(true);
         result((action) => {
@@ -75,6 +86,9 @@ describe('Test correctness of the annotations actions', () => {
                         properties: {
                             id: '1',
                             name: 'myannotation'
+                        },
+                        geometry: {
+                            type: "Point"
                         }
                     }]
                 }]
@@ -87,23 +101,73 @@ describe('Test correctness of the annotations actions', () => {
         expect(result.type).toEqual(REMOVE_ANNOTATION);
         expect(result.id).toEqual('1');
     });
-
+    it('showTextArea', () => {
+        const result = showTextArea();
+        expect(result.type).toEqual(SHOW_TEXT_AREA);
+    });
+    it('addText', () => {
+        const result = addText();
+        expect(result.type).toEqual(ADD_TEXT);
+    });
+    it('cancelText', () => {
+        const result = cancelText();
+        expect(result.type).toEqual(CANCEL_CLOSE_TEXT);
+    });
     it('confirm remove annotation', () => {
         const result = confirmRemoveAnnotation('1');
         expect(result.type).toEqual(CONFIRM_REMOVE_ANNOTATION);
         expect(result.id).toEqual('1');
     });
-
+    it('changedProperties', () => {
+        const field = "desc";
+        const value = "desc value";
+        const result = changedProperties(field, value);
+        expect(result.type).toEqual(CHANGED_PROPERTIES);
+        expect(result.field).toEqual(field);
+        expect(result.value).toEqual(value);
+    });
     it('cancel remove annotation', () => {
         const result = cancelRemoveAnnotation();
         expect(result.type).toEqual(CANCEL_REMOVE_ANNOTATION);
     });
-
+    it('setUnsavedChanges', () => {
+        const result = setUnsavedChanges(true);
+        expect(result.type).toEqual(UNSAVED_CHANGES);
+        expect(result.unsavedChanges).toEqual(true);
+    });
+    it('setUnsavedStyle', () => {
+        const result = setUnsavedStyle(true);
+        expect(result.type).toEqual(UNSAVED_STYLE);
+        expect(result.unsavedStyle).toEqual(true);
+    });
     it('cancel edit annotation', () => {
         const result = cancelEditAnnotation();
         expect(result.type).toEqual(CANCEL_EDIT_ANNOTATION);
     });
-
+    it('stopDrawing', () => {
+        const result = stopDrawing();
+        expect(result.type).toEqual(STOP_DRAWING);
+    });
+    it('toggleUnsavedChangesModal', () => {
+        const result = toggleUnsavedChangesModal();
+        expect(result.type).toEqual(TOGGLE_CHANGES_MODAL);
+    });
+    it('toggleUnsavedStyleModal', () => {
+        const result = toggleUnsavedStyleModal();
+        expect(result.type).toEqual(TOGGLE_STYLE_MODAL);
+    });
+    it('saveText', () => {
+        const text = "asdfasf!";
+        const result = saveText(text);
+        expect(result.type).toEqual(SAVE_TEXT);
+        expect(result.value).toEqual(text);
+    });
+    it('changeStyler', () => {
+        const stylerType = "marker";
+        const result = changeStyler(stylerType);
+        expect(result.type).toEqual(CHANGE_STYLER);
+        expect(result.stylerType).toEqual(stylerType);
+    });
     it('save annotation', () => {
         const result = saveAnnotation('1', {
             name: 'changed'
@@ -168,9 +232,8 @@ describe('Test correctness of the annotations actions', () => {
     });
 
     it('creates new annotation', () => {
-        const result = newAnnotation('Point');
+        const result = newAnnotation();
         expect(result.type).toEqual(NEW_ANNOTATION);
-        expect(result.featureType).toEqual('Point');
     });
 
     it('highlights annotation', () => {

@@ -7,7 +7,7 @@
  */
 const expect = require('expect');
 const VectorStyle = require('../VectorStyle');
-const ol = require('openlayers');
+// const ol = require('openlayers');
 
 describe('Test VectorStyle', () => {
     beforeEach((done) => {
@@ -23,26 +23,14 @@ describe('Test VectorStyle', () => {
     it('simple point style', () => {
         const style = VectorStyle.getStyle({
             style: {
-                type: 'Point'
+                type: 'Point',
+                "Point": {
+                    iconGlyph: "comment"
+                }
             }
-        });
+        }, true);
         expect(style).toExist();
         expect(style.getImage()).toExist();
-    });
-
-    it('image point style', () => {
-        const style = VectorStyle.getStyle({
-            style: {
-                type: 'Point',
-                iconUrl: 'myurl'
-            }
-        });
-        expect(style).toExist();
-        const feature = new ol.Feature({
-              geometry: new ol.geom.Point(13.0, 43.0),
-              name: 'My Point'
-        });
-        expect(style.call(feature)[0]. getImage()).toExist();
     });
 
     it('style name', () => {
@@ -53,22 +41,5 @@ describe('Test VectorStyle', () => {
         expect(style).toExist();
     });
 
-    it('guess image point style', () => {
-        const feature = {
-              geometry: {
-                  type: 'Point',
-                  coordinates: [13.0, 43.0]
-              },
-              name: 'My Point'
-        };
-        const style = VectorStyle.getStyle({
-            features: [feature],
-            style: {
-                radius: 10,
-                color: 'blue'
-            }
-        });
-        expect(style).toExist();
-        expect(style.getImage()).toExist();
-    });
+
 });
