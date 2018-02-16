@@ -21,7 +21,7 @@ module.exports = compose(
            const {filter, property, and} = filterBuilder({gmlVersion: "3.1.1"});
            if (!mapSync || !dependencies.viewport) {
                return {
-                   filter: filterObj ? filter(and((FilterUtils.toOGCFilterParts(filterObj, "1.1.0", "ogc") : []))) : undefined
+                   filter: filterObj ? filter(and((FilterUtils.toOGCFilterParts(filterObj, "1.1.0", "ogc") || []))) : undefined
                };
            }
 

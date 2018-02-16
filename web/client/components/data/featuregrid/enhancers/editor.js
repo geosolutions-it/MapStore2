@@ -88,7 +88,7 @@ const featuresToGrid = compose(
     withPropsOnChange(
         ["features", "newFeatures", "changes"],
         props => ({
-            rows: ( [...props.newFeatures, ...props.features] : props.features)
+            rows: (props.newFeatures ? [...props.newFeatures, ...props.features] : props.features)
                 .filter(props.focusOnEdit ? createNewAndEditingFilter(props.changes && Object.keys(props.changes).length > 0, props.newFeatures, props.changes) : () => true)
                 .map(orig => applyAllChanges(orig, props.changes)).map(result =>
                     ({...result,
