@@ -1081,7 +1081,9 @@
                     "configureChartOptions": "Diagrammoptionen konfigurieren",
                     "configureWidgetOptions": "Widget-Optionen konfigurieren",
                     "updateWidget": "Aktualisieren Sie das Widget",
-                    "addToTheMap": "Hinzufügen des Widgets zur Karte"
+                    "addToTheMap": "Hinzufügen des Widgets zur Karte",
+                    "titlePlaceholder": "Gib den Titel ein...",
+                    "textPlaceholder": "Text eingeben..."
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Keine Widgets verfügbar",

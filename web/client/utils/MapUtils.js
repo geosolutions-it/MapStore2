@@ -333,7 +333,8 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
         maxExtent: currentMap.maxExtent,
         projection: currentMap.projection,
         units: currentMap.units,
-        zoom: currentMap.zoom
+        zoom: currentMap.zoom,
+        mapOptions: currentMap.mapOptions || {}
     };
 
     const layers = currentLayers.map((layer) => {

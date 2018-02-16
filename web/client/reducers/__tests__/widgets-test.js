@@ -38,6 +38,15 @@ describe('Test the widgets reducer', () => {
     it('editWidget', () => {
         const state = widgets(undefined, editWidget({type: "bar"}));
         expect(state.builder.editor.type).toBe("bar");
+        expect(state.builder.settings.step).toBe(1);
+    });
+    it('editWidget initial by kind of widget', () => {
+        // default chart
+        expect(widgets(undefined, editWidget({ type: "bar" })).builder.settings.step).toBe(1);
+        // chart explicit
+        expect(widgets(undefined, editWidget({ widgetType: "chart" })).builder.settings.step).toBe(1);
+        // text explicit
+        expect(widgets(undefined, editWidget({ widgetType: "text" })).builder.settings.step).toBe(0);
     });
     it('onEditorChange', () => {
         const state = widgets(undefined, onEditorChange("type", "bar"));

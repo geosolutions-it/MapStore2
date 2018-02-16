@@ -1080,7 +1080,9 @@
                     "configureChartOptions": "Configure chart options",
                     "configureWidgetOptions": "Configure widget options",
                     "updateWidget": "Update the widget",
-                    "addToTheMap": "Add the widget to the map"
+                    "addToTheMap": "Add the widget to the map",
+                    "titlePlaceholder": "Insert title...",
+                    "textPlaceholder": "Insert text..."
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "No Widgets available",
