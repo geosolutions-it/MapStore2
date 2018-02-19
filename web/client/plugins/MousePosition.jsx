@@ -64,11 +64,22 @@ const MousePositionButton = connect((state) => ({
 
 const MousePositionComponent = require('../components/mapcontrols/mouseposition/MousePosition');
 
-
 class MousePosition extends React.Component {
+
     render() {
+
+        const degreesTemplateComponent = ((degreesTemplateStr) => {
+            switch( degreesTemplateStr ) {
+              case "MousePositionLabelDD" : return require('../components/mapcontrols/mouseposition/MousePositionLabelDD');
+              case "MousePositionLabelDM" : return require('../components/mapcontrols/mouseposition/MousePositionLabelDM');
+              case "MousePositionLabelDMS" : return require('../components/mapcontrols/mouseposition/MousePositionLabelDMS');
+              case "MousePositionLabelDMSNW" : return require('../components/mapcontrols/mouseposition/MousePositionLabelDMSNW');
+              default: return require('../components/mapcontrols/mouseposition/MousePositionLabelDMS');
+            }
+        })(this.props.degreesTemplateStr);
+
         return (
-            <MousePositionComponent toggle={<MousePositionButton/>} {...this.props}/>
+            <MousePositionComponent toggle={<MousePositionButton/>} degreesTemplate={degreesTemplateComponent} {...this.props}/>
         );
     }
 }
