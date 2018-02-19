@@ -72,7 +72,7 @@ module.exports = props => {
     const revGeocodeDisplayName = reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError"/> : reverseGeocodeData.display_name;
 
     return (
-        <span>
+        <div>
             <DockablePanel
                 bsStyle="primary"
                 glyph="map-marker"
@@ -124,6 +124,6 @@ module.exports = props => {
                     </div>
                 </ResizableModal>
             </Portal>
-        </span>
+        </div>
     );
 };

@@ -54,7 +54,7 @@ module.exports = withState('fullscreen', 'onFullscreen', false)(
         onFullscreen = () => {},
         fixed = false
     }) =>
-        <span className={'ms-side-panel ' + (!fixed ? 'ms-absolute-dock ' : '') + className}>
+        <div className={'ms-side-panel ' + (!fixed ? 'ms-absolute-dock ' : '') + className}>
             <Dock
                 fluid={fluid || fullscreen}
                 position={position}
@@ -80,5 +80,5 @@ module.exports = withState('fullscreen', 'onFullscreen', false)(
                     {children}
                 </BorderLayout>
             </Dock>
-        </span>
+        </div>
 );

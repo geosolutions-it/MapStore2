@@ -57,7 +57,7 @@ module.exports = props => {
     const tabs = getTabs(props);
 
     return (
-        <span>
+        <div>
             <DockablePanel
                 open={settings.expanded}
                 glyph="wrench"
@@ -112,33 +112,33 @@ module.exports = props => {
                     retrieveLayerData={onRetrieveLayerData}
                     onChange={(key, value) => onUpdateParams({[key]: value}, realtimeUpdate)}/>
             ))}
-        </DockablePanel>
-        <Portal>
-            <ResizableModal
-                fade
-                show={alertModal}
-                title={<Message msgId="layerProperties.changedSettings"/>}
-                size="xs"
-                onClose={() => onShowAlertModal(false)}
-                buttons={[
-                    {
-                        bsStyle: 'primary',
-                        text: <Message msgId="close"/>,
-                        onClick: () => onClose(true)
-                    },
-                    {
-                        bsStyle: 'primary',
-                        text: <Message msgId="save"/>,
-                        onClick: onSave
-                    }
-                ]}>
-                <div className="ms-alert">
-                    <div className="ms-alert-center">
-                        <Message msgId="layerProperties.changedSettingsAlert"/>
+            </DockablePanel>
+            <Portal>
+                <ResizableModal
+                    fade
+                    show={alertModal}
+                    title={<Message msgId="layerProperties.changedSettings"/>}
+                    size="xs"
+                    onClose={() => onShowAlertModal(false)}
+                    buttons={[
+                        {
+                            bsStyle: 'primary',
+                            text: <Message msgId="close"/>,
+                            onClick: () => onClose(true)
+                        },
+                        {
+                            bsStyle: 'primary',
+                            text: <Message msgId="save"/>,
+                            onClick: onSave
+                        }
+                    ]}>
+                    <div className="ms-alert">
+                        <div className="ms-alert-center">
+                            <Message msgId="layerProperties.changedSettingsAlert"/>
+                        </div>
                     </div>
-                </div>
-            </ResizableModal>
-        </Portal>
-    </span>
+                </ResizableModal>
+            </Portal>
+        </div>
     );
 };
