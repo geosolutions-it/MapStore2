@@ -721,7 +721,7 @@
             "undo": "Sei sicuro di voler abbandonare la modifica in corso?",
             "title": "Annotazioni",
             "zoomTo": "Zoom",
-            "downloadtooltip": "Scarica annotazioni",
+            "downloadtooltip": "Esporta annotazioni",
             "field": {
                 "title": "Titolo",
                 "description": "Descrizione"
