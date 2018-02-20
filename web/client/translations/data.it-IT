@@ -722,6 +722,7 @@
             "title": "Annotazioni",
             "zoomTo": "Zoom",
             "downloadtooltip": "Esporta annotazioni",
+            "downloadError": "Errore di esportazione",
             "field": {
                 "title": "Titolo",
                 "description": "Descrizione"

@@ -306,24 +306,22 @@ describe('annotations Epics', () => {
         }, state);
     });
 
-    it('export annotation layer', (done) => {
+    it('export annotation fail', (done) => {
         const state = {
             layers: {
-                            flat: [{
-                                id: 'annotations',
-                                features: [{
-                                    properties: {
-                                        id: '1'
-                                    },
-                                    geometry: {
-                                        type: "Point"
-                                    }
-                                }]
-                            }]
+                            flat: []
                         }
         };
-        testEpic(downloadAnnotations, 0, download(), actions => {
-            expect(actions.length).toBe(0);
+        testEpic(downloadAnnotations, 1, download(), actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case "SHOW_NOTIFICATION":
+                        break;
+                    default:
+                        expect(false).toBe(true);
+                }
+            });
             done();
         }, state);
     });

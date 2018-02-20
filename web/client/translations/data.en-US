@@ -721,6 +721,7 @@
             "title": "Annotations",
             "zoomTo": "Zoom",
             "downloadtooltip": "Download annotations",
+            "downloadError": "Export error",
             "field": {
                 "title": "Title",
                 "description": "Description"

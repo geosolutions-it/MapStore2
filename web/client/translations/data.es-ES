@@ -721,6 +721,7 @@
             "undo": "¿Estás seguro de que quieres abandonar la sesión de edición de anotaciones?",
             "zoomTo": "Zoom",
             "downloadtooltip": "Descargar anotaciones",
+            "downloadError": "Error de exportación",
             "field": {
                 "title": "Título",
                 "description": "Descripción"

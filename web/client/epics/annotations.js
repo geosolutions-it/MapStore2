@@ -13,6 +13,8 @@ const {TOGGLE_CONTROL, toggleControl} = require('../actions/controls');
 const {addLayer, updateNode, changeLayerProperties, removeLayer} = require('../actions/layers');
 const {hideMapinfoMarker, purgeMapInfoResults} = require('../actions/mapInfo');
 
+const {error} = require('../actions/notifications');
+
 const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAdd, showTextArea,
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
     TOGGLE_ADD, SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, STOP_DRAWING,
@@ -263,10 +265,19 @@ module.exports = (viewer) => ({
     }),
     downloadAnnotations: (action$, {getState}) => action$.ofType(DOWNLOAD)
         .switchMap(() => {
-            const annotations = annotationsLayerSelector(getState());
-            const mapName = mapNameSelector(getState());
-            saveAs(new Blob([JSON.stringify(annotations.features)], {type: "application/json;charset=utf-8"}), `${ mapName.length > 0 && mapName || "Annotations"}.json`);
-            return Rx.Observable.empty();
+            try {
+                const annotations = annotationsLayerSelector(getState());
+                const mapName = mapNameSelector(getState());
+                saveAs(new Blob([JSON.stringify(annotations.features)], {type: "application/json;charset=utf-8"}), `${ mapName.length > 0 && mapName || "Annotations"}.json`);
+                return Rx.Observable.empty();
+            }catch (e) {
+                return Rx.Observable.of(error({
+                        title: "annotations.title",
+                        message: "annotations.downloadError",
+                        autoDismiss: 5,
+                        position: "tr"
+                    }));
+            }
         })
 
 });
