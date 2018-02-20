@@ -44,6 +44,7 @@ const dataStreamFactory = $props => {
 
 const featuresToGrid = compose(
     defaultProps({
+        sortable: true,
         autocompleteEnabled: false,
         initPlugin: () => {},
         url: "",
@@ -112,12 +113,13 @@ const featuresToGrid = compose(
     ),
     withHandlers({rowGetter: props => props.virtualScroll && (i => getRowVirtual(i, props.rows, props.pages, props.size)) || (i => getRow(i, props.rows))}),
     withPropsOnChange(
-        ["describeFeatureType", "columnSettings", "tools", "actionOpts", "mode", "isFocused"],
+        ["describeFeatureType", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "noSort"],
         props => ({
             columns: getToolColumns(props.tools, props.rowGetter, props.describeFeatureType, props.actionOpts)
                 .concat(featureTypeToGridColumns(props.describeFeatureType, props.columnSettings, {
                     editable: props.mode === "EDIT",
-                    sortable: !props.isFocused
+                    sortable: props.sortable && !props.isFocused,
+                    defaultSize: props.defaultSize
                 }, {
                     getEditor: (desc) => {
                         const generalProps = {

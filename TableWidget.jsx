@@ -7,12 +7,8 @@
  */
 const React = require('react');
 const Message = require('../../I18N/Message');
-const BorderLayout = require('../../layout/BorderLayout');
-const LoadingSpinner = require('../../misc/LoadingSpinner');
 const loadingState = require('../../misc/enhancers/loadingState');
-const errorChartState = require('../enhancers/errorChartState');
-
-const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(require('../../data/featuregrid/FeatureGrid')));
+const FeatureGrid = loadingState(({ describeFeatureType }) => !describeFeatureType)(require('../../data/featuregrid/FeatureGrid'));
 const InfoPopover = require('./InfoPopover');
 
 const WidgetContainer = require('./WidgetContainer');
@@ -43,11 +39,9 @@ module.exports = ({
         moreFeatures: () => {}
     },
     describeFeatureType,
-    columnSettings,
     features,
     size,
     pages,
-    error,
     pagination = {},
     virtualScroll = true
 }) =>
@@ -60,34 +54,21 @@ module.exports = ({
         toggleDeleteConfirm={toggleDeleteConfirm}
         topRightItems={<ButtonToolbar>
             <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
+                <MenuItem onClick={() => toggleTableView()} eventKey="1"><Glyphicon glyph="features-grid" />&nbsp;<Message msgId="widgets.widget.menu.showChartData" /></MenuItem>
                 <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil" />&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>
                 <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash" />&nbsp;<Message msgId="widgets.widget.menu.delete" /></MenuItem>
                 <MenuItem onClick={() => exportCSV({ title })} eventKey="4"><Glyphicon className="exportCSV" glyph="download" />&nbsp;<Message msgId="widgets.widget.menu.downloadData" /></MenuItem>
             </DropdownButton>
         </ButtonToolbar>}>
-        <BorderLayout
-            footer={pagination.totalFeatures ? (
-                    <div style={{ height: "30px", overflow: "hidden"}}>
-                    {loading ? <span style={{ "float": "right"}}><LoadingSpinner /></span> : null}
-                    <span style={{ "float": "left", margin: "5px" }} ><Message
-                            msgId={"featuregrid.resultInfoVirtual"}
-                            msgParams={{ total: pagination.totalFeatures }} /></span>
-                    </div>) : null}
-        >
         <FeatureGrid
-            sortable={false}
-            defaultSize={false}
-            columnSettings={columnSettings}
             pageEvents={pageEvents}
             virtualScroll={virtualScroll}
             features={features}
             pages={pages}
-            error={error}
             size={size}
             rowKey="id"
             describeFeatureType={describeFeatureType}
             pagination={pagination} />
-        </BorderLayout>
     </WidgetContainer>
 
     );

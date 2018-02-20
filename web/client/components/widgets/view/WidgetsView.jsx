@@ -35,6 +35,7 @@ module.exports = pure(({
 }={}) =>
     (<ResponsiveReactGridLayout
         key={id}
+        draggableHandle={".draggableHandle"}
         onLayoutChange={onLayoutChange}
         preventCollision
         layouts={layouts ? JSON.parse(JSON.stringify(layouts)) : undefined}

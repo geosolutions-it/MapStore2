@@ -101,10 +101,10 @@ const wfsQueryEpic = (action$, store) =>
             const totalFeatures = paginationInfo.totalFeatures(store.getState());
             const searchUrl = ConfigUtils.filterUrlParams(action.searchUrl, authkeyParamNameSelector(store.getState()));
             return Rx.Observable.merge(
-                getJSONFeatureWA(searchUrl, action.filterObj, {
-                    totalFeatures,
-                    sortOptions
-                })
+                    getJSONFeatureWA(searchUrl, action.filterObj, {
+                        totalFeatures,
+                        sortOptions
+                    })
                     .map(data => querySearchResponse(data, action.searchUrl, action.filterObj))
                     .catch(error => Rx.Observable.of(queryError(error)))
                     .startWith(featureLoading(true))

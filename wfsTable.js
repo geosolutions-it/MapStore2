@@ -5,40 +5,28 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {includes} = require('lodash');
 const { compose, withProps, createEventHandler, withHandlers, withStateHandlers, defaultProps } = require('recompose');
 const { getLayerJSONFeature, describeFeatureType } = require('../../../observables/wfs');
 const { getCurrentPaginationOptions, updatePages } = require('../../../utils/FeatureGridUtils');
-const { getFeatureTypeProperties } = require('../../../utils/ogc/WFS/base');
 const propsStreamFactory = require('../../misc/enhancers/propsStreamFactory');
 const Rx = require('rxjs');
 
 const sameFilter = (f1, f2) => f1 === f2;
 const sameOptions = (o1 = {}, o2 = {}) =>
     o1.propertyName === o2.propertyName;
-const sameSortOptions = (o1 = {}, o2 = {}) =>
-    o1.sortBy === o2.sortBy
-    && o1.sortOrder === o2.sortOrder;
+
 const getLayerUrl = l => l && l.wpsUrl || (l.search && l.search.url) || l.url;
 
 const configureDataRetrieve = ($props) =>
     $props.filter(({ layer = {}, options }) => layer.name && options)
         .distinctUntilChanged(
-            ({ layer = {}, options = {}, filter, sortOptions }, newProps) =>
+            ({ layer = {}, options = {}, filter }, newProps) =>
                 getLayerUrl(layer) === getLayerUrl(layer)
                 && (newProps.layer && layer.name === newProps.layer.name)
                 && sameOptions(options, newProps.options)
-                && sameFilter(filter, newProps.filter)
-                && sameSortOptions(sortOptions, newProps.sortOptions))
-        // when one of the items above changed invalidates cache for before the next request
-        .map((props) => ({
-            ...props,
-            features: [],
-            pages: [],
-            pagination: {}
-        }));
+                && sameFilter(filter, newProps.filter));
 /**
- * Get data all in one request.
+ * get data all in one request.
  * @param {Observable} props$ stream of props
  */
 const singlePageDataStream = props$ => props$.switchMap(
@@ -55,16 +43,14 @@ const singlePageDataStream = props$ => props$.switchMap(
             // TODO totalFeatures
             // TODO sortOptions - default
         })
-            .map(() => ({
+            .map((data) => ({
                 loading: false,
-                error: undefined
-
-            })).do(data => onLoad({
+                error: undefined,
                 features: data.features,
                 pagination: {
                     totalFeatures: data.totalFeatures
                 }
-            }))
+            })).do(onLoad)
             .catch((e) => Rx.Observable.of({
                 loading: false,
                 error: e,
@@ -82,52 +68,33 @@ const virtualScrollDataStream = pages$ => props$ => props$.switchMap(({
             layer = {},
             size = 20,
             maxStoredPages = 5,
+            options,
             filter,
-            options = {},
             pages,
             features = [],
             onLoad = () => { },
             onLoadError = () => { }
-}) => pages$.switchMap(({pagesRange, pagination = {}}, {}) => getLayerJSONFeature(layer, filter, {
+}) => pages$.switchMap(pagesRange => getLayerJSONFeature(layer, filter, {
         ...getCurrentPaginationOptions(pagesRange, pages, size),
-        timeout: 15000,
-        totalFeatures: pagination.totalFeatures, // this is needed to allow workaround of GEOS-7233
-        propertyName: options.propertyName
-        // TODO: defaultSortOptions - to skip primary-key issues
-    })
-    .do(data => onLoad({
-        ...updatePages(data, pagesRange, { pages, features }, { ...getCurrentPaginationOptions(pagesRange, pages, size), size, maxStoredPages }),
-        pagination: {
-            totalFeatures: data.totalFeatures
-        }
-    }))
-    .map(() => ({
-        loading: false
+            timeout: 15000,
+            params: { propertyName: options.propertyName }
+            //TODO: manage no primary key issues
+        // TODO totalFeatures
+        // TODO sortOptions - default
+    }).do(data => onLoad(updatePages(data, pagesRange, { pages, features }, { ...getCurrentPaginationOptions(pagesRange, pages, size), size, maxStoredPages })))
+    .map( ({result = {}} = {}) => ({
+        pagination: {totalFeatures: result.totalFeatures}
     }))
     .catch((e) => Rx.Observable.of({
         loading: false,
-        error: e
+        error: e,
+        data: []
     }).do(onLoadError))
-    .startWith({
-        loading: true
-    })
-));
-const fetchDataStream = (props$, pages$, virtualScroll = true) =>
+    ));
+const dataRetrieveStream = (props$, pages$, virtualScroll = true) =>
     configureDataRetrieve(props$)
     .let(virtualScroll
-        ? virtualScrollDataStream(
-            pages$.withLatestFrom(
-                props$
-                    // get latest options needed
-                    .map(({pagination = {}} = {}) => ({
-                        pagination
-                    })), // pagination is needed to allow workaround of GEOS-7233
-                (pagesRange, otherOptions) => ({
-                    pagesRange,
-                    ...otherOptions
-                })
-            )
-        )
+        ? virtualScrollDataStream(pages$)
         : singlePageDataStream
     )
     .startWith({});
@@ -135,7 +102,7 @@ const describeStream = props$ =>
     props$
         .distinctUntilChanged(({ layer: layer1 } = {}, { layer: layer2 } = {}) => getLayerUrl(layer1) === getLayerUrl(layer2))
         .switchMap(({ layer } = {}) => describeFeatureType({ layer })
-            .map(r => ({ describeFeatureType: r.data, loading: false, error: undefined })))
+            .map(r => ({ describeFeatureType: r.data, loading: false })))
         .catch(error => Rx.Observable.of({
             loading: false,
             error
@@ -145,7 +112,7 @@ const dataStreamFactory = ($props) => {
     const {handler, stream: pages$ } = createEventHandler();
     return describeStream($props)
         .combineLatest(
-            fetchDataStream($props, pages$.startWith({startPage: 0, endPage: 1})),
+            dataRetrieveStream($props, pages$.startWith({startPage: 0, endPage: 1})),
             (p1, p2) => ({
                 ...p1,
                 ...p2,
@@ -165,36 +132,21 @@ module.exports = compose(
     }),
     withStateHandlers({
         pages: [],
-        features: [],
-        pagination: {}
+        features: []
     }, {
-        setData: () => ({pages, features, pagination} = {}) => ({
+        setData: () => ({pages, features} = {}) => ({
             pages,
-            features,
-            pagination,
-            error: undefined
+            features
         })
     }),
     withHandlers({
-        onLoad: ({ setData = () => {}, onLoad = () => {}} = {}) => (...args) => {
-            setData(...args);
-            onLoad(...args);
+        onLoad: ({ setData = () => {}, onLoad = () => {}} = {}) => ({pages, features} = {}) => {
+            setData({pages, features});
+            onLoad({pages, features});
         }
     }),
     withProps(() => ({
         dataStreamFactory
     })),
-    propsStreamFactory,
-    // handle propertyNames and columns
-    withProps(({ options = {}, describeFeatureType: dft } = {}) => ({
-        columnSettings: dft ?
-            getFeatureTypeProperties(dft)
-                .filter(p => !includes(options.propertyName || [], p.name))
-            .reduce((acc, p) => ({
-                ...acc,
-                [p.name]: {
-                hide: true
-            }
-        }), {}) : {}
-    })),
+    propsStreamFactory
 );

@@ -14,6 +14,7 @@ module.exports = ({
     id,
     title,
     confirmDelete= false,
+    handle = "draggableHandle",
     toggleDeleteConfirm = () => {},
     onDelete=() => {},
     topLeftItems,
@@ -21,7 +22,7 @@ module.exports = ({
     children
     }) =>
     (<div className="mapstore-widget-card" id={id}>
-        <BorderLayout header={(<div className="mapstore-widget-info">
+        <BorderLayout header={(<div className={`mapstore-widget-info ${handle ? handle : ""}`}>
                     <div className="mapstore-widget-header">
                         {topLeftItems}
                         <span className="widget-title">{title}</span>

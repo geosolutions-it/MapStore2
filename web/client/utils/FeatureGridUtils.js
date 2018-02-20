@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const {get, findIndex, isNil} = require('lodash');
+const { get, findIndex, isNil, fill} = require('lodash');
 
 const {getFeatureTypeProperties, isGeometryType, isValid, isValidValueForPropertyName, findGeometryProperty, getPropertyDesciptor} = require('./ogc/WFS/base');
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
@@ -77,18 +77,45 @@ const upsertFilterField = (filterFields = [], filter, newObject) => {
 };
 const getAttributeFields = (describe) => (getFeatureTypeProperties(describe) || []).filter( e => !isGeometryType(e));
 
+// virtual scroll utility functions
+const getIdxFarthestEl = (startIdx, pages = [], firstRow, lastRow) => {
+    return pages.map(val => firstRow <= val && val <= lastRow ? 0 : Math.abs(val - startIdx)).reduce((i, distance, idx, vals) => distance > vals[i] && idx || i, 0);
+};
+const removePage = (idxFarthestEl, pages) => pages.filter((el, i) => i !== idxFarthestEl);
+const removePageFeatures = (features, idxToRemove, size) => features.filter((el, i) => i < idxToRemove || i >= idxToRemove + size);
+const getPagesToLoad = (startPage, endPage, pages, size) => {
+    let firstMissingPage;
+    let lastMissingPage;
+    for (let i = startPage; i <= endPage && firstMissingPage === undefined; i++) {
+        if (getRowIdx(i * size, pages, size) === -1) {
+            firstMissingPage = i;
+        }
+    }
+    for (let i = endPage; i >= startPage && lastMissingPage === undefined; i--) {
+        if (getRowIdx(i * size, pages, size) === -1) {
+            lastMissingPage = i;
+        }
+    }
+    return [firstMissingPage, lastMissingPage].filter(p => p !== undefined);
+};
+// return the options for the paged request to get checking the current cached data
+const getCurrentPaginationOptions = ({ startPage, endPage }, oldPages, size) => {
+    const nPs = getPagesToLoad(startPage, endPage, oldPages, size);
+    const needPages = (nPs[1] - nPs[0] + 1);
+    return { startIndex: nPs[0] * size, maxFeatures: needPages * size };
+};
 
 module.exports = {
     getAttributeFields,
     featureTypeToGridColumns: (
             describe,
             columnSettings = {},
-            {editable=false, sortable=true, resizable=true, filterable = true} = {},
+            {editable=false, sortable=true, resizable=true, filterable = true, defaultSize = 200} = {},
             {getEditor = () => {}, getFilterRenderer = () => {}, getFormatter = () => {}} = {}) =>
         getAttributeFields(describe).filter(e => !(columnSettings[e.name] && columnSettings[e.name].hide)).map( (desc) => ({
                 sortable,
                 key: desc.name,
-                width: columnSettings[desc.name] && columnSettings[desc.name].width || 200,
+                width: columnSettings[desc.name] && columnSettings[desc.name].width || (defaultSize ? defaultSize : undefined),
                 name: desc.name,
                 resizable,
                 editable,
@@ -161,25 +188,45 @@ module.exports = {
         total: totalFeatures,
         maxPages: Math.ceil(totalFeatures / maxFeatures) - 1
     }),
+    getCurrentPaginationOptions,
+    /**
+     * updates the pages and the features of the request to support virtual scroll.
+     * This is virtual scroll with support for
+     * @param {object} result An object with result --> geoJSON of type "FeatureCollection"
+     * @param {object} requestOptions contains startPage and endPage needed.
+     * @param {object} oldData features and pages previously loaded
+     * @param {object} paginationOptions. The options for pagination `size` and `maxStoredPages`, .
+     *
+     */
+    updatePages: (result, { endPage, startPage } = {}, { pages, features } = {}, {size, maxStoredPages, startIndex} = {}) => {
+        const nPs = getPagesToLoad(startPage, endPage, pages, size);
+        const needPages = (nPs[1] - nPs[0] + 1);
+        let fts = get(result, "features", []);
+        if (fts.length !== needPages * size) {
+            fts = fts.concat(fill(Array(needPages * size - fts.length), false));
+        }
+        let oldPages = pages;
+        let oldFeatures = features;
+        // Cached page should be less than the max of maxStoredPages or the number of page needed to fill the visible are of the grid
+        const nSpaces = oldPages.length + needPages - Math.max(maxStoredPages, (endPage - startPage + 1));
+        if (nSpaces > 0) {
+            const firstRow = startPage * size;
+            const lastRow = endPage * size;
+            // Remove the farthest page from last loaded pages
+            const averageIdx = firstRow + (lastRow - firstRow) / 2;
+            for (let i = 0; i < nSpaces; i++) {
+                const idxFarthestEl = getIdxFarthestEl(averageIdx, pages, firstRow, lastRow);
+                const idxToRemove = idxFarthestEl * size;
+                oldPages = removePage(idxFarthestEl, oldPages);
+                oldFeatures = removePageFeatures(features, idxToRemove, size);
+            }
+        }
+        let pagesLoaded = [];
+        for (let i = 0; i < needPages; i++) {
+            pagesLoaded.push(startIndex + (size * i));
+        }
+        return { pages: oldPages.concat(pagesLoaded), features: oldFeatures.concat(fts) };
+    },
     getRowIdx,
-    getPagesToLoad: (startPage, endPage, pages, size) => {
-        let firstMissingPage;
-        let lastMissingPage;
-        for (let i = startPage; i <= endPage && firstMissingPage === undefined; i++) {
-            if (getRowIdx(i * size, pages, size) === -1) {
-                firstMissingPage = i;
-            }
-        }
-        for (let i = endPage; i >= startPage && lastMissingPage === undefined; i--) {
-            if (getRowIdx(i * size, pages, size) === -1) {
-                lastMissingPage = i;
-            }
-        }
-        return [firstMissingPage, lastMissingPage].filter(p => p !== undefined);
-    },
-    getIdxFarthestEl: (startIdx, pages = [], firstRow, lastRow) => {
-        return pages.map(val => firstRow <= val && val <= lastRow ? 0 : Math.abs(val - startIdx)).reduce((i, distance, idx, vals) => distance > vals[i] && idx || i, 0);
-    },
-    removePage: (idxFarthestEl, pages) => pages.filter( (el, i) => i !== idxFarthestEl),
-    removePageFeatures: (features, idxToRemove, size) => features.filter((el, i) => i < idxToRemove || i >= idxToRemove + size)
+    getPagesToLoad
 };
