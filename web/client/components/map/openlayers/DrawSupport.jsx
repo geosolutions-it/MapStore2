@@ -345,14 +345,14 @@ class DrawSupport extends React.Component {
             // this.drawLayer.getSource().getFeatures()[0].set("textValues", previousTexts.concat(["dsfgsdgsgs"]));
 
             const geojsonFormat = new ol.format.GeoJSON();
-            let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), this.props.map.getView().getProjection().getCode(), this.props.options.featureProjection);
+            let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
             if (newFeature.geometry.type === "Polygon") {
                 newFeature.geometry.coordinates[0].push(newFeature.geometry.coordinates[0][0]);
             }
 
             this.props.onGeometryChanged([newFeature], this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "", drawMethod === "Text");
             this.props.onEndDrawing(feature, this.props.drawOwner);
-            feature = reprojectGeoJson(feature, this.props.map.getView().getProjection().getCode(), this.props.options.featureProjection);
+            feature = reprojectGeoJson(feature, this.props.map.getView().getProjection().getCode(), "EPSG:4326");
             let properties = this.props.features[0].properties;
             if (drawMethod === "Text") {
                 properties = assign({}, this.props.features[0].properties, {
@@ -367,7 +367,7 @@ class DrawSupport extends React.Component {
                 this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner, newFeatures);
             } else {
                 this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner,
-                    newFeatures.map((f) => reprojectGeoJson(f, this.props.options.featureProjection, this.props.map.getView().getProjection().getCode())),
+                    newFeatures.map((f) => reprojectGeoJson(f, "EPSG:4326", this.props.map.getView().getProjection().getCode())),
                     assign({}, this.props.options, { featureProjection: this.props.map.getView().getProjection().getCode()}));
             }
             if (this.selectInteraction) {
@@ -771,7 +771,7 @@ class DrawSupport extends React.Component {
 
             const geojsonFormat = new ol.format.GeoJSON();
             let features = e.features.getArray().map((f) => {
-                return reprojectGeoJson(geojsonFormat.writeFeatureObject(f.clone()), this.props.map.getView().getProjection().getCode(), this.props.options.featureProjection);
+                return reprojectGeoJson(geojsonFormat.writeFeatureObject(f.clone()), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
             });
 
             this.props.onGeometryChanged(features, this.props.drawOwner, false, "editing"); // TODO FIX THIS
@@ -790,7 +790,7 @@ class DrawSupport extends React.Component {
 
             const geojsonFormat = new ol.format.GeoJSON();
             let features = e.features.getArray().map((f) => {
-                return reprojectGeoJson(geojsonFormat.writeFeatureObject(f.clone()), this.props.map.getView().getProjection().getCode(), this.props.options.featureProjection);
+                return reprojectGeoJson(geojsonFormat.writeFeatureObject(f.clone()), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
             });
 
             this.props.onGeometryChanged(features, this.props.drawOwner, this.props.drawOwner, false, this.props.drawMethod === "Text");

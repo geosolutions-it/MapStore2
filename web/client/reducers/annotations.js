@@ -199,7 +199,7 @@ function annotations(state = { validationErrors: {} }, action) {
             });
         case UPDATE_ANNOTATION_GEOMETRY: {
             let stylerType;
-            let availableStyler = getAvailableStyler(convertGeoJSONToInternalModel(action.geometry, typeof action.textChanged !== "string" ? state.editing.properties.textValues || ["v"] : [] ));
+            let availableStyler = getAvailableStyler(convertGeoJSONToInternalModel(action.geometry, typeof action.textChanged === "boolean" && action.textChanged ? state.editing.properties.textValues || ["v"] : [] ));
             if (action.geometry.type === "GeometryCollection") {
                 stylerType = availableStyler.indexOf(state.stylerType) !== -1 ? state.stylerType : head(availableStyler);
             } else {
