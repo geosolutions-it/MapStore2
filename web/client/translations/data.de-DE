@@ -719,6 +719,7 @@
             "add": "Neue",
             "filter": "Filtern die annotationen...",
             "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
+            "downloadtooltip": "Laden Sie Anmerkungen herunter",
             "zoomTo": "Zoom",
             "field": {
                 "title": "Titel",

@@ -694,6 +694,7 @@
             "filter": "Filtrer les annotations...",
             "undo": "Êtes-vous sûr de vouloir abandonner la session d'édition d'annotation?",
             "zoomTo": "Zoom",
+            "downloadtooltip": "Télécharger les annotations",
             "field": {
                 "title": "Titre",
                 "description": "Description"
