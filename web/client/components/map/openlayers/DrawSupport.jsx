@@ -771,7 +771,7 @@ class DrawSupport extends React.Component {
 
             const geojsonFormat = new ol.format.GeoJSON();
             let features = e.features.getArray().map((f) => {
-                return reprojectGeoJson(geojsonFormat.writeFeatureObject(f.clone()), this.props.map.getView().getProjection().getCode(), this.props.options.featureProjection);
+                return reprojectGeoJson(geojsonFormat.writeFeatureObject(f.clone()), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
             });
 
             this.props.onGeometryChanged(features, this.props.drawOwner, false, "editing"); // TODO FIX THIS
@@ -790,7 +790,7 @@ class DrawSupport extends React.Component {
 
             const geojsonFormat = new ol.format.GeoJSON();
             let features = e.features.getArray().map((f) => {
-                return reprojectGeoJson(geojsonFormat.writeFeatureObject(f.clone()), this.props.map.getView().getProjection().getCode(), this.props.options.featureProjection);
+                return reprojectGeoJson(geojsonFormat.writeFeatureObject(f.clone()), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
             });
 
             this.props.onGeometryChanged(features, this.props.drawOwner, this.props.drawOwner, false, this.props.drawMethod === "Text");
