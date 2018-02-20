@@ -65,7 +65,7 @@
             "featureInfoFormatLbl": "Identifiziere das Antwortformat",
             "legenderror": "Legende ist nicht verfügbar",
             "editCustomFormat": "Bearbeiten Sie das benutzerdefinierte Format",
-            "exampleOfResponse": "Beispiel für eine Antwort",
+            "exampleOfResponse": "Beispiel",
             "changedSettings": "Geänderte Einstellungen",
             "changedSettingsAlert": "Sie schließen das Einstellungsfenster, ohne Ihre Änderungen zu speichern",
             "textFormatTitle": "TEXT",
@@ -77,7 +77,7 @@
             "templateFormatTitle": "TEMPLATE",
             "templateFormatDescription": "Passen Sie das Ergebnis der Feature-Informationen an",
             "templateFormatInfoAlert1": "Klicken Sie auf Bearbeiten, um eine neue Vorlage hinzuzufügen.",
-            "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um die Eigenschaften zu umbrechen, die angezeigt werden sollen",
+            "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um die Eigenschaften zu umbrechen, die Sie anzeigen müssen",
             "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
             "templatePreview": "Vorschau template"
         },

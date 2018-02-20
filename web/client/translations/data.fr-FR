@@ -66,7 +66,7 @@
             "featureInfoFormatLbl": "Information, format de la réponse",
             "legenderror": "La légende n'est pas disponible",
             "editCustomFormat": "Modifier le format personnalisé",
-            "exampleOfResponse": "Exemple de réponse",
+            "exampleOfResponse": "Exemple",
             "changedSettings": "Paramètres modifiés",
             "changedSettingsAlert": "Vous fermez le panneau des paramètres sans enregistrer vos modifications",
             "textFormatTitle": "TEXT",
@@ -78,7 +78,7 @@
             "templateFormatTitle": "TEMPLATE",
             "templateFormatDescription": "Personnaliser le format des résultats d'informations sur les fonctionnalités",
             "templateFormatInfoAlert1": "Cliquez sur le bouton d'édition pour ajouter un nouveau modèle.",
-            "templateFormatInfoAlert2": "Utilisez ${ attribute } pour envelopper les propriétés dont vous avez besoin",
+            "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
             "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }",
             "templatePreview": "Aperçu du template"
         },

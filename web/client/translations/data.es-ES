@@ -65,7 +65,7 @@
             "featureInfoFormatLbl": "Indentificar el formato de respuesta",
             "legenderror": "La leyenda no está disponible",
             "editCustomFormat": "Editar formato personalizado",
-            "exampleOfResponse": "Ejemplo de respuesta",
+            "exampleOfResponse": "Ejemplo",
             "changedSettings": "Configuraciones modificadas",
             "changedSettingsAlert": "Está cerrando el panel de configuraciones sin guardar sus cambios",
             "textFormatTitle": "TEXT",
@@ -77,7 +77,7 @@
             "templateFormatTitle": "TEMPLATE",
             "templateFormatDescription": "Personalizar formato de resultados de información de funciones",
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
-            "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita mostrar",
+            "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
             "templateFormatInfoAlertExample": "La identificación de la función es ${ properties }",
             "templatePreview": "Vista previa de template"
         },

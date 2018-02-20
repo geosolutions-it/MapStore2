@@ -65,7 +65,7 @@
             "featureInfoFormatLbl": "Identify response format",
             "legenderror": "Legend is not available",
             "editCustomFormat": "Edit custom format",
-            "exampleOfResponse": "Example of Response",
+            "exampleOfResponse": "Example",
             "changedSettings": "Changed Settings",
             "changedSettingsAlert": "You are closing the settings panel without save your changes",
             "textFormatTitle": "TEXT",
@@ -77,7 +77,7 @@
             "templateFormatTitle": "TEMPLATE",
             "templateFormatDescription": "Customize feature info results format",
             "templateFormatInfoAlert1": "Click on edit button to add a new template.",
-            "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to be displayed",
+            "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
             "templatePreview": "Template preview"
 
