@@ -16,7 +16,7 @@ const {hideMapinfoMarker, purgeMapInfoResults} = require('../actions/mapInfo');
 const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAdd, showTextArea,
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
     TOGGLE_ADD, SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, STOP_DRAWING,
-    CANCEL_CLOSE_TEXT, SAVE_TEXT, DONWLOAD} = require('../actions/annotations');
+    CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD} = require('../actions/annotations');
 const {CLICK_ON_MAP} = require('../actions/map');
 
 const {GEOMETRY_CHANGED} = require('../actions/draw');
@@ -261,7 +261,7 @@ module.exports = (viewer) => ({
     .switchMap(() => {
         return Rx.Observable.from((store.getState().controls.annotations && store.getState().controls.annotations.enabled ? [toggleControl('annotations')] : []).concat([purgeMapInfoResults()]));
     }),
-    downloadAnnotaions: (action$, {getState}) => action$.ofType(DONWLOAD)
+    downloadAnnotations: (action$, {getState}) => action$.ofType(DOWNLOAD)
         .switchMap(() => {
             const annotations = annotationsLayerSelector(getState());
             const mapName = mapNameSelector(getState());
