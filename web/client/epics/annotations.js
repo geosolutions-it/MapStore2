@@ -140,7 +140,7 @@ module.exports = (viewer) => ({
                     handleClickOnLayer: true
                 })
             ]).concat([
-                changeDrawingStatus("clean", store.getState().annotations.featureType, "annotations", [], {}),
+                changeDrawingStatus("clean", store.getState().annotations.featureType || '', "annotations", [], {}),
                 changeLayerProperties('annotations', {visibility: true})
             ]));
         }),
@@ -148,7 +148,7 @@ module.exports = (viewer) => ({
         action$.ofType(CANCEL_EDIT_ANNOTATION, PURGE_MAPINFO_RESULTS)
         .switchMap(() => {
             return Rx.Observable.from([
-                changeDrawingStatus("clean", store.getState().annotations.featureType, "annotations", [], {}),
+                changeDrawingStatus("clean", store.getState().annotations.featureType || '', "annotations", [], {}),
                 changeLayerProperties('annotations', {visibility: true})
             ]);
         }),
@@ -250,7 +250,7 @@ module.exports = (viewer) => ({
         .switchMap(() => {
             return Rx.Observable.from([
                 cleanHighlight(),
-                changeDrawingStatus("clean", store.getState().annotations.featureType, "annotations", [], {}),
+                changeDrawingStatus("clean", store.getState().annotations.featureType || '', "annotations", [], {}),
                 changeLayerProperties('annotations', {visibility: true})
             ]);
         }),
