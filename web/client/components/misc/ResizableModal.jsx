@@ -6,11 +6,12 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const PropTypes = require('prop-types');
 const React = require('react');
 const {Glyphicon} = require('react-bootstrap');
 const Dialog = require('./Dialog');
 const Toolbar = require('./toolbar/Toolbar');
+const {withState} = require('recompose');
+const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 
 const sizes = {
     xs: ' ms-xs',
@@ -38,6 +39,7 @@ const fullscreen = {
         }
     }
 };
+
 /**
  * Component for rendering a responsive dialog modal.
  * @memberof components.ResizableModal
@@ -51,87 +53,72 @@ const fullscreen = {
  * @prop {array} buttons array of buttons object see Toolbar.
  * @prop {string} size size of modal sm, lg or md/empty. Default ''
  * @prop {string} bodyClassName custom class for modal body.
- *
+ * @prop {bool} draggable enable modal drag.
  */
-class ResizableModal extends React.Component {
-    static propTypes = {
-        show: PropTypes.bool,
-        showFullscreen: PropTypes.bool,
-        clickOutEnabled: PropTypes.bool,
-        fullscreenType: PropTypes.string,
-        onClose: PropTypes.func,
-        title: PropTypes.node,
-        buttons: PropTypes.array,
-        size: PropTypes.string,
-        showClose: PropTypes.bool,
-        disabledClose: PropTypes.bool,
-        bodyClassName: PropTypes.string
-    };
 
-    static defaultProps = {
-        show: false,
-        onClose: () => {},
-        title: '',
-        clickOutEnabled: true,
-        showClose: true,
-        disabledClose: false,
-        showFullscreen: false,
-        fullscreenType: 'full',
-        buttons: [],
-        size: '',
-        bodyClassName: ''
-    };
+const ResizableModal = ({
+    show = false,
+    onClose = () => {},
+    title = '',
+    clickOutEnabled = true,
+    showClose = true,
+    disabledClose = false,
+    showFullscreen = false,
+    fullscreenType = 'full',
+    buttons = [],
+    size = '',
+    bodyClassName = '',
+    children,
+    draggable = false,
+    fullscreenState,
+    onFullscreen,
+    fade = false
+}) => {
+    const sizeClassName = sizes[size] || '';
+    const fullscreenClassName = showFullscreen && fullscreenState === 'expanded' && fullscreen.className[fullscreenType] || '';
+    const dialog = show ? (
+        <div className={'modal-fixed ' + (draggable ? 'ms-draggable' : '')}>
+            <Dialog
+                id="ms-resizable-modal"
+                style={{display: 'flex'}}
+                onClickOut={clickOutEnabled ? onClose : () => {}}
+                containerClassName="ms-resizable-modal"
+                draggable={draggable}
+                modal
+                className={'modal-dialog modal-content' + sizeClassName + fullscreenClassName}>
+                <span role="header">
+                    <h4 className="modal-title">
+                        <div className="ms-title">{title}</div>
+                        {showFullscreen && fullscreen.className[fullscreenType] &&
+                            <Glyphicon
+                                className="ms-header-btn"
+                                onClick={() => onFullscreen(fullscreenState === 'expanded' ? 'collapsed' : 'expanded')}
+                                glyph={fullscreen.glyph[fullscreenState][fullscreenType]}/>
+                        }
+                        {showClose && onClose &&
+                            <Glyphicon
+                                glyph="1-close"
+                                className="ms-header-btn"
+                                onClick={onClose}
+                                disabled={disabledClose}/>
+                        }
+                    </h4>
+                </span>
+                <div role="body" className={bodyClassName}>
+                    {children}
+                </div>
+                <div role="footer">
+                    <Toolbar buttons={buttons}/>
+                </div>
+            </Dialog>
+        </div>) : null;
+    return fade ?
+        (<ReactCSSTransitionGroup
+            transitionName="ms-resizable-modal-fade"
+            transitionEnterTimeout={300}
+            transitionLeaveTimeout={300}>
+            {dialog}
+        </ReactCSSTransitionGroup>) : dialog;
+};
 
-    state = {
-        fullscreen: 'collapsed'
-    };
-
-    render() {
-        // TODO VERIFY that the dialog id can be customizable or a fixed value
-        const sizeClassName = sizes[this.props.size] || '';
-        const fullscreenClassName = this.props.showFullscreen && this.state.fullscreen === 'expanded' && fullscreen.className[this.props.fullscreenType] || '';
-        return (
-            <span className={this.props.show ? "modal-fixed" : ""}>
-                <Dialog
-                    id="ms-resizable-modal"
-                    style={{display: this.props.show ? 'flex' : 'none'}}
-                    onClickOut={this.props.clickOutEnabled ? this.props.onClose : () => {}}
-                    containerClassName="ms-resizable-modal"
-                    draggable={false}
-                    modal
-                    className={'modal-dialog modal-content' + sizeClassName + fullscreenClassName}>
-                    <span role="header">
-                        <h4 className="modal-title">
-                            <div className="ms-title">{this.props.title}</div>
-                            {this.props.showFullscreen && fullscreen.className[this.props.fullscreenType] &&
-                                <Glyphicon
-                                    className="ms-header-btn"
-                                    onClick={() => {
-                                        this.setState({
-                                            fullscreen: this.state.fullscreen === 'expanded' ? 'collapsed' : 'expanded'
-                                        });
-                                    }}
-                                    glyph={fullscreen.glyph[this.state.fullscreen][this.props.fullscreenType]}/>
-                            }
-                            {this.props.showClose && this.props.onClose &&
-                                <Glyphicon
-                                    glyph="1-close"
-                                    className="ms-header-btn"
-                                    onClick={this.props.onClose}
-                                    disabled={this.props.disabledClose}/>
-                            }
-                        </h4>
-                    </span>
-                    <div role="body" className={this.props.bodyClassName}>
-                        {this.props.children}
-                    </div>
-                    <div role="footer">
-                        <Toolbar buttons={this.props.buttons}/>
-                    </div>
-                </Dialog>
-            </span>
-        );
-    }
-}
-
-module.exports = ResizableModal;
+module.exports = withState('fullscreenState', 'onFullscreen', 'collapsed')(ResizableModal);

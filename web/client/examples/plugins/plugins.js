@@ -38,7 +38,8 @@ module.exports = {
         ExpanderPlugin: require('../../plugins/Expander'),
         SharePlugin: require('../../plugins/Share'),
         HomePlugin: require('../../plugins/Home'),
-        LoginPlugin: require('../../plugins/Login')
+        LoginPlugin: require('../../plugins/Login'),
+        TOCItemsSettingsPlugin: require('../../plugins/TOCItemsSettings')
     },
     requires: {}
 };

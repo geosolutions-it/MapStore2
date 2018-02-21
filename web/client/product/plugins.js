@@ -81,7 +81,8 @@ module.exports = {
         Dashboard: require('../plugins/Dashboard'),
         DashboardEditor: require('../plugins/DashboardEditor'),
         WidgetsPlugin: require('../plugins/Widgets'),
-        WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder')
+        WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder'),
+        TOCItemsSettingsPlugin: require('../plugins/TOCItemsSettings')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

@@ -5,20 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+
 const React = require('react');
 const ReactDOM = require('react-dom');
-
-const GeocodeViewer = require('../GeocodeViewer.jsx');
-
 const expect = require('expect');
-
+const GeocodeViewer = require('../GeocodeViewer.jsx');
 const TestUtils = require('react-dom/test-utils');
-
-class Wrapper extends React.Component {
-    render() {
-        return this.props.children;
-    }
-}
 
 describe('GeocodeViewer', () => {
     beforeEach((done) => {
@@ -33,46 +25,85 @@ describe('GeocodeViewer', () => {
     });
 
     it('creates the GeocodeViewer component with defaults', () => {
-        let component = <Wrapper><GeocodeViewer modalOptions={{animation: false}} show="true" latlng={{lat: 42, lng: 10}} showModalReverse="false"/></Wrapper>;
-        const header = ReactDOM.render(
-            component,
+        ReactDOM.render(
+            <GeocodeViewer />,
             document.getElementById("container")
         );
-
-        expect(header).toExist();
+        const geocodeViewer = document.getElementsByClassName('ms-geoscode-viewer');
+        expect(geocodeViewer.length).toBe(0);
     });
 
-    it('creates the GeocodeViewer component with latlng', () => {
-        let component = <Wrapper><GeocodeViewer modalOptions={{animation: false}} show="true" latlng={{lat: 42, lng: 10}} showModalReverse="false"/></Wrapper>;
-        const header = ReactDOM.render(
-            component,
+    it('creates the GeocodeViewer no lat lng', () => {
+        ReactDOM.render(
+            <GeocodeViewer enableRevGeocode/>,
             document.getElementById("container")
         );
-
-        expect(header).toExist();
-        const dom = ReactDOM.findDOMNode(header);
-        expect(dom.innerHTML.indexOf('42') !== -1).toBe(true);
-        expect(dom.innerHTML.indexOf('10') !== -1).toBe(true);
+        const geocodeViewer = document.getElementsByClassName('ms-geoscode-viewer');
+        expect(geocodeViewer.length).toBe(0);
     });
 
-    it('test click handler and modal', () => {
+    it('creates the GeocodeViewer enable', () => {
+        ReactDOM.render(
+            <GeocodeViewer
+                enableRevGeocode
+                latlng={{lat: 40, lng: 10}}
+                lngCorrected={10}/>,
+            document.getElementById("container")
+        );
+        const geocodeViewer = document.getElementsByClassName('ms-geoscode-viewer');
+        expect(geocodeViewer.length).toBe(1);
+        const coords = document.getElementsByClassName('ms-geocode-coords')[0];
+        expect(coords.innerHTML.indexOf('Lat:') !== -1).toBe(true);
+        expect(coords.innerHTML.indexOf('Long:') !== -1).toBe(true);
+    });
+
+    it('creates the GeocodeViewer hide', () => {
+        ReactDOM.render(
+            <GeocodeViewer
+                enableRevGeocode
+                latlng={{lat: 40, lng: 10}}
+                lngCorrected={10}/>,
+            document.getElementById("container")
+        );
+        const modalEditor = document.getElementsByClassName('ms-resizable-modal');
+        expect(modalEditor.length).toBe(0);
+    });
+
+    it('test rendering close x and show', () => {
         const testHandlers = {
-            clickHandler: (pressed) => {return pressed; }
+            hideRevGeocode: () => {}
         };
-        const spy = expect.spyOn(testHandlers, 'clickHandler');
-        var geocode = ReactDOM.render(<Wrapper><GeocodeViewer modalOptions={{animation: false}} latlng={{lat: 42, lng: 10}} showRevGeocode={testHandlers.clickHandler} showModalReverse/></Wrapper>, document.getElementById("container"));
-        let elem = TestUtils.findRenderedDOMComponentWithTag(geocode, "button");
+        const spyHideRevGeocode = expect.spyOn(testHandlers, 'hideRevGeocode');
+        ReactDOM.render(<GeocodeViewer
+            enableRevGeocode
+            showModalReverse
+            latlng={{lat: 40, lng: 10}}
+            hideRevGeocode={testHandlers.hideRevGeocode}
+            lngCorrected={10}/>, document.getElementById("container"));
+        const modalEditor = document.getElementsByClassName('ms-resizable-modal');
+        expect(modalEditor.length).toBe(1);
+        const btns = document.getElementsByClassName('ms-header-btn');
+        expect(btns.length).toBe(1);
+        TestUtils.Simulate.click(btns[0]);
+        expect(spyHideRevGeocode).toHaveBeenCalled();
+    });
 
-        const getModals = function() {
-            return document.getElementsByTagName("body")[0].getElementsByClassName('modal-dialog');
+    it('test rendering close close', () => {
+        const testHandlers = {
+            hideRevGeocode: () => {}
         };
-
-        expect(getModals().length).toBe(1);
-
-        expect(elem).toExist();
-        ReactDOM.findDOMNode(elem).click();
-        expect(spy.calls.length).toEqual(1);
-        expect(spy.calls[0].arguments[0].lat).toEqual(42);
-        expect(spy.calls[0].arguments[0].lng).toEqual(10);
+        const spyHideRevGeocode = expect.spyOn(testHandlers, 'hideRevGeocode');
+        ReactDOM.render(<GeocodeViewer
+            enableRevGeocode
+            showModalReverse
+            latlng={{lat: 40, lng: 10}}
+            hideRevGeocode={testHandlers.hideRevGeocode}
+            lngCorrected={10}/>, document.getElementById("container"));
+        const modalEditor = document.getElementsByClassName('ms-resizable-modal');
+        expect(modalEditor.length).toBe(1);
+        const btns = document.getElementsByClassName('btn');
+        expect(btns.length).toBe(1);
+        TestUtils.Simulate.click(btns[0]);
+        expect(spyHideRevGeocode).toHaveBeenCalled();
     });
 });
