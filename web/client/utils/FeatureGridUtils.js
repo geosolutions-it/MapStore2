@@ -146,11 +146,12 @@ module.exports = {
      * @param  {function} rowGetter     the method to retrieve the feature
      * @param  {object} describe        the describe feature type
      * @param  {object} actionOpts      some options
+     * @param  {object} columns         columns definition
      * @return {object}                 The events with the additional parameters
      */
-    getGridEvents: (gridEvents = {}, rowGetter, describe, actionOpts) => Object.keys(gridEvents).reduce((events, currentEventKey) => ({
+    getGridEvents: (gridEvents = {}, rowGetter, describe, actionOpts, columns) => Object.keys(gridEvents).reduce((events, currentEventKey) => ({
         ...events,
-        [currentEventKey]: (...args) => gridEvents[currentEventKey](...args, rowGetter, describe, actionOpts)
+        [currentEventKey]: (...args) => gridEvents[currentEventKey](...args, rowGetter, describe, actionOpts, columns)
     }), {}),
     isProperty: (k, d) => !!getPropertyDesciptor(k, d),
     isValidValueForPropertyName: (v, k, d) => isValidValueForPropertyName(v, getPropertyName(k, d), d),

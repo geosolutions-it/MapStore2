@@ -155,10 +155,10 @@ const getJSONFeatureWA = (searchUrl, filterObj, { sortOptions = {}, ...options }
  * retro compatibility the filter object can contain pagination info, typeName and so on.
  * @param {object} options the optnions (pagination, totalFeatures and so on ...)
  */
-const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter = {}, {sortOptions, propertyName: pn, ...options} = {}) =>
+const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {sortOptions, propertyName: pn, ...options} = {}) =>
     // TODO: Apply sort workaround for no primary keys
     getJSONFeature(search.url || url,
-        typeof filter === 'object' ? {
+        filter && typeof filter === 'object' ? {
             ...filter,
             typeName: name || filter.typeName
         } : getFeature(
@@ -166,7 +166,7 @@ const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter = {}, {sort
                     [
                     ...( sortOptions ? [sortBy(sortOptions.sortBy, sortOptions.sortOrder)] : []),
                     ...(pn ? [propertyName(pn)] : []),
-                     ...castArray(filter)
+                        ...(filter ? castArray(filter) : [])
                     ]),
                 options), // options contains startIndex, maxFeatures and it can be passed as it is
     options);

@@ -149,7 +149,7 @@ const featuresToGrid = compose(
             })
     ),
     withPropsOnChange(
-        ["gridOpts", "describeFeatureType", "actionOpts", "mode", "select"],
+        ["gridOpts", "describeFeatureType", "actionOpts", "mode", "select", "columns"],
         props => {
             // bind proper events and setup the colums array
             // bind and get proper grid events from gridEvents object
@@ -158,7 +158,7 @@ const featuresToGrid = compose(
                 onRowsDeselected = () => {},
                 onRowsToggled = () => {},
                 hasTemporaryChanges = () => {},
-                ...gridEvents} = getGridEvents(props.gridEvents, props.rowGetter, props.describeFeatureType, props.actionOpts);
+                ...gridEvents} = getGridEvents(props.gridEvents, props.rowGetter, props.describeFeatureType, props.actionOpts, props.columns);
 
             // setup gridOpts setting app selection events binded
             let gridOpts = props.gridOpts;

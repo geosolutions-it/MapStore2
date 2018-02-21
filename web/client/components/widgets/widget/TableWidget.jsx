@@ -36,9 +36,9 @@ module.exports = ({
     confirmDelete = false,
     toggleTableView = () => { },
     toggleDeleteConfirm = () => { },
-    exportCSV = () => { },
     onEdit = () => { },
     onDelete = () => { },
+    gridEvents = () => {},
     pageEvents = {
         moreFeatures: () => {}
     },
@@ -62,7 +62,6 @@ module.exports = ({
             <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
                 <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil" />&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>
                 <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash" />&nbsp;<Message msgId="widgets.widget.menu.delete" /></MenuItem>
-                <MenuItem onClick={() => exportCSV({ title })} eventKey="4"><Glyphicon className="exportCSV" glyph="download" />&nbsp;<Message msgId="widgets.widget.menu.downloadData" /></MenuItem>
             </DropdownButton>
         </ButtonToolbar>}>
         <BorderLayout
@@ -75,6 +74,7 @@ module.exports = ({
                     </div>) : null}
         >
         <FeatureGrid
+            gridEvents={gridEvents}
             sortable={false}
             defaultSize={false}
             columnSettings={columnSettings}

@@ -10,9 +10,11 @@ import { mapPropsStream } from 'recompose';
 
 const React = require('react');
 const { connect } = require('react-redux');
+const {get} = require('lodash');
 const { isGeometryType } = require('../../utils/ogc/WFS/base');
 const { compose, renameProps, branch, renderComponent } = require('recompose');
-
+const InfoPopover = require('../../components/widgets/widget/InfoPopover');
+const Message = require('../../components/I18N/Message');
 const BorderLayout = require('../../components/layout/BorderLayout');
 
 const { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } = require('../../actions/widgets');
@@ -72,10 +74,17 @@ const chooseLayerEhnancer = compose(
     )
 );
 
-module.exports = chooseLayerEhnancer(({ enabled, onClose = () => { }, dependencies, ...props } = {}) =>
+module.exports = chooseLayerEhnancer(({ enabled, onClose = () => { }, editorData = {}, dependencies, ...props } = {}) =>
 
     (<BorderLayout
-        header={<BuilderHeader onClose={onClose}><Toolbar onClose={onClose} /></BuilderHeader>}
+        header={
+            <BuilderHeader onClose={onClose}>
+                <Toolbar onClose={onClose} />
+                {get(editorData, "options.propertyName.length") === 0 ? <InfoPopover
+                    glyph="exclamation-mark"
+                    bsStyle="warning"
+                    text={<Message msgId="widgets.builder.errors.checkAtLeastOneAttribute" />} /> : null}
+            </BuilderHeader>}
     >
-        {enabled ? <Builder dependencies={dependencies} {...props} /> : null}
+        {enabled ? <Builder editorData={editorData} dependencies={dependencies} {...props} /> : null}
     </BorderLayout>));

@@ -14,7 +14,7 @@ const isValidStep1 = editorData => editorData && editorData.options && editorDat
 const getBackTooltipId = step => {
     switch (step) {
         case 1:
-            return "widgets.builder.wizard.backToTypeSelection";
+            return "widgets.builder.wizard.backToTableOptions";
         case 2:
             return "widgets.builder.wizard.backToChartOptions";
         default:
@@ -23,7 +23,7 @@ const getBackTooltipId = step => {
     }
 };
 
-const getNextTooltipId = (step, valid) => valid ? "widgets.builder.wizard.configureWidgetOptions" : "widget.builder.wizard.errors.youhavetosetatleast1property";
+const getNextTooltipId = (step, valid) => valid ? "widgets.builder.wizard.configureWidgetOptions" : "widget.builder.wizard.errors.checkAtLeastOneAttribute";
 
 const getSaveTooltipId = (step, {id} = {}) => {
     if (id) {
@@ -31,7 +31,7 @@ const getSaveTooltipId = (step, {id} = {}) => {
     }
     return "widgets.builder.wizard.addToTheMap";
 };
-module.exports = ({openFilterEditor = () => {}, step = 0, editorData = {}, valid, setPage = () => {}, onFinish = () => {}} = {}) => (<Toolbar btnDefaultProps={{
+module.exports = ({openFilterEditor = () => {}, step = 0, editorData = {}, setPage = () => {}, onFinish = () => {}} = {}) => (<Toolbar btnDefaultProps={{
         bsStyle: "primary",
         bsSize: "sm"
     }}

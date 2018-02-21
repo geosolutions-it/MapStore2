@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {includes} = require('lodash');
+const { includes, merge } = require('lodash');
 const { compose, withProps, createEventHandler, withHandlers, withStateHandlers, defaultProps } = require('recompose');
 const { getLayerJSONFeature, describeFeatureType } = require('../../../observables/wfs');
 const { getCurrentPaginationOptions, updatePages } = require('../../../utils/FeatureGridUtils');
@@ -157,6 +157,12 @@ const dataStreamFactory = ($props) => {
         )
         .startWith({loading: true});
 };
+
+/**
+ * enhances a FeatureGrid to connect to WFS services
+ * of a layer and use virtualScroll.
+ * Manages propertyNames to manage columns and support WFS Filters
+*/
 module.exports = compose(
     defaultProps({
         virtualScroll: true,
@@ -185,16 +191,19 @@ module.exports = compose(
         dataStreamFactory
     })),
     propsStreamFactory,
-    // handle propertyNames and columns
-    withProps(({ options = {}, describeFeatureType: dft } = {}) => ({
-        columnSettings: dft ?
-            getFeatureTypeProperties(dft)
-                .filter(p => !includes(options.propertyName || [], p.name))
-            .reduce((acc, p) => ({
-                ...acc,
-                [p.name]: {
-                hide: true
-            }
-        }), {}) : {}
-    })),
+    // handle propertyNames and columnOptions
+    withProps(({ options = {}, describeFeatureType: dft, columnSettings = {} } = {}) => ({
+        columnSettings: merge(
+            dft ?
+                getFeatureTypeProperties(dft)
+                    .filter(p => !includes(options.propertyName || [], p.name))
+                    .reduce((acc, p) => ({
+                        ...acc,
+                        [p.name]: {
+                        hide: true
+                    }
+                    }), {}) : {},
+            options.columnSettings || {},
+            columnSettings)
+    }))
 );

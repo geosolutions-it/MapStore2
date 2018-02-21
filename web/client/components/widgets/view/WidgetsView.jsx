@@ -28,6 +28,7 @@ module.exports = pure(({
     widgets=[],
     layouts,
     dependencies,
+    updateWidgetProperty = () => {},
     deleteWidget = () => {},
     editWidget = () => {},
     onLayoutChange = () => {},
@@ -52,6 +53,7 @@ module.exports = pure(({
             {...actions}
             {...w}
             dependencies={dependencies}
+                updateProperty={(...args) => updateWidgetProperty(w.id, ...args)}
             onDelete={() => deleteWidget(w)}
             onEdit={() => editWidget(w)} /></div>))
     }
