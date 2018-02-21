@@ -16,13 +16,13 @@ const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS} = require('../../actions/mapI
 const {configureMap
 } = require('../../actions/config');
 const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation, setStyle, highlight, cleanHighlight,
-    toggleAdd, UPDATE_ANNOTATION_GEOMETRY, SHOW_TEXT_AREA, cancelText, stopDrawing
+    toggleAdd, UPDATE_ANNOTATION_GEOMETRY, SHOW_TEXT_AREA, cancelText, stopDrawing, download
 } = require('../../actions/annotations');
 const {clickOnMap
 } = require('../../actions/map');
 const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
     cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawGeomEpic, setStyleEpic, restoreStyleEpic, highlighAnnotationEpic,
-    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, stopDrawingMultiGeomEpic
+    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, stopDrawingMultiGeomEpic, downloadAnnotations
 } = require('../annotations')({});
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
     setStyleEpic, cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawGeomEpic, restoreStyleEpic, highlighAnnotationEpic,
@@ -297,6 +297,26 @@ describe('annotations Epics', () => {
             actions.map((action) => {
                 switch (action.type) {
                     case TEST_TIMEOUT:
+                        break;
+                    default:
+                        expect(false).toBe(true);
+                }
+            });
+            done();
+        }, state);
+    });
+
+    it('export annotation fail', (done) => {
+        const state = {
+            layers: {
+                            flat: []
+                        }
+        };
+        testEpic(downloadAnnotations, 1, download(), actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case "SHOW_NOTIFICATION":
                         break;
                     default:
                         expect(false).toBe(true);

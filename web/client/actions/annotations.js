@@ -39,6 +39,13 @@ const SHOW_TEXT_AREA = 'ANNOTATIONS:SHOW_TEXT_AREA';
 const ADD_TEXT = 'ANNOTATIONS:ADD_TEXT';
 const CANCEL_CLOSE_TEXT = 'ANNOTATIONS:CANCEL_CLOSE_TEXT';
 const SAVE_TEXT = 'ANNOTATIONS:SAVE_TEXT';
+const DOWNLOAD = 'ANNOTATIONS:DOWNLOAD';
+
+function download() {
+    return {
+        type: DOWNLOAD
+    };
+}
 
 const {head} = require('lodash');
 
@@ -289,5 +296,6 @@ module.exports = {
     filterAnnotations,
     closeAnnotations,
     confirmCloseAnnotations,
-    cancelCloseAnnotations
+    cancelCloseAnnotations,
+    DOWNLOAD, download
 };

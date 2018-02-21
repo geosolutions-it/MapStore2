@@ -71,6 +71,7 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {function} onDetail triggered when the user clicks on an annotation card
  * @prop {function} onFilter triggered when the user enters some text in the filtering widget
  * @prop {function} classNameSelector optional selector to assign custom a CSS class to annotations, based on
+ * @prop {function} onDownload triggered when the user clicks on the download annotations button
  * the annotation's attributes.
  */
 class Annotations extends React.Component {
@@ -104,7 +105,8 @@ class Annotations extends React.Component {
         filter: PropTypes.string,
         onFilter: PropTypes.func,
         classNameSelector: PropTypes.func,
-        width: PropTypes.number
+        width: PropTypes.number,
+        onDownload: React.PropTypes.func
     };
 
     static contextTypes = {
@@ -227,6 +229,13 @@ class Annotations extends React.Component {
                                     tooltip: <Message msgId="annotations.add"/>,
                                     visible: this.props.mode === "list",
                                     onClick: () => { this.props.onAdd(); }
+                                },
+                                {
+                                    glyph: 'download',
+                                    disabled: !(this.props.annotations && this.props.annotations.length > 0),
+                                    tooltip: <Message msgId="annotations.downloadtooltip"/>,
+                                    visible: this.props.mode === "list",
+                                    onClick: () => { this.props.onDownload(); }
                                 }
                             ]}/>
                     </Col>

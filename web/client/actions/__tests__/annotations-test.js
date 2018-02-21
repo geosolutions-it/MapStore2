@@ -64,7 +64,8 @@ const {
     filterAnnotations,
     closeAnnotations,
     confirmCloseAnnotations,
-    cancelCloseAnnotations
+    cancelCloseAnnotations,
+    DOWNLOAD, download
 } = require('../annotations');
 
 describe('Test correctness of the annotations actions', () => {
@@ -266,5 +267,9 @@ describe('Test correctness of the annotations actions', () => {
     it('cancel close annotations', () => {
         const result = cancelCloseAnnotations();
         expect(result.type).toEqual(CANCEL_CLOSE_ANNOTATIONS);
+    });
+    it('download  annotations', () => {
+        const result = download();
+        expect(result.type).toEqual(DOWNLOAD);
     });
 });

@@ -20,7 +20,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
     highlight, cleanHighlight, showAnnotation, cancelShowAnnotation, filterAnnotations, closeAnnotations,
     cancelCloseAnnotations, confirmCloseAnnotations, stopDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal, changedProperties,
-    setUnsavedStyle, toggleUnsavedStyleModal, addText, cancelText, saveText} =
+    setUnsavedStyle, toggleUnsavedStyleModal, addText, cancelText, saveText, download} =
     require('../actions/annotations');
 
 const { zoomToExtent } = require('../actions/map');
@@ -86,7 +86,8 @@ const Annotations = connect(panelSelector, {
     onHighlight: highlight,
     onCleanHighlight: cleanHighlight,
     onDetail: showAnnotation,
-    onFilter: filterAnnotations
+    onFilter: filterAnnotations,
+    onDownload: download
 })(require('../components/mapcontrols/annotations/Annotations'));
 
 const ContainerDimensions = require('react-container-dimensions').default;
