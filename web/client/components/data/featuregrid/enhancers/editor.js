@@ -113,7 +113,7 @@ const featuresToGrid = compose(
     ),
     withHandlers({rowGetter: props => props.virtualScroll && (i => getRowVirtual(i, props.rows, props.pages, props.size)) || (i => getRow(i, props.rows))}),
     withPropsOnChange(
-        ["describeFeatureType", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "noSort"],
+        ["describeFeatureType", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "sortable"],
         props => ({
             columns: getToolColumns(props.tools, props.rowGetter, props.describeFeatureType, props.actionOpts)
                 .concat(featureTypeToGridColumns(props.describeFeatureType, props.columnSettings, {

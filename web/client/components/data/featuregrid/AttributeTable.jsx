@@ -21,6 +21,7 @@ module.exports = ({
             <ReactDataGrid
                 rowKey="id"
                 columns={[{
+                    name: '',
                     key: 'attribute'
                 }]}
                 rowGetter={idx => attributes[idx]}

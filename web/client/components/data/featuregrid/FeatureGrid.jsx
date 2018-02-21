@@ -74,6 +74,7 @@ class FeatureGrid extends React.PureComponent {
     constructor(props) {
         super(props);
     }
+    // TODO: externalize initPlugin
     componentDidMount() {
         this.props.initPlugin({virtualScroll: this.props.virtualScroll, editingAllowedRoles: this.props.editingAllowedRoles, maxStoredPages: this.props.maxStoredPages});
     }

@@ -1056,6 +1056,10 @@
                 "text": {
                     "title": "Text",
                     "caption": "add a text area"
+                },
+                 "table": {
+                    "title": "Table",
+                    "caption": "add a table"
                 }
             },
             "selectWidgetType": "Select the widget type",
@@ -1079,6 +1083,9 @@
                     "backToChartOptions": "Back to chart options",
                     "configureChartOptions": "Configure chart options",
                     "configureWidgetOptions": "Configure widget options",
+                    "backToTableOptions": "Back to table options",
+                    "configureTableOptions": "Configure table options",
+                    "resetColumnsSizes": "Reset all changes to the column sizes",
                     "updateWidget": "Update the widget",
                     "addToTheMap": "Add the widget to the map",
                     "titlePlaceholder": "Insert title...",
@@ -1086,7 +1093,8 @@
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "No Widgets available",
-                    "noWidgetsAvailableDescription": "<p>You can't create any widgets for the selected layer. This is probably because the layer is not suitable for the available widgets or the server doesn't expose all the needed services or information to generate widget. Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li><code>gs:aggregate process</code> is not available</li></ul><p>"
+                    "noWidgetsAvailableDescription": "<p>You can't create any widgets for the selected layer. This is probably because the layer is not suitable for the available widgets or the server doesn't expose all the needed services or information to generate widget. Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li><code>gs:aggregate process</code> is not available</li></ul><p>",
+                    "checkAtLeastOneAttribute": "You must select at least one column"
                 },
                 "setupFilter": "Configure a filter for the widget data"
             },
