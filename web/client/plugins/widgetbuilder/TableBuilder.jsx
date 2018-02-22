@@ -45,8 +45,9 @@ const Builder = connect(
         props$
             .distinctUntilChanged(({ featureTypeProperties: oldFT } = {}, { featureTypeProperties: newFT } = {}) => oldFT === newFT)
             // set propTypes to all attributes when
-            .do(({ featureTypeProperties = [], onChange = () => {} } = {}) => {
-                if (onChange && featureTypeProperties.length > 0) {
+            .do(({ featureTypeProperties = [], onChange = () => { }, data={} } = {}) => {
+                // initialize attribute list if empty (first time)
+                if (onChange && featureTypeProperties.length > 0 && !get(data, "options.propertyName")) {
                     onChange("options.propertyName", featureTypeProperties.filter(a => !isGeometryType(a)).map(ft => ft.name));
                 }
             }).ignoreElements()
