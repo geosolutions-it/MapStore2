@@ -1084,6 +1084,9 @@
                     "backToChartOptions": "Torna alle opzioni del grafico",
                     "configureChartOptions": "Configura le opzioni del grafico",
                     "configureWidgetOptions": "Configura le opzioni del widget",
+                     "backToTableOptions": "Torna alle opzioni della tabella",
+                    "configureTableOptions": "Configura le opzioni della tabella",
+                    "resetColumnsSizes": "Reimposta larghezza automatica delle colonne",
                     "updateWidget": "Aggiorna il widget",
                     "addToTheMap": "Aggiungi il widget alla mappa",
                     "titlePlaceholder": "Inserisci il titolo...",
@@ -1164,6 +1167,9 @@
 
         },
         "dashboard": {
+             "editor": {
+                "addACardToTheDashboard": "Aggiungi un widget alla dashboard"
+            },
             "emptyTitle": "La dashboard è vuota"
         },
         "wizard": {

@@ -21,8 +21,8 @@ const FilterUtils = require('../utils/FilterUtils');
 const requestBuilder = require('../utils/ogc/WFS/RequestBuilder');
 const {getFeature, query, sortBy, propertyName} = requestBuilder({ wfsVersion: "1.1.0" });
 
-const toDescribeURL = ({name, search = {}, url} = {}) => {
-    const parsed = urlUtil.parse(search.url || url, true);
+const toDescribeURL = ({ name, search = {}, url, describeFeatureTypeURL} = {}) => {
+    const parsed = urlUtil.parse(describeFeatureTypeURL || search.url || url, true);
     return urlUtil.format(
         {
         ...parsed,

@@ -1166,6 +1166,9 @@
 
         },
         "dashboard": {
+            "editor": {
+                "addACardToTheDashboard": "Add a widget to the dashboard"
+            },
             "emptyTitle": "The dashboard is empty"
         },
         "wizard": {

@@ -56,9 +56,15 @@ const dataStreamFactory = ($props) => {
 };
 
 /**
- * enhances a FeatureGrid to connect to WFS services
+ * Enhancer a FeatureGrid or a TableWidget to connect to WFS services. It's used in a widgets context, but is enough genreal
+ * to be used in any other cotnext. TODO: move it in featuregrid enhancers whenn enough stable and general.
  * of a layer and use virtualScroll.
  * Manages propertyNames to manage columns and support WFS Filters
+ * @prop {object} layer. The layer with at least layer name and URL.
+ * @prop {boolean} virtualScroll. If enabled, the FeatureGrid will retrieve data with virtualScroll
+ * @prop {object} options. Options for WFS. Can contain
+ *  - propertyName: an array of property name to optimize download.
+ *  - columnSettings: will be merged with grid columnsettings to setup column width and so on
 */
 module.exports = compose(
     defaultProps({

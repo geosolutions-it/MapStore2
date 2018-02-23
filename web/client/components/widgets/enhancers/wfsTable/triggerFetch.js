@@ -21,7 +21,7 @@ const sameSortOptions = (o1 = {}, o2 = {}) =>
  * @return {Observable} Stream of props to trigger the data fetch
  */
 module.exports = ($props) =>
-    $props.filter(({ layer = {}, options }) => layer.name && options)
+    $props.filter(({ layer = {} }) => layer.name )
         .distinctUntilChanged(
         ({ layer = {}, options = {}, filter, sortOptions }, newProps) =>
             getLayerUrl(layer) === getLayerUrl(layer)

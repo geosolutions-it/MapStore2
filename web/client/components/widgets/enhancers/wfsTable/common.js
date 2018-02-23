@@ -11,7 +11,7 @@
  * @param {Object} layer
  * @returns {string} layer url
  */
-const getLayerUrl = l => l && l.wpsUrl || (l.search && l.search.url) || l.url;
+const getLayerUrl = (l = {}) => l.search && l.search.url || l.url;
 module.exports = {
     getLayerUrl
 };

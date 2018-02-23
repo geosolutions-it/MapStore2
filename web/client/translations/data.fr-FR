@@ -1169,6 +1169,9 @@
             }
         },
         "dashboard": {
+             "editor": {
+                "addACardToTheDashboard": "Ajouter un widget au tableau de bord"
+            },
             "emptyTitle": "Le tableau de bord est vide"
         },
         "wizard": {
