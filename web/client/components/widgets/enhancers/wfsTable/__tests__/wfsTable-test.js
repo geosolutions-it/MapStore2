@@ -12,8 +12,8 @@ const { createSink, setObservableConfig} = require('recompose');
 const expect = require('expect');
 const wfsTable = require('../index');
 
-const rxjsconfig = require('recompose/rxjsObservableConfig').default;
-setObservableConfig(rxjsconfig);
+const rxjsConfig = require('recompose/rxjsObservableConfig').default;
+setObservableConfig(rxjsConfig);
 
 
 describe('index enhancer', () => {
@@ -26,7 +26,7 @@ describe('index enhancer', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('retrieve WFS desribeFeatureType and features', (done) => {
+    it('retrieve WFS describeFeatureType and features', (done) => {
         const Sink = wfsTable(createSink( props => {
             expect(props).toExist();
             if (props.describeFeatureType) {
@@ -46,7 +46,7 @@ describe('index enhancer', () => {
             }
         }} />, document.getElementById("container"));
     });
-    it('retrieve WFS desribeFeatureType with virtualScroll', (done) => {
+    it('retrieve WFS describeFeatureType with virtualScroll', (done) => {
         let triggered = false;
         const Sink = wfsTable(createSink(props => {
             expect(props).toExist();

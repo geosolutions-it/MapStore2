@@ -1,5 +1,5 @@
 /**
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -7,13 +7,13 @@
  */
 const React = require('react');
 
-const { wizardHanlders } = require('../../../misc/wizard/enhancers');
+const { wizardHandlers } = require('../../../misc/wizard/enhancers');
 
 const TableOptions = require('./table/TableOptions');
 const WidgetOptions = require('./common/WidgetOptions');
 const isChartOptionsValid = (options = {}) => options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes;
 
-const Wizard = wizardHanlders(require('../../../misc/wizard/WizardContainer'));
+const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
 
 const { compose, lifecycle } = require('recompose');
 

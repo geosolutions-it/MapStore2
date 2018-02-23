@@ -125,7 +125,7 @@ const getJSONFeature = (searchUrl, filterObj, options = {}) => {
 /**
  * Same of `getJSONFeature` but auto-retries possible errors due to no-primary-key issues
  * (when you are using pagination vendor parameters for GeoServer and the primary-key of the table was not set).
- * When this kind of error occours, auto-retry using the sortOptions passed.
+ * When this kind of error occurs, auto-retry using the sortOptions passed.
  * present. .
  * @param {string} searchUrl URL of WFS service
  * @param {object} filterObj Filter object
@@ -153,7 +153,7 @@ const getJSONFeatureWA = (searchUrl, filterObj, { sortOptions = {}, ...options }
  * @param {object} layer the layer to search
  * @param {object|string} filter the filter object or string of the filter. To maintain
  * retro compatibility the filter object can contain pagination info, typeName and so on.
- * @param {object} options the optnions (pagination, totalFeatures and so on ...)
+ * @param {object} options the options (pagination, totalFeatures and so on ...)
  */
 const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {sortOptions, propertyName: pn, ...options} = {}) =>
     // TODO: Apply sort workaround for no primary keys
