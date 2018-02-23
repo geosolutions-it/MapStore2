@@ -24,6 +24,7 @@ const BorderLayout = require('../../layout/BorderLayout');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const SideGrid = require('../../misc/cardgrids/SideGrid');
 
+const SelecAnnotationsFile = require("./SelectAnnotationsFile");
 
 const defaultConfig = require('./AnnotationsConfig');
 
@@ -35,7 +36,9 @@ const defaultConfig = require('./AnnotationsConfig');
  *  - editing: when editing an annotation
  * When in list mode, the list of current map annotations is shown, with:
  *  - summary card for each annotation, with full detail show on click
+ *  - upload annotations Button
  *  - new annotation Button
+ *  - download annotations Button
  *  - filtering widget
  * When in detail mode the configured editor is shown on the selected annotation, in viewer mode.
  * When in editing mode the configured editor is shown on the selected annotation, in editing mode.
@@ -106,7 +109,8 @@ class Annotations extends React.Component {
         onFilter: PropTypes.func,
         classNameSelector: PropTypes.func,
         width: PropTypes.number,
-        onDownload: React.PropTypes.func
+        onDownload: React.PropTypes.func,
+        onLoadAnnotations: React.PropTypes.func
     };
 
     static contextTypes = {
@@ -117,9 +121,12 @@ class Annotations extends React.Component {
         mode: 'list',
         config: defaultConfig,
         classNameSelector: () => '',
-        toggleControl: () => {}
+        toggleControl: () => {},
+        onLoadAnnotations: () => {}
     };
-
+    state = {
+        selectFile: false
+    }
     getConfig = () => {
         return assign({}, defaultConfig, this.props.config);
     };
@@ -225,6 +232,12 @@ class Annotations extends React.Component {
                             btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}}
                             buttons={[
                                 {
+                                    glyph: 'upload',
+                                    tooltip: <Message msgId="annotations.loadtooltip"/>,
+                                    visible: this.props.mode === "list",
+                                    onClick: () => { this.setState(() => ({selectFile: true})); }
+                                },
+                                {
                                     glyph: 'plus',
                                     tooltip: <Message msgId="annotations.add"/>,
                                     visible: this.props.mode === "list",
@@ -303,7 +316,18 @@ class Annotations extends React.Component {
                 closeText={<Message msgId="annotations.cancel" />}>
                 <Message msgId={this.props.mode === 'editing' ? "annotations.removegeometry" : "annotations.removeannotation"}/>
                 </ConfirmDialog>);
-        } else {
+        }else if (this.state.selectFile) {
+            body = (
+                <SelecAnnotationsFile
+                    text={<Message msgId="annotations.selectfiletext"/>}
+                    onFileChoosen={this.props.onLoadAnnotations}
+                    show={this.state.selectFile}
+                    diableOvveride={!(this.props.annotations && this.props.annotations.length > 0)}
+                    onClose={() => this.setState(() => ({selectFile: false}))}
+                    />);
+
+
+        }else {
             body = (<span> {this.renderCards()} </span>);
         }
         return (<BorderLayout id={this.props.id} header={this.renderHeader()}>

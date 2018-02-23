@@ -722,6 +722,11 @@
             "zoomTo": "Zoom",
             "downloadtooltip": "Download annotations",
             "downloadError": "Export error",
+            "loadtooltip": "Import annotations",
+            "loadtitle": "Import Annotations",
+            "selectfiletext": "Drop your file here or click to select the Annotation File to import. (supported files: JSON)",
+            "loadoverride": "Replace annotations",
+            "loaderror": "Select one or more annotations files. (supported files: json)",
             "field": {
                 "title": "Title",
                 "description": "Description"

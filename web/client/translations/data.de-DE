@@ -721,6 +721,11 @@
             "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
             "downloadtooltip": "Laden Sie Anmerkungen herunter",
             "downloadError": "Fehler beim Exportieren",
+            "loadtooltip": "Importieren Sie Anmerkungen",
+            "loadtitle": "Importieren Sie Anmerkungen",
+            "selectfiletext": "Legen Sie die Datei hier ab oder klicken Sie, um die zu importierende Anmerkungsdatei auszuwählen. (unterstützte Dateien: JSON)",
+            "loadoverride": "Ersetzen Sie Anmerkungen",
+            "loaderror": "Wählen Sie eine oder mehrere Anmerkungsdateien aus. (unterstützte Dateien: json)",
             "zoomTo": "Zoom",
             "field": {
                 "title": "Titel",

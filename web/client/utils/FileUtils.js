@@ -20,7 +20,8 @@ const FileUtils = {
         'gpx': 'application/gpx+xml',
         'kmz': 'application/vnd.google-earth.kmz',
         'kml': 'application/vnd.google-earth.kml+xml',
-        'zip': 'application/zip'
+        'zip': 'application/zip',
+        'json': 'application/json'
     },
     recognizeExt: function(fileName) {
         return fileName.split('.').slice(-1)[0];
@@ -58,6 +59,22 @@ const FileUtils = {
             reader.onload = function() {
                  resolve(parser.parseFromString(reader.result, "text/xml"));
              };
+            reader.onerror = function() {
+                reject(reader.error.name);
+            };
+            reader.readAsText(file);
+        });
+    },
+    readJson: function(file) {
+        return new Promise((resolve, reject) => {
+            let reader = new FileReader();
+            reader.onload = function() {
+                try {
+                    resolve(JSON.parse(reader.result));
+                }catch(e) {
+                    reject(e);
+                }
+            };
             reader.onerror = function() {
                 reject(reader.error.name);
             };

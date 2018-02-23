@@ -18,7 +18,7 @@ const {error} = require('../actions/notifications');
 const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAdd, showTextArea,
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
     TOGGLE_ADD, SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, STOP_DRAWING,
-    CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD} = require('../actions/annotations');
+    CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS} = require('../actions/annotations');
 const {CLICK_ON_MAP} = require('../actions/map');
 
 const {GEOMETRY_CHANGED} = require('../actions/draw');
@@ -278,6 +278,24 @@ module.exports = (viewer) => ({
                         position: "tr"
                     }));
             }
+        }),
+    onLoadAnnotations: (action$, {getState}) => action$.ofType(LOAD_ANNOTATIONS)
+        .switchMap(({features, override}) => {
+            const annotationsLayer = annotationsLayerSelector(getState());
+            const oldFeature = annotationsLayer && annotationsLayer.features || [];
+            const newFeatures = override ? features : oldFeature.concat(features);
+            const action = annotationsLayer ? updateNode('annotations', 'layer', {
+                features: newFeatures}) : addLayer({
+                    type: 'vector',
+                    visibility: true,
+                    id: 'annotations',
+                    name: "Annotations",
+                    rowViewer: viewer,
+                    hideLoading: true,
+                    features: newFeatures,
+                    handleClickOnLayer: true
+                });
+            return Rx.Observable.of(action);
         })
 
 });
