@@ -1,4 +1,10 @@
 const {head} = require('lodash');
+
+const getFormatByName = (outF) => {
+    const extension = outF.split('-')[1];
+    return extension ? {outputFormat: outF, extension: extension.toLowerCase()} : undefined;
+
+};
 const formats = [{
         outputFormat: "shape-zip",
         extension: "zip"
@@ -64,5 +70,5 @@ const formats = [{
 
 module.exports = {
     formats,
-    getByOutputFormat: (outF) => head(formats.filter(format => format.outputFormat === outF))
+    getByOutputFormat: (outF) => head(formats.filter(format => format.outputFormat === outF)) || getFormatByName(outF)
 };
