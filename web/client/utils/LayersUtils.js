@@ -175,6 +175,12 @@ const extractDataFromSources = mapState => {
     }) : [...mapState.layers];
 };
 
+const getURLs = (urls, queryParametersString = '') => {
+    return urls.map((url) => url.split("\?")[0] + queryParametersString);
+};
+
+const SecurityUtils = require('./SecurityUtils');
+
 const LayerCustomUtils = {};
 
 const LayersUtils = {
@@ -328,6 +334,7 @@ const LayersUtils = {
             id: layer.id,
             features: layer.features,
             format: layer.format,
+            thumbURL: layer.thumbURL,
             group: layer.group,
             search: layer.search,
             source: layer.source,
@@ -347,7 +354,7 @@ const LayersUtils = {
             url: layer.url,
             bbox: layer.bbox,
             nativeCrs: layer.nativeCrs,
-            visibility: layer.loadingError === 'Error' ? true : layer.visibility,
+            visibility: layer.visibility,
             singleTile: layer.singleTile || false,
             allowedSRS: layer.allowedSRS,
             matrixIds: layer.matrixIds,
@@ -358,6 +365,7 @@ const LayersUtils = {
             hideLoading: layer.hideLoading || false,
             handleClickOnLayer: layer.handleClickOnLayer || false,
             featureInfo: layer.featureInfo,
+            catalogURL: layer.catalogURL,
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },
@@ -412,7 +420,16 @@ const LayersUtils = {
     getGroupNodes,
     deepChange,
     extractDataFromSources,
-    extractTileMatrixFromSources
+    extractTileMatrixFromSources,
+    getURLs,
+    getAuthenticationParam: options => {
+        const urls = getURLs(isArray(options.url) ? options.url : [options.url]);
+        let authenticationParam = {};
+        urls.forEach(url => {
+            SecurityUtils.addAuthenticationParameter(url, authenticationParam, options.securityToken);
+        });
+        return authenticationParam;
+    }
 };
 
 module.exports = LayersUtils;

@@ -46,7 +46,9 @@ class FeatureGrid extends React.PureComponent {
         actionOpts: PropTypes.object,
         initPlugin: PropTypes.func,
         tools: PropTypes.array,
-        gridEvents: PropTypes.object
+        gridEvents: PropTypes.object,
+        virtualScroll: PropTypes.bool,
+        maxStoredPages: PropTypes.number
     };
     static childContextTypes = {
         isModified: PropTypes.func,
@@ -64,13 +66,15 @@ class FeatureGrid extends React.PureComponent {
         columnSettings: {},
         features: [],
         tools: [],
-        showDragHandle: false
+        showDragHandle: false,
+        virtualScroll: false,
+        maxStoredPages: 5
     };
     constructor(props) {
         super(props);
     }
     componentDidMount() {
-        this.props.initPlugin({editingAllowedRoles: this.props.editingAllowedRoles});
+        this.props.initPlugin({virtualScroll: this.props.virtualScroll, editingAllowedRoles: this.props.editingAllowedRoles, maxStoredPages: this.props.maxStoredPages});
     }
     getChildContext() {
         return {

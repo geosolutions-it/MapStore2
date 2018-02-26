@@ -65,7 +65,7 @@ describe('test  Layer Properties General module component', () => {
         let spy = expect.spyOn(handlers, "onChange");
         // wrap in a stateful component, stateless components render return null
         // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
-        const comp = ReactDOM.render(<General element={l} settings={settings} updateSettings={handlers.onChange}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<General element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();

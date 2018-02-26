@@ -22,10 +22,11 @@ describe("Test BorderLayout Component", () => {
     });
     it('Test BorderLayout', () => {
         ReactDOM.render(
-            <BorderLayout className={"CLASS"}/>, document.getElementById("container"));
+            <BorderLayout id="MYCOMPONENT" className={"CLASS"}/>, document.getElementById("container"));
         expect(document.getElementsByClassName( 'ms2-border-layout-body')[0]).toExist();
         expect(document.getElementsByClassName('ms2-border-layout-content')).toExist();
         expect(document.getElementsByClassName('CLASS')).toExist();
+        expect(document.getElementById('MYCOMPONENT')).toExist();
     });
     it('Test BorderLayout with header footer and columns', () => {
         ReactDOM.render(

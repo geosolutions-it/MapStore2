@@ -21,6 +21,8 @@
         "enable": "Activar",
         "layers": "Capas",
         "warning": "Atención",
+        "errorTitleDefault": "Error",
+        "errorDefault": "Ocurrió un error",
         "version": {
             "label": "Versión"
         },
@@ -28,6 +30,12 @@
             "of": "of",
             "updating": "Updating...",
             "layers": "layers"
+        },
+        "localeErrors": {
+            "404": "Archivo de traducción no encontrado"
+        },
+        "details": {
+            "title": "Información en este mapa"
         },
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
@@ -55,7 +63,23 @@
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Indentificar el formato de respuesta",
-            "legenderror": "La leyenda no está disponible"
+            "legenderror": "La leyenda no está disponible",
+            "editCustomFormat": "Editar formato personalizado",
+            "exampleOfResponse": "Ejemplo",
+            "changedSettings": "Configuraciones modificadas",
+            "changedSettingsAlert": "Está cerrando el panel de configuraciones sin guardar sus cambios",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Muestra resultados de información de funciones como texto sin formato",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Muestra resultados de información de funciones como html",
+            "propertiesFormatTitle": "PROPIEDADES",
+            "propertiesFormatDescription": "Muestra resultados de información de características como lista de propiedades",
+            "templateFormatTitle": "TEMPLATE",
+            "templateFormatDescription": "Personalizar formato de resultados de información de funciones",
+            "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
+            "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
+            "templateFormatInfoAlertExample": "La identificación de la función es ${ properties }",
+            "templatePreview": "Vista previa de template"
         },
         "notification": {
             "update": "Update",
@@ -103,6 +127,8 @@
         "elevation": "Elevación",
         "close": "Cerrar",
         "cancel": "Cancelar",
+        "no": "No",
+        "yes": "Sí",
         "confirm": "Confirmar",
         "confirmTitle": "¿Lo confirma?",
         "pageInfo": "{total, plural, =0 {ningún item} =1 {{total} item de {total}} other {objets {start}-{end} de {total}}}",
@@ -192,6 +218,29 @@
         },
         "newMap": "Nuevo mapa",
 		"maps": {
+            "feedback": {
+                "noDetailsAvailable": "Detalles del mapa no disponibles",
+                "successSavedMap": "El mapa ha sido creado correctamente",
+                "errorDeletingMap": "Error al eliminar este mapa",
+                "errorDeletingThumbnailOfMap": "Error al eliminar una miniatura de este mapa",
+                "errorDeletingDetailsOfMap": "Error al eliminar detalles de este mapa",
+                "allResDeleted": "Todos los recursos asociados con este mapa han sido eliminados con éxito",
+                "errorFetchingDetailsOfMap": "Error al recuperar detalles para este mapa",
+                "details": {
+                    "deletedSuccesfully": "Los detalles han sido eliminados correctamente",
+                    "savedSuccesfully": "Los detalles han sido eliminados correctamente",
+                    "updatedSuccesfully": "Los detalles se han actualizado correctamente"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "La miniatura ha sido eliminada correctamente",
+                    "savedSuccesfully": "La miniatura ha sido eliminada correctamente",
+                    "updatedSuccesfully": "La miniatura se ha actualizado correctamente"
+                },
+                "errorWhenSaving": "Se produjo un error durante el proceso de guardado",
+                "errorWhenUpdating": "Se produjo un error durante el proceso de actualización",
+                "errorWhenDeleting": "Se produjo un error durante el proceso de eliminación",
+                "errorSizeExceeded": "Por favor, reduzca el tamaño de los detalles o la calidad de las imágenes"
+            },
 			"search": "buscador de mapas ..."
 		},
         "map": {
@@ -209,6 +258,8 @@
             "errorFormat": "Formatos soportados: png/jpg",
             "errorSize": "Tamaño máximo admitido: 500kb",
             "error": "La imagen proporcionada es inválida",
+            "savedMapTitle": "Mapa Guardado",
+            "savedMapMessage": "El mapa se ha guardado correctamente",
             "thumbnailError": {
                 "error403": "Error al modificar la viñeta",
                 "error404": "Error al crear la viñeta",
@@ -216,9 +267,11 @@
                 "errorDefault": "Error de red"
             },
             "mapError": {
+                "errorTitle": "No se puede guardar el mapa actual",
                 "error403": "Error al modificar el mapa",
                 "error404": "Error al crear el mapa",
                 "error409": "Nombre del mapa repetido",
+                "error500": "Error de servidor interno. Verificar si el tamaño del archivo de configuración del mapa excede el límite fijado",
                 "errorDefault": "Error de red"
             },
             "permissions": {
@@ -229,35 +282,50 @@
                 "canWrite": "puedo editar",
                 "noResult": "nigún resultado encontrado",
                 "title": "Grupos de permisos"
+            },
+            "details": {
+                "back": "Espalda",
+                "save": "Salvar",
+                "show": "Mostrar hoja de detalles",
+                "add": "Agregar nuevos detalles",
+                "edit": "Editar detalles",
+                "rowTitle": "Hoja de detalles",
+                "title": "Hoja de detalles - {name}",
+                "undo": "Deshacer quitar",
+                "showPreview": "Mostrar vista previa",
+                "hidePreview": "Ocultar vista previa",
+                "delete": "Eliminar hoja de detalles",
+                "titleUnsavedChanges": "Estás seguro de cerrar sin guardar los cambios?",
+                "sureToClose": "Estás seguro de cerrar sin guardar los cambios?",
+                "fieldsChanged": "Algunos campos han sido cambiados"
             }
         },
         "toc": {
             "toggleLayerVisibility": "Activar / desactivar la visibilidad del mapa",
             "displayLegendAndTools": "Mostrar la leyenda y las herramientas",
             "zoomToLayerExtent": "Zoom sobre la extensión del mapa",
-
             "addLayer": "Añadir capa",
-            "toolZoomToLayerTooltip": "Zoom to selected layer extent",
-            "toolZoomToLayersTooltip": "Zoom to selected layers extent",
-            "toolLayerSettingsTooltip": "Selected layer settings",
-            "toolGroupSettingsTooltip": "Selected group settings",
-            "toolTrashLayerTooltip": "Remove selected layer",
-            "toolTrashLayersTooltip": "Remove selected layers",
-            "toolFeaturesGridTooltip": "Open Attribute Table",
-            "noFilteredResults": "No results",
+            "toolZoomToLayerTooltip": "Zoom a la extensión de capa seleccionada",
+            "toolZoomToLayersTooltip": "Zoom a la extensión de capas seleccionadas",
+            "toolLayerSettingsTooltip": "Configuración de capa seleccionada",
+            "toolGroupSettingsTooltip": "Configuraciones de grupos seleccionados",
+            "toolTrashLayerTooltip": "Eliminar la capa seleccionada",
+            "toolTrashLayersTooltip": "Eliminar capas seleccionadas",
+            "toolFeaturesGridTooltip": "Abrir la tabla de atributos",
+            "toolDownloadTooltip": "Exportar datos de capa",
+            "noFilteredResults": "Capas de filtro",
             "filterPlaceholder": "Capas de filtro",
-            "clearFilter": "Clear filter",
-            "toolReloadLayerTooltip": "Force reload of selected layer",
-            "toolReloadLayersTooltip": "Force reload of selected layers",
-            "statusIconOpen": "Close group",
-            "statusIconClose": "Open group",
-            "grabLayerIcon": "Grab and sort layer",
-            "grabGroupIcon": "Grab and sort group",
-            "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
+            "clearFilter": "Filtro claro",
+            "toolReloadLayerTooltip": "Fuerza la recarga de la capa seleccionada",
+            "toolReloadLayersTooltip": "Fuerza la recarga de las capas seleccionadas",
+            "statusIconOpen": "Grupo cerrado",
+            "statusIconClose": "Grupo abierto",
+            "grabLayerIcon": "Coge y clasifica la capa",
+            "grabGroupIcon": "Coge y ordenar grupo",
+            "toggleLayerVisibilityWarning": "Alternar la visibilidad de la capa, Advertencia: la capa no se cargó correctamente",
             "createWidget": "Crea un widget para la capa seleccionada",
             "editLayerProperties": "Modificar las propiedades de la capa",
             "browseData": "Abrir la tabla de atributos",
-            "searchFeatures": "Buscar en el  mapa ...",
             "removeLayer": "Borrar la capa",
             "loadingerror": "La capa no se ha cargado correctamente o no está disponible",
             "measure": "Medidor",
@@ -273,6 +341,19 @@
                 "search": "Refrescar las optiones de búsqueda",
                 "title": "Refrescar el título",
                 "dimensions": "Refrescar las dimensiones"
+            },
+            "layerMetadata": {
+                "identifier": "Identificador",
+                "title": "Título",
+                "abstract": "Abstracto",
+                "subject": "Asunto",
+                "type": "Tipo",
+                "creator": "Creador",
+                "toolLayerMetadataTooltip": "Mostrar los metadatos de la capa seleccionada",
+                "layerMetadataPanelTitle": "Metadatos de capa",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Error en la búsqueda de metadatos"
+                }
             }
         },
         "print":{
@@ -614,7 +695,13 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Por favor, intoduzca su clave y contraseña",
                 "usernamePwdIncorrect":"Ususario o clave incorrectos"
-            }
+            },
+            "detailsName": "Nombre",
+            "detailsRole": "Rol",
+            "detailsGroups": "Grupos",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Empresa",
+            "detailsNotes": "Notas"
         },
         "annotations": {
             "edit": "Editar",
@@ -634,6 +721,7 @@
             "add": "Nueva",
             "filter": "Filtrar las anotaciones...",
             "undo": "¿Estás seguro de que quieres abandonar la sesión de edición de anotaciones?",
+            "zoomTo": "Zoom",
             "field": {
                 "title": "Título",
                 "description": "Descripción"
@@ -741,6 +829,8 @@
             "getWMSLink": "Enlace WMS",
             "error": "A ocurrido un error cargando los datos del catálogo",
             "pageInfo": "{start}-{end} resultados desde {total}",
+            "resultInfo": "{total, plural, =0 No hay artículos} =1 {{total} artículo de {total}} other {{start}-{end} de {total}}}",
+            "pageInfoInfinite": "{total, plural, =undefined {} =0 {No hay resultados} =1 {{total} de {total} emparejados} other {Cargado {loaded} de {total} emparejados}}",
             "noRecordsMatched": "Ningún resultado encontrado",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
@@ -909,6 +999,7 @@
             "deselectall": "Deseleccionar todos",
             "backtosearch": "Volver a la búsqueda",
             "resultInfo": "{total, plural, =0 {nada} =1 {{total} de {total}} other {{start}-{end} de {total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {nada} =1 {{total} de {total}} other { {total}}}",
             "pageInfo": "{totalPages, plural, =0 {ningúna Página} =1 {Página {totalPages} de {totalPages}} other {Seite {page} de {totalPages}}}",
             "pagination": {
                 "page": "Página",
@@ -973,6 +1064,17 @@
             }
         },
         "widgets": {
+             "types": {
+                "chart": {
+                    "title": "Gráfico",
+                    "caption": "agregar un gráfico"
+                },
+                "text": {
+                    "title": "Texto",
+                    "caption": "agregar un área de texto"
+                }
+            },
+            "selectWidgetType": "Seleccione el tipo de widget",
             "selectChartType": {
                 "title": "Seleccione el tipo de widget"
             },
@@ -994,7 +1096,9 @@
                     "configureChartOptions": "Configurar opciones de gráfico",
                     "configureWidgetOptions": "Configurar las opciones del widget",
                     "updateWidget": "Actualiza el widget",
-                    "addToTheMap": "Agrega el widget al mapa"
+                    "addToTheMap": "Agrega el widget al mapa",
+                    "titlePlaceholder": "Ingrese el título...",
+                    "textPlaceholder": "Ingresar texto..."
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Sin widgets disponibles",
@@ -1068,6 +1172,9 @@
                 "gauge": "Mostrar etiquetas"
             }
 
+        },
+        "dashboard": {
+            "emptyTitle": "El tablero está vacío"
         },
         "wizard": {
             "next": "Siguiente",

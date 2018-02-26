@@ -8,6 +8,7 @@
 
 module.exports = {
     plugins: {
+        DetailsPlugin: require('../plugins/Details'),
         MousePositionPlugin: require('../plugins/MousePosition'),
         PrintPlugin: require('../plugins/Print'),
         IdentifyPlugin: require('../plugins/Identify'),
@@ -77,8 +78,11 @@ module.exports = {
         AutoMapUpdatePlugin: require('../plugins/AutoMapUpdate'),
         MapFooterPlugin: require('../plugins/MapFooter'),
         AnnotationsPlugin: require('../plugins/Annotations'),
+        Dashboard: require('../plugins/Dashboard'),
+        DashboardEditor: require('../plugins/DashboardEditor'),
         WidgetsPlugin: require('../plugins/Widgets'),
-        WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder')
+        WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder'),
+        TOCItemsSettingsPlugin: require('../plugins/TOCItemsSettings')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

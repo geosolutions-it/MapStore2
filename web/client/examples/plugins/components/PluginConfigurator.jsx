@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {Checkbox, FormGroup, Button, Glyphicon} = require('react-bootstrap');
 
-const Codemirror = require('react-codemirror');
+const {Controlled: Codemirror} = require('react-codemirror2');
 require('codemirror/lib/codemirror.css');
 
 require('codemirror/mode/javascript/javascript');
@@ -67,7 +67,7 @@ class PluginConfigurator extends React.Component {
     renderCfg = () => {
         return this.state.configVisible ? [
             <label key="config-label">Enter a JSON object to configure plugin properties</label>,
-            <Codemirror key="code-mirror" value={this.state.code} onChange={this.updateCode} options={{
+            <Codemirror key={"code-mirror" + this.props.pluginName} value={this.state.code} onBeforeChange={this.updateCode} options={{
                 mode: {name: "javascript", json: true},
                 lineNumbers: true
             }}/>,
@@ -108,7 +108,7 @@ class PluginConfigurator extends React.Component {
         }
     };
 
-    updateCode = (newCode) => {
+    updateCode = (editor, data, newCode) => {
         this.setState({
             code: newCode
         });

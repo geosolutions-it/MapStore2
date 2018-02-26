@@ -13,7 +13,7 @@ const FilterUtils = require('../FilterUtils');
 const assign = require('object-assign');
 
 module.exports = {
-    buildRequest: (layer, props, infoFormat, viewer) => {
+    buildRequest: (layer, props, infoFormat, viewer, featureInfo) => {
         /* In order to create a valid feature info request
          * we create a bbox of 101x101 pixel that wrap the point.
          * center point is repojected then is built a box of 101x101pixel around it
@@ -64,7 +64,8 @@ module.exports = {
             metadata: {
                 title: isObject(layer.title) ? layer.title[props.currentLocale] || layer.title.default : layer.title,
                 regex: layer.featureInfoRegex,
-                viewer
+                viewer,
+                featureInfo
             },
             url: isArray(layer.url) ?
                 layer.url[0] :

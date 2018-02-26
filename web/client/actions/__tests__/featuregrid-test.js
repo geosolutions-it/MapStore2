@@ -39,7 +39,9 @@ const {
     initPlugin, INIT_PLUGIN,
     sizeChange, SIZE_CHANGE,
     START_SYNC_WMS, startSyncWMS,
-    storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER
+    storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER,
+    fatureGridQueryResult, GRID_QUERY_RESULT,
+    moreFeatures, LOAD_MORE_FEATURES
 } = require('../featuregrid');
 
 const idFeature = "2135";
@@ -257,5 +259,27 @@ describe('Test correctness of featurgrid actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(STORE_ADVANCED_SEARCH_FILTER);
         expect(retval.filterObj).toBe(filterObj);
+    });
+    it('Test storeAdvancedSearchFilter', () => {
+        const filterObj = {name: "A"};
+        const retval = storeAdvancedSearchFilter(filterObj);
+        expect(retval).toExist();
+        expect(retval.type).toBe(STORE_ADVANCED_SEARCH_FILTER);
+        expect(retval.filterObj).toBe(filterObj);
+    });
+    it('Test fatureGridQueryResult', () => {
+        const pages = [];
+        const retval = fatureGridQueryResult(features, pages);
+        expect(retval).toExist();
+        expect(retval.type).toBe(GRID_QUERY_RESULT);
+        expect(retval.features).toBe(features);
+        expect(retval.pages).toBe(pages);
+    });
+    it('Test moreFeatures', () => {
+        const pages = {startPage: 0, endPage: 2};
+        const retval = moreFeatures(pages);
+        expect(retval).toExist();
+        expect(retval.type).toBe(LOAD_MORE_FEATURES);
+        expect(retval.pages).toBe(pages);
     });
 });

@@ -1,6 +1,6 @@
 #mapstore-elevation {
-    width: 600px;
-    margin-top: -46px;
+    width: 100%;
+    /*margin-top: -46px;*/
     height: 80px;
     padding: 0 5px;
 }

@@ -13,6 +13,6 @@ const ConfigUtils = require('../../utils/ConfigUtils');
 
 module.exports = (Component) => {
     return (props) => {
-        return <Component {...props} container={document.querySelector('.' + (ConfigUtils.getConfigProp('themePrefix') || 'ms2')) || document.body}/>;
+        return <Component {...props} container={document.querySelector('.' + (ConfigUtils.getConfigProp('themePrefix') || 'ms2') + " > div") || document.body}/>;
     };
 };

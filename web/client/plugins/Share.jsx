@@ -16,6 +16,7 @@ const Message = require('../components/I18N/Message');
 const {toggleControl} = require('../actions/controls');
 const ConfigUtils = require('../utils/ConfigUtils');
 const ShareUtils = require('../utils/ShareUtils');
+const {versionSelector} = require('../selectors/version');
 
 /**
  * Share Plugin allows to share the current URL (location.href) in some different ways.
@@ -38,7 +39,8 @@ const Share = connect((state) => ({
     isVisible: state.controls && state.controls.share && state.controls.share.enabled,
     shareUrl: location.href,
     shareApiUrl: ShareUtils.getApiUrl(location.href),
-    shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl'))
+    shareConfigUrl: ShareUtils.getConfigUrl(location.href, ConfigUtils.getConfigProp('geoStoreUrl')),
+    version: versionSelector(state)
 }), {
     onClose: toggleControl.bind(null, 'share', null)
 })(require('../components/share/SharePanel'));

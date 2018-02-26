@@ -191,6 +191,18 @@ describe('Test the map reducer', () => {
         expect(state.bbox.bounds.maxy).toExist();
 
     });
+
+    it('zoom to extent with max zoom', () => {
+        const action = {
+            type: 'ZOOM_TO_EXTENT',
+            extent: [10, 44, 12, 46],
+            crs: "EPSG:4326",
+            maxZoom: 5
+        };
+
+        var state = mapConfig({ projection: "EPSG:4326", size: { width: 400, height: 400 } }, action);
+        expect(state.zoom).toBe(5);
+    });
     it('change map style', () => {
         const action = {
             type: 'CHANGE_MAP_STYLE',

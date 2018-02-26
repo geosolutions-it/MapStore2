@@ -2,8 +2,7 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 var path = require("path");
 const glob = require('glob');
 const extractThemesPlugin = new ExtractTextPlugin({
-    filename: '[name].css',
-    disable: process.env.NODE_ENV === "development"
+    filename: '[name].css'
 });
 
 

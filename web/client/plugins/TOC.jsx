@@ -13,10 +13,11 @@ const {Glyphicon} = require('react-bootstrap');
 
 const {changeLayerProperties, changeGroupProperties, toggleNode, contextNode,
        sortNode, showSettings, hideSettings, updateSettings, updateNode, removeNode,
-       browseData, selectNode, filterLayers, refreshLayerVersion} = require('../actions/layers');
+       browseData, selectNode, filterLayers, refreshLayerVersion, hideLayerMetadata,
+    download} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {zoomToExtent} = require('../actions/map');
-const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector} = require('../selectors/layers');
+const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, layerMetadataSelector, wfsDownloadSelector} = require('../selectors/layers');
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
@@ -35,6 +36,8 @@ const {isObject, head} = require('lodash');
 
 const {setControlProperty} = require('../actions/controls');
 const {createWidget} = require('../actions/widgets');
+
+const {getMetadataRecordById} = require("../actions/catalog");
 
 const {activeSelector} = require("../selectors/catalog");
 
@@ -59,7 +62,7 @@ const addFilteredAttributesGroups = (nodes, filters) => {
 const filterLayersByTitle = (layer, filterText, currentLocale) => {
     const translation = isObject(layer.title) ? layer.title[currentLocale] || layer.title.default : layer.title;
     const title = translation || layer.name;
-    return title.toLowerCase().includes(filterText.toLowerCase());
+    return title.toLowerCase().indexOf(filterText.toLowerCase()) !== -1;
 };
 
 const tocSelector = createSelector(
@@ -67,6 +70,8 @@ const tocSelector = createSelector(
         (state) => state.controls && state.controls.toolbar && state.controls.toolbar.active === 'toc',
         groupsSelector,
         layerSettingSelector,
+        layerMetadataSelector,
+        wfsDownloadSelector,
         mapSelector,
         currentLocaleSelector,
         selectedNodesSelector,
@@ -76,10 +81,12 @@ const tocSelector = createSelector(
         activeSelector,
         widgetBuilderAvailable,
         generalInfoFormatSelector
-    ], (enabled, groups, settings, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat) => ({
+    ], (enabled, groups, settings, layerMetadata, wfsdownload, map, currentLocale, selectedNodes, filterText, layers, mapName, catalogActive, activateWidgetTool, generalInfoFormat) => ({
         enabled,
         groups,
         settings,
+        layerMetadata,
+        wfsdownload,
         currentZoomLvl: map && map.zoom,
         scales: mapUtils.getScales(
             map && map.projection || 'EPSG:3857',
@@ -125,6 +132,9 @@ class LayerTree extends React.Component {
         buttonContent: PropTypes.node,
         groups: PropTypes.array,
         settings: PropTypes.object,
+        layerMetadata: PropTypes.object,
+        wfsdownload: PropTypes.object,
+        metadataTemplate: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object, PropTypes.func]),
         refreshMapEnabled: PropTypes.bool,
         groupStyle: PropTypes.object,
         groupPropertiesChangeHandler: PropTypes.func,
@@ -133,6 +143,7 @@ class LayerTree extends React.Component {
         onToggleLayer: PropTypes.func,
         onContextMenu: PropTypes.func,
         onBrowseData: PropTypes.func,
+        onDownload: PropTypes.func,
         onSelectNode: PropTypes.func,
         selectedNodes: PropTypes.array,
         onZoomToExtent: PropTypes.func,
@@ -146,6 +157,7 @@ class LayerTree extends React.Component {
         updateNode: PropTypes.func,
         removeNode: PropTypes.func,
         activateTitleTooltip: PropTypes.bool,
+        showFullTitleOnExpand: PropTypes.bool,
         activateOpacityTool: PropTypes.bool,
         activateSortLayer: PropTypes.bool,
         activateFilterLayer: PropTypes.bool,
@@ -155,7 +167,9 @@ class LayerTree extends React.Component {
         activateLegendTool: PropTypes.bool,
         activateZoomTool: PropTypes.bool,
         activateQueryTool: PropTypes.bool,
+        activateDownloadTool: PropTypes.bool,
         activateSettingsTool: PropTypes.bool,
+        activateMetedataTool: PropTypes.bool,
         activateWidgetTool: PropTypes.bool,
         visibilityCheckType: PropTypes.string,
         settingsOptions: PropTypes.object,
@@ -176,6 +190,8 @@ class LayerTree extends React.Component {
         filteredGroups: PropTypes.array,
         noFilterResults: PropTypes.bool,
         onAddLayer: PropTypes.func,
+        onGetMetadataRecord: PropTypes.func,
+        hideLayerMetadata: PropTypes.func,
         activateAddLayerButton: PropTypes.bool,
         catalogActive: PropTypes.bool,
         refreshLayerVersion: PropTypes.func
@@ -203,6 +219,7 @@ class LayerTree extends React.Component {
         selectedNodes: [],
         activateOpacityTool: true,
         activateTitleTooltip: true,
+        showFullTitleOnExpand: false,
         activateSortLayer: true,
         activateFilterLayer: true,
         activateMapTitle: true,
@@ -210,8 +227,10 @@ class LayerTree extends React.Component {
         activateLegendTool: true,
         activateZoomTool: true,
         activateSettingsTool: true,
+        activateMetedataTool: true,
         activateRemoveLayer: true,
         activateQueryTool: false,
+        activateDownloadTool: false,
         activateWidgetTool: false,
         visibilityCheckType: "glyph",
         settingsOptions: {
@@ -242,9 +261,12 @@ class LayerTree extends React.Component {
         filteredGroups: [],
         noFilterResults: false,
         onAddLayer: () => {},
+        onGetMetadataRecord: () => {},
+        hideLayerMetadata: () => {},
         activateAddLayerButton: false,
         catalogActive: false,
-        refreshLayerVersion: () => {}
+        refreshLayerVersion: () => {},
+        metadataTemplate: null
     };
 
     getNoBackgroundLayers = (group) => {
@@ -272,6 +294,7 @@ class LayerTree extends React.Component {
             <DefaultLayer
                 {...this.props.layerOptions}
                 titleTooltip={this.props.activateTitleTooltip}
+                showFullTitleOnExpand={this.props.showFullTitleOnExpand}
                 onToggle={this.props.onToggleLayer}
                 activateOpacityTool={this.props.activateOpacityTool}
                 onContextMenu={this.props.onContextMenu}
@@ -311,14 +334,19 @@ class LayerTree extends React.Component {
                             selectedGroups={this.props.selectedGroups}
                             generalInfoFormat={this.props.generalInfoFormat}
                             settings={this.props.settings}
+                            layerMetadata={this.props.layerMetadata}
+                            wfsdownload={this.props.wfsdownload}
+                            metadataTemplate={this.props.metadataTemplate}
                             activateTool={{
                                 activateToolsContainer: this.props.activateToolsContainer,
                                 activateRemoveLayer: this.props.activateRemoveLayer,
                                 activateZoomTool: this.props.activateZoomTool,
                                 activateQueryTool: this.props.activateQueryTool,
+                                activateDownloadTool: this.props.activateDownloadTool,
                                 activateSettingsTool: this.props.activateSettingsTool,
                                 activateAddLayer: this.props.activateAddLayerButton && !this.props.catalogActive,
                                 includeDeleteButtonInSettings: false,
+                                activateMetedataTool: this.props.activateMetedataTool,
                                 activateWidgetTool: this.props.activateWidgetTool
                             }}
                             options={{
@@ -348,6 +376,7 @@ class LayerTree extends React.Component {
                                     GROUP: <Message msgId="toc.toolGroupSettingsTooltip"/>
                                 },
                                 featuresGridTooltip: <Message msgId="toc.toolFeaturesGridTooltip"/>,
+                                downloadToolTooltip: <Message msgId="toc.toolDownloadTooltip" />,
                                 trashTooltip: {
                                     LAYER: <Message msgId="toc.toolTrashLayerTooltip"/>,
                                     LAYERS: <Message msgId="toc.toolTrashLayersTooltip"/>
@@ -355,12 +384,15 @@ class LayerTree extends React.Component {
                                 reloadTooltip: {
                                     LAYER: <Message msgId="toc.toolReloadLayerTooltip"/>,
                                     LAYERS: <Message msgId="toc.toolReloadLayersTooltip"/>
-                                }
+                                },
+                                layerMetadataTooltip: <Message msgId="toc.layerMetadata.toolLayerMetadataTooltip"/>,
+                                layerMetadataPanelTitle: <Message msgId="toc.layerMetadata.layerMetadataPanelTitle"/>
                             }}
                             onToolsActions={{
                                 onZoom: this.props.onZoomToExtent,
                                 onNewWidget: this.props.onNewWidget,
                                 onBrowseData: this.props.onBrowseData,
+                                onDownload: this.props.onDownload,
                                 onUpdate: this.props.updateNode,
                                 onRemove: this.props.removeNode,
                                 onClear: this.props.onSelectNode,
@@ -370,6 +402,8 @@ class LayerTree extends React.Component {
                                 onHideSettings: this.props.hideSettings,
                                 onReload: this.props.refreshLayerVersion,
                                 onAddLayer: this.props.onAddLayer,
+                                onGetMetadataRecord: this.props.onGetMetadataRecord,
+                                onHideLayerMetadata: this.props.hideLayerMetadata,
                                 onShow: this.props.layerPropertiesChangeHandler}}/>
                     }/>
                 <div className={'mapstore-toc' + bodyClass}>
@@ -410,9 +444,11 @@ class LayerTree extends React.Component {
  * @prop {boolean} cfg.activateSettingsTool: activate settings of layers and groups, default `true`
  * @prop {boolean} cfg.activateRemoveLayer: activate remove layer tool, default `true`
  * @prop {boolean} cfg.activateQueryTool: activate query tool options, default `false`
+ * @prop {boolean} cfg.activateDownloadTool: activate a button to download layer data through wfs, default `false`
  * @prop {boolean} cfg.activateSortLayer: activate drag and drob to sort layers, default `true`
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
  * @prop {object} cfg.layerOptions: options to pass to the layer.
+ * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
  * For instance you can pass some stying props to the legend.
  * this example is to make the legend scrollable horizontally
@@ -437,6 +473,7 @@ const TOCPlugin = connect(tocSelector, {
     onToggleLayer: LayersUtils.toggleByType('layers', toggleNode),
     onContextMenu: contextNode,
     onBrowseData: browseData,
+    onDownload: download,
     onSort: LayersUtils.sortUsing(LayersUtils.sortLayers, sortNode),
     onSettings: showSettings,
     onZoomToExtent: zoomToExtent,
@@ -447,10 +484,57 @@ const TOCPlugin = connect(tocSelector, {
     onSelectNode: selectNode,
     onFilter: filterLayers,
     onAddLayer: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+    onGetMetadataRecord: getMetadataRecordById,
+    hideLayerMetadata,
     onNewWidget: () => createWidget(),
     refreshLayerVersion
 })(LayerTree);
 
+const API = {
+    csw: require('../api/CSW')
+};
+/**
+ * Provides Table Of Content visualization.
+ * @memberof plugins
+ * @name TOC
+ * @class
+ * @prop {string[]|string|object|function} metadataTemplate custom template for displaying metadata
+ * @example
+ * {
+ * "name": "TOC",
+ *      "cfg": {
+ *          "metadataTemplate": ["<div id={model.identifier}>",
+ *              "<Bootstrap.Table className='responsive'>",
+ *                  "<thead>",
+ *                  "<tr>",
+ *                      "<th>Campo</th><th>Valore</th>",
+ *                  "</tr>",
+ *                  "</thead>",
+ *                  "<tbody>",
+ *                      "<tr>",
+ *                          "<td>Identifier</td><td>{model.identifier}</td>",
+ *                      "</tr>",
+ *                      "<tr>",
+ *                          "<td>Title</td><td>{model.title}</td>",
+ *                      "</tr>",
+ *                      "<tr>",
+ *                          "<td>Abstract</td><td>{model.abstract}</td>",
+ *                      "</tr>",
+ *                      "<tr>",
+ *                          "<td>Subject</td><td>{Array.isArray(model.subject) ? model.subject.map((value, i) => <ul key={'meta'+i}><li key={i}>{value}</li></ul>) : model.subject}</td>",
+ *                      "</tr>",
+ *                      "<tr>",
+ *                          "<td>Type</td><td>{model.type}</td>",
+ *                      "</tr>",
+ *                      "<tr>",
+ *                          "<td>Creator</td><td>{model.creator}</td>",
+ *                      "</tr>",
+ *                  "</tbody>",
+ *              "</Bootstrap.Table>",
+ *          "</div>"]
+ *      }
+ *  }
+ */
 module.exports = {
     TOCPlugin: assign(TOCPlugin, {
         Toolbar: {
@@ -480,5 +564,6 @@ module.exports = {
     reducers: {
         queryform: require('../reducers/queryform'),
         query: require('../reducers/query')
-    }
+    },
+    epics: require("../epics/catalog")(API)
 };

@@ -6,7 +6,7 @@ const NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
-
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publicPath, cssPrefix) => ({
     entry: assign({
         'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
@@ -15,11 +15,15 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     output: {
         path: paths.dist,
         publicPath,
-        filename: "[name].js"
+        filename: "[name].js",
+        chunkFilename: prod ? "[name].[hash].chunk.js" : "[name].js"
     },
     plugins: [
         new CopyWebpackPlugin([
             { from: path.join(paths.base, 'node_modules', 'bootstrap', 'less'), to: path.join(paths.dist, "bootstrap", "less") }
+        ]),
+		new CopyWebpackPlugin([
+            { from: path.join(paths.base, 'node_modules', 'react-nouislider', 'example'), to: path.join(paths.dist, "react-nouislider", "example") }
         ]),
         new LoaderOptionsPlugin({
             debug: !prod,
@@ -45,7 +49,24 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
         new NoEmitOnErrorsPlugin(),
         extractThemesPlugin
-    ].concat(prod ? [new ParallelUglifyPlugin({
+    ].concat(prod ? [new HtmlWebpackPlugin({
+            template: path.join(paths.framework, 'indexTemplate.html'),
+            chunks: ['mapstore2'],
+            inject: true,
+            hash: true
+    }), new HtmlWebpackPlugin({
+            template: path.join(paths.framework, 'embeddedTemplate.html'),
+            chunks: ['embedded'],
+            inject: true,
+            hash: true,
+            filename: 'embedded.html'
+    }), new HtmlWebpackPlugin({
+            template: path.join(paths.framework, 'apiTemplate.html'),
+            chunks: ['ms2-api'],
+            inject: 'head',
+            hash: true,
+            filename: 'api.html'
+    })] : []).concat(prod ? [new ParallelUglifyPlugin({
         uglifyJS: {
             sourceMap: false,
             compress: {warnings: false},
@@ -129,15 +150,20 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
                 }],
                 include: paths.code
             }
-        ]
+        ].concat(prod ? [{
+                test: /\.html$/,
+                loader: 'html-loader'
+        }] : [])
     },
     devServer: {
         proxy: {
             '/rest/geostore': {
-                target: "http://dev.mapstore2.geo-solutions.it/mapstore"
+                target: "https://dev.mapstore2.geo-solutions.it/mapstore",
+                secure: false
             },
             '/proxy': {
-                target: "http://dev.mapstore2.geo-solutions.it/mapstore"
+                target: "https://dev.mapstore2.geo-solutions.it/mapstore",
+                secure: false
             },
             '/docs': {
                 target: "http://localhost:8081",

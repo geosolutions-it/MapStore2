@@ -1,5 +1,16 @@
-const {FORMAT_OPTIONS_FETCH, DOWNLOAD_FEATURES, onDownloadFinished, updateFormats} = require('../actions/wfsdownload');
+/*
+ * Copyright 2017, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+const { FORMAT_OPTIONS_FETCH, DOWNLOAD_FEATURES, onDownloadFinished, updateFormats, onDownloadOptionChange} = require('../actions/wfsdownload');
 const {TOGGLE_CONTROL, toggleControl} = require('../actions/controls');
+const {queryPanelSelector, wfsDownloadSelector} = require('../selectors/controls');
+const {DOWNLOAD} = require('../actions/layers');
+const {createQuery} = require('../actions/wfsquery');
 const {error} = require('../actions/notifications');
 const Rx = require('rxjs');
 const {get, find, pick, toPairs} = require('lodash');
@@ -8,6 +19,7 @@ const axios = require('axios');
 const FilterUtils = require('../utils/FilterUtils');
 const {getByOutputFormat} = require('../utils/FileFormatUtils');
 const {getLayerWFSCapabilities} = require('../observables/wfs');
+
 
 const DOWNLOAD_FORMATS_LOOKUP = {
 	"gml3": "GML3.1",
@@ -68,6 +80,15 @@ const str2bytes = (str) => {
 };
 */
 module.exports = {
+    openDownloadTool: (action$) =>
+        action$.ofType(DOWNLOAD)
+            .switchMap((action) => {
+                return Rx.Observable.from([
+                    toggleControl("wfsdownload"),
+                    onDownloadOptionChange("singlePage", false),
+                    createQuery(action.layer.url, {featureTypeName: action.layer.name})
+                ]);
+            }),
     fetchFormatsWFSDownload: (action$) =>
         action$.ofType(FORMAT_OPTIONS_FETCH)
             .switchMap( action => {
@@ -77,13 +98,14 @@ module.exports = {
                 });
             }),
     startFeatureExportDownload: (action$, store) =>
-        action$.ofType(DOWNLOAD_FEATURES).switchMap(action =>
-            getWFSFeature({
+        action$.ofType(DOWNLOAD_FEATURES).switchMap(action => {
+            const {virtualScroll= false} = (store.getState()).featuregrid;
+            return getWFSFeature({
                     url: action.url,
                     downloadOptions: action.downloadOptions,
                     filterObj: {
                         ...action.filterObj,
-                        pagination: get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null
+                        pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null
                     }
                 })
                 .do(({data, headers}) => {
@@ -100,7 +122,7 @@ module.exports = {
                             downloadOptions: action.downloadOptions,
                             filterObj: {
                                 ...action.filterObj,
-                                pagination: get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
+                                pagination: !virtualScroll && get(action, "downloadOptions.singlePage") ? action.filterObj && action.filterObj.pagination : null,
                                 sortOptions: getDefaultSortOptions(getFirstAttribute(store.getState()))
                             }
                         }).do(({data, headers}) => {
@@ -124,11 +146,10 @@ module.exports = {
                         position: "tr"
                     }),
                     onDownloadFinished())
-                )
-
-        ),
+                );
+        }),
     closeExportDownload: (action$, store) =>
         action$.ofType(TOGGLE_CONTROL)
-        .filter((a) => a.control === "queryPanel" && !store.getState().controls.queryPanel.enabled && store.getState().controls.wfsdownload.enabled)
+        .filter((a) => a.control === "queryPanel" && !queryPanelSelector(store.getState()) && wfsDownloadSelector(store.getState()))
         .switchMap( () => Rx.Observable.of(toggleControl("wfsdownload")))
 };

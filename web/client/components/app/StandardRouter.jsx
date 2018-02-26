@@ -1,16 +1,14 @@
-const PropTypes = require('prop-types');
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 const React = require('react');
 const {connect} = require('react-redux');
-
+const PropTypes = require('prop-types');
 const Debug = require('../development/Debug');
-
 const {Route} = require('react-router');
 const {ConnectedRouter} = require('react-router-redux');
 const createHistory = require('history/createHashHistory').default;
@@ -33,7 +31,9 @@ class StandardRouter extends React.Component {
         locale: PropTypes.object,
         pages: PropTypes.array,
         className: PropTypes.string,
-        themeCfg: PropTypes.object
+        themeCfg: PropTypes.object,
+        version: PropTypes.string,
+        loadAfterTheme: PropTypes.bool
     };
 
     static defaultProps = {
@@ -43,9 +43,12 @@ class StandardRouter extends React.Component {
         className: "fill",
         themeCfg: {
             path: 'dist/themes'
-        }
+        },
+        loadAfterTheme: false
     };
-
+    state = {
+        themeLoaded: false
+    }
     renderPages = () => {
         return this.props.pages.map((page, i) => {
             const pageConfig = page.pageConfig || {};
@@ -57,21 +60,45 @@ class StandardRouter extends React.Component {
         });
     };
 
-    render() {
+    renderAfterTheme() {
         return (
-
             <div className={this.props.className}>
-                <Theme {...this.props.themeCfg}/>
+                <Theme {...this.props.themeCfg} version={this.props.version} onLoad={this.themeLoaded}>
+                    {this.state.themeLoaded ? (<Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
+                        <ConnectedRouter history={history}>
+                            <div>
+                                {this.renderPages()}
+                            </div>
+                        </ConnectedRouter>
+                    </Localized>) :
+                        (<span><div className="_ms2_init_spinner _ms2_init_center"><div></div></div>
+                        <div className="_ms2_init_text _ms2_init_center">Loading MapStore</div></span>)}
+                </Theme>
+                <Debug/>
+            </div>
+        );
+    }
+    renderWithTheme() {
+        return (
+            <div className={this.props.className}>
+                <Theme {...this.props.themeCfg} version={this.props.version}/>
                 <Localized messages={this.props.locale.messages} locale={this.props.locale.current} loadingError={this.props.locale.localeError}>
                     <ConnectedRouter history={history}>
                         <div>
                             {this.renderPages()}
                         </div>
                     </ConnectedRouter>
-                </Localized>
+                    </Localized>
                 <Debug/>
-            </div>
-        );
+            </div>);
+    }
+    render() {
+        return this.props.loadAfterTheme ? this.renderAfterTheme() : this.renderWithTheme();
+    }
+    themeLoaded = () => {
+        this.setState({
+            themeLoaded: true
+        });
     }
 }
 

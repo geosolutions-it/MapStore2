@@ -7,7 +7,7 @@
   */
 const React = require('react');
 
-const ChartWizard = require('./ChartWizard');
+const ChartWizard = require('./wizard/ChartWizard');
 module.exports = ({
         step=0,
         valid,

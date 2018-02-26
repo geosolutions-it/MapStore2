@@ -56,7 +56,7 @@ class CreateNewMap extends React.Component {
 module.exports = {
     CreateNewMapPlugin: connect((state) => ({
         mapType: mapTypeSelector(state),
-        isLoggedIn: state && state.security && state.security.user && state.security.user.enabled && true || false,
+        isLoggedIn: state && state.security && state.security.user && state.security.user.enabled && !(state.browser && state.browser.mobile) && true || false,
         user: state && state.security && state.security.user
     }))(CreateNewMap)
 };

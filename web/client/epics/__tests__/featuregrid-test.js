@@ -11,20 +11,23 @@ const assign = require('object-assign');
 const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
-const {toggleEditMode, toggleViewMode, openFeatureGrid, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid, GEOMETRY_CHANGED, openAdvancedSearch} = require('../../actions/featuregrid');
+const {toggleEditMode, toggleViewMode, openFeatureGrid, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid, GEOMETRY_CHANGED, openAdvancedSearch, moreFeatures, GRID_QUERY_RESULT} = require('../../actions/featuregrid');
 const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
 const {ZOOM_TO_EXTENT} = require('../../actions/map');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
-const {toggleSyncWms} = require('../../actions/wfsquery');
+const {toggleSyncWms, QUERY, querySearchResponse} = require('../../actions/wfsquery');
 const {CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
 
 const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
 
-const {setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeCatalogOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing, syncMapWmsFilter, onOpenAdvancedSearch} = require('../featuregrid');
+
+const {setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeRightPanelOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing, syncMapWmsFilter, onOpenAdvancedSearch, virtualScrollLoadFeatures} = require('../featuregrid');
+
+
 const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
 const {isEmpty, isNil} = require('lodash');
 const filterObj = {
@@ -91,58 +94,7 @@ const filterObj = {
     sortOptions: null,
     hits: false
   };
-const state = {
-    query: {
-        featureTypes: {
-            'editing:polygons': {
-                geometry: [{
-                    label: 'geometry',
-                    attribute: 'geometry',
-                    type: 'geometry',
-                    valueId: 'id',
-                    valueLabel: 'name',
-                    values: []
-                }],
-                original: {
-                    elementFormDefault: 'qualified',
-                    targetNamespace: 'http://geoserver.org/editing',
-                    targetPrefix: 'editing',
-                    featureTypes: [{
-                        typeName: 'polygons',
-                        properties: [{
-                                name: 'name',
-                                maxOccurs: 1,
-                                minOccurs: 0,
-                                nillable: true,
-                                type: 'xsd:string',
-                                localType: 'string'
-                            },
-                            {
-                                name: 'geometry',
-                                maxOccurs: 1,
-                                minOccurs: 0,
-                                nillable: true,
-                                type: 'gml:Polygon',
-                                localType: 'Polygon'
-                            }
-                        ]
-                    }]
-                },
-                attributes: [{
-                    label: 'name',
-                    attribute: 'name',
-                    type: 'string',
-                    valueId: 'id',
-                    valueLabel: 'name',
-                    values: []
-                }]
-            }
-        },
-        data: {},
-        result: {
-            type: 'FeatureCollection',
-            totalFeatures: 4,
-            features: [{
+const features = [{
                     type: 'Feature',
                     id: 'polygons.1',
                     geometry: {
@@ -253,7 +205,172 @@ const state = {
                         name: 'vvvv'
                     }
                 }
-            ],
+            ];
+const gmlFeatures = [{
+        type: 'Feature',
+        id: 'polygons.1',
+        geometry: {
+            type: 'Polygon',
+            coordinates: [
+                [
+                    [-39,
+                        39
+                    ],
+                    [-39,
+                        38
+                    ],
+                    [-40,
+                        38
+                    ],
+                    [-39,
+                        39
+                    ]
+                ]
+            ]
+        },
+        geometry_name: 'geometry',
+        properties: {
+            name: 'test'
+        }
+    },
+    {
+        type: 'Feature',
+        id: 'polygons.2',
+        geometry: {
+            type: 'Polygon',
+            coordinates: [
+                [
+                    [-48.77929687,
+                        37.54457732
+                    ],
+                    [-49.43847656,
+                        36.06686213
+                    ],
+                    [-46.31835937,
+                        35.53222623
+                    ],
+                    [-44.47265625,
+                        37.40507375
+                    ],
+                    [-48.77929687,
+                        37.54457732
+                    ]
+                ]
+            ]
+        },
+        geometry_name: 'geometry',
+        properties: {
+            name: 'poly2'
+        }
+    },
+    {
+        type: 'Feature',
+        id: 'polygons.6',
+        geometry: {
+            type: 'Polygon',
+            coordinates: [
+                [
+                    [-50.16357422,
+                        28.90239723
+                    ],
+                    [-49.69116211,
+                        28.24632797
+                    ],
+                    [-48.2409668,
+                        28.56522549
+                    ],
+                    [-50.16357422,
+                        28.90239723
+                    ]
+                ]
+            ]
+        },
+        geometry_name: 'geometry',
+        properties: {
+            name: 'ads'
+        }
+    },
+    {
+        type: 'Feature',
+        id: 'polygons.7',
+        geometry: {
+            type: 'Polygon',
+            coordinates: [
+                [
+                    [-64.46777344,
+                        33.90689555
+                    ],
+                    [-66.22558594,
+                        31.95216224
+                    ],
+                    [-63.32519531,
+                        30.97760909
+                    ],
+                    [-64.46777344,
+                        33.90689555
+                    ]
+                ]
+            ]
+        },
+        geometry_name: 'geometry',
+        properties: {
+            name: 'vvvv'
+        }
+    }
+];
+
+const state = {
+    query: {
+        featureTypes: {
+            'editing:polygons': {
+                geometry: [{
+                    label: 'geometry',
+                    attribute: 'geometry',
+                    type: 'geometry',
+                    valueId: 'id',
+                    valueLabel: 'name',
+                    values: []
+                }],
+                original: {
+                    elementFormDefault: 'qualified',
+                    targetNamespace: 'http://geoserver.org/editing',
+                    targetPrefix: 'editing',
+                    featureTypes: [{
+                        typeName: 'polygons',
+                        properties: [{
+                                name: 'name',
+                                maxOccurs: 1,
+                                minOccurs: 0,
+                                nillable: true,
+                                type: 'xsd:string',
+                                localType: 'string'
+                            },
+                            {
+                                name: 'geometry',
+                                maxOccurs: 1,
+                                minOccurs: 0,
+                                nillable: true,
+                                type: 'gml:Polygon',
+                                localType: 'Polygon'
+                            }
+                        ]
+                    }]
+                },
+                attributes: [{
+                    label: 'name',
+                    attribute: 'name',
+                    type: 'string',
+                    valueId: 'id',
+                    valueLabel: 'name',
+                    values: []
+                }]
+            }
+        },
+        data: {},
+        result: {
+            type: 'FeatureCollection',
+            totalFeatures: 4,
+            features,
             crs: {
                 type: 'name',
                 properties: {
@@ -350,118 +467,7 @@ const stateWithGmlGeometry = {
         result: {
             type: 'FeatureCollection',
             totalFeatures: 4,
-            features: [{
-                    type: 'Feature',
-                    id: 'polygons.1',
-                    geometry: {
-                        type: 'Polygon',
-                        coordinates: [
-                            [
-                                [-39,
-                                    39
-                                ],
-                                [-39,
-                                    38
-                                ],
-                                [-40,
-                                    38
-                                ],
-                                [-39,
-                                    39
-                                ]
-                            ]
-                        ]
-                    },
-                    geometry_name: 'geometry',
-                    properties: {
-                        name: 'test'
-                    }
-                },
-                {
-                    type: 'Feature',
-                    id: 'polygons.2',
-                    geometry: {
-                        type: 'Polygon',
-                        coordinates: [
-                            [
-                                [-48.77929687,
-                                    37.54457732
-                                ],
-                                [-49.43847656,
-                                    36.06686213
-                                ],
-                                [-46.31835937,
-                                    35.53222623
-                                ],
-                                [-44.47265625,
-                                    37.40507375
-                                ],
-                                [-48.77929687,
-                                    37.54457732
-                                ]
-                            ]
-                        ]
-                    },
-                    geometry_name: 'geometry',
-                    properties: {
-                        name: 'poly2'
-                    }
-                },
-                {
-                    type: 'Feature',
-                    id: 'polygons.6',
-                    geometry: {
-                        type: 'Polygon',
-                        coordinates: [
-                            [
-                                [-50.16357422,
-                                    28.90239723
-                                ],
-                                [-49.69116211,
-                                    28.24632797
-                                ],
-                                [-48.2409668,
-                                    28.56522549
-                                ],
-                                [-50.16357422,
-                                    28.90239723
-                                ]
-                            ]
-                        ]
-                    },
-                    geometry_name: 'geometry',
-                    properties: {
-                        name: 'ads'
-                    }
-                },
-                {
-                    type: 'Feature',
-                    id: 'polygons.7',
-                    geometry: {
-                        type: 'Polygon',
-                        coordinates: [
-                            [
-                                [-64.46777344,
-                                    33.90689555
-                                ],
-                                [-66.22558594,
-                                    31.95216224
-                                ],
-                                [-63.32519531,
-                                    30.97760909
-                                ],
-                                [-64.46777344,
-                                    33.90689555
-                                ]
-                            ]
-                        ]
-                    },
-                    geometry_name: 'geometry',
-                    properties: {
-                        name: 'vvvv'
-                    }
-                }
-            ],
+            gmlFeatures,
             crs: {
                 type: 'name',
                 properties: {
@@ -641,7 +647,8 @@ describe('featuregrid Epics', () => {
                 selectedLayer: "TEST_LAYER",
                 mode: 'EDIT',
                 select: [],
-                changes: []
+                changes: [],
+                features
             }
         };
 
@@ -714,17 +721,38 @@ describe('featuregrid Epics', () => {
         }, {});
     });
 
-    it('test closeCatalogOnFeatureGridOpen', (done) => {
-        testEpic(closeCatalogOnFeatureGridOpen, 1, openFeatureGrid(), actions => {
-            expect(actions.length).toBe(1);
-            actions.map((action) => {
+    it('test closeRightPanelOnFeatureGridOpen', (done) => {
+        testEpic(closeRightPanelOnFeatureGridOpen, 3, openFeatureGrid(), actions => {
+            expect(actions.length).toBe(3);
+            actions.map((action, i) => {
                 switch (action.type) {
-                    case SET_CONTROL_PROPERTY:
-                        expect(action.control).toBe('metadataexplorer');
-                        expect(action.property).toBe('enabled');
-                        expect(action.value).toBe(false);
-                        expect(action.toggle).toBe(undefined);
+                    case SET_CONTROL_PROPERTY: {
+                        switch (i) {
+                            case 0: {
+                                expect(action.control).toBe('metadataexplorer');
+                                expect(action.property).toBe('enabled');
+                                expect(action.value).toBe(false);
+                                expect(action.toggle).toBe(undefined);
+                                break;
+                            }
+                            case 1: {
+                                expect(action.control).toBe('annotations');
+                                expect(action.property).toBe('enabled');
+                                expect(action.value).toBe(false);
+                                expect(action.toggle).toBe(undefined);
+                                break;
+                            }
+                            case 2: {
+                                expect(action.control).toBe('details');
+                                expect(action.property).toBe('enabled');
+                                expect(action.value).toBe(false);
+                                expect(action.toggle).toBe(undefined);
+                                break;
+                            }
+                            default: expect(true).toBe(false);
+                        }
                         break;
+                    }
                     default:
                         expect(true).toBe(false);
                 }
@@ -927,7 +955,7 @@ describe('featuregrid Epics', () => {
                 }
             });
             done();
-        }, state);
+        }, {...state, featuregrid: {features}});
     });
 
     it('test resetControlsOnEnterInEditMode', (done) => {
@@ -1421,6 +1449,78 @@ describe('featuregrid Epics', () => {
                 switch (action.type) {
                     case CHANGE_DRAWING_STATUS:
                         expect(action.status).toBe('clean');
+                        break;
+                    default:
+                        expect(true).toBe(true);
+                }
+            });
+            done();
+        }, newState);
+    });
+    it('test virtualScrollLoadFeatures to dispatch query action', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST__6",
+                mode: 'EDIT',
+                select: [{id: 'polygons.1', _new: 'polygons._new'}],
+                changes: [],
+                pages: [],
+                pagination: {
+                    size: 10
+                },
+                features: []
+            }
+        };
+
+        const newState = assign({}, state, stateFeaturegrid);
+        testEpic(virtualScrollLoadFeatures, 1, [moreFeatures({startPage: 0, endPage: 2})], actions => {
+
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case QUERY:
+                        expect(action.filterObj.pagination.startIndex).toBe(0);
+                        expect(action.filterObj.pagination.maxFeatures).toBe(30);
+                        break;
+                    default:
+                        expect(true).toBe(true);
+                }
+            });
+            done();
+        }, newState);
+    });
+    it('test virtualScrollLoadFeatures to emit GRID_QUERY_RESULT on query success', (done) => {
+        const stateFeaturegrid = {
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST__6",
+                mode: 'EDIT',
+                select: [{id: 'polygons.1', _new: 'polygons._new'}],
+                changes: [],
+                pages: [],
+                pagination: {
+                    size: 10
+
+                },
+                features: []
+            }
+        };
+        const newState = assign({}, state, stateFeaturegrid);
+        testEpic(virtualScrollLoadFeatures, 2, [moreFeatures({startPage: 0, endPage: 2}), querySearchResponse({features: Array(30)}, " ", {pagination: {startIndex: 0, maxFeatures: 30}})], actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                    case QUERY:
+                        expect(action.filterObj.pagination.startIndex).toBe(0);
+                        expect(action.filterObj.pagination.maxFeatures).toBe(30);
+                        break;
+                    case GRID_QUERY_RESULT:
+                        expect(action.features.length).toBe(30);
+                        expect(action.pages.length).toBe(3);
+                        expect(action.pages[0]).toBe(0);
+                        expect(action.pages[1]).toBe(10);
+                        expect(action.pages[2]).toBe(20);
                         break;
                     default:
                         expect(true).toBe(true);

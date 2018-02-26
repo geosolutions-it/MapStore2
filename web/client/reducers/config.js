@@ -7,7 +7,7 @@
  */
 
 const {MAP_CONFIG_LOADED, MAP_INFO_LOAD_START, MAP_INFO_LOADED, MAP_INFO_LOAD_ERROR, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
-const {MAP_CREATED} = require('../actions/maps');
+const {MAP_CREATED, DETAILS_LOADED} = require('../actions/maps');
 
 const assign = require('object-assign');
 const ConfigUtils = require('../utils/ConfigUtils');
@@ -59,10 +59,23 @@ function mapConfig(state = null, action) {
             return assign({}, state, {map: map});
         }
         return state;
+    case DETAILS_LOADED:
+        map = state && state.map && state.map.present ? state.map.present : state && state.map;
+        if (map && map.mapId.toString() === action.mapId.toString()) {
+            map = assign({}, map, {
+                info:
+                    assign({}, map.info, {
+                        details: action.detailsUri
+                })
+            });
+            return assign({}, state, {map: map});
+        }
+        return state;
     case MAP_CREATED: {
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
-        if (map && !map.mapId) {
-            map = assign({}, map, {newMapId: action.resourceId});
+        if (map) {
+            // version needed to avoid automapupdate to start
+            map = assign({}, map, {mapId: action.resourceId, version: 2});
             return assign({}, state, {map: map});
         }
     }

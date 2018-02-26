@@ -333,7 +333,8 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
         maxExtent: currentMap.maxExtent,
         projection: currentMap.projection,
         units: currentMap.units,
-        zoom: currentMap.zoom
+        zoom: currentMap.zoom,
+        mapOptions: currentMap.mapOptions || {}
     };
 
     const layers = currentLayers.map((layer) => {
@@ -388,6 +389,12 @@ function getSimpleGeomType(geomType = "Point") {
     }
 }
 
+const getIdFromUri = (uri, regex = /data\/(\d+)/) => {
+    const decodedUri = decodeURIComponent(uri);
+    const findDataDigit = regex.exec(decodedUri);
+    return findDataDigit && findDataDigit.length && findDataDigit.length > 1 ? findDataDigit[1] : null;
+};
+
 module.exports = {
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
@@ -417,5 +424,6 @@ module.exports = {
     saveMapConfiguration,
     isSimpleGeomType,
     getSimpleGeomType,
-    extractTileMatrixSetFromLayers
+    extractTileMatrixSetFromLayers,
+    getIdFromUri
 };

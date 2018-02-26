@@ -143,4 +143,25 @@ describe('Test correctness of the WMS APIs', () => {
             }
         });
     });
+    it('parseLayerCapabilities nested', () => {
+        const capabilities = {
+            capability: {
+                layer: {
+                    layer: {
+                        layer: [
+                            {
+                                name: "mytest"
+                            },
+                            {
+                                name: "mytest2"
+                            }
+                        ]
+                    }
+                }
+            }
+        };
+
+        const capability = API.parseLayerCapabilities(capabilities, {name: 'mytest'});
+        expect(capability).toExist();
+    });
 });

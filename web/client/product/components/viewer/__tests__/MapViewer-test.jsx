@@ -28,22 +28,21 @@ const renderMapViewerComp = (mapViewerPros) => {
 describe("Test the MapViewerCmp component", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
-        done();
+        setTimeout(done);
     });
 
     afterEach((done) => {
         document.body.innerHTML = '';
-        done();
+        setTimeout(done);
     });
 
-    it('testing creation with defaults', (done) => {
+    it('testing creation with defaults', () => {
         const mapViewerPros = { wrappedContainer: MapViewerContainer };
         const cmpMapViewerCmp = renderMapViewerComp(mapViewerPros);
         expect(cmpMapViewerCmp).toExist();
-        done();
     });
 
-    it('testing creation with mapId = new', (done) => {
+    it('testing creation with mapId = new', () => {
         const match = {params: {mapId: "new"}};
         const mapViewerPros = { match, location, onInit: () => {},
         wrappedContainer: MapViewerContainer,
@@ -53,10 +52,9 @@ describe("Test the MapViewerCmp component", () => {
             }};
         const cmpMapViewerCmp = renderMapViewerComp(mapViewerPros);
         expect(cmpMapViewerCmp).toExist();
-        done();
     });
 
-    it('testing creation with mapId = anyString', (done) => {
+    it('testing creation with mapId = anyString', () => {
         const match = {params: {mapId: "anyString"}};
         const mapViewerPros = { match, location, onInit: () => {},
             wrappedContainer: MapViewerContainer,
@@ -66,10 +64,9 @@ describe("Test the MapViewerCmp component", () => {
             }};
         const cmpMapViewerCmp = renderMapViewerComp(mapViewerPros);
         expect(cmpMapViewerCmp).toExist();
-        done();
     });
 
-    it('testing creation with mapId = 0', (done) => {
+    it('testing creation with mapId = 0', () => {
         const match = {params: {mapId: 0}};
         const mapViewerPros = { match, location, onInit: () => {},
             wrappedContainer: MapViewerContainer,
@@ -79,10 +76,9 @@ describe("Test the MapViewerCmp component", () => {
             }};
         const component = renderMapViewerComp(mapViewerPros);
         expect(component).toExist();
-        done();
     });
 
-    it('testing creation with mapId = 1', (done) => {
+    it('testing creation with mapId = 1', () => {
         const match = {params: {mapId: 1}};
         const mapViewerPros = { match, location, onInit: () => {},
             wrappedContainer: MapViewerContainer,
@@ -92,7 +88,6 @@ describe("Test the MapViewerCmp component", () => {
             }};
         const component = renderMapViewerComp(mapViewerPros);
         expect(component).toExist();
-        done();
     });
 
 });

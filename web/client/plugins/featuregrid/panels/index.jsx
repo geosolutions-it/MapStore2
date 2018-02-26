@@ -43,7 +43,7 @@ const Toolbar = connect(
         isDownloadOpen: state => state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.enabled,
         isSyncActive: isSyncWmsActive,
         isColumnsOpen: state => state && state.featuregrid && state.featuregrid.tools && state.featuregrid.tools.settings,
-        disableZoomAll: (state) => featureCollectionResultSelector(state).features.length === 0,
+        disableZoomAll: (state) => state && state.featuregrid.virtualScroll || featureCollectionResultSelector(state).features.length === 0,
         isSearchAllowed: (state) => !isCesium(state),
         isEditingAllowed: (state) => (filterEditingAllowedUser(userRoleSelector(state), editingAllowedRolesSelector(state)) || canEditSelector(state)) && !isCesium(state),
         hasSupportedGeometry
@@ -66,9 +66,11 @@ const Footer = connect(
         createSelector(
             createStructuredSelector(paginationInfo),
             featureLoadingSelector,
-            (pagination, loading) => ({
+            state => state && state.featuregrid && !!state.featuregrid.virtualScroll,
+            (pagination, loading, virtualScroll) => ({
                 ...pagination,
-                loading
+                loading,
+                virtualScroll
             })),
     pageEvents
 )(require('../../../components/data/featuregrid/Footer'));
@@ -115,12 +117,13 @@ module.exports = {
         return <Header ><Toolbar /></Header>;
     },
     getFooter: (props) => {
-        return (props.focusOnEdit && props.hasChanges || props.newFeatures.length > 0) ? null : <Footer />;
+        return ( props.focusOnEdit && props.hasChanges || props.newFeatures.length > 0) ? null : <Footer />;
     },
     getEmptyRowsView: () => {
         return EmptyRowsView;
     },
-    getFilterRenderers: (describe) =>
+    getFilterRenderers: createSelector((d) => d,
+        (describe) =>
         describe ? getAttributeFields(describe).reduce( (out, cur) => ({
             ...out,
             [cur.name]: connect(
@@ -138,7 +141,7 @@ module.exports = {
                         return mode === "EDIT" ? {...props, ...editProps} : props;
                     }
         ))(getFilterRenderer(cur.localType, {name: cur.name}))
-        }), {}) : {},
+        }), {}) : {}),
     getDialogs: (tools = {}) => {
         return Object.keys(tools)
             .filter(t => tools[t] && dialogs[t])

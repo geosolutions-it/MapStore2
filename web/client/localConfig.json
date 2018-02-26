@@ -1,5 +1,4 @@
 {
-
     "proxyUrl": {
         "url": "proxy/?url=",
         "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver"]
@@ -11,6 +10,7 @@
     "initialMapFilter": "",
     "ignoreMobileCss": false,
     "useAuthenticationRules": true,
+    "loadAfterTheme": true,
     "defaultMapOptions": {
       "cesium": {
           "flyTo": true,
@@ -64,6 +64,30 @@
               }
             }
           }
+        },
+        "locales": {
+          "supportedLocales": {
+            "it": {
+              "code": "it-IT",
+              "description": "Italiano"
+            },
+            "en": {
+              "code": "en-US",
+              "description": "English"
+            },
+            "fr": {
+              "code": "fr-FR",
+              "description": "Français"
+            },
+            "de": {
+              "code": "de-DE",
+              "description": "Deutsch"
+            },
+            "es": {
+              "code": "es-ES",
+              "description": "Español"
+            }
+          }
         }
       }
     },
@@ -92,16 +116,13 @@
                 "name": "Identify",
                 "showIn": ["Settings"],
                 "cfg": {
-                    "panelClassName": "mapstore-mobile-identify",
-                    "fullscreen": true,
-                    "draggable": false,
-                    "collapsible": true,
+                    "showFullscreen": true,
+                    "position": "bottom",
+                    "size": 0.5,
+                    "fluid": true,
                     "viewerOptions": {
-                        "container": "{context.ReactSwipe}",
-                        "header": "{context.SwipeHeader}",
-                        "collapsible": false
-                    },
-                    "bodyClass": "mobile-feature-info"
+                        "container": "{context.ReactSwipe}"
+                    }
                 }
             }, {
                 "name": "Locate",
@@ -115,6 +136,11 @@
                 "cfg": {
                     "activateMapTitle": false,
                     "activateSortLayer": false
+                }
+            }, {
+                "name": "TOCItemsSettings",
+                "cfg": {
+                    "width": 300
                 }
             }, {
                 "name": "Tutorial",
@@ -160,8 +186,7 @@
               }
             }
         ],
-
-        "desktop": [
+        "desktop": [ "Details",
           {
             "name": "Map",
             "cfg": {
@@ -187,17 +212,8 @@
             {
                 "name": "Identify",
                 "cfg": {
-                    "panelClassName": "mapstore-right-panel modal-content",
-                    "draggable": false,
-                    "collapsible": true,
                     "viewerOptions": {
-                        "container": "{context.ReactSwipe}",
-                        "header": "{context.SwipeHeader}",
-                        "draggable": false,
-                        "collapsible": false,
-                        "headerOptions": {
-                            "useButtons": true
-                        }
+                        "container": "{context.ReactSwipe}"
                     }
                 },
                 "override": {
@@ -236,6 +252,7 @@
                 "name": "TOC",
                 "cfg": {
                     "activateQueryTool": true,
+                    "activateDownloadTool": true,
                     "activateAddLayerButton": true,
                     "spatialOperations": [
                         {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
@@ -250,7 +267,9 @@
                         {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
                     ]
                 }
-            }, "Tutorial", "MapFooter", {
+            },
+            "TOCItemsSettings",
+            "Tutorial", "MapFooter", {
                 "name": "Measure"
             }, "Print", "ShapeFile", {
                 "name": "Settings",
@@ -364,16 +383,13 @@
               }, {
                 "name": "Identify",
                 "cfg": {
-                    "panelClassName": "mapstore-mobile-identify",
-                    "fullscreen": true,
-                    "draggable": false,
-                    "collapsible": true,
+                    "showFullscreen": true,
+                    "position": "bottom",
+                    "size": 0.5,
+                    "fluid": true,
                     "viewerOptions": {
-                        "container": "{context.ReactSwipe}",
-                        "header": "{context.SwipeHeader}",
-                        "collapsible": false
-                    },
-                    "bodyClass": "mobile-feature-info"
+                        "container": "{context.ReactSwipe}"
+                    }
                 }
             }, {
                 "name": "ZoomAll",
@@ -452,6 +468,29 @@
             "declineUrl" : "http://www.google.com"
           }
         }],
+        "dashboard": [{
+            "name": "OmniBar",
+            "cfg": {
+                "containerPosition": "header",
+                "className": "navbar shadow navbar-home"
+            }
+        }, "ManagerMenu", "Login", "Language", "Attribution", {
+          "name": "DashboardEditor",
+          "cfg": {
+             "catalog": {
+              "url": "https://demo.geo-solutions.it/geoserver/csw",
+              "type": "csw",
+              "title": "Demo CSW Service",
+              "autoload": true
+            },
+            "containerPosition": "columns"
+          }
+        }, {
+          "name": "QueryPanel",
+          "cfg": {
+            "containerPosition": "columns"
+          }
+        }, "Dashboard"],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }

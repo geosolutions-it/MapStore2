@@ -8,6 +8,7 @@
 var expect = require('expect');
 
 var mapConfig = require('../config');
+const {DETAILS_LOADED, MAP_CREATED} = require('../../actions/maps');
 
 
 describe('Test the mapConfig reducer', () => {
@@ -72,5 +73,44 @@ describe('Test the mapConfig reducer', () => {
         expect(state.map).toExist();
         expect(state.map.info).toExist();
         expect(state.map.info.canEdit).toBe(true);
+    });
+    it('DETAILS_LOADED', () => {
+        const detailsUri = "details/uri";
+        var state = mapConfig({
+            map: {
+                present: {
+                    mapId: 1
+                }
+            }
+        }, {type: DETAILS_LOADED, mapId: 1, detailsUri});
+        expect(state.map).toExist();
+        expect(state.map.info).toExist();
+        expect(state.map.info.details).toBe(detailsUri);
+    });
+
+    it('map created', () => {
+        expect(mapConfig({
+            map: {
+                present: {
+                    mapId: 1
+                }
+            }
+        }, {type: MAP_CREATED, resourceId: 2})).toEqual({
+            map: {
+                mapId: 2,
+                version: 2
+            }
+        });
+        expect(mapConfig({
+            map: {
+                present: {}
+            }
+        }, {type: MAP_CREATED, resourceId: 2})).toEqual({
+            map: {
+                mapId: 2,
+                version: 2
+            }
+        });
+        expect(mapConfig({}, {type: MAP_CREATED, resourceId: 2})).toEqual({});
     });
 });

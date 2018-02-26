@@ -7,7 +7,8 @@
 */
 
 const expect = require('expect');
-const {layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector} = require('../layers');
+const {layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
+    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector} = require('../layers');
 
 describe('Test layers selectors', () => {
     it('test layersSelector from config', () => {
@@ -148,6 +149,26 @@ describe('Test layers selectors', () => {
     it('test layerSettingSelector no state', () => {
         const props = layerSettingSelector({});
         expect(props).toEqual({expanded: false, options: {opacity: 1}});
+    });
+
+    it('test layerMetadataSelector', () => {
+        const props = layerMetadataSelector({layers: {layerMetadata: {expanded: true}}});
+        expect(props).toEqual({expanded: true});
+    });
+
+    it('test layerMetadataSelector no state', () => {
+        const props = layerMetadataSelector({});
+        expect(props).toEqual({expanded: false, metadataRecord: {}, maskLoading: false});
+    });
+
+    it('test wfsDownloadSelector', () => {
+        const props = wfsDownloadSelector({ controls: { wfsdownload: { enabled: true } } });
+        expect(props).toEqual({ expanded: true });
+    });
+
+    it('test wfsDownloadSelector no state', () => {
+        const props = wfsDownloadSelector({});
+        expect(props).toEqual({ expanded: false });
     });
 
     it('test backgroundControlsSelector', () => {

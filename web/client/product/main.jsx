@@ -16,22 +16,27 @@ module.exports = (config, pluginsDef) => {
         const ConfigUtils = require('../utils/ConfigUtils');
         const {loadMaps} = require('../actions/maps');
         const {loadVersion} = require('../actions/version');
+        const {versionSelector} = require('../selectors/version');
+        const {loadAfterThemeSelector} = require('../selectors/config');
         const StandardApp = require('../components/app/StandardApp');
 
         const {pages, initialState, storeOpts, appEpics = {}} = config;
 
         const StandardRouter = connect((state) => ({
             locale: state.locale || {},
-            pages
+            pages,
+            version: versionSelector(state),
+            loadAfterTheme: loadAfterThemeSelector(state)
         }))(require('../components/app/StandardRouter'));
 
         const {updateMapLayoutEpic} = require('../epics/maplayout');
+        const {setSupportedLocales} = require('../epics/localconfig');
 
         const appStore = require('../stores/StandardStore').bind(null, initialState, {
             maptype: require('../reducers/maptype'),
             maps: require('../reducers/maps'),
             maplayout: require('../reducers/maplayout')
-        }, {...appEpics, updateMapLayoutEpic});
+        }, {...appEpics, updateMapLayoutEpic, setSupportedLocales});
 
         const initialActions = [
             () => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*"),

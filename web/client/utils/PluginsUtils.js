@@ -148,7 +148,7 @@ const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, load
                     item,
                     pluginCfg.override && pluginCfg.override[name] || {},
                     {
-                        cfg: pluginCfg && parsePluginConfig(state, plugins.requires, pluginCfg.cfg || {}) || undefined
+                        cfg: assign({ }, pluginImpl.cfg || {}, pluginCfg && parsePluginConfig(state, plugins.requires, pluginCfg.cfg || {}) || undefined)
                     },
                     {
                         plugin: pluginImpl,
@@ -208,6 +208,29 @@ const PluginsUtils = {
     filterState,
     filterDisabledPlugins,
     getMonitoredState: (state, monitorState = []) => filterState(state, defaultMonitoredState.concat(monitorState)),
+    /**
+     * Create an object structured like following:
+     * ```
+     * {
+     *   bodyPlugins: [...all the configs without cfg.contanerPosition attribute ]
+     *   columns: [...all the configs configured with cfg.contanerPosition: "columns"]
+     *   header: [...all the configs configured with cfg.contanerPosition: "header"]
+     *   ... and so on, for every cfg.contanerPosition value found
+     * }
+     * ```
+     * @param  {object[]} pluginsConfig The configurations of plugins
+     * @return {object}   An object that spreads the configruations in arrays by their `cfg.containerPosition`.
+     */
+    mapPluginsPosition: (pluginsConfig = []) =>
+        pluginsConfig.reduce( (o, p) => {
+            const position = p.cfg && p.cfg.containerPosition || "bodyPlugins";
+            return {
+                ...o,
+                [position]: o[position]
+                    ? [...o[position], p]
+                    : [p]
+            };
+        }, {}),
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
                                 .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
     /**
@@ -247,7 +270,7 @@ const PluginsUtils = {
             id: id || name,
             name,
             impl: includeLoaded(name, loadedPlugins, impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent ? impl : impl(stateSelector)),
-            cfg: isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {},
+            cfg: assign({}, impl.cfg || {}, isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {}),
             items: getPluginItems(state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
         };
     },

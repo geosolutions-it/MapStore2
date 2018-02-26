@@ -47,7 +47,7 @@ const getColorRangeItems = (type) => {
     return COLORS;
 };
 
-module.exports = ({data = {options: {}}, onChange = () => {}, options=[], aggregationOptions = [], sampleChart}) => (<Row>
+module.exports = ({data = {options: {}}, onChange = () => {}, options=[], dependencies, aggregationOptions = [], sampleChart}) => (<Row>
         <StepHeader title={<Message msgId={`widgets.chartOptionsTitle`} />} />
           <Col xs={12}>
               <div style={{marginBottom: "30px"}}>
@@ -114,7 +114,8 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], aggreg
                   onChange={v => {onChange("autoColorOptions", {...v.options, name: v.name}); }}/>
           </Col>
         </FormGroup>
-        <FormGroup controlId="mapSync" className="mapstore-block-width">
+        {dependencies && dependencies.viewport
+            ? (<FormGroup controlId="mapSync" className="mapstore-block-width">
             <Col componentClass={ControlLabel} sm={6}>
               <Message msgId={`widgets.mapSync`} />
             </Col>
@@ -126,7 +127,8 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], aggreg
                   }}
                   />
           </Col>
-        </FormGroup>
+        </FormGroup>)
+            : null}
         <FormGroup controlId="displayLegend">
             <Col componentClass={ControlLabel} sm={6}>
               <Message msgId={`widgets.displayLegend.${data.type}`} />

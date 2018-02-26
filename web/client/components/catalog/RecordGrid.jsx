@@ -17,6 +17,7 @@ class RecordGrid extends React.Component {
     static propTypes = {
         recordItem: PropTypes.element,
         catalogURL: PropTypes.string,
+        catalogType: PropTypes.string,
         onZoomToExtent: PropTypes.func,
         zoomToLayer: PropTypes.bool,
         onLayerAdd: PropTypes.func,
@@ -49,6 +50,7 @@ class RecordGrid extends React.Component {
                     zoomToLayer={this.props.zoomToLayer}
                     onError={this.props.onError}
                     catalogURL={this.props.catalogURL}
+                    catalogType={this.props.catalogType}
                     record={record}
                     authkeyParamNames={this.props.authkeyParamNames}
                     style={{height: "215px", maxHeight: "215px"}}

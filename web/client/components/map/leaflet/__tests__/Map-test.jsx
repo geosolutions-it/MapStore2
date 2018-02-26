@@ -314,4 +314,83 @@ describe('LeafletMap', () => {
         attributions = document.body.getElementsByClassName('leaflet-control-attribution');
         expect(attributions.length).toBe(0);
     });
+
+    it('add layer observable', () => {
+
+        let map = ReactDOM.render(
+            <LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>,
+            document.getElementById("container"));
+
+        expect(map).toExist();
+        let event = {
+            layer: {
+                layerId: 2,
+                on: () => {},
+                _ms2LoadingTileCount: 1
+            }
+        };
+
+        map.addLayerObservable(event, false);
+        expect(event.layer.layerLoadingStream$).toNotExist();
+        expect(event.layer.layerErrorStream$).toNotExist();
+        expect(event.layer.layerLoadStream$).toNotExist();
+
+    });
+
+    it('add layer observable no tile error', () => {
+
+        const actions = {
+            onLayerError: () => {}
+        };
+
+        const spyLayerError = expect.spyOn(actions, 'onLayerError');
+
+        let map = ReactDOM.render(
+            <LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} onLayerError={actions.onLayerError}/>,
+            document.getElementById("container"));
+
+        expect(map).toExist();
+        let event = {
+            layer: {
+                layerId: 2,
+                on: () => {},
+                _ms2LoadingTileCount: 1
+            }
+        };
+
+        map.addLayerObservable(event, true);
+
+        event.layer.layerLoadingStream$.next();
+        event.layer.layerLoadStream$.next();
+        expect(spyLayerError).toNotHaveBeenCalled();
+    });
+
+    it('add layer observable with tile error', () => {
+
+        const actions = {
+            onLayerError: () => {}
+        };
+
+        const spyLayerError = expect.spyOn(actions, 'onLayerError');
+
+        let map = ReactDOM.render(
+            <LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} onLayerError={actions.onLayerError}/>,
+            document.getElementById("container"));
+
+        expect(map).toExist();
+        let event = {
+            layer: {
+                layerId: 2,
+                on: () => {},
+                _ms2LoadingTileCount: 1
+            }
+        };
+
+        map.addLayerObservable(event, true);
+
+        event.layer.layerLoadingStream$.next();
+        event.layer.layerErrorStream$.next({ target: { layerId: 2 }});
+        event.layer.layerLoadStream$.next();
+        expect(spyLayerError).toHaveBeenCalled();
+    });
 });

@@ -1,12 +1,12 @@
-.widget-card-on-map {
-    &.react-grid-layout {
+.widget-container {
+    &.react-grid-layout.on-map {
         pointer-events: none;
     }
-    &.react-grid-layout > * {
+    &.react-grid-layout.on-map > * {
         pointer-events: auto;
     }
     .mapstore-widget-card {
-        background: #fff;
+        background: @ms2-color-background;
         margin: 20px 0;
         overflow: visible;
         position: absolute;
@@ -28,8 +28,8 @@
             margin: 10px 5%;
             font-size: 22px;
             font-weight: bold;
-            border-bottom: 1px solid #ddd;
-            color: #078aa3;
+            border-bottom: 1px solid @ms2-color-shade-lighter;
+            color: @ms2-color-primary;
             .widget-title {
                 text-overflow: ellipsis;
                 width: calc(100% - 30px);
@@ -43,6 +43,9 @@
                 color: @ms2-color-primary;
             }
         }
+        .mapstore-widget-default-content {
+            margin: 10px 5%;
+        }
         .mapstore-widget-description {
             text-align: center;
             width: 90%;
@@ -51,7 +54,7 @@
         .mapstore-widget-options {
             position: absolute;
             font-size: 18px;
-            color: #078aa3;
+            color: @ms2-color-primary;
             right: 20px;
         }
         .widget-menu {
@@ -118,4 +121,35 @@
     border-radius: 50%;
     width: 18px;
     height: 18px;
+}
+/* BUILDER */
+.widgets-builder-header {
+    .mapstore-info-popover {
+        position: absolute;
+        right: 0;
+        padding: 7px;
+        margin-right: 13px;
+    }
+}
+.dashboard-editor {
+    /*
+     * this makes the shadow of upper header disappear
+     * to have the optical illusion of the search input and title
+     * inside the global dashboard editor
+     */
+    .layer-selector .ms2-border-layout-body{
+        position: relative;
+        .compat-catalog {
+            .catalog-footer {
+                z-index: 100;
+                box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.06), 0 -1px 2px rgba(0, 0, 0, 0.12);
+            }
+            .catalog-form {
+                width: 100%;
+                padding: 0 auto;
+                z-index: 100;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+            }
+        }
+    }
 }

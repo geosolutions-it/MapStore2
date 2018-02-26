@@ -16,13 +16,14 @@ const {isString, isObject} = require('lodash');
 const LocaleUtils = require('../../../../utils/LocaleUtils');
 const assign = require('object-assign');
 require('react-selectize/themes/index.css');
+const {Grid} = require('react-bootstrap');
 
 /**
  * General Settings form for layer
  */
 class General extends React.Component {
     static propTypes = {
-        updateSettings: PropTypes.func,
+        onChange: PropTypes.func,
         element: PropTypes.object,
         groups: PropTypes.array,
         nodeType: PropTypes.string
@@ -30,7 +31,7 @@ class General extends React.Component {
 
     static defaultProps = {
         element: {},
-        updateSettings: () => {},
+        onChange: () => {},
         nodeType: 'layers'
     };
 
@@ -52,6 +53,7 @@ class General extends React.Component {
         const locales = LocaleUtils.getSupportedLocales();
         const translations = isObject(this.props.element.title) ? assign({}, this.props.element.title) : { 'default': this.props.element.title };
         return (
+            <Grid fluid style={{paddingTop: 15, paddingBottom: 15}}>
             <form ref="settings">
                 <FormGroup>
                     <ControlLabel><Message msgId="layerProperties.title" /></ControlLabel>
@@ -63,15 +65,21 @@ class General extends React.Component {
                 </FormGroup>
                 <FormGroup>
                     <ControlLabel><Message msgId="layerProperties.titleTranslations" /></ControlLabel>
-                    {Object.keys(locales).map((a) =>
-                        <InputGroup key={a}>
-                            <InputGroup.Addon><img src={require('../../../I18N/images/flags/' + locales[a].code + '.png')} alt={locales[a].description}/></InputGroup.Addon>
+                    {Object.keys(locales).map((a) => {
+                        let flagImgSrc;
+                        try {
+                            flagImgSrc = require('../../../I18N/images/flags/' + locales[a].code + '.png');
+                        } catch(e) {
+                            flagImgSrc = false;
+                        }
+                        return flagImgSrc ? (<InputGroup key={a}>
+                            <InputGroup.Addon><img src={flagImgSrc} alt={locales[a].description}/></InputGroup.Addon>
                             <FormControl
                                 placeholder={locales[a].description}
                                 value={translations[locales[a].code] ? translations[locales[a].code] : ''}
                                 type="text"
                                 onChange={this.updateTranslation.bind(null, locales[a].code)}/>
-                        </InputGroup>
+                    </InputGroup>) : null; }
                     )}
                 </FormGroup>
                 <FormGroup>
@@ -136,19 +144,20 @@ class General extends React.Component {
                         }}/>
                 </div> : null}
             </form>
+            </Grid>
         );
     }
 
     updateEntry = (key, event) => {
         let value = event.target.value;
-        this.props.updateSettings({[key]: value});
+        this.props.onChange(key, value);
     };
 
     updateTranslation = (key, event) => {
         if (key === 'default' && isString(this.props.element.title)) {
-            this.props.updateSettings({title: event.target.value});
+            this.props.onChange('title', event.target.value);
         } else {
-            this.props.updateSettings({title: assign({}, isObject(this.props.element.title) ? this.props.element.title : {'default': this.props.element.title || ''}, {[key]: event.target.value})});
+            this.props.onChange('title', assign({}, isObject(this.props.element.title) ? this.props.element.title : {'default': this.props.element.title || ''}, {[key]: event.target.value}));
         }
     };
 }

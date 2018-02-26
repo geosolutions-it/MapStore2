@@ -29,7 +29,7 @@
     </head>
     <body onload="init()">
         <div id="container" class="ms2"></div>
-        <script id="ms2-api" src="__BASE__URL__dist/ms2-api.js"></script>
+        <script id="ms2-api" src="__BASE__URL__dist/ms2-api.js__VERSION__"></script>
         <script type="text/javascript">
         function init() {
             MapStore2.create('container',{

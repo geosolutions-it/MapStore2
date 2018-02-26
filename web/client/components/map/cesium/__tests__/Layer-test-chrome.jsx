@@ -23,6 +23,9 @@ require('../plugins/GraticuleLayer');
 require('../plugins/OverlayLayer');
 require('../plugins/MarkerLayer');
 
+const SecurityUtils = require('../../../../utils/SecurityUtils');
+const ConfigUtils = require('../../../../utils/ConfigUtils');
+
 window.CESIUM_BASE_URL = "web/client/libs/Cesium/Build/Cesium";
 
 describe('Cesium layer', () => {
@@ -536,5 +539,131 @@ describe('Cesium layer', () => {
 
         const position = map.imageryLayers.get(0)._position;
         expect(position).toBe(10);
+    });
+    it('test wms security token', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms"
+        };
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        ConfigUtils.setConfigProp('authenticationRules', [
+            {
+                urlPattern: '.*geostore.*',
+                method: 'bearer'
+            }, {
+                urlPattern: '\\/geoserver.*',
+                authkeyParamName: 'ms2-authkey',
+                method: 'authkey'
+            }
+        ]);
+
+        SecurityUtils.setStore({
+            getState: () => ({
+                security: {
+                    token: "########-####-####-####-###########"
+                }
+            })
+        });
+        let layer = ReactDOM.render(<CesiumLayer
+            type="wms"
+            options={options}
+            map={map}
+            securityToken="########-####-####-####-###########"/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        // expect(map.imageryLayers.length).toBe(1);
+        let url = decodeURIComponent(layer.layer._tileProvider._url);
+        expect(url.match(/ms2-authkey=########-####-####-####-###########/g).length).toBe(1);
+
+        layer = ReactDOM.render(<CesiumLayer
+            type="wms"
+            options={options}
+            map={map}
+            securityToken=""/>, document.getElementById("container"));
+
+        url = decodeURIComponent(layer.layer._tileProvider._url);
+        expect(url.match(/ms2-authkey/g)).toBe(null);
+
+        layer = ReactDOM.render(<CesiumLayer
+            type="wms"
+            options={options}
+            map={map}
+            securityToken="########-####-$$$$-####-###########"/>, document.getElementById("container"));
+
+        url = decodeURIComponent(layer.layer._tileProvider._url);
+        expect(url.match(/ms2-authkey=########-####-\$\$\$\$-####-###########/g).length).toBe(1);
+    });
+
+    it('test wmts security token', () => {
+        const options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "tileMatrixSet": "EPSG:900913",
+            "matrixIds": {
+                "EPSG:4326": [{
+                    ranges: {
+                        cols: {max: 0, min: 0},
+                        rows: {max: 0, min: 0}
+                    }
+                }]
+            },
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        ConfigUtils.setConfigProp('authenticationRules', [
+            {
+                urlPattern: '.*geostore.*',
+                method: 'bearer'
+            }, {
+                urlPattern: '\\/geoserver.*',
+                authkeyParamName: 'ms2-authkey',
+                method: 'authkey'
+            }
+        ]);
+
+        SecurityUtils.setStore({
+            getState: () => ({
+                security: {
+                    token: "########-####-####-####-###########"
+                }
+            })
+        });
+        let layer = ReactDOM.render(<CesiumLayer
+            type="wmts"
+            options={options}
+            map={map}
+            securityToken="########-####-####-####-###########"/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+
+        let url = decodeURIComponent(layer.layer._url[0]);
+        expect(url.match(/ms2-authkey=########-####-####-####-###########/g).length).toBe(1);
+
+        layer = ReactDOM.render(<CesiumLayer
+            type="wmts"
+            options={options}
+            map={map}
+            securityToken=""/>, document.getElementById("container"));
+
+        url = decodeURIComponent(layer.layer._url[0]);
+        expect(url.match(/ms2-authkey/g)).toBe(null);
+
+        layer = ReactDOM.render(<CesiumLayer
+            type="wmts"
+            options={options}
+            map={map}
+            securityToken="########-####-$$$$-####-###########"/>, document.getElementById("container"));
+
+        url = decodeURIComponent(layer.layer._url[0]);
+        expect(url.match(/ms2-authkey=########-####-\$\$\$\$-####-###########/g).length).toBe(1);
+
     });
 });

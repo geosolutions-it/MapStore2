@@ -57,7 +57,7 @@ class Examples extends React.Component {
                   <Button href="examples/scalebar" bsStyle="info" bsSize="large" target="_blank"><I18N.Message msgId="home.open" /></Button>
                 </div>
               </CarouselItem>
-              <CarouselItem>
+              {/*<CarouselItem>
                 <img width={900} height={500} alt="900x500" src={carouselImages.layertree}/>
                 <div className="carousel-caption">
                     <I18N.HTML msgId="home.examples.layertree.html" />
@@ -70,7 +70,7 @@ class Examples extends React.Component {
                     <I18N.HTML msgId="home.examples.queryform.html" />
                   <Button href="examples/queryform" bsStyle="info" bsSize="large" target="_blank"><I18N.Message msgId="home.open" /></Button>
                 </div>
-              </CarouselItem>
+              </CarouselItem>*/}
               <CarouselItem>
                 <img width={900} height={500} alt="900x500" src={carouselImages.featuregrid}/>
                 <div className="carousel-caption">
@@ -99,13 +99,13 @@ class Examples extends React.Component {
                   <Button href="examples/api" bsStyle="info" bsSize="large" target="_blank"><I18N.Message msgId="home.open" /></Button>
                 </div>
               </CarouselItem>
-              <CarouselItem>
+              {/*<CarouselItem>
                 <img width={900} height={500} alt="900x500" src={carouselImages.rasterstyler}/>
                 <div className="carousel-caption">
                     <I18N.HTML msgId="home.examples.rasterstyler.html" />
                   <Button href="examples/rasterstyler" bsStyle="info" bsSize="large" target="_blank"><I18N.Message msgId="home.open" /></Button>
                 </div>
-              </CarouselItem>
+              </CarouselItem>*/}
           </Carousel>
       </Panel>);
     }

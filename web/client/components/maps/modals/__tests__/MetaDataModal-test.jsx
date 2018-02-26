@@ -8,6 +8,7 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var MetadataModal = require('../MetadataModal.jsx');
+const ReactTestUtils = require('react-dom/test-utils');
 var expect = require('expect');
 
 describe('This test for MetadataModal', () => {
@@ -54,7 +55,43 @@ describe('This test for MetadataModal', () => {
 
         const modalDivList = document.getElementsByClassName("modal-content");
         const closeBtnList = modalDivList.item(0).getElementsByTagName('button');
-        expect(closeBtnList.length).toBe(3);
+        expect(closeBtnList.length).toBe(2);
+    });
+    /*
+     * This checks if you can close the modal even if the function (confirm) is not defined.
+     * see https://github.com/geosolutions-it/MapStore2/issues/2576
+     */
+    it('Test MetadataModal onToggleUnsavedChangesModal only if present', () => {
+        let thumbnail = "myThumnbnailUrl";
+        let errors = ["FORMAT"];
+        let map = {
+            unsavedChanges: true,
+            thumbnail: thumbnail,
+            id: 123,
+            canWrite: true,
+            errors: errors
+        };
+        const actions = {
+            onToggleUnsavedChangesModal: () => {},
+            onDisplayMetadataEdit: () => {}
+        };
+        const spyonToggleUnsavedChangesModal = expect.spyOn(actions, 'onToggleUnsavedChangesModal');
+        const spyonDisplayMetadataEdit = expect.spyOn(actions, 'onDisplayMetadataEdit');
+        const cmp = ReactDOM.render(<MetadataModal
+            show useModal map={map} id="MetadataModal"
+            detailsSheetActions={{onToggleUnsavedChangesModal: actions.onToggleUnsavedChangesModal}} onDisplayMetadataEdit={actions.spyonDisplayMetadataEdit} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        let el = document.querySelector('#ms-resizable-modal .btn-group button');
+        expect(el).toExist();
+        ReactTestUtils.Simulate.click(el); // <-- trigger event callback
+        expect(spyonToggleUnsavedChangesModal).toHaveBeenCalled();
+        expect(spyonDisplayMetadataEdit).toNotHaveBeenCalled();
+        ReactDOM.render(<MetadataModal
+            show useModal map={map} id="MetadataModal"
+            onDisplayMetadataEdit={actions.onDisplayMetadataEdit} />, document.getElementById("container"));
+        el = document.querySelector('#ms-resizable-modal .btn-group button');
+        ReactTestUtils.Simulate.click(el);
+        expect(spyonDisplayMetadataEdit).toHaveBeenCalled();
     });
 
     it('creates the component with a format error', () => {
@@ -78,7 +115,7 @@ describe('This test for MetadataModal', () => {
 
         const modalDivList = document.getElementsByClassName("modal-content");
         const closeBtnList = modalDivList.item(0).getElementsByTagName('button');
-        expect(closeBtnList.length).toBe(3);
+        expect(closeBtnList.length).toBe(2);
 
         const errorFORMAT = modalDivList.item(0).getElementsByTagName('errorFORMAT');
         expect(errorFORMAT).toExist();
@@ -105,7 +142,7 @@ describe('This test for MetadataModal', () => {
 
         const modalDivList = document.getElementsByClassName("modal-content");
         const closeBtnList = modalDivList.item(0).getElementsByTagName('button');
-        expect(closeBtnList.length).toBe(3);
+        expect(closeBtnList.length).toBe(2);
 
         const errorFORMAT = modalDivList.item(0).getElementsByTagName('errorSIZE');
         expect(errorFORMAT).toExist();

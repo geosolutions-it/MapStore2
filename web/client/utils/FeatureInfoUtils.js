@@ -3,9 +3,11 @@ const INFO_FORMATS = {
     "TEXT": "text/plain",
     "HTML": "text/html",
     "JSONP": "text/javascript",
+    "PROPERTIES": "application/json",
     "JSON": "application/json",
     "GML2": "application/vnd.ogc.gml",
-    "GML3": "application/vnd.ogc.gml/3.1.1"
+    "GML3": "application/vnd.ogc.gml/3.1.1",
+    "TEMPLATE": "application/json"
 };
 
 const INFO_FORMATS_BY_MIME_TYPE = {
@@ -84,6 +86,20 @@ const Validator = {
             return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
         }
     },
+    PROPERTIES: {
+        /**
+         *Parse the JSON to get only the valid json responses
+         */
+        getValidResponses(responses) {
+            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
+        },
+        /**
+         * Parse the JSON to get only the NOT valid json responses
+         */
+        getNoValidResponses(responses) {
+            return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
+        }
+    },
     GML3: {
         /**
          *Parse the HTML to get only the valid html responses
@@ -96,6 +112,20 @@ const Validator = {
          */
         getNoValidResponses(responses) {
             return responses.filter((res) => {return !parseXMLResponse(res); });
+        }
+    },
+    TEMPLATE: {
+        /**
+         *Parse the JSON to get only the valid json responses
+         */
+        getValidResponses(responses) {
+            return responses.filter((res) => res.response && res.response.features && res.response.features.length);
+        },
+        /**
+         * Parse the JSON to get only the NOT valid json responses
+         */
+        getNoValidResponses(responses) {
+            return responses.filter((res) => res.response && res.response.features && res.response.features.length === 0);
         }
     }
 };

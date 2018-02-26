@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -7,6 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
+const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector, createStructuredSelector} = require('reselect');
@@ -28,7 +28,6 @@ const MapUtils = require('../utils/MapUtils');
 const saveAsStateSelector = createStructuredSelector({
     show: state => state.controls && state.controls.saveAs && state.controls.saveAs.enabled,
     mapType: state => mapTypeSelector(state),
-    newMapId: state => state.currentMap && state.currentMap.newMapId,
     user: state => state.security && state.security.user,
     currentMap: state => state.currentMap,
     metadata: state => state.maps.metadata,
@@ -54,7 +53,6 @@ class SaveAs extends React.Component {
     static propTypes = {
         additionalOptions: PropTypes.object,
         show: PropTypes.bool,
-        newMapId: PropTypes.number,
         map: PropTypes.object,
         user: PropTypes.object,
         mapType: PropTypes.string,
@@ -68,6 +66,8 @@ class SaveAs extends React.Component {
         onCreateThumbnail: PropTypes.func,
         onUpdateCurrentMap: PropTypes.func,
         onErrorCurrentMap: PropTypes.func,
+        onResetCurrentMap: PropTypes.func,
+        onDisplayMetadataEdit: PropTypes.func,
         onSave: PropTypes.func,
         editMap: PropTypes.func,
         resetCurrentMap: PropTypes.func,
@@ -84,6 +84,7 @@ class SaveAs extends React.Component {
     static defaultProps = {
         additionalOptions: {},
         onMapSave: () => {},
+        onDisplayMetadataEdit: () => {},
         loadMapInfo: () => {},
         show: false
     };
@@ -100,10 +101,10 @@ class SaveAs extends React.Component {
         this.onMissingInfo(nextProps);
     }
 
-    onMissingInfo = (props) => {
-        let map = props.map;
-        if (map && props.currentMap.mapId && !this.props.newMapId) {
-            this.context.router.history.push("/viewer/" + props.mapType + "/" + props.currentMap.mapId);
+    onMissingInfo = (nextProps) => {
+        const map = nextProps.map;
+        if (map && nextProps.currentMap.mapId && this.props.currentMap.mapId !== nextProps.currentMap.mapId) {
+            this.context.router.history.push("/viewer/" + nextProps.mapType + "/" + nextProps.currentMap.mapId);
             this.props.resetCurrentMap();
         }
     };
@@ -115,13 +116,16 @@ class SaveAs extends React.Component {
                 metadataChanged={this.props.metadataChanged}
                 metadata={this.props.metadata}
                 displayPermissionEditor={false}
+                showDetailsRow={false}
+                modalSize="sm"
                 show={this.props.currentMap.displayMetadataEdit}
                 onEdit={this.props.editMap}
                 onUpdateCurrentMap={this.props.onUpdateCurrentMap}
                 onErrorCurrentMap={this.props.onErrorCurrentMap}
                 onHide={this.close}
-                onClose={this.close}
                 map={map}
+                onDisplayMetadataEdit={this.props.onDisplayMetadataEdit}
+                onResetCurrentMap={this.props.resetCurrentMap}
                 onSave={this.saveMap}
             />
         );
@@ -149,7 +153,7 @@ class SaveAs extends React.Component {
         };
         if (metadata.name !== "") {
             thumbComponent.getThumbnailDataUri( (data) => {
-                this.props.onMapSave(metadata, JSON.stringify(this.createV2Map()), {
+                this.props.onMapSave(metadata, this.createV2Map(), {
                     data,
                     category: "THUMBNAIL",
                     name: thumbComponent.generateUUID()
@@ -179,7 +183,7 @@ module.exports = {
                 position: 900,
                 text: <Message msgId="saveAs"/>,
                 icon: <Glyphicon glyph="floppy-open"/>,
-                action: editMap.bind(null, {}),
+            action: editMap.bind(null, {}, true),
                 selector: (state) => {
                     if (state && state.controls && state.controls.saveAs && state.controls.saveAs.allowedRoles) {
                         return indexOf(state.controls.saveAs.allowedRoles, state && state.security && state.security.user && state.security.user.role) !== -1 ? {} : { style: {display: "none"} };

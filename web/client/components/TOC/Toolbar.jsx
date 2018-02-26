@@ -12,8 +12,7 @@ const {ButtonGroup, Button, Glyphicon, Tooltip, OverlayTrigger} = require('react
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 const {head} = require('lodash');
 const ConfirmModal = require('../maps/modals/ConfirmModal');
-const SettingsModal = require('./fragments/SettingsModal');
-const GroupSettingsModal = require('./fragments/GroupSettingsModal');
+const LayerMetadataModal = require('./fragments/LayerMetadataModal');
 
 class Toolbar extends React.Component {
 
@@ -27,7 +26,10 @@ class Toolbar extends React.Component {
         activateTool: PropTypes.object,
         options: PropTypes.object,
         style: PropTypes.object,
-        settings: PropTypes.object
+        settings: PropTypes.object,
+        layerMetadata: PropTypes.object,
+        wfsdownload: PropTypes.object,
+        metadataTemplate: PropTypes.oneOfType([PropTypes.string, PropTypes.array, PropTypes.object, PropTypes.func])
     };
 
     static defaultProps = {
@@ -47,6 +49,9 @@ class Toolbar extends React.Component {
             onHideSettings: () => {},
             onReload: () => {},
             onAddLayer: () => {},
+            onDownload: () => {},
+            onGetMetadataRecord: () => {},
+            onHideLayerMetadata: () => {},
             onShow: () => {}
         },
         text: {
@@ -68,6 +73,7 @@ class Toolbar extends React.Component {
                 GROUP: ''
             },
             featuresGridTooltip: '',
+            downloadToolTooltip: '',
             trashTooltip: {
                 LAYER: '',
                 LAYERS: ''
@@ -75,16 +81,20 @@ class Toolbar extends React.Component {
             reloadTooltip: {
                 LAYER: '',
                 LAYERS: ''
-            }
+            },
+            layerMetadataTooltip: '',
+            layerMetadataPanelTitle: ''
         },
         activateTool: {
             activateToolsContainer: true,
             activateRemoveLayer: true,
             activateZoomTool: true,
             activateQueryTool: true,
+            activateDownloadTool: true,
             activateSettingsTool: true,
             activateAddLayer: true,
-            includeDeleteButtonInSettings: false
+            includeDeleteButtonInSettings: false,
+            activateMetedataTool: true
         },
         options: {
             modalOptions: {},
@@ -93,7 +103,10 @@ class Toolbar extends React.Component {
         style: {
             chartStyle: {}
         },
-        settings: {}
+        settings: {},
+        layerMetadata: {},
+        wfsdownload: {},
+        metadataTemplate: null
     };
 
     state = {
@@ -121,39 +134,14 @@ class Toolbar extends React.Component {
         return status;
     }
 
-    getSettingsModal = (status) => {
-        return status === 'LAYER' ?
-            (<SettingsModal
-                key="toolsettingsmodal"
-                options={this.props.options.modalOptions}
-                {...this.props.options.settingsOptions}
-                settings={this.props.settings}
-                element={this.props.selectedLayers[0]}
-                generalInfoFormat={this.props.generalInfoFormat}
-                retrieveLayerData={this.props.onToolsActions.onRetrieveLayerData}
-                updateSettings={this.props.onToolsActions.onUpdateSettings}
-                hideSettings={this.props.onToolsActions.onHideSettings}
-                updateNode={this.props.onToolsActions.onUpdate}
-                removeNode={this.props.onToolsActions.onRemove}
-                includeDeleteButton={this.props.activateTool.includeDeleteButtonInSettings}
-                chartStyle={this.props.style.chartStyle}
-                titleText={this.props.text.settingsText}
-                opacityText={this.props.text.opacityText}
-                elevationText={this.props.text.elevationText}
-                saveText={this.props.text.saveText}
-                closeText={this.props.text.closeText}
-                groups={this.props.groups}/>)
-            : <GroupSettingsModal
-                element={this.props.selectedGroups[this.props.selectedGroups.length - 1]}
-                settings={this.props.settings}
-                updateNode={this.props.onToolsActions.onUpdate}
-                updateSettings={this.props.onToolsActions.onUpdateSettings}
-                hideSettings={this.props.onToolsActions.onHideSettings}/>;
-    }
-
     render() {
         const status = this.getStatus();
-        const settingModal = status === 'GROUP' || status === 'LAYER' ? this.getSettingsModal(status) : null;
+        const layerMetadataModal = (<LayerMetadataModal
+                                key="toollayermetadatamodal"
+                                layerMetadata={this.props.layerMetadata}
+                                metadataTemplate={this.props.metadataTemplate}
+                                hideLayerMetadata={this.props.onToolsActions.onHideLayerMetadata}
+                                layerMetadataPanelTitle={this.props.text.layerMetadataPanelTitle} />);
         return this.props.activateTool.activateToolsContainer ? (
         <ButtonGroup>
             <ReactCSSTransitionGroup
@@ -175,7 +163,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {this.props.activateTool.activateSettingsTool && (status === 'LAYER' || status === 'GROUP') ?
+                    {this.props.activateTool.activateSettingsTool && (status === 'LAYER' || status === 'GROUP') && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
                     <OverlayTrigger
                         key="settings"
                         placement="top"
@@ -185,7 +173,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {this.props.activateTool.activateQueryTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded ?
+                    {this.props.activateTool.activateQueryTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
                     <OverlayTrigger
                         key="featuresGrid"
                         placement="top"
@@ -195,7 +183,7 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYERS_LOAD_ERROR') && this.props.selectedLayers.length > 0 && !this.props.settings.expanded ?
+                    {this.props.activateTool.activateRemoveLayer && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS' || status === 'LAYERS_LOAD_ERROR') && this.props.selectedLayers.length > 0 && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
                     <OverlayTrigger
                         key="removeNode"
                         placement="top"
@@ -215,13 +203,33 @@ class Toolbar extends React.Component {
                         </Button>
                     </OverlayTrigger>
                 : null}
-                {this.props.activateTool.activateWidgetTool && (status === 'LAYER') && this.props.selectedLayers.length === 1 && !this.props.settings.expanded ?
+                    {this.props.activateTool.activateWidgetTool && (status === 'LAYER') && this.props.selectedLayers.length === 1 && !this.props.settings.expanded && !this.props.layerMetadata.expanded && !this.props.wfsdownload.expanded ?
                     <OverlayTrigger
                         key="widgets"
                         placement="top"
                         overlay={<Tooltip id="toc-tooltip-widgets">{this.props.text.createWidgetTooltip}</Tooltip>}>
                         <Button bsStyle="primary" className="square-button-md" onClick={this.props.onToolsActions.onNewWidget}>
                             <Glyphicon glyph="stats" />
+                        </Button>
+                    </OverlayTrigger>
+                : null}
+                {this.props.activateTool.activateDownloadTool && status === 'LAYER' && this.props.selectedLayers[0].search && !this.props.settings.expanded && !this.props.layerMetadata.expanded ?
+                    <OverlayTrigger
+                        key="downloadTool"
+                        placement="top"
+                            overlay={<Tooltip id="toc-tooltip-downloadTool">{this.props.text.downloadToolTooltip}</Tooltip>}>
+                            <Button bsStyle={this.props.wfsdownload.expanded ? "success" : "primary"} className="square-button-md" onClick={this.download}>
+                            <Glyphicon glyph="download" />
+                        </Button>
+                    </OverlayTrigger>
+                    : null}
+                    {this.props.activateTool.activateMetedataTool && (status === 'LAYER') && this.props.selectedLayers[0].catalogURL && !this.props.settings.expanded && !this.props.wfsdownload.expanded ?
+                    <OverlayTrigger
+                        key="layerMetadata"
+                        placement="top"
+                        overlay={<Tooltip id="legend-tooltip-metadata">{this.props.text.layerMetadataTooltip}</Tooltip>}>
+                        <Button key="layer-metadata" bsStyle={this.props.layerMetadata.expanded ? 'success' : 'primary'} className="square-button-md" onClick={() => this.showMetadata()}>
+                            <Glyphicon glyph="info-sign" />
                         </Button>
                     </OverlayTrigger>
                 : null}
@@ -236,12 +244,20 @@ class Toolbar extends React.Component {
                 confirmText={this.props.text.confirmDeleteText}
                 cancelText={this.props.text.confirmDeleteCancelText}
                 body={this.props.text.confirmDeleteMessage} />
-            {settingModal}
+            {layerMetadataModal}
         </ButtonGroup>) : null;
     }
 
     brosweData = () => {
         this.props.onToolsActions.onBrowseData({
+            url: this.props.selectedLayers[0].search.url || this.props.selectedLayers[0].url,
+            name: this.props.selectedLayers[0].name,
+            id: this.props.selectedLayers[0].id
+        });
+    }
+
+    download = () => {
+        this.props.onToolsActions.onDownload({
             url: this.props.selectedLayers[0].search.url || this.props.selectedLayers[0].url,
             name: this.props.selectedLayers[0].name,
             id: this.props.selectedLayers[0].id
@@ -277,6 +293,14 @@ class Toolbar extends React.Component {
             }
         } else {
             this.props.onToolsActions.onHideSettings();
+        }
+    }
+
+    showMetadata = () => {
+        if (!this.props.layerMetadata.expanded) {
+            this.props.onToolsActions.onGetMetadataRecord();
+        } else {
+            this.props.onToolsActions.onHideLayerMetadata();
         }
     }
 

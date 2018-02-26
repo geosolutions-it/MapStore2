@@ -11,7 +11,10 @@ const {
     userSelector,
     userRoleSelector,
     isAdminUserSelector,
-    rulesSelector
+    rulesSelector,
+    securityTokenSelector,
+    userGroupSecuritySelector,
+    userParamsSelector
 } = require('../security');
 const id = 1833;
 const name = 'teo';
@@ -50,12 +53,10 @@ describe('Test security selectors', () => {
         expect(userlogged).toExist();
         expect(userlogged.id).toBe(id);
         expect(userlogged.name).toBe(name);
-
         initialState.security.user = null;
         const noLogged = userSelector(initialState);
         expect(noLogged).toBe(null);
         initialState.security.user = user;
-
     });
     it('test userRoleSelector', () => {
         const roleofuserlogged = userRoleSelector(initialState);
@@ -77,5 +78,19 @@ describe('Test security selectors', () => {
         const rules = rulesSelector(initialState);
         expect(rules).toExist();
     });
-
+    it('test securityTokenSelector', () => {
+        expect(securityTokenSelector({ security: { token: '########-####-####-####-###########' }})).toBe('########-####-####-####-###########');
+        expect(securityTokenSelector({})).toBe(undefined);
+    });
+    it('test userGroupSecuritySelector ', () => {
+        const group = userGroupSecuritySelector(initialState);
+        expect(group).toExist();
+        expect(group.id).toBe(479);
+    });
+    it('test userParamsSelector ', () => {
+        const userParams = userParamsSelector(initialState);
+        expect(userParams).toExist();
+        expect(userParams.id).toBe(id);
+        expect(userParams.name).toBe(name);
+    });
 });

@@ -7,12 +7,12 @@
  */
 const React = require('react');
 const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
+const {createSelector, createStructuredSelector} = require('reselect');
 const {bindActionCreators} = require('redux');
 const {get} = require('lodash');
 
 const Grid = require('../components/data/featuregrid/FeatureGrid');
-const {resultsSelector, describeSelector, wfsURLSelector, typeNameSelector} = require('../selectors/query');
+const {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} = require('../selectors/query');
 const {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector, getDockSize} = require('../selectors/featuregrid');
 const { toChangesMap} = require('../utils/FeatureGridUtils');
 const {getPanels, getHeader, getFooter, getDialogs, getEmptyRowsView, getFilterRenderers} = require('./featuregrid/panels/index');
@@ -38,9 +38,16 @@ const Dock = connect(createSelector(
   * @class
   * @prop {object} cfg.customEditorsOptions Set of options used to connect the custom editors to the featuregrid
   * @prop {object} cfg.editingAllowedRoles array of user roles allowed to enter in edit mode
+  * @prop {boolean} cfg.virtualScroll default true. Activates virtualScroll. When false the grid uses normal pagination
+  * @prop {number} cfg.maxStoredPages default 5. In virtual Scroll mode determines the size of the loaded pages cache
+  * @prop {number} cfg.vsOverScan default 20. Number of rows to load above/below the visible slice of the grid
+  * @prop {number} cfg.scrollDebounce default 50. milliseconds of debounce interval between two scroll event
   * @classdesc
-  * FeatureEditor Plugin Provides functionalities to browse/edit data via WFS. It can be configured passing custom editors
-  * <br/>Rules are applied in order and the first rule that match the regex wins.
+  * FeatureEditor Plugin Provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
+  * <br/>virtual scroll mechanisms. By defualt virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
+  * <br/>sets the size of loaded pages cache, while vsOverscan and scrollDebounce parmas determine the behavior of grid scrolling
+  * <br/>and of row loading.
+  * <br/>Furthermore it can be configured passing custom editors. Rules are applied in order and the first rule that match the regex wins
   * <br/>That means that for those conditions it is used the custom editor specified in the editor param.
   * <br/>All the conditions inside a rule must match to apply the editor.
   * <br/>If no rule is applied then it will be used the default editor based on the dataType of that column.
@@ -149,10 +156,19 @@ const FeatureDock = (props = {
                 key={"feature-grid-container"}
                 columnSettings={props.attributes}
                 gridEvents={props.gridEvents}
+                pageEvents={props.pageEvents}
                 describeFeatureType={props.describe}
                 features={props.features}
                 minHeight={600}
-                tools={props.gridTools}/>
+                tools={props.gridTools}
+                pagination={props.pagination}
+                pages={props.pages}
+                virtualScroll={props.virtualScroll}
+                maxStoredPages={props.maxStoredPages}
+                vsOverScan={props.vsOverScan}
+                scrollDebounce={props.scrollDebounce}
+                size={props.size}
+                />
         </BorderLayout> }
 
         </ContainerDimensions>
@@ -164,7 +180,7 @@ const selector = createSelector(
     state => get(state, "queryform.autocompleteEnabled"),
     state => wfsURLSelector(state),
     state => typeNameSelector(state),
-    resultsSelector,
+    state => get(state, 'featuregrid.features') || EMPTY_ARR,
     describeSelector,
     state => get(state, "featuregrid.attributes"),
     state => get(state, "featuregrid.tools"),
@@ -175,7 +191,10 @@ const selector = createSelector(
     hasChangesSelector,
     state => get(state, 'featuregrid.focusOnEdit') || [],
     state => get(state, 'featuregrid.enableColumnFilters'),
-    (open, autocompleteEnabled, url, typeName, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters) => ({
+    createStructuredSelector(paginationInfo),
+    state => get(state, 'featuregrid.pages'),
+    state => get(state, 'featuregrid.pagination.size'),
+    (open, autocompleteEnabled, url, typeName, features = EMPTY_ARR, describe, attributes, tools, select, mode, changes, newFeatures = EMPTY_ARR, hasChanges, focusOnEdit, enableColumnFilters, pagination, pages, size) => ({
         open,
         autocompleteEnabled,
         url,
@@ -190,7 +209,10 @@ const selector = createSelector(
         mode,
         focusOnEdit,
         enableColumnFilters,
-        changes: toChangesMap(changes)
+        changes: toChangesMap(changes),
+        pagination,
+        pages,
+        size
     })
 );
 const EditorPlugin = connect(selector,

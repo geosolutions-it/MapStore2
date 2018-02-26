@@ -28,6 +28,8 @@ const Select = require('react-select');
 const PluginsUtils = require('../../../utils/PluginsUtils');
 const defaultConfig = require('./AnnotationsConfig');
 
+const bbox = require('@turf/bbox');
+
 /**
  * (Default) Viewer / Editor for Annotations.
  * @memberof components.mapControls.annotations
@@ -38,6 +40,7 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {boolean} drawing flag to state status of drawing during editing
  * @prop {boolean} styling flag to state status of styling during editing
  * @prop {object} errors key/value set of validation errors (field_name: error_id)
+ * @prop {object} feature object with the annotation properties
  * @prop {bool} showBack shows / hides the back button
  * @prop {function} onEdit triggered when the user clicks on the edit button
  * @prop {function} onCancelEdit triggered when the user cancels current editing session
@@ -50,7 +53,7 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {function} onStyleGeometry triggered when the user clicks on the style button
  * @prop {function} onSetStyle triggered when the user changes a style property
  *
- * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property.
+ * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
 class AnnotationsEditor extends React.Component {
     static displayName = 'AnnotationsEditor';
@@ -69,18 +72,23 @@ class AnnotationsEditor extends React.Component {
         onDeleteGeometry: PropTypes.func,
         onStyleGeometry: PropTypes.func,
         onSetStyle: PropTypes.func,
+        onZoom: PropTypes.func,
         editing: PropTypes.object,
         drawing: PropTypes.bool,
         styling: PropTypes.bool,
         errors: PropTypes.object,
         showBack: PropTypes.bool,
-        config: PropTypes.object
+        config: PropTypes.object,
+        feature: PropTypes.object,
+        maxZoom: PropTypes.number
     };
 
     static defaultProps = {
         config: defaultConfig,
         errors: {},
-        showBack: false
+        showBack: false,
+        feature: {},
+        maxZoom: 18
     };
 
     state = {
@@ -91,6 +99,21 @@ class AnnotationsEditor extends React.Component {
         if (newProps.id !== this.props.id) {
             this.setState({
                 editedFields: {}
+            });
+        }
+    }
+
+    componentWillUpdate(newProps) {
+        const editing = this.props.editing && (this.props.editing.properties.id === this.props.id);
+        const newEditing = newProps.editing && (newProps.editing.properties.id === newProps.id);
+
+        if (!editing && newEditing) {
+            const newConfig = assign({}, defaultConfig, newProps.config);
+            this.setState({
+                editedFields: newConfig.fields
+                    .reduce((a, field) => {
+                        return assign({}, a, { [field.name]: newProps[field.name] });
+                    }, {})
             });
         }
     }
@@ -109,7 +132,7 @@ class AnnotationsEditor extends React.Component {
                     <span><p key={field.name} className={"mapstore-annotations-info-viewer-item mapstore-annotations-info-viewer-" + field.name + ' ' + additionalCls}>
                         {field.showLabel ? <label><Message msgId={"annotations.field." + field.name}/></label> : null}
                         {isError ? this.renderErrorOn(field.name) : ''}
-                        {this.renderProperty(field, this.props[field.name], editing)}
+                        {this.renderProperty(field, this.props[field.name] || field.value, editing)}
                     </p>
                     </span>
                 );
@@ -125,6 +148,7 @@ class AnnotationsEditor extends React.Component {
 
     renderViewButtons = () => {
         return (<ButtonGroup className="mapstore-annotations-info-viewer-buttons">
+                <Button bsStyle="primary" onClick={this.zoom}><Glyphicon glyph="zoom-to" />&nbsp;<Message msgId="annotations.zoomTo" /></Button>
                 <Button bsStyle="primary" onClick={() => this.props.onEdit(this.props.id, this.props.config.multiGeometry ? 'MultiPoint' : 'Point')}><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="annotations.edit"/></Button>
                 <Button bsStyle="primary" onClick={() => this.props.onRemove(this.props.id)}><Glyphicon glyph="ban-circle"/>&nbsp;<Message msgId="annotations.remove"/></Button>
                 {this.props.showBack ? <Button bsStyle="primary" onClick={() => this.props.onCancel()}><Glyphicon glyph="back"/>&nbsp;<Message msgId="annotations.back"/></Button> : null }
@@ -179,6 +203,9 @@ class AnnotationsEditor extends React.Component {
             switch (field.type) {
                 case 'html':
                     return <ReactQuill readOnly={this.props.drawing} value={fieldValue || ''} onChange={(val) => this.change(field.name, val)}/>;
+                case 'component':
+                    const Component = fieldValue;
+                    return <prop editing value={<Component annotation={this.props.feature} />} onChange={(e) => this.change(field.name, e.target.value)} />;
                 default:
                     return <FormControl disabled={this.props.drawing} value={fieldValue || ''} onChange={(e) => this.change(field.name, e.target.value)}/>;
             }
@@ -187,6 +214,9 @@ class AnnotationsEditor extends React.Component {
         switch (field.type) {
             case 'html':
                 return <span dangerouslySetInnerHTML={{__html: fieldValue} }/>;
+            case 'component':
+                const Component = fieldValue;
+                return <Component annotation={this.props.feature} />;
             default:
                 return fieldValue;
         }
@@ -260,6 +290,11 @@ class AnnotationsEditor extends React.Component {
                 {this.renderBody(editing)}
             </div>
         );
+    }
+
+    zoom = () => {
+        const extent = bbox(this.props.feature);
+        this.props.onZoom(extent, 'EPSG:4326', this.props.maxZoom);
     }
 
     cancelEdit = () => {

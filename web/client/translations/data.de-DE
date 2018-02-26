@@ -21,6 +21,8 @@
         "enable": "Aktiviere",
         "layers": "Ebenen",
         "warning": "Warnung",
+        "errorTitleDefault": "Fehler",
+        "errorDefault": "Ein Fehler ist aufgetreten",
         "version": {
             "label": "Version"
         },
@@ -28,6 +30,12 @@
             "of": "of",
             "updating": "Updating...",
             "layers": "layers"
+        },
+        "localeErrors": {
+            "404": "Übersetzungsdatei nicht gefunden"
+        },
+        "details": {
+            "title": "Infos zu dieser Karte"
         },
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",
@@ -55,7 +63,23 @@
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Identifiziere das Antwortformat",
-            "legenderror": "Legende ist nicht verfügbar"
+            "legenderror": "Legende ist nicht verfügbar",
+            "editCustomFormat": "Bearbeiten Sie das benutzerdefinierte Format",
+            "exampleOfResponse": "Beispiel",
+            "changedSettings": "Geänderte Einstellungen",
+            "changedSettingsAlert": "Sie schließen das Einstellungsfenster, ohne Ihre Änderungen zu speichern",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Zeigt Feature-Info-Ergebnisse als Nur-Text an",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Zeigt Feature-Info-Ergebnisse als HTML an",
+            "propertiesFormatTitle": "EIGENSCHAFTEN",
+            "propertiesFormatDescription": "Zeigt Feature-Info-Ergebnisse als Eigenschaftsliste an",
+            "templateFormatTitle": "TEMPLATE",
+            "templateFormatDescription": "Passen Sie das Ergebnis der Feature-Informationen an",
+            "templateFormatInfoAlert1": "Klicken Sie auf Bearbeiten, um eine neue Vorlage hinzuzufügen.",
+            "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um die Eigenschaften zu umbrechen, die Sie anzeigen müssen",
+            "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
+            "templatePreview": "Vorschau template"
         },
         "notification": {
             "update": "Update",
@@ -76,10 +100,10 @@
             "tooltipActivate": "Geben Sie den 3D-Modus ein"
         },
         "cookie":{
-            "info": "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.",
-            "moreDetailsButton": "More Details",
-            "leave": "Leave",
-            "accept": "Accept"
+            "info": "Diese Webseite verwendet Cookies damit Sie diese einwandfrei nutzen können. Wir gehen davon aus, dass sie damit einverstanden sind, andernfalls können Sie die Webseite verlassen.",
+            "moreDetailsButton": "Mehr Details",
+            "leave": "Verlassen",
+            "accept": "Annehmen"
         },
         "background": "Hintergrund",
         "language": "Sprache",
@@ -103,6 +127,8 @@
         "elevation": "Höhe",
         "close": "Schliessen",
         "cancel": "Abbrechen",
+        "no": "Nein",
+        "yes": "Ja",
         "confirm": "Bestätigen",
         "confirmTitle": "Bestätigst du das?",
         "pageInfo": "{total, plural, =0 {Keine Artikel} =1 {{total} Artikel von {total}} other {Artikel {start}-{end} von {total}}}",
@@ -192,6 +218,29 @@
         },
         "newMap": "Neue Karte",
         "maps": {
+            "feedback": {
+                "noDetailsAvailable": "Kartendetails nicht verfügbar",
+                "successSavedMap": "Die Karte wurde korrekt erstellt",
+                "errorDeletingMap": "Fehler beim Löschen dieser Map",
+                "errorDeletingThumbnailOfMap": "Fehler beim Löschen der Miniaturansicht für diese Karte",
+                "errorDeletingDetailsOfMap": "Fehler beim Löschen von Details für diese Map",
+                "allResDeleted": "Alle dieser Karte zugeordneten Ressourcen wurden erfolgreich gelöscht",
+                "errorFetchingDetailsOfMap": "Fehler beim Abrufen von Details für diese Karte",
+                "details": {
+                    "deletedSuccesfully": "Die Details wurden korrekt entfernt",
+                    "savedSuccesfully": "Die Details wurden korrekt entfernt",
+                    "updatedSuccesfully": "Die Details wurden korrekt aktualisiert"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "Das Vorschaubild wurde korrekt entfernt",
+                    "savedSuccesfully": "Das Vorschaubild wurde korrekt entfernt",
+                    "updatedSuccesfully": "Das Thumbnail wurde korrekt aktualisiert"
+                },
+                "errorWhenSaving": "Beim Speichern ist ein Fehler aufgetreten",
+                "errorWhenUpdating": "Während des Aktualisierungsprozesses ist ein Fehler aufgetreten",
+                "errorWhenDeleting": "Beim Löschen ist ein Fehler aufgetreten",
+                "errorSizeExceeded": "Bitte verkleinern Sie die Größe der Details oder die Qualität der Bilder"
+            },
             "search": "Suche nach Karten..."
         },
         "map": {
@@ -209,6 +258,8 @@
             "errorFormat": "Unterstützte Formate: png/jpg",
             "errorSize": "Maximal zulässige Größe: 500kb",
             "error": "Das bereitgestellte Bild ist ungültig",
+            "savedMapTitle": "Gespeicherte Karte",
+            "savedMapMessage": "Karte wurde korrekt gespeichert",
             "thumbnailError": {
                 "error403": "Du hast keine Berechtigung um Thumbnails hochzuladen",
                 "error404": "Es gab einen Fehler während der Erstellung des Thumbnails",
@@ -216,9 +267,11 @@
                 "errorDefault": "Netzwerk Fehler"
             },
             "mapError": {
+                "errorTitle": "Aktuelle Karte kann nicht gespeichert werden",
                 "error403": "Du hast keine Berechtigung die Karte zu aktualisieren",
                 "error404": "Es gab einen Fehler während der Erstellung der Karte",
                 "error409": "Eine Karte mit diesem Namen existiert bereits",
+                "error500": "Interner Serverfehler. Überprüfen Sie, ob die Größe der Kartenkonfigurationsdatei den festgelegten Grenzwert überschreitet",
                 "errorDefault": "Netzwerk Fehler"
             },
             "permissions": {
@@ -229,6 +282,22 @@
                 "canWrite": "kann bearbeiten",
                 "noResult": "keine Resultate gefunden",
                 "title": "Gruppen Berechtigungen"
+            },
+            "details": {
+                "back": "Zurück",
+                "save": "Sparen",
+                "show": "Details anzeigen",
+                "add": "Neue Details hinzufügen",
+                "edit": "Details bearbeiten",
+                "rowTitle": "Detailblatt",
+                "title": "Detailblatt - {name}",
+                "undo": "Rückgängig entfernen",
+                "showPreview": "Vorschau zeigen",
+                "hidePreview": "Vorschau ausblenden",
+                "delete": "Löschen Sie das Detailblatt",
+                "titleUnsavedChanges": "Sind Sie sicher, dass Sie schließen, ohne Ihre Änderungen zu speichern??",
+                "sureToClose": "Sind Sie sicher, dass Sie schließen, ohne Ihre Änderungen zu speichern??",
+                "fieldsChanged": "Einige Felder wurden geändert"
             }
         },
         "toc": {
@@ -236,27 +305,27 @@
             "displayLegendAndTools": "Legende und Werkzeuge zeigen",
             "zoomToLayerExtent": "Zoome auf Ausdehung der Ebene",
             "addLayer": "Ebene hinzufügen",
-            "toolZoomToLayerTooltip": "Zoom to selected layer extent",
-            "toolZoomToLayersTooltip": "Zoom to selected layers extent",
-            "toolLayerSettingsTooltip": "Selected layer settings",
-            "toolGroupSettingsTooltip": "Selected group settings",
-            "toolTrashLayerTooltip": "Remove selected layer",
-            "toolTrashLayersTooltip": "Remove selected layers",
-            "toolFeaturesGridTooltip": "Open Attribute Table",
-            "noFilteredResults": "No results",
+            "toolZoomToLayerTooltip": "Zoom auf den ausgewählten Ebenen",
+            "toolZoomToLayersTooltip": "Zoom auf ausgewählte Ebenen",
+            "toolLayerSettingsTooltip": "Ausgewählte Ebeneneinstellungen",
+            "toolGroupSettingsTooltip": "Ausgewählte Gruppeneinstellungen",
+            "toolTrashLayerTooltip": "Entferne die ausgewählte Ebene",
+            "toolTrashLayersTooltip": "Entferne ausgewählte Ebenen",
+            "toolFeaturesGridTooltip": "Öffnen Sie die Attributtabelle",
+            "toolDownloadTooltip": "Layerdaten exportieren",
+            "noFilteredResults": "Keine Ergebnisse",
             "filterPlaceholder": "Ebenen filtern",
-            "clearFilter": "Clear filter",
-            "toolReloadLayerTooltip": "Force reload of selected layer",
-            "toolReloadLayersTooltip": "Force reload of selected layers",
-            "statusIconOpen": "Close group",
-            "statusIconClose": "Open group",
-            "grabLayerIcon": "Grab and sort layer",
-            "grabGroupIcon": "Grab and sort group",
-            "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
+            "clearFilter": "Filter löschen",
+            "toolReloadLayerTooltip": "Erneutes Laden der ausgewählten Ebene erzwingen",
+            "toolReloadLayersTooltip": "Erzwinge das erneute Laden ausgewählter Ebenen",
+            "statusIconOpen": "Gruppe schließen",
+            "statusIconClose": "Gruppe öffnen",
+            "grabLayerIcon": "Grab und sortieren Schicht",
+            "grabGroupIcon": "Grab und sortiere Gruppe",
+            "toggleLayerVisibilityWarning": "Layer-Sichtbarkeit ändern, Warnung: Layer wurde nicht richtig geladen",
             "createWidget": "Erstellen Sie ein Widget für die ausgewählte Ebene",
             "editLayerProperties": "Ändere Ebenen Eigenschaften",
             "browseData": "öffnen Sie die Attributtabelle",
-            "searchFeatures": "Auf dieser Ebene suchen...",
             "removeLayer": "Ebene entfernen",
             "loadingerror": "Diese Ebene wurde nicht korrekt geladen oder nicht verfügbar",
             "measure": "Messen",
@@ -272,6 +341,19 @@
                 "search": "Suchoptionen aktualisieren",
                 "title": "Titel aktualisieren",
                 "dimensions": "Dimensionen aktualisieren"
+            },
+            "layerMetadata": {
+                "identifier": "Kennung",
+                "title": "Titel",
+                "abstract": "Abstrakt",
+                "subject": "Betreff",
+                "type": "Typ",
+                "creator": "Schöpfer",
+                "toolLayerMetadataTooltip": "Zeigen Sie die Metadaten der ausgewählten Ebene an",
+                "layerMetadataPanelTitle": "Ebenenmetadaten",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Fehler bei der Metadatensuche"
+                }
             }
         },
         "print":{
@@ -613,7 +695,13 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Bitte gib Benutzernamen und Password ein",
                 "usernamePwdIncorrect":"Benutzername oder Passwort inkorrekt"
-            }
+            },
+            "detailsName": "Name",
+            "detailsRole": "Rolle",
+            "detailsGroups": "Gruppen",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Unternehmen",
+            "detailsNotes": "Anmerkungen"
         },
         "annotations": {
             "edit": "Bearbeiten",
@@ -633,6 +721,7 @@
             "add": "Neue",
             "filter": "Filtern die annotationen...",
             "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
+            "zoomTo": "Zoom",
             "field": {
                 "title": "Titel",
                 "description": "Beschreibung"
@@ -740,6 +829,8 @@
             "getWMSLink": "WMS Link erhalten",
             "error": "Es gab einen Fehler beim Laden von Einträgen aus dem Katalog",
             "pageInfo": "Resultat {start}-{end} von {total}",
+            "resultInfo": "{total, plural, =0 {Keine Gegenstände} =1 {{total} von {total} stimmt überein} other {{start}-{end} von {total}}}",
+            "pageInfoInfinite": "{total, plural, =undefined {} =0 {Keine Ergebnisse} =1 {{total} von {total} stimmt überein} other {Geladen {loaded} von {total} übereinstimmend}",
             "noRecordsMatched": "Kein passender Eintrag",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
@@ -908,6 +999,7 @@
             "deselectall": "Auswahl aufheben",
             "backtosearch": "Zurück zur suche",
             "resultInfo": "{total, plural, =0 {Keine Artikel} =1 {{total} von {total}} other {{start}-{end} von {total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {Keine Artikel} =1 {{total} von {total}} other {{total}}}",
             "pageInfo": "{totalPages, plural, =0 {keine Seite} =1 {Seite {totalPages} von {totalPages}} other {Seite {page} von {totalPages}}}",
             "pagination": {
                 "page": "Seite",
@@ -972,8 +1064,20 @@
             }
         },
         "widgets": {
+
+            "types": {
+                "chart": {
+                    "title": "Grafik",
+                    "caption": "füge ein Diagramm hinzu"
+                },
+                "text": {
+                    "title": "Text",
+                    "caption": "Fügen Sie einen Textbereich hinzu"
+                }
+            },
+            "selectWidgetType": "Wählen Sie den Widgettyp",
             "selectChartType": {
-                "title": "Wählen Sie den Widgettyp"
+                "title": "Wählen Sie den Diagrammtyp aus"
             },
             "title": "Titel",
             "description": "Beschreibung",
@@ -993,7 +1097,9 @@
                     "configureChartOptions": "Diagrammoptionen konfigurieren",
                     "configureWidgetOptions": "Widget-Optionen konfigurieren",
                     "updateWidget": "Aktualisieren Sie das Widget",
-                    "addToTheMap": "Hinzufügen des Widgets zur Karte"
+                    "addToTheMap": "Hinzufügen des Widgets zur Karte",
+                    "titlePlaceholder": "Gib den Titel ein...",
+                    "textPlaceholder": "Text eingeben..."
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Keine Widgets verfügbar",
@@ -1068,6 +1174,9 @@
             }
 
         },
+        "dashboard": {
+            "emptyTitle": "Das Armaturenbrett ist leer"
+        },
         "wizard": {
             "next": "Nächster",
             "prev": "Bisherige",
@@ -1139,46 +1248,46 @@
             "cancelButton": "Abbrechen"
         },
         "tutorial": {
-            "title": "Tutorial",
-            "back": "Back",
-            "next": "Next",
-            "close": "Close",
-            "skip": "Skip",
-            "last": "Finish",
-            "start": "Start",
-            "checkbox": "don't show this message again",
-            "error": "Error: target not found",
+            "title": "Anleitung",
+            "back": "zurück",
+            "next": "nächste",
+            "close": "schließen",
+            "skip": "springen",
+            "last": "Ende",
+            "start": "Anfang",
+            "checkbox": "Zeige diese Nachricht nicht mehr an",
+            "error": "Fehler: Ziel wurde nicht gefunden",
             "intro": {
-                "title": "Welcome on MapStore2",
-                "text": "framework to build web mapping applications using standard mapping libraries, such as OpenLayers 3 and Leaflet."
+                "title": "Willkommen bei MapStore2",
+                "text": "Framework zum Erstellen von Web Mapping-Anwendungen mit Standard-Mapping-Bibliotheken wie OpenLayers 3 und Leaflet."
             },
             "drawerMenu": {
-                "title": "Main menu",
-                "text": "You can find information and tools to manage layer"
+                "title": "Hauptmenü",
+                "text": "Sie können Informationen und Tools zum Verwalten der Ebene finden"
             },
             "searchBar": {
-                "title": "Search Bar",
-                "text": "Write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+                "title": "Suchleiste",
+                "text": "Schreibe die Adresse des gesuchten Ortes z.B. '1. Allee, New York'. Sie können auch Koordinaten in diesem Format einfügen: 43.87.10.20"
             },
             "home": {
-                "title": "Home",
-                "text": "Click to go to homepage"
+                "title": "Zuhause",
+                "text": "Klicken Sie hier, um zur Startseite zu gelangen"
             },
             "searchButton": {
-                "title": "Search",
-                "text": "Click to open the search bar, then write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+                "title": "Suche",
+                "text": "Schreibe die Adresse des gesuchten Ortes z.B. '1. Allee, New York'. Sie können auch Koordinaten in diesem Format einfügen: 43.87.10.20"
             },
             "burgerMenu": {
-                "title": "Option Menu",
-                "text": "You can find options, settings and help"
+                "title": "Optionsmenü",
+                "text": "Sie können Optionen, Einstellungen und Hilfe finden"
             },
             "zoomInButton": {
                 "title": "Zoom In",
-                "text": "Click to enlarge the map"
+                "text": "Klicken Sie, um die Karte zu vergrößern"
             },
             "zoomOutButton": {
                 "title": "Zoom Out",
-                "text": "Click to reduce the map"
+                "text": "Klicken Sie, um die Karte zu verkleinern"
             },
             "fullscreen": {
                 "title": "Vollbild",
@@ -1186,46 +1295,46 @@
             },
             "identifyButton": {
                 "title": "Info",
-                "text": "Press the button to activate the tool, then click on the map to retrieve information from layers"
+                "text": "Drücken Sie die Taste, um das Werkzeug zu aktivieren, und klicken Sie dann auf die Karte, um Informationen aus den Layern abzurufen"
             },
             "mapType": {
-                "title": "Library",
-                "text": "You can choose Leaflet or OpenLayers to render your maps"
+                "title": "Bibliothek",
+                "text": "Sie können Leaflet oder OpenLayers auswählen, um Ihre Karten zu rendern"
             },
             "mapsGrid": {
-                "title": "Maps",
-                "text": "Here some examples of MapStore2. Click on an image to try the demo."
+                "title": "Karten",
+                "text": "Hier einige Beispiele von MapStore2. Klicken Sie auf ein Bild, um die Demo zu testen."
             },
             "examples": {
-                "title": "Custom Application",
-                "text": "You can use components and plugins of MapStore2 to build custom applications"
+                "title": "benutzerdefinierte Anwendung",
+                "text": "Sie können Komponenten und Plugins von MapStore2 verwenden, um benutzerdefinierte Anwendungen zu erstellen"
             },
             "introCesium": {
-                "title": "3D map instructions",
-                "text": "Click on next button to start the tutorial"
+                "title": "3D Kartenanweisungen",
+                "text": "Klicken Sie auf Weiter, um das Tutorial zu starten"
             },
             "cesium": {
-                "title": "Interactions with the Map",
-                "pan": "Pan view",
-                "zoom": "Zoom view",
-                "tilt": "Tilt view",
-                "rotate": "Rotate view",
-                "oneDrag": "One finger drag",
-                "twoPinch": "Two finger pinch",
-                "twoDragSame": "Two finger drag, same direction",
-                "twoDragOpposite": "Two finger drag, opposite direction",
-                "leftClick": "Left click + drag",
-                "rightClick": "Right click + drag, or Mouse wheel scroll",
-                "middleClick": "Middle click + drag, or CTRL + Left/Right click + drag"
+                "title": "Interaktionen mit der Karte",
+                "pan": "Verschieben",
+                "zoom": "Zoom-Ansicht",
+                "tilt": "Kippansicht",
+                "rotate": "Ansicht drehen",
+                "oneDrag": "ein Finger ziehen",
+                "twoPinch": "Zwei Finger Prise",
+                "twoDragSame": "Ziehen mit zwei Fingern, gleiche Richtung",
+                "twoDragOpposite": "Ziehen mit zwei Fingern, entgegengesetzte Richtung",
+                "leftClick": "Linksklick + Ziehen",
+                "rightClick": "Rechtsklicke + Ziehen oder Mausrad scrollen",
+                "middleClick": "Mittlerer Klick + Ziehen, oder STRG + Links / Rechts klicken + ziehen"
 
             },
             "cesiumCompass": {
-                "title": "Compass",
-                "text": "You can use the compass to orbit around the globe. Drag to rotate the map"
+                "title": "Kompass",
+                "text": "Sie können den Kompass verwenden, um den Globus zu umkreisen. Ziehen Sie, um die Karte zu drehen"
             },
             "cesiumNavigation": {
                 "title": "Navigation",
-                "text": "Here you can find the zoom in and zoom out buttons"
+                "text": "Hier finden Sie die Schaltflächen zum Vergrößern und Verkleinern"
             }
         }
     }

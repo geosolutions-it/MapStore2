@@ -148,6 +148,8 @@ class LeafletMap extends React.Component {
         this.map.on('layeradd', (event) => {
             // we want to run init code only the first time a layer is added to the map
             if (event.layer._ms2Added) {
+                const isStopped = event.layer.layerLoadingStream$ && event.layer.layerLoadingStream$.isStopped;
+                this.addLayerObservable(event, isStopped);
                 return;
             }
             event.layer._ms2Added = true;
@@ -164,43 +166,27 @@ class LeafletMap extends React.Component {
                 // TODO check event.layer.on is a function
                 // Needed to fix GeoJSON Layer neverending loading
 
-                let layerLoadingStream$ = new Rx.Subject();
-                let layerLoadStream$ = new Rx.Subject();
-                let layerErrorStream$ = new Rx.Subject();
-
-                layerErrorStream$
-                    .bufferToggle(
-                        layerLoadingStream$,
-                        () => layerLoadStream$)
-                    .subscribe({
-                        next: (errorEvent) => {
-                            const tileCount = errorEvent && errorEvent[0] && errorEvent[0].target && errorEvent[0].target._tiles && Object.keys(errorEvent[0].target._tiles).length || 0;
-                            if (tileCount > 0 && errorEvent && errorEvent.length > 0) {
-                                this.props.onLayerError(errorEvent[0].target.layerId, tileCount, errorEvent.length);
-                            }
-                        }
-                    });
+                this.addLayerObservable(event, true);
 
                 if (!(event.layer.options && event.layer.options.hideLoading)) {
                     this.props.onLayerLoading(event.layer.layerId);
-                    layerLoadingStream$.next();
+                    event.layer.layerLoadingStream$.next();
                 }
 
                 event.layer.on('loading', (loadingEvent) => {
                     this.props.onLayerLoading(loadingEvent.target.layerId);
-                    layerLoadingStream$.next();
+                    event.layer.layerLoadingStream$.next();
                 });
 
                 event.layer.on('load', (loadEvent) => {
                     this.props.onLayerLoad(loadEvent.target.layerId);
-                    layerLoadStream$.next();
+                    event.layer.layerLoadStream$.next();
+
                 });
 
-                event.layer.on('tileerror', (errorEvent) => { layerErrorStream$.next(errorEvent); });
+                event.layer.on('tileloadstart ', () => { event.layer._ms2LoadingTileCount++; });
+                event.layer.on('tileerror', (errorEvent) => { event.layer.layerErrorStream$.next(errorEvent); });
 
-                event.layer.layerLoadingStream$ = layerLoadingStream$;
-                event.layer.layerLoadStream$ = layerLoadStream$;
-                event.layer.layerErrorStream$ = layerErrorStream$;
             }
         });
 
@@ -395,6 +381,36 @@ class LeafletMap extends React.Component {
             let pos = CoordinatesUtils.reproject([point.lng, point.lat], 'EPSG:4326', this.props.projection);
             return [pos.x, pos.y];
         });
+    };
+
+    addLayerObservable = (event, stopped) => {
+
+        if (!event.layer.layerId
+        || event.layer && event.layer.options && event.layer.options.msLayer === 'vector') {
+            return;
+        }
+
+        if (event && event.layer && event.layer.on && stopped) {
+
+            event.layer._ms2LoadingTileCount = 0;
+
+            event.layer.layerLoadingStream$ = new Rx.Subject();
+            event.layer.layerLoadStream$ = new Rx.Subject();
+            event.layer.layerErrorStream$ = new Rx.Subject();
+            event.layer.layerErrorStream$
+                .bufferToggle(
+                    event.layer.layerLoadingStream$,
+                    () => event.layer.layerLoadStream$)
+                .subscribe({
+                    next: errorEvent => {
+                        const loadingTileCount = event.layer._ms2LoadingTileCount || errorEvent && errorEvent.length || 0;
+                        if (errorEvent && errorEvent.length > 0) {
+                            this.props.onLayerError(errorEvent[0].target.layerId, loadingTileCount, errorEvent.length);
+                        }
+                        event.layer._ms2LoadingTileCount = 0;
+                    }
+                });
+        }
     };
 }
 

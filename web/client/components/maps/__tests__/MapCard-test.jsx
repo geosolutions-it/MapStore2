@@ -52,24 +52,21 @@ describe('This test for MapCard', () => {
         expect(headings[0].innerHTML).toBe(testName);
     });
 
-    it('test viewer url', () => {
+    it('test details tool', () => {
         const testName = "test";
         const testDescription = "testDescription";
-        var component = TestUtils.renderIntoDocument(<MapCard viewerUrl="viewer" id={1} map={{id: 1, name: testName, description: testDescription}} mapType="leaflet"/>);
+        let component = TestUtils.renderIntoDocument(<MapCard viewerUrl="viewer" id={1} map={{id: 1, name: testName, description: testDescription, details: null, canEdit: true}} mapType="leaflet"/>);
         const handlers = {
-            onclick: () => {}
+            onToggleDetailsSheet: () => {},
+            onEdit: () => {}
         };
-        const buttonLink = TestUtils.findRenderedDOMComponentWithTag(
+        let spy = expect.spyOn(handlers, "onToggleDetailsSheet");
+        component = TestUtils.renderIntoDocument(<MapCard id={1} detailsSheetActions={{...handlers}} map={{id: 1, name: testName, description: testDescription, detailsText: "here some details", details: "here some details"}} mapType="leaflet" />);
+        const detailsTool = TestUtils.findRenderedDOMComponentWithTag(
            component, 'button'
         );
-        expect(buttonLink).toExist();
-        let spy = expect.spyOn(handlers, "onclick");
-        component = TestUtils.renderIntoDocument(<MapCard id={1} viewerUrl={handlers.onclick} map={{id: 1, name: testName, description: testDescription}} mapType="leaflet" />);
-        const button = TestUtils.findRenderedDOMComponentWithTag(
-           component, 'button'
-        );
-        TestUtils.Simulate.click(button);
-        expect(button).toExist();
+        expect(detailsTool).toExist();
+        TestUtils.Simulate.click(detailsTool);
         expect(spy.calls.length).toEqual(1);
     });
     it('test edit/delete', () => {
@@ -82,7 +79,7 @@ describe('This test for MapCard', () => {
             onMapDelete: () => {}
         };
 
-        let spyviewerUrl = expect.spyOn(handlers, "viewerUrl");
+
         let spyonEdit = expect.spyOn(handlers, "onEdit");
         let spyonMapDelete = expect.spyOn(handlers, "onMapDelete");
         const component = ReactDOM.render(<MapCard id={1}
@@ -93,10 +90,9 @@ describe('This test for MapCard', () => {
         const buttons = TestUtils.scryRenderedDOMComponentsWithTag(
            component, 'button'
         );
-        expect(buttons.length).toBe(3);
+        expect(buttons.length).toBe(2);
         buttons.forEach(b => TestUtils.Simulate.click(b));
 
-        expect(spyviewerUrl.calls.length).toEqual(1);
         expect(spyonEdit.calls.length).toEqual(1);
         // wait for confirm
         expect(spyonMapDelete.calls.length).toEqual(0);

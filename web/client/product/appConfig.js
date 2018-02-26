@@ -27,12 +27,19 @@ module.exports = {
         name: "manager",
         path: "/manager/:tool",
         component: require('./pages/Manager')
+    }, {
+        name: "dashboard",
+        path: "/dashboard",
+        component: require('./pages/Dashboard')
     }],
     initialState: {
         defaultState: {
             mousePosition: {enabled: false},
             controls: {
                 help: {
+                    enabled: false
+                },
+                details: {
                     enabled: false
                 },
                 print: {
@@ -66,6 +73,7 @@ module.exports = {
             mousePosition: {enabled: true, crs: "EPSG:4326", showCenter: true}
         }
     },
+    appEpics: {},
     storeOpts: {
         persist: {
             whitelist: ['security']

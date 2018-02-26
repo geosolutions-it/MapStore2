@@ -23,7 +23,9 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     cancelCloseAnnotations, confirmCloseAnnotations} =
     require('../actions/annotations');
 
-const {annotationsInfoSelector, annotationsListSelector} = require('../selectors/annotations');
+const { zoomToExtent } = require('../actions/map');
+
+const { annotationsInfoSelector, annotationsListSelector } = require('../selectors/annotations');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
 const AnnotationsEditor = connect(annotationsInfoSelector,
@@ -39,7 +41,8 @@ const AnnotationsEditor = connect(annotationsInfoSelector,
     onCancelStyle: restoreStyle,
     onSaveStyle: toggleStyle,
     onSetStyle: setStyle,
-    onDeleteGeometry: removeAnnotationGeometry
+    onDeleteGeometry: removeAnnotationGeometry,
+    onZoom: zoomToExtent
 })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
 
 const AnnotationsInfoViewer = connect(annotationsInfoSelector,
@@ -54,7 +57,8 @@ const AnnotationsInfoViewer = connect(annotationsInfoSelector,
     onCancelStyle: restoreStyle,
     onSaveStyle: toggleStyle,
     onSetStyle: setStyle,
-    onDeleteGeometry: removeAnnotationGeometry
+    onDeleteGeometry: removeAnnotationGeometry,
+    onZoom: zoomToExtent
 })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
 
 const panelSelector = createSelector([annotationsListSelector], (list) => ({

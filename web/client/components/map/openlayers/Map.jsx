@@ -103,24 +103,17 @@ class OpenlayersMap extends React.Component {
         });
 
         this.map = map;
-        const oldOn = this.map.on;
         this.map.disabledListeners = {};
-        this.map.on = (event, handler) => {
-            oldOn.call(this.map, event, (e) => {
-                if (!this.map.disabledListeners[event]) {
-                    handler(e);
-                }
-            });
-        };
         this.map.disableEventListener = (event) => {
             this.map.disabledListeners[event] = true;
         };
         this.map.enableEventListener = (event) => {
             delete this.map.disabledListeners[event];
         };
+        // TODO support disableEventListener
         map.on('moveend', this.updateMapInfoState);
         map.on('singleclick', (event) => {
-            if (this.props.onClick) {
+            if (this.props.onClick && !this.map.disabledListeners.singleclick) {
                 let pos = event.coordinate.slice();
                 let coords = ol.proj.toLonLat(pos, this.props.projection);
                 let tLng = CoordinatesUtils.normalizeLng(coords[0]);
@@ -153,6 +146,7 @@ class OpenlayersMap extends React.Component {
             }
         });
         const mouseMove = throttle(this.mouseMoveEvent, 100);
+        // TODO support disableEventListener
         map.on('pointermove', mouseMove);
 
         this.updateMapInfoState();

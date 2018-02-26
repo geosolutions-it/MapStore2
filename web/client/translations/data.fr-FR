@@ -22,6 +22,8 @@
         "enable": "Activer",
         "layers": "Couches",
         "warning": "Attention",
+        "errorTitleDefault": "Erreur",
+        "errorDefault": "Une erreur est survenue",
         "version": {
             "label": "Version"
         },
@@ -29,6 +31,12 @@
             "of": "de",
             "updating": "Rafraichissement...",
             "layers": "Couches"
+        },
+        "localeErrors": {
+            "404": "Fichier de traduction introuvable"
+        },
+        "details": {
+            "title": "Info sur cette carte"
         },
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
@@ -56,7 +64,23 @@
             "groupProperties": "Propriétés du groupe",
             "featureInfo": "Informations attributaires de l'objet",
             "featureInfoFormatLbl": "Information, format de la réponse",
-            "legenderror": "La légende n'est pas disponible"
+            "legenderror": "La légende n'est pas disponible",
+            "editCustomFormat": "Modifier le format personnalisé",
+            "exampleOfResponse": "Exemple",
+            "changedSettings": "Paramètres modifiés",
+            "changedSettingsAlert": "Vous fermez le panneau des paramètres sans enregistrer vos modifications",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Affiche les résultats d'info en texte brut",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Affiche les résultats de l'info sur les fonctionnalités au format html",
+            "propertiesFormatTitle": "PROPRIÉTÉS",
+            "propertiesFormatDescription": "Affiche les résultats des informations sur les fonctionnalités sous forme de liste de propriétés",
+            "templateFormatTitle": "TEMPLATE",
+            "templateFormatDescription": "Personnaliser le format des résultats d'informations sur les fonctionnalités",
+            "templateFormatInfoAlert1": "Cliquez sur le bouton d'édition pour ajouter un nouveau modèle.",
+            "templateFormatInfoAlert2": "Utilisez ${ attribut } pour envelopper les propriétés que vous devez afficher",
+            "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }",
+            "templatePreview": "Aperçu du template"
         },
         "notification": {
             "update": "Mise à jour",
@@ -104,6 +128,8 @@
         "elevation": "Elévation",
         "close": "Fermer",
         "cancel": "Annuler",
+        "no": "Non",
+        "yes": "Oui",
         "confirm": "Confirmer",
         "confirmTitle": "Confirmez-vous?",
         "pageInfo": "{total, plural, =0 {aucun objet} =1 {{total} objet parmi {total}} other {objets {start}-{end} parmi {total}}}",
@@ -193,7 +219,30 @@
         },
         "newMap": "Nouvelle carte",
 		"maps": {
-			"search": "rechercher des cartes ..."
+            "feedback": {
+                "noDetailsAvailable": "Détails de la carte non disponibles",
+                "successSavedMap": "La carte a été créée correctement",
+                "errorDeletingMap": "Erreur lors de la suppression de cette carte",
+                "errorDeletingThumbnailOfMap": "Erreur lors de la suppression de la vignette pour cette carte",
+                "errorDeletingDetailsOfMap": "Erreur lors de la suppression des détails de cette carte",
+                "allResDeleted": "Toutes les ressources associées à cette carte ont été supprimées avec succès",
+                "errorFetchingDetailsOfMap": "Erreur lors de l'extraction des détails de cette carte",
+                "details": {
+                    "deletedSuccesfully": "Les détails ont été supprimés correctement",
+                    "savedSuccesfully": "Les détails ont été supprimés correctement",
+                    "updatedSuccesfully": "Les détails ont été mis à jour correctement"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "La vignette a été supprimée correctement",
+                    "savedSuccesfully": "La vignette a été supprimée correctement",
+                    "updatedSuccesfully": "La vignette a été mise à jour correctement"
+                },
+                "errorWhenSaving": "Une erreur est survenue lors du processus d'enregistrement",
+                "errorWhenUpdating": "Une erreur s'est produite lors du processus de mise à jour",
+                "errorWhenDeleting": "Une erreur s'est produite lors du processus de suppression",
+                "errorSizeExceeded": "S'il vous plaît, réduisez la taille des détails ou la qualité des images"
+            },
+            "search": "rechercher des cartes ..."
 		},
         "map": {
             "loading": "Chargement...",
@@ -210,6 +259,8 @@
             "errorFormat": "Formats supportés: png/jpg",
             "errorSize": "taille maximum autorisée: 500kb",
             "error": "L'image fournie est pas valide",
+            "savedMapTitle": "Carte Sauvegardée",
+            "savedMapMessage": "La carte a été enregistrée correctement",
             "thumbnailError": {
                 "error403": "Une erreur est survenue lors de la suppression de la vignette",
                 "error404": "Une erreur est survenue lors de la création de la vignette",
@@ -217,9 +268,11 @@
                 "errorDefault": "Une erreur est survenue sur le serveur"
             },
             "mapError": {
+                "errorTitle": "Impossible d'enregistrer la carte actuelle",
                 "error403": "Une erreur est survenue lors de la suppression de la carte",
                 "error404": "Une erreur est survenue lors de la création de la carte",
                 "error409": "Nom de la carte déjà choisie",
+                "error500": "Erreur Interne du Serveur. Vérifier si la taille du fichier de configuration de la carte dépasse la limite fixée",
                 "errorDefault": "Une erreur est survenue sur le serveur"
             },
             "permissions": {
@@ -230,6 +283,22 @@
                 "canWrite": "peut éditer",
                 "noResult": "aucun résultat trouvé",
                 "title": "groupes autorisés"
+            },
+            "details": {
+                "back": "Arrière",
+                "save": "Sauvegarder",
+                "show": "Montrer la fiche détaillée",
+                "add": "Ajouter de nouveaux détails",
+                "edit": "Modifier les détails",
+                "rowTitle": "Fiche de détails",
+                "title": "Fiche de détails - {name}",
+                "undo": "Annuler supprimer",
+                "showPreview": "Afficher l'aperçu",
+                "hidePreview": "Masquer l'aperçu",
+                "delete": "Supprimer la fiche détaillée",
+                "titleUnsavedChanges": "Êtes-vous sûr de fermer sans enregistrer vos modifications?",
+                "sureToClose": "Êtes-vous sûr de fermer sans enregistrer vos modifications?",
+                "fieldsChanged": "Certains champs ont été modifiés"
             }
         },
         "toc": {
@@ -244,6 +313,7 @@
             "toolTrashLayerTooltip": "Retirer la couche sélectionnée",
             "toolTrashLayersTooltip": "Retirer les couches sélectionnées",
             "toolFeaturesGridTooltip": "Ouvrir la table attributaires",
+            "toolDownloadTooltip": "Exporter les données de la couche",
             "noFilteredResults": "Pas de résultats",
             "filterPlaceholder": "Filtrer les couches",
             "clearFilter": "Supprimer le filtre",
@@ -273,6 +343,19 @@
                 "search": "Mettre à jour les options de recherche",
                 "title": "Mettre à jour le titre",
                 "dimensions": "Mettre à jour les dimensions"
+            },
+            "layerMetadata": {
+                "identifier": "Identifiant",
+                "title": "Titre",
+                "abstract": "Résumé",
+                "subject": "Sujet",
+                "type": "Type",
+                "creator": "Créateur",
+                "toolLayerMetadataTooltip": "Afficher les métadonnées de la couche sélectionnée",
+                "layerMetadataPanelTitle": "Métadonnées de couche",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Erreur dans la recherche de métadonnées"
+                }
             }
         },
         "print":{
@@ -612,6 +695,7 @@
             "add": "Nouvelle",
             "filter": "Filtrer les annotations...",
             "undo": "Êtes-vous sûr de vouloir abandonner la session d'édition d'annotation?",
+            "zoomTo": "Zoom",
             "field": {
                 "title": "titre",
                 "description": "Description"
@@ -638,7 +722,13 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Merci d'entrer vos nom d'utilisateur et mot de passe",
                 "usernamePwdIncorrect":"Nom d'utilisateur ou mot de passe incorrect"
-            }
+            },
+            "detailsName": "Nom",
+            "detailsRole": "Rôle",
+            "detailsGroups": "Groupes",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Compagnie",
+            "detailsNotes": "Remarques"
         },
         "users": {
             "title": "Gérer les comptes",
@@ -742,6 +832,8 @@
             "getWMSLink": "Lien WMS",
             "error": "Une erreur s'est produite lors du chargement des données du catalogue",
             "pageInfo": "{start}-{end} résultats parmi {total}",
+            "resultInfo": "{total, plural, =0 {Pas d'objet} =1 {{total} sur {total}} other {{start}-{end} sur {total}}}",
+            "pageInfoInfinite": "{total, plural, =undefined {} =0 {Aucun résultat} =1 {{total} sur {total} trouvés} other {chargé {loaded} sur {total} trouvés}}",
             "noRecordsMatched": "Aucun enregistrement correspondant",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
@@ -910,6 +1002,7 @@
             "deselectall": "Tout désélectionner",
             "backtosearch": "Retour à la recherche",
             "resultInfo": "{total, plural, =0 {aucun objet} =1 {{total} de {total}} other {{start}-{end} de {total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {aucun objet} =1 {{total} de {total}} other {{total} Objets}}",
             "pageInfo": "{totalPages, plural, =0 {No pages} =1 {Page {totalPages} de {totalPages}} other {Page {page} de {totalPages}}}",
             "pagination": {
                 "page": "Page",
@@ -975,6 +1068,17 @@
             }
         },
         "widgets": {
+            "types": {
+                "chart": {
+                    "title": "Graphique",
+                    "caption": "ajouter un graphique"
+                },
+                "text": {
+                    "title": "Texte",
+                    "caption": "ajouter une zone de texte"
+                }
+            },
+            "selectWidgetType": "Sélectionnez le type de widget",
             "selectChartType": {
                 "title": "Sélectionnez le type de widget"
             },
@@ -996,7 +1100,9 @@
                     "configureChartOptions": "Configurer les options de graphique",
                     "configureWidgetOptions": "Configurer les options du widget",
                     "updateWidget": "Mettre à jour le widget",
-                    "addToTheMap": "Ajouter le widget à la carte"
+                    "addToTheMap": "Ajouter le widget à la carte",
+                    "titlePlaceholder": "Entrez le titre...",
+                    "textPlaceholder": "Entrez le texte..."
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Aucun widget disponible",
@@ -1069,6 +1175,9 @@
                 "bar": "Légende d'affichage",
                 "gauge": "Afficher les étiquettes"
             }
+        },
+        "dashboard": {
+            "emptyTitle": "Le tableau de bord est vide"
         },
         "wizard": {
             "next": "Suivant",

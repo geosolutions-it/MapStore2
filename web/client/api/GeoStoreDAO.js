@@ -10,7 +10,8 @@ const _ = require('lodash');
 const assign = require('object-assign');
 const uuidv1 = require('uuid/v1');
 const ConfigUtils = require('../utils/ConfigUtils');
-const {utfEncode} = require('../utils/EncodeUtils');
+
+const {registerErrorParser} = require('../utils/LocaleUtils');
 
 let parseOptions = (opts) => opts;
 
@@ -29,14 +30,34 @@ let parseUserGroups = (groupsObj) => {
     return groupsObj.User.groups.group.filter(obj => !!obj.id).map((obj) => _.pick(obj, ["id", "groupName", "description"]));
 };
 
-const encodeContent = function(content) {
-    return utfEncode(content);
+const boolToString = (b) => b ? "true" : "false";
+
+const errorParser = {
+    /**
+     * Returns localized message for geostore map errors
+     * @param  {object} e error object
+     * @return {object} {title, message}
+     */
+    mapsError: e => {
+        if (e.status === 403 || e.status === 404 || e.status === 409 || e.status === 500) {
+            return {
+                title: 'map.mapError.errorTitle',
+                message: 'map.mapError.error' + e.status
+            };
+        }
+        return {
+            title: 'map.mapError.errorTitle',
+            message: 'map.mapError.errorDefault'
+        };
+    }
 };
+
+registerErrorParser('geostore', {...errorParser});
 
 /**
  * API for local config
  */
-var Api = {
+const Api = {
     authProviderName: "geostore",
     addBaseUrl: function(options) {
         return assign(options || {}, {baseURL: ConfigUtils.getDefaults().geoStoreUrl});
@@ -54,7 +75,7 @@ var Api = {
     },
     getResourcesByCategory: function(category, query, options) {
         const q = query || "*";
-        const url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail"; // comma-separated list of wanted attributes
+        const url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail,details"; // comma-separated list of wanted attributes
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     getUserDetails: function(username, password, options) {
@@ -111,6 +132,15 @@ var Api = {
                 }
             }, options)));
     },
+    getResourceAttribute: function(resourceId, name, options = {}) {
+        return axios.get(
+            "resources/resource/" + resourceId + "/attributes/" + name,
+            this.addBaseUrl(_.merge({
+                headers: {
+                    'Content-Type': "application/xml"
+                }
+            }, options)));
+    },
     putResourceMetadata: function(resourceId, newName, newDescription, options) {
         return axios.put(
             "resources/resource/" + resourceId,
@@ -122,14 +152,13 @@ var Api = {
                 }
             }, options)));
     },
-    encodeContent,
     putResource: function(resourceId, content, options) {
         return axios.put(
             "data/" + resourceId,
-            encodeContent(content),
+            content,
             this.addBaseUrl(_.merge({
                 headers: {
-                    'Content-Type': "text/plain;charset=utf-8"
+                    'Content-Type': typeof content === 'string' ? "text/plain; charset=utf-8" : 'application/json; charset=utf-8"'
                 }
             }, options)));
     },
@@ -139,14 +168,14 @@ var Api = {
             if (rule.canRead || rule.canWrite) {
                 if (rule.user) {
                     payload = payload + "<SecurityRule>";
-                    payload = payload + "<canRead>" + (rule.canRead || rule.canWrite ? "true" : "false") + "</canRead>";
-                    payload = payload + "<canWrite>" + (rule.canWrite ? "true" : "false") + "</canWrite>";
+                    payload = payload + "<canRead>" + boolToString(rule.canRead || rule.canWrite) + "</canRead>";
+                    payload = payload + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>";
                     payload = payload + "<user><id>" + (rule.user.id || "") + "</id><name>" + (rule.user.name || "") + "</name></user>";
                     payload = payload + "</SecurityRule>";
                 } else if (rule.group) {
                     payload = payload + "<SecurityRule>";
-                    payload = payload + "<canRead>" + (rule.canRead || rule.canWrite ? "true" : "false") + "</canRead>";
-                    payload = payload + "<canWrite>" + (rule.canWrite ? "true" : "false") + "</canWrite>";
+                    payload = payload + "<canRead>" + boolToString(rule.canRead || rule.canWrite) + "</canRead>";
+                    payload = payload + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>";
                     payload = payload + "<group><id>" + (rule.group.id || "") + "</id><groupName>" + (rule.group.groupName || "") + "</groupName></group>";
                     payload = payload + "</SecurityRule>";
                 }
@@ -184,7 +213,13 @@ var Api = {
                 "<Resource><description>" + description + "</description><metadata></metadata>" +
                 "<name>" + (name || "") + "</name><category><name>" + (category || "") + "</name></category>" +
                 attributesSection +
-                "<store><data><![CDATA[" + (data || "") + "]]></data></store></Resource>",
+                "<store><data><![CDATA[" + (
+                    data
+                        && (
+                            (typeof data === 'object')
+                                ? JSON.stringify(data)
+                                : data)
+                        || "") + "]]></data></store></Resource>",
             this.addBaseUrl(_.merge({
                 headers: {
                     'Content-Type': "application/xml"
@@ -351,7 +386,8 @@ var Api = {
             postUser.attribute = postUser.attribute && postUser.attribute.length > 0 ? [...postUser.attribute, uuidAttr] : [uuidAttr];
             return postUser;
         }
-    }
+    },
+    errorParser
 };
 
 module.exports = Api;

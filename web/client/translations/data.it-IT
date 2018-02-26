@@ -21,6 +21,8 @@
         "enable": "Abilita",
         "layers": "Livelli",
         "warning": "Attenzione",
+        "errorTitleDefault": "Errore",
+        "errorDefault": "Si è verificato un errore",
         "version": {
             "label": "Versione"
         },
@@ -28,6 +30,12 @@
             "of": "di",
             "updating": "In aggiornamento...",
             "layers": "layers"
+        },
+        "localeErrors": {
+            "404": "File di traduzione non trovato"
+        },
+        "details": {
+            "title": "Info su questa mappa"
         },
         "layerProperties": {
             "windowTitle": "Proprietà del livello",
@@ -55,7 +63,23 @@
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa",
-            "legenderror": "Legenda non disponibile"
+            "legenderror": "Legenda non disponibile",
+            "editCustomFormat": "Edita formato",
+            "exampleOfResponse": "Esempio",
+            "changedSettings": "Proprietà modificate",
+            "changedSettingsAlert": "Stai chiudendo il pannello senza salvare le tue modifiche",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Mosta i risultati come testo",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Mosta i risultati come html",
+            "propertiesFormatTitle": "PROPRIETÀ",
+            "propertiesFormatDescription": "Mosta i risultati come lista di proprietà",
+            "templateFormatTitle": "TEMPLATE",
+            "templateFormatDescription": "Personalizza il formato di risposta",
+            "templateFormatInfoAlert1": "Click sul bottone di modifica per aggiungere un nuovo template.",
+            "templateFormatInfoAlert2": "Usa ${ attribute } per aggiungere gli attributi da visualizzare",
+            "templateFormatInfoAlertExample": "id della feature è ${ properties }",
+            "templatePreview": "Anteprima template"
         },
         "notification": {
             "update": "Aggiorna",
@@ -103,6 +127,8 @@
         "elevation": "Elevazione",
         "close": "Chiudi",
         "cancel": "Annulla",
+        "no": "No",
+        "yes": "Si",
         "confirm": "Conferma",
         "confirmTitle": "Confermi?",
         "pageInfo": "{total, plural, =0 {Nessun Elemento} =1 {{total} Elemento di {total}} other {Elementi {start}-{end} di {total}}}",
@@ -192,6 +218,29 @@
         },
         "newMap": "Nuova Mappa",
 		"maps": {
+            "feedback": {
+                "noDetailsAvailable": "Dettagli della mappa non disponibili",
+                "successSavedMap": "La mappa è stata salvata correttamente",
+                "errorDeletingMap": "Errore durante l'eliminazione di questa mappa",
+                "errorDeletingThumbnailOfMap": "Errore durante l'eliminazione dell'anteprima di questa mappa",
+                "errorDeletingDetailsOfMap": "Errore durante l'eliminazione dei dettagli di questa mappa",
+                "allResDeleted": "Sono state eliminate tutte le risorse associate a questa mappa",
+                "errorFetchingDetailsOfMap": "Errore durante il recupero dei dettagli di questa mappa",
+                "details": {
+                    "deletedSuccesfully": "I dettagli sono stati eliminati correttamente",
+                    "savedSuccesfully": "I dettagli sono stati salvati correttamente",
+                    "updatedSuccesfully": "I dettagli sono stati aggiornati correttamente"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "L'anteprima è stata eliminata correttamente",
+                    "savedSuccesfully": "L'anteprima è stata salvata correttamente",
+                    "updatedSuccesfully": "L'anteprima è stata aggiornata correttamente"
+                },
+                "errorWhenSaving": "C'è stato un errore durante il salvataggio",
+                "errorWhenUpdating": "C'è stato un errore durante l'aggiornamento",
+                "errorWhenDeleting": "C'è stato un errore durante la cancellazione",
+                "errorSizeExceeded": "Riduci il contenuto o la qualità delle immagini"
+            },
 			"search": "Cerca mappe..."
 		},
         "map": {
@@ -209,6 +258,8 @@
             "errorFormat": "Formati supportati: png/jpg",
             "errorSize": "Dimensione massima consentita: 500kb",
             "error": "L'immagine fornita non è valida",
+            "savedMapTitle": "Mappa Salvata",
+            "savedMapMessage": "La mappa è stata salvata correttamente",
             "thumbnailError": {
                 "error403": "Non disponi dei permessi per aggiornare la thumbnail",
                 "error404": "Non è stato possibile creare la thumbnail sul server",
@@ -216,9 +267,11 @@
                 "errorDefault": "Errore di rete"
             },
             "mapError": {
+                "errorTitle": "Non è stato possibile salvare la mappa",
                 "error403": "Non disponi dei permessi per aggiornare la mappa",
                 "error404": "Non è stato possibile creare la mappa sul server",
                 "error409": "Una mappa con questo nome esiste già",
+                "error500": "Errore interno del server. Verificare se la dimensione della configurazione di mappa supera il limite fissato",
                 "errorDefault": "Errore di rete"
             },
             "permissions": {
@@ -229,6 +282,22 @@
                 "canWrite": "Può modificare",
                 "noResult": "Nessun gruppo rimasto",
                 "title": "Permessi dei gruppi"
+            },
+            "details": {
+                "back": "Indietro",
+                "save": "Salva",
+                "show": "Mostra i dettagli",
+                "add": "Aggiungi dettagli",
+                "edit": "Modifica dettagli",
+                "rowTitle": "Dettagli",
+                "title": "Dettagli - {name}",
+                "undo": "Annulla eliminazione",
+                "showPreview": "Mostra anteprima",
+                "hidePreview": "Nascondi anteprima",
+                "delete": "Elimina dettagli",
+                "titleUnsavedChanges": "Sicuro di chiudere senza salvare?",
+                "sureToClose": "Sicuro di chiudere senza salvare?",
+                "fieldsChanged": "Alcuni dati sono cambiati"
             }
         },
         "toc": {
@@ -243,6 +312,7 @@
             "toolTrashLayerTooltip": "Rimuovi livello selezionato",
             "toolTrashLayersTooltip": "Rimuovi livelli selezionati",
             "toolFeaturesGridTooltip": "Apri tabella degli attributi",
+            "toolDownloadTooltip": "Esporta i dati del livello",
             "noFilteredResults": "Nessun risultato",
             "filterPlaceholder": "Filtra layers",
             "clearFilter": "Pulisci filtro",
@@ -256,7 +326,6 @@
             "createWidget": "Crea un widget per il livello selezionato",
             "editLayerProperties": "Modifica proprietà dal livello",
             "browseData": "Apri tabella degli attributi",
-            "searchFeatures": "Effettua una ricerca su questo livello...",
             "removeLayer": "Rimuovi livello",
             "loadingerror": "Il livello non è stato caricato correttamente o non disponible",
             "measure": "Misure",
@@ -272,6 +341,19 @@
                 "search": "Aggiorna opzioni di ricerca",
                 "title": "Aggiorna il titolo del layer",
                 "dimensions": "Aggiorna le dimensioni aggiuntive"
+            },
+            "layerMetadata": {
+                "identifier": "Identificativo",
+                "title": "Titolo",
+                "abstract": "Abstract",
+                "subject": "Oggetto",
+                "type": "Tipo",
+                "creator": "Creatore",
+                "toolLayerMetadataTooltip": "Mostra i metadati del layer selezionato",
+                "layerMetadataPanelTitle": "Metadati del layer",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Errore nella ricerca dei metadati"
+                }
             }
         },
         "print":{
@@ -561,6 +643,7 @@
                     "details_bbox_label": "Edita le coordinate per modificare l'area",
                     "details_circle_label": "Edita i campi numerici per modificare raggio e centro del cerchio",
                     "reset": "Reimposta allo stato iniziale",
+                    "reset_bbox": "Reset",
                     "save_bbox": "Salva le modifiche al BBOX",
                     "save_radius": "Salva le modifiche al raggio e/o al centro",
                     "radius": "Raggio"
@@ -613,7 +696,13 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Per favore, Inserisci username e password",
                 "usernamePwdIncorrect":"Username o password non corretti"
-            }
+            },
+            "detailsName": "Nome",
+            "detailsRole": "Ruolo",
+            "detailsGroups": "Gruppi",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Company",
+            "detailsNotes": "Note"
         },
         "annotations": {
             "edit": "Modifica",
@@ -633,6 +722,7 @@
             "filter": "Filtra le annotazioni...",
             "undo": "Sei sicuro di voler abbandonare la modifica in corso?",
             "title": "Annotazioni",
+            "zoomTo": "Zoom",
             "field": {
                 "title": "Titolo",
                 "description": "Descrizione"
@@ -740,6 +830,8 @@
             "getWMSLink": "Ottieni link WMS",
             "error": "C'è stato un errore durante il caricamento del catalogo",
             "pageInfo": "Risultati {start}-{end} di {total}",
+            "resultInfo": "{total, plural, =0 {Nessun Risultato} =1 {{total} Risultato di {total}} other {{start}-{end} di {total}}}",
+            "pageInfoInfinite": "{total, plural, =undefined {} =0 {Nessun Risultato} =1 {{total} risultato} other {Caricati {loaded} di {total} risultati}}",
             "noRecordsMatched": "Nessun risultato trovato",
             "wmsGetCapLink": "WMS",
             "wfsGetCapLink": "WFS",
@@ -908,6 +1000,7 @@
             "deselectall": "Deseleziona tutti",
             "backtosearch": "Ritorna alla ricerca",
             "resultInfo": "{total, plural, =0 {Nessun elemento} =1 {{total} di {total}} other {{start}-{end} di {total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {Nessun elemento} =1 {{total} di {total}} other {{total} Elementi}}",
             "pageInfo": "{totalPages, plural, =0 {Nessuna pagina} =1 {Pagina {totalPages} di {totalPages}} other {Pagina {page} di {totalPages}}}",
             "pagination": {
                 "page": "Pagina",
@@ -937,7 +1030,7 @@
                     "editMode": "La ricerca veloce non è disponibile in modalità editing",
                     "default": "Cerca...",
                     "string": "Digita il testo da cercare...",
-                    "number": "Digita un numero o un espression. Esempi: 10, > 2, < 10"
+                    "number": "Digita un numero o una espressione. Esempi: 10, > 2, < 10"
                 }
             },
             "toolbar": {
@@ -972,6 +1065,17 @@
             }
         },
         "widgets": {
+            "types": {
+                "chart": {
+                    "title": "Grafico",
+                    "caption": "aggiungi un grafico"
+                },
+                "text": {
+                    "title": "Testo",
+                    "caption": "aggiungi un area di testo"
+                }
+            },
+            "selectWidgetType": "Seleziona il tipo di widget",
             "selectChartType": {
                 "title": "Seleziona il tipo di widget"
             },
@@ -993,7 +1097,9 @@
                     "configureChartOptions": "Configura le opzioni del grafico",
                     "configureWidgetOptions": "Configura le opzioni del widget",
                     "updateWidget": "Aggiorna il widget",
-                    "addToTheMap": "Aggiungi il widget alla mappa"
+                    "addToTheMap": "Aggiungi il widget alla mappa",
+                    "titlePlaceholder": "Inserisci il titolo...",
+                    "textPlaceholder": "Inserisci il testo..."
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Nessun widgets disponibile",
@@ -1067,6 +1173,9 @@
                 "gauge": "Mostra etichette"
             }
 
+        },
+        "dashboard": {
+            "emptyTitle": "La dashboard è vuota"
         },
         "wizard": {
             "next": "Avanti",

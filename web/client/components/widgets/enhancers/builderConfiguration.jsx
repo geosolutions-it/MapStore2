@@ -10,6 +10,11 @@ const {describeProcess} = require('../../../observables/wps/describe');
 const {Message, HTML} = require("../../I18N/I18N");
 const TYPES = "ALL";
 const {findGeometryProperty} = require('../../../utils/ogc/WFS/base');
+
+/**
+ * Enhancer that retrieves information about the featuretype attributes and the aggregate process
+ * to find out proper information
+ */
 module.exports = compose(
     defaultProps({
         dataStreamFactory: ($props, {onEditorChange = () => {}, onConfigurationError = () => {}} = {}) =>
@@ -19,6 +24,7 @@ module.exports = compose(
                 .do(([result]) => {
                     const geomProp = get(findGeometryProperty(result.data || {}), "name");
                     if (geomProp) {
+                        // set the geometry property (needed for syncronization with a map or any other sort of spatial filter)
                         onEditorChange("geomProp", geomProp);
                     }
 
