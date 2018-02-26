@@ -15,8 +15,8 @@ const fr = require('react-intl/locale-data/fr');
 const de = require('react-intl/locale-data/de');
 const es = require('react-intl/locale-data/es');
 const nl = require('react-intl/locale-data/nl');
-
-addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl]);
+const zh = require('react-intl/locale-data/zh');
+addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl, ...zh]);
 
 /*
  * it, en, fr, de, es are the default locales and it is preferrable to customize them via configuration.
@@ -42,6 +42,10 @@ let supportedLocales = {
     "es": {
         code: "es-ES",
         description: "Español"
+    },
+    "zh": {
+        code: "zh-ZH",
+        description: "中文"
     }/*,
     "nl": {
         code: "nl-NL",
@@ -52,7 +56,8 @@ const DATE_FORMATS = {
     "default": "yyyy/MM/dd",
     "en-US": "MM/dd/yyyy",
     "it-IT": "dd/MM/yyyy",
-    "nl-NL": "dd/MM/yyyy"
+    "nl-NL": "dd/MM/yyyy",
+    "zh-ZH": "yyyy/MM/dd"
 };
 
 let errorParser = {};
@@ -63,7 +68,7 @@ let errorParser = {};
  */
 const LocaleUtils = {
     ensureIntl(callback) {
-        require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js', 'intl/locale-data/jsonp/de.js', 'intl/locale-data/jsonp/es.js', 'intl/locale-data/jsonp/nl.js'], (require) => {
+        require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js', 'intl/locale-data/jsonp/de.js', 'intl/locale-data/jsonp/es.js', 'intl/locale-data/jsonp/nl.js', 'intl/locale-data/jsonp/zh.js'], (require) => {
             global.Intl = require('intl');
             require('intl/locale-data/jsonp/en.js');
             require('intl/locale-data/jsonp/it.js');
@@ -71,6 +76,7 @@ const LocaleUtils = {
             require('intl/locale-data/jsonp/de.js');
             require('intl/locale-data/jsonp/es.js');
             require('intl/locale-data/jsonp/nl.js');
+            require('intl/locale-data/jsonp/zh.js');
             if (callback) {
                 callback();
             }
