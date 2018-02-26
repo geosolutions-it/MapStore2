@@ -11,7 +11,7 @@ const IconAlignLeft = '<span class="glyphicon glyphicon-align-left" style="displ
 const IconAlignCenter = '<span class="glyphicon glyphicon-align-center" style="display: inline-block; margin-top: 4px;"></span>';
 const IconAlignRight = '<span class="glyphicon glyphicon-align-right" style="display: inline-block; margin-top: 4px;"></span>';
 const IconAlignClear = '<span class="glyphicon glyphicon-remove" style="display: inline-block; margin-top: 4px;"></span>';
-const videoHeight = 200;
+const iframeHeight = 200;
 require('./assets/css/resizemodule.css');
 
 module.exports = Quill => {
@@ -384,9 +384,9 @@ module.exports = Quill => {
                                 iframe.setAttribute('width', '100%');
                                 overlay.style.width = '100%';
 
-                                domNode.style.height = videoHeight + 'px';
-                                iframe.setAttribute('height', videoHeight);
-                                overlay.style.height = videoHeight + 'px';
+                                domNode.style.height = iframeHeight + 'px';
+                                iframe.setAttribute('height', iframeHeight);
+                                overlay.style.height = iframeHeight + 'px';
                             }
                         }
                     },
@@ -663,11 +663,11 @@ module.exports = Quill => {
         'width'
     ];
 
-    class Video extends Embed {
+    class IFrame extends Embed {
         static create(value) {
             let src = '';
             let width = '100%';
-            let height = videoHeight;
+            let height = iframeHeight;
             if (isObject(value)) {
                 src = value.src || src;
                 width = value.width || width;
@@ -735,9 +735,9 @@ module.exports = Quill => {
         }
     }
 
-    Video.blotName = 'video';
-    Video.className = 'ql-video';
-    Video.tagName = 'DIV';
+    IFrame.blotName = 'video';
+    IFrame.className = 'ql-video';
+    IFrame.tagName = 'DIV';
 
     const toolbarConfig = {
         container: [
@@ -750,7 +750,11 @@ module.exports = Quill => {
 
     return {
         ResizeModule,
-        Video,
-        toolbarConfig
+        IFrame,
+        toolbarConfig,
+        BaseModule,
+        Toolbar,
+        DisplaySize,
+        Resize
     };
 };

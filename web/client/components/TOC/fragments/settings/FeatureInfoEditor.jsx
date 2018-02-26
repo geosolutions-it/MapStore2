@@ -12,10 +12,10 @@ const ResizableModal = require('../../../misc/ResizableModal');
 const Portal = require('../../../misc/Portal');
 const Message = require('../../../I18N/Message');
 const {Quill} = ReactQuill;
-const {ResizeModule, Video, toolbarConfig} = require('../../../misc/quillmodules/ResizeModule')(Quill);
+const {ResizeModule, IFrame, toolbarConfig} = require('../../../misc/quillmodules/ResizeModule')(Quill);
 
 Quill.register({
-    'formats/video': Video,
+    'formats/video': IFrame,
     'modules/resizeModule': ResizeModule
 });
 
