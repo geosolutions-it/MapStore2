@@ -1,0 +1,25 @@
+
+
+.ql-snow .ql-tooltip[data-mode=video]::before {
+    content: "Enter iframe url:";
+}
+
+.ql-formats button.ql-video {
+    position: relative;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1;
+    background-image: url('../img/iframe-icon.svg');
+    background-size: auto 80%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+/*
+.ql-formats button.ql-video:hover {
+    color: #06c;
+}
+*/
+.ql-formats button.ql-video svg {
+    display: none;
+}
+
