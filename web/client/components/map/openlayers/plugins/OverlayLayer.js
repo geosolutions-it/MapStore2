@@ -44,6 +44,14 @@ Layers.registerType('overlay', {
         const original = document.getElementById(options.id);
         const cloned = cloneOriginalOverlay(original, options);
         document.body.appendChild(cloned);
+        if (options.onLink) {
+            if (cloned) {
+                let links = cloned.getElementsByTagName('a');
+                for (let i = 0; i < links.length; i++) {
+                    links[i].addEventListener('click', options.onLink);
+                }
+            }
+        }
         const overlay = new ol.Overlay(({
             id: options.id,
             element: cloned,
