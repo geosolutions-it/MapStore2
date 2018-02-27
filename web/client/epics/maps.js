@@ -255,19 +255,19 @@ const storeDetailsInfoEpic = (action$, store) =>
         return !mapId ?
             Rx.Observable.empty() :
             Rx.Observable.fromPromise(
-            GeoStoreApi.getResourceAttribute(mapId, "details")
-            .then(res => res.data).catch(() => {
-                return null;
-            })
-        )
-        .switchMap((details) => {
-            if (!details) {
-                return Rx.Observable.empty();
-            }
-            return Rx.Observable.of(
-                    detailsLoaded(mapId, details)
-                );
-        });
+                GeoStoreApi.getResourceAttribute(mapId, "details")
+                .then(res => res.data).catch(() => {
+                    return null;
+                })
+            )
+            .switchMap((details) => {
+                if (!details) {
+                    return Rx.Observable.empty();
+                }
+                return Rx.Observable.of(
+                        detailsLoaded(mapId, details)
+                    );
+            });
     });
 
 

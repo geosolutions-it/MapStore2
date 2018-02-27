@@ -35,6 +35,7 @@ const MAP_ERROR = 'MAP_ERROR';
 const SAVE_ALL = 'SAVE_ALL';
 const DISPLAY_METADATA_EDIT = 'DISPLAY_METADATA_EDIT';
 const RESET_UPDATING = 'RESET_UPDATING';
+const SAVING_MAP = 'SAVING_MAP';
 const SAVE_MAP = 'SAVE_MAP';
 const PERMISSIONS_LIST_LOADING = 'PERMISSIONS_LIST_LOADING';
 const PERMISSIONS_LIST_LOADED = 'PERMISSIONS_LIST_LOADED';
@@ -324,6 +325,18 @@ function saveMap(map, resourceId) {
         resourceId,
         map
     };
+}
+/**
+ * Performed before start saving a new map
+ * @memberof actions.maps
+ * @param {object} metadata
+ * @return {action} type SAVING_MAP action
+ */
+function savingMap(metadata) {
+    return {
+        type: SAVING_MAP,
+        metadata
+    }
 }
 
 /**
@@ -673,6 +686,7 @@ function deleteThumbnail(resourceId, resourceIdMap, options, reset) {
  */
 function createMap(metadata, content, thumbnail, options) {
     return (dispatch) => {
+        dispatch(savingMap(metadata));
         GeoStoreApi.createResource(metadata, content, "MAP", options).then((response) => {
             let resourceId = response.data;
             if (thumbnail && thumbnail.data) {
@@ -898,6 +912,7 @@ module.exports = {
     ATTRIBUTE_UPDATED,
     PERMISSIONS_UPDATED,
     SAVE_MAP,
+    SAVING_MAP,
     THUMBNAIL_ERROR,
     PERMISSIONS_LIST_LOADING,
     PERMISSIONS_LIST_LOADED,
