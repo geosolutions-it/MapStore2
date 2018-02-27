@@ -726,6 +726,7 @@
             "selectfiletext": "Legen Sie die Datei hier ab oder klicken Sie, um die zu importierende Anmerkungsdatei auszuwählen. (unterstützte Dateien: JSON)",
             "loadoverride": "Ersetzen Sie Anmerkungen",
             "loaderror": "Wählen Sie eine oder mehrere Anmerkungsdateien aus. (unterstützte Dateien: json)",
+            "defaulttitle": "Bearbeiten Sie den Standardtitel",
             "zoomTo": "Zoom",
             "field": {
                 "title": "Titel",
