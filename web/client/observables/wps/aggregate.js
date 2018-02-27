@@ -51,12 +51,12 @@ const applyTemplate = ({featureType, aggregationAttribute, groupByAttributes = [
                 <wps:LiteralData>false</wps:LiteralData>
             </wps:Data>
         </wps:Input>
-        <wps:Input>
+        ${castArray(groupByAttributes).map( (attribute) => `<wps:Input>
             <ows:Identifier>groupByAttributes</ows:Identifier>
             <wps:Data>
-                <wps:LiteralData>${groupByAttributes}</wps:LiteralData>
+                <wps:LiteralData>${attribute}</wps:LiteralData>
             </wps:Data>
-        </wps:Input>
+        </wps:Input>`)}
     </wps:DataInputs>
     <wps:ResponseForm>
         <wps:RawDataOutput mimeType="application/json">

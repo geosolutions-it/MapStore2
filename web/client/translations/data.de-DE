@@ -1073,9 +1073,13 @@
                     "title": "Text",
                     "caption": "fügen Sie einen Textbereich hinzu"
                 },
-                 "table": {
+                "table": {
                     "title": "Tabelle",
                     "caption": "füge eine Tabelle hinzu"
+                },
+                "counter": {
+                    "title": "Zähler",
+                    "caption": "füge einen Zähler hinzu"
                 }
             },
             "selectWidgetType": "Wählen Sie den Widgettyp",
@@ -1152,25 +1156,41 @@
                 "line": "X-Attribut",
                 "pie": "Gruppiere nach",
                 "bar": "X-Attribut",
-                "gauge": "Gruppiere nach"
+                "gauge": "Gruppiere nach",
+                "counter": "Gruppiere nach",
+                "default": "Gruppiere nach"
             },
             "aggregationAttribute": {
                 "line": "Y-Attribut",
                 "pie": "Wert",
                 "bar": "Y-Attribut",
-                "gauge": "Wert"
+                "gauge": "Wert",
+                "counter": "Wert",
+                "default": "Wert"
             },
             "aggregateFunction": {
                 "line": "Betrieb",
                 "pie": "Betrieb",
                 "bar": "Betrieb",
-                "gauge": "Betrieb"
+                "gauge": "Betrieb",
+                "counter": "Betrieb",
+                "default": "Betrieb"
             },
             "colorRamp": {
                 "line": "Farbe",
                 "pie": "Farbrampe",
                 "bar": "Farbe",
-                "gauge": "Farbe"
+                "gauge": "Farbe",
+                "counter": "Farbe",
+                "default": "Farbe"
+            },
+            "uom": {
+                "line": "Maßeinheit",
+                "pie": "Maßeinheit",
+                "bar": "Maßeinheit",
+                "gauge": "Maßeinheit",
+                "counter": "Maßeinheit",
+                "default": "Maßeinheit"
             },
             "mapSync": "Live-Filter nach Ansichtsfenster",
             "displayLegend": {

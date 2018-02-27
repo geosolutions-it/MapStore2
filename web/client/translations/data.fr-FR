@@ -327,7 +327,6 @@
             "createWidget": "Créer un widget pour le calque sélectionné",
             "editLayerProperties": "Modifier les propriétés de la couche",
             "browseData": "Ouvrir la table d'attribut",
-            "searchFeatures": "Recherche sur ce calque ...",
             "removeLayer": "Supprimer la couche",
             "loadingerror": "La couche n'a pas été chargée correctement",
             "measure": "Mesurer",
@@ -488,7 +487,6 @@
                         }
                     },
                     "polygon": {
-                        "error": "Erreur: les bords de la forme ne peuvent se croiser!",
                         "tooltip": {
                             "start": "Cliquer pour commencer à tracer une forme.",
                             "cont": "Cliquer pour continuer la forme.",
@@ -1044,7 +1042,6 @@
                 "drawGeom": "Élément de dessin",
                 "stopDrawGeom": "Annuler la création de la géométrie",
                 "addGeom": "Ajouter un élément à la géométrie existante",
-                "drawFeature": "Élément de dessin",
                 "deleteSelectedFeatures": "Supprimer les fonctionnalités sélectionnées",
                 "saveChanges": "Sauvegarder les modifications",
                 "saving": "sauvetage...",
@@ -1080,6 +1077,10 @@
                 "table": {
                     "title": "Table",
                     "caption": "ajouter une table"
+                },
+                "counter": {
+                    "title": "Compteur",
+                    "caption": "ajouter un compteur"
                 }
             },
             "selectWidgetType": "Sélectionnez le type de widget",
@@ -1150,31 +1151,47 @@
                     "caption": "jauge"
                 }
             },
-            "chartOptionsTitle": "Données de graphique",
+            "chartOptionsTitle": "Données",
             "widgetOptionsTitle": "Info sur le widget",
             "groupByAttributes": {
                 "line": "Attributs X",
                 "pie": "Grouper par",
                 "bar": "Attributs X",
-                "gauge": "Grouper par"
+                "gauge": "Grouper par",
+                "counter": "Grouper par",
+                "default": "Grouper par"
             },
             "aggregationAttribute": {
                 "line": "Attributs Y",
                 "pie": "Valeur",
                 "bar": "Attributs Y",
-                "gauge": "valeur"
+                "gauge": "Valeur",
+                "counter": "Valeur",
+                "default": "Valeur"
             },
             "aggregateFunction": {
                 "line": "Opération",
                 "pie": "Opération",
                 "bar": "Opération",
-                "gauge": "Opération"
+                "gauge": "Opération",
+                "counter": "Opération",
+                "default": "Opération"
             },
             "colorRamp": {
                 "line": "Couleur",
                 "pie": "Rampe de couleur",
                 "bar": "Couleur",
-                "gauge": "Couleur"
+                "gauge": "Couleur",
+                "counter": "Couleur",
+                "default": "Couleur"
+            },
+            "uom": {
+                "line": "Unité de mesure",
+                "pie": "Unité de mesure",
+                "bar": "Unité de mesure",
+                "gauge": "Unité de mesure",
+                "counter": "Unité de mesure",
+                "default": "Unité de mesure"
             },
             "mapSync": "Live Filter par viewport",
             "displayLegend": {

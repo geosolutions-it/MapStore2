@@ -1076,6 +1076,10 @@
                  "table": {
                     "title": "Mesa",
                     "caption": "agregar una mesa"
+                },
+                "counter": {
+                    "title": "Contador",
+                    "caption": "agregar un contador"
                 }
             },
             "selectWidgetType": "Seleccione el tipo de widget",
@@ -1146,31 +1150,47 @@
                     "caption": "indicatores"
                 }
             },
-            "chartOptionsTitle": "Datos del gráfico",
+            "chartOptionsTitle": "Datos",
             "widgetOptionsTitle": "Información de widget",
             "groupByAttributes": {
                 "line": "Atributo X",
                 "pie": "Agrupar por",
                 "bar": "Atributo X",
-                "gauge": "Agrupar por"
+                "gauge": "Agrupar por",
+                "counter": "Agrupar por",
+                "default": "Agrupar por"
             },
             "aggregationAttribute": {
                 "line": "Atributo Y",
                 "pie": "Valor",
                 "bar": "Atributo Y",
-                "gauge": "Valor"
+                "gauge": "Valor",
+                "counter": "Valor",
+                "default": "Valor"
             },
             "aggregateFunction": {
                 "line": "Operación",
                 "pie": "Operación",
                 "bar": "Operación",
-                "gauge": "Operación"
+                "gauge": "Operación",
+                "counter": "Operación",
+                "default": "Operación"
             },
             "colorRamp": {
                 "line": "Color",
                 "pie": "Rampa de color",
                 "bar": "Color",
-                "gauge": "Color"
+                "gauge": "Color",
+                "counter": "Color",
+                "default": "Color"
+            },
+            "uom": {
+                "line": "Unidad de medida",
+                "pie": "Unidad de medida",
+                "bar": "Unidad de medida",
+                "gauge": "Unidad de medida",
+                "counter": "Unidad de medida",
+                "default": "Unidad de medida"
             },
             "mapSync": "Filtro en vivo por la Viewport",
             "displayLegend": {

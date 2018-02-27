@@ -6,8 +6,8 @@
   * LICENSE file in the root directory of this source tree.
   */
 const React = require('react');
-const {head} = require('lodash');
-const {Row, Col, Form, FormGroup, ControlLabel} = require('react-bootstrap');
+const { head, get} = require('lodash');
+const { Row, Col, Form, FormGroup, FormControl, ControlLabel} = require('react-bootstrap');
 const Message = require('../../../../I18N/Message');
 const Select = require('react-select');
 const ColorRangeSelector = require('../../../../style/ColorRangeSelector');
@@ -46,8 +46,20 @@ const getColorRangeItems = (type) => {
     }
     return COLORS;
 };
-
-module.exports = ({data = {options: {}}, onChange = () => {}, options=[], dependencies, aggregationOptions = [], sampleChart}) => (<Row>
+const getLabelMessageId = (field, data = {}) => `widgets.${field}.${data.type || data.widgetType || "default"}`;
+module.exports = ({
+        data = { options: {} },
+        onChange = () => { },
+        options = [],
+        formOptions = {
+            showGroupBy: true,
+            showUom: false,
+            showColorRampSelector: true,
+            showLegend: true
+        },
+        dependencies,
+        aggregationOptions = [],
+        sampleChart}) => (<Row>
         <StepHeader title={<Message msgId={`widgets.chartOptionsTitle`} />} />
           <Col xs={12}>
               <div style={{marginBottom: "30px"}}>
@@ -56,9 +68,9 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], depend
               </Col>
           <Col xs={12}>
           <Form className="chart-options-form" horizontal>
-        <FormGroup controlId="groupByAttributes" className="mapstore-block-width">
+          {formOptions.showGroupBy ? (<FormGroup controlId="groupByAttributes" className="mapstore-block-width">
           <Col componentClass={ControlLabel} sm={6}>
-            <Message msgId={`widgets.groupByAttributes.${data.type}`} />
+                <Message msgId={getLabelMessageId("groupByAttributes", data)} />
           </Col>
           <Col sm={6}>
               <Select
@@ -70,11 +82,10 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], depend
                   }}
                   />
           </Col>
-        </FormGroup>
-
+        </FormGroup>) : null}
         <FormGroup controlId="aggregationAttribute" className="mapstore-block-width">
             <Col componentClass={ControlLabel} sm={6}>
-              <Message msgId={`widgets.aggregationAttribute.${data.type}`} />
+                <Message msgId={getLabelMessageId("aggregationAttribute", data)} />
             </Col>
           <Col sm={6}>
               <Select
@@ -89,7 +100,7 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], depend
         </FormGroup>
         <FormGroup controlId="aggregateFunction" className="mapstore-block-width">
             <Col componentClass={ControlLabel} sm={6}>
-              <Message msgId={`widgets.aggregateFunction.${data.type}`} />
+                <Message msgId={getLabelMessageId("aggregateFunction", data)} />
             </Col>
           <Col sm={6}>
               <Select
@@ -102,9 +113,17 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], depend
                   />
           </Col>
         </FormGroup>
-        <FormGroup controlId="colorRamp" className="mapstore-block-width">
+        {formOptions.showUom ? <FormGroup controlId="uom">
             <Col componentClass={ControlLabel} sm={6}>
-              <Message msgId={`widgets.colorRamp.${data.type}`} />
+                        <Message msgId={getLabelMessageId("uom", data)} />
+            </Col>
+            <Col sm={6}>
+                <FormControl value={get(data, `options.seriesOptions[0].uom`)} type="text" onChange={e => onChange("options.seriesOptions.[0].uom", e.target.value)} />
+            </Col>
+        </FormGroup> : null}
+        {formOptions.showColorRampSelector ? <FormGroup controlId="colorRamp" className="mapstore-block-width">
+            <Col componentClass={ControlLabel} sm={6}>
+                <Message msgId={getLabelMessageId("colorRamp", data)} />
             </Col>
           <Col sm={6}>
               <ColorRangeSelector
@@ -113,7 +132,7 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], depend
                   samples={data.type === "pie" ? 5 : 1}
                   onChange={v => {onChange("autoColorOptions", {...v.options, name: v.name}); }}/>
           </Col>
-        </FormGroup>
+        </FormGroup> : null}
         {dependencies && dependencies.viewport
             ? (<FormGroup controlId="mapSync" className="mapstore-block-width">
             <Col componentClass={ControlLabel} sm={6}>
@@ -129,9 +148,9 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], depend
           </Col>
         </FormGroup>)
             : null}
-        <FormGroup controlId="displayLegend">
+        {formOptions.showLegend ? <FormGroup controlId="displayLegend">
             <Col componentClass={ControlLabel} sm={6}>
-              <Message msgId={`widgets.displayLegend.${data.type}`} />
+                <Message msgId={getLabelMessageId("displayLegend", data)} />
             </Col>
           <Col sm={6}>
               <SwitchButton
@@ -141,7 +160,7 @@ module.exports = ({data = {options: {}}, onChange = () => {}, options=[], depend
                   }}
                   />
           </Col>
-        </FormGroup>
+        </FormGroup> : null}
       </Form>
 
 
