@@ -1072,6 +1072,10 @@
                 "text": {
                     "title": "Texto",
                     "caption": "agregar un área de texto"
+                 },
+                 "table": {
+                    "title": "Mesa",
+                    "caption": "agregar una mesa"
                 }
             },
             "selectWidgetType": "Seleccione el tipo de widget",
@@ -1095,6 +1099,9 @@
                     "backToChartOptions": "Volver a las opciones de gráfico",
                     "configureChartOptions": "Configurar opciones de gráfico",
                     "configureWidgetOptions": "Configurar las opciones del widget",
+                     "backToTableOptions": "Volver a las opciones de mesa",
+                    "configureTableOptions": "Configurar opciones de tabla",
+                    "resetColumnsSizes": "Restablecer todos los cambios en los tamaños de columna",
                     "updateWidget": "Actualiza el widget",
                     "addToTheMap": "Agrega el widget al mapa",
                     "titlePlaceholder": "Ingrese el título...",
@@ -1102,7 +1109,8 @@
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Sin widgets disponibles",
-                    "noWidgetsAvailableDescription": "<p> No puede crear ningún widgets para la capa seleccionada. Esto es probablemente porque la capa no es adecuada para los widgets disponibles o el servidor no expone todos los servicios o información necesarios para generar el widget. Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> gs: el proceso agregado no está disponible </li> </ul >) <p>"
+                    "noWidgetsAvailableDescription": "<p> No puede crear ningún widgets para la capa seleccionada. Esto es probablemente porque la capa no es adecuada para los widgets disponibles o el servidor no expone todos los servicios o información necesarios para generar el widget. Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> gs: el proceso agregado no está disponible </li> </ul >) <p>",
+                    "checkAtLeastOneAttribute": "Debes seleccionar al menos una columna"
                 },
                 "setupFilter": "Configurar un filtro para los datos del widget"
             },
@@ -1174,6 +1182,9 @@
 
         },
         "dashboard": {
+            "editor": {
+                "addACardToTheDashboard": "Agregar un widget al tablero"
+            },
             "emptyTitle": "El tablero está vacío"
         },
         "wizard": {

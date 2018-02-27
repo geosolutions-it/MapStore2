@@ -13,6 +13,7 @@ const EDIT_NEW = "WIDGETS:EDIT_NEW";
 const EDITOR_CHANGE = "WIDGETS:EDITOR_CHANGE";
 const EDITOR_SETTING_CHANGE = "WIGETS:EDITOR_SETTING_CHANGE";
 const UPDATE = "WIDGETS:UPDATE";
+const UPDATE_PROPERTY = "WIDGETS:UPDATE_PROPERTY";
 const CHANGE_LAYOUT = "WIDGETS:CHANGE_LAYOUT";
 const DELETE = "WIDGETS:DELETE";
 const CLEAR_WIDGETS = "WIDGETS:CLEAR_WIDGETS";
@@ -55,6 +56,20 @@ const updateWidget = (widget, target = DEFAULT_TARGET) => ({
     type: UPDATE,
     target,
     widget
+});
+/**
+ * Update a widget property in the provided target
+ * @param  {string} id The widget id to update
+ * @param  {string} key The widget property name or path to update
+ * @param {any} value the widget value to update
+ * @return {object}  action with type `WIDGETS:UPDATE_PROPERTY`, the widget and the target
+ */
+const updateWidgetProperty = (id, key, value, target = DEFAULT_TARGET) => ({
+    type: UPDATE_PROPERTY,
+    id,
+    target,
+    key,
+    value
 });
 /**
  * Deletes a widget from the passed target
@@ -100,7 +115,7 @@ const editWidget = (widget) => ({
  * Edit new widget. Initializes the widget builder properly
  * @param  {object} widget The widget template
  * @param  {object} settings The settings for the template
- * @return {object}        the action of type `WIGETS:EDIT_NEW`
+ * @return {object} the action of type `WIGETS:EDIT_NEW`
  */
 const editNewWidget = (widget, settings) => ({
     type: EDIT_NEW,
@@ -157,6 +172,7 @@ module.exports = {
     NEW,
     INSERT,
     UPDATE,
+    UPDATE_PROPERTY,
     DELETE,
     CLEAR_WIDGETS,
     CHANGE_LAYOUT,
@@ -174,6 +190,7 @@ module.exports = {
     createWidget,
     insertWidget,
     updateWidget,
+    updateWidgetProperty,
     deleteWidget,
     clearWidgets,
     changeLayout,

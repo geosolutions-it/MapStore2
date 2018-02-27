@@ -400,6 +400,14 @@ const LayersUtils = {
         }
         return addBaseParams(reqUrl, layer.baseParams || {});
     },
+    /**
+     * Gets the layer search url or the current url
+     *
+     * @memberof utils.LayerUtils
+     * @param {Object} layer
+     * @returns {string} layer url
+     */
+    getSearchUrl: (l = {}) => l.search && l.search.url || l.url,
     invalidateUnsupportedLayer(layer, maptype) {
         return isSupportedLayer(layer, maptype) ? checkInvalidParam(layer) : assign({}, layer, {invalid: true});
     },

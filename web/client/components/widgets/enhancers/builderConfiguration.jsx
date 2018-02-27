@@ -24,7 +24,7 @@ module.exports = compose(
                 .do(([result]) => {
                     const geomProp = get(findGeometryProperty(result.data || {}), "name");
                     if (geomProp) {
-                        // set the geometry property (needed for syncronization with a map or any other sort of spatial filter)
+                        // set the geometry property (needed for synchronization with a map or any other sort of spatial filter)
                         onEditorChange("geomProp", geomProp);
                     }
 

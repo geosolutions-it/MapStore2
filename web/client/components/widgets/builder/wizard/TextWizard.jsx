@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {wizardHanlders} = require('../../../misc/wizard/enhancers');
+const {wizardHandlers} = require('../../../misc/wizard/enhancers');
 const TextOptions = require('./text/TextOptions');
-const Wizard = wizardHanlders(require('../../../misc/wizard/WizardContainer'));
+const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
 
 
 module.exports = ({

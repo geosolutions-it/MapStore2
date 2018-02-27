@@ -28,6 +28,7 @@ module.exports = pure(({
     widgets=[],
     layouts,
     dependencies,
+    updateWidgetProperty = () => {},
     deleteWidget = () => {},
     editWidget = () => {},
     onLayoutChange = () => {},
@@ -35,6 +36,7 @@ module.exports = pure(({
 }={}) =>
     (<ResponsiveReactGridLayout
         key={id}
+        draggableHandle={".draggableHandle"}
         onLayoutChange={onLayoutChange}
         preventCollision
         layouts={layouts ? JSON.parse(JSON.stringify(layouts)) : undefined}
@@ -51,6 +53,7 @@ module.exports = pure(({
             {...actions}
             {...w}
             dependencies={dependencies}
+                updateProperty={(...args) => updateWidgetProperty(w.id, ...args)}
             onDelete={() => deleteWidget(w)}
             onEdit={() => editWidget(w)} /></div>))
     }

@@ -11,6 +11,7 @@ const {
     NEW,
     INSERT,
     UPDATE,
+    UPDATE_PROPERTY,
     DELETE,
     CHANGE_LAYOUT,
     EDIT,
@@ -27,6 +28,7 @@ const {
     createWidget,
     insertWidget,
     updateWidget,
+    updateWidgetProperty,
     deleteWidget,
     changeLayout,
     editWidget,
@@ -82,6 +84,15 @@ describe('Test correctness of the widgets actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(UPDATE);
         expect(retval.widget).toBe(widget);
+        expect(retval.target).toBe(DEFAULT_TARGET);
+    });
+    it('updateWidgetProperty', () => {
+        const retval = updateWidgetProperty("id", "key", "value");
+        expect(retval).toExist();
+        expect(retval.type).toBe(UPDATE_PROPERTY);
+        expect(retval.id).toBe("id");
+        expect(retval.key).toBe("key");
+        expect(retval.value).toBe("value");
         expect(retval.target).toBe(DEFAULT_TARGET);
     });
     it('deleteWidget', () => {

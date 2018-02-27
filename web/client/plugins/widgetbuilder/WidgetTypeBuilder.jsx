@@ -24,7 +24,8 @@ const mapStateToProps = createSelector(
 const WidgetTypeSelector = require('./WidgetTypeSelector');
 const Builders = {
     chart: require('./ChartBuilder'),
-    text: require('./TextBuilder')
+    text: require('./TextBuilder'),
+    table: require('./TableBuilder')
 };
 
 /**
