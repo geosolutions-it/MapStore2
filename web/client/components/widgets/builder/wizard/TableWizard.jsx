@@ -17,7 +17,7 @@ const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
 
 const { compose, lifecycle } = require('recompose');
 
-const enhanceWizard = compose(lifecycle({
+const triggerValidationReset = compose(lifecycle({
     componentWillReceiveProps: ({ data = {}, valid, setValid = () => { } } = {}) => {
         if (valid && !isChartOptionsValid(data.options)) {
             setValid(false);
@@ -26,7 +26,7 @@ const enhanceWizard = compose(lifecycle({
 })
 );
 
-module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies }) =>
+module.exports = triggerValidationReset(({ onChange = () => { }, onFinish = () => { }, setPage = () => { }, data = {}, layer = {}, step = 0, types, featureTypeProperties, dependencies }) =>
     (<Wizard
         step={step}
         setPage={setPage}

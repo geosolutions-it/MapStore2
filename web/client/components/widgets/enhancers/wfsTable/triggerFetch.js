@@ -7,7 +7,7 @@
  */
 
 require('rxjs');
-const {getLayerUrl} = require('./common');
+const { getSearchUrl } = require('../../../../utils/LayersUtils');
 const sameFilter = (f1, f2) => f1 === f2;
 const sameOptions = (o1 = {}, o2 = {}) =>
     o1.propertyName === o2.propertyName;
@@ -24,7 +24,7 @@ module.exports = ($props) =>
     $props.filter(({ layer = {} }) => layer.name )
         .distinctUntilChanged(
         ({ layer = {}, options = {}, filter, sortOptions }, newProps) =>
-            getLayerUrl(layer) === getLayerUrl(layer)
+            getSearchUrl(layer) === getSearchUrl(layer)
             && (newProps.layer && layer.name === newProps.layer.name)
             && sameOptions(options, newProps.options)
             && sameFilter(filter, newProps.filter)

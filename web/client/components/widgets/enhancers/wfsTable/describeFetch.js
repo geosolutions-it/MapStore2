@@ -8,14 +8,14 @@
 
 const Rx = require('rxjs');
 const { describeFeatureType } = require('../../../../observables/wfs');
-const {getLayerUrl} = require('./common');
+const { getSearchUrl } = require('../../../../utils/LayersUtils');
 /**
  * Retrieves feature types for the layer provideded in props. When the layer changes url,
  * @param {Obserbable} props$ props stream
  */
 module.exports = props$ =>
     props$
-        .distinctUntilChanged(({ layer: layer1 } = {}, { layer: layer2 } = {}) => getLayerUrl(layer1) === getLayerUrl(layer2))
+        .distinctUntilChanged(({ layer: layer1 } = {}, { layer: layer2 } = {}) => getSearchUrl(layer1) === getSearchUrl(layer2)) // this check is not too precise,it may need a refinement
         .switchMap(({ layer } = {}) => describeFeatureType({ layer })
             .map(r => ({ describeFeatureType: r.data, loading: false, error: undefined })))
         .catch(error => Rx.Observable.of({
