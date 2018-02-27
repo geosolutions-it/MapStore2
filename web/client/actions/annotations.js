@@ -40,6 +40,15 @@ const ADD_TEXT = 'ANNOTATIONS:ADD_TEXT';
 const CANCEL_CLOSE_TEXT = 'ANNOTATIONS:CANCEL_CLOSE_TEXT';
 const SAVE_TEXT = 'ANNOTATIONS:SAVE_TEXT';
 const DOWNLOAD = 'ANNOTATIONS:DOWNLOAD';
+const LOAD_ANNOTATIONS = 'ANNOTATIONS:LOAD_ANNOTATIONS';
+
+function loadAnnotations(features, override = false) {
+    return {
+        type: LOAD_ANNOTATIONS,
+        features,
+        override
+    };
+}
 
 function download() {
     return {
@@ -297,5 +306,6 @@ module.exports = {
     closeAnnotations,
     confirmCloseAnnotations,
     cancelCloseAnnotations,
-    DOWNLOAD, download
+    DOWNLOAD, download,
+    LOAD_ANNOTATIONS, loadAnnotations
 };

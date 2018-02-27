@@ -722,6 +722,12 @@
             "zoomTo": "Zoom",
             "downloadtooltip": "Descargar anotaciones",
             "downloadError": "Error de exportación",
+            "loadtooltip": "Importar anotaciones",
+            "loadtitle": "Importar Anotaciones",
+            "selectfiletext": "Coloque su archivo aquí o haga clic para seleccionar el archivo de anotación para importar. (archivos compatibles: JSON)",
+            "loadoverride": "Reemplazar anotaciones",
+            "loaderror": "Seleccione uno o más archivos de anotaciones. (archivos compatibles: json)",
+            "defaulttitle": "Edita el título predeterminado",
             "field": {
                 "title": "Título",
                 "description": "Descripción"

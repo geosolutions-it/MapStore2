@@ -18,7 +18,7 @@ const {error} = require('../actions/notifications');
 const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAdd, showTextArea,
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
     TOGGLE_ADD, SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, STOP_DRAWING,
-    CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD} = require('../actions/annotations');
+    CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS} = require('../actions/annotations');
 const {CLICK_ON_MAP} = require('../actions/map');
 
 const {GEOMETRY_CHANGED} = require('../actions/draw');
@@ -28,7 +28,8 @@ const {head} = require('lodash');
 const assign = require('object-assign');
 
 const {annotationsLayerSelector} = require('../selectors/annotations');
-// const {DEFAULT_ANNOTATIONS_STYLES} = require('../utils/AnnotationsUtils');
+
+const {normalizeAnnotation, removeDuplicate} = require('../utils/AnnotationsUtils');
 
 const { mapNameSelector} = require('../selectors/map');
 
@@ -268,7 +269,7 @@ module.exports = (viewer) => ({
             try {
                 const annotations = annotationsLayerSelector(getState());
                 const mapName = mapNameSelector(getState());
-                saveAs(new Blob([JSON.stringify(annotations.features)], {type: "application/json;charset=utf-8"}), `${ mapName.length > 0 && mapName || "Annotations"}.json`);
+                saveAs(new Blob([JSON.stringify({features: annotations.features, type: "ms2-annotations"})], {type: "application/json;charset=utf-8"}), `${ mapName.length > 0 && mapName || "Annotations"}.json`);
                 return Rx.Observable.empty();
             }catch (e) {
                 return Rx.Observable.of(error({
@@ -278,6 +279,28 @@ module.exports = (viewer) => ({
                         position: "tr"
                     }));
             }
+        }),
+    onLoadAnnotations: (action$, {getState}) => action$.ofType(LOAD_ANNOTATIONS)
+        .switchMap(({features, override}) => {
+            const annotationsLayer = annotationsLayerSelector(getState());
+            const {messages = {}} = (getState()).locale || {};
+            const oldFeature = annotationsLayer && annotationsLayer.features || [];
+            const normFeatures = features.map((a) => normalizeAnnotation(a, messages));
+            const newFeatures = override ? normFeatures : oldFeature.concat(normFeatures);
+            const action = annotationsLayer ? updateNode('annotations', 'layer', {
+                features: removeDuplicate(newFeatures)}) : addLayer({
+                    type: 'vector',
+                    visibility: true,
+                    id: 'annotations',
+                    name: "Annotations",
+                    rowViewer: viewer,
+                    hideLoading: true,
+                    features: newFeatures,
+                    handleClickOnLayer: true
+                });
+            return Rx.Observable.of(action);
         })
 
 });
+
+// .filter(f => f.type === "Feature" && !isEmpty(f.geometry) && !isEmpty(f.properties) && !isEmpty(f.style))

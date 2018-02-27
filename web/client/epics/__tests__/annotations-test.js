@@ -16,17 +16,17 @@ const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS} = require('../../actions/mapI
 const {configureMap
 } = require('../../actions/config');
 const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation, setStyle, highlight, cleanHighlight,
-    toggleAdd, UPDATE_ANNOTATION_GEOMETRY, SHOW_TEXT_AREA, cancelText, stopDrawing, download
+    toggleAdd, UPDATE_ANNOTATION_GEOMETRY, SHOW_TEXT_AREA, cancelText, stopDrawing, download, loadAnnotations
 } = require('../../actions/annotations');
 const {clickOnMap
 } = require('../../actions/map');
 const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
     cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawGeomEpic, setStyleEpic, restoreStyleEpic, highlighAnnotationEpic,
-    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, stopDrawingMultiGeomEpic, downloadAnnotations
+    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, stopDrawingMultiGeomEpic, downloadAnnotations, onLoadAnnotations
 } = require('../annotations')({});
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
     setStyleEpic, cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawGeomEpic, restoreStyleEpic, highlighAnnotationEpic,
-    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, stopDrawingMultiGeomEpic);
+    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, stopDrawingMultiGeomEpic, onLoadAnnotations);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
@@ -306,7 +306,7 @@ describe('annotations Epics', () => {
         }, state);
     });
 
-    it('export annotation fail', (done) => {
+    it('export annotations fail', (done) => {
         const state = {
             layers: {
                             flat: []
@@ -324,6 +324,42 @@ describe('annotations Epics', () => {
             });
             done();
         }, state);
+    });
+
+    it('load annotations', done => {
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(UPDATE_NODE);
+                done();
+            }
+        });
+        const action = loadAnnotations([{ "coordinates": [
+                    4.6142578125,
+                    45.67548217560647
+                ],
+                "type": "Point"
+            }]);
+        store.dispatch(action);
+
+    });
+    it('load annotations and create layer', done => {
+        store = mockStore({
+            layers: {
+                flat: []
+            }
+        });
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(ADD_LAYER);
+                done();
+            }
+        });
+        const action = loadAnnotations([]);
+        store.dispatch(action);
+
     });
 
 });

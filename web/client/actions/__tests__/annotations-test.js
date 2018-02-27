@@ -65,7 +65,8 @@ const {
     closeAnnotations,
     confirmCloseAnnotations,
     cancelCloseAnnotations,
-    DOWNLOAD, download
+    DOWNLOAD, download,
+    LOAD_ANNOTATIONS, loadAnnotations
 } = require('../annotations');
 
 describe('Test correctness of the annotations actions', () => {
@@ -271,5 +272,11 @@ describe('Test correctness of the annotations actions', () => {
     it('download  annotations', () => {
         const result = download();
         expect(result.type).toEqual(DOWNLOAD);
+    });
+    it('load  annotations', () => {
+        const result = loadAnnotations([]);
+        expect(result.type).toEqual(LOAD_ANNOTATIONS);
+        expect(result.features).toExist();
+        expect(result.override).toBe(false);
     });
 });
