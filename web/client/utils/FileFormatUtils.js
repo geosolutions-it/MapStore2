@@ -1,7 +1,7 @@
 const {head} = require('lodash');
 
 const getFormatByName = (outF) => {
-    const extension = outF.split('-')[1];
+    const extension = outF.split(/[^\w]/)[1];
     return extension ? {outputFormat: outF, extension: extension.toLowerCase()} : undefined;
 
 };
