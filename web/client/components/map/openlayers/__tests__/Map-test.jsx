@@ -288,9 +288,8 @@ describe('OpenlayersMap', () => {
             expect(spy.calls[1].arguments[3].width).toExist();
             done();
         });
-        setTimeout(() => {
-            olMap.getView().setZoom(12);
-        }, 0);
+        olMap.getView().setZoom(12);
+        olMap.dispatchEvent('moveend');
     });
 
     it('check if the handler for "moveend" event is called after setCenter', (done) => {
@@ -321,9 +320,8 @@ describe('OpenlayersMap', () => {
             expect(spy.calls[1].arguments[3].width).toExist();
             done();
         });
-        setTimeout(() => {
-            olMap.getView().setCenter(ol.proj.transform([10, 44], 'EPSG:4326', 'EPSG:3857'));
-        }, 0);
+        olMap.getView().setCenter(ol.proj.transform([10, 44], 'EPSG:4326', 'EPSG:3857'));
+        olMap.dispatchEvent('moveend');
     });
 
     it('check if the map changes when receive new props', () => {
