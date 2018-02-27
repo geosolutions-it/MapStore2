@@ -61,7 +61,7 @@ function widgetsReducer(state = emptyState, action) {
         case EDIT: {
             return set(`builder.editor`, {
                 ...action.widget,
-                // for backward compatibility for widgets without this
+                // for backward compatibility widgets without widgetType are charts
                 widgetType: action.widget && action.widget.widgetType || 'chart'
             }, set("builder.settings.step",
                     (action.widget && action.widget.widgetType || 'chart') === 'chart'

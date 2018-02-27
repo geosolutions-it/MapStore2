@@ -1074,9 +1074,13 @@
                     "title": "Text",
                     "caption": "add a text area"
                 },
-                 "table": {
+                "table": {
                     "title": "Table",
                     "caption": "add a table"
+                },
+                "counter": {
+                    "title": "Counter",
+                    "caption": "add a counter"
                 }
             },
             "selectWidgetType": "Select the widget type",
@@ -1147,31 +1151,47 @@
                     "caption": "gauge"
                 }
             },
-            "chartOptionsTitle": "Chart Data",
+            "chartOptionsTitle": "Data",
             "widgetOptionsTitle": "Widget Info",
             "groupByAttributes": {
                 "line": "X Attribute",
                 "pie": "Group By",
                 "bar": "X Attribute",
-                "gauge": "Group By"
+                "gauge": "Group By",
+                "counter": "Group By",
+                "default": "Group By"
             },
             "aggregationAttribute": {
                 "line": "Y Attribute",
                 "pie": "Value",
                 "bar": "Y Attribute",
-                "gauge": "Value"
+                "gauge": "Value",
+                "counter": "Value",
+                "default": "Value"
             },
             "aggregateFunction": {
                 "line": "Operation",
                 "pie": "Operation",
                 "bar": "Operation",
-                "gauge": "Operation"
+                "gauge": "Operation",
+                "counter": "Operation",
+                "default": "Operation"
             },
             "colorRamp": {
                 "line": "Color",
                 "pie": "Color Ramp",
                 "bar": "Color",
-                "gauge": "Color"
+                "gauge": "Color",
+                "counter": "Color",
+                "default": "Color"
+            },
+            "uom": {
+                "line": "Unit of measure",
+                "pie": "Unit of measure",
+                "bar": "Unit of measure",
+                "gauge": "Unit of measure",
+                "counter": "Unit of measure",
+                "default": "Unit of measure"
             },
             "mapSync": "Live Filter by viewport",
             "displayLegend": {

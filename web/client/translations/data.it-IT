@@ -642,7 +642,6 @@
                     "details_header": "Dettaglio Selezione",
                     "details_bbox_label": "Edita le coordinate per modificare l'area",
                     "details_circle_label": "Edita i campi numerici per modificare raggio e centro del cerchio",
-                    "reset": "Reimposta allo stato iniziale",
                     "reset_bbox": "Reset",
                     "save_bbox": "Salva le modifiche al BBOX",
                     "save_radius": "Salva le modifiche al raggio e/o al centro",
@@ -1077,6 +1076,10 @@
                 "table": {
                     "title": "Tabella",
                     "caption": "aggiungi una tabella"
+                },
+                "counter": {
+                    "title": "Contatore",
+                    "caption": "aggiungi un contatore"
                 }
             },
             "selectWidgetType": "Seleziona il tipo di widget",
@@ -1153,25 +1156,41 @@
                 "line": "Attributo X",
                 "pie": "Raggruppa per",
                 "bar": "Attributo X",
-                "gauge": "Group By"
+                "gauge": "Raggruppa per",
+                "counter": "Raggruppa per",
+                "default": "Raggruppa per"
             },
             "aggregationAttribute": {
                 "line": "Attributo Y",
                 "pie": "Valore",
                 "bar": "Attributo Y",
-                "gauge": "Valore"
+                "gauge": "Valore",
+                "counter": "Valore",
+                "default": "Valore"
             },
             "aggregateFunction": {
                 "line": "Operazione",
                 "pie": "Operazione",
                 "bar": "Operazione",
-                "gauge": "Operazione"
+                "gauge": "Operazione",
+                "counter": "Operazione",
+                "default": "Operazione"
             },
             "colorRamp": {
                 "line": "Colore",
                 "pie": "Scala colori",
                 "bar": "Colore",
-                "gauge": "Colore"
+                "gauge": "Colore",
+                "counter": "Colore",
+                "default": "Colore"
+                },
+            "uom": {
+                "line": "Unità di misura",
+                "pie": "Unità di misura",
+                "bar": "Unità di misura",
+                "gauge": "Unità di misura",
+                "counter": "Unità di misura",
+                "default": "Unità di misura"
             },
             "mapSync": "Filtra dati sull'area visibile",
             "displayLegend": {

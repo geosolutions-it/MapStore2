@@ -25,7 +25,8 @@ const WidgetTypeSelector = require('./WidgetTypeSelector');
 const Builders = {
     chart: require('./ChartBuilder'),
     text: require('./TextBuilder'),
-    table: require('./TableBuilder')
+    table: require('./TableBuilder'),
+    counter: require('./CounterBuilder')
 };
 
 /**

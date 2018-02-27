@@ -24,8 +24,13 @@ const DEFAULT_TYPES = [{
 }, {
     title: <Message msgId={"widgets.types.table.title"} />,
     type: "table",
-        glyph: "features-grid",
+    glyph: "features-grid",
     caption: <Message msgId={"widgets.types.table.caption"} />
+}, {
+    title: <Message msgId={"widgets.types.counter.title"} />,
+    type: "counter",
+    glyph: "counter",
+    caption: <Message msgId={"widgets.types.counter.caption"} />
 }];
 
 module.exports = ({widgetTypes = DEFAULT_TYPES, typeFilter = () => true, onSelect= () => {}}) =>
