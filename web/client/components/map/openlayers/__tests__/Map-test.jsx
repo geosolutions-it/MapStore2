@@ -275,8 +275,6 @@ describe('OpenlayersMap', () => {
         , document.getElementById("map"));
 
         const olMap = map.map;
-        olMap.getView().setZoom(12);
-
         olMap.on('moveend', () => {
             // The first call is triggered as soon as the map component is mounted, the second one is as a result of setZoom
             expect(spy.calls.length).toEqual(2);
@@ -290,6 +288,9 @@ describe('OpenlayersMap', () => {
             expect(spy.calls[1].arguments[3].width).toExist();
             done();
         });
+        setTimeout(() => {
+            olMap.getView().setZoom(12);
+        }, 0);
     });
 
     it('check if the handler for "moveend" event is called after setCenter', (done) => {
@@ -307,8 +308,6 @@ describe('OpenlayersMap', () => {
         , document.getElementById("map"));
 
         const olMap = map.map;
-        olMap.getView().setCenter(ol.proj.transform([10, 44], 'EPSG:4326', 'EPSG:3857'));
-
         olMap.on('moveend', () => {
             // The first call is triggered as soon as the map component is mounted, the second one is as a result of setCenter
             expect(spy.calls.length).toEqual(2);
@@ -322,6 +321,9 @@ describe('OpenlayersMap', () => {
             expect(spy.calls[1].arguments[3].width).toExist();
             done();
         });
+        setTimeout(() => {
+            olMap.getView().setCenter(ol.proj.transform([10, 44], 'EPSG:4326', 'EPSG:3857'));
+        }, 0);
     });
 
     it('check if the map changes when receive new props', () => {
