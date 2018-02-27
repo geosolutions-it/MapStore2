@@ -5,6 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
+const uuidv1 = require('uuid/v1');
+const LocaleUtils = require('./LocaleUtils');
+const {values} = require('lodash');
+
 const STYLE_POINT = {
     iconGlyph: 'comment',
     iconShape: 'square',
@@ -50,6 +54,15 @@ const DEFAULT_ANNOTATIONS_STYLES = {
     "Polygon": STYLE_POLYGON,
     "MultiPolygon": STYLE_POLYGON
 };
+
+const getStylesObject = ({type = "Point", geometries = []} = {}) => {
+    return type === "GeometryCollection" ? geometries.reduce((p, {type: t}) => {
+        p[t] = DEFAULT_ANNOTATIONS_STYLES[t];
+        return p;
+    }, {type: "GeometryCollection"}) : {...DEFAULT_ANNOTATIONS_STYLES[type]};
+};
+const getPropreties = (props = {}, messages = {}) => ({title: LocaleUtils.getMessageById(messages, "annotations.defaulttitle") || "Default title", id: uuidv1(), ...props});
+
 const AnnotationsUtils = {
     /**
      * function used to convert a geojson into a internal model.
@@ -145,8 +158,19 @@ const AnnotationsUtils = {
     STYLE_POINT,
     STYLE_TEXT,
     STYLE_LINE,
-    STYLE_POLYGON
-
+    STYLE_POLYGON,
+    /**
+    * it converts any geoJSONObject to an annotation
+    * Mandatory elemets: MUST be a geoJSON type Feature => properties with an ID and a title
+    * annotation style.
+    */
+    normalizeAnnotation: (ann, messages) => {
+        const annotation = ann.type !== "Feature" && {type: "Feature", geometry: ann} || {...ann};
+        const style = getStylesObject(annotation.geometry);
+        const properties = getPropreties(annotation.properties, messages);
+        return {style, properties, ...annotation};
+    },
+    removeDuplicate: (annotations) => values(annotations.reduce((p, c) => ({...p, [c.properties.id]: c}), {}))
 };
 
 module.exports = AnnotationsUtils;

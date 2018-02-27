@@ -335,7 +335,12 @@ describe('annotations Epics', () => {
                 done();
             }
         });
-        const action = loadAnnotations([]);
+        const action = loadAnnotations([{ "coordinates": [
+                    4.6142578125,
+                    45.67548217560647
+                ],
+                "type": "Point"
+            }]);
         store.dispatch(action);
 
     });

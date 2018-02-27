@@ -55,7 +55,7 @@ describe("test the Annotations Panel", () => {
             onCancelRemove={testHandlers.onCancelHandler}/>, document.getElementById("container"));
         expect(annotations).toExist();
 
-        let confirmButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(annotations, "button")[4]);
+        let confirmButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(annotations, "button")[5]);
 
         expect(confirmButton).toExist();
         TestUtils.Simulate.click(confirmButton);

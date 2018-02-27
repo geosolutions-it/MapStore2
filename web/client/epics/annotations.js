@@ -28,7 +28,8 @@ const {head} = require('lodash');
 const assign = require('object-assign');
 
 const {annotationsLayerSelector} = require('../selectors/annotations');
-// const {DEFAULT_ANNOTATIONS_STYLES} = require('../utils/AnnotationsUtils');
+
+const {normalizeAnnotation, removeDuplicate} = require('../utils/AnnotationsUtils');
 
 const { mapNameSelector} = require('../selectors/map');
 
@@ -268,7 +269,7 @@ module.exports = (viewer) => ({
             try {
                 const annotations = annotationsLayerSelector(getState());
                 const mapName = mapNameSelector(getState());
-                saveAs(new Blob([JSON.stringify(annotations.features)], {type: "application/json;charset=utf-8"}), `${ mapName.length > 0 && mapName || "Annotations"}.json`);
+                saveAs(new Blob([JSON.stringify({features: annotations.features, type: "ms2-annotations"})], {type: "application/json;charset=utf-8"}), `${ mapName.length > 0 && mapName || "Annotations"}.json`);
                 return Rx.Observable.empty();
             }catch (e) {
                 return Rx.Observable.of(error({
@@ -282,10 +283,12 @@ module.exports = (viewer) => ({
     onLoadAnnotations: (action$, {getState}) => action$.ofType(LOAD_ANNOTATIONS)
         .switchMap(({features, override}) => {
             const annotationsLayer = annotationsLayerSelector(getState());
+            const {messages = {}} = (getState()).locale || {};
             const oldFeature = annotationsLayer && annotationsLayer.features || [];
-            const newFeatures = override ? features : oldFeature.concat(features);
+            const normFeatures = features.map((a) => normalizeAnnotation(a, messages));
+            const newFeatures = override ? normFeatures : oldFeature.concat(normFeatures);
             const action = annotationsLayer ? updateNode('annotations', 'layer', {
-                features: newFeatures}) : addLayer({
+                features: removeDuplicate(newFeatures)}) : addLayer({
                     type: 'vector',
                     visibility: true,
                     id: 'annotations',
@@ -299,3 +302,5 @@ module.exports = (viewer) => ({
         })
 
 });
+
+// .filter(f => f.type === "Feature" && !isEmpty(f.geometry) && !isEmpty(f.properties) && !isEmpty(f.style))

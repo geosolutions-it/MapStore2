@@ -727,6 +727,7 @@
             "selectfiletext": "Drop your file here or click to select the Annotation File to import. (supported files: JSON)",
             "loadoverride": "Replace annotations",
             "loaderror": "Select one or more annotations files. (supported files: json)",
+            "defaulttitle": "Edit default title",
             "field": {
                 "title": "Title",
                 "description": "Description"

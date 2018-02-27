@@ -32,19 +32,12 @@ describe("test the SelectAnnotationsFile modal", () => {
         expect(annotationsNode).toExist();
     });
     it('test file selected', (done) => {
-        const jsonFile = new File([`[{
-            "geometry": {
-                "type": "MultiPolygon"
-            },
-            "properties": {
-                "id": "25cbbbb0-1625-11e8-a091-639e3ca0149f",
-                "title": "Pino"
-            },
-            "style": {
-                "highlight": false
-            },
-            "type": "Feature"
-            }]`
+        const jsonFile = new File([`{ "coordinates": [
+                    4.6142578125,
+                    45.67548217560647
+                ],
+                "type": "Point"
+            }`
         ], "file.json", {
           type: "application/json"
         });

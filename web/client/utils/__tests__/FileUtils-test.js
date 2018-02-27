@@ -11,7 +11,7 @@ var FileUtils = require('../FileUtils');
 describe('FilterUtils', () => {
     it('Test read local json file', (done) => {
         const jsonFile = new File(["[]"], "file.json", {
-          type: "text/plain"
+          type: "application/json"
         });
         FileUtils.readJson(jsonFile).then((res) => {
             expect(res instanceof Array).toBe(true);
