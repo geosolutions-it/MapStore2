@@ -25,7 +25,7 @@ module.exports = Quill => {
     const WidthStyle = new Parchment.Attributor.Style('width', 'width');
 
     const DefaultOptions = {
-        iframeIcon: false,
+        iframeIcon: true,
         modules: [
             'DisplaySize',
             'Toolbar',
