@@ -1150,7 +1150,7 @@
                     "caption": "indicatores"
                 }
             },
-            "chartOptionsTitle": "Datos del gráfico",
+            "chartOptionsTitle": "Datos",
             "widgetOptionsTitle": "Información de widget",
             "groupByAttributes": {
                 "line": "Atributo X",

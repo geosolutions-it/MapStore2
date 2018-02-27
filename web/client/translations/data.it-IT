@@ -1150,7 +1150,7 @@
                     "caption": "cruscotto"
                 }
             },
-            "chartOptionsTitle": "Dati grafico",
+            "chartOptionsTitle": "Dati",
             "widgetOptionsTitle": "Informazioni",
             "groupByAttributes": {
                 "line": "Attributo X",

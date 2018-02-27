@@ -1151,7 +1151,7 @@
                     "caption": "jauge"
                 }
             },
-            "chartOptionsTitle": "Données de graphique",
+            "chartOptionsTitle": "Données",
             "widgetOptionsTitle": "Info sur le widget",
             "groupByAttributes": {
                 "line": "Attributs X",
