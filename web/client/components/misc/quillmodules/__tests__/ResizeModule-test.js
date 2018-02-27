@@ -97,6 +97,7 @@ describe("test quill ResizeModule", () => {
     it('test Resize class ', () => {
         const overlay = document.createElement('div');
         const domNode = document.createElement('img');
+        const box = document.createElement('img');
         const resize = new Resize({
             domNode,
             overlay,
@@ -110,13 +111,64 @@ describe("test quill ResizeModule", () => {
                     boxSizing: 'border-box',
                     opacity: '0.80'
                 }
-            }
+            },
+            onUpdate: () => {}
         });
         expect(resize).toExist();
         expect(resize.boxes).toNotExist();
         resize.onCreate();
         expect(resize.boxes).toExist();
+        resize.handleMousedown({
+            clientX: 0,
+            clientY: 0,
+            target: box
+        });
+        resize.handleMousedown({
+            clientX: 0,
+            clientY: 0,
+            target: resize.boxes[0]
+        });
+        resize.handleMousedown({
+            clientX: 0,
+            clientY: 0,
+            target: resize.boxes[2]
+        });
+        resize.handleMouseup();
+        resize.handleDrag({
+            clientX: -5,
+            clientY: 10,
+            target: box
+        });
         resize.onDestroy();
+    });
+
+    it('test IFrame class ', () => {
+        const rQuill = ReactDOM.render(
+            <ReactQuill
+                modules={{
+                    resizeModule: {},
+                    toolbar: toolbarConfig
+                }}/>, document.getElementById("container"));
+        expect(rQuill).toExist();
+        expect(document.querySelector('.ql-editor')).toExist();
+        expect(document.querySelector('.ms-quill-iframe')).toNotExist();
+        rQuill.getEditor().insertEmbed(0, 'video', 'http://test-url');
+        expect(document.querySelector('.ms-quill-iframe')).toExist();
+    });
+
+    it('test ResizeModule class ', () => {
+        const domNode = document.createElement('img');
+        const rQuill = ReactDOM.render(
+            <ReactQuill />, document.getElementById("container"));
+        const quill = rQuill.getEditor();
+        const resizeModule = new ResizeModule(quill, {});
+        expect(resizeModule.overlay).toNotExist();
+        resizeModule.show(domNode);
+        expect(resizeModule.overlay).toExist();
+        resizeModule.handleClick({});
+        resizeModule.checkImage({});
+        resizeModule.hide();
+        expect(resizeModule.overlay).toNotExist();
     });
 
 });
