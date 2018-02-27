@@ -36,6 +36,12 @@ const cloneOriginalOverlay = (original, options) => {
         };
         eventListener.add(close, 'click', onClose);
     }
+    if (options.onLink) {
+        let links = cloned.getElementsByTagName('a');
+        for (let i = 0; i < links.length; i++) {
+            eventListener.add(links[i], 'click', options.onLink);
+        }
+    }
     return cloned;
 };
 
