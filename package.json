@@ -123,7 +123,7 @@
     "moment": "2.13.0",
     "object-assign": "4.1.1",
     "ogc-schemas": "2.6.1",
-    "openlayers": "4.0.1",
+    "openlayers": "4.6.4",
     "pdfviewer": "0.3.2",
     "proj4": "https://github.com/geosolutions-it/proj4js/tarball/mapstore2_fixes",
     "prop-types": "15.6.0",
