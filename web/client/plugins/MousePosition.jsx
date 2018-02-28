@@ -14,6 +14,8 @@ const {Tooltip} = require('react-bootstrap');
 const {createSelector} = require('reselect');
 
 const assign = require('object-assign');
+const PropTypes = require('prop-types');
+const {isFunction} = require('lodash');
 
 const {changeMousePositionCrs, changeMousePositionState} = require('../actions/mousePosition');
 
@@ -66,9 +68,26 @@ const MousePositionComponent = require('../components/mapcontrols/mouseposition/
 
 
 class MousePosition extends React.Component {
+    static propTypes = {
+        degreesTemplate: PropTypes.string,
+        projectedTemplate: PropTypes.string
+    };
+
+    static defaultProps = {
+        degreesTemplate: 'MousePositionLabelDMS',
+        projectedTemplate: 'MousePositionLabelYX'
+    };
+
+    getTemplate = (template) => {
+        return require('../components/mapcontrols/mouseposition/' + template);
+    };
     render() {
+        const { degreesTemplate, projectedTemplate, ...other} = this.props;
         return (
-            <MousePositionComponent toggle={<MousePositionButton/>} {...this.props}/>
+            <MousePositionComponent
+                degreesTemplate={this.getTemplate(degreesTemplate)}
+                projectedTemplate={this.getTemplate(projectedTemplate)}
+                toggle={<MousePositionButton/>} {...other}/>
         );
     }
 }
