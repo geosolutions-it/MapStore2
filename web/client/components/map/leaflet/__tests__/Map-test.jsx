@@ -5,13 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var LeafletMap = require('../Map.jsx');
-var LeafLetLayer = require('../Layer.jsx');
-var expect = require('expect');
-var mapUtils = require('../../../../utils/MapUtils');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const LeafletMap = require('../Map.jsx');
+const LeafLetLayer = require('../Layer.jsx');
+const expect = require('expect');
+const mapUtils = require('../../../../utils/MapUtils');
 const {isNumber} = require('lodash');
+
 require('leaflet-draw');
 
 require('../../../../utils/leaflet/Layers');
@@ -30,13 +31,13 @@ describe('LeafletMap', () => {
     });
 
     it('creates a div for leaflet map with given id', () => {
-        const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+        const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
         expect(map).toExist();
         expect(ReactDOM.findDOMNode(map).id).toBe('mymap');
     });
 
     it('creates a div for leaflet map with default id (map)', () => {
-        const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+        const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
         expect(map).toExist();
         expect(ReactDOM.findDOMNode(map).id).toBe('map');
     });
@@ -45,8 +46,8 @@ describe('LeafletMap', () => {
         const container = ReactDOM.render(
 
             <div>
-                <div id="container1"><LeafletMap id="map1" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
-                <div id="container2"><LeafletMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11}/></div>
+                <div id="container1"><LeafletMap id="map1" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/></div>
+                <div id="container2"><LeafletMap id="map2" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/></div>
             </div>
         , document.getElementById("container"));
         expect(container).toExist();
@@ -56,16 +57,16 @@ describe('LeafletMap', () => {
     });
 
     it('populates the container with leaflet objects', () => {
-        const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+        const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
         expect(map).toExist();
         expect(document.getElementsByClassName('leaflet-map-pane').length).toBe(1);
         expect(document.getElementsByClassName('leaflet-tile-pane').length).toBe(1);
-        expect(document.getElementsByClassName('leaflet-objects-pane').length).toBe(1);
+        expect(document.getElementsByClassName('leaflet-popup-pane').length).toBe(1);
         expect(document.getElementsByClassName('leaflet-control-container').length).toBe(1);
     });
 
     it('enables leaflet controls', () => {
-        const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+        const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
         expect(map).toExist();
         expect(document.getElementsByClassName('leaflet-control-zoom-in').length).toBe(1);
 
@@ -85,7 +86,7 @@ describe('LeafletMap', () => {
         var options = {
             "visibility": true
         };
-        const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11}>
+        const map = ReactDOM.render(<LeafletMap center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}>
             <LeafLetLayer type="osm" options={options} />
         </LeafletMap>, document.getElementById("container"));
         expect(map).toExist();
@@ -142,6 +143,7 @@ describe('LeafletMap', () => {
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
                 onClick={testHandlers.handler}
+                mapOptions={{zoomAnimation: false}}
             />
         , document.getElementById("container"));
 
@@ -168,6 +170,7 @@ describe('LeafletMap', () => {
                 center={{y: 43.9, x: 10.3}}
                 zoom={11.6}
                 measurement={{}}
+                mapOptions={{zoomAnimation: false}}
             />
         , document.getElementById("container"));
 
@@ -178,6 +181,7 @@ describe('LeafletMap', () => {
                 center={{y: 44, x: 10}}
                 zoom={10.4}
                 measurement={{}}
+                mapOptions={{zoomAnimation: false}}
             />
         , document.getElementById("container"));
         expect(leafletMap.getZoom()).toBe(10);
@@ -190,6 +194,7 @@ describe('LeafletMap', () => {
             <LeafletMap
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
+                mapOptions={{zoomAnimation: false}}
             />
         , document.getElementById("container"));
 
@@ -204,6 +209,7 @@ describe('LeafletMap', () => {
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
                 mousePointer="pointer"
+                mapOptions={{zoomAnimation: false}}
             />
         , document.getElementById("container"));
 
@@ -214,7 +220,7 @@ describe('LeafletMap', () => {
 
     it('test COMPUTE_BBOX_HOOK hook execution', () => {
         // instanciating the map that will be used to compute the bounfing box
-        let map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11}/>, document.getElementById("container"));
+        let map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 43.9, x: 10.3}} zoom={11} mapOptions={{zoomAnimation: false}}/>, document.getElementById("container"));
         // computing the bounding box for the new center and the new zoom
         const bbox = mapUtils.getBbox({y: 44, x: 10}, 5);
         // update the map with the new center and the new zoom so we can check our computed bouding box
@@ -244,7 +250,7 @@ describe('LeafletMap', () => {
     it('check that new props, current props and map state values are used', () => {
 
         // instanciate the leaflet map
-        let map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 40.0, x: 10.0}} zoom={10}/>,
+        let map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 40.0, x: 10.0}} zoom={10} mapOptions={{zoomAnimation: false}}/>,
                         document.getElementById("container"));
 
         // updating leaflet map view without updating the props
@@ -283,7 +289,7 @@ describe('LeafletMap', () => {
         expect(getPixelFromCoordinates).toNotExist();
         expect(getCoordinatesFromPixel).toNotExist();
 
-        const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 0, x: 0}} zoom={11} registerHooks/>,
+        const map = ReactDOM.render(<LeafletMap id="mymap" center={{y: 0, x: 0}} zoom={11} registerHooks mapOptions={{zoomAnimation: false}}/>,
                                     document.getElementById("container"));
         expect(map).toExist();
 

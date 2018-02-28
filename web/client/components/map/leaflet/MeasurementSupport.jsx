@@ -26,7 +26,9 @@ class MeasurementSupport extends React.Component {
     };
 
     static defaultProps = {
-        updateOnMouseMove: false
+        updateOnMouseMove: false,
+        metric: true,
+        feet: false
     };
 
     componentWillReceiveProps(newProps) {
@@ -51,7 +53,7 @@ class MeasurementSupport extends React.Component {
         this.lastLayer = evt.layer;
 
         if (this.props.measurement.geomType === 'Point') {
-            let pos = this.drawControl._markers.getLatLng();
+            let pos = this.drawControl._marker.getLatLng();
             let point = {x: pos.lng, y: pos.lat, srs: 'EPSG:4326'};
             let newMeasureState = assign({}, this.props.measurement, {point: point});
             this.props.changeMeasurementState(newMeasureState);
@@ -160,7 +162,15 @@ class MeasurementSupport extends React.Component {
                 },
                 metric: this.props.metric,
                 feet: this.props.feet,
-                repeatMode: false
+                repeatMode: false,
+                icon: new L.DivIcon({
+                    iconSize: new L.Point(8, 8),
+                    className: 'leaflet-div-icon leaflet-editing-icon'
+                }),
+                touchIcon: new L.DivIcon({
+                    iconSize: new L.Point(8, 8),
+                    className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
+                })
             });
         } else if (newProps.measurement.geomType === 'Polygon') {
             this.drawControl = new L.Draw.Polygon(this.props.map, {
@@ -169,7 +179,15 @@ class MeasurementSupport extends React.Component {
                     weight: 2,
                     fill: 'rgba(255, 255, 255, 0.2)'
                 },
-                repeatMode: false
+                repeatMode: false,
+                icon: new L.DivIcon({
+                    iconSize: new L.Point(8, 8),
+                    className: 'leaflet-div-icon leaflet-editing-icon'
+                }),
+                touchIcon: new L.DivIcon({
+                    iconSize: new L.Point(8, 8),
+                    className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
+                })
             });
         }
 

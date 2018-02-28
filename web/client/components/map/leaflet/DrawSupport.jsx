@@ -17,6 +17,8 @@ const assign = require('object-assign');
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
 const VectorUtils = require('../../../utils/leaflet/Vector');
+
+const DEG_TO_RAD = Math.PI / 180.0;
 /**
  * Converts the leaflet circle into the projected circle (usually in 3857)
  * @param  {number} mRadius leaflet radius of circle
@@ -33,7 +35,7 @@ const toProjectedCircle = (mRadius, center, projection) => {
     }
 
     // calculate
-    const lonRadius = (mRadius / 40075017) * 360 / Math.cos(L.LatLng.DEG_TO_RAD * (center[1]));
+    const lonRadius = (mRadius / 40075017) * 360 / Math.cos(DEG_TO_RAD * (center[1]));
     const projCenter = CoordinatesUtils.reproject(center, "EPSG:4326", projection);
     if (lonRadius) {
         const checkPoint = CoordinatesUtils.reproject([center[0] + lonRadius, center[1]], "EPSG:4326", projection);
@@ -77,7 +79,7 @@ const toLeafletCircle = (radius, center, projection= "EPSG:4326") => {
     const checkPoint = CoordinatesUtils.reproject([center.lng + radius, center.lat], projection, "EPSG:4326");
 
     const lonRadius = Math.sqrt(Math.pow(leafletCenter.x - checkPoint.x, 2) + Math.pow(leafletCenter.y - checkPoint.y, 2));
-    const mRadius = lonRadius * Math.cos(L.LatLng.DEG_TO_RAD * leafletCenter.y) * 40075017 / 360;
+    const mRadius = lonRadius * Math.cos(DEG_TO_RAD * leafletCenter.y) * 40075017 / 360;
     return {
         center: leafletCenter,
         projection: "EPSG:4326",
@@ -190,6 +192,11 @@ class DrawSupport extends React.Component {
         if (evt.layerType === "marker") {
             bounds = L.latLngBounds(geoJesonFt.geometry.coordinates, geoJesonFt.geometry.coordinates);
         } else {
+            if (!layer._map) {
+                layer._map = this.props.map;
+                layer._renderer = this.props.map.getRenderer(layer);
+                layer._project();
+            }
             bounds = layer.getBounds();
         }
         let extent = boundsToOLExtent(bounds);
@@ -324,7 +331,15 @@ class DrawSupport extends React.Component {
                     fillColor: '#ffffff',
                     fillOpacity: 0.2
                 },
-                repeatMode: true
+                repeatMode: true,
+                icon: new L.DivIcon({
+                    iconSize: new L.Point(8, 8),
+                    className: 'leaflet-div-icon leaflet-editing-icon'
+                }),
+                touchIcon: new L.DivIcon({
+                    iconSize: new L.Point(8, 8),
+                    className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
+                })
             });
         } else if (newProps.drawMethod === 'Polygon' || newProps.drawMethod === 'MultiPolygon') {
             this.drawControl = new L.Draw.Polygon(this.props.map, {
@@ -336,7 +351,15 @@ class DrawSupport extends React.Component {
                     dashArray: [5, 5],
                     guidelineDistance: 5
                 },
-                repeatMode: true
+                repeatMode: true,
+                icon: new L.DivIcon({
+                    iconSize: new L.Point(8, 8),
+                    className: 'leaflet-div-icon leaflet-editing-icon'
+                }),
+                touchIcon: new L.DivIcon({
+                    iconSize: new L.Point(8, 8),
+                    className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
+                })
             });
         } else if (newProps.drawMethod === 'BBOX') {
             this.drawControl = new L.Draw.Rectangle(this.props.map, {
@@ -348,7 +371,15 @@ class DrawSupport extends React.Component {
                     fillOpacity: 0.2,
                     dashArray: [5, 5]
                 },
-                repeatMode: true
+                repeatMode: true,
+                icon: new L.DivIcon({
+                    iconSize: new L.Point(8, 8),
+                    className: 'leaflet-div-icon leaflet-editing-icon'
+                }),
+                touchIcon: new L.DivIcon({
+                    iconSize: new L.Point(8, 8),
+                    className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
+                })
             });
         } else if (newProps.drawMethod === 'Circle') {
             this.drawControl = new L.Draw.Circle(this.props.map, {
@@ -422,7 +453,22 @@ class DrawSupport extends React.Component {
     addEditInteraction = (newProps) => {
         this.clean();
 
-        this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
+        this.addGeojsonLayer({
+            features: newProps.features,
+            projection: newProps.options && newProps.options.featureProjection || "EPSG:4326",
+            style: assign({}, newProps.style, {
+                poly: {
+                    icon: new L.DivIcon({
+                        iconSize: new L.Point(8, 8),
+                        className: 'leaflet-div-icon leaflet-editing-icon'
+                    }),
+                    touchIcon: new L.DivIcon({
+                        iconSize: new L.Point(8, 8),
+                        className: 'leaflet-div-icon leaflet-editing-icon leaflet-touch-icon'
+                    })
+                }
+            })
+        });
 
         let allLayers = this.drawLayer.getLayers();
         allLayers.forEach(l => {

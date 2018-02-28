@@ -118,7 +118,7 @@ var WMTS = L.TileLayer.extend({
         let se = crs.project(map.unproject(sePoint, tilePoint.z));
         let tilewidth = se.x - nw.x;
 
-        const params = this.getWMTSParams([...this.matrixSet], [...this.matrixIds], map.getZoom(), nw, tilewidth);
+        const params = this.getWMTSParams([...this.matrixSet], [...this.matrixIds], tilePoint.z, nw, tilewidth);
 
         if (!params) {
             return "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
