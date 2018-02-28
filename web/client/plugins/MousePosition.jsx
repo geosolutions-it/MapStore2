@@ -15,7 +15,6 @@ const {createSelector} = require('reselect');
 
 const assign = require('object-assign');
 const PropTypes = require('prop-types');
-const {isFunction} = require('lodash');
 
 const {changeMousePositionCrs, changeMousePositionState} = require('../actions/mousePosition');
 
