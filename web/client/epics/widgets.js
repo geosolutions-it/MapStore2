@@ -22,7 +22,9 @@ const outerHTML = (node) => {
  */
 const getValidLocationChange = action$ =>
     action$.ofType(SAVING_MAP, MAP_CREATED, MAP_ERROR)
-        .switchMap(action => action.type === SAVING_MAP ? Rx.Observable.never() : action$);
+        .startWith({type: MAP_CONFIG_LOADED}) // just dummy action to trigger the first switchMap
+        .switchMap(action => action.type === SAVING_MAP ? Rx.Observable.never() : action$)
+        .filter(({type} = {}) => type === LOCATION_CHANGE);
 
 module.exports = {
     exportWidgetData: action$ =>
@@ -32,10 +34,10 @@ module.exports = {
                     csv
                 ], {type: "text/csv"}), title + ".csv")))
             .filter( () => false),
-    clearWidgetsOnlocationChange: (action$, {getState = () => {}} = {}) =>
+    clearWidgetsOnLocationChange: (action$, {getState = () => {}} = {}) =>
         action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
             const location = get(getState(), "routing.location");
-            return action$.let(getValidLocationChange).ofType(LOCATION_CHANGE)
+            return action$.let(getValidLocationChange)
                 .filter( () => {
                     const newLocation = get(getState(), "routing.location");
                     return newLocation !== location;

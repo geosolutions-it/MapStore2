@@ -336,11 +336,11 @@ function savingMap(metadata) {
     return {
         type: SAVING_MAP,
         metadata
-    }
+    };
 }
 
 /**
- * performed when want to disaplay/hide the metadata editing window
+ * performed when want to display/hide the metadata editing window
  * @memberof actions.maps
  * @param  {boolean} displayMetadataEditValue true to display, false to hide
  * @return {action}                          type `DISPLAY_METADATA_EDIT`, with the arguments as they are named
@@ -604,12 +604,12 @@ function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categor
 }
 
 /**
- * Save all the metadata and thubnail, if needed.
+ * Save all the metadata and thumbnail, if needed.
  * @memberof actions.maps
  * @param  {object} map               the map object
  * @param  {object} metadataMap       metadata for the map
- * @param  {string} nameThumbnail     the name for the thubnail
- * @param  {string} dataThumbnail     the data to save for the thubnail
+ * @param  {string} nameThumbnail     the name for the thumbnail
+ * @param  {string} dataThumbnail     the data to save for the thumbnail
  * @param  {string} categoryThumbnail the category for the thumbnails
  * @param  {number} resourceIdMap     the id of the map
  * @param  {object} [options]         options for the request
@@ -959,6 +959,7 @@ module.exports = {
     permissionsLoading,
     permissionsLoaded,
     attributeUpdated,
+    savingMap,
     saveMap,
     thumbnailError,
     createMap,
