@@ -15,6 +15,20 @@ const {Promise} = require('es6-promise');
 const parser = new DOMParser();
 const assign = require('object-assign');
 
+const cleanStyleFromKml = (xml) => {
+
+    [].slice.call(xml.documentElement.getElementsByTagName("StyleMap")).map(el => el.parentNode.removeChild(el));
+    [].slice.call(xml.documentElement.getElementsByTagName("Style")).map(el => el.parentNode.removeChild(el));
+    [].slice.call(xml.documentElement.getElementsByTagName("LineStyle")).map(el => el.parentNode.removeChild(el));
+    [].slice.call(xml.documentElement.getElementsByTagName("PointStyle")).map(el => el.parentNode.removeChild(el));
+    [].slice.call(xml.documentElement.getElementsByTagName("PolyStyle")).map(el => el.parentNode.removeChild(el));
+    [].slice.call(xml.documentElement.getElementsByTagName("IconStyle")).map(el => el.parentNode.removeChild(el));
+    [].slice.call(xml.documentElement.getElementsByTagName("LabelStyle")).map(el => el.parentNode.removeChild(el));
+    [].slice.call(xml.documentElement.getElementsByTagName("ListStyle")).map(el => el.parentNode.removeChild(el));
+    [].slice.call(xml.documentElement.getElementsByTagName("BallonStyle")).map(el => el.parentNode.removeChild(el));
+    [].slice.call(xml.documentElement.getElementsByTagName("styleUrl")).map(el => el.parentNode.removeChild(el));
+    return xml;
+};
 const FileUtils = {
     MIME_LOOKUPS: {
         'gpx': 'application/gpx+xml',
@@ -37,7 +51,8 @@ const FileUtils = {
         return [].concat(shp.parseZip(zipBuffer));
     },
     kmlToGeoJSON: function(xml) {
-        const geoJSON = [].concat(tj.kml(xml)).map(item => assign({}, item, {fileName: xml.getElementsByTagName('name')[0].innerHTML}));
+        const pureKml = cleanStyleFromKml(xml);
+        const geoJSON = [].concat(tj.kml(pureKml)).map(item => assign({}, item, {fileName: pureKml.getElementsByTagName('name')[0].innerHTML}));
         return geoJSON;
     },
     gpxToGeoJSON: function(xml) {

@@ -252,7 +252,7 @@ const CoordinatesUtils = {
             if (gj.crs) {
                 delete gj.crs;
             }
-            // Strip Z coord if present fixes #2638
+            // Strip Z coord if present fixes #2638 Proj4 transform only bidimensional coordinates
             gj.coordinates = traverseCoords(gj.coordinates, ([x, y]) => {
                 return transform.forward([x, y]);
             });
