@@ -252,8 +252,9 @@ const CoordinatesUtils = {
             if (gj.crs) {
                 delete gj.crs;
             }
-            gj.coordinates = traverseCoords(gj.coordinates, (xy) => {
-                return transform.forward(xy);
+            // Strip Z coord if present fixes #2638
+            gj.coordinates = traverseCoords(gj.coordinates, ([x, y]) => {
+                return transform.forward([x, y]);
             });
         }, (gj) => {
             if (gj.bbox) {
