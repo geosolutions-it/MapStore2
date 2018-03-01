@@ -240,6 +240,6 @@ describe('Test the map reducer', () => {
             type: 'RESIZE_MAP'
         };
         let state = mapConfig({}, action);
-        expect(state.rersize).toEqual(1);
+        expect(state.resize).toEqual(1);
     });
 });
