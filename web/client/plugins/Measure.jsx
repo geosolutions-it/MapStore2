@@ -13,13 +13,18 @@ const Message = require('./locale/Message');
 
 const assign = require('object-assign');
 const {createSelector} = require('reselect');
-const {changeMeasurement} = require('../actions/measurement');
+const {changeMeasurement, changeUom, changeLengthFormula, toggleShowLabel} = require('../actions/measurement');
 const {toggleControl} = require('../actions/controls');
 const {MeasureDialog} = require('./measure/index');
 
 const selector = (state) => {
     return {
         measurement: state.measurement || {},
+        lengthFormula: state.measurement && state.measurement.lengthFormula || "Haversine",
+        uom: state.measurement && state.measurement.uom || {
+            length: {unit: 'm', label: 'm'},
+            area: {unit: 'sqm', label: 'm²'}
+        },
         lineMeasureEnabled: state.measurement && state.measurement.lineMeasureEnabled || false,
         areaMeasureEnabled: state.measurement && state.measurement.areaMeasureEnabled || false,
         bearingMeasureEnabled: state.measurement && state.measurement.bearingMeasureEnabled || false
@@ -45,6 +50,9 @@ const Measure = connect(
     )),
     {
         toggleMeasure: changeMeasurement,
+        onChangeUom: changeUom,
+        onChangeFormula: changeLengthFormula,
+        onToggleShowLabel: toggleShowLabel,
         onClose: toggleMeasureTool
     }, null, {pure: false})(MeasureDialog);
 

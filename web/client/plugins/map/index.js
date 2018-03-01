@@ -11,7 +11,7 @@ const React = require('react');
 const {creationError, changeMapView, clickOnMap} = require('../../actions/map');
 const {layerLoading, layerLoad, layerError} = require('../../actions/layers');
 const {changeMousePosition} = require('../../actions/mousePosition');
-const {changeMeasurementState} = require('../../actions/measurement');
+const {changeMeasurementState, changeGeometry} = require('../../actions/measurement');
 const {changeSelectionState} = require('../../actions/selection');
 const {changeLocateState, onLocateError} = require('../../actions/locate');
 const {changeDrawingStatus, endDrawing, setCurrentStyle} = require('../../actions/draw');
@@ -46,9 +46,15 @@ module.exports = (mapType, actions) => {
     })(components.LMap);
 
     const MeasurementSupport = connect((state) => ({
-        measurement: state.measurement || {}
+        measurement: state.measurement || {},
+        uom: state.measurement && state.measurement.uom || {
+            length: {unit: 'm', label: 'm'},
+            area: {unit: 'sqm', label: 'm²'}
+        },
+        lengthFormula: state.measurement && state.measurement.lengthFormula || "Haversine"
     }), {
-        changeMeasurementState
+        changeMeasurementState,
+        changeGeometry
     })(components.MeasurementSupport || Empty);
 
     const Locate = connect((state) => ({

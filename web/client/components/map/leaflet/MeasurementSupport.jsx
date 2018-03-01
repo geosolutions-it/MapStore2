@@ -3,8 +3,7 @@ const React = require('react');
 const assign = require('object-assign');
 var L = require('leaflet');
 const {slice} = require('lodash');
-var CoordinatesUtils = require('../../../utils/CoordinatesUtils');
-
+const {reproject, calculateAzimuth, calculateLength} = require('../../../utils/CoordinatesUtils');
 require('leaflet-draw');
 
 class MeasurementSupport extends React.Component {
@@ -15,6 +14,7 @@ class MeasurementSupport extends React.Component {
         metric: PropTypes.bool,
         feet: PropTypes.bool,
         projection: PropTypes.string,
+        lengthFormula: PropTypes.string,
         measurement: PropTypes.object,
         changeMeasurementState: PropTypes.func,
         messages: PropTypes.object,
@@ -50,10 +50,14 @@ class MeasurementSupport extends React.Component {
         // preserve the currently created layer to remove it later on
         this.lastLayer = evt.layer;
 
+        let feature = this.lastLayer && this.lastLayer.toGeoJSON() || {};
         if (this.props.measurement.geomType === 'Point') {
             let pos = this.drawControl._markers.getLatLng();
             let point = {x: pos.lng, y: pos.lat, srs: 'EPSG:4326'};
-            let newMeasureState = assign({}, this.props.measurement, {point: point});
+            let newMeasureState = assign({}, this.props.measurement, {point: point, feature});
+            this.props.changeMeasurementState(newMeasureState);
+        } else {
+            let newMeasureState = assign({}, this.props.measurement, {feature});
             this.props.changeMeasurementState(newMeasureState);
         }
     };
@@ -77,10 +81,15 @@ class MeasurementSupport extends React.Component {
         let bearing = 0;
 
         let currentLatLng = this.drawControl._currentLatLng;
-        if (this.props.measurement.geomType === 'LineString' && this.drawControl._markers && this.drawControl._markers.length > 0) {
+        if (this.props.measurement.geomType === 'LineString' && this.drawControl._markers && this.drawControl._markers.length > 1) {
             // calculate length
-            let previousLatLng = this.drawControl._markers[this.drawControl._markers.length - 1].getLatLng();
-            distance = this.drawControl._measurementRunningTotal + currentLatLng.distanceTo(previousLatLng);
+            const reprojectedCoords = this.drawControl._markers.reduce((p, c) => {
+                const {lng, lat} = c.getLatLng();
+                return [...p, [lng, lat]];
+            }, []);
+
+            distance = calculateLength(reprojectedCoords, this.props.lengthFormula);
+
         } else if (this.props.measurement.geomType === 'Polygon' && this.drawControl._poly) {
             // calculate area
             let latLngs = [...this.drawControl._poly.getLatLngs(), currentLatLng];
@@ -96,12 +105,12 @@ class MeasurementSupport extends React.Component {
                 coords2 = [bearingMarkers[1].getLatLng().lng, bearingMarkers[1].getLatLng().lat];
             }
             // in order to align the results between leaflet and openlayers the coords are repojected only for leaflet
-            coords1 = CoordinatesUtils.reproject(coords1, 'EPSG:4326', this.props.projection);
-            coords2 = CoordinatesUtils.reproject(coords2, 'EPSG:4326', this.props.projection);
+            coords1 = reproject(coords1, 'EPSG:4326', this.props.projection);
+            coords2 = reproject(coords2, 'EPSG:4326', this.props.projection);
             // calculate the azimuth as base for bearing information
-            bearing = CoordinatesUtils.calculateAzimuth(coords1, coords2, this.props.projection);
+            bearing = calculateAzimuth(coords1, coords2, this.props.projection);
         }
-
+        // let drawn geom stay on the map
         let newMeasureState = assign({}, this.props.measurement,
             {
                 point: null, // Point is set in onDraw.created

@@ -1,15 +1,20 @@
-/**
- * Copyright 2015, GeoSolutions Sas.
+/*
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
 const {
     CHANGE_MEASUREMENT_TOOL,
-    CHANGE_MEASUREMENT_STATE
+    CHANGE_MEASUREMENT_STATE,
+    CHANGE_UOM,
+    CHANGE_FORMULA,
+    TOGGLE_SHOW_LABEL,
+    CHANGED_GEOMETRY
 } = require('../actions/measurement');
+const {calculateVincentyDistance, calculateGeodesicDistance} = require('../utils/CoordinatesUtils');
 
 const {TOGGLE_CONTROL, RESET_CONTROLS} = require('../actions/controls');
 
@@ -18,7 +23,12 @@ const assign = require('object-assign');
 function measurement(state = {
     lineMeasureEnabled: false,
     areaMeasureEnabled: false,
-    bearingMeasureEnabled: false
+    bearingMeasureEnabled: false,
+    uom: {
+        length: {unit: 'm', label: 'm'},
+        area: {unit: 'sqm', label: 'm²'}
+    },
+    lengthFormula: "Haversine"
 }, action) {
     switch (action.type) {
     case CHANGE_MEASUREMENT_TOOL:
@@ -26,7 +36,8 @@ function measurement(state = {
             lineMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'LineString',
             areaMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Polygon',
             bearingMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Bearing',
-            geomType: action.geomType === state.geomType ? null : action.geomType
+            geomType: action.geomType === state.geomType ? null : action.geomType,
+            feature: {}
         });
     case CHANGE_MEASUREMENT_STATE:
         return assign({}, state, {
@@ -39,8 +50,47 @@ function measurement(state = {
             area: action.area,
             bearing: action.bearing,
             lenUnit: action.lenUnit,
-            areaUnit: action.areaUnit
+            areaUnit: action.areaUnit,
+            feature: action.feature
         });
+    case TOGGLE_SHOW_LABEL: {
+        return assign({}, state, {
+            showLabel: !state.showLabel
+        });
+    }
+    case CHANGE_UOM: {
+        const prop = action.uom === "length" ? "lenUnit" : "lenArea";
+        const {value, label} = action.value;
+        return assign({}, state, {
+            [prop]: value,
+            uom: assign({}, action.previousUom, {
+                [action.uom]: {
+                    unit: value,
+                    label
+                }
+            })
+        });
+    }
+    case CHANGE_FORMULA: {
+        let len = 0;
+        if (state.feature && state.feature.geometry && state.feature.geometry.coordinates) {
+            if (action.formula === "Haversine") {
+                len = calculateGeodesicDistance(state.feature.geometry.coordinates);
+            } else {
+                len = calculateVincentyDistance(state.feature.geometry.coordinates);
+            }
+        }
+        return assign({}, state, {
+            lengthFormula: action.formula,
+            len
+        });
+    }
+    case CHANGED_GEOMETRY: {
+        const {feature} = action;
+        return assign({}, state, {
+            feature
+        });
+    }
     case TOGGLE_CONTROL:
         {
             // TODO: remove this when the controls will be able to be mutually exclusive

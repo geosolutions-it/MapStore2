@@ -414,6 +414,11 @@
             "redoBtnTooltip": "Aller en avant"
         },
         "infoFormatLbl": "Informations, format de la réponse",
+        "measureSupport": {
+            "continueLine": "Cliquez pour continuer à dessiner la ligne",
+            "continuePolygon": "Cliquez pour continuer à dessiner le polygone",
+            "startDrawing": "Cliquez pour commencer à dessiner"
+        },
         "measureComponent": {
             "Measure": "Mesurer",
             "MeasureLength": "Mesure de distance",
@@ -426,7 +431,9 @@
             "resetButtonText": "Recommencer",
             "lengthLabel": "Longueur",
             "areaLabel": "Surface",
-            "bearingLabel": "Direction"
+            "bearingLabel": "Direction",
+            "formula": "Formule pour le calcul de la distance",
+            "showLabel": "Afficher l'étiquette de mesure"
         },
         "search":{
             "placeholder": "Recherche par toponyme ou coordonnées...",

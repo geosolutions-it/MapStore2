@@ -4,8 +4,11 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
+const geo = require('node-geo-distance');
+const ol = require('openlayers');
+const wgs84Sphere = new ol.Sphere(6378137);
 const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const axios = require('../libs/ajax');
@@ -391,6 +394,49 @@ const CoordinatesUtils = {
         var azimuth = (Math.atan2(y, x) * 180.0 / Math.PI + 360 ) % 360;
 
         return azimuth;
+    },
+    /**
+    @param coordinates in EPSG:4326
+    return vincenty distance between two points
+    */
+    calculateVincentyDistance: (coordinates) => {
+        let length = 0;
+        for (let i = 0; i < coordinates.length - 1; ++i) {
+            const p1 = coordinates[i];
+            const p2 = coordinates[i + 1];
+            const [x1, y1] = p1;
+            const [x2, y2] = p2;
+            length += parseFloat(geo.vincentySync({longitude: x1, latitude: y1}, {longitude: x2, latitude: y2}));
+        }
+        return length;
+    },
+    /**
+    @param coordinates in EPSG:4326
+    return distance between two points using haversine formula
+    */
+    calculateGeodesicDistance: (coordinates) => {
+        let length = 0;
+        for (let i = 0; i < coordinates.length - 1; ++i) {
+            const p1 = coordinates[i];
+            const p2 = coordinates[i + 1];
+            length += parseFloat(wgs84Sphere.haversineDistance(p1, p2));
+        }
+        return length;
+    },
+    /**
+    * Calculate length based on Haversine or Vincenty formula
+    * @param {object[]} reprojectedCoords in 4326
+    * @return {number} length in meters
+    */
+    calculateLength: (reprojectedCoords, lengthFormula = "Haversine") => {
+        if (reprojectedCoords.length >= 2) {
+            if (lengthFormula === "Haversine") {
+                return CoordinatesUtils.calculateGeodesicDistance(reprojectedCoords);
+            } else if (lengthFormula === "Vincenty") {
+                return CoordinatesUtils.calculateVincentyDistance(reprojectedCoords);
+            }
+        }
+        return 0;
     },
     /**
      * Extend an extent given another one
