@@ -21,7 +21,7 @@ const feature = {type: "Feature", geometry: {
 }};
 const measureState = {
     len: 84321231.123,
-    lengthFormula: "Vincenty",
+    lengthFormula: "vincenty",
     feature
 };
 describe('Test correctness of measurement actions', () => {
@@ -30,7 +30,7 @@ describe('Test correctness of measurement actions', () => {
         const retval = toggleMeasurement(measureState);
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_MEASUREMENT_TOOL);
-        expect(retval.lengthFormula).toBe("Vincenty");
+        expect(retval.lengthFormula).toBe("vincenty");
     });
 
     it('Test toggleShowLabel action creator', () => {
@@ -53,7 +53,7 @@ describe('Test correctness of measurement actions', () => {
     });
 
     it('Test changeLengthFormula action creator', () => {
-        const formula = "Haversine";
+        const formula = "haversine";
         const retval = changeLengthFormula(formula);
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_FORMULA);

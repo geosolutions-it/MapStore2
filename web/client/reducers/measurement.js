@@ -14,7 +14,7 @@ const {
     TOGGLE_SHOW_LABEL,
     CHANGED_GEOMETRY
 } = require('../actions/measurement');
-const {calculateVincentyDistance, calculateGeodesicDistance} = require('../utils/CoordinatesUtils');
+const {vincenty, haversine} = require('../utils/CoordinatesUtils').FORMULAS;
 
 const {TOGGLE_CONTROL, RESET_CONTROLS} = require('../actions/controls');
 
@@ -28,17 +28,21 @@ function measurement(state = {
         length: {unit: 'm', label: 'm'},
         area: {unit: 'sqm', label: 'm²'}
     },
-    lengthFormula: "Haversine"
+    lengthFormula: "haversine"
 }, action) {
     switch (action.type) {
-    case CHANGE_MEASUREMENT_TOOL:
+    case CHANGE_MEASUREMENT_TOOL: {
         return assign({}, state, {
             lineMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'LineString',
             areaMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Polygon',
             bearingMeasureEnabled: action.geomType !== state.geomType && action.geomType === 'Bearing',
             geomType: action.geomType === state.geomType ? null : action.geomType,
+            len: 0,
+            area: 0,
+            bearing: 0,
             feature: {}
         });
+    }
     case CHANGE_MEASUREMENT_STATE:
         return assign({}, state, {
             lineMeasureEnabled: action.lineMeasureEnabled,
@@ -74,10 +78,10 @@ function measurement(state = {
     case CHANGE_FORMULA: {
         let len = 0;
         if (state.feature && state.feature.geometry && state.feature.geometry.coordinates) {
-            if (action.formula === "Haversine") {
-                len = calculateGeodesicDistance(state.feature.geometry.coordinates);
+            if (action.formula === "haversine") {
+                len = haversine(state.feature.geometry.coordinates);
             } else {
-                len = calculateVincentyDistance(state.feature.geometry.coordinates);
+                len = vincenty(state.feature.geometry.coordinates);
             }
         }
         return assign({}, state, {

@@ -78,10 +78,10 @@ class MeasureComponent extends React.Component {
             sm: 4,
             md: 4
         },
-        lengthFormula: "Haversine",
+        lengthFormula: "haversine",
         formulas: [
-            {value: "Haversine", label: "Haversine"},
-            {value: "Vincenty", label: "Vincenty"}
+            {value: "haversine", label: "haversine"},
+            {value: "vincenty", label: "vincenty"}
         ],
         uomLengthValues: [
             {value: "ft", label: "ft"},

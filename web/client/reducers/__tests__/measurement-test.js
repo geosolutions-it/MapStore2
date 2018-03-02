@@ -29,7 +29,7 @@ describe('Test the measurement reducer', () => {
         expect(state.bearingMeasureEnabled).toBe(false);
         expect(state.uom.area.unit).toBe("sqm");
         expect(state.uom.area.label).toBe("m²");
-        expect(state.lengthFormula).toBe("Haversine");
+        expect(state.lengthFormula).toBe("haversine");
     });
 
     it('CHANGE_MEASUREMENT_TOOL previous geomType LineString', () => {
@@ -98,13 +98,13 @@ describe('Test the measurement reducer', () => {
         expect(state.uom.length.label).toBe("km");
     });
     it('CHANGE_FORMULA', () => {
-        let state = measurement( {feature, lengthFormula: "Vincenty"}, changeLengthFormula("Haversine"));
-        expect(state.lengthFormula).toBe("Haversine");
+        let state = measurement( {feature, lengthFormula: "vincenty"}, changeLengthFormula("haversine"));
+        expect(state.lengthFormula).toBe("haversine");
         expect(state.len).toBe(157353.62718543038);
     });
     it('CHANGE_FORMULA no feature', () => {
-        let state = measurement( {feature: {}, lengthFormula: "Vincenty"}, changeLengthFormula("Haversine"));
-        expect(state.lengthFormula).toBe("Haversine");
+        let state = measurement( {feature: {}, lengthFormula: "vincenty"}, changeLengthFormula("haversine"));
+        expect(state.lengthFormula).toBe("haversine");
         expect(state.len).toBe(0);
     });
     it('CHANGED_GEOMETRY', () => {

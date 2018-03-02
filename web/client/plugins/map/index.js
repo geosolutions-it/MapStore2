@@ -51,7 +51,7 @@ module.exports = (mapType, actions) => {
             length: {unit: 'm', label: 'm'},
             area: {unit: 'sqm', label: 'm²'}
         },
-        lengthFormula: state.measurement && state.measurement.lengthFormula || "Haversine"
+        lengthFormula: state.measurement && state.measurement.lengthFormula || "haversine"
     }), {
         changeMeasurementState,
         changeGeometry

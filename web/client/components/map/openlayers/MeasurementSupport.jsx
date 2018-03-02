@@ -12,12 +12,10 @@ const {round} = require('lodash');
 const assign = require('object-assign');
 const ol = require('openlayers');
 const wgs84Sphere = new ol.Sphere(6378137);
-const {reprojectGeoJson, reproject, calculateAzimuth, calculateLength} = require('../../../utils/CoordinatesUtils');
+const {reprojectGeoJson, reproject, calculateAzimuth, calculateDistance, transformToArcs} = require('../../../utils/CoordinatesUtils');
 const {getFormattedLength, getFormattedArea, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
 const {getMessageById} = require('../../../utils/LocaleUtils');
 
-const greatCircle = require('@turf/great-circle').default;
-const toPoint = require('turf-point');
 class MeasurementSupport extends React.Component {
     static propTypes = {
         map: PropTypes.object,
@@ -195,16 +193,7 @@ class MeasurementSupport extends React.Component {
             this.props.changeGeometry(newFeature);
             if (this.props.measurement.lineMeasureEnabled) {
                 // Calculate arc
-                const {coordinates} = newFeature.geometry;
-                let newCoords = [];
-                for (let i = 0; i < coordinates.length - 1; ++i) {
-                    const p1 = coordinates[i];
-                    const p2 = coordinates[i + 1];
-                    const start = toPoint(p1);
-                    const end = toPoint(p2);
-                    const grCircle = greatCircle(start, end, {});
-                    newCoords = [...newCoords, ...grCircle.geometry.coordinates];
-                }
+                let newCoords = transformToArcs(newFeature.geometry.coordinates);
                 const ft = assign({}, newFeature, {
                     geometry: assign({}, newFeature.geometry,
                         {coordinates: newCoords})
@@ -291,7 +280,7 @@ class MeasurementSupport extends React.Component {
             {
                 point: this.props.measurement.geomType === 'Point' ?
                     this.getPointCoordinate(sketchCoords) : null,
-                len: this.props.measurement.geomType === 'LineString' ? calculateLength(this.reprojectedCoordinates(sketchCoords), this.props.lengthFormula) : 0,
+                len: this.props.measurement.geomType === 'LineString' ? calculateDistance(this.reprojectedCoordinates(sketchCoords), this.props.lengthFormula) : 0,
                 area: this.props.measurement.geomType === 'Polygon' ?
                     this.calculateGeodesicArea(this.sketchFeature.getGeometry().getLinearRing(0).getCoordinates()) : 0,
                 bearing: this.props.measurement.geomType === 'Bearing' ? bearing : 0,
@@ -356,7 +345,7 @@ class MeasurementSupport extends React.Component {
             return getFormattedBearingValue(bearing);
         }
         const reprojectedCoords = this.reprojectedCoordinates(sketchCoords);
-        const length = calculateLength(reprojectedCoords, this.props.lengthFormula);
+        const length = calculateDistance(reprojectedCoords, this.props.lengthFormula);
         const {label, unit} = this.props.uom && this.props.uom.length;
         const output = round(getFormattedLength(unit, length), 2);
         return output + " " + (label);
@@ -383,6 +372,10 @@ class MeasurementSupport extends React.Component {
     removeMeasureTooltips = () => {
         if (this.measureTooltipElement && this.measureTooltipElement.parentNode) {
             let oldtooltips = document.getElementsByClassName("tooltip-static") || [];
+            for (let i = 0; i < oldtooltips.length; i++) {
+                oldtooltips[i].parentNode.removeChild(oldtooltips[i]);
+            }
+            oldtooltips = document.getElementsByClassName("tooltip-measure") || [];
             for (let i = 0; i < oldtooltips.length; i++) {
                 oldtooltips[i].parentNode.removeChild(oldtooltips[i]);
             }

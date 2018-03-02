@@ -3,7 +3,7 @@ const React = require('react');
 const assign = require('object-assign');
 var L = require('leaflet');
 const {slice} = require('lodash');
-const {reproject, calculateAzimuth, calculateLength} = require('../../../utils/CoordinatesUtils');
+const {reproject, calculateAzimuth, calculateDistance, transformToArcs} = require('../../../utils/CoordinatesUtils');
 require('leaflet-draw');
 
 class MeasurementSupport extends React.Component {
@@ -33,13 +33,13 @@ class MeasurementSupport extends React.Component {
         if (newProps.measurement.geomType && newProps.measurement.geomType !== this.props.measurement.geomType ) {
             this.addDrawInteraction(newProps);
         }
-
         if (!newProps.measurement.geomType) {
             this.removeDrawInteraction();
         }
     }
 
     onDrawStart = () => {
+        this.removeArcLayer();
         this.drawing = true;
     };
 
@@ -60,6 +60,9 @@ class MeasurementSupport extends React.Component {
             let newMeasureState = assign({}, this.props.measurement, {feature});
             this.props.changeMeasurementState(newMeasureState);
         }
+        if (this.props.measurement.lineMeasureEnabled && this.lastLayer) {
+            this.addArcsToMap([feature]);
+        }
     };
 
     render() {
@@ -68,10 +71,36 @@ class MeasurementSupport extends React.Component {
         if (drawingStrings) {
             L.drawLocal = drawingStrings;
         }
-
         return null;
     }
 
+    /**
+     * This method adds arcs converting from a LineString features
+     */
+    addArcsToMap = (features) => {
+        this.removeLastLayer();
+        let newFeatures = features.map(f => {
+            return assign({}, f, {
+                geometry: assign({}, f.geometry, {
+                    coordinates: transformToArcs(f.geometry.coordinates)
+                })
+            });
+        });
+        this.arcLayer = L.geoJson(newFeatures, {
+            style: {
+                color: '#ffcc33',
+                opacity: 1,
+                weight: 1,
+                fillColor: '#ffffff',
+                fillOpacity: 0.2,
+                clickable: false
+            }
+        });
+        this.props.map.addLayer(this.arcLayer);
+        if (newFeatures && newFeatures.length > 0) {
+            this.arcLayer.addData(newFeatures);
+        }
+    }
     updateMeasurementResults = () => {
         if (!this.drawing || !this.drawControl) {
             return;
@@ -88,7 +117,7 @@ class MeasurementSupport extends React.Component {
                 return [...p, [lng, lat]];
             }, []);
 
-            distance = calculateLength(reprojectedCoords, this.props.lengthFormula);
+            distance = calculateDistance(reprojectedCoords, this.props.lengthFormula);
 
         } else if (this.props.measurement.geomType === 'Polygon' && this.drawControl._poly) {
             // calculate area
@@ -190,9 +219,7 @@ class MeasurementSupport extends React.Component {
         if (this.drawControl !== null && this.drawControl !== undefined) {
             this.drawControl.disable();
             this.drawControl = null;
-            if (this.lastLayer) {
-                this.props.map.removeLayer(this.lastLayer);
-            }
+            this.removeLastLayer();
             this.props.map.off('draw:created', this.onDrawCreated, this);
             this.props.map.off('draw:drawstart', this.onDrawStart, this);
             this.props.map.off('click', this.mapClickHandler, this);
@@ -201,6 +228,16 @@ class MeasurementSupport extends React.Component {
             }
         }
     };
+    removeLastLayer = () => {
+        if (this.lastLayer) {
+            this.props.map.removeLayer(this.lastLayer);
+        }
+    }
+    removeArcLayer = () => {
+        if (this.arcLayer) {
+            this.props.map.removeLayer(this.arcLayer);
+        }
+    }
 }
 
 module.exports = MeasurementSupport;

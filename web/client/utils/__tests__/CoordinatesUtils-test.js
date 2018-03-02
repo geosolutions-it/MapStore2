@@ -449,17 +449,21 @@ describe('CoordinatesUtils', () => {
         expect(CoordinatesUtils.determineCrs("EPSG:3004")).toBe(null);
         expect(CoordinatesUtils.determineCrs({crs: "EPSG:3004"}).crs).toBe("EPSG:3004");
     });
-    it('test calculateLength', () => {
-        expect(CoordinatesUtils.calculateLength([[1, 1], [2, 2]], "Haversine")).toNotBe(null);
-        expect(CoordinatesUtils.calculateLength([[1, 1], [2, 2]], "Haversine")).toBe(157401.56104583552);
-        expect(CoordinatesUtils.calculateLength([[1, 1], [2, 2]], "Vincenty")).toBe(156876.149);
+    it('test calculateDistance', () => {
+        expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "haversine")).toNotBe(null);
+        expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "haversine")).toBe(157401.56104583552);
+        expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "vincenty")).toBe(156876.149);
     });
-    it('test calculateGeodesicDistance', () => {
-        expect(CoordinatesUtils.calculateGeodesicDistance([[1, 1], [2, 2]] )).toNotBe(null);
-        expect(CoordinatesUtils.calculateGeodesicDistance([[1, 1], [2, 2]] )).toBe(157401.56104583552);
+    it('test calculate Geodesic Distance', () => {
+        expect(CoordinatesUtils.FORMULAS.haversine([[1, 1], [2, 2]] )).toNotBe(null);
+        expect(CoordinatesUtils.FORMULAS.haversine([[1, 1], [2, 2]] )).toBe(157401.56104583552);
     });
-    it('test calculateVincentyDistance', () => {
-        expect(CoordinatesUtils.calculateVincentyDistance([[1, 1], [2, 2]] )).toNotBe(null);
-        expect(CoordinatesUtils.calculateVincentyDistance([[1, 1], [2, 2]] )).toBe(156876.149);
+    it('test calculate vincenty Distance', () => {
+        expect(CoordinatesUtils.FORMULAS.vincenty([[1, 1], [2, 2]] )).toNotBe(null);
+        expect(CoordinatesUtils.FORMULAS.vincenty([[1, 1], [2, 2]] )).toBe(156876.149);
+    });
+    it('test transformToArcs', () => {
+        expect(CoordinatesUtils.transformToArcs([[1, 1], [2, 2]] )).toNotBe(null);
+        expect(CoordinatesUtils.transformToArcs([[1, 1], [2, 2]] ).length).toBe(100);
     });
 });

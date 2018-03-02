@@ -20,7 +20,7 @@ const {MeasureDialog} = require('./measure/index');
 const selector = (state) => {
     return {
         measurement: state.measurement || {},
-        lengthFormula: state.measurement && state.measurement.lengthFormula || "Haversine",
+        lengthFormula: state.measurement && state.measurement.lengthFormula || "haversine",
         uom: state.measurement && state.measurement.uom || {
             length: {unit: 'm', label: 'm'},
             area: {unit: 'sqm', label: 'm²'}
