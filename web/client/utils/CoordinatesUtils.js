@@ -550,7 +550,7 @@ const CoordinatesUtils = {
      * properties: line feature properties
      * @return {number[[]]} for each couple of points it creates an arc of 100 points by default
     */
-    transformToArcs: (coordinates, options = {npoints: 100, offset: 10, properties: {}}) => {
+    transformLineToArcs: (coordinates, options = {npoints: 100, offset: 10, properties: {}}) => {
         let arcs = [];
         for (let i = 0; i < coordinates.length - 1; ++i) {
             const p1 = coordinates[i];

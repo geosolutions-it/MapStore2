@@ -462,8 +462,8 @@ describe('CoordinatesUtils', () => {
         expect(CoordinatesUtils.FORMULAS.vincenty([[1, 1], [2, 2]] )).toNotBe(null);
         expect(CoordinatesUtils.FORMULAS.vincenty([[1, 1], [2, 2]] )).toBe(156876.149);
     });
-    it('test transformToArcs', () => {
-        expect(CoordinatesUtils.transformToArcs([[1, 1], [2, 2]] )).toNotBe(null);
-        expect(CoordinatesUtils.transformToArcs([[1, 1], [2, 2]] ).length).toBe(100);
+    it('test transformLineToArcs', () => {
+        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] )).toNotBe(null);
+        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] ).length).toBe(100);
     });
 });

@@ -11,8 +11,6 @@ const {
     toggleMeasurement,
     changeMeasurementState,
     changeUom,
-    changeLengthFormula,
-    toggleShowLabel,
     changeGeometry
 } = require('../../actions/measurement');
 const {RESET_CONTROLS} = require('../../actions/controls');
@@ -82,13 +80,6 @@ describe('Test the measurement reducer', () => {
         expect(state.len).toBe(120205);
     });
 
-
-    it('TOGGLE_SHOW_LABEL', () => {
-        let state = measurement( {showLabel: true}, toggleShowLabel());
-        expect(state.showLabel).toBe(false);
-        let state2 = measurement( {}, toggleShowLabel());
-        expect(state2.showLabel).toBe(true);
-    });
     it('CHANGE_UOM', () => {
         let state = measurement( {showLabel: true}, changeUom("length", {label: "km", value: "km"}, {
             length: {unit: 'm', label: 'm'},
@@ -96,16 +87,6 @@ describe('Test the measurement reducer', () => {
         }));
         expect(state.lenUnit).toBe("km");
         expect(state.uom.length.label).toBe("km");
-    });
-    it('CHANGE_FORMULA', () => {
-        let state = measurement( {feature, lengthFormula: "vincenty"}, changeLengthFormula("haversine"));
-        expect(state.lengthFormula).toBe("haversine");
-        expect(state.len).toBe(157353.62718543038);
-    });
-    it('CHANGE_FORMULA no feature', () => {
-        let state = measurement( {feature: {}, lengthFormula: "vincenty"}, changeLengthFormula("haversine"));
-        expect(state.lengthFormula).toBe("haversine");
-        expect(state.len).toBe(0);
     });
     it('CHANGED_GEOMETRY', () => {
         let state = measurement( {feature: {}}, changeGeometry(feature));

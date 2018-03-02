@@ -12,7 +12,7 @@ const {round} = require('lodash');
 const assign = require('object-assign');
 const ol = require('openlayers');
 const wgs84Sphere = new ol.Sphere(6378137);
-const {reprojectGeoJson, reproject, calculateAzimuth, calculateDistance, transformToArcs} = require('../../../utils/CoordinatesUtils');
+const {reprojectGeoJson, reproject, calculateAzimuth, calculateDistance, transformLineToArcs} = require('../../../utils/CoordinatesUtils');
 const {getFormattedLength, getFormattedArea, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
 const {getMessageById} = require('../../../utils/LocaleUtils');
 
@@ -22,7 +22,6 @@ class MeasurementSupport extends React.Component {
         projection: PropTypes.string,
         measurement: PropTypes.object,
         uom: PropTypes.object,
-        lengthFormula: PropTypes.string,
         changeMeasurementState: PropTypes.func,
         changeGeometry: PropTypes.func,
         updateOnMouseMove: PropTypes.bool
@@ -193,7 +192,7 @@ class MeasurementSupport extends React.Component {
             this.props.changeGeometry(newFeature);
             if (this.props.measurement.lineMeasureEnabled) {
                 // Calculate arc
-                let newCoords = transformToArcs(newFeature.geometry.coordinates);
+                let newCoords = transformLineToArcs(newFeature.geometry.coordinates);
                 const ft = assign({}, newFeature, {
                     geometry: assign({}, newFeature.geometry,
                         {coordinates: newCoords})
@@ -204,7 +203,6 @@ class MeasurementSupport extends React.Component {
                 this.measureTooltipElement.className = 'tooltip tooltip-static';
                 this.measureTooltip.setOffset([0, -7]);
                 ol.Observable.unByKey(this.listener);
-                // this.sketchFeature = null;
             }
         }, this);
 
@@ -280,7 +278,7 @@ class MeasurementSupport extends React.Component {
             {
                 point: this.props.measurement.geomType === 'Point' ?
                     this.getPointCoordinate(sketchCoords) : null,
-                len: this.props.measurement.geomType === 'LineString' ? calculateDistance(this.reprojectedCoordinates(sketchCoords), this.props.lengthFormula) : 0,
+                len: this.props.measurement.geomType === 'LineString' ? calculateDistance(this.reprojectedCoordinates(sketchCoords), this.props.measurement.lengthFormula) : 0,
                 area: this.props.measurement.geomType === 'Polygon' ?
                     this.calculateGeodesicArea(this.sketchFeature.getGeometry().getLinearRing(0).getCoordinates()) : 0,
                 bearing: this.props.measurement.geomType === 'Bearing' ? bearing : 0,
@@ -345,7 +343,7 @@ class MeasurementSupport extends React.Component {
             return getFormattedBearingValue(bearing);
         }
         const reprojectedCoords = this.reprojectedCoordinates(sketchCoords);
-        const length = calculateDistance(reprojectedCoords, this.props.lengthFormula);
+        const length = calculateDistance(reprojectedCoords, this.props.measurement.lengthFormula);
         const {label, unit} = this.props.uom && this.props.uom.length;
         const output = round(getFormattedLength(unit, length), 2);
         return output + " " + (label);

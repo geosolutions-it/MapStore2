@@ -8,7 +8,7 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {Panel, ButtonGroup, Tooltip, Glyphicon, Button, Grid, Row, Col, FormGroup, FormControl, Form, Checkbox} = require('react-bootstrap');
+const {Panel, ButtonGroup, Tooltip, Glyphicon, Button, Grid, Row, Col, FormGroup, Form} = require('react-bootstrap');
 const ToggleButton = require('../../buttons/ToggleButton');
 const NumberFormat = require('../../I18N/Number');
 const Message = require('../../I18N/Message');
@@ -60,10 +60,6 @@ class MeasureComponent extends React.Component {
         formatArea: PropTypes.func,
         formatBearing: PropTypes.func,
         onChangeUom: PropTypes.func,
-        onToggleShowLabel: PropTypes.func,
-        onChangeFormula: PropTypes.func,
-        lengthFormula: PropTypes.string,
-        formulas: PropTypes.array,
         uomLengthValues: PropTypes.array,
         uomAreaValues: PropTypes.array
     };
@@ -78,11 +74,6 @@ class MeasureComponent extends React.Component {
             sm: 4,
             md: 4
         },
-        lengthFormula: "haversine",
-        formulas: [
-            {value: "haversine", label: "haversine"},
-            {value: "vincenty", label: "vincenty"}
-        ],
         uomLengthValues: [
             {value: "ft", label: "ft"},
             {value: "m", label: "m"},
@@ -205,32 +196,6 @@ class MeasureComponent extends React.Component {
                             </Col>
                         </FormGroup>
                     </Row>
-                    <Row>
-                        <FormGroup>
-                            <Col xs={6}>
-                                <span><Checkbox name="showLabel" checked={this.props.measurement.showLabel} onChange={() => {
-                                    this.props.onToggleShowLabel();
-                                }}><Message msgId="measureComponent.showLabel"/></Checkbox></span>
-                            </Col>
-                        </FormGroup>
-                    </Row>
-                    {this.props.lineMeasureEnabled && (<Row>
-                        <FormGroup>
-                            <Col xs={6}>
-                                <FormControl.Static><Message msgId="measureComponent.formula"/></FormControl.Static>
-                            </Col>
-                            <Col xs={6}>
-                                <DropdownList
-                                    value={this.props.lengthFormula}
-                                    data={this.props.formulas}
-                                    onChange={({value}) => {
-                                        this.props.onChangeFormula(value);
-                                    }}
-                                    textField="label"
-                                    valueField="value"/>
-                            </Col>
-                        </FormGroup>
-                    </Row>)}
                 </Form>
             </div>
         );

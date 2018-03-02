@@ -88,6 +88,14 @@
               "description": "Español"
             }
           }
+        },
+        "measurement": {
+          "lengthFormula": "vincenty",
+          "showLabel": true,
+          "uom": {
+            "length": {"unit": "m", "label": "m"},
+            "area": {"unit": "sqm", "label": "m²"}
+          }
         }
       }
     },

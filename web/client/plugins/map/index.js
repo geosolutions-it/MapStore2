@@ -50,8 +50,7 @@ module.exports = (mapType, actions) => {
         uom: state.measurement && state.measurement.uom || {
             length: {unit: 'm', label: 'm'},
             area: {unit: 'sqm', label: 'm²'}
-        },
-        lengthFormula: state.measurement && state.measurement.lengthFormula || "haversine"
+        }
     }), {
         changeMeasurementState,
         changeGeometry

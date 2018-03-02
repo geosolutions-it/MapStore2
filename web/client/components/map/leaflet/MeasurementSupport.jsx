@@ -3,7 +3,7 @@ const React = require('react');
 const assign = require('object-assign');
 var L = require('leaflet');
 const {slice} = require('lodash');
-const {reproject, calculateAzimuth, calculateDistance, transformToArcs} = require('../../../utils/CoordinatesUtils');
+const {reproject, calculateAzimuth, calculateDistance, transformLineToArcs} = require('../../../utils/CoordinatesUtils');
 require('leaflet-draw');
 
 class MeasurementSupport extends React.Component {
@@ -14,7 +14,6 @@ class MeasurementSupport extends React.Component {
         metric: PropTypes.bool,
         feet: PropTypes.bool,
         projection: PropTypes.string,
-        lengthFormula: PropTypes.string,
         measurement: PropTypes.object,
         changeMeasurementState: PropTypes.func,
         messages: PropTypes.object,
@@ -82,7 +81,7 @@ class MeasurementSupport extends React.Component {
         let newFeatures = features.map(f => {
             return assign({}, f, {
                 geometry: assign({}, f.geometry, {
-                    coordinates: transformToArcs(f.geometry.coordinates)
+                    coordinates: transformLineToArcs(f.geometry.coordinates)
                 })
             });
         });
@@ -117,7 +116,7 @@ class MeasurementSupport extends React.Component {
                 return [...p, [lng, lat]];
             }, []);
 
-            distance = calculateDistance(reprojectedCoords, this.props.lengthFormula);
+            distance = calculateDistance(reprojectedCoords, this.props.measurement.lengthFormula);
 
         } else if (this.props.measurement.geomType === 'Polygon' && this.drawControl._poly) {
             // calculate area

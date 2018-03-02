@@ -10,11 +10,8 @@ const {
     CHANGE_MEASUREMENT_TOOL,
     CHANGE_MEASUREMENT_STATE,
     CHANGE_UOM,
-    CHANGE_FORMULA,
-    TOGGLE_SHOW_LABEL,
     CHANGED_GEOMETRY
 } = require('../actions/measurement');
-const {vincenty, haversine} = require('../utils/CoordinatesUtils').FORMULAS;
 
 const {TOGGLE_CONTROL, RESET_CONTROLS} = require('../actions/controls');
 
@@ -57,11 +54,6 @@ function measurement(state = {
             areaUnit: action.areaUnit,
             feature: action.feature
         });
-    case TOGGLE_SHOW_LABEL: {
-        return assign({}, state, {
-            showLabel: !state.showLabel
-        });
-    }
     case CHANGE_UOM: {
         const prop = action.uom === "length" ? "lenUnit" : "lenArea";
         const {value, label} = action.value;
@@ -75,20 +67,6 @@ function measurement(state = {
             })
         });
     }
-    case CHANGE_FORMULA: {
-        let len = 0;
-        if (state.feature && state.feature.geometry && state.feature.geometry.coordinates) {
-            if (action.formula === "haversine") {
-                len = haversine(state.feature.geometry.coordinates);
-            } else {
-                len = vincenty(state.feature.geometry.coordinates);
-            }
-        }
-        return assign({}, state, {
-            lengthFormula: action.formula,
-            len
-        });
-    }
     case CHANGED_GEOMETRY: {
         const {feature} = action;
         return assign({}, state, {
@@ -100,18 +78,21 @@ function measurement(state = {
             // TODO: remove this when the controls will be able to be mutually exclusive
             if (action.control === 'info') {
                 return {
+                    ...state,
                     lineMeasureEnabled: false,
                     areaMeasureEnabled: false,
                     bearingMeasureEnabled: false
                 };
             }
         }
-    case RESET_CONTROLS:
+    case RESET_CONTROLS: {
         return {
+            ...state,
             lineMeasureEnabled: false,
             areaMeasureEnabled: false,
             bearingMeasureEnabled: false
         };
+    }
     default:
         return state;
     }

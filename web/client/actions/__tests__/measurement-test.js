@@ -11,9 +11,7 @@ const {
     toggleMeasurement, CHANGE_MEASUREMENT_TOOL,
     changeMeasurementState, CHANGE_MEASUREMENT_STATE,
     changeUom, CHANGE_UOM,
-    changeLengthFormula, CHANGE_FORMULA,
-    changeGeometry, CHANGED_GEOMETRY,
-    toggleShowLabel, TOGGLE_SHOW_LABEL
+    changeGeometry, CHANGED_GEOMETRY
 } = require('../measurement');
 const feature = {type: "Feature", geometry: {
     coordinates: [],
@@ -33,11 +31,6 @@ describe('Test correctness of measurement actions', () => {
         expect(retval.lengthFormula).toBe("vincenty");
     });
 
-    it('Test toggleShowLabel action creator', () => {
-        const retval = toggleShowLabel();
-        expect(retval).toExist();
-        expect(retval.type).toBe(TOGGLE_SHOW_LABEL);
-    });
 
     it('Test changeMousePositionState action creator', () => {
         const [uom, value, previousUom] = ["m", 42, {
@@ -50,14 +43,6 @@ describe('Test correctness of measurement actions', () => {
         expect(retval.uom).toBe("m");
         expect(retval.value).toBe(42);
         expect(retval.previousUom.length.label).toBe("km");
-    });
-
-    it('Test changeLengthFormula action creator', () => {
-        const formula = "haversine";
-        const retval = changeLengthFormula(formula);
-        expect(retval).toExist();
-        expect(retval.type).toBe(CHANGE_FORMULA);
-        expect(retval.formula).toBe(formula);
     });
 
     it('Test changeGeometry action creator', () => {
