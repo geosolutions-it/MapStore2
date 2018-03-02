@@ -20,6 +20,7 @@ const CHANGE_ROTATION = 'CHANGE_ROTATION';
 const CREATION_ERROR_LAYER = 'CREATION_ERROR_LAYER';
 const UPDATE_VERSION = 'UPDATE_VERSION';
 const INIT_MAP = 'INIT_MAP';
+const RESIZE_MAP = 'RESIZE_MAP';
 
 function creationError(options) {
     return {
@@ -130,6 +131,12 @@ function initMap() {
     };
 }
 
+function resizeMap() {
+    return {
+        type: RESIZE_MAP
+    };
+}
+
 module.exports = {
     CHANGE_MAP_VIEW,
     CLICK_ON_MAP,
@@ -145,6 +152,7 @@ module.exports = {
     CREATION_ERROR_LAYER,
     UPDATE_VERSION,
     INIT_MAP,
+    RESIZE_MAP,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -158,5 +166,6 @@ module.exports = {
     zoomToPoint,
     creationError,
     updateVersion,
-    initMap
+    initMap,
+    resizeMap
 };
