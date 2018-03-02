@@ -50,7 +50,8 @@ const commonEditorActions = {
     onSetStyle: setStyle,
     onStopDrawing: stopDrawing,
     onDeleteGeometry: removeAnnotationGeometry,
-    onZoom: zoomToExtent
+    onZoom: zoomToExtent,
+    onDownload: download
 };
 const AnnotationsEditor = connect(annotationsInfoSelector,
 {

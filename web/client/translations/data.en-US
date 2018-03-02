@@ -721,6 +721,7 @@
             "title": "Annotations",
             "zoomTo": "Zoom",
             "downloadtooltip": "Download annotations",
+            "downloadcurrenttooltip": "Download current annotation",
             "downloadError": "Export error",
             "loadtooltip": "Import annotations",
             "loadtitle": "Import Annotations",

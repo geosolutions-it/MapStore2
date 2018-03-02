@@ -720,6 +720,7 @@
             "filter": "Filtern die annotationen...",
             "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
             "downloadtooltip": "Laden Sie Anmerkungen herunter",
+            "downloadcurrenttooltip": "Aktuelle Annotation herunterladen",
             "downloadError": "Fehler beim Exportieren",
             "loadtooltip": "Importieren Sie Anmerkungen",
             "loadtitle": "Importieren Sie Anmerkungen",

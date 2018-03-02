@@ -138,7 +138,8 @@ class AnnotationsEditor extends React.Component {
         feature: PropTypes.object,
         mode: PropTypes.string,
         maxZoom: PropTypes.number,
-        width: PropTypes.number
+        width: PropTypes.number,
+        onDownload: PropTypes.func
     };
 
     static defaultProps = {
@@ -197,6 +198,11 @@ class AnnotationsEditor extends React.Component {
                                 visible: this.props.showBack,
                                 onClick: () => {this.props.onCancel(); this.props.onCleanHighlight(); }
                             }, {
+                                glyph: 'zoom-to',
+                                tooltipId: "annotations.zoomTo",
+                                visible: true,
+                                onClick: () => {this.zoom(); }
+                            }, {
                                 glyph: "pencil",
                                 tooltipId: "annotations.edit",
                                 visible: true,
@@ -210,10 +216,10 @@ class AnnotationsEditor extends React.Component {
                                 visible: true,
                                 onClick: () => {this.props.onRemove(this.props.id); }
                             }, {
-                                glyph: 'zoom-to',
-                                tooltipId: "annotations.zoomTo",
-                                visible: true,
-                                onClick: () => {this.zoom(); }
+                                    glyph: 'download',
+                                    tooltip: <Message msgId="annotations.downloadcurrenttooltip"/>,
+                                    visible: true,
+                                    onClick: () => { this.props.onDownload(this.props.feature); }
                             }
                         ]}/>
                     </Col>
