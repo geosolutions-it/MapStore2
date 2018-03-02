@@ -94,6 +94,19 @@ const FileUtils = {
                 });
             });
         });
+    },
+    /* Checks if the zip contains .prj file */
+    checkShapePrj: function(buffer) {
+        const zip = new JSZip();
+        return new Promise((resolve) => {
+            zip.loadAsync(buffer).then(({files = {}}) => {
+                const shapeNames = Object.keys(files).filter(k => !files[k].dir && k.indexOf("__MACOSX") !== 0 && k.indexOf(".shp") === k.length - 4).map( n => n.slice(0, -4));
+                const warnings = shapeNames.reduce((p, c) => {
+                    return p.concat(!files[`${c}.prj`] && c || []);
+                }, []);
+                resolve(warnings);
+            });
+        });
     }
 };
 module.exports = FileUtils;
