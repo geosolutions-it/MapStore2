@@ -32,13 +32,9 @@ function getUrls(opt) {
     let urls = [];
     let url = opt.url;
     if (opt.subdomains) {
-        for (let c of opt.subdomains) {
-            urls.push(template(url.replace("{s}", c), opt));
-        }
+        opt.subdomains.map( c => urls.push(template(url.replace("{s}", c), opt)));
     } else {
-        for (let c of 'abc') {
-            urls.push(template(url.replace("{s}", c), opt));
-        }
+        ['a', 'b', 'c'].map( c => urls.push(template(url.replace("{s}", c), opt)));
     }
     return urls;
 }
