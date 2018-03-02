@@ -58,7 +58,7 @@ class ShapeFileUploadAndStyle extends React.Component {
 
     static defaultProps = {
         shapeLoading: () => {},
-        readFiles: (files) => files.map((file) => {
+        readFiles: (files, onWarnings) => files.map((file) => {
             const ext = FileUtils.recognizeExt(file.name);
             const type = file.type || FileUtils.MIME_LOOKUPS[ext];
             if (type === 'application/vnd.google-earth.kml+xml') {
@@ -79,7 +79,12 @@ class ShapeFileUploadAndStyle extends React.Component {
             if (type === 'application/x-zip-compressed' ||
                 type === 'application/zip' ) {
                 return FileUtils.readZip(file).then((buffer) => {
-                    return FileUtils.shpToGeoJSON(buffer);
+                    return FileUtils.checkShapePrj(buffer).then((warnings) => {
+                        if (warnings.length > 0) {
+                            onWarnings('shapefile.error.missingPrj');
+                        }
+                        return FileUtils.shpToGeoJSON(buffer);
+                    });
                 });
             }
         }),
@@ -207,7 +212,7 @@ class ShapeFileUploadAndStyle extends React.Component {
 
     addShape = (files) => {
         this.props.shapeLoading(true);
-        let queue = this.props.readFiles(files);
+        let queue = this.props.readFiles(files, this.props.onShapeError);
         Promise.all(queue).then((geoJsons) => {
             let ls = geoJsons.filter((element) => element[0].features.length !== 0).reduce((layers, geoJson) => {
                 if (geoJson) {

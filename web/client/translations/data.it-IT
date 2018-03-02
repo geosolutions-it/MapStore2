@@ -813,7 +813,8 @@
             "error": {
                 "select": "Seleziona file corretto. File supportati: SHAPEFILES contenuti in archivi zip, KML/KMZ e GPX)",
                 "shapeFileParsingError": "Non è stato possibile caricare il file. Il file potrebbe essere danneggiato o non corretto",
-                "genericLoadError": "Il file non è stato caricato correttamente sulla mappa"
+                "genericLoadError": "Il file non è stato caricato correttamente sulla mappa",
+                "missingPrj": "Mancono le informazioni sul sistema di riferimento (.prj), si utilizza EPSG:4326 come valore prdefinito"
             },
             "add": "Importa",
             "cancel": "Annulla",

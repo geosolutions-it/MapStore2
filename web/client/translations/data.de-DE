@@ -813,7 +813,8 @@
             "error": {
                 "select": "Wählen Sie die richtige Datei aus",
                 "shapeFileParsingError": "Das Shapefile kann nicht geladen werden. Die Datei könnte beschädigt oder nicht gut geformt sein",
-                "genericLoadError": "Das Shapefile kann nicht auf der Karte geladen werden"
+                "genericLoadError": "Das Shapefile kann nicht auf der Karte geladen werden",
+                "missingPrj": "Fehlende Projektionsinformation (.prj), Koordinatensystem soll EPSG: 4326 sein"
             },
             "add": "Hinzufügen",
             "cancel": "Abbrechen",

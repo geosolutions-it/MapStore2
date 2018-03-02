@@ -813,7 +813,8 @@
             "error": {
                 "select": "Seleccionar uno o más archivo local. (archivos compatibles: Shapefiles deben estar dentro de un zip, KML/KMZ e GPX)",
                 "shapeFileParsingError": "No se puede cargar el archivo local El archivo podría dañarse o no estar bien formado",
-                "genericLoadError": "No se puede cargar el archivo local en el mapa"
+                "genericLoadError": "No se puede cargar el archivo local en el mapa",
+                "missingPrj": "Falta información de proyección (.prj), se supone que el sistema de coordenadas es EPSG: 4326"
             },
             "add": "Añadir",
             "cancel": "Cancelar",
