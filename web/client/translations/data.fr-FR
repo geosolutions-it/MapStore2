@@ -695,6 +695,7 @@
             "undo": "Êtes-vous sûr de vouloir abandonner la session d'édition d'annotation?",
             "zoomTo": "Zoom",
             "downloadtooltip": "Télécharger les annotations",
+            "downloadcurrenttooltip": "Télécharger l'annotation en cours",
             "downloadError": "Erreur d'exportation",
             "loadtooltip": "Importer des annotations",
             "loadtitle": "Importer des Annotations",

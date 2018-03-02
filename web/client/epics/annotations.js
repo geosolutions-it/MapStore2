@@ -265,11 +265,11 @@ module.exports = (viewer) => ({
         return Rx.Observable.from((store.getState().controls.annotations && store.getState().controls.annotations.enabled ? [toggleControl('annotations')] : []).concat([purgeMapInfoResults()]));
     }),
     downloadAnnotations: (action$, {getState}) => action$.ofType(DOWNLOAD)
-        .switchMap(() => {
+        .switchMap(({annotation}) => {
             try {
-                const annotations = annotationsLayerSelector(getState());
+                const annotations = annotation && [annotation] || (annotationsLayerSelector(getState())).features;
                 const mapName = mapNameSelector(getState());
-                saveAs(new Blob([JSON.stringify({features: annotations.features, type: "ms2-annotations"})], {type: "application/json;charset=utf-8"}), `${ mapName.length > 0 && mapName || "Annotations"}.json`);
+                saveAs(new Blob([JSON.stringify({features: annotations, type: "ms2-annotations"})], {type: "application/json;charset=utf-8"}), `${ mapName.length > 0 && mapName || "Annotations"}.json`);
                 return Rx.Observable.empty();
             }catch (e) {
                 return Rx.Observable.of(error({

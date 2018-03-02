@@ -50,9 +50,10 @@ function loadAnnotations(features, override = false) {
     };
 }
 
-function download() {
+function download(annotation) {
     return {
-        type: DOWNLOAD
+        type: DOWNLOAD,
+        annotation
     };
 }
 
