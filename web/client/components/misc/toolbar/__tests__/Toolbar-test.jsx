@@ -56,6 +56,21 @@ describe("Toolbar component", () => {
         const btn = document.getElementById("button");
         expect(btn).toNotExist();
     });
+    // Optionally removes css animation group
+    it('test disable animation', () => {
+        ReactDOM.render(<Toolbar key={"toolbar"} transitionProps={false} buttons={[{
+            id: "button",
+            visible: true,
+            tooltip: "hello",
+            text: "hello",
+            tooltipPosition: "right",
+            glyph: "plus"
+        }]} />, document.getElementById("container"));
+        // this allows vertical toolbar with bootstrap css (animation group add internal span)
+        const el = document.querySelector(".btn-group > button");
+        expect(el).toExist();
+    });
+
 
 
 });
