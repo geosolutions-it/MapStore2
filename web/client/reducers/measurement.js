@@ -79,13 +79,27 @@ function measurement(state = defaultState, action) {
             // TODO: remove this when the controls will be able to be mutually exclusive
             if (action.control === 'info') {
                 return {
-                    ...defaultState
+                    ...state,
+                    len: 0,
+                    area: 0,
+                    bearing: 0,
+                    lineMeasureEnabled: false,
+                    areaMeasureEnabled: false,
+                    bearingMeasureEnabled: false,
+                    feature: {}
                 };
             }
         }
     case RESET_CONTROLS: {
         return {
-            ...defaultState
+            ...state,
+            len: 0,
+            area: 0,
+            bearing: 0,
+            lineMeasureEnabled: false,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false,
+            feature: {}
         };
     }
     default:
