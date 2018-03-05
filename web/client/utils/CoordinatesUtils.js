@@ -543,12 +543,12 @@ const CoordinatesUtils = {
     },
     /**
      * Generate arcs between a series of points
-     * @param {number[[]]} coordinates of points of a LineString reprojected in 4326
+     * @param {number[]} coordinates of points of a LineString reprojected in 4326
      * @param {object} options of the great circle drawMethod
      * npoints: number of points
      * offset: offset controls the likelyhood that lines will be split which cross the dateline. The higher the number the more likely.
      * properties: line feature properties
-     * @return {number[[]]} for each couple of points it creates an arc of 100 points by default
+     * @return {number[]} for each couple of points it creates an arc of 100 points by default
     */
     transformLineToArcs: (coordinates, options = {npoints: 100, offset: 10, properties: {}}) => {
         let arcs = [];

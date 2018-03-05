@@ -16,8 +16,7 @@ const {
 const {TOGGLE_CONTROL, RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
-
-function measurement(state = {
+const defaultState = {
     lineMeasureEnabled: false,
     areaMeasureEnabled: false,
     bearingMeasureEnabled: false,
@@ -25,8 +24,10 @@ function measurement(state = {
         length: {unit: 'm', label: 'm'},
         area: {unit: 'sqm', label: 'm²'}
     },
-    lengthFormula: "haversine"
-}, action) {
+    lengthFormula: "haversine",
+    showLabel: true
+};
+function measurement(state = defaultState, action) {
     switch (action.type) {
     case CHANGE_MEASUREMENT_TOOL: {
         return assign({}, state, {
@@ -78,19 +79,13 @@ function measurement(state = {
             // TODO: remove this when the controls will be able to be mutually exclusive
             if (action.control === 'info') {
                 return {
-                    ...state,
-                    lineMeasureEnabled: false,
-                    areaMeasureEnabled: false,
-                    bearingMeasureEnabled: false
+                    ...defaultState
                 };
             }
         }
     case RESET_CONTROLS: {
         return {
-            ...state,
-            lineMeasureEnabled: false,
-            areaMeasureEnabled: false,
-            bearingMeasureEnabled: false
+            ...defaultState
         };
     }
     default:

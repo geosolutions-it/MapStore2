@@ -31,12 +31,13 @@ const selector = (state) => {
 };
 const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
 /**
- * Measure plugin. Allows to show the tool to measure dinstances, areas and bearing.
+ * Measure plugin. Allows to show the tool to measure dinstances, areas and bearing.<br>
+ * See [Application Configuration](local-config) to understand how to configure lengthFormula, showLabel and uom
  * @class
  * @name Measure
  * @memberof plugins
  * @prop {boolean} showResults shows the measure in the panel itself.
- */
+  */
 const Measure = connect(
     createSelector([
         selector,
