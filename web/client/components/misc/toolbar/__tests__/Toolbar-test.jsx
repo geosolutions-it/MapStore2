@@ -70,7 +70,4 @@ describe("Toolbar component", () => {
         const el = document.querySelector(".btn-group > button");
         expect(el).toExist();
     });
-
-
-
 });
