@@ -2,7 +2,7 @@ var PropTypes = require('prop-types');
 var React = require('react');
 var L = require('leaflet');
 var assign = require('object-assign');
-require('leaflet.locatecontrol')();
+require('leaflet.locatecontrol');
 require('leaflet.locatecontrol/dist/L.Control.Locate.css');
 
 const defaultOpt = { // For all configuration options refer to https://github.com/Norkart/Leaflet-MiniMap
@@ -21,11 +21,12 @@ const defaultOpt = { // For all configuration options refer to https://github.co
 L.Control.MSLocate = L.Control.Locate.extend({
     setMap: function(map) {
         this._map = map;
-        this._layer = this.options.layer;
+        this._layer = this.options.layer || new L.LayerGroup();
         this._layer.addTo(map);
         this._event = undefined;
+        this._prevBounds = null;
 
-            // extend the follow marker style and circle from the normal style
+        // extend the follow marker style and circle from the normal style
         let tmp = {};
         L.extend(tmp, this.options.markerStyle, this.options.followMarkerStyle);
         this.options.followMarkerStyle = tmp;
@@ -33,14 +34,14 @@ L.Control.MSLocate = L.Control.Locate.extend({
         L.extend(tmp, this.options.circleStyle, this.options.followCircleStyle);
         this.options.followCircleStyle = tmp;
         this._resetVariables();
-        this.bindEvents(map);
+        this._map.on('unload', this._unload, this);
     },
     _setClasses: function(state) {
         this._map.fire('locatestatus', {state: state});
         return state;
     },
-    _toggleContainerStyle: function() {
-        if (this._following) {
+    _updateContainerStyle: function() {
+        if (this._isFollowing()) {
             this._setClasses('following');
         } else if (this._active) {
             this._setClasses('active');

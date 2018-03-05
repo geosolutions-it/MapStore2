@@ -23,6 +23,7 @@ html, body, #container, .fill {
     bottom: 28px;
     height: auto;
     overflow: hidden;
+    z-index: 0;
 }
 
 #home-button {
