@@ -132,7 +132,7 @@ describe('LeafletMap', () => {
         leafletMap.setView({lat: 44, lng: 10}, 12);
     });
 
-    it('check if the handler for "click" event is called', (done) => {
+    it('check if the handler for "click" event is called', () => {
         const testHandlers = {
             handler: () => {}
         };
@@ -148,20 +148,29 @@ describe('LeafletMap', () => {
         , document.getElementById("container"));
 
         const leafletMap = map.map;
-        const mapDiv = leafletMap.getContainer();
-
-        mapDiv.click();
-        setTimeout(() => {
-            expect(spy.calls.length).toEqual(1);
-            expect(spy.calls[0].arguments.length).toEqual(1);
-            expect(spy.calls[0].arguments[0].pixel).toExist();
-            expect(spy.calls[0].arguments[0].latlng).toExist();
-            expect(spy.calls[0].arguments[0].modifiers).toExist();
-            expect(spy.calls[0].arguments[0].modifiers.alt).toEqual(false);
-            expect(spy.calls[0].arguments[0].modifiers.ctrl).toEqual(false);
-            expect(spy.calls[0].arguments[0].modifiers.shift).toEqual(false);
-            done();
-        }, 600);
+        leafletMap.fire('singleclick', {
+            containerPoint: {
+                x: 100,
+                y: 100
+            },
+            latlng: {
+                lat: 43,
+                lng: 10
+            },
+            originalEvent: {
+                altKey: false,
+                ctrlKey: false,
+                shiftKey: false
+            }
+        });
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments.length).toBe(1);
+        expect(spy.calls[0].arguments[0].pixel).toExist();
+        expect(spy.calls[0].arguments[0].latlng).toExist();
+        expect(spy.calls[0].arguments[0].modifiers).toExist();
+        expect(spy.calls[0].arguments[0].modifiers.alt).toBe(false);
+        expect(spy.calls[0].arguments[0].modifiers.ctrl).toBe(false);
+        expect(spy.calls[0].arguments[0].modifiers.shift).toBe(false);
     });
 
     it('check if the map changes when receive new props', () => {
