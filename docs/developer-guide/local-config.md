@@ -143,3 +143,26 @@ Set `selectedService` value to one of the ID of the services object ("Demo CSW S
 <br>Be careful to use unique IDs
 <br>Future implementations will try to detect the type from the url.
 <br>newService is used internally as the starting object for an empty service.
+
+<br>
+<h4> Measure Tool configuration </h4>
+Inside defaultState you can set lengthFormula, showLabel, uom:
+- you can customize the formula used for length calculation from "haversine" or "vincenty" (default haversine)
+- show or not the measurement label on the map after drawing a measurement (default true)
+- set the default uom used for measure tool (default m and sqm)
+<br>For the label you can chose whatever value you want.
+<br>For the unit you can chose between:
+ - unit length values : ft, m, km, mi, nm standing for feets, meters, kilometers, miles, nautical miles
+ - unit area values : sqft, sqm, sqkm, sqmi, sqnm standing for square feets, square meters, square kilometers, square miles, square nautical miles
+
+example:<br>
+```
+"measurement": {
+  "lengthFormula": "vincenty",
+  "showLabel": true,
+  "uom": {
+    "length": {"unit": "m", "label": "m"},
+    "area": {"unit": "sqm", "label": "m²"}
+  }
+}
+```
