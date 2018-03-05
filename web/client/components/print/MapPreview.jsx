@@ -87,18 +87,20 @@ class MapPreview extends React.Component {
             })
         });
     };
-
-    renderLayerContent = (layer) => {
+    renderLayerContent = (layer, projection) => {
         if (layer.features && layer.type === "vector") {
             return layer.features.map( (feature) => {
                 return (
                     <Feature
+                        crs={projection}
                         key={feature.id}
                         type={feature.type}
                         geometry={feature.geometry}
                         msId={feature.id}
                         featuresCrs={ layer.featuresCrs || 'EPSG:4326' }
-                        style={ feature.style || layer.style || null }/>
+                        layerStyle={layer.style}
+                        style={ feature.style || layer.style || null }
+                        properties={feature.properties}/>
                 );
             });
         }
@@ -132,7 +134,7 @@ class MapPreview extends React.Component {
                 {this.props.layers.map((layer, index) =>
                     (<Layer key={layer.id || layer.name} position={index} type={layer.type}
                         options={assign({}, this.adjustResolution(layer), {srs: projection})}>
-                        {this.renderLayerContent(layer)}
+                        {this.renderLayerContent(layer, projection)}
                     </Layer>)
 
                 )}
