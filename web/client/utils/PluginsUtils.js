@@ -218,8 +218,8 @@ const PluginsUtils = {
      *   ... and so on, for every cfg.contanerPosition value found
      * }
      * ```
-     * @param  {[type]} pluginsConfig [description]
-     * @return {[type]}               [description]
+     * @param  {object[]} pluginsConfig The configurations of plugins
+     * @return {object}   An object that spreads the configruations in arrays by their `cfg.containerPosition`.
      */
     mapPluginsPosition: (pluginsConfig = []) =>
         pluginsConfig.reduce( (o, p) => {

@@ -35,6 +35,7 @@ const MAP_ERROR = 'MAP_ERROR';
 const SAVE_ALL = 'SAVE_ALL';
 const DISPLAY_METADATA_EDIT = 'DISPLAY_METADATA_EDIT';
 const RESET_UPDATING = 'RESET_UPDATING';
+const SAVING_MAP = 'SAVING_MAP';
 const SAVE_MAP = 'SAVE_MAP';
 const PERMISSIONS_LIST_LOADING = 'PERMISSIONS_LIST_LOADING';
 const PERMISSIONS_LIST_LOADED = 'PERMISSIONS_LIST_LOADED';
@@ -325,9 +326,21 @@ function saveMap(map, resourceId) {
         map
     };
 }
+/**
+ * Performed before start saving a new map
+ * @memberof actions.maps
+ * @param {object} metadata
+ * @return {action} type SAVING_MAP action
+ */
+function savingMap(metadata) {
+    return {
+        type: SAVING_MAP,
+        metadata
+    };
+}
 
 /**
- * performed when want to disaplay/hide the metadata editing window
+ * performed when want to display/hide the metadata editing window
  * @memberof actions.maps
  * @param  {boolean} displayMetadataEditValue true to display, false to hide
  * @return {action}                          type `DISPLAY_METADATA_EDIT`, with the arguments as they are named
@@ -591,12 +604,12 @@ function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categor
 }
 
 /**
- * Save all the metadata and thubnail, if needed.
+ * Save all the metadata and thumbnail, if needed.
  * @memberof actions.maps
  * @param  {object} map               the map object
  * @param  {object} metadataMap       metadata for the map
- * @param  {string} nameThumbnail     the name for the thubnail
- * @param  {string} dataThumbnail     the data to save for the thubnail
+ * @param  {string} nameThumbnail     the name for the thumbnail
+ * @param  {string} dataThumbnail     the data to save for the thumbnail
  * @param  {string} categoryThumbnail the category for the thumbnails
  * @param  {number} resourceIdMap     the id of the map
  * @param  {object} [options]         options for the request
@@ -673,6 +686,7 @@ function deleteThumbnail(resourceId, resourceIdMap, options, reset) {
  */
 function createMap(metadata, content, thumbnail, options) {
     return (dispatch) => {
+        dispatch(savingMap(metadata));
         GeoStoreApi.createResource(metadata, content, "MAP", options).then((response) => {
             let resourceId = response.data;
             if (thumbnail && thumbnail.data) {
@@ -898,6 +912,7 @@ module.exports = {
     ATTRIBUTE_UPDATED,
     PERMISSIONS_UPDATED,
     SAVE_MAP,
+    SAVING_MAP,
     THUMBNAIL_ERROR,
     PERMISSIONS_LIST_LOADING,
     PERMISSIONS_LIST_LOADED,
@@ -944,6 +959,7 @@ module.exports = {
     permissionsLoading,
     permissionsLoaded,
     attributeUpdated,
+    savingMap,
     saveMap,
     thumbnailError,
     createMap,

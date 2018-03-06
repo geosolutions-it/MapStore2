@@ -44,7 +44,9 @@ module.exports = {
         .switchMap((w) => Rx.Observable.of(editNewWidget({
             legend: false,
             mapSync: true,
-            ...w
+            ...w,
+            // override action's type
+            type: undefined
         }, {step: 0}))),
     /**
      * Manages interaction with QueryPanel and widgetBuilder

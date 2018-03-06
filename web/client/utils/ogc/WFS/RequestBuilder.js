@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const filterBuilder = require('../Filter/FilterBuilder');
+const {castArray} = require('lodash');
 const {wfsToGmlVersion} = require("./base");
 const getStaticAttributesWFS1 = (ver) => 'service="WFS" version="' + ver + '" ' +
     (ver === "1.0.0" ? 'outputFormat="GML2" ' : "") +
@@ -84,9 +85,19 @@ module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS="wf
             + ((startIndex || startIndex === 0) ? ` startIndex="${startIndex}"` : "")
             + ((maxFeatures || maxFeatures === 0) ? ` ${getMaxFeatures(maxFeatures)}` : "");
     };
+    const propertyName = (property) =>
+        castArray(property)
+        .map(p => `<${wfsNS}:PropertyName>${p}</${wfsNS}:PropertyName>`)
+        .join("");
     return {
+        propertyName,
         ...filterBuilder({gmlVersion: gmlV, wfsVersion, filterNS: filterNS || wfsVersion === "2.0" ? "fes" : "ogc"}),
         getFeature: (content, opts) => `<${wfsNS}:GetFeature ${requestAttributes(opts)}>${Array.isArray(content) ? content.join("") : content}</${wfsNS}:GetFeature>`,
+        sortBy: (property, order = "ASC") =>
+            `<${wfsNS}:SortBy><${wfsNS}:SortProperty>` +
+            `${propertyName(property)}` +
+            `<${wfsNS}:SortOrder>${order}</${wfsNS}:SortOrder>`
+            `</${wfsNS}:SortProperty></${wfsNS}:SortBy>`,
         query: (featureName, content, {srsName ="EPSG:4326"} = {}) =>
             `<${wfsNS}:Query ${wfsVersion === "2.0" ? "typeNames" : "typeName"}="${featureName}" srsName="${srsName}">`
             + `${Array.isArray(content) ? content.join("") : content}`

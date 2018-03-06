@@ -84,7 +84,9 @@ class DataGrid extends Grid {
         const visibleRows = Math.ceil(this.canvas.clientHeight / this.props.rowHeight);
         const firstRowIdx = Math.floor(this.canvas.scrollTop / this.props.rowHeight);
         const lastRowIdx = firstRowIdx + visibleRows;
-        this.props.onGridScroll({firstRowIdx, lastRowIdx});
+        if (this.props.onGridScroll) {
+            this.props.onGridScroll({ firstRowIdx, lastRowIdx });
+        }
     }
     setCanvasListner = () => {
         this.canvas = ReactDOM.findDOMNode(this).querySelector('.react-grid-Canvas');

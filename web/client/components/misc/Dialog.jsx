@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -9,7 +8,7 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-
+const PropTypes = require('prop-types');
 const Draggable = require('react-draggable');
 const Spinner = require('react-spinkit');
 const assign = require('object-assign');
@@ -87,7 +86,7 @@ class Dialog extends React.Component {
                 {this.renderRole('footer')}
             </div> : <span/>}
         </div>);
-        const dialog = this.props.draggable ? (<Draggable start={this.props.start} handle=".draggable-header, .draggable-header *">
+        const dialog = this.props.draggable ? (<Draggable defaultPosition={this.props.start} handle=".draggable-header, .draggable-header *">
             {body}
         </Draggable>) : body;
         let containerStyle = assign({}, this.props.style, this.props.backgroundStyle);

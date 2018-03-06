@@ -122,16 +122,13 @@
                 "name": "Identify",
                 "showIn": ["Settings"],
                 "cfg": {
-                    "panelClassName": "mapstore-mobile-identify",
-                    "fullscreen": true,
-                    "draggable": false,
-                    "collapsible": true,
+                    "showFullscreen": true,
+                    "position": "bottom",
+                    "size": 0.5,
+                    "fluid": true,
                     "viewerOptions": {
-                        "container": "{context.ReactSwipe}",
-                        "header": "{context.SwipeHeader}",
-                        "collapsible": false
-                    },
-                    "bodyClass": "mobile-feature-info"
+                        "container": "{context.ReactSwipe}"
+                    }
                 }
             }, {
                 "name": "Locate",
@@ -145,6 +142,11 @@
                 "cfg": {
                     "activateMapTitle": false,
                     "activateSortLayer": false
+                }
+            }, {
+                "name": "TOCItemsSettings",
+                "cfg": {
+                    "width": 300
                 }
             }, {
                 "name": "Tutorial",
@@ -216,17 +218,8 @@
             {
                 "name": "Identify",
                 "cfg": {
-                    "panelClassName": "mapstore-right-panel modal-content",
-                    "draggable": false,
-                    "collapsible": true,
                     "viewerOptions": {
-                        "container": "{context.ReactSwipe}",
-                        "header": "{context.SwipeHeader}",
-                        "draggable": false,
-                        "collapsible": false,
-                        "headerOptions": {
-                            "useButtons": true
-                        }
+                        "container": "{context.ReactSwipe}"
                     }
                 },
                 "override": {
@@ -280,7 +273,9 @@
                         {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
                     ]
                 }
-            }, "Tutorial", "MapFooter", {
+            },
+            "TOCItemsSettings",
+            "Tutorial", "MapFooter", {
                 "name": "Measure"
             }, "Print", "ShapeFile", {
                 "name": "Settings",
@@ -394,16 +389,13 @@
               }, {
                 "name": "Identify",
                 "cfg": {
-                    "panelClassName": "mapstore-mobile-identify",
-                    "fullscreen": true,
-                    "draggable": false,
-                    "collapsible": true,
+                    "showFullscreen": true,
+                    "position": "bottom",
+                    "size": 0.5,
+                    "fluid": true,
                     "viewerOptions": {
-                        "container": "{context.ReactSwipe}",
-                        "header": "{context.SwipeHeader}",
-                        "collapsible": false
-                    },
-                    "bodyClass": "mobile-feature-info"
+                        "container": "{context.ReactSwipe}"
+                    }
                 }
             }, {
                 "name": "ZoomAll",

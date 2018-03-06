@@ -326,8 +326,12 @@ const PrintUtils = {
             })
         }
     },
+    rgbaTorgb: (rgba = "") => {
+        return rgba.indexOf("rgba") !== -1 ? `rgb${rgba.slice(rgba.indexOf("("), rgba.lastIndexOf(","))})` : rgba;
+    },
     /**
      * Useful for print (Or generic Openlayers 2 conversion style)
+     * http://dev.openlayers.org/docs/files/OpenLayers/Feature/Vector-js.html#OpenLayers.Feature.Vector.OpenLayers.Feature.Vector.style
      */
     toOpenLayers2Style: function(layer, style) {
         if (!style) {
@@ -335,14 +339,14 @@ const PrintUtils = {
         }
         // commented the available options.
         return {
-            "fillColor": style.fillColor,
+            "fillColor": PrintUtils.rgbaTorgb(style.fillColor),
             "fillOpacity": style.fillOpacity,
              // "rotation": "30",
             "externalGraphic": style.iconUrl,
              // "graphicName": "circle",
              // "graphicOpacity": 0.4,
             "pointRadius": style.radius,
-            "strokeColor": style.color,
+            "strokeColor": PrintUtils.rgbaTorgb(style.fillColor),
             "strokeOpacity": style.opacity,
             "strokeWidth": style.weight
              // "strokeLinecap": "round",

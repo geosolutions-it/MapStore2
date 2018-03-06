@@ -6,12 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {EDIT_NEW, INSERT, EDIT, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT, CLEAR_WIDGETS, DEFAULT_TARGET} = require('../actions/widgets');
+const { EDIT_NEW, INSERT, EDIT, UPDATE_PROPERTY, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT, CLEAR_WIDGETS, DEFAULT_TARGET} = require('../actions/widgets');
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
 
 const set = require('lodash/fp/set');
+const { get, find} = require('lodash');
 const {arrayUpsert, arrayDelete} = require('../utils/ImmutableUtils');
 
 const emptyState = {
@@ -60,9 +61,13 @@ function widgetsReducer(state = emptyState, action) {
         case EDIT: {
             return set(`builder.editor`, {
                 ...action.widget,
-                // for backward compatibility for widgets without this
+                // for backward compatibility widgets without widgetType are charts
                 widgetType: action.widget && action.widget.widgetType || 'chart'
-            }, state);
+            }, set("builder.settings.step",
+                    (action.widget && action.widget.widgetType || 'chart') === 'chart'
+                    ? 1
+                    : 0
+                , state));
         }
         case EDITOR_CHANGE: {
             return set(`builder.editor.${action.key}`, action.value, state);
@@ -77,6 +82,18 @@ function widgetsReducer(state = emptyState, action) {
            }, state);
 
            return tempState;
+        case UPDATE_PROPERTY:
+            return arrayUpsert(`containers[${action.target}].widgets`,
+                // update the widget setting the value to the existing object
+                set(
+                    action.key,
+                    action.value,
+                    find(get(state, `containers[${action.target}].widgets`), {
+                        id: action.id
+                    }),
+                ), {
+                    id: action.id
+                }, state);
         case DELETE:
             return arrayDelete(`containers[${action.target}].widgets`, {
                 id: action.widget.id

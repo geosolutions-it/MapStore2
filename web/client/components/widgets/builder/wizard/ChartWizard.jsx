@@ -7,12 +7,12 @@
   */
 const React = require('react');
 
-const {wizardHanlders} = require('../../../misc/wizard/enhancers');
+const {wizardHandlers} = require('../../../misc/wizard/enhancers');
 const loadingState = require('../../../misc/enhancers/loadingState')(({loading, data}) => loading || !data, {width: 500, height: 200});
 
 const ChartType = require('./chart/ChartType');
-const wfsChartOptions = require('./chart/wfsChartOptions');
-const ChartOptions = wfsChartOptions(require('./chart/ChartOptions'));
+const wfsChartOptions = require('./common/wfsChartOptions');
+const ChartOptions = wfsChartOptions(require('./common/WPSWidgetOptions'));
 const WidgetOptions = require('./common/WidgetOptions');
 const sampleData = require('../../enhancers/sampleChartData');
 const wpsChart = require('../../enhancers/wpsChart');
@@ -38,7 +38,7 @@ const sampleProps = {
 
 const isChartOptionsValid = (options = {}) => options.aggregateFunction && options.aggregationAttribute && options.groupByAttributes;
 
-const Wizard = wizardHanlders(require('../../../misc/wizard/WizardContainer'));
+const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
 
 
 const renderPreview = ({data = {}, layer, dependencies={}, setValid = () => {}}) => isChartOptionsValid(data.options)

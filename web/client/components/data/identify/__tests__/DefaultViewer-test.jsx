@@ -159,4 +159,36 @@ describe('DefaultViewer', () => {
         expect(dom.getElementsByClassName("custom").length).toBe(1);
         expect(dom.innerHTML.indexOf('myresponse') !== -1).toBe(true);
     });
+
+    it('test DefaultViewer component need reset current index on new request', () => {
+        const testHandlers = {
+            setIndex: () => {}
+        };
+        const spySetIndex = expect.spyOn(testHandlers, 'setIndex');
+        ReactDOM.render(
+            <DefaultViewer responses={[{}]} setIndex={testHandlers.setIndex}/>,
+            document.getElementById("container")
+        );
+        ReactDOM.render(
+            <DefaultViewer responses={[{}, {}]} setIndex={testHandlers.setIndex}/>,
+            document.getElementById("container")
+        );
+        expect(spySetIndex.calls.length).toEqual(1);
+    });
+
+    it("test DefaultViewer component doesn't need reset current index when requests are the same", () => {
+        const testHandlers = {
+            setIndex: () => {}
+        };
+        const spySetIndex = expect.spyOn(testHandlers, 'setIndex');
+        ReactDOM.render(
+            <DefaultViewer responses={[{}]} setIndex={testHandlers.setIndex}/>,
+            document.getElementById("container")
+        );
+        ReactDOM.render(
+            <DefaultViewer responses={[{}]} setIndex={testHandlers.setIndex}/>,
+            document.getElementById("container")
+        );
+        expect(spySetIndex.calls.length).toEqual(0);
+    });
 });

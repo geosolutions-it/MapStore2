@@ -4,8 +4,11 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
+const geo = require('node-geo-distance');
+const ol = require('openlayers');
+const wgs84Sphere = new ol.Sphere(6378137);
 const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const axios = require('../libs/ajax');
@@ -14,7 +17,38 @@ const {isArray, flattenDeep, chunk, cloneDeep} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
 const polygonToLinestring = require('@turf/polygon-to-linestring');
 const {head} = require('lodash');
-
+const greatCircle = require('@turf/great-circle').default;
+const toPoint = require('turf-point');
+const FORMULAS = {
+    /**
+    @param coordinates in EPSG:4326
+    return vincenty distance between two points
+    */
+    "vincenty": (coordinates) => {
+        let length = 0;
+        for (let i = 0; i < coordinates.length - 1; ++i) {
+            const p1 = coordinates[i];
+            const p2 = coordinates[i + 1];
+            const [x1, y1] = p1;
+            const [x2, y2] = p2;
+            length += parseFloat(geo.vincentySync({longitude: x1, latitude: y1}, {longitude: x2, latitude: y2}));
+        }
+        return length;
+    },
+    /**
+    @param coordinates in EPSG:4326
+    return distance between two points using Geodesic formula
+    */
+    "haversine": (coordinates) => {
+        let length = 0;
+        for (let i = 0; i < coordinates.length - 1; ++i) {
+            const p1 = coordinates[i];
+            const p2 = coordinates[i + 1];
+            length += parseFloat(wgs84Sphere.haversineDistance(p1, p2));
+        }
+        return length;
+    }
+};
 // Checks if `list` looks like a `[x, y]`.
 function isXY(list) {
     return list.length >= 2 &&
@@ -252,8 +286,9 @@ const CoordinatesUtils = {
             if (gj.crs) {
                 delete gj.crs;
             }
-            gj.coordinates = traverseCoords(gj.coordinates, (xy) => {
-                return transform.forward(xy);
+            // Strip Z coord if present fixes #2638 Proj4 transform only bidimensional coordinates
+            gj.coordinates = traverseCoords(gj.coordinates, ([x, y]) => {
+                return transform.forward([x, y]);
             });
         }, (gj) => {
             if (gj.bbox) {
@@ -393,6 +428,18 @@ const CoordinatesUtils = {
         return azimuth;
     },
     /**
+    * Calculate length based on haversine or vincenty formula
+    * @param {object[]} coords projected in EPSG:4326
+    * @return {number} length in meters
+    */
+    calculateDistance: (coords = [], formula = "haversine") => {
+        if (coords.length >= 2 && Object.keys(FORMULAS).indexOf(formula) !== -1) {
+            return FORMULAS[formula](coords);
+        }
+        return 0;
+    },
+    FORMULAS,
+    /**
      * Extend an extent given another one
      *
      * @param extent1 {array} [minx, miny, maxx, maxy]
@@ -494,6 +541,27 @@ const CoordinatesUtils = {
 
         points[0].push(points[0][0]);
         return points;
+    },
+    /**
+     * Generate arcs between a series of points
+     * @param {number[]} coordinates of points of a LineString reprojected in 4326
+     * @param {object} options of the great circle drawMethod
+     * npoints: number of points
+     * offset: offset controls the likelyhood that lines will be split which cross the dateline. The higher the number the more likely.
+     * properties: line feature properties
+     * @return {number[]} for each couple of points it creates an arc of 100 points by default
+    */
+    transformLineToArcs: (coordinates, options = {npoints: 100, offset: 10, properties: {}}) => {
+        let arcs = [];
+        for (let i = 0; i < coordinates.length - 1; ++i) {
+            const p1 = coordinates[i];
+            const p2 = coordinates[i + 1];
+            const start = toPoint(p1);
+            const end = toPoint(p2);
+            const grCircle = greatCircle(start, end, options);
+            arcs = [...arcs, ...grCircle.geometry.coordinates];
+        }
+        return arcs;
     },
     coordsOLtoLeaflet: ({coordinates, type}) => {
         switch (type) {

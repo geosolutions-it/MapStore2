@@ -401,6 +401,38 @@ describe('Openlayers layer', () => {
         expect(closed).toBe(true);
     });
 
+    it('creates and overlay layer for openlayers map with onLink support', () => {
+        let container = document.createElement('div');
+        container.id = 'ovcontainer';
+        document.body.appendChild(container);
+
+        let element = document.createElement('div');
+        element.id = 'overlay-1';
+        let linkElement = document.createElement('a');
+        linkElement.className = 'link';
+        element.appendChild(linkElement);
+        document.body.appendChild(element);
+        let clicked = false;
+        let options = {
+            id: 'overlay-1',
+            position: [13, 43],
+            onLink: () => {
+                clicked = true;
+            }
+        };
+        // create layers
+        let layer = ReactDOM.render(
+            <OpenlayersLayer type="overlay"
+                options={options} map={map} />, document.getElementById('ovcontainer'));
+
+        expect(layer).toExist();
+        const overlayElement = document.getElementById('overlay-1-overlay');
+        expect(overlayElement).toExist();
+        const link = overlayElement.getElementsByClassName('link')[0];
+        link.click();
+        expect(clicked).toBe(true);
+    });
+
     it('creates and overlay layer for openlayers map with no data-reactid attributes', () => {
         let container = document.createElement('div');
         container.id = 'ovcontainer';
@@ -937,6 +969,56 @@ describe('Openlayers layer', () => {
             securityToken="########-####-$$$$-####-###########"/>, document.getElementById("container"));
 
         expect(layer.layer.getSource().getParams()['ms2-authkey']).toBe("########-####-$$$$-####-###########");
+    });
+
+    it('test wmts initial visibility false', () => {
+        const options = {
+            type: 'wmts',
+            visibility: false,
+            name: 'nurc:Arc_Sample',
+            group: 'Meteo',
+            format: 'image/png',
+            tileMatrixSet: [
+                {
+                    'TileMatrix': [],
+                    'ows:Identifier': 'EPSG:900913',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts'
+        };
+
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={options}
+            map={map}
+             />, document.getElementById("container"));
+        expect(layer.layer.getVisible()).toBe(false);
+    });
+
+    it('test wmts initial visibility true', () => {
+        const options = {
+            type: 'wmts',
+            visibility: true,
+            name: 'nurc:Arc_Sample',
+            group: 'Meteo',
+            format: 'image/png',
+            tileMatrixSet: [
+                {
+                    'TileMatrix': [],
+                    'ows:Identifier': 'EPSG:900913',
+                    'ows:SupportedCRS': 'urn:ogc:def:crs:EPSG::900913'
+                }
+            ],
+            url: 'http://sample.server/geoserver/gwc/service/wmts'
+        };
+
+        const layer = ReactDOM.render(<OpenlayersLayer
+            type="wmts"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+        expect(layer.layer.getVisible()).toBe(true);
     });
 
     it('test wmts security token', () => {

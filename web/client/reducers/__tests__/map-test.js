@@ -234,4 +234,12 @@ describe('Test the map reducer', () => {
         let state = mapConfig({}, action);
         expect(state.version).toEqual(version);
     });
+
+    it('force resize update of map', () => {
+        const action = {
+            type: 'RESIZE_MAP'
+        };
+        let state = mapConfig({}, action);
+        expect(state.resize).toEqual(1);
+    });
 });

@@ -44,6 +44,7 @@ const dataStreamFactory = $props => {
 
 const featuresToGrid = compose(
     defaultProps({
+        sortable: true,
         autocompleteEnabled: false,
         initPlugin: () => {},
         url: "",
@@ -88,7 +89,7 @@ const featuresToGrid = compose(
     withPropsOnChange(
         ["features", "newFeatures", "changes"],
         props => ({
-            rows: ( [...props.newFeatures, ...props.features] : props.features)
+            rows: (props.newFeatures ? [...props.newFeatures, ...props.features] : props.features)
                 .filter(props.focusOnEdit ? createNewAndEditingFilter(props.changes && Object.keys(props.changes).length > 0, props.newFeatures, props.changes) : () => true)
                 .map(orig => applyAllChanges(orig, props.changes)).map(result =>
                     ({...result,
@@ -112,12 +113,13 @@ const featuresToGrid = compose(
     ),
     withHandlers({rowGetter: props => props.virtualScroll && (i => getRowVirtual(i, props.rows, props.pages, props.size)) || (i => getRow(i, props.rows))}),
     withPropsOnChange(
-        ["describeFeatureType", "columnSettings", "tools", "actionOpts", "mode", "isFocused"],
+        ["describeFeatureType", "columnSettings", "tools", "actionOpts", "mode", "isFocused", "sortable"],
         props => ({
             columns: getToolColumns(props.tools, props.rowGetter, props.describeFeatureType, props.actionOpts)
                 .concat(featureTypeToGridColumns(props.describeFeatureType, props.columnSettings, {
                     editable: props.mode === "EDIT",
-                    sortable: !props.isFocused
+                    sortable: props.sortable && !props.isFocused,
+                    defaultSize: props.defaultSize
                 }, {
                     getEditor: (desc) => {
                         const generalProps = {
@@ -147,7 +149,7 @@ const featuresToGrid = compose(
             })
     ),
     withPropsOnChange(
-        ["gridOpts", "describeFeatureType", "actionOpts", "mode", "select"],
+        ["gridOpts", "describeFeatureType", "actionOpts", "mode", "select", "columns"],
         props => {
             // bind proper events and setup the colums array
             // bind and get proper grid events from gridEvents object
@@ -156,7 +158,7 @@ const featuresToGrid = compose(
                 onRowsDeselected = () => {},
                 onRowsToggled = () => {},
                 hasTemporaryChanges = () => {},
-                ...gridEvents} = getGridEvents(props.gridEvents, props.rowGetter, props.describeFeatureType, props.actionOpts);
+                ...gridEvents} = getGridEvents(props.gridEvents, props.rowGetter, props.describeFeatureType, props.actionOpts, props.columns);
 
             // setup gridOpts setting app selection events binded
             let gridOpts = props.gridOpts;

@@ -5,12 +5,13 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var ReactDOM = require('react-dom');
-var L = require('leaflet');
-var LeafLetLayer = require('../Layer.jsx');
-var Feature = require('../Feature.jsx');
-var expect = require('expect');
+
+const L = require('leaflet');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const LeafLetLayer = require('../Layer.jsx');
+const Feature = require('../Feature.jsx');
+const expect = require('expect');
 
 const assign = require('object-assign');
 

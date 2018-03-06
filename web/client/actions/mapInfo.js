@@ -120,7 +120,7 @@ function getFeatureInfo(basePath, requestParams, lMetaData, options = {}) {
                 dispatch(loadFeatureInfo(reqId, response.data, requestParams, lMetaData));
             }
         }).catch((e) => {
-            dispatch(errorFeatureInfo(reqId, e, requestParams, lMetaData));
+            dispatch(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData));
         });
     };
 }
