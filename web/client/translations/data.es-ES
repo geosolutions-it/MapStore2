@@ -64,7 +64,23 @@
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Indentificar el formato de respuesta",
-            "legenderror": "La leyenda no está disponible"
+            "legenderror": "La leyenda no está disponible",
+            "editCustomFormat": "Editar formato personalizado",
+            "exampleOfResponse": "Ejemplo",
+            "changedSettings": "Configuraciones modificadas",
+            "changedSettingsAlert": "Está cerrando el panel de configuraciones sin guardar sus cambios",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Muestra resultados de información de funciones como texto sin formato",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Muestra resultados de información de funciones como html",
+            "propertiesFormatTitle": "PROPIEDADES",
+            "propertiesFormatDescription": "Muestra resultados de información de características como lista de propiedades",
+            "templateFormatTitle": "TEMPLATE",
+            "templateFormatDescription": "Personalizar formato de resultados de información de funciones",
+            "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
+            "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
+            "templateFormatInfoAlertExample": "La identificación de la función es ${ properties }",
+            "templatePreview": "Vista previa de template"
         },
         "notification": {
             "update": "Update",
@@ -398,6 +414,11 @@
             "redoBtnTooltip": "Ir hacia adelante"
         },
         "infoFormatLbl": "Indentificar el formato de respuesta",
+        "measureSupport": {
+            "continueLine": "Haga clic para seguir dibujando la línea",
+            "continuePolygon": "Haga clic para continuar dibujando el polígono",
+            "startDrawing": "Haga clic para comenzar a dibujar"
+        },
         "measureComponent": {
             "Measure": "Medidas",
             "MeasureLength": "Medias de distancia",
@@ -410,7 +431,9 @@
             "resetButtonText": "Reset",
             "lengthLabel": "Longitud",
             "areaLabel": "Área",
-            "bearingLabel": "Rumbo"
+            "bearingLabel": "Rumbo",
+            "formula": "Fórmula para cálculo de distancia",
+            "showLabel": "Mostrar etiqueta de medición"
         },
         "search":{
             "placeholder": "Búsqueda por toponimo o coordenadas...",
@@ -826,7 +849,8 @@
             "error": {
                 "select": "Seleccionar uno o más archivo local. (archivos compatibles: Shapefiles deben estar dentro de un zip, KML/KMZ e GPX)",
                 "shapeFileParsingError": "No se puede cargar el archivo local El archivo podría dañarse o no estar bien formado",
-                "genericLoadError": "No se puede cargar el archivo local en el mapa"
+                "genericLoadError": "No se puede cargar el archivo local en el mapa",
+                "missingPrj": "Falta información de proyección (.prj), se supone que el sistema de coordenadas es EPSG: 4326"
             },
             "add": "Añadir",
             "cancel": "Cancelar",
@@ -1085,6 +1109,14 @@
                 "text": {
                     "title": "Texto",
                     "caption": "agregar un área de texto"
+                 },
+                 "table": {
+                    "title": "Mesa",
+                    "caption": "agregar una mesa"
+                },
+                "counter": {
+                    "title": "Contador",
+                    "caption": "agregar un contador"
                 }
             },
             "selectWidgetType": "Seleccione el tipo de widget",
@@ -1108,12 +1140,18 @@
                     "backToChartOptions": "Volver a las opciones de gráfico",
                     "configureChartOptions": "Configurar opciones de gráfico",
                     "configureWidgetOptions": "Configurar las opciones del widget",
+                     "backToTableOptions": "Volver a las opciones de mesa",
+                    "configureTableOptions": "Configurar opciones de tabla",
+                    "resetColumnsSizes": "Restablecer todos los cambios en los tamaños de columna",
                     "updateWidget": "Actualiza el widget",
-                    "addToTheMap": "Agrega el widget al mapa"
+                    "addToTheMap": "Agrega el widget al mapa",
+                    "titlePlaceholder": "Ingrese el título...",
+                    "textPlaceholder": "Ingresar texto..."
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Sin widgets disponibles",
-                    "noWidgetsAvailableDescription": "<p> No puede crear ningún widgets para la capa seleccionada. Esto es probablemente porque la capa no es adecuada para los widgets disponibles o el servidor no expone todos los servicios o información necesarios para generar el widget. Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> gs: el proceso agregado no está disponible </li> </ul >) <p>"
+                    "noWidgetsAvailableDescription": "<p> No puede crear ningún widgets para la capa seleccionada. Esto es probablemente porque la capa no es adecuada para los widgets disponibles o el servidor no expone todos los servicios o información necesarios para generar el widget. Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> gs: el proceso agregado no está disponible </li> </ul >) <p>",
+                    "checkAtLeastOneAttribute": "Debes seleccionar al menos una columna"
                 },
                 "setupFilter": "Configurar un filtro para los datos del widget"
             },
@@ -1149,31 +1187,47 @@
                     "caption": "indicatores"
                 }
             },
-            "chartOptionsTitle": "Datos del gráfico",
+            "chartOptionsTitle": "Datos",
             "widgetOptionsTitle": "Información de widget",
             "groupByAttributes": {
                 "line": "Atributo X",
                 "pie": "Agrupar por",
                 "bar": "Atributo X",
-                "gauge": "Agrupar por"
+                "gauge": "Agrupar por",
+                "counter": "Agrupar por",
+                "default": "Agrupar por"
             },
             "aggregationAttribute": {
                 "line": "Atributo Y",
                 "pie": "Valor",
                 "bar": "Atributo Y",
-                "gauge": "Valor"
+                "gauge": "Valor",
+                "counter": "Valor",
+                "default": "Valor"
             },
             "aggregateFunction": {
                 "line": "Operación",
                 "pie": "Operación",
                 "bar": "Operación",
-                "gauge": "Operación"
+                "gauge": "Operación",
+                "counter": "Operación",
+                "default": "Operación"
             },
             "colorRamp": {
                 "line": "Color",
                 "pie": "Rampa de color",
                 "bar": "Color",
-                "gauge": "Color"
+                "gauge": "Color",
+                "counter": "Color",
+                "default": "Color"
+            },
+            "uom": {
+                "line": "Unidad de medida",
+                "pie": "Unidad de medida",
+                "bar": "Unidad de medida",
+                "gauge": "Unidad de medida",
+                "counter": "Unidad de medida",
+                "default": "Unidad de medida"
             },
             "mapSync": "Filtro en vivo por la Viewport",
             "displayLegend": {
@@ -1185,6 +1239,9 @@
 
         },
         "dashboard": {
+            "editor": {
+                "addACardToTheDashboard": "Agregar un widget al tablero"
+            },
             "emptyTitle": "El tablero está vacío"
         },
         "wizard": {

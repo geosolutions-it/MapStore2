@@ -64,7 +64,23 @@
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Identifiziere das Antwortformat",
-            "legenderror": "Legende ist nicht verfügbar"
+            "legenderror": "Legende ist nicht verfügbar",
+            "editCustomFormat": "Bearbeiten Sie das benutzerdefinierte Format",
+            "exampleOfResponse": "Beispiel",
+            "changedSettings": "Geänderte Einstellungen",
+            "changedSettingsAlert": "Sie schließen das Einstellungsfenster, ohne Ihre Änderungen zu speichern",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Zeigt Feature-Info-Ergebnisse als Nur-Text an",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Zeigt Feature-Info-Ergebnisse als HTML an",
+            "propertiesFormatTitle": "EIGENSCHAFTEN",
+            "propertiesFormatDescription": "Zeigt Feature-Info-Ergebnisse als Eigenschaftsliste an",
+            "templateFormatTitle": "TEMPLATE",
+            "templateFormatDescription": "Passen Sie das Ergebnis der Feature-Informationen an",
+            "templateFormatInfoAlert1": "Klicken Sie auf Bearbeiten, um eine neue Vorlage hinzuzufügen.",
+            "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um die Eigenschaften zu umbrechen, die Sie anzeigen müssen",
+            "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
+            "templatePreview": "Vorschau template"
         },
         "notification": {
             "update": "Update",
@@ -398,6 +414,11 @@
             "redoBtnTooltip": "Gehe vorwärts"
         },
         "infoFormatLbl": "Identifiziere das Antwortformat",
+        "measureSupport": {
+            "continueLine": "Klicken Sie auf, um mit dem Zeichnen der Linie fortzufahren",
+            "continuePolygon": "Klicken Sie, um mit dem Zeichnen des Polygons fortzufahren",
+            "startDrawing": "Klicken Sie, um mit dem Zeichnen zu beginnen"
+        },
         "measureComponent": {
             "Measure": "Messen",
             "MeasureLength": "Distanz messen",
@@ -410,7 +431,9 @@
             "resetButtonText": "Zurücksetzen",
             "lengthLabel": "Länge",
             "areaLabel": "Fläche",
-            "bearingLabel": "Richtung"
+            "bearingLabel": "Richtung",
+            "formula": "Formel zur Entfernungsberechnung",
+            "showLabel": "Zeige Bezeichnungsetikett"
         },
         "search":{
             "placeholder": "Suche nache einer Adresse oder gib Koordinaten ein ...",
@@ -826,7 +849,8 @@
             "error": {
                 "select": "Wählen Sie die richtige Datei aus",
                 "shapeFileParsingError": "Das Shapefile kann nicht geladen werden. Die Datei könnte beschädigt oder nicht gut geformt sein",
-                "genericLoadError": "Das Shapefile kann nicht auf der Karte geladen werden"
+                "genericLoadError": "Das Shapefile kann nicht auf der Karte geladen werden",
+                "missingPrj": "Fehlende Projektionsinformation (.prj), Koordinatensystem soll EPSG: 4326 sein"
             },
             "add": "Hinzufügen",
             "cancel": "Abbrechen",
@@ -1077,7 +1101,6 @@
             }
         },
         "widgets": {
-
             "types": {
                 "chart": {
                     "title": "Grafik",
@@ -1085,7 +1108,15 @@
                 },
                 "text": {
                     "title": "Text",
-                    "caption": "Fügen Sie einen Textbereich hinzu"
+                    "caption": "fügen Sie einen Textbereich hinzu"
+                },
+                "table": {
+                    "title": "Tabelle",
+                    "caption": "füge eine Tabelle hinzu"
+                },
+                "counter": {
+                    "title": "Zähler",
+                    "caption": "füge einen Zähler hinzu"
                 }
             },
             "selectWidgetType": "Wählen Sie den Widgettyp",
@@ -1109,12 +1140,18 @@
                     "backToChartOptions": "Zurück zu den Diagrammoptionen",
                     "configureChartOptions": "Diagrammoptionen konfigurieren",
                     "configureWidgetOptions": "Widget-Optionen konfigurieren",
+                    "backToTableOptions": "Zurück zu den Tabellenoptionen",
+                    "configureTableOptions": "Konfigurieren Sie die Tabellenoptionen",
+                    "resetColumnsSizes": "Setzen Sie alle Änderungen an den Spaltengrößen zurück",
                     "updateWidget": "Aktualisieren Sie das Widget",
-                    "addToTheMap": "Hinzufügen des Widgets zur Karte"
+                    "addToTheMap": "Hinzufügen des Widgets zur Karte",
+                    "titlePlaceholder": "Gib den Titel ein...",
+                    "textPlaceholder": "Text eingeben..."
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Keine Widgets verfügbar",
-                    "noWidgetsAvailableDescription": "<p> Sie können keine Widgets für die ausgewählte Ebene erstellen. Dies liegt wahrscheinlich daran, dass der Layer nicht für die verfügbaren Widgets geeignet ist oder der Server nicht alle benötigten Services oder Informationen zum Generieren eines Widgets bereitstellt. Mögliche Ursachen sind: <ul><li> Die ausgewählte Ebene ist eine Rasterebene </li><li> WFS-Dienst ist nicht verfügbar </li><li> gs: Aggregatprozess ist nicht verfügbar </li> </ul>) <p>"
+                    "noWidgetsAvailableDescription": "<p> Sie können keine Widgets für die ausgewählte Ebene erstellen. Dies liegt wahrscheinlich daran, dass der Layer nicht für die verfügbaren Widgets geeignet ist oder der Server nicht alle benötigten Services oder Informationen zum Generieren eines Widgets bereitstellt. Mögliche Ursachen sind: <ul><li> Die ausgewählte Ebene ist eine Rasterebene </li><li> WFS-Dienst ist nicht verfügbar </li><li> gs: Aggregatprozess ist nicht verfügbar </li> </ul>) <p>",
+                     "checkAtLeastOneAttribute": "Sie müssen mindestens eine Spalte auswählen"
                 },
                 "setupFilter": "Konfigurieren Sie einen Filter für die Widgetdaten"
             },
@@ -1156,25 +1193,41 @@
                 "line": "X-Attribut",
                 "pie": "Gruppiere nach",
                 "bar": "X-Attribut",
-                "gauge": "Gruppiere nach"
+                "gauge": "Gruppiere nach",
+                "counter": "Gruppiere nach",
+                "default": "Gruppiere nach"
             },
             "aggregationAttribute": {
                 "line": "Y-Attribut",
                 "pie": "Wert",
                 "bar": "Y-Attribut",
-                "gauge": "Wert"
+                "gauge": "Wert",
+                "counter": "Wert",
+                "default": "Wert"
             },
             "aggregateFunction": {
                 "line": "Betrieb",
                 "pie": "Betrieb",
                 "bar": "Betrieb",
-                "gauge": "Betrieb"
+                "gauge": "Betrieb",
+                "counter": "Betrieb",
+                "default": "Betrieb"
             },
             "colorRamp": {
                 "line": "Farbe",
                 "pie": "Farbrampe",
                 "bar": "Farbe",
-                "gauge": "Farbe"
+                "gauge": "Farbe",
+                "counter": "Farbe",
+                "default": "Farbe"
+            },
+            "uom": {
+                "line": "Maßeinheit",
+                "pie": "Maßeinheit",
+                "bar": "Maßeinheit",
+                "gauge": "Maßeinheit",
+                "counter": "Maßeinheit",
+                "default": "Maßeinheit"
             },
             "mapSync": "Live-Filter nach Ansichtsfenster",
             "displayLegend": {
@@ -1186,6 +1239,9 @@
 
         },
         "dashboard": {
+            "editor": {
+                "addACardToTheDashboard": "Agregar un widget al tablero"
+            },
             "emptyTitle": "Das Armaturenbrett ist leer"
         },
         "wizard": {

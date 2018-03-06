@@ -8,39 +8,21 @@
 
 const Rx = require('rxjs');
 const axios = require('../libs/ajax');
-const Url = require('url');
+
 const {changeSpatialAttribute, SELECT_VIEWPORT_SPATIAL_METHOD, updateGeometrySpatialField} = require('../actions/queryform');
 const {CHANGE_MAP_VIEW} = require('../actions/map');
 const {FEATURE_TYPE_SELECTED, QUERY, UPDATE_QUERY, featureLoading, featureTypeLoaded, featureTypeError, querySearchResponse, queryError} = require('../actions/wfsquery');
 const {paginationInfo, isDescribeLoaded, layerDescribeSelector} = require('../selectors/query');
 const {mapSelector} = require('../selectors/map');
 const {authkeyParamNameSelector} = require('../selectors/catalog');
-const FilterUtils = require('../utils/FilterUtils');
+
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const ConfigUtils = require('../utils/ConfigUtils');
 const assign = require('object-assign');
 const {spatialFieldMethodSelector, spatialFieldSelector, spatialFieldGeomTypeSelector, spatialFieldGeomCoordSelector, spatialFieldGeomSelector, spatialFieldGeomProjSelector} = require('../selectors/queryform');
 const {changeDrawingStatus} = require('../actions/draw');
 const {INIT_QUERY_PANEL} = require('../actions/wfsquery');
-
-const {isObject} = require('lodash');
-const {interceptOGCError} = require('../utils/ObservableUtils');
-// this is a workaround for https://osgeo-org.atlassian.net/browse/GEOS-7233. can be removed when fixed
-const workaroundGEOS7233 = ({totalFeatures, features, ...rest}, {startIndex, maxFeatures}, originalSize) => {
-    if (originalSize > totalFeatures && originalSize === startIndex + features.length && totalFeatures === features.length) {
-        return {
-            ...rest,
-            features,
-            totalFeatures: originalSize
-        };
-    }
-    return {
-        ...rest,
-        features,
-        totalFeatures
-    };
-
-};
+const {getJSONFeatureWA} = require('../observables/wfs');
 const {describeFeatureTypeToAttributes} = require('../utils/FeatureTypeUtils');
 const extractInfo = (data) => {
     return {
@@ -62,61 +44,12 @@ const extractInfo = (data) => {
     };
 };
 
-const getWFSFilterData = (filterObj) => {
-    let data;
-    if (typeof filterObj === 'string') {
-        data = filterObj;
-    } else {
-        data = filterObj.filterType === "OGC" ?
-            FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits) :
-            FilterUtils.toCQLFilter(filterObj);
-    }
-    return data;
-};
-
-const getWFSFeature = (searchUrl, filterObj, state) => {
-    const data = getWFSFilterData(filterObj);
-
-    const urlParsedObj = Url.parse(ConfigUtils.filterUrlParams(searchUrl, authkeyParamNameSelector(state)), true);
-    let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};
-    params.service = 'WFS';
-    params.outputFormat = 'json';
-    const queryString = Url.format({
-        protocol: urlParsedObj.protocol,
-        host: urlParsedObj.host,
-        pathname: urlParsedObj.pathname,
-        query: params
-    });
-
-    return Rx.Observable.defer( () =>
-        axios.post(queryString, data, {
-            timeout: 60000,
-            headers: {'Accept': 'application/json', 'Content-Type': 'application/json'}
-        }));
-};
-
 const getFirstAttribute = (state)=> {
     return state.query && state.query.featureTypes && state.query.featureTypes[state.query.typeName] && state.query.featureTypes[state.query.typeName].attributes && state.query.featureTypes[state.query.typeName].attributes[0] && state.query.featureTypes[state.query.typeName].attributes[0].attribute || null;
 };
 
 const getDefaultSortOptions = (attribute) => {
     return attribute ? { sortBy: attribute, sortOrder: 'A'} : {};
-};
-
-const retryWithForcedSortOptions = (action, store) => {
-    const sortOptions = getDefaultSortOptions(getFirstAttribute(store.getState()));
-    return getWFSFeature(action.searchUrl, assign(action.filterObj, {
-        sortOptions
-    }), store.getState())
-        .let(interceptOGCError)
-        .map((newResponse) => {
-            const state = store.getState();
-            const data = workaroundGEOS7233(newResponse.data, action.filterObj.pagination, paginationInfo.totalFeatures(state));
-            return querySearchResponse(data, action.searchUrl, action.filterObj);
-        })
-        .catch((e) => {
-            return Rx.Observable.of(queryError(e));
-        });
 };
 
 /**
@@ -161,25 +94,20 @@ const featureTypeSelectedEpic = (action$, store) =>
  * @param {external:Observable} action$ manages `QUERY`
  * @return {external:Observable}
  */
-
 const wfsQueryEpic = (action$, store) =>
     action$.ofType(QUERY)
         .switchMap(action => {
+            const sortOptions = getDefaultSortOptions(getFirstAttribute(store.getState()));
+            const totalFeatures = paginationInfo.totalFeatures(store.getState());
+            const searchUrl = ConfigUtils.filterUrlParams(action.searchUrl, authkeyParamNameSelector(store.getState()));
             return Rx.Observable.merge(
-                getWFSFeature(action.searchUrl, action.filterObj, store.getState())
-                    .let(interceptOGCError)
-                    .switchMap((response) => {
-                        const state = store.getState();
-                        const data = workaroundGEOS7233(response.data, action.filterObj.pagination, paginationInfo.totalFeatures(state));
-                        return Rx.Observable.of(querySearchResponse(data, action.searchUrl, action.filterObj));
+                    getJSONFeatureWA(searchUrl, action.filterObj, {
+                        totalFeatures,
+                        sortOptions
                     })
+                    .map(data => querySearchResponse(data, action.searchUrl, action.filterObj))
+                    .catch(error => Rx.Observable.of(queryError(error)))
                     .startWith(featureLoading(true))
-                    .catch((error) => {
-                        if (error.name === "OGCError" && error.code === 'NoApplicableCode') {
-                            return retryWithForcedSortOptions(action, store);
-                        }
-                        return Rx.Observable.of(queryError(error));
-                    })
                     .concat(Rx.Observable.of(featureLoading(false)))
             ).takeUntil(action$.ofType(UPDATE_QUERY));
         });
@@ -239,6 +167,5 @@ module.exports = {
     featureTypeSelectedEpic,
     wfsQueryEpic,
     redrawSpatialFilterEpic,
-    viewportSelectedEpic,
-    getWFSFilterData
+    viewportSelectedEpic
 };

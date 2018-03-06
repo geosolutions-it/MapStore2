@@ -18,7 +18,11 @@ var {
     getViewer,
     setViewer,
     getLabelFromValue,
-    getDefaultInfoFormatValueFromLayer
+    getDefaultInfoFormatValueFromLayer,
+    getLayerFeatureInfo,
+    filterRequestParams,
+    validateStringAttribute,
+    getCleanTemplate
 } = require('../MapInfoUtils');
 
 const CoordinatesUtils = require('../CoordinatesUtils');
@@ -35,7 +39,8 @@ describe('MapInfoUtils', () => {
         let testData = {
             "TEXT": "text/plain",
             "HTML": "text/html",
-            "PROPERTIES": "application/json"
+            "PROPERTIES": "application/json",
+            "TEMPLATE": "application/json"
         };
         let results = getAvailableInfoFormat();
         expect(results).toExist();
@@ -50,10 +55,10 @@ describe('MapInfoUtils', () => {
     });
 
     it('getAvailableInfoFormatLabels', () => {
-        let testData = ['TEXT', 'PROPERTIES', 'HTML'];
+        let testData = ['TEXT', 'PROPERTIES', 'HTML', 'TEMPLATE'];
         let results = getAvailableInfoFormatLabels();
         expect(results).toExist();
-        expect(results.length).toBe(3);
+        expect(results.length).toBe(4);
 
         expect(results.reduce((prev, label) => {
             return prev && testData.indexOf(label) !== -1;
@@ -64,7 +69,7 @@ describe('MapInfoUtils', () => {
         let testData = ['text/plain', 'text/html', 'application/json'];
         let results = getAvailableInfoFormatValues();
         expect(results).toExist();
-        expect(results.length).toBe(3);
+        expect(results.length).toBe(4);
 
         expect(results.reduce((prev, value) => {
             return prev && testData.indexOf(value) !== -1;
@@ -343,10 +348,70 @@ describe('MapInfoUtils', () => {
         let label = getLabelFromValue("text_or_something_else");
         expect(label).toBe("TEXT");
     });
+
+    it('getDefaultInfoFormatValueFromLayer', () => {
+        const jsonFormat = getDefaultInfoFormatValueFromLayer({featureInfo: {format: "JSON"}}, {});
+        expect(jsonFormat).toBe('application/json');
+        const htmlFormat = getDefaultInfoFormatValueFromLayer({}, {format: "text/html"});
+        expect(htmlFormat).toBe('text/html');
+    });
+
+    it('getLayerFeatureInfo', () => {
+        expect(getLayerFeatureInfo()).toEqual({});
+        expect(getLayerFeatureInfo({})).toEqual({});
+        expect(getLayerFeatureInfo({featureInfo: {format: 'TEXT'}})).toEqual({format: 'TEXT'});
+    });
+
+    it('filterRequestParams', () => {
+        const excludeParams = ["SLD_BODY"];
+        const includeOptions = ["buffer", "cql_filter", "filter", "propertyName"];
+
+        expect(filterRequestParams({
+            SLD_BODY: '<Style/>',
+            buffer: 'buffer',
+            cql_filter: 'cql_filter',
+            filter: 'filter',
+            propertyName: 'propertyName',
+            name: 'layer:01'
+        }, [], [])).toEqual({});
+
+        expect(filterRequestParams({
+            name: 'layer:01'
+        }, includeOptions, excludeParams)).toEqual({});
+
+        expect(filterRequestParams({
+            SLD_BODY: '<Style/>',
+            buffer: 'buffer',
+            cql_filter: 'cql_filter',
+            filter: 'filter',
+            propertyName: 'propertyName',
+            name: 'layer:01'
+        }, includeOptions, excludeParams)).toEqual({ buffer: 'buffer', cql_filter: 'cql_filter', filter: 'filter', propertyName: 'propertyName' });
+    });
+
+    it('validateStringAttribute', () => {
+        const testObj = {
+            properties: {
+                name: 'object-name'
+            }
+        };
+        expect(validateStringAttribute(testObj, 'properties.name')).toBe(true);
+        expect(validateStringAttribute(testObj, ' properties.name ')).toBe(true);
+        expect(validateStringAttribute(testObj, '${properties.name}')).toBe(false);
+        expect(validateStringAttribute(testObj, '${properties.name}', 2, 1)).toBe(true);
+        expect(validateStringAttribute(testObj, '${ properties.name }', 2, 1)).toBe(true);
+        expect(validateStringAttribute(testObj, 'properties.desc')).toBe(false);
+    });
+
+    it('getCleanTemplate', () => {
+        const template = '<p>the name is ${ properties.name } and the description ${ properties.desc } and again the name is ${ <strong>properties.name</strong> }</p>';
+        const testObj = {
+            properties: {
+                name: 'object-name'
+            }
+        };
+        expect(getCleanTemplate(template, testObj, /\$\{.*?\}/g, 2, 1)).toBe('<p>the name is ${ properties.name } and the description  and again the name is ${ properties.name }</p>');
+
+    });
 });
-it('getDefaultInfoFormatValueFromLayer', () => {
-    const jsonFormat = getDefaultInfoFormatValueFromLayer({featureInfo: {format: "JSON"}}, {});
-    expect(jsonFormat).toBe('application/json');
-    const htmlFormat = getDefaultInfoFormatValueFromLayer({}, {format: "text/html"});
-    expect(htmlFormat).toBe('text/html');
-});
+

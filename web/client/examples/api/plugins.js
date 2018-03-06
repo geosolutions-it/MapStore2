@@ -41,7 +41,8 @@ module.exports = {
         SaveAsPlugin: require('../../plugins/SaveAs'),
         TOCPlugin: require('../../plugins/TOC'),
         BackgroundSelectorPlugin: require('../../plugins/BackgroundSelector'),
-        MeasurePlugin: require('../../plugins/Measure')
+        MeasurePlugin: require('../../plugins/Measure'),
+        TOCItemsSettingsPlugin: require('../../plugins/TOCItemsSettings')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

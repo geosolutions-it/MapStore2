@@ -11,8 +11,8 @@ const {connect} = require('react-redux');
 const {compose, withProps} = require('recompose');
 const {createSelector} = require('reselect');
 const {mapIdSelector} = require('../selectors/map');
-const {getDashboardWidgets, dashBoardDependenciesSelector, getDashboardWidgetsLayout} = require('../selectors/widgets');
-const {editWidget, deleteWidget, changeLayout, exportCSV, exportImage} = require('../actions/widgets');
+const { getDashboardWidgets, dashBoardDependenciesSelector, getDashboardWidgetsLayout} = require('../selectors/widgets');
+const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage} = require('../actions/widgets');
 const ContainerDimensions = require('react-container-dimensions').default;
 
 const PropTypes = require('prop-types');
@@ -31,6 +31,7 @@ const WidgetsView = compose(
             })
         ), {
             editWidget,
+            updateWidgetProperty,
             exportCSV,
             exportImage,
             deleteWidget,

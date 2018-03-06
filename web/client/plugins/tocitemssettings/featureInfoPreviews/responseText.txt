@@ -1,0 +1,26 @@
+Results for FeatureType 'http://www.openplans.org/topp:states':
+--------------------------------------------
+the_geom = [GEOMETRY (Polygon) with 48 points]
+STATE_NAME = Wyoming
+STATE_FIPS = 56
+SUB_REGION = Mtn
+STATE_ABBR = WY
+LAND_KM = 251500.801
+WATER_KM = 1848.149
+PERSONS = 453588.0
+FAMILIES = 119825.0
+HOUSHOLD = 168839.0
+MALE = 227007.0
+FEMALE = 226581.0
+WORKERS = 164561.0
+DRVALONE = 153679.0
+CARPOOL = 28109.0
+PUBTRANS = 2963.0
+EMPLOYED = 207868.0
+UNEMPLOY = 13112.0
+SERVICE = 71419.0
+MANUAL = 29157.0
+P_MALE = 0.5
+P_FEMALE = 0.5
+SAMP_POP = 83202.0
+--------------------------------------------

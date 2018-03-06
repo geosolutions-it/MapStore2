@@ -8,7 +8,7 @@
 
 
 const {compose, withState, withPropsOnChange, withHandlers} = require('recompose');
-const wizardHanlders = compose(
+const wizardHandlers = compose(
     withPropsOnChange(["step"], ({skipButtonsOnSteps = [], step, hideButtons} = {}) => {
         if (skipButtonsOnSteps && skipButtonsOnSteps.indexOf(step) >= 0) {
             return {hideButtons: true};
@@ -26,18 +26,18 @@ const wizardHanlders = compose(
 );
 module.exports = {
    /**
-    * Apply this enhancer to the WizarContainer to make it controlled.
-    * It controls the step and the hideButtons paroperties
+    * Apply this enhancer to the WizardContainer to make it controlled.
+    * It controls the step and the hideButtons properties
     */
     controlledWizard: compose(
         withState(
             "step", "setPage", 0
         ),
-        wizardHanlders
+        wizardHandlers
     ),
     /**
      * Use this enhancer if you want to change step and use setPage as handler
      */
-    wizardHanlders
+    wizardHandlers
 
 };

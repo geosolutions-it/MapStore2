@@ -64,7 +64,23 @@
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa",
-            "legenderror": "Legenda non disponibile"
+            "legenderror": "Legenda non disponibile",
+            "editCustomFormat": "Edita formato",
+            "exampleOfResponse": "Esempio",
+            "changedSettings": "Proprietà modificate",
+            "changedSettingsAlert": "Stai chiudendo il pannello senza salvare le tue modifiche",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Mosta i risultati come testo",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Mosta i risultati come html",
+            "propertiesFormatTitle": "PROPRIETÀ",
+            "propertiesFormatDescription": "Mosta i risultati come lista di proprietà",
+            "templateFormatTitle": "TEMPLATE",
+            "templateFormatDescription": "Personalizza il formato di risposta",
+            "templateFormatInfoAlert1": "Click sul bottone di modifica per aggiungere un nuovo template.",
+            "templateFormatInfoAlert2": "Usa ${ attribute } per aggiungere gli attributi da visualizzare",
+            "templateFormatInfoAlertExample": "id della feature è ${ properties }",
+            "templatePreview": "Anteprima template"
         },
         "notification": {
             "update": "Aggiorna",
@@ -398,6 +414,11 @@
             "redoBtnTooltip": "Vai avanti"
         },
         "infoFormatLbl": "Formato risposte interrogazioni su mappa",
+        "measureSupport": {
+            "continueLine": "Clicca per continuare a disegnare la linea",
+            "continuePolygon": "Clicca per continuare a disegnare il poligono",
+            "startDrawing": "Clicca per iniziare a disegnare"
+        },
         "measureComponent": {
             "Measure": "Misura",
             "MeasureLength": "Misura Distanza",
@@ -410,7 +431,9 @@
             "resetButtonText": "Azzerare",
             "lengthLabel": "Lunghezza",
             "areaLabel": "Area",
-            "bearingLabel": "Direzione"
+            "bearingLabel": "Direzione",
+            "formula": "Formula per il calcolo della distanza",
+            "showLabel": "Mostra etichetta di misurazione"
         },
         "search":{
             "placeholder": "Cerca un indirizzo o inserisci coordinate...",
@@ -640,7 +663,6 @@
                     "details_header": "Dettaglio Selezione",
                     "details_bbox_label": "Edita le coordinate per modificare l'area",
                     "details_circle_label": "Edita i campi numerici per modificare raggio e centro del cerchio",
-                    "reset": "Reimposta allo stato iniziale",
                     "reset_bbox": "Reset",
                     "save_bbox": "Salva le modifiche al BBOX",
                     "save_radius": "Salva le modifiche al raggio e/o al centro",
@@ -827,7 +849,8 @@
             "error": {
                 "select": "Seleziona file corretto. File supportati: SHAPEFILES contenuti in archivi zip, KML/KMZ e GPX)",
                 "shapeFileParsingError": "Non è stato possibile caricare il file. Il file potrebbe essere danneggiato o non corretto",
-                "genericLoadError": "Il file non è stato caricato correttamente sulla mappa"
+                "genericLoadError": "Il file non è stato caricato correttamente sulla mappa",
+                "missingPrj": "Mancono le informazioni sul sistema di riferimento (.prj), si utilizza EPSG:4326 come valore prdefinito"
             },
             "add": "Importa",
             "cancel": "Annulla",
@@ -1086,6 +1109,14 @@
                 "text": {
                     "title": "Testo",
                     "caption": "aggiungi un area di testo"
+                },
+                "table": {
+                    "title": "Tabella",
+                    "caption": "aggiungi una tabella"
+                },
+                "counter": {
+                    "title": "Contatore",
+                    "caption": "aggiungi un contatore"
                 }
             },
             "selectWidgetType": "Seleziona il tipo di widget",
@@ -1109,12 +1140,18 @@
                     "backToChartOptions": "Torna alle opzioni del grafico",
                     "configureChartOptions": "Configura le opzioni del grafico",
                     "configureWidgetOptions": "Configura le opzioni del widget",
+                     "backToTableOptions": "Torna alle opzioni della tabella",
+                    "configureTableOptions": "Configura le opzioni della tabella",
+                    "resetColumnsSizes": "Reimposta larghezza automatica delle colonne",
                     "updateWidget": "Aggiorna il widget",
-                    "addToTheMap": "Aggiungi il widget alla mappa"
+                    "addToTheMap": "Aggiungi il widget alla mappa",
+                    "titlePlaceholder": "Inserisci il titolo...",
+                    "textPlaceholder": "Inserisci il testo..."
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Nessun widgets disponibile",
-                    "noWidgetsAvailableDescription": "<p>Non si possono creare widget per il livello selezionato. Questo perchè il livello non è adatto a nessuno degli widget disponibili o perché il server non espone sufficienti servizi per gernerali. Possibili cause: <ul><li>Hai selezionato un livello raster</li><li>Il servizio WFS non è disponibile per il livello in oggetto</li><li>Il processo gs:aggregate non è disponibile sul server</li></ul> )<p>"
+                    "noWidgetsAvailableDescription": "<p>Non si possono creare widget per il livello selezionato. Questo perchè il livello non è adatto a nessuno degli widget disponibili o perché il server non espone sufficienti servizi per gernerali. Possibili cause: <ul><li>Hai selezionato un livello raster</li><li>Il servizio WFS non è disponibile per il livello in oggetto</li><li>Il processo gs:aggregate non è disponibile sul server</li></ul> )<p>",
+                    "checkAtLeastOneAttribute": "seleziona almeno un attributo"
                 },
                 "setupFilter": "Configura un filtro per il livello selezionato"
             },
@@ -1150,31 +1187,47 @@
                     "caption": "cruscotto"
                 }
             },
-            "chartOptionsTitle": "Dati grafico",
+            "chartOptionsTitle": "Dati",
             "widgetOptionsTitle": "Informazioni",
             "groupByAttributes": {
                 "line": "Attributo X",
                 "pie": "Raggruppa per",
                 "bar": "Attributo X",
-                "gauge": "Group By"
+                "gauge": "Raggruppa per",
+                "counter": "Raggruppa per",
+                "default": "Raggruppa per"
             },
             "aggregationAttribute": {
                 "line": "Attributo Y",
                 "pie": "Valore",
                 "bar": "Attributo Y",
-                "gauge": "Valore"
+                "gauge": "Valore",
+                "counter": "Valore",
+                "default": "Valore"
             },
             "aggregateFunction": {
                 "line": "Operazione",
                 "pie": "Operazione",
                 "bar": "Operazione",
-                "gauge": "Operazione"
+                "gauge": "Operazione",
+                "counter": "Operazione",
+                "default": "Operazione"
             },
             "colorRamp": {
                 "line": "Colore",
                 "pie": "Scala colori",
                 "bar": "Colore",
-                "gauge": "Colore"
+                "gauge": "Colore",
+                "counter": "Colore",
+                "default": "Colore"
+                },
+            "uom": {
+                "line": "Unità di misura",
+                "pie": "Unità di misura",
+                "bar": "Unità di misura",
+                "gauge": "Unità di misura",
+                "counter": "Unità di misura",
+                "default": "Unità di misura"
             },
             "mapSync": "Filtra dati sull'area visibile",
             "displayLegend": {
@@ -1186,6 +1239,9 @@
 
         },
         "dashboard": {
+             "editor": {
+                "addACardToTheDashboard": "Aggiungi un widget alla dashboard"
+            },
             "emptyTitle": "La dashboard è vuota"
         },
         "wizard": {

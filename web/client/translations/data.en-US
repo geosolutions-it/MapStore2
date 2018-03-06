@@ -64,7 +64,24 @@
             "groupProperties": "Group properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Identify response format",
-            "legenderror": "Legend is not available"
+            "legenderror": "Legend is not available",
+            "editCustomFormat": "Edit custom format",
+            "exampleOfResponse": "Example",
+            "changedSettings": "Changed Settings",
+            "changedSettingsAlert": "You are closing the settings panel without save your changes",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Shows feature info results as plain text",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Shows feature info results as html",
+            "propertiesFormatTitle": "PROPERTIES",
+            "propertiesFormatDescription": "Shows feature info results as properties list",
+            "templateFormatTitle": "TEMPLATE",
+            "templateFormatDescription": "Customize feature info results format",
+            "templateFormatInfoAlert1": "Click on edit button to add a new template.",
+            "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
+            "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
+            "templatePreview": "Template preview"
+
         },
         "notification": {
             "update": "Update",
@@ -398,6 +415,11 @@
             "redoBtnTooltip": "Go forward"
         },
         "infoFormatLbl": "Identify response format",
+        "measureSupport": {
+            "continueLine": "Click to continue drawing the line",
+            "continuePolygon": "Click to continue drawing the polygon",
+            "startDrawing": "Click to start drawing"
+        },
         "measureComponent": {
             "Measure": "Measure",
             "MeasureLength": "Measure Distance",
@@ -410,7 +432,9 @@
             "resetButtonText": "Reset",
             "lengthLabel": "Length",
             "areaLabel": "Area",
-            "bearingLabel": "Bearing"
+            "bearingLabel": "Bearing",
+            "formula": "Formula for distance calculation",
+            "showLabel": "Show measurement label"
         },
         "search":{
             "placeholder": "Search by location name or coordinates ...",
@@ -826,7 +850,8 @@
             "error": {
                 "select": "Select one or more files. (supported files: shapefiles must be contained in zip archives, KML/KMZ e GPX)",
                 "shapeFileParsingError": "Cannot load the vector file. The file could be damaged or not well formed",
-                "genericLoadError": "Cannot load the vector file on map"
+                "genericLoadError": "Cannot load the vector file on map",
+                "missingPrj": "Missing projection info (.prj), coordinate system is  supposed to be EPSG:4326"
             },
             "add": "Add",
             "cancel": "Cancel",
@@ -1085,6 +1110,14 @@
                 "text": {
                     "title": "Text",
                     "caption": "add a text area"
+                },
+                "table": {
+                    "title": "Table",
+                    "caption": "add a table"
+                },
+                "counter": {
+                    "title": "Counter",
+                    "caption": "add a counter"
                 }
             },
             "selectWidgetType": "Select the widget type",
@@ -1108,12 +1141,18 @@
                     "backToChartOptions": "Back to chart options",
                     "configureChartOptions": "Configure chart options",
                     "configureWidgetOptions": "Configure widget options",
+                    "backToTableOptions": "Back to table options",
+                    "configureTableOptions": "Configure table options",
+                    "resetColumnsSizes": "Reset all changes to the column sizes",
                     "updateWidget": "Update the widget",
-                    "addToTheMap": "Add the widget to the map"
+                    "addToTheMap": "Add the widget to the map",
+                    "titlePlaceholder": "Insert title...",
+                    "textPlaceholder": "Insert text..."
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "No Widgets available",
-                    "noWidgetsAvailableDescription": "<p>You can't create any widgets for the selected layer. This is probably because the layer is not suitable for the available widgets or the server doesn't expose all the needed services or information to generate widget. Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li><code>gs:aggregate process</code> is not available</li></ul><p>"
+                    "noWidgetsAvailableDescription": "<p>You can't create any widgets for the selected layer. This is probably because the layer is not suitable for the available widgets or the server doesn't expose all the needed services or information to generate widget. Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li><code>gs:aggregate process</code> is not available</li></ul><p>",
+                    "checkAtLeastOneAttribute": "You must select at least one column"
                 },
                 "setupFilter": "Configure a filter for the widget data"
             },
@@ -1149,31 +1188,47 @@
                     "caption": "gauge"
                 }
             },
-            "chartOptionsTitle": "Chart Data",
+            "chartOptionsTitle": "Data",
             "widgetOptionsTitle": "Widget Info",
             "groupByAttributes": {
                 "line": "X Attribute",
                 "pie": "Group By",
                 "bar": "X Attribute",
-                "gauge": "Group By"
+                "gauge": "Group By",
+                "counter": "Group By",
+                "default": "Group By"
             },
             "aggregationAttribute": {
                 "line": "Y Attribute",
                 "pie": "Value",
                 "bar": "Y Attribute",
-                "gauge": "Value"
+                "gauge": "Value",
+                "counter": "Value",
+                "default": "Value"
             },
             "aggregateFunction": {
                 "line": "Operation",
                 "pie": "Operation",
                 "bar": "Operation",
-                "gauge": "Operation"
+                "gauge": "Operation",
+                "counter": "Operation",
+                "default": "Operation"
             },
             "colorRamp": {
                 "line": "Color",
                 "pie": "Color Ramp",
                 "bar": "Color",
-                "gauge": "Color"
+                "gauge": "Color",
+                "counter": "Color",
+                "default": "Color"
+            },
+            "uom": {
+                "line": "Unit of measure",
+                "pie": "Unit of measure",
+                "bar": "Unit of measure",
+                "gauge": "Unit of measure",
+                "counter": "Unit of measure",
+                "default": "Unit of measure"
             },
             "mapSync": "Live Filter by viewport",
             "displayLegend": {
@@ -1185,6 +1240,9 @@
 
         },
         "dashboard": {
+            "editor": {
+                "addACardToTheDashboard": "Add a widget to the dashboard"
+            },
             "emptyTitle": "The dashboard is empty"
         },
         "wizard": {

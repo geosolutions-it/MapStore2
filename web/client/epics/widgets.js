@@ -4,6 +4,7 @@ const {EXPORT_CSV, EXPORT_IMAGE, clearWidgets} = require('../actions/widgets');
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
+const { MAP_CREATED, SAVING_MAP, MAP_ERROR } = require('../actions/maps');
 const {LOCATION_CHANGE} = require('react-router-redux');
 const {saveAs} = require('file-saver');
 const FileUtils = require('../utils/FileUtils');
@@ -15,6 +16,16 @@ const outerHTML = (node) => {
     parent.appendChild(node.cloneNode(true));
     return parent.innerHTML;
 };
+/**
+ * Disables action emissions on the stream between SAVING_MAP and MAP_CREATED or MAP_ERROR events.
+ * This is needed to avoid widget clear when LOCATION_CHANGE because of a map save.
+ */
+const getValidLocationChange = action$ =>
+    action$.ofType(SAVING_MAP, MAP_CREATED, MAP_ERROR)
+        .startWith({type: MAP_CONFIG_LOADED}) // just dummy action to trigger the first switchMap
+        .switchMap(action => action.type === SAVING_MAP ? Rx.Observable.never() : action$)
+        .filter(({type} = {}) => type === LOCATION_CHANGE);
+
 module.exports = {
     exportWidgetData: action$ =>
         action$.ofType(EXPORT_CSV)
@@ -23,10 +34,10 @@ module.exports = {
                     csv
                 ], {type: "text/csv"}), title + ".csv")))
             .filter( () => false),
-    clearWidgetsOnlocationChange: (action$, {getState = () => {}} = {}) =>
+    clearWidgetsOnLocationChange: (action$, {getState = () => {}} = {}) =>
         action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
             const location = get(getState(), "routing.location");
-            return action$.ofType(LOCATION_CHANGE)
+            return action$.let(getValidLocationChange)
                 .filter( () => {
                     const newLocation = get(getState(), "routing.location");
                     return newLocation !== location;

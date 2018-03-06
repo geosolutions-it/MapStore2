@@ -5,14 +5,14 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {wizardHanlders} = require('../enhancers');
+const {wizardHandlers} = require('../enhancers');
 
 const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
 
 const expect = require('expect');
-const WizardContainer = wizardHanlders(require('../WizardContainer'));
+const WizardContainer = wizardHandlers(require('../WizardContainer'));
 
 describe('wizard enhancers ', () => {
     beforeEach((done) => {

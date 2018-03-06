@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require('rxjs');
-const {get, head, isEmpty, find, fill} = require('lodash');
+const {get, head, isEmpty, find} = require('lodash');
 const { LOCATION_CHANGE } = require('react-router-redux');
 const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
@@ -53,7 +53,7 @@ const {getLayerFromId} = require('../selectors/layers');
 
 const {interceptOGCError} = require('../utils/ObservableUtils');
 
-const {gridUpdateToQueryUpdate, getIdxFarthestEl, removePageFeatures, removePage} = require('../utils/FeatureGridUtils');
+const {gridUpdateToQueryUpdate, updatePages} = require('../utils/FeatureGridUtils');
 
 const {queryFormUiStateSelector} = require('../selectors/queryform');
 /**
@@ -679,9 +679,9 @@ module.exports = {
         .switchMap( ac => {
             const state = getState();
             const {startPage, endPage} = ac.pages;
-            const {pages, pagination} = state.featuregrid;
+            const {pages: oldPages, pagination} = state.featuregrid;
             const size = get(pagination, "size");
-            const nPs = getPagesToLoad(startPage, endPage, pages, size);
+            const nPs = getPagesToLoad(startPage, endPage, oldPages, size);
             const needPages = (nPs[1] - nPs[0] + 1 );
             return Rx.Observable.of( query(wfsURL(state),
                     addPagination({
@@ -692,38 +692,19 @@ module.exports = {
                     )).filter(() => nPs.length > 0)
                 .merge( action$.ofType(QUERY_RESULT)
                     .filter(() => nPs.length > 0)
-                    .map((ra) => {
-                        let {features = [], maxStoredPages} = (getState()).featuregrid;
-                        let fts = get(ra, "result.features", []);
-                        if (fts.length !== needPages * size) {
-                            fts = fts.concat(fill(Array(needPages * size - fts.length), false));
-                        }
-                        const startIdx = get(ra, "filterObj.pagination.startIndex");
-                        let oldPages = pages;
-                        // Cached page should be less than the max of maxStoredPages or the number of page needed to fill the visible are of the grid
-                        const nSpaces = oldPages.length + needPages - Math.max(maxStoredPages, (endPage - startPage + 1));
-                        if ( nSpaces > 0) {
-                            const firstRow = startPage * size;
-                            const lastRow = endPage * size;
-                            // Remove the farthest page from last loaded pages
-                            const averageIdx = firstRow + (lastRow - firstRow) / 2;
-                            for (let i = 0; i < nSpaces; i++) {
-                                const idxFarthestEl = getIdxFarthestEl(averageIdx, pages, firstRow, lastRow);
-                                const idxToRemove = idxFarthestEl * size;
-                                oldPages = removePage(idxFarthestEl, oldPages);
-                                features = removePageFeatures(features, idxToRemove, size);
-                            }
-                        }
-                        let pagesLoaded = [];
-                        for (let i = 0; i < needPages; i++) {
-                            pagesLoaded.push(startIdx + (size * i));
-                        }
-                        const newPages = oldPages.concat(pagesLoaded);
-                        const newFts = features.concat(fts);
-                        return fatureGridQueryResult( newFts, newPages);
+                    .map(({result = {}, filterObj} = {}) => {
+                        const {features: oldFeatures, maxStoredPages} = (getState()).featuregrid;
+                        const startIndex = get(filterObj, "pagination.startIndex");
+                        const { pages, features } = updatePages(
+                            result,
+                            { endPage, startPage },
+                            { pages: oldPages, features: oldFeatures || [] },
+                            { size, startIndex, maxStoredPages});
+                        return fatureGridQueryResult(features, pages);
                     }).take(1).takeUntil(action$.ofType(QUERY_ERROR))
-                ).merge(action$.ofType(FEATURE_LOADING).filter(() => nPs.length > 0)
-                // When loading we store the load more features request, on loading end we emit the last
+                ).merge(
+                    action$.ofType(FEATURE_LOADING).filter(() => nPs.length > 0)
+                     // When loading we store the load more features request, on loading end we emit the last
                     .filter(a => !a.isLoading)
                     .withLatestFrom(action$.ofType(LOAD_MORE_FEATURES))
                     .map((p) => p[1])

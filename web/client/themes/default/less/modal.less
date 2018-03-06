@@ -6,6 +6,20 @@
     margin: 0;
     top: 0;
     left: 0;
+    
+    .ms-header {
+        .row {
+            &:first-child {
+                padding-top: 15px;
+            }
+            & + .row {
+                padding-top: 15px;
+            }
+        }
+    }
+    pre {
+        white-space: pre-wrap;
+    }
 
     .modal-content {
         position: absolute;
@@ -40,24 +54,25 @@
             height: 98%;
             left: 1%;
             top: 1%;
+            transform: translate(0, 0) !important;
         }
 
         &.ms-fullscreen-v {
             height: 98%;
             top: 1%;
+            transform: translate(0, 0) !important;
         }
 
         &.ms-fullscreen-h {
             width: 98%;
             left: 1%;
+            transform: translate(0, 0) !important;
         }
 
         .modal-header {
             height: @square-btn-size;
-            pading: (@square-btn-size - @font-size-h4) / 2;
+            padding: (@square-btn-size - @font-size-h4) / 2;
             border: none;
-
-
             .modal-title {
                 display: flex;
                 .ms-title {
@@ -110,6 +125,29 @@
                     margin: auto;
                 }
             }
+            .ms-editor {
+                flex: 1;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                .quill {
+                    flex: 1;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    .ql-toolbar {
+                        .shadow-soft;
+                        border: transparent;
+                        min-height: @square-btn-size;
+                    }
+                    .ql-container {
+                        flex: 1;
+                        overflow-y: auto;
+                        overflow-x: hidden;
+                        border: transparent;
+                    }
+                }
+            }
         }
 
         .modal-footer {
@@ -121,7 +159,7 @@
                 margin: (@square-btn-size - 34) / 2;
             }
         }
-    }
+    }    
 }
 
 @media (min-width: 505px) and (max-width: 768px) {
@@ -209,4 +247,54 @@
     top: 0;
     left: 0;
     z-index: 3000;
+    &.ms-draggable {
+        pointer-events: none !important;
+        .ms-resizable-modal {
+            background: transparent !important;
+            pointer-events: none !important;
+            .modal-dialog {
+                pointer-events: auto;
+            }
+        }
+    }
+}
+
+.ms-resizable-modal-fade-enter {
+    opacity: 0.01;
+    .modal.fade.in {
+        .modal-dialog {
+            transform: translateY(-25%);
+        }
+    }
+}
+
+.ms-resizable-modal-fade-enter.ms-resizable-modal-fade-enter-active {
+    opacity: 1;
+    transition: 0.3s ease-in;
+    .modal.fade.in {
+        .modal-dialog {
+            transition: 0.3s ease-in;
+            transform: translateY(0);
+        }
+    }
+}
+
+.ms-resizable-modal-fade-leave {
+    opacity: 1;
+    .modal.fade.in {
+        .modal-dialog {
+            transform: translateY(0);
+        }
+    }
+}
+
+.ms-resizable-modal-fade-leave.ms-resizable-modal-fade-leave-active {
+    opacity: 0.01;
+    transition: 0.3s ease-in;
+    .modal.fade.in {
+        .modal-dialog {
+            transition: 0.3s ease-in;
+            transform: translateY(-25%);
+        }
+    }
 }

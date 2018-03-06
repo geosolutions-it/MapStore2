@@ -11,6 +11,7 @@ const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY} = require('../actions/controls');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID} = require('../actions/featuregrid');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
+const {SHOW_SETTINGS, HIDE_SETTINGS} = require('../actions/layers');
 const {mapInfoRequestsSelector} = require('../selectors/mapinfo');
 
 /**
@@ -31,7 +32,7 @@ const {isFeatureGridOpen, getDockSize} = require('../selectors/featuregrid');
  */
 
 const updateMapLayoutEpic = (action$, store) =>
-    action$.ofType(MAP_CONFIG_LOADED, SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID, PURGE_MAPINFO_RESULTS, TOGGLE_CONTROL, SET_CONTROL_PROPERTY)
+    action$.ofType(MAP_CONFIG_LOADED, SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID, PURGE_MAPINFO_RESULTS, TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SHOW_SETTINGS, HIDE_SETTINGS)
         .switchMap(() => {
 
             if (get(store.getState(), "browser.mobile")) {
@@ -50,6 +51,7 @@ const updateMapLayoutEpic = (action$, store) =>
             const leftPanels = head([
                 get(store.getState(), "controls.queryPanel.enabled") && {left: mapLayout.left.lg} || null,
                 get(store.getState(), "controls.widgetBuilder.enabled") && {left: mapLayout.left.md} || null,
+                get(store.getState(), "layers.settings.expanded") && {left: mapLayout.left.md} || null,
                 get(store.getState(), "controls.drawer.enabled") && {left: mapLayout.left.sm} || null
             ].filter(panel => panel)) || {left: 0};
 

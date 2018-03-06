@@ -8,7 +8,7 @@
 
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, CHANGE_MAP_SCALES, ZOOM_TO_EXTENT, PAN_TO,
-    CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT} = require('../actions/map');
+    CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT, RESIZE_MAP} = require('../actions/map');
 const {isArray} = require('lodash');
 
 
@@ -132,6 +132,9 @@ function mapConfig(state = null, action) {
     }
     case CHANGE_MAP_STYLE: {
         return assign({}, state, {mapStateSource: action.mapStateSource, style: action.style, resize: state.resize ? state.resize + 1 : 1});
+    }
+    case RESIZE_MAP: {
+        return assign({}, state, {resize: state.resize ? state.resize + 1 : 1});
     }
     case CHANGE_ROTATION: {
         let newBbox = assign({}, state.bbox, {rotation: action.rotation});
