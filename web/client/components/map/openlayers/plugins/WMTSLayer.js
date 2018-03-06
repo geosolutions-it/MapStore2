@@ -83,6 +83,7 @@ const createLayer = options => {
         opacity: options.opacity !== undefined ? options.opacity : 1,
         zIndex: options.zIndex,
         extent: extent,
+        visible: options.visibility !== false,
         source: new ol.source.WMTS(assign({
             urls: urls.map(u => u + queryParametersString),
             layer: options.name,
