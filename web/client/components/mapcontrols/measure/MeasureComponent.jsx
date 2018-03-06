@@ -8,11 +8,11 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {Panel, ButtonGroup, Tooltip, Glyphicon, Button} = require('react-bootstrap');
+const {Panel, ButtonGroup, Tooltip, Glyphicon, Button, Grid, Row, Col, FormGroup, Form} = require('react-bootstrap');
 const ToggleButton = require('../../buttons/ToggleButton');
 const NumberFormat = require('../../I18N/Number');
 const Message = require('../../I18N/Message');
-
+const {DropdownList} = require('react-widgets');
 const measureUtils = require('../../../utils/MeasureUtils');
 const localeUtils = require('../../../utils/LocaleUtils');
 
@@ -58,7 +58,10 @@ class MeasureComponent extends React.Component {
         inlineGlyph: PropTypes.bool,
         formatLength: PropTypes.func,
         formatArea: PropTypes.func,
-        formatBearing: PropTypes.func
+        formatBearing: PropTypes.func,
+        onChangeUom: PropTypes.func,
+        uomLengthValues: PropTypes.array,
+        uomAreaValues: PropTypes.array
     };
 
     static contextTypes = {
@@ -71,6 +74,20 @@ class MeasureComponent extends React.Component {
             sm: 4,
             md: 4
         },
+        uomLengthValues: [
+            {value: "ft", label: "ft"},
+            {value: "m", label: "m"},
+            {value: "km", label: "km"},
+            {value: "mi", label: "mi"},
+            {value: "nm", label: "nm"}
+        ],
+        uomAreaValues: [
+            {value: "sqft", label: "ft²"},
+            {value: "sqm", label: "m²"},
+            {value: "sqkm", label: "km²"},
+            {value: "sqmi", label: "mi²"},
+            {value: "sqnm", label: "nm²"}
+        ],
         id: "measure-result-panel",
         uom: {
             length: {unit: 'm', label: 'm'},
@@ -89,7 +106,8 @@ class MeasureComponent extends React.Component {
         bearingLabel: <Message msgId="measureComponent.bearingLabel"/>,
         formatLength: (uom, value) => measureUtils.getFormattedLength(uom, value),
         formatArea: (uom, value) => measureUtils.getFormattedArea(uom, value),
-        formatBearing: (value) => measureUtils.getFormattedBearingValue(round(value || 0, 6))
+        formatBearing: (value) => measureUtils.getFormattedBearingValue(round(value || 0, 6)),
+        onChangeUom: () => {}
     };
 
     shouldComponentUpdate(nextProps) {
@@ -131,14 +149,55 @@ class MeasureComponent extends React.Component {
     renderMeasurements = () => {
         let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
         return (
-               <div className="panel-body">
-                    <p><span>{this.props.lengthLabel}: </span><span id="measure-len-res">
-                        <NumberFormat key="len" numberParams={decimalFormat} value={this.props.formatLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}</span></p>
-                    <p><span>{this.props.areaLabel}: </span><span id="measure-area-res">
-                        <NumberFormat key="area" numberParams={decimalFormat} value={this.props.formatArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}</span></p>
-                    <p><span>{this.props.bearingLabel}: </span>
-                    <span id="measure-bearing-res">{this.props.formatBearing(this.props.measurement.bearing || 0)}</span></p>
-                </div>
+            <div>
+                <Form horizontal>
+                    <Row>
+                        <FormGroup>
+                            <Col xs={6}>
+                                <span>{this.props.lengthLabel}: </span><span id="measure-len-res">
+                                <NumberFormat key="len" numberParams={decimalFormat} value={this.props.formatLength(this.props.uom.length.unit, this.props.measurement.len)} /> {this.props.uom.length.label}</span>
+                            </Col>
+                            <Col xs={6}>
+                                <DropdownList
+                                    value={this.props.uom.length.label}
+                                    onChange={(value) => {
+                                        this.props.onChangeUom("length", value, this.props.uom);
+                                    }}
+                                    data={this.props.uomLengthValues}
+                                    textField="label"
+                                    valueField="value"
+                                    />
+                            </Col>
+                        </FormGroup>
+                    </Row>
+                    <Row>
+                        <FormGroup>
+                            <Col xs={6}>
+                                <span>{this.props.areaLabel}: </span><span id="measure-area-res">
+                                        <NumberFormat key="area" numberParams={decimalFormat} value={this.props.formatArea(this.props.uom.area.unit, this.props.measurement.area)} /> {this.props.uom.area.label}</span>
+                            </Col>
+                            <Col xs={6}>
+                                <DropdownList
+                                    value={this.props.uom.area.label}
+                                    onChange={(value) => {
+                                        this.props.onChangeUom("area", value, this.props.uom);
+                                    }}
+                                    data={this.props.uomAreaValues}
+                                    textField="label"
+                                    valueField="value"/>
+                            </Col>
+                        </FormGroup>
+                    </Row>
+                    <Row>
+                        <FormGroup>
+                            <Col xs={6}>
+                                <span>{this.props.bearingLabel}: </span>
+                                <span id="measure-bearing-res">{this.props.formatBearing(this.props.measurement.bearing || 0)}</span>
+                            </Col>
+                        </FormGroup>
+                    </Row>
+                </Form>
+            </div>
         );
     };
 
@@ -169,33 +228,49 @@ class MeasureComponent extends React.Component {
         let {lineToolTip, areaToolTip, bearingToolTip} = this.getToolTips();
         return (
                 <div>
-                    <ToggleButton
-                        text={this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength")}
-                        glyphicon={!this.props.inlineGlyph && this.props.lineGlyph}
-                        style={{"width": "100%", textAlign: "left"}}
-                        pressed={this.props.lineMeasureEnabled}
-                        onClick={this.onLineClick}
-                        tooltip={lineToolTip} />
-                    <ToggleButton
-                        text={this.renderText(this.props.inlineGlyph && this.props.areaGlyph, "measureComponent.MeasureArea")}
-                        glyphicon={!this.props.inlineGlyph && this.props.areaGlyph}
-                        style={{"width": "100%", textAlign: "left"}}
-                        pressed={this.props.areaMeasureEnabled}
-                        onClick={this.onAreaClick}
-                        tooltip={areaToolTip} />
-                    <ToggleButton
-                        text={this.renderText(this.props.inlineGlyph && this.props.bearingGlyph, "measureComponent.MeasureBearing")}
-                        glyphicon={!this.props.inlineGlyph && this.props.bearingGlyph}
-                        style={{"width": "100%", textAlign: "left"}}
-                        pressed={this.props.bearingMeasureEnabled}
-                        onClick={this.onBearingClick}
-                        tooltip={bearingToolTip} />
-                    {this.props.withReset ? <ButtonGroup>
-                        <Button
-                            onClick={this.onResetClick}>
-                            {this.props.resetButtonText}
-                        </Button>
-                    </ButtonGroup> : <span/>}
+                    <Form horizontal>
+                        <Row>
+                        <FormGroup>
+                            <Col xs={6}>
+                                <ToggleButton
+                                    text={this.renderText(this.props.inlineGlyph && this.props.lineGlyph, "measureComponent.MeasureLength")}
+                                    glyphicon={!this.props.inlineGlyph && this.props.lineGlyph}
+                                    style={{"width": "100%", textAlign: "left"}}
+                                    pressed={this.props.lineMeasureEnabled}
+                                    onClick={this.onLineClick}
+                                    tooltip={lineToolTip} />
+                                <ToggleButton
+                                    text={this.renderText(this.props.inlineGlyph && this.props.areaGlyph, "measureComponent.MeasureArea")}
+                                    glyphicon={!this.props.inlineGlyph && this.props.areaGlyph}
+                                    style={{"width": "100%", textAlign: "left"}}
+                                    pressed={this.props.areaMeasureEnabled}
+                                    onClick={this.onAreaClick}
+                                    tooltip={areaToolTip} />
+                                <ToggleButton
+                                    text={this.renderText(this.props.inlineGlyph && this.props.bearingGlyph, "measureComponent.MeasureBearing")}
+                                    glyphicon={!this.props.inlineGlyph && this.props.bearingGlyph}
+                                    style={{"width": "100%", textAlign: "left"}}
+                                    pressed={this.props.bearingMeasureEnabled}
+                                    onClick={this.onBearingClick}
+                                    tooltip={bearingToolTip} />
+                            </Col>
+                        </FormGroup>
+                        </Row>
+                    </Form>
+                    <Row>
+                        <Form horizontal>
+                            <FormGroup>
+                                <Col xs={12}>
+                                    {this.props.withReset ? <ButtonGroup>
+                                        <Button
+                                            onClick={this.onResetClick}>
+                                            {this.props.resetButtonText}
+                                        </Button>
+                                    </ButtonGroup> : <span/>}
+                                </Col>
+                            </FormGroup>
+                        </Form>
+                    </Row>
                 </div>
         );
     };
@@ -211,8 +286,10 @@ class MeasureComponent extends React.Component {
     render() {
         return (
             <Panel id={this.props.id}>
+                <Grid fluid>
                 {this.props.showButtons && (this.props.useButtonGroup ? this.renderButtonGroup() : this.renderButtons()) }
                 {this.renderPanel()}
+                </Grid>
             </Panel>
         );
     }

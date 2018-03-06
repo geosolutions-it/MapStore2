@@ -413,6 +413,11 @@
             "redoBtnTooltip": "Gehe vorwärts"
         },
         "infoFormatLbl": "Identifiziere das Antwortformat",
+        "measureSupport": {
+            "continueLine": "Klicken Sie auf, um mit dem Zeichnen der Linie fortzufahren",
+            "continuePolygon": "Klicken Sie, um mit dem Zeichnen des Polygons fortzufahren",
+            "startDrawing": "Klicken Sie, um mit dem Zeichnen zu beginnen"
+        },
         "measureComponent": {
             "Measure": "Messen",
             "MeasureLength": "Distanz messen",
@@ -425,7 +430,9 @@
             "resetButtonText": "Zurücksetzen",
             "lengthLabel": "Länge",
             "areaLabel": "Fläche",
-            "bearingLabel": "Richtung"
+            "bearingLabel": "Richtung",
+            "formula": "Formel zur Entfernungsberechnung",
+            "showLabel": "Zeige Bezeichnungsetikett"
         },
         "search":{
             "placeholder": "Suche nache einer Adresse oder gib Koordinaten ein ...",
