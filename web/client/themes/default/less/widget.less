@@ -144,18 +144,20 @@
      * to have the optical illusion of the search input and title
      * inside the global dashboard editor
      */
-    .layer-selector .ms2-border-layout-body{
-        position: relative;
-        .compat-catalog {
-            .catalog-footer {
-                z-index: 100;
-                box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.06), 0 -1px 2px rgba(0, 0, 0, 0.12);
-            }
-            .catalog-form {
-                width: 100%;
-                padding: 0 auto;
-                z-index: 100;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+    .layer-selector, .map-selector {
+        .ms2-border-layout-body {
+            position: relative;
+            .compat-catalog, .map-catalog {
+                .catalog-footer {
+                    z-index: 100;
+                    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.06), 0 -1px 2px rgba(0, 0, 0, 0.12);
+                }
+                .catalog-form {
+                    width: 100%;
+                    padding: 0 auto;
+                    z-index: 100;
+                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+                }
             }
         }
     }

@@ -14,21 +14,11 @@ const mapType = require('../../map/enhancers/mapType');
 const autoResize = require('../../map/enhancers/autoResize');
 const MMap = autoResize(2000)(autoMapType(mapType(require('../../map/BaseMap'))));
 
-const MapView = () => (<MMap
+const MapView = ({id, map, layers = []}) => (<MMap
+    id={id}
     options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
-    layers={[{
-    "id": "mapnik__1",
-    "group": "background",
-    "source": "osm",
-    "name": "mapnik",
-    "title": "Open Street Map",
-    "type": "osm",
-    "visibility": true,
-    "singleTile": false,
-    "dimensions": [],
-    "hideLoading": false,
-    "handleClickOnLayer": false
-}]} />);
+    map={map}
+    layers={layers} />);
 const {
     Glyphicon,
     ButtonToolbar,
@@ -40,6 +30,7 @@ module.exports = ({
     onEdit = () => { },
     toggleDeleteConfirm = () => { },
     id, title,
+    map,
     confirmDelete = false,
     onDelete = () => { }
 } = {}) =>
@@ -51,5 +42,5 @@ module.exports = ({
             </DropdownButton>
         </ButtonToolbar>}
     >
-    <MapView />
+        <MapView id={id} map={map} layers={map && map.layers}/>
     </WidgetContainer>);
