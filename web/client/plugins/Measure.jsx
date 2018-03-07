@@ -13,13 +13,17 @@ const Message = require('./locale/Message');
 
 const assign = require('object-assign');
 const {createSelector} = require('reselect');
-const {changeMeasurement} = require('../actions/measurement');
+const {changeMeasurement, changeUom} = require('../actions/measurement');
 const {toggleControl} = require('../actions/controls');
 const {MeasureDialog} = require('./measure/index');
 
 const selector = (state) => {
     return {
         measurement: state.measurement || {},
+        uom: state.measurement && state.measurement.uom || {
+            length: {unit: 'm', label: 'm'},
+            area: {unit: 'sqm', label: 'm²'}
+        },
         lineMeasureEnabled: state.measurement && state.measurement.lineMeasureEnabled || false,
         areaMeasureEnabled: state.measurement && state.measurement.areaMeasureEnabled || false,
         bearingMeasureEnabled: state.measurement && state.measurement.bearingMeasureEnabled || false
@@ -27,12 +31,13 @@ const selector = (state) => {
 };
 const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
 /**
- * Measure plugin. Allows to show the tool to measure dinstances, areas and bearing.
+ * Measure plugin. Allows to show the tool to measure dinstances, areas and bearing.<br>
+ * See [Application Configuration](local-config) to understand how to configure lengthFormula, showLabel and uom
  * @class
  * @name Measure
  * @memberof plugins
  * @prop {boolean} showResults shows the measure in the panel itself.
- */
+  */
 const Measure = connect(
     createSelector([
         selector,
@@ -45,6 +50,7 @@ const Measure = connect(
     )),
     {
         toggleMeasure: changeMeasurement,
+        onChangeUom: changeUom,
         onClose: toggleMeasureTool
     }, null, {pure: false})(MeasureDialog);
 

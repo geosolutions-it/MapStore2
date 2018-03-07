@@ -414,6 +414,11 @@
             "redoBtnTooltip": "Go forward"
         },
         "infoFormatLbl": "Identify response format",
+        "measureSupport": {
+            "continueLine": "Click to continue drawing the line",
+            "continuePolygon": "Click to continue drawing the polygon",
+            "startDrawing": "Click to start drawing"
+        },
         "measureComponent": {
             "Measure": "Measure",
             "MeasureLength": "Measure Distance",
@@ -426,7 +431,9 @@
             "resetButtonText": "Reset",
             "lengthLabel": "Length",
             "areaLabel": "Area",
-            "bearingLabel": "Bearing"
+            "bearingLabel": "Bearing",
+            "formula": "Formula for distance calculation",
+            "showLabel": "Show measurement label"
         },
         "search":{
             "placeholder": "Search by location name or coordinates ...",
