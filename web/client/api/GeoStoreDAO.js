@@ -164,7 +164,7 @@ const Api = {
     },
     updateResourcePermissions: function(resourceId, securityRules) {
         let payload = "<SecurityRuleList>";
-        for (let rule of securityRules.SecurityRuleList.SecurityRule) {
+        (securityRules && securityRules.SecurityRuleList && _.castArray(securityRules.SecurityRuleList.SecurityRule) || []).forEach( rule => {
             if (rule.canRead || rule.canWrite) {
                 if (rule.user) {
                     payload = payload + "<SecurityRule>";
@@ -182,7 +182,7 @@ const Api = {
                 // NOTE: if rule has no group or user, it is skipped
                 // NOTE: if rule is "no read and no write", it is skipped
             }
-        }
+        });
         payload = payload + "</SecurityRuleList>";
         return axios.post(
             "resources/resource/" + resourceId + "/permissions",
