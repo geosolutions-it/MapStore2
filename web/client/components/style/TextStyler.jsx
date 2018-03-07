@@ -43,7 +43,7 @@ class TextStyler extends React.Component {
         uomValues: [{value: "px"}, {value: "em"}],
         fontWeightValues: [{value: "normal"}, {value: "bold"}],
         alignValues: [{value: "start"}, {value: "center"}, {value: "end"}],
-        fontStyleValues: [{value: "start"}, {value: "center"}, {value: "end"}],
+        fontStyleValues: [{value: "normal"}, {value: "italic"}],
         fontFamilyValues: [{value: "Arial"}, {value: "FontAwesome"}, {value: "Courier"}],
         shapeStyle: {},
         setStyleParameter: () => {}

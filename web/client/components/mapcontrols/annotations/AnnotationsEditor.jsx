@@ -239,7 +239,12 @@ class AnnotationsEditor extends React.Component {
                             visible: true,
                             onClick: () => {
                                 if (this.props.unsavedChanges) {
-                                    this.props.onToggleUnsavedChangesModal();
+                                    const errors = this.validate();
+                                    if (Object.keys(errors).length === 0) {
+                                        this.props.onToggleUnsavedChangesModal();
+                                    } else {
+                                        this.props.onError(errors);
+                                    }
                                 } else {
                                     this.cancelEdit();
                                 }}
