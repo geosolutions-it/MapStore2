@@ -161,28 +161,31 @@ const Api = {
                 }
             }, options)));
     },
-    updateResourcePermissions: function(resourceId, securityRules) {
-        let payload = "<SecurityRuleList>";
-        for (let rule of securityRules.SecurityRuleList.SecurityRule) {
+    writeSecurityRules: function(SecurityRuleList = {}) {
+        return "<SecurityRuleList>" +
+        (_.castArray(SecurityRuleList.SecurityRule) || []).map( rule => {
             if (rule.canRead || rule.canWrite) {
                 if (rule.user) {
-                    payload = payload + "<SecurityRule>";
-                    payload = payload + "<canRead>" + boolToString(rule.canRead || rule.canWrite) + "</canRead>";
-                    payload = payload + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>";
-                    payload = payload + "<user><id>" + (rule.user.id || "") + "</id><name>" + (rule.user.name || "") + "</name></user>";
-                    payload = payload + "</SecurityRule>";
+                    return "<SecurityRule>"
+                        + "<canRead>" + boolToString(rule.canRead || rule.canWrite) + "</canRead>"
+                        + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>"
+                        + "<user><id>" + (rule.user.id || "") + "</id><name>" + (rule.user.name || "") + "</name></user>"
+                        + "</SecurityRule>";
                 } else if (rule.group) {
-                    payload = payload + "<SecurityRule>";
-                    payload = payload + "<canRead>" + boolToString(rule.canRead || rule.canWrite) + "</canRead>";
-                    payload = payload + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>";
-                    payload = payload + "<group><id>" + (rule.group.id || "") + "</id><groupName>" + (rule.group.groupName || "") + "</groupName></group>";
-                    payload = payload + "</SecurityRule>";
+                    return "<SecurityRule>"
+                        + "<canRead>" + boolToString(rule.canRead || rule.canWrite) + "</canRead>"
+                        + "<canWrite>" + boolToString(rule.canWrite) + "</canWrite>"
+                        + "<group><id>" + (rule.group.id || "") + "</id><groupName>" + (rule.group.groupName || "") + "</groupName></group>"
+                        + "</SecurityRule>";
                 }
+                return "";
                 // NOTE: if rule has no group or user, it is skipped
                 // NOTE: if rule is "no read and no write", it is skipped
             }
-        }
-        payload = payload + "</SecurityRuleList>";
+        }).join('') + "</SecurityRuleList>";
+    },
+    updateResourcePermissions: function(resourceId, securityRules) {
+        const payload = Api.writeSecurityRules(securityRules.SecurityRuleList);
         return axios.post(
             "resources/resource/" + resourceId + "/permissions",
             payload,

@@ -29,18 +29,11 @@ function template(str, data) {
     });
 }
 function getUrls(opt) {
-    let urls = [];
     let url = opt.url;
     if (opt.subdomains) {
-        for (let c of opt.subdomains) {
-            urls.push(template(url.replace("{s}", c), opt));
-        }
-    } else {
-        for (let c of 'abc') {
-            urls.push(template(url.replace("{s}", c), opt));
-        }
+        return opt.subdomains.map( c => template(url.replace("{s}", c), opt));
     }
-    return urls;
+    return ['a', 'b', 'c'].map( c => template(url.replace("{s}", c), opt));
 }
 /*eslint-disable */
 function lBoundsToOlExtent(bounds, destPrj){
