@@ -41,7 +41,7 @@ describe('widgets builderConfiguration enhancer', () => {
                 setTimeout(() => {
                     expect(document.querySelector('.empty-state-container')).toExist();
                     done();
-                }, 100);
+                }, 20);
 
             }
         };

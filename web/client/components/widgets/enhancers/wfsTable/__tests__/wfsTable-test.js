@@ -16,7 +16,7 @@ const rxjsConfig = require('recompose/rxjsObservableConfig').default;
 setObservableConfig(rxjsConfig);
 
 
-describe('index enhancer', () => {
+describe('wfsTable enhancer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -60,7 +60,6 @@ describe('index enhancer', () => {
             } else if (props.pages && props.features.length > 0 && props.pages[0] === 40) {
                 expect(props.pages[1]).toBe(60);
                 done();
-
             }
         }));
         ReactDOM.render(<Sink virtualScroll layer={{

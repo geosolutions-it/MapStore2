@@ -32,7 +32,8 @@ function shapefile(state = initialState, action) {
     switch (action.type) {
     case ON_SHAPE_CHOOSEN: {
         let selected = action.layers && action.layers[0] ? action.layers[0] : null;
-        return assign({}, state, {layers: action.layers, selected: selected, bbox: [190, 190, -190, -190]});
+        const error = action.layers ? state.error : null;
+        return assign({}, state, {layers: action.layers, selected: selected, bbox: [190, 190, -190, -190], error});
     }
     case ON_SHAPE_ERROR: {
         return assign({}, state, {error: action.message, success: null});

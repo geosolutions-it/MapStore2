@@ -413,6 +413,11 @@
             "redoBtnTooltip": "Gehe vorwärts"
         },
         "infoFormatLbl": "Identifiziere das Antwortformat",
+        "measureSupport": {
+            "continueLine": "Klicken Sie auf, um mit dem Zeichnen der Linie fortzufahren",
+            "continuePolygon": "Klicken Sie, um mit dem Zeichnen des Polygons fortzufahren",
+            "startDrawing": "Klicken Sie, um mit dem Zeichnen zu beginnen"
+        },
         "measureComponent": {
             "Measure": "Messen",
             "MeasureLength": "Distanz messen",
@@ -425,7 +430,9 @@
             "resetButtonText": "Zurücksetzen",
             "lengthLabel": "Länge",
             "areaLabel": "Fläche",
-            "bearingLabel": "Richtung"
+            "bearingLabel": "Richtung",
+            "formula": "Formel zur Entfernungsberechnung",
+            "showLabel": "Zeige Bezeichnungsetikett"
         },
         "search":{
             "placeholder": "Suche nache einer Adresse oder gib Koordinaten ein ...",
@@ -813,7 +820,8 @@
             "error": {
                 "select": "Wählen Sie die richtige Datei aus",
                 "shapeFileParsingError": "Das Shapefile kann nicht geladen werden. Die Datei könnte beschädigt oder nicht gut geformt sein",
-                "genericLoadError": "Das Shapefile kann nicht auf der Karte geladen werden"
+                "genericLoadError": "Das Shapefile kann nicht auf der Karte geladen werden",
+                "missingPrj": "Fehlende Projektionsinformation (.prj), Koordinatensystem soll EPSG: 4326 sein"
             },
             "add": "Hinzufügen",
             "cancel": "Abbrechen",
