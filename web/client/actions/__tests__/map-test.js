@@ -20,6 +20,7 @@ var {
     UPDATE_VERSION,
     INIT_MAP,
     ZOOM_TO_EXTENT,
+    RESIZE_MAP,
     creationError,
     changeMapView,
     clickOnMap,
@@ -31,7 +32,8 @@ var {
     changeRotation,
     updateVersion,
     initMap,
-    zoomToExtent
+    zoomToExtent,
+    resizeMap
 } = require('../map');
 
 describe('Test correctness of the map actions', () => {
@@ -150,5 +152,11 @@ describe('Test correctness of the map actions', () => {
         const retval = initMap();
         expect(retval).toExist();
         expect(retval.type).toEqual(INIT_MAP);
+    });
+
+    it('resizeMap', () => {
+        const retval = resizeMap();
+        expect(retval).toExist();
+        expect(retval.type).toEqual(RESIZE_MAP);
     });
 });

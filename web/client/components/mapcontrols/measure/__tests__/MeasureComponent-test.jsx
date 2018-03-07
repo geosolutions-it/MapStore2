@@ -200,22 +200,22 @@ describe("test the MeasureComponent", () => {
         cmp = ReactDOM.render(
             <MeasureComponent measurement={assign({}, measurement, {bearing: 45})}/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("N 45° 0' 0''  E");
+        expect(bearingSpan.innerHTML).toBe("N 45° 0' 0'' E");
 
         cmp = ReactDOM.render(
             <MeasureComponent measurement={assign({}, measurement, {bearing: 135})}/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("S 45° 0' 0''  E");
+        expect(bearingSpan.innerHTML).toBe("S 45° 0' 0'' E");
 
         cmp = ReactDOM.render(
             <MeasureComponent measurement={assign({}, measurement, {bearing: 225})}/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("S 45° 0' 0''  W");
+        expect(bearingSpan.innerHTML).toBe("S 45° 0' 0'' W");
 
         cmp = ReactDOM.render(
             <MeasureComponent measurement={assign({}, measurement, {bearing: 315})}/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("N 45° 0' 0''  W");
+        expect(bearingSpan.innerHTML).toBe("N 45° 0' 0'' W");
     });
     it('test uom format area and lenght', () => {
         let measurement = {

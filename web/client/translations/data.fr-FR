@@ -414,6 +414,11 @@
             "redoBtnTooltip": "Aller en avant"
         },
         "infoFormatLbl": "Informations, format de la réponse",
+        "measureSupport": {
+            "continueLine": "Cliquez pour continuer à dessiner la ligne",
+            "continuePolygon": "Cliquez pour continuer à dessiner le polygone",
+            "startDrawing": "Cliquez pour commencer à dessiner"
+        },
         "measureComponent": {
             "Measure": "Mesurer",
             "MeasureLength": "Mesure de distance",
@@ -426,7 +431,9 @@
             "resetButtonText": "Recommencer",
             "lengthLabel": "Longueur",
             "areaLabel": "Surface",
-            "bearingLabel": "Direction"
+            "bearingLabel": "Direction",
+            "formula": "Formule pour le calcul de la distance",
+            "showLabel": "Afficher l'étiquette de mesure"
         },
         "search":{
             "placeholder": "Recherche par toponyme ou coordonnées...",
@@ -814,7 +821,8 @@
             "error": {
                 "select": "Sélectionnez le bon fichier. (Shapefiles doivent être contenus dans des archives zip, KML/KMZ e GPX)",
                 "shapeFileParsingError": "Impossible de charger le fichier de formes. Le fichier pourrait être endommagé ou mal formé",
-                "genericLoadError": "Impossible de charger le fichier de formes sur la carte"
+                "genericLoadError": "Impossible de charger le fichier de formes sur la carte",
+                "missingPrj": "Information de projection manquante (.prj), le système de coordonnées est supposé être EPSG: 4326"
             },
             "add": "Ajouter",
             "cancel": "Annuler",

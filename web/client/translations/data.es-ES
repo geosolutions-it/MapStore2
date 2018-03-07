@@ -413,6 +413,11 @@
             "redoBtnTooltip": "Ir hacia adelante"
         },
         "infoFormatLbl": "Indentificar el formato de respuesta",
+        "measureSupport": {
+            "continueLine": "Haga clic para seguir dibujando la línea",
+            "continuePolygon": "Haga clic para continuar dibujando el polígono",
+            "startDrawing": "Haga clic para comenzar a dibujar"
+        },
         "measureComponent": {
             "Measure": "Medidas",
             "MeasureLength": "Medias de distancia",
@@ -425,7 +430,9 @@
             "resetButtonText": "Reset",
             "lengthLabel": "Longitud",
             "areaLabel": "Área",
-            "bearingLabel": "Rumbo"
+            "bearingLabel": "Rumbo",
+            "formula": "Fórmula para cálculo de distancia",
+            "showLabel": "Mostrar etiqueta de medición"
         },
         "search":{
             "placeholder": "Búsqueda por toponimo o coordenadas...",
@@ -813,7 +820,8 @@
             "error": {
                 "select": "Seleccionar uno o más archivo local. (archivos compatibles: Shapefiles deben estar dentro de un zip, KML/KMZ e GPX)",
                 "shapeFileParsingError": "No se puede cargar el archivo local El archivo podría dañarse o no estar bien formado",
-                "genericLoadError": "No se puede cargar el archivo local en el mapa"
+                "genericLoadError": "No se puede cargar el archivo local en el mapa",
+                "missingPrj": "Falta información de proyección (.prj), se supone que el sistema de coordenadas es EPSG: 4326"
             },
             "add": "Añadir",
             "cancel": "Cancelar",
