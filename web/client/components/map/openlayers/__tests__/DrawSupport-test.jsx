@@ -593,6 +593,80 @@ describe('Test DrawSupport', () => {
         expect(spyAddFeature.calls.length).toBe(1);
     });
 
+    it('replace features no draw interaction', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'LineString',
+                coordinates: [[13, 43], [14, 44]]
+            },
+            properties: {
+                'name': "some name"
+            }
+        };
+
+        const support = ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        const spyAddInteraction = expect.spyOn(support, "addInteractions");
+        ReactDOM.render(
+            <DrawSupport features={[feature]} map={fakeMap} drawStatus="replace" drawMethod="MultiLineString" options={{drawEnabled: false}}
+                />, document.getElementById("container"));
+        expect(spyAddInteraction.calls.length).toBe(0);
+    });
+
+    it('replace features with draw interaction', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'LineString',
+                coordinates: [[13, 43], [14, 44]]
+            },
+            properties: {
+                'name': "some name"
+            }
+        };
+
+        const support = ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        const spyAddInteraction = expect.spyOn(support, "addInteractions");
+        ReactDOM.render(
+            <DrawSupport features={[feature]} map={fakeMap} drawStatus="replace" drawMethod="MultiLineString" options={{drawEnabled: true}}
+                />, document.getElementById("container"));
+        expect(spyAddInteraction.calls.length).toBe(1);
+    });
+
     it('replace features circle', () => {
         const fakeMap = {
             addLayer: () => {},

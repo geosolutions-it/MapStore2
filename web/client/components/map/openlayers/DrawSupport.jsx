@@ -152,7 +152,7 @@ class DrawSupport extends React.Component {
 
     replaceFeatures = (newProps) => {
         if (!this.drawLayer) {
-            this.addLayer(newProps, true);
+            this.addLayer(newProps, newProps.options && newProps.options.drawEnabled || false);
         } else {
             this.drawSource.clear();
             this.addFeatures(newProps);
