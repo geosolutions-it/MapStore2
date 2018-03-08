@@ -22,7 +22,7 @@ const getGeomCollStyle = (type, multiType, style, defaultStyle = DEFAULT_ANNOTAT
 
 const DropdownButtonT = tooltip(DropdownButton);
 const DropdownFeatureType = ({onClick = () => {}, onStopDrawing = () => {}, onAddText = () => {}, onSetStyle = () => {}, bsStyle = "primary", ...props} = {}) => (
-    <DropdownButtonT id={props.idDropDown || uuidv1()} tooltip={props.tooltip} className="square-button-md" bsStyle={bsStyle} title={<Glyphicon glyph={props.glyph}/>} disabled={!!props.disabled} noCaret onClick={() => {onStopDrawing(); }}>
+    <DropdownButtonT id={props.idDropDown || uuidv1()} tooltipId={props.tooltipId} className="square-button-md" bsStyle={bsStyle} title={<Glyphicon glyph={props.glyph}/>} disabled={!!props.disabled} noCaret onClick={() => {onStopDrawing(); }}>
         <MenuItem eventKey="1" onClick={() => { onClick("MultiPoint"); onSetStyle(getGeomCollStyle("Point", "MultiPoint", props.style || {})); }}><Glyphicon glyph="point"/>{props.titles.marker}</MenuItem>
         <MenuItem eventKey="2" onClick={() => { onClick("MultiLineString"); onSetStyle(getGeomCollStyle("LineString", "MultiLineString", props.style || {})); }}><Glyphicon glyph="line"/>{props.titles.line}</MenuItem>
         <MenuItem eventKey="3" onClick={() => { onClick("MultiPolygon"); onSetStyle(getGeomCollStyle("Polygon", "MultiPolygon", props.style || {})); }}><Glyphicon glyph="polygon"/>{props.titles.polygon}</MenuItem>

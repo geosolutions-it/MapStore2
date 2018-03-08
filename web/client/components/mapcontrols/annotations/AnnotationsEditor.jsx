@@ -519,6 +519,7 @@ class AnnotationsEditor extends React.Component {
                     (<Portal><ConfirmDialog
                         show
                         modal
+                        title={<Message msgId="annotations.insertText" />}
                         confirmButtonDisabled={this.state.textValue === ""}
                         confirmButtonBSStyle="default"
                         onClose={this.props.onCancelText}
