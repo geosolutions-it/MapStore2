@@ -20,14 +20,20 @@ require('../plugins/OSMLayer');
 
 describe('LeafletMap', () => {
 
-    beforeEach((done) => {
+    beforeEach(() => {
         document.body.innerHTML = '<div id="container"></div>';
-        setTimeout(done);
     });
-    afterEach((done) => {
-        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
-        document.body.innerHTML = '';
-        setTimeout(done);
+    afterEach(() => {
+        try {
+            ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+            const attributions = document.body.getElementsByClassName('leaflet-control-attribution');
+            if (attributions.length > 0) {
+                document.body.removeChild(attributions[0]);
+            }
+            document.body.innerHTML = '';
+        } catch(e) {
+            // ignore
+        }
     });
 
     it('creates a div for leaflet map with given id', () => {
@@ -325,6 +331,7 @@ describe('LeafletMap', () => {
         let attributions = domMap.getElementsByClassName('leaflet-control-attribution');
         expect(attributions.length).toBe(0);
         attributions = document.body.getElementsByClassName('leaflet-control-attribution');
+        expect(attributions.length).toBe(1);
         document.body.removeChild(attributions[0]);
         attributions = document.body.getElementsByClassName('leaflet-control-attribution');
         expect(attributions.length).toBe(0);
