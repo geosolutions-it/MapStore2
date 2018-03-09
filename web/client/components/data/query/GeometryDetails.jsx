@@ -16,6 +16,7 @@ const assign = require('object-assign');
 
 const CoordinatesUtils = require("../../../utils/CoordinatesUtils");
 
+
 class GeometryDetails extends React.Component {
     static propTypes = {
         useMapProjection: PropTypes.bool,
@@ -23,7 +24,8 @@ class GeometryDetails extends React.Component {
         type: PropTypes.string,
         onShowPanel: PropTypes.func,
         onChangeDrawingStatus: PropTypes.func,
-        onEndDrawing: PropTypes.func
+        onEndDrawing: PropTypes.func,
+        zoom: PropTypes.number
     };
 
     static defaultProps = {
@@ -77,7 +79,7 @@ class GeometryDetails extends React.Component {
             projection: this.props.geometry.projection
         };
 
-        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry]);
+        this.props.onChangeDrawingStatus({geometry:[geometry]});
     };
 
     onUpdateCircle = (value, name) => {
@@ -96,12 +98,11 @@ class GeometryDetails extends React.Component {
             projection: this.props.geometry.projection
         };
 
-        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry]);
+        this.props.onChangeDrawingStatus({geometry: [geometry]});
     };
 
     onModifyGeometry = () => {
         let geometry;
-
         // Update the geometry
         if (this.props.type === "BBOX") {
             this.extent = this.tempExtent;
@@ -168,28 +169,44 @@ class GeometryDetails extends React.Component {
     };
 
     onClosePanel = () => {
-        if (this.props.type === "BBOX") {
-            this.resetBBOX();
-        } else if (this.props.type === "Circle") {
-            this.resetCircle();
-        }
-
+        this.resetGeom();
         this.props.onShowPanel(false);
     };
-
+    roundValue = (val, prec = 1000000) => Math.round(val * prec) / prec;
+    getStep = (zoom = 1) => {
+        if ( zoom >= 21 ) {
+            return 0.00001
+        }else if( zoom >= 18) {
+            return 0.0001
+        }else if( zoom >= 15) {
+            return 0.001
+        }else if( zoom >= 12) {
+            return 0.01
+        }else if( zoom >= 9) {
+            return 0.1
+        }else if( zoom >= 6) {
+            return 1
+        }
+            return 10;
+    };
+    getStepCircle = (zoom, name) => {
+        const step = this.getStep(zoom);
+        return name === 'radius' && step * 100000 || step;
+    };
+    isWGS84 = () => (this.props.geometry || {}).projection === 'EPSG:4326' || !this.props.useMapProjection;
     getBBOXDimensions = (geometry) => {
         const extent = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
             CoordinatesUtils.reprojectBbox(geometry.extent, geometry.projection, 'EPSG:4326') : geometry.extent;
 
         return {
             // minx
-            west: Math.round(extent[0] * 100) / 100,
+            west: extent[0],
             // miny
-            sud: Math.round(extent[1] * 100) / 100,
+            sud: extent[1],
             // maxx
-            est: Math.round(extent[2] * 100) / 100,
+            est: extent[2],
             // maxy
-            north: Math.round(extent[3] * 100) / 100
+            north: extent[3]
         };
     };
     getCircleDimensions = (geometry) => {
@@ -201,9 +218,9 @@ class GeometryDetails extends React.Component {
         center = (center.x === undefined) ? {x: center[0], y: center[1]} : center;
 
         return {
-            x: Math.round(center.x * 100) / 100,
-            y: Math.round(center.y * 100) / 100,
-            radius: Math.round(geometry.radius * 100) / 100
+            x: center.x,
+            y: center.y,
+            radius: geometry.radius
         };
     };
     renderCoordinateField = (value, name) => {
@@ -214,18 +231,19 @@ class GeometryDetails extends React.Component {
                     style={{minWidth: '105px', margin: 'auto'}}
                     type="number"
                     id={"queryform_bbox_" + name}
-                    defaultValue={value}
+                    step={!this.isWGS84() ? 1 : this.getStep(this.props.zoom)}
+                    defaultValue={this.roundValue(value, !this.isWGS84() ? 100 : 1000000)}
                     onChange={(evt) => this.onUpdateBBOX(evt.target.value, name)}/>
             </div>
         );
     };
-
     renderCircleField = (value, name) => {
         return (
             <FormControl
                 type="number"
                 id={"queryform_circle_" + name}
-                defaultValue={value}
+                defaultValue={this.roundValue(value, !this.isWGS84() || name === 'radius' ? 100 : 1000000)}
+                step={!this.isWGS84() ? 1 : this.getStepCircle(this.props.zoom, name)}
                 onChange={(evt) => this.onUpdateCircle(evt.target.value, name)}/>
         );
     };
@@ -352,7 +370,7 @@ class GeometryDetails extends React.Component {
                 key: 'reset',
                 tooltipId: 'queryform.reset',
                 glyph: 'clear-filter',
-                onClick: () => this.resetBBOX()
+                onClick: () => this.resetGeom()
             }, {
                 key: 'close',
                 glyph: '1-close',
@@ -362,30 +380,36 @@ class GeometryDetails extends React.Component {
             </SwitchPanel>
         );
     }
-
+    resetGeom = () => {
+        if (this.props.type === "BBOX") {
+            this.resetBBOX();
+        } else if (this.props.type === "Circle") {
+            this.resetCircle();
+        }
+    };
     resetBBOX = () => {
         for (let prop in this.extent) {
             if (prop) {
                 let coordinateInput = document.getElementById("queryform_bbox_" + prop);
-                coordinateInput.value = this.extent[prop];
-                this.onUpdateBBOX(coordinateInput.value, prop);
+                coordinateInput.value = this.roundValue(this.extent[prop], !this.isWGS84() ? 100 : 1000000);
+                this.onUpdateBBOX(this.extent[prop], prop);
             }
         }
     };
 
     resetCircle = () => {
         let radiusInput = document.getElementById("queryform_circle_radius");
-        radiusInput.value = this.circle.radius;
-        this.onUpdateCircle(radiusInput.value, "radius");
+        radiusInput.value = this.roundValue(this.circle.radius, 100);
+        this.onUpdateCircle(this.circle.radius, "radius");
 
         let coordinateXInput = document.getElementById("queryform_circle_x");
-        coordinateXInput.value = this.circle.x;
-        this.onUpdateCircle(coordinateXInput.value, "x");
+        coordinateXInput.value = this.roundValue(this.circle.x, !this.isWGS84() ? 100 : 1000000);
+        this.onUpdateCircle(this.circle.x, "x");
 
         let coordinateYInput = document.getElementById("queryform_circle_y");
-        coordinateYInput.value = this.circle.y;
-        this.onUpdateCircle(coordinateYInput.value, "y");
+        coordinateYInput.value = this.roundValue(this.circle.y, !this.isWGS84() ? 100 : 1000000);
+        this.onUpdateCircle(this.circle.y, "y");
     };
 }
 
-module.exports = GeometryDetails;
+module.exports =  GeometryDetails;

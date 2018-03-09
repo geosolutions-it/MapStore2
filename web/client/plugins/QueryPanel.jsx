@@ -21,6 +21,7 @@ const {zoomToExtent} = require('../actions/map');
 const {toggleControl} = require('../actions/controls');
 
 const {groupsSelector} = require('../selectors/layers');
+const {mapSelector} = require('../selectors/map');
 const {
     crossLayerFilterSelector,
     availableCrossLayerFilterLayersSelector
@@ -111,11 +112,11 @@ const SmartQueryForm = connect((state) => {
         showGeneratedFilter: false,
         allowEmptyFilter: true,
         emptyFilterWarning: true,
-        maxHeight: state.map && state.map.present && state.map.present.size && state.map.present.size.height
+        maxHeight: state.map && state.map.present && state.map.present.size && state.map.present.size.height,
+        zoom: (mapSelector(state) || {}).zoom
     };
 }, dispatch => {
     return {
-
         attributeFilterActions: bindActionCreators({
             onAddGroupField: addGroupField,
             onAddFilterField: addFilterField,
