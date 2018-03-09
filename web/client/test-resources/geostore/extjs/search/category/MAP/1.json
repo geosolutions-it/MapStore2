@@ -1,0 +1,19 @@
+{
+  "success": true,
+  "totalCount": 13,
+  "results": [
+    {
+      "canDelete": false,
+      "canEdit": false,
+      "canCopy": true,
+      "creation": "2014-04-04 12:14:21.17",
+      "lastUpdate": "2017-05-17 10:18:11.455",
+      "description": "",
+      "id": 464,
+      "name": "TEST MAP",
+      "thumbnail": "base%2Fweb%2Fclient%2Ftest-resources%2Fimg%2Fblank.jpg",
+      "owner": "mapstore"
+    }
+  ]
+}
+

@@ -17,8 +17,8 @@ const Toolbar = require('../../../../misc/toolbar/Toolbar');
 const BuilderHeader = require('../../BuilderHeader');
 
 const { compose, withState, mapPropsStream, withHandlers } = require('recompose');
-
-const MapCatalog = require('../../../../maps/MapCatalog');
+const mcEnhancer = require('../../../../maps/enhancers/mapCatalog');
+const MapCatalog = mcEnhancer(require('../../../../maps/MapCatalog'));
 /**
  * Builder page that allows layer's selection
  */
