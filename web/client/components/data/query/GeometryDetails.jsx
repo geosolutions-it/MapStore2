@@ -79,7 +79,7 @@ class GeometryDetails extends React.Component {
             projection: this.props.geometry.projection
         };
 
-        this.props.onChangeDrawingStatus({geometry:[geometry]});
+        this.props.onChangeDrawingStatus({geometry: [geometry]});
     };
 
     onUpdateCircle = (value, name) => {
@@ -172,28 +172,26 @@ class GeometryDetails extends React.Component {
         this.resetGeom();
         this.props.onShowPanel(false);
     };
-    roundValue = (val, prec = 1000000) => Math.round(val * prec) / prec;
     getStep = (zoom = 1) => {
         if ( zoom >= 21 ) {
-            return 0.00001
-        }else if( zoom >= 18) {
-            return 0.0001
-        }else if( zoom >= 15) {
-            return 0.001
-        }else if( zoom >= 12) {
-            return 0.01
-        }else if( zoom >= 9) {
-            return 0.1
-        }else if( zoom >= 6) {
-            return 1
+            return 0.00001;
+        }else if ( zoom >= 18) {
+            return 0.0001;
+        }else if ( zoom >= 15) {
+            return 0.001;
+        }else if ( zoom >= 12) {
+            return 0.01;
+        }else if ( zoom >= 9) {
+            return 0.1;
+        }else if ( zoom >= 6) {
+            return 1;
         }
-            return 10;
+        return 10;
     };
     getStepCircle = (zoom, name) => {
         const step = this.getStep(zoom);
         return name === 'radius' && step * 100000 || step;
     };
-    isWGS84 = () => (this.props.geometry || {}).projection === 'EPSG:4326' || !this.props.useMapProjection;
     getBBOXDimensions = (geometry) => {
         const extent = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
             CoordinatesUtils.reprojectBbox(geometry.extent, geometry.projection, 'EPSG:4326') : geometry.extent;
@@ -380,6 +378,8 @@ class GeometryDetails extends React.Component {
             </SwitchPanel>
         );
     }
+    isWGS84 = () => (this.props.geometry || {}).projection === 'EPSG:4326' || !this.props.useMapProjection;
+    roundValue = (val, prec = 1000000) => Math.round(val * prec) / prec;
     resetGeom = () => {
         if (this.props.type === "BBOX") {
             this.resetBBOX();
@@ -412,4 +412,4 @@ class GeometryDetails extends React.Component {
     };
 }
 
-module.exports =  GeometryDetails;
+module.exports = GeometryDetails;
