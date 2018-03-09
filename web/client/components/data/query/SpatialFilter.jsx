@@ -8,10 +8,11 @@
 const React = require('react');
 const {find} = require('lodash');
 const PropTypes = require('prop-types');
-
 const {Row, Col, Panel, Glyphicon, FormControl} = require('react-bootstrap');
+
 const ComboField = require('./ComboField');
-const GeometryDetails = require('./enhancers/geometrydetails')(require('./GeometryDetails'));
+const GeometryDetails = require('./GeometryDetails');
+
 const {AutocompleteWFSCombobox} = require('../../misc/AutocompleteWFSCombobox');
 const ComboFieldListItem = require('./ComboFieldListItem');
 const {createWFSFetchStream} = require('../../../observables/autocomplete');

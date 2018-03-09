@@ -8,11 +8,11 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-const {createSink} = require('recompose');
+const {createSink, compose} = require('recompose');
 const expect = require('expect');
-const geometrydetails = require('../geometrydetails');
+const debounce = require('../debounce');
 
-describe('geometrydetails enhancer', () => {
+describe('debounce enhancer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -22,7 +22,7 @@ describe('geometrydetails enhancer', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('geometrydetails onChangeDrawingStatus debounce', (done) => {
+    it('debounce call only last action', (done) => {
         const action = (status, method, owner, features) => {
             expect(status).toExist();
             expect(status).toBe("replace");
@@ -33,7 +33,7 @@ describe('geometrydetails enhancer', () => {
             expect(features).toBe("geom2");
             done();
         };
-        const Sink = geometrydetails(createSink( props => {
+        const Sink = compose(debounce("onChangeDrawingStatus", 800))(createSink( props => {
             expect(props).toExist();
             expect(props.onChangeDrawingStatus).toExist();
             props.onChangeDrawingStatus("geom");

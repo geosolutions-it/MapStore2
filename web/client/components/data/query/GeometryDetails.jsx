@@ -172,25 +172,10 @@ class GeometryDetails extends React.Component {
         this.resetGeom();
         this.props.onShowPanel(false);
     };
-    getStep = (zoom = 1) => {
-        if ( zoom >= 21 ) {
-            return 0.00001;
-        }else if ( zoom >= 18) {
-            return 0.0001;
-        }else if ( zoom >= 15) {
-            return 0.001;
-        }else if ( zoom >= 12) {
-            return 0.01;
-        }else if ( zoom >= 9) {
-            return 0.1;
-        }else if ( zoom >= 6) {
-            return 1;
-        }
-        return 10;
-    };
+    getStep = (zoom = 1) => Math.min(1 / Math.pow(10, Math.ceil(Math.min(zoom, 21) / 3) - 2), 1);
     getStepCircle = (zoom, name) => {
         const step = this.getStep(zoom);
-        return name === 'radius' && step * 100000 || step;
+        return name === 'radius' && step * 10000 || step;
     };
     getBBOXDimensions = (geometry) => {
         const extent = geometry.projection !== 'EPSG:4326' && !this.props.useMapProjection ?
