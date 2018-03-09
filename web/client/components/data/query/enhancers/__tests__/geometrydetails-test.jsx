@@ -30,14 +30,15 @@ describe('geometrydetails enhancer', () => {
             expect(owner).toExist();
             expect(owner).toBe("queryform");
             expect(features).toExist();
-            expect(features).toBe("geom1");
+            expect(features).toBe("geom2");
             done();
         };
         const Sink = geometrydetails(createSink( props => {
             expect(props).toExist();
             expect(props.onChangeDrawingStatus).toExist();
-            props.onChangeDrawingStatus({geometry: "geom"});
-            props.onChangeDrawingStatus({geometry: "geom1"});
+            props.onChangeDrawingStatus("geom");
+            props.onChangeDrawingStatus("geom1");
+            props.onChangeDrawingStatus("replace", undefined, "queryform", "geom2");
         }));
         ReactDOM.render((<Sink onChangeDrawingStatus={action}
             />), document.getElementById("container"));
