@@ -25,6 +25,7 @@ const ResizeObserver = require('resize-observer-polyfill').default;
  *
  */
 module.exports = ({
+    debounceTime,
     querySelector,
     closest = false
 } = {}) => (Component) =>
@@ -44,7 +45,7 @@ class WithResizeSpy extends React.Component {
         this.width = undefined;
         this.height = undefined;
         this.skipOnMount = props.skipOnMount;
-        this.onResize = debounce((...args) => this.props.onResize(...args), props.debounceTime);
+        this.onResize = debounce((...args) => this.props.onResize(...args), debounceTime !== undefined ? debounceTime : props.debounceTime || 1000);
         this.ro = new ResizeObserver((entries) => {
             entries.forEach((entry) => {
                 const { width, height } = entry.contentRect;

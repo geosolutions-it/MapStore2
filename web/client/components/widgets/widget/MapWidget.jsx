@@ -12,7 +12,7 @@ const Message = require('../../I18N/Message');
 const autoMapType = require('../../map/enhancers/autoMapType');
 const mapType = require('../../map/enhancers/mapType');
 const autoResize = require('../../map/enhancers/autoResize');
-const MMap = autoResize(2000)(autoMapType(mapType(require('../../map/BaseMap'))));
+const MMap = autoResize(0)(autoMapType(mapType(require('../../map/BaseMap'))));
 
 const MapView = ({id, map, layers = []}) => (<MMap
     id={id}
@@ -32,7 +32,7 @@ module.exports = ({
     id, title,
     map,
     confirmDelete = false,
-    onDelete = () => { }
+    onDelete = () => {}
 } = {}) =>
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm}
         topRightItems={<ButtonToolbar>
