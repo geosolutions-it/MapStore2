@@ -9,23 +9,25 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const {createSink, setObservableConfig} = require('recompose');
-const ConfigUtils = require('../../../utils/ConfigUtils');
 const rxjsConfig = require('recompose/rxjsObservableConfig').default;
 setObservableConfig(rxjsConfig);
 const expect = require('expect');
 const MapCatalog = require('../MapCatalog');
 const enhancer = require('../enhancers/mapCatalog');
+const GeoStoreDAO = require('../../../api/GeoStoreDAO');
 
 describe('MapCatalog component', () => {
-    let defaultUrl = ConfigUtils.getConfigProp("geoStoreUrl");
+    let oldAddBaseUri;
     beforeEach((done) => {
-        defaultUrl = ConfigUtils.getConfigProp("geoStoreUrl");
-        ConfigUtils.setConfigProp("geoStoreUrl", "base/web/client/test-resources/geostore/extjs/search/category/MAP/1.json#");
+        oldAddBaseUri = GeoStoreDAO.addBaseUrl;
+        GeoStoreDAO.addBaseUrl = (options) => {
+            return {...options, baseURL: 'base/web/client/test-resources/geostore/extjs/search/category/MAP/1.json#' };
+        };
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
     });
     afterEach((done) => {
-        ConfigUtils.setConfigProp("geoStoreUrl", defaultUrl);
+        GeoStoreDAO.addBaseUrl = oldAddBaseUri;
         ReactDOM.unmountComponentAtNode(document.getElementById("container"));
         document.body.innerHTML = '';
         setTimeout(done);
