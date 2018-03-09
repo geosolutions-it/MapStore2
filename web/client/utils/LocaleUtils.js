@@ -46,11 +46,11 @@ let supportedLocales = {
     "zh": {
         code: "zh-ZH",
         description: "中文"
-    }/*,
+    },
     "nl": {
         code: "nl-NL",
         description: "Nederlands"
-    }*/
+    }
 };
 const DATE_FORMATS = {
     "default": "yyyy/MM/dd",

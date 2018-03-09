@@ -190,4 +190,9 @@ describe('PrintUtils', () => {
         expect(printSpec.dpi).toBe(96);
         expect(printSpec.layers.length).toBe(1);
     });
+    it('from rgba to rgb', () => {
+        const rgb = PrintUtils.rgbaTorgb("rgba(255, 255, 255, 0.1)");
+        expect(rgb).toExist();
+        expect(rgb).toBe("rgb(255, 255, 255)");
+    });
 });

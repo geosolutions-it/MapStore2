@@ -723,7 +723,8 @@
             "error": {
                 "select": "Select one or more files. (supported files: shapefiles must be contained in zip archives, KML/KMZ e GPX)",
                 "shapeFileParsingError": "Cannot load the vector file. The file could be damaged or not well formed",
-                "genericLoadError": "Cannot load the vector file on map"
+                "genericLoadError": "Cannot load the vector file on map",
+                "missingPrj": "Missing projection info (.prj), coordinate system is  supposed to be EPSG:4326"
             },
             "add": "Add",
             "cancel": "Cancel",

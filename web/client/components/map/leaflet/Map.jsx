@@ -231,7 +231,7 @@ class LeafletMap extends React.Component {
 
     componentWillUnmount() {
         const attributionContainer = this.props.mapOptions.attribution && this.props.mapOptions.attribution.container && document.querySelector(this.props.mapOptions.attribution.container);
-        if (attributionContainer && attributionContainer.querySelector('.leaflet-control-attribution')) {
+        if (attributionContainer && this.attribution.getContainer() && attributionContainer.querySelector('.leaflet-control-attribution')) {
             attributionContainer.removeChild(this.attribution.getContainer());
         }
         this.map.remove();
@@ -355,7 +355,7 @@ class LeafletMap extends React.Component {
         mapUtils.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
             let latLngCenter = L.latLng([center.y, center.x]);
             // this call will use map internal size
-            let topLeftPoint = this.map._getNewTopLeftPoint(latLngCenter, zoom);
+            let topLeftPoint = this.map._getNewPixelOrigin(latLngCenter, zoom);
             let pixelBounds = new L.Bounds(topLeftPoint, topLeftPoint.add(this.map.getSize()));
             let southWest = this.map.unproject(pixelBounds.getBottomLeft(), zoom);
             let northEast = this.map.unproject(pixelBounds.getTopRight(), zoom);

@@ -181,7 +181,7 @@ const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
         return Rx.Observable.forkJoin(
             // delete details
             deleteResourceById(thumbnailsId, options),
-            // delete thumbanil
+            // delete thumbnail
             deleteResourceById(detailsId, options),
             // delete map
             deleteResourceById(mapId, options)
@@ -255,19 +255,19 @@ const storeDetailsInfoEpic = (action$, store) =>
         return !mapId ?
             Rx.Observable.empty() :
             Rx.Observable.fromPromise(
-            GeoStoreApi.getResourceAttribute(mapId, "details")
-            .then(res => res.data).catch(() => {
-                return null;
-            })
-        )
-        .switchMap((details) => {
-            if (!details) {
-                return Rx.Observable.empty();
-            }
-            return Rx.Observable.of(
-                    detailsLoaded(mapId, details)
-                );
-        });
+                GeoStoreApi.getResourceAttribute(mapId, "details")
+                    .then(res => res.data).catch(() => {
+                        return null;
+                    })
+            )
+            .switchMap((details) => {
+                if (!details) {
+                    return Rx.Observable.empty();
+                }
+                return Rx.Observable.of(
+                        detailsLoaded(mapId, details)
+                    );
+            });
     });
 
 

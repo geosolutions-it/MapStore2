@@ -1,5 +1,6 @@
 
 const Rx = require('rxjs');
+const { isFunction } = require('lodash');
 const { ActionsObservable, combineEpics } = require('redux-observable');
 const TEST_TIMEOUT = "EPICTEST:TIMEOUT";
 module.exports = {
@@ -9,12 +10,12 @@ module.exports = {
      * @param  {number}   count      the number of actions to wait (note, the stream)
      * @param  {object|object[]}   action     the action(s) to trigger
      * @param  {function} callback   The check function, called after `count` actions received
-     * @param  {Object}   [state={}] the state
+     * @param  {Object|function}   [state={}] the state or a function that return it
      */
     testEpic: (epic, count, action, callback, state = {}) => {
         const actions = new Rx.Subject();
         const actions$ = new ActionsObservable(actions);
-        const store = { getState: () => state };
+        const store = { getState: () => isFunction(state) ? state() : state};
         epic(actions$, store)
             .take(count)
             .toArray()

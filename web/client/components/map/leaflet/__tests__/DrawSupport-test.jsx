@@ -105,14 +105,15 @@ describe('Leaflet DrawSupport', () => {
 
     it('test map onClick handler created circle', () => {
         let bounds = L.latLngBounds(L.latLng(40.712, -74.227), L.latLng(40.774, -74.125));
-        let layer = {
-            getBounds: function() { return bounds; },
-            toGeoJSON: function() {return {geometry: {coordinates: [0, 0]}}; }
-        };
         let map = L.map("map", {
             center: [51.505, -0.09],
             zoom: 13
         });
+        let layer = {
+            getBounds: function() { return bounds; },
+            toGeoJSON: function() {return {geometry: {coordinates: [0, 0]}}; },
+            _map: map
+        };
         let cmp = ReactDOM.render(
             <DrawSupport
                 map={map}
@@ -176,14 +177,15 @@ describe('Leaflet DrawSupport', () => {
     it('test draw replace with circle', () => {
         const RADIUS = 1;
         let bounds = L.latLngBounds(L.latLng(40.712, -74.227), L.latLng(40.774, -74.125));
-        let layer = {
-            getBounds: function() { return bounds; },
-            toGeoJSON: function() {return {geometry: {coordinates: [0, 0]}}; }
-        };
         let map = L.map("map", {
             center: [51.505, -0.09],
             zoom: 13
         });
+        let layer = {
+            getBounds: function() { return bounds; },
+            toGeoJSON: function() {return {geometry: {coordinates: [0, 0]}}; },
+            _map: map
+        };
         let cmp = ReactDOM.render(
             <DrawSupport
                 map={map}
