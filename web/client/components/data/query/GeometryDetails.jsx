@@ -79,7 +79,7 @@ class GeometryDetails extends React.Component {
             projection: this.props.geometry.projection
         };
 
-        this.props.onChangeDrawingStatus({geometry: [geometry]});
+        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry]);
     };
 
     onUpdateCircle = (value, name) => {
@@ -98,7 +98,7 @@ class GeometryDetails extends React.Component {
             projection: this.props.geometry.projection
         };
 
-        this.props.onChangeDrawingStatus({geometry: [geometry]});
+        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry]);
     };
 
     onModifyGeometry = () => {
