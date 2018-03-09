@@ -48,8 +48,8 @@ describe('MapCatalog component', () => {
 
     it('mapCatalog enhancer', (done) => {
         const Sink = enhancer(createSink( props => {
-            expect(props).toExist();
             if (props.items && props.items.length > 0) {
+                expect(props).toExist();
                 const item = props.items[0];
                 expect(item).toExist();
                 expect(item.title).toExist();
