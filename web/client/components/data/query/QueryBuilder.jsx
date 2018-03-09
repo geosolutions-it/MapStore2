@@ -62,7 +62,8 @@ class QueryBuilder extends React.Component {
         allowEmptyFilter: PropTypes.bool,
         autocompleteEnabled: PropTypes.bool,
         emptyFilterWarning: PropTypes.bool,
-        header: PropTypes.node
+        header: PropTypes.node,
+        zoom: PropTypes.number
     };
 
     static defaultProps = {
@@ -180,7 +181,8 @@ class QueryBuilder extends React.Component {
                         spatialMethodOptions={this.props.spatialMethodOptions}
                         spatialPanelExpanded={this.props.spatialPanelExpanded}
                         showDetailsPanel={this.props.showDetailsPanel}
-                        actions={this.props.spatialFilterActions}/>
+                        actions={this.props.spatialFilterActions}
+                        zoom={this.props.zoom}/>
                     <CrossLayerFilter
                         spatialOperations={this.props.spatialOperations}
                         crossLayerExpanded={this.props.crossLayerExpanded}
