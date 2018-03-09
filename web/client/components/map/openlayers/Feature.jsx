@@ -69,6 +69,11 @@ class Feature extends React.Component {
                     f.set("textGeometriesIndexes", props.properties.textGeometriesIndexes);
                 });
             }
+            if (props.properties && props.properties.circles) {
+                this._feature.forEach((f) => {
+                    f.set("circles", props.properties.circles);
+                });
+            }
             if (props.style && (props.style !== props.layerStyle)) {
                 this._feature.forEach((f) => { f.setStyle(getStyle({style: props.style})); });
             }

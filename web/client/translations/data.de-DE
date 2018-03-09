@@ -760,7 +760,8 @@
                 "marker": " Marker",
                 "line": " Linie",
                 "polygon": " Polygon",
-                "text": " Text"
+                "text": " Text",
+                "circle": " Kreis"
             }
         },
         "users": {

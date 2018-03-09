@@ -29,7 +29,7 @@ describe("test the SelectAnnotationsFile modal", () => {
         const annotations = ReactDOM.render(<SelectAnnotationsFile/>, document.getElementById("container"));
         expect(annotations).toExist();
         const annotationsNode = ReactDOM.findDOMNode(annotations);
-        expect(annotationsNode).toExist();
+        expect(annotationsNode).toNotExist();
     });
     it('test file selected', (done) => {
         const jsonFile = new File([`{ "coordinates": [

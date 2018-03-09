@@ -11,10 +11,12 @@ const React = require('react');
 const MARKER = "marker";
 const LINE = "lineString";
 const POLYGON = "polygon";
+const CIRCLE = "circle";
 const TEXT = "text";
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const Portal = require('../../misc/Portal');
 const PolygonStyler = require('../../style/PolygonStyler');
+const CircleStyler = require('../../style/CircleStyler');
 const TextStyler = require('../../style/TextStyler');
 const PolylineStyler = require('../../style/PolylineStyler');
 const Message = require('../../I18N/Message');
@@ -247,7 +249,8 @@ class AnnotationsEditor extends React.Component {
                                     }
                                 } else {
                                     this.cancelEdit();
-                                }}
+                                }
+                            }
                         }, {
                             glyph: "pencil-add",
                             el: DropdownFeatureType,
@@ -264,6 +267,7 @@ class AnnotationsEditor extends React.Component {
                                 marker: <Message msgId="annotations.titles.marker"/>,
                                 line: <Message msgId="annotations.titles.line"/>,
                                 polygon: <Message msgId="annotations.titles.polygon"/>,
+                                circle: <Message msgId="annotations.titles.circle"/>,
                                 text: <Message msgId="annotations.titles.text"/>
                             },
                                 bsStyle: this.props.drawing ? "success" : "primary"
@@ -345,6 +349,11 @@ class AnnotationsEditor extends React.Component {
                         this.props.onChangeStyler(MARKER);
                     }
                 }}><Glyphicon glyph="point"/></NavItemT>);
+                case CIRCLE: return (<NavItemT eventKey={CIRCLE} onClick={() => {
+                    if (this.props.stylerType !== CIRCLE) {
+                        this.props.onChangeStyler(CIRCLE);
+                    }
+                }}><Glyphicon glyph="1-circle"/></NavItemT>);
                 case LINE: return (<NavItemT eventKey={LINE} onClick={() => {
                     if (this.props.stylerType !== LINE) {
                         this.props.onChangeStyler(LINE);
@@ -385,13 +394,14 @@ class AnnotationsEditor extends React.Component {
             case "lineString": return <PolylineStyler setStyleParameter={(style) => {this.props.onSetStyle(style); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }} shapeStyle={this.props.editing.style} width={this.props.width} />;
             case "text": return <TextStyler setStyleParameter={(style) => {this.props.onSetStyle(style); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }} shapeStyle={this.props.editing.style} width={this.props.width} />;
             case "polygon": return <PolygonStyler setStyleParameter={(style) => {this.props.onSetStyle(style); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }} shapeStyle={this.props.editing.style} width={this.props.width}/>;
+            case "circle": return <CircleStyler setStyleParameter={(style) => {this.props.onSetStyle(style); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }} shapeStyle={this.props.editing.style} width={this.props.width}/>;
             default: return null;
         }
     };
 
     renderStyler = () => {
         const {editing, onCancelStyle, onSaveStyle, stylerType, onSetUnsavedStyle, onToggleUnsavedStyleModal} = this.props;
-        const stylerTabs = editing.geometry ? getAvailableStyler(convertGeoJSONToInternalModel(editing.geometry, editing.properties.textValues)) : [];
+        const stylerTabs = editing.geometry ? getAvailableStyler(convertGeoJSONToInternalModel(editing.geometry, editing.properties.textValues, editing.properties.circles)) : [];
         return (<div className="mapstore-annotations-info-viewer-styler">
             <Grid className="mapstore-annotations-info-viewer-styler-buttons" fluid style={{width: '100%', boxShadow: 'none'}}>
                 <Row className="noTopMargin">

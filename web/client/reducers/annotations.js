@@ -96,13 +96,15 @@ function annotations(state = { validationErrors: {} }, action) {
                 removing: 'geometry',
                 unsavedChanges: true
             });
-        case EDIT_ANNOTATION:
+        case EDIT_ANNOTATION: {
+            const {properties} = action.feature;
             return assign({}, state, {
                 editing: assign({}, action.feature),
-                stylerType: head(getAvailableStyler(convertGeoJSONToInternalModel(action.feature.geometry, action.feature.properties && action.feature.properties.textValues || [] ))),
+                stylerType: head(getAvailableStyler(convertGeoJSONToInternalModel(action.feature.geometry, properties && properties.textValues || [], properties && properties.circles || [] ))),
                 originalStyle: null,
                 featureType: action.featureType
             });
+        }
         case NEW_ANNOTATION:
             const id = uuid.v1();
             return assign({}, state, {
@@ -124,10 +126,11 @@ function annotations(state = { validationErrors: {} }, action) {
                 current: null,
                 editing: state.editing ? assign({}, state.editing, {
                     geometry: null,
-                    style: {},
+                    // style: {}, TODO CHECK THIS
                     properties: assign({}, state.editing.properties, {
                             textValues: [],
-                            textGeometriesIndexes: []
+                            textGeometriesIndexes: [],
+                            circles: []
                         })
                 }) : null
             });
@@ -199,17 +202,31 @@ function annotations(state = { validationErrors: {} }, action) {
             });
         case UPDATE_ANNOTATION_GEOMETRY: {
             let stylerType;
-            let availableStyler = getAvailableStyler(convertGeoJSONToInternalModel(action.geometry, typeof action.textChanged === "boolean" && action.textChanged ? state.editing.properties.textValues || ["v"] : [] ));
+            let properties = state.editing.properties;
+
+            let textValues = [];
+            let circles = [];
+            if ((properties && properties.textValues && properties.textValues.length) || (typeof action.textChanged === "boolean" && action.textChanged)) {
+                textValues = properties && properties.textValues && properties.textValues.length && properties.textValues || ["v"];
+            }
+            if ((properties && properties.circles && properties.circles.length) || (typeof action.circleChanged === "boolean" && action.circleChanged)) {
+                circles = properties && properties.circles && properties.circles.length && properties.circles || ["v"];
+            }
+            let availableStyler = getAvailableStyler(convertGeoJSONToInternalModel(action.geometry, textValues, circles));
             if (action.geometry.type === "GeometryCollection") {
                 stylerType = availableStyler.indexOf(state.stylerType) !== -1 ? state.stylerType : head(availableStyler);
             } else {
                 stylerType = head(availableStyler);
             }
-            let properties = state.editing.properties;
             if (typeof action.textChanged === "boolean" && action.textChanged) {
                 properties = assign({}, state.editing.properties, {
                         textValues: (state.editing.properties.textValues || []).concat([""]),
                         textGeometriesIndexes: (state.editing.properties.textGeometriesIndexes || []).concat([action.geometry.geometries.length - 1])
+                    });
+            }
+            if (typeof action.circleChanged === "boolean" && action.circleChanged) {
+                properties = assign({}, state.editing.properties, {
+                        circles: (state.editing.properties.circles || []).concat([action.geometry.geometries.length - 1])
                     });
             }
             return assign({}, state, {

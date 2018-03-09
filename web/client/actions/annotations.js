@@ -156,11 +156,12 @@ function setStyle(style) {
         style
     };
 }
-function updateAnnotationGeometry(geometry, textChanged) {
+function updateAnnotationGeometry(geometry, textChanged, circleChanged) {
     return {
         type: UPDATE_ANNOTATION_GEOMETRY,
         geometry,
-        textChanged
+        textChanged,
+        circleChanged
     };
 }
 function validationError(errors) {

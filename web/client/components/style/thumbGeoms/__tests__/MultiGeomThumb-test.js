@@ -56,6 +56,23 @@ describe("Test the MultiGeomThumb component", () => {
         expect(svg.attributes.viewBox.value).toBe("0 0 100 100");
 
     });
+    it('create component with only Circle', () => {
+        const style = DEFAULT_ANNOTATIONS_STYLES;
+        const cmp = ReactDOM.render(<MultiGeomThumb styleMultiGeom={style} geometry={{geometries: [{type: "Polygon"}]}} properties={{circles: [0]}}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+        const circle = TestUtils.findRenderedDOMComponentWithTag(cmp, 'circle');
+
+        expect(circle).toExist();
+        expect(circle.attributes.cx.value).toBe("50");
+        expect(circle.attributes.cy.value).toBe("50");
+        expect(circle.attributes.r.value).toBe("25");
+        expect(circle.attributes.stroke.value).toBe("#ffcc33");
+        expect(circle.attributes.fill.value).toBe("#ffffff");
+        expect(circle.attributes.opacity.value).toBe("1");
+        expect(circle.attributes["stroke-width"].value).toBe("3");
+        expect(circle.attributes["fill-opacity"].value).toBe("0.2");
+
+    });
 
 
 });
