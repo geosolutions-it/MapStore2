@@ -72,7 +72,7 @@ describe('Test the AnnotationsUtils', () => {
     });
     it('default styles text', () => {
         const numStyles = Object.keys(DEFAULT_ANNOTATIONS_STYLES);
-        expect(numStyles.length).toBe(7);
+        expect(numStyles.length).toBe(8);
 
         const textParams = Object.keys(DEFAULT_ANNOTATIONS_STYLES.Text);
         expect(textParams.length).toBe(9);
@@ -162,6 +162,12 @@ describe('Test the AnnotationsUtils', () => {
         geometries = [{type: "MultiPoint"}, {type: "MultiPoint"}];
         convertedGeometries = [{type: "Text"}, {type: "MultiPoint"}];
         newGeom = convertGeoJSONToInternalModel({type: "GeometryCollection", geometries}, ["some va"]);
+        newGeom.geometries.forEach((g, i) => {
+            expect(g.type).toBe(convertedGeometries[i].type);
+        });
+        geometries = [{type: "Polygon"}, {type: "MultiPoint"}];
+        convertedGeometries = [{type: "Circle"}, {type: "MultiPoint"}];
+        newGeom = convertGeoJSONToInternalModel({type: "GeometryCollection", geometries}, [], ["some va"]);
         newGeom.geometries.forEach((g, i) => {
             expect(g.type).toBe(convertedGeometries[i].type);
         });

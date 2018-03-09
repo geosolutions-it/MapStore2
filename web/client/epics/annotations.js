@@ -176,7 +176,7 @@ module.exports = (viewer) => ({
         .filter(action => action.owner === 'annotations')
         .switchMap( (action) => {
             return Rx.Observable.from([
-                updateAnnotationGeometry(mergeGeometry(action.features), action.textChanged)
+                updateAnnotationGeometry(mergeGeometry(action.features), action.textChanged, action.circleChanged)
             ].concat(!store.getState().annotations.config.multiGeometry && store.getState().annotations.drawing ? [toggleAdd()] : []));
         }),
     endDrawTextEpic: (action$, store) => action$.ofType(SAVE_TEXT)
@@ -302,5 +302,3 @@ module.exports = (viewer) => ({
         })
 
 });
-
-// .filter(f => f.type === "Feature" && !isEmpty(f.geometry) && !isEmpty(f.properties) && !isEmpty(f.style))

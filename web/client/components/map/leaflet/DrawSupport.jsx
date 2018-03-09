@@ -506,7 +506,7 @@ class DrawSupport extends React.Component {
 
         let allLayers = this.drawLayer.getLayers();
         allLayers.forEach(l => {
-            if (l.getLayers() && l.getLayers().length) {
+            if (l.getLayers && l.getLayers() && l.getLayers().length) {
                 l.getLayers().forEach((layer) => {
                     layer.on('edit', (e) => this.onUpdateGeom(e.target, newProps));
                     layer.on('moveend', (e) => this.onUpdateGeom(e.target, newProps));
@@ -564,7 +564,7 @@ class DrawSupport extends React.Component {
         if (this.drawLayer) {
             let allLayers = this.drawLayer.getLayers();
             allLayers.forEach(l => {
-                if (l.getLayers() && l.getLayers().length) {
+                if (l.getLayers && l.getLayers() && l.getLayers().length) {
                     l.getLayers().forEach((layer) => {
                         layer.off('edit');
                         layer.off('moveend');

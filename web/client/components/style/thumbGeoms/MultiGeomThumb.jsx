@@ -35,9 +35,11 @@ class MultiGeomThumb extends React.Component {
 
     render() {
 
+        let styleCircle = this.props.styleMultiGeom.Circle;
         let styleLine = this.props.styleMultiGeom.MultiLineString || this.props.styleMultiGeom.LineString;
         let stylePolygon = this.props.styleMultiGeom.MultiPolygon || this.props.styleMultiGeom.Polygon;
         let textPresent = this.props.properties && this.props.properties.textValues && !!this.props.properties.textValues.length;
+        let circlePresent = this.props.properties && this.props.properties.circles && !!this.props.properties.circles.length;
         let styleText = textPresent ? this.props.styleMultiGeom.Text : {};
         let types = this.props.geometry.geometries.map(g => g.type);
         let polygonPresent = types.indexOf("Polygon") !== -1 || types.indexOf("MultiPolygon") !== -1;
@@ -63,8 +65,8 @@ class MultiGeomThumb extends React.Component {
                         opacity: stylePolygon.opacity
                     }}
                 />) }
-                {textPresent && <text x="10" y="40" fill={styleText.color}>T</text>
-}
+                {textPresent && <text x="10" y="40" fill={styleText.color}>T</text>}
+                {circlePresent && <circle cx="50" cy="50" r="25" stroke={styleCircle.color} opacity={styleCircle.opacity} strokeWidth={styleCircle.weight} fill={styleCircle.fillColor} fillOpacity={styleCircle.fillOpacity}/> }
             </svg>
         </div>
         );

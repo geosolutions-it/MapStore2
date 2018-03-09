@@ -733,7 +733,8 @@
                 "marker": " Marqueur",
                 "line": " Ligne",
                 "polygon": " Polygone",
-                "text": " Texte"
+                "text": " Texte",
+                "circle": " Cercle"
             }
         },
         "user":{

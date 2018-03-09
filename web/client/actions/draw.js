@@ -12,13 +12,14 @@ const SET_CURRENT_STYLE = 'DRAW:SET_CURRENT_STYLE';
 const GEOMETRY_CHANGED = 'DRAW:GEOMETRY_CHANGED';
 const DRAW_SUPPORT_STOPPED = 'DRAW:DRAW_SUPPORT_STOPPED';
 
-function geometryChanged(features, owner, enableEdit, textChanged) {
+function geometryChanged(features, owner, enableEdit, textChanged, circleChanged) {
     return {
         type: GEOMETRY_CHANGED,
         features,
         owner,
         enableEdit,
-        textChanged
+        textChanged,
+        circleChanged
     };
 }
 function drawStopped() {
