@@ -1074,6 +1074,10 @@
         },
         "widgets": {
             "types": {
+                 "map": {
+                    "title": "Carte",
+                    "caption": "ajouter une carte"
+                },
                 "chart": {
                     "title": "Graphique",
                     "caption": "ajouter un graphique"

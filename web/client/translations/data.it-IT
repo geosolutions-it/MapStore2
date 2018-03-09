@@ -1073,6 +1073,10 @@
         },
         "widgets": {
             "types": {
+                "map": {
+                    "title": "Mappa",
+                    "caption": "aggiungi una mappa"
+                },
                 "chart": {
                     "title": "Grafico",
                     "caption": "aggiungi un grafico"
