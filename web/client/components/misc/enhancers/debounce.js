@@ -9,7 +9,7 @@ const {withHandlers} = require('recompose');
 const {debounce} = require("lodash");
 const emptyFunc = () => {};
 /**
- * This enhancer debounce an action or of a passed debounceTime
+ * This enhancer de-bounce a method passed as prop of the given time.
  * The action should be present in the props passed to the component
  * @memberof components.misc.enhancers
  * @function
