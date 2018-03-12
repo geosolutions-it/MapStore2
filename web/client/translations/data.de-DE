@@ -81,10 +81,10 @@
             "tooltipActivate": "Geben Sie den 3D-Modus ein"
         },
         "cookie":{
-            "info": "This website uses cookies to improve your experience. We'll assume you're ok with this, but you can opt-out if you wish.",
-            "moreDetailsButton": "More Details",
-            "leave": "Leave",
-            "accept": "Accept"
+            "info": "Diese Webseite verwendet Cookies damit Sie diese einwandfrei nutzen können. Wir gehen davon aus, dass sie damit einverstanden sind, andernfalls können Sie die Webseite verlassen.",
+            "moreDetailsButton": "Mehr Details",
+            "leave": "Verlassen",
+            "accept": "Annehmen"
         },
         "background": "Hintergrund",
         "language": "Sprache",
