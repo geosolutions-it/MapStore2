@@ -86,7 +86,8 @@ function measurement(state = defaultState, action) {
                     lineMeasureEnabled: false,
                     areaMeasureEnabled: false,
                     bearingMeasureEnabled: false,
-                    feature: {}
+                    feature: {},
+                    geomType: ""
                 };
             }
         }
@@ -99,7 +100,8 @@ function measurement(state = defaultState, action) {
             lineMeasureEnabled: false,
             areaMeasureEnabled: false,
             bearingMeasureEnabled: false,
-            feature: {}
+            feature: {},
+            geomType: ""
         };
     }
     default:
