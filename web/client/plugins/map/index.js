@@ -47,6 +47,7 @@ module.exports = (mapType, actions) => {
 
     const MeasurementSupport = connect((state) => ({
         measurement: state.measurement || {},
+        distinctMeasure: state.measurement && state.measurement.distinctMeasure || null,
         uom: state.measurement && state.measurement.uom || {
             length: {unit: 'm', label: 'm'},
             area: {unit: 'sqm', label: 'm²'}
