@@ -49,4 +49,10 @@ describe('CounterWidget component', () => {
         ReactTestUtils.Simulate.click(el); // <-- trigger event callback
         expect(spyonEdit).toHaveBeenCalled();
     });
+    it('Test CounterWidget DropdownMenu', () => {
+        ReactDOM.render(<CounterWidget onEdit={actions.onEdit} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelectorAll('.dropdown-menu dropdown-menu-right li');
+        expect(el).toEqual(2);
+    });
 });
