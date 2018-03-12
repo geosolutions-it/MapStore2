@@ -39,6 +39,7 @@ let defaultPrecision = {
  * @method readableDistance(distance, isMetric, useFeet, isNauticalMile, precision, options): string
  * Converts metric distance to distance string.
  * The value will be rounded as defined by the precision option object.
+ * this override is necesary due to the customization on how the measure label is presented and for adding bearing support
 */
 L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, precision, options) => {
     let distanceStr;
@@ -99,6 +100,8 @@ L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, p
 /** @method readableArea(area, isMetric, precision): string
  * @return a readable area string in yards or metric.
  * The value will be rounded as defined by the precision option object.
+ * this override is necesary due to the customization on how the area measure label is presented
+ supporting also the square nautical miles and square feets
  */
 L.GeometryUtil.readableArea = (area, isMetric, precision, options) => {
     let areaStr;
@@ -149,6 +152,9 @@ L.GeometryUtil.readableArea = (area, isMetric, precision, options) => {
     return areaStr;
 };
 
+/**
+ * this is need to pass custom options as uom, distinctMeasure to the readableArea function
+*/
 L.Draw.Polygon.prototype._getMeasurementString = function() {
     let area = this._area;
     let measurementString = '';
@@ -160,6 +166,7 @@ L.Draw.Polygon.prototype._getMeasurementString = function() {
     }
 
     if (area) {
+        // here is the custom option passed to geom util func
         const opt = {
             uom: this.options.uom,
             distinctMeasure: this.options.distinctMeasure,
@@ -169,6 +176,9 @@ L.Draw.Polygon.prototype._getMeasurementString = function() {
     }
     return measurementString;
 };
+/**
+ * this is need to pass custom options as uom, distinctMeasure, bearing to the readableDistance function
+*/
 L.Draw.Polyline.prototype._getMeasurementString = function() {
     let currentLatLng = this._currentLatLng;
     let previousLatLng = this._markers[this._markers.length - 1].getLatLng();
@@ -180,6 +190,7 @@ L.Draw.Polyline.prototype._getMeasurementString = function() {
     } else {
         distance = previousLatLng && currentLatLng ? this._measurementRunningTotal + this._map.distance(currentLatLng, previousLatLng) * (this.options.factor || 1) : this._measurementRunningTotal || 0;
     }
+    // here is the custom option passed to geom util func
     const opt = {
         uom: this.options.uom,
         distinctMeasure: this.options.distinctMeasure,
