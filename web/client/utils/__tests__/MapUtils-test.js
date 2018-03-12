@@ -33,6 +33,7 @@ var {
 } = require('../MapUtils');
 
 const POINT = "Point";
+const CIRCLE = "Circle";
 const LINE_STRING = "LineString";
 const POLYGON = "Polygon";
 const MULTI_POINT = "MultiPoint";
@@ -1177,7 +1178,7 @@ describe('Test the MapUtils', () => {
         expect(isSimpleGeomType(MULTI_POINT)).toBe(false);
         expect(isSimpleGeomType(MULTI_LINE_STRING)).toBe(false);
         expect(isSimpleGeomType(MULTI_POLYGON)).toBe(false);
-        expect(isSimpleGeomType("Circle")).toBeTruthy();
+        expect(isSimpleGeomType(CIRCLE)).toBeFalsy();
     });
 
     it('getSimpleGeomType default Point', () => {

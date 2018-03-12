@@ -9,6 +9,14 @@ const uuidv1 = require('uuid/v1');
 const LocaleUtils = require('./LocaleUtils');
 const {values} = require('lodash');
 
+const STYLE_CIRCLE = {
+    color: '#ffcc33',
+    opacity: 1,
+    weight: 3,
+    fillColor: '#ffffff',
+    fillOpacity: 0.2,
+    radius: 10
+};
 const STYLE_POINT = {
     iconGlyph: 'comment',
     iconShape: 'square',
@@ -48,6 +56,7 @@ const STYLE_POLYGON = {
 const DEFAULT_ANNOTATIONS_STYLES = {
     "Text": STYLE_TEXT,
     "Point": STYLE_POINT,
+    "Circle": STYLE_CIRCLE,
     "MultiPoint": STYLE_POINT,
     "LineString": STYLE_LINE,
     "MultiLineString": STYLE_LINE,
@@ -70,14 +79,19 @@ const AnnotationsUtils = {
      * otherwise it will return the original geometry type.
      * @return {object} a transformed geojson with only geometry types
     */
-    convertGeoJSONToInternalModel: ({type = "Point", geometries = []}, textValues = []) => {
+    convertGeoJSONToInternalModel: ({type = "Point", geometries = []}, textValues = [], circles = []) => {
         switch (type) {
             case "Point": case "MultiPoint": {
                 return {type: textValues.length === 1 ? "Text" : type};
             }
+            case "Polygon": {
+                return {type: circles.length === 1 ? "Circle" : type};
+            }
             case "GeometryCollection": {
                 const onlyPoints = geometries.filter(g => g.type === "Point" || g.type === "MultiPoint");
-                let tmp = 0;
+                const onlyMultiPolygons = geometries.filter(g => g.type === "Polygon");
+                let t = 0;
+                let p = 0;
                 return {type: "GeometryCollection", geometries: geometries.map(g => {
                     if (g.type === "Point" || g.type === "MultiPoint") {
                         if (onlyPoints.length === textValues.length) {
@@ -86,9 +100,21 @@ const AnnotationsUtils = {
                         if (textValues.length === 0) {
                             return {type: g.type};
                         }
-                        if (tmp === 0) {
-                            tmp++;
+                        if (t === 0) {
+                            t++;
                             return {type: "Text" };
+                        }
+                    }
+                    if (g.type === "Polygon") {
+                        if (onlyMultiPolygons.length === circles.length) {
+                            return {type: "Circle"};
+                        }
+                        if (circles.length === 0) {
+                            return {type: g.type};
+                        }
+                        if (p === 0) {
+                            p++;
+                            return {type: "Circle" };
                         }
                     }
                     return {type: g.type};
@@ -115,6 +141,9 @@ const AnnotationsUtils = {
             case "Text": {
                 return [AnnotationsUtils.getRelativeStyler(type)];
             }
+            case "Circle": {
+                return [AnnotationsUtils.getRelativeStyler(type)];
+            }
             case "GeometryCollection": {
                 return geometries.reduce((p, c) => {
                     return (p.indexOf(AnnotationsUtils.getRelativeStyler(c.type)) !== -1) ? p : p.concat(AnnotationsUtils.getAvailableStyler(c));
@@ -131,6 +160,9 @@ const AnnotationsUtils = {
         switch (type) {
             case "Point": case "MultiPoint": {
                 return "marker";
+            }
+            case "Circle": {
+                return "circle";
             }
             case "LineString": case "MultiLineString": {
                 return "lineString";
@@ -155,6 +187,7 @@ const AnnotationsUtils = {
      * some defaults for the style
     */
     DEFAULT_ANNOTATIONS_STYLES,
+    STYLE_CIRCLE,
     STYLE_POINT,
     STYLE_TEXT,
     STYLE_LINE,

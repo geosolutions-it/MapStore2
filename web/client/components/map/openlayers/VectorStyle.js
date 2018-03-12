@@ -22,6 +22,8 @@ const STYLE_POINT = {
     fillOpacity: 0.2,
     radius: 10
 };
+const STYLE_CIRCLE = STYLE_POINT;
+
 const STYLE_TEXT = {
     fontStyle: 'normal',
     fontSize: '14',
@@ -55,6 +57,7 @@ const STYLE_POLYGON = {
 };
 const defaultStyles = {
     "Text": STYLE_TEXT,
+    "Circle": STYLE_CIRCLE,
     "Point": STYLE_POINT,
     "MultiPoint": STYLE_POINT,
     "LineString": STYLE_LINE,
@@ -192,6 +195,29 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
         }) : getMarkerStyle({style: {...tempStyle, highlight: options.style.highlight}});
 
     }
+    if ((geomType === "Circle") && tempStyle.radius ) {
+        return new ol.style.Style({
+            stroke: new ol.style.Stroke( tempStyle && tempStyle.stroke ? tempStyle.stroke : {
+                color: hexToRgb(options.style && tempStyle.color || "#0000FF").concat([tempStyle.opacity || 1]),
+                lineDash: options.style.highlight ? [10] : [0],
+                width: tempStyle.weight || 1
+            }),
+            fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
+                color: hexToRgb(options.style && tempStyle.fillColor || "#0000FF").concat([tempStyle.fillOpacity || 0.2])
+            }),
+            image: new ol.style.Circle({
+                radius: tempStyle.radius || 10,
+                fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
+                    color: hexToRgb(options.style && tempStyle.fillColor || "#0000FF").concat([tempStyle.fillOpacity || 0.2])
+                }),
+                stroke: new ol.style.Stroke({
+                  color: hexToRgb(options.style && tempStyle.color || "#0000FF").concat([tempStyle.opacity || 1]),
+                  lineDash: options.style.highlight ? [10] : [0],
+                  width: tempStyle.weight || 1
+                })
+            })
+        });
+    }
     if (geomType === "Text" && tempStyle.font) {
         return isDrawing ? new ol.style.Style({
             image: image
@@ -273,6 +299,7 @@ function getStyle(options, isDrawing = false, textValues = []) {
                 let markerStyles;
                 let type = feature.getGeometry().getType();
                 let textIndexes = feature.get("textGeometriesIndexes") || [];
+                let circles = feature.get("circles") || [];
                 let textValue = feature.get("textValues");// || [""];
                 if (feature.getGeometry().getType() === "GeometryCollection") {
                     let geometries = feature.getGeometry().getGeometries();
@@ -280,6 +307,11 @@ function getStyle(options, isDrawing = false, textValues = []) {
                         type = c.getType();
                         if ((type === "Point" || type === "MultiPoint") && textIndexes.length && textIndexes.indexOf(i) !== -1) {
                             let gStyle = getValidStyle("Text", options, isDrawing, [textValue[textIndexes.indexOf(i)]]);
+                            gStyle.setGeometry(c);
+                            return p.concat([gStyle]);
+                        }
+                        if (type === "Polygon" && circles.length && circles.indexOf(i) !== -1) {
+                            let gStyle = getValidStyle("Circle", options, isDrawing, []);
                             gStyle.setGeometry(c);
                             return p.concat([gStyle]);
                         }

@@ -761,7 +761,8 @@
                 "marker": " Marker",
                 "line": " Linea",
                 "polygon": " Poligono",
-                "text": " Testo"
+                "text": " Testo",
+                "circle": " Cerchio"
             }
         },
         "users": {
