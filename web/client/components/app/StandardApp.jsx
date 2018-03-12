@@ -21,6 +21,7 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 
 const assign = require('object-assign');
 const url = require('url');
+const {isObject} = require('lodash');
 
 const urlQuery = url.parse(window.location.href, true).query;
 
@@ -78,7 +79,9 @@ class StandardApp extends React.Component {
             const opts = assign({}, this.props.storeOpts, {
                 onPersist: onInit.bind(null, config)
             }, {
-                initialState: config.initialState || {defaultState: {}, mobile: {}}
+                initialState: this.parseInitialState(config.initialState, {
+                    mode: ConfigUtils.getBrowserProperties().mobile ? 'mobile' : 'desktop'
+                }) || {defaultState: {}, mobile: {}}
             });
             this.store = this.props.appStore(this.props.pluginsDef.plugins, opts);
             this.props.onStoreInit(this.store);
@@ -115,6 +118,12 @@ class StandardApp extends React.Component {
         this.props.initialActions.forEach((action) => {
             this.store.dispatch(action());
         });
+    };
+    parseInitialState = (state, context) => {
+        return Object.keys(state || {}).reduce((previous, key) => {
+            return { ...previous, ...{ [key]: isObject(state[key]) ? this.parseInitialState(state[key], context) :
+                PluginsUtils.handleExpression({}, context, state[key])}};
+        }, {});
     };
 }
 

@@ -289,6 +289,7 @@ class MapPlugin extends React.Component {
 }
 
 const {mapSelector, projectionDefsSelector} = require('../selectors/map');
+const { mapTypeSelector } = require('../selectors/maptype');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
 const {selectedFeatures} = require('../selectors/highlight');
 const {securityTokenSelector} = require('../selectors/security');
@@ -297,13 +298,15 @@ const selector = createSelector(
     [
         projectionDefsSelector,
         mapSelector,
+        mapTypeSelector,
         layerSelectorWithMarkers,
         selectedFeatures,
         (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data,
         securityTokenSelector
-    ], (projectionDefs, map, layers, features, loadingError, securityToken) => ({
+    ], (projectionDefs, map, mapType, layers, features, loadingError, securityToken) => ({
         projectionDefs,
         map,
+        mapType,
         layers,
         features,
         loadingError,
@@ -314,7 +317,8 @@ module.exports = {
     MapPlugin: connect(selector)(MapPlugin),
     reducers: {
         draw: require('../reducers/draw'),
-        highlight: require('../reducers/highlight')
-     },
+        highlight: require('../reducers/highlight'),
+        maptype: require('../reducers/maptype')
+    },
     epics: assign({}, {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit})
 };

@@ -81,14 +81,16 @@ div#mailinglists h1 {
 }
 
 @media (min-width: 769px) {
-     #mapstore-grid-home div.theme-switcher.form-group.form-group-sm {
+     #page-maps div.theme-switcher.form-group.form-group-sm {
         width: 300px;
         margin-bottom: 40px;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
 @media (max-width: 768px) {
-    #mapstore-grid-home div.theme-switcher.form-group.form-group-sm {
+    #page-maps div.theme-switcher.form-group.form-group-sm {
         width: 100%;
     }
 }
