@@ -8,6 +8,62 @@
 
 const expect = require('expect');
 const API = require('../GeoStoreDAO');
+const SAMPLE_RULES = {
+   "SecurityRuleList": {
+      "SecurityRule": [
+         {
+            "canRead": true,
+            "canWrite": true,
+            "user": {
+               "id": 3,
+               "name": "admin"
+            }
+         },
+         {
+            "canRead": true,
+            "canWrite": true,
+            "group": {
+               "groupName": "geosolutions",
+               "id": 524
+            }
+         },
+         {
+            "canRead": true,
+            "canWrite": false,
+            "group": {
+               "groupName": "testers",
+               "id": 3956
+            }
+         }
+      ]
+   }
+};
+const SAMPLE_XML_RULES = "<SecurityRuleList>"
+    + "<SecurityRule>"
+        + "<canRead>true</canRead>"
+        + "<canWrite>true</canWrite>"
+        + "<user>"
+            + "<id>3</id>"
+            + "<name>admin</name>"
+        + "</user>"
+    + "</SecurityRule>"
+    + "<SecurityRule>"
+        + "<canRead>true</canRead>"
+        + "<canWrite>true</canWrite>"
+        + "<group>"
+            + "<id>524</id>"
+            + "<groupName>geosolutions</groupName>"
+        + "</group>"
+    + "</SecurityRule>"
+    + "<SecurityRule>"
+        + "<canRead>true</canRead>"
+        + "<canWrite>false</canWrite>"
+        + "<group>"
+            + "<id>3956</id>"
+            + "<groupName>testers</groupName>"
+        + "</group>"
+    + "</SecurityRule>"
++ "</SecurityRuleList>";
 
 describe('Test correctness of the GeoStore APIs', () => {
 
@@ -34,7 +90,6 @@ describe('Test correctness of the GeoStore APIs', () => {
         const user2 = API.utils.initUser(originalUser2);
         expect(user2.attribute.length).toBe(2);
     });
-
     it('test error parser', () => {
         expect(API.errorParser.mapsError({status: 409})).toEqual({
             title: 'map.mapError.errorTitle',
@@ -44,5 +99,9 @@ describe('Test correctness of the GeoStore APIs', () => {
             title: 'map.mapError.errorTitle',
             message: 'map.mapError.errorDefault'
         });
+    });
+    it('test security rules utils (writeSecurityRules)', () => {
+        const payload = API.writeSecurityRules(SAMPLE_RULES.SecurityRuleList);
+        expect(payload).toBe(SAMPLE_XML_RULES);
     });
 });

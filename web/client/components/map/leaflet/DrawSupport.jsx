@@ -486,7 +486,6 @@ class DrawSupport extends React.Component {
     addEditInteraction = (newProps) => {
         this.clean();
 
-
         this.addGeojsonLayer({
             features: newProps.features,
             projection: newProps.options && newProps.options.featureProjection || "EPSG:4326",
