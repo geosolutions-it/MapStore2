@@ -52,7 +52,7 @@ describe('CounterWidget component', () => {
     it('Test CounterWidget DropdownMenu', () => {
         ReactDOM.render(<CounterWidget />, document.getElementById("container"));
         const container = document.getElementById('container');
-        const el = container.querySelectorAll('.dropdown-menu dropdown-menu-right li');
-        expect(el).toEqual(2);
+        const el = container.querySelectorAll('.dropdown-menu li');
+        expect(el.length).toEqual(2);
     });
 });
