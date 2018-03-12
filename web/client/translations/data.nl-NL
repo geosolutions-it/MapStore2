@@ -558,7 +558,7 @@
                     "reset_bbox": "Herbegin",
                     "save_bbox": "Wijzigingen opslaan",
                     "save_radius": "Wijzigingen opslaan",
-                    "radius": "Straal"
+                    "radius": "Straal(m)"
                 },
                 "methods": {
                     "zone": "Zone",
