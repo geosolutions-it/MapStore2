@@ -50,7 +50,7 @@ describe('CounterWidget component', () => {
         expect(spyonEdit).toHaveBeenCalled();
     });
     it('Test CounterWidget DropdownMenu', () => {
-        ReactDOM.render(<CounterWidget onEdit={actions.onEdit} />, document.getElementById("container"));
+        ReactDOM.render(<CounterWidget />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelectorAll('.dropdown-menu dropdown-menu-right li');
         expect(el).toEqual(2);
