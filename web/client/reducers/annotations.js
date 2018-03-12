@@ -206,10 +206,10 @@ function annotations(state = { validationErrors: {} }, action) {
 
             let textValues = [];
             let circles = [];
-            if ((properties && properties.textValues && properties.textValues.length) || (typeof action.textChanged === "boolean" && action.textChanged)) {
+            if ((properties && properties.textValues && properties.textValues.length) || (action.textChanged === true)) {
                 textValues = properties && properties.textValues && properties.textValues.length && properties.textValues || ["v"];
             }
-            if ((properties && properties.circles && properties.circles.length) || (typeof action.circleChanged === "boolean" && action.circleChanged)) {
+            if ((properties && properties.circles && properties.circles.length) || (action.circleChanged === true)) {
                 circles = properties && properties.circles && properties.circles.length && properties.circles || ["v"];
             }
             let availableStyler = getAvailableStyler(convertGeoJSONToInternalModel(action.geometry, textValues, circles));
@@ -218,13 +218,13 @@ function annotations(state = { validationErrors: {} }, action) {
             } else {
                 stylerType = head(availableStyler);
             }
-            if (typeof action.textChanged === "boolean" && action.textChanged) {
+            if (action.textChanged === true) {
                 properties = assign({}, state.editing.properties, {
                         textValues: (state.editing.properties.textValues || []).concat([""]),
                         textGeometriesIndexes: (state.editing.properties.textGeometriesIndexes || []).concat([action.geometry.geometries.length - 1])
                     });
             }
-            if (typeof action.circleChanged === "boolean" && action.circleChanged) {
+            if (action.circleChanged === true) {
                 properties = assign({}, state.editing.properties, {
                         circles: (state.editing.properties.circles || []).concat([action.geometry.geometries.length - 1])
                     });

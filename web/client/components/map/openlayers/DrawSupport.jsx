@@ -663,7 +663,7 @@ class DrawSupport extends React.Component {
                 geometry.setCoordinates(coordinates);
             }
             if (this.props.drawMethod === "Circle") {
-                radius = this.calulateRadius(center, coordinates);
+                radius = this.calculateRadius(center, coordinates);
             }
             return assign({}, {
                 id: feature.get('id'),
@@ -685,7 +685,7 @@ class DrawSupport extends React.Component {
                 g.setCoordinates(coordinates);
             }
             if (this.props.drawMethod === "Circle") {
-                radius = this.calulateRadius(center, coordinates);
+                radius = this.calculateRadius(center, coordinates);
             }
             return assign({}, {
                 id: feature.get('id'),
@@ -889,7 +889,7 @@ class DrawSupport extends React.Component {
             default: break;
         }
     }
-    calulateRadius = (center, coordinates) => {
+    calculateRadius = (center, coordinates) => {
         return Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
     }
     /**
@@ -938,7 +938,7 @@ class DrawSupport extends React.Component {
             if (feature.getProperties().circles.indexOf(i) !== -1) {
                 const extent = g.getExtent();
                 const center = ol.extent.getCenter(extent);
-                const radius = this.calulateRadius(center, g.getCoordinates());
+                const radius = this.calculateRadius(center, g.getCoordinates());
                 return new ol.geom.Circle(center, radius);
             }
         });
