@@ -218,6 +218,7 @@
         },
         "newMap": "Nuevo mapa",
 		"maps": {
+            "title": "Mapas",
             "feedback": {
                 "noDetailsAvailable": "Detalles del mapa no disponibles",
                 "successSavedMap": "El mapa ha sido creado correctamente",

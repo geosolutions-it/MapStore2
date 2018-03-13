@@ -22,7 +22,7 @@ const defaultPreview = <Icon glyph="geoserver" padding={20} />;
  * converts record item into a item for SideGrid
  */
 const resToProps = ({ results, totalCount }) => ({
-    items: (castArray(results) || []).map((r = {}) => ({
+    items: (results !== "" && castArray(results) || []).map((r = {}) => ({
         id: r.id,
         title: r.name,
         description: r.description,
