@@ -24,6 +24,6 @@ describe("Dialog component", () => {
         ReactDOM.render(<Dialog id={"mapstore-shapefile-upload"} />, document.getElementById("container"));
         const container = document.getElementById("container");
         const loader = container.querySelector('.sk-circle-wrapper .sk-fade-in');
-        expect(loader).toExist;
+        expect(loader).toExist();
     });
 });
