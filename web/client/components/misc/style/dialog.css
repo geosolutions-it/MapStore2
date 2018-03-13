@@ -1,3 +1,24 @@
 .modal-dialog-container{
     box-shadow: 0 0 5px 1px rgba(94,94,94,1);
 }
+@keyframes sk-fade-in {
+    0%{
+        opacity: 1;
+    }
+}
+@-webkit-keyframes sk-fade-in {
+    0%{
+        opacity: 1;
+    }
+}
+@-moz-keyframes sk-fade-in {
+    0%{
+        opacity: 1;
+    }
+}
+@-ms-keyframes sk-fade-in {
+    0%{
+        opacity: 1;
+    }
+}
+

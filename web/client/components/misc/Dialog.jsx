@@ -79,8 +79,8 @@ class Dialog extends React.Component {
                 {this.renderRole('header')}
             </div>
             <div className={this.props.bodyClassName}>
-                {this.renderLoading()}
-                {this.renderRole('body')}
+                    {this.renderLoading()}
+                    {this.renderRole('body')}
             </div>
             {this.hasRole('footer') ? <div className={this.props.footerClassName}>
                 {this.renderRole('footer')}
