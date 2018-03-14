@@ -37,7 +37,7 @@ let defaultPrecision = {
 };
 
 
-const getMeasureWithTreshold = (value, threshold, source, dest, precision, sourceLabel, destLabel) => {
+L.getMeasureWithTreshold = (value, threshold, source, dest, precision, sourceLabel, destLabel) => {
     if (value > threshold) {
         return L.GeometryUtil.formattedNumber(convertUom(value, source, dest), precision[dest]) + ' ' + destLabel;
     }
@@ -64,10 +64,10 @@ L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, p
     let distanceStr = L.GeometryUtil.formattedNumber(convertUom(distance, "m", unit), p[unit]) + ' ' + label;
     if (options.useTreshold) {
         if (isMetric) {
-            distanceStr = getMeasureWithTreshold(distance, 1000, "m", "km", p, "m", "km");
+            distanceStr = L.getMeasureWithTreshold(distance, 1000, "m", "km", p, "m", "km");
         }
         if (unit === "mi") {
-            distanceStr = getMeasureWithTreshold(convertUom(distance, "mi", "yd"), 1760, "yd", "mi", p, "yd", "mi");
+            distanceStr = L.getMeasureWithTreshold(convertUom(distance, "m", "yd"), 1760, "yd", "mi", p, "yd", "mi");
         }
     }
     return distanceStr;
@@ -80,18 +80,16 @@ L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, p
  supporting also the square nautical miles and square feets
  */
 L.GeometryUtil.readableArea = (area, isMetric, precision, options) => {
-    let areaStr;
     const {unit, label} = options.uom.area;
     let p = L.Util.extend({}, defaultPrecision, precision);
+    let areaStr = L.GeometryUtil.formattedNumber(convertUom(area, "sqm", unit), p[unit]) + ' ' + label;
     if (options.useTreshold) { // this is done for retrocompatibility
         if (isMetric) {
-            areaStr = getMeasureWithTreshold(area, 1000000, "sqm", "sqkm", p, "m²", "km²");
+            areaStr = L.getMeasureWithTreshold(area, 1000000, "sqm", "sqkm", p, "m²", "km²");
         }
         if (unit === "sqmi") {
-            areaStr = getMeasureWithTreshold(convertUom(area, "sqm", "sqyd"), 3097600, "sqyd", "sqmi", p, "yd²", "mi²");
+            areaStr = L.getMeasureWithTreshold(convertUom(area, "sqm", "sqyd"), 3097600, "sqyd", "sqmi", p, "yd²", "mi²");
         }
-    } else {
-        areaStr = L.GeometryUtil.formattedNumber(convertUom(area, "sqm", unit), p[unit]) + ' ' + label;
     }
     return areaStr;
 };
