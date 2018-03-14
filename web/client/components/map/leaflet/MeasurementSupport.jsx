@@ -12,10 +12,7 @@ const {
     transformLineToArcs
 } = require('../../../utils/CoordinatesUtils');
 const {
-    sqmTosqft,
-    sqmTosqnm,
-    sqmTosqmi,
-    sqmTosqkm,
+    convertUom,
     getFormattedBearingValue
 } = require('../../../utils/MeasureUtils');
 require('leaflet-draw');
@@ -28,9 +25,24 @@ let defaultPrecision = {
     ac: 2,
     yd: 0,
     ft: 0,
-    nm: 2
+    nm: 2,
+    sqkm: 2,
+    sqha: 2,
+    sqm: 2,
+    sqmi: 2,
+    sqac: 2,
+    sqyd: 2,
+    sqft: 2,
+    sqnm: 2
 };
 
+
+const getMeasureWithTreshold = (value, threshold, source, dest, precision, sourceLabel, destLabel) => {
+    if (value > threshold) {
+        return L.GeometryUtil.formattedNumber(convertUom(value, source, dest), precision[dest]) + ' ' + destLabel;
+    }
+    return L.GeometryUtil.formattedNumber(value, precision[source]) + ' ' + sourceLabel;
+};
 
 /** @method readableDistance(distance, units): string
  * Converts a metric distance to one of [ feet, nauticalMile, metric or yards ] string
@@ -41,58 +53,22 @@ let defaultPrecision = {
  * The value will be rounded as defined by the precision option object.
  * this override is necesary due to the customization on how the measure label is presented and for adding bearing support
 */
-L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, precision, options) => {
-    let distanceStr;
-    let units;
-    let d = distance;
-    let p = L.Util.extend({}, defaultPrecision, precision);
 
-    if (isMetric) {
-        units = typeof isMetric === 'string' ? isMetric : 'metric';
-    } else if (isFeet) {
-        units = 'feet';
-    } else if (isNauticalMile) {
-        units = 'nauticalMile';
-    } else {
-        units = 'yards';
-    }
+L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, precision, options) => {
     if (options.geomType === 'Bearing') {
         return options.bearing;
     }
-    switch (units) {
-        // show meters when distance is < 1km, then show km
-        case 'metric':
-            if (options.distinctMeasure) {
-                if (distance > 1000) {
-                    distanceStr = L.GeometryUtil.formattedNumber(distance / 1000, p.km) + ' km';
-                } else {
-                    distanceStr = L.GeometryUtil.formattedNumber(distance, p.m) + ' m';
-                }
-            } else {
-                distanceStr = options.uom.length.unit === "m" ? L.GeometryUtil.formattedNumber(distance, p.m) + ' m' : L.GeometryUtil.formattedNumber(distance / 1000, p.km) + ' km';
-            }
-            break;
-        case 'feet':
-            d *= 1.09361 * 3;
-            distanceStr = L.GeometryUtil.formattedNumber(d, p.ft) + ' ft';
-            break;
-        case 'nauticalMile':
-            d *= 0.53996;
-            distanceStr = L.GeometryUtil.formattedNumber(d / 1000, p.nm) + ' nm';
-            break;
-        case 'yards':
-        default:
-            d *= 1.09361;
-            if (options.distinctMeasure) {
-                if (distance > 1760) {
-                    distanceStr = L.GeometryUtil.formattedNumber(d / 1760, p.mi) + ' miles';
-                } else {
-                    distanceStr = L.GeometryUtil.formattedNumber(d, p.yd) + ' yd';
-                }
-            } else {
-                distanceStr = options.uom.length.unit === "mi" ? L.GeometryUtil.formattedNumber(d / 1760, p.mi) + ' miles' : distanceStr = L.GeometryUtil.formattedNumber(d, p.yd) + ' yd';
-            }
-            break;
+    let p = L.Util.extend({}, defaultPrecision, precision);
+    const {unit, label} = options.uom.length;
+
+    let distanceStr = L.GeometryUtil.formattedNumber(convertUom(distance, "m", unit), p[unit]) + ' ' + label;
+    if (options.useTreshold) {
+        if (isMetric) {
+            distanceStr = getMeasureWithTreshold(distance, 1000, "m", "km", p, "m", "km");
+        }
+        if (unit === "mi") {
+            distanceStr = getMeasureWithTreshold(convertUom(distance, "mi", "yd"), 1760, "yd", "mi", p, "yd", "mi");
+        }
     }
     return distanceStr;
 };
@@ -105,55 +81,23 @@ L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, p
  */
 L.GeometryUtil.readableArea = (area, isMetric, precision, options) => {
     let areaStr;
-    let units;
-    let type;
-    const {unit} = options.uom.area;
+    const {unit, label} = options.uom.area;
     let p = L.Util.extend({}, defaultPrecision, precision);
-    let a = area;
-    if (options.distinctMeasure) { // this is done for retrocompatibility
+    if (options.useTreshold) { // this is done for retrocompatibility
         if (isMetric) {
-            units = ['ha', 'm', 'km']; // added km
-            type = typeof isMetric;
-            if (type === 'string') {
-                units = [isMetric];
-            } else if (type !== 'boolean') {
-                units = isMetric;
-            }
-            if (area >= 1000000 && units.indexOf('km') !== -1) {
-                areaStr = L.GeometryUtil.formattedNumber(area * 0.000001, p.km) + ' km²';
-            } else if (area >= 10000 && units.indexOf('ha') !== -1) {
-                areaStr = L.GeometryUtil.formattedNumber(area * 0.0001, p.ha) + ' ha';
-            } else {
-                areaStr = L.GeometryUtil.formattedNumber(area, p.m) + ' m²';
-            }
-        } else {
-            a /= 0.836127; // Square yards in 1 meter
-            if (a >= 3097600) { // 3097600 square yards in 1 square mile
-                areaStr = L.GeometryUtil.formattedNumber(a / 3097600, p.mi) + ' mi²';
-            } else if (a >= 4840) { // 4840 square yards in 1 acre
-                areaStr = L.GeometryUtil.formattedNumber(a / 4840, p.ac) + ' acres';
-            } else {
-                areaStr = L.GeometryUtil.formattedNumber(a, p.yd) + ' yd²';
-            }
+            areaStr = getMeasureWithTreshold(area, 1000000, "sqm", "sqkm", p, "m²", "km²");
+        }
+        if (unit === "sqmi") {
+            areaStr = getMeasureWithTreshold(convertUom(area, "sqm", "sqyd"), 3097600, "sqyd", "sqmi", p, "yd²", "mi²");
         }
     } else {
-        if (unit === "sqkm") {
-            areaStr = L.GeometryUtil.formattedNumber(sqmTosqkm(area), p.km) + ' km²';
-        } else if (unit === "sqm") {
-            areaStr = L.GeometryUtil.formattedNumber(area, p.ft) + ' m²';
-        } else if (unit === "sqft") {
-            areaStr = L.GeometryUtil.formattedNumber(sqmTosqft(area), p.ft) + ' ft²';
-        } else if (unit === "sqnm") {
-            areaStr = L.GeometryUtil.formattedNumber(sqmTosqnm(area), p.nm) + ' nm²';
-        } else { // default square miles
-            areaStr = L.GeometryUtil.formattedNumber(sqmTosqmi(area), p.mi) + ' mi²';
-        }
+        areaStr = L.GeometryUtil.formattedNumber(convertUom(area, "sqm", unit), p[unit]) + ' ' + label;
     }
     return areaStr;
 };
 
 /**
- * this is need to pass custom options as uom, distinctMeasure to the readableArea function
+ * this is need to pass custom options as uom, useTreshold to the readableArea function
 */
 L.Draw.Polygon.prototype._getMeasurementString = function() {
     let area = this._area;
@@ -169,15 +113,14 @@ L.Draw.Polygon.prototype._getMeasurementString = function() {
         // here is the custom option passed to geom util func
         const opt = {
             uom: this.options.uom,
-            distinctMeasure: this.options.distinctMeasure,
-            geomType: this.options.geomType
+            useTreshold: this.options.useTreshold
         };
         measurementString += this.options.showLength ? '<br>' : '' + L.GeometryUtil.readableArea(area, this.options.metric, this.options.precision, opt);
     }
     return measurementString;
 };
 /**
- * this is need to pass custom options as uom, distinctMeasure, bearing to the readableDistance function
+ * this is need to pass custom options as uom, useTreshold, bearing to the readableDistance function
 */
 L.Draw.Polyline.prototype._getMeasurementString = function() {
     let currentLatLng = this._currentLatLng;
@@ -193,7 +136,7 @@ L.Draw.Polyline.prototype._getMeasurementString = function() {
     // here is the custom option passed to geom util func
     const opt = {
         uom: this.options.uom,
-        distinctMeasure: this.options.distinctMeasure,
+        useTreshold: this.options.useTreshold,
         geomType: this.options.geomType,
         bearing: this.options.bearing ? getFormattedBearingValue(this.options.bearing) : 0
     };
@@ -207,7 +150,7 @@ class MeasurementSupport extends React.Component {
         metric: PropTypes.bool,
         feet: PropTypes.bool,
         nautic: PropTypes.bool,
-        distinctMeasure: PropTypes.bool,
+        useTreshold: PropTypes.bool,
         projection: PropTypes.string,
         measurement: PropTypes.object,
         changeMeasurementState: PropTypes.func,
@@ -228,7 +171,7 @@ class MeasurementSupport extends React.Component {
         updateOnMouseMove: false,
         metric: true,
         nautic: false,
-        distinctMeasure: false,
+        useTreshold: false,
         feet: false
     };
 
@@ -405,7 +348,7 @@ class MeasurementSupport extends React.Component {
                     weight: 2
                 },
                 showLength: true,
-                distinctMeasure: newProps.distinctMeasure,
+                useTreshold: newProps.useTreshold,
                 uom: newProps.uom,
                 geomType: newProps.measurement.geomType,
                 ...uomOptions,
@@ -431,7 +374,7 @@ class MeasurementSupport extends React.Component {
                 allowIntersection: false,
                 showLength: false,
                 repeatMode: false,
-                distinctMeasure: newProps.distinctMeasure,
+                useTreshold: newProps.useTreshold,
                 uom: newProps.uom,
                 geomType: newProps.measurement.geomType,
                 ...uomOptions,
