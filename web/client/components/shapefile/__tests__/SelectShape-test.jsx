@@ -142,4 +142,12 @@ describe("Test the select shapefile component", () => {
         }];
         TestUtils.Simulate.drop(content, { dataTransfer: { files } });
     });
+
+    it('upload local vector, show loader', () => {
+        const cmp = ReactDOM.render(<SelectShape loading />, document.getElementById("container"));
+        expect(cmp).toExist();
+        const spinner = document.querySelector('.spinner');
+        /* check class sk-fade-in not present to ensure loader is not fade and correctly shown */
+        expect(spinner.className.indexOf('sk-fade-in')).toBe(-1);
+    });
 });
