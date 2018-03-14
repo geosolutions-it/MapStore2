@@ -216,8 +216,14 @@ describe('Test the annotations reducer', () => {
         const state = annotations({
             removing: '1',
             editing: {
+                style: {
+                    "Circle": {
+                        imgGliph: "comment"
+                    }
+                },
                 geometry: {}
-            }
+            },
+            featureType: "Circle"
         }, {
             type: CONFIRM_REMOVE_ANNOTATION,
             id: '1'
