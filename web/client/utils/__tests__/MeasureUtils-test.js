@@ -8,17 +8,8 @@
 const expect = require('expect');
 const {
     getFormattedBearingValue,
-    getFormattedLength,
-    getFormattedArea,
     degToDms,
-    mToft,
-    mTokm,
-    mTomi,
-    mTonm,
-    sqmTosqmi,
-    sqmTosqkm,
-    sqmTosqnm,
-    sqmTosqft
+    convertUom
 } = require('../MeasureUtils');
 
 
@@ -29,66 +20,59 @@ describe('MeasureUtils', () => {
     afterEach(() => {
 
     });
+    it('test conversion km to mi', () => {
+        const val = convertUom(1, "km", "mi");
+        expect(val).toBe(0.62137121212121);
+    });
     it('test conversion meters to feet', () => {
-        const val = mToft(1);
+        const val = convertUom(1, "m", "ft");
         expect(val).toBe(3.28084);
     });
     it('test conversion meters to kilometers', () => {
-        const val = mTokm(1);
+        const val = convertUom(1, "m", "km");
         expect(val).toBe(0.001);
     });
     it('test conversion meters to miles', () => {
-        const val = mTomi(1);
+        const val = convertUom(1, "m", "mi");
         expect(val).toBe(0.000621371);
     });
     it('test conversion meters to nauticalmiles', () => {
-        const val = mTonm(1);
+        const val = convertUom(1, "m", "nm");
         expect(val).toBe(0.000539956803);
     });
     it('test conversion squaremeters to squarefeet', () => {
-        const val = sqmTosqft(1);
-        expect(val).toBe(10.7639);
+        const val = convertUom(1, "sqm", "sqft");
+        expect(val).toBe(10.76391);
     });
     it('test conversion squaremeters to squarekilometers', () => {
-        const val = sqmTosqkm(1);
+        const val = convertUom(1, "sqm", "sqkm");
         expect(val).toBe(0.000001);
     });
     it('test conversion squaremeters to squaremiles', () => {
-        const val = sqmTosqmi(1);
-        expect(val).toBe(0.000000386102159);
+        const val = convertUom(1, "sqm", "sqmi");
+        expect(val).toBe(3.8610215854245e-7);
     });
     it('test conversion squaremeters to squarenauticalmiles', () => {
-        const val = sqmTosqnm(1);
-        expect(val).toBe(0.00000029155);
+        const val = convertUom(1, "sqm", "sqnm");
+        expect(val).toBe(2.91181e-7);
     });
-    it('test getFormattedLength', () => {
-        let val = getFormattedLength("m", 1);
-        expect(val).toBe(1);
-        val = getFormattedLength(undefined, 1);
-        expect(val).toBe(1);
-        val = getFormattedLength("ft", 1);
-        expect(val).toBe(3.28084);
-        val = getFormattedLength("km", 1);
-        expect(val).toBe(0.001);
-        val = getFormattedLength("mi", 1);
-        expect(val).toBe(0.000621371);
-        val = getFormattedLength("nm", 1);
-        expect(val).toBe(0.000539956803);
+    it('test conversion squarefeets to squarekilometers', () => {
+        const val = convertUom(1, "sqft", "sqkm");
+        expect(val).toBe(9.2903043596611e-8);
     });
-    it('test getFormattedArea', () => {
-        let val = getFormattedArea("sqm", 1);
-        expect(val).toBe(1);
-        val = getFormattedArea(undefined, 1);
-        expect(val).toBe(1);
-        val = getFormattedArea("sqft", 1);
-        expect(val).toBe(10.7639);
-        val = getFormattedArea("sqkm", 1);
-        expect(val).toBe(0.000001);
-        val = getFormattedArea("sqmi", 1);
-        expect(val).toBe(0.000000386102159);
-        val = getFormattedArea("sqnm", 1);
-        expect(val).toBe(0.00000029155);
+    it('test conversion squarekilometers to squaremiles', () => {
+        const val = convertUom(1, "sqkm", "sqmi");
+        expect(val).toBe(0.38610215854245);
     });
+    it('test conversion squaremiles to squarenauticalmiles', () => {
+        const val = convertUom(1, "sqmi", "sqnm");
+        expect(val).toBe(0.75415532795574);
+    });
+    it('test conversion squarenauticalmiles to squaremiles', () => {
+        const val = convertUom(1, "sqnm", "sqmi");
+        expect(val).toBe(1.325986786715);
+    });
+
     it('test degToDms', () => {
         let val = degToDms(1.111);
         expect(val).toBe("1° 6' 39'' ");
