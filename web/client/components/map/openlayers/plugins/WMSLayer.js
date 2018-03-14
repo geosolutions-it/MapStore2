@@ -69,7 +69,7 @@ Layers.registerType('wms', {
                 source: new ol.source.ImageWMS({
                     url: urls[0],
                     params: queryParameters,
-                    ratio: options.ratio
+                    ratio: options.ratio || 1
                 })
             });
         }
@@ -124,7 +124,7 @@ Layers.registerType('wms', {
             if (changed) {
                 layer.getSource().updateParams(objectAssign(newParams, newOptions.params));
             }
-            if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken) {
+            if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken || oldOptions.ratio !== newOptions.ratio) {
                 const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
                 const queryParameters = wmsToOpenlayersOptions(newOptions) || {};
                 urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, newOptions.securityToken));
@@ -137,7 +137,8 @@ Layers.registerType('wms', {
                         zIndex: newOptions.zIndex,
                         source: new ol.source.ImageWMS({
                             url: urls[0],
-                            params: queryParameters
+                            params: queryParameters,
+                            ratio: newOptions.ratio || 1
                         })
                     });
                 } else {
