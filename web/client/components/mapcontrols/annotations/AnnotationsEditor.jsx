@@ -303,12 +303,12 @@ class AnnotationsEditor extends React.Component {
         if (editing) {
             switch (field.type) {
                 case 'html':
-                    return <ReactQuill readOnly={this.props.drawing} value={fieldValue || ''} onChange={(val) => {this.change(field.name, val); if (!this.props.unsavedChanges) {this.props.onSetUnsavedChanges(true); } }}/>;
+                    return <ReactQuill value={fieldValue || ''} onChange={(val) => {this.change(field.name, val); if (!this.props.unsavedChanges) {this.props.onSetUnsavedChanges(true); } }}/>;
                 case 'component':
                     const Component = fieldValue;
                     return <prop editing value={<Component annotation={this.props.feature} />} onChange={(e) => {this.change(field.name, e.target.value); if (!this.props.unsavedChanges) {this.props.onSetUnsavedChanges(true); } }} />;
                 default:
-                    return <FormControl disabled={this.props.drawing} value={fieldValue || ''} onChange={(e) => {this.change(field.name, e.target.value); if (!this.props.unsavedChanges) {this.props.onSetUnsavedChanges(true); } }}/>;
+                    return <FormControl value={fieldValue || ''} onChange={(e) => {this.change(field.name, e.target.value); if (!this.props.unsavedChanges) {this.props.onSetUnsavedChanges(true); } }}/>;
             }
 
         }

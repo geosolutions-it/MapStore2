@@ -732,7 +732,7 @@
             "cancel": "Cancel",
             "back": "Back",
             "addMarker": "Add a new geometry",
-            "styleGeometry": "Choose a different style for points, lines, polygons",
+            "styleGeometry": "Change style",
             "deleteGeometry": "Remove existing geometry",
             "removeannotation": "Do you want to remove the annotation?",
             "removegeometry": "Do you want to remove all annotation features?",

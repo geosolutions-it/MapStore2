@@ -126,7 +126,10 @@ function annotations(state = { validationErrors: {} }, action) {
                 current: null,
                 editing: state.editing ? assign({}, state.editing, {
                     geometry: null,
-                    // style: {}, TODO CHECK THIS
+                    style: {
+                        [state.featureType]: {...state.editing.style[state.featureType]},
+                        type: state.featureType
+                    },
                     properties: assign({}, state.editing.properties, {
                             textValues: [],
                             textGeometriesIndexes: [],

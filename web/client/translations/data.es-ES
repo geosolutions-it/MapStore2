@@ -731,7 +731,7 @@
             "cancel": "Cancelar",
             "back": "Espalda",
             "addMarker": "Agrega una geometría",
-            "styleGeometry": "Elige un estilo diferente para los puntos",
+            "styleGeometry": "Cambia estilo",
             "deleteGeometry": "Eliminar puntos existentes",
             "removeannotation": "¿Desea eliminar la anotación?",
             "removegeometry": "¿Desea eliminar todos los puntos de anotación?",
