@@ -342,7 +342,7 @@ class DrawSupport extends React.Component {
                 }
 
                 if (drawnGeom.getType() !== getSimpleGeomType(previousGeometries.getType())) {
-                    let geoms = this.replaceCirclesWithPolygons(head(drawnFeatures));
+                    let geoms = head(drawnFeatures).getGeometry().getGeometries ? this.replaceCirclesWithPolygons(head(drawnFeatures)) : [];
                     if (geomAlreadyPresent) {
                         let newGeoms = geoms.map(gg => {
                             return gg.getType() === geomAlreadyPresent.getType() ? geomAlreadyPresent : gg;
@@ -364,7 +364,19 @@ class DrawSupport extends React.Component {
                     this.sketchFeature.setGeometry(geomAlreadyPresent);
                 }
             }
-            let feature = this.fromOLFeature(this.sketchFeature, startingPoint);
+            let properties = this.props.features[0].properties;
+            if (drawMethod === "Text") {
+                properties = assign({}, this.props.features[0].properties, {
+                        textValues: (this.props.features[0].properties.textValues || []).concat(["."]),
+                        textGeometriesIndexes: (this.props.features[0].properties.textGeometriesIndexes || []).concat([this.sketchFeature.getGeometry().getGeometries().length - 1])
+                    });
+            }
+            if (drawMethod === "Circle") {
+                properties = assign({}, properties, {
+                        circles: (this.props.features[0].properties.circles || []).concat([this.sketchFeature.getGeometry().getGeometries().length - 1])
+                    });
+            }
+            let feature = this.fromOLFeature(this.sketchFeature, startingPoint, properties);
             const vectorSource = new ol.source.Vector({
                 features: (new ol.format.GeoJSON()).readFeatures(feature)
               });
@@ -379,18 +391,7 @@ class DrawSupport extends React.Component {
             this.props.onGeometryChanged([newFeature], this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "", drawMethod === "Text", drawMethod === "Circle");
             this.props.onEndDrawing(feature, this.props.drawOwner);
             feature = reprojectGeoJson(feature, this.props.map.getView().getProjection().getCode(), "EPSG:4326");
-            let properties = this.props.features[0].properties;
-            if (drawMethod === "Text") {
-                properties = assign({}, this.props.features[0].properties, {
-                        textValues: (this.props.features[0].properties.textValues || []).concat(["."]),
-                        textGeometriesIndexes: (this.props.features[0].properties.textGeometriesIndexes || []).concat([feature.geometry.geometries.length - 1])
-                    });
-            }
-            if (drawMethod === "Circle") {
-                properties = assign({}, properties, {
-                        circles: (this.props.features[0].properties.circles || []).concat([feature.geometry.geometries.length - 1])
-                    });
-            }
+
             const newFeatures = isSimpleGeomType(this.props.drawMethod) ?
                 this.props.features.concat([{...feature, properties}]) :
                 [{...feature, properties}];
@@ -650,7 +651,7 @@ class DrawSupport extends React.Component {
         }
     };
 
-    fromOLFeature = (feature, startingPoint) => {
+    fromOLFeature = (feature, startingPoint, properties) => {
         let geometry = feature.getGeometry();
         let extent = geometry.getExtent();
         let center = ol.extent.getCenter(extent);
@@ -676,7 +677,7 @@ class DrawSupport extends React.Component {
                 projection: this.props.map.getView().getProjection().getCode()
             });
         }
-        let geometries = geometry.getGeometries().map(g => {
+        let geometries = geometry.getGeometries().map((g, i) => {
             extent = g.getExtent();
             center = ol.extent.getCenter(extent);
             let coordinates = g.getCoordinates();
@@ -684,8 +685,10 @@ class DrawSupport extends React.Component {
                 coordinates = concat(startingPoint, coordinates);
                 g.setCoordinates(coordinates);
             }
-            if (this.props.drawMethod === "Circle") {
+            if (properties.circles && properties.circles.indexOf(i) !== -1) {
                 radius = this.calculateRadius(center, coordinates);
+            } else {
+                radius = 0;
             }
             return assign({}, {
                 id: feature.get('id'),
