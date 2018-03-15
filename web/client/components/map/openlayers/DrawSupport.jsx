@@ -95,6 +95,7 @@ class DrawSupport extends React.Component {
                 default : return;
             }
         }
+
     }
 
     render() {
@@ -530,7 +531,6 @@ class DrawSupport extends React.Component {
         this.addDrawInteraction(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints);
         if (newProps.options && newProps.options.editEnabled) {
             this.addSelectInteraction();
-
             if (this.translateInteraction) {
                 this.props.map.removeInteraction(this.translateInteraction);
             }
@@ -538,6 +538,7 @@ class DrawSupport extends React.Component {
             this.translateInteraction = new ol.interaction.Translate({
                 features: this.selectInteraction.getFeatures()
             });
+            this.translateInteraction.setActive(false);
 
             this.translateInteraction.on('translateend', this.updateFeatureExtent);
             this.props.map.addInteraction(this.translateInteraction);
@@ -548,7 +549,10 @@ class DrawSupport extends React.Component {
             }
 
             this.modifyInteraction = new ol.interaction.Modify({
-                features: this.selectInteraction.getFeatures()
+                features: this.selectInteraction.getFeatures(),
+                condition: (e) => {
+                    return ol.events.condition.primaryAction(e) && !ol.events.condition.altKeyOnly(e);
+                }
             });
 
             this.props.map.addInteraction(this.modifyInteraction);
@@ -572,11 +576,10 @@ class DrawSupport extends React.Component {
             this.addFeatures(props);
         }
         if (newProps.options.editEnabled) {
+
             this.addModifyInteraction();
             // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
-            if (getSimpleGeomType(newProps.drawMethod) !== "Polygon" && getSimpleGeomType(newProps.drawMethod) !== "GeometryCollection") {
-                this.addTranslateInteraction();
-            }
+            this.addTranslateInteraction();
         }
 
         if (newProps.options.drawEnabled) {
@@ -804,7 +807,10 @@ class DrawSupport extends React.Component {
             this.props.map.removeInteraction(this.modifyInteraction);
         }
         this.modifyInteraction = new ol.interaction.Modify({
-                features: new ol.Collection(this.drawLayer.getSource().getFeatures())
+                features: new ol.Collection(this.drawLayer.getSource().getFeatures()),
+                condition: (e) => {
+                    return ol.events.condition.primaryAction(e) && !ol.events.condition.altKeyOnly(e);
+                }
             });
         this.modifyInteraction.on('modifyend', (e) => {
 
@@ -812,7 +818,9 @@ class DrawSupport extends React.Component {
             let features = e.features.getArray().map((f) => {
                 // transform back circles in polygons
                 let newFt = f.clone();
-                newFt.getGeometry().setGeometries(this.replaceCirclesWithPolygons(newFt));
+                if (newFt.getGeometry().getType() === "GeometryCollection") {
+                    newFt.getGeometry().setGeometries(this.replaceCirclesWithPolygons(newFt));
+                }
                 return reprojectGeoJson(geojsonFormat.writeFeatureObject(newFt), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
             });
 
@@ -828,18 +836,22 @@ class DrawSupport extends React.Component {
         this.translateInteraction = new ol.interaction.Translate({
                 features: new ol.Collection(this.drawLayer.getSource().getFeatures())
             });
+        this.translateInteraction.setActive(false);
         this.translateInteraction.on('translateend', (e) => {
 
             const geojsonFormat = new ol.format.GeoJSON();
             let features = e.features.getArray().map(f => {
                 // transform back circles in polygons
                 let newFt = f.clone();
-                newFt.getGeometry().setGeometries(this.replaceCirclesWithPolygons(newFt));
+                if (newFt.getGeometry().getType() === "GeometryCollection") {
+                    newFt.getGeometry().setGeometries(this.replaceCirclesWithPolygons(newFt));
+                }
                 return reprojectGeoJson(geojsonFormat.writeFeatureObject(newFt), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
             });
 
             this.props.onGeometryChanged(features, this.props.drawOwner, this.props.drawOwner, false, this.props.drawMethod === "Text", this.props.drawMethod === "Circle");
         });
+        this.addTranlateListener();
         this.props.map.addInteraction(this.translateInteraction);
     }
 
@@ -915,6 +927,9 @@ class DrawSupport extends React.Component {
      * @return {ol.geom.SimpleGeometry[]} geometries
     */
     replaceCirclesWithPolygons = (feature) => {
+        if (feature.getGeometry && !feature.getGeometry().getGeometries) {
+            return feature;
+        }
         let geoms = feature.getGeometry().getGeometries();
         return geoms.map((g, i) => {
             if (g.getType() !== "Circle") {
@@ -947,5 +962,17 @@ class DrawSupport extends React.Component {
         });
     }
 
+    addTranlateListener = () => {
+        document.addEventListener("keydown", (event) => {
+            if (event.altKey && event.code === "AltLeft") {
+                this.translateInteraction.setActive(true);
+            }
+        });
+        document.addEventListener("keyup", (event) => {
+            if (event.code === "AltLeft") {
+                this.translateInteraction.setActive(false);
+            }
+        });
+    }
 }
 module.exports = DrawSupport;
