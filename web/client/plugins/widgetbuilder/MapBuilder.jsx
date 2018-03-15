@@ -28,6 +28,10 @@ const chooseMapEnhancer = compose(
     branch(
         ({ editorData = {} } = {}) => !editorData.map,
         renderComponent(require('./MapSelector'))
+    ),
+    branch(
+        ({ enableMapSelector = false } = {}) => !enableMapSelector,
+        renderComponent(require('./MapLayerSelector'))
     )
 );
 const Builder = connect(
