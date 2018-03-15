@@ -55,6 +55,9 @@ L.getMeasureWithTreshold = (value, threshold, source, dest, precision, sourceLab
 */
 
 L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, precision, options) => {
+    if (options === null) {
+        return "";
+    }
     if (options.geomType === 'Bearing') {
         return options.bearing;
     }
@@ -80,6 +83,9 @@ L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, p
  supporting also the square nautical miles and square feets
  */
 L.GeometryUtil.readableArea = (area, isMetric, precision, options) => {
+    if (options === null) {
+        return "";
+    }
     const {unit, label} = options.uom.area;
     let p = L.Util.extend({}, defaultPrecision, precision);
     let areaStr = L.GeometryUtil.formattedNumber(convertUom(area, "sqm", unit), p[unit]) + ' ' + label;
@@ -109,10 +115,10 @@ L.Draw.Polygon.prototype._getMeasurementString = function() {
 
     if (area) {
         // here is the custom option passed to geom util func
-        const opt = {
+        const opt = this.options.uom ? {
             uom: this.options.uom,
             useTreshold: this.options.useTreshold
-        };
+        } : null;
         measurementString += this.options.showLength ? '<br>' : '' + L.GeometryUtil.readableArea(area, this.options.metric, this.options.precision, opt);
     }
     return measurementString;
@@ -132,12 +138,13 @@ L.Draw.Polyline.prototype._getMeasurementString = function() {
         distance = previousLatLng && currentLatLng ? this._measurementRunningTotal + this._map.distance(currentLatLng, previousLatLng) * (this.options.factor || 1) : this._measurementRunningTotal || 0;
     }
     // here is the custom option passed to geom util func
-    const opt = {
+    const opt = this.options.uom ? {
         uom: this.options.uom,
         useTreshold: this.options.useTreshold,
         geomType: this.options.geomType,
         bearing: this.options.bearing ? getFormattedBearingValue(this.options.bearing) : 0
-    };
+    } : null;
+
     return L.GeometryUtil.readableDistance(distance, this.options.metric, this.options.feet, this.options.nautic, this.options.precision, opt);
 };
 class MeasurementSupport extends React.Component {
