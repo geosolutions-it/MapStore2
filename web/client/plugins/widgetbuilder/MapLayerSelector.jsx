@@ -11,11 +11,11 @@ const {createSelector} = require('reselect');
 
 const BorderLayout = require('../../components/layout/BorderLayout');
 const {selectedCatalogSelector} = require('../../selectors/catalog');
-const Toolbar = require('../../components/widgets/builder/wizard/common/layerselector/Toolbar');
+const Toolbar = require('../../components/misc/toolbar/Toolbar');
 const BuilderHeader = require('./BuilderHeader');
 const InfoPopover = require('../../components/widgets/widget/InfoPopover');
 const {Message, HTML} = require('../../components/I18N/I18N');
-const { compose, branch} = require('recompose');
+const {compose, branch} = require('recompose');
 
 const Catalog = compose(
     branch(
@@ -25,13 +25,26 @@ const Catalog = compose(
 )(require('./Catalog'));
 /**
  * Builder page that allows layer's selection
- * @prop {function} [layerValidationStream]
  */
-module.exports = ({onClose = () => {}, setSelected = () => {}, onLayerChoice = () => {}, selected, canProceed, layer, catalog, catalogServices} = {}) =>
+module.exports = ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, toggleLayerSelector = () => {}, selected, canProceed, layer, catalog, catalogServices} = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
-        <Toolbar canProceed={canProceed} onProceed={() => onLayerChoice(layer)} />
+            <Toolbar btnDefaultProps={{
+                className: "square-button-md",
+                bsStyle: "primary",
+                bsSize: "sm"
+            }}
+                buttons={[{
+                    onClick: () => toggleLayerSelector(false),
+                    tooltipId: "close",
+                    glyph: "1-close"
+                }, {
+                    onClick: () => onLayerChoice(layer),
+                    disabled: !selected || !canProceed,
+                    tooltipId: "widgets.useTheSelectedLayer",
+                    glyph: "plus"
+                }]} />
         { selected && !canProceed ? <InfoPopover
             glyph="exclamation-mark"
             bsStyle="warning"

@@ -195,6 +195,8 @@ const LayersUtils = {
     getLayerId: (layerObj, layers) => {
         return layerObj && layerObj.id || layerObj.name + "__" + layers.length;
     },
+    normalizeLayer: (layer) => layer.id ? layer : { ...layer, id: LayersUtils.getLayerId(layer, layer) },
+    normalizeMap: (map = {}) => (map.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...map, layers: (map.layers || []).map(l => LayersUtils.normalizeLayer(l))} : map,
     getLayersByGroup: (configLayers) => {
         let i = 0;
         let mapLayers = configLayers.map((layer) => assign({}, layer, {storeIndex: i++}));
