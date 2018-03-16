@@ -111,7 +111,7 @@ const originalGetMeasurementStringPolygon = L.Draw.Polygon.prototype._getMeasure
 
 L.Draw.Polygon.prototype._getMeasurementString = function() {
     if (!this.options.uom) {
-        return originalGetMeasurementStringPolygon.apply(null, arguments);
+        return originalGetMeasurementStringPolygon.apply(this, arguments);
     }
     let area = this._area;
     let measurementString = '';
@@ -139,7 +139,7 @@ const originalGetMeasurementStringPolyline = L.Draw.Polyline.prototype._getMeasu
 
 L.Draw.Polyline.prototype._getMeasurementString = function() {
     if (!this.options.uom) {
-        return originalGetMeasurementStringPolyline.apply(null, arguments);
+        return originalGetMeasurementStringPolyline.apply(this, arguments);
     }
     let currentLatLng = this._currentLatLng;
     let previousLatLng = this._markers[this._markers.length - 1].getLatLng();
