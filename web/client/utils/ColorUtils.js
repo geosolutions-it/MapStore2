@@ -210,11 +210,14 @@ const ColorUtils = {
     },
     /**
     * convert any valid css color to rgba str
-    * @param (String) color any valid css colo
-    * @param (number) opacity 0 - 100 alpha value
+    * @param (String) color any valid css color
+    * @param (number) opacity 0 - 1 alpha value
     * @return (String) rgba string
     */
-    colorToRgbaStr: (color = "#0000FF", alpha = 1) => tinycolor(color).setAlpha(toNumber(alpha)).toRgbString()
+    colorToRgbaStr: (color = "#0000FF", alpha) => {
+        const c  = tinycolor(color);
+        return c.setAlpha(toNumber(alpha !== undefined ? alpha : c.getAlpha())).toRgbString()
+    }
 
 };
 module.exports = ColorUtils;

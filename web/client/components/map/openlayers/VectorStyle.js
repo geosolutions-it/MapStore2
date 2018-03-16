@@ -198,20 +198,20 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
     if ((geomType === "Circle") && tempStyle.radius ) {
         return new ol.style.Style({
             stroke: new ol.style.Stroke( tempStyle && tempStyle.stroke ? tempStyle.stroke : {
-                color: hexToRgb(options.style && tempStyle.color || "#0000FF").concat([tempStyle.opacity || 1]),
+                color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
                 lineDash: options.style.highlight ? [10] : [0],
                 width: tempStyle.weight || 1
             }),
             fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
-                color: hexToRgb(options.style && tempStyle.fillColor || "#0000FF").concat([tempStyle.fillOpacity || 0.2])
+                color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 0.2)
             }),
             image: new ol.style.Circle({
                 radius: tempStyle.radius || 10,
                 fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
-                    color: hexToRgb(options.style && tempStyle.fillColor || "#0000FF").concat([tempStyle.fillOpacity || 0.2])
+                    color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 0.2)
                 }),
                 stroke: new ol.style.Stroke({
-                  color: hexToRgb(options.style && tempStyle.color || "#0000FF").concat([tempStyle.opacity || 1]),
+                  color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
                   lineDash: options.style.highlight ? [10] : [0],
                   width: tempStyle.weight || 1
                 })
