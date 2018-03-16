@@ -215,8 +215,8 @@ const ColorUtils = {
     * @return (String) rgba string
     */
     colorToRgbaStr: (color = "#0000FF", alpha) => {
-        const c  = tinycolor(color);
-        return c.setAlpha(toNumber(alpha !== undefined ? alpha : c.getAlpha())).toRgbString()
+        const c = tinycolor(color);
+        return c.setAlpha(toNumber(alpha !== undefined ? alpha : c.getAlpha())).toRgbString();
     }
 
 };
