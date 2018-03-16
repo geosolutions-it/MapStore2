@@ -5,7 +5,8 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
-
+const tinycolor = require("tinycolor2");
+const {toNumber} = require("lodash");
 /**
  * Porting of various MapStore(1) utilities for random/color scale generations
  * @name ColorUtils
@@ -206,6 +207,14 @@ const ColorUtils = {
             g: rgb[1],
             b: rgb[2]
         };
-    }
+    },
+    /**
+    * convert any valid css color to rgba str
+    * @param (String) color any valid css colo
+    * @param (number) opacity 0 - 100 alpha value
+    * @return (String) rgba string
+    */
+    colorToRgbaStr: (color = "#0000FF", alpha = 1) => tinycolor(color).setAlpha(toNumber(alpha)).toRgbString()
+
 };
 module.exports = ColorUtils;

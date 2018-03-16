@@ -12,7 +12,7 @@ const image = new ol.style.Circle({
 });
 
 const Icons = require('../../../utils/openlayers/Icons');
-const {hexToRgb} = require('../../../utils/ColorUtils');
+const {colorToRgbaStr} = require('../../../utils/ColorUtils');
 
 const STYLE_POINT = {
     color: '#ffcc33',
@@ -175,14 +175,14 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
     if (geomType === "MultiLineString" || geomType === "LineString") {
         style = tempStyle ? {
             stroke: new ol.style.Stroke( tempStyle && tempStyle.stroke ? tempStyle.stroke : {
-                color: hexToRgb(options.style && tempStyle.color || "#0000FF").concat([tempStyle.opacity || 1]),
+                color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
                 lineDash: options.style.highlight ? [10] : [0],
                 width: tempStyle.weight || 1
             }),
             image: isDrawing ? image : null
             } : {
                 stroke: new ol.style.Stroke(defaultStyles[geomType] && defaultStyles[geomType].stroke ? defaultStyles[geomType].stroke : {
-                    color: hexToRgb(options.style && defaultStyles[geomType].color || "#0000FF").concat([defaultStyles[geomType].opacity || 1]),
+                    color: colorToRgbaStr(options.style && defaultStyles[geomType].color || "#0000FF", defaultStyles[geomType].opacity || 1),
                     lineDash: options.style.highlight ? [10] : [0],
                     width: defaultStyles[geomType].weight || 1
                 }) };
@@ -227,7 +227,7 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
                 text: textValues[0] || "",
                 font: tempStyle.font,
                 fill: new ol.style.Fill({
-                    color: hexToRgb(tempStyle.stroke || tempStyle.color || '#000000').concat([tempStyle.opacity || 1])
+                    color: colorToRgbaStr(tempStyle.stroke || tempStyle.color || '#000000', tempStyle.opacity || 1)
                 })
             })
         });
@@ -236,13 +236,13 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
     if (geomType === "MultiPolygon" || geomType === "Polygon") {
         style = {
             stroke: new ol.style.Stroke( tempStyle.stroke ? tempStyle.stroke : {
-                color: hexToRgb(options.style && tempStyle.color || "#0000FF").concat([tempStyle.opacity || 1]),
+                color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
                 lineDash: options.style.highlight ? [10] : [0],
                 width: tempStyle.weight || 1
             }),
             image: isDrawing ? image : null,
             fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
-                color: hexToRgb(options.style && tempStyle.fillColor || "#0000FF").concat([tempStyle.fillOpacity || 1])
+                color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 1)
             })
         };
         return new ol.style.Style(style);
@@ -257,12 +257,12 @@ function getStyle(options, isDrawing = false, textValues = []) {
     if (!style && options.style) {
         style = {
             stroke: new ol.style.Stroke( options.style.stroke ? options.style.stroke : {
-                color: hexToRgb(options.style && options.style.color || "#0000FF").concat([options.style.opacity || 1]),
+                color: colorToRgbaStr(options.style && options.style.color || "#0000FF", options.style.opacity || 1),
                 lineDash: options.style.highlight ? [10] : [0],
                 width: options.style.weight || 1
             }),
             fill: new ol.style.Fill(options.style.fill ? options.style.fill : {
-                color: hexToRgb(options.style && options.style.fillColor || "#0000FF").concat([options.style.fillOpacity || 1])
+                color: colorToRgbaStr(options.style && options.style.fillColor || "#0000FF", options.style.fillOpacity || 1)
             })
         };
 
