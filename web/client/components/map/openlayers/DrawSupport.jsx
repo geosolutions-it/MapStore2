@@ -543,7 +543,7 @@ class DrawSupport extends React.Component {
             this.translateInteraction.on('translateend', this.updateFeatureExtent);
             this.props.map.addInteraction(this.translateInteraction);
 
-
+            this.addTranslateListener();
             if (this.modifyInteraction) {
                 this.props.map.removeInteraction(this.modifyInteraction);
             }
@@ -851,7 +851,7 @@ class DrawSupport extends React.Component {
 
             this.props.onGeometryChanged(features, this.props.drawOwner, this.props.drawOwner, false, this.props.drawMethod === "Text", this.props.drawMethod === "Circle");
         });
-        this.addTranlateListener();
+        this.addTranslateListener();
         this.props.map.addInteraction(this.translateInteraction);
     }
 
@@ -962,7 +962,7 @@ class DrawSupport extends React.Component {
         });
     }
 
-    addTranlateListener = () => {
+    addTranslateListener = () => {
         document.addEventListener("keydown", (event) => {
             if (event.altKey && event.code === "AltLeft") {
                 this.translateInteraction.setActive(true);
