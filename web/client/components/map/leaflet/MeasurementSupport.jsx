@@ -192,6 +192,9 @@ class MeasurementSupport extends React.Component {
     }
     onDrawStart = () => {
         this.removeArcLayer();
+        if (this.props.map.doubleClickZoom) {
+            this.props.map.doubleClickZoom.disable();
+        }
         this.drawing = true;
     };
 
@@ -223,6 +226,26 @@ class MeasurementSupport extends React.Component {
         }
         if (this.props.measurement.lineMeasureEnabled && this.lastLayer) {
             this.addArcsToMap([feature]);
+        }
+        setTimeout(() => {
+            this.props.map.on('click', this.restartDrawing, this);
+        }, 100);
+    };
+
+    onDrawVertex = () => {
+        let bearingMarkers = this.drawControl._markers || [];
+
+        if (this.props.measurement.geomType === 'Bearing' && bearingMarkers.length >= 2) {
+            setTimeout(() => {
+                this.drawControl._markers = slice(this.drawControl._markers, 0, 2);
+                this.drawControl._poly._latlngs = slice(this.drawControl._poly._latlngs, 0, 2);
+                this.drawControl._poly._originalPoints = slice(this.drawControl._poly._originalPoints, 0, 2);
+                this.updateMeasurementResults();
+                this.drawControl._finishShape();
+                this.drawControl.disable();
+            }, 100);
+        } else {
+            this.updateMeasurementResults();
         }
     };
 
@@ -298,27 +321,16 @@ class MeasurementSupport extends React.Component {
         this.props.changeMeasurementState(newMeasureState);
     };
 
-    mapClickHandler = () => {
-        if (!this.drawing && this.drawControl !== null) {
-            // re-enable draw control, since it is stopped after
-            // every finished sketch
-            this.props.map.removeLayer(this.lastLayer);
-            this.drawControl.enable();
-            this.drawing = true;
-        } else {
-            let bearingMarkers = this.drawControl._markers || [];
-
-            if (this.props.measurement.geomType === 'Bearing' && bearingMarkers.length >= 2) {
-                this.drawControl._markers = slice(this.drawControl._markers, 0, 2);
-                this.drawControl._poly._latlngs = slice(this.drawControl._poly._latlngs, 0, 2);
-                this.drawControl._poly._originalPoints = slice(this.drawControl._poly._originalPoints, 0, 2);
-                this.updateMeasurementResults();
-                this.drawControl._finishShape();
-                this.drawControl.disable();
-            } else {
-                this.updateMeasurementResults();
-            }
+    restartDrawing = () => {
+        this.props.map.off('click', this.restartDrawing, this);
+        if (this.props.map.doubleClickZoom) {
+            this.props.map.doubleClickZoom.enable();
         }
+        // re-enable draw control, since it is stopped after
+        // every finished sketch
+        this.props.map.removeLayer(this.lastLayer);
+        this.drawControl.enable();
+        this.drawing = true;
     };
 
     addDrawInteraction = (newProps) => {
@@ -327,7 +339,8 @@ class MeasurementSupport extends React.Component {
 
         this.props.map.on('draw:created', this.onDrawCreated, this);
         this.props.map.on('draw:drawstart', this.onDrawStart, this);
-        this.props.map.on('click', this.mapClickHandler, this);
+        this.props.map.on('draw:drawvertex', this.onDrawVertex, this);
+        // this.props.map.on('click', this.mapClickHandler, this);
         this.props.map.on('mousemove', this.updateBearing, this);
 
         if (this.props.updateOnMouseMove) {
@@ -398,10 +411,14 @@ class MeasurementSupport extends React.Component {
             this.removeLastLayer();
             this.props.map.off('draw:created', this.onDrawCreated, this);
             this.props.map.off('draw:drawstart', this.onDrawStart, this);
+            this.props.map.off('draw:drawvertex', this.onDrawVertex, this);
             this.props.map.off('mousemove', this.updateBearing, this);
-            this.props.map.off('click', this.mapClickHandler, this);
+            // this.props.map.off('click', this.mapClickHandler, this);
             if (this.props.updateOnMouseMove) {
                 this.props.map.off('mousemove', this.updateMeasurementResults, this);
+            }
+            if (this.props.map.doubleClickZoom) {
+                this.props.map.doubleClickZoom.enable();
             }
         }
     };

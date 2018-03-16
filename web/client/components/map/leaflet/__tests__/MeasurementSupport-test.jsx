@@ -225,7 +225,7 @@ describe('Leaflet MeasurementSupport', () => {
             />
         , msNode);
 
-        document.getElementById('map').addEventListener('click', () => {
+        document.getElementById('map').addEventListener('draw:addvertex', () => {
             expect(newMeasureState).toExist();
         });
         document.getElementById('map').click();
@@ -261,7 +261,7 @@ describe('Leaflet MeasurementSupport', () => {
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
         , msNode);
-        document.getElementById('map').addEventListener('click', () => {
+        document.getElementById('map').addEventListener('draw:addvertex', () => {
             expect(newMeasureState).toExist();
         });
         document.getElementById('map').click();
@@ -297,7 +297,7 @@ describe('Leaflet MeasurementSupport', () => {
                 changeMeasurementState={(data) => {newMeasureState = data; }}
             />
         , msNode);
-        document.getElementById('map').addEventListener('click', () => {
+        document.getElementById('map').addEventListener('draw:addvertex', () => {
             expect(newMeasureState).toExist();
         });
         document.getElementById('map').click();
