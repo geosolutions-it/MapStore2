@@ -6,4 +6,7 @@
     <Category>
         <name>THUMBNAIL</name>
     </Category>
+    <Category>
+        <name>DETAILS</name>
+    </Category>
 </CategoryList>
