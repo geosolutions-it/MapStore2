@@ -53,12 +53,16 @@ L.getMeasureWithTreshold = (value, threshold, source, dest, precision, sourceLab
  * The value will be rounded as defined by the precision option object.
  * this override is necesary due to the customization on how the measure label is presented and for adding bearing support
 */
+const originalReadableDistance = L.GeometryUtil.readableDistance;
 
 L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, precision, options) => {
+    if (!options) {
+        return originalReadableDistance.apply(null, arguments);
+    }
     if (options.geomType === 'Bearing') {
         return options.bearing;
     }
-    let p = L.Util.extend({}, defaultPrecision, precision);
+    const p = L.Util.extend({}, defaultPrecision, precision);
     const {unit, label} = options.uom.length;
 
     let distanceStr = L.GeometryUtil.formattedNumber(convertUom(distance, "m", unit), p[unit]) + ' ' + label;
@@ -79,11 +83,17 @@ L.GeometryUtil.readableDistance = (distance, isMetric, isFeet, isNauticalMile, p
  * this override is necesary due to the customization on how the area measure label is presented
  supporting also the square nautical miles and square feets
  */
+
+const originalReadableArea = L.GeometryUtil.readableArea;
+
 L.GeometryUtil.readableArea = (area, isMetric, precision, options) => {
+    if (!options) {
+        return originalReadableArea.apply(null, arguments);
+    }
     const {unit, label} = options.uom.area;
-    let p = L.Util.extend({}, defaultPrecision, precision);
+    const p = L.Util.extend({}, defaultPrecision, precision);
     let areaStr = L.GeometryUtil.formattedNumber(convertUom(area, "sqm", unit), p[unit]) + ' ' + label;
-    if (options.useTreshold) { // this is done for retrocompatibility
+    if (options.useTreshold) {
         if (isMetric) {
             areaStr = L.getMeasureWithTreshold(area, 1000000, "sqm", "sqkm", p, "m²", "km²");
         }
@@ -97,7 +107,12 @@ L.GeometryUtil.readableArea = (area, isMetric, precision, options) => {
 /**
  * this is need to pass custom options as uom, useTreshold to the readableArea function
 */
+const originalGetMeasurementStringPolygon = L.Draw.Polygon.prototype._getMeasurementString;
+
 L.Draw.Polygon.prototype._getMeasurementString = function() {
+    if (!this.options.uom) {
+        return originalGetMeasurementStringPolygon.apply(this, arguments);
+    }
     let area = this._area;
     let measurementString = '';
     if (!area && !this.options.showLength) {
@@ -120,7 +135,12 @@ L.Draw.Polygon.prototype._getMeasurementString = function() {
 /**
  * this is need to pass custom options as uom, useTreshold, bearing to the readableDistance function
 */
+const originalGetMeasurementStringPolyline = L.Draw.Polyline.prototype._getMeasurementString;
+
 L.Draw.Polyline.prototype._getMeasurementString = function() {
+    if (!this.options.uom) {
+        return originalGetMeasurementStringPolyline.apply(this, arguments);
+    }
     let currentLatLng = this._currentLatLng;
     let previousLatLng = this._markers[this._markers.length - 1].getLatLng();
     let distance;
@@ -140,6 +160,7 @@ L.Draw.Polyline.prototype._getMeasurementString = function() {
     };
     return L.GeometryUtil.readableDistance(distance, this.options.metric, this.options.feet, this.options.nautic, this.options.precision, opt);
 };
+
 class MeasurementSupport extends React.Component {
     static displayName = 'MeasurementSupport';
 
