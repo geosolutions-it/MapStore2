@@ -191,6 +191,7 @@ class MeasurementSupport extends React.Component {
         }
     }
     onDrawStart = () => {
+        this.props.map.off('click', this.restartDrawing, this);
         this.removeArcLayer();
         if (this.props.map.doubleClickZoom) {
             this.props.map.doubleClickZoom.disable();
@@ -228,6 +229,7 @@ class MeasurementSupport extends React.Component {
             this.addArcsToMap([feature]);
         }
         setTimeout(() => {
+            this.props.map.off('click', this.restartDrawing, this);
             this.props.map.on('click', this.restartDrawing, this);
         }, 100);
     };
@@ -413,6 +415,7 @@ class MeasurementSupport extends React.Component {
             this.props.map.off('draw:drawstart', this.onDrawStart, this);
             this.props.map.off('draw:drawvertex', this.onDrawVertex, this);
             this.props.map.off('mousemove', this.updateBearing, this);
+            this.props.map.off('click', this.restartDrawing, this);
             // this.props.map.off('click', this.mapClickHandler, this);
             if (this.props.updateOnMouseMove) {
                 this.props.map.off('mousemove', this.updateMeasurementResults, this);
