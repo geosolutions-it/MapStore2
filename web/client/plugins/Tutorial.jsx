@@ -122,6 +122,7 @@ const Tutorial = connect(tutorialPluginSelector, (dispatch) => {
 
 module.exports = {
     TutorialPlugin: assign(Tutorial, {
+        disablePluginIf: "{state('browser') && (state('browser').ie || state('browser').ie11)}",
         BurgerMenu: {
             name: 'tutorial',
             position: 1000,
