@@ -44,7 +44,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(10);
+        expect(inputs.length).toBe(11);
 
     });
     it('tests Layer Properties Display component events', () => {
@@ -69,7 +69,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(10);
+        expect(inputs.length).toBe(11);
         ReactTestUtils.Simulate.change(inputs[0]);
         expect(spy.calls.length).toBe(1);
     });
