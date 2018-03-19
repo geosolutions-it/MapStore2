@@ -348,6 +348,7 @@ class DrawSupport extends React.Component {
                     fillColor: '#ffffff',
                     fillOpacity: 0.2
                 },
+                showLength: false,
                 repeatMode: true,
                 icon: new L.DivIcon({
                     iconSize: new L.Point(8, 8),
@@ -369,6 +370,8 @@ class DrawSupport extends React.Component {
                     guidelineDistance: 5
                 },
                 allowIntersection: false,
+                showLength: false,
+                showArea: false,
                 repeatMode: true,
                 icon: new L.DivIcon({
                     iconSize: new L.Point(8, 8),
