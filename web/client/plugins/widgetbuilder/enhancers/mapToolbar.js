@@ -20,10 +20,7 @@ module.exports = compose(
     ),
     manageLayers,
     withHandlers({
-        onRemoveSelected: ({ layers = [], selectedGroups = [], selectedLayers = [], onEditorChange = () => { }, removeLayersById = () => { } }) => () => {
-            // TODO: clear selection
-            // TODO: get layer's by group
-            // TODO: remove groups
+        onRemoveSelected: ({selectedLayers = [], removeLayersById = () => { } }) => () => {
             removeLayersById(selectedLayers);
         }
     }),

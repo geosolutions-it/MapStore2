@@ -5,4 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-module.exports = require('../../../widget/MapView');
+
+
+const { compose, withHandlers} = require('recompose');
+
+module.exports = compose(
+    withHandlers({
+        onMapViewChanges: ({onChange = () => {}}) => map => onChange('map', map)
+    })
+)(require('../../../widget/MapView'));

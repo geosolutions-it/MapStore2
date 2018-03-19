@@ -26,8 +26,8 @@ module.exports = ({
         hideButtons>
         <MapOptions
             onNodeSelect={onNodeSelect}
-            onChange={onChange}
             selectedNodes={selectedNodes}
+            onChange={onChange}
             preview={<Preview
                 onChange={onChange /* TODO: save map changes */ }
                 layers={editorData.map && editorData.map.layers}
