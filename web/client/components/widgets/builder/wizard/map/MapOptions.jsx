@@ -17,7 +17,7 @@ const StepHeader = require('../../../../misc/wizard/StepHeader');
 const Message = require('../../../../I18N/Message');
 const TOC = require('./TOC');
 
-module.exports = ({ preview, map, onChange }) => (<div>
+module.exports = ({ preview, map, onChange = () => { }, selectedNodes = [], onNodeSelect = () => {} }) => (<div>
     <StepHeader title={<Message msgId={`Preview`} />} />
     <div key="sample" >
         <div style={{ width: "100%", height: "200px"}}>
@@ -25,5 +25,5 @@ module.exports = ({ preview, map, onChange }) => (<div>
         </div>
     </div>
     <StepHeader title={<Message msgId={`Layers`} />} />
-    <TOC onChange={onChange} map={map} />
+    <TOC selectedNodes={selectedNodes} onSelect={onNodeSelect} onChange={onChange} map={map} />
 </div>);

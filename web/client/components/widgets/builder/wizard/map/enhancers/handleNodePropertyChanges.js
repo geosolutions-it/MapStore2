@@ -7,6 +7,7 @@
  */
 // handle property changes
 const { withHandlers } = require('recompose');
+const {belongsToGroup} = require('../../../../../../utils/LayersUtils');
 const { findIndex } = require('lodash');
 module.exports = withHandlers({
     /**
@@ -28,7 +29,7 @@ module.exports = withHandlers({
         ({ onChange = () => { }, map = {} }) =>
             (gid, key, value) =>
                 map.layers
-                    .filter(l => (l.group || "Default") === gid || (l.group || "").indexOf(`${gid}.`) === 0)
+                    .filter(belongsToGroup(gid))
                     .map(({ id } = {}) => findIndex(map.layers || [], { id }))
                     .filter(i => i >= 0)
                     .map(index => onChange(`map.layers[${index}].${key}`, value)),

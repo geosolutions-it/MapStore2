@@ -197,6 +197,11 @@ const LayersUtils = {
     },
     normalizeLayer: (layer) => layer.id ? layer : { ...layer, id: LayersUtils.getLayerId(layer, layer) },
     normalizeMap: (map = {}) => (map.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...map, layers: (map.layers || []).map(l => LayersUtils.normalizeLayer(l))} : map,
+    /**
+     * @param gid
+     * @return function that filter by group
+     */
+    belongsToGroup: (gid) => l => (l.group || "Default") === gid || (l.group || "").indexOf(`${gid}.`) === 0,
     getLayersByGroup: (configLayers) => {
         let i = 0;
         let mapLayers = configLayers.map((layer) => assign({}, layer, {storeIndex: i++}));

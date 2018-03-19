@@ -17,11 +17,11 @@ const getSaveTooltipId = (step, {id} = {}) => {
     return "widgets.builder.wizard.addToTheMap";
 };
 
-module.exports = ({ step = 0, editorData = {}, onFinish = () => { }, toggleLayerSelector = () => { } } = {}) => (<Toolbar btnDefaultProps={{
+module.exports = ({ step = 0, tocButtons = [], editorData = {}, onFinish = () => { }, toggleLayerSelector = () => { } } = {}) => (<Toolbar btnDefaultProps={{
         bsStyle: "primary",
         bsSize: "sm"
     }}
-    buttons={[{
+    buttons={[ ...tocButtons, {
         onClick: () => toggleLayerSelector(true),
         visible: step === 0,
         glyph: "plus",

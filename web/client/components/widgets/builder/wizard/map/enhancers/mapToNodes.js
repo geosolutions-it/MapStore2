@@ -9,8 +9,9 @@ const LayersUtils = require('../../../../../../utils/LayersUtils');
 const { withProps } = require('recompose');
 
 /**
+ * Maps MapStore's map (as stored on back-end) to be mapped properly to
+ * TOC nodes
  *
- * @param {*} param0
  */
 const mapToNodes = ({ map }) => ({
     nodes: (

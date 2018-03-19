@@ -15,6 +15,8 @@ const Preview = require('./map/PreviewMap');
 module.exports = ({
     onChange = () => {}, onFinish = () => {}, setPage= () => {},
     step=0,
+    selectedNodes=[],
+    onNodeSelect = () => {},
     editorData = {}
 } = {}) => (
     <Wizard
@@ -23,7 +25,9 @@ module.exports = ({
         onFinish={onFinish}
         hideButtons>
         <MapOptions
+            onNodeSelect={onNodeSelect}
             onChange={onChange}
+            selectedNodes={selectedNodes}
             preview={<Preview
                 onChange={onChange /* TODO: save map changes */ }
                 layers={editorData.map && editorData.map.layers}
@@ -36,5 +40,4 @@ module.exports = ({
             data={editorData}
             onChange={onChange}
         />
-</Wizard>
-    );
+</Wizard>);

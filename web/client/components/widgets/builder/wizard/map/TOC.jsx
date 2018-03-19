@@ -6,14 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const { withProps, compose, withPropsOnChange, withHandlers, withStateHandlers} = require('recompose');
+const { compose, withPropsOnChange} = require('recompose');
 const TOC = require('../../../../TOC/TOC');
 const DefaultLayerOrGroup = require('../../../../TOC/DefaultLayerOrGroup');
 const DefaultGroup = require('../../../../TOC/DefaultGroup');
 const DefaultLayer = require('../../../../TOC/DefaultLayer');
 
 const handleNodePropertyChanges = require('./enhancers/handleNodePropertyChanges');
-const handleNodeSelection = require('./enhancers/handleNodeSelection');
 const handleNodeFiltering = require('./enhancers/handleNodeFiltering');
 const mapToNodes = require('./enhancers/mapToNodes');
 
@@ -26,8 +25,7 @@ const enhanceTOC = compose(
             onSort: !filterText ? () => {} : null
         })
     ),
-   handleNodePropertyChanges,
-   handleNodeSelection
+   handleNodePropertyChanges
 );
 
 module.exports = enhanceTOC(({
@@ -38,6 +36,8 @@ module.exports = enhanceTOC(({
     selectedNodes,
     nodes =[]} = {}
     ) => <TOC
+    selectedNodes={selectedNodes}
+    onSelect={onSelect}
     nodes={nodes} >
     <DefaultLayerOrGroup
         groupElement={<DefaultGroup

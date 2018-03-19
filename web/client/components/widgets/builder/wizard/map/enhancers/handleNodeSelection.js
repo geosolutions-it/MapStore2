@@ -12,11 +12,16 @@ const getGroupLayerIds = (id, map) =>
     (map.layers || [])
         .filter(({ group = "Default" } = {}) => group === id)
         .map(({ id: lid } = {}) => lid);
+/**
+ * Allows management of node selection in localState. Useful to use TOC.
+ * Requires a `map` prop with groups and layers. Each layer must have an id property
+ *
+ */
 module.exports = compose(
         withStateHandlers(
             () => ({ selectedLayers: [], selectedGroups: [] }),
             {
-                onSelect: ({ selectedLayers = [], selectedGroups = [] }, { map = {} }) => (id, nodeType, ctrlKey) => ({
+                onNodeSelect: ({ selectedLayers = [], selectedGroups = [] }, { map = {} }) => (id, nodeType, ctrlKey) => ({
                     selectedLayers: nodeType === "group"
                         ? findIndex(selectedGroups, item => item === id) >= 0
                             // remove all layers

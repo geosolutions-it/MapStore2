@@ -26,6 +26,12 @@ const addFilteredAttributesGroups = (nodes, filters) => {
     }, []);
 };
 const filterLayersByTitle = () => true;
+
+/**
+ * Dummy replacement of original logic to add filtering by title in TOC.
+ * For the moment it only adds the defaults
+ * @param {object} props
+ */
 const addNodeFilters = ({ nodes, filterText, currentLocale }) => addFilteredAttributesGroups(nodes, [
     {
         options: { showComponent: true },
