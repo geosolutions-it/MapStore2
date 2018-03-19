@@ -13,6 +13,7 @@ const wpsChart = require('../enhancers/wpsChart');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const ChartWidget = dependenciesToFilter(wpsChart(enhanceChartWidget(require('./ChartWidget'))));
 const TextWidget = enhanceTextWidget(require('./TextWidget'));
+const MapWidget = enhanceTextWidget(require('./MapWidget'));
 const TableWidget = dependenciesToFilter(enhanceTableWidget(require('./TableWidget')));
 const enhanceCounter = require('../enhancers/counterWidget');
 const CounterWidget = dependenciesToFilter(enhanceCounter(require("./CounterWidget")));
@@ -39,6 +40,12 @@ module.exports = ({
                 dependencies={dependencies}
                 onDelete={onDelete}
                 onEdit={onEdit} />
+            : w.widgetType === "map"
+            ? <MapWidget {...w}
+                dependencies={dependencies}
+                onDelete={onDelete}
+                onEdit={onEdit} />
+
             : (<ChartWidget {...w}
                 exportCSV={exportCSV}
                 dependencies={dependencies}

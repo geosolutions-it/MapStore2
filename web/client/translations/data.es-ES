@@ -218,6 +218,7 @@
         },
         "newMap": "Nuevo mapa",
 		"maps": {
+            "title": "Mapas",
             "feedback": {
                 "noDetailsAvailable": "Detalles del mapa no disponibles",
                 "successSavedMap": "El mapa ha sido creado correctamente",
@@ -1073,6 +1074,10 @@
         },
         "widgets": {
              "types": {
+                "map": {
+                    "title": "Mapa",
+                    "caption": "agregar un mapa"
+                },
                 "chart": {
                     "title": "Gráfico",
                     "caption": "agregar un gráfico"

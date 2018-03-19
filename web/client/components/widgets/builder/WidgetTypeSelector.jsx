@@ -31,6 +31,11 @@ const DEFAULT_TYPES = [{
     type: "counter",
     glyph: "counter",
     caption: <Message msgId={"widgets.types.counter.caption"} />
+}, {
+    title: <Message msgId={"widgets.types.map.title"} />,
+    type: "map",
+    glyph: "1-map",
+    caption: <Message msgId={"widgets.types.map.caption"} />
 }];
 
 module.exports = ({widgetTypes = DEFAULT_TYPES, typeFilter = () => true, onSelect= () => {}}) =>

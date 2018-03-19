@@ -219,6 +219,7 @@
         },
         "newMap": "Nouvelle carte",
 		"maps": {
+            "title": "Cartes",
             "feedback": {
                 "noDetailsAvailable": "Détails de la carte non disponibles",
                 "successSavedMap": "La carte a été créée correctement",
@@ -1074,6 +1075,10 @@
         },
         "widgets": {
             "types": {
+                 "map": {
+                    "title": "Carte",
+                    "caption": "ajouter une carte"
+                },
                 "chart": {
                     "title": "Graphique",
                     "caption": "ajouter un graphique"
