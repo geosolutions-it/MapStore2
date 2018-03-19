@@ -715,7 +715,7 @@ describe('Test DrawSupport', () => {
             <DrawSupport features={[feature]} map={fakeMap} drawStatus="drawOrEdit" drawMethod="Polygon" options={{
                     drawEnabled: false, editEnabled: true}}
                 />, document.getElementById("container"));
-        expect(support.translateInteraction).toNotExist();
+        expect(support.translateInteraction).toExist();
     });
 
     it('end drawing', () => {
@@ -1439,7 +1439,7 @@ describe('Test DrawSupport', () => {
                 }}
                 />, document.getElementById("container"));
         expect(spyAddLayer.calls.length).toBe(1);
-        expect(spyAddInteraction.calls.length).toBe(2);
+        expect(spyAddInteraction.calls.length).toBe(3);
     });
 
     it('draw or edit, endevent', () => {

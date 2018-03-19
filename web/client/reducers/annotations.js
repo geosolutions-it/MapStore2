@@ -305,6 +305,7 @@ function annotations(state = { validationErrors: {} }, action) {
                     styling: false,
                     drawing: false,
                     filter: null,
+                    editedFields: {},
                     originalStyle: null
                 });
             }

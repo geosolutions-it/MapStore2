@@ -195,7 +195,7 @@ class AnnotationsEditor extends React.Component {
                         <Toolbar
                             btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}}
                             buttons={[ {
-                                glyph: 'back',
+                                glyph: 'arrow-left',
                                 tooltipId: "annotations.back",
                                 visible: this.props.showBack,
                                 onClick: () => {this.props.onCancel(); this.props.onCleanHighlight(); }
@@ -236,7 +236,7 @@ class AnnotationsEditor extends React.Component {
                     <Toolbar
                         btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}}
                         buttons={[ {
-                            glyph: 'back',
+                            glyph: 'arrow-left',
                             tooltipId: "annotations.back",
                             visible: true,
                             onClick: () => {
