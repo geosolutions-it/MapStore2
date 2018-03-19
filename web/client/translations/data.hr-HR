@@ -123,7 +123,7 @@
         "annotationsbutton": "Pribilješke",
         "noresultfound": "Nije pronađen nijedan rezultat",
         "save": "Spremi",
-		"saveAs": "Spremi kao...",
+        "saveAs": "Spremi kao...",
         "opacity": "Prozirnost",
         "elevation": "Nadmorska visina",
         "close": "Zatvori",
@@ -218,7 +218,8 @@
             "locales_combo": "Jezik:"
         },
         "newMap": "Nova karta",
-		"maps": {
+	    "maps": {
+            "title": "Karte",
             "feedback": {
                 "noDetailsAvailable": "Detalji nisu dostupni",
                 "successSavedMap": "Karta je ispravno kreirana",
@@ -1074,6 +1075,10 @@
         },
         "widgets": {
             "types": {
+                "map": {
+                    "title": "Karta",
+                    "caption": "dodaj kartu"
+                },
                 "chart": {
                     "title": "Grafikon",
                     "caption": "dodaj grafikon"
@@ -1118,7 +1123,11 @@
                     "updateWidget": "Ažuriraj widget",
                     "addToTheMap": "Dodaj widget na kartu",
                     "titlePlaceholder": "Umetni naslov...",
-                    "textPlaceholder": "Umetni tekst..."
+                    "textPlaceholder": "Umetni tekst...",
+                    "useThisMap": "Koristi ovu kartu",
+                    "configureMapOptions": "Konfiguriraj postavke karte",
+                    "addLayer": "Dodaj sloj na kartu",
+                    "useTheSelectedLayer": "Koristi odabrani sloj"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Nema dostupnih widgeta",
