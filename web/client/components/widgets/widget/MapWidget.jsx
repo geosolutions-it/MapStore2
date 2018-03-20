@@ -7,6 +7,7 @@
  */
 const React = require('react');
 const WidgetContainer = require('./WidgetContainer');
+const InfoPopover = require('./InfoPopover');
 
 const Message = require('../../I18N/Message');
 const {withHandlers} = require('recompose');
@@ -21,16 +22,22 @@ const {
     MenuItem
 } = require('react-bootstrap');
 
+
+const renderHeaderLeftTopItem = ({ title, description } = {}) => {
+    return description ? <InfoPopover placement="top" title={title} text={description} /> : null;
+};
+
 module.exports = ({
     onEdit = () => { },
     updateProperty = () => { },
     toggleDeleteConfirm = () => { },
-    id, title,
+    id, title, loading, description,
     map,
     confirmDelete = false,
     onDelete = () => {}
 } = {}) =>
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm}
+        topLeftItems={renderHeaderLeftTopItem({ loading, title, description })}
         topRightItems={<ButtonToolbar>
             <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
                 <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil" />&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>

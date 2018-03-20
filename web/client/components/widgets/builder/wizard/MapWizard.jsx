@@ -17,7 +17,10 @@ module.exports = ({
     step=0,
     selectedNodes=[],
     onNodeSelect = () => {},
-    editorData = {}
+    editorData = {},
+    editNode,
+    setEditNode = () => {},
+    closeNodeEditor = () => {}
 } = {}) => (
     <Wizard
         step={step}
@@ -25,11 +28,14 @@ module.exports = ({
         onFinish={onFinish}
         hideButtons>
         <MapOptions
+            editNode={editNode}
+            setEditNode={setEditNode}
+            closeNodeEditor={closeNodeEditor}
             onNodeSelect={onNodeSelect}
             selectedNodes={selectedNodes}
             onChange={onChange}
             preview={<Preview
-                onChange={onChange /* TODO: save map changes */ }
+                onChange={onChange}
                 layers={editorData.map && editorData.map.layers}
                 map={editorData.map}
                 options={{ style: { margin: 10, height: 'calc(100% - 20px)' } }} /> }

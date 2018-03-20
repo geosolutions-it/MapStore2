@@ -12,6 +12,7 @@ const {wizardSelector, wizardStateToProps} = require('./commons');
 const layerSelector = require('./enhancers/layerSelector');
 const manageLayers = require('./enhancers/manageLayers');
 const mapToolbar = require('./enhancers/mapToolbar');
+const handleNodeEditing = require('./enhancers/handleNodeEditing');
 const BorderLayout = require('../../components/layout/BorderLayout');
 
 const BuilderHeader = require('./BuilderHeader');
@@ -61,11 +62,12 @@ const mapBuilder = compose(
     withProps(({ editorData = {}}) => ({
         map: editorData.map
     })),
-    handleNodeSelection
+    handleNodeSelection,
+    handleNodeEditing
 );
 
 
-module.exports = mapBuilder(({ enabled, onClose = () => { }, toggleLayerSelector = () => { }, selectedGroups=[], selectedLayers=[], selectedNodes, onNodeSelect = () => { } } = {}) =>
+module.exports = mapBuilder(({ enabled, onClose = () => { }, toggleLayerSelector = () => { }, editNode, setEditNode, closeNodeEditor, selectedGroups=[], selectedLayers=[], selectedNodes, onNodeSelect = () => { } } = {}) =>
     (<BorderLayout
         className = "map-selector"
         header={(<BuilderHeader onClose={onClose}>
@@ -75,5 +77,10 @@ module.exports = mapBuilder(({ enabled, onClose = () => { }, toggleLayerSelector
             selectedGroups={selectedGroups}
             toggleLayerSelector={toggleLayerSelector}/></BuilderHeader>)}
         >
-        {enabled ? <Builder onNodeSelect={onNodeSelect} selectedNodes={selectedNodes}/> : null}
+        {enabled ? <Builder
+            setEditNode={setEditNode}
+            editNode={editNode}
+            closeNodeEditor={closeNodeEditor}
+            onNodeSelect={onNodeSelect}
+            selectedNodes={selectedNodes}/> : null}
     </BorderLayout>));

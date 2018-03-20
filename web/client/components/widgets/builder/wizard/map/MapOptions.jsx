@@ -16,14 +16,25 @@ const React = require('react');
 const StepHeader = require('../../../../misc/wizard/StepHeader');
 const Message = require('../../../../I18N/Message');
 const TOC = require('./TOC');
+const Editor = require('./NodeEditor');
 
-module.exports = ({ preview, map, onChange = () => { }, selectedNodes = [], onNodeSelect = () => {} }) => (<div>
+module.exports = ({ preview, map, onChange = () => { }, selectedNodes = [], onNodeSelect = () => { }, editNode, closeNodeEditor = () => { } }) => (<div>
     <StepHeader title={<Message msgId={`Preview`} />} />
     <div key="sample" >
         <div style={{ width: "100%", height: "200px"}}>
             {preview}
         </div>
     </div>
-    <StepHeader title={<Message msgId={`Layers`} />} />
-    <TOC selectedNodes={selectedNodes} onSelect={onNodeSelect} onChange={onChange} map={map} />
+    {editNode
+        ? [<StepHeader title={<Message msgId={`Layers`} />} />,
+        <Editor
+            closeNodeEditor={closeNodeEditor}
+            editNode={editNode}
+            map={map}
+            onChange={onChange} />]
+        : <TOC
+            selectedNodes={selectedNodes}
+            onSelect={onNodeSelect}
+            onChange={onChange}
+            map={map} />}
 </div>);
