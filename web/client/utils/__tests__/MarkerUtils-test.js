@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
-const marker = require('../../test-resources/markerIcon.png');
+
 
 const {
     extraMarkers,
