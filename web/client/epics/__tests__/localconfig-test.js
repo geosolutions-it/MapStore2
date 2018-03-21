@@ -27,7 +27,7 @@ describe('localconfig Epics', () => {
                 switch (action.type) {
                     case SUPPORTED_LOCALES_REGISTERED:
                         // 7 is the actual default number of locales
-                        expect(Object.keys(suppLocales).length).toBe(7);
+                        expect(Object.keys(suppLocales).length).toBe(8);
                         break;
                     default:
                         expect(true).toBe(false);

@@ -9,8 +9,10 @@ const React = require('react');
 const WidgetOptions = require('./common/WidgetOptions');
 const {wizardHandlers} = require('../../../misc/wizard/enhancers');
 const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
+
 const MapOptions = require('./map/MapOptions');
 const Preview = require('./map/PreviewMap');
+
 
 module.exports = ({
     onChange = () => {}, onFinish = () => {}, setPage= () => {},

@@ -11,6 +11,13 @@ const ReactQuill = require('react-quill');
 const ResizableModal = require('../../../misc/ResizableModal');
 const Portal = require('../../../misc/Portal');
 const Message = require('../../../I18N/Message');
+const {Quill} = ReactQuill;
+const {ResizeModule, IFrame, toolbarConfig} = require('../../../misc/quillmodules/ResizeModule')(Quill);
+
+Quill.register({
+    'formats/video': IFrame,
+    'modules/resizeModule': ResizeModule
+});
 
 /**
  * Component for rendering FeatureInfoEditor a modal editor to modify format template
@@ -21,9 +28,10 @@ const Message = require('../../../I18N/Message');
  * @prop {bool} showEditor show/hide modal
  * @prop {funciotn} onShowEditor called when click on close buttons
  * @prop {function} onChange called when text in editor has been changed
+ * @prop {bool} enableIFrameModule enable iframe in editor, default true
  */
 
-module.exports = ({onShowEditor = () => {}, showEditor, element = {}, onChange = () => {}}) =>(
+module.exports = ({onShowEditor = () => {}, showEditor, element = {}, onChange = () => {}, enableIFrameModule = true}) =>(
     <Portal>
         <ResizableModal
             fade
@@ -43,6 +51,10 @@ module.exports = ({onShowEditor = () => {}, showEditor, element = {}, onChange =
             <div id="ms-template-editor" className="ms-editor">
                 <ReactQuill
                     bounds="#ms-template-editor"
+                    modules={enableIFrameModule ? {
+                        resizeModule: {},
+                        toolbar: toolbarConfig
+                    } : {}}
                     defaultValue={element.featureInfo && element.featureInfo.template || ' '}
                     onChange={template => {
                         onChange('featureInfo', {

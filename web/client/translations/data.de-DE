@@ -653,7 +653,7 @@
                     "reset_bbox": "Zurücksetzen",
                     "save_bbox": "BBOX Änderungen speichern",
                     "save_radius": "Radius/Kreiszentrum Änderungen speichern",
-                    "radius": "Radius"
+                    "radius": "Radius(m)"
                 },
                 "methods": {
                     "zone": "Zone",
