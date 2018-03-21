@@ -117,7 +117,7 @@ const annStyleToOlStyle = (type, style, label = "") => {
             };
         case "Point":
         case "MultiPoint": {
-            const externalGraphic = extraMarkers.markerToDataUrl(style);
+            const externalGraphic = extraMarkers.markerToDataUrl(s);
             return externalGraphic ? {
                     externalGraphic: externalGraphic,
                     "graphicWidth": 36,
