@@ -6,10 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 const { compose, withProps, withState, withHandlers } = require('recompose');
+
+const withControllableState = require('../../../../../misc/enhancers/withControllableState');
+const mapToNodes = require('./mapToNodes');
+const withSelectedNode = require('./withSelectedNode');
+const withCapabilitiesRetrieval = require('./withCapabilitiesRetrieval');
 /* TABS definitions */
 const General = require('../../../../../TOC/fragments/settings/General');
 const Display = require('../../../../../TOC/fragments/settings/Display');
-const WMSStyle = require('../../../../../TOC/fragments/settings/WMSStyle');
+const WMSStyle = withCapabilitiesRetrieval(require('../../../../../TOC/fragments/settings/WMSStyle'));
 const handleNodePropertyChanges = require('./handleNodePropertyChanges');
 const { settingsLifecycle } = require('../../../../../TOC/enhancers/tocItemsSettings');
 
@@ -40,9 +45,6 @@ const withDefaultTabs = withProps((props) => ({
     }]
 }));
 
-const withControllableState = require('../../../../../misc/enhancers/withControllableState');
-const mapToNodes = require('./mapToNodes');
-const withSelectedNode = require('./withSelectedNode');
 module.exports = compose(
     // select selected node
     mapToNodes,
