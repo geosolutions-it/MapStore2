@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
+const marker = require('../../test-resources/markerIcon.png');
 
 const {
     extraMarkers,
@@ -58,5 +59,14 @@ describe('Test the MarkerUtils', () => {
     it('getGlyphs', () => {
         expect(Object.keys(getGlyphs('fontawesome')).length > 0).toBe(true);
         expect(getGlyphs('fontawesome').comment).toExist();
+    });
+
+    it('markerToDataUrl', () => {
+        const style = {
+            iconShape: 'penta',
+            iconColor: 'green'};
+        const dataUrl = extraMarkers.markerToDataUrl(style);
+        expect(dataUrl).toExist();
+        expect(dataUrl).toBe(marker);
     });
 });

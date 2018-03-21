@@ -7,7 +7,10 @@
 */
 const expect = require('expect');
 
-const {getAvailableStyler, getRelativeStyler, convertGeoJSONToInternalModel, DEFAULT_ANNOTATIONS_STYLES, createFont} = require('../AnnotationsUtils');
+const {getAvailableStyler, getRelativeStyler, convertGeoJSONToInternalModel, DEFAULT_ANNOTATIONS_STYLES, createFont,
+circlesToMultiPolygon, textToPoint, flattenGeometryCollection} = require('../AnnotationsUtils');
+
+const feature = require("json-loader!../../test-resources/Annotation.json");
 
 describe('Test the AnnotationsUtils', () => {
     it('getAvailableStyler for point or MultiPoint', () => {
@@ -189,4 +192,45 @@ describe('Test the AnnotationsUtils', () => {
         expect(createFont({fontStyle: "italic"})).toBe("italic normal 14px FontAwesome");
         expect(createFont({fontWeight: "bold"})).toBe("normal bold 14px FontAwesome");
     });
+
+    it('circlesToMultiPolygon', () => {
+        const {geometry, properties, style} = feature;
+        const f = circlesToMultiPolygon(geometry, properties, style.Circle);
+        expect(f).toExist();
+        expect(f.type).toBe("Feature");
+        expect(f.geometry.type).toBe("MultiPolygon");
+        expect(f.properties.ms_style).toExist();
+        expect(f.properties.ms_style.strokeColor).toBe(style.Circle.color);
+        expect(f.properties).toExist();
+
+    });
+    it('textToPoint', () => {
+        const {geometry, properties, style} = feature;
+        const fts = textToPoint(geometry, properties, style.Text);
+        expect(fts).toExist();
+        expect(fts.length).toBe(2);
+        expect(fts[0].type).toBe("Feature");
+        expect(fts[0].geometry.type).toBe("MultiPoint");
+        expect(fts[0].properties.ms_style).toExist();
+        expect(fts[0].properties.ms_style.label).toBe("pino");
+        expect(fts[0].properties).toExist();
+
+    });
+
+    it('flattenGeometryCollection', () => {
+        const fts = flattenGeometryCollection(feature);
+        expect(fts).toExist();
+        expect(fts.length).toBe(9);
+        expect(fts[6].type).toBe("Feature");
+        expect(fts[6].geometry.type).toBe("MultiPolygon");
+        expect(fts[6].properties.ms_style).toExist();
+        expect(fts[6].properties.ms_style.strokeColor).toBe(feature.style.Circle.color);
+        expect(fts[6].properties).toExist();
+        expect(fts[7].type).toBe("Feature");
+        expect(fts[7].geometry.type).toBe("MultiPoint");
+        expect(fts[7].properties.ms_style).toExist();
+        expect(fts[7].properties.ms_style.label).toBe("pino");
+        expect(fts[7].properties).toExist();
+    });
+
 });

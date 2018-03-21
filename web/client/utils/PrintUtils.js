@@ -8,7 +8,7 @@
 
 const CoordinatesUtils = require('./CoordinatesUtils');
 const MapUtils = require('./MapUtils');
-
+const AnnotationsUtils = require("./AnnotationsUtils");
 
 const {isArray} = require('lodash');
 
@@ -18,6 +18,7 @@ const defaultScales = MapUtils.getGoogleMercatorScales(0, 21);
 
 const assign = require('object-assign');
 
+// Non è detto che sia uniforme!!
 const getGeomType = function(layer) {
     return layer.features && layer.features[0] ? layer.features[0].geometry.type : undefined;
 };
@@ -230,20 +231,21 @@ const PrintUtils = {
         },
         vector: {
             map: (layer, spec) => ({
-                type: 'Vector',
-                name: layer.name,
-                "opacity": layer.opacity || 1.0,
-                styleProperty: "ms_style",
-                styles: {
-                    1: PrintUtils.toOpenLayers2Style(layer, layer.style)
-                },
-                geoJson: CoordinatesUtils.reprojectGeoJson({
-                    type: "FeatureCollection",
-                    features: layer.features.map( f => ({...f, properties: {...f.properties, ms_style: 1}}))
-                },
-                "EPSG:4326",
-                spec.projection)
-            })
+                    type: 'Vector',
+                    name: layer.name,
+                    "opacity": layer.opacity || 1.0,
+                    styleProperty: "ms_style",
+                    styles: {
+                        1: PrintUtils.toOpenLayers2Style(layer, layer.style)
+                    },
+                    geoJson: CoordinatesUtils.reprojectGeoJson({
+                        type: "FeatureCollection",
+                        features: layer.id === "annotations" && AnnotationsUtils.annotationsToPrint(layer.features) || layer.features.map( f => ({...f, properties: {...f.properties, ms_style: 1}}))
+                    },
+                    "EPSG:4326",
+                    spec.projection)
+                }
+            )
         },
         osm: {
             map: () => ({
@@ -329,6 +331,7 @@ const PrintUtils = {
     rgbaTorgb: (rgba = "") => {
         return rgba.indexOf("rgba") !== -1 ? `rgb${rgba.slice(rgba.indexOf("("), rgba.lastIndexOf(","))})` : rgba;
     },
+
     /**
      * Useful for print (Or generic Openlayers 2 conversion style)
      * http://dev.openlayers.org/docs/files/OpenLayers/Feature/Vector-js.html#OpenLayers.Feature.Vector.OpenLayers.Feature.Vector.style
@@ -346,7 +349,7 @@ const PrintUtils = {
              // "graphicName": "circle",
              // "graphicOpacity": 0.4,
             "pointRadius": style.radius,
-            "strokeColor": PrintUtils.rgbaTorgb(style.fillColor),
+            "strokeColor": PrintUtils.rgbaTorgb(style.color),
             "strokeOpacity": style.opacity,
             "strokeWidth": style.weight
              // "strokeLinecap": "round",
