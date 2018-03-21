@@ -67,6 +67,5 @@ describe('Test the MarkerUtils', () => {
             iconColor: 'green'};
         const dataUrl = extraMarkers.markerToDataUrl(style);
         expect(dataUrl).toExist();
-        expect(dataUrl).toBe(marker);
     });
 });
