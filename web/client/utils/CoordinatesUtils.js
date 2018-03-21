@@ -675,6 +675,9 @@ const CoordinatesUtils = {
             parseFloat(b.$.maxy)
         ], SRS, 'EPSG:4326')));
         return isArray(bbox) && {minx: bbox[0], miny: bbox[1], maxx: bbox[2], maxy: bbox[3]} || null;
+    },
+    isSRSAllowed: (srs) => {
+        return !!Proj4js.defs(srs);
     }
 };
 
