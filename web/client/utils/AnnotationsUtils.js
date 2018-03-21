@@ -5,9 +5,12 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
+
 const uuidv1 = require('uuid/v1');
 const LocaleUtils = require('./LocaleUtils');
+const {extraMarkers} = require('./MarkerUtils');
 const {values} = require('lodash');
+
 
 const STYLE_CIRCLE = {
     color: '#ffcc33',
@@ -64,13 +67,83 @@ const DEFAULT_ANNOTATIONS_STYLES = {
     "MultiPolygon": STYLE_POLYGON
 };
 
+const rgbaTorgb = (rgba = "") => {
+    return rgba.indexOf("rgba") !== -1 ? `rgb${rgba.slice(rgba.indexOf("("), rgba.lastIndexOf(","))})` : rgba;
+};
+
+const textAlignTolabelAlign = (a) => (a === "start" && "lm") || (a === "end" && "rm") || "cm";
+
 const getStylesObject = ({type = "Point", geometries = []} = {}) => {
     return type === "GeometryCollection" ? geometries.reduce((p, {type: t}) => {
         p[t] = DEFAULT_ANNOTATIONS_STYLES[t];
         return p;
     }, {type: "GeometryCollection"}) : {...DEFAULT_ANNOTATIONS_STYLES[type]};
 };
+
 const getPropreties = (props = {}, messages = {}) => ({title: LocaleUtils.getMessageById(messages, "annotations.defaulttitle") || "Default title", id: uuidv1(), ...props});
+
+const annStyleToOlStyle = (type, style, label = "") => {
+    const s = style[type] || style;
+    switch (type) {
+        case "MultiPolygon":
+        case "Polygon":
+        case "Circle":
+            return {
+                "strokeColor": rgbaTorgb(s.color),
+                "strokeOpacity": s.opacity,
+                "strokeWidth": s.weight,
+                "fillColor": rgbaTorgb(s.fillColor),
+                "fillOpacity": s.fillOpacity
+            };
+        case "LineString":
+        case "MultiLineString":
+            return {
+                "strokeColor": rgbaTorgb(s.color),
+                "strokeOpacity": s.opacity,
+                "strokeWidth": s.weight
+            };
+        case "Text":
+            return {
+                "fontStyle": s.fontStyle,
+                "fontSize": s.fontSize,   // in mapfish is in px
+                "fontFamily": s.fontFamily,
+                "fontWeight": s.fontWeight,
+                "labelAlign": textAlignTolabelAlign(s.textAlign),
+                "fontColor": rgbaTorgb(s.color),
+                "fontOpacity": s.opacity,
+                "label": label,
+                "fill": false,
+                "stroke": false
+            };
+        case "Point":
+        case "MultiPoint": {
+            const externalGraphic = extraMarkers.markerToDataUrl(s);
+            return externalGraphic ? {
+                    externalGraphic: externalGraphic,
+                    "graphicWidth": 36,
+                    "graphicHeight": 46,
+                    "graphicXOffset": -18,
+                    "graphicYOffset": -46
+                } : {
+                    "fillColor": "#0000AE",
+                    "fillOpacity": 0.5,
+                    "strokeColor": "#0000FF",
+                    "pointRadius": 10,
+                    "strokeOpacity": 1,
+                    "strokeWidth": 1
+            };
+        }
+        default:
+            return {
+                "fillColor": "#FF0000",
+                "fillOpacity": 0,
+                "strokeColor": "#FF0000",
+                "pointRadius": 5,
+                "strokeOpacity": 1,
+                "strokeWidth": 1
+            };
+    }
+};
 
 const AnnotationsUtils = {
     /**
@@ -203,7 +276,59 @@ const AnnotationsUtils = {
         const properties = getPropreties(annotation.properties, messages);
         return {style, properties, ...annotation};
     },
-    removeDuplicate: (annotations) => values(annotations.reduce((p, c) => ({...p, [c.properties.id]: c}), {}))
+    removeDuplicate: (annotations) => values(annotations.reduce((p, c) => ({...p, [c.properties.id]: c}), {})),
+    /**
+    * Compress circle in a single MultyPolygon feature with style
+    * @param (Object) geometry
+    * @param (Object) properties
+    * @param (Object) style
+    * @return (OBject) feature
+    */
+    circlesToMultiPolygon: ({geometries}, {circles}, style = STYLE_CIRCLE) => {
+        const coordinates = circles.reduce((coords, cIdx) => coords.concat([geometries[cIdx].coordinates]), []);
+        return {type: "Feature", geometry: {type: "MultiPolygon", coordinates}, properties: {id: uuidv1(), ms_style: annStyleToOlStyle("Circle", style)}};
+    },
+    /**
+    * Flatten text point to single point with style
+    * @param (Object) geometry
+    * @param (Object) properties
+    * @param (Object) style
+    * @return (array) features
+    */
+    textToPoint: ({geometries}, {textGeometriesIndexes, textValues}, style = STYLE_TEXT) => {
+        return textGeometriesIndexes.map((tIdx, cIdx) => {
+            return {type: "Feature", geometry: geometries[tIdx], properties: {id: uuidv1(), ms_style: annStyleToOlStyle("Text", style, textValues[cIdx])}};
+        });
+
+    },
+    /**
+    * Flatten geometry collection
+    * @param (Object) GeometryCollection An annotation of type geometrycollection
+    * @return (array) an array of features
+    */
+    flattenGeometryCollection: ({geometry, properties, style}) => {
+        const circles = properties.circles && AnnotationsUtils.circlesToMultiPolygon(geometry, properties, style.Circle) || [];
+        const texts = properties.textGeometriesIndexes && AnnotationsUtils.textToPoint(geometry, properties, style.Text) || [];
+        const skeep = (properties.circles || []).concat(properties.textGeometriesIndexes || []);
+        const features = geometry.geometries.filter((el, idx) => skeep.indexOf(idx) === -1)
+            .map((geom) => ({
+                type: "Feature",
+                geometry: geom,
+                properties: {id: uuidv1(), ms_style: annStyleToOlStyle(geom.type, style[geom.type])}
+            }));
+        return features.concat(circles, texts);
+    },
+    /**
+    * Adapt annotation features to print pdf
+    * @param (Array) features
+    * @param (Object) style
+    * @return (Array) features
+    */
+    annotationsToPrint: (features = []) => {
+        return features.reduce((coll, f) => {
+            return f.geometry.type === "GeometryCollection" && coll.concat(AnnotationsUtils.flattenGeometryCollection(f)) || coll.concat({type: "Feature", geometry: f.geometry, properties: {...f.properties, ms_style: annStyleToOlStyle(f.geometry.type, f.style)}});
+        }, []);
+    }
 };
 
 module.exports = AnnotationsUtils;
