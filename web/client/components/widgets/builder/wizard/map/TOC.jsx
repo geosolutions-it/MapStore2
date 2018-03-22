@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const { compose, withPropsOnChange} = require('recompose');
+const { compose } = require('recompose');
 const TOC = require('../../../../TOC/TOC');
 const DefaultLayerOrGroup = require('../../../../TOC/DefaultLayerOrGroup');
 const DefaultGroup = require('../../../../TOC/DefaultGroup');
@@ -15,32 +15,31 @@ const DefaultLayer = require('../../../../TOC/DefaultLayer');
 const handleNodePropertyChanges = require('./enhancers/handleNodePropertyChanges');
 const handleNodeFiltering = require('./enhancers/handleNodeFiltering');
 const mapToNodes = require('./enhancers/mapToNodes');
+const withSortable = require('./enhancers/withSortable');
 
 const enhanceTOC = compose(
     mapToNodes,
     handleNodeFiltering,
-    withPropsOnChange(
-        "filterText",
-        ({ filterText }) => ({
-            onSort: !filterText ? () => {} : null
-        })
-    ),
-   handleNodePropertyChanges
+    handleNodePropertyChanges,
+    withSortable
 );
 
 module.exports = enhanceTOC(({
     changeLayerPropertyByGroup = () => {},
     changeLayerProperty = () => {},
     changeGroupProperty = () => {},
+    onSort,
     onSelect,
     selectedNodes,
     nodes =[]} = {}
     ) => <TOC
+    onSort={onSort}
     selectedNodes={selectedNodes}
     onSelect={onSelect}
     nodes={nodes} >
     <DefaultLayerOrGroup
         groupElement={<DefaultGroup
+            onSort={onSort}
             selectedNodes={selectedNodes}
             onSelect={onSelect}
             propertiesChangeHandler={(id, changes) => Object.keys(changes).map(k => changeLayerPropertyByGroup( id, k, changes[k]))}

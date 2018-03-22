@@ -43,5 +43,6 @@ module.exports = withHandlers({
                     id
                 });
                 onChange(`map.groups[${index}].${key}`, value);
-            }
+            },
+    updateMapEntries: ({ onChange = () => { } }) => (obj = {}) => Object.keys(obj).map(k => onChange(`map[${k}]`, obj[k]))
 });

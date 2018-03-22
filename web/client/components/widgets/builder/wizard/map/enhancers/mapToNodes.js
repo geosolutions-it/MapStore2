@@ -15,7 +15,7 @@ const { withProps } = require('recompose');
  */
 const mapToNodes = ({ map }) => ({
     nodes: (
-        ({ layers }) => (LayersUtils.denormalizeGroups(layers.flat, layers.groups).groups)
+        ({ layers = {} }) => (LayersUtils.denormalizeGroups(layers.flat || [], layers.groups || []).groups)
     )(LayersUtils.splitMapAndLayers(map))
 });
 module.exports = withProps(mapToNodes);

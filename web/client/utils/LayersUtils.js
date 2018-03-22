@@ -196,7 +196,11 @@ const LayersUtils = {
         return layerObj && layerObj.id || layerObj.name + "__" + layers.length;
     },
     normalizeLayer: (layer) => layer.id ? layer : { ...layer, id: LayersUtils.getLayerId(layer, layer) },
-    normalizeMap: (map = {}) => (map.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...map, layers: (map.layers || []).map(l => LayersUtils.normalizeLayer(l))} : map,
+    normalizeMap: (rawMap = {}) =>
+        [
+            (map) => (map.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...map, layers: (map.layers || []).map(l => LayersUtils.normalizeLayer(l))} : map,
+            (map) => map.groups ? map : {...map, groups: {id: "Default", expanded: true}}
+        ].reduce((f, g) => (...args) => f(g(...args)))(rawMap),
     /**
      * @param gid
      * @return function that filter by group

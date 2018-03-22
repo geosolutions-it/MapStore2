@@ -6,11 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 const { compose, withProps, withState, withHandlers } = require('recompose');
+const { get } = require('lodash');
 
 const withControllableState = require('../../../../../misc/enhancers/withControllableState');
+const {splitMapAndLayers} = require('../../../../../../utils/LayersUtils');
 const mapToNodes = require('./mapToNodes');
 const withSelectedNode = require('./withSelectedNode');
 const withCapabilitiesRetrieval = require('./withCapabilitiesRetrieval');
+
 /* TABS definitions */
 const General = require('../../../../../TOC/fragments/settings/General');
 const Display = require('../../../../../TOC/fragments/settings/Display');
@@ -66,7 +69,7 @@ module.exports = compose(
                         : 1
             }
         },
-        groups: map.groups
+        groups: get(splitMapAndLayers(map), 'layers.groups')
     })),
     // adapter for handlers
     handleNodePropertyChanges,

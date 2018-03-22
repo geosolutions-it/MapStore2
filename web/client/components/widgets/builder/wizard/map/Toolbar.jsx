@@ -21,7 +21,7 @@ module.exports = ({ step = 0, buttons, tocButtons = [], editorData = {}, setPage
         bsStyle: "primary",
         bsSize: "sm"
     }}
-    buttons={buttons || [ ...tocButtons, {
+    buttons={buttons || [ ...(step === 0 ? tocButtons : []), {
         onClick: () => toggleLayerSelector(true),
         visible: step === 0,
         glyph: "plus",
