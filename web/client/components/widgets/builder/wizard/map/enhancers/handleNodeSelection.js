@@ -15,42 +15,41 @@ const getGroupLayerIds = (id, map) =>
 /**
  * Allows management of node selection in localState. Useful to use TOC.
  * Requires a `map` prop with groups and layers. Each layer must have an id property
- *
  */
 module.exports = compose(
-        withStateHandlers(
-            () => ({ selectedLayers: [], selectedGroups: [] }),
-            {
-                onNodeSelect: ({ selectedLayers = [], selectedGroups = [] }, { map = {} }) => (id, nodeType, ctrlKey) => ({
-                    selectedLayers: nodeType === "group"
-                        ? findIndex(selectedGroups, item => item === id) >= 0
-                            // remove all layers
-                            ? selectedLayers.filter(item => findIndex(getGroupLayerIds(id, map), lid => lid === item) < 0)
-                            // add all layers
-                            : ctrlKey
-                                ? [...selectedLayers, ...getGroupLayerIds(id, map)]
-                                : [...getGroupLayerIds(id, map)]
-                        // layer selection
-                        : findIndex(selectedLayers, item => item === id) >= 0
-                            // remove
-                            ? selectedLayers.filter(i => i !== id)
-                            : ctrlKey
-                                ? [...selectedLayers, id]
-                                : [id],
-                    selectedGroups: nodeType === "group"
-                        ? findIndex(selectedGroups, item => item === id) >= 0
-                            // remove group
-                            ? selectedGroups.filter(g => g !== id)
-                            // add group
-                            : ctrlKey
-                                ? [...selectedGroups, id]
-                                : [id]
+    withStateHandlers(
+        () => ({ selectedLayers: [], selectedGroups: [] }),
+        {
+            onNodeSelect: ({ selectedLayers = [], selectedGroups = [] }, { map = {} }) => (id, nodeType, ctrlKey) => ({
+                selectedLayers: nodeType === "group"
+                    ? findIndex(selectedGroups, item => item === id) >= 0
+                        // remove all layers
+                        ? selectedLayers.filter(item => findIndex(getGroupLayerIds(id, map), lid => lid === item) < 0)
+                        // add all layers
                         : ctrlKey
-                            ? selectedGroups
-                            : []
-                })
-            }
-        ),
+                            ? [...selectedLayers, ...getGroupLayerIds(id, map)]
+                            : [...getGroupLayerIds(id, map)]
+                    // layer selection
+                    : findIndex(selectedLayers, item => item === id) >= 0
+                        // remove
+                        ? selectedLayers.filter(i => i !== id)
+                        : ctrlKey
+                            ? [...selectedLayers, id]
+                            : [id],
+                selectedGroups: nodeType === "group"
+                    ? findIndex(selectedGroups, item => item === id) >= 0
+                        // remove group
+                        ? selectedGroups.filter(g => g !== id)
+                        // add group
+                        : ctrlKey
+                            ? [...selectedGroups, id]
+                            : [id]
+                    : ctrlKey
+                        ? selectedGroups
+                        : []
+            })
+        }
+    ),
     withProps(({ selectedLayers, selectedGroups }) => ({
         selectedNodes: [...selectedLayers, ...selectedGroups]
     }))

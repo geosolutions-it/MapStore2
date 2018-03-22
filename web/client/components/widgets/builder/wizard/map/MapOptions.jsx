@@ -18,7 +18,7 @@ const Message = require('../../../../I18N/Message');
 const TOC = require('./TOC');
 const Editor = require('./NodeEditor');
 
-module.exports = ({ preview, map, onChange = () => { }, selectedNodes = [], onNodeSelect = () => { }, editNode, closeNodeEditor = () => { } }) => (<div>
+module.exports = ({ preview, map = {}, onChange = () => { }, selectedNodes = [], onNodeSelect = () => { }, editNode, closeNodeEditor = () => { } }) => (<div>
     <StepHeader title={<Message msgId={`Preview`} />} />
     <div key="sample" >
         <div style={{ width: "100%", height: "200px"}}>

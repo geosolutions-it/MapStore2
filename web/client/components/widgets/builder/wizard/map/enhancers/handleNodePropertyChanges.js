@@ -9,6 +9,9 @@
 const { withHandlers } = require('recompose');
 const {belongsToGroup} = require('../../../../../../utils/LayersUtils');
 const { findIndex } = require('lodash');
+/**
+ * Add to the TOC or the Node editor some handlers for TOC nodes
+ */
 module.exports = withHandlers({
     /**
      * Changes the layer property
