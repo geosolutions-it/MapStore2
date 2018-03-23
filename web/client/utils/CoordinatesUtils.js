@@ -7,8 +7,6 @@
 */
 
 const geo = require('node-geo-distance');
-const ol = require('openlayers');
-const wgs84Sphere = new ol.Sphere(6378137);
 const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const axios = require('../libs/ajax');
@@ -44,7 +42,9 @@ const FORMULAS = {
         for (let i = 0; i < coordinates.length - 1; ++i) {
             const p1 = coordinates[i];
             const p2 = coordinates[i + 1];
-            length += parseFloat(wgs84Sphere.haversineDistance(p1, p2));
+            const [x1, y1] = p1;
+            const [x2, y2] = p2;
+            length += parseFloat(geo.haversineSync({longitude: x1, latitude: y1}, {longitude: x2, latitude: y2}));
         }
         return length;
     }

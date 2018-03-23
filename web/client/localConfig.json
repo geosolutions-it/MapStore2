@@ -33,6 +33,9 @@
     "projectionDefs": [],
     "initialState": {
       "defaultState": {
+        "maptype": {
+            "mapType": "{context.mode === 'desktop' ? 'openlayers' : 'leaflet'}"
+        },
         "catalog": {
           "default": {
             "newService": {
@@ -452,7 +455,7 @@
                 "className": "navbar shadow navbar-home"
             }
         }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop", "Notifications"],
-        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "MapType", "ThemeSwitcher",  "GridContainer", "CreateNewMap",
+        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "ThemeSwitcher", "CreateNewMap",
           {
             "name": "Maps",
             "cfg": {
