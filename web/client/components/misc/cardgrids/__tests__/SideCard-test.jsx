@@ -34,4 +34,57 @@ describe('SideCard component', () => {
         const el = container.querySelector('.selected');
         expect(el).toExist();
     });
+
+    it('SideCard show/hide preview node', () => {
+        ReactDOM.render(<SideCard selected/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        let preview = container.querySelector('.mapstore-side-preview');
+        expect(preview).toNotExist();
+
+        ReactDOM.render(<SideCard preview={'icon'} selected/>, document.getElementById("container"));
+
+        preview = container.querySelector('.mapstore-side-preview');
+        expect(preview).toExist();
+        preview.innerHTML = 'icon';
+    });
+
+
+    it('SideCard show/hide caption node', () => {
+        ReactDOM.render(<SideCard selected/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        let caption = container.querySelector('.mapstore-side-caption');
+        expect(caption).toNotExist();
+
+        ReactDOM.render(<SideCard caption={'caption'} selected/>, document.getElementById("container"));
+
+        caption = container.querySelector('.mapstore-side-card-caption');
+        expect(caption).toExist();
+        caption.innerHTML = 'caption';
+    });
+
+    it('SideCard show/hide caption node', () => {
+        ReactDOM.render(<SideCard selected/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        let caption = container.querySelector('.mapstore-side-caption');
+        expect(caption).toNotExist();
+
+        ReactDOM.render(<SideCard caption={'caption'} selected/>, document.getElementById("container"));
+
+        caption = container.querySelector('.mapstore-side-card-caption');
+        expect(caption).toExist();
+        caption.innerHTML = 'caption';
+    });
+
+    it('SideCard show/hide body node', () => {
+        ReactDOM.render(<SideCard selected/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        let body = container.querySelector('.ms-body');
+        expect(body).toNotExist();
+
+        ReactDOM.render(<SideCard body={'body'} selected/>, document.getElementById("container"));
+
+        body = container.querySelector('.ms-body');
+        expect(body).toExist();
+        body.innerHTML = 'body';
+    });
 });
