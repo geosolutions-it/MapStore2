@@ -1123,7 +1123,11 @@
                     "updateWidget": "Mettre à jour le widget",
                     "addToTheMap": "Ajouter le widget à la carte",
                     "titlePlaceholder": "Entrez le titre...",
-                    "textPlaceholder": "Entrez le texte..."
+                    "textPlaceholder": "Entrez le texte...",
+                    "useThisMap": "Utiliser cette carte",
+                    "configureMapOptions": "Configurer les options de la carte",
+                    "addLayer": "Ajouter une couche à la carte",
+                    "useTheSelectedLayer": "Utiliser le calque sélectionné"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Aucun widget disponible",

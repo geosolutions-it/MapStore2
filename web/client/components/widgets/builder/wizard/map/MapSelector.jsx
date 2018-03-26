@@ -63,6 +63,7 @@ module.exports = compose(
                     bsSize: "sm"
                 }}
                 buttons={[{
+                tooltipId: "widgets.builder.wizard.useThisMap",
                 onClick: () => onMapChoice(selected),
                 visible: true,
                 disabled: !selected,

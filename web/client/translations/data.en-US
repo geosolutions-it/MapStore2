@@ -1123,7 +1123,11 @@
                     "updateWidget": "Update the widget",
                     "addToTheMap": "Add the widget to the map",
                     "titlePlaceholder": "Insert title...",
-                    "textPlaceholder": "Insert text..."
+                    "textPlaceholder": "Insert text...",
+                    "useThisMap": "Use this map",
+                    "configureMapOptions": "Configure map options",
+                    "addLayer": "Add a layer to the map",
+                    "useTheSelectedLayer": "Use the selected layer"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "No Widgets available",

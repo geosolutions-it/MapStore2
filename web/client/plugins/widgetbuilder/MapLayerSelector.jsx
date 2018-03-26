@@ -42,7 +42,7 @@ module.exports = ({ onClose = () => { }, setSelected = () => { }, onLayerChoice 
                 }, {
                     onClick: () => onLayerChoice(layer),
                     disabled: !selected || !canProceed,
-                    tooltipId: "widgets.useTheSelectedLayer",
+                    tooltipId: "widgets.builder.wizard.useTheSelectedLayer",
                     glyph: "plus"
                 }]} />
         { selected && !canProceed ? <InfoPopover

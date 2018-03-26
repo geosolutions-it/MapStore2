@@ -1122,7 +1122,11 @@
                     "updateWidget": "Aggiorna il widget",
                     "addToTheMap": "Aggiungi il widget alla mappa",
                     "titlePlaceholder": "Inserisci il titolo...",
-                    "textPlaceholder": "Inserisci il testo..."
+                    "textPlaceholder": "Inserisci il testo...",
+                    "useThisMap": "Usa questa mappa",
+                    "configureMapOptions": "Configura opzioni mappa",
+                    "addLayer": "Aggiungi un livello alla mappa",
+                    "useTheSelectedLayer": "Usa il livello selezionato"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Nessun widgets disponibile",

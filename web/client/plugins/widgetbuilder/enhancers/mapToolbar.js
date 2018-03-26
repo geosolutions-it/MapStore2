@@ -31,6 +31,7 @@ module.exports = compose(
         withProps(({ selectedNodes = [], setEditNode = () => { } }) => ({
             buttons: [{
                 visible: selectedNodes.length === 1,
+                tooltipId: "close",
                 glyph: "1-close",
                 onClick: () => setEditNode(false)
             }]
@@ -39,12 +40,13 @@ module.exports = compose(
             tocButtons: [{
                 visible: selectedNodes.length === 1,
                 glyph: "wrench",
+                tooltipId: "toc.toolLayerSettingsTooltip",
                 onClick: () => setEditNode(selectedNodes[0])
             }, {
                 onClick: () => onRemoveSelected(),
                 visible: selectedNodes.length > 0,
                 glyph: "trash",
-                tooltipId: "widgets.builder.wizard.addLayer"
+                tooltipId: "toc.toolTrashLayerTooltip"
             }]
         }))
     )
