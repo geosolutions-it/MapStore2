@@ -1,5 +1,3 @@
-import { withHandlers } from 'recompose';
-
 /*
  * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
