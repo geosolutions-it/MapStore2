@@ -1122,7 +1122,11 @@
                     "updateWidget": "Aktualisieren Sie das Widget",
                     "addToTheMap": "Hinzufügen des Widgets zur Karte",
                     "titlePlaceholder": "Gib den Titel ein...",
-                    "textPlaceholder": "Text eingeben..."
+                    "textPlaceholder": "Text eingeben...",
+                    "useThisMap": "Benutze diese Karte",
+                    "configureMapOptions": "Kartenoptionen konfigurieren",
+                    "addLayer": "Fügt der Karte eine Ebene hinzu",
+                    "useTheSelectedLayer": "Verwende die ausgewählte Ebene"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Keine Widgets verfügbar",

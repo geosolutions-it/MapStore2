@@ -10,6 +10,7 @@ const React = require('react');
 
 require('rxjs');
 const GeoStoreDAO = require('../../../../../api/GeoStoreDAO');
+const ConfigUtils = require('../../../../../utils/ConfigUtils');
 
 const BorderLayout = require('../../../../layout/BorderLayout');
 
@@ -25,10 +26,22 @@ const MapCatalog = mcEnhancer(require('../../../../maps/MapCatalog'));
 module.exports = compose(
     withState('selected', "setSelected", null),
     withHandlers({
-        onMapChoice: ({ onMapSelected = () => { } } = {}) => map => GeoStoreDAO.getData(map.id)
+        onMapChoice: ({ onMapSelected = () => { } } = {}) => map => GeoStoreDAO
+            .getData(map.id)
+            .then((config => {
+                let mapState = !config.version ? ConfigUtils.convertFromLegacy(config) : ConfigUtils.normalizeConfig(config.map);
+                return {
+                    ...mapState,
+                    layers: mapState.layers.map(l => {
+                        if (l.group === "background" && (l.type === "ol" || l.type === "OpenLayers.Layer")) {
+                            l.type = "empty";
+                        }
+                        return l;
+                    })
+                };
+            }))
             .then(res => onMapSelected({
-                map: res.map,
-                layers: res.layers
+                map: res
             }))
     }),
     mapPropsStream(props$ =>
@@ -50,6 +63,7 @@ module.exports = compose(
                     bsSize: "sm"
                 }}
                 buttons={[{
+                tooltipId: "widgets.builder.wizard.useThisMap",
                 onClick: () => onMapChoice(selected),
                 visible: true,
                 disabled: !selected,

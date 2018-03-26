@@ -18,7 +18,7 @@ function mapConfig(state = null, action) {
     case MAP_CONFIG_LOADED:
         let size = state && state.map && state.map.present && state.map.present.size || state && state.map && state.map.size;
 
-        let hasVersion = action.config.version && action.config.version >= 2;
+        let hasVersion = action.config && action.config.version >= 2;
             // we get from the configuration what will be used as the initial state
         let mapState = action.legacy && !hasVersion ? ConfigUtils.convertFromLegacy(action.config) : ConfigUtils.normalizeConfig(action.config.map);
         let newMapState = {

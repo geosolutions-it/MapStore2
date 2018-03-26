@@ -16,6 +16,7 @@ const BorderLayout = require('../../components/layout/BorderLayout');
 const { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } = require('../../actions/widgets');
 
 const builderConfiguration = require('../../components/widgets/enhancers/builderConfiguration');
+const chartLayerSelector = require('./enhancers/chartLayerSelector');
 
 const {
     wizardStateToProps,
@@ -52,15 +53,15 @@ const Toolbar = connect(wizardSelector, {
  * in case you don't have a layer selected (e.g. dashboard) the chartbuilder
  * prompts a catalog view to allow layer selection
  */
-const chooseLayerEhnancer = compose(
+const chooseLayerEhahncer = compose(
     connect(wizardSelector),
     branch(
         ({ layer } = {}) => !layer,
-        renderComponent(require('./LayerSelector'))
+        renderComponent(chartLayerSelector(require('./LayerSelector')))
     )
 );
 
-module.exports = chooseLayerEhnancer(({ enabled, onClose = () => { }, dependencies, ...props } = {}) =>
+module.exports = chooseLayerEhahncer(({ enabled, onClose = () => { }, dependencies, ...props } = {}) =>
 
     (<BorderLayout
         header={<BuilderHeader onClose={onClose}><Toolbar onClose={onClose} /></BuilderHeader>}

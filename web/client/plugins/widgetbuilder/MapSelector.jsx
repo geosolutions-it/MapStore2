@@ -7,11 +7,11 @@
  */
 const {connect} = require('react-redux');
 const { onEditorChange } = require('../../actions/widgets');
-
+const { normalizeMap } = require('../../utils/LayersUtils');
 
 module.exports = connect(
     () => ({}), {
-        onMapSelected: ({ map }) => onEditorChange("map", map)
+        onMapSelected: ({ map }) => onEditorChange("map", normalizeMap(map))
 
     }
 

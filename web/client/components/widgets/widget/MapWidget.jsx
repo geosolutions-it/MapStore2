@@ -7,18 +7,14 @@
  */
 const React = require('react');
 const WidgetContainer = require('./WidgetContainer');
+const InfoPopover = require('./InfoPopover');
 
 const Message = require('../../I18N/Message');
-const autoMapType = require('../../map/enhancers/autoMapType');
-const mapType = require('../../map/enhancers/mapType');
-const autoResize = require('../../map/enhancers/autoResize');
-const MMap = autoResize(0)(autoMapType(mapType(require('../../map/BaseMap'))));
+const {withHandlers} = require('recompose');
+const MapView = withHandlers({
+    onMapViewChanges: ({ updateProperty = () => { } }) => map => updateProperty('map', map)
+})(require('./MapView'));
 
-const MapView = ({id, map, layers = []}) => (<MMap
-    id={id}
-    options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}
-    map={map}
-    layers={layers} />);
 const {
     Glyphicon,
     ButtonToolbar,
@@ -26,15 +22,22 @@ const {
     MenuItem
 } = require('react-bootstrap');
 
+
+const renderHeaderLeftTopItem = ({ title, description } = {}) => {
+    return description ? <InfoPopover placement="top" title={title} text={description} /> : null;
+};
+
 module.exports = ({
     onEdit = () => { },
+    updateProperty = () => { },
     toggleDeleteConfirm = () => { },
-    id, title,
+    id, title, loading, description,
     map,
     confirmDelete = false,
     onDelete = () => {}
 } = {}) =>
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm}
+        topLeftItems={renderHeaderLeftTopItem({ loading, title, description })}
         topRightItems={<ButtonToolbar>
             <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
                 <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil" />&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>
@@ -42,5 +45,5 @@ module.exports = ({
             </DropdownButton>
         </ButtonToolbar>}
     >
-        <MapView id={id} map={map} layers={map && map.layers}/>
+        <MapView updateProperty={updateProperty} id={id} map={map} layers={map && map.layers} options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}/>
     </WidgetContainer>);

@@ -19,13 +19,7 @@ module.exports = (debounceTime = 0) => compose(
             resize: 0
         }),
         {
-            onResize: ({resize = 0, map}) => ({width, height} = {}) => ({
-                map: {
-                    ...map,
-                    size: {
-                        width, height
-                    }
-                },
+            onResize: ({resize = 0}) => () => ({
                 resize: resize + 1
             })
         }

@@ -18,7 +18,7 @@ module.exports = ({canProceed, selected, onProceed = () => {}} = {}) => (<Toolba
     buttons={[{
         onClick: onProceed,
         disabled: !canProceed,
-        tooltipId: "widgets.useTheSelectedLayer",
+        tooltipId: "widgets.builder.wizard.useTheSelectedLayer",
         visible: selected,
         glyph: "arrow-right"
     }]} />);

@@ -20,14 +20,14 @@ const dependenciesToFilter = require('../../enhancers/dependenciesToFilter');
 const emptyChartState = require('../../enhancers/emptyChartState');
 const errorChartState = require('../../enhancers/errorChartState');
 const {compose, lifecycle} = require('recompose');
-const enhanchePreview = compose(
+const enhancePreview = compose(
     dependenciesToFilter,
     wpsChart,
     loadingState,
     errorChartState,
     emptyChartState
 );
-const PreviewChart = enhanchePreview(require('../../../charts/SimpleChart'));
+const PreviewChart = enhancePreview(require('../../../charts/SimpleChart'));
 const SampleChart = sampleData(require('../../../charts/SimpleChart'));
 
 const sampleProps = {

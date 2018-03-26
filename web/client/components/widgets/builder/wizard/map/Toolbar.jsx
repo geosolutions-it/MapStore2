@@ -17,13 +17,28 @@ const getSaveTooltipId = (step, {id} = {}) => {
     return "widgets.builder.wizard.addToTheMap";
 };
 
-module.exports = ({step = 0, editorData = {}, onFinish = () => {}} = {}) => (<Toolbar btnDefaultProps={{
+module.exports = ({ step = 0, buttons, tocButtons = [], editorData = {}, setPage = () => {}, onFinish = () => { }, toggleLayerSelector = () => { } } = {}) => (<Toolbar btnDefaultProps={{
         bsStyle: "primary",
         bsSize: "sm"
     }}
-    buttons={[{
-        onClick: () => onFinish(Math.min(step + 1, 1)),
+    buttons={buttons || [ ...(step === 0 ? tocButtons : []), {
+        onClick: () => toggleLayerSelector(true),
         visible: step === 0,
+        glyph: "plus",
+        tooltipId: "widgets.builder.wizard.addLayer"
+    }, {
+        onClick: () => setPage(Math.max(step - 1, 0)),
+        visible: step === 1,
+        glyph: "arrow-left",
+        tooltipId: "widgets.builder.wizard.configureMapOptions"
+    }, {
+        onClick: () => setPage(Math.min(step + 1, 2)),
+        visible: step === 0,
+        glyph: "arrow-right",
+        tooltipId: "widgets.builder.wizard.configureWidgetOptions"
+    }, {
+        onClick: () => onFinish(Math.min(step + 1, 1)),
+        visible: step === 1,
         glyph: "floppy-disk",
         tooltipId: getSaveTooltipId(step, editorData)
     }]} />);

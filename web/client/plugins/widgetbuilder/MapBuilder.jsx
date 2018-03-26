@@ -7,27 +7,46 @@
  */
 const React = require('react');
 const {connect} = require('react-redux');
-const {onEditorChange, insertWidget, setPage} = require('../../actions/widgets');
+const {onEditorChange} = require('../../actions/widgets');
 const {wizardSelector, wizardStateToProps} = require('./commons');
+const layerSelector = require('./enhancers/layerSelector');
+const manageLayers = require('./enhancers/manageLayers');
+const mapToolbar = require('./enhancers/mapToolbar');
+const handleNodeEditing = require('./enhancers/handleNodeEditing');
 const BorderLayout = require('../../components/layout/BorderLayout');
-const BuilderHeader = require('./BuilderHeader');
 
-const Toolbar = connect(wizardSelector, {
-        setPage,
-        insertWidget
-    },
-    wizardStateToProps
-)(require('../../components/widgets/builder/wizard/map/Toolbar'));
-const { compose, branch, renderComponent } = require('recompose');
+const BuilderHeader = require('./BuilderHeader');
+const { compose, branch, renderComponent, withState, withHandlers, withProps } = require('recompose');
+const handleNodeSelection = require('../../components/widgets/builder/wizard/map/enhancers/handleNodeSelection');
+
+const Toolbar = mapToolbar(require('../../components/widgets/builder/wizard/map/Toolbar'));
+
 /*
- * in case you don't have a layer selected (e.g. dashboard) the chartbuilder
- * prompts a catalog view to allow layer selection
+ * Prompts Map Selection or Layer selector (to add layers)
  */
 const chooseMapEnhancer = compose(
     connect(wizardSelector),
+    // map selector
     branch(
         ({ editorData = {} } = {}) => !editorData.map,
         renderComponent(require('./MapSelector'))
+    ),
+     // layer selector - to add layers to the map
+    withState('layerSelectorOpen', 'toggleLayerSelector', false),
+    branch(
+        ({ layerSelectorOpen = false } = {}) => layerSelectorOpen,
+        renderComponent(
+            compose(
+                manageLayers,
+                withHandlers({
+                    onLayerChoice: ({ toggleLayerSelector = () => { }, addLayer = () => { } }) => (layer) => {
+                        addLayer(layer);
+                        toggleLayerSelector(false);
+                    }
+                }),
+                layerSelector
+            )(require('./MapLayerSelector'))
+        )
     )
 );
 const Builder = connect(
@@ -37,10 +56,31 @@ const Builder = connect(
     },
     wizardStateToProps
 )(require('../../components/widgets/builder/wizard/MapWizard'));
-module.exports = chooseMapEnhancer(({enabled, onClose = () => {}} = {}) =>
+
+const mapBuilder = compose(
+    chooseMapEnhancer,
+    withProps(({ editorData = {}}) => ({
+        map: editorData.map
+    })),
+    handleNodeSelection,
+    handleNodeEditing
+);
+
+
+module.exports = mapBuilder(({ enabled, onClose = () => { }, toggleLayerSelector = () => { }, editNode, setEditNode, closeNodeEditor, selectedGroups=[], selectedLayers=[], selectedNodes, onNodeSelect = () => { } } = {}) =>
     (<BorderLayout
         className = "map-selector"
-        header={<BuilderHeader onClose={onClose}><Toolbar /></BuilderHeader>}
+        header={(<BuilderHeader onClose={onClose}>
+            <Toolbar
+            selectedNodes={selectedNodes}
+            selectedLayers={selectedLayers}
+            selectedGroups={selectedGroups}
+            toggleLayerSelector={toggleLayerSelector}/></BuilderHeader>)}
         >
-        {enabled ? <Builder /> : null}
+        {enabled ? <Builder
+            setEditNode={setEditNode}
+            editNode={editNode}
+            closeNodeEditor={closeNodeEditor}
+            onNodeSelect={onNodeSelect}
+            selectedNodes={selectedNodes}/> : null}
     </BorderLayout>));
