@@ -17,11 +17,20 @@ const getSaveTooltipId = (step, {id} = {}) => {
     return "widgets.builder.wizard.addToTheMap";
 };
 
-module.exports = ({ step = 0, buttons, tocButtons = [], editorData = {}, setPage = () => {}, onFinish = () => { }, toggleLayerSelector = () => { } } = {}) => (<Toolbar btnDefaultProps={{
+module.exports = ({
+        step = 0, buttons, tocButtons = [], editorData = {},
+        setPage = () => {}, onFinish = () => {},
+        toggleLayerSelector = () => {} } = {},
+        availableMaps = [], toggleConnection = () => { }, connected) => (<Toolbar btnDefaultProps={{
         bsStyle: "primary",
         bsSize: "sm"
     }}
     buttons={buttons || [ ...(step === 0 ? tocButtons : []), {
+        onClick: () => toggleConnection(),
+        visible: step === 0 && availableMaps.length > 0,
+        glyph: connected ? "unplug" : "plug",
+        tooltipId: "widgets.builder.wizard.connect"
+    }, {
         onClick: () => toggleLayerSelector(true),
         visible: step === 0,
         glyph: "plus",
