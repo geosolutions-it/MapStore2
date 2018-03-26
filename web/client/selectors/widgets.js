@@ -38,6 +38,7 @@ module.exports = {
     getEditingWidgetFilter: state => get(getEditingWidget(state), "filter"),
     getEditorSettings,
     getWidgetLayer,
+    getMapWidgets: state => (get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`) || []).filter(({type} = {}) => type === "map"),
     dashBoardDependenciesSelector: () => ({}), // TODO dashboard dependencies
     /**
      * transforms dependencies in the form `{ k1: "path1", k1, "path2" }` into
