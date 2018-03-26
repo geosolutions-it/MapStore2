@@ -12,7 +12,7 @@ const {connect} = require('react-redux');
 const BorderLayout = require('../../components/layout/BorderLayout');
 const BuilderHeader = require('./BuilderHeader');
 const TypeSelector = connect(
-    () => {},
+    () => ({}),
     {
         onSelect: (type) => onEditorChange("widgetType", type)
     }

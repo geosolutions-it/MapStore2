@@ -18,7 +18,7 @@ module.exports = compose(
     withProps(({ editorData = {} }) => ({
         layers: editorData.map && editorData.map.layers
     })),
-    connect(() => { }, {
+    connect(() => ({}), {
         setLayers: layers => onEditorChange('map.layers', layers)
     }),
     withHandlers({

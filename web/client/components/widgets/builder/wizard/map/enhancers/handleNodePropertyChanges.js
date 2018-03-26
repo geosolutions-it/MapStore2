@@ -11,6 +11,13 @@ const {belongsToGroup} = require('../../../../../../utils/LayersUtils');
 const { findIndex } = require('lodash');
 /**
  * Add to the TOC or the Node editor some handlers for TOC nodes
+ * add to the wrapped component the following methods:
+ *  - changeLayerProperty (id, key, value) - calls onChange on map.layers[index].key
+ *  - changeLayerPropertyGroup (gid, key, value) - calls multiple times onChange
+ *  - changeGroupProperty(gid, key, value) - calls onChange on map.groups[index].key
+ *  - updateMapEntries(object) - calls multiple times onChange
+ * These method will call the method `onChange` from props mapping accordingly
+ * @prop {function} onChange callback with arguments : (path, value) -> path will be something like: `map.layers[2].title` or `map.groups[1].title`, `map[somethingElse]`
  */
 module.exports = withHandlers({
     /**

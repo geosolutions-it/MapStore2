@@ -12,13 +12,12 @@ const tooltip = require('../../../../misc/enhancers/tooltip');
 
 const { Row, Col, Nav, NavItem: BSNavItem, Glyphicon } = require('react-bootstrap');
 const NavItem = tooltip(BSNavItem);
-const nodeEditor = require('./enhancers/nodeEditor');
 /**
  * Provides a node (layer or group) property editor for the TOC
  */
-module.exports = nodeEditor(({
-        settings, element = {}, tabs = [], activeTab, width, groups,
-        setActiveTab = () => { }, onUpdateParams = () => { }, onRetrieveLayerData = () => { }, realtimeUpdate, ...props} = {}) =>
+module.exports = ({
+    settings, element = {}, tabs = [], activeTab, width, groups,
+    setActiveTab = () => { }, onUpdateParams = () => { }, onRetrieveLayerData = () => { }, realtimeUpdate, ...props} = {}) =>
         (<Row key="ms-toc-settings-navbar" className="ms-row-tab">
         <Col xs={12}>
             <Nav bsStyle="tabs" activeKey={activeTab} justified>
@@ -46,4 +45,4 @@ module.exports = nodeEditor(({
                         retrieveLayerData={onRetrieveLayerData}
                         onChange={(key, value) => onUpdateParams({ [key]: value }, realtimeUpdate)} />
                 ))}</Col>
-        </Row>));
+        </Row>);

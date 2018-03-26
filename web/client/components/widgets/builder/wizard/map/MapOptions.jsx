@@ -16,7 +16,8 @@ const React = require('react');
 const StepHeader = require('../../../../misc/wizard/StepHeader');
 const Message = require('../../../../I18N/Message');
 const TOC = require('./TOC');
-const Editor = require('./NodeEditor');
+const nodeEditor = require('./enhancers/nodeEditor');
+const Editor = nodeEditor(require('./NodeEditor'));
 
 module.exports = ({ preview, map = {}, onChange = () => { }, selectedNodes = [], onNodeSelect = () => { }, editNode, closeNodeEditor = () => { } }) => (<div>
     <StepHeader title={<Message msgId={`Preview`} />} />

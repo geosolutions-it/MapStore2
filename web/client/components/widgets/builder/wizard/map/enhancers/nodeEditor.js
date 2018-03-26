@@ -47,7 +47,15 @@ const withDefaultTabs = withProps((props) => ({
         Component: WMSStyle
     }]
 }));
-
+/**
+ * Manages internal TOC node editor state exposing only
+ * @prop {string} editNode the ID of the node to edit
+ * @prop {object} map the map (with layers and groups)
+ * @prop {function} onChange method called when a change has been applied
+ * @example
+ * // `path` can be something like `map.layers[idx].prop` (path definition of lodash get, set)
+ * <EnhancedNodeEditor editNode={"LAYER_1"} map={map} onChange={(path, value) => set(map, path, value)} /> // set could be immutable version of lodash set
+ */
 module.exports = compose(
     // select selected node
     mapToNodes,
