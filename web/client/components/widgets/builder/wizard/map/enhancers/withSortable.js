@@ -15,6 +15,7 @@ const { deepChange, sortLayers: DEFAULT_SORT_LAYERS, splitMapAndLayers, getNode}
  * you should consider that the order of tree is imposed by the layers, because a group can not be empty.
  * So the groups are only a presentation of the TOC.
  * This version doesn't keep in state the ids of nested nodes because is not necessary.
+ * requires updateMapEntries callback, that can be added using handleNodePropertyChanges enhancer
  */
 module.exports = withHandlers({
     onSort: ({ map = {}, activateSortLayers = true, filterText, sortLayers = DEFAULT_SORT_LAYERS, updateMapEntries = () => {}}) =>
