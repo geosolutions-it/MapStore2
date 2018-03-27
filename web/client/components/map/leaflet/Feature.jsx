@@ -53,6 +53,8 @@ const geometryToLayer = function(geojson, options) {
     if (!coords && !geometry) {
         return null;
     }
+
+    const style = options.style && options.style[geometry.type] || options.style;
     let layer;
     switch (geometry.type) {
     case 'Point':
@@ -71,13 +73,13 @@ const geometryToLayer = function(geojson, options) {
 
     case 'LineString':
         latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
-        layer = new L.Polyline(latlngs, options.style && options.style.LineString || options.style);
+        layer = new L.Polyline(latlngs, style);
         layer.msId = geojson.id;
         return layer;
     case 'MultiLineString':
         latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
         for (i = 0, len = latlngs.length; i < len; i++) {
-            layer = new L.Polyline(latlngs[i], options.style && options.style.MultiLineString || options.style);
+            layer = new L.Polyline(latlngs[i], style);
             layer.msId = geojson.id;
             if (layer) {
                 layers.push(layer);
@@ -86,13 +88,13 @@ const geometryToLayer = function(geojson, options) {
         return new L.FeatureGroup(layers);
     case 'Polygon':
         latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
-        layer = new L.Polygon(latlngs, options.style && options.style.Polygon || options.style);
+        layer = new L.Polygon(latlngs, style);
         layer.msId = geojson.id;
         return layer;
     case 'MultiPolygon':
         latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
         for (i = 0, len = latlngs.length; i < len; i++) {
-            layer = new L.Polygon(latlngs[i], options.style && options.style.MultiPolygon || options.style);
+            layer = new L.Polygon(latlngs[i], style);
             layer.msId = geojson.id;
             if (layer) {
                 layers.push(layer);
