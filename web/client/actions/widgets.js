@@ -17,6 +17,11 @@ const UPDATE_PROPERTY = "WIDGETS:UPDATE_PROPERTY";
 const CHANGE_LAYOUT = "WIDGETS:CHANGE_LAYOUT";
 const DELETE = "WIDGETS:DELETE";
 const CLEAR_WIDGETS = "WIDGETS:CLEAR_WIDGETS";
+const ADD_DEPENDENCY = "WIDGETS:ADD_DEPENDENCY";
+const REMOVE_DEPENDENCY = "WIDGETS:REMOVE_DEPENDENCY";
+const LOAD_DEPENDENCIES = "WIDGETS:LOAD_DEPENDENCIES";
+const RESET_DEPENDENCIES = "WIDGETS:RESET_DEPENDENCIES";
+
 const OPEN_FILTER_EDITOR = "WIDGETS:OPEN_FILTER_EDITOR";
 const EXPORT_CSV = "WIDGETS:EXPORT_CSV";
 const EXPORT_IMAGE = "WIDGETS:EXPORT_IMAGE";
@@ -146,6 +151,25 @@ const changeEditorSetting = (key, value) => ({
     key,
     value
 });
+
+const addDependency = (key, value) => ({
+    type: ADD_DEPENDENCY,
+    key,
+    value
+});
+
+const removeDependency = (key) => ({
+    type: REMOVE_DEPENDENCY,
+    key
+});
+
+const resetDependencies = () => ({
+    type: RESET_DEPENDENCIES
+});
+const loadDependencies = (dependencies) => ({
+    type: LOAD_DEPENDENCIES,
+    dependencies
+});
 /**
  * Change the page setting of the editor
  * @param  {number} step the page number
@@ -180,6 +204,10 @@ module.exports = {
     EDIT_NEW,
     EDITOR_CHANGE,
     EDITOR_SETTING_CHANGE,
+    ADD_DEPENDENCY,
+    REMOVE_DEPENDENCY,
+    LOAD_DEPENDENCIES,
+    RESET_DEPENDENCIES,
     DEFAULT_TARGET,
     OPEN_FILTER_EDITOR,
     EXPORT_CSV,
@@ -198,5 +226,9 @@ module.exports = {
     editNewWidget,
     onEditorChange,
     changeEditorSetting,
+    addDependency,
+    removeDependency,
+    loadDependencies,
+    resetDependencies,
     setPage
 };
