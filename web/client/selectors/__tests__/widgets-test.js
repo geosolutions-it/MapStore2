@@ -76,11 +76,40 @@ describe('widgets selectors', () => {
     it('dependenciesSelector', () => {
         const state = {
             widgets: {
+                containers: {
+                    [DEFAULT_TARGET]: {
+                        widgets: [{
+                            id: "WIDGET_ID",
+                            map: {
+                                center: {
+                                    x: -4.866943359375001,
+                                    y: 43.96119063892024,
+                                    crs: 'EPSG:4326'
+                                },
+                                bbox: {
+                                    bounds: {
+                                        minx: -1346514.6902716649,
+                                        miny: 5126784.36114334,
+                                        maxx: 262943.37730100635,
+                                        maxy: 5792092.255337515
+                                    }
+                                }
+                            }
+                        }]
+                    }
+                },
                 dependencies: {
                     a: "mydep.a",
                     b: "mydep.b",
-                    c: "map.abc"
-                }
+                    // special map path
+                    c: "map.abc",
+                    // special widgets path
+                    d: "widgets[\"WIDGET_ID\"].center",
+                    e: "widgets[WIDGET_ID].center",
+                    f: "widgets[NO_ID].center",
+                    g: "widgets[otherStateSlice]"
+                },
+             otherStateSlice: "otherStateValue"
              },
              mydep: {
                  a: "A",
@@ -96,6 +125,10 @@ describe('widgets selectors', () => {
         expect(dependencies.a).toBe("A");
         expect(dependencies.b).toBe("B");
         expect(dependencies.c).toBe("ABC");
+        expect(dependencies.d).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].center);
+        expect(dependencies.e).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].center);
+        expect(dependencies.f).toBeFalsy();
+        expect(dependencies.g).toBe(state.widgets.otherStateSlice);
     });
 
 });

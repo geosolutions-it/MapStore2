@@ -1,7 +1,8 @@
-const {get, isEqualWith} = require('lodash');
+const {get, find, isEqualWith} = require('lodash');
 const {mapSelector} = require('./map');
 const {getSelectedLayer} = require('./layers');
 const {DEFAULT_TARGET} = require('../actions/widgets');
+const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
 const {isDashboardAvailable, isDashboardEditing} = require('./dashboard');
 const {defaultMemoize, createSelector, createSelectorCreator} = require('reselect');
 
@@ -26,9 +27,18 @@ const getWidgetLayer = createSelector(
     state => isDashboardAvailable(state) && isDashboardEditing(state),
     ({layer} = {}, selectedLayer, dashboardEditing) => layer || !dashboardEditing && selectedLayer
 );
-
+const getWidgetDependency = (k, widgets) => {
+    const [match, id, rest] = WIDGETS_REGEX.exec(k);
+    if (match) {
+        const widget = find(widgets, { id });
+        return rest
+            ? get(widget, rest)
+            : widget;
+    }
+};
+const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
 module.exports = {
-    getFloatingWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
+    getFloatingWidgets,
     getFloatingWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
     // let's use the same container for the moment
     getDashboardWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
@@ -50,7 +60,12 @@ module.exports = {
         getDependenciesMap,
         getDependenciesKeys,
         // produces the array of values of the keys in getDependenciesKeys
-        state => getDependenciesKeys(state).map(k => k.indexOf("map.") === 0 ? get(mapSelector(state), k.slice(4)) : get(state, k) ),
+        state => getDependenciesKeys(state).map(k =>
+            k.indexOf("map.") === 0
+            ? get(mapSelector(state), k.slice(4))
+            : k.match(WIDGETS_REGEX) === 0
+            ? getWidgetDependency(k, getFloatingWidgets(state))
+            : get(state, k) ),
         // iterate the dependencies keys to set the dependencies values in a map
         (map, keys, values) => keys.reduce((acc, k, i) => ({
             ...acc,
