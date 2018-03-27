@@ -120,6 +120,15 @@ describe('Test layers selectors', () => {
             color: '#ff0000'
         };
 
+        const deafaultIconStyle = {
+            iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        };
+
         const props = layerSelectorWithMarkers({config: {layers: [{type: "osm"}]}, search: {
             markerPosition: {
                 type: "Feature",
@@ -132,7 +141,7 @@ describe('Test layers selectors', () => {
         }});
         expect(props.length).toBe(2);
         expect(props[1].type).toBe("vector");
-        expect(props[1].style).toEqual(style);
+        expect(props[1].style).toEqual({...deafaultIconStyle, ...style});
     });
 
     it('test groupsSelector from layers flat one group', () => {
