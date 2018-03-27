@@ -66,13 +66,39 @@ const ToggleButton = require('./searchbar/ToggleButton');
  * {
  *  "name": "Search",
  *  "cfg": {
- *    "withToggle": ["max-width: 768px", "min-width: 768px"]
+ *      "withToggle": ["max-width: 768px", "min-width: 768px"],
+ *      "resultsStyle": {
+ *          "iconUrl": "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+ *          "shadowUrl": "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+ *          "iconSize": [25, 41],
+ *          "iconAnchor": [12, 41],
+ *          "popupAnchor": [1, -34],
+ *          "shadowSize": [41, 41],
+ *          "color": "#ff0000",
+ *          "weight": 4,
+ *          "dashArray": "",
+ *          "fillColor": "rgba(255, 0, 255, 0.2)",
+ *          "fillOpacity": 1.0,
+ *          "LineString": {
+ *              // custom style for LineString, it overrides deafult/general style (optional)
+ *          },
+ *          "MultiLineString": {
+ *              // custom style for MultiLineString, it overrides deafult/general style (optional)
+ *          },
+ *          "Polygon": {
+ *              // custom style for Polygon, it overrides deafult/general style (optional)
+ *          },
+ *          "MultiPolygon": {
+ *              // custom style for MultiPolygon, it overrides deafult/general style (optional)
+ *          }
+ *      }
+ *    }
  *  }
  * }
  * @class Search
  * @memberof plugins
  * @prop {object} cfg.searchOptions initial search options
-
+ * @prop {object} cfg.resultsStyle custom style for search results
  * @prop {bool} cfg.fitResultsToMapSize true by default, fits the result list to the mapSize (can be disabled, for custom uses)
  * @prop {searchService[]} cfg.searchOptions.services a list of services to perform search.
  * a **nominatim** search service look like this:
