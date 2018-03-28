@@ -33,7 +33,8 @@ class StandardApp extends React.Component {
         initialActions: PropTypes.array,
         appComponent: PropTypes.func,
         printingEnabled: PropTypes.bool,
-        onStoreInit: PropTypes.func
+        onStoreInit: PropTypes.func,
+        mode: PropTypes.string
     };
 
     static defaultProps = {
@@ -80,7 +81,7 @@ class StandardApp extends React.Component {
                 onPersist: onInit.bind(null, config)
             }, {
                 initialState: this.parseInitialState(config.initialState, {
-                    mode: ConfigUtils.getBrowserProperties().mobile ? 'mobile' : 'desktop'
+                    mode: this.props.mode || ConfigUtils.getBrowserProperties().mobile ? 'mobile' : 'desktop'
                 }) || {defaultState: {}, mobile: {}}
             });
             this.store = this.props.appStore(this.props.pluginsDef.plugins, opts);
@@ -98,7 +99,7 @@ class StandardApp extends React.Component {
 
     render() {
         const {plugins, requires} = this.props.pluginsDef;
-        const {pluginsDef, appStore, initialActions, appComponent, ...other} = this.props;
+        const {pluginsDef, appStore, initialActions, appComponent, mode, ...other} = this.props;
         const App = this.props.appComponent;
         return this.state.store ?
             <Provider store={this.state.store}>
