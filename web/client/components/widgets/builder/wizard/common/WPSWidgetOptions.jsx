@@ -57,7 +57,6 @@ module.exports = ({
             showColorRampSelector: true,
             showLegend: true
         },
-        dependencies,
         aggregationOptions = [],
         sampleChart}) => (<Row>
         <StepHeader title={<Message msgId={`widgets.chartOptionsTitle`} />} />
