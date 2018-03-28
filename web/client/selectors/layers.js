@@ -22,9 +22,9 @@ const geoColderSelector = state => state.search && state.search;
 // TODO currently loading flag causes a re-creation of the selector on any pan
 // to avoid this separate loading from the layer object
 
-const deafaultIconStyle = {
+const defaultIconStyle = {
     iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],
     popupAnchor: [1, -34],
@@ -42,7 +42,7 @@ const layerSelectorWithMarkers = createSelector(
             newLayers.push(MapInfoUtils.getMarkerLayer("GeoCoder", geocoder.markerPosition, "marker",
                 {
                     overrideOLStyle: true,
-                    style: isObject(geocoder.style) && !isEmpty(geocoder.style) && {...deafaultIconStyle, ...geocoder.style} || deafaultIconStyle
+                    style: isObject(geocoder.style) && !isEmpty(geocoder.style) && {...defaultIconStyle, ...geocoder.style} || defaultIconStyle
                 }, geocoder.markerLabel
             ));
         }

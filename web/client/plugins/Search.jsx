@@ -69,7 +69,7 @@ const ToggleButton = require('./searchbar/ToggleButton');
  *      "withToggle": ["max-width: 768px", "min-width: 768px"],
  *      "resultsStyle": {
  *          "iconUrl": "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
- *          "shadowUrl": "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+ *          "shadowUrl": "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png",
  *          "iconSize": [25, 41],
  *          "iconAnchor": [12, 41],
  *          "popupAnchor": [1, -34],
@@ -77,8 +77,8 @@ const ToggleButton = require('./searchbar/ToggleButton');
  *          "color": "#ff0000",
  *          "weight": 4,
  *          "dashArray": "",
- *          "fillColor": "rgba(255, 0, 255, 0.2)",
- *          "fillOpacity": 1.0,
+ *          "fillColor": "#3388ff",
+ *          "fillOpacity": 0.2,
  *          "LineString": {
  *              // custom style for LineString, it overrides deafult/general style (optional)
  *          },
@@ -175,8 +175,8 @@ class extends React.Component {
             color: '#3388ff',
             weight: 4,
             dashArray: '',
-            fillColor: 'rgba(51, 136, 255, 0.2)',
-            fillOpacity: 1.0
+            fillColor: '#3388ff',
+            fillOpacity: 0.2
         },
         fitResultsToMapSize: true,
         withToggle: false,

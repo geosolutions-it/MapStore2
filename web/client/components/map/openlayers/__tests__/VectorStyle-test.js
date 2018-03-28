@@ -188,7 +188,8 @@ describe('Test VectorStyle', () => {
                 color: '#3388ff',
                 weight: 4,
                 dashArray: '',
-                fillColor: 'rgba(51, 136, 255, 0.2)'
+                fillColor: 'rgb(51, 136, 255)',
+                fillOpacity: 0.2
             }
         };
 
@@ -206,7 +207,8 @@ describe('Test VectorStyle', () => {
                 color: '#3388ff',
                 weight: 4,
                 dashArray: '',
-                fillColor: 'rgba(51, 136, 255, 0.2)',
+                fillColor: '#3388ff',
+                fillOpacity: 0.2,
                 Polygon: {
                     color: '#ffaa33',
                     weight: 10,
@@ -220,7 +222,7 @@ describe('Test VectorStyle', () => {
         olFill = olStyle[0].getFill();
         olStroke = olStyle[0].getStroke();
 
-        expect(olFill.getColor()).toBe('#333333');
+        expect(olFill.getColor()).toBe('rgb(51, 51, 51)');
         expect(olStroke.getColor()).toBe('#ffaa33');
         expect(olStroke.getWidth()).toBe(10);
         expect(olStroke.getLineDash()).toEqual(['10', '5']);
@@ -255,7 +257,8 @@ describe('Test VectorStyle', () => {
                 color: '#3388ff',
                 weight: 4,
                 dashArray: '',
-                fillColor: 'rgba(51, 136, 255, 0.2)'
+                fillColor: '#3388ff',
+                fillOpacity: 0.2
             }
         };
 
@@ -273,7 +276,8 @@ describe('Test VectorStyle', () => {
                 color: '#3388ff',
                 weight: 4,
                 dashArray: '',
-                fillColor: 'rgba(51, 136, 255, 0.2)',
+                fillColor: '#3388ff',
+                fillOpacity: 0.2,
                 MultiPolygon: {
                     color: '#ffaa33',
                     weight: 10,
@@ -287,7 +291,7 @@ describe('Test VectorStyle', () => {
         olFill = olStyle[0].getFill();
         olStroke = olStyle[0].getStroke();
 
-        expect(olFill.getColor()).toBe('#333333');
+        expect(olFill.getColor()).toBe('rgb(51, 51, 51)');
         expect(olStroke.getColor()).toBe('#ffaa33');
         expect(olStroke.getWidth()).toBe(10);
         expect(olStroke.getLineDash()).toEqual(['10', '5']);

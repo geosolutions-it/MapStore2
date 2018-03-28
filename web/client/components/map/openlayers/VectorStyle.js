@@ -5,6 +5,8 @@ var ol = require('openlayers');
 const assign = require('object-assign');
 const {trim, isString} = require('lodash');
 
+const {colorToRgbaStr} = require('../../../utils/ColorUtils');
+
 const image = new ol.style.Circle({
   radius: 5,
   fill: null,
@@ -34,7 +36,7 @@ const fillStyle = (options, defaultsStyle = {color: 'rgba(0, 0, 255, 0.1)'}) => 
     fill: new ol.style.Fill(
         options.style ?
         options.style.fill || {
-            color: options.style.fillColor || defaultsStyle.color
+            color: colorToRgbaStr(options.style.fillColor, options.style.fillOpacity) || defaultsStyle.color
         }
         :
         {...defaultsStyle}
