@@ -1297,6 +1297,9 @@
             "deleteButton": "Effacer",
             "cancelButton": "Annuler"
         },
+        "gfrulesmanager": {
+            "menutitle": "Manage GeoFence Rules"
+        },
         "tutorial": {
             "title": "Tutoriel",
             "back": "Retour",
