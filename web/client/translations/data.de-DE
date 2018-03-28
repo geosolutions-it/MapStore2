@@ -1126,7 +1126,10 @@
                     "useThisMap": "Benutze diese Karte",
                     "configureMapOptions": "Kartenoptionen konfigurieren",
                     "addLayer": "Fügt der Karte eine Ebene hinzu",
-                    "useTheSelectedLayer": "Verwende die ausgewählte Ebene"
+                    "useTheSelectedLayer": "Verwende die ausgewählte Ebene",
+                    "connectToAMap": "Mit einer Karte verbinden",
+                    "connectToTheMap": "Verbinden mit der Karte",
+                    "clearConnection": "Verbindung löschen"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Keine Widgets verfügbar",

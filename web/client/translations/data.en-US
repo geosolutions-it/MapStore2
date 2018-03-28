@@ -1127,7 +1127,10 @@
                     "useThisMap": "Use this map",
                     "configureMapOptions": "Configure map options",
                     "addLayer": "Add a layer to the map",
-                    "useTheSelectedLayer": "Use the selected layer"
+                    "useTheSelectedLayer": "Use the selected layer",
+                    "connectToAMap": "Connect to a map",
+                    "connectToTheMap": "Connect to the map",
+                    "clearConnection": "Clear connection"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "No Widgets available",

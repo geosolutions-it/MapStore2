@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {withHandlers, withProps, compose} = require('recompose');
+const {omit} = require('lodash');
 
 /**
  * Provides proper handlers and variables to connect a widget to a map viewport in the toolbar or other builders
@@ -27,8 +28,16 @@ module.exports = compose(
              * update dependenciesMap to `undefined` if id === map because in this case there is no need to remap
              * because dependencies from main map is named as viewport
              */
-            const newValue = !editorData.mapSync && id !== 'map' ? `${id}.viewport` : undefined;
-            onChange('dependenciesMap', { ...editorData.dependenciesMap, viewport: newValue});
+            const viewport =
+                !editorData.mapSync
+                    ? id === 'map'
+                        ? 'viewport'
+                        : `${id}.viewport`
+
+                    : undefined;
+            const {dependenciesMap = {}} = editorData;
+            onChange('dependenciesMap', viewport ? { ...dependenciesMap, viewport } : omit(dependenciesMap, 'viewport') );
+
 
         }
     }),

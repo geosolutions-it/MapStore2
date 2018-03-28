@@ -1126,7 +1126,10 @@
                     "useThisMap": "Usar este mapa",
                     "configureMapOptions": "Configurar opciones de mapa",
                     "addLayer": "Agregar una capa al mapa",
-                    "useTheSelectedLayer": "Usar la capa seleccionada"
+                    "useTheSelectedLayer": "Usar la capa seleccionada",
+                    "connectToAMap": "Conectar a un mapa",
+                    "connectToTheMap": "Conectarse al mapa",
+                    "clearConnection": "Borrar conexión"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Sin widgets disponibles",

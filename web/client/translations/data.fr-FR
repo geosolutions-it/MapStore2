@@ -1127,7 +1127,10 @@
                     "useThisMap": "Utiliser cette carte",
                     "configureMapOptions": "Configurer les options de la carte",
                     "addLayer": "Ajouter une couche à la carte",
-                    "useTheSelectedLayer": "Utiliser le calque sélectionné"
+                    "useTheSelectedLayer": "Utiliser le calque sélectionné",
+                    "connectToAMap": "Se connecter à une carte",
+                    "connectToTheMap": "Se connecter à la carte",
+                    "clearConnection": "Effacer la connexion"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Aucun widget disponible",

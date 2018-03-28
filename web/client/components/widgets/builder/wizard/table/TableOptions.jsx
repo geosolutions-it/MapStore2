@@ -52,21 +52,6 @@ module.exports = ({ data = { options: {} }, onChange = () => { }, dependencies, 
                 options={data.options}
                 onChange={onChange}
                 attributes={featureTypeProperties}/>
-            {dependencies && dependencies.viewport
-                ? (<FormGroup style={{ marginTop: "20px" }}controlId="mapSync" className="mapstore-block-width">
-                    <Col componentClass={ControlLabel} sm={6}>
-                        <Message msgId={`widgets.mapSync`} />
-                    </Col>
-                    <Col sm={6}>
-                        <SwitchButton
-                            checked={data.mapSync}
-                            onChange={(val) => {
-                                onChange("mapSync", val);
-                            }}
-                        />
-                    </Col>
-                </FormGroup>)
-                : null}
             {data.options && data.options.columnSettings
                 ? <Button style={{"float": "right"}} onClick={() => onChange("options.columnSettings", undefined)}><Message msgId="widgets.builder.wizard.resetColumnsSizes" /></Button>
                 : null

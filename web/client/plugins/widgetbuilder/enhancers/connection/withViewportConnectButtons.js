@@ -23,10 +23,15 @@ module.exports = (showCondition = () => true) => compose(
         }) => ({
             stepButtons: [{
                     onClick: () => toggleConnection(availableDependencies),
+                    disabled: availableDependencies.length > 1, // TODO: remove when support multi map
                     visible: showCondition(props) && canConnect && availableDependencies.length > 0,
                     bsStyle: connected ? "success" : "primary",
                     glyph: connected ? "plug" : "unplug",
-                    tooltipId: "widgets.builder.wizard.connect"
+                tooltipId: connected
+                    ? "widgets.builder.wizard.clearConnection"
+                    : availableDependencies.length === 1
+                        ? "widgets.builder.wizard.connectToTheMap"
+                        : "connection to multiple maps not supported yet" // TODO: "widgets.builder.wizard.connectToAMap"
                 }, ...stepButtons
             ]
         }))
