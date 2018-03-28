@@ -55,12 +55,8 @@ describe('WPSWidgetOptions component', () => {
 
 
         ReactTestUtils.Simulate.change(inputs[3]);
-        expect(spyonChange.calls[3].arguments[0]).toBe("mapSync");
+        expect(spyonChange.calls[3].arguments[0]).toBe("legend");
         expect(spyonChange.calls[3].arguments[1]).toBe(true);
-
-        ReactTestUtils.Simulate.change(inputs[4]);
-        expect(spyonChange.calls[4].arguments[0]).toBe("legend");
-        expect(spyonChange.calls[4].arguments[1]).toBe(true);
     });
     it('Test WPSWidgetOptions onChange for counter context', () => {
         const actions = {
@@ -91,9 +87,5 @@ describe('WPSWidgetOptions component', () => {
         ReactTestUtils.Simulate.change(inputs[2], { target: { value: 'test' } });
         expect(spyonChange.calls[2].arguments[0]).toBe("options.seriesOptions.[0].uom");
         expect(spyonChange.calls[2].arguments[1]).toBe("test");
-
-        ReactTestUtils.Simulate.change(inputs[3]);
-        expect(spyonChange.calls[3].arguments[0]).toBe("mapSync");
-        expect(spyonChange.calls[3].arguments[1]).toBe(true);
     });
 });
