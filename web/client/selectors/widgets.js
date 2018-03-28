@@ -1,4 +1,4 @@
-const {get, find, isEqualWith} = require('lodash');
+const { get, find, castArray, isEqualWith} = require('lodash');
 const {mapSelector} = require('./map');
 const {getSelectedLayer} = require('./layers');
 const {DEFAULT_TARGET} = require('../actions/widgets');
@@ -37,6 +37,20 @@ const getWidgetDependency = (k, widgets) => {
     }
 };
 const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
+
+const getMapWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
+
+/**
+ * Find in the state the available dependencies to connect
+ */
+const availableDependenciesSelector = createSelector(
+    getMapWidgets,
+    mapSelector,
+    (ws = [], map = []) => ({
+        availableDependencies: ws.map(({id}) => `widgets[${id}].map`).concat(castArray(map).map(() => "map"))
+    })
+);
+
 module.exports = {
     getFloatingWidgets,
     getFloatingWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
@@ -48,7 +62,8 @@ module.exports = {
     getEditingWidgetFilter: state => get(getEditingWidget(state), "filter"),
     getEditorSettings,
     getWidgetLayer,
-    getMapWidgets: state => (get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`) || []).filter(({type} = {}) => type === "map"),
+    getMapWidgets,
+    availableDependenciesSelector,
     dashBoardDependenciesSelector: () => ({}), // TODO dashboard dependencies
     /**
      * transforms dependencies in the form `{ k1: "path1", k1, "path2" }` into
@@ -63,7 +78,7 @@ module.exports = {
         state => getDependenciesKeys(state).map(k =>
             k.indexOf("map.") === 0
             ? get(mapSelector(state), k.slice(4))
-            : k.match(WIDGETS_REGEX) === 0
+            : k.match(WIDGETS_REGEX)
             ? getWidgetDependency(k, getFloatingWidgets(state))
             : get(state, k) ),
         // iterate the dependencies keys to set the dependencies values in a map

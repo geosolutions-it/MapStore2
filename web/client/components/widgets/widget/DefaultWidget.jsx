@@ -7,16 +7,31 @@
  */
 const React = require('react');
 const enhanceChartWidget = require('../enhancers/chartWidget');
-const enhanceTextWidget = require('../enhancers/deleteWidget');
+const deleteWidget = require('../enhancers/deleteWidget');
 const enhanceTableWidget = require('../enhancers/tableWidget');
 const wpsChart = require('../enhancers/wpsChart');
+const {compose} = require('recompose');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
-const ChartWidget = dependenciesToFilter(wpsChart(enhanceChartWidget(require('./ChartWidget'))));
-const TextWidget = enhanceTextWidget(require('./TextWidget'));
-const MapWidget = enhanceTextWidget(require('./MapWidget'));
-const TableWidget = dependenciesToFilter(enhanceTableWidget(require('./TableWidget')));
+const dependenciesToWidget = require('../enhancers/dependenciesToWidget');
+const ChartWidget = compose(
+    dependenciesToWidget,
+    dependenciesToFilter,
+    wpsChart,
+    enhanceChartWidget
+)(require('./ChartWidget'));
+const TextWidget = deleteWidget(require('./TextWidget'));
+const MapWidget = deleteWidget(require('./MapWidget'));
+const TableWidget = compose(
+    dependenciesToWidget,
+    dependenciesToFilter,
+    enhanceTableWidget
+)(require('./TableWidget'));
 const enhanceCounter = require('../enhancers/counterWidget');
-const CounterWidget = dependenciesToFilter(enhanceCounter(require("./CounterWidget")));
+const CounterWidget = compose(
+    dependenciesToWidget,
+    dependenciesToFilter,
+    enhanceCounter
+)(require("./CounterWidget"));
 module.exports = ({
     dependencies,
     exportCSV = () => {},

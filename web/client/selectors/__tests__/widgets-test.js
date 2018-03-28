@@ -17,7 +17,8 @@ const {
     getEditingWidgetFilter,
     getEditorSettings,
     getWidgetLayer,
-    dependenciesSelector
+    dependenciesSelector,
+    availableDependenciesSelector
 } = require('../widgets');
 const {set} = require('../../utils/ImmutableUtils');
 describe('widgets selectors', () => {
@@ -73,6 +74,27 @@ describe('widgets selectors', () => {
         const widgetLayer = set(`widgets.builder.editor`, { layer: { name: "TEST2" } }, dashboardNoLayer);
         expect(getWidgetLayer(widgetLayer).name).toBe("TEST2");
     });
+    it('getMapWidgets', () => {
+        const state = {
+            widgets: {
+                containers: {
+                    [DEFAULT_TARGET]: {
+                        widgets: [{
+                            id: "WIDGET",
+                            widgetType: "map"
+                        }, {
+
+                        }, {
+                            widgetType: "table"
+                        }]
+                    }
+                }
+            }
+        };
+        expect(availableDependenciesSelector(state)).toExist();
+        expect(availableDependenciesSelector(state).availableDependencies[0]).toBe('widgets[WIDGET].map');
+        expect(availableDependenciesSelector(state).availableDependencies[1]).toBe('map');
+    });
     it('dependenciesSelector', () => {
         const state = {
             widgets: {
@@ -104,10 +126,10 @@ describe('widgets selectors', () => {
                     // special map path
                     c: "map.abc",
                     // special widgets path
-                    d: "widgets[\"WIDGET_ID\"].center",
-                    e: "widgets[WIDGET_ID].center",
-                    f: "widgets[NO_ID].center",
-                    g: "widgets[otherStateSlice]"
+                    d: "widgets[\"WIDGET_ID\"].map.center",
+                    e: "widgets[WIDGET_ID].map.center",
+                    f: "widgets[NO_ID].map.center",
+                    g: "widgets.otherStateSlice"
                 },
              otherStateSlice: "otherStateValue"
              },
@@ -125,8 +147,8 @@ describe('widgets selectors', () => {
         expect(dependencies.a).toBe("A");
         expect(dependencies.b).toBe("B");
         expect(dependencies.c).toBe("ABC");
-        expect(dependencies.d).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].center);
-        expect(dependencies.e).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].center);
+        expect(dependencies.d).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].map.center);
+        expect(dependencies.e).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].map.center);
         expect(dependencies.f).toBeFalsy();
         expect(dependencies.g).toBe(state.widgets.otherStateSlice);
     });

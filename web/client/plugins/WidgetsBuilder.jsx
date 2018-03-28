@@ -18,8 +18,12 @@ const {setControlProperty} = require('../actions/controls');
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {widgetBuilderSelector} = require('../selectors/controls');
-const {dependenciesSelector} = require('../selectors/widgets');
-const Builder = connect(createSelector(dependenciesSelector, dependencies => ({dependencies})))(require('./widgetbuilder/WidgetTypeBuilder'));
+const { dependenciesSelector, availableDependenciesSelector} = require('../selectors/widgets');
+const Builder = connect(
+    createSelector(
+        dependenciesSelector,
+        availableDependenciesSelector,
+        (dependencies, availableDependenciesProps) => ({ dependencies, ...availableDependenciesProps})))(require('./widgetbuilder/WidgetTypeBuilder'));
 
 class SideBarComponent extends React.Component {
      static propTypes = {

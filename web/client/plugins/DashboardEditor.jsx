@@ -7,7 +7,7 @@
  */
 
 const React = require('react');
-
+const {withProps, compose} = require('recompose');
 const {createSelector} = require('reselect');
 const {connect} = require('react-redux');
 const PropTypes = require('prop-types');
@@ -15,7 +15,13 @@ const PropTypes = require('prop-types');
 const {isDashboardEditing} = require('../selectors/dashboard');
 const {dashboardSelector} = require('./widgetbuilder/commons');
 
-const Builder = connect(dashboardSelector)(require('./widgetbuilder/WidgetTypeBuilder'));
+const Builder =
+    compose(
+        connect(dashboardSelector),
+        withProps(({ availableDependencies = []}) => ({
+            availableDependencies: availableDependencies.filter(d => d !== "map")
+        }))
+    )(require('./widgetbuilder/WidgetTypeBuilder'));
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const {createWidget} = require('../actions/widgets');
 

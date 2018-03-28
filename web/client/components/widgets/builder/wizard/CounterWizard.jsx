@@ -18,6 +18,7 @@ const WidgetOptions = require('./common/WidgetOptions');
 
 const wpsCounter = require('../../enhancers/wpsCounter');
 const dependenciesToFilter = require('../../enhancers/dependenciesToFilter');
+const dependenciesToWidget = require('../../enhancers/dependenciesToWidget');
 const emptyChartState = require('../../enhancers/emptyChartState');
 const errorChartState = require('../../enhancers/errorChartState');
 
@@ -32,8 +33,8 @@ const triggerSetValid = compose(
         }
     }));
 
-const enhanchePreview = compose(
-
+const enhancePreview = compose(
+    dependenciesToWidget,
     dependenciesToFilter,
     wpsCounter,
     triggerSetValid,
@@ -51,7 +52,7 @@ const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
 
 
 const Counter = require('../../widget/CounterView');
-const Preview = enhanchePreview(Counter);
+const Preview = enhancePreview(Counter);
 const CounterPreview = ({ data = {}, layer, dependencies = {}, valid, setValid = () => { } }) =>
     !isCounterOptionsValid(data.options)
         ? <Counter
@@ -62,6 +63,7 @@ const CounterPreview = ({ data = {}, layer, dependencies = {}, valid, setValid =
         : <Preview
             {...sampleProps}
             valid={valid}
+            dependenciesMap={data.dependenciesMap}
             dependencies={dependencies}
             setValid={setValid}
             type={data.type}
