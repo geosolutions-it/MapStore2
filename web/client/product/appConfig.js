@@ -35,6 +35,10 @@ module.exports = {
         name: "dashboard",
         path: "/dashboard",
         component: require('./pages/Dashboard')
+    }, {
+        name: "rulesmanager",
+        path: "/rules-manager",
+        component: require('./pages/RulesManager')
     }],
     initialState: {
         defaultState: {

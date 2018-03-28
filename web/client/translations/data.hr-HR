@@ -1295,6 +1295,9 @@
             "deleteButton": "Izbriši",
             "cancelButton": "Odustani"
         },
+        "gfrulesmanager": {
+            "menutitle": "Manage GeoFence Rules"
+        },
         "tutorial": {
             "title": "Tutorijal",
             "back": "Natrag",
