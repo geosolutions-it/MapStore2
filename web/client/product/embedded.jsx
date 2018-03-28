@@ -24,13 +24,10 @@ const startApp = () => {
         loadAfterTheme: loadAfterThemeSelector(state)
     }))(require('../components/app/StandardRouter'));
 
-    const {updateMapLayoutEpic} = require('../epics/maplayout');
-
     const appStore = require('../stores/StandardStore').bind(null, initialState, {
         mode: (state = 'embedded') => state,
-        version: require('../reducers/version'),
-        maplayout: require('../reducers/maplayout')
-    }, {updateMapLayoutEpic});
+        version: require('../reducers/version')
+    }, {});
 
     const appConfig = {
         mode: 'embedded',
