@@ -1126,7 +1126,10 @@
                     "useThisMap": "Usa questa mappa",
                     "configureMapOptions": "Configura opzioni mappa",
                     "addLayer": "Aggiungi un livello alla mappa",
-                    "useTheSelectedLayer": "Usa il livello selezionato"
+                    "useTheSelectedLayer": "Usa il livello selezionato",
+                    "connectToAMap": "Connetti a una mappa",
+                    "connectToTheMap": "Connetti alla mappa",
+                    "clearConnection": "Disconnetti"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Nessun widgets disponibile",

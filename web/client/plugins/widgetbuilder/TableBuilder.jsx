@@ -1,5 +1,3 @@
-import { mapPropsStream } from 'recompose';
-
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -12,7 +10,7 @@ const React = require('react');
 const { connect } = require('react-redux');
 const {get} = require('lodash');
 const { isGeometryType } = require('../../utils/ogc/WFS/base');
-const { compose, renameProps, branch, renderComponent } = require('recompose');
+const { compose, renameProps, branch, renderComponent, mapPropsStream } = require('recompose');
 const InfoPopover = require('../../components/widgets/widget/InfoPopover');
 const Message = require('../../components/I18N/Message');
 const BorderLayout = require('../../components/layout/BorderLayout');
@@ -21,6 +19,7 @@ const { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSet
 
 const builderConfiguration = require('../../components/widgets/enhancers/builderConfiguration');
 const chartLayerSelector = require('./enhancers/chartLayerSelector');
+const withViewportConnectButtons = require('./enhancers/connection/withViewportConnectButtons');
 const {
     wizardStateToProps,
     wizardSelector
@@ -55,12 +54,16 @@ const Builder = connect(
 )(require('../../components/widgets/builder/wizard/TableWizard')));
 
 const BuilderHeader = require('./BuilderHeader');
-const Toolbar = connect(wizardSelector, {
-    openFilterEditor,
-    setPage,
-    insertWidget
-},
-    wizardStateToProps
+const Toolbar = compose(
+    connect(wizardSelector, {
+        openFilterEditor,
+        setPage,
+        onChange: onEditorChange,
+        insertWidget
+    },
+        wizardStateToProps
+    ),
+    withViewportConnectButtons(({ step }) => step === 0)
 )(require('../../components/widgets/builder/wizard/table/Toolbar'));
 
 /*
@@ -75,12 +78,12 @@ const chooseLayerEnhancer = compose(
     )
 );
 
-module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, editorData = {}, dependencies, ...props } = {}) =>
+module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, editorData = {}, availableDependencies = {}, dependencies, ...props } = {}) =>
 
     (<BorderLayout
         header={
             <BuilderHeader onClose={onClose}>
-                <Toolbar onClose={onClose} />
+                <Toolbar availableDependencies={availableDependencies} onClose={onClose} />
                 {get(editorData, "options.propertyName.length") === 0 ? <InfoPopover
                     glyph="exclamation-mark"
                     bsStyle="warning"

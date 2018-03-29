@@ -17,6 +17,7 @@ const { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSet
 
 const builderConfiguration = require('../../components/widgets/enhancers/builderConfiguration');
 const chartLayerSelector = require('./enhancers/chartLayerSelector');
+const withViewportConnectButtons = require('./enhancers/connection/withViewportConnectButtons');
 
 const {
     wizardStateToProps,
@@ -41,19 +42,24 @@ const Builder = connect(
 )(require('../../components/widgets/builder/wizard/CounterWizard')));
 
 const BuilderHeader = require('./BuilderHeader');
-const Toolbar = connect(wizardSelector, {
-    openFilterEditor,
-    setPage,
-    insertWidget
-},
-    wizardStateToProps
+const Toolbar = compose(
+    connect(
+        wizardSelector, {
+            openFilterEditor,
+            setPage,
+            onChange: onEditorChange,
+            insertWidget
+        },
+        wizardStateToProps
+    ),
+    withViewportConnectButtons(({ step }) => step === 0)
 )(require('../../components/widgets/builder/wizard/counter/Toolbar'));
 
 /*
- * in case you don't have a layer selected (e.g. dashboard) the chartbuilder
+ * in case you don't have a layer selected (e.g. dashboard) the chart builder
  * prompts a catalog view to allow layer selection
  */
-const chooseLayerEhahncer = compose(
+const chooseLayerEnhancer = compose(
     connect(wizardSelector),
     branch(
         ({ layer } = {}) => !layer,
@@ -61,10 +67,10 @@ const chooseLayerEhahncer = compose(
     )
 );
 
-module.exports = chooseLayerEhahncer(({ enabled, onClose = () => { }, dependencies, ...props } = {}) =>
+module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, availableDependencies={}, dependencies, ...props } = {}) =>
 
     (<BorderLayout
-        header={<BuilderHeader onClose={onClose}><Toolbar onClose={onClose} /></BuilderHeader>}
+        header={<BuilderHeader onClose={onClose}><Toolbar availableDependencies={availableDependencies} onClose={onClose} /></BuilderHeader>}
     >
         {enabled ? <Builder formOptions={{
             showColorRamp: false,

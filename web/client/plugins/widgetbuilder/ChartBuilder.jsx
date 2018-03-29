@@ -9,7 +9,7 @@
 const React = require('react');
 const {connect} = require('react-redux');
 
-const {compose, renameProps, branch, renderComponent} = require('recompose');
+const { compose, renameProps, branch, renderComponent} = require('recompose');
 
 const BorderLayout = require('../../components/layout/BorderLayout');
 
@@ -17,6 +17,7 @@ const {insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSett
 
 const builderConfiguration = require('../../components/widgets/enhancers/builderConfiguration');
 const chartLayerSelector = require('./enhancers/chartLayerSelector');
+const withViewportConnectButtons = require('./enhancers/connection/withViewportConnectButtons');
 const {
     wizardStateToProps,
     wizardSelector
@@ -40,12 +41,17 @@ const Builder = connect(
 )(require('../../components/widgets/builder/wizard/ChartWizard')));
 
 const BuilderHeader = require('./BuilderHeader');
-const Toolbar = connect(wizardSelector, {
-        openFilterEditor,
-        setPage,
-        insertWidget
-    },
-    wizardStateToProps
+const Toolbar = compose(
+    connect(wizardSelector, {
+            openFilterEditor,
+            setPage,
+            onChange: onEditorChange,
+            insertWidget
+        },
+        wizardStateToProps
+    ),
+    withViewportConnectButtons(({step}) => step === 1)
+
 )(require('../../components/widgets/builder/wizard/chart/Toolbar'));
 
 /*
@@ -60,10 +66,10 @@ const chooseLayerEnhancer = compose(
     )
 );
 
-module.exports = chooseLayerEnhancer(({enabled, onClose = () => {}, dependencies, ...props} = {}) =>
+module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, availableDependencies = {}, dependencies, ...props} = {}) =>
 
     (<BorderLayout
-        header={<BuilderHeader onClose={onClose}><Toolbar onClose={onClose}/></BuilderHeader>}
+        header={<BuilderHeader onClose={onClose}><Toolbar availableDependencies={availableDependencies} onClose={onClose}/></BuilderHeader>}
         >
         {enabled ? <Builder dependencies={dependencies} {...props}/> : null}
     </BorderLayout>));

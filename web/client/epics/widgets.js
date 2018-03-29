@@ -1,9 +1,10 @@
 const Rx = require('rxjs');
-const {get} = require('lodash');
-const {EXPORT_CSV, EXPORT_IMAGE, clearWidgets} = require('../actions/widgets');
+const { get, isEqual } = require('lodash');
+const { EXPORT_CSV, EXPORT_IMAGE, INSERT, clearWidgets, loadDependencies} = require('../actions/widgets');
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
+const { availableDependenciesSelector } = require('../selectors/widgets');
 const { MAP_CREATED, SAVING_MAP, MAP_ERROR } = require('../actions/maps');
 const {LOCATION_CHANGE} = require('react-router-redux');
 const {saveAs} = require('file-saver');
@@ -34,6 +35,23 @@ module.exports = {
                     csv
                 ], {type: "text/csv"}), title + ".csv")))
             .filter( () => false),
+    /**
+     * Intercepts changes to widgets to catch widgets that can share some dependencies.
+     * Then re-configures the dependencies to it.
+     */
+    alignDependenciesToWidgets: (action$, { getState = () => { } } = {}) =>
+        action$.ofType(MAP_CONFIG_LOADED, INSERT)
+        .map(() => availableDependenciesSelector(getState()))
+        .pluck('availableDependencies')
+        .distinctUntilChanged( (oldMaps = [], newMaps = []) => isEqual([...oldMaps], [...newMaps]))
+        // add dependencies for all map widgets (for the moment the only ones that shares dependencies)
+        // and for main "map" dependency, the "viewport" and "center"
+        .map((maps=[]) => loadDependencies(maps.reduce( (deps, m) => ({
+            ...deps,
+            [m === "map" ? "viewport" : `${m}.viewport`]: `${m}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].viewport": "widgets[ID_W].bbox"}
+            [m === "map" ? "center" : `${m}.center`]: `${m}.center` // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
+        }), {}))
+    ),
     clearWidgetsOnLocationChange: (action$, {getState = () => {}} = {}) =>
         action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
             const location = get(getState(), "routing.location");

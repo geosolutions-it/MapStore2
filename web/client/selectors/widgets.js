@@ -1,7 +1,8 @@
-const {get, isEqualWith} = require('lodash');
+const { get, find, castArray, isEqualWith} = require('lodash');
 const {mapSelector} = require('./map');
 const {getSelectedLayer} = require('./layers');
 const {DEFAULT_TARGET} = require('../actions/widgets');
+const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
 const {isDashboardAvailable, isDashboardEditing} = require('./dashboard');
 const {defaultMemoize, createSelector, createSelectorCreator} = require('reselect');
 
@@ -26,9 +27,32 @@ const getWidgetLayer = createSelector(
     state => isDashboardAvailable(state) && isDashboardEditing(state),
     ({layer} = {}, selectedLayer, dashboardEditing) => layer || !dashboardEditing && selectedLayer
 );
+const getWidgetDependency = (k, widgets) => {
+    const [match, id, rest] = WIDGETS_REGEX.exec(k);
+    if (match) {
+        const widget = find(widgets, { id });
+        return rest
+            ? get(widget, rest)
+            : widget;
+    }
+};
+const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
+
+const getMapWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
+
+/**
+ * Find in the state the available dependencies to connect
+ */
+const availableDependenciesSelector = createSelector(
+    getMapWidgets,
+    mapSelector,
+    (ws = [], map = []) => ({
+        availableDependencies: ws.map(({id}) => `widgets[${id}].map`).concat(castArray(map).map(() => "map"))
+    })
+);
 
 module.exports = {
-    getFloatingWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
+    getFloatingWidgets,
     getFloatingWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
     // let's use the same container for the moment
     getDashboardWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
@@ -38,6 +62,8 @@ module.exports = {
     getEditingWidgetFilter: state => get(getEditingWidget(state), "filter"),
     getEditorSettings,
     getWidgetLayer,
+    getMapWidgets,
+    availableDependenciesSelector,
     dashBoardDependenciesSelector: () => ({}), // TODO dashboard dependencies
     /**
      * transforms dependencies in the form `{ k1: "path1", k1, "path2" }` into
@@ -49,7 +75,12 @@ module.exports = {
         getDependenciesMap,
         getDependenciesKeys,
         // produces the array of values of the keys in getDependenciesKeys
-        state => getDependenciesKeys(state).map(k => k.indexOf("map.") === 0 ? get(mapSelector(state), k.slice(4)) : get(state, k) ),
+        state => getDependenciesKeys(state).map(k =>
+            k.indexOf("map.") === 0
+            ? get(mapSelector(state), k.slice(4))
+            : k.match(WIDGETS_REGEX)
+            ? getWidgetDependency(k, getFloatingWidgets(state))
+            : get(state, k) ),
         // iterate the dependencies keys to set the dependencies values in a map
         (map, keys, values) => keys.reduce((acc, k, i) => ({
             ...acc,

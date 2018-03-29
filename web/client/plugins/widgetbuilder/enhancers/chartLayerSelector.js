@@ -12,7 +12,7 @@ const { onEditorChange } = require('../../../actions/widgets');
 const canGenerateCharts = require('../../../observables/widgets/canGenerateCharts');
 module.exports = compose(
     setDisplayName('ChartLayerSelector'),
-    connect(() => { }, {
+    connect(() => ({}), {
         onLayerChoice: (l) => onEditorChange("layer", l)
     }),
     defaultProps({

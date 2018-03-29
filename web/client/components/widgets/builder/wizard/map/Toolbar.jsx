@@ -10,18 +10,18 @@ const React = require('react');
 
 const Toolbar = require('../../../../misc/toolbar/Toolbar');
 
-const getSaveTooltipId = (step, {id} = {}) => {
+const getSaveTooltipId = (step, { id } = {}) => {
     if (id) {
         return "widgets.builder.wizard.updateWidget";
     }
     return "widgets.builder.wizard.addToTheMap";
 };
 
-module.exports = ({ step = 0, buttons, tocButtons = [], editorData = {}, setPage = () => {}, onFinish = () => { }, toggleLayerSelector = () => { } } = {}) => (<Toolbar btnDefaultProps={{
-        bsStyle: "primary",
-        bsSize: "sm"
-    }}
-    buttons={buttons || [ ...(step === 0 ? tocButtons : []), {
+module.exports = ({ step = 0, buttons, tocButtons = [], editorData = {}, setPage = () => { }, onFinish = () => { }, toggleLayerSelector = () => { } } = {}) => (<Toolbar btnDefaultProps={{
+    bsStyle: "primary",
+    bsSize: "sm"
+}}
+    buttons={buttons || [...(step === 0 ? tocButtons : []), {
         onClick: () => toggleLayerSelector(true),
         visible: step === 0,
         glyph: "plus",

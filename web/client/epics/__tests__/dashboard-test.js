@@ -147,7 +147,7 @@ describe('openDashboardWidgetEditor epic', () => {
                     case EDIT_NEW:
                         expect(action.widget).toExist();
                         // verify default mapSync
-                        expect(action.widget.mapSync).toBe(true);
+                        expect(action.widget.mapSync).toBe(false);
                         break;
                     default:
                         done(new Error("Action not recognized"));
