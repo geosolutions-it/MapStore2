@@ -9,10 +9,13 @@ var expect = require('expect');
 const { testEpic, addTimeoutEpic, TEST_TIMEOUT } = require('./epicTestUtils');
 
 const {
-    clearWidgetsOnLocationChange
+    clearWidgetsOnLocationChange,
+    alignDependenciesToWidgets
 } = require('../widgets');
 const {
-    CLEAR_WIDGETS
+    CLEAR_WIDGETS,
+    insertWidget,
+    LOAD_DEPENDENCIES
 } = require('../../actions/widgets');
 const {
     savingMap,
@@ -126,4 +129,22 @@ describe('widgets Epics', () => {
                     };
             });
     });
+    it('alignDependenciesToWidgets triggered on insertWidget', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            const action = actions[0];
+            expect(action.type).toBe(LOAD_DEPENDENCIES);
+            expect(action.dependencies).toExist();
+            expect(action.dependencies.center).toBe("map.center");
+            expect(action.dependencies.viewport).toBe("map.bbox");
+            expect(action.dependencies.zoom).toBe("map.zoom");
+            done();
+        };
+        testEpic(alignDependenciesToWidgets,
+            1,
+            [insertWidget({id: 'test'})],
+            checkActions,
+            {});
+    });
+
 });

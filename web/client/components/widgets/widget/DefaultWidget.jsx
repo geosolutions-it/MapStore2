@@ -13,6 +13,7 @@ const wpsChart = require('../enhancers/wpsChart');
 const {compose} = require('recompose');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const dependenciesToWidget = require('../enhancers/dependenciesToWidget');
+const dependenciesToMapProp = require('../enhancers/dependenciesToMapProp');
 const ChartWidget = compose(
     dependenciesToWidget,
     dependenciesToFilter,
@@ -20,7 +21,12 @@ const ChartWidget = compose(
     enhanceChartWidget
 )(require('./ChartWidget'));
 const TextWidget = deleteWidget(require('./TextWidget'));
-const MapWidget = deleteWidget(require('./MapWidget'));
+const MapWidget = compose(
+    dependenciesToWidget,
+    dependenciesToMapProp('center'),
+    dependenciesToMapProp('zoom'),
+    deleteWidget
+)(require('./MapWidget'));
 const TableWidget = compose(
     dependenciesToWidget,
     dependenciesToFilter,

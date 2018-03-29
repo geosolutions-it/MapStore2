@@ -8,7 +8,7 @@
 const React = require('react');
 const WidgetContainer = require('./WidgetContainer');
 const InfoPopover = require('./InfoPopover');
-
+const { omit } = require('lodash');
 const Message = require('../../I18N/Message');
 const {withHandlers} = require('recompose');
 const MapView = withHandlers({
@@ -33,6 +33,7 @@ module.exports = ({
     toggleDeleteConfirm = () => { },
     id, title, loading, description,
     map,
+    mapStateSource,
     confirmDelete = false,
     onDelete = () => {}
 } = {}) =>
@@ -45,5 +46,5 @@ module.exports = ({
             </DropdownButton>
         </ButtonToolbar>}
     >
-        <MapView updateProperty={updateProperty} id={id} map={map} layers={map && map.layers} options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}/>
+        <MapView updateProperty={updateProperty} id={id} map={omit(map, 'mapStateSource')} mapStateSource={mapStateSource} layers={map && map.layers} options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}/>
     </WidgetContainer>);
