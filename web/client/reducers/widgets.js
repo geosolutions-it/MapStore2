@@ -19,7 +19,8 @@ const {arrayUpsert, arrayDelete} = require('../utils/ImmutableUtils');
 const emptyState = {
     dependencies: {
         viewport: "map.bbox",
-        center: "map.center"
+        center: "map.center",
+        zoom: "map.zoom"
     },
     containers: {
         floating: {

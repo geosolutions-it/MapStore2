@@ -78,7 +78,7 @@ const chooseLayerEnhancer = compose(
     )
 );
 
-module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, editorData = {}, availableDependencies = {}, dependencies, ...props } = {}) =>
+module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, editorData = {}, availableDependencies = [], dependencies, ...props } = {}) =>
 
     (<BorderLayout
         header={

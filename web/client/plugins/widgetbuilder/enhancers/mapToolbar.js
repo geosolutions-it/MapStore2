@@ -7,14 +7,16 @@
  */
 const { compose, branch, withProps, withHandlers} = require('recompose');
 const {connect} = require('react-redux');
-const { insertWidget, setPage} = require('../../../actions/widgets');
+const { insertWidget, setPage, onEditorChange} = require('../../../actions/widgets');
 const manageLayers = require('./manageLayers');
 const handleNodeEditing = require('./handleNodeEditing');
 const { wizardSelector, wizardStateToProps } = require('../commons');
-
+const withConnectButton = require('./connection/withConnectButton');
+const mapPositionConnect = require('./connection/mapPositionConnect');
 module.exports = compose(
     connect(wizardSelector, {
         setPage,
+        onChange: onEditorChange,
         insertWidget
     },
         wizardStateToProps
@@ -49,6 +51,8 @@ module.exports = compose(
                 tooltipId: "toc.toolTrashLayerTooltip"
             }]
         }))
-    )
+    ),
+    mapPositionConnect,
+    withConnectButton(({step}) => step === 0)
 
 );

@@ -17,7 +17,7 @@ const getSaveTooltipId = (step, { id } = {}) => {
     return "widgets.builder.wizard.addToTheMap";
 };
 
-module.exports = ({ step = 0, buttons, tocButtons = [], editorData = {}, setPage = () => { }, onFinish = () => { }, toggleLayerSelector = () => { } } = {}) => (<Toolbar btnDefaultProps={{
+module.exports = ({ step = 0, buttons, tocButtons = [], stepButtons = [], editorData = {}, setPage = () => { }, onFinish = () => { }, toggleLayerSelector = () => { } } = {}) => (<Toolbar btnDefaultProps={{
     bsStyle: "primary",
     bsSize: "sm"
 }}
@@ -31,7 +31,7 @@ module.exports = ({ step = 0, buttons, tocButtons = [], editorData = {}, setPage
         visible: step === 1,
         glyph: "arrow-left",
         tooltipId: "widgets.builder.wizard.configureMapOptions"
-    }, {
+        }, ...stepButtons, {
         onClick: () => setPage(Math.min(step + 1, 2)),
         visible: step === 0,
         glyph: "arrow-right",

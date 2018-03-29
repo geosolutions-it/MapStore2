@@ -29,6 +29,10 @@ describe('Test the widgets reducer', () => {
     it('initial state', () => {
         const state = widgets(undefined, {type: "START"});
         expect(state.containers).toExist();
+        expect(state.dependencies.key).toBeFalsy();
+        expect(state.dependencies.viewport).toBe("map.bbox");
+        expect(state.dependencies.center).toBe("map.center");
+        expect(state.dependencies.zoom).toBe("map.zoom");
     });
     it('editNewWidget', () => {
         const state = widgets(undefined, editNewWidget({a: "A"}, {step: 0}));
@@ -121,5 +125,7 @@ describe('Test the widgets reducer', () => {
         expect(state).toExist();
         expect(state.dependencies.key).toBeFalsy();
         expect(state.dependencies.viewport).toBe("map.bbox");
+        expect(state.dependencies.center).toBe("map.center");
+        expect(state.dependencies.zoom).toBe("map.zoom");
     });
 });

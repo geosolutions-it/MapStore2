@@ -8,7 +8,7 @@
 const React = require('react');
 const {connect} = require('react-redux');
 const {onEditorChange} = require('../../actions/widgets');
-const { wizardSelector, wizardStateToProps, availableDependenciesSelector} = require('./commons');
+const { wizardSelector, wizardStateToProps} = require('./commons');
 const layerSelector = require('./enhancers/layerSelector');
 const manageLayers = require('./enhancers/manageLayers');
 const mapToolbar = require('./enhancers/mapToolbar');
@@ -63,17 +63,16 @@ const mapBuilder = compose(
         map: editorData.map
     })),
     handleNodeSelection,
-    handleNodeEditing,
-    connect(availableDependenciesSelector)
+    handleNodeEditing
 );
 
 
 module.exports = mapBuilder(({
-    enabled, onClose = () => {},
-    toggleLayerSelector = () => {},
-    editNode, setEditNode, closeNodeEditor, selectedGroups=[], selectedLayers=[], selectedNodes, onNodeSelect = () => {} } = {},
-    availableDependencies = []
-    ) =>
+        enabled, onClose = () => {},
+        toggleLayerSelector = () => {},
+        editNode, setEditNode, closeNodeEditor, selectedGroups=[], selectedLayers=[], selectedNodes, onNodeSelect = () => {},
+        availableDependencies =[]
+    } = {}) =>
     (<BorderLayout
         className = "map-selector"
         header={(<BuilderHeader onClose={onClose}>

@@ -49,7 +49,8 @@ module.exports = {
         .map((maps=[]) => loadDependencies(maps.reduce( (deps, m) => ({
             ...deps,
             [m === "map" ? "viewport" : `${m}.viewport`]: `${m}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].viewport": "widgets[ID_W].bbox"}
-            [m === "map" ? "center" : `${m}.center`]: `${m}.center` // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
+            [m === "map" ? "center" : `${m}.center`]: `${m}.center`, // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
+            [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`
         }), {}))
     ),
     clearWidgetsOnLocationChange: (action$, {getState = () => {}} = {}) =>
