@@ -28,6 +28,8 @@ module.exports = pure(({
     widgets=[],
     layouts,
     dependencies,
+    getWidgetClass = () => {},
+    onWidgetClick = () => {},
     updateWidgetProperty = () => {},
     deleteWidget = () => {},
     editWidget = () => {},
@@ -48,7 +50,7 @@ module.exports = pure(({
         breakpoints={breakpoints}
         cols={cols}>
      {
-         widgets.map( w => (<div key={w.id} data-grid={w.dataGrid} ><DefaultWidget
+         widgets.map( w => (<div key={w.id} data-grid={w.dataGrid} onClick={onWidgetClick} className={getWidgetClass(w)}><DefaultWidget
             data-grid={w.dataGrid}
             {...actions}
             {...w}

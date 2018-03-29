@@ -12,6 +12,15 @@
     &.react-grid-layout.on-map > * {
         pointer-events: auto;
     }
+    /* selection */
+    &.selection-active {
+        background-color: #555;
+        .disabled {
+            opacity: 0.2;
+            pointer-events: none;
+        }
+    }
+
     .mapstore-widget-card {
         background: @ms2-color-background;
         margin: 20px 0;
