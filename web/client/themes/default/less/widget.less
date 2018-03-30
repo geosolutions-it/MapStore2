@@ -144,21 +144,41 @@
      * to have the optical illusion of the search input and title
      * inside the global dashboard editor
      */
+     position: relative;
     .layer-selector, .map-selector {
         .ms2-border-layout-body {
             position: relative;
             .compat-catalog, .map-catalog {
                 .catalog-footer {
                     z-index: 100;
-                    box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.06), 0 -1px 2px rgba(0, 0, 0, 0.12);
+                    .shadow-soft-up;
                 }
                 .catalog-form {
                     width: 100%;
                     padding: 0 auto;
                     z-index: 100;
-                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+                    .shadow-soft;
                 }
             }
         }
     }
+    
+    /*
+     * fix for google map layer in preview
+     */
+    .map-selector {
+        .ms2-border-layout-body {
+            overflow: hidden;
+        }
+        #__base_map__ {
+            position: relative;
+        }
+    }
+    /*
+     * end - fix for google map layer in preview
+     */
+}
+
+.m-padding-md {
+    padding-bottom: 15px;
 }
