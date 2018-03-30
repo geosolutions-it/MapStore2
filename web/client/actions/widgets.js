@@ -21,11 +21,15 @@ const ADD_DEPENDENCY = "WIDGETS:ADD_DEPENDENCY";
 const REMOVE_DEPENDENCY = "WIDGETS:REMOVE_DEPENDENCY";
 const LOAD_DEPENDENCIES = "WIDGETS:LOAD_DEPENDENCIES";
 const RESET_DEPENDENCIES = "WIDGETS:RESET_DEPENDENCIES";
+const TOGGLE_CONNECTION = "WIDGETS:TOGGLE_CONNECTION";
 
 const OPEN_FILTER_EDITOR = "WIDGETS:OPEN_FILTER_EDITOR";
 const EXPORT_CSV = "WIDGETS:EXPORT_CSV";
 const EXPORT_IMAGE = "WIDGETS:EXPORT_IMAGE";
+const WIDGET_SELECTED = "WIDGETS:WIDGET_SELECTED";
 const DEFAULT_TARGET = "floating";
+const DEPENDENCY_SELECTOR_KEY = "dependencySelector";
+const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
 
 
 /**
@@ -170,6 +174,20 @@ const loadDependencies = (dependencies) => ({
     type: LOAD_DEPENDENCIES,
     dependencies
 });
+
+/**
+ * Action triggered to start the connection flow. Typically starts the connection flow
+ * @param {array} availableDependencies Array of available dependency keys
+ * @param {object} options a map of connections to apply when the dependencies has been resolved
+ * @param {string} target target of the connection. If not present we assume is the current editing widget
+ */
+const toggleConnection = (active, availableDependencies, options, target) => ({
+    type: TOGGLE_CONNECTION,
+    active,
+    availableDependencies,
+    options,
+    target
+});
 /**
  * Change the page setting of the editor
  * @param  {number} step the page number
@@ -187,11 +205,23 @@ const exportCSV = ({data= [], title = "export"}) => ({
     title
 });
 
+const selectWidget = (widget, opts) => ({
+    type: WIDGET_SELECTED,
+    widget,
+    opts
+});
 const exportImage = ({widgetDivId}) => ({
     type: EXPORT_IMAGE,
     widgetDivId
 });
 const openFilterEditor = () => ({type: OPEN_FILTER_EDITOR});
+const setupDependencySelector = (setup) => changeEditorSetting(`${DEPENDENCY_SELECTOR_KEY}`, setup);
+const changeDependencySelector = (key, value) => changeEditorSetting(`${DEPENDENCY_SELECTOR_KEY}[${key}]`, value);
+const toggleDependencySelector = (active, settings) => setupDependencySelector({
+    active,
+    ...settings
+});
+
 module.exports = {
     NEW,
     INSERT,
@@ -208,10 +238,11 @@ module.exports = {
     REMOVE_DEPENDENCY,
     LOAD_DEPENDENCIES,
     RESET_DEPENDENCIES,
-    DEFAULT_TARGET,
     OPEN_FILTER_EDITOR,
     EXPORT_CSV,
     EXPORT_IMAGE,
+    TOGGLE_CONNECTION,
+    WIDGET_SELECTED,
     exportCSV,
     exportImage,
     openFilterEditor,
@@ -226,9 +257,17 @@ module.exports = {
     editNewWidget,
     onEditorChange,
     changeEditorSetting,
+    toggleConnection,
+    selectWidget,
     addDependency,
     removeDependency,
     loadDependencies,
     resetDependencies,
-    setPage
+    setPage,
+    changeDependencySelector,
+    setupDependencySelector,
+    toggleDependencySelector,
+    DEPENDENCY_SELECTOR_KEY,
+    DEFAULT_TARGET,
+    WIDGETS_REGEX
 };

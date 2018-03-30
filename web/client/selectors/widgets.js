@@ -1,8 +1,8 @@
 const { get, find, castArray, isEqualWith} = require('lodash');
 const {mapSelector} = require('./map');
 const {getSelectedLayer} = require('./layers');
-const {DEFAULT_TARGET} = require('../actions/widgets');
-const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
+const {DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
+
 const {isDashboardAvailable, isDashboardEditing} = require('./dashboard');
 const {defaultMemoize, createSelector, createSelectorCreator} = require('reselect');
 
@@ -50,6 +50,16 @@ const availableDependenciesSelector = createSelector(
         availableDependencies: ws.map(({id}) => `widgets[${id}].map`).concat(castArray(map).map(() => "map"))
     })
 );
+/**
+ * returns if the dependency selector state
+ * @param {object} state the state
+ */
+const getDependencySelectorConfig = state => get(getEditorSettings(state), `${DEPENDENCY_SELECTOR_KEY}`);
+/**
+ * Determines if the dependencySelector is active
+ * @param {object} state the state
+ */
+const isWidgetSelectionActive = state => get(getDependencySelectorConfig(state), 'active');
 
 module.exports = {
     getFloatingWidgets,
@@ -86,5 +96,7 @@ module.exports = {
             ...acc,
             [Object.keys(map)[i]]: values[i]
         }), {})
-    )
+    ),
+    isWidgetSelectionActive,
+    getDependencySelectorConfig
 };

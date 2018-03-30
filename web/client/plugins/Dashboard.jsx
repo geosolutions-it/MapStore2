@@ -11,8 +11,8 @@ const {connect} = require('react-redux');
 const {compose, withProps} = require('recompose');
 const {createSelector} = require('reselect');
 const {mapIdSelector} = require('../selectors/map');
-const { getDashboardWidgets, dependenciesSelector, getDashboardWidgetsLayout} = require('../selectors/widgets');
-const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage} = require('../actions/widgets');
+const { getDashboardWidgets, dependenciesSelector, getDashboardWidgetsLayout, isWidgetSelectionActive} = require('../selectors/widgets');
+const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage, selectWidget} = require('../actions/widgets');
 const ContainerDimensions = require('react-container-dimensions').default;
 
 const PropTypes = require('prop-types');
@@ -23,11 +23,13 @@ const WidgetsView = compose(
             getDashboardWidgets,
             getDashboardWidgetsLayout,
             dependenciesSelector,
-            (id, widgets, layouts, dependencies) => ({
+            isWidgetSelectionActive,
+            (id, widgets, layouts, dependencies, selectionActive) => ({
                 id,
                 widgets,
                 layouts,
-                dependencies
+                dependencies,
+                selectionActive
             })
         ), {
             editWidget,
@@ -35,6 +37,7 @@ const WidgetsView = compose(
             exportCSV,
             exportImage,
             deleteWidget,
+            onWidgetSelected: selectWidget, // TODO: manage onselect
             onLayoutChange: changeLayout
         }
     ),

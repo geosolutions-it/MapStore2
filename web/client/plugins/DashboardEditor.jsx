@@ -14,16 +14,16 @@ const PropTypes = require('prop-types');
 
 const {isDashboardEditing} = require('../selectors/dashboard');
 const {dashboardSelector} = require('./widgetbuilder/commons');
-
+const { createWidget, toggleConnection } = require('../actions/widgets');
 const Builder =
     compose(
-        connect(dashboardSelector),
+        connect(dashboardSelector, {toggleConnection}),
         withProps(({ availableDependencies = []}) => ({
             availableDependencies: availableDependencies.filter(d => d !== "map")
-        }))
+        })),
     )(require('./widgetbuilder/WidgetTypeBuilder'));
 const Toolbar = require('../components/misc/toolbar/Toolbar');
-const {createWidget} = require('../actions/widgets');
+
 
 const {setEditing, setEditorAvailable} = require('../actions/dashboard');
 

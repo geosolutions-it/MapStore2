@@ -70,14 +70,17 @@ const mapBuilder = compose(
 module.exports = mapBuilder(({
         enabled, onClose = () => {},
         toggleLayerSelector = () => {},
+        editorData = {},
         editNode, setEditNode, closeNodeEditor, selectedGroups=[], selectedLayers=[], selectedNodes, onNodeSelect = () => {},
-        availableDependencies =[]
+    availableDependencies = [], toggleConnection = () => {}
     } = {}) =>
     (<BorderLayout
         className = "map-selector"
         header={(<BuilderHeader onClose={onClose}>
             <Toolbar
+            editorData={editorData}
             availableDependencies={availableDependencies}
+            toggleConnection={toggleConnection}
             selectedNodes={selectedNodes}
             selectedLayers={selectedLayers}
             selectedGroups={selectedGroups}

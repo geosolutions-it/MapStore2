@@ -12,6 +12,7 @@ const { withProps, compose } = require('recompose');
  */
 module.exports = (showCondition = () => true) => compose(
     withProps(({
+        disableMultiDependencySupport,
         stepButtons = [],
         toggleConnection = () => { },
         availableDependencies = [],
@@ -21,8 +22,8 @@ module.exports = (showCondition = () => true) => compose(
     }) => ({
         stepButtons: [{
             onClick: () => toggleConnection(availableDependencies),
-            disabled: availableDependencies.length > 1, // TODO: remove when support multi map
-            visible: showCondition(props) && canConnect && availableDependencies.length > 0,
+            disabled: disableMultiDependencySupport,
+            visible: !!showCondition(props) && !!canConnect && availableDependencies.length > 0,
             bsStyle: connected ? "success" : "primary",
             glyph: connected ? "plug" : "unplug",
             tooltipId: connected
