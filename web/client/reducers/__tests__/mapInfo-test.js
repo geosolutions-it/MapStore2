@@ -252,4 +252,9 @@ describe('Test the mapInfo reducer', () => {
         expect(state.enabled).toBe(false);
     });
 
+    it('should enable zoom to marker', () => {
+        let state = mapInfo({}, {type: 'ENABLE_ZOOM_TO_MARKER'});
+        expect(state).toExist();
+        expect(state.zoomToMarker).toBe(true);
+    });
 });

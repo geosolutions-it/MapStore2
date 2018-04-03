@@ -22,7 +22,8 @@ const {
     NO_QUERYABLE_LAYERS,
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
-    TOGGLE_MAPINFO_STATE
+    TOGGLE_MAPINFO_STATE,
+    ENABLE_ZOOM_TO_MARKER
 } = require('../actions/mapInfo');
 
 const {RESET_CONTROLS} = require('../actions/controls');
@@ -177,6 +178,11 @@ function mapInfo(state = initState, action) {
                 layerMetadata: action.metadata,
                 format: 'JSON'
             }]
+        });
+    }
+    case ENABLE_ZOOM_TO_MARKER: {
+        return assign({}, state, {
+            zoomToMarker: true
         });
     }
     default:

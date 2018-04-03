@@ -10,7 +10,8 @@ const {createSelector} = require('reselect');
 
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
-const {head, isEmpty, find} = require('lodash');
+const {getNormalizedLatLon} = require('../utils/CoordinatesUtils');
+const {get, head, isEmpty, find} = require('lodash');
 
 const layersSelector = state => state.layers && state.layers.flat || state.layers || state.config && state.config.layers || [];
 const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
@@ -22,12 +23,15 @@ const geoColderSelector = state => state.search && state.search;
 // TODO currently loading flag causes a re-creation of the selector on any pan
 // to avoid this separate loading from the layer object
 
+const zoomToInfoMarkerSelector = (state) => get(state, "mapInfo.zoomToMarker", false);
+
 const layerSelectorWithMarkers = createSelector(
-    [layersSelector, markerSelector, geoColderSelector],
-    (layers = [], markerPosition, geocoder) => {
+    [layersSelector, markerSelector, geoColderSelector, zoomToInfoMarkerSelector],
+    (layers = [], markerPosition, geocoder, zoomToMarker) => {
         let newLayers = [...layers];
         if ( markerPosition ) {
-            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", markerPosition.latlng));
+            const coords = zoomToMarker ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
+            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", coords));
         }
         if (geocoder && geocoder.markerPosition) {
             newLayers.push(MapInfoUtils.getMarkerLayer("GeoCoder", geocoder.markerPosition, "marker",
@@ -93,5 +97,6 @@ module.exports = {
     wfsDownloadSelector,
     backgroundControlsSelector,
     currentBackgroundSelector,
-    tempBackgroundSelector
+    tempBackgroundSelector,
+    zoomToInfoMarkerSelector
 };

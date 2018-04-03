@@ -65,11 +65,17 @@ const identifyLifecycle = compose(
         componentDidMount() {
             const {
                 enabled,
-                changeMousePointer = () => {}
+                changeMousePointer = () => {},
+                disableZoomToMarker,
+                onEnableZoomToMarker = () => {}
             } = this.props;
 
             if (enabled) {
                 changeMousePointer('pointer');
+            }
+
+            if (!disableZoomToMarker) {
+                onEnableZoomToMarker();
             }
         },
         componentWillReceiveProps(newProps) {

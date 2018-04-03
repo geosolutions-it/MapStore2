@@ -36,15 +36,26 @@ const updateMapLayoutEpic = (action$, store) =>
         .switchMap(() => {
 
             if (get(store.getState(), "browser.mobile")) {
-                return Rx.Observable.empty();
+                const bottom = mapInfoRequestsSelector(store.getState()).length > 0 ? {bottom: '50%'} : {bottom: undefined};
+                const boundingMapRect = {
+                    ...bottom
+                };
+                return Rx.Observable.of(updateMapLayout({
+                    boundingMapRect
+                }));
             }
 
             const mapLayout = {left: {sm: 300, md: 500, lg: 600}, right: {md: 658}, bottom: {sm: 30}};
 
             if (get(store.getState(), "mode") === 'embedded') {
                 const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
+                const bottom = mapInfoRequestsSelector(store.getState()).length > 0 ? {bottom: '50%'} : {bottom: undefined};
+                const boundingMapRect = {
+                    ...bottom
+                };
                 return Rx.Observable.of(updateMapLayout({
-                    ...height
+                    ...height,
+                    boundingMapRect
                 }));
             }
 
@@ -62,17 +73,24 @@ const updateMapLayoutEpic = (action$, store) =>
                 mapInfoRequestsSelector(store.getState()).length > 0 && {right: mapLayout.right.md} || null
             ].filter(panel => panel)) || {right: 0};
 
-            const footer = isFeatureGridOpen(store.getState()) && {bottom: getDockSize(store.getState()) * 100 + '%'} || {bottom: mapLayout.bottom.sm};
+            const bottom = isFeatureGridOpen(store.getState()) && {bottom: getDockSize(store.getState()) * 100 + '%'} || {bottom: mapLayout.bottom.sm};
 
             const transform = isFeatureGridOpen(store.getState()) && {transform: 'translate(0, -' + mapLayout.bottom.sm + 'px)'} || {transform: 'none'};
             const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
 
+            const boundingMapRect = {
+                ...bottom,
+                ...leftPanels,
+                ...rightPanels
+            };
+
             return Rx.Observable.of(updateMapLayout({
                 ...leftPanels,
                 ...rightPanels,
-                ...footer,
+                ...bottom,
                 ...transform,
-                ...height
+                ...height,
+                boundingMapRect
             }));
         });
 
