@@ -41,6 +41,10 @@ const CANCEL_CLOSE_TEXT = 'ANNOTATIONS:CANCEL_CLOSE_TEXT';
 const SAVE_TEXT = 'ANNOTATIONS:SAVE_TEXT';
 const DOWNLOAD = 'ANNOTATIONS:DOWNLOAD';
 const LOAD_ANNOTATIONS = 'ANNOTATIONS:LOAD_ANNOTATIONS';
+const CHANGED_SELECTED = 'ANNOTATIONS:CHANGED_SELECTED';
+const RESET_COORD_EDITOR = 'ANNOTATIONS:RESET_COORD_EDITOR';
+const CHANGE_RADIUS = 'ANNOTATIONS:CHANGE_RADIUS';
+const CHANGE_TEXT = 'ANNOTATIONS:CHANGE_TEXT';
 
 function loadAnnotations(features, override = false) {
     return {
@@ -62,16 +66,32 @@ const {head} = require('lodash');
 function editAnnotation(id) {
     return (dispatch, getState) => {
         const feature = head(head(getState().layers.flat.filter(l => l.id === 'annotations')).features.filter(f => f.properties.id === id));
-        dispatch({
-            type: EDIT_ANNOTATION,
-            feature,
-            featureType: feature.geometry.type
-        });
+        if (feature.type === "FeatureCollection") {
+            dispatch({
+                type: EDIT_ANNOTATION,
+                feature,
+                featureType: feature.type
+            });
+        } else {
+            dispatch({
+                type: EDIT_ANNOTATION,
+                feature,
+                featureType: feature.geometry.type
+            });
+        }
     };
 }
 function newAnnotation() {
     return {
         type: NEW_ANNOTATION
+    };
+}
+function changeSelected(coordinates, radius, text) {
+    return {
+        type: CHANGED_SELECTED,
+        coordinates,
+        radius,
+        text
     };
 }
 function showTextArea() {
@@ -240,16 +260,33 @@ function toggleUnsavedStyleModal() {
         type: TOGGLE_STYLE_MODAL
     };
 }
+function resetCoordEditor() {
+    return {
+        type: RESET_COORD_EDITOR
+    };
+}
 function saveText(value) {
     return {
         type: SAVE_TEXT,
         value
     };
 }
+function changeRadius(radius) {
+    return {
+        type: CHANGE_RADIUS,
+        radius
+    };
+}
 function changeStyler(stylerType) {
     return {
         type: CHANGE_STYLER,
         stylerType
+    };
+}
+function changeText(text) {
+    return {
+        type: CHANGE_TEXT,
+        text
     };
 }
 module.exports = {
@@ -309,5 +346,9 @@ module.exports = {
     confirmCloseAnnotations,
     cancelCloseAnnotations,
     DOWNLOAD, download,
-    LOAD_ANNOTATIONS, loadAnnotations
+    LOAD_ANNOTATIONS, loadAnnotations,
+    RESET_COORD_EDITOR, resetCoordEditor,
+    CHANGE_TEXT, changeText,
+    CHANGE_RADIUS, changeRadius,
+    CHANGED_SELECTED, changeSelected
 };

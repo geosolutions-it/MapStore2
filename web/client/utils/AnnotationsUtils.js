@@ -7,7 +7,9 @@
 */
 const uuidv1 = require('uuid/v1');
 const LocaleUtils = require('./LocaleUtils');
-const {values} = require('lodash');
+const {values, slice} = require('lodash');
+const assign = require('object-assign');
+const uuid = require('uuid');
 
 const STYLE_CIRCLE = {
     color: '#ffcc33',
@@ -79,7 +81,7 @@ const AnnotationsUtils = {
      * otherwise it will return the original geometry type.
      * @return {object} a transformed geojson with only geometry types
     */
-    convertGeoJSONToInternalModel: ({type = "Point", geometries = []}, textValues = [], circles = []) => {
+    convertGeoJSONToInternalModel: ({type = "Point", geometries = [], features = []}, textValues = [], circles = []) => {
         switch (type) {
             case "Point": case "MultiPoint": {
                 return {type: textValues.length === 1 ? "Text" : type};
@@ -120,6 +122,18 @@ const AnnotationsUtils = {
                     return {type: g.type};
                 })};
             }
+            case "FeatureCollection" : {
+                const featuresTypes = features.map(f => {
+                    if (f.properties && f.properties.isCircle) {
+                        return {type: "Circle"};
+                    }
+                    if (f.properties && f.properties.isText) {
+                        return {type: "Text"};
+                    }
+                    return {type: f.geometry.type};
+                });
+                return {type: "FeatureCollection", features: featuresTypes};
+            }
             default: return {type};
         }
     },
@@ -127,7 +141,7 @@ const AnnotationsUtils = {
      * Retrieves a non duplicated list of stylers
      * @return {string[]} it returns the array of available styler from geometry of a feature
     */
-    getAvailableStyler: ({type = "Point", geometries = []} = {}) => {
+    getAvailableStyler: ({type = "Point", geometries = [], features = []} = {}) => {
         switch (type) {
             case "Point": case "MultiPoint": {
                 return [AnnotationsUtils.getRelativeStyler(type)];
@@ -146,6 +160,11 @@ const AnnotationsUtils = {
             }
             case "GeometryCollection": {
                 return geometries.reduce((p, c) => {
+                    return (p.indexOf(AnnotationsUtils.getRelativeStyler(c.type)) !== -1) ? p : p.concat(AnnotationsUtils.getAvailableStyler(c));
+                }, []);
+            }
+            case "FeatureCollection": {
+                return features.reduce((p, c) => {
                     return (p.indexOf(AnnotationsUtils.getRelativeStyler(c.type)) !== -1) ? p : p.concat(AnnotationsUtils.getAvailableStyler(c));
                 }, []);
             }
@@ -203,7 +222,27 @@ const AnnotationsUtils = {
         const properties = getPropreties(annotation.properties, messages);
         return {style, properties, ...annotation};
     },
-    removeDuplicate: (annotations) => values(annotations.reduce((p, c) => ({...p, [c.properties.id]: c}), {}))
+    removeDuplicate: (annotations) => values(annotations.reduce((p, c) => ({...p, [c.properties.id]: c}), {})),
+    formatCoordinates: (coords) => {
+        return coords.map(c => ({lat: c[1], lon: c[0]}));
+    },
+    getComponents: ({type, coordinates}) => {
+        switch (type) {
+            case "Polygon": return AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1));
+            case "LineString": return AnnotationsUtils.formatCoordinates(coordinates);
+            default: return AnnotationsUtils.formatCoordinates([coordinates]);
+        }
+    },
+    addIds: (features) => {
+        return features.map(f => {
+            if (f.properties && f.properties.id) {
+                return f;
+            }
+            return assign({}, f, { properties: assign({}, f.properties, {id: uuid.v1()})});
+        });
+    },
+    validateCoords: ({lat, lon}) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
+    validateCoordsArray: ([lon, lat]) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon))
 };
 
 module.exports = AnnotationsUtils;

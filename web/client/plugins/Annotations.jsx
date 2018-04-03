@@ -20,7 +20,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
     highlight, cleanHighlight, showAnnotation, cancelShowAnnotation, filterAnnotations, closeAnnotations,
     cancelCloseAnnotations, confirmCloseAnnotations, stopDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal, changedProperties,
-    setUnsavedStyle, toggleUnsavedStyleModal, addText, cancelText, saveText, download, loadAnnotations} =
+    setUnsavedStyle, toggleUnsavedStyleModal, addText, cancelText, saveText, download, loadAnnotations, changeSelected, resetCoordEditor, changeRadius, changeText} =
     require('../actions/annotations');
 
 const { zoomToExtent } = require('../actions/map');
@@ -44,13 +44,17 @@ const commonEditorActions = {
     onChangeProperties: changedProperties,
     onToggleUnsavedChangesModal: toggleUnsavedChangesModal,
     onToggleUnsavedStyleModal: toggleUnsavedStyleModal,
+    onResetCoordEditor: resetCoordEditor,
     onStyleGeometry: toggleStyle,
     onCancelStyle: restoreStyle,
+    onChangeSelected: changeSelected,
     onSaveStyle: toggleStyle,
     onSetStyle: setStyle,
     onStopDrawing: stopDrawing,
     onDeleteGeometry: removeAnnotationGeometry,
     onZoom: zoomToExtent,
+    onChangeRadius: changeRadius,
+    onChangeText: changeText,
     onDownload: download
 };
 const AnnotationsEditor = connect(annotationsInfoSelector,

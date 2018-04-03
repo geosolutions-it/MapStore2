@@ -160,9 +160,9 @@ class Annotations extends React.Component {
             <PolygonThumb styleRect={style[featureType]}/>
         </span>);
         }
-        if (featureType === "GeometryCollection") {
+        if (featureType === "GeometryCollection" || featureType === "FeatureCollection") {
             return (<span className={"mapstore-annotations-panel-card"}>
-            {(!!geometry.geometries.filter(f => f.type !== "MultiPoint").length || (properties.textValues && properties.textValues.length)) && (<MultiGeomThumb styleMultiGeom={style} geometry={geometry} properties={properties}/>)}
+            {(!!(geometry.geometries || geometry.features).filter(f => f.type !== "MultiPoint").length || (properties.textValues && properties.textValues.length)) && (<MultiGeomThumb styleMultiGeom={style} geometry={geometry} properties={properties}/>)}
             {markerStyle ? (<span className={"mapstore-annotations-panel-card"}>
                 <div className={"mapstore-annotations-panel-card-thumbnail-" + marker.name} style={{...marker.thumbnailStyle, margin: 'auto', textAlign: 'center', color: '#ffffff', marginLeft: 7}}>
                     <span className={"mapstore-annotations-panel-card-thumbnail " + this.getConfig().getGlyphClassName(markerStyle)} style={{marginTop: 0, marginLeft: -7}}/>
@@ -188,7 +188,7 @@ class Annotations extends React.Component {
             ...this.getConfig().fields.reduce( (p, c)=> {
                 return assign({}, p, {[c.name]: this.renderField(c, annotation)});
             }, {}),
-            preview: this.renderThumbnail({style: annotation.style, featureType: annotation.geometry.type, geometry: annotation.geometry, properties: annotation.properties }),
+            preview: this.renderThumbnail({style: annotation.style, featureType: "FeatureCollection", geometry: {features: annotation.features}, properties: annotation.properties }),
             ...cardActions
         };
     };

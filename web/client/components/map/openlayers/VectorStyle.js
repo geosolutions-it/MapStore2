@@ -169,7 +169,7 @@ function getMarkerStyle(options) {
     return null;
 }
 
-const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, textValues, fallbackStyle ) => {
+const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, textValues, fallbackStyle, radius = 0 ) => {
     let style;
     let tempStyle = options.style[geomType] || options.style;
     if (geomType === "MultiLineString" || geomType === "LineString") {
@@ -195,7 +195,7 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
         }) : getMarkerStyle({style: {...tempStyle, highlight: options.style.highlight}});
 
     }
-    if ((geomType === "Circle") && tempStyle.radius ) {
+    if (geomType === "Circle" && radius ) {
         return new ol.style.Style({
             stroke: new ol.style.Stroke( tempStyle && tempStyle.stroke ? tempStyle.stroke : {
                 color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
@@ -206,7 +206,7 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
                 color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 0.2)
             }),
             image: new ol.style.Circle({
-                radius: tempStyle.radius || 10,
+                radius: radius || 10,
                 fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
                     color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 0.2)
                 }),
@@ -253,7 +253,36 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
 function getStyle(options, isDrawing = false, textValues = []) {
 
     let style = options.nativeStyle;
-    const geomType = (options.style && options.style.type) || (options.features && options.features[0] ? options.features[0].geometry.type : undefined);
+    let type;
+    let textStrings = textValues;
+    let radius = 0;
+    let geomType = (options.style && options.style.type) || (options.features && options.features[0] && options.features[0].geometry ? options.features[0].geometry.type : undefined);
+    if (geomType === "FeatureCollection" || options.features && options.features[0] && options.features[0].type === "FeatureCollection") {
+        geomType = "FeatureCollection";
+        return function(f) {
+            var feature = this || f;
+            type = feature.getGeometry().getType();
+            if (feature.getProperties() && feature.getProperties().isCircle ) {
+                type = "Circle";
+                radius = feature.getProperties().radius;
+            }
+            if (feature.getProperties() && feature.getProperties().isText ) {
+                type = "Text";
+                textStrings = [feature.getProperties().valueText];
+            }
+            return getValidStyle(type, options, isDrawing, textStrings, null, radius);
+        };
+    }
+    if (options && options.properties && options.properties.isText) {
+        type = "Text";
+        textStrings = [options.properties.valueText];
+        return getValidStyle(type, options, isDrawing, textStrings, null, radius);
+    }
+    if (options && options.properties && options.properties.isCircle ) {
+        type = "Circle";
+        radius = options.properties.radius;
+        return getValidStyle(type, options, isDrawing, textStrings, null, radius);
+    }
     if (!style && options.style) {
         style = {
             stroke: new ol.style.Stroke( options.style.stroke ? options.style.stroke : {
@@ -276,7 +305,7 @@ function getStyle(options, isDrawing = false, textValues = []) {
 
             style = function(f) {
                 var feature = this || f;
-                const type = feature.getGeometry().getType();
+                type = feature.getGeometry().getType();
                 switch (type) {
                     case "Point":
                     case "MultiPoint":
@@ -297,7 +326,7 @@ function getStyle(options, isDrawing = false, textValues = []) {
             style = function(f) {
                 var feature = this || f;
                 let markerStyles;
-                let type = feature.getGeometry().getType();
+                type = feature.getGeometry().getType();
                 let textIndexes = feature.get("textGeometriesIndexes") || [];
                 let circles = feature.get("circles") || [];
                 let textValue = feature.get("textValues");// || [""];
@@ -331,8 +360,8 @@ function getStyle(options, isDrawing = false, textValues = []) {
                 if (type === "Point" || type === "MultiPoint") {
                     markerStyles = getMarkerStyle({style: {...options.style[type], highlight: options.style.highlight}});
                     return isDrawing ? new ol.style.Style({
-                      image: image,
-                      geometry: feature.getGeometry()
+                        image: image,
+                        geometry: feature.getGeometry()
                     }) : markerStyles.map(m => {
                         m.setGeometry(feature.getGeometry());
                         return m;
@@ -342,13 +371,19 @@ function getStyle(options, isDrawing = false, textValues = []) {
             };
             return style;
         }
-        return getValidStyle(geomType, options, isDrawing, textValues, style);
+        if (geomType === "Circle") {
+            radius = options.features && options.features.length && options.features[0].properties && options.features[0].properties.radius || 10;
+        }
+        if (geomType === "Circle") {
+            radius = options.features && options.features.length && options.features[0].properties && options.features[0].properties.radius || 10;
+        }
+        return getValidStyle(geomType, options, isDrawing, textValues, style, radius);
     }
     // *************************************************************************
 
     return (options.styleName && !options.overrideOLStyle) ? (feature) => {
         if (options.styleName === "marker") {
-            const type = feature.getGeometry().getType();
+            type = feature.getGeometry().getType();
             switch (type) {
                 case "Point":
                 case "MultiPoint":

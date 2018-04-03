@@ -15,6 +15,7 @@ const CIRCLE = "circle";
 const TEXT = "text";
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const Portal = require('../../misc/Portal');
+const GeometryEditor = require('./GeometryEditor');
 const PolygonStyler = require('../../style/PolygonStyler');
 const CircleStyler = require('../../style/CircleStyler');
 const TextStyler = require('../../style/TextStyler');
@@ -112,12 +113,16 @@ class AnnotationsEditor extends React.Component {
         onSetUnsavedChanges: PropTypes.func,
         onSetUnsavedStyle: PropTypes.func,
         onChangeProperties: PropTypes.func,
+        onChangeSelected: PropTypes.func,
         onConfirmClose: PropTypes.func,
         onCancelRemove: PropTypes.func,
         onConfirmRemove: PropTypes.func,
+        onChangeRadius: PropTypes.func,
+        onChangeText: PropTypes.func,
         onCancelClose: PropTypes.func,
         onDeleteGeometry: PropTypes.func,
         onStyleGeometry: PropTypes.func,
+        onResetCoordEditor: PropTypes.func,
         onSetStyle: PropTypes.func,
         onChangeStyler: PropTypes.func,
         onStopDrawing: PropTypes.func,
@@ -128,6 +133,7 @@ class AnnotationsEditor extends React.Component {
         drawing: PropTypes.bool,
         unsavedChanges: PropTypes.bool,
         unsavedStyle: PropTypes.bool,
+        coordinateEditorEnabled: PropTypes.bool,
         styling: PropTypes.bool,
         removing: PropTypes.object,
         closing: PropTypes.bool,
@@ -138,6 +144,7 @@ class AnnotationsEditor extends React.Component {
         showUnsavedStyleModal: PropTypes.bool,
         config: PropTypes.object,
         feature: PropTypes.object,
+        selected: PropTypes.object,
         mode: PropTypes.string,
         maxZoom: PropTypes.number,
         width: PropTypes.number,
@@ -147,8 +154,10 @@ class AnnotationsEditor extends React.Component {
     static defaultProps = {
         config: defaultConfig,
         errors: {},
+        selected: null,
         editedFields: {},
         showBack: false,
+        coordinateEditorEnabled: false,
         feature: {},
         maxZoom: 18,
         stylerType: "marker"
@@ -210,7 +219,7 @@ class AnnotationsEditor extends React.Component {
                                 visible: true,
                                 multiGeometry: this.props.config.multiGeometry,
                                 onClick: () => {this.props.onEdit(this.props.id); },
-                                disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.geometry,
+                                disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.features,
                                 bsStyle: this.props.drawing ? "success" : "primary"
                             }, {
                                 glyph: 'trash',
@@ -261,7 +270,7 @@ class AnnotationsEditor extends React.Component {
                             onSetStyle: this.props.onSetStyle,
                             style: this.props.editing.style,
                             onStopDrawing: this.props.onStopDrawing,
-                            disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.geometry,
+                            disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.features && this.props.editing.features.length,
                             drawing: this.props.drawing,
                             titles: {
                                 marker: <Message msgId="annotations.titles.marker"/>,
@@ -274,12 +283,12 @@ class AnnotationsEditor extends React.Component {
                             }, {
                                 glyph: 'polygon-trash',
                                 tooltipId: "annotations.deleteGeometry",
-                                visible: this.props.editing && !!this.props.editing.geometry,
+                                visible: this.props.editing && !!this.props.editing.features,
                                 onClick: this.props.onDeleteGeometry
                             }, {
                                 glyph: 'dropper',
                                 tooltipId: "annotations.styleGeometry",
-                                visible: this.props.editing && !!this.props.editing.geometry,
+                                visible: this.props.editing && !!this.props.editing.features,
                                 onClick: this.props.onStyleGeometry
                             }, {
                                 glyph: 'floppy-disk',
@@ -292,9 +301,31 @@ class AnnotationsEditor extends React.Component {
             </Row>
         </Grid>);
     };
+    renderEditingCoordButtons = () => {
+        return (<Grid className="mapstore-annotations-info-viewer-buttons" fluid>
+            <Row className="text-center noTopMargin">
+                <Col xs={12}>
+                    <Toolbar
+                        btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}}
+                        buttons={[ {
+                            glyph: 'arrow-left',
+                            tooltipId: "annotations.back",
+                            visible: true,
+                            onClick: () => {
+                                // TODO back should return to editing form
+                                this.props.onResetCoordEditor();
+                            }
+                        }
+                        ]}/>
+                </Col>
+            </Row>
+        </Grid>);
+    };
 
-    renderButtons = (editing) => {
-        const toolbar = editing ? this.renderEditingButtons() : this.renderViewButtons();
+    renderButtons = (editing, coordinateEditorEnabled) => {
+        const toolbar = editing ?
+            coordinateEditorEnabled ? this.renderEditingCoordButtons() : this.renderEditingButtons()
+            : this.renderViewButtons();
         return (<div className="mapstore-annotations-info-viewer-buttons">{toolbar}</div>);
     };
 
@@ -401,7 +432,7 @@ class AnnotationsEditor extends React.Component {
 
     renderStyler = () => {
         const {editing, onCancelStyle, onSaveStyle, stylerType, onSetUnsavedStyle, onToggleUnsavedStyleModal} = this.props;
-        const stylerTabs = editing.geometry ? getAvailableStyler(convertGeoJSONToInternalModel(editing.geometry, editing.properties.textValues, editing.properties.circles)) : [];
+        const stylerTabs = editing.features ? getAvailableStyler(convertGeoJSONToInternalModel(editing)) : [];
         return (<div className="mapstore-annotations-info-viewer-styler">
             <Grid className="mapstore-annotations-info-viewer-styler-buttons" fluid style={{width: '100%', boxShadow: 'none'}}>
                 <Row className="noTopMargin">
@@ -453,11 +484,24 @@ class AnnotationsEditor extends React.Component {
         return (
             <div className="mapstore-annotations-info-viewer-items">
                 <Grid fluid>
-                    <Row>
+                    {!this.props.coordinateEditorEnabled && <Row>
                         <Col xs={12}>
                             {items}
                         </Col>
                     </Row>
+                    }
+                    {this.props.coordinateEditorEnabled && <Row>
+                        <Col xs={12}>
+                            <GeometryEditor
+                                drawing={this.props.drawing}
+                                selected={this.props.selected}
+                                completeGeometry={this.props.drawing}
+                                onChange={this.props.onChangeSelected}
+                                onChangeRadius={this.props.onChangeRadius}
+                                onChangeText={this.props.onChangeText}
+                            />
+                        </Col>
+                    </Row>}
                 </Grid>
             </div>
         );
@@ -524,7 +568,7 @@ class AnnotationsEditor extends React.Component {
         const editing = this.props.editing && (this.props.editing.properties.id === this.props.id);
         return (
             <div className="mapstore-annotations-info-viewer">
-                {this.renderButtons(editing)}
+                {this.renderButtons(editing, this.props.coordinateEditorEnabled)}
                 {this.props.drawingText && this.props.drawingText.show &&
                     (<Portal><ConfirmDialog
                         show
@@ -605,7 +649,7 @@ class AnnotationsEditor extends React.Component {
                 });
             }
             return previous;
-        }, {}), this.props.editing.geometry ? {} : {
+        }, {}), this.props.editing.features ? {} : {
             geometry: 'annotations.emptygeometry'
         });
 
@@ -615,7 +659,7 @@ class AnnotationsEditor extends React.Component {
         const errors = this.validate();
         if (Object.keys(errors).length === 0) {
             this.props.onSave(this.props.id, assign({}, this.props.editedFields),
-                this.props.editing.geometry, this.props.editing.style, this.props.editing.newFeature || false, this.props.editing.properties);
+                this.props.editing.features, this.props.editing.style, this.props.editing.newFeature || false, this.props.editing.properties);
         } else {
             this.props.onError(errors);
         }

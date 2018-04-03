@@ -41,7 +41,13 @@ class MultiGeomThumb extends React.Component {
         let textPresent = this.props.properties && this.props.properties.textValues && !!this.props.properties.textValues.length;
         let circlePresent = this.props.properties && this.props.properties.circles && !!this.props.properties.circles.length;
         let styleText = textPresent ? this.props.styleMultiGeom.Text : {};
-        let types = this.props.geometry.geometries.map(g => g.type);
+        let types;
+        if (this.props.geometry.geometries && this.props.geometry.geometries.length) {
+            types = (this.props.geometry.geometries).map(g => g.type);
+        }
+        if (this.props.geometry.features && this.props.geometry.features.length) {
+            types = (this.props.geometry.features).map(g => g.geometry.type);
+        }
         let polygonPresent = types.indexOf("Polygon") !== -1 || types.indexOf("MultiPolygon") !== -1;
         let lineStringPresent = types.indexOf("LineString") !== -1 || types.indexOf("MultiLineString") !== -1;
         return (

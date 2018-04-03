@@ -13,9 +13,8 @@ const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const uuid = require('uuid');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
-const {reprojectGeoJson} = require('../../../utils/CoordinatesUtils');
+const {reprojectGeoJson, reproject} = require('../../../utils/CoordinatesUtils');
 const VectorStyle = require('./VectorStyle');
-
 /**
  * Component that allows to draw and edit geometries as (Point, LineString, Polygon, Rectangle, Circle, MultiGeometries)
  * @class DrawSupport
@@ -43,6 +42,7 @@ class DrawSupport extends React.Component {
         features: PropTypes.array,
         onChangeDrawingStatus: PropTypes.func,
         onGeometryChanged: PropTypes.func,
+        onSelectFeatures: PropTypes.func,
         onDrawStopped: PropTypes.func,
         onEndDrawing: PropTypes.func,
         onTextChanged: PropTypes.func,
@@ -61,6 +61,7 @@ class DrawSupport extends React.Component {
         onChangeDrawingStatus: () => {},
         onGeometryChanged: () => {},
         onDrawStopped: () => {},
+        onSelectFeatures: () => {},
         onEndDrawing: () => {},
         onTextChanged: () => {}
     };
@@ -97,7 +98,11 @@ class DrawSupport extends React.Component {
         }
 
     }
-
+    getNewFeature = (newDrawMethod, coordinates) => {
+        return new ol.Feature({
+            geometry: this.createOLGeometry({type: newDrawMethod, coordinates})
+        });
+    }
     render() {
         return null;
     }
@@ -142,36 +147,57 @@ class DrawSupport extends React.Component {
     };
 
     addFeatures = ({features, drawMethod, options}) => {
+
         features.forEach((f) => {
-            let geometry = f;
-            if (geometry.geometry && geometry.geometry.type !== "GeometryCollection") {
-                geometry = reprojectGeoJson(geometry, geometry.featureProjection, this.props.map.getView().getProjection().getCode()).geometry;
-            }
-            if (geometry.type !== "GeometryCollection") {
-                const feature = new ol.Feature({
-                    geometry: this.createOLGeometry(geometry.geometry ? geometry.geometry : geometry)
+            if (f.type === "FeatureCollection") {
+                let featuresOL = (new ol.format.GeoJSON()).readFeatures(f);
+                featuresOL = featuresOL.map(ft => this.transformPolygonToCircle(ft));
+                this.drawSource = new ol.source.Vector({
+                    features: featuresOL
                 });
-                feature.set("textGeometriesIndexes", f.properties && f.properties.textGeometriesIndexes);
-                feature.set("textValues", f.properties && f.properties.textValues);
-                feature.set("circles", f.properties && f.properties.circles);
-                this.drawSource.addFeature(feature);
+                // TODO need further impementation for recognize  CIRCLE, TEXT, MARKER
+                // transform polygon into Circle
+
+                this.drawLayer.setSource(this.drawSource);
+            } else {
+                let geometry = f;
+                if (geometry.geometry && geometry.geometry.type !== "GeometryCollection") {
+                    geometry = reprojectGeoJson(geometry, geometry.featureProjection, this.props.map.getView().getProjection().getCode()).geometry;
+                }
+                if (geometry.type !== "GeometryCollection") {
+                    const feature = new ol.Feature({
+                        geometry: this.createOLGeometry(geometry.geometry ? geometry.geometry : geometry)
+                    });
+                    feature.set("textGeometriesIndexes", f.properties && f.properties.textGeometriesIndexes);
+                    feature.set("textValues", f.properties && f.properties.textValues);
+                    feature.set("circles", f.properties && f.properties.circles);
+                    this.drawSource.addFeature(feature);
+                }
             }
         });
 
+        // TODO CHECK THIS WITH FeatureCollection
         if (features.length === 0 && (options.editEnabled || options.drawEnabled)) {
-            const feature = new ol.Feature({
-                geometry: this.createOLGeometry({type: drawMethod, coordinates: null})
-            });
-            this.drawSource.addFeature(feature);
+            if (options.transformToFeatureCollection) {
+                this.drawSource = new ol.source.Vector({
+                    features: (new ol.format.GeoJSON()).readFeatures(
+                        {
+                            type: "FeatureCollection", features: []
+                        })
+                });
+                this.drawLayer.setSource(this.drawSource);
+            } else {
+                const feature = new ol.Feature({
+                    geometry: this.createOLGeometry({type: drawMethod, coordinates: null})
+                });
+                this.drawSource.addFeature(feature);
+            }
         } else {
             if (features[0] && features[0].type === "GeometryCollection" ) {
                 // HERE IT ENTERS WITH EDIT
                 this.drawSource = new ol.source.Vector({
                     features: (new ol.format.GeoJSON()).readFeatures(features[0])
                 });
-                this.drawSource.getFeatures()[0].set("textGeometriesIndexes", features[0].properties && features[0].properties.textGeometriesIndexes);
-                this.drawSource.getFeatures()[0].set("textValues", features[0].properties && features[0].properties.textValues);
-                this.drawSource.getFeatures()[0].set("circles", features[0].properties && features[0].properties.circles);
 
                 let geoms = this.replacePolygonsWithCircles(this.drawSource.getFeatures()[0]);
                 this.drawSource.getFeatures()[0].getGeometry().setGeometries(geoms);
@@ -254,6 +280,7 @@ class DrawSupport extends React.Component {
         }
         return geometry;
     };
+
     handleDrawAndEdit = (drawMethod, startingPoint, maxPoints, style) => {
         if (this.drawInteraction) {
             this.removeDrawInteraction();
@@ -276,137 +303,178 @@ class DrawSupport extends React.Component {
             let features = this.props.features;
             let geomCollection;
             let newDrawMethod;
-            if (drawMethod === "Circle") {
-                newDrawMethod = "Polygon";
-                const radius = drawnGeom.getRadius();
-                const center = drawnGeom.getCenter();
-                const coordinates = this.polygonCoordsFromCircle(center, radius);
-                const newMultiGeom = this.toMulti(this.createOLGeometry({type: newDrawMethod, coordinates}));
-                if (features.length === 1 && !features[0].geometry) {
-                    previousGeometries = [];
-                    geomCollection = new ol.geom.GeometryCollection([newMultiGeom]);
+            if (this.props.options.transformToFeatureCollection) {
+                let newFeature;
+                if (drawMethod === "Circle") {
+                    newDrawMethod = "Polygon";
+                    const radius = drawnGeom.getRadius();
+                    let center = drawnGeom.getCenter();
+                    const coordinates = this.polygonCoordsFromCircle(center, radius);
+                    newFeature = this.getNewFeature(newDrawMethod, coordinates);
+                    // TODO verify center is projected in 4326 and is an array
+                    center = reproject(center, this.props.map.getView().getProjection().getCode(), "EPSG:4326", false);
+                    newFeature.setProperties({isCircle: true, radius, center: [center.x, center.y]});
+                } else if (drawMethod === "Polygon") {
+                    newDrawMethod = this.props.drawMethod;
+                    let coordinates = drawnGeom.getCoordinates();
+                    coordinates[0].push(coordinates[0][0]);
+                    newFeature = this.getNewFeature(newDrawMethod, coordinates);
                 } else {
-                    previousGeometries = this.toMulti(head(drawnFeatures).getGeometry());
-                    if (previousGeometries.getGeometries) {
-                        // transform also previous circles into polygon
-                        const geoms = this.replaceCirclesWithPolygons(head(drawnFeatures));
-                        geomCollection = new ol.geom.GeometryCollection([...geoms, newMultiGeom]);
-                    } else {
-                        geomCollection = new ol.geom.GeometryCollection([previousGeometries, newMultiGeom]);
+                    newDrawMethod = (drawMethod === "Text") ? "Point" : this.props.drawMethod;
+                    let coordinates = drawnGeom.getCoordinates();
+                    newFeature = this.getNewFeature(newDrawMethod, coordinates);
+                    if (drawMethod === "Text") {
+                        newFeature.setProperties({isText: true, valueText: "."});
                     }
                 }
-                this.sketchFeature.setGeometry(geomCollection);
+                // drawnFeatures is array of ol.Feature
+                const previousFeatures = drawnFeatures.length >= 1 ? [...this.replaceCirclesWithPolygonsInFeatureColl(drawnFeatures)] : [];
+                newFeature.setProperties({id: uuid.v1()});
+                const newFeatures = [...previousFeatures, newFeature];
+                // create FeatureCollection externalize as function
+                const geojsonFormat = new ol.format.GeoJSON();
+                let newFeatureColl = geojsonFormat.writeFeaturesObject(newFeatures);
+                const vectorSource = new ol.source.Vector({
+                    features: (new ol.format.GeoJSON()).readFeatures(newFeatureColl)
+                  });
+                this.drawLayer.setSource(vectorSource);
+                let feature = reprojectGeoJson(newFeatureColl, this.props.map.getView().getProjection().getCode(), "EPSG:4326");
+                this.props.onGeometryChanged([feature], this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "", drawMethod === "Text", drawMethod === "Circle");
+                this.props.onEndDrawing(feature, this.props.drawOwner);
 
-            } else if (drawMethod === "Text" || drawMethod === "MultiPoint") {
-                let coordinates = drawnGeom.getCoordinates();
-                newDrawMethod = "MultiPoint";
-                let newMultiGeom = this.toMulti(this.createOLGeometry({type: newDrawMethod, coordinates: [coordinates]}));
-                if (features.length === 1 && !features[0].geometry) {
-                    previousGeometries = [];
-                    geomCollection = new ol.geom.GeometryCollection([newMultiGeom]);
-                } else {
-                    previousGeometries = this.toMulti(head(drawnFeatures).getGeometry());
-                    if (previousGeometries.getGeometries) {
-                        let geoms = this.replaceCirclesWithPolygons(head(drawnFeatures));
-                        geomCollection = new ol.geom.GeometryCollection([...geoms, newMultiGeom]);
+            } else {
+                if (drawMethod === "Circle") {
+                    newDrawMethod = "Polygon";
+                    const radius = drawnGeom.getRadius();
+                    const center = drawnGeom.getCenter();
+                    const coordinates = this.polygonCoordsFromCircle(center, radius);
+                    const newMultiGeom = this.toMulti(this.createOLGeometry({type: newDrawMethod, coordinates}));
+                    if (features.length === 1 && !features[0].geometry) {
+                        previousGeometries = [];
+                        geomCollection = new ol.geom.GeometryCollection([newMultiGeom]);
                     } else {
-                        geomCollection = new ol.geom.GeometryCollection([previousGeometries, newMultiGeom]);
-                    }
-                }
-                this.sketchFeature.setGeometry(geomCollection);
-            } else if (!isSimpleGeomType(drawMethod)) {
-                let newMultiGeom;
-                geomCollection = null;
-                if (features.length === 1 && !features[0].geometry) {
-                    previousGeometries = this.toMulti(this.createOLGeometry({type: drawMethod, coordinates: null}));
-                } else {
-                    previousGeometries = this.toMulti(head(drawnFeatures).getGeometry());
-                }
-
-                // find geometry of same type
-                let geometries = drawnFeatures.map(f => {
-                    if (f.getGeometry().getType() === "GeometryCollection") {
-                        return f.getGeometry().getGeometries();
-                    }
-                    return f.getGeometry();
-                });
-                if (drawnFeatures[0].getGeometry().getType() === "GeometryCollection") {
-                    geometries = geometries[0];
-                }
-                let geomAlreadyPresent = find(geometries, (olGeom) => olGeom.getType() === drawMethod);
-                if (geomAlreadyPresent) {
-                    // append
-                    this.appendToMultiGeometry(drawMethod, geomAlreadyPresent, drawnGeom);
-                } else {
-                    // create new multi geom
-                    newMultiGeom = this.toMulti(this.createOLGeometry({type: drawMethod, coordinates: [drawnGeom.getCoordinates()]}));
-                }
-
-                if (drawnGeom.getType() !== getSimpleGeomType(previousGeometries.getType())) {
-                    let geoms = head(drawnFeatures).getGeometry().getGeometries ? this.replaceCirclesWithPolygons(head(drawnFeatures)) : [];
-                    if (geomAlreadyPresent) {
-                        let newGeoms = geoms.map(gg => {
-                            return gg.getType() === geomAlreadyPresent.getType() ? geomAlreadyPresent : gg;
-                        });
-                        geomCollection = new ol.geom.GeometryCollection(newGeoms);
-                    } else {
-                        if (previousGeometries.getType() === "GeometryCollection") {
+                        previousGeometries = this.toMulti(head(drawnFeatures).getGeometry());
+                        if (previousGeometries.getGeometries) {
+                            // transform also previous circles into polygon
+                            const geoms = this.replaceCirclesWithPolygons(head(drawnFeatures));
                             geomCollection = new ol.geom.GeometryCollection([...geoms, newMultiGeom]);
                         } else {
-                            if (drawMethod === "Text") {
-                                geomCollection = new ol.geom.GeometryCollection([newMultiGeom]);
-                            } else {
-                                geomCollection = new ol.geom.GeometryCollection([previousGeometries, newMultiGeom]);
-                            }
+                            geomCollection = new ol.geom.GeometryCollection([previousGeometries, newMultiGeom]);
                         }
                     }
                     this.sketchFeature.setGeometry(geomCollection);
-                } else {
-                    this.sketchFeature.setGeometry(geomAlreadyPresent);
+
+                } else if (drawMethod === "Text" || drawMethod === "MultiPoint") {
+                    let coordinates = drawnGeom.getCoordinates();
+                    newDrawMethod = "MultiPoint";
+                    let newMultiGeom = this.toMulti(this.createOLGeometry({type: newDrawMethod, coordinates: [coordinates]}));
+                    if (features.length === 1 && !features[0].geometry) {
+                        previousGeometries = [];
+                        geomCollection = new ol.geom.GeometryCollection([newMultiGeom]);
+                    } else {
+                        previousGeometries = this.toMulti(head(drawnFeatures).getGeometry());
+                        if (previousGeometries.getGeometries) {
+                            let geoms = this.replaceCirclesWithPolygons(head(drawnFeatures));
+                            geomCollection = new ol.geom.GeometryCollection([...geoms, newMultiGeom]);
+                        } else {
+                            geomCollection = new ol.geom.GeometryCollection([previousGeometries, newMultiGeom]);
+                        }
+                    }
+                    this.sketchFeature.setGeometry(geomCollection);
+                } else if (!isSimpleGeomType(drawMethod)) {
+                    let newMultiGeom;
+                    geomCollection = null;
+                    if (features.length === 1 && !features[0].geometry) {
+                        previousGeometries = this.toMulti(this.createOLGeometry({type: drawMethod, coordinates: null}));
+                    } else {
+                        previousGeometries = this.toMulti(head(drawnFeatures).getGeometry());
+                    }
+
+                    // find geometry of same type
+                    let geometries = drawnFeatures.map(f => {
+                        if (f.getGeometry().getType() === "GeometryCollection") {
+                            return f.getGeometry().getGeometries();
+                        }
+                        return f.getGeometry();
+                    });
+                    if (drawnFeatures[0].getGeometry().getType() === "GeometryCollection") {
+                        geometries = geometries[0];
+                    }
+                    let geomAlreadyPresent = find(geometries, (olGeom) => olGeom.getType() === drawMethod);
+                    if (geomAlreadyPresent) {
+                        // append
+                        this.appendToMultiGeometry(drawMethod, geomAlreadyPresent, drawnGeom);
+                    } else {
+                        // create new multi geom
+                        newMultiGeom = this.toMulti(this.createOLGeometry({type: drawMethod, coordinates: [drawnGeom.getCoordinates()]}));
+                    }
+
+                    if (drawnGeom.getType() !== getSimpleGeomType(previousGeometries.getType())) {
+                        let geoms = head(drawnFeatures).getGeometry().getGeometries ? this.replaceCirclesWithPolygons(head(drawnFeatures)) : [];
+                        if (geomAlreadyPresent) {
+                            let newGeoms = geoms.map(gg => {
+                                return gg.getType() === geomAlreadyPresent.getType() ? geomAlreadyPresent : gg;
+                            });
+                            geomCollection = new ol.geom.GeometryCollection(newGeoms);
+                        } else {
+                            if (previousGeometries.getType() === "GeometryCollection") {
+                                geomCollection = new ol.geom.GeometryCollection([...geoms, newMultiGeom]);
+                            } else {
+                                if (drawMethod === "Text") {
+                                    geomCollection = new ol.geom.GeometryCollection([newMultiGeom]);
+                                } else {
+                                    geomCollection = new ol.geom.GeometryCollection([previousGeometries, newMultiGeom]);
+                                }
+                            }
+                        }
+                        this.sketchFeature.setGeometry(geomCollection);
+                    } else {
+                        this.sketchFeature.setGeometry(geomAlreadyPresent);
+                    }
                 }
-            }
-            let properties = this.props.features[0].properties;
-            if (drawMethod === "Text") {
-                properties = assign({}, this.props.features[0].properties, {
-                        textValues: (this.props.features[0].properties.textValues || []).concat(["."]),
-                        textGeometriesIndexes: (this.props.features[0].properties.textGeometriesIndexes || []).concat([this.sketchFeature.getGeometry().getGeometries().length - 1])
-                    });
-            }
-            if (drawMethod === "Circle") {
-                properties = assign({}, properties, {
-                        circles: (this.props.features[0].properties.circles || []).concat([this.sketchFeature.getGeometry().getGeometries().length - 1])
-                    });
-            }
-            let feature = this.fromOLFeature(this.sketchFeature, startingPoint, properties);
-            const vectorSource = new ol.source.Vector({
-                features: (new ol.format.GeoJSON()).readFeatures(feature)
-              });
-            this.drawLayer.setSource(vectorSource);
+                let properties = this.props.features[0].properties;
+                if (drawMethod === "Text") {
+                    properties = assign({}, this.props.features[0].properties, {
+                            textValues: (this.props.features[0].properties.textValues || []).concat(["."]),
+                            textGeometriesIndexes: (this.props.features[0].properties.textGeometriesIndexes || []).concat([this.sketchFeature.getGeometry().getGeometries().length - 1])
+                        });
+                }
+                if (drawMethod === "Circle") {
+                    properties = assign({}, properties, {
+                            circles: (this.props.features[0].properties.circles || []).concat([this.sketchFeature.getGeometry().getGeometries().length - 1])
+                        });
+                }
+                let feature = this.fromOLFeature(this.sketchFeature, startingPoint, properties);
+                const vectorSource = new ol.source.Vector({
+                    features: (new ol.format.GeoJSON()).readFeatures(feature)
+                  });
+                this.drawLayer.setSource(vectorSource);
 
-            const geojsonFormat = new ol.format.GeoJSON();
-            let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
-            if (newFeature.geometry.type === "Polygon") {
-                newFeature.geometry.coordinates[0].push(newFeature.geometry.coordinates[0][0]);
-            }
+                const geojsonFormat = new ol.format.GeoJSON();
+                let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
+                if (newFeature.geometry.type === "Polygon") {
+                    newFeature.geometry.coordinates[0].push(newFeature.geometry.coordinates[0][0]);
+                }
 
-            this.props.onGeometryChanged([newFeature], this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "", drawMethod === "Text", drawMethod === "Circle");
-            this.props.onEndDrawing(feature, this.props.drawOwner);
-            feature = reprojectGeoJson(feature, this.props.map.getView().getProjection().getCode(), "EPSG:4326");
+                this.props.onGeometryChanged([newFeature], this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "", drawMethod === "Text", drawMethod === "Circle");
+                this.props.onEndDrawing(feature, this.props.drawOwner);
+                feature = reprojectGeoJson(feature, this.props.map.getView().getProjection().getCode(), "EPSG:4326");
 
-            const newFeatures = isSimpleGeomType(this.props.drawMethod) ?
-                this.props.features.concat([{...feature, properties}]) :
-                [{...feature, properties}];
-            if (this.props.options.stopAfterDrawing) {
-                this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner, newFeatures);
-            } else {
-                this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner,
-                    newFeatures.map((f) => reprojectGeoJson(f, "EPSG:4326", this.props.map.getView().getProjection().getCode())),
-                    assign({}, this.props.options, { featureProjection: this.props.map.getView().getProjection().getCode()}));
-            }
-            if (this.selectInteraction) {
-                // TODO update also the selected features
-                this.addSelectInteraction();
-                this.selectInteraction.setActive(true);
+                const newFeatures = isSimpleGeomType(this.props.drawMethod) ?
+                    this.props.features.concat([{...feature, properties}]) :
+                    [{...feature, properties}];
+                if (this.props.options.stopAfterDrawing) {
+                    this.props.onChangeDrawingStatus('stop', this.props.drawMethod, this.props.drawOwner, newFeatures);
+                } else {
+                    this.props.onChangeDrawingStatus('replace', this.props.drawMethod, this.props.drawOwner,
+                        newFeatures.map((f) => reprojectGeoJson(f, "EPSG:4326", this.props.map.getView().getProjection().getCode())),
+                        assign({}, this.props.options, { featureProjection: this.props.map.getView().getProjection().getCode()}));
+                }
+                if (this.selectInteraction) {
+                    // TODO update also the selected features
+                    this.addSelectInteraction();
+                    this.selectInteraction.setActive(true);
+                }
             }
         }, this);
 
@@ -565,8 +633,17 @@ class DrawSupport extends React.Component {
 
     addDrawOrEditInteractions = (newProps) => {
         this.clean();
+        /*
+        const newFeature = reprojectGeoJson(mockFeatureCollection, newProps.options.featureProjection, this.props.map.getView().getProjection().getCode());
+        const props = assign({}, newProps, {features: newFeature.features.length ? newFeature.features : [], newFeature});
+        */
         const newFeature = reprojectGeoJson(head(newProps.features), newProps.options.featureProjection, this.props.map.getView().getProjection().getCode());
-        const props = assign({}, newProps, {features: newFeature.geometry ? [{...newFeature.geometry, properties: newFeature.properties}] : []});
+        let props;
+        if (newFeature.features && newFeature.features.length) {
+            props = assign({}, newProps, {features: [newFeature]});
+        } else {
+            props = assign({}, newProps, {features: newFeature.geometry ? [{...newFeature.geometry, properties: newFeature.properties}] : []});
+        }
         // TODO investigate if this newFeature.geometry is needed instead of only newFeature
         if (!this.drawLayer) {
             this.addLayer(props);
@@ -580,6 +657,7 @@ class DrawSupport extends React.Component {
             this.addModifyInteraction();
             // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
             this.addTranslateInteraction();
+            this.addSelectInteraction(newProps.options && newProps.options.selected);
         }
 
         if (newProps.options.drawEnabled) {
@@ -587,29 +665,72 @@ class DrawSupport extends React.Component {
         }
     };
 
-    addSelectInteraction = () => {
+    addSelectInteraction = (selectedFeature) => {
         if (this.selectInteraction) {
             this.props.map.removeInteraction(this.selectInteraction);
         }
+        let olFt;
+        if (selectedFeature) {
+            olFt = find(this.drawSource.getFeatures(), f => f.getProperties().id === selectedFeature.properties.id );
+            this.selectFeature(olFt);
+        }
 
-        this.selectInteraction = new ol.interaction.Select({ layers: [this.drawLayer] });
+        this.selectInteraction = new ol.interaction.Select({
+            layers: [this.drawLayer],
+            features: new ol.Collection(selectedFeature ? [olFt] : null)
+        });
 
-        this.selectInteraction.on('select', () => {
-            let features = this.props.features.map(f => {
-                let selectedFeatures = this.selectInteraction.getFeatures().getArray();
-                const selected = selectedFeatures.reduce((previous, current) => {
-                    return current.get('id') === f.id ? true : previous;
-                }, false);
+        this.selectInteraction.on('select', (evt) => {
 
-                return assign({}, f, { selected: selected });
-            });
-
-            this.props.onChangeDrawingStatus('select', null, this.props.drawOwner, features);
+            let selectedFeatures = this.selectInteraction.getFeatures().getArray();
+            let featuresSelected = [];
+            if (selectedFeatures.length) {
+                featuresSelected = this.props.features.map(f => {
+                    let selected = false;
+                    if (f.type === "FeatureCollection" && selectedFeatures.length > 0) {
+                        let ftSelected = head(selectedFeatures);
+                        this.selectFeature(ftSelected);
+                        // TODO SELECT SMALLEST ONE IF THERE ARE >= 2 features selected
+                        const geojsonFormat = new ol.format.GeoJSON();
+                        if (ftSelected.getGeometry && ftSelected.getGeometry().getType() === "Circle") {
+                            let radius = ftSelected.getGeometry().getRadius();
+                            let center = reproject(ftSelected.getGeometry().getCenter(), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
+                            ftSelected.setProperties({center: [center.x, center.y], radius});
+                            ftSelected = this.replaceCircleWithPolygon(ftSelected.clone());
+                        }
+                        this.drawSource.getFeatures().forEach(feat => {
+                            if (feat.getProperties().id === ftSelected.getProperties().id) {
+                                this.selectFeature(ftSelected);
+                            } else {
+                                this.deselectFeature(feat);
+                            }
+                        });
+                        return reprojectGeoJson(geojsonFormat.writeFeatureObject(ftSelected.clone()), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
+                    }
+                    selected = selectedFeatures.reduce((previous, current) => {
+                        return current.get('id') === f.id ? true : previous;
+                    }, false);
+                    return assign({}, f, { selected: selected, selectedFeature: evt.selected });
+                });
+                this.props.onSelectFeatures(featuresSelected);
+            }
+            if (selectedFeatures.length === 0) {
+                this.props.onSelectFeatures([]);
+                this.drawSource.getFeatures().map( ft => this.deselectFeature(ft));
+                return null;
+            }
+            // this.props.onChangeDrawingStatus('select', null, this.props.drawOwner, features);
         });
 
         this.props.map.addInteraction(this.selectInteraction);
     };
 
+    selectFeature = (f) => {
+        f.setProperties({selected: true});
+    }
+    deselectFeature = (f) => {
+        f.setProperties({selected: false});
+    }
     removeDrawInteraction = () => {
         if (this.drawInteraction) {
             this.props.map.removeInteraction(this.drawInteraction);
@@ -818,13 +939,26 @@ class DrawSupport extends React.Component {
             let features = e.features.getArray().map((f) => {
                 // transform back circles in polygons
                 let newFt = f.clone();
-                if (newFt.getGeometry().getType() === "GeometryCollection") {
+
+                if (newFt.getGeometry && newFt.getGeometry().getType() === "GeometryCollection") {
                     newFt.getGeometry().setGeometries(this.replaceCirclesWithPolygons(newFt));
+                }
+                if (newFt.getGeometry && newFt.getGeometry() && newFt.getGeometry().getType() === "Circle") {
+                    let center = reproject(newFt.getGeometry().getCenter(), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
+                    let radius = newFt.getGeometry().getRadius();
+                    newFt.setProperties({center: [center.x, center.y], radius});
+                    newFt = this.replaceCircleWithPolygon(newFt.clone());
+                }
+                if (newFt.getProperties().selected) {
+                    this.props.onSelectFeatures([reprojectGeoJson(geojsonFormat.writeFeatureObject(newFt), this.props.map.getView().getProjection().getCode(), "EPSG:4326")]);
                 }
                 return reprojectGeoJson(geojsonFormat.writeFeatureObject(newFt), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
             });
-
-            this.props.onGeometryChanged(features, this.props.drawOwner, false, "editing", "editing"); // TODO FIX THIS
+            if (this.props.options.transformToFeatureCollection) {
+                this.props.onGeometryChanged([{type: "FeatureCollection", features}], this.props.drawOwner, false, "editing", "editing"); // TODO FIX THIS
+            } else {
+                this.props.onGeometryChanged(features, this.props.drawOwner, false, "editing", "editing"); // TODO FIX THIS
+            }
         });
         this.props.map.addInteraction(this.modifyInteraction);
     }
@@ -843,13 +977,26 @@ class DrawSupport extends React.Component {
             let features = e.features.getArray().map(f => {
                 // transform back circles in polygons
                 let newFt = f.clone();
-                if (newFt.getGeometry().getType() === "GeometryCollection") {
+                if (newFt.getGeometry && newFt.getGeometry().getType() === "GeometryCollection") {
                     newFt.getGeometry().setGeometries(this.replaceCirclesWithPolygons(newFt));
+                }
+                if (newFt.getGeometry && newFt.getGeometry() && newFt.getGeometry().getType() === "Circle") {
+                    if (!newFt.getProperties.center) {
+                        let center = reproject(newFt.getGeometry().getCenter(), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
+                        newFt.setProperties({center: [center.x, center.y]});
+                    }
+                    newFt = this.replaceCircleWithPolygon(newFt);
+                }
+                if (f.getProperties() && f.getProperties().selected) {
+                    this.props.onSelectFeatures([reprojectGeoJson(geojsonFormat.writeFeatureObject(newFt), this.props.map.getView().getProjection().getCode(), "EPSG:4326")]);
                 }
                 return reprojectGeoJson(geojsonFormat.writeFeatureObject(newFt), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
             });
-
-            this.props.onGeometryChanged(features, this.props.drawOwner, this.props.drawOwner, false, this.props.drawMethod === "Text", this.props.drawMethod === "Circle");
+            if (this.props.options.transformToFeatureCollection) {
+                this.props.onGeometryChanged([{type: "FeatureCollection", features}], this.props.drawOwner, this.props.drawOwner, false, this.props.drawMethod === "Text", this.props.drawMethod === "Circle");
+            } else {
+                this.props.onGeometryChanged(features, this.props.drawOwner, this.props.drawOwner, false, this.props.drawMethod === "Text", this.props.drawMethod === "Circle");
+            }
         });
         this.addTranslateListener();
         this.props.map.addInteraction(this.translateInteraction);
@@ -922,6 +1069,33 @@ class DrawSupport extends React.Component {
     }
 
     /**
+     * replace circles with polygons in feature collection
+     * @param {ol.Feature[]} features to transform
+     * @return {ol.Feature[]} features transformed
+    */
+    replaceCirclesWithPolygonsInFeatureColl = (features) => {
+        return features.map(f => {
+            if (f.getGeometry().getType() !== "Circle") {
+                return f;
+            }
+            return this.replaceCircleWithPolygon(f);
+        });
+    }
+    /**
+     * tranform circle to polygon
+     * @param {ol.Feature} feature to check if needs to be transformed
+     * @return {ol.Feature} feature transformed in polygon
+    */
+    replaceCircleWithPolygon = (feature) => {
+        if (feature.getProperties().isCircle && feature.getGeometry().getType() === "Circle") {
+            const center = feature.getGeometry().getCenter();
+            const radius = feature.getGeometry().getRadius();
+            feature.setGeometry(this.polygonFromCircle(center, radius));
+            return feature;
+        }
+        return feature;
+    }
+    /**
      * replace circles with polygons
      * @param {ol.Feature} feature must contain a geometry collection
      * @return {ol.geom.SimpleGeometry[]} geometries
@@ -946,7 +1120,7 @@ class DrawSupport extends React.Component {
      * replace polygons with circles
      * @param {ol.Feature} feature must contain a geometry collection and property "circles"
      * @return {ol.geom.SimpleGeometry[]} geometries
-    */
+     */
     replacePolygonsWithCircles = (feature) => {
         let geoms = feature.getGeometry().getGeometries();
         return geoms.map((g, i) => {
@@ -960,6 +1134,30 @@ class DrawSupport extends React.Component {
                 return new ol.geom.Circle(center, radius);
             }
         });
+    }
+    /**
+     * transform polygon to a circle
+     * @param {ol.Feature} feature must contain a geometry collection and property "circles"
+     * @return {ol.geom.Circle} geometries
+     */
+    transformPolygonToCircle = (feature) => {
+        if (feature.getGeometry().getType() !== "Polygon") {
+            return feature;
+        }
+        if (feature.getProperties() && feature.getProperties().isCircle) {
+            const extent = feature.getGeometry().getExtent();
+            let center;
+            if (feature.getProperties().center) {
+                center = reproject(feature.getProperties().center, "EPSG:4326", this.props.map.getView().getProjection().getCode());
+                center = [center.x, center.y];
+            } else {
+                center = ol.extent.getCenter(extent);
+            }
+            const radius = feature.getProperties().radius || this.calculateRadius(center, feature.getGeometry().getCoordinates());
+            feature.setGeometry(new ol.geom.Circle(center, radius));
+            return feature;
+        }
+        return feature;
     }
 
     addTranslateListener = () => {
