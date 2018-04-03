@@ -11,11 +11,12 @@ const { connect } = require('react-redux');
 const {createSelector} = require('reselect');
 const {compose} = require('recompose');
 const React = require('react');
+const Message = require('../../../../components/I18N/Message');
 module.exports = compose(
     connect(createSelector(isWidgetSelectionActive, (widgetSelectionActive) => ({ widgetSelectionActive }))),
     withMask(
         ({ widgetSelectionActive }) => widgetSelectionActive,
-        () => <div style={{margin: "auto"}} >Select a Map to connect with the chart</div>,
+        () => <div style={{margin: "auto"}} ><Message msgId="widgets.builder.wizard.selectMapToConnect" /></div>,
         {alwaysWrap: true}
     )
 );

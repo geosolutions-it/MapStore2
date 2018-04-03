@@ -66,7 +66,6 @@ const Toolbar = compose(
         wizardStateToProps
     ),
     viewportBuilderConnect,
-    viewportBuilderConnectMask,
     withConnectButton(({ step }) => step === 0)
 )(require('../../components/widgets/builder/wizard/table/Toolbar'));
 
@@ -76,6 +75,7 @@ const Toolbar = compose(
  */
 const chooseLayerEnhancer = compose(
     connect(wizardSelector),
+    viewportBuilderConnectMask,
     branch(
         ({ layer } = {}) => !layer,
         renderComponent(chartLayerSelector(require('./LayerSelector')))
