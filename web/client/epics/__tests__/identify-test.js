@@ -9,7 +9,7 @@
 const expect = require('expect');
 
 const {ZOOM_TO_POINT} = require('../../actions/map');
-const {FEATURE_INFO_CLICK, loadFeatureInfo} = require('../../actions/mapinfo');
+const {FEATURE_INFO_CLICK, loadFeatureInfo} = require('../../actions/mapInfo');
 const {zoomToVisibleAreaEpic} = require('../identify');
 const {testEpic} = require('./epicTestUtils');
 
