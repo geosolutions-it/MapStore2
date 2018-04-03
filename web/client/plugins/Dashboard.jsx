@@ -7,11 +7,12 @@
  */
 
 const React = require('react');
+const {get} = require('lodash');
 const {connect} = require('react-redux');
-const {compose, withProps} = require('recompose');
+const { compose, withProps, withHandlers } = require('recompose');
 const {createSelector} = require('reselect');
 const {mapIdSelector} = require('../selectors/map');
-const { getDashboardWidgets, dependenciesSelector, getDashboardWidgetsLayout, isWidgetSelectionActive} = require('../selectors/widgets');
+const { getDashboardWidgets, dependenciesSelector, getDashboardWidgetsLayout, isWidgetSelectionActive, getEditingWidget} = require('../selectors/widgets');
 const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage, selectWidget} = require('../actions/widgets');
 const ContainerDimensions = require('react-container-dimensions').default;
 
@@ -24,12 +25,14 @@ const WidgetsView = compose(
             getDashboardWidgetsLayout,
             dependenciesSelector,
             isWidgetSelectionActive,
-            (id, widgets, layouts, dependencies, selectionActive) => ({
+            (state) => get(getEditingWidget(state), "id"),
+            (id, widgets, layouts, dependencies, selectionActive, editingWidgetId) => ({
                 id,
                 widgets,
                 layouts,
                 dependencies,
-                selectionActive
+                selectionActive,
+                editingWidgetId
             })
         ), {
             editWidget,
@@ -37,7 +40,7 @@ const WidgetsView = compose(
             exportCSV,
             exportImage,
             deleteWidget,
-            onWidgetSelected: selectWidget, // TODO: manage onselect
+            onWidgetSelected: selectWidget,
             onLayoutChange: changeLayout
         }
     ),
@@ -46,7 +49,11 @@ const WidgetsView = compose(
             height: "100%",
             overflow: "auto"
         }
-    }))
+    })),
+    withHandlers({
+        // TODO: maybe using availableDependencies here will be better when different widget's type dependencies are supported
+        isWidgetSelectable: ({ editingWidgetId }) => ({ widgetType, id }) => widgetType === "map" && id !== editingWidgetId
+    })
 )(require('../components/dashboard/Dashboard'));
 
 

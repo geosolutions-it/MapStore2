@@ -36,7 +36,28 @@ const getValidLocationChange = action$ =>
         .startWith({type: MAP_CONFIG_LOADED}) // just dummy action to trigger the first switchMap
         .switchMap(action => action.type === SAVING_MAP ? Rx.Observable.never() : action$)
         .filter(({type} = {}) => type === LOCATION_CHANGE);
-const configureDependency = (active, dependency, options) => Rx.Observable.of(onEditorChange("mapSync", active), onEditorChange('dependenciesMap', updateDependencyMap(active, dependency, options)))
+/**
+ * Action flow to add/Removes dependencies for a widgets.
+ * Trigger `mapSync` property of a widget and sets `dependenciesMap` object to map `dependency` prop onto widget props.
+ * For instance if
+ *  - `active = true`
+ *  - `mappings` option is `{a: "b"}
+ *  - `dependency = "x"`
+ * then you will have dependencyMap set to : {a: "x.b"}.
+ * It manages also special dependency "map" where mappings are applied directly (center...) .
+ * If active = false the dependencies will be removed from dependencyMap.
+ *
+ * @param {boolean} active true if the connection must be activated
+ * @param {string} dependency the dependency element id to add
+ * @param {object} options dependency mapping options. Must contain `mappings` object
+ */
+const configureDependency = (active, dependency, options) =>
+    Rx.Observable.of(
+        onEditorChange("mapSync", active),
+        onEditorChange('dependenciesMap',
+            updateDependencyMap(active, dependency, options)
+        )
+    );
 module.exports = {
     exportWidgetData: action$ =>
         action$.ofType(EXPORT_CSV)
@@ -63,6 +84,10 @@ module.exports = {
             [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`
         }), {}))
     ),
+    /**
+     * Toggles the dependencies setup and widget selection for dependencies
+     * (if more than one widget is available for connection)
+     */
     toggleWidgetConnectFlow: (action$, {getState = () => {}} = {}) =>
         action$.ofType(TOGGLE_CONNECTION).switchMap(({ active, availableDependencies = [], options}) =>
             active

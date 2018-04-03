@@ -1129,6 +1129,7 @@
                     "useTheSelectedLayer": "Usar la capa seleccionada",
                     "connectToAMap": "Conectar a un mapa",
                     "connectToTheMap": "Conectarse al mapa",
+                    "selectMapToConnect": "Seleccione el mapa para conectarse",
                     "clearConnection": "Borrar conexión"
                 },
                 "errors": {

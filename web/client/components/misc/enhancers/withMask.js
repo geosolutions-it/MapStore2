@@ -12,21 +12,31 @@ const {branch, nest} = require('recompose');
  * @param {function} showMask gets props as argument and returns true if the enhancer should be applied
  * @param {*} maskContent the content of the mask
  */
-const maskEnhancer = (visible, maskContent, { maskContainerStyle, maskStyle }) => (A) => nest(
-    (props) => (<div style={maskContainerStyle} >
+const maskEnhancer = (showMask, maskContent, { maskContainerStyle, maskStyle }) => (A) => nest(
+    (props) => (<div className="ms2-mask-container" style={maskContainerStyle} >
         {props.children}
-        <div style={{ ...maskStyle, visibility: visible(props) ? 'visible' : 'hidden'}} >
+        {showMask(props) ? <div className="ms2-mask" style={maskStyle} >
             {maskContent(props)}
-        </div>
+        </div> : null}
     </div>),
     A);
+/**
+ * Enhancer to gray out a component with a mask. The enhancer always adds a wrapper div with className="ms2-mask-container". if you want to avoid this use the option alwaysWrap = false.
+ *
+ * @param {function} showMask function that returns true if the mask have to be shown. Gets props as argument
+ * @param {function} maskContent returns the content of the mask, gets props as argument TODO: allow any component
+ * @param {object} options options for the mask:
+ *  - alwaysWrap: true by default. if false, apply the enhancer only when showMask is true.
+ *    This will cause a complete remount and re-render of the wrapped component, that may be a problem if you're using lifecycle methods, so by default is false
+ *  -
+ */
 module.exports = (
         showMask = () => {},
         maskContent = () => {},
         {
-            alwaysWrap = false,
-            maskContainerStyle = { width: "100%", height: "100%", position: "relative" },
-            maskStyle = { backgroundColor: "rgba(0, 0, 0, 0.7)", color: "#fff", display: 'flex', zIndex: 1000, width: "100%", height: "100%", position: 'absolute', top: 0 }
+            alwaysWrap = true,
+            maskContainerStyle = {},
+            maskStyle = {}
         } = {}
     ) => alwaysWrap
         ? maskEnhancer(showMask, maskContent, { maskContainerStyle, maskStyle })

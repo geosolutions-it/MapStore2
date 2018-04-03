@@ -1130,6 +1130,7 @@
                     "useTheSelectedLayer": "Use the selected layer",
                     "connectToAMap": "Connect to a map",
                     "connectToTheMap": "Connect to the map",
+                    "selectMapToConnect": "Select the map to connect",
                     "clearConnection": "Clear connection"
                 },
                 "errors": {

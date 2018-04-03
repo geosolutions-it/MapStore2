@@ -26,7 +26,7 @@ module.exports = branch(
                     (w) => getWidgetClass(w)
                         ? getWidgetClass(w) + (isWidgetSelectable(w) ? undefined : ' disabled')
                         : isWidgetSelectable(w) ? undefined : ' disabled',
-            onWidgetClick: ({ onWidgetSelected = () => { } }) => (...args) => onWidgetSelected(...args)
+            onWidgetClick: ({ onWidgetSelected = () => { }, isWidgetSelectable = () => true }) => (w, ...args) => isWidgetSelectable(w) ? onWidgetSelected(w, ...args) : null
         }))
     )
 );
