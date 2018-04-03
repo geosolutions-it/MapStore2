@@ -8,7 +8,6 @@
 var expect = require('expect');
 var CoordinatesUtils = require('../CoordinatesUtils');
 var Proj4js = require('proj4').default;
-const {getCurrentResolution} = require('../MapUtils');
 
 describe('CoordinatesUtils', () => {
     afterEach((done) => {
@@ -506,7 +505,7 @@ describe('CoordinatesUtils', () => {
             bottom: 10
         };
 
-        const resolution = getCurrentResolution(Math.round(map.zoom), 0, 21, 96);
+        const resolution = 9783;
 
         const insideVisibleArea = CoordinatesUtils.isInsideVisibleArea(coords, map, layout, resolution);
 
@@ -541,7 +540,7 @@ describe('CoordinatesUtils', () => {
             bottom: 250
         };
 
-        const resolution = getCurrentResolution(Math.round(map.zoom), 0, 21, 96);
+        const resolution = 9783;
 
         const insideVisibleArea = CoordinatesUtils.isInsideVisibleArea(coords, map, layout, resolution);
 
@@ -576,7 +575,7 @@ describe('CoordinatesUtils', () => {
             bottom: 250
         };
 
-        const resolution = getCurrentResolution(Math.round(map.zoom), 0, 21, 96);
+        const resolution = 9783;
 
         const newCenter = CoordinatesUtils.centerToVisibleArea(coords, map, layout, resolution);
         expect(newCenter.zoom).toBe(4);
@@ -611,7 +610,7 @@ describe('CoordinatesUtils', () => {
             bottom: 0
         };
 
-        const resolution = getCurrentResolution(Math.round(map.zoom), 0, 21, 96);
+        const resolution = 19568;
 
         const newCenter = CoordinatesUtils.centerToVisibleArea(coords, map, layout, resolution);
         expect(newCenter.zoom).toBe(3);
@@ -646,7 +645,7 @@ describe('CoordinatesUtils', () => {
             bottom: 0
         };
 
-        const resolution = getCurrentResolution(Math.round(map.zoom), 0, 21, 96);
+        const resolution = 19568;
 
         const newCenter = CoordinatesUtils.centerToVisibleArea(coords, map, layout, resolution);
         expect(newCenter.zoom).toBe(3);
