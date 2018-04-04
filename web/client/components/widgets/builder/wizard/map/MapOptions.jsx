@@ -20,7 +20,7 @@ const nodeEditor = require('./enhancers/nodeEditor');
 const Editor = nodeEditor(require('./NodeEditor'));
 
 module.exports = ({ preview, map = {}, onChange = () => { }, selectedNodes = [], onNodeSelect = () => { }, editNode, closeNodeEditor = () => { } }) => (<div>
-    <StepHeader title={<Message msgId={`Preview`} />} />
+    <StepHeader title={<Message msgId={`widgets.builder.wizard.preview`} />} />
     <div key="sample" >
         <div style={{ width: "100%", height: "200px"}}>
             {preview}

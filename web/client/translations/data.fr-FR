@@ -1126,6 +1126,7 @@
                     "textPlaceholder": "Entrez le texte...",
                     "useThisMap": "Utiliser cette carte",
                     "configureMapOptions": "Configurer les options de la carte",
+                    "preview": "Aperçu",
                     "addLayer": "Ajouter une couche à la carte",
                     "useTheSelectedLayer": "Utiliser le calque sélectionné",
                     "connectToAMap": "Se connecter à une carte",
@@ -1224,7 +1225,9 @@
         },
         "dashboard": {
              "editor": {
-                "addACardToTheDashboard": "Ajouter un widget au tableau de bord"
+                "addACardToTheDashboard": "Ajouter un widget au tableau de bord",
+                "showConnections": "Afficher les connexions",
+                "hideConnections": "Masquer les connexions"
             },
             "emptyTitle": "Le tableau de bord est vide"
         },

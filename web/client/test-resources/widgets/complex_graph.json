@@ -1,0 +1,546 @@
+{
+  "widgets": [
+    {
+      "id": "bd02b5b0-37e5-11e8-8356-a9f1e7707f6f",
+      "layer": false,
+      "url": false,
+      "legend": false,
+      "mapSync": false,
+      "widgetType": "map",
+      "map": {
+        "map": {
+          "center": {
+            "x": -0.18782921925813859,
+            "y": 44.08755782761387,
+            "crs": "EPSG:4326"
+          },
+          "maxExtent": [
+            -20037508.34,
+            -20037508.34,
+            20037508.34,
+            20037508.34
+          ],
+          "projection": "EPSG:900913",
+          "units": "m",
+          "zoom": 6,
+          "mapOptions": {}
+        },
+        "layers": [
+          {
+            "id": "mapnik__0",
+            "group": "background",
+            "source": "osm",
+            "name": "mapnik",
+            "title": "Open Street Map",
+            "type": "osm",
+            "visibility": true,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "HYBRID__1",
+            "group": "background",
+            "source": "google",
+            "name": "HYBRID",
+            "title": "Google HYBRID",
+            "type": "google",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "osm__2",
+            "group": "background",
+            "source": "mapquest",
+            "name": "osm",
+            "title": "MapQuest OSM",
+            "type": "mapquest",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "apiKey": "__API_KEY_MAPQUEST__"
+          },
+          {
+            "id": "Night2012__3",
+            "group": "background",
+            "source": "nasagibs",
+            "name": "Night2012",
+            "provider": "NASAGIBS.ViirsEarthAtNight2012",
+            "title": "NASAGIBS Night 2012",
+            "type": "tileprovider",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "OpenTopoMap__4",
+            "group": "background",
+            "source": "OpenTopoMap",
+            "name": "OpenTopoMap",
+            "provider": "OpenTopoMap",
+            "title": "OpenTopoMap",
+            "type": "tileprovider",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "undefined__5",
+            "group": "background",
+            "source": "ol",
+            "title": "Empty Background",
+            "type": "empty",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          }
+        ],
+        "groups": [
+          {
+            "id": "Default",
+            "expanded": true
+          },
+          {
+            "id": "Local shape",
+            "expanded": true
+          }
+        ],
+        "center": {
+          "x": -10.546875,
+          "y": 42.553080288955805,
+          "crs": "EPSG:4326"
+        },
+        "bbox": {
+          "bounds": {
+            "minx": -9001224.450862356,
+            "miny": -78271.51696402114,
+            "maxx": 6653078.941941742,
+            "maxy": 10566654.790142763
+          },
+          "crs": "EPSG:3857",
+          "rotation": 0
+        },
+        "zoom": 1,
+        "size": {
+          "width": 200,
+          "height": 136
+        },
+        "projection": "EPSG:3857",
+        "mapStateSource": "bd02b5b0-37e5-11e8-8356-a9f1e7707f6f"
+      },
+      "dataGrid": {
+        "y": 0,
+        "x": 0,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "c66b2830-37e5-11e8-8356-a9f1e7707f6f",
+      "layer": {
+        "type": "wms",
+        "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+        "visibility": true,
+        "dimensions": [],
+        "name": "topp:states",
+        "title": "USA Population",
+        "description": "This is some census data on the states.",
+        "bbox": {
+          "crs": "EPSG:4326",
+          "bounds": {
+            "minx": -124.73142200000001,
+            "miny": 24.955967,
+            "maxx": -66.969849,
+            "maxy": 49.371735
+          }
+        },
+        "links": [],
+        "params": {
+          "layers": "topp:states"
+        },
+        "allowedSRS": {},
+        "search": {
+          "type": "wfs",
+          "url": "https://demo.geo-solutions.it:443/geoserver/wfs?"
+        }
+      },
+      "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+      "legend": false,
+      "mapSync": true,
+      "type": "bar",
+      "widgetType": "chart",
+      "geomProp": "the_geom",
+      "dependenciesMap": {
+        "viewport": "widgets[bd02b5b0-37e5-11e8-8356-a9f1e7707f6f].map.viewport"
+      },
+      "options": {
+        "groupByAttributes": "STATE_NAME",
+        "aggregationAttribute": "STATE_NAME",
+        "aggregateFunction": "Count"
+      },
+      "dataGrid": {
+        "y": 0,
+        "x": 0,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "cbc25830-37e5-11e8-8356-a9f1e7707f6f",
+      "layer": false,
+      "url": false,
+      "legend": false,
+      "mapSync": true,
+      "widgetType": "map",
+      "map": {
+        "map": {
+          "center": {
+            "x": -0.18782921925813859,
+            "y": 44.08755782761387,
+            "crs": "EPSG:4326"
+          },
+          "maxExtent": [
+            -20037508.34,
+            -20037508.34,
+            20037508.34,
+            20037508.34
+          ],
+          "projection": "EPSG:900913",
+          "units": "m",
+          "zoom": 6,
+          "mapOptions": {}
+        },
+        "layers": [
+          {
+            "id": "mapnik__0",
+            "group": "background",
+            "source": "osm",
+            "name": "mapnik",
+            "title": "Open Street Map",
+            "type": "osm",
+            "visibility": true,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "HYBRID__1",
+            "group": "background",
+            "source": "google",
+            "name": "HYBRID",
+            "title": "Google HYBRID",
+            "type": "google",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "osm__2",
+            "group": "background",
+            "source": "mapquest",
+            "name": "osm",
+            "title": "MapQuest OSM",
+            "type": "mapquest",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "apiKey": "__API_KEY_MAPQUEST__"
+          },
+          {
+            "id": "Night2012__3",
+            "group": "background",
+            "source": "nasagibs",
+            "name": "Night2012",
+            "provider": "NASAGIBS.ViirsEarthAtNight2012",
+            "title": "NASAGIBS Night 2012",
+            "type": "tileprovider",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "OpenTopoMap__4",
+            "group": "background",
+            "source": "OpenTopoMap",
+            "name": "OpenTopoMap",
+            "provider": "OpenTopoMap",
+            "title": "OpenTopoMap",
+            "type": "tileprovider",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "undefined__5",
+            "group": "background",
+            "source": "ol",
+            "title": "Empty Background",
+            "type": "empty",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          }
+        ],
+        "groups": [
+          {
+            "id": "Default",
+            "expanded": true
+          },
+          {
+            "id": "Local shape",
+            "expanded": true
+          }
+        ],
+        "center": {
+          "x": -10.546875,
+          "y": 42.55308028895579,
+          "crs": "EPSG:4326"
+        },
+        "bbox": {
+          "bounds": {
+            "minx": -9001224.450862356,
+            "miny": -78271.516964023,
+            "maxx": 6653078.941941742,
+            "maxy": 10566654.790142763
+          },
+          "crs": "EPSG:3857",
+          "rotation": 0
+        },
+        "zoom": 1,
+        "size": {
+          "width": 200,
+          "height": 136
+        },
+        "projection": "EPSG:3857",
+        "mapStateSource": "cbc25830-37e5-11e8-8356-a9f1e7707f6f"
+      },
+      "dependenciesMap": {
+        "center": "widgets[bd02b5b0-37e5-11e8-8356-a9f1e7707f6f].map.center",
+        "zoom": "widgets[bd02b5b0-37e5-11e8-8356-a9f1e7707f6f].map.zoom"
+      },
+      "dataGrid": {
+        "y": 0,
+        "x": 0,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "dad8a630-37e5-11e8-8356-a9f1e7707f6f",
+      "layer": false,
+      "url": false,
+      "legend": false,
+      "mapSync": false,
+      "widgetType": "map",
+      "map": {
+        "map": {
+          "center": {
+            "x": -96.416015625,
+            "y": 38.75408327579141,
+            "crs": "EPSG:4326"
+          },
+          "maxExtent": [
+            -20037508.34,
+            -20037508.34,
+            20037508.34,
+            20037508.34
+          ],
+          "projection": "EPSG:900913",
+          "units": "m",
+          "zoom": 4
+        },
+        "layers": [
+          {
+            "group": "background",
+            "source": "osm",
+            "name": "mapnik",
+            "title": "Open Street Map",
+            "type": "osm",
+            "visibility": true,
+            "singleTile": false,
+            "dimensions": [],
+            "id": "mapnik__0"
+          },
+          {
+            "group": "background",
+            "source": "google",
+            "name": "HYBRID",
+            "title": "Google HYBRID",
+            "type": "google",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "id": "HYBRID__1"
+          },
+          {
+            "group": "background",
+            "source": "mapquest",
+            "name": "osm",
+            "title": "MapQuest OSM",
+            "type": "mapquest",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "apiKey": "__API_KEY_MAPQUEST__",
+            "id": "osm__2"
+          },
+          {
+            "group": "background",
+            "source": "nasagibs",
+            "name": "Night2012",
+            "provider": "NASAGIBS.ViirsEarthAtNight2012",
+            "title": "NASAGIBS Night 2012",
+            "type": "tileprovider",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "id": "Night2012__3"
+          },
+          {
+            "group": "background",
+            "source": "OpenTopoMap",
+            "name": "OpenTopoMap",
+            "provider": "OpenTopoMap",
+            "title": "OpenTopoMap",
+            "type": "tileprovider",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "id": "OpenTopoMap__4"
+          },
+          {
+            "search": {
+              "url": "https://demo.geo-solutions.it:443/geoserver/wfs?",
+              "type": "wfs"
+            },
+            "name": "topp:states",
+            "title": "USA Population",
+            "type": "wms",
+            "url": "https://demo.geo-solutions.it/geoserver/wms",
+            "bbox": {
+              "crs": "EPSG:4326",
+              "bounds": {
+                "minx": "-124.731422",
+                "miny": "24.955967",
+                "maxx": "-66.969849",
+                "maxy": "49.371735"
+              }
+            },
+            "visibility": true,
+            "singleTile": false,
+            "dimensions": [],
+            "params": {},
+            "id": "topp:states__5"
+          }
+        ],
+        "groups": {
+          "id": "Default",
+          "expanded": true
+        },
+        "center": {
+          "x": -101.953125,
+          "y": 33.72433966174758,
+          "crs": "EPSG:4326"
+        },
+        "bbox": {
+          "bounds": {
+            "minx": -19176521.656185016,
+            "miny": -1330615.7883883514,
+            "maxx": -3522218.2633809205,
+            "maxy": 9314310.518718434
+          },
+          "crs": "EPSG:3857",
+          "rotation": 0
+        },
+        "zoom": 1,
+        "size": {
+          "width": 200,
+          "height": 136
+        },
+        "projection": "EPSG:3857",
+        "mapStateSource": "dad8a630-37e5-11e8-8356-a9f1e7707f6f"
+      },
+      "dependenciesMap": {
+        "center": "widgets[bd02b5b0-37e5-11e8-8356-a9f1e7707f6f].map.center",
+        "zoom": "widgets[bd02b5b0-37e5-11e8-8356-a9f1e7707f6f].map.zoom"
+      },
+      "dataGrid": {
+        "y": 0,
+        "x": 0,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "e6db99b0-37e5-11e8-8356-a9f1e7707f6f",
+      "layer": {
+        "type": "wms",
+        "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+        "visibility": true,
+        "dimensions": [],
+        "name": "topp:states",
+        "title": "USA Population",
+        "description": "This is some census data on the states.",
+        "bbox": {
+          "crs": "EPSG:4326",
+          "bounds": {
+            "minx": -124.73142200000001,
+            "miny": 24.955967,
+            "maxx": -66.969849,
+            "maxy": 49.371735
+          }
+        },
+        "links": [],
+        "params": {
+          "layers": "topp:states"
+        },
+        "allowedSRS": {},
+        "search": {
+          "type": "wfs",
+          "url": "https://demo.geo-solutions.it:443/geoserver/wfs?"
+        }
+      },
+      "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+      "legend": false,
+      "mapSync": true,
+      "widgetType": "counter",
+      "geomProp": "the_geom",
+      "dependenciesMap": {
+        "viewport": "widgets[dad8a630-37e5-11e8-8356-a9f1e7707f6f].map.viewport"
+      },
+      "options": {
+        "aggregationAttribute": "STATE_FIPS",
+        "aggregateFunction": "Count"
+      },
+      "dataGrid": {
+        "y": 0,
+        "x": 0,
+        "w": 1,
+        "h": 1
+      }
+    }
+  ]
+}

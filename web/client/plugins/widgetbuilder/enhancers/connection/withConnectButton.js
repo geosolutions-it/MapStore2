@@ -30,7 +30,7 @@ module.exports = (showCondition = () => true) => compose(
                 ? "widgets.builder.wizard.clearConnection"
                 : availableDependencies.length === 1
                     ? "widgets.builder.wizard.connectToTheMap"
-                    : "widgets.builder.wizard.connectToAMap" // TODO: "widgets.builder.wizard.connectToAMap"
+                    : "widgets.builder.wizard.connectToAMap"
         }, ...stepButtons
         ]
     }))

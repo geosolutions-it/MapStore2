@@ -1125,6 +1125,7 @@
                     "textPlaceholder": "Text eingeben...",
                     "useThisMap": "Benutze diese Karte",
                     "configureMapOptions": "Kartenoptionen konfigurieren",
+                    "preview": "Vorschau",
                     "addLayer": "Fügt der Karte eine Ebene hinzu",
                     "useTheSelectedLayer": "Verwende die ausgewählte Ebene",
                     "connectToAMap": "Mit einer Karte verbinden",
@@ -1224,7 +1225,9 @@
         },
         "dashboard": {
             "editor": {
-                "addACardToTheDashboard": "Agregar un widget al tablero"
+                "addACardToTheDashboard": "Agregar un widget al tablero",
+                "showConnections": "Verbindungen anzeigen",
+                "hideConnections": "Verbindungen ausblenden"
             },
             "emptyTitle": "Das Armaturenbrett ist leer"
         },

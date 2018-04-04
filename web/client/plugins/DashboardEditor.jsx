@@ -12,17 +12,48 @@ const {createSelector} = require('reselect');
 const {connect} = require('react-redux');
 const PropTypes = require('prop-types');
 
-const {isDashboardEditing} = require('../selectors/dashboard');
+const { isDashboardEditing} = require('../selectors/dashboard');
 const {dashboardSelector} = require('./widgetbuilder/commons');
 const { createWidget, toggleConnection } = require('../actions/widgets');
+const { triggerShowConnections } = require('../actions/dashboard');
+const { showConnectionsSelector } = require('../selectors/dashboard');
 const Builder =
     compose(
-        connect(dashboardSelector, {toggleConnection}),
+        connect(dashboardSelector, { toggleConnection, triggerShowConnections}),
         withProps(({ availableDependencies = []}) => ({
             availableDependencies: availableDependencies.filter(d => d !== "map")
         })),
     )(require('./widgetbuilder/WidgetTypeBuilder'));
-const Toolbar = require('../components/misc/toolbar/Toolbar');
+
+const Toolbar = compose(
+    connect(
+        createSelector(
+            showConnectionsSelector,
+            showConnections => ({showConnections})
+        ),
+        {
+            onShowConnections: triggerShowConnections,
+            onAddWidget: createWidget
+        }
+    ),
+    withProps(({
+        onAddWidget = () => {},
+        showConnections, onShowConnections = () => { }
+        }) => ({
+            buttons: [{
+                    glyph: 'plus',
+                    tooltipId: 'dashboard.editor.addACardToTheDashboard',
+                    bsStyle: 'primary',
+                    visible: true,
+                    onClick: () => onAddWidget()
+                }, {
+                    glyph: showConnections ? 'bulb-on' : 'bulb-off',
+                    tooltipId: showConnections ? 'dashboard.editor.hideConnections' : 'dashboard.editor.showConnections',
+                    bsStyle: showConnections ? 'success' : 'primary',
+                    onClick: () => onShowConnections(!showConnections)
+                }]
+        }))
+)(require('../components/misc/toolbar/Toolbar'));
 
 
 const {setEditing, setEditorAvailable} = require('../actions/dashboard');
@@ -40,7 +71,6 @@ class DashboardEditorComponent extends React.Component {
          onMount: PropTypes.func,
          onUnmount: PropTypes.func,
          setEditing: PropTypes.func,
-         onAddWidget: PropTypes.func,
          dimMode: PropTypes.string,
          src: PropTypes.string,
          style: PropTypes.object
@@ -56,7 +86,6 @@ class DashboardEditorComponent extends React.Component {
          position: "left",
          onMount: () => {},
          onUnmount: () => {},
-         onAddWidget: () => {},
          setEditing: () => {}
      };
     componentDidMount() {
@@ -67,21 +96,12 @@ class DashboardEditorComponent extends React.Component {
         this.props.onUnmount();
     }
     render() {
-        const buttons = [{
-            glyph: 'plus',
-            tooltipId: 'dashboard.editor.addACardToTheDashboard',
-            bsStyle: 'primary',
-            tooltipPosition: 'right',
-            visible: true,
-            onClick: () => {
-                this.props.onAddWidget();
-            }
-        }];
+
 
         return this.props.editing
                 ? <div className="dashboard-editor de-builder"><Builder enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog}/></div>
                 : (<div className="ms-vertical-toolbar dashboard-editor de-toolbar" id={this.props.id}>
-                    <Toolbar btnGroupProps={{vertical: true}} btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}} buttons={buttons}/>
+                    <Toolbar transitionProps={false} btnGroupProps={{vertical: true}} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary'}} />
                     </div>);
     }
 }
@@ -92,7 +112,6 @@ const Plugin = connect(
         editing => ({editing})
     ), {
         setEditing,
-        onAddWidget: createWidget,
         onMount: () => setEditorAvailable(true),
         onUnmount: () => setEditorAvailable(false)
     }
