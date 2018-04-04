@@ -1129,6 +1129,7 @@
                     "useTheSelectedLayer": "Usa il livello selezionato",
                     "connectToAMap": "Connetti a una mappa",
                     "connectToTheMap": "Connetti alla mappa",
+                    "selectMapToConnect": "Seleziona la mappa da connettere",
                     "clearConnection": "Disconnetti"
                 },
                 "errors": {
