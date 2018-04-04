@@ -9,7 +9,7 @@ const {withProps} = require('recompose');
 /**
  * re-map widget dependencies to a new object, based on a mapping object
  *
- * @param {object} widget dependencyMap. a map of key1: key2, where key1 is the key to return and key2 is the key of the value to return in the deps object
+ * @param {object} widget dependenciesMap. a map of key1: key2, where key1 is the key to return and key2 is the key of the value to return in the deps object
  * @param {object} deps the original dependencies object
  */
 const buildDependencies = (map, deps) => map

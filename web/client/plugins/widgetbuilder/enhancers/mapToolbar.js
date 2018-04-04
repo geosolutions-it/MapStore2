@@ -11,8 +11,9 @@ const { insertWidget, setPage, onEditorChange} = require('../../../actions/widge
 const manageLayers = require('./manageLayers');
 const handleNodeEditing = require('./handleNodeEditing');
 const { wizardSelector, wizardStateToProps } = require('../commons');
+
+const mapBuilderConnect = require('./connection/mapBuilderConnect');
 const withConnectButton = require('./connection/withConnectButton');
-const mapPositionConnect = require('./connection/mapPositionConnect');
 module.exports = compose(
     connect(wizardSelector, {
         setPage,
@@ -52,7 +53,7 @@ module.exports = compose(
             }]
         }))
     ),
-    mapPositionConnect,
+    mapBuilderConnect,
     withConnectButton(({step}) => step === 0)
 
 );

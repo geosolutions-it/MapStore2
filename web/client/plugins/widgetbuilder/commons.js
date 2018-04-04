@@ -33,7 +33,7 @@ const wizardSelector = createSelector(
 const dashboardSelector = createSelector(
     getEditingWidget,
     dependenciesSelector,
-    availableDependenciesSelector, // TODO dependencies
+    availableDependenciesSelector,
     ({ layer }, dependencies, dependencyConnectProps) => ({
         layer,
         dependencies,

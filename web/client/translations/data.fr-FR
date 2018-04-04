@@ -1130,6 +1130,7 @@
                     "useTheSelectedLayer": "Utiliser le calque sélectionné",
                     "connectToAMap": "Se connecter à une carte",
                     "connectToTheMap": "Se connecter à la carte",
+                    "selectMapToConnect": "Sélectionnez la carte à connecter",
                     "clearConnection": "Effacer la connexion"
                 },
                 "errors": {

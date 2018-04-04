@@ -1129,6 +1129,7 @@
                     "useTheSelectedLayer": "Verwende die ausgewählte Ebene",
                     "connectToAMap": "Mit einer Karte verbinden",
                     "connectToTheMap": "Verbinden mit der Karte",
+                    "selectMapToConnect": "Wählen Sie die zu verbindende Karte aus",
                     "clearConnection": "Verbindung löschen"
                 },
                 "errors": {

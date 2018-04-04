@@ -6,9 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {pure, compose} = require('recompose');
+const {pure, compose, defaultProps} = require('recompose');
 const Message = require('../I18N/Message');
 const emptyState = require('../misc/enhancers/emptyState');
+const withSelection = require('../widgets/view/enhancers/withSelection');
+
 module.exports =
     compose(
         pure,
@@ -18,5 +20,9 @@ module.exports =
                 glyph: "dashboard",
                 title: <Message msgId="dashboard.emptyTitle" /> // TODO i18n
             })
-        )
+        ),
+        defaultProps({
+            isWidgetSelectable: ({}) => true // TODO: filter widgets
+        }),
+        withSelection
     )(require('../widgets/view/WidgetsView'));
