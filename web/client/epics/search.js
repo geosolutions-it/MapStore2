@@ -27,6 +27,7 @@ const {changeMapView} = require('../actions/map');
 const toBbox = require('turf-bbox');
 const {generateTemplateString} = require('../utils/TemplateUtils');
 const assign = require('object-assign');
+const {updateResultsStyle} = require('../actions/search');
 
 const {get} = require('lodash');
 
@@ -107,6 +108,7 @@ const searchItemSelected = action$ =>
                 // center by the max. extent defined in the map's config
                 let newCenter = mapUtils.getCenterForExtent(bbox, "EPSG:4326");
                 let actions = [
+                    updateResultsStyle(action.resultsStyle || null),
                     changeMapView(newCenter, newZoom, {
                         bounds: {
                             minx: bbox[0],
