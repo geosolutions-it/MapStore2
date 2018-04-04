@@ -5,6 +5,7 @@
   * This source code is licensed under the BSD-style license found in the
   * LICENSE file in the root directory of this source tree.
   */
+const tinycolor = require("tinycolor2");
 
 /**
  * Porting of various MapStore(1) utilities for random/color scale generations
@@ -155,6 +156,7 @@ const ColorUtils = {
             let rgb = ColorUtils.hexToRgb(hex);
             return ColorUtils.rgbToHsv(rgb);
         }
-    }
+    },
+    colorToHexStr: (color = 'red') => tinycolor(color).toHexString()
 };
 module.exports = ColorUtils;
