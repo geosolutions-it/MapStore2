@@ -15,7 +15,7 @@ const Toolbar = require('../../components/widgets/builder/wizard/common/layersel
 const BuilderHeader = require('./BuilderHeader');
 const InfoPopover = require('../../components/widgets/widget/InfoPopover');
 const {Message, HTML} = require('../../components/I18N/I18N');
-const { compose, branch} = require('recompose');
+const { compose, branch } = require('recompose');
 
 const Catalog = compose(
     branch(
@@ -27,13 +27,14 @@ const Catalog = compose(
  * Builder page that allows layer's selection
  * @prop {function} [layerValidationStream]
  */
-module.exports = ({onClose = () => {}, setSelected = () => {}, onLayerChoice = () => {}, selected, canProceed, layer, catalog, catalogServices} = {}) =>
+module.exports = ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, selected, error, canProceed, layer, catalog, catalogServices} = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
         <Toolbar canProceed={canProceed} onProceed={() => onLayerChoice(layer)} />
-        { selected && !canProceed ? <InfoPopover
-            glyph="exclamation-mark"
+        {selected && !canProceed && error ? <InfoPopover
+            trigger={false}
+            glyph="warning-sign"
             bsStyle="warning"
             title={<Message msgId="widgets.builder.errors.noWidgetsAvailableTitle" />}
             text={<HTML msgId="widgets.builder.errors.noWidgetsAvailableDescription"/>} /> : null}
