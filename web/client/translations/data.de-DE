@@ -1225,7 +1225,7 @@
         },
         "dashboard": {
             "editor": {
-                "addACardToTheDashboard": "Agregar un widget al tablero",
+                "addACardToTheDashboard": "Ein Widget zum Dashboard hinzufügen",
                 "showConnections": "Verbindungen anzeigen",
                 "hideConnections": "Verbindungen ausblenden"
             },
