@@ -16,7 +16,16 @@ const {
 
 const Overlay = require('../../misc/Overlay');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
-
+/**
+ * InfoPopover. A component that renders a icon with a Popover.
+ * @prop {string} title the title of popover
+ * @prop {string} text the text of popover
+ * @prop {string} glyph glyph id for the icon
+ * @prop {number} left left prop of popover
+ * @prop {number} right right prop of popover
+ * @prop {string} placement position of popover
+ * @prop {boolean|String[]} trigger ['hover', 'focus'] by default. false always show the popover. Array with hover, focus and/or click string to specify events that trigger popover to show.
+ */
 class InfoPopover extends React.Component {
 
     static propTypes = {
@@ -28,8 +37,7 @@ class InfoPopover extends React.Component {
         placement: PropTypes.string,
         left: PropTypes.number,
         top: PropTypes.number,
-        trigger: PropTypes.array,
-        target: PropTypes.any
+        trigger: PropTypes.oneOf([PropTypes.array, PropTypes.bool])
     };
 
     static defaultProps = {
@@ -65,10 +73,11 @@ class InfoPopover extends React.Component {
             glyph={this.props.glyph} />);
     }
     render() {
+        const trigger = this.props.trigger === true ? ['hover', 'focus'] : this.props.trigger;
         return (
             <span className="mapstore-info-popover">
                 {this.props.trigger
-                        ? (<OverlayTrigger trigger={this.props.trigger} placement={this.props.placement} overlay={this.renderPopover()}>
+                        ? (<OverlayTrigger trigger={trigger} placement={this.props.placement} overlay={this.renderPopover()}>
                                 {this.renderContent()}
                             </OverlayTrigger>)
                     : [
