@@ -1135,8 +1135,8 @@
                     "clearConnection": "Clear connection"
                 },
                 "errors": {
-                    "noWidgetsAvailableTitle": "No Widgets available",
-                    "noWidgetsAvailableDescription": "<p>You can't create any widgets for the selected layer. This is probably because the layer is not suitable for the available widgets or the server doesn't expose all the needed services or information to generate widget. Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li><code>gs:aggregate process</code> is not available</li></ul><p>",
+                    "noWidgetsAvailableTitle": "Das Widget für die ausgewählte Ebene kann nicht erstellt werden",
+                    "noWidgetsAvailableDescription": "<p><strong>Please try to select another layer or widget type</strong></p><p>The server doesn't provide the needed services for the layer and the widget type selected</p><p>Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li>The WPS process <code>gs:aggregate</code> is not available</li></ul></p>",
                     "checkAtLeastOneAttribute": "You must select at least one column"
                 },
                 "setupFilter": "Configure a filter for the widget data"

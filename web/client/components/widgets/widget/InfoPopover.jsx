@@ -7,12 +7,14 @@
  */
 
 const React = require('react');
+const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
 const {
     Popover,
     Glyphicon
 } = require('react-bootstrap');
 
+const Overlay = require('../../misc/Overlay');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 
 class InfoPopover extends React.Component {
@@ -25,7 +27,9 @@ class InfoPopover extends React.Component {
         bsStyle: PropTypes.string,
         placement: PropTypes.string,
         left: PropTypes.number,
-        top: PropTypes.number
+        top: PropTypes.number,
+        trigger: PropTypes.array,
+        target: PropTypes.any
     };
 
     static defaultProps = {
@@ -36,7 +40,8 @@ class InfoPopover extends React.Component {
         left: 200,
         top: 50,
         glyph: "question-sign",
-        bsStyle: 'info'
+        bsStyle: 'info',
+        trigger: ['hover', 'focus']
     };
 
     renderPopover() {
@@ -51,13 +56,27 @@ class InfoPopover extends React.Component {
             </Popover>
         );
     }
-
+    renderContent() {
+        return (<Glyphicon
+            ref={button => {
+                this.target = button;
+            }}
+            className={`text-${this.props.bsStyle}`}
+            glyph={this.props.glyph} />);
+    }
     render() {
         return (
             <span className="mapstore-info-popover">
-                <OverlayTrigger trigger={['hover', 'focus']} placement={this.props.placement} overlay={this.renderPopover()}>
-                    <Glyphicon className={`text-${this.props.bsStyle}`} glyph="question-sign"/>
-                </OverlayTrigger>
+                {this.props.trigger
+                        ? (<OverlayTrigger trigger={this.props.trigger} placement={this.props.placement} overlay={this.renderPopover()}>
+                                {this.renderContent()}
+                            </OverlayTrigger>)
+                    : [
+                        this.renderContent(),
+                        <Overlay show target={() => ReactDOM.findDOMNode(this.target)}>
+                        {this.renderPopover()}
+                        </Overlay>
+                    ]}
             </span>
         );
     }

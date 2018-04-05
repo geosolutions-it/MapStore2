@@ -1134,8 +1134,8 @@
                     "clearConnection": "Disconnetti"
                 },
                 "errors": {
-                    "noWidgetsAvailableTitle": "Nessun widgets disponibile",
-                    "noWidgetsAvailableDescription": "<p>Non si possono creare widget per il livello selezionato. Questo perchè il livello non è adatto a nessuno degli widget disponibili o perché il server non espone sufficienti servizi per gernerali. Possibili cause: <ul><li>Hai selezionato un livello raster</li><li>Il servizio WFS non è disponibile per il livello in oggetto</li><li>Il processo gs:aggregate non è disponibile sul server</li></ul> )<p>",
+                    "noWidgetsAvailableTitle": "Impossibile creare il widget per il livello selezionato",
+                    "noWidgetsAvailableDescription": "<p><strong> Prova a selezionare un altro livello o tipo di widget </strong> </p><p>Il server non fornisce i servizi necessari per il livello e il tipo di widget selezionato </p> <p> Le possibili cause sono: <ul> <li> Il livello selezionato è un livello raster </li> <li> Il servizio WFS non è disponibile </li><li> Il processo WPS <code>gs:aggregate</code> non è disponibile </li> </ul></p>",
                     "checkAtLeastOneAttribute": "seleziona almeno un attributo"
                 },
                 "setupFilter": "Configura un filtro per il livello selezionato"
