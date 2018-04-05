@@ -8,6 +8,7 @@
 
 
 const React = require('react');
+const { shouldUpdate } = require('recompose');
 const SideGrid = require('../../../../misc/cardgrids/SideGrid');
 const Message = require('../../../../I18N/Message');
 const sampleData = require('../../../enhancers/sampleChartData');
@@ -38,7 +39,9 @@ const ITEMS = [{
     description: <Message msgId={`widgets.chartType.${type}.description`} />,
     caption: <Message msgId={`widgets.chartType.${type}.caption`} />
 }));
-module.exports = ({ onSelect = () => { }, onNextPage = () => { }, types = ITEMS, type} = {}) => (<Row>
+module.exports = shouldUpdate(
+    ({ types, type }, { types: nextTypes, type: nextType}) => type !== nextType && types !== nextTypes
+)(({ onSelect = () => { }, onNextPage = () => { }, types = ITEMS, type} = {}) => (<Row>
     <StepHeader key="title" title={<Message msgId="widgets.selectChartType.title" />} />
     <SideGrid
         key="content"
@@ -59,4 +62,4 @@ module.exports = ({ onSelect = () => { }, onNextPage = () => { }, types = ITEMS,
                      />)
             }))} />
 </Row>
-    );
+    ));
