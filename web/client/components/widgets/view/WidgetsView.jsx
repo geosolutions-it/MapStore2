@@ -8,14 +8,16 @@
 const React = require('react');
 
 const { pure } = require('recompose');
-
+const { find } = require('lodash');
 /*
 react-grid-layout-resize-prevent-collision is a fork of react-grid-layout deployed on npmjs.org to fix https://github.com/STRML/react-grid-layout/issues/655
 You can install and use react-grid-layout again when the issue is fixed
 */
 const { Responsive, WidthProvider: widthProvider } = require('react-grid-layout-resize-prevent-collision');
 const ResponsiveReactGridLayout = widthProvider(Responsive);
-const DefaultWidget = require('../widget/DefaultWidget');
+const withGroupColor = require('../enhancers/withGroupColor');
+const DefaultWidget = withGroupColor(require('../widget/DefaultWidget'));
+const getWidgetGroups = (groups = [], w) => groups.filter(g => find(g.widgets, id => id === w.id));
 require('react-grid-layout-resize-prevent-collision/css/styles.css');
 
 module.exports = pure(({
@@ -28,6 +30,8 @@ module.exports = pure(({
     widgets = [],
     layouts,
     dependencies,
+    showGroupColor,
+    groups = [],
     getWidgetClass = () => { },
     onWidgetClick = () => { },
     updateWidgetProperty = () => { },
@@ -54,6 +58,8 @@ module.exports = pure(({
                 data-grid={w.dataGrid}
                 {...actions}
                 {...w}
+                groups={getWidgetGroups(groups, w)}
+                showGroupColor={showGroupColor}
                 dependencies={dependencies}
                 updateProperty={(...args) => updateWidgetProperty(w.id, ...args)}
                 onDelete={() => deleteWidget(w)}

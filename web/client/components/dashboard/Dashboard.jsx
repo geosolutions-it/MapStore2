@@ -18,11 +18,11 @@ module.exports =
             ({widgets = []} = {}) => widgets.length === 0,
             () => ({
                 glyph: "dashboard",
-                title: <Message msgId="dashboard.emptyTitle" /> // TODO i18n
+                title: <Message msgId="dashboard.emptyTitle" />
             })
         ),
         defaultProps({
-            isWidgetSelectable: ({}) => true // TODO: filter widgets
+            isWidgetSelectable: ({}) => true
         }),
         withSelection
     )(require('../widgets/view/WidgetsView'));

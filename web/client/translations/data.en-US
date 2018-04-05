@@ -1126,6 +1126,7 @@
                     "textPlaceholder": "Insert text...",
                     "useThisMap": "Use this map",
                     "configureMapOptions": "Configure map options",
+                    "preview": "Preview",
                     "addLayer": "Add a layer to the map",
                     "useTheSelectedLayer": "Use the selected layer",
                     "connectToAMap": "Connect to a map",
@@ -1225,7 +1226,9 @@
         },
         "dashboard": {
             "editor": {
-                "addACardToTheDashboard": "Add a widget to the dashboard"
+                "addACardToTheDashboard": "Add a widget to the dashboard",
+                "showConnections": "Show connections",
+                "hideConnections": "HideConnections"
             },
             "emptyTitle": "The dashboard is empty"
         },
