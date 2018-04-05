@@ -31,6 +31,7 @@ module.exports = ({
     id,
     title,
     description,
+    headerStyle,
     data = [],
     series = [],
     loading,
@@ -45,6 +46,7 @@ module.exports = ({
     ...props}) =>
     (<WidgetContainer
         id={`widget-chart-${id}`}
+        headerStyle={headerStyle}
         title={title}
         topLeftItems={renderHeaderLeftTopItem({loading, title, description, showTable, toggleTableView})}
         confirmDelete={confirmDelete}

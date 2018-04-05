@@ -1,7 +1,8 @@
-const { get, find, castArray, isEqualWith} = require('lodash');
+const { get, castArray, isEqualWith} = require('lodash');
 const {mapSelector} = require('./map');
 const {getSelectedLayer} = require('./layers');
 const {DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
+const { getWidgetsGroups, getWidgetDependency} = require('../utils/WidgetsUtils');
 
 const {isDashboardAvailable, isDashboardEditing} = require('./dashboard');
 const {defaultMemoize, createSelector, createSelectorCreator} = require('reselect');
@@ -27,15 +28,7 @@ const getWidgetLayer = createSelector(
     state => isDashboardAvailable(state) && isDashboardEditing(state),
     ({layer} = {}, selectedLayer, dashboardEditing) => layer || !dashboardEditing && selectedLayer
 );
-const getWidgetDependency = (k, widgets) => {
-    const [match, id, rest] = WIDGETS_REGEX.exec(k);
-    if (match) {
-        const widget = find(widgets, { id });
-        return rest
-            ? get(widget, rest)
-            : widget;
-    }
-};
+
 const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
 
 const getMapWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
@@ -60,6 +53,11 @@ const getDependencySelectorConfig = state => get(getEditorSettings(state), `${DE
  * @param {object} state the state
  */
 const isWidgetSelectionActive = state => get(getDependencySelectorConfig(state), 'active');
+
+const getWidgetsDependenciesGroups = createSelector(
+    getFloatingWidgets,
+    widgets => getWidgetsGroups(widgets)
+);
 
 module.exports = {
     getFloatingWidgets,
@@ -98,5 +96,6 @@ module.exports = {
         }), {})
     ),
     isWidgetSelectionActive,
-    getDependencySelectorConfig
+    getDependencySelectorConfig,
+    getWidgetsDependenciesGroups
 };

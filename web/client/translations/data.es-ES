@@ -1125,6 +1125,7 @@
                     "textPlaceholder": "Ingresar texto...",
                     "useThisMap": "Usar este mapa",
                     "configureMapOptions": "Configurar opciones de mapa",
+                    "preview": "Vista previa",
                     "addLayer": "Agregar una capa al mapa",
                     "useTheSelectedLayer": "Usar la capa seleccionada",
                     "connectToAMap": "Conectar a un mapa",
@@ -1224,7 +1225,9 @@
         },
         "dashboard": {
             "editor": {
-                "addACardToTheDashboard": "Agregar un widget al tablero"
+                "addACardToTheDashboard": "Agregar un widget al tablero",
+                "showConnections": "Mostrar conexiones",
+                "hideConnections": "Ocultar conexiones"
             },
             "emptyTitle": "El tablero está vacío"
         },

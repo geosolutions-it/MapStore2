@@ -12,8 +12,9 @@ const {connect} = require('react-redux');
 const { compose, withProps, withHandlers } = require('recompose');
 const {createSelector} = require('reselect');
 const {mapIdSelector} = require('../selectors/map');
-const { getDashboardWidgets, dependenciesSelector, getDashboardWidgetsLayout, isWidgetSelectionActive, getEditingWidget} = require('../selectors/widgets');
+const { getDashboardWidgets, dependenciesSelector, getDashboardWidgetsLayout, isWidgetSelectionActive, getEditingWidget, getWidgetsDependenciesGroups} = require('../selectors/widgets');
 const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage, selectWidget} = require('../actions/widgets');
+const {showConnectionsSelector} = require('../selectors/dashboard');
 const ContainerDimensions = require('react-container-dimensions').default;
 
 const PropTypes = require('prop-types');
@@ -26,13 +27,17 @@ const WidgetsView = compose(
             dependenciesSelector,
             isWidgetSelectionActive,
             (state) => get(getEditingWidget(state), "id"),
-            (id, widgets, layouts, dependencies, selectionActive, editingWidgetId) => ({
+            getWidgetsDependenciesGroups,
+            showConnectionsSelector,
+            (id, widgets, layouts, dependencies, selectionActive, editingWidgetId, groups, showGroupColor) => ({
                 id,
                 widgets,
                 layouts,
                 dependencies,
                 selectionActive,
-                editingWidgetId
+                editingWidgetId,
+                groups,
+                showGroupColor
             })
         ), {
             editWidget,
