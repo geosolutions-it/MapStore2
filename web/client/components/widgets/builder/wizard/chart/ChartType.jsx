@@ -29,15 +29,16 @@ const ITEMS = [{
     type: "pie"
 }, {
     type: "line"
-}, {
+}/*, {
     type: "gauge"
-}].map( ({type}) => ({
+}
+*/].map( ({type}) => ({
     type,
     title: <Message msgId={`widgets.chartType.${type}.title`} />,
     description: <Message msgId={`widgets.chartType.${type}.description`} />,
     caption: <Message msgId={`widgets.chartType.${type}.caption`} />
 }));
-module.exports = ({onSelect = () => {}, onNextPage = () => {}, types = [], type} = {}) => (<Row>
+module.exports = ({ onSelect = () => { }, onNextPage = () => { }, types = ITEMS, type} = {}) => (<Row>
     <StepHeader key="title" title={<Message msgId="widgets.selectChartType.title" />} />
     <SideGrid
         key="content"
