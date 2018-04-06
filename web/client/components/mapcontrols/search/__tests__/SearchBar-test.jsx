@@ -197,4 +197,39 @@ describe("test the SearchBar", () => {
             done();
         }, 10);
     });
+
+    it('test search and reset buttons both present, splitTools=false', () => {
+        const tb = ReactDOM.render(<SearchBar splitTools={false} searchText={"some val"} delay={0} typeAhead={false} />, document.getElementById("container"));
+        let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "searchclear");
+        let search = TestUtils.findRenderedDOMComponentWithClass(tb, "magnifying-glass");
+        expect(reset).toExist();
+        expect(search).toExist();
+    });
+    it('test only search present, splitTools=false', () => {
+        const tb = ReactDOM.render(<SearchBar splitTools={false} searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));
+        let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "searchclear");
+        expect(reset.length).toBe(0);
+
+        let search = TestUtils.findRenderedDOMComponentWithClass(tb, "magnifying-glass");
+        expect(search).toExist();
+    });
+
+
+    it('test only search present, splitTools=true', () => {
+        const tb = ReactDOM.render(<SearchBar splitTools searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));
+        let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "searchclear");
+        expect(reset.length).toBe(0);
+
+        let search = TestUtils.findRenderedDOMComponentWithClass(tb, "magnifying-glass");
+        expect(search).toExist();
+    });
+
+    it('test only reset present, splitTools=true', () => {
+        const tb = ReactDOM.render(<SearchBar splitTools searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
+        let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "searchclear");
+        expect(reset).toExist();
+
+        let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "magnifying-glass");
+        expect(search.length).toBe(0);
+    });
 });
