@@ -1,20 +1,20 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
-var React = require('react');
-var {FormControl, FormGroup, Glyphicon, Tooltip} = require('react-bootstrap');
+const PropTypes = require('prop-types');
+const React = require('react');
+const {FormControl, FormGroup, Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
-var LocaleUtils = require('../../../utils/LocaleUtils');
-var Spinner = require('react-spinkit');
+const LocaleUtils = require('../../../utils/LocaleUtils');
+const Spinner = require('react-spinkit');
 
 
-var delay = (
+const delay = (
     function() {
         var timer = 0;
         return function(callback, ms) {
@@ -43,6 +43,7 @@ require('./searchbar.css');
  * @prop {searchText} the text to display in the component
  * @prop {object[]} selectedItems the items selected. Must have `text` property to display
  * @prop {boolean} autoFocusOnSelect if true, the component gets focus when items are added, or deleted but some item is still selected. Useful for continue writing after selecting an item (with nested services for instance)
+ * @prop {boolean} splitTools if false, the search and reset can appear both at the same time, otherwise the search appear only with empty text, the reset if a text is entered
  * @prop {boolean} loading if true, shows the loading tool
  * @prop {object} error if not null, an error icon will be display
  * @prop {object} style css style to apply to the component
@@ -66,6 +67,7 @@ class SearchBar extends React.Component {
         searchText: PropTypes.string,
         selectedItems: PropTypes.array,
         autoFocusOnSelect: PropTypes.bool,
+        splitTools: PropTypes.bool,
         loading: PropTypes.bool,
         error: PropTypes.object,
         style: PropTypes.object,
@@ -87,6 +89,7 @@ class SearchBar extends React.Component {
         delay: 1000,
         blurResetDelay: 300,
         autoFocusOnSelect: true,
+        splitTools: true,
         hideOnBlur: true,
         typeAhead: true,
         searchText: ""
@@ -145,14 +148,15 @@ class SearchBar extends React.Component {
     };
 
     renderAddonAfter = () => {
-        const remove = <Glyphicon className="searchclear" glyph="remove" onClick={this.clearSearch} key="searchbar_remove_glyphicon"/>;
-        var showRemove = this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0;
-        let addonAfter = showRemove ? [remove] : [<Glyphicon glyph="search" key="searchbar_search_glyphicon"/>];
+        const remove = <Glyphicon className="searchclear" glyph="1-close" onClick={this.clearSearch} key="searchbar_remove_glyphicon"/>;
+        const search = <Glyphicon className="magnifying-glass" glyph="search" key="searchbar_search_glyphicon" onClick={this.search}/>;
+        const showRemove = this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0;
+        let addonAfter = showRemove ? (this.props.splitTools ? [remove] : [remove, search]) : [search];
         if (this.props.loading) {
             addonAfter = [<Spinner style={{
                 position: "absolute",
-                right: "16px",
-                top: "12px"
+                right: "19px",
+                top: "7px"
             }} spinnerName="pulse" noFadeIn/>, addonAfter];
         }
         if (this.props.error) {

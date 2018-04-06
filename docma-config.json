@@ -199,6 +199,7 @@
                 "web/client/plugins/GlobeViewSwitcher.jsx",
                 "web/client/plugins/GoFull.jsx",
                 "web/client/plugins/Map.jsx",
+                "web/client/plugins/MapSearch.jsx",
                 "web/client/plugins/Measure.jsx",
                 "web/client/plugins/MeasurePanel.jsx",
                 "web/client/plugins/MeasureResults.jsx",
