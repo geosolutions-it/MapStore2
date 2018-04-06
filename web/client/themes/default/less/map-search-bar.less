@@ -17,10 +17,16 @@ div.MapSearchBar .input-group-addon {
 	font-size: @icon-size;
 }
 
+.MapSearchBar .input-group-addon .magnifying-glass:hover,
+.MapSearchBar .input-group-addon .searchclear:hover {
+    opacity: 0.75
+}
+
+.MapSearchBar .input-group-addon .magnifying-glass,
 .MapSearchBar .input-group-addon .searchclear,
 .MapSearchBar .input-group-addon .searcherror {
-	font-size: @icon-size-md;
     margin-right: 4px;
+    cursor: pointer
 }
 
 .MapSearchBar .input-group-addon .searcherror {
