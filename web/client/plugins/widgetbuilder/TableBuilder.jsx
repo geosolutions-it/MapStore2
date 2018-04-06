@@ -19,7 +19,9 @@ const { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSet
 
 const builderConfiguration = require('../../components/widgets/enhancers/builderConfiguration');
 const chartLayerSelector = require('./enhancers/chartLayerSelector');
-const withViewportConnectButtons = require('./enhancers/connection/withViewportConnectButtons');
+const viewportBuilderConnect = require('./enhancers/connection/viewportBuilderConnect');
+const viewportBuilderConnectMask = require('./enhancers/connection/viewportBuilderConnectMask');
+const withConnectButton = require('./enhancers/connection/withConnectButton');
 const {
     wizardStateToProps,
     wizardSelector
@@ -63,7 +65,8 @@ const Toolbar = compose(
     },
         wizardStateToProps
     ),
-    withViewportConnectButtons(({ step }) => step === 0)
+    viewportBuilderConnect,
+    withConnectButton(({ step }) => step === 0)
 )(require('../../components/widgets/builder/wizard/table/Toolbar'));
 
 /*
@@ -72,18 +75,23 @@ const Toolbar = compose(
  */
 const chooseLayerEnhancer = compose(
     connect(wizardSelector),
+    viewportBuilderConnectMask,
     branch(
         ({ layer } = {}) => !layer,
         renderComponent(chartLayerSelector(require('./LayerSelector')))
     )
 );
 
-module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, editorData = {}, availableDependencies = [], dependencies, ...props } = {}) =>
+module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, editorData = {}, toggleConnection, availableDependencies = [], dependencies, ...props } = {}) =>
 
     (<BorderLayout
         header={
             <BuilderHeader onClose={onClose}>
-                <Toolbar availableDependencies={availableDependencies} onClose={onClose} />
+                <Toolbar
+                    editorData={editorData}
+                    toggleConnection={toggleConnection}
+                    availableDependencies={availableDependencies}
+                    onClose={onClose} />
                 {get(editorData, "options.propertyName.length") === 0 ? <InfoPopover
                     glyph="exclamation-mark"
                     bsStyle="warning"

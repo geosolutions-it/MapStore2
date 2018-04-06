@@ -93,6 +93,57 @@ describe('Test layers selectors', () => {
         expect(props[1].type).toBe("vector");
     });
 
+    it('test layerSelectorWithMarkers with default style', () => {
+        const props = layerSelectorWithMarkers({config: {layers: [{type: "osm"}]}, search: {
+            markerPosition: {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [0, 0]
+                }
+            }
+        }});
+        expect(props.length).toBe(2);
+        expect(props[1].type).toBe("vector");
+        expect(props[1].style).toEqual({
+            iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+    });
+
+    it('test layerSelectorWithMarkers with custom style', () => {
+        const style = {
+            color: '#ff0000'
+        };
+
+        const defaultIconStyle = {
+            iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        };
+
+        const props = layerSelectorWithMarkers({config: {layers: [{type: "osm"}]}, search: {
+            markerPosition: {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [0, 0]
+                }
+            },
+            style
+        }});
+        expect(props.length).toBe(2);
+        expect(props[1].type).toBe("vector");
+        expect(props[1].style).toEqual({...defaultIconStyle, ...style});
+    });
+
     it('test groupsSelector from layers flat one group', () => {
         const props = groupsSelector({layers: {
             flat: [{type: "osm", id: "layer1", group: "group1"}, {type: "wms", id: "layer2", group: "group1"}],

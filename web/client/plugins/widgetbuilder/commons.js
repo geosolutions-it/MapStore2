@@ -7,6 +7,7 @@
  */
 const {createSelector} = require('reselect');
 const { getEditingWidget, dependenciesSelector, getEditorSettings, getWidgetLayer, availableDependenciesSelector} = require('../../selectors/widgets');
+const { showConnectionsSelector } = require('../../selectors/dashboard');
 
 const wizardStateToProps = ( stateProps = {}, dispatchProps = {}, ownProps = {}) => ({
          ...ownProps,
@@ -32,10 +33,12 @@ const wizardSelector = createSelector(
  );
 const dashboardSelector = createSelector(
     getEditingWidget,
+    showConnectionsSelector,
     dependenciesSelector,
-    availableDependenciesSelector, // TODO dependencies
-    ({ layer }, dependencies, dependencyConnectProps) => ({
+    availableDependenciesSelector,
+    ({ layer }, showConnections, dependencies, dependencyConnectProps) => ({
         layer,
+        showConnections,
         dependencies,
         ...dependencyConnectProps
     }));

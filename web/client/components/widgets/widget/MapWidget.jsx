@@ -35,9 +35,10 @@ module.exports = ({
     map,
     mapStateSource,
     confirmDelete = false,
-    onDelete = () => {}
+    onDelete = () => {},
+    headerStyle
 } = {}) =>
-    (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm}
+    (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
         topLeftItems={renderHeaderLeftTopItem({ loading, title, description })}
         topRightItems={<ButtonToolbar>
             <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
