@@ -36,6 +36,7 @@ module.exports = ({
     width,
     height,
     confirmDelete= false,
+    headerStyle,
     toggleTableView= () => {},
     toggleDeleteConfirm= () => {},
     onEdit= () => {},
@@ -48,6 +49,7 @@ module.exports = ({
         confirmDelete={confirmDelete}
         onDelete={onDelete}
         toggleDeleteConfirm = {toggleDeleteConfirm}
+        headerStyle={headerStyle}
         topRightItems={showTable
             ? null : <ButtonToolbar>
             <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">

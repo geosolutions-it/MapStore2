@@ -30,7 +30,8 @@ module.exports = compose(
                         .mapTo({ canProceed: true })
                         .catch((error) => Rx.Observable.of({ error, canProceed: false }))
             ).startWith({})
-            .combineLatest(props$, ({ canProceed } = {}, props) => ({
+            .combineLatest(props$, ({ canProceed, error } = {}, props) => ({
+                error,
                 canProceed,
                 ...props
             })

@@ -1,16 +1,26 @@
 const Rx = require('rxjs');
-const { get, isEqual } = require('lodash');
-const { EXPORT_CSV, EXPORT_IMAGE, INSERT, clearWidgets, loadDependencies} = require('../actions/widgets');
+const { get, isEqual, omit } = require('lodash');
+const { EXPORT_CSV, EXPORT_IMAGE, INSERT, TOGGLE_CONNECTION, WIDGET_SELECTED, EDITOR_SETTING_CHANGE,
+    onEditorChange, clearWidgets, loadDependencies, toggleDependencySelector, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
-const { availableDependenciesSelector } = require('../selectors/widgets');
+const { availableDependenciesSelector, isWidgetSelectionActive, getDependencySelectorConfig } = require('../selectors/widgets');
 const { MAP_CREATED, SAVING_MAP, MAP_ERROR } = require('../actions/maps');
 const {LOCATION_CHANGE} = require('react-router-redux');
 const {saveAs} = require('file-saver');
 const FileUtils = require('../utils/FileUtils');
 const converter = require('json-2-csv');
 const canvg = require('canvg-browser');
+const updateDependencyMap = (active, id, { dependenciesMap, mappings}) => {
+    const overrides = Object.keys(mappings).filter(k => mappings[k] !== undefined).reduce( (ov, k) => ({
+        ...ov,
+        [k]: id === "map" ? mappings[k] : `${id}.${mappings[k]}`
+    }), {});
+    return active
+        ? { ...dependenciesMap, ...overrides}
+        : omit(dependenciesMap, [Object.keys(mappings)]);
+};
 
 const outerHTML = (node) => {
     const parent = document.createElement('div');
@@ -26,7 +36,28 @@ const getValidLocationChange = action$ =>
         .startWith({type: MAP_CONFIG_LOADED}) // just dummy action to trigger the first switchMap
         .switchMap(action => action.type === SAVING_MAP ? Rx.Observable.never() : action$)
         .filter(({type} = {}) => type === LOCATION_CHANGE);
-
+/**
+ * Action flow to add/Removes dependencies for a widgets.
+ * Trigger `mapSync` property of a widget and sets `dependenciesMap` object to map `dependency` prop onto widget props.
+ * For instance if
+ *  - `active = true`
+ *  - `mappings` option is `{a: "b"}
+ *  - `dependency = "x"`
+ * then you will have dependencyMap set to : {a: "x.b"}.
+ * It manages also special dependency "map" where mappings are applied directly (center...) .
+ * If active = false the dependencies will be removed from dependencyMap.
+ *
+ * @param {boolean} active true if the connection must be activated
+ * @param {string} dependency the dependency element id to add
+ * @param {object} options dependency mapping options. Must contain `mappings` object
+ */
+const configureDependency = (active, dependency, options) =>
+    Rx.Observable.of(
+        onEditorChange("mapSync", active),
+        onEditorChange('dependenciesMap',
+            updateDependencyMap(active, dependency, options)
+        )
+    );
 module.exports = {
     exportWidgetData: action$ =>
         action$.ofType(EXPORT_CSV)
@@ -53,6 +84,40 @@ module.exports = {
             [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`
         }), {}))
     ),
+    /**
+     * Toggles the dependencies setup and widget selection for dependencies
+     * (if more than one widget is available for connection)
+     */
+    toggleWidgetConnectFlow: (action$, {getState = () => {}} = {}) =>
+        action$.ofType(TOGGLE_CONNECTION).switchMap(({ active, availableDependencies = [], options}) =>
+            active
+                // activate flow
+                ? availableDependencies.length === 1
+                    // case singleMap
+                    // In future may be necessary to pass active prop, if different from mapSync, in options object
+                    // also if connection is triggered for a different target (widget not in editing) we should change actions to trigger (onChange instead of onEditorChange)
+                    ? configureDependency(active, availableDependencies[0], options)
+                    // case of multiple map
+                    : Rx.Observable.of(toggleDependencySelector(active, {
+                            availableDependencies
+                        })
+                        ).merge(
+                            action$.ofType(WIDGET_SELECTED)
+                                .filter(() => isWidgetSelectionActive(getState()))
+                                .switchMap(({ widget }) => {
+                                    const ad = get(getDependencySelectorConfig(getState()), 'availableDependencies');
+                                    const deps = ad.filter(d => (WIDGETS_REGEX.exec(d) || [])[1] === widget.id);
+                                    return configureDependency(active, deps[0], options).concat(Rx.Observable.of(toggleDependencySelector(false, {})));
+                                }).takeUntil(
+                                    action$.ofType(LOCATION_CHANGE)
+                                    .merge(action$.filter(({ type, key } = {}) => type === EDITOR_SETTING_CHANGE && key === DEPENDENCY_SELECTOR_KEY))
+                                )
+                        )
+
+                // deactivate flow
+                : configureDependency(active, availableDependencies[0], options)
+        ),
+
     clearWidgetsOnLocationChange: (action$, {getState = () => {}} = {}) =>
         action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
             const location = get(getState(), "routing.location");

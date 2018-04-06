@@ -152,5 +152,4 @@ describe('widgets selectors', () => {
         expect(dependencies.f).toBeFalsy();
         expect(dependencies.g).toBe(state.widgets.otherStateSlice);
     });
-
 });

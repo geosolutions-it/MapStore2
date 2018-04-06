@@ -24,7 +24,8 @@ class SearchResultList extends React.Component {
         onItemClick: PropTypes.func,
         addMarker: PropTypes.func,
         afterItemClick: PropTypes.func,
-        notFoundMessage: PropTypes.oneOfType([PropTypes.object, PropTypes.string])
+        notFoundMessage: PropTypes.oneOfType([PropTypes.object, PropTypes.string]),
+        resultsStyle: PropTypes.object
     };
 
     static defaultProps = {
@@ -37,11 +38,12 @@ class SearchResultList extends React.Component {
         },
         onItemClick: () => {},
         addMarker: () => {},
-        afterItemClick: () => {}
+        afterItemClick: () => {},
+        resultsStyle: {}
     };
 
     onItemClick = (item) => {
-        this.props.onItemClick(item, this.props.mapConfig);
+        this.props.onItemClick(item, this.props.mapConfig, this.props.resultsStyle);
     };
 
     renderResults = () => {

@@ -13,11 +13,13 @@ const layerSelector = require('./enhancers/layerSelector');
 const manageLayers = require('./enhancers/manageLayers');
 const mapToolbar = require('./enhancers/mapToolbar');
 const handleNodeEditing = require('./enhancers/handleNodeEditing');
+const mapBuilderConnectMask = require('./enhancers/connection/mapBuilderConnectMask');
 const BorderLayout = require('../../components/layout/BorderLayout');
 
 const BuilderHeader = require('./BuilderHeader');
 const { compose, branch, renderComponent, withState, withHandlers, withProps } = require('recompose');
 const handleNodeSelection = require('../../components/widgets/builder/wizard/map/enhancers/handleNodeSelection');
+
 
 const Toolbar = mapToolbar(require('../../components/widgets/builder/wizard/map/Toolbar'));
 
@@ -62,6 +64,7 @@ const mapBuilder = compose(
     withProps(({ editorData = {}}) => ({
         map: editorData.map
     })),
+    mapBuilderConnectMask,
     handleNodeSelection,
     handleNodeEditing
 );
@@ -70,14 +73,17 @@ const mapBuilder = compose(
 module.exports = mapBuilder(({
         enabled, onClose = () => {},
         toggleLayerSelector = () => {},
+        editorData = {},
         editNode, setEditNode, closeNodeEditor, selectedGroups=[], selectedLayers=[], selectedNodes, onNodeSelect = () => {},
-        availableDependencies =[]
+    availableDependencies = [], toggleConnection = () => {}
     } = {}) =>
     (<BorderLayout
         className = "map-selector"
         header={(<BuilderHeader onClose={onClose}>
             <Toolbar
+            editorData={editorData}
             availableDependencies={availableDependencies}
+            toggleConnection={toggleConnection}
             selectedNodes={selectedNodes}
             selectedLayers={selectedLayers}
             selectedGroups={selectedGroups}
