@@ -19,6 +19,7 @@ const builderConfiguration = require('../../components/widgets/enhancers/builder
 const chartLayerSelector = require('./enhancers/chartLayerSelector');
 const viewportBuilderConnect = require('./enhancers/connection/viewportBuilderConnect');
 const viewportBuilderConnectMask = require('./enhancers/connection/viewportBuilderConnectMask');
+const withExitButton = require('./enhancers/withExitButton');
 const withConnectButton = require('./enhancers/connection/withConnectButton');
 const {
     wizardStateToProps,
@@ -53,6 +54,7 @@ const Toolbar = compose(
         wizardStateToProps
     ),
     viewportBuilderConnect,
+    withExitButton(),
     withConnectButton(({step}) => step === 1)
 
 )(require('../../components/widgets/builder/wizard/chart/Toolbar'));
@@ -71,11 +73,12 @@ const chooseLayerEnhancer = compose(
 
 );
 
-module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, editorData, toggleConnection, availableDependencies = [], dependencies, ...props} = {}) =>
+module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton, editorData, toggleConnection, availableDependencies = [], dependencies, ...props} = {}) =>
 
     (<BorderLayout
         header={<BuilderHeader onClose={onClose}>
             <Toolbar
+                exitButton={exitButton}
                 editorData={editorData}
                 toggleConnection={toggleConnection}
                 availableDependencies={availableDependencies}

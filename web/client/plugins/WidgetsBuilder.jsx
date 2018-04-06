@@ -13,6 +13,7 @@ const Dock = require('react-dock').default;
 
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
+const { compose } = require('recompose');
 
 const {setControlProperty} = require('../actions/controls');
 
@@ -20,12 +21,16 @@ const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {widgetBuilderSelector} = require('../selectors/controls');
 const { dependenciesSelector, availableDependenciesSelector} = require('../selectors/widgets');
 const { toggleConnection } = require('../actions/widgets');
-const Builder = connect(
-    createSelector(
-        dependenciesSelector,
-        availableDependenciesSelector,
-        (dependencies, availableDependenciesProps) => ({ dependencies, ...availableDependenciesProps}))
-    , { toggleConnection })(require('./widgetbuilder/WidgetTypeBuilder'));
+const withMapExitButton = require('./widgetbuilder/enhancers/withMapExitButton');
+const Builder = compose(
+    connect(
+        createSelector(
+            dependenciesSelector,
+            availableDependenciesSelector,
+            (dependencies, availableDependenciesProps) => ({ dependencies, ...availableDependenciesProps }))
+    , { toggleConnection }),
+    withMapExitButton
+)(require('./widgetbuilder/WidgetTypeBuilder'));
 
 class SideBarComponent extends React.Component {
      static propTypes = {

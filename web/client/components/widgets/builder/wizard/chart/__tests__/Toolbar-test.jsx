@@ -33,12 +33,7 @@ describe('CounterWizard Toolbar component', () => {
         const el = container.querySelector('.btn-group');
         expect(el).toExist();
         const buttons = container.querySelectorAll('button');
-        expect(buttons.length).toBe(2);
-        expect(buttons[0].querySelector('.glyphicon-filter')).toExist();
-        expect(buttons[1].querySelector('.glyphicon-arrow-right')).toExist();
-        expect(buttons[1].disabled).toBe(true);
-        ReactDOM.render(<Toolbar step={0} valid />, document.getElementById("container"));
-        expect(container.querySelectorAll('button')[1].disabled).toBeFalsy();
+        expect(buttons.length).toBe(0);
     });
     it('step 1', () => {
         ReactDOM.render(<Toolbar step={1} valid />, document.getElementById("container"));
@@ -46,22 +41,28 @@ describe('CounterWizard Toolbar component', () => {
         const el = container.querySelector('.btn-group');
         expect(el).toExist();
         const buttons = container.querySelectorAll('button');
-        expect(buttons.length).toBe(2);
+        expect(buttons.length).toBe(3);
         expect(buttons[0].querySelector('.glyphicon-arrow-left')).toExist();
-        expect(buttons[1].querySelector('.glyphicon-floppy-disk')).toExist();
+        expect(buttons[1].querySelector('.glyphicon-filter')).toExist();
     });
-    it('step buttons', () => {
-        ReactDOM.render(<Toolbar stepButtons={[{text: "text", glyph: 'test', id: "test-button"}]} step={0} valid={false} />, document.getElementById("container"));
+    it('step 2', () => {
+        ReactDOM.render(<Toolbar step={1} valid />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.btn-group');
         expect(el).toExist();
         const buttons = container.querySelectorAll('button');
         expect(buttons.length).toBe(3);
-        expect(buttons[0].querySelector('.glyphicon-test')).toExist();
+        expect(buttons[0].querySelector('.glyphicon-arrow-left')).toExist();
         expect(buttons[1].querySelector('.glyphicon-filter')).toExist();
         expect(buttons[2].querySelector('.glyphicon-arrow-right')).toExist();
-        expect(buttons[2].disabled).toBe(true);
-        ReactDOM.render(<Toolbar step={0} valid />, document.getElementById("container"));
-        expect(container.querySelectorAll('button')[1].disabled).toBeFalsy();
+    });
+    it('step buttons', () => {
+        ReactDOM.render(<Toolbar stepButtons={[{ text: "text", glyph: 'test', id: "test-button" }]} step={0} valid={false} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.btn-group');
+        expect(el).toExist();
+        const buttons = container.querySelectorAll('button');
+        expect(buttons.length).toBe(1);
+        expect(buttons[0].querySelector('.glyphicon-test')).toExist();
     });
 });

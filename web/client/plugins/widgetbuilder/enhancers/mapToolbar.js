@@ -14,6 +14,7 @@ const { wizardSelector, wizardStateToProps } = require('../commons');
 
 const mapBuilderConnect = require('./connection/mapBuilderConnect');
 const withConnectButton = require('./connection/withConnectButton');
+const withExitButton = require('./withExitButton');
 module.exports = compose(
     connect(wizardSelector, {
         setPage,
@@ -54,6 +55,9 @@ module.exports = compose(
         }))
     ),
     mapBuilderConnect,
+    withExitButton(undefined, {
+        tooltipId: "widgets.builder.wizard.backToMapSelection"
+    }),
     withConnectButton(({step}) => step === 0)
 
 );

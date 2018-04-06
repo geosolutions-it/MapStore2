@@ -59,7 +59,7 @@ module.exports = ({
         tooltipId: "widgets.builder.setupFilter"
     }, {
         onClick: () => setPage(Math.min(step + 1, 2)),
-        visible: !!(step === 0 && (!editorData.type || editorData.type.indexOf("WI") !== 0)) || step === 1,
+        visible: !!( step === 1 ),
         disabled: step === 1 && !valid,
         glyph: "arrow-right",
         tooltipId: getNextTooltipId(step)

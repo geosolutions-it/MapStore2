@@ -1113,6 +1113,9 @@
                 },
                 "wizard": {
                     "backToTypeSelection": "Torna alla selezione del tipo",
+                    "backToWidgetTypeSelection": "Torna alla selezione del tipo di widget",
+                    "backToLayerSelection": "Torna alla selezione del livello",
+                    "backToMapSelection": "Torna alla selezione della mappa",
                     "backToChartOptions": "Torna alle opzioni del grafico",
                     "configureChartOptions": "Configura le opzioni del grafico",
                     "configureWidgetOptions": "Configura le opzioni del widget",
