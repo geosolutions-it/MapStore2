@@ -53,7 +53,7 @@ module.exports = compose(
             })
             )
     )
-)(({ onClose = () => { }, setSelected = () => { }, onMapChoice = () => { }, selected } = {}) =>
+)(({ onClose = () => { }, setSelected = () => { }, onMapChoice = () => { }, stepButtons = [], selected } = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
@@ -62,7 +62,7 @@ module.exports = compose(
                     bsStyle: "primary",
                     bsSize: "sm"
                 }}
-                buttons={[{
+                buttons={[...stepButtons, {
                 tooltipId: "widgets.builder.wizard.useThisMap",
                 onClick: () => onMapChoice(selected),
                 visible: true,

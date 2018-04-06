@@ -17,12 +17,14 @@ const {dashboardSelector} = require('./widgetbuilder/commons');
 const { createWidget, toggleConnection } = require('../actions/widgets');
 const { triggerShowConnections } = require('../actions/dashboard');
 const { showConnectionsSelector } = require('../selectors/dashboard');
+const withDashboardExitButton = require('./widgetbuilder/enhancers/withDashboardExitButton');
 const Builder =
     compose(
         connect(dashboardSelector, { toggleConnection, triggerShowConnections}),
         withProps(({ availableDependencies = []}) => ({
             availableDependencies: availableDependencies.filter(d => d !== "map")
         })),
+        withDashboardExitButton
     )(require('./widgetbuilder/WidgetTypeBuilder'));
 
 const Toolbar = compose(

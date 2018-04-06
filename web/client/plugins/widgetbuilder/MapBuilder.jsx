@@ -27,7 +27,9 @@ const Toolbar = mapToolbar(require('../../components/widgets/builder/wizard/map/
  * Prompts Map Selection or Layer selector (to add layers)
  */
 const chooseMapEnhancer = compose(
-    connect(wizardSelector),
+    connect(wizardSelector, {
+        onResetChange: onEditorChange
+    }),
     // map selector
     branch(
         ({ editorData = {} } = {}) => !editorData.map,
@@ -46,10 +48,20 @@ const chooseMapEnhancer = compose(
                         toggleLayerSelector(false);
                     }
                 }),
-                layerSelector
+                layerSelector,
             )(require('./MapLayerSelector'))
         )
-    )
+    ),
+    // add button to back to map selection
+    withProps(({ onResetChange = () => { } }) => ({
+        exitButton: {
+            glyph: 'arrow-left',
+            onClick: () => {
+                // options will not be valid anymore in case of layer change
+                onResetChange("map", undefined);
+            }
+        }
+    }))
 );
 const Builder = connect(
     wizardSelector,
@@ -74,13 +86,14 @@ module.exports = mapBuilder(({
         enabled, onClose = () => {},
         toggleLayerSelector = () => {},
         editorData = {},
-        editNode, setEditNode, closeNodeEditor, selectedGroups=[], selectedLayers=[], selectedNodes, onNodeSelect = () => {},
+        editNode, setEditNode, closeNodeEditor, selectedGroups=[], exitButton, selectedLayers=[], selectedNodes, onNodeSelect = () => {},
     availableDependencies = [], toggleConnection = () => {}
     } = {}) =>
     (<BorderLayout
         className = "map-selector"
         header={(<BuilderHeader onClose={onClose}>
             <Toolbar
+            exitButton={exitButton}
             editorData={editorData}
             availableDependencies={availableDependencies}
             toggleConnection={toggleConnection}

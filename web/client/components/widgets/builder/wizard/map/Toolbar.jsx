@@ -22,16 +22,16 @@ module.exports = ({ step = 0, buttons, tocButtons = [], stepButtons = [], editor
     bsSize: "sm"
 }}
     buttons={buttons || [...(step === 0 ? tocButtons : []), {
+        onClick: () => setPage(Math.max(step - 1, 0)),
+        visible: step === 1,
+        glyph: "arrow-left",
+        tooltipId: "widgets.builder.wizard.configureMapOptions"
+    }, ...stepButtons, {
         onClick: () => toggleLayerSelector(true),
         visible: step === 0,
         glyph: "plus",
         tooltipId: "widgets.builder.wizard.addLayer"
     }, {
-        onClick: () => setPage(Math.max(step - 1, 0)),
-        visible: step === 1,
-        glyph: "arrow-left",
-        tooltipId: "widgets.builder.wizard.configureMapOptions"
-        }, ...stepButtons, {
         onClick: () => setPage(Math.min(step + 1, 2)),
         visible: step === 0,
         glyph: "arrow-right",

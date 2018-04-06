@@ -20,7 +20,7 @@ module.exports = (showCondition = () => true) => compose(
         connected,
         ...props
     }) => ({
-        stepButtons: [{
+            stepButtons: [...stepButtons, {
             onClick: () => toggleConnection(availableDependencies),
             disabled: disableMultiDependencySupport,
             visible: !!showCondition(props) && !!canConnect && availableDependencies.length > 0,
@@ -31,7 +31,7 @@ module.exports = (showCondition = () => true) => compose(
                 : availableDependencies.length === 1
                     ? "widgets.builder.wizard.connectToTheMap"
                     : "widgets.builder.wizard.connectToAMap"
-        }, ...stepButtons
+        }
         ]
     }))
 );
