@@ -455,12 +455,7 @@
                 "className": "navbar shadow navbar-home"
             }
         }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop", "Notifications"],
-        "maps": ["Header", "Fork", {
-            "name": "MapSearch",
-            "cfg": {
-              "splitTools" : true
-            }
-          }, "HomeDescription", "ThemeSwitcher", "CreateNewMap",
+        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "ThemeSwitcher", "CreateNewMap",
           {
             "name": "Maps",
             "cfg": {
