@@ -23,7 +23,7 @@ const {
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
     TOGGLE_MAPINFO_STATE,
-    ENABLE_ZOOM_TO_MARKER
+    UPDATE_CENTER_TO_MARKER
 } = require('../actions/mapInfo');
 
 const {RESET_CONTROLS} = require('../actions/controls');
@@ -180,9 +180,9 @@ function mapInfo(state = initState, action) {
             }]
         });
     }
-    case ENABLE_ZOOM_TO_MARKER: {
+    case UPDATE_CENTER_TO_MARKER: {
         return assign({}, state, {
-            zoomToMarker: true
+            centerToMarker: action.status
         });
     }
     default:

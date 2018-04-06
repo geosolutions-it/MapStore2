@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 const {layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
-    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector, zoomToInfoMarkerSelector} = require('../layers');
+    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector, centerToMarkerSelector} = require('../layers');
 
 describe('Test layers selectors', () => {
     it('test layersSelector from config', () => {
@@ -387,20 +387,20 @@ describe('Test layers selectors', () => {
         expect(props).toEqual({});
     });
 
-    it('test zoomToInfoMarkerSelector', () => {
-        let props = zoomToInfoMarkerSelector({});
+    it('test centerToMarkerSelector', () => {
+        let props = centerToMarkerSelector({});
         expect(props).toEqual(false);
 
-        props = zoomToInfoMarkerSelector({
+        props = centerToMarkerSelector({
             mapInfo: {
-                zoomToMarker: false
+                centerToMarker: false
             }
         });
         expect(props).toEqual(false);
 
-        props = zoomToInfoMarkerSelector({
+        props = centerToMarkerSelector({
             mapInfo: {
-                zoomToMarker: true
+                centerToMarker: true
             }
         });
         expect(props).toEqual(true);

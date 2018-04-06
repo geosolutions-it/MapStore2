@@ -27,7 +27,7 @@ const NO_QUERYABLE_LAYERS = 'NO_QUERYABLE_LAYERS';
 const CLEAR_WARNING = 'CLEAR_WARNING';
 const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
 const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
-const ENABLE_ZOOM_TO_MARKER = 'ENABLE_ZOOM_TO_MARKER';
+const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
 
 /**
  * Private
@@ -198,12 +198,13 @@ function toggleMapInfoState() {
 }
 
 /**
- * Enable zoom to marker if it's not in visible extent
+ * Update center to marker if it's not in visible extent
  */
 
-function enableZoomToMarker() {
+function updateCenterToMarker(status) {
     return {
-        type: ENABLE_ZOOM_TO_MARKER
+        type: UPDATE_CENTER_TO_MARKER,
+        status
     };
 }
 
@@ -224,7 +225,7 @@ module.exports = {
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
     TOGGLE_MAPINFO_STATE,
-    ENABLE_ZOOM_TO_MARKER,
+    UPDATE_CENTER_TO_MARKER,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
@@ -241,5 +242,5 @@ module.exports = {
     errorFeatureInfo,
     loadFeatureInfo,
     toggleMapInfoState,
-    enableZoomToMarker
+    updateCenterToMarker
 };

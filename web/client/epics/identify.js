@@ -7,12 +7,12 @@
 */
 const Rx = require('rxjs');
 
-const {LOAD_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK} = require('../actions/mapInfo');
+const {LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, updateCenterToMarker} = require('../actions/mapInfo');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint} = require('../actions/map');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {stopGetFeatureInfoSelector} = require('../selectors/mapinfo');
-const {zoomToInfoMarkerSelector} = require('../selectors/layers');
+const {centerToMarkerSelector} = require('../selectors/layers');
 const {mapSelector} = require('../selectors/map');
 const {boundingMapRectSelector} = require('../selectors/maplayout');
 const {centerToVisibleArea, isInsideVisibleArea} = require('../utils/CoordinatesUtils');
@@ -48,20 +48,21 @@ module.exports = {
      */
     zoomToVisibleAreaEpic: (action$, store) =>
         action$.ofType(FEATURE_INFO_CLICK)
-        .filter(() => zoomToInfoMarkerSelector(store.getState()))
+        .filter(() => centerToMarkerSelector(store.getState()))
         .switchMap((action) =>
-            action$.ofType(LOAD_FEATURE_INFO)
+            action$.ofType(LOAD_FEATURE_INFO, ERROR_FEATURE_INFO)
             .switchMap(() => {
                 const state = store.getState();
                 const map = mapSelector(state);
                 const boundingMapRect = boundingMapRectSelector(state);
                 const coords = action.point && action.point && action.point.latlng;
                 const resolution = getCurrentResolution(Math.round(map.zoom), 0, 21, 96);
-                if (!map || !boundingMapRect || !coords || isInsideVisibleArea(coords, map, boundingMapRect, resolution)) {
-                    return Rx.Observable.empty();
+                // exclude cesium with cartographic options
+                if (!map || !boundingMapRect || !coords || action.point.cartographic || isInsideVisibleArea(coords, map, boundingMapRect, resolution)) {
+                    return Rx.Observable.of(updateCenterToMarker('disabled'));
                 }
                 const center = centerToVisibleArea(coords, map, boundingMapRect, resolution);
-                return Rx.Observable.of(zoomToPoint(center.pos, center.zoom, center.crs));
+                return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs));
             })
         )
 };

@@ -19,7 +19,7 @@ var {
     HIDE_REVERSE_GEOCODE,
     GET_VECTOR_INFO,
     TOGGLE_MAPINFO_STATE,
-    ENABLE_ZOOM_TO_MARKER,
+    UPDATE_CENTER_TO_MARKER,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
@@ -29,7 +29,7 @@ var {
     hideMapinfoRevGeocode,
     getVectorInfo,
     toggleMapInfoState,
-    enableZoomToMarker
+    updateCenterToMarker
 } = require('../mapInfo');
 
 describe('Test correctness of the map actions', () => {
@@ -201,8 +201,9 @@ describe('Test correctness of the map actions', () => {
         expect(retval.type).toBe(TOGGLE_MAPINFO_STATE);
     });
 
-    it('enable zoom to marker', () => {
-        const retval = enableZoomToMarker();
-        expect(retval.type).toBe(ENABLE_ZOOM_TO_MARKER);
+    it('update center to marker', () => {
+        const retval = updateCenterToMarker('enabled');
+        expect(retval.type).toBe(UPDATE_CENTER_TO_MARKER);
+        expect(retval.status).toBe('enabled');
     });
 });

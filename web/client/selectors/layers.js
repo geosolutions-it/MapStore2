@@ -23,7 +23,7 @@ const geoColderSelector = state => state.search && state.search;
 // TODO currently loading flag causes a re-creation of the selector on any pan
 // to avoid this separate loading from the layer object
 
-const zoomToInfoMarkerSelector = (state) => get(state, "mapInfo.zoomToMarker", false);
+const centerToMarkerSelector = (state) => get(state, "mapInfo.centerToMarker", '');
 const defaultIconStyle = {
     iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
@@ -34,11 +34,11 @@ const defaultIconStyle = {
 };
 
 const layerSelectorWithMarkers = createSelector(
-    [layersSelector, markerSelector, geoColderSelector, zoomToInfoMarkerSelector],
-    (layers = [], markerPosition, geocoder, zoomToMarker) => {
+    [layersSelector, markerSelector, geoColderSelector, centerToMarkerSelector],
+    (layers = [], markerPosition, geocoder, centerToMarker) => {
         let newLayers = [...layers];
         if ( markerPosition ) {
-            const coords = zoomToMarker ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
+            const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
             newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", coords));
         }
         if (geocoder && geocoder.markerPosition) {
@@ -99,5 +99,5 @@ module.exports = {
     backgroundControlsSelector,
     currentBackgroundSelector,
     tempBackgroundSelector,
-    zoomToInfoMarkerSelector
+    centerToMarkerSelector
 };
