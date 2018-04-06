@@ -27,11 +27,11 @@ const Catalog = compose(
  * Builder page that allows layer's selection
  * @prop {function} [layerValidationStream]
  */
-module.exports = ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, selected, error, canProceed, layer, catalog, catalogServices} = {}) =>
+module.exports = ({ onClose = () => { }, setSelected = () => { }, onLayerChoice = () => { }, stepButtons, selected, error, canProceed, layer, catalog, catalogServices} = {}) =>
     (<BorderLayout
         className="bg-body layer-selector"
         header={<BuilderHeader onClose={onClose}>
-        <Toolbar canProceed={canProceed} onProceed={() => onLayerChoice(layer)} />
+        <Toolbar stepButtons={stepButtons} canProceed={canProceed} onProceed={() => onLayerChoice(layer)} />
         {selected && !canProceed && error ? <InfoPopover
             trigger={false}
             glyph="warning-sign"

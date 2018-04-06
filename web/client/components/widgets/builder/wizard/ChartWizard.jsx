@@ -82,7 +82,13 @@ module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, se
         step={step}
         setPage={setPage}
         onFinish={onFinish}
-        isStepValid={n => n === 1 ? isChartOptionsValid(data.options) : true} hideButtons>
+        isStepValid={n =>
+                n === 0
+                    ? data.chartType
+                    : n === 1
+                        ? isChartOptionsValid(data.options)
+                        : true
+                } hideButtons>
         <ChartType
             key="type"
             type={data.type}

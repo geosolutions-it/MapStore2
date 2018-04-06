@@ -1114,6 +1114,9 @@
                 },
                 "wizard": {
                     "backToTypeSelection": "Back to type selection",
+                    "backToWidgetTypeSelection": "Back to widget type selection",
+                    "backToLayerSelection": "Back to layer selection",
+                    "backToMapSelection": "Back to map selection",
                     "backToChartOptions": "Back to chart options",
                     "configureChartOptions": "Configure chart options",
                     "configureWidgetOptions": "Configure widget options",
