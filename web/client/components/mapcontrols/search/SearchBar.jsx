@@ -12,6 +12,7 @@ const {FormControl, FormGroup, Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const Spinner = require('react-spinkit');
+const assign = require('object-assign');
 
 
 const delay = (
@@ -36,6 +37,8 @@ require('./searchbar.css');
  * @prop {function} onCancelSelectedItem triggered when the user deletes the selected item (by hitting backspace) when text is empty
  * @prop {string} placeholder string to use as placeholder when text is empty
  * @prop {string} placeholderMsgId msgId for the placeholder. Used if placeholder is not defined
+ * @prop {string} removeIcon glyphicon used for reset button, default 1-close
+ * @prop {string} searchIcon glyphicon used for search button, default search
  * @prop {number} delay milliseconds after trigger onSearch if typeAhead is true
  * @prop {boolean} hideOnBlur if true, it triggers onPurgeResults on blur
  * @prop {boolean} typeAhead if true, onSearch is triggered when users change the search text, after `delay` milliseconds
@@ -65,6 +68,8 @@ class SearchBar extends React.Component {
         blurResetDelay: PropTypes.number,
         typeAhead: PropTypes.bool,
         searchText: PropTypes.string,
+        removeIcon: PropTypes.string,
+        searchIcon: PropTypes.string,
         selectedItems: PropTypes.array,
         autoFocusOnSelect: PropTypes.bool,
         splitTools: PropTypes.bool,
@@ -86,6 +91,8 @@ class SearchBar extends React.Component {
         onCancelSelectedItem: () => {},
         selectedItems: [],
         placeholderMsgId: "search.placeholder",
+        removeIcon: "1-close",
+        searchIcon: "search",
         delay: 1000,
         blurResetDelay: 300,
         autoFocusOnSelect: true,
@@ -141,6 +148,17 @@ class SearchBar extends React.Component {
         }
     };
 
+    getSpinnerStyle = () => {
+        const nonSplittedStyle = {
+            right: "19px",
+            top: "7px"
+        };
+        const splittedStyle = {
+            right: "16px",
+            top: "12px"
+        };
+        return assign({}, {position: "absolute"}, this.props.splitTools ? {...splittedStyle} : {...nonSplittedStyle} );
+    }
     renderAddonBefore = () => {
         return this.props.selectedItems && this.props.selectedItems.map((item, index) =>
             <span key={"selected-item" + index} className="input-group-addon"><div className="selectedItem-text">{item.text}</div></span>
@@ -148,16 +166,12 @@ class SearchBar extends React.Component {
     };
 
     renderAddonAfter = () => {
-        const remove = <Glyphicon className="searchclear" glyph="1-close" onClick={this.clearSearch} key="searchbar_remove_glyphicon"/>;
-        const search = <Glyphicon className="magnifying-glass" glyph="search" key="searchbar_search_glyphicon" onClick={this.search}/>;
+        const remove = <Glyphicon className="searchclear" glyph={this.props.removeIcon} onClick={this.clearSearch} key="searchbar_remove_glyphicon"/>;
+        const search = <Glyphicon className="magnifying-glass" glyph={this.props.searchIcon} key="searchbar_search_glyphicon" onClick={this.search}/>;
         const showRemove = this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0;
         let addonAfter = showRemove ? (this.props.splitTools ? [remove] : [remove, search]) : [search];
         if (this.props.loading) {
-            addonAfter = [<Spinner style={{
-                position: "absolute",
-                right: "19px",
-                top: "7px"
-            }} spinnerName="pulse" noFadeIn/>, addonAfter];
+            addonAfter = [<Spinner style={this.getSpinnerStyle()} spinnerName="pulse" noFadeIn/>, addonAfter];
         }
         if (this.props.error) {
             let tooltip = <Tooltip id="tooltip">{this.props.error && this.props.error.message || null}</Tooltip>;
