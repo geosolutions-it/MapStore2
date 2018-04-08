@@ -218,6 +218,7 @@
         },
         "newMap": "Nuevo mapa",
 		"maps": {
+            "title": "Mapas",
             "feedback": {
                 "noDetailsAvailable": "Detalles del mapa no disponibles",
                 "successSavedMap": "El mapa ha sido creado correctamente",
@@ -652,7 +653,7 @@
                     "reset_bbox": "Reset",
                     "save_bbox": "Guardar los cambios",
                     "save_radius": "Guardar los cambios",
-                    "radius": "Radio"
+                    "radius": "Radio(m)"
                 },
                 "methods": {
                     "zone": "Zona",
@@ -1073,6 +1074,10 @@
         },
         "widgets": {
              "types": {
+                "map": {
+                    "title": "Mapa",
+                    "caption": "agregar un mapa"
+                },
                 "chart": {
                     "title": "Gráfico",
                     "caption": "agregar un gráfico"
@@ -1108,6 +1113,9 @@
                 },
                 "wizard": {
                     "backToTypeSelection": "Volver a la selección de tipo",
+                    "backToWidgetTypeSelection": "Volver a la selección del tipo de widget",
+                    "backToLayerSelection": "Volver a la selección de capas",
+                    "backToMapSelection": "Volver a la selección del mapa",
                     "backToChartOptions": "Volver a las opciones de gráfico",
                     "configureChartOptions": "Configurar opciones de gráfico",
                     "configureWidgetOptions": "Configurar las opciones del widget",
@@ -1117,11 +1125,20 @@
                     "updateWidget": "Actualiza el widget",
                     "addToTheMap": "Agrega el widget al mapa",
                     "titlePlaceholder": "Ingrese el título...",
-                    "textPlaceholder": "Ingresar texto..."
+                    "textPlaceholder": "Ingresar texto...",
+                    "useThisMap": "Usar este mapa",
+                    "configureMapOptions": "Configurar opciones de mapa",
+                    "preview": "Vista previa",
+                    "addLayer": "Agregar una capa al mapa",
+                    "useTheSelectedLayer": "Usar la capa seleccionada",
+                    "connectToAMap": "Conectar a un mapa",
+                    "connectToTheMap": "Conectarse al mapa",
+                    "selectMapToConnect": "Seleccione el mapa para conectarse",
+                    "clearConnection": "Borrar conexión"
                 },
                 "errors": {
-                    "noWidgetsAvailableTitle": "Sin widgets disponibles",
-                    "noWidgetsAvailableDescription": "<p> No puede crear ningún widgets para la capa seleccionada. Esto es probablemente porque la capa no es adecuada para los widgets disponibles o el servidor no expone todos los servicios o información necesarios para generar el widget. Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> gs: el proceso agregado no está disponible </li> </ul >) <p>",
+                    "noWidgetsAvailableTitle": "No se puede crear el widget para la capa seleccionada",
+                    "noWidgetsAvailableDescription": "<p> <strong> Intente seleccionar otra capa o tipo de widget </strong> </p> <p> El servidor no proporciona los servicios necesarios para la capa y el tipo de widget seleccionado </p> <p> Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> El proceso WPS <code>gs:aggregate</code> no está disponible </li> </ul> </p> ",
                     "checkAtLeastOneAttribute": "Debes seleccionar al menos una columna"
                 },
                 "setupFilter": "Configurar un filtro para los datos del widget"
@@ -1211,7 +1228,9 @@
         },
         "dashboard": {
             "editor": {
-                "addACardToTheDashboard": "Agregar un widget al tablero"
+                "addACardToTheDashboard": "Agregar un widget al tablero",
+                "showConnections": "Mostrar conexiones",
+                "hideConnections": "Ocultar conexiones"
             },
             "emptyTitle": "El tablero está vacío"
         },

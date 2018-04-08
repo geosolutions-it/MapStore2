@@ -38,8 +38,6 @@ describe('TableOptions component', () => {
             data={{ options: { columnSettings: { test: {} } } }}
             featureTypeProperties={get(describeStates, "featureTypes[0].properties")}
             dependencies={{ viewport: {} }} />, document.getElementById("container"));
-        const switchEl = document.querySelector('.mapstore-switch-btn');
-        expect(switchEl).toExist();
         const resetButton = document.querySelector('.btn');
         expect(resetButton).toExist();
 
@@ -55,14 +53,11 @@ describe('TableOptions component', () => {
             onChange={actions.onChange}
             dependencies={{ viewport: {} }} />, document.getElementById("container"));
         const inputs = document.querySelectorAll('input');
-        expect(inputs.length).toBe(16); // 15 + 1 mapSync because dependencies is present
-        ReactTestUtils.Simulate.change(inputs[15]);
-        expect(spyonChange.calls[0].arguments[0]).toBe("mapSync");
-        expect(spyonChange.calls[0].arguments[1]).toBe(true);
+        expect(inputs.length).toBe(15);
         const resetButton = document.querySelector('.btn');
         expect(resetButton).toExist();
         ReactTestUtils.Simulate.click(resetButton);
-        expect(spyonChange.calls[1].arguments[0]).toBe("options.columnSettings");
-        expect(spyonChange.calls[1].arguments[1]).toBe(undefined);
+        expect(spyonChange.calls[0].arguments[0]).toBe("options.columnSettings");
+        expect(spyonChange.calls[0].arguments[1]).toBe(undefined);
     });
 });

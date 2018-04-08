@@ -7,12 +7,14 @@
  */
 
 const React = require('react');
+const {get} = require('lodash');
 const {connect} = require('react-redux');
-const {compose, withProps} = require('recompose');
+const { compose, withProps, withHandlers } = require('recompose');
 const {createSelector} = require('reselect');
 const {mapIdSelector} = require('../selectors/map');
-const { getDashboardWidgets, dashBoardDependenciesSelector, getDashboardWidgetsLayout} = require('../selectors/widgets');
-const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage} = require('../actions/widgets');
+const { getDashboardWidgets, dependenciesSelector, getDashboardWidgetsLayout, isWidgetSelectionActive, getEditingWidget, getWidgetsDependenciesGroups} = require('../selectors/widgets');
+const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage, selectWidget} = require('../actions/widgets');
+const {showConnectionsSelector} = require('../selectors/dashboard');
 const ContainerDimensions = require('react-container-dimensions').default;
 
 const PropTypes = require('prop-types');
@@ -22,12 +24,20 @@ const WidgetsView = compose(
             mapIdSelector,
             getDashboardWidgets,
             getDashboardWidgetsLayout,
-            dashBoardDependenciesSelector,
-            (id, widgets, layouts, dependencies) => ({
+            dependenciesSelector,
+            isWidgetSelectionActive,
+            (state) => get(getEditingWidget(state), "id"),
+            getWidgetsDependenciesGroups,
+            showConnectionsSelector,
+            (id, widgets, layouts, dependencies, selectionActive, editingWidgetId, groups, showGroupColor) => ({
                 id,
                 widgets,
                 layouts,
-                dependencies
+                dependencies,
+                selectionActive,
+                editingWidgetId,
+                groups,
+                showGroupColor
             })
         ), {
             editWidget,
@@ -35,6 +45,7 @@ const WidgetsView = compose(
             exportCSV,
             exportImage,
             deleteWidget,
+            onWidgetSelected: selectWidget,
             onLayoutChange: changeLayout
         }
     ),
@@ -43,7 +54,11 @@ const WidgetsView = compose(
             height: "100%",
             overflow: "auto"
         }
-    }))
+    })),
+    withHandlers({
+        // TODO: maybe using availableDependencies here will be better when different widget's type dependencies are supported
+        isWidgetSelectable: ({ editingWidgetId }) => ({ widgetType, id }) => widgetType === "map" && id !== editingWidgetId
+    })
 )(require('../components/dashboard/Dashboard'));
 
 

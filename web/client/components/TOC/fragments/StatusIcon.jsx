@@ -8,8 +8,9 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {Glyphicon, Tooltip} = require('react-bootstrap');
 const Message = require('../../I18N/Message');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
 
 class StatusIcon extends React.Component {
     static propTypes = {

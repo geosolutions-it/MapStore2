@@ -9,10 +9,19 @@ var expect = require('expect');
 const { testEpic, addTimeoutEpic, TEST_TIMEOUT } = require('./epicTestUtils');
 
 const {
-    clearWidgetsOnLocationChange
+    clearWidgetsOnLocationChange,
+    alignDependenciesToWidgets,
+    toggleWidgetConnectFlow
 } = require('../widgets');
 const {
-    CLEAR_WIDGETS
+    CLEAR_WIDGETS,
+    insertWidget,
+    toggleConnection,
+    selectWidget,
+    EDITOR_CHANGE,
+    EDITOR_SETTING_CHANGE,
+    LOAD_DEPENDENCIES,
+    DEPENDENCY_SELECTOR_KEY
 } = require('../../actions/widgets');
 const {
     savingMap,
@@ -125,5 +134,142 @@ describe('widgets Epics', () => {
                         }
                     };
             });
+    });
+    it('alignDependenciesToWidgets triggered on insertWidget', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            const action = actions[0];
+            expect(action.type).toBe(LOAD_DEPENDENCIES);
+            expect(action.dependencies).toExist();
+            expect(action.dependencies.center).toBe("map.center");
+            expect(action.dependencies.viewport).toBe("map.bbox");
+            expect(action.dependencies.zoom).toBe("map.zoom");
+            done();
+        };
+        testEpic(alignDependenciesToWidgets,
+            1,
+            [insertWidget({id: 'test'})],
+            checkActions,
+            {});
+    });
+
+    it('toggleWidgetConnectFlow with only map', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(EDITOR_CHANGE);
+            expect(actions[0].key).toBe("mapSync");
+            expect(actions[0].value).toBe(true);
+            const action = actions[1];
+            expect(action.type).toBe(EDITOR_CHANGE);
+            expect(action.key).toExist();
+            expect(action.key).toBe("dependenciesMap");
+            expect(action.value.center).toBe("center");
+            expect(action.value.zoom).toBe("zoom");
+            done();
+        };
+        testEpic(toggleWidgetConnectFlow,
+            2,
+            [toggleConnection(
+                true,
+                ["map"],
+                { mappings: { zoom: "zoom", center: "center" } }
+            )],
+            checkActions,
+            {});
+    });
+    it('toggleWidgetConnectFlow for widgets', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(EDITOR_CHANGE);
+            expect(actions[0].key).toBe("mapSync");
+            expect(actions[0].value).toBe(true);
+            const action = actions[1];
+            expect(action.type).toBe(EDITOR_CHANGE);
+            expect(action.key).toExist();
+            expect(action.key).toBe("dependenciesMap");
+            expect(action.value.center).toBe("widgets[a].map.center");
+            expect(action.value.zoom).toBe("widgets[a].map.zoom");
+            done();
+        };
+        testEpic(toggleWidgetConnectFlow,
+            2,
+            [toggleConnection(
+                true,
+                ["widgets[a].map"],
+                { mappings: { "center": "center", "zoom": "zoom" } }
+            )],
+            checkActions,
+            {});
+    });
+    it('toggleWidgetConnectFlow for multiple widgets', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(4);
+            expect(actions[0].type).toBe(EDITOR_SETTING_CHANGE);
+            expect(actions[0].key).toBe(DEPENDENCY_SELECTOR_KEY);
+            expect(actions[0].value.active).toBe(true);
+            expect(actions[0].value.availableDependencies.length).toBe(2);
+            expect(actions[1].type).toBe(EDITOR_CHANGE);
+            expect(actions[1].key).toBe("mapSync");
+            expect(actions[1].value).toBe(true);
+            const action = actions[2];
+            expect(action.type).toBe(EDITOR_CHANGE);
+            expect(action.key).toExist();
+            expect(action.key).toBe("dependenciesMap");
+            expect(action.value.center).toBe("widgets[w1].map.center");
+            expect(action.value.zoom).toBe("widgets[w1].map.zoom");
+            expect(actions[3].type).toBe(EDITOR_SETTING_CHANGE);
+            expect(actions[3].key).toBe(DEPENDENCY_SELECTOR_KEY);
+            expect(actions[3].value.active).toBe(false);
+            done();
+        };
+        testEpic(toggleWidgetConnectFlow,
+            4,
+            [toggleConnection(
+                true,
+                ["w1", "w2"],
+                { mappings: { "center": "center", "zoom": "zoom" } }
+            ), selectWidget({
+                id: "w1",
+                widgetType: "map"
+            })],
+            checkActions,
+            {
+                widgets: {
+                    builder: {
+                        settings: {
+                            [DEPENDENCY_SELECTOR_KEY]: { active: true,
+                                availableDependencies: [
+                                    "map.zoom",
+                                    "widgets[w1].map",
+                                    "widgets[w2].map"
+                                ] }
+                        }
+                    }
+                }
+            });
+    });
+    it('toggleWidgetConnectFlow deactivate widgets', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(EDITOR_CHANGE);
+            expect(actions[0].key).toBe("mapSync");
+            expect(actions[0].value).toBe(false);
+            const action = actions[1];
+            expect(action.type).toBe(EDITOR_CHANGE);
+            expect(action.key).toExist();
+            expect(action.key).toBe("dependenciesMap");
+            expect(action.value.center).toNotExist();
+            expect(action.value.zoom).toNotExist();
+            done();
+        };
+        testEpic(toggleWidgetConnectFlow,
+            2,
+            [toggleConnection(
+                false,
+                ["map"],
+                { mappings: { "center": "widgets[a].map.center", "zoom": "widgets[a].map.zoom" } }
+            )],
+            checkActions,
+            {});
     });
 });

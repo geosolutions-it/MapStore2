@@ -57,7 +57,6 @@ module.exports = ({
             showColorRampSelector: true,
             showLegend: true
         },
-        dependencies,
         aggregationOptions = [],
         sampleChart}) => (<Row>
         <StepHeader title={<Message msgId={`widgets.chartOptionsTitle`} />} />
@@ -133,21 +132,6 @@ module.exports = ({
                   onChange={v => {onChange("autoColorOptions", {...v.options, name: v.name}); }}/>
           </Col>
         </FormGroup> : null}
-        {dependencies && dependencies.viewport
-            ? (<FormGroup controlId="mapSync" className="mapstore-block-width">
-            <Col componentClass={ControlLabel} sm={6}>
-              <Message msgId={`widgets.mapSync`} />
-            </Col>
-          <Col sm={6}>
-              <SwitchButton
-                  checked={data.mapSync}
-                  onChange={(val) => {
-                      onChange("mapSync", val);
-                  }}
-                  />
-          </Col>
-        </FormGroup>)
-            : null}
         {formOptions.showLegend ? <FormGroup controlId="displayLegend">
             <Col componentClass={ControlLabel} sm={6}>
                 <Message msgId={getLabelMessageId("displayLegend", data)} />

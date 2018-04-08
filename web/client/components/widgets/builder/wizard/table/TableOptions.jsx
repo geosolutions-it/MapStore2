@@ -8,10 +8,9 @@
 const React = require('react');
 const { isGeometryType } = require('../../../../../utils/ogc/WFS/base');
 const { uniq, castArray, includes } = require('lodash');
-const { Row, Col, Form, FormGroup, ControlLabel, Button } = require('react-bootstrap');
+const { Row, Col, Form, Button } = require('react-bootstrap');
 const Message = require('../../../../I18N/Message');
 const StepHeader = require('../../../../misc/wizard/StepHeader');
-const SwitchButton = require('../../../../misc/switch/SwitchButton');
 
 const {withProps, withHandlers, compose} = require('recompose');
 const updatePropertyName = (arr, name, hide) => {
@@ -39,7 +38,7 @@ const AttributeSelector = compose(withProps(
 )(require('../../../../data/featuregrid/AttributeTable'));
 
 
-module.exports = ({ data = { options: {} }, onChange = () => { }, dependencies, featureTypeProperties, sampleChart}) => (<Row>
+module.exports = ({ data = { options: {} }, onChange = () => { }, featureTypeProperties, sampleChart}) => (<Row>
     <StepHeader title={<Message msgId={`widgets.builder.wizard.configureTableOptions`} />} />
           <Col xs={12}>
               <div >
@@ -52,21 +51,6 @@ module.exports = ({ data = { options: {} }, onChange = () => { }, dependencies, 
                 options={data.options}
                 onChange={onChange}
                 attributes={featureTypeProperties}/>
-            {dependencies && dependencies.viewport
-                ? (<FormGroup style={{ marginTop: "20px" }}controlId="mapSync" className="mapstore-block-width">
-                    <Col componentClass={ControlLabel} sm={6}>
-                        <Message msgId={`widgets.mapSync`} />
-                    </Col>
-                    <Col sm={6}>
-                        <SwitchButton
-                            checked={data.mapSync}
-                            onChange={(val) => {
-                                onChange("mapSync", val);
-                            }}
-                        />
-                    </Col>
-                </FormGroup>)
-                : null}
             {data.options && data.options.columnSettings
                 ? <Button style={{"float": "right"}} onClick={() => onChange("options.columnSettings", undefined)}><Message msgId="widgets.builder.wizard.resetColumnsSizes" /></Button>
                 : null

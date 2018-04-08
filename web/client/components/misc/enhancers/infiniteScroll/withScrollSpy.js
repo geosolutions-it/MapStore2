@@ -91,7 +91,7 @@ module.exports = ({
             && (loadingProp // is not loading (if loadingProp is defined)
                 ? !this.props[loadingProp]
                 : true)
-            && this.props.hasMore()) {
+            && this.props.hasMore(this.props)) {
             this.props.onLoadMore(dataProp
                 ? Math.ceil(this.props[dataProp].length / pageSize)
                 : null);

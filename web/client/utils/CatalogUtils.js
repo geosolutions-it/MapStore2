@@ -216,7 +216,7 @@ const converters = {
     }
 };
 const buildSRSMap = (srs) => {
-    return srs.reduce((previous, current) => {
+    return srs.filter(s => CoordinatesUtils.isSRSAllowed(s)).reduce((previous, current) => {
         return assign(previous, {[current]: true});
     }, {});
 };

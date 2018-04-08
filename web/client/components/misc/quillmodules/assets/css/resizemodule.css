@@ -1,0 +1,7 @@
+
+
+.ql-snow .ms-ql-iframe-tooltip[data-mode=video]::before {
+    content: "Enter iframe url:";
+}
+
+

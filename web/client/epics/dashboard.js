@@ -54,7 +54,7 @@ module.exports = {
         .filter( () => isDashboardAvailable(getState()))
         .switchMap((w) => Rx.Observable.of(editNewWidget({
             legend: false,
-            mapSync: true,
+            mapSync: false,
             ...w,
             // override action's type
             type: undefined

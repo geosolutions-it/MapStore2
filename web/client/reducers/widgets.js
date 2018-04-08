@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { EDIT_NEW, INSERT, EDIT, UPDATE_PROPERTY, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT, CLEAR_WIDGETS, DEFAULT_TARGET} = require('../actions/widgets');
+const { EDIT_NEW, INSERT, EDIT, UPDATE_PROPERTY, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT, CLEAR_WIDGETS, DEFAULT_TARGET,
+ADD_DEPENDENCY, REMOVE_DEPENDENCY, LOAD_DEPENDENCIES, RESET_DEPENDENCIES} = require('../actions/widgets');
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
@@ -17,7 +18,9 @@ const {arrayUpsert, arrayDelete} = require('../utils/ImmutableUtils');
 
 const emptyState = {
     dependencies: {
-        viewport: "map.bbox"
+        viewport: "map.bbox",
+        center: "map.center",
+        zoom: "map.zoom"
     },
     containers: {
         floating: {
@@ -109,6 +112,19 @@ function widgetsReducer(state = emptyState, action) {
         case CLEAR_WIDGETS: {
             return set(`containers[${DEFAULT_TARGET}]`, emptyState.containers[DEFAULT_TARGET], state);
         }
+        case ADD_DEPENDENCY: {
+            const {key, value} = action;
+            return set(`dependencies[${key}]`, value, state);
+        }
+        case REMOVE_DEPENDENCY: {
+            const {key} = action;
+            return set(`dependencies[${key}]`, null, state);
+        }
+        case LOAD_DEPENDENCIES:
+            const {dependencies} = action;
+            return set(`dependencies`, dependencies, state);
+        case RESET_DEPENDENCIES:
+            return set('dependencies', emptyState.dependencies, state);
         default:
             return state;
     }

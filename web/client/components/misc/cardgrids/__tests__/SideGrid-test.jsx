@@ -39,4 +39,27 @@ describe('SideGrid component', () => {
         el.click();
         expect(spyonItemClick).toHaveBeenCalled();
     });
+    it('Test SideGrid custom cards', () => {
+        const CustomCardComponent = ({title}) => <div className="custom-card-component">{title}</div>;
+
+        ReactDOM.render(<SideGrid
+            cardComponent={CustomCardComponent}
+            items={[{id: 'card-01', title: 'Card title 01'}, {id: 'card-02', title: 'Card title 02'}]}/>, document.getElementById("container"));
+
+        const container = document.getElementById('container');
+        const el = container.querySelector('.msSideGrid');
+        expect(el).toExist();
+
+        let customCards = container.getElementsByClassName('custom-card-component');
+        expect(customCards.length).toBe(2);
+        expect(customCards[0].innerHTML).toBe('Card title 01');
+        expect(customCards[1].innerHTML).toBe('Card title 02');
+
+        ReactDOM.render(<SideGrid
+            items={[{id: 'card-01', title: 'Card title 01'}, {id: 'card-02', title: 'Card title 02'}]}/>, document.getElementById("container"));
+
+        customCards = container.getElementsByClassName('custom-card-component');
+        expect(customCards.length).toBe(0);
+
+    });
 });

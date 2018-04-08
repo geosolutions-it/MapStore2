@@ -46,6 +46,7 @@ const tocItemsSettingsSelector = createSelector([
  * @prop cfg.dock {bool} true shows dock panel, false shows modal
  * @prop cfg.width {number} width of panel
  * @prop cfg.showFeatureInfoTab {bool} enable/disbale feature info settings
+ * @prop cfg.enableIFrameModule {bool} enable iframe in template editor of feature info, default true
  *
  * @example
  * {

@@ -8,10 +8,11 @@
 const React = require('react');
 const {find} = require('lodash');
 const PropTypes = require('prop-types');
-
 const {Row, Col, Panel, Glyphicon, FormControl} = require('react-bootstrap');
+
 const ComboField = require('./ComboField');
 const GeometryDetails = require('./GeometryDetails');
+
 const {AutocompleteWFSCombobox} = require('../../misc/AutocompleteWFSCombobox');
 const ComboFieldListItem = require('./ComboFieldListItem');
 const {createWFSFetchStream} = require('../../../observables/autocomplete');
@@ -31,7 +32,8 @@ class SpatialFilter extends React.Component {
         spatialPanelExpanded: PropTypes.bool,
         showDetailsPanel: PropTypes.bool,
         withContainer: PropTypes.bool,
-        actions: PropTypes.object
+        actions: PropTypes.object,
+        zoom: PropTypes.number
     };
 
     static contextTypes = {
@@ -275,7 +277,8 @@ class SpatialFilter extends React.Component {
                 type={this.props.spatialField.method}
                 onShowPanel={this.props.actions.onShowSpatialSelectionDetails}
                 onChangeDrawingStatus={this.changeDrawingStatus}
-                onEndDrawing={this.props.actions.onEndDrawing}/>)
+                onEndDrawing={this.props.actions.onEndDrawing}
+                zoom={this.props.zoom}/>)
          :
             <span/>
         ;

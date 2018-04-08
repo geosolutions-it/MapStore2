@@ -23,6 +23,25 @@ You can download the WAR file from the latest release [here](https://github.com/
 
 Quick Start
 ------------
+
+There are two quick ways to test out MapStore2. Either using [Docker](https://www.docker.com/) or a local java web container like [Apache Tomcat](http://tomcat.apache.org/)
+
+### Using Docker
+
+Pull the latest image from Docker Hub:
+
+`docker pull geosolutionsit/mapstore2`
+
+`docker run --name mapstore -p8080:8080  geosolutionsit/mapstore2`
+
+Then you can access MapStore2 using the following URL:
+
+[http://localhost:8080/mapstore](http://localhost:8080/mapstore)
+
+Use the default credentials (admin / admin) to login and start creating your maps!
+
+### Using the Web Archive (WAR file)
+
 After downloading the MapStore2 war file, install it in your java web container (e.g. Tomcat), with usual procedures for the container (normally you only need to copy the war file in the webapps subfolder).
 
 If you don't have a java web container you can download Apache Tomcat from [here](https://tomcat.apache.org/download-70.cgi) and install it. You will also need a Java7 [JRE](http://www.oracle.com/technetwork/java/javase/downloads/jre7-downloads-1880261.html)

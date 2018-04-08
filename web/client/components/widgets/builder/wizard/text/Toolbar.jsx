@@ -17,11 +17,11 @@ const getSaveTooltipId = (step, {id} = {}) => {
     return "widgets.builder.wizard.addToTheMap";
 };
 
-module.exports = ({step = 0, editorData = {}, onFinish = () => {}} = {}) => (<Toolbar btnDefaultProps={{
+module.exports = ({ step = 0, editorData = {}, stepButtons = [], onFinish = () => {}} = {}) => (<Toolbar btnDefaultProps={{
         bsStyle: "primary",
         bsSize: "sm"
     }}
-    buttons={[{
+    buttons={[...stepButtons, {
         onClick: () => onFinish(Math.min(step + 1, 1)),
         visible: step === 0,
         glyph: "floppy-disk",

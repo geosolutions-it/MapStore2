@@ -30,6 +30,7 @@ const startApp = () => {
     }, {});
 
     const appConfig = {
+        mode: 'embedded',
         storeOpts,
         appStore,
         pluginsDef,

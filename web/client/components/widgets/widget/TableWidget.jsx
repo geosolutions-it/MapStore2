@@ -9,6 +9,7 @@ const React = require('react');
 const Message = require('../../I18N/Message');
 const BorderLayout = require('../../layout/BorderLayout');
 const LoadingSpinner = require('../../misc/LoadingSpinner');
+const EmptyRowsView = require('../../data/featuregrid/EmptyRowsView');
 const loadingState = require('../../misc/enhancers/loadingState');
 const errorChartState = require('../enhancers/errorChartState');
 
@@ -34,6 +35,7 @@ module.exports = ({
     description,
     loading,
     confirmDelete = false,
+    headerStyle,
     toggleTableView = () => { },
     toggleDeleteConfirm = () => { },
     onEdit = () => { },
@@ -54,6 +56,7 @@ module.exports = ({
     (<WidgetContainer
         id={`widget-chart-${id}`}
         title={title}
+        headerStyle={headerStyle}
         topLeftItems={renderHeaderLeftTopItem({ loading, title, description, toggleTableView })}
         confirmDelete={confirmDelete}
         onDelete={onDelete}
@@ -74,6 +77,7 @@ module.exports = ({
                     </div>) : null}
         >
         <FeatureGrid
+            emptyRowsView={() => <EmptyRowsView loading={loading} />}
             gridEvents={gridEvents}
             sortable={false}
             defaultSize={false}

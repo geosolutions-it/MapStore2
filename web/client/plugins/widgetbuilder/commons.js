@@ -6,7 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {createSelector} = require('reselect');
-const {getEditingWidget, getEditorSettings, getWidgetLayer, dashBoardDependenciesSelector} = require('../../selectors/widgets');
+const { getEditingWidget, dependenciesSelector, getEditorSettings, getWidgetLayer, availableDependenciesSelector} = require('../../selectors/widgets');
+const { showConnectionsSelector } = require('../../selectors/dashboard');
+
 const wizardStateToProps = ( stateProps = {}, dispatchProps = {}, ownProps = {}) => ({
          ...ownProps,
          ...stateProps,
@@ -31,11 +33,19 @@ const wizardSelector = createSelector(
  );
 const dashboardSelector = createSelector(
     getEditingWidget,
-    dashBoardDependenciesSelector, // TODO dependencies
-    ({layer}) => ({layer}));
+    showConnectionsSelector,
+    dependenciesSelector,
+    availableDependenciesSelector,
+    ({ layer }, showConnections, dependencies, dependencyConnectProps) => ({
+        layer,
+        showConnections,
+        dependencies,
+        ...dependencyConnectProps
+    }));
 
 module.exports = {
     getWidgetLayer,
+    availableDependenciesSelector,
     dashboardSelector,
     wizardStateToProps,
     wizardSelector

@@ -26,6 +26,7 @@ const Builders = {
     chart: require('./ChartBuilder'),
     text: require('./TextBuilder'),
     table: require('./TableBuilder'),
+    map: require('./MapBuilder'),
     counter: require('./CounterBuilder')
 };
 
