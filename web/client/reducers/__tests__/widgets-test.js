@@ -14,6 +14,10 @@ const {
     deleteWidget,
     changeLayout,
     clearWidgets,
+    addDependency,
+    removeDependency,
+    resetDependencies,
+    loadDependencies,
     DEFAULT_TARGET
 } = require('../../actions/widgets');
 const {configureMap} = require('../../actions/config');
@@ -25,6 +29,10 @@ describe('Test the widgets reducer', () => {
     it('initial state', () => {
         const state = widgets(undefined, {type: "START"});
         expect(state.containers).toExist();
+        expect(state.dependencies.key).toBeFalsy();
+        expect(state.dependencies.viewport).toBe("map.bbox");
+        expect(state.dependencies.center).toBe("map.center");
+        expect(state.dependencies.zoom).toBe("map.zoom");
     });
     it('editNewWidget', () => {
         const state = widgets(undefined, editNewWidget({a: "A"}, {step: 0}));
@@ -93,6 +101,31 @@ describe('Test the widgets reducer', () => {
         const newState = widgets(state, clearWidgets());
         expect(newState.containers[DEFAULT_TARGET].widgets.length).toBe(0);
     });
-
-
+    it('widgets addDependency', () => {
+        const action = addDependency("key", "value");
+        const state = widgets({ dependencies: {} }, action);
+        expect(state).toExist();
+        expect(state.dependencies.key).toBe("value");
+    });
+    it('widgets removeDependency', () => {
+        const action = removeDependency("key");
+        const state = widgets({dependencies: {key: "value"}}, action);
+        expect(state).toExist();
+        expect(state.dependencies.key).toBeFalsy();
+    });
+    it('widgets loadDependencies', () => {
+        const action = loadDependencies({key: "value"});
+        const state = widgets( undefined, action);
+        expect(state).toExist();
+        expect(state.dependencies.key).toBe("value");
+    });
+    it('widgets resetDependencies', () => {
+        const action = resetDependencies();
+        const state = widgets( {dependencies: {key: "value"}}, action);
+        expect(state).toExist();
+        expect(state.dependencies.key).toBeFalsy();
+        expect(state.dependencies.viewport).toBe("map.bbox");
+        expect(state.dependencies.center).toBe("map.center");
+        expect(state.dependencies.zoom).toBe("map.zoom");
+    });
 });

@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {isNil, isEqual} = require('lodash');
-const {withState, withHandlers, compose, lifecycle} = require('recompose');
+const { isNil, isEqual } = require('lodash');
+const { withState, withHandlers, compose, lifecycle } = require('recompose');
 
 /**
  * Enhancer for settings state needed in TOCItemsSettings plugin
@@ -39,37 +39,44 @@ const settingsState = compose(
  */
 const settingsLifecycle = compose(
     withHandlers({
-        onUpdateParams: props => (newParams, update = true) => {
-            let originalSettings = {...props.originalSettings};
+        onUpdateParams: ({
+            settings = {},
+            initialSettings = {},
+            originalSettings: orig,
+            onUpdateOriginalSettings = () => {},
+            onUpdateSettings = () => {},
+            onUpdateNode = () => {}
+        }) => (newParams, update = true) => {
+            let originalSettings = { ...(orig || {}) };
             // TODO one level only storage of original settings for the moment
             Object.keys(newParams).forEach((key) => {
-                originalSettings[key] = props.initialSettings[key];
+                originalSettings[key] = initialSettings && initialSettings[key];
             });
-            props.onUpdateOriginalSettings(originalSettings);
-            props.onUpdateSettings(newParams);
+            onUpdateOriginalSettings(originalSettings);
+            onUpdateSettings(newParams);
             if (update) {
-                props.onUpdateNode(
-                    props.settings.node,
-                    props.settings.nodeType,
-                    {...props.settings.options, ...newParams}
+                onUpdateNode(
+                    settings.node,
+                    settings.nodeType,
+                    { ...settings.options, ...newParams }
                 );
             }
         },
-        onClose: ({onUpdateNode, originalSettings, settings, onHideSettings, onShowAlertModal}) => forceClose => {
-            const originalOptions = Object.keys(settings.options).reduce((options, key) => ({...options, [key]: key === 'opacity' && !originalSettings[key] && 1.0 || originalSettings[key]}), {});
+        onClose: ({ onUpdateNode, originalSettings, settings, onHideSettings, onShowAlertModal }) => forceClose => {
+            const originalOptions = Object.keys(settings.options).reduce((options, key) => ({ ...options, [key]: key === 'opacity' && !originalSettings[key] && 1.0 || originalSettings[key] }), {});
             if (!isEqual(originalOptions, settings.options) && !forceClose) {
                 onShowAlertModal(true);
             } else {
                 onUpdateNode(
                     settings.node,
                     settings.nodeType,
-                    {...settings.options, ...originalSettings}
+                    { ...settings.options, ...originalSettings }
                 );
                 onHideSettings();
                 onShowAlertModal(false);
             }
         },
-        onSave: ({onHideSettings = () => {}, onShowAlertModal = () => {}}) => () => {
+        onSave: ({ onHideSettings = () => { }, onShowAlertModal = () => { } }) => () => {
             onHideSettings();
             onShowAlertModal(false);
         }
@@ -78,19 +85,19 @@ const settingsLifecycle = compose(
         componentWillMount() {
             const {
                 element = {},
-                onUpdateOriginalSettings = () => {},
-                onUpdateInitialSettings = () => {}
+                onUpdateOriginalSettings = () => { },
+                onUpdateInitialSettings = () => { }
             } = this.props;
 
-            onUpdateOriginalSettings({...element});
-            onUpdateInitialSettings({...element});
+            onUpdateOriginalSettings({ ...element });
+            onUpdateInitialSettings({ ...element });
         },
         componentWillReceiveProps(newProps) {
             // an empty description does not trigger the single layer getCapabilites,
             // it does only for missing description
             const {
                 settings = {},
-                onRetrieveLayerData = () => {}
+                onRetrieveLayerData = () => { }
             } = this.props;
 
             if (!settings.expanded && newProps.settings && newProps.settings.expanded && isNil(newProps.element.description) && newProps.element.type === "wms") {
@@ -100,15 +107,15 @@ const settingsLifecycle = compose(
         componentWillUpdate(newProps) {
             const {
                 settings = {},
-                onUpdateOriginalSettings = () => {},
-                onUpdateInitialSettings = () => {},
-                onSetTab = () => {}
+                onUpdateOriginalSettings = () => { },
+                onUpdateInitialSettings = () => { },
+                onSetTab = () => { }
             } = this.props;
 
             if (!settings.expanded && newProps.settings && newProps.settings.expanded) {
                 // update initial and original settings
-                onUpdateOriginalSettings({...newProps.element});
-                onUpdateInitialSettings({...newProps.element});
+                onUpdateOriginalSettings({ ...newProps.element });
+                onUpdateInitialSettings({ ...newProps.element });
                 onSetTab('general');
             }
         }

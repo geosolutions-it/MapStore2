@@ -192,9 +192,40 @@ const LayersUtils = {
             return null;
         }
     },
+    /**
+     * Returns an id for the layer. If the layer has layer.id returns it, otherwise it will return a generated id.
+     * If the layer doesn't have any layer and if the 2nd argument is passed (it should be an array),
+     * the layer id will returned will be something like `layerName__2` when 2 is the layer size (for retro compatibility, it should be removed in the future).
+     * Otherwise a random string will be appended to the layer name.
+     * @param {object} layer the layer
+     * @param {array} [layers] an array to use to generate the id @deprecated
+     * @returns {string} the id of the layer, or a generated one
+     */
     getLayerId: (layerObj, layers) => {
-        return layerObj && layerObj.id || layerObj.name + "__" + layers.length;
+        return layerObj && layerObj.id || layerObj.name + "__" + (layers ? layers.length : Math.random().toString(36).substring(2, 15));
     },
+    /**
+     * Normalizes the layer to assign missing Ids
+     * @param {object} layer the layer to normalize
+     * @returns {object} the normalized layer
+     */
+    normalizeLayer: (layer) => layer.id ? layer : { ...layer, id: LayersUtils.getLayerId(layer) },
+    /**
+     * Normalizes the map adding missing ids, default groups.
+     * @param {object} map the map
+     * @param {object} the normalized map
+     */
+    normalizeMap: (rawMap = {}) =>
+        [
+            (map) => (map.layers || []).filter(({ id } = {}) => !id).length > 0 ? {...map, layers: (map.layers || []).map(l => LayersUtils.normalizeLayer(l))} : map,
+            (map) => map.groups ? map : {...map, groups: {id: "Default", expanded: true}}
+        // this is basically a compose
+        ].reduce((f, g) => (...args) => f(g(...args)))(rawMap),
+    /**
+     * @param gid
+     * @return function that filter by group
+     */
+    belongsToGroup: (gid) => l => (l.group || "Default") === gid || (l.group || "").indexOf(`${gid}.`) === 0,
     getLayersByGroup: (configLayers) => {
         let i = 0;
         let mapLayers = configLayers.map((layer) => assign({}, layer, {storeIndex: i++}));

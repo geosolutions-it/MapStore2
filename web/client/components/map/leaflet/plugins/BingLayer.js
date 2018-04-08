@@ -5,11 +5,11 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+const L = require('leaflet');
 const Layers = require('../../../../utils/leaflet/Layers');
 require('leaflet-plugins/layer/tile/Bing');
 const assign = require('object-assign');
-const L = require('leaflet');
+
 
 L.BingLayer.prototype.loadMetadata = function() {
     if (this.metaRequested) {

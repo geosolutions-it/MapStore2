@@ -39,7 +39,11 @@ const getSaveTooltipId = (step, {id} = {}) => {
     }
     return "widgets.builder.wizard.addToTheMap";
 };
-module.exports = ({openFilterEditor = () => {}, step = 0, editorData = {}, valid, setPage = () => {}, onFinish = () => {}} = {}) => (<Toolbar btnDefaultProps={{
+module.exports = ({
+    step = 0, editorData = {}, valid, setPage = () => {}, onFinish = () => {},
+    stepButtons = [],
+    openFilterEditor = () => {}
+    } = {}) => (<Toolbar btnDefaultProps={{
         bsStyle: "primary",
         bsSize: "sm"
     }}
@@ -48,14 +52,14 @@ module.exports = ({openFilterEditor = () => {}, step = 0, editorData = {}, valid
         visible: step > 0,
         glyph: "arrow-left",
         tooltipId: getBackTooltipId(step)
-    }, {
+    }, ...stepButtons, {
         visible: step > 0,
         onClick: openFilterEditor,
         glyph: "filter",
         tooltipId: "widgets.builder.setupFilter"
     }, {
         onClick: () => setPage(Math.min(step + 1, 2)),
-        visible: !!(step === 0 && (!editorData.type || editorData.type.indexOf("WI") !== 0)) || step === 1,
+        visible: !!( step === 1 ),
         disabled: step === 1 && !valid,
         glyph: "arrow-right",
         tooltipId: getNextTooltipId(step)

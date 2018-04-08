@@ -218,6 +218,7 @@
         },
         "newMap": "Neue Karte",
         "maps": {
+            "title": "Karten",
             "feedback": {
                 "noDetailsAvailable": "Kartendetails nicht verfügbar",
                 "successSavedMap": "Die Karte wurde korrekt erstellt",
@@ -652,7 +653,7 @@
                     "reset_bbox": "Zurücksetzen",
                     "save_bbox": "BBOX Änderungen speichern",
                     "save_radius": "Radius/Kreiszentrum Änderungen speichern",
-                    "radius": "Radius"
+                    "radius": "Radius(m)"
                 },
                 "methods": {
                     "zone": "Zone",
@@ -1073,6 +1074,10 @@
         },
         "widgets": {
             "types": {
+                "map": {
+                    "title": "Karte",
+                    "caption": "Eine Karte hinzufügen"
+                },
                 "chart": {
                     "title": "Grafik",
                     "caption": "füge ein Diagramm hinzu"
@@ -1108,6 +1113,9 @@
                 },
                 "wizard": {
                     "backToTypeSelection": "Zurück zur Typenauswahl",
+                    "backToWidgetTypeSelection": "Zurück zur Auswahl des Widget-Typs",
+                    "backToLayerSelection": "Zurück zur Ebenenauswahl",
+                    "backToMapSelection": "Zurück zur Kartenauswahl",
                     "backToChartOptions": "Zurück zu den Diagrammoptionen",
                     "configureChartOptions": "Diagrammoptionen konfigurieren",
                     "configureWidgetOptions": "Widget-Optionen konfigurieren",
@@ -1117,12 +1125,21 @@
                     "updateWidget": "Aktualisieren Sie das Widget",
                     "addToTheMap": "Hinzufügen des Widgets zur Karte",
                     "titlePlaceholder": "Gib den Titel ein...",
-                    "textPlaceholder": "Text eingeben..."
+                    "textPlaceholder": "Text eingeben...",
+                    "useThisMap": "Benutze diese Karte",
+                    "configureMapOptions": "Kartenoptionen konfigurieren",
+                    "preview": "Vorschau",
+                    "addLayer": "Fügt der Karte eine Ebene hinzu",
+                    "useTheSelectedLayer": "Verwende die ausgewählte Ebene",
+                    "connectToAMap": "Mit einer Karte verbinden",
+                    "connectToTheMap": "Verbinden mit der Karte",
+                    "selectMapToConnect": "Wählen Sie die zu verbindende Karte aus",
+                    "clearConnection": "Verbindung löschen"
                 },
                 "errors": {
-                    "noWidgetsAvailableTitle": "Keine Widgets verfügbar",
-                    "noWidgetsAvailableDescription": "<p> Sie können keine Widgets für die ausgewählte Ebene erstellen. Dies liegt wahrscheinlich daran, dass der Layer nicht für die verfügbaren Widgets geeignet ist oder der Server nicht alle benötigten Services oder Informationen zum Generieren eines Widgets bereitstellt. Mögliche Ursachen sind: <ul><li> Die ausgewählte Ebene ist eine Rasterebene </li><li> WFS-Dienst ist nicht verfügbar </li><li> gs: Aggregatprozess ist nicht verfügbar </li> </ul>) <p>",
-                     "checkAtLeastOneAttribute": "Sie müssen mindestens eine Spalte auswählen"
+                    "noWidgetsAvailableTitle": "Das Widget für die ausgewählte Ebene kann nicht erstellt werden",
+                    "noWidgetsAvailableDescription": "<p><strong>Bitte wählen Sie eine andere Ebene oder einen anderen Widgets-Typ</strong></p><p>Der Server bietet nicht die erforderlichen Dienste für die Ebene und den ausgewählten Widget-Typ</p><p> Mögliche Ursachen sind: <ul> <li> Der ausgewählte Layer ist ein Raster-Layer </li> <li> Der WFS-Service ist nicht verfügbar </li> <li> Der WPS-Prozess <code>gs:aggregate</code> ist nicht verfügbar </li> </ul> </p>",
+                    "checkAtLeastOneAttribute": "Sie müssen mindestens eine Spalte auswählen"
                 },
                 "setupFilter": "Konfigurieren Sie einen Filter für die Widgetdaten"
             },
@@ -1211,7 +1228,9 @@
         },
         "dashboard": {
             "editor": {
-                "addACardToTheDashboard": "Agregar un widget al tablero"
+                "addACardToTheDashboard": "Ein Widget zum Dashboard hinzufügen",
+                "showConnections": "Verbindungen anzeigen",
+                "hideConnections": "Verbindungen ausblenden"
             },
             "emptyTitle": "Das Armaturenbrett ist leer"
         },

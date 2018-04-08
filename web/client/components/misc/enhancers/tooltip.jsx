@@ -7,7 +7,8 @@
   */
 const React = require('react');
 const {branch} = require('recompose');
-const { Tooltip, OverlayTrigger} = require('react-bootstrap');
+const { Tooltip } = require('react-bootstrap');
+const OverlayTrigger = require('../OverlayTrigger');
 const Message = require('../../I18N/Message');
 
 /**

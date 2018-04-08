@@ -20,6 +20,10 @@ module.exports = {
         path: "/viewer/:mapType/:mapId",
         component: require('./pages/MapViewer')
     }, {
+        name: "mapviewer",
+        path: "/viewer/:mapId",
+        component: require('./pages/MapViewer')
+    }, {
         name: "manager",
         path: "/manager",
         component: require('./pages/Manager')

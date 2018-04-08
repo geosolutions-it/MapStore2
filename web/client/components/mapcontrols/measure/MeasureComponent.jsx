@@ -13,7 +13,7 @@ const ToggleButton = require('../../buttons/ToggleButton');
 const NumberFormat = require('../../I18N/Number');
 const Message = require('../../I18N/Message');
 const {DropdownList} = require('react-widgets');
-const measureUtils = require('../../../utils/MeasureUtils');
+const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
 const localeUtils = require('../../../utils/LocaleUtils');
 
 const {isEqual, round} = require('lodash');
@@ -104,9 +104,9 @@ class MeasureComponent extends React.Component {
         lengthLabel: <Message msgId="measureComponent.lengthLabel"/>,
         areaLabel: <Message msgId="measureComponent.areaLabel"/>,
         bearingLabel: <Message msgId="measureComponent.bearingLabel"/>,
-        formatLength: (uom, value) => measureUtils.getFormattedLength(uom, value),
-        formatArea: (uom, value) => measureUtils.getFormattedArea(uom, value),
-        formatBearing: (value) => measureUtils.getFormattedBearingValue(round(value || 0, 6)),
+        formatLength: (uom, value) => convertUom(value, "m", uom),
+        formatArea: (uom, value) => convertUom(value, "sqm", uom),
+        formatBearing: (value) => getFormattedBearingValue(round(value || 0, 6)),
         onChangeUom: () => {}
     };
 

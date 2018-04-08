@@ -9,12 +9,24 @@
 const React = require('react');
 const SideCard = require('./SideCard');
 const {Row, Col} = require('react-bootstrap');
-module.exports = ({items=[], colProps={xs: 12}, onItemClick = () => {}, size} = {}) =>
-    (<div className="msSideGrid">
+/**
+ * Component for rendering a list of SideCard.
+ * @memberof components.misc.cardgrids
+ * @name SideGrid
+ * @class
+ * @prop {array} items array of list item
+ * @prop {function} onItemClick callback on item click
+ * @prop {string} size size of cards, 'sm' for small
+ * @prop {element} cardComponent custom component for card in list
+ * @prop {object} colProps props for react-bootstrap col component
+ */
+module.exports = ({cardComponent, items = [], colProps = {xs: 12}, onItemClick = () => {}, size = ''} = {}) => {
+    const Card = cardComponent || SideCard;
+    return (<div className="msSideGrid">
         <Row className="items-list">
             {items.map((item, i) =>
                 (<Col key={item.id || i} {...colProps}>
-                    <SideCard
+                    <Card
                         onClick={() => onItemClick(item)}
                         size={size}
                         {...item}
@@ -23,3 +35,4 @@ module.exports = ({items=[], colProps={xs: 12}, onItemClick = () => {}, size} = 
             )}
         </Row>
     </div>);
+};

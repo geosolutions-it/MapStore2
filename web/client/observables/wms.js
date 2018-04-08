@@ -7,6 +7,8 @@
  */
 const {Observable} = require('rxjs');
 const axios = require('../libs/ajax');
+const WMS = require('../api/WMS');
+const LayersUtils = require('../utils/LayersUtils');
 const urlUtil = require('url');
 const {interceptOGCError} = require('../utils/ObservableUtils');
 const toDescribeLayerURL = ({name, search = {}, url} = {}) => {
@@ -28,6 +30,9 @@ const toDescribeLayerURL = ({name, search = {}, url} = {}) => {
 };
 const describeLayer = l => Observable.defer( () => axios.get(toDescribeLayerURL(l))).let(interceptOGCError);
 module.exports = {
+    getLayerCapabilities: l => Observable.defer(() => WMS.getCapabilities(LayersUtils.getCapabilitiesUrl(l)))
+        .let(interceptOGCError)
+        .map(c => WMS.parseLayerCapabilities(c, l)),
     describeLayer,
     addSearch: l =>
         describeLayer(l)

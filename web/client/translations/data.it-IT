@@ -218,6 +218,7 @@
         },
         "newMap": "Nuova Mappa",
 		"maps": {
+            "title": "Mappe",
             "feedback": {
                 "noDetailsAvailable": "Dettagli della mappa non disponibili",
                 "successSavedMap": "La mappa è stata salvata correttamente",
@@ -652,7 +653,7 @@
                     "reset_bbox": "Reset",
                     "save_bbox": "Salva le modifiche al BBOX",
                     "save_radius": "Salva le modifiche al raggio e/o al centro",
-                    "radius": "Raggio"
+                    "radius": "Raggio(m)"
                 },
                 "methods": {
                     "zone": "Zona",
@@ -1073,6 +1074,10 @@
         },
         "widgets": {
             "types": {
+                "map": {
+                    "title": "Mappa",
+                    "caption": "aggiungi una mappa"
+                },
                 "chart": {
                     "title": "Grafico",
                     "caption": "aggiungi un grafico"
@@ -1108,6 +1113,9 @@
                 },
                 "wizard": {
                     "backToTypeSelection": "Torna alla selezione del tipo",
+                    "backToWidgetTypeSelection": "Torna alla selezione del tipo di widget",
+                    "backToLayerSelection": "Torna alla selezione del livello",
+                    "backToMapSelection": "Torna alla selezione della mappa",
                     "backToChartOptions": "Torna alle opzioni del grafico",
                     "configureChartOptions": "Configura le opzioni del grafico",
                     "configureWidgetOptions": "Configura le opzioni del widget",
@@ -1117,11 +1125,20 @@
                     "updateWidget": "Aggiorna il widget",
                     "addToTheMap": "Aggiungi il widget alla mappa",
                     "titlePlaceholder": "Inserisci il titolo...",
-                    "textPlaceholder": "Inserisci il testo..."
+                    "textPlaceholder": "Inserisci il testo...",
+                    "useThisMap": "Usa questa mappa",
+                    "configureMapOptions": "Configura opzioni mappa",
+                    "preview": "Anteprima",
+                    "addLayer": "Aggiungi un livello alla mappa",
+                    "useTheSelectedLayer": "Usa il livello selezionato",
+                    "connectToAMap": "Connetti a una mappa",
+                    "connectToTheMap": "Connetti alla mappa",
+                    "selectMapToConnect": "Seleziona la mappa da connettere",
+                    "clearConnection": "Disconnetti"
                 },
                 "errors": {
-                    "noWidgetsAvailableTitle": "Nessun widgets disponibile",
-                    "noWidgetsAvailableDescription": "<p>Non si possono creare widget per il livello selezionato. Questo perchè il livello non è adatto a nessuno degli widget disponibili o perché il server non espone sufficienti servizi per gernerali. Possibili cause: <ul><li>Hai selezionato un livello raster</li><li>Il servizio WFS non è disponibile per il livello in oggetto</li><li>Il processo gs:aggregate non è disponibile sul server</li></ul> )<p>",
+                    "noWidgetsAvailableTitle": "Impossibile creare il widget per il livello selezionato",
+                    "noWidgetsAvailableDescription": "<p><strong> Prova a selezionare un altro livello o tipo di widget </strong> </p><p>Il server non fornisce i servizi necessari per il livello e il tipo di widget selezionato </p> <p> Le possibili cause sono: <ul> <li> Il livello selezionato è un livello raster </li> <li> Il servizio WFS non è disponibile </li><li> Il processo WPS <code>gs:aggregate</code> non è disponibile </li> </ul></p>",
                     "checkAtLeastOneAttribute": "seleziona almeno un attributo"
                 },
                 "setupFilter": "Configura un filtro per il livello selezionato"
@@ -1211,7 +1228,9 @@
         },
         "dashboard": {
              "editor": {
-                "addACardToTheDashboard": "Aggiungi un widget alla dashboard"
+                "addACardToTheDashboard": "Aggiungi un widget alla dashboard",
+                "showConnections": "Mostra connessioni",
+                "hideConnections": "Nascondi connessioni"
             },
             "emptyTitle": "La dashboard è vuota"
         },

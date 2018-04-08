@@ -8,7 +8,7 @@
 
 const CoordinatesUtils = require('./CoordinatesUtils');
 const MapUtils = require('./MapUtils');
-
+const {colorToHexStr} = require("./ColorUtils");
 
 const {isArray} = require('lodash');
 
@@ -339,14 +339,14 @@ const PrintUtils = {
         }
         // commented the available options.
         return {
-            "fillColor": PrintUtils.rgbaTorgb(style.fillColor),
+            "fillColor": colorToHexStr(style.fillColor),
             "fillOpacity": style.fillOpacity,
              // "rotation": "30",
             "externalGraphic": style.iconUrl,
              // "graphicName": "circle",
              // "graphicOpacity": 0.4,
             "pointRadius": style.radius,
-            "strokeColor": PrintUtils.rgbaTorgb(style.fillColor),
+            "strokeColor": colorToHexStr(style.fillColor),
             "strokeOpacity": style.opacity,
             "strokeWidth": style.weight
              // "strokeLinecap": "round",

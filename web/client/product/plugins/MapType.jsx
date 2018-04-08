@@ -43,7 +43,7 @@ class MapType extends React.Component {
                         {this.props.mapTypes.map(type => <option value={type.key} key={type.key}>{type.label}</option>)}
                     </FormControl>
                 </FormGroup>
-        </div>
+            </div>
         );
     }
 }

@@ -4,7 +4,7 @@
         "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver"]
     },
     "geoStoreUrl": "rest/geostore/",
-    "printUrl": "https://demo.geo-solutions.it/geoserver/pdf/info.json",
+    "printUrl": "pdf/info.json",
     "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
     "mapquestApiKey": "__API_KEY_MAPQUEST__",
     "initialMapFilter": "",
@@ -33,6 +33,9 @@
     "projectionDefs": [],
     "initialState": {
       "defaultState": {
+        "maptype": {
+            "mapType": "{context.mode === 'desktop' ? 'openlayers' : 'leaflet'}"
+        },
         "catalog": {
           "default": {
             "newService": {
@@ -452,7 +455,7 @@
                 "className": "navbar shadow navbar-home"
             }
         }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop", "Notifications"],
-        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "MapType", "ThemeSwitcher",  "GridContainer", "CreateNewMap",
+        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "ThemeSwitcher", "CreateNewMap",
           {
             "name": "Maps",
             "cfg": {

@@ -15,13 +15,15 @@ var {
     TEXT_SEARCH_ITEM_SELECTED,
     TEXT_SEARCH_NESTED_SERVICES_SELECTED,
     TEXT_SEARCH_CANCEL_ITEM,
+    UPDATE_RESULTS_STYLE,
     searchResultLoaded,
     searchTextLoading,
     searchResultError,
     textSearch,
     selectSearchItem,
     selectNestedService,
-    cancelSelectedItem
+    cancelSelectedItem,
+    updateResultsStyle
 } = require('../search');
 
 describe('Test correctness of the search actions', () => {
@@ -56,11 +58,12 @@ describe('Test correctness of the search actions', () => {
         expect(retval2.append).toBe(true);
     });
     it('serch item selected', () => {
-        const retval = selectSearchItem("A", "B");
+        const retval = selectSearchItem("A", "B", {color: '#ff0000'});
         expect(retval).toExist();
         expect(retval.type).toBe(TEXT_SEARCH_ITEM_SELECTED);
         expect(retval.item).toEqual("A");
         expect(retval.mapConfig).toBe("B");
+        expect(retval.resultsStyle).toEqual({color: '#ff0000'});
     });
     it('serch item cancelled', () => {
         const retval = cancelSelectedItem("ITEM");
@@ -77,6 +80,11 @@ describe('Test correctness of the search actions', () => {
         expect(retval.items).toEqual(items);
         expect(retval.services).toEqual(services);
     });
-
-
+    it('update results style', () => {
+        const style = {color: '#ff0000'};
+        const retval = updateResultsStyle(style);
+        expect(retval).toExist();
+        expect(retval.type).toBe(UPDATE_RESULTS_STYLE);
+        expect(retval.style).toEqual({color: '#ff0000'});
+    });
 });
