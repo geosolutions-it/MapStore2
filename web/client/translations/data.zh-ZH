@@ -424,8 +424,7 @@
                     },
                     "simpleshape": {
                         "tooltip": {
-                            "end": "释放鼠标完成绘图
-."
+                            "end": "释放鼠标完成绘图."
                         }
                     }
                 }
@@ -474,7 +473,7 @@
         "zoombuttons": {
             "zoomInTooltip": "放大",
             "zoomOutTooltip": "缩小",
-            "zoomAllTooltip": "缩放到最大范围t"
+            "zoomAllTooltip": "缩放到最大范围"
         },
         "fullscreen": {
             "tooltipActivate": "切换到全屏",
