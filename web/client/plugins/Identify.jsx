@@ -19,7 +19,7 @@ const {on} = require('../actions/controls');
 const {getFeatureInfo, getVectorInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState} = require('../actions/mapInfo');
 const {closeAnnotations} = require('../actions/annotations');
 const {changeMousePointer} = require('../actions/map');
-const {changeMapInfoFormat} = require('../actions/mapInfo');
+const {changeMapInfoFormat, updateCenterToMarker} = require('../actions/mapInfo');
 const {currentLocaleSelector} = require('../selectors/locale');
 
 const {compose, defaultProps} = require('recompose');
@@ -147,6 +147,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.viewerOptions {object}
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
  * @prop cfg.viewerOptions.header {expression} the geader of the viewer, expression from the context{expression}
+ * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
  *
  * @example
  * {
@@ -174,7 +175,8 @@ const IdentifyPlugin = compose(
         clearWarning,
         hideMarker: hideMapinfoMarker,
         showRevGeocode: showMapinfoRevGeocode,
-        hideRevGeocode: hideMapinfoRevGeocode
+        hideRevGeocode: hideMapinfoRevGeocode,
+        onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled')
     }),
     identifyDefaultProps,
     switchControlledIdentify,

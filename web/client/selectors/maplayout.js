@@ -25,6 +25,15 @@ const {head} = require('lodash');
 const mapLayoutSelector = (state) => state.maplayout && state.maplayout.layout || {};
 
 /**
+ * Get map layout bounds left, top, bottom and right
+ * @function
+ * @memberof selectors.mapLayout
+ * @param  {object} state the state
+ * @return {object} boundingMapRect {left, top, bottom, right}
+ */
+const boundingMapRectSelector = (state) => state.maplayout && state.maplayout.boundingMapRect || {};
+
+/**
  * Retrieve only specific attribute from map layout
  * @function
  * @memberof selectors.mapLayout
@@ -86,5 +95,6 @@ module.exports = {
     mapLayoutValuesSelector,
     checkConditionsSelector,
     rightPanelOpenSelector,
-    bottomPanelOpenSelector
+    bottomPanelOpenSelector,
+    boundingMapRectSelector
 };
