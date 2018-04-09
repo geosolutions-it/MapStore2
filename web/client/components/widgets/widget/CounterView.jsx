@@ -34,7 +34,7 @@ module.exports = enhanceCounter(({ series = [], data = [], options = {}, style =
         transform: "translate(-50%, -50%)",
         position: "absolute",
         display: "inline",
-        padding: "5%",
+        padding: "1%",
         top: "50%",
         left: "50%"
     }} ) => {
