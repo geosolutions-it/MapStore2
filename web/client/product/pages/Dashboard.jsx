@@ -8,8 +8,6 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 
-require("../assets/css/maps.css");
-
 const {connect} = require('react-redux');
 
 const url = require('url');

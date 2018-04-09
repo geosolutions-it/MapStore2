@@ -81,7 +81,7 @@ class StandardApp extends React.Component {
                 onPersist: onInit.bind(null, config)
             }, {
                 initialState: this.parseInitialState(config.initialState, {
-                    mode: this.props.mode || ConfigUtils.getBrowserProperties().mobile ? 'mobile' : 'desktop'
+                    mode: this.props.mode || (ConfigUtils.getBrowserProperties().mobile ? 'mobile' : 'desktop')
                 }) || {defaultState: {}, mobile: {}}
             });
             this.store = this.props.appStore(this.props.pluginsDef.plugins, opts);
