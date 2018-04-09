@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 const {layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
-    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector} = require('../layers');
+    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector, centerToMarkerSelector} = require('../layers');
 
 describe('Test layers selectors', () => {
     it('test layersSelector from config', () => {
@@ -387,5 +387,23 @@ describe('Test layers selectors', () => {
         expect(props).toEqual({});
     });
 
+    it('test centerToMarkerSelector', () => {
+        let props = centerToMarkerSelector({});
+        expect(props).toEqual(false);
+
+        props = centerToMarkerSelector({
+            mapInfo: {
+                centerToMarker: false
+            }
+        });
+        expect(props).toEqual(false);
+
+        props = centerToMarkerSelector({
+            mapInfo: {
+                centerToMarker: true
+            }
+        });
+        expect(props).toEqual(true);
+    });
 
 });

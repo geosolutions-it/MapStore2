@@ -14,9 +14,10 @@ const assign = require('object-assign');
 const {isArray, flattenDeep, chunk, cloneDeep} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
 const polygonToLinestring = require('@turf/polygon-to-linestring');
-const {head} = require('lodash');
+const {head, isString, trim, isNumber} = require('lodash');
 const greatCircle = require('@turf/great-circle').default;
 const toPoint = require('turf-point');
+
 const FORMULAS = {
     /**
     @param coordinates in EPSG:4326
@@ -207,6 +208,19 @@ const getExtentFromNormalized = (bounds, projection) => {
             normalizedXExtent[3]
         ], projection, isIDL),
         isIDL};
+};
+
+/**
+ * Return parsed number from layout value
+ * @param value {number|string} number or percentage value string
+ * @param size {number} only in case of percentage
+ * @return {number}
+ */
+const parseLayoutValue = (value, size = 0) => {
+    if (isString(value) && value.indexOf('%') !== -1) {
+        return parseFloat(trim(value)) * size / 100;
+    }
+    return isNumber(value) ? value : 0;
 };
 
 /**
@@ -678,6 +692,116 @@ const CoordinatesUtils = {
     },
     isSRSAllowed: (srs) => {
         return !!Proj4js.defs(srs);
+    },
+    /**
+     * Return normalized latitude and longitude
+     * @param coords {object} coordinates {lat, lng}
+     * @return {object} {lat, lng}
+     */
+    getNormalizedLatLon: ({lng = 1, lat = 1}) => {
+        return {
+            lat: lat,
+            lng: CoordinatesUtils.normalizeLng(lng)
+        };
+    },
+    /**
+     * Return true if coordinates are inside of visible area
+     * @param coords {object} coordinates {lat, lng}
+     * @param map {object} must containt present map
+     * @param layout {object} current layout on map {bottom, top, left, right}
+     * @param resolution {number} resolutions of current map zoom
+     * @return {bool}
+     */
+    isInsideVisibleArea: (coords, map, layout = {}, resolution = 0) => {
+
+        const normalizedCoords = CoordinatesUtils.getNormalizedLatLon(coords);
+        const reprojectedCoords = reproject([normalizedCoords.lng, normalizedCoords.lat], 'EPSG:4326', map.projection);
+        if (!map.bbox) {
+            return false;
+        }
+        const bbox = CoordinatesUtils.reprojectBbox(map.bbox.bounds, map.bbox.crs, map.projection);
+
+        const layoutBounds = {
+            left: parseLayoutValue(layout.left, map.size.width),
+            bottom: parseLayoutValue(layout.bottom, map.size.height),
+            right: parseLayoutValue(layout.right, map.size.width),
+            top: parseLayoutValue(layout.top, map.size.height)
+        };
+
+        const visibleExtent = {
+            minx: bbox[0] + layoutBounds.left * resolution,
+            miny: bbox[1] + layoutBounds.bottom * resolution,
+            maxx: bbox[2] - layoutBounds.right * resolution,
+            maxy: bbox[3] - layoutBounds.top * resolution
+        };
+
+        const splittedView = CoordinatesUtils.getViewportGeometry(visibleExtent, map.projection);
+        const views = splittedView.extent.length === 4 ? [[...splittedView.extent]] : [...splittedView.extent];
+
+        return head(views.map(extent =>
+            reprojectedCoords.x >= extent[0]
+            && reprojectedCoords.y >= extent[1]
+            && reprojectedCoords.x <= extent[2]
+            && reprojectedCoords.y <= extent[3])
+            .filter(val => val)) || false;
+    },
+    /**
+     * Return new center position based of visible area
+     * @param center {object} new visible center {lat, lng}
+     * @param map {object} must containt present map
+     * @param layout {object} current layout on map {bottom, top, left, right}
+     * @param resolution {number} resolutions of current map zoom
+     * @return {object} {pos, zoom, crs}
+     */
+    centerToVisibleArea: (center, map, layout = {}, resolution = 0) => {
+
+        const normalizedCoords = CoordinatesUtils.getNormalizedLatLon(center);
+        const reprojectedCoords = reproject([normalizedCoords.lng, normalizedCoords.lat], 'EPSG:4326', map.projection);
+
+        const layoutBounds = {
+            left: parseLayoutValue(layout.left, map.size.width),
+            bottom: parseLayoutValue(layout.bottom, map.size.height),
+            right: parseLayoutValue(layout.right, map.size.width),
+            top: parseLayoutValue(layout.top, map.size.height)
+        };
+
+        const visibleSize = {
+            width: (map.size.width - layoutBounds.right - layoutBounds.left) * resolution,
+            height: (map.size.height - layoutBounds.top - layoutBounds.bottom) * resolution
+        };
+
+        const mapExtent = {
+            minx: reprojectedCoords.x - visibleSize.width / 2 - layoutBounds.left * resolution,
+            miny: reprojectedCoords.y - visibleSize.height / 2 - layoutBounds.bottom * resolution,
+            maxx: reprojectedCoords.x + visibleSize.width / 2 + layoutBounds.right * resolution,
+            maxy: reprojectedCoords.y + visibleSize.height / 2 + layoutBounds.top * resolution
+        };
+
+        const splittedView = CoordinatesUtils.getViewportGeometry(mapExtent, map.projection);
+
+        if (splittedView.extent.length === 4) {
+            return {
+                pos: reproject([splittedView.extent[0] + map.size.width / 2 * resolution, splittedView.extent[1] + map.size.height / 2 * resolution], map.projection, 'EPSG:4326'),
+                zoom: map.zoom,
+                crs: 'EPSG:4326'
+            };
+        }
+
+        if (Math.abs(splittedView.extent[0][2] - splittedView.extent[0][0]) > Math.abs(splittedView.extent[1][2] - splittedView.extent[1][0])) {
+            const pos = reproject([splittedView.extent[0][2] - map.size.width / 2 * resolution, splittedView.extent[0][3] - map.size.height / 2 * resolution], map.projection, 'EPSG:4326');
+            const adjustedPos = {...pos, x: pos.x + (normalizedCoords.lng > pos.x ? 360 : 0)};
+            return {
+                pos: adjustedPos,
+                zoom: map.zoom,
+                crs: 'EPSG:4326'
+            };
+        }
+
+        return {
+            pos: reproject([splittedView.extent[1][0] + map.size.width / 2 * resolution, splittedView.extent[1][1] + map.size.height / 2 * resolution], map.projection, 'EPSG:4326'),
+            zoom: map.zoom,
+            crs: 'EPSG:4326'
+        };
     }
 };
 

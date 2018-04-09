@@ -21,4 +21,15 @@ describe('Test the map layout reducer', () => {
         let state = mapLayout({}, action);
         expect(state.layout).toEqual(layout);
     });
+
+    it('change layout boundingMapRect', () => {
+        let layout = {left: 300, boundingMapRect: {left: 300}};
+        const action = {
+            type: UPDATE_MAP_LAYOUT,
+            layout
+        };
+        let state = mapLayout({}, action);
+        expect(state.layout).toEqual({left: 300});
+        expect(state.boundingMapRect).toEqual({left: 300});
+    });
 });
