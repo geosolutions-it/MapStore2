@@ -115,4 +115,11 @@ module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeo
             visible={mode === "VIEW"}
             onClick={events.sync}
             glyph="map-filter"/>
+        <TButton
+            id="grid-map-chart"
+            tooltip={<Message msgId="featuregrid.toolbar.createNewChart"/>}
+            disabled={disableToolbar}
+            visible={mode === "VIEW"}
+            onClick={events.chart}
+            glyph="stats"/>
     </ButtonGroup>);

@@ -1058,7 +1058,8 @@
                 "downloadGridData": "Descargar datos",
                 "hideShowColumns": "Ocultar / mostrar columnas",
                 "zoomAll": "Zoom a la extensión de la página",
-                "syncOnMap": "Sincronizar mapa con filtro"
+                "syncOnMap": "Sincronizar mapa con filtro",
+                "createNewChart": "Crea un gráfico para la capa seleccionada"
             }
         },
         "wfsdownload": {

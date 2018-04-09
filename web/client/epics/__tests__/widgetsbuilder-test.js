@@ -11,14 +11,18 @@ const {
     openWidgetEditor,
     initEditorOnNew,
     closeWidgetEditorOnFinish,
-    handleWidgetsFilterPanel
+    handleWidgetsFilterPanel,
+    initEditorOnNewChart
 } = require('../widgetsbuilder');
 const {
     createWidget, editWidget, insertWidget,
-    openFilterEditor,
+    openFilterEditor, createChart,
     EDIT_NEW,
     EDITOR_CHANGE
 } = require('../../actions/widgets');
+const {
+    CLOSE_FEATURE_GRID
+} = require('../../actions/featuregrid');
 
 const {FEATURE_TYPE_SELECTED} = require('../../actions/wfsquery');
 const {LOAD_FILTER, search} = require('../../actions/queryform');
@@ -156,6 +160,33 @@ describe('widgetsbuilder epic', () => {
                         expect(action.widget).toExist();
                         // verify default mapSync
                         expect(action.widget.mapSync).toBe(true);
+                        break;
+                    default:
+                        done(new Error("Action not recognized"));
+                }
+            }, );
+            done();
+        }, {
+            controls: {
+                widgetBuilder: {
+                    available: true
+                }
+            }
+        });
+    });
+    it('initEditorOnNewChart', (done) => {
+        const startActions = [createChart()];
+        testEpic(initEditorOnNewChart, 2, startActions, actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                    case EDIT_NEW:
+                        expect(action.widget).toExist();
+                        // verify default mapSync
+                        expect(action.widget.mapSync).toBe(true);
+                        break;
+                    case CLOSE_FEATURE_GRID:
+                        expect(action.type).toBe(CLOSE_FEATURE_GRID);
                         break;
                     default:
                         done(new Error("Action not recognized"));

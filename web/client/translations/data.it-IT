@@ -1058,7 +1058,8 @@
                 "downloadGridData": "Esporta i dati della griglia",
                 "hideShowColumns": "Nascondi/mostra colonne",
                 "zoomAll": "Zoom all'estensione della pagina",
-                "syncOnMap": "Sincronizza la mappa con i filtri"
+                "syncOnMap": "Sincronizza la mappa con i filtri",
+                "createNewChart": "crea un grafico per il livello selezionato"
             }
         },
         "wfsdownload": {

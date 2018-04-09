@@ -11,6 +11,9 @@ const {toggleTool,
     openAdvancedSearch,
     zoomAll
 } = require('../../actions/featuregrid');
+const {
+    createChart
+} = require('../../actions/widgets');
 const {toggleSyncWms} = require('../../actions/wfsquery');
 
 module.exports = {
@@ -28,5 +31,6 @@ module.exports = {
     onClose: () => closeFeatureGridConfirm(),
     showQueryPanel: () => openAdvancedSearch(),
     zoomAll: () => zoomAll(),
-    sync: () => toggleSyncWms()
+    sync: () => toggleSyncWms(),
+    chart: () => createChart()
 };

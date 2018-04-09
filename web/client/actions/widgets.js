@@ -27,6 +27,7 @@ const OPEN_FILTER_EDITOR = "WIDGETS:OPEN_FILTER_EDITOR";
 const EXPORT_CSV = "WIDGETS:EXPORT_CSV";
 const EXPORT_IMAGE = "WIDGETS:EXPORT_IMAGE";
 const WIDGET_SELECTED = "WIDGETS:WIDGET_SELECTED";
+const NEW_CHART = "WIDGETS:NEW_CHART";
 const DEFAULT_TARGET = "floating";
 const DEPENDENCY_SELECTOR_KEY = "dependencySelector";
 const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
@@ -40,6 +41,14 @@ const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
 const createWidget = (widget) => ({
     type: NEW,
     widget
+});
+
+/**
+ * Intent to create a new chart Widget
+ * @return {object}        action with type `WIDGETS:NEW_CHART`
+ */
+const createChart = () => ({
+    type: NEW_CHART
 });
 
 /**
@@ -260,6 +269,7 @@ module.exports = {
     EXPORT_IMAGE,
     TOGGLE_CONNECTION,
     WIDGET_SELECTED,
+    createChart, NEW_CHART,
     exportCSV,
     exportImage,
     openFilterEditor,
