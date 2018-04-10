@@ -1106,7 +1106,7 @@
                 },
                 "emptyMap": {
                     "title": "Mapa vacío",
-                    "descripción": "Comience desde un mapa vacío"
+                    "description": "Comience desde un mapa vacío"
                  }
             },
             "title": "Título",
