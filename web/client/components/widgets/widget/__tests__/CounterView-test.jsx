@@ -39,4 +39,19 @@ describe('CounterView component', () => {
         const container = document.getElementById('container');
         expect(container.querySelector('.glyphicon-warning-sign')).toExist();
     });
+    it('CounterView rendering style', () => {
+        ReactDOM.render(<CounterView data={[{ dataKey: 1 }]} series={[{ dataKey: "dataKey" }]} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.counter-widget-view');
+        expect(el).toExist();
+        const content = el.querySelector('div');
+        expect(content.style.width).toBe("100%");
+        expect(content.style.height).toBe("100%");
+        expect(content.style.transform).toExist();
+        expect(content.style.top).toBe('50%');
+        expect(content.style.left).toBe('50%');
+        ReactDOM.render(<CounterView data={[{ dataKey: 1 }]} style={{top: "10px"}} series={[{ dataKey: "dataKey" }]} />, document.getElementById("container"));
+        const content2 = container.querySelector('.counter-widget-view div');
+        expect(content2.style.top).toBe('10px');
+    });
 });

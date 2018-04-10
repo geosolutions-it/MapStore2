@@ -44,8 +44,10 @@ const enhancePreview = compose(
 );
 
 const sampleProps = {
-    width: 430,
-    height: 200
+    style: {
+        width: 450,
+        height: 100
+    }
 };
 
 const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
