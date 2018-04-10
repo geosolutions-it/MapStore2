@@ -6,14 +6,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-
-const { compose, withHandlers} = require('recompose');
-
-module.exports = compose(
-    withHandlers({
-        onMapViewChanges: ({onChange = () => {}}) => map => {
-            onChange('map', map);
-            onChange('mapStateSource', map.mapStateSource);
-        }
-    })
-)(require('../../../widget/MapView'));
+const {previewMap} = require('./enhancers/previewMap');
+module.exports = previewMap(require('../../../widget/MapView'));
