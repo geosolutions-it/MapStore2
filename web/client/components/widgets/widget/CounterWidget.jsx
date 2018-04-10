@@ -7,6 +7,7 @@
  */
 const React = require('react');
 const Message = require('../../I18N/Message');
+
 const CounterView = require('./CounterView');
 const InfoPopover = require('./InfoPopover');
 const WidgetContainer = require('./WidgetContainer');
@@ -33,8 +34,6 @@ module.exports = ({
     series = [],
     loading,
     showTable,
-    width,
-    height,
     confirmDelete= false,
     headerStyle,
     toggleTableView= () => {},
@@ -43,6 +42,7 @@ module.exports = ({
     onDelete=() => {},
     ...props}) =>
     (<WidgetContainer
+        className="counter-widget"
         id={`widget-chart-${id}`}
         title={title}
         topLeftItems={renderHeaderLeftTopItem({loading, title, description, showTable, toggleTableView})}
@@ -57,5 +57,5 @@ module.exports = ({
                 <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash"/>&nbsp;<Message msgId="widgets.widget.menu.delete" /></MenuItem>
             </DropdownButton>
         </ButtonToolbar>}>
-        <CounterView id={id} style={{ width: "80%", height: "80%", margin: "0 auto"}} containerSize={{ width, height }} isAnimationActive={!loading} loading={loading} data={data} series={series} iconFit {...props} />
+        <CounterView id={id} isAnimationActive={!loading} loading={loading} data={data} series={series} iconFit {...props} />
     </WidgetContainer>);
