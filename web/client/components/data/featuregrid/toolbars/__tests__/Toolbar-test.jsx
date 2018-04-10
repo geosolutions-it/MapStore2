@@ -321,7 +321,7 @@ describe('Featuregrid toolbar component', () => {
             chart: () => {}
         };
         spyOn(events, "chart");
-        ReactDOM.render(<Toolbar events={events} mode="VIEW"/>, document.getElementById("container"));
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" widgetAvailable chartDisabled={false}/>, document.getElementById("container"));
         const el = document.getElementsByClassName("featuregrid-toolbar")[0];
         expect(el).toExist();
         let chart = document.getElementById("fg-grid-map-chart");
