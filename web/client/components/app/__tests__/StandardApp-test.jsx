@@ -87,6 +87,7 @@ describe('StandardApp', () => {
     it('creates a default app and reads initialState from localConfig', (done) => {
         const store = (plugins, storeOpts) => {
             expect(storeOpts.initialState.defaultState.test).toExist();
+            expect(storeOpts.initialState.defaultState.testMode).toExist();
             done();
             return {
                 dispatch() {
@@ -102,9 +103,32 @@ describe('StandardApp', () => {
                 mobile: {}
             }
         };
-        const app = ReactDOM.render(<StandardApp appStore={store} storeOpts={storeOpts}/>, document.getElementById("container"));
+        const app = ReactDOM.render(<StandardApp mode={'TEST'} appStore={store} storeOpts={storeOpts}/>, document.getElementById("container"));
         expect(app).toExist();
     });
+    it('creates a default app and reads initialState with mode', (done) => {
+        const store = (plugins, storeOpts) => {
+            expect(storeOpts.initialState.defaultState.testMode).toBe('EXPRESSION_MODE_TEST');
+            done();
+            return {
+                dispatch() {
+                }
+            };
+        };
+
+        const storeOpts = {
+            initialState: {
+                defaultState: {
+                    test: "NOTHING"
+
+                },
+                mobile: {}
+            }
+        };
+        const app = ReactDOM.render(<StandardApp mode={'TEST'} appStore={store} storeOpts={storeOpts} />, document.getElementById("container"));
+        expect(app).toExist();
+    });
+
 
     it('creates a default app and renders the given component', () => {
         const store = () => ({
