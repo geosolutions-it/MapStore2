@@ -6,5 +6,5 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {previewMap} = require('./enhancers/previewMap');
+const previewMap = require('./enhancers/previewMap');
 module.exports = previewMap(require('../../../widget/MapView'));
