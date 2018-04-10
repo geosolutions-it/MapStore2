@@ -1099,6 +1099,16 @@
             "selectChartType": {
                 "title": "Seleccione el tipo de widget"
             },
+            "selectMap": {
+                "TOC": {
+                    "noLayerTitle": "Sin capas",
+                    "noLayerDescription": "No hay capas en el mapa. Si desea agregar una capa desde el catálogo, haga clic en el botón '+' en la barra de herramientas en la parte superior"
+                },
+                "emptyMap": {
+                    "title": "Mapa vacío",
+                    "descripción": "Comience desde un mapa vacío"
+                 }
+            },
             "title": "Título",
             "description": "Descripción",
             "errors": {

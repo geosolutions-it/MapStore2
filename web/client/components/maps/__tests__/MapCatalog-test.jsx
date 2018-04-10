@@ -13,7 +13,8 @@ const rxjsConfig = require('recompose/rxjsObservableConfig').default;
 setObservableConfig(rxjsConfig);
 const expect = require('expect');
 const MapCatalog = require('../MapCatalog');
-const enhancer = require('../enhancers/mapCatalog');
+const mapCatalog = require('../enhancers/mapCatalog');
+const mapCatalogWithEmptymap = require('../enhancers/mapCatalogWithEmptyMap');
 const GeoStoreDAO = require('../../../api/GeoStoreDAO');
 
 describe('MapCatalog component', () => {
@@ -49,10 +50,24 @@ describe('MapCatalog component', () => {
     });
 
     it('mapCatalog enhancer', (done) => {
-        const Sink = enhancer(createSink( props => {
+        const Sink = mapCatalog(createSink( props => {
             if (props.items && props.items.length > 0) {
                 expect(props).toExist();
                 const item = props.items[0];
+                expect(props.skip).toNotExist();
+                expect(item).toExist();
+                expect(item.title).toExist();
+                done();
+            }
+        }));
+        ReactDOM.render(<Sink />, document.getElementById("container"));
+    });
+    it('mapCatalogWithEmptyMap enhancer', (done) => {
+        const Sink = mapCatalogWithEmptymap(createSink(props => {
+            if (props.items && props.items.length > 0) {
+                expect(props).toExist();
+                const item = props.items[0];
+                expect(props.skip).toBe(1);
                 expect(item).toExist();
                 expect(item.title).toExist();
                 done();

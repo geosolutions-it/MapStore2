@@ -1100,6 +1100,16 @@
             "selectChartType": {
                 "title": "Select the Chart type"
             },
+            "selectMap": {
+                "TOC": {
+                    "noLayerTitle": "No Layers",
+                    "noLayerDescription": "There are no layers in the map. If you want to add a layer from the catalog click on the '+' button in the toolbar on top"
+                },
+                "emptyMap": {
+                    "title": "Empty Map",
+                    "description": "Start from an empty map"
+                }
+            },
             "title": "Title",
             "description": "Description",
             "errors": {
