@@ -124,7 +124,9 @@ class StandardApp extends React.Component {
         return Object.keys(state || {}).reduce((previous, key) => {
 
             return { ...previous, ...{ [key]: isObject(state[key]) ?
-                (isArray(state[key]) && isString(state[key][0]) ? state[key] : this.parseInitialState(state[key], context)) :
+                (isArray(state[key]) && state[key].map(s => {
+                    return isObject(s) ? this.parseInitialState(state[key], context) : s;
+                }) || [] ) :
                 PluginsUtils.handleExpression({}, context, state[key])}};
         }, {});
     };
