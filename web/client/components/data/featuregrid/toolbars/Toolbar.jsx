@@ -16,7 +16,7 @@ const getSaveMessageId = ({saving, saved}) => {
     return "featuregrid.toolbar.saveChanges";
 };
 
-module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen, disableToolbar, isSearchAllowed, disableDownload, displayDownload, isSyncActive = false, hasSupportedGeometry = true, disableZoomAll = false} = {}) =>
+module.exports = ({events = {}, mode = "VIEW", showChartButton = true, selectedCount, hasChanges, hasGeometry, hasNewFeatures, isSimpleGeom, isDrawing = false, isEditingAllowed, saving = false, saved = false, isDownloadOpen, isColumnsOpen, disableToolbar, isSearchAllowed, disableDownload, displayDownload, isSyncActive = false, hasSupportedGeometry = true, disableZoomAll = false} = {}) =>
 
     (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
         <TButton
@@ -115,4 +115,11 @@ module.exports = ({events = {}, mode = "VIEW", selectedCount, hasChanges, hasGeo
             visible={mode === "VIEW"}
             onClick={events.sync}
             glyph="map-filter"/>
+        <TButton
+            id="grid-map-chart"
+            tooltip={<Message msgId="featuregrid.toolbar.createNewChart"/>}
+            disabled={disableToolbar}
+            visible={mode === "VIEW" && showChartButton}
+            onClick={events.chart}
+            glyph="stats"/>
     </ButtonGroup>);

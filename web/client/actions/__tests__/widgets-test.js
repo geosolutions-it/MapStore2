@@ -23,6 +23,7 @@ const {
     EXPORT_CSV,
     EXPORT_IMAGE,
     DEPENDENCY_SELECTOR_KEY,
+    createChart, NEW_CHART,
     exportCSV,
     exportImage,
     openFilterEditor,
@@ -175,6 +176,11 @@ describe('Test correctness of the widgets actions', () => {
         expect(retval.key).toBe(`${DEPENDENCY_SELECTOR_KEY}`);
         expect(retval.value.setup).toBe("setup");
         expect(retval.value.active).toBe(true);
+    });
+    it('createChart', () => {
+        const retval = createChart(true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(NEW_CHART);
     });
 
 });

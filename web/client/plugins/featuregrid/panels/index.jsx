@@ -10,11 +10,12 @@ const React = require('react');
 const {connect} = require('react-redux');
 const {bindActionCreators} = require('redux');
 const {createSelector, createStructuredSelector} = require('reselect');
-const {wfsDownloadAvailable} = require('../../../selectors/controls');
+const {widgetBuilderAvailable, wfsDownloadAvailable} = require('../../../selectors/controls');
 const {paginationInfo, featureLoadingSelector, resultsSelector, isSyncWmsActive, featureCollectionResultSelector} = require('../../../selectors/query');
 const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter, hasSupportedGeometry, editingAllowedRolesSelector} = require('../../../selectors/featuregrid');
 const {userRoleSelector} = require('../../../selectors/security');
 const {isCesium} = require('../../../selectors/maptype');
+const {chartDisabledSelector} = require('../../../selectors/featuregrid');
 const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed, closeFeatureGrid} = require('../../../actions/featuregrid');
 const {toolbarEvents, pageEvents} = require('../index');
 const {getAttributeFields} = require('../../../utils/FeatureGridUtils');
@@ -35,6 +36,7 @@ const Toolbar = connect(
         hasNewFeatures: hasNewFeaturesSelector,
         hasGeometry: hasGeometrySelector,
         isDrawing: isDrawingSelector,
+        showChartButton: state => !chartDisabledSelector(state) && widgetBuilderAvailable(state),
         isSimpleGeom: isSimpleGeomSelector,
         selectedCount: selectedFeaturesCount,
         disableToolbar: state => state && state.featuregrid && state.featuregrid.disableToolbar,
