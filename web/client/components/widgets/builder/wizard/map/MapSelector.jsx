@@ -20,6 +20,7 @@ const BuilderHeader = require('../../BuilderHeader');
 
 const { compose, withState, mapPropsStream, withHandlers } = require('recompose');
 const mcEnhancer = require('../../../../maps/enhancers/mapCatalogWithEmptyMap');
+const Message = require('../../../../I18N/Message');
 const MapCatalog = mcEnhancer(require('../../../../maps/MapCatalog'));
 /**
  * Builder page that allows layer's selection
@@ -74,5 +75,5 @@ module.exports = compose(
             }]} />
         </BuilderHeader>}
     >
-        <MapCatalog selected={selected} onSelected={r => setSelected(r)} />
+        <MapCatalog title={<Message msgId="widgets.builder.wizard.selectAMap" />} selected={selected} onSelected={r => setSelected(r)} />
     </BorderLayout>));

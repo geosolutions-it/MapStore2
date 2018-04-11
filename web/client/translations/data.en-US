@@ -1129,6 +1129,8 @@
                     "backToLayerSelection": "Back to layer selection",
                     "backToMapSelection": "Back to map selection",
                     "backToChartOptions": "Back to chart options",
+                    "selectALayer": "Select a layer",
+                    "selectAMap": "Select a map",
                     "configureChartOptions": "Configure chart options",
                     "configureWidgetOptions": "Configure widget options",
                     "backToTableOptions": "Back to table options",
@@ -1187,8 +1189,8 @@
                     "caption": "gauge"
                 }
             },
-            "chartOptionsTitle": "Data",
-            "widgetOptionsTitle": "Widget Info",
+            "chartOptionsTitle": "Configure data",
+            "widgetOptionsTitle": "Configure Widget Info",
             "groupByAttributes": {
                 "line": "X Attribute",
                 "pie": "Group By",

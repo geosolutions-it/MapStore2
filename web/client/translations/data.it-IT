@@ -1128,6 +1128,8 @@
                     "backToLayerSelection": "Torna alla selezione del livello",
                     "backToMapSelection": "Torna alla selezione della mappa",
                     "backToChartOptions": "Torna alle opzioni del grafico",
+                    "selectALayer": "Seleziona un livello",
+                    "selectAMap": "Seleziona una mappa",
                     "configureChartOptions": "Configura le opzioni del grafico",
                     "configureWidgetOptions": "Configura le opzioni del widget",
                      "backToTableOptions": "Torna alle opzioni della tabella",
@@ -1186,8 +1188,8 @@
                     "caption": "cruscotto"
                 }
             },
-            "chartOptionsTitle": "Dati",
-            "widgetOptionsTitle": "Informazioni",
+            "chartOptionsTitle": "Configura dati",
+            "widgetOptionsTitle": "Configura informazioni widget",
             "groupByAttributes": {
                 "line": "Attributo X",
                 "pie": "Raggruppa per",
