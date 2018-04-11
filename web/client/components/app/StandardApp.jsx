@@ -121,11 +121,10 @@ class StandardApp extends React.Component {
         });
     };
     /**
-     * A function used to parse the initialState in the localConfig.json
-     * If an array of simple values is parsed then just return their values, otherwise return the recursive func
-     * @param {object} state the piece of state to be parsed
-     * @param {object} context contains the mode to be used
-     * @return {object} the object parsed.
+     * It returns an object of the same structure of the initialState but replacing strings like "{someExpression}" with the result of the expression between brackets.
+     * @param {object} state the object to parse
+     * @param {object} context context for expression
+     * @return {object} the modified object
     */
     parseInitialState = (state, context) => {
         return Object.keys(state || {}).reduce((previous, key) => {
