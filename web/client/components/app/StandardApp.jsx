@@ -21,7 +21,7 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 
 const assign = require('object-assign');
 const url = require('url');
-const {isObject} = require('lodash');
+const {isObject, isArray, isString} = require('lodash');
 
 const urlQuery = url.parse(window.location.href, true).query;
 
@@ -122,7 +122,9 @@ class StandardApp extends React.Component {
     };
     parseInitialState = (state, context) => {
         return Object.keys(state || {}).reduce((previous, key) => {
-            return { ...previous, ...{ [key]: isObject(state[key]) ? this.parseInitialState(state[key], context) :
+
+            return { ...previous, ...{ [key]: isObject(state[key]) ?
+                (isArray(state[key]) && isString(state[key][0]) ? state[key] : this.parseInitialState(state[key], context)) :
                 PluginsUtils.handleExpression({}, context, state[key])}};
         }, {});
     };
