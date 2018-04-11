@@ -12,7 +12,7 @@ require('rxjs');
 const GeoStoreDAO = require('../../../../../api/GeoStoreDAO');
 const axios = require('../../../../../libs/ajax');
 const ConfigUtils = require('../../../../../utils/ConfigUtils');
-
+const { excludeGoogleBackground } = require('../../../../../utils/LayersUtils');
 const BorderLayout = require('../../../../layout/BorderLayout');
 
 const Toolbar = require('../../../../misc/toolbar/Toolbar');
@@ -35,12 +35,12 @@ module.exports = compose(
                 let mapState = (!config.version && typeof map.id !== 'string') ? ConfigUtils.convertFromLegacy(config) : ConfigUtils.normalizeConfig(config.map);
                 return {
                     ...(mapState && mapState.map || {}),
-                    layers: mapState.layers.map(l => {
+                    layers: excludeGoogleBackground(mapState.layers.map(l => {
                         if (l.group === "background" && (l.type === "ol" || l.type === "OpenLayers.Layer")) {
                             l.type = "empty";
                         }
                         return l;
-                    })
+                    }))
                 };
             }))
             .then(res => onMapSelected({
