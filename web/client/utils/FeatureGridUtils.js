@@ -35,7 +35,7 @@ const getRow = (i, rows) => rows[i];
 
 /* eslint-disable */
 
-const toChangesMap = (changesArray) => isArray(changesArray) ? changesArray.reduce((changes, c) => ({
+const toChangesMap = (changesArray = []) => isArray(changesArray) ? changesArray.reduce((changes, c) => ({
     ...changes,
     [c.id]: {
         ...changes[c.id],

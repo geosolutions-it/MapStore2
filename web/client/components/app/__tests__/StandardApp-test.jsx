@@ -147,6 +147,7 @@ describe('StandardApp', () => {
             initialState: {
                 defaultState: {
                     test: "test",
+                    withArrayEmpty: [],
                     withArray: [valueArr1],
                     withArrayObj: [valueArr2, {
                         innerObjTest: innerObjTestValue
@@ -159,6 +160,7 @@ describe('StandardApp', () => {
         expect(app).toExist();
         const parsedInitialState = app.parseInitialState(storeOpts.initialState, {});
         expect(parsedInitialState.defaultState.withArray.length).toBe(1);
+        expect(parsedInitialState.defaultState.withArrayEmpty.length).toBe(0);
         expect(parsedInitialState.defaultState.withArray[0]).toBe(valueArr1);
         expect(parsedInitialState.defaultState.withArrayObj.length).toBe(2);
         expect(parsedInitialState.defaultState.withArrayObj[0]).toBe(valueArr2);
