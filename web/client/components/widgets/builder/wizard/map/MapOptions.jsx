@@ -52,7 +52,7 @@ module.exports = ({ preview, map = {}, onChange = () => { }, selectedNodes = [],
             editNode={editNode}
             map={map}
             onChange={onChange} />
-            ] : [<StepHeader title={<Message msgId={`Layers`} />} />, <TOC
+            ] : [<StepHeader title={<Message msgId={`layers`} />} />, <TOC
             selectedNodes={selectedNodes}
             onSelect={onNodeSelect}
             onChange={onChange}
