@@ -1059,7 +1059,8 @@
                 "downloadGridData": "Télécharger les données",
                 "hideShowColumns": "Masquer / afficher les colonnes",
                 "zoomAll": "Zoom sur la page",
-                "syncOnMap": "Synchroniser la carte avec un filtre"
+                "syncOnMap": "Synchroniser la carte avec un filtre",
+                "createNewChart": "Créer un graphique pour le calque sélectionné"
             }
         },
         "wfsdownload": {
