@@ -1128,9 +1128,11 @@
                     "backToLayerSelection": "Volver a la selección de capas",
                     "backToMapSelection": "Volver a la selección del mapa",
                     "backToChartOptions": "Volver a las opciones de gráfico",
+                    "selectALayer": "Seleccionar una capa",
+                    "selectAMap": "Seleccionar un mapa",
                     "configureChartOptions": "Configurar opciones de gráfico",
                     "configureWidgetOptions": "Configurar las opciones del widget",
-                     "backToTableOptions": "Volver a las opciones de mesa",
+                    "backToTableOptions": "Volver a las opciones de mesa",
                     "configureTableOptions": "Configurar opciones de tabla",
                     "resetColumnsSizes": "Restablecer todos los cambios en los tamaños de columna",
                     "updateWidget": "Actualiza el widget",
@@ -1186,8 +1188,8 @@
                     "caption": "indicatores"
                 }
             },
-            "chartOptionsTitle": "Datos",
-            "widgetOptionsTitle": "Información de widget",
+            "chartOptionsTitle": "Configurar Datos",
+            "widgetOptionsTitle": "Configurar Información de widget",
             "groupByAttributes": {
                 "line": "Atributo X",
                 "pie": "Agrupar por",

@@ -31,7 +31,7 @@ const accumulate = (props, messages) => (acc = {}, propName) => ({
  * const Input = localizeProps('placeholder')(BootstrapInput);
  * // render
  * //...
- * <Input placholder="path.to.placeholder.message" />
+ * <Input placeholder="path.to.placeholder.message" />
  */
 module.exports = (propNames) => compose(
     getContext({
