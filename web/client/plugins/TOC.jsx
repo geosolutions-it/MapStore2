@@ -112,6 +112,10 @@ const tocSelector = createSelector(
             {
                 options: {expanded: true, showComponent: true},
                 func: (node) => filterText && head(node.nodes.filter(l => filterLayersByTitle(l, filterText, currentLocale) || l.nodes && head(node.nodes.filter(g => g.showComponent))))
+            },
+            {
+                options: { showComponent: false },
+                func: (node) => head(node.nodes.filter(l => l.hidden))
             }
         ]),
         catalogActive,
@@ -307,7 +311,8 @@ class LayerTree extends React.Component {
                 currentLocale={this.props.currentLocale}
                 selectedNodes={this.props.selectedNodes}
                 filterText={this.props.filterText}
-                onUpdateNode={this.props.updateNode}/>);
+                onUpdateNode={this.props.updateNode}
+                />);
     }
 
     renderTOC = () => {

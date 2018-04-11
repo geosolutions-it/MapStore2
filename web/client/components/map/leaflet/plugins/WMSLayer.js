@@ -5,7 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+const React = require('react');
+const Message = require('../../../../components/I18N/Message');
 const Layers = require('../../../../utils/leaflet/Layers');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 const FilterUtils = require('../../../../utils/FilterUtils');
@@ -14,6 +15,7 @@ const L = require('leaflet');
 const objectAssign = require('object-assign');
 const {isArray, isEqual} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
+const ElevationUtils = require('../../../../utils/ElevationUtils');
 require('leaflet.nontiledlayer');
 
 L.NonTiledLayer.WMSCustom = L.NonTiledLayer.WMS.extend({
@@ -103,6 +105,48 @@ L.tileLayer.multipleUrlWMS = function(urls, options) {
     return new L.TileLayer.MultipleUrlWMS(urls, options);
 };
 
+
+L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
+    initialize: function() {
+        this._tiles = {};
+        L.TileLayer.MultipleUrlWMS.prototype.initialize.apply(this, arguments);
+    },
+    _addTile: function(coords) {
+        const tileUrl = this.getTileUrl(coords);
+        ElevationUtils.loadTile(tileUrl, coords, this._tileCoordsToKey(coords));
+    },
+
+    getElevation: function(latLng, containerPoint) {
+        try {
+            const tilePoint = this._getTileFromCoords(latLng);
+            const elevation = ElevationUtils.getElevation(this._tileCoordsToKey(tilePoint),
+                this._getTileRelativePixel(tilePoint, containerPoint), this.getTileSize().x);
+            if (elevation.available) {
+                return elevation.value;
+            }
+            return <Message msgId={elevation.message} />;
+        } catch (e) {
+            return <Message msgId="elevationLoadingError" />;
+        }
+    },
+    _getTileFromCoords: function(latLng) {
+        var layerPoint = this._map.project(latLng).divideBy(256).floor();
+        return objectAssign(layerPoint, {z: this._tileZoom});
+    },
+    _getTileRelativePixel: function(tilePoint, containerPoint) {
+        var x = Math.floor(containerPoint.x - this._getTilePos(tilePoint).x - this._map._getMapPanePos().x);
+        var y = Math.min(this.getTileSize().x - 1, Math.floor(containerPoint.y - this._getTilePos(tilePoint).y - this._map._getMapPanePos().y));
+        return new L.Point(x, y);
+    },
+    _removeTile: function() {},
+    _abortLoading: function() {}
+});
+
+L.tileLayer.elevationWMS = function(urls, options) {
+    return new L.TileLayer.ElevationWMS(urls, options);
+};
+
+
 function wmsToLeafletOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
     const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
@@ -137,6 +181,9 @@ Layers.registerType('wms', {
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
         const queryParameters = wmsToLeafletOptions(options) || {};
         urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
+        if (options.useForElevation) {
+            return L.tileLayer.elevationWMS(urls, queryParameters);
+        }
         if (options.singleTile) {
             return L.nonTiledLayer.wmsCustom(urls[0], queryParameters);
         }

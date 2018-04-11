@@ -160,10 +160,14 @@ class CesiumLayer extends React.Component {
     };
 
     addLayerInternal = (newProps) => {
-        this.provider = this.props.map.imageryLayers.addImageryProvider(this.layer);
-        this.provider._position = this.props.position;
-        if (newProps.options.opacity !== undefined) {
-            this.provider.alpha = newProps.options.opacity;
+        if (newProps.options.useForElevation) {
+            this.props.map.terrainProvider = this.layer;
+        } else {
+            this.provider = this.props.map.imageryLayers.addImageryProvider(this.layer);
+            this.provider._position = this.props.position;
+            if (newProps.options.opacity !== undefined) {
+                this.provider.alpha = newProps.options.opacity;
+            }
         }
     };
 

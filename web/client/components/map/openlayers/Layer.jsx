@@ -126,6 +126,9 @@ class OpenlayersLayer extends React.Component {
             if (this.layer && !this.layer.detached) {
                 this.addLayer(options);
             }
+            if (this.layer && this.layer.get && this.layer.get('getElevation')) {
+                this.props.map.set('elevationLayer', this.layer);
+            }
             this.forceUpdate();
         }
     };

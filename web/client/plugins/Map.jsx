@@ -121,6 +121,7 @@ class MapPlugin extends React.Component {
         mapType: PropTypes.string,
         map: PropTypes.object,
         layers: PropTypes.array,
+        additionalLayers: PropTypes.array,
         zoomControl: PropTypes.bool,
         mapLoadingMessage: PropTypes.string,
         loadingSpinner: PropTypes.bool,
@@ -163,7 +164,8 @@ class MapPlugin extends React.Component {
                 layers: [{type: "osm"}]
             }
         },
-        securityToken: ''
+        securityToken: '',
+        additionalLayers: []
     };
 
     componentWillMount() {
@@ -206,7 +208,7 @@ class MapPlugin extends React.Component {
 
     renderLayers = () => {
         const projection = this.props.map.projection || 'EPSG:3857';
-        return this.props.layers.map((layer, index) => {
+        return [...this.props.layers, ...this.props.additionalLayers].map((layer, index) => {
             return (
                 <plugins.Layer type={layer.type} srs={projection} position={index} key={layer.id || layer.name} options={layer} securityToken={this.props.securityToken}>
                     {this.renderLayerContent(layer, projection)}

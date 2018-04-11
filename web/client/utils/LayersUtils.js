@@ -397,6 +397,8 @@ const LayersUtils = {
             handleClickOnLayer: layer.handleClickOnLayer || false,
             featureInfo: layer.featureInfo,
             catalogURL: layer.catalogURL,
+            useForElevation: layer.useForElevation || false,
+            hidden: layer.hidden || false,
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },
