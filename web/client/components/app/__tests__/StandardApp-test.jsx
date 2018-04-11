@@ -106,6 +106,7 @@ describe('StandardApp', () => {
         const app = ReactDOM.render(<StandardApp appStore={store} storeOpts={storeOpts}/>, document.getElementById("container"));
         expect(app).toExist();
     });
+
     it('creates a default app and reads initialState with mode', (done) => {
         const store = (plugins, storeOpts) => {
             expect(storeOpts.initialState.defaultState.testMode).toBe('EXPRESSION_MODE_TEST');
@@ -129,6 +130,42 @@ describe('StandardApp', () => {
         expect(app).toExist();
     });
 
+    it('test the parseInitialState func', (done) => {
+        const store = (plugins, storeOpts) => {
+            expect(storeOpts.initialState.defaultState.test).toExist();
+            done();
+            return {
+                dispatch() {
+                }
+            };
+        };
+
+        const valueArr1 = "valueArr1";
+        const valueArr2 = "valueArr2";
+        const innerObjTestValue = "innerObjTestValue";
+        const storeOpts = {
+            initialState: {
+                defaultState: {
+                    test: "test",
+                    withArrayEmpty: [],
+                    withArray: [valueArr1],
+                    withArrayObj: [valueArr2, {
+                        innerObjTest: innerObjTestValue
+                    }]
+                },
+                mobile: {}
+            }
+        };
+        const app = ReactDOM.render(<StandardApp appStore={store} storeOpts={storeOpts}/>, document.getElementById("container"));
+        expect(app).toExist();
+        const parsedInitialState = app.parseInitialState(storeOpts.initialState, {});
+        expect(parsedInitialState.defaultState.withArray.length).toBe(1);
+        expect(parsedInitialState.defaultState.withArrayEmpty.length).toBe(0);
+        expect(parsedInitialState.defaultState.withArray[0]).toBe(valueArr1);
+        expect(parsedInitialState.defaultState.withArrayObj.length).toBe(2);
+        expect(parsedInitialState.defaultState.withArrayObj[0]).toBe(valueArr2);
+        expect(parsedInitialState.defaultState.withArrayObj[1].innerObjTest).toBe(innerObjTestValue);
+    });
 
     it('creates a default app and renders the given component', () => {
         const store = () => ({
