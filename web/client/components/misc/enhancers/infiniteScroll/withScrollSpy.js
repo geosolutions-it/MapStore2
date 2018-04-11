@@ -21,6 +21,7 @@ require('rxjs');
  * @param  {String}  [loadingProp="loading"] property to check for loading status. If props[loadingProp] is true, the scroll events will be stopped
  * @param  {Number}  [pageSize=10]           page size. It is used to count items and guess the next page number.
  * @param  {Number}  [offsetSize=200]        offset, in pixels, before the end of page to call the scroll spy. If the user scrolls the `onLoadMore` handler will be colled when he reaches the end_of_the_page - offsetSize pixels.
+ * @param  {Number} [skip=0]                 optional number of items to skip in count
  * @return {HOC}                             An Higher Order Component that will call `onLoadMore` when you should load more elements in the context, for example, of an infinite scroll.
  * @example
  * const Cmp = withScrollSpy({items: "items", querySelector: "div"})(MyComponent);
@@ -34,6 +35,7 @@ module.exports = ({
     querySelector,
     closest = false,
     loadingProp = "loading",
+    skip = 0,
     pageSize = 10,
     offsetSize = 200
 } = {}) => (Component) =>
@@ -93,7 +95,7 @@ module.exports = ({
                 : true)
             && this.props.hasMore(this.props)) {
             this.props.onLoadMore(dataProp
-                ? Math.ceil(this.props[dataProp].length / pageSize)
+                ? Math.ceil((this.props[dataProp].length - skip) / pageSize)
                 : null);
         }
     }

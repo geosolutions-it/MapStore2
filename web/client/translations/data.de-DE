@@ -1099,6 +1099,16 @@
             "selectChartType": {
                 "title": "Wählen Sie den Diagrammtyp aus"
             },
+            "selectMap": {
+                "TOC": {
+                    "noLayerTitle": "Keine Ebenen",
+                    "noLayerDescription": "Es gibt keine Ebenen in der Karte. Wenn Sie eine Ebene aus dem Katalog hinzufügen möchten, klicken Sie auf die Schaltfläche '+' in der Symbolleiste oben"
+                 },
+                 "emptyMap": {
+                    "title": "Leere Karte",
+                    "description": "Start von einer leeren Karte"
+                }
+            },
             "title": "Titel",
             "description": "Beschreibung",
             "errors": {

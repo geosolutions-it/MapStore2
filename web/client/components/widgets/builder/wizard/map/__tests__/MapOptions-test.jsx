@@ -26,7 +26,22 @@ describe('MapOptions component', () => {
         const container = document.getElementById('container');
         expect(container.querySelector('.mapstore-step-title')).toExist();
         // renders the TOC
+        expect(container.querySelector('#mapstore-layers')).toNotExist();
+        expect(container.querySelector('.empty-state-container')).toExist();
+        // not the Editor
+        expect(container.querySelector('.ms-row-tab')).toNotExist();
+    });
+    it('MapOptions rendering layers', () => {
+        ReactDOM.render(<MapOptions
+            map={{ groups: [{ id: 'GGG' }], layers: [{ id: "LAYER", group: "GGG", options: {} }] }}
+            nodes={[{ id: 'GGG', nodes: [{ id: "LAYER", group: "GGG", options: {} }] }]}
+            layers={[{ id: "LAYER", group: "GGG", options: {} }]}
+            />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container.querySelector('.mapstore-step-title')).toExist();
+        // renders the TOC
         expect(container.querySelector('#mapstore-layers')).toExist();
+        expect(container.querySelector('.empty-state-container')).toNotExist();
         // not the Editor
         expect(container.querySelector('.ms-row-tab')).toNotExist();
     });

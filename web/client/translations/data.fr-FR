@@ -1100,6 +1100,16 @@
             "selectChartType": {
                 "title": "Sélectionnez le type de widget"
             },
+           "selectMap": {
+                "TOC": {
+                    "noLayerTitle": "Pas de couches",
+                    "noLayerDescription": "Il n'y a pas de couches dans la carte. Si vous voulez ajouter une couche à partir du catalogue, cliquez sur le bouton '+' dans la barre d'outils"
+                },
+                "emptyMap": {
+                    "title": "Carte vide",
+                    "description": "Démarrer à partir d'une carte vide"
+                }
+            },
             "title": "Titre",
             "description": "Description",
             "errors": {

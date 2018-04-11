@@ -1099,6 +1099,16 @@
             "selectChartType": {
                 "title": "Seleziona il tipo di widget"
             },
+            "selectMap": {
+                "TOC": {
+                    "noLayerTitle": "Nessun livello",
+                    "noLayerDescription": "Non ci sono livelli nella mappa. Se si desidera aggiungere un layer dal catalogo fare clic sul pulsante '+' nella barra degli strumenti in alto"
+                },
+                "emptyMap": {
+                    "title": "Mappa vuota",
+                    "description": "Inizia da una mappa vuota"
+                }
+            },
             "title": "Titolo",
             "description": "Descrizione",
             "errors": {
