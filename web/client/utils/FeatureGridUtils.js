@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const { get, findIndex, isNil, fill} = require('lodash');
+const { get, findIndex, isNil, fill, isArray} = require('lodash');
 
 const {getFeatureTypeProperties, isGeometryType, isValid, isValidValueForPropertyName, findGeometryProperty, getPropertyDesciptor} = require('./ogc/WFS/base');
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
@@ -35,13 +35,13 @@ const getRow = (i, rows) => rows[i];
 
 /* eslint-disable */
 
-const toChangesMap = (changesArray) => changesArray.reduce((changes, c) => ({
+const toChangesMap = (changesArray = []) => isArray(changesArray) ? changesArray.reduce((changes, c) => ({
     ...changes,
     [c.id]: {
         ...changes[c.id],
         ...c.updated
     }
-}), {});
+}), {}) : {};
 const applyChanges = (feature, changes) => {
     const propChanges = Object.keys(changes).filter(k => k !== "geometry").reduce((acc, cur) => ({
         ...acc,

@@ -21,7 +21,7 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 
 const assign = require('object-assign');
 const url = require('url');
-const {isObject} = require('lodash');
+const {isObject, isArray} = require('lodash');
 
 const urlQuery = url.parse(window.location.href, true).query;
 
@@ -120,9 +120,18 @@ class StandardApp extends React.Component {
             this.store.dispatch(action());
         });
     };
+    /**
+     * It returns an object of the same structure of the initialState but replacing strings like "{someExpression}" with the result of the expression between brackets.
+     * @param {object} state the object to parse
+     * @param {object} context context for expression
+     * @return {object} the modified object
+    */
     parseInitialState = (state, context) => {
         return Object.keys(state || {}).reduce((previous, key) => {
-            return { ...previous, ...{ [key]: isObject(state[key]) ? this.parseInitialState(state[key], context) :
+            return { ...previous, ...{ [key]: isObject(state[key]) ?
+                (isArray(state[key]) ? state[key].map(s => {
+                    return isObject(s) ? this.parseInitialState(s, context) : s;
+                }) : this.parseInitialState(state[key], context)) :
                 PluginsUtils.handleExpression({}, context, state[key])}};
         }, {});
     };
