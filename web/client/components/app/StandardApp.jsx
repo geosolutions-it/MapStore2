@@ -21,7 +21,7 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 
 const assign = require('object-assign');
 const url = require('url');
-const {isObject} = require('lodash');
+const {isObject, isArray} = require('lodash');
 
 const urlQuery = url.parse(window.location.href, true).query;
 
@@ -120,9 +120,19 @@ class StandardApp extends React.Component {
             this.store.dispatch(action());
         });
     };
+    /**
+     * A function used to parse the initialState in the localConfig.json
+     * If an array of simple values is parsed then just return their values, otherwise return the recursive func
+     * @param {object} state the piece of state to be parsed
+     * @param {object} context contains the mode to be used
+     * @return {object} the object parsed.
+    */
     parseInitialState = (state, context) => {
         return Object.keys(state || {}).reduce((previous, key) => {
-            return { ...previous, ...{ [key]: isObject(state[key]) ? this.parseInitialState(state[key], context) :
+            return { ...previous, ...{ [key]: isObject(state[key]) ?
+                (isArray(state[key]) ? state[key].map(s => {
+                    return isObject(s) ? this.parseInitialState(s, context) : s;
+                }) : this.parseInitialState(state[key], context)) :
                 PluginsUtils.handleExpression({}, context, state[key])}};
         }, {});
     };
