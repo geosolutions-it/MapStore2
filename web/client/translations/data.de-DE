@@ -1128,6 +1128,8 @@
                     "backToLayerSelection": "Zurück zur Ebenenauswahl",
                     "backToMapSelection": "Zurück zur Kartenauswahl",
                     "backToChartOptions": "Zurück zu den Diagrammoptionen",
+                    "selectALayer": "Wähle eine Ebene",
+                    "selectAMap": "Wählen Sie eine Karte",
                     "configureChartOptions": "Diagrammoptionen konfigurieren",
                     "configureWidgetOptions": "Widget-Optionen konfigurieren",
                     "backToTableOptions": "Zurück zu den Tabellenoptionen",
@@ -1186,8 +1188,8 @@
                     "caption": "gauge"
                 }
             },
-            "chartOptionsTitle": "Kartendaten",
-            "widgetOptionsTitle": "Widget Info",
+            "chartOptionsTitle": "Daten konfigurieren",
+            "widgetOptionsTitle": "Widget-Informationen konfigurieren",
             "groupByAttributes": {
                 "line": "X-Attribut",
                 "pie": "Gruppiere nach",
