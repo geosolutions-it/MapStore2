@@ -14,8 +14,16 @@
  */
 const React = require('react');
 const StepHeader = require('../../../../misc/wizard/StepHeader');
+const emptyState = require('../../../../misc/enhancers/emptyState');
 const Message = require('../../../../I18N/Message');
-const TOC = require('./TOC');
+const TOC = emptyState(
+    ({ map = {} } = {}) => !map.layers || (map.layers || []).filter(l => l.group !== 'background').length === 0,
+    () => ({
+        glyph: "1-layer",
+        title: <Message msgId="widgets.selectMap.TOC.noLayerTitle" />,
+        description: <Message msgId="widgets.selectMap.TOC.noLayerDescription" />
+    })
+     )(require('./TOC'));
 const nodeEditor = require('./enhancers/nodeEditor');
 const Editor = nodeEditor(require('./NodeEditor'));
 
