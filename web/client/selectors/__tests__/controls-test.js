@@ -12,8 +12,7 @@ const {
     wfsDownloadAvailable,
     wfsDownloadSelector,
     widgetBuilderAvailable,
-    widgetBuilderSelector,
-    featureGridSelector
+    widgetBuilderSelector
 } = require("../controls");
 
 const state = {
@@ -61,10 +60,4 @@ describe('Test controls selectors', () => {
         expect(retVal).toExist();
         expect(retVal).toBe(true);
     });
-    it('test featureGridSelector', () => {
-        const retVal = featureGridSelector(state);
-        expect(retVal).toExist();
-        expect(retVal).toBe(true);
-    });
-
 });

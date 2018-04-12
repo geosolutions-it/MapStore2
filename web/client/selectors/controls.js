@@ -5,6 +5,5 @@ module.exports = {
     wfsDownloadAvailable: state => !!get(state, "controls.wfsdownload.available"),
     wfsDownloadSelector: state => !!get(state, "controls.wfsdownload.enabled"),
     widgetBuilderAvailable: state => get(state, "controls.widgetBuilder.available"),
-    widgetBuilderSelector: (state) => get(state, "controls.widgetBuilder.enabled"),
-    featureGridSelector: (state) => get(state, "controls.featuregrid.enabled")
+    widgetBuilderSelector: (state) => get(state, "controls.widgetBuilder.enabled")
 };

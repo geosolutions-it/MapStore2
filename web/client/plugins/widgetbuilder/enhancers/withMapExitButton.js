@@ -11,13 +11,13 @@ const { connect } = require('react-redux');
 const {setControlProperty} = require('../../../actions/controls');
 const {openFeatureGrid} = require('../../../actions/featuregrid');
 const { onEditorChange } = require('../../../actions/widgets');
-const {featureGridSelector} = require('../../../selectors/controls');
+const {returnToFeatureGridSelector} = require('../../../selectors/widgets');
 /**
  * Reset widgets
  */
 module.exports = compose(
     connect(() => ({
-        returnToFeatureGrid: state => featureGridSelector(state)}),
+        returnToFeatureGrid: state => returnToFeatureGridSelector(state)}),
     {
         backToWidgetList: () => onEditorChange('widgetType', undefined),
         backToFeatureGrid: () => setControlProperty("widgetBuilder", "enabled", false, false),
