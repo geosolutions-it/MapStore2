@@ -9,7 +9,11 @@
 const expect = require('expect');
 const {
     queryPanelSelector,
-    wfsDownloadAvailable
+    wfsDownloadAvailable,
+    wfsDownloadSelector,
+    widgetBuilderAvailable,
+    widgetBuilderSelector,
+    featureGridSelector
 } = require("../controls");
 
 const state = {
@@ -18,7 +22,15 @@ const state = {
             enabled: true
         },
         wfsdownload: {
-            available: true
+            available: true,
+            enabled: true
+        },
+        widgetBuilder: {
+            available: true,
+            enabled: true
+        },
+        featuregrid: {
+            enabled: true
         }
     }
 };
@@ -31,6 +43,26 @@ describe('Test controls selectors', () => {
     });
     it('test wfsDownloadAvailable', () => {
         const retVal = wfsDownloadAvailable(state);
+        expect(retVal).toExist();
+        expect(retVal).toBe(true);
+    });
+    it('test wfsDownloadSelector', () => {
+        const retVal = wfsDownloadSelector(state);
+        expect(retVal).toExist();
+        expect(retVal).toBe(true);
+    });
+    it('test widgetBuilderAvailable', () => {
+        const retVal = widgetBuilderAvailable(state);
+        expect(retVal).toExist();
+        expect(retVal).toBe(true);
+    });
+    it('test widgetBuilderSelector', () => {
+        const retVal = widgetBuilderSelector(state);
+        expect(retVal).toExist();
+        expect(retVal).toBe(true);
+    });
+    it('test featureGridSelector', () => {
+        const retVal = featureGridSelector(state);
         expect(retVal).toExist();
         expect(retVal).toBe(true);
     });
