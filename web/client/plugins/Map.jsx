@@ -111,9 +111,28 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  * ```
  *  - name is a unique name for the tool
  *  - impl is a placeholder (“{context.ToolName}”) where ToolName is the name you gave the tool in plugins.js (TestSupportLeaflet in our example)
+ *
  * @memberof plugins
  * @class Map
+ * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
  * @static
+ * @example
+  * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)
+  * {
+  *   "cfg": {
+  *     "additionalLayers": [{
+  *         "type": "wms",
+  *         "url": "http://localhost:8090/geoserver/wms",
+  *         "visibility": true,
+  *         "title": "Elevation",
+  *         "name": "topp:elevation",
+  *         "format": "application/bil16",
+  *         "useForElevation": true,
+  *         "nodata": -9999,
+  *         "hidden": true
+  *      }]
+  *   }
+  * }
  *
  */
 class MapPlugin extends React.Component {

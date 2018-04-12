@@ -103,7 +103,7 @@ function getElevation(pos) {
     try {
         const tilePoint = getTileFromCoords(this, pos);
         const tileSize = this.getSource().getTileGrid().getTileSize();
-        const elevation = ElevationUtils.getElevation(tileCoordsToKey(tilePoint), getTileRelativePixel(this, pos, tilePoint), tileSize);
+        const elevation = ElevationUtils.getElevation(tileCoordsToKey(tilePoint), getTileRelativePixel(this, pos, tilePoint), tileSize, this.get('nodata'));
         if (elevation.available) {
             return elevation.value;
         }
@@ -150,6 +150,7 @@ Layers.registerType('wms', {
         });
         layer.set('map', map);
         if (options.useForElevation) {
+            layer.set('nodata', options.nodata);
             layer.set('getElevation', getElevation.bind(layer));
         }
         return layer;

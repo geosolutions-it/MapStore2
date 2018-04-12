@@ -34,11 +34,11 @@ const addErroredElevationTile = (error, coords, key) => {
     });
 };
 
-const getValueAtXY = (ncols, tile, x, y) => {
+const getValueAtXY = (ncols, tile, x, y, nodata = -9999) => {
     const index = (y * ncols) + x;
     try {
         const result = tile.dataView.getInt16(index * 2, false);
-        if (result !== -9999 && result !== 32767 && result !== -32768) {
+        if (result !== nodata && result !== 32767 && result !== -32768) {
             return result;
         }
     } catch (e) {
@@ -78,17 +78,18 @@ module.exports = {
      * @param key a given tile key (e-g. 15:10:20, z:x:y)
      * @param tilePixelPosition a pixel position inside the tile (x, y)
      * @param tileSize in pixels (e.g. 256)
+     * @param nodata value to be used for nodata (no elevation available)
      * @returns an object with the following properties:
      *   * available: true / false
      *   * value: elevation value if available is true
      *   * message: an error message if available is false
      */
-    getElevation: (key, tilePixelPosition, tileSize) => {
+    getElevation: (key, tilePixelPosition, tileSize, nodata = -9999) => {
         const tile = elevationTiles.get(key);
         if (tile && tile.status === "success") {
             return {
                 available: true,
-                value: getValueAtXY(tileSize, tile, tilePixelPosition.x, tilePixelPosition.y)
+                value: getValueAtXY(tileSize, tile, tilePixelPosition.x, tilePixelPosition.y, nodata)
             };
         } else if (tile && tile.status === "loading") {
             return {

@@ -107,8 +107,9 @@ L.tileLayer.multipleUrlWMS = function(urls, options) {
 
 
 L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
-    initialize: function() {
+    initialize: function(urls, options, nodata) {
         this._tiles = {};
+        this._nodata = nodata;
         L.TileLayer.MultipleUrlWMS.prototype.initialize.apply(this, arguments);
     },
     _addTile: function(coords) {
@@ -120,7 +121,7 @@ L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
         try {
             const tilePoint = this._getTileFromCoords(latLng);
             const elevation = ElevationUtils.getElevation(this._tileCoordsToKey(tilePoint),
-                this._getTileRelativePixel(tilePoint, containerPoint), this.getTileSize().x);
+                this._getTileRelativePixel(tilePoint, containerPoint), this.getTileSize().x, this._nodata);
             if (elevation.available) {
                 return elevation.value;
             }
@@ -142,8 +143,8 @@ L.TileLayer.ElevationWMS = L.TileLayer.MultipleUrlWMS.extend({
     _abortLoading: function() {}
 });
 
-L.tileLayer.elevationWMS = function(urls, options) {
-    return new L.TileLayer.ElevationWMS(urls, options);
+L.tileLayer.elevationWMS = function(urls, options, nodata) {
+    return new L.TileLayer.ElevationWMS(urls, options, nodata);
 };
 
 
@@ -182,7 +183,7 @@ Layers.registerType('wms', {
         const queryParameters = wmsToLeafletOptions(options) || {};
         urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
         if (options.useForElevation) {
-            return L.tileLayer.elevationWMS(urls, queryParameters);
+            return L.tileLayer.elevationWMS(urls, queryParameters, options.nodata || -9999);
         }
         if (options.singleTile) {
             return L.nonTiledLayer.wmsCustom(urls[0], queryParameters);

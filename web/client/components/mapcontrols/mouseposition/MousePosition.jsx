@@ -15,12 +15,15 @@ const MousePositionLabelDMS = require('./MousePositionLabelDMS');
 const MousePositionLabelYX = require('./MousePositionLabelYX');
 const CRSSelector = require('./CRSSelector');
 const Message = require('../../I18N/Message');
+const {isNumber} = require('lodash');
 
 require('./mousePosition.css');
 /**
  * MousePosition is a component that shows the coordinate of the mouse position in a selected crs.
  * @class
  * @memberof components.mousePosition
+ * @prop {boolean} showElevation shows elevation in addition to planar coordinates (requires a WMS layer with useElevation: true to be configured in the map)
+ * @prop {function} elevationTemplate custom template to show the elevation if showElevation is true (default template shows the elevation number with no formatting)
  * @prop {string[]} filterAllowedCRS list of allowed crs in the combobox list
  * @prop {object[]} projectionDefs list of additional project definitions
  * @prop {object} additionalCRS additional crs to be added to the list
@@ -62,7 +65,7 @@ class MousePosition extends React.Component {
         degreesTemplate: MousePositionLabelDMS,
         projectedTemplate: MousePositionLabelYX,
         crsTemplate: crs => <span className="mouseposition-crs">{crs}</span>,
-        elevationTemplate: elevation => elevation ? <span className="mouseposition-elevation">{elevation}</span> : <Message msgId="mousePositionNoElevation"/>,
+        elevationTemplate: elevation => isNumber(elevation) ? <span className="mouseposition-elevation">{elevation} m</span> : <Message msgId="mousePositionNoElevation"/>,
         style: {},
         copyToClipboardEnabled: false,
         glyphicon: "paste",
