@@ -9,7 +9,7 @@
 const assign = require('object-assign');
 
 const { RULES_SELECTED, RULES_LOADED, UPDATE_ACTIVE_RULE,
-        ACTION_ERROR, OPTIONS_LOADED, UPDATE_FILTERS_VALUES } = require('../actions/rulesmanager');
+        ACTION_ERROR, OPTIONS_LOADED, UPDATE_FILTERS_VALUES, LOADING} = require('../actions/rulesmanager');
 const _ = require('lodash');
 
 function rulesmanager(state = {}, action) {
@@ -84,6 +84,8 @@ function rulesmanager(state = {}, action) {
             })
         });
     }
+    case LOADING:
+        return assign({}, state, {loading: action.loading});
     default:
         return state;
     }

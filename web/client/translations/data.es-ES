@@ -1266,6 +1266,7 @@
             "layerlabel": "Capa"
         },
         "rulesmanager": {
+            "menutitle": "Administrar reglas de GeoFence",
             "title": "Reglas de acceso",
             "role": "Rol",
             "user": "Ususario",
@@ -1283,6 +1284,7 @@
             "close": "Cerrar",
             "previous": "previo",
             "next": "próximo",
+            "errorTitle": "Geofence",
             "errorLoadingRoles": "Error al cargar los  roles.",
             "errorLoadingUsers": "Error al cargar los usuarios.",
             "errorLoadingWorkspaces": "Error al cargar los espacios de trabajo.",
@@ -1296,9 +1298,6 @@
             "selectedRulesDelete": "¿Está seguro de borrar las reglas seleccionadas?",
             "deleteButton": "Borrar",
             "cancelButton": "Cancelar"
-        },
-        "gfrulesmanager": {
-            "menutitle": "Manage GeoFence Rules"
         },
         "tutorial": {
             "title": "Tutorial",

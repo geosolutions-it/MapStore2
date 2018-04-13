@@ -42,8 +42,9 @@ const optionsSelector = (state) => {
     options.layersCount = stateOptions.layersCount || 0;
     return options;
 };
-
+const selectedRules = (state) => state.rulesmanager && state.rulesmanager.selectedRules || [];
 module.exports = {
     rulesSelector,
-    optionsSelector
+    optionsSelector,
+    selectedRules
 };

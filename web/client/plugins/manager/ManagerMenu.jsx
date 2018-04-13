@@ -54,7 +54,7 @@ class ManagerMenu extends React.Component {
             "path": "/manager/usermanager"
         },
         {
-            "msgId": "gfrulesmanager.menutitle",
+            "msgId": "rulesmanager.menutitle",
             "glyph": "lock",
             "path": "/rules-manager"
         }],
