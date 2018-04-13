@@ -1286,6 +1286,7 @@
             "layerlabel": "Layer"
             },
             "rulesmanager": {
+                "menutitle": "Configura GeoFence Rules",
                 "title": "Regole Di Accesso",
                 "role": "Ruolo",
                 "user": "Utente",
@@ -1303,6 +1304,7 @@
                 "close": "Chiudi",
                 "previous": "precedente",
                 "next": "prossima",
+                "errorTitle": "Geofence",
                 "errorLoadingRoles": "Errore durante il caricamento dei ruoli",
                 "errorLoadingUsers": "Errore durante il caricamento  degli utenti.",
                 "errorLoadingWorkspaces": "Errore durante il caricamento dei workspaces.",
@@ -1316,9 +1318,6 @@
                 "selectedRulesDelete": "Vuoi eliminare le regole selezionate?",
                 "deleteButton": "Elimina",
                 "cancelButton": "Annulla"
-            },
-            "gfrulesmanager": {
-                "menutitle": "Manage GeoFence Rules"
             },
             "tutorial": {
                 "title": "Tutorial",

@@ -1264,6 +1264,7 @@
             "layerlabel": "Sloj"
         },
         "rulesmanager": {
+            "menutitle": "Upravljanje pravilima GeoFence",
             "title": "Pravila pristupa",
             "role": "Rola",
             "user": "Korisnik",
@@ -1281,6 +1282,7 @@
             "close": "Zatvori",
             "previous": "prethodno",
             "next": "slijedeće",
+            "errorTitle": "Geofence",
             "errorLoadingRoles": "Greška prilikom učitavanja rola.",
             "errorLoadingUsers": "Greška prilikom učitavanja korisnika.",
             "errorLoadingWorkspaces": "Greška prilikom učitavanja radnih okolina.",
@@ -1294,9 +1296,6 @@
             "selectedRulesDelete": "Izbriši odabrana pravila ?",
             "deleteButton": "Izbriši",
             "cancelButton": "Odustani"
-        },
-        "gfrulesmanager": {
-            "menutitle": "Manage GeoFence Rules"
         },
         "tutorial": {
             "title": "Tutorijal",
