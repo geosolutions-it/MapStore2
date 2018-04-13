@@ -37,7 +37,7 @@ class RuleRenderer extends React.Component {
         const {row = {}, isSelected} = this.props;
         return (
             <div
-                key={this.props.idx}
+                key={this.props.row.check}
                 className={(isSelected && ' ms-row-select ' || '') + ((accessField[row.grant] || {}).classNameRow || ' ')}
             >
                 <Rule ref={ node => this.row = node } {...this.props} />
