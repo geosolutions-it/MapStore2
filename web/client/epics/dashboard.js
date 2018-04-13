@@ -11,7 +11,11 @@ const {
     editNewWidget, onEditorChange
 } = require('../actions/widgets');
 const {
-    setEditing
+    setEditing,
+    dashboardSaved,
+    dashboardLoaded,
+    SAVE_DASHBOARD,
+    LOAD_DASHBOARD
 } = require('../actions/dashboard');
 const {
     setControlProperty,
@@ -33,6 +37,10 @@ const {
     getEditingWidgetFilter
 } = require('../selectors/widgets');
 
+const {
+    createResource,
+    getResource
+} = require('../observables/geostore');
 const {LOCATION_CHANGE} = require('react-router-redux');
 const getFTSelectedArgs = (state) => {
     let layer = getEditingWidgetLayer(state);
@@ -99,6 +107,19 @@ module.exports = {
                      setControlProperty('queryPanel', "enabled", false)
                  )
                  )
-             )
+             ),
+    loadDashboardStream: action$ => action$
+        .ofType(LOAD_DASHBOARD)
+        .switchMap( ({id}) =>
+            getResource(id)
+                .map(({ data, ...metadata }) => dashboardLoaded(metadata, data))
+        ),
+    saveDashboard: action$ => action$
+        .ofType(SAVE_DASHBOARD)
+            .exhaustMap( ({resource} = {}) =>
+                (!resource.id ? createResource(resource) : Rx.Observable.empty()) // TODO: update flow
+                .map(id => resource.id ? dashboardSaved(id) : Rx.Observable.empty()) // TODO: update flow
+            )
+            .catch(Rx.Observable.empty()) // TODO: manage error
 
 };

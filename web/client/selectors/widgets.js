@@ -5,7 +5,7 @@ const {DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../act
 const { getWidgetsGroups, getWidgetDependency} = require('../utils/WidgetsUtils');
 
 const {isDashboardAvailable, isDashboardEditing} = require('./dashboard');
-const {defaultMemoize, createSelector, createSelectorCreator} = require('reselect');
+const { defaultMemoize, createSelector, createSelectorCreator, createStructuredSelector} = require('reselect');
 
 const isShallowEqual = (el1, el2) => {
     if (Array.isArray(el1) && Array.isArray(el2)) {
@@ -58,10 +58,10 @@ const getWidgetsDependenciesGroups = createSelector(
     getFloatingWidgets,
     widgets => getWidgetsGroups(widgets)
 );
-
+const getFloatingWidgetsLayout = state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
 module.exports = {
     getFloatingWidgets,
-    getFloatingWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
+    getFloatingWidgetsLayout,
     // let's use the same container for the moment
     getDashboardWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
     getDashboardWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
@@ -97,5 +97,9 @@ module.exports = {
     ),
     isWidgetSelectionActive,
     getDependencySelectorConfig,
-    getWidgetsDependenciesGroups
+    getWidgetsDependenciesGroups,
+    widgetsConfig: createStructuredSelector({
+        widgets: getFloatingWidgets,
+        layouts: getFloatingWidgetsLayout
+    })
 };

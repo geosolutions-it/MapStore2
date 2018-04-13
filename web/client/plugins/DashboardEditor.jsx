@@ -13,9 +13,10 @@ const {connect} = require('react-redux');
 const PropTypes = require('prop-types');
 
 const { isDashboardEditing} = require('../selectors/dashboard');
+const { isLoggedIn } = require('../selectors/security');
 const {dashboardSelector} = require('./widgetbuilder/commons');
 const { createWidget, toggleConnection } = require('../actions/widgets');
-const { triggerShowConnections } = require('../actions/dashboard');
+const { triggerShowConnections, triggerSave } = require('../actions/dashboard');
 const { showConnectionsSelector } = require('../selectors/dashboard');
 const withDashboardExitButton = require('./widgetbuilder/enhancers/withDashboardExitButton');
 const Builder =
@@ -35,11 +36,14 @@ const Toolbar = compose(
         ),
         {
             onShowConnections: triggerShowConnections,
+            onToggleSave: triggerSave,
             onAddWidget: createWidget
         }
     ),
     withProps(({
         onAddWidget = () => {},
+        onToggleSave = () => {},
+        canSave,
         showConnections, onShowConnections = () => { }
         }) => ({
             buttons: [{
@@ -49,6 +53,13 @@ const Toolbar = compose(
                     visible: true,
                     onClick: () => onAddWidget()
                 }, {
+                    glyph: 'floppy-disk',
+                    tooltipId: 'dashboard.editor.save',
+                    bsStyle: 'primary',
+                    tooltipPosition: 'right',
+                    visible: canSave,
+                    onClick: () => onToggleSave(true)
+                }, {
                     glyph: showConnections ? 'bulb-on' : 'bulb-off',
                     tooltipId: showConnections ? 'dashboard.editor.hideConnections' : 'dashboard.editor.showConnections',
                     bsStyle: showConnections ? 'success' : 'primary',
@@ -57,6 +68,7 @@ const Toolbar = compose(
         }))
 )(require('../components/misc/toolbar/Toolbar'));
 
+const SaveDialog = require('./dashboard/SaveDialog');
 
 const {setEditing, setEditorAvailable} = require('../actions/dashboard');
 
@@ -65,6 +77,7 @@ class DashboardEditorComponent extends React.Component {
      static propTypes = {
          id: PropTypes.string,
          editing: PropTypes.bool,
+         canSave: PropTypes.bool,
          limitDockHeight: PropTypes.bool,
          fluid: PropTypes.bool,
          zIndex: PropTypes.number,
@@ -98,11 +111,10 @@ class DashboardEditorComponent extends React.Component {
         this.props.onUnmount();
     }
     render() {
-
-
         return this.props.editing
                 ? <div className="dashboard-editor de-builder"><Builder enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog}/></div>
                 : (<div className="ms-vertical-toolbar dashboard-editor de-toolbar" id={this.props.id}>
+                    <SaveDialog />
                     <Toolbar transitionProps={false} btnGroupProps={{vertical: true}} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary'}} />
                     </div>);
     }
@@ -111,7 +123,8 @@ class DashboardEditorComponent extends React.Component {
 const Plugin = connect(
     createSelector(
         isDashboardEditing,
-        editing => ({editing})
+        isLoggedIn, // TODO: check also if the current dashboard is editable and if at least one widget is present
+        (editing, canSave) => ({ editing, canSave}),
     ), {
         setEditing,
         onMount: () => setEditorAvailable(true),

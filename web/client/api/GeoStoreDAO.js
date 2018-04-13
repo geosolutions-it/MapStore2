@@ -73,6 +73,11 @@ const Api = {
             "resources/resource/" + resourceId,
             this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
+    getShortResource: function(resourceId, options) {
+        return axios.get(
+            "extjs/resource/" + resourceId,
+            this.addBaseUrl(parseOptions(options))).then(function(response) { return response.data; });
+    },
     getResourcesByCategory: function(category, query, options) {
         const q = query || "*";
         const url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail,details"; // comma-separated list of wanted attributes
