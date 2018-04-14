@@ -20,7 +20,7 @@ const {updatePages, getPagesToLoad} = require('../../../../../utils/RulesGridUti
 module.exports = page$ => props$ => props$.distinctUntilChanged((oProps, nProps) => sameFilter(oProps, nProps))
     .switchMap(({size = 5, maxStoredPages = 5, filters = {},
         onLoad = () => { }, moreRules, setLoading, onLoadError = () => { }
-    }) => page$.exhaustMap((pagesRequest) => {
+    }) => page$.delay(1).exhaustMap((pagesRequest) => {
         // First request
         setLoading(true);
         return loadRules(pagesRequest.pagesToLoad, filters, size)
@@ -34,12 +34,12 @@ module.exports = page$ => props$ => props$.distinctUntilChanged((oProps, nProps)
                 title: "rulesmanager.errorTitle",
                 message: "rulesmanager.errorLoadingRules"
             })).do(() => setLoading(false))) // Store pages requests and emit on first request end
-            .withLatestFrom(page$, (p1, p2) => ({
-                ...p1,
-                ...p2
+            .withLatestFrom(page$, ({pages: nPages}, lastRequest) => ({
+                    lastRequest,
+                    nPages
             }))
             .filter(({error}) => !error)
-            .map(({pagesRequest: lastRequest, pages: nPages}) => {
+            .map(({lastRequest, nPages}) => {
                 // Prepare the new request merging last loaded pages and last pages request
                 const {pages: tPages} = updatePages(nPages, pagesRequest, maxStoredPages);
                 const pagesToLoad = getPagesToLoad(lastRequest.startPage, lastRequest.endPage, tPages);
