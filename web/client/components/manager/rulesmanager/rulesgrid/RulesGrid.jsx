@@ -38,7 +38,6 @@ class RulesGrid extends React.Component {
         onSelect: () => {},
         selectedIds: [],
         columns: [
-            { key: 'priority', name: "Priority", filterable: true },
             { key: 'rolename', name: <Message msgId={"rulesmanager.role"} />, filterable: true },
             { key: 'username', name: <Message msgId={"rulesmanager.user"} />, filterable: true },
             { key: 'ipaddress', name: 'IP', filterable: false},
@@ -58,6 +57,9 @@ class RulesGrid extends React.Component {
         if (this.props.rowsCount > 0 && rowsCount !== this.props.rowsCount) {
             this.grid.scrollListener();
         }
+    }
+    componentWillUnmount() {
+        this.grid = null;
     }
     onRowsSelected = (rows) => {
         const selectedRules = this._getSelectedRow(this.props.rowKey, this.props.selectedIds, this.props.rows).concat(rows.map(({row}) => row).filter(({id}) => id !== "empty_row"));

@@ -8,6 +8,7 @@
 
 const React = require('react');
 const {connect} = require('react-redux');
+const {compose} = require("recompose");
 
 const {createSelector} = require('reselect');
 const {selectedRules} = require('../selectors/rulesmanager');
@@ -19,12 +20,11 @@ const {error} = require('../actions/notifications');
 const ruelsSelector = createSelector(selectedRules, (rules) => ({
     selectedIds: rules.map(r => r.id)
 }));
+const rulesGridEnhancer = compose(
+    connect( ruelsSelector, {onSelect: rulesSelected, onLoadError: error, setLoading}),
+    require('../components/manager/rulesmanager/rulesgrid/enhancers/rulesgrid'));
 
-const RulesGrid = connect( ruelsSelector, {
-    onSelect: rulesSelected,
-    onLoadError: error,
-    setLoading
-})(require('../components/manager/rulesmanager/rulesgrid/enhancers/rulesgrid')(require('../components/manager/rulesmanager/rulesgrid/RulesGrid')));
+const RulesGrid = rulesGridEnhancer(require('../components/manager/rulesmanager/rulesgrid/RulesGrid'));
 
 
 class RulesDataGridPlugin extends React.Component {

@@ -33,15 +33,13 @@ class RuleRenderer extends React.Component {
         super(props);
         this.setScrollLeft = (scrollBy) => this.row.setScrollLeft(scrollBy);
     }
+    componentWillUnmount() {
+        this.setScrollLeft = null;
+    }
     render() {
         const {row = {}, isSelected} = this.props;
-        return (
-            <div
-                key={this.props.row.check}
-                className={(isSelected && ' ms-row-select ' || '') + ((accessField[row.grant] || {}).classNameRow || ' ')}
-            >
-                <Rule ref={ node => this.row = node } {...this.props} />
-            </div>);
+        const extraClasses = (isSelected && ' ms-row-select ' || '') + ((accessField[row.grant] || {}).classNameRow || ' ');
+        return (<Rule ref={ node => this.row = node } extraClasses={extraClasses} {...this.props} />);
     }
 
 }
