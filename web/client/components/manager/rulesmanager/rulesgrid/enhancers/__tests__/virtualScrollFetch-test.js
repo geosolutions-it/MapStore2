@@ -9,29 +9,25 @@
 const expect = require('expect');
 const virtualScrollFetch = require('../virtualScrollFetch');
 const Rx = require("rxjs");
-const ConfigUtils = require("../../../../../../utils/ConfigUtils");
-ConfigUtils.setConfigProp("geoFenceUrl", "base/web/client/test-resources/");
+
 const axios = require('../../../../../../libs/ajax');
-const interceptors = (config) => {
-    if (config.url === "base/web/client/test-resources/geofence/rest/rules") {
-        config.url = "base/web/client/test-resources/geofence/rest/rules.xml";
+const rulesInterceptor = (config) => {
+    if (config.url.indexOf("geofence/rest/rules") !== -1) {
+        config.url = "base/web/client/test-resources/geofence/rest/rules/rules.xml";
     }
     return config;
 };
 
 describe('rulegrid virtulaScrollFetch', () => {
     it('generate pages request', (done) => {
-        const inter = axios.interceptors.request.use(interceptors);
+        const inter = axios.interceptors.request.use(rulesInterceptor);
         const onLoad = ({pages}) => {
-            axios.interceptors.request.eject(inter);
             expect(pages).toExist();
             expect(pages[0]).toExist();
             expect(pages[0].length).toBe(5);
             done();
         };
-        const onLoadError = () => {
-            axios.interceptors.request.eject(inter);
-        };
+        const onLoadError = () => {};
         const pages$ = Rx.Observable.of({ pagesToLoad: [0], startPage: 0, endPage: 0, pages: {}});
         const prop$ = Rx.Observable.of({size: 5,
             maxStoredPages: 5,
@@ -41,6 +37,12 @@ describe('rulegrid virtulaScrollFetch', () => {
             setLoading: () => {},
             onLoadError
         });
-        virtualScrollFetch(pages$)(prop$).subscribe(() => {});
+        virtualScrollFetch(pages$)(prop$).subscribe({
+            next: () => {},
+            error: () => {},
+            complete: () => {
+                axios.interceptors.request.eject(inter);
+            }
+          });
     });
 });
