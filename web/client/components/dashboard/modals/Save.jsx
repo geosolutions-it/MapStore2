@@ -10,7 +10,7 @@ const React = require('react');
 
 const Portal = require('../../misc/Portal');
 const ResizableModal = require('../../misc/ResizableModal');
-require('./css/modals.css');
+// require('./css/modals.css');
 const {Grid} = require('react-bootstrap');
 const Message = require('../../I18N/Message');
 const ErrorBox = require('./fragments/ErrorBox');
