@@ -78,6 +78,21 @@ describe('CesiumMap', () => {
         expect(map.map.imageryLayers.length).toBe(1);
     });
 
+    it('check layers for elevation', () => {
+        var options = {
+            "url": "http://fake",
+            "name": "mylayer",
+            "visibility": true,
+            "useForElevation": true
+        };
+        const map = ReactDOM.render(<CesiumMap center={{ y: 43.9, x: 10.3 }} zoom={11}>
+            <CesiumLayer type="wms" options={options} />
+        </CesiumMap>, document.getElementById("container"));
+        expect(map).toExist();
+        expect(map.map.terrainProvider).toExist();
+        expect(map.map.terrainProvider.layerName).toBe('mylayer');
+    });
+
     it('check if the handler for "moveend" event is called', (done) => {
         const expectedCalls = 1;
         const precision = 1000000000;

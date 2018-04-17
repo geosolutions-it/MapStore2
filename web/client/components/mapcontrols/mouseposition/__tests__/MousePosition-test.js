@@ -56,6 +56,25 @@ describe('MousePosition', () => {
         expect(cmpDom.innerText.indexOf('...') !== -1).toBe(true);
     });
 
+    it('checks no elevation', () => {
+        const cmp = ReactDOM.render(<MousePosition enabled />, document.getElementById("container"));
+        expect(cmp).toExist();
+
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        expect(cmpDom).toExist();
+        expect(cmpDom.getElementsByClassName('mapstore-mouse-elevation').length).toBe(0);
+    });
+
+    it('checks elevation enabled', () => {
+        const cmp = ReactDOM.render(<MousePosition enabled showElevation mousePosition={{ x: 11, y: 12, z: 13, crs: "EPSG:4326" }}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        expect(cmpDom).toExist();
+        expect(cmpDom.getElementsByClassName('mapstore-mouse-elevation').length).toBe(1);
+        expect(cmpDom.innerHTML).toContain('13');
+    });
+
     it('checks default templates degrees', () => {
         const cmp = ReactDOM.render(<MousePosition enabled mousePosition={{x: 1, y: 1, crs: "EPSG:4326"}}/>, document.getElementById("container"));
         expect(cmp).toExist();
@@ -94,6 +113,17 @@ describe('MousePosition', () => {
         expect(cmpDom).toExist();
         expect(cmpDom.innerHTML).toContain('11');
         expect(cmpDom.innerHTML).toContain('12');
+    });
+
+    it('checks custom elevation template', () => {
+        const elevationTemplate = (z) => <div>Z: {z}</div>;
+
+        const cmp = ReactDOM.render(<MousePosition elevationTemplate={elevationTemplate} showElevation enabled mousePosition={{ x: 11, y: 12, z: 13, crs: "EPSG:4326" }} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        expect(cmpDom).toExist();
+        expect(cmpDom.innerHTML).toContain('Z:');
+        expect(cmpDom.innerHTML).toContain('13');
     });
 
     it('checks copy to clipboard enabled', () => {
