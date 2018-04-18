@@ -17,7 +17,7 @@ const { isLoggedIn } = require('../selectors/security');
 const {dashboardSelector} = require('./widgetbuilder/commons');
 const { createWidget, toggleConnection } = require('../actions/widgets');
 const { triggerShowConnections, triggerSave } = require('../actions/dashboard');
-const { showConnectionsSelector } = require('../selectors/dashboard');
+const { showConnectionsSelector, dashboardResource } = require('../selectors/dashboard');
 const withDashboardExitButton = require('./widgetbuilder/enhancers/withDashboardExitButton');
 const Builder =
     compose(
@@ -32,7 +32,12 @@ const Toolbar = compose(
     connect(
         createSelector(
             showConnectionsSelector,
-            showConnections => ({showConnections})
+            isLoggedIn,
+            dashboardResource,
+            (showConnections, logged, resource) => ({
+                showConnections,
+                canSave: logged && resource ? resource.canEdit : true
+             })
         ),
         {
             onShowConnections: triggerShowConnections,
@@ -57,7 +62,7 @@ const Toolbar = compose(
                     tooltipId: 'dashboard.editor.save',
                     bsStyle: 'primary',
                     tooltipPosition: 'right',
-                    visible: canSave,
+                    visible: !!canSave,
                     onClick: () => onToggleSave(true)
                 }, {
                     glyph: showConnections ? 'bulb-on' : 'bulb-off',
@@ -77,7 +82,6 @@ class DashboardEditorComponent extends React.Component {
      static propTypes = {
          id: PropTypes.string,
          editing: PropTypes.bool,
-         canSave: PropTypes.bool,
          limitDockHeight: PropTypes.bool,
          fluid: PropTypes.bool,
          zIndex: PropTypes.number,
@@ -123,8 +127,7 @@ class DashboardEditorComponent extends React.Component {
 const Plugin = connect(
     createSelector(
         isDashboardEditing,
-        isLoggedIn, // TODO: check also if the current dashboard is editable and if at least one widget is present
-        (editing, canSave) => ({ editing, canSave}),
+        (editing) => ({ editing }),
     ), {
         setEditing,
         onMount: () => setEditorAvailable(true),

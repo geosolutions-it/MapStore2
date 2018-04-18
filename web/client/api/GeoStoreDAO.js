@@ -146,6 +146,26 @@ const Api = {
                 }
             }, options)));
     },
+    getResourceAttributes: function(resourceId, options = {}) {
+        return axios.get(
+            "resources/resource/" + resourceId + "/attributes",
+            this.addBaseUrl({
+                headers: {
+                    'Accept': "application/json"
+                },
+                ...options
+            })).then(({ data } = {}) => data)
+            .then(data => _.castArray(_.get(data, "AttributeList.Attribute")))
+            .then(attributes => (attributes && attributes[0] && attributes[0] !== "") ? attributes : []);
+    },
+    /**
+     * same of getPermissions but clean data properly and returns only the array of rules.
+     */
+    getResourcePermissions: function(resourceId, options) {
+        return Api.getPermissions(resourceId, options)
+            .then(rl => _.castArray(_.get(rl, 'SecurityRuleList.SecurityRule')))
+            .then(rules => (rules && rules[0] && rules[0] !== "") ? rules : []);
+    },
     putResourceMetadata: function(resourceId, newName, newDescription, options) {
         return axios.put(
             "resources/resource/" + resourceId,

@@ -14,6 +14,10 @@ const {
     setEditing,
     dashboardSaved,
     dashboardLoaded,
+    dashboardLoading,
+    triggerSave,
+    loadDashboard,
+    dashboardSaveError,
     SAVE_DASHBOARD,
     LOAD_DASHBOARD
 } = require('../actions/dashboard');
@@ -25,13 +29,24 @@ const {
     featureTypeSelected
 } = require('../actions/wfsquery');
 const {
+    show,
+    error
+} = require('../actions/notifications');
+const {
     loadFilter,
     QUERY_FORM_SEARCH
 } = require('../actions/queryform');
 const {
+    LOGIN_SUCCESS
+} = require('../actions/security');
+const {
     isDashboardEditing,
     isDashboardAvailable = () => true
 } = require('../selectors/dashboard');
+
+const {
+    isLoggedIn
+} = require('../selectors/security');
 const {
     getEditingWidgetLayer,
     getEditingWidgetFilter
@@ -39,9 +54,13 @@ const {
 
 const {
     createResource,
+    updateResource,
     getResource
 } = require('../observables/geostore');
-const {LOCATION_CHANGE} = require('react-router-redux');
+const {
+    wrapStartStop
+} = require('../observables/epics');
+const { LOCATION_CHANGE, push} = require('react-router-redux');
 const getFTSelectedArgs = (state) => {
     let layer = getEditingWidgetLayer(state);
     let url = layer.search && layer.search.url;
@@ -108,18 +127,60 @@ module.exports = {
                  )
                  )
              ),
-    loadDashboardStream: action$ => action$
+    loadDashboardStream: (action$, {getState = () => {}}) => action$
         .ofType(LOAD_DASHBOARD)
         .switchMap( ({id}) =>
             getResource(id)
-                .map(({ data, ...metadata }) => dashboardLoaded(metadata, data))
+                .map(({ data, ...resource }) => dashboardLoaded(resource, data))
+                .let(wrapStartStop(
+                    dashboardLoading(true, "loading"),
+                    dashboardLoading(false, "loading"),
+                    e => {
+                        if (e.status === 403 ) {
+                            if ( isLoggedIn(getState())) {
+                                return Rx.Observable.of(error({
+                                    title: "error",
+                                    message: "The dashboard is not accessible"
+                                }));
+                            }
+                            return Rx.Observable.of(error({
+                                title: "error",
+                                message: "Please log in"
+                            }))
+                            .merge(action$
+                                .ofType(LOGIN_SUCCESS)
+                                .map(() => loadDashboard(id))
+                                .filter(() => isDashboardAvailable(getState()))
+                                .takeUntil(action$.ofType(LOCATION_CHANGE)));
+                        }
+                        return Rx.Observable.of(error({
+                            title: "error",
+                            message: "There was an error loading the dashboard"
+                        }));
+                    }
+                ))
         ),
     saveDashboard: action$ => action$
         .ofType(SAVE_DASHBOARD)
-            .exhaustMap( ({resource} = {}) =>
-                (!resource.id ? createResource(resource) : Rx.Observable.empty()) // TODO: update flow
-                .map(id => resource.id ? dashboardSaved(id) : Rx.Observable.empty()) // TODO: update flow
-            )
-            .catch(Rx.Observable.empty()) // TODO: manage error
-
+        .exhaustMap(({resource} = {}) =>
+            (!resource.id ? createResource(resource) : updateResource(resource))
+                .switchMap(rid => Rx.Observable.of(
+                    dashboardSaved(rid),
+                    triggerSave(false),
+                    !resource.id
+                        ? push(`/dashboard/${rid}`)
+                        : loadDashboard(rid),
+                    show({
+                        title: "success",
+                        message: "saved successfully" // TODO: i18n
+                    })
+                ))
+                .let(wrapStartStop(
+                    dashboardLoading(true, "saving"),
+                    dashboardLoading(false, "saving")
+                ))
+                .catch(
+                ({ status, statusText, data, message, ...other } = {}) => Rx.Observable.of(dashboardSaveError(status ? { status, statusText, data } : message || other), dashboardLoading(false, "saving"))
+                )
+        )
 };

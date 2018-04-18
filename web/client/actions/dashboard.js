@@ -4,10 +4,12 @@ const SHOW_CONNECTIONS = "DASHBOARD:SHOW_CONNECTIONS";
 const TRIGGER_SAVE_MODAL = "DASHBOARD:TRIGGER_SAVE_MODAL";
 
 const SAVE_DASHBOARD = "DASHBOARD:SAVE_DASHBOARD";
+const SAVE_ERROR = "DASHBOARD:SAVE_ERROR";
 const DASHBOARD_SAVED = "DASHBOARD:DASHBOARD_SAVED";
 
 const LOAD_DASHBOARD = "DASHBOARD:LOAD_DASHBOARD";
 const DASHBOARD_LOADED = "DASHBOARD:DASHBOARD_LOADED";
+const DASHBOARD_LOADING = "DASHBOARD:DASHBOARD_LOADING";
 
 module.exports = {
     SET_EDITING,
@@ -20,10 +22,22 @@ module.exports = {
     triggerSave: show => ({ type: TRIGGER_SAVE_MODAL, show}),
     SAVE_DASHBOARD,
     saveDashboard: resource => ({ type: SAVE_DASHBOARD, resource}),
+    SAVE_ERROR,
+    dashboardSaveError: error => ({type: SAVE_ERROR, error}),
     DASHBOARD_SAVED,
     dashboardSaved: id => ({type: DASHBOARD_SAVED, id}),
     LOAD_DASHBOARD,
     loadDashboard: id => ({ type: LOAD_DASHBOARD, id}),
     DASHBOARD_LOADED,
-    dashboardLoaded: (metadata, data) => ({ type: DASHBOARD_LOADED, metadata, data})
+    dashboardLoaded: (resource, data) => ({ type: DASHBOARD_LOADED, resource, data}),
+    DASHBOARD_LOADING,
+    /**
+     * @param {boolean} value the value of the flag
+     * @param {string} [name] the name of the flag to set. loading is anyway always triggered
+     */
+    dashboardLoading: (value, name = "loading") => ({
+        type: DASHBOARD_LOADING,
+        name,
+        value
+    })
 };

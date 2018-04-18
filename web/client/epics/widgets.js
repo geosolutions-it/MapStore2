@@ -7,6 +7,7 @@ const {
 } = require('../actions/config');
 const { availableDependenciesSelector, isWidgetSelectionActive, getDependencySelectorConfig } = require('../selectors/widgets');
 const { MAP_CREATED, SAVING_MAP, MAP_ERROR } = require('../actions/maps');
+const { DASHBOARD_LOADED } = require('../actions/dashboard');
 const {LOCATION_CHANGE} = require('react-router-redux');
 const {saveAs} = require('file-saver');
 const FileUtils = require('../utils/FileUtils');
@@ -71,7 +72,7 @@ module.exports = {
      * Then re-configures the dependencies to it.
      */
     alignDependenciesToWidgets: (action$, { getState = () => { } } = {}) =>
-        action$.ofType(MAP_CONFIG_LOADED, INSERT)
+        action$.ofType(MAP_CONFIG_LOADED, DASHBOARD_LOADED, INSERT)
         .map(() => availableDependenciesSelector(getState()))
         .pluck('availableDependencies')
         .distinctUntilChanged( (oldMaps = [], newMaps = []) => isEqual([...oldMaps], [...newMaps]))

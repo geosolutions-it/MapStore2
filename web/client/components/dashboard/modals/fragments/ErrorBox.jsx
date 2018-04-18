@@ -7,16 +7,26 @@
  */
 
 const React = require('react');
-const errorMessages = { "FORMAT": "map.errorFormat", "SIZE": "map.errorSize" };
+const DEFAULT_MESSAGES = { "FORMAT": "map.errorFormat", "SIZE": "map.errorSize", 409: "dashboard.errors.resourceAlreadyExists"};
 
 const Message = require('../../../I18N/Message');
 const { Row } = require('react-bootstrap');
-module.exports = ({errors = []}) => {
+const errorString = err => typeof err === 'string' ? err : err.statusText;
+const errorCode = err => typeof err === 'string' ? err : err.status;
+const errorData = err => typeof err === 'string' ? undefined : err;
+const errorMessage = error => {
+    const code = errorCode(error);
+    return <Message msgId={DEFAULT_MESSAGES[code] || ("Error:" + errorString(error))} msgParams={errorData(error)} />;
+};
+
+module.exports = ({ errors = []}) => {
     return (<Row>
         {errors.length > 0 ?
             <div className="dropzone-errorBox alert-danger">
-                <p><Message msgId="map.error" /></p>
-                {errors.map((error) => <div key={"error" + error} className={"error" + error}><Message msgId={errorMessages[error]} /></div>)}
+                {errors.map(error =>
+                    (<div key={"error" + errorString(error)} className={"error" + errorString(error)}>
+                        {errorMessage(error)}
+                    </div>))}
             </div>
         : null}
         </Row>);

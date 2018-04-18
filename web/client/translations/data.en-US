@@ -1241,6 +1241,14 @@
 
         },
         "dashboard": {
+            "saveDialog": {
+                "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",
+                "close": "Close",
+                "cancel": "Cancel"
+            },
+            "errors":{
+                "resourceAlreadyExists": "A resource with this name already exists. try '{data}'"
+            },
             "editor": {
                 "addACardToTheDashboard": "Add a widget to the dashboard",
                 "showConnections": "Show connections",

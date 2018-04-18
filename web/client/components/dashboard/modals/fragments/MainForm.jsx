@@ -17,7 +17,6 @@ module.exports = class MainForm extends React.Component {
         const {
             resource,
             linkedResources={},
-            metadata,
             onError = () => { },
             onUpdate = () => { },
             onUpdateLinkedResource = () => { }
@@ -26,7 +25,10 @@ module.exports = class MainForm extends React.Component {
             <Col xs={12}>
                 <Thumbnail
                     resource={resource}
-                    thumbnail={linkedResources.thumbnail && linkedResources.thumbnail.data}
+                    thumbnail={
+                        (linkedResources && linkedResources.thumbnail && linkedResources.thumbnail.data)
+                        || resource && resource.attributes && resource.attributes.thumbnail
+                    }
                     onError={onError}
                     onRemove={() => onUpdateLinkedResource("thumbnail", "NODATA", "THUMBNAIL", {
                         tail: '/raw?decode=datauri'
@@ -39,7 +41,6 @@ module.exports = class MainForm extends React.Component {
                 <Metadata role="body" ref="mapMetadataForm"
                     onChange={onUpdate}
                     resource={resource}
-                    metadata={metadata}
                     nameFieldText={<Message msgId="map.name" />}
                     descriptionFieldText={<Message msgId="map.description" />}
                     namePlaceholderText={"map.namePlaceholder"}

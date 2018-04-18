@@ -477,7 +477,7 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "Attribution", {
+        }, "ManagerMenu", "Login", "Language", "Attribution", "Home", {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {
@@ -493,7 +493,7 @@
           "cfg": {
             "containerPosition": "columns"
           }
-        }, "Dashboard"],
+        }, "Dashboard", "Notifications"],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }

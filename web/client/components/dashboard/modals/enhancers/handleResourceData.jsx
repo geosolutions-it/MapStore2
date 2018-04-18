@@ -1,5 +1,3 @@
-import { withHandlers } from 'recompose';
-
 /*
  * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
@@ -7,17 +5,37 @@ import { withHandlers } from 'recompose';
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const {compose, withStateHandlers} = require('recompose');
+const React = require('react');
+const { compose, withStateHandlers, withState, branch, withHandlers, renderComponent} = require('recompose');
 const {set} = require('../../../../utils/ImmutableUtils');
+const Message = require('../../../I18N/Message');
+const ConfirmDialog = require('../Confirm');
 
+/**
+ * Enhancer to manage resource data for a Save dialog.
+ * Stores the original data to handle changes.
+ */
 module.exports = compose(
     withStateHandlers(
         ({resource = {}}) => ({
             originalData: resource,
-            resource
+            metadata: {
+                name: resource.name,
+                description: resource.description
+            },
+            resource: {
+                id: resource.id,
+                attributes: resource.attributes,
+                metadata: {
+                    name: resource.name,
+                    description: resource.description
+                }
+            }
+
         }),
         {
             onUpdate: ({resource}) => (key, value) => ({
+                hasChanges: true,
                 resource: set(key, value, resource)
             }),
             onUpdateLinkedResource: ({ linkedResources = {} }) => (key, data, category, options = {}) => ({
@@ -29,6 +47,29 @@ module.exports = compose(
             })
         }
     ),
+    withState('confirmClose', 'onCloseConfirm', false),
+    branch(
+        ({ confirmClose }) => confirmClose,
+        renderComponent(({ onCloseConfirm, onClose }) =>
+        (<ConfirmDialog
+            show
+            confirmText={<Message msgId="dashboard.saveDialog.close" />}
+                cancelText={<Message msgId="dashboard.saveDialog.cancel" />}
+            onConfirm={() => onClose()}
+            onClose={() => onCloseConfirm(false)}
+            body={<div><Message msgId="dashboard.saveDialog.confirmCloseText" /></div>}
+            ><div></div></ConfirmDialog>))
+    ),
+    withHandlers({
+        onClose: ({
+                hasChanges,
+                onClose = () => {},
+                onCloseConfirm = () => {}}
+            ) => () =>
+                hasChanges
+                ? onCloseConfirm(true)
+                : onClose()
+    }),
     withHandlers({
         onSave: ({onSave = () => {}, category = "DASHBOARD", data, linkedResources}) => resource => onSave({
             category,

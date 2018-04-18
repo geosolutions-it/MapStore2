@@ -56,6 +56,7 @@ class Thumbnail extends React.Component {
         }
 
         this.files = null;
+        this.props.onError([]);
         this.props.onRemove();
     };
 
@@ -106,22 +107,6 @@ class Thumbnail extends React.Component {
     getThumbnailDataUri = (callback) => {
         this.getDataUri(this.files, callback);
     };
-
-    deleteThumbnail = (thumbnail) => {
-        if (thumbnail && thumbnail.indexOf("geostore") !== -1) {
-            // this doesn't work if the URL is not encoded (because of GeoStore / Tomcat parameter encoding issues)
-            let start = thumbnail.indexOf("data%2F") + 7;
-            let end = thumbnail.indexOf("%2F" + "raw");
-            let idThumbnail = thumbnail.slice(start, end);
-
-            // delete the old thumbnail
-            if (idThumbnail) {
-                // with mapId != null it will override thumbnail attribute with NODATA value for that map
-                // this.props.onDelete(idThumbnail, mapId);
-            }
-        }
-    };
-
     render() {
         return (
             this.props.loading ? <div className="btn btn-info" style={{"float": "center"}}> <Spinner spinnerName="circle" overrideSpinnerClassName="spinner"/></div> :
