@@ -20,21 +20,26 @@ module.exports = compose(
         returnToFeatureGrid: state => returnToFeatureGridSelector(state)}),
     {
         backToWidgetList: () => onEditorChange('widgetType', undefined),
-        backToFeatureGrid: () => setControlProperty("widgetBuilder", "enabled", false, false),
+        closeWidgetBuilder: () => setControlProperty("widgetBuilder", "enabled", false, false),
         openFeatureGridTable: () => openFeatureGrid()
     }),
+    /**
+     * it allows to return to the feature grid if the chart wizard has been opened from there.
+     * otherwise it goes back to the widget list
+    */
     withHandlers({
         backFromWizard: ({
             backToWidgetList = () => {},
-            backToFeatureGrid = () => {},
+            closeWidgetBuilder = () => {},
             openFeatureGridTable = () => {},
             returnToFeatureGrid
         }) => () => {
             if (returnToFeatureGrid) {
-                backToFeatureGrid();
+                closeWidgetBuilder();
                 openFeatureGridTable();
+            } else {
+                backToWidgetList();
             }
-            backToWidgetList();
         }
     }),
     withProps(({ backFromWizard = () => {} }) => ({
