@@ -40,13 +40,16 @@ module.exports = ({
     offsetSize = 200
 } = {}) => (Component) =>
   class WithInfiniteScroll extends React.Component {
+
     static propTypes = {
         hasMore: PropTypes.func,
-        onLoadMore: PropTypes.func
+        onLoadMore: PropTypes.func,
+        isScrolled: PropTypes.func
     }
     static defaultProps = {
         onLoadMore: () => {},
-        hasMore: () => true
+        hasMore: () => true,
+        isScrolled: ({div, offset}) => div.scrollTop + div.clientHeight >= div.scrollHeight - offset
     }
     findScrollDomNode = () => {
         if (!this.isMounded) {
@@ -86,7 +89,7 @@ module.exports = ({
     onScroll = () => {
         const div = this.findScrollDomNode();
         if (div
-            && (div.scrollTop + div.clientHeight >= div.scrollHeight - offsetSize)
+            && this.props.isScrolled({div, offset: offsetSize})
             && (dataProp // has data array (if dataprop has been defined)
                 ? this.props[dataProp] && this.props[dataProp].length
                 : true)

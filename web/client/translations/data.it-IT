@@ -23,6 +23,8 @@
         "warning": "Attenzione",
         "errorTitleDefault": "Errore",
         "errorDefault": "Si è verificato un errore",
+        "pageInfoShowMore": "Elementi {count} di {total}",
+        "showMore": "Mostra altri...",
         "version": {
             "label": "Versione"
         },
@@ -149,6 +151,8 @@
         },
         "home":{
             "open": "Apri",
+            "shortDescription": "Modern webmapping con OL3, Leaflet e React<br/><small>visita la pagina di <a href=\"/mapstore/docs/\">documentazione</a></small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"/mapstore/docs/\">home page</a> per maggiori dettagli.",
             "Applications": "Applicazioni",
             "Examples": "Esempi",
@@ -214,11 +218,14 @@
             "mapTypes_combo": "Seleziona il visualizzatore di mappa:",
             "theme_combo": "Seleziona Tema:",
             "maps_title": "Mappe",
-            "locales_combo": "Lingua:"
+            "locales_combo": "Lingua:",
+            "featuredMaps": "Featured Maps"
         },
         "newMap": "Nuova Mappa",
 		"maps": {
             "title": "Mappe",
+            "addToFeaturedMaps": "Aggiungi alle featured maps",
+            "removeFromFeaturedMaps": "Rimuovi dalle featured maps",
             "feedback": {
                 "noDetailsAvailable": "Dettagli della mappa non disponibili",
                 "successSavedMap": "La mappa è stata salvata correttamente",

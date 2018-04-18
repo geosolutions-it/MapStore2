@@ -1,16 +1,16 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var {Col, Row} = require('react-bootstrap');
-var I18N = require('../../../components/I18N/I18N');
+const React = require('react');
+const PropTypes = require('prop-types');
+const {Col, Row, Form, FormGroup, FormControl, Button} = require('react-bootstrap');
+const I18N = require('../../../components/I18N/I18N');
 
-const googleGroups = require('../../assets/img/groups_logo_sm.gif');
+const googleGroups = require('../../assets/img/groups_logo.png');
 const LinkedinGroup = require('../../assets/img/linkedin_group.png');
 const {Follow} = require('react-twitter-widgets');
 
@@ -24,68 +24,47 @@ class MailingLists extends React.Component {
         return (
             <div id="mailinglists" className="container">
                 <Row>
-                    <Col>
-                        <h1 className="color2" style={{align: "center", fontWeight: "bold", margin: "10px" }}><I18N.Message msgId="home.ml.title"/></h1>
+                    <Col className="text-center">
+                        <h1><I18N.Message msgId="home.ml.title"/></h1>
                     </Col>
                 </Row>
-                <Row>
+                <Row className="text-center">
                     <Col sm={12} md={6}>
-                        <table style={{padding: "5px", margin: "auto"}} cellSpacing="0">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <img src={googleGroups} height="30" width="136" alt="Google Groups" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style={{paddingLeft: "10px", paddingRight: "10px"}}>
-                                    <b><I18N.Message msgId="home.ml.subscribe_users"/></b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style={{paddingLeft: "10px", paddingRight: "10px"}}>
-                                    <form action="https://groups.google.com/group/mapstore-users/boxsubscribe">
-                                        <I18N.Message msgId="home.ml.email"/> <input type="text" name="email" />
-                                        <input type="submit" name="sub" value={this.context.messages.home.ml.subscribe} />
-                                    </form>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a className="link-white-bg" href="https://groups.google.com/group/mapstore-users"><I18N.Message msgId="home.ml.visit_group"/></a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <h2>
+                            <img src={googleGroups} height="30" width="auto" alt="Google Groups" />
+                        </h2>
+                        <p>
+                            <strong><I18N.Message msgId="home.ml.subscribe_users"/></strong>
+                        </p>
+                        <p>
+                            <Form inline action="https://groups.google.com/group/mapstore-users/boxsubscribe">
+                                <FormGroup controlId="formInlineEmail">
+                                    <span><I18N.Message msgId="home.ml.email"/></span>{' '}
+                                    <FormControl type="email" />
+                                </FormGroup>{' '}
+                                <Button bsStyle="primary" type="submit">{this.context.messages.home.ml.subscribe}</Button>
+                            </Form>
+                        </p>
+                        <p><a className="link-white-bg" href="https://groups.google.com/group/mapstore-users"><I18N.Message msgId="home.ml.visit_group"/></a></p>
                     </Col>
+
                     <Col sm={12} md={6}>
-                        <table style={{padding: "5px", margin: "auto"}} cellSpacing="0">
-                            <tbody>
-                            <tr>
-                                <td>
-                                    <img src={googleGroups} height="30" width="136" alt="Google Groups" />
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style={{paddingLeft: "10px", paddingRight: "10px"}}>
-                                    <b><I18N.Message msgId="home.ml.subscribe_devel"/></b>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td style={{paddingLeft: "10px", paddingRight: "10px"}}>
-                                    <form action="https://groups.google.com/group/mapstore-developers/boxsubscribe">
-                                        <I18N.Message msgId="home.ml.email"/> <input type="text" name="email" />
-                                        <input type="submit" name="sub" value={this.context.messages.home.ml.subscribe} />
-                                    </form>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <a className="link-white-bg" href="https://groups.google.com/group/mapstore-developers"><I18N.Message msgId="home.ml.visit_group"/></a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                        <h2>
+                            <img src={googleGroups} height="30" width="auto" alt="Google Groups" />
+                        </h2>
+                        <p>
+                            <strong><I18N.Message msgId="home.ml.subscribe_devel"/></strong>
+                        </p>
+                        <p>
+                            <Form inline action="https://groups.google.com/group/mapstore-developers/boxsubscribe">
+                                <FormGroup controlId="formInlineMapStoreDev">
+                                    <span><I18N.Message msgId="home.ml.email"/></span>{' '}
+                                    <FormControl type="email" />
+                                </FormGroup>{' '}
+                                <Button bsStyle="primary" type="submit">{this.context.messages.home.ml.subscribe}</Button>
+                            </Form>
+                        </p>
+                        <p><a className="link-white-bg" href="https://groups.google.com/group/mapstore-developers"><I18N.Message msgId="home.ml.visit_group"/></a></p>
                     </Col>
                     <Col sm={12} md={6}>
                         <table style={{padding: "0", margin: "10px auto"}} cellSpacing="0">

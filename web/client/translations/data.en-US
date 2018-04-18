@@ -23,6 +23,8 @@
         "warning": "Warning",
         "errorTitleDefault": "Error",
         "errorDefault": "An error occurred",
+        "pageInfoShowMore": "Results {count} of {total}",
+        "showMore": "Show more...",
         "version": {
             "label": "Version"
         },
@@ -150,6 +152,8 @@
         },
         "home":{
             "open": "Open",
+            "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore 2 has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.<br/>Visit the <a href=\"/mapstore/docs/\">home page</a> for more details.",
             "Applications": "Applications",
             "Examples": "Examples",
@@ -215,11 +219,14 @@
             "mapTypes_combo": "Select Map Viewer: ",
             "theme_combo": "Select Theme:",
             "maps_title": "Maps",
-            "locales_combo": "Language:"
+            "locales_combo": "Language:",
+            "featuredMaps": "Featured Maps"
         },
         "newMap": "New Map",
 		"maps": {
             "title": "Maps",
+            "addToFeaturedMaps": "Add to featured maps",
+            "removeFromFeaturedMaps": "Remove from featured maps",
             "feedback": {
                 "noDetailsAvailable": "Details not available",
                 "successSavedMap": "The map has been created correctly",

@@ -26,10 +26,11 @@ module.exports = ({
     loadPage,
     scrollSpyOptions,
     loadStreamOptions,
-    hasMore
+    hasMore,
+    isScrolled
 }) => compose(
         loadMore(loadPage),
-        defaultProps({hasMore}),
+        defaultProps({hasMore, isScrolled}),
         withScrollSpy(scrollSpyOptions, loadStreamOptions)
 
 );
