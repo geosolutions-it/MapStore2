@@ -41,7 +41,9 @@ const {
     START_SYNC_WMS, startSyncWMS,
     storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER,
     fatureGridQueryResult, GRID_QUERY_RESULT,
-    moreFeatures, LOAD_MORE_FEATURES
+    moreFeatures, LOAD_MORE_FEATURES,
+    hideSyncPopover, HIDE_SYNC_POPOVER,
+    toggleShowAgain, TOGGLE_SHOW_AGAIN_FLAG
 } = require('../featuregrid');
 
 const idFeature = "2135";
@@ -95,6 +97,16 @@ describe('Test correctness of featurgrid actions', () => {
         const retval = clearChangeConfirmed();
         expect(retval).toExist();
         expect(retval.type).toBe(CLEAR_CHANGES_CONFIRMED);
+    });
+    it('Test hideSyncPopover action creator', () => {
+        const retval = hideSyncPopover();
+        expect(retval).toExist();
+        expect(retval.type).toBe(HIDE_SYNC_POPOVER);
+    });
+    it('Test toggleShowAgain action creator', () => {
+        const retval = toggleShowAgain();
+        expect(retval).toExist();
+        expect(retval.type).toBe(TOGGLE_SHOW_AGAIN_FLAG);
     });
     it('Test startDrawingFeature action creator', () => {
         const retval = startDrawingFeature();

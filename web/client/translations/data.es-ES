@@ -1042,6 +1042,9 @@
                 }
             },
             "toolbar": {
+                "synchPopoverTitle": "Sincronizar mapa con filtro ",
+                "synchPopoverText": "Use esta herramienta para sincronizar el mapa con el filtro seleccionado",
+                "notShowAgain": "  No mostrar este mensaje otra vez",
                 "editMode": "Modo de edición",
                 "advancedFilter": "Búsqueda avanzada",
                 "quitEditMode": "Salir del modo de edición",

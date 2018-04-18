@@ -122,6 +122,8 @@ module.exports = {
     hasGeometrySelector: state => hasGeometrySelectedFeature(state),
     newFeaturesSelector,
     hasNewFeaturesSelector,
+    showAgainSelector: state => get(state, "featuregrid.showAgain", true),
+    showPopoverSyncSelector: state => get(state, "featuregrid.showPopoverSync", true),
     isSavingSelector: state => state && state.featuregrid && state.featuregrid.saving,
     editingAllowedRolesSelector: state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]),
     isSavedSelector: state => state && state.featuregrid && state.featuregrid.saved,
