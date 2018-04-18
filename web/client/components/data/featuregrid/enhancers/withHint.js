@@ -4,7 +4,7 @@ const tooltip = require('../../../misc/enhancers/tooltip');
 const withPopover = require('./withPopover');
 module.exports = compose(
     branch(
-        (({renderPopover} = {}) => renderPopover),
+        (({renderPopover, popoverOptions} = {}) => renderPopover && !!popoverOptions),
         withPopover,
         tooltip
     )
