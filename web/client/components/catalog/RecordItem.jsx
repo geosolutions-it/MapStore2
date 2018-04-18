@@ -143,7 +143,7 @@ class RecordItem extends React.Component {
                 <div>
                     <h4 className="truncateText">{record && this.getTitle(record.title)}</h4>
                     <h4 className="truncateText"><small>{record && record.identifier}</small></h4>
-                    <p className="truncateText record-item-description">{this.renderDescription(record)}</p>
+                    <p className="truncateText record-item-description" style={{display: 'block'}}>{this.renderDescription(record)}</p>
                 </div>
                   {this.renderButtons(record)}
             </Panel>
