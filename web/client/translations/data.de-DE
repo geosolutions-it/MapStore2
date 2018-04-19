@@ -1254,7 +1254,7 @@
             },
             "errors":{
                 "loading": {
-                    "title": Fehler beim Laden des Dashboards",
+                    "title": "Fehler beim Laden des Dashboards",
                     "dashboardNotAccessible": "Sie sind nicht berechtigt, auf dieses Dashboard zuzugreifen. Wenden Sie sich an den Ressourcenbesitzer",
                     "pleaseLogin": "Dieses Dashboard ist nicht öffentlich. Bitte versuchen Sie sich einzuloggen",
                     "dashboardDoesNotExist": "Das Dashboard, auf das Sie zugreifen möchten, existiert nicht oder wurde entfernt",

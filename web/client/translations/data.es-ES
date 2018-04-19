@@ -1245,7 +1245,7 @@
                 "name": "Nombre",
                 "description": "Descripción",
                 "namePlaceholder": "Escriba un nombre ...",
-                "descriptionPlaceholder": Escriba una descripción ...",
+                "descriptionPlaceholder": "Escriba una descripción ...",
                 "confirmCloseText": "Hay cambios pendientes, ¿está seguro de que quiere cerrar sin guardar?",
                 "close": "Cerca",
                 "cancel": "Cancelar",
