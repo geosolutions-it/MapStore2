@@ -27,6 +27,9 @@ describe('featuredMaps enhancher', () => {
         setTimeout(done);
     });
     it('loadPage fails ', done => {
+        GeoStoreDAO.addBaseUrl = (options) => {
+            return assign(options, {baseURL: 'wrong/geostore/'});
+        };
         const props = loadPage();
         props.subscribe(res => {
             expect(res).toEqual({ items: [], total: 0, loading: false });

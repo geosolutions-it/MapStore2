@@ -86,7 +86,11 @@ const updateFeaturedMapsStream = mapPropsStream(props$ =>
         return props$
             .debounceTime(500)
             .startWith({searchText, permission, viewSize, pageSize, loading: true})
-            .distinctUntilChanged((previous, next) => isEqual(previous.resource, next.resource) && previous.searchText === next.searchText)
+            .distinctUntilChanged((previous, next) =>
+                isEqual(previous.resource, next.resource)
+                && previous.searchText === next.searchText
+                && previous.permission === next.permission
+            )
             .do(({permission: newPermission, viewSize: newViewSize, searchText: newSearchText, pageSize: newPageSize} = {}) =>
                 loadFirst({permission: newPermission, viewSize: newViewSize, searchText: newSearchText, pageSize: newPageSize})
             )
