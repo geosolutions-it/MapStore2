@@ -10,11 +10,18 @@ const expect = require('expect');
 const { RULES_SELECTED, RULES_LOADED, UPDATE_ACTIVE_RULE,
         ACTION_ERROR, OPTIONS_LOADED, UPDATE_FILTERS_VALUES,
         rulesSelected, rulesLoaded, updateActiveRule,
-        actionError, optionsLoaded, updateFiltersValues} = require('../rulesmanager');
+        actionError, optionsLoaded, updateFiltersValues,
+        SET_FILTER, setFilter} = require('../rulesmanager');
 
 describe('test rules manager actions', () => {
-
-    it('rules slected', () => {
+    it('set Filter', () => {
+        const action = setFilter("key", "value");
+        expect(action).toExist();
+        expect(action.type).toBe(SET_FILTER);
+        expect(action.key).toBe("key");
+        expect(action.value).toBe("value");
+    });
+    it('rules selected', () => {
         const rules = [
             { id: "rules1" },
             { id: "rules2" }

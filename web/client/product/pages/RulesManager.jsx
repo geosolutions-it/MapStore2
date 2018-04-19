@@ -7,9 +7,6 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
-require("../assets/css/maps.css");
-
 const {connect} = require('react-redux');
 
 const url = require('url');
@@ -41,9 +38,6 @@ class MapsPage extends React.Component {
 
     componentWillMount() {
         if (this.props.match.params.mapType && this.props.match.params.mapId) {
-            if (this.props.mode === 'mobile') {
-                require('../assets/css/mobile.css');
-            }
             this.props.reset();
             this.props.loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*");
         }
@@ -61,6 +55,7 @@ class MapsPage extends React.Component {
         };
 
         return (<HolyGrail
+            className="rules-manager"
             id="rules-manager-view-container"
             pagePluginsConfig={pagePlugins}
             pluginsConfig={pluginsConfig}
