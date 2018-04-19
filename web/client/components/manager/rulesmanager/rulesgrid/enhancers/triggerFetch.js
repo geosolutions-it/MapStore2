@@ -12,7 +12,7 @@ const sameFilter = (f1, {filters: f2}) => f1 === f2;
 const sameVersion = (f1, {version: f2}) => f1 === f2;
 const { getCount } = require('../../../../../observables/rulesmanager');
 /**
- * Function that converts stream of a RulesGrid props to trigger firs data fetch events, It gets the rules count
+ * Function that converts stream of a RulesGrid props to trigger data fetch events, It gets the rules count
  * @param {Observable} Stream of props.
  * @return {Observable} Stream of props to trigger the data fetch
  */

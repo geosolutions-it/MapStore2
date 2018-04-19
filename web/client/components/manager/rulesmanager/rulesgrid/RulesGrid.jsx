@@ -1,14 +1,18 @@
+/**
+* Copyright 2018, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
 const React = require('react');
 const PropTypes = require('prop-types');
 const RuleRenderer = require('./renderers/RuleRenderer');
-const AccessFormatter = require('./formatters/AccessFormatter');
 
 const { Draggable} = require('react-data-grid-addons');
 
 const DataGrid = require('../../../data/grid/DataGrid');
 const { Container: DraggableContainer, RowActionsCell, DropTargetRowContainer: dropTargetRowContainer } = Draggable;
-
-const Message = require('../../../I18N/Message');
 
 const RowRenderer = dropTargetRowContainer(RuleRenderer);
 
@@ -37,15 +41,7 @@ class RulesGrid extends React.Component {
         onSort: () => {},
         onSelect: () => {},
         selectedIds: [],
-        columns: [
-            { key: 'rolename', name: <Message msgId={"rulesmanager.role"} />, filterable: true },
-            { key: 'username', name: <Message msgId={"rulesmanager.user"} />, filterable: true },
-            { key: 'ipaddress', name: 'IP', filterable: false},
-            { key: 'service', name: <Message msgId={"rulesmanager.service"} />, filterable: true },
-            { key: 'request', name: <Message msgId={"rulesmanager.request"} />, filterable: true },
-            { key: 'workspace', name: <Message msgId={"rulesmanager.workspace"} />, filterable: true },
-            { key: 'layer', name: <Message msgId={"rulesmanager.layer"} />, filterable: true },
-            { key: 'grant', name: <Message msgId={"rulesmanager.access"} />, formatter: AccessFormatter, filterable: false }]
+        columns: []
     };
 
     componentDidMount() {

@@ -1287,6 +1287,9 @@
             "layerlabel": "Layer"
         },
         "rulesmanager": {
+            "placeholders": {
+                "filter": "Search..."
+            },
             "menutitle": "Manage GeoFence Rules",
             "title": "Access Rules",
             "role": "Role",

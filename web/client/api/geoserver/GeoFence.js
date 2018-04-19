@@ -101,29 +101,52 @@ var Api = {
             assign(queryParameters, {[filterName]: filterValue});
         }
     },
-
-    getGroups: function() {
-        return axios.get('security/rest/roles', this.addBaseUrl({
+    getGroupsCount: function(filter = " ") {
+        const encodedFilter = encodeURIComponent(`%${filter}%`);
+        return axios.get(`geofence/rest/groups/count/${encodedFilter}`, this.addBaseUrl({
             'headers': {
-                'Accept': 'application/json'
+                'Accept': 'text/plain'
+            }
+        })).then(function(response) {
+            return response.data;
+        });
+    },
+    getGroups: function(filter, page, entries = 10) {
+        const params = {
+            page,
+            entries,
+            nameLike: `%${filter}%`
+        };
+        const options = {params};
+        return axios.get(`geofence/rest/groups`, this.addBaseUrl(options)).then(function(response) {
+            return response.data;
+        });
+    },
+    getUsersCount: function(filter = " ") {
+        const encodedFilter = encodeURIComponent(`%${filter}%`);
+        return axios.get(`geofence/rest/users/count/${encodedFilter}`, this.addBaseUrl({
+            'headers': {
+                'Accept': 'text/plain'
             }
         })).then(function(response) {
             return response.data;
         });
     },
 
-    getUsers: function() {
-        return axios.get('security/rest/usergroup/users', this.addBaseUrl({
-            'headers': {
-                'Accept': 'application/json'
-            }
-        })).then(function(response) {
+    getUsers: function(filter, page, entries = 10) {
+        const params = {
+            page,
+            entries,
+            nameLike: `%${filter}%`
+        };
+        const options = {params};
+        return axios.get(`geofence/rest/users`, this.addBaseUrl(options)).then(function(response) {
             return response.data;
         });
     },
 
     getWorkspaces: function() {
-        return axios.get('rest/workspaces', this.addBaseUrl({
+        return axios.get('rest/workspaces', this.addBaseUrlGS({
             'headers': {
                 'Accept': 'application/json'
             }
@@ -136,8 +159,12 @@ var Api = {
         return !value ? '*' : value;
     },
 
-    addBaseUrl: function(options) {
+    addBaseUrl: function(options = {}) {
         return assign(options, {baseURL: ConfigUtils.getDefaults().geoFenceUrl});
+    },
+    addBaseUrlGS: function(options = {}) {
+        const {url: baseURL} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
+        return assign(options, {baseURL});
     }
 };
 
