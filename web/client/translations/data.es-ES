@@ -1286,6 +1286,9 @@
             "layerlabel": "Capa"
         },
         "rulesmanager": {
+            "placeholders": {
+                "filter": "Buscar..."
+            },
             "menutitle": "Administrar reglas de GeoFence",
             "title": "Reglas de acceso",
             "role": "Rol",

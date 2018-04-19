@@ -1031,6 +1031,9 @@
             "layerlabel": "Laag"
         },
         "rulesmanager": {
+            "placeholders": {
+                "filter": "Zoeken..."
+            },
             "menutitle": "Beheer GeoFence Rules",
             "title": "Toegangsregels",
             "role": "Rol",
