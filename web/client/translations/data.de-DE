@@ -1286,6 +1286,9 @@
             "layerlabel": "Ebene"
         },
         "rulesmanager": {
+            "placeholders": {
+                "filter": "Suche..."
+            },
             "menutitle": "GeoFence-Regeln Verwalten",
             "title": "Zugangs Regeln",
             "role": "Rolle",

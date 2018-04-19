@@ -1264,6 +1264,9 @@
             "layerlabel": "Sloj"
         },
         "rulesmanager": {
+            "placeholders": {
+                "filter": "Traži..."
+            },
             "menutitle": "Upravljanje pravilima GeoFence",
             "title": "Pravila pristupa",
             "role": "Rola",
