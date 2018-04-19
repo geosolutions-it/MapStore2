@@ -210,6 +210,7 @@
                 "web/client/plugins/MousePosition.jsx",
                 "web/client/plugins/Notifications.jsx",
                 "web/client/plugins/QueryPanel.jsx",
+                "web/client/plugins/RulesDataGrid.jsx",
                 "web/client/plugins/ScaleBox.jsx",
                 "web/client/plugins/ScrollTop.jsx",
                 "web/client/plugins/Search.jsx",
