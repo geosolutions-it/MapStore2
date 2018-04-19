@@ -6,7 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
-const { setEditorAvailable, setEditing, triggerShowConnections } = require('../../actions/dashboard');
+const {
+    setEditorAvailable,
+    setEditing,
+    triggerShowConnections,
+    triggerSave,
+    dashboardLoaded,
+    dashboardSaved,
+    dashboardSaveError,
+    dashboardLoading } = require('../../actions/dashboard');
 const { insertWidget, updateWidget, deleteWidget } = require('../../actions/widgets');
 const dashboard = require('../dashboard');
 describe('Test the dashboard reducer', () => {
@@ -27,5 +35,37 @@ describe('Test the dashboard reducer', () => {
         const state = dashboard({}, triggerShowConnections(true));
         expect(state.showConnections).toBe(true);
     });
+    it('dashboard triggerSave', () => {
+        const action = triggerSave(true);
+        const state = dashboard( undefined, action);
+        expect(state).toExist();
+        expect(state.showSaveModal).toBe(true);
+    });
+    it('dashboard dashboardLoaded', () => {
+        const action = dashboardLoaded("TEST");
+        const state = dashboard( undefined, action);
+        expect(state).toExist();
+        expect(state.resource).toBe("TEST");
+    });
+    it('dashboard dashboardSaveError', () => {
+        const action = dashboardSaveError(["error1"]);
+        const state = dashboard( undefined, action);
+        expect(state).toExist();
+        expect(state.saveErrors.length).toBe(1);
+    });
+    it('dashboard dashboardSaved', () => {
+        const action = dashboardSaved();
+        const state = dashboard( {saveErrors: ["error"]}, action);
+        expect(state.saveErrors).toNotExist();
+        expect(state).toExist();
+    });
+    it('dashboard dashboardLoading', () => {
+        const action = dashboardLoading(true, "saving");
+        const state = dashboard( undefined, action);
+        expect(state).toExist();
+        expect(state.loading).toBe(true);
+        expect(state.loadFlags.saving).toBe(true);
+    });
+
 
 });

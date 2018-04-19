@@ -1240,7 +1240,30 @@
 
         },
         "dashboard": {
-             "editor": {
+            "saveDialog": {
+                "title": "Modifica proprietà dashboard",
+                "name": "Nome",
+                "description": "Descrizione",
+                "namePlaceholder": "Inserisci un nome..",
+                "descriptionPlaceholder": "Inserisci una descrizione...",
+                "confirmCloseText": "Ci sono modifiche non salvate, sei sicuro di voler chiudere senza salvare?",
+                "close": "Chiudi",
+                "cancel": "Annulla",
+                "saveSuccessTitle": "Successo",
+                "saveSuccessMessage": "Dashboard salvata"
+            },
+            "errors":{
+                "loading": {
+                    "title": "Errore di caricamento della dashboard",
+                    "dashboardNotAccessible": Non hai i permessi per accedere a questa dashboard. Contatta il properietario",
+                    "pleaseLogin": "Questa risorsa non è pubblica. Effettuare il login",
+                    "dashboardDoesNotExist": "La dashboard richiesta non esiste o è stata cancellata",
+                    "unknownError": "C'è stato un errore durante il caricamento della dashboard. Contattare l'amministratore"
+                },
+                "resourceAlreadyExists": "Una risorsa con questo nome esiste già. Provare con '{data}'"
+            },
+            "editor": {
+                "save": "Save the dashboard",
                 "addACardToTheDashboard": "Aggiungi un widget alla dashboard",
                 "showConnections": "Mostra connessioni",
                 "hideConnections": "Nascondi connessioni"
