@@ -59,11 +59,15 @@ const getWidgetsDependenciesGroups = createSelector(
     widgets => getWidgetsGroups(widgets)
 );
 const getFloatingWidgetsLayout = state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
+
+const getDashboardWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
+
 module.exports = {
     getFloatingWidgets,
     getFloatingWidgetsLayout,
     // let's use the same container for the moment
-    getDashboardWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
+    getDashboardWidgets,
+    dashboardHasWidgets: state => (getDashboardWidgets(state) || []).length > 0,
     getDashboardWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
     getEditingWidget,
     getEditingWidgetLayer: state => get(getEditingWidget(state), "layer"),

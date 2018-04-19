@@ -84,7 +84,7 @@ class SaveModal extends React.Component {
     render() {
         return (<Portal>
             {<ResizableModal
-                title={<Message msgId="manager.editMapMetadata"/>}
+                title={<Message msgId="dashboard.saveDialog.title"/>}
                 show={this.props.show}
                 clickOutEnabled
                 bodyClassName="ms-flex modal-properties-container"

@@ -14,11 +14,15 @@ const PropTypes = require('prop-types');
 
 const { isDashboardEditing} = require('../selectors/dashboard');
 const { isLoggedIn } = require('../selectors/security');
+const { dashboardHasWidgets } = require('../selectors/widgets');
+const { showConnectionsSelector, dashboardResource } = require('../selectors/dashboard');
 const {dashboardSelector} = require('./widgetbuilder/commons');
+
 const { createWidget, toggleConnection } = require('../actions/widgets');
 const { triggerShowConnections, triggerSave } = require('../actions/dashboard');
-const { showConnectionsSelector, dashboardResource } = require('../selectors/dashboard');
+
 const withDashboardExitButton = require('./widgetbuilder/enhancers/withDashboardExitButton');
+
 const Builder =
     compose(
         connect(dashboardSelector, { toggleConnection, triggerShowConnections}),
@@ -34,9 +38,11 @@ const Toolbar = compose(
             showConnectionsSelector,
             isLoggedIn,
             dashboardResource,
-            (showConnections, logged, resource) => ({
+            dashboardHasWidgets,
+            (showConnections, logged, resource, hasWidgets) => ({
                 showConnections,
-                canSave: logged && resource ? resource.canEdit : true
+                hasWidgets,
+                canSave: logged && hasWidgets && (resource ? resource.canEdit : true)
              })
         ),
         {
@@ -48,6 +54,7 @@ const Toolbar = compose(
     withProps(({
         onAddWidget = () => {},
         onToggleSave = () => {},
+        hasWidgets,
         canSave,
         showConnections, onShowConnections = () => { }
         }) => ({
@@ -68,6 +75,7 @@ const Toolbar = compose(
                     glyph: showConnections ? 'bulb-on' : 'bulb-off',
                     tooltipId: showConnections ? 'dashboard.editor.hideConnections' : 'dashboard.editor.showConnections',
                     bsStyle: showConnections ? 'success' : 'primary',
+                    visible: !!hasWidgets,
                     onClick: () => onShowConnections(!showConnections)
                 }]
         }))

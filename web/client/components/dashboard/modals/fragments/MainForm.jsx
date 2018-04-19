@@ -41,10 +41,10 @@ module.exports = class MainForm extends React.Component {
                 <Metadata role="body" ref="mapMetadataForm"
                     onChange={onUpdate}
                     resource={resource}
-                    nameFieldText={<Message msgId="map.name" />}
-                    descriptionFieldText={<Message msgId="map.description" />}
-                    namePlaceholderText={"map.namePlaceholder"}
-                    descriptionPlaceholderText={"map.descriptionPlaceholder"}
+                    nameFieldText={<Message msgId="dashboard.saveDialog.name" />}
+                    descriptionFieldText={<Message msgId="dashboard.saveDialog.description" />}
+                    namePlaceholderText={"dashboard.saveDialog.namePlaceholder"}
+                    descriptionPlaceholderText={"dashboard.saveDialog.descriptionPlaceholder"}
                 />
             </Col>
         </Row>);

@@ -16,7 +16,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {FormControl: BFormControl, FormGroup, ControlLabel} = require('react-bootstrap');
-const FormControl = require('../../misc/enhancers/localizedProps')('placehoder')(BFormControl);
+const FormControl = require('../../misc/enhancers/localizedProps')('placeholder')(BFormControl);
 
 /**
  * A DropDown menu for user details:

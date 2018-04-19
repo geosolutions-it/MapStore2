@@ -69,14 +69,19 @@ const getFTSelectedArgs = (state) => {
 };
 
 module.exports = {
+
+    // Basic interactions with dashboard editor
     openDashboardWidgetEditor: (action$, {getState = () => {}} = {}) => action$.ofType(NEW, EDIT)
         .filter( () => isDashboardAvailable(getState()))
         .switchMap(() => Rx.Observable.of(
             setEditing(true)
     )),
+    // Basic interactions with dashboard editor
     closeDashboardWidgetEditorOnFinish: (action$, {getState = () => {}} = {}) => action$.ofType(INSERT)
         .filter( () => isDashboardAvailable(getState()))
         .switchMap(() => Rx.Observable.of(setEditing(false))),
+
+    // Basic interactions with dashboard editor
     initDashboardEditorOnNew: (action$, {getState = () => {}} = {}) => action$.ofType(NEW)
         .filter( () => isDashboardAvailable(getState()))
         .switchMap((w) => Rx.Observable.of(editNewWidget({
@@ -86,6 +91,7 @@ module.exports = {
             // override action's type
             type: undefined
         }, {step: 0}))),
+    // Basic interactions with dashboard editor
     closeDashboardEditorOnExit: (action$, {getState = () => {}} = {}) => action$.ofType(LOCATION_CHANGE)
         .filter( () => isDashboardAvailable(getState()))
         .filter( () => isDashboardEditing(getState()) )
@@ -127,6 +133,7 @@ module.exports = {
                  )
                  )
              ),
+    // dashboard loading from resource ID.
     loadDashboardStream: (action$, {getState = () => {}}) => action$
         .ofType(LOAD_DASHBOARD)
         .switchMap( ({id}) =>
@@ -139,42 +146,51 @@ module.exports = {
                         if (e.status === 403 ) {
                             if ( isLoggedIn(getState())) {
                                 return Rx.Observable.of(error({
-                                    title: "error",
-                                    message: "The dashboard is not accessible"
+                                    title: "dashboard.errors.loading.title",
+                                    message: "dashboard.errors.loading.dashboardNotAccessible"
                                 }));
                             }
                             return Rx.Observable.of(error({
-                                title: "error",
-                                message: "Please log in"
+                                title: "dashboard.errors.loading.title",
+                                message: "dashboard.errors.loading.pleaseLogin"
                             }))
                             .merge(action$
                                 .ofType(LOGIN_SUCCESS)
-                                .map(() => loadDashboard(id))
+                                .switchMap( () => Rx.Observable.of(loadDashboard(id)).delay(1000))
                                 .filter(() => isDashboardAvailable(getState()))
                                 .takeUntil(action$.ofType(LOCATION_CHANGE)));
+                        } if (e.status === 404) {
+                            return Rx.Observable.of(error({
+                                title: "dashboard.errors.loading.title",
+                                message: "dashboard.errors.loading.dashboardDoesNotExist"
+                            }));
                         }
                         return Rx.Observable.of(error({
-                            title: "error",
-                            message: "There was an error loading the dashboard"
+                            title: "dashboard.errors.loading.title",
+                            message: "dashboard.errors.loading.unknownError"
                         }));
                     }
                 ))
         ),
+    // saving dashboard flow (both creation and update)
     saveDashboard: action$ => action$
         .ofType(SAVE_DASHBOARD)
         .exhaustMap(({resource} = {}) =>
             (!resource.id ? createResource(resource) : updateResource(resource))
                 .switchMap(rid => Rx.Observable.of(
-                    dashboardSaved(rid),
-                    triggerSave(false),
-                    !resource.id
-                        ? push(`/dashboard/${rid}`)
-                        : loadDashboard(rid),
-                    show({
-                        title: "success",
-                        message: "saved successfully" // TODO: i18n
-                    })
-                ))
+                        dashboardSaved(rid),
+                        triggerSave(false),
+                        !resource.id
+                            ? push(`/dashboard/${rid}`)
+                            : loadDashboard(rid),
+                    ).merge(
+                        Rx.Observable.of(show({
+                                id: "DASHBOARD_SAVE_SUCCESS",
+                                title: "dashboard.saveDialog.saveSuccessTitle",
+                                message: "dashboard.saveDialog.saveSuccessMessage"
+                        })).delay(!resource.id ? 1000 : 0) // delay to allow loading
+                    )
+                )
                 .let(wrapStartStop(
                     dashboardLoading(true, "saving"),
                     dashboardLoading(false, "saving")
