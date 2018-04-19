@@ -299,7 +299,8 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                    "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "isSearchClickable": false,
+                  "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
                 "name": "Toolbar",
@@ -455,7 +456,13 @@
                 "className": "navbar shadow navbar-home"
             }
         }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop", "Notifications"],
-        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "ThemeSwitcher", "CreateNewMap",
+        "maps": ["Header", "Fork",
+        {
+          "name": "MapSearch",
+          "cfg": {
+            "splitTools" : false
+          }
+        }, "HomeDescription", "ThemeSwitcher", "CreateNewMap",
           {
             "name": "Maps",
             "cfg": {
@@ -494,6 +501,16 @@
             "containerPosition": "columns"
           }
         }, "Dashboard"],
-        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
+        "manager": ["Header", "Redirect", {
+          "name": "UserManager",
+          "cfg": {
+            "splitTools" : false
+          }
+        },{
+          "name": "GroupManager",
+          "cfg": {
+            "splitTools" : false
+          }
+        }, "Home", "Manager", "Footer"]
     }
 }
