@@ -220,7 +220,7 @@
             "theme_combo": "Select Theme:",
             "maps_title": "Maps",
             "locales_combo": "Language:",
-            "featuredMaps": "Featured Maps"
+            "featuredMaps": "Featured"
         },
         "newMap": "New Map",
 		"maps": {

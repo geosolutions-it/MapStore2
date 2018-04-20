@@ -24,7 +24,8 @@ class MapCard extends React.Component {
         viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
         onEdit: PropTypes.func,
         onMapDelete: PropTypes.func,
-        onUpdateAttribute: PropTypes.func
+        onUpdateAttribute: PropTypes.func,
+        backgroundOpacity: PropTypes.number
     };
 
     static contextTypes = {
@@ -44,7 +45,8 @@ class MapCard extends React.Component {
         // CALLBACKS
         onMapDelete: ()=> {},
         onEdit: () => {},
-        onUpdateAttribute: () => {}
+        onUpdateAttribute: () => {},
+        backgroundOpacity: 0.3
     };
 
     onEdit = (map, openModalProperties) => {
@@ -68,7 +70,7 @@ class MapCard extends React.Component {
     getCardStyle = () => {
         if (this.props.map.thumbnail) {
             return assign({}, this.props.style, {
-                backgroundImage: 'url(' + (this.props.map.thumbnail === null || this.props.map.thumbnail === "NODATA" ? thumbUrl : decodeURIComponent(this.props.map.thumbnail)) + ')'
+                background: 'linear-gradient(rgba(0, 0, 0, ' + this.props.backgroundOpacity + '), rgba(0, 0, 0, ' + this.props.backgroundOpacity + ') ), url(' + (this.props.map.thumbnail === null || this.props.map.thumbnail === "NODATA" ? thumbUrl : decodeURIComponent(this.props.map.thumbnail)) + ')'
             });
         }
         return this.props.style;

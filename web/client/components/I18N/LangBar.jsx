@@ -27,7 +27,8 @@ class LangBar extends React.Component {
         className: 'mapstore-langselector',
         locales: {},
         currentLocale: 'en-US',
-        onLanguageChange: function() {}
+        onLanguageChange: function() {},
+        dropdown: true
     };
 
     render() {
@@ -37,7 +38,6 @@ class LangBar extends React.Component {
             <div
                 className={this.props.className}>
                 <DropdownButton
-                    noCaret
                     pullRight
                     id={this.props.id}
                     title={

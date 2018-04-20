@@ -20,7 +20,6 @@ const mapsEpics = require('../epics/maps');
 const {userRoleSelector} = require('../selectors/security');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {resourceSelector, searchTextSelector} = require('../selectors/featuredmaps');
-
 const {loadPage, updateItemsLifecycle} = require('../components/maps/enhancers/featuredMaps');
 const gridPagination = require('../components/misc/enhancers/gridPagination');
 
@@ -62,7 +61,8 @@ class FeaturedMaps extends React.Component {
                 colProps={this.props.colProps}
                 viewerUrl={(map) => {this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id); }}
                 metadataModal={MetadataModal}
-                bottom={this.props.bottom}/>
+                bottom={this.props.bottom}
+                style={items.length === 0 ? {display: 'none'} : {}}/>
         );
     }
 }
@@ -139,7 +139,7 @@ const FeaturedMapsPlugin = compose(
 
 module.exports = {
     FeaturedMapsPlugin: assign(FeaturedMapsPlugin, {
-        Attribution: {
+        NavMenu: {
             position: 1,
             label: <Message msgId="manager.featuredMaps" />,
             linkId: '#ms-featured-maps',

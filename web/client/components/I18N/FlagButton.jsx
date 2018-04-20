@@ -20,18 +20,20 @@ class LangBar extends React.Component {
         active: PropTypes.bool,
         label: PropTypes.string,
         description: PropTypes.string,
-        onFlagSelected: PropTypes.func
+        onFlagSelected: PropTypes.func,
+        tooltipPlacement: PropTypes.string
     };
 
     static defaultProps = {
         locales: LocaleUtils.getSupportedLocales(),
         code: 'en-US',
         onLanguageChange: function() {},
-        onFlagSelected: () => {}
+        onFlagSelected: () => {},
+        tooltipPlacement: 'bottom'
     };
 
     render() {
-        let tooltip = <Tooltip id={"flag-button." + this.props.code}>{this.props.label}</Tooltip>;
+        let tooltip = <Tooltip id={"flag-button." + this.props.code} >{this.props.label}</Tooltip>;
         let imgSrc;
         try {
             imgSrc = require('./images/flags/' + this.props.code + '.png');
@@ -39,7 +41,7 @@ class LangBar extends React.Component {
             imgSrc = null;
         }
 
-        return imgSrc ? (<OverlayTrigger key={"overlay-" + this.props.code} overlay={tooltip}>
+        return imgSrc ? (<OverlayTrigger key={"overlay-" + this.props.code} overlay={tooltip} placement={this.props.tooltipPlacement}>
             <Button
                 key={this.props.code}
                 onClick={this.launchFlagAction.bind(this, this.props.code)}

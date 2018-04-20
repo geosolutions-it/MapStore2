@@ -454,12 +454,7 @@
             "cfg": {
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", {
-            "name": "Language",
-            "cfg": {
-                "dropdown": true
-            }
-        }, "Attribution", "ScrollTop", "Notifications"],
+        }, "ManagerMenu", "Login","Language", "NavMenu", "Attribution", "ScrollTop", "Notifications"],
         "maps": ["HomeDescription", "Fork", "MapSearch", "CreateNewMap", "FeaturedMaps",
           {
             "name": "Maps",
@@ -483,12 +478,7 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", {
-            "name": "Language",
-            "cfg": {
-                "dropdown": true
-            }
-        }, "Attribution", {
+        }, "ManagerMenu", "Login", "Language", "NavMenu", "Attribution", {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {

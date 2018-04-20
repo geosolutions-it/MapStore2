@@ -15,6 +15,7 @@ const Message = require("../components/I18N/Message");
 const maptypeEpics = require('../epics/maptype');
 const mapsEpics = require('../epics/maps');
 const {mapTypeSelector} = require('../selectors/maptype');
+const {userRoleSelector} = require('../selectors/security');
 const {createSelector} = require('reselect');
 
 const MapsGrid = require('./maps/MapsGrid');
@@ -104,11 +105,12 @@ const mapsPluginSelector = createSelector([
     mapTypeSelector,
     state => state.maps && state.maps.searchText,
     state => state.maps && state.maps.results ? state.maps.results : [],
-    state => get(state, 'controls.featuredmaps.enabled') ? true : false
-], (mapType, searchText, maps, featuredEnabled) => ({
+    state => get(state, 'controls.featuredmaps.enabled') ? true : false,
+    userRoleSelector
+], (mapType, searchText, maps, featuredEnabled, role) => ({
     mapType,
     searchText,
-    maps: maps.map(map => ({...map, featuredEnabled}))
+    maps: maps.map(map => ({...map, featuredEnabled: featuredEnabled && role === 'ADMIN'}))
 }));
 
 const MapsPlugin = connect(mapsPluginSelector, {
@@ -117,7 +119,7 @@ const MapsPlugin = connect(mapsPluginSelector, {
 
 module.exports = {
     MapsPlugin: assign(MapsPlugin, {
-        Attribution: {
+        NavMenu: {
             position: 2,
             label: <Message msgId="manager.maps_title" />,
             linkId: '#mapstore-maps-grid',

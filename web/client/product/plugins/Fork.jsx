@@ -22,7 +22,7 @@ class Fork extends React.Component {
 
 module.exports = {
     ForkPlugin: assign(Fork, {
-        Attribution: {
+        NavMenu: {
             position: 100,
             label: <Message msgId="home.forkMeOnGitHub"/>,
             href: 'https://github.com/geosolutions-it/MapStore2',
