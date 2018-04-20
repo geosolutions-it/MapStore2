@@ -11,9 +11,10 @@ const { compose, lifecycle } = require('recompose');
 
 const {wizardHandlers} = require('../../../misc/wizard/enhancers');
 const loadingState = require('../../../misc/enhancers/loadingState')(({loading, data}) => loading || !data, {width: 500, height: 200});
-
 const wfsChartOptions = require('./common/wfsChartOptions');
-const CounterOptions = wfsChartOptions(require('./common/WPSWidgetOptions'));
+const noAttributes = require('./common/noAttributesEmptyView');
+
+const CounterOptions = wfsChartOptions(noAttributes(({options = []}) => options.length === 0)(require('./common/WPSWidgetOptions')));
 const WidgetOptions = require('./common/WidgetOptions');
 
 const wpsCounter = require('../../enhancers/wpsCounter');

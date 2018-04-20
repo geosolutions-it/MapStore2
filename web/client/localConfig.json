@@ -267,7 +267,6 @@
                 "name": "TOC",
                 "cfg": {
                     "activateQueryTool": true,
-                    "activateDownloadTool": true,
                     "activateAddLayerButton": true,
                     "spatialOperations": [
                         {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
