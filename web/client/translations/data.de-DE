@@ -1155,6 +1155,8 @@
                     "clearConnection": "Verbindung löschen"
                 },
                 "errors": {
+                    "noAttributesTitle": "Keine Attribute zum Anzeigen",
+                    "noAttributesDescription": "Für die ausgewählten Ebenen sind keine Attribute sichtbar. Bitte gehen Sie zurück und wählen Sie eine andere Ebene, um dieses Widget zu verwenden",
                     "noWidgetsAvailableTitle": "Das Widget für die ausgewählte Ebene kann nicht erstellt werden",
                     "noWidgetsAvailableDescription": "<p><strong>Bitte wählen Sie eine andere Ebene oder einen anderen Widgets-Typ</strong></p><p>Der Server bietet nicht die erforderlichen Dienste für die Ebene und den ausgewählten Widget-Typ</p><p> Mögliche Ursachen sind: <ul> <li> Der ausgewählte Layer ist ein Raster-Layer </li> <li> Der WFS-Service ist nicht verfügbar </li> <li> Der WPS-Prozess <code>gs:aggregate</code> ist nicht verfügbar </li> </ul> </p>",
                     "checkAtLeastOneAttribute": "Sie müssen mindestens eine Spalte auswählen"

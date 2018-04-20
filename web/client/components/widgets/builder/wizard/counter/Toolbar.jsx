@@ -47,7 +47,7 @@ module.exports = ({openFilterEditor = () => {}, step = 0, stepButtons = [], edit
         glyph: "arrow-left",
         tooltipId: getBackTooltipId(step)
     }, ...stepButtons, {
-        visible: step === 0,
+        visible: step === 0 && valid,
         onClick: openFilterEditor,
         glyph: "filter",
         tooltipId: "widgets.builder.setupFilter"

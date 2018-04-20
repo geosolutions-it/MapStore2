@@ -23,7 +23,7 @@ const getBackTooltipId = step => {
     }
 };
 
-const getNextTooltipId = (step, valid) => valid ? "widgets.builder.wizard.configureWidgetOptions" : "widget.builder.wizard.errors.checkAtLeastOneAttribute";
+const getNextTooltipId = (step, valid) => valid ? "widgets.builder.wizard.configureWidgetOptions" : "widgets.builder.errors.checkAtLeastOneAttribute";
 
 const getSaveTooltipId = (step, {id} = {}) => {
     if (id) {
@@ -43,6 +43,7 @@ module.exports = ({ openFilterEditor = () => { }, step = 0, stepButtons = [], ed
     }, ...stepButtons, {
         visible: step >= 0,
         onClick: openFilterEditor,
+        disabled: !isValidStep1(editorData),
         glyph: "filter",
         tooltipId: "widgets.builder.setupFilter"
     }, {

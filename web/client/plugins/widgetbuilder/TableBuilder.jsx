@@ -96,6 +96,7 @@ module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, editorData
                     availableDependencies={availableDependencies}
                     onClose={onClose} />
                 {get(editorData, "options.propertyName.length") === 0 ? <InfoPopover
+                    trigger={false}
                     glyph="exclamation-mark"
                     bsStyle="warning"
                     text={<Message msgId="widgets.builder.errors.checkAtLeastOneAttribute" />} /> : null}

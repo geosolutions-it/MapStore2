@@ -1155,6 +1155,8 @@
                     "clearConnection": "Borrar conexión"
                 },
                 "errors": {
+                    "noAttributesTitle": "No hay atributos para mostrar",
+                    "noAttributesDescription": "Las capas seleccionadas no tienen atributos que mostrar. Vuelva atrás y seleccione otra capa para usar este widget",
                     "noWidgetsAvailableTitle": "No se puede crear el widget para la capa seleccionada",
                     "noWidgetsAvailableDescription": "<p> <strong> Intente seleccionar otra capa o tipo de widget </strong> </p> <p> El servidor no proporciona los servicios necesarios para la capa y el tipo de widget seleccionado </p> <p> Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> El proceso WPS <code>gs:aggregate</code> no está disponible </li> </ul> </p> ",
                     "checkAtLeastOneAttribute": "Debes seleccionar al menos una columna"
