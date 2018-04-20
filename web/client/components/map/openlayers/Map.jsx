@@ -128,6 +128,7 @@ class OpenlayersMap extends React.Component {
                     }
                     tLng = CoordinatesUtils.normalizeLng(coords[0]);
                 });
+                const getElevation = this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation');
                 this.props.onClick({
                     pixel: {
                         x: event.pixel[0],
@@ -135,7 +136,8 @@ class OpenlayersMap extends React.Component {
                     },
                     latlng: {
                         lat: coords[1],
-                        lng: tLng
+                        lng: tLng,
+                        z: getElevation && getElevation(pos, event.pixel) || undefined
                     },
                     modifiers: {
                         alt: event.originalEvent.altKey,
@@ -300,6 +302,7 @@ class OpenlayersMap extends React.Component {
             this.props.onMouseMove({
                 y: coords[1] || 0.0,
                 x: tLng || 0.0,
+                z: this.map.get('elevationLayer') && this.map.get('elevationLayer').get('getElevation')(pos, event.pixel) || undefined,
                 crs: "EPSG:4326",
                 pixel: {
                     x: event.pixel[0],

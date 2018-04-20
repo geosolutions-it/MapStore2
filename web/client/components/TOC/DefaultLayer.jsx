@@ -38,6 +38,7 @@ class DefaultLayer extends React.Component {
         filterText: PropTypes.string,
         onUpdateNode: PropTypes.func,
         titleTooltip: PropTypes.bool,
+        filter: PropTypes.func,
         showFullTitleOnExpand: PropTypes.bool
     };
 
@@ -56,8 +57,14 @@ class DefaultLayer extends React.Component {
         selectedNodes: [],
         filterText: '',
         onUpdateNode: () => {},
+        filter: () => true,
         titleTooltip: false,
         showFullTitleOnExpand: false
+    };
+
+    getTitle = (layer) => {
+        const translation = isObject(layer.title) ? layer.title[this.props.currentLocale] || layer.title.default : layer.title;
+        return translation || layer.name;
     };
 
     renderCollapsible = () => {
@@ -67,30 +74,30 @@ class DefaultLayer extends React.Component {
                 <Grid fluid>
                     {this.props.showFullTitleOnExpand ? <Row><Col xs={12} className="toc-full-title">{this.getTitle(this.props.node)}</Col></Row> : null}
                     {this.props.activateOpacityTool ?
-                    <Row>
+                        <Row>
 
-                        <Col xs={12} className="mapstore-slider with-tooltip">
-                            <Slider start={[layerOpacity]}
-                                disabled={!this.props.node.visibility}
-                                range={{min: 0, max: 100}}
-                                tooltips
-                                format={{
-                                    from: value => Math.round(value),
-                                    to: value => Math.round(value) + ' %'
-                                }}
-                                onChange={(opacity) => {
-                                    if (isArray(opacity) && opacity[0]) {
-                                        this.props.onUpdateNode(this.props.node.id, 'layers', {opacity: parseFloat(opacity[0].replace(' %', '')) / 100});
-                                    }
-                                }}/>
-                        </Col>
-                    </Row> : null}
+                            <Col xs={12} className="mapstore-slider with-tooltip">
+                                <Slider start={[layerOpacity]}
+                                    disabled={!this.props.node.visibility}
+                                    range={{ min: 0, max: 100 }}
+                                    tooltips
+                                    format={{
+                                        from: value => Math.round(value),
+                                        to: value => Math.round(value) + ' %'
+                                    }}
+                                    onChange={(opacity) => {
+                                        if (isArray(opacity) && opacity[0]) {
+                                            this.props.onUpdateNode(this.props.node.id, 'layers', { opacity: parseFloat(opacity[0].replace(' %', '')) / 100 });
+                                        }
+                                    }} />
+                            </Col>
+                        </Row> : null}
                     {this.props.activateLegendTool ?
-                    <Row>
-                        <Col xs={12}>
-                            <WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} {...this.props.legendOptions}/>
-                        </Col>
-                    </Row> : null}
+                        <Row>
+                            <Col xs={12}>
+                                <WMSLegend node={this.props.node} currentZoomLvl={this.props.currentZoomLvl} scales={this.props.scales} {...this.props.legendOptions} />
+                            </Col>
+                        </Row> : null}
                 </Grid>
             </div>);
     };
@@ -100,27 +107,27 @@ class DefaultLayer extends React.Component {
             (<LayersTool key="loadingerror"
                 glyph="exclamation-mark text-danger"
                 tooltip="toc.loadingerror"
-                className="toc-error"/>)
+                className="toc-error" />)
             :
             (<VisibilityCheck key="visibilitycheck"
                 tooltip={this.props.node.loadingError === 'Warning' ? 'toc.toggleLayerVisibilityWarning' : 'toc.toggleLayerVisibility'}
                 node={this.props.node}
                 checkType={this.props.visibilityCheckType}
-                propertiesChangeHandler={this.props.propertiesChangeHandler}/>);
+                propertiesChangeHandler={this.props.propertiesChangeHandler} />);
     }
 
     renderToolsLegend = (isEmpty) => {
         return this.props.node.loadingError === 'Error' || isEmpty ?
-                null
-                :
-                (<LayersTool
-                    node={this.props.node}
-                    tooltip="toc.displayLegendAndTools"
-                    key="toollegend"
-                    className="toc-legend"
-                    ref="target"
-                    glyph="chevron-left"
-                    onClick={(node) => this.props.onToggle(node.id, node.expanded)}/>);
+            null
+            :
+            (<LayersTool
+                node={this.props.node}
+                tooltip="toc.displayLegendAndTools"
+                key="toollegend"
+                className="toc-legend"
+                ref="target"
+                glyph="chevron-left"
+                onClick={(node) => this.props.onToggle(node.id, node.expanded)} />);
     }
 
     renderNode = (grab, hide, selected, error, warning, other) => {
@@ -130,7 +137,7 @@ class DefaultLayer extends React.Component {
                 <div className="toc-default-layer-head">
                     {grab}
                     {this.renderVisibility()}
-                    <Title tooltip={this.props.titleTooltip} filterText={this.props.filterText} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onSelect} onContextMenu={this.props.onContextMenu}/>
+                    <Title tooltip={this.props.titleTooltip} filterText={this.props.filterText} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onSelect} onContextMenu={this.props.onContextMenu} />
                     {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
                 </div>
                 {isEmpty ? null : this.renderCollapsible()}
@@ -147,18 +154,17 @@ class DefaultLayer extends React.Component {
         const warning = this.props.node.loadingError === 'Warning' ? ' layer-warning' : '';
         const grab = other.isDraggable ? <LayersTool key="grabTool" tooltip="toc.grabLayerIcon" className="toc-grab" ref="target" glyph="menu-hamburger"/> : <span className="toc-layer-tool toc-grab"/>;
         const filteredNode = this.filterLayers(this.props.node) ? this.renderNode(grab, hide, selected, error, warning, other) : null;
+        if (this.props.filter(this.props.node)) {
+            return !this.props.filterText ? this.renderNode(grab, hide, selected, error, warning, other) : filteredNode;
+        }
+        return null;
+    }
 
-        return !this.props.filterText ? this.renderNode(grab, hide, selected, error, warning, other) : filteredNode;
-    }
-    getTitle = (layer) => {
-        const translation = isObject(layer.title) ? layer.title[this.props.currentLocale] || layer.title.default : layer.title;
-        return translation || layer.name;
-    }
     filterLayers = (layer) => {
         const translation = isObject(layer.title) ? layer.title[this.props.currentLocale] || layer.title.default : layer.title;
         const title = translation || layer.name;
         return title.toLowerCase().indexOf(this.props.filterText.toLowerCase()) !== -1;
-    }
+    };
 }
 
 module.exports = DefaultLayer;

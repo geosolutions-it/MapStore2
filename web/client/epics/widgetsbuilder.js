@@ -60,7 +60,7 @@ module.exports = {
             ...w,
             // override action's type
             type: undefined
-        }, {step: 0}))),
+        }, {step: 0}), onEditorChange("returnToFeatureGrid", true))),
     /**
      * Manages interaction with QueryPanel and widgetBuilder
      */

@@ -111,9 +111,28 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  * ```
  *  - name is a unique name for the tool
  *  - impl is a placeholder (“{context.ToolName}”) where ToolName is the name you gave the tool in plugins.js (TestSupportLeaflet in our example)
+ *
  * @memberof plugins
  * @class Map
+ * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
  * @static
+ * @example
+  * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)
+  * {
+  *   "cfg": {
+  *     "additionalLayers": [{
+  *         "type": "wms",
+  *         "url": "http://localhost:8090/geoserver/wms",
+  *         "visibility": true,
+  *         "title": "Elevation",
+  *         "name": "topp:elevation",
+  *         "format": "application/bil16",
+  *         "useForElevation": true,
+  *         "nodata": -9999,
+  *         "hidden": true
+  *      }]
+  *   }
+  * }
  *
  */
 class MapPlugin extends React.Component {
@@ -121,6 +140,7 @@ class MapPlugin extends React.Component {
         mapType: PropTypes.string,
         map: PropTypes.object,
         layers: PropTypes.array,
+        additionalLayers: PropTypes.array,
         zoomControl: PropTypes.bool,
         mapLoadingMessage: PropTypes.string,
         loadingSpinner: PropTypes.bool,
@@ -163,7 +183,8 @@ class MapPlugin extends React.Component {
                 layers: [{type: "osm"}]
             }
         },
-        securityToken: ''
+        securityToken: '',
+        additionalLayers: []
     };
 
     componentWillMount() {
@@ -206,7 +227,7 @@ class MapPlugin extends React.Component {
 
     renderLayers = () => {
         const projection = this.props.map.projection || 'EPSG:3857';
-        return this.props.layers.map((layer, index) => {
+        return [...this.props.layers, ...this.props.additionalLayers].map((layer, index) => {
             return (
                 <plugins.Layer type={layer.type} srs={projection} position={index} key={layer.id || layer.name} options={layer} securityToken={this.props.securityToken}>
                     {this.renderLayerContent(layer, projection)}

@@ -111,6 +111,11 @@
         "mousePositionCoordinates": "Coordinates indicator",
         "mouseCoordinates": "Coordinates:",
         "mousePositionCRS": "CRS:",
+        "mousePositionElevation": "Elev.:",
+        "mousePositionNoElevation": "N/A",
+        "elevationLoading": "Loading...",
+        "elevationLoadingError": "Error",
+        "elevationNotAvailable": "N/A",
         "mapScale": "Scale:",
         "showMousePositionCoordinates": "Show/Hide Coordinates",
         "menu": "Menu",
@@ -1043,6 +1048,9 @@
                 }
             },
             "toolbar": {
+                "synchPopoverTitle": "Sync map with filter ",
+                "synchPopoverText": "Use this tool to synchronize the map with the selected filter",
+                "notShowAgain": "  Don't show this message again",
                 "editMode": "Edit mode",
                 "advancedFilter": "Advanced Search",
                 "quitEditMode": "Quit edit mode",
@@ -1151,6 +1159,8 @@
                     "clearConnection": "Clear connection"
                 },
                 "errors": {
+                    "noAttributesTitle": "No attributes to show",
+                    "noAttributesDescription": "The selected layers has no attributes to show. Please go back and select another layer to use this widget",
                     "noWidgetsAvailableTitle": "Can not create the widget for the selected layer",
                     "noWidgetsAvailableDescription": "<p><strong>Please try to select another layer or widget type</strong></p><p>The server doesn't provide the needed services for the layer and the widget type selected</p><p>Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li>The WPS process <code>gs:aggregate</code> is not available</li></ul></p>",
                     "checkAtLeastOneAttribute": "You must select at least one column"

@@ -111,6 +111,11 @@
         "mousePositionCoordinates": "Coordonnées",
         "mouseCoordinates": "Coordonnées:",
         "mousePositionCRS": "CRS:",
+        "mousePositionElevation": "Élév.:",
+        "mousePositionNoElevation": "Int.",
+        "elevationLoading": "Chargement...",
+        "elevationLoadingError": "Erreur",
+        "elevationNotAvailable": "Int.",
         "mapScale": "Échelle:",
         "showMousePositionCoordinates": "Montrer/cacher les Coordonnées",
         "menu": "Menu",
@@ -1043,6 +1048,9 @@
                 }
             },
             "toolbar": {
+                "synchPopoverTitle": "Synchroniser la carte avec un filtre ",
+                "synchPopoverText": "Utilisez cet outil pour synchroniser la carte avec le filtre sélectionné",
+                "notShowAgain": "  Ne plus afficher ce message",
                 "editMode": "Mode édition",
                 "advancedFilter": "Recherche Avancée",
                 "quitEditMode": "Quitter le mode d'édition",
@@ -1151,6 +1159,8 @@
                     "clearConnection": "Effacer la connexion"
                 },
                 "errors": {
+                    "noAttributesTitle": "Aucun attribut à afficher",
+                    "noAttributesDescription": "Les couches sélectionnées n'ont aucun attribut à afficher. Veuillez revenir en arrière et sélectionner une autre couche pour utiliser ce widget",
                     "noWidgetsAvailableTitle": "Impossible de créer le widget pour le calque sélectionné",
                     "noWidgetsAvailableDescription": "<p> <strong> Veuillez essayer de sélectionner un autre type de couche ou de widget </strong> </p> <p> Le serveur ne fournit pas les services requis pour la couche et le type de widget sélectionné </p> <p> Les causes possibles sont: <ul> <li> Le calque sélectionné est une couche raster </li> <li> Le service WFS n'est pas disponible </li> <li> Le processus WPS <code> gs:aggregate </code> n'est pas disponible </li> </ul> </p> ",
                     "checkAtLeastOneAttribute": "Vous devez sélectionner au moins une colonne"

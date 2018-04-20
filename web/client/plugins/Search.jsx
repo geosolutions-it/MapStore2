@@ -156,6 +156,8 @@ const SearchPlugin = connect((state) => ({
 }))(
 class extends React.Component {
     static propTypes = {
+        splitTools: PropTypes.bool,
+        isSearchClickable: PropTypes.bool,
         fitResultsToMapSize: PropTypes.bool,
         searchOptions: PropTypes.object,
         resultsStyle: PropTypes.object,
@@ -171,6 +173,8 @@ class extends React.Component {
         searchOptions: {
             services: [{type: "nominatim"}]
         },
+        isSearchClickable: false,
+        splitTools: true,
         resultsStyle: {
             color: '#3388ff',
             weight: 4,
