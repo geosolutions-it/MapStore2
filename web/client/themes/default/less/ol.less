@@ -115,3 +115,27 @@ div.ol-scale-line-inner {
         border-top-color: #ffcc33;
     }
 }
+
+.ol-rotate {
+    width: @square-btn-size;
+    height: @square-btn-size;
+    background: none;
+    margin-right: 7px;
+    .ol-rotate-reset {
+        box-shadow: -1px 1px 5px 1px #5e5e5e;
+        height: @square-btn-size;
+        width: @square-btn-size;
+        color: @ms2-color-text-primary;
+        background-color: @ms2-color-primary;
+        border-color: @btn-primary-border;
+        .ol-compass {
+            font-size: 36px;
+        }
+    }
+    .ol-rotate-reset:hover, .ol-rotate-reset:focus {
+        background-color: darken(@ms2-color-primary, 5%);
+    }
+}
+.ol-rotate:hover {
+    background: none;
+}
