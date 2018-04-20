@@ -166,7 +166,7 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                    "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
                 "name": "Toolbar",
@@ -311,7 +311,7 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                    "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
                 "name": "Toolbar",
@@ -440,7 +440,7 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                    "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
                 "name": "Toolbar",
@@ -510,6 +510,6 @@
             "containerPosition": "columns"
           }
         }, "Dashboard"],
-        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
+        "manager": ["Header", "Redirect", "UserManager", "GroupManager", "Home", "Manager", "Footer"]
     }
 }

@@ -47,6 +47,8 @@ require('./searchbar.css');
  * @prop {object[]} selectedItems the items selected. Must have `text` property to display
  * @prop {boolean} autoFocusOnSelect if true, the component gets focus when items are added, or deleted but some item is still selected. Useful for continue writing after selecting an item (with nested services for instance)
  * @prop {boolean} splitTools if false, the search and reset can appear both at the same time, otherwise the search appear only with empty text, the reset if a text is entered
+ * @prop {boolean} isSearchClickable if true, the magnifying-glass uses a clickable style otherwise it doesn't. see map-search-bar.less for more info on the style.
+ Also the onClick method will be added only if this flag is true
  * @prop {boolean} loading if true, shows the loading tool
  * @prop {object} error if not null, an error icon will be display
  * @prop {object} style css style to apply to the component
@@ -73,6 +75,7 @@ class SearchBar extends React.Component {
         selectedItems: PropTypes.array,
         autoFocusOnSelect: PropTypes.bool,
         splitTools: PropTypes.bool,
+        isSearchClickable: PropTypes.bool,
         loading: PropTypes.bool,
         error: PropTypes.object,
         style: PropTypes.object,
@@ -97,6 +100,7 @@ class SearchBar extends React.Component {
         blurResetDelay: 300,
         autoFocusOnSelect: true,
         splitTools: true,
+        isSearchClickable: false,
         hideOnBlur: true,
         typeAhead: true,
         searchText: ""
@@ -166,8 +170,14 @@ class SearchBar extends React.Component {
     };
 
     renderAddonAfter = () => {
+        const searchProps = assign({}, {
+            key: "searchbar_search_glyphicon",
+            glyph: this.props.searchIcon,
+            className: this.props.isSearchClickable ? "magnifying-glass clickable" : "magnifying-glass"},
+            this.props.isSearchClickable ? { onClick: this.search } : {});
+        const search = <Glyphicon {...searchProps}/>;
+
         const remove = <Glyphicon className="searchclear" glyph={this.props.removeIcon} onClick={this.clearSearch} key="searchbar_remove_glyphicon"/>;
-        const search = <Glyphicon className="magnifying-glass" glyph={this.props.searchIcon} key="searchbar_search_glyphicon" onClick={this.search}/>;
         const showRemove = this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0;
         let addonAfter = showRemove ? (this.props.splitTools ? [remove] : [remove, search]) : [search];
         if (this.props.loading) {
