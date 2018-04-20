@@ -15,7 +15,7 @@ const {paginationInfo, featureLoadingSelector, resultsSelector, isSyncWmsActive,
 const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter, hasSupportedGeometry, editingAllowedRolesSelector} = require('../../../selectors/featuregrid');
 const {userRoleSelector} = require('../../../selectors/security');
 const {isCesium} = require('../../../selectors/maptype');
-const {mapLayoutValuesSelector} = require('../../../selectors/mapLayout');
+const {mapLayoutValuesSelector} = require('../../../selectors/maplayout');
 const {chartDisabledSelector, showAgainSelector, showPopoverSyncSelector} = require('../../../selectors/featuregrid');
 const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed, closeFeatureGrid} = require('../../../actions/featuregrid');
 const {toolbarEvents, pageEvents} = require('../index');
