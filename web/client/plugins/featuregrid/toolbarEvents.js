@@ -4,6 +4,8 @@ const {toggleTool,
     toggleViewMode,
     closeFeatureGridConfirm,
     saveChanges,
+    hideSyncPopover,
+    toggleShowAgain,
     createNewFeatures,
     startEditingFeature,
     startDrawingFeature,
@@ -32,5 +34,7 @@ module.exports = {
     showQueryPanel: () => openAdvancedSearch(),
     zoomAll: () => zoomAll(),
     sync: () => toggleSyncWms(),
+    hideSyncPopover: () => hideSyncPopover(),
+    toggleShowAgain: () => toggleShowAgain(),
     chart: () => createChart()
 };

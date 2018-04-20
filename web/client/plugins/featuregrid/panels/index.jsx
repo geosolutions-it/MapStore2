@@ -15,7 +15,8 @@ const {paginationInfo, featureLoadingSelector, resultsSelector, isSyncWmsActive,
 const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector, hasGeometrySelector, isSimpleGeomSelector, hasNewFeaturesSelector, isSavingSelector, isSavedSelector, isDrawingSelector, canEditSelector, getAttributeFilter, hasSupportedGeometry, editingAllowedRolesSelector} = require('../../../selectors/featuregrid');
 const {userRoleSelector} = require('../../../selectors/security');
 const {isCesium} = require('../../../selectors/maptype');
-const {chartDisabledSelector} = require('../../../selectors/featuregrid');
+const {mapLayoutValuesSelector} = require('../../../selectors/mapLayout');
+const {chartDisabledSelector, showAgainSelector, showPopoverSyncSelector} = require('../../../selectors/featuregrid');
 const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed, closeFeatureGrid} = require('../../../actions/featuregrid');
 const {toolbarEvents, pageEvents} = require('../index');
 const {getAttributeFields} = require('../../../utils/FeatureGridUtils');
@@ -35,6 +36,11 @@ const Toolbar = connect(
         hasChanges: hasChangesSelector,
         hasNewFeatures: hasNewFeaturesSelector,
         hasGeometry: hasGeometrySelector,
+        syncPopover: state => ({
+            showAgain: showAgainSelector(state),
+            showPopoverSync: showPopoverSyncSelector(state),
+            dockSize: mapLayoutValuesSelector(state, {dockSize: true}).dockSize + 3.2 + "%"
+        }),
         isDrawing: isDrawingSelector,
         showChartButton: state => !chartDisabledSelector(state) && widgetBuilderAvailable(state),
         isSimpleGeom: isSimpleGeomSelector,

@@ -1047,6 +1047,9 @@
                 }
             },
             "toolbar": {
+                "synchPopoverTitle": "Sincronizza la mappa con il filtro ",
+                "synchPopoverText": "Usa questa icona per sincronizzare la mappa con il filtro selezionato",
+                "notShowAgain": "  Non mostrare più",
                 "editMode": "Entra in modalità editing",
                 "advancedFilter": "Ricerca avanzata",
                 "quitEditMode": "Esci dalla modalità editing",

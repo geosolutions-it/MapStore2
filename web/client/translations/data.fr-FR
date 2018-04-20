@@ -1048,6 +1048,9 @@
                 }
             },
             "toolbar": {
+                "synchPopoverTitle": "Synchroniser la carte avec un filtre ",
+                "synchPopoverText": "Utilisez cet outil pour synchroniser la carte avec le filtre sélectionné",
+                "notShowAgain": "  Ne plus afficher ce message",
                 "editMode": "Mode édition",
                 "advancedFilter": "Recherche Avancée",
                 "quitEditMode": "Quitter le mode d'édition",

@@ -946,6 +946,9 @@
                 }
             },
             "toolbar": {
+                "synchPopoverTitle": "Sync map with filter ",
+                "synchPopoverText": "Use this tool to synchronize the map with the selected filter",
+                "notShowAgain": "  Don't show this message again",
                 "editMode": "Edit mode",
                 "advancedFilter": "Advanced Search",
                 "quitEditMode": "Quit edit mode",

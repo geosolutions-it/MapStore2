@@ -870,7 +870,23 @@
                 "featureClose":"Wilt u echt het rooster sluiten?",
                 "delete": "Valideren om de elementen te verwijderen?",
                 "missingGeometry": "Ontbrekende geometrie",
+                "filter": {
+                    "placeholders": {
+                        "default": "Search...",
+                        "string": "Type text to filter...",
+                        "number": "Type number or expression..."
+                    },
+                    "tooltips": {
+                        "editMode": "Quick search is not available in edit mode",
+                        "default": "Search...",
+                        "string": "Type text to filter...",
+                        "number": "Type a number or an expression. Examples: 10, > 2, < 10"
+                    }
+                },
                 "toolbar": {
+                    "synchPopoverTitle": "Sync map with filter ",
+                    "synchPopoverText": "Use this tool to synchronize the map with the selected filter",
+                    "notShowAgain": "  Don't show this message again",
                     "editMode": "Bewerkingsmodus",
                     "advancedFilter": "Geavanceerd zoeken",
                     "quitEditMode": "Verlaat de bewerkingsmodus",
