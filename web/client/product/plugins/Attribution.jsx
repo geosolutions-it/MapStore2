@@ -37,7 +37,7 @@ module.exports = {
             tool: (props) => ({
                 position: 0,
                 label: props.label || 'GeoSolutions',
-                href: props.href || 'https://github.com/geosolutions-it/MapStore2',
+                href: props.href || 'https://www.geo-solutions.it/',
                 img: props.src && <img className="customer-logo" src={props.src} height="30" /> || <img className="customer-logo" src={src} height="30" />,
                 logo: true
             })
