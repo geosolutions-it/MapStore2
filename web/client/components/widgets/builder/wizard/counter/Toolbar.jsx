@@ -47,8 +47,15 @@ module.exports = ({openFilterEditor = () => {}, step = 0, stepButtons = [], edit
         glyph: "arrow-left",
         tooltipId: getBackTooltipId(step)
     }, ...stepButtons, {
-        visible: step === 0 && valid,
+        visible: step === 0,
         onClick: openFilterEditor,
+        /* if no valid attribute is present, filter must be disabled
+         * (Query panel don't work you can not proceed, so it doesn't make sense to
+         * create a filter if you can not create the widget)
+         * TODO: improve checking valid attributes presence instead
+         * of valid flag.
+         */
+        disabled: !valid,
         glyph: "filter",
         tooltipId: "widgets.builder.setupFilter"
     }, {
