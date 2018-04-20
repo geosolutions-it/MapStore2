@@ -39,6 +39,8 @@ class GroupManager extends React.Component {
     static defaultProps = {
         className: "user-search",
         hideOnBlur: false,
+        isSearchClickable: true,
+        splitTools: false,
         placeholderMsgId: "usergroups.searchGroups",
         typeAhead: false,
         searchText: "",

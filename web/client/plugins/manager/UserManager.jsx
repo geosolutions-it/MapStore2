@@ -39,6 +39,8 @@ class UserManager extends React.Component {
     static defaultProps = {
         className: "user-search",
         hideOnBlur: false,
+        isSearchClickable: true,
+        splitTools: false,
         placeholderMsgId: "users.searchUsers",
         typeAhead: false,
         searchText: "",

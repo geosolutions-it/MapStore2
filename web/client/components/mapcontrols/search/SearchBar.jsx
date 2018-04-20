@@ -100,7 +100,7 @@ class SearchBar extends React.Component {
         blurResetDelay: 300,
         autoFocusOnSelect: true,
         splitTools: true,
-        isSearchClickable: true,
+        isSearchClickable: false,
         hideOnBlur: true,
         typeAhead: true,
         searchText: ""

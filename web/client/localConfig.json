@@ -158,7 +158,7 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                    "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
                 "name": "Toolbar",
@@ -299,7 +299,6 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                  "isSearchClickable": false,
                   "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
@@ -425,7 +424,7 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                    "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
                 "name": "Toolbar",
@@ -456,13 +455,7 @@
                 "className": "navbar shadow navbar-home"
             }
         }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop", "Notifications"],
-        "maps": ["Header", "Fork",
-        {
-          "name": "MapSearch",
-          "cfg": {
-            "splitTools" : false
-          }
-        }, "HomeDescription", "ThemeSwitcher", "CreateNewMap",
+        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "ThemeSwitcher", "CreateNewMap",
           {
             "name": "Maps",
             "cfg": {
@@ -501,16 +494,6 @@
             "containerPosition": "columns"
           }
         }, "Dashboard"],
-        "manager": ["Header", "Redirect", {
-          "name": "UserManager",
-          "cfg": {
-            "splitTools" : false
-          }
-        },{
-          "name": "GroupManager",
-          "cfg": {
-            "splitTools" : false
-          }
-        }, "Home", "Manager", "Footer"]
+        "manager": ["Header", "Redirect", "UserManager", "GroupManager", "Home", "Manager", "Footer"]
     }
 }
