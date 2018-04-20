@@ -47,7 +47,7 @@ describe("Test GroupGrid Component", () => {
           "row"
         );
         expect(rows).toExist();
-        expect(rows.length).toBe(2);
+        expect(rows.length).toBe(1);
         let card = ReactTestUtils.scryRenderedDOMComponentsWithClass(comp, "gridcard");
         expect(card).toExist();
         expect(card.length).toBe(1);
