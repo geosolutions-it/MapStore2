@@ -98,6 +98,14 @@
         "mobile": [{
                 "name": "Map",
                 "cfg": {
+                    "mapOptions": {
+                      "openlayers": {
+                        "interactions": {
+                          "pinchRotate": false,
+                          "altShiftDragRotate": false
+                        }
+                      }
+                    },
                     "tools": ["locate"]
                 }
             }, "Version", "DrawerMenu",
@@ -195,6 +203,10 @@
             "cfg": {
               "mapOptions": {
                 "openlayers": {
+                  "interactions": {
+                    "pinchRotate": false,
+                    "altShiftDragRotate": false
+                  },
                   "attribution": {
                     "container": "#mapstore-map-footer-container"
                   }
@@ -349,8 +361,12 @@
                 "name": "Map",
                 "cfg": {
                     "tools": ["locate"],
-                  "mapOptions": {
+                    "mapOptions": {
                     "openlayers": {
+                      "interactions": {
+                        "pinchRotate": false,
+                        "altShiftDragRotate": false
+                      },
                       "attribution": {
                         "container": "#mapstore-map-footer-container"
                       }
