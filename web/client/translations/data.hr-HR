@@ -23,6 +23,8 @@
         "warning": "Upozorenje",
         "errorTitleDefault": "Greška",
         "errorDefault": "Došlo je do greške",
+        "pageInfoShowMore": "Results {count} of {total}",
+        "showMore": "Show more...",
         "version": {
             "label": "Verzija"
         },
@@ -155,6 +157,8 @@
         },
         "home":{
             "open": "Otvori",
+            "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore 2 je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd.<br/>Posjetite <a href=\"/mapstore/docs/\">početnu stranicu</a> za više informacija.",
             "Applications": "Aplikacije",
             "Examples": "Primjeri",
@@ -220,11 +224,14 @@
             "mapTypes_combo": "Odaberi preglednik karte: ",
             "theme_combo": "Odaberi temu:",
             "maps_title": "Karte",
-            "locales_combo": "Jezik:"
+            "locales_combo": "Jezik:",
+            "featuredMaps": "Featured Maps"
         },
         "newMap": "Nova karta",
 	    "maps": {
             "title": "Karte",
+            "addToFeaturedMaps": "Add to featured maps",
+            "removeFromFeaturedMaps": "Remove from featured maps",
             "feedback": {
                 "noDetailsAvailable": "Detalji nisu dostupni",
                 "successSavedMap": "Karta je ispravno kreirana",

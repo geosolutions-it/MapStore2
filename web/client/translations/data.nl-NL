@@ -21,6 +21,8 @@
         "enable": "Activeren",
         "layers": "Lagen",
         "warning": "Opgepast",
+        "pageInfoShowMore": "Results {count} of {total}",
+        "showMore": "Show more...",
         "version": {
             "label": "Versie"
         },
@@ -129,6 +131,8 @@
         },
         "home":{
             "open": "Openen",
+            "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore 2 is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. <br/>Bezoek onze <a href=\"/mapstore/docs/\">homepage</a> voor meer detail.",
             "Applications": "Toepassingen",
             "Examples": "Voorbeelden",
@@ -194,11 +198,14 @@
             "mapTypes_combo": "De kaart-viewer kiezen: ",
             "theme_combo": "Kies een thema:",
             "maps_title": "Kaarten",
-            "locales_combo": "Taal:"
+            "locales_combo": "Taal:",
+            "featuredMaps": "Featured Maps"
         },
         "newMap": "Nieuwe kaart",
 		"maps": {
-			"search": "Kaarten opzoeken..."
+			"search": "Kaarten opzoeken...",
+            "addToFeaturedMaps": "Add to featured maps",
+            "removeFromFeaturedMaps": "Remove from featured maps"
 		},
         "map": {
             "loading": "Bezig met laden...",

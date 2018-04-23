@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,7 +6,8 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const src = require("./attribution/geosolutions-brand.png");
+const PropTypes = require('prop-types');
+const src = require("./attribution/geosolutions-brand-sm.png");
 const assign = require('object-assign');
 
 class Attribution extends React.Component {
@@ -27,19 +27,21 @@ class Attribution extends React.Component {
     };
 
     render() {
-
-        return (<img
-                src={this.props.src}
-                style={this.props.style} />);
+        return null;
     }
 }
 
 module.exports = {
     AttributionPlugin: assign(Attribution, {
-        OmniBar: {
-            position: 1,
-            tool: () => <div className="navbar-header"><img className="customer-logo" src={src} height="36" /></div>,
-            priority: 1
+        NavMenu: {
+            tool: (props) => ({
+                position: 0,
+                label: props.label || 'GeoSolutions',
+                href: props.href || 'https://www.geo-solutions.it/',
+                img: props.src && <img className="customer-logo" src={props.src} height="30" /> || <img className="customer-logo" src={src} height="30" />,
+                logo: true
+            })
         }
     })
 };
+

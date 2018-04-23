@@ -1,31 +1,95 @@
-.ms-footer {
-    border-top: solid 1px @ms2-color-primary !important;
-    color: @ms2-color-primary !important;
+.mapstore-langselector {
+    height: @square-btn-size;
+    float: right;
+    .dropdown {
+        height: @square-btn-size;
+        .dropdown-toggle {
+            border: none !important;
+            padding: 0;
+            height: @square-btn-size - 2;
+            .btn {
+                height: @square-btn-size - 2;
+                border: none;
+            }
+            .caret {
+                margin-left: 4px;
+                margin-right: 4px;
+            }
+        }
+        .dropdown-menu {
+            > li {
+                > a {
+                    padding: 4px !important;
+                }
+            }
+            .btn {
+                border: none;
+            }
+            border: none;
+            .shadow-far;
+        }
+    }
 }
 
-.map-thumb-description {
-	color: #000000;
+
+.page-maps {
+    .MapSearchBar {
+        input {
+            box-shadow: none;
+        }
+    }
+    #mapstore-navbar-container {
+        display: flex;
+        flex-direction: row-reverse;
+        .nav {
+            &.pull-left {
+                display: flex;
+                flex: 1;
+                > li {
+                    > a {
+                        display: flex;
+                        align-items: center;
+                        height: 100%;
+                    }
+                }
+            }
+        }
+    }
+    .ms-home-description {
+        background-color: @ms2-color-background;
+        padding: @square-btn-size 0 0 0;
+        background-position: center;
+        .container {
+            background-color: fade(@ms2-color-background, 75%);
+            width: 100%;
+        }
+    }
+    .navbar-home {
+        position: fixed;
+        width: 100%;
+        margin-bottom: 0;
+        z-index: 1000;
+        background-color: @ms2-color-background;
+    }
+    > .container {
+        + .container {
+            border-top: 1px solid @ms2-color-shade-lighter;
+        }
+
+        &:last-child {
+            padding-top: 30px;
+            padding-bottom: 80px;
+            > .row + .row {
+                margin-top: 15px;
+            }
+        }
+    }
 }
 
-#mapstore-langselector button {
-	padding: 6px 12px;
-}
-
-.gridcard-tools {
-    height: @grid-btn-size !important;
-}
-
-.gridcard-button {
-	height: @grid-btn-size;
-	width: @grid-btn-size;
-    padding: 0;
-}
-
-.gridcard-button .glyphicon {
-    font-size: @grid-icon-size;
-    margin-top: -2px; /* remove after new icons */
-}
-
-.gridcard-title {
-    color: @ms2-color-text-primary;
+@media screen and (min-width: 1200px) {
+    .page-maps {
+        .container {
+            width: 90%;
+        }
+    }
 }

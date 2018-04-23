@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,10 +7,8 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {Glyphicon, Button, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('./OverlayTrigger');
-const Spinner = require('react-spinkit');
-
+const PropTypes = require('prop-types');
+const Toolbar = require('./toolbar/Toolbar');
 require('./style/gridcard.css');
 
 class GridCard extends React.Component {
@@ -20,25 +17,27 @@ class GridCard extends React.Component {
         className: PropTypes.string,
         header: PropTypes.node,
         actions: PropTypes.array,
-        onClick: PropTypes.func
+        onClick: PropTypes.func,
+        toolbarProps: PropTypes.object
     };
 
     static defaultProps = {
         actions: [],
-        header: ""
+        header: "",
+        toolbarProps: {
+            btnDefaultProps: {
+                className: 'square-button-md',
+                bsStyle: 'primary'
+            }
+        }
     };
 
     renderActions = () => {
-        return (<div className="gridcard-tools">
-            {this.props.actions.map((action, index) => {
-                let tooltip = <Tooltip id="tooltip">{action.tooltip}</Tooltip>;
-                return (<OverlayTrigger key={"gridcard-tool" + index} placement="bottom" overlay={tooltip}>
-                    <Button key={"gridcard-tool" + index} onClick={action.onClick} className="gridcard-button" bsStyle="primary" disabled={action.disabled}>
-                        {action.loading ? <Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/> : <Glyphicon glyph={action.glyph} /> }
-                    </Button>
-                    </OverlayTrigger>);
-            })}
-        </div>);
+        return (
+            <div className="gridcard-tools">
+                <Toolbar buttons={this.props.actions} {...this.props.toolbarProps}/>
+            </div>
+        );
     };
 
     render() {

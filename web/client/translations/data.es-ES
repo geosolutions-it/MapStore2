@@ -23,6 +23,8 @@
         "warning": "Atención",
         "errorTitleDefault": "Error",
         "errorDefault": "Ocurrió un error",
+        "pageInfoShowMore": "Resultados {count} de {total}",
+        "showMore": "Mostrar más...",
         "version": {
             "label": "Versión"
         },
@@ -154,6 +156,8 @@
         },
         "home":{
             "open": "Abrir",
+            "shortDescription": "Modern webmapping con OL3, Leaflet y React<br/><small>visite la página de <a href=\"/mapstore/docs/\">documentación</a></small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore 2 está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que propocionone protocolos estandar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"/mapstore/docs/\">página principal</a> para más detalles.",
             "Applications": "Aplicaciones",
             "Examples": "Ejemplos",
@@ -219,11 +223,14 @@
             "mapTypes_combo": "Seleccione un visor:",
             "theme_combo": "Seleccione un tema:",
             "maps_title": "Mapa",
-            "locales_combo": "Lengua:"
+            "locales_combo": "Lengua:",
+            "featuredMaps": "Mapas Destacados"
         },
         "newMap": "Nuevo mapa",
 		"maps": {
             "title": "Mapas",
+            "addToFeaturedMaps": "Agregar a los mapas destacados",
+            "removeFromFeaturedMaps": "Eliminar de los mapas destacados",
             "feedback": {
                 "noDetailsAvailable": "Detalles del mapa no disponibles",
                 "successSavedMap": "El mapa ha sido creado correctamente",

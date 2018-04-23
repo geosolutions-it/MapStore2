@@ -469,17 +469,18 @@
             "cfg": {
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop", "Notifications"],
-        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "ThemeSwitcher", "CreateNewMap",
+        }, "ManagerMenu", "Login","Language", "NavMenu", "Attribution", "ScrollTop", "Notifications"],
+        "maps": ["HomeDescription", "Fork", "MapSearch", "CreateNewMap", "FeaturedMaps",
           {
             "name": "Maps",
             "cfg": {
               "mapsOptions": {
                 "start": 0,
                 "limit": 12
-              }
+              },
+              "fluid": false
             }
-          }, "Examples", "Footer", {
+          }, "MailingLists", "Footer", {
           "name": "Cookie",
           "cfg": {
             "externalCookieUrl" : "",
@@ -492,7 +493,7 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "Attribution", "Home", {
+        }, "ManagerMenu", "Login", "Language", "NavMenu", "Attribution", {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {

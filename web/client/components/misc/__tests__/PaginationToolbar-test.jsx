@@ -45,7 +45,7 @@ describe('PaginationToolbar', () => {
     it('creates the component loading', () => {
         const item = ReactDOM.render(<PaginationToolbar pageSize={2} page={1} items={["a", "b"]} total={2} loading />, document.getElementById("container"));
         expect(item).toExist();
-        const spinner = ReactDOM.findDOMNode(item).getElementsByClassName('spinner');
+        const spinner = ReactDOM.findDOMNode(item).getElementsByClassName('mapstore-small-size-loader');
         expect(spinner).toExist();
         expect(spinner.length).toBe(1);
     });

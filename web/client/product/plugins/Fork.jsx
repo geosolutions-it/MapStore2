@@ -6,6 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const assign = require('object-assign');
+const github = require('../assets/img/GitHub-Mark-32px.png');
+const Message = require('../../components/I18N/Message');
 
 class Fork extends React.Component {
     render() {
@@ -18,5 +21,12 @@ class Fork extends React.Component {
 }
 
 module.exports = {
-    ForkPlugin: Fork
+    ForkPlugin: assign(Fork, {
+        NavMenu: {
+            position: 100,
+            label: <Message msgId="home.forkMeOnGitHub"/>,
+            href: 'https://github.com/geosolutions-it/MapStore2',
+            img: <img height={20} alt="GitHub" src={github}/>
+        }
+    })
 };
