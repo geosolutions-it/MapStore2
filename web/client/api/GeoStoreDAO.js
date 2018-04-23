@@ -74,6 +74,11 @@ const Api = {
             "resources/resource/" + resourceId,
             this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
+    getShortResource: function(resourceId, options) {
+        return axios.get(
+            "extjs/resource/" + resourceId,
+            this.addBaseUrl(parseOptions(options))).then(function(response) { return response.data; });
+    },
     getResourcesByCategory: function(category, query, options) {
         const q = query || "*";
         const url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail,details,featured"; // comma-separated list of wanted attributes
@@ -141,6 +146,26 @@ const Api = {
                     'Content-Type': "application/xml"
                 }
             }, options)));
+    },
+    getResourceAttributes: function(resourceId, options = {}) {
+        return axios.get(
+            "resources/resource/" + resourceId + "/attributes",
+            this.addBaseUrl({
+                headers: {
+                    'Accept': "application/json"
+                },
+                ...options
+            })).then(({ data } = {}) => data)
+            .then(data => _.castArray(_.get(data, "AttributeList.Attribute")))
+            .then(attributes => (attributes && attributes[0] && attributes[0] !== "") ? attributes : []);
+    },
+    /**
+     * same of getPermissions but clean data properly and returns only the array of rules.
+     */
+    getResourcePermissions: function(resourceId, options) {
+        return Api.getPermissions(resourceId, options)
+            .then(rl => _.castArray(_.get(rl, 'SecurityRuleList.SecurityRule')))
+            .then(rules => (rules && rules[0] && rules[0] !== "") ? rules : []);
     },
     putResourceMetadata: function(resourceId, newName, newDescription, options) {
         return axios.put(

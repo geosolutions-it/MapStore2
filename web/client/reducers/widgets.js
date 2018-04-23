@@ -11,6 +11,9 @@ ADD_DEPENDENCY, REMOVE_DEPENDENCY, LOAD_DEPENDENCIES, RESET_DEPENDENCIES} = requ
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
+const {
+    DASHBOARD_LOADED
+} = require('../actions/dashboard');
 
 const set = require('lodash/fp/set');
 const { get, find} = require('lodash');
@@ -101,8 +104,13 @@ function widgetsReducer(state = emptyState, action) {
             return arrayDelete(`containers[${action.target}].widgets`, {
                 id: action.widget.id
             }, state);
+        case DASHBOARD_LOADED:
+            const { data } = action;
+            return set(`containers[${DEFAULT_TARGET}]`, {
+                ...data
+            }, state);
         case MAP_CONFIG_LOADED:
-            const {widgetsConfig} = (action.config || {});
+            const { widgetsConfig } = (action.config || {});
             return set(`containers[${DEFAULT_TARGET}]`, {
                 ...widgetsConfig
             }, state);

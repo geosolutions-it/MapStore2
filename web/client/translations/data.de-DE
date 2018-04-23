@@ -1257,7 +1257,30 @@
 
         },
         "dashboard": {
+            "saveDialog": {
+                "title": "Dashboardeigenschaften bearbeiten",
+                "name": "Name",
+                "description": "Beschreibung",
+                "namePlaceholder": "Geben Sie einen Namen ein ...",
+                "descriptionPlaceholder": "Geben Sie eine Beschreibung ein ...",
+                "confirmCloseText": "Es gibt ausstehende Änderungen, sind Sie sicher, dass Sie schließen möchten, ohne zu speichern?",
+                "close": "Schließen",
+                "cancel": "Abbrechen",
+                "saveSuccessTitle": "Erfolg",
+                "saveSuccessMessage": "Dashboard erfolgreich gespeichert"
+            },
+            "errors":{
+                "loading": {
+                    "title": "Fehler beim Laden des Dashboards",
+                    "dashboardNotAccessible": "Sie sind nicht berechtigt, auf dieses Dashboard zuzugreifen. Wenden Sie sich an den Ressourcenbesitzer",
+                    "pleaseLogin": "Dieses Dashboard ist nicht öffentlich. Bitte versuchen Sie sich einzuloggen",
+                    "dashboardDoesNotExist": "Das Dashboard, auf das Sie zugreifen möchten, existiert nicht oder wurde entfernt",
+                    "unknownError":  "Beim Laden des Dashboards ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Administrator."
+                },
+                "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits. Versuchen Sie '{data}'"
+            },
             "editor": {
+                "save": "Speichern Sie das Dashboard",
                 "addACardToTheDashboard": "Ein Widget zum Dashboard hinzufügen",
                 "showConnections": "Verbindungen anzeigen",
                 "hideConnections": "Verbindungen ausblenden"

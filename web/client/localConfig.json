@@ -509,7 +509,7 @@
           "cfg": {
             "containerPosition": "columns"
           }
-        }, "Dashboard"],
-        "manager": ["Header", "Redirect", "UserManager", "GroupManager", "Home", "Manager", "Footer"]
+        }, "Dashboard", "Notifications"],
+        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }
