@@ -13,7 +13,8 @@ const {defaultProps, compose, mapPropsStream} = require('recompose');
 const {createSelector} = require('reselect');
 const {connect} = require('react-redux');
 const {isEqual} = require('lodash');
-const {setControlProperty} = require('../actions/controls');
+const { setFeaturedMapsEnabled} = require('../actions/maps');
+
 const Message = require("../components/I18N/Message");
 const maptypeEpics = require('../epics/maptype');
 const mapsEpics = require('../epics/maps');
@@ -106,7 +107,7 @@ const updateFeaturedMapsStream = mapPropsStream(props$ =>
 
 const FeaturedMapsPlugin = compose(
     connect(featuredMapsPluginSelector, {
-        onStart: setControlProperty.bind(null, 'featuredmaps', 'enabled', true)
+        onStart: () => setFeaturedMapsEnabled( true )
     }),
     defaultProps({
         mapType: 'leaflet',

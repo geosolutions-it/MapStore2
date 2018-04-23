@@ -16,13 +16,13 @@ const maptypeEpics = require('../epics/maptype');
 const mapsEpics = require('../epics/maps');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {userRoleSelector} = require('../selectors/security');
+const { isFeaturedMapsEnabled } = require('../selectors/featuredmaps');
 const {createSelector} = require('reselect');
 
 const MapsGrid = require('./maps/MapsGrid');
 const MetadataModal = require('./maps/MetadataModal');
 
 const {loadMaps} = require('../actions/maps');
-const {get} = require('lodash');
 
 const PaginationToolbar = connect((state) => {
     if (!state.maps ) {
@@ -105,7 +105,7 @@ const mapsPluginSelector = createSelector([
     mapTypeSelector,
     state => state.maps && state.maps.searchText,
     state => state.maps && state.maps.results ? state.maps.results : [],
-    state => get(state, 'controls.featuredmaps.enabled') ? true : false,
+    isFeaturedMapsEnabled,
     userRoleSelector
 ], (mapType, searchText, maps, featuredEnabled, role) => ({
     mapType,

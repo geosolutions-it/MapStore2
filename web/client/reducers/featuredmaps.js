@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {ATTRIBUTE_UPDATED, MAP_DELETED, MAP_METADATA_UPDATED, PERMISSIONS_UPDATED, MAPS_LIST_LOADING} = require('../actions/maps');
+const { ATTRIBUTE_UPDATED, MAP_DELETED, MAP_METADATA_UPDATED, PERMISSIONS_UPDATED, MAPS_LIST_LOADING, FEATURED_MAPS_SET_ENABLED} = require('../actions/maps');
+
 const {set} = require('../utils/ImmutableUtils');
 
 function dashboard(state = {}, action) {
@@ -40,6 +41,9 @@ function dashboard(state = {}, action) {
             return {...state,
                 searchText: action.searchText
             };
+        }
+        case FEATURED_MAPS_SET_ENABLED: {
+            return set("enabled", action.enabled, state);
         }
         default:
             return state;
