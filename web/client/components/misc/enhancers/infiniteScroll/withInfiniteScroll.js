@@ -20,16 +20,18 @@ const withScrollSpy = require('./withScrollSpy');
  * @param {object} scrollSpyOptions  Options for the `withInfiniteScroll` enhancer
  * @param {object} [loadStreamOptions]  Options for the `withInfiniteScroll` enhancer
  * @param {object} [hasMore]  Function to check if load more data
+ * @param {function} [isScrolled]  Function to check if trigger load new data eg. (div, offset) => div.scrollTop + div.clientHeight >= div.scrollHeight - offset
  * @return {HOC}                  The HOC to apply
  */
 module.exports = ({
     loadPage,
     scrollSpyOptions,
     loadStreamOptions,
-    hasMore
+    hasMore,
+    isScrolled
 }) => compose(
         loadMore(loadPage),
-        defaultProps({hasMore}),
+        defaultProps({hasMore, isScrolled}),
         withScrollSpy(scrollSpyOptions, loadStreamOptions)
 
 );

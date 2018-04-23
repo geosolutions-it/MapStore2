@@ -102,9 +102,7 @@ class UsersGrid extends React.Component {
                     <Row key="users">
                         {this.renderUsers(this.props.users || [])}
                     </Row>
-                    <Row key="bottom">
-                        {this.props.bottom}
-                    </Row>
+                    {this.props.bottom}
                 </Grid>
         );
     }

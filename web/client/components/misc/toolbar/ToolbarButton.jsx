@@ -7,6 +7,7 @@
   */
 const React = require('react');
 const {Button, Glyphicon} = require('react-bootstrap');
+const Loader = require('../Loader');
 const tooltip = require('../enhancers/tooltip');
 /**
  * Button for @see components.misc.toolbar.Toolbar. Exposes all the props of a react-bootstrap button, plus glyph and text
@@ -15,8 +16,10 @@ const tooltip = require('../enhancers/tooltip');
  * @prop glyph [glyph] the icon to use
  * @prop text [text] the text to display
  */
-module.exports = tooltip(({glyph, text="", ...props} = {}) =>
+
+module.exports = tooltip(({glyph, loading, text="", loaderProps = {}, ...props} = {}) =>
     <Button {...props}>
-        {glyph ? <Glyphicon glyph={glyph}/> : null}
+        {glyph && !loading ? <Glyphicon glyph={glyph}/> : null}
         {text}
+        {loading ? <Loader className={`ms-loader${props.bsStyle && ' ms-loader-' + props.bsStyle || ''}${props.bsSize && ' ms-loader-' + props.bsSize || ''}`} {...loaderProps}/> : null}
     </Button>);

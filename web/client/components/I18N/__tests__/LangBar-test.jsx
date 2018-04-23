@@ -41,7 +41,7 @@ describe('LangBar', () => {
 
     it('checks button click fires the proper action', () => {
         let newLang;
-        const cmp = ReactDOM.render(<LangBar onLanguageChange={ (lang) => {newLang = lang; }}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<LangBar dropdown={false} onLanguageChange={ (lang) => {newLang = lang; }}/>, document.getElementById("container"));
         const cmpDom = ReactDOM.findDOMNode(cmp);
         const select = cmpDom.getElementsByTagName("button").item(0);
 

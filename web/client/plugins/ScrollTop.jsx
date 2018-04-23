@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -7,10 +6,10 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
 const ScrollUp = require('react-scroll-up').default;
 const Message = require('../components/I18N/Message');
-const {Glyphicon, Button, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../components/misc/OverlayTrigger');
+const {Glyphicon, Button, Tooltip, OverlayTrigger} = require('react-bootstrap');
 
 /**
  * ScrollUp Plugin. Show a button that allows to scroll to the top of the page. Only for full pages.
@@ -30,12 +29,12 @@ class ScrollTop extends React.Component {
 
     static defaultProps = {
         showUnder: 200,
-        btnClassName: 'square-button',
+        btnClassName: 'square-button shadow-far',
         style: {
             zIndex: 10,
             position: 'fixed',
-            bottom: 50,
-            right: 30,
+            bottom: 12,
+            right: 8,
             cursor: 'pointer',
             transitionDuration: '0.2s',
             transitionTimingFunction: 'linear',
