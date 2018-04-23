@@ -12,7 +12,7 @@
  * @memberof selectors
  * @static
  */
-
+const { get } = require('lodash');
 module.exports = {
     /**
      * selects latestResource from featuredmaps, it's the latest resource updated
@@ -28,6 +28,14 @@ module.exports = {
      * @param  {object}  state applications state
      * @return {string}  current searched text
      */
-    searchTextSelector: state => state && state.featuredmaps && state.featuredmaps.searchText || ''
+    searchTextSelector: state => state && state.featuredmaps && state.featuredmaps.searchText || '',
+    /**
+     * selects flag for featuredmaps enabled
+     * @memberof selectors.featuredmaps
+     * @param  {object}  state applications state
+     * @return {boolean}  current searched text
+     */
+    isFeaturedMapsEnabled: state => get(state, "featuredmaps.enabled")
+
 };
 

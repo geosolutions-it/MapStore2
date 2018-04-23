@@ -6,7 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
-const {attributeUpdated, mapDeleted, mapMetadataUpdated, permissionsUpdated, mapsLoading} = require('../../actions/maps');
+const {attributeUpdated, mapDeleted, mapMetadataUpdated, permissionsUpdated, mapsLoading, setFeaturedMapsEnabled} = require('../../actions/maps');
+const { isFeaturedMapsEnabled } = require('../../selectors/featuredmaps');
 const featuredmaps = require('../featuredmaps');
 
 describe('Test the featuredmaps reducer', () => {
@@ -60,6 +61,12 @@ describe('Test the featuredmaps reducer', () => {
         const searchText = 'text';
         const state = featuredmaps({}, mapsLoading(searchText, {}));
         expect(state.searchText).toEqual(searchText);
+    });
+    it('featuredmaps enabled', () => {
+        const fm = featuredmaps({}, setFeaturedMapsEnabled(true) );
+        expect(isFeaturedMapsEnabled({
+            featuredmaps: fm
+        })).toBe(true);
     });
 
 });
