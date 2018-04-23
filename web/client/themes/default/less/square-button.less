@@ -24,6 +24,9 @@
 
 .square-button-md {
     // !important due to vertical btn-group eg. dashboard
+    &.input-group-addon {
+        display: flex;
+    }
     &, .btn-group-vertical & {
         height: @square-btn-medium-size;
         width: @square-btn-medium-size;
