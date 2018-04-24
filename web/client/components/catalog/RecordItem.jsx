@@ -135,9 +135,7 @@ class RecordItem extends React.Component {
         }
     };
 
-    truncateDescription(description,size){
-        return _.truncate(description, {'length': size, 'separator': /,? +/})
-    }
+
 
     render() {
         let record = this.props.record;
@@ -152,6 +150,10 @@ class RecordItem extends React.Component {
                   {this.renderButtons(record)}
             </Panel>
         );
+    }
+
+    truncateDescription =(description, size) => {
+        return _.truncate(description, {'length': size, 'separator': /,? +/});
     }
 
     isLinkCopied = (key) => {
