@@ -27,11 +27,6 @@
     overflow: hidden;
 }
 
-.record-item-description {
-    width: 350px;
-    white-space: nowrap;
-}
-
 .record-item .preview{
     float: left;
     width: 150px;

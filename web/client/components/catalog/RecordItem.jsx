@@ -135,6 +135,10 @@ class RecordItem extends React.Component {
         }
     };
 
+    truncateDescription(description,size){
+        return _.truncate(description, {'length': size, 'separator': /,? +/})
+    }
+
     render() {
         let record = this.props.record;
         return (
@@ -143,7 +147,7 @@ class RecordItem extends React.Component {
                 <div>
                     <h4 className="truncateText">{record && this.getTitle(record.title)}</h4>
                     <h4 className="truncateText"><small>{record && record.identifier}</small></h4>
-                    <p className="truncateText record-item-description" style={{display: 'block'}}>{this.renderDescription(record)}</p>
+                    <p className="truncateText record-item-description">{this.truncateDescription(this.renderDescription(record), 70)}</p>
                 </div>
                   {this.renderButtons(record)}
             </Panel>
