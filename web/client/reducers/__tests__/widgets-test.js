@@ -21,6 +21,7 @@ const {
     DEFAULT_TARGET
 } = require('../../actions/widgets');
 const {configureMap} = require('../../actions/config');
+const {dashboardLoaded} = require('../../actions/dashboard');
 const widgets = require('../widgets');
 
 const expect = require('expect');
@@ -127,5 +128,13 @@ describe('Test the widgets reducer', () => {
         expect(state.dependencies.viewport).toBe("map.bbox");
         expect(state.dependencies.center).toBe("map.center");
         expect(state.dependencies.zoom).toBe("map.zoom");
+    });
+    it('widgets dashboardLoaded', () => {
+        const widgetsData = { widgets: [{}] };
+        const action = dashboardLoaded("RESOURCE", widgetsData);
+        const state = widgets( undefined, action);
+        expect(state).toExist();
+        expect(state.containers[DEFAULT_TARGET].widgets).toExist();
+        expect(state.containers[DEFAULT_TARGET].widgets.length).toBe(1);
     });
 });

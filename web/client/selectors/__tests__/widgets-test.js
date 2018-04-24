@@ -18,7 +18,8 @@ const {
     getEditorSettings,
     getWidgetLayer,
     dependenciesSelector,
-    availableDependenciesSelector
+    availableDependenciesSelector,
+    returnToFeatureGridSelector
 } = require('../widgets');
 const {set} = require('../../utils/ImmutableUtils');
 describe('widgets selectors', () => {
@@ -64,6 +65,11 @@ describe('widgets selectors', () => {
         const state = set(`widgets.builder.settings`, { flag: true }, {});
         expect(getEditorSettings(state)).toExist();
         expect(getEditorSettings(state).flag).toBe(true);
+    });
+    it('returnToFeatureGridSelector', () => {
+        const state = set(`widgets.builder.editor`, { returnToFeatureGrid: true }, {});
+        expect(returnToFeatureGridSelector(state)).toExist();
+        expect(returnToFeatureGridSelector(state)).toBe(true);
     });
     it('getWidgetLayer', () => {
         const tocLayerState = {'layers': { selected: ["TEST1"], flat: [{id: "TEST1", name: "TEST1"}] }};

@@ -1,16 +1,15 @@
-
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var React = require('react');
-var {Button, Tooltip} = require('react-bootstrap');
+const React = require('react');
+const PropTypes = require('prop-types');
+const {Button, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
-var LocaleUtils = require('../../utils/LocaleUtils');
+const LocaleUtils = require('../../utils/LocaleUtils');
 
 
 class LangBar extends React.Component {
@@ -21,17 +20,20 @@ class LangBar extends React.Component {
         active: PropTypes.bool,
         label: PropTypes.string,
         description: PropTypes.string,
-        onFlagSelected: PropTypes.func
+        onFlagSelected: PropTypes.func,
+        tooltipPlacement: PropTypes.string
     };
 
     static defaultProps = {
         locales: LocaleUtils.getSupportedLocales(),
         code: 'en-US',
-        onLanguageChange: function() {}
+        onLanguageChange: function() {},
+        onFlagSelected: () => {},
+        tooltipPlacement: 'bottom'
     };
 
     render() {
-        let tooltip = <Tooltip id={"flag-button." + this.props.code}>{this.props.label}</Tooltip>;
+        let tooltip = <Tooltip id={"flag-button." + this.props.code} >{this.props.label}</Tooltip>;
         let imgSrc;
         try {
             imgSrc = require('./images/flags/' + this.props.code + '.png');
@@ -39,7 +41,7 @@ class LangBar extends React.Component {
             imgSrc = null;
         }
 
-        return imgSrc ? (<OverlayTrigger key={"overlay-" + this.props.code} overlay={tooltip}>
+        return imgSrc ? (<OverlayTrigger key={"overlay-" + this.props.code} overlay={tooltip} placement={this.props.tooltipPlacement}>
             <Button
                 key={this.props.code}
                 onClick={this.launchFlagAction.bind(this, this.props.code)}

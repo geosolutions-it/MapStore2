@@ -21,7 +21,8 @@ class CreateNewMap extends React.Component {
         colProps: PropTypes.object,
         isLoggedIn: PropTypes.bool,
         allowedRoles: PropTypes.array,
-        user: PropTypes.object
+        user: PropTypes.object,
+        fluid: PropTypes.bool
     };
 
     static contextTypes = {
@@ -38,11 +39,12 @@ class CreateNewMap extends React.Component {
             sm: 12,
             lg: 12,
             md: 12
-        }
+        },
+        fluid: false
     };
     render() {
         const display = this.isAllowed() ? null : "none";
-        return (<Grid fluid style={{marginBottom: "30px", padding: 0, display}}>
+        return (<Grid fluid={this.props.fluid} style={{marginBottom: "30px", padding: 0, display}}>
         <Col {...this.props.colProps} >
             <Button bsStyle="primary" onClick={() => { this.context.router.history.push("/viewer/" + this.props.mapType + "/new"); }}>
             <Message msgId="newMap" />

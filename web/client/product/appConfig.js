@@ -36,6 +36,10 @@ module.exports = {
         path: "/dashboard",
         component: require('./pages/Dashboard')
     }, {
+        name: "dashboard",            
+        path: "/dashboard/:did",
+        component: require('./pages/Dashboard')
+    }, {
         name: "rulesmanager",
         path: "/rules-manager",
         component: require('./pages/RulesManager')

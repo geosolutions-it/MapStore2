@@ -261,7 +261,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 },
                 {
                     allowedSRS: {},
@@ -299,7 +301,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 },
                 {
                     allowedSRS: {},
@@ -337,7 +341,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -497,7 +503,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 },
                 {
                     allowedSRS: {},
@@ -535,7 +543,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 },
                 {
                     allowedSRS: {},
@@ -573,7 +583,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 }],
                 mapOptions: {
                     view: {
@@ -751,7 +763,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "http:url001",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 },
                 {
                     allowedSRS: {},
@@ -789,7 +803,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "http:url001",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 },
                 {
                     allowedSRS: {},
@@ -827,7 +843,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "http:url001",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],

@@ -23,6 +23,8 @@
         "warning": "Warning",
         "errorTitleDefault": "Error",
         "errorDefault": "An error occurred",
+        "pageInfoShowMore": "Results {count} of {total}",
+        "showMore": "Show more...",
         "version": {
             "label": "Version"
         },
@@ -111,6 +113,11 @@
         "mousePositionCoordinates": "Coordinates indicator",
         "mouseCoordinates": "Coordinates:",
         "mousePositionCRS": "CRS:",
+        "mousePositionElevation": "Elev.:",
+        "mousePositionNoElevation": "N/A",
+        "elevationLoading": "Loading...",
+        "elevationLoadingError": "Error",
+        "elevationNotAvailable": "N/A",
         "mapScale": "Scale:",
         "showMousePositionCoordinates": "Show/Hide Coordinates",
         "menu": "Menu",
@@ -150,6 +157,8 @@
         },
         "home":{
             "open": "Open",
+            "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore 2 has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.<br/>Visit the <a href=\"/mapstore/docs/\">home page</a> for more details.",
             "Applications": "Applications",
             "Examples": "Examples",
@@ -215,11 +224,14 @@
             "mapTypes_combo": "Select Map Viewer: ",
             "theme_combo": "Select Theme:",
             "maps_title": "Maps",
-            "locales_combo": "Language:"
+            "locales_combo": "Language:",
+            "featuredMaps": "Featured"
         },
         "newMap": "New Map",
 		"maps": {
             "title": "Maps",
+            "addToFeaturedMaps": "Add to featured maps",
+            "removeFromFeaturedMaps": "Remove from featured maps",
             "feedback": {
                 "noDetailsAvailable": "Details not available",
                 "successSavedMap": "The map has been created correctly",
@@ -1043,6 +1055,9 @@
                 }
             },
             "toolbar": {
+                "synchPopoverTitle": "Sync map with filter ",
+                "synchPopoverText": "Use this tool to synchronize the map with the selected filter",
+                "notShowAgain": "  Don't show this message again",
                 "editMode": "Edit mode",
                 "advancedFilter": "Advanced Search",
                 "quitEditMode": "Quit edit mode",
@@ -1151,6 +1166,8 @@
                     "clearConnection": "Clear connection"
                 },
                 "errors": {
+                    "noAttributesTitle": "No attributes to show",
+                    "noAttributesDescription": "The selected layers has no attributes to show. Please go back and select another layer to use this widget",
                     "noWidgetsAvailableTitle": "Can not create the widget for the selected layer",
                     "noWidgetsAvailableDescription": "<p><strong>Please try to select another layer or widget type</strong></p><p>The server doesn't provide the needed services for the layer and the widget type selected</p><p>Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li>The WPS process <code>gs:aggregate</code> is not available</li></ul></p>",
                     "checkAtLeastOneAttribute": "You must select at least one column"
@@ -1241,7 +1258,30 @@
 
         },
         "dashboard": {
+            "saveDialog": {
+                "title": "Edit dashboard properties",
+                "name": "Name",
+                "description": "Description",
+                "namePlaceholder": "Type a name...",
+                "descriptionPlaceholder": "Type a description...",
+                "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",
+                "close": "Close",
+                "cancel": "Cancel",
+                "saveSuccessTitle": "Success",
+                "saveSuccessMessage": "Dashboard saved successfully"
+            },
+            "errors":{
+                "loading": {
+                    "title": "Error loading dashboard",
+                    "dashboardNotAccessible": "You don't have permission to access this dashboard. Please contact the resource owner",
+                    "pleaseLogin": "This dashboard is not public. Please try to login",
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist or has been removed",
+                    "unknownError": "There was an error loading the dashboard. Please contact the administrator"
+                },
+                "resourceAlreadyExists": "A resource with this name already exists. try '{data}'"
+            },
             "editor": {
+                "save": "Save the dashboard",
                 "addACardToTheDashboard": "Add a widget to the dashboard",
                 "showConnections": "Show connections",
                 "hideConnections": "HideConnections"

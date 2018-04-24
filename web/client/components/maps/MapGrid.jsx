@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,12 +7,14 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const {Grid, Row, Col} = require('react-bootstrap');
 const MapCard = require('./MapCard');
 const Spinner = require('react-spinkit');
 
 class MapGrid extends React.Component {
     static propTypes = {
+        id: PropTypes.string,
         panelProps: PropTypes.object,
         bottom: PropTypes.node,
         loading: PropTypes.bool,
@@ -38,19 +39,21 @@ class MapGrid extends React.Component {
         deleteMap: PropTypes.func,
         resetCurrentMap: PropTypes.func,
         updatePermissions: PropTypes.func,
-        metadataModal: PropTypes.func
+        metadataModal: PropTypes.func,
+        onUpdateAttribute: PropTypes.func,
+        title: PropTypes.node,
+        className: PropTypes.string,
+        style: PropTypes.object
     };
 
     static defaultProps = {
+        id: "mapstore-maps-grid",
         mapType: 'leaflet',
         bottom: "",
         fluid: true,
         colProps: {
             xs: 12,
-            sm: 6,
-            style: {
-                "marginBottom": "20px"
-            }
+            sm: 6
         },
         currentMap: {},
         maps: [],
@@ -80,7 +83,10 @@ class MapGrid extends React.Component {
         editMap: () => {},
         resetCurrentMap: () => {},
         updatePermissions: () => {},
-        groups: []
+        groups: [],
+        onUpdateAttribute: () => {},
+        className: '',
+        style: {}
     };
     renderMaps = (maps, mapType) => {
         const viewerUrl = this.props.viewerUrl;
@@ -93,7 +99,8 @@ class MapGrid extends React.Component {
                         map={map}
                         onEdit={this.props.editMap}
                         detailsSheetActions={this.props.detailsSheetActions}
-                        onMapDelete={this.props.deleteMap}/>
+                        onMapDelete={this.props.deleteMap}
+                        onUpdateAttribute={this.props.onUpdateAttribute}/>
                 </Col>;
         });
     };
@@ -122,13 +129,14 @@ class MapGrid extends React.Component {
 
     render() {
         return (
-                <Grid id="mapstore-maps-grid" fluid={this.props.fluid}>
-                    <Row>
+                <Grid id={this.props.id} fluid={this.props.fluid} className={'ms-grid-container ' + this.props.className} style={this.props.style}>
+                    {this.props.title && <Row>
+                        {this.props.title}
+                    </Row>}
+                    <Row className="ms-grid">
                         {this.props.loading && this.props.maps.length === 0 ? this.renderLoading() : this.renderMaps(this.props.maps || [], this.props.mapType)}
                     </Row>
-                    <Row>
-                        {this.props.bottom}
-                    </Row>
+                    {this.props.bottom}
                     {this.renderMetadataModal()}
                 </Grid>
         );

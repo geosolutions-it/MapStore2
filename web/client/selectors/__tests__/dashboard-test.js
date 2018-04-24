@@ -10,7 +10,11 @@ const expect = require('expect');
 const {
     isDashboardAvailable,
     isDashboardEditing,
-    showConnectionsSelector
+    showConnectionsSelector,
+    isShowSaveOpen,
+    dashboardResource,
+    isDashboardLoading,
+    getDashboardSaveErrors
 } = require('../dashboard');
 describe('dashboard selectors', () => {
     it('test isDashboardAvailable selector', () => {
@@ -27,5 +31,33 @@ describe('dashboard selectors', () => {
                 showConnections: true
             }
         })).toBe(true);
+    });
+    it('isShowOpen', () => {
+        expect(isShowSaveOpen({
+            dashboard: {
+                showSaveModal: true
+            }
+        })).toBe(true);
+    });
+    it('dashboardResource', () => {
+        expect(dashboardResource({
+            dashboard: {
+                resource: {}
+            }
+        })).toExist();
+    });
+    it('isDashboardLoading', () => {
+        expect(isDashboardLoading({
+            dashboard: {
+                loading: true
+            }
+        })).toBe(true);
+    });
+    it('getDashboardSaveErrors', () => {
+        expect(getDashboardSaveErrors({
+            dashboard: {
+                saveErrors: [{}]
+            }
+        }).length).toBe(1);
     });
 });

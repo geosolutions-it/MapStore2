@@ -97,7 +97,7 @@ class SettingsButton extends React.Component {
                     </Row>
                     <Row>
                         <Col xs={12}>
-                            <LangBar locales={LocaleUtils.getSupportedLocales()} key="langSelector"/>
+                            <LangBar dropdown={false} locales={LocaleUtils.getSupportedLocales()} key="langSelector"/>
                         </Col>
                     </Row>
                 </FormGroup>

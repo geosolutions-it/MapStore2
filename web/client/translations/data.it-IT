@@ -23,6 +23,8 @@
         "warning": "Attenzione",
         "errorTitleDefault": "Errore",
         "errorDefault": "Si è verificato un errore",
+        "pageInfoShowMore": "Elementi {count} di {total}",
+        "showMore": "Mostra altri...",
         "version": {
             "label": "Versione"
         },
@@ -110,6 +112,11 @@
         "mousePositionCoordinates": "Indicatore di coordinate",
         "mouseCoordinates": "Coordinate:",
         "mousePositionCRS": "CRS:",
+        "mousePositionElevation": "Elev.:",
+        "mousePositionNoElevation": "Non disp.",
+        "elevationLoading": "Attendi...",
+        "elevationLoadingError": "Errore",
+        "elevationNotAvailable": "Non disp.",
         "mapScale": "Scala:",
         "showMousePositionCoordinates": "Mostra/Nascondi Coordinate",
         "menu": "Menu",
@@ -149,6 +156,8 @@
         },
         "home":{
             "open": "Apri",
+            "shortDescription": "Modern webmapping con OL3, Leaflet e React<br/><small>visita la pagina di <a href=\"/mapstore/docs/\">documentazione</a></small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"/mapstore/docs/\">home page</a> per maggiori dettagli.",
             "Applications": "Applicazioni",
             "Examples": "Esempi",
@@ -214,11 +223,14 @@
             "mapTypes_combo": "Seleziona il visualizzatore di mappa:",
             "theme_combo": "Seleziona Tema:",
             "maps_title": "Mappe",
-            "locales_combo": "Lingua:"
+            "locales_combo": "Lingua:",
+            "featuredMaps": "In Evidenza"
         },
         "newMap": "Nuova Mappa",
 		"maps": {
             "title": "Mappe",
+            "addToFeaturedMaps": "Aggiungi alle featured maps",
+            "removeFromFeaturedMaps": "Rimuovi dalle featured maps",
             "feedback": {
                 "noDetailsAvailable": "Dettagli della mappa non disponibili",
                 "successSavedMap": "La mappa è stata salvata correttamente",
@@ -1042,6 +1054,9 @@
                 }
             },
             "toolbar": {
+                "synchPopoverTitle": "Sincronizza la mappa con il filtro ",
+                "synchPopoverText": "Usa questa icona per sincronizzare la mappa con il filtro selezionato",
+                "notShowAgain": "  Non mostrare più",
                 "editMode": "Entra in modalità editing",
                 "advancedFilter": "Ricerca avanzata",
                 "quitEditMode": "Esci dalla modalità editing",
@@ -1150,6 +1165,8 @@
                     "clearConnection": "Disconnetti"
                 },
                 "errors": {
+                    "noAttributesTitle": "Nessun attributo disponibile",
+                    "noAttributesDescription": "Il layer selezionato non ha attributi da mostrare. Tornare indietro e selezionare un'altro livello per utilizzare questo widget",
                     "noWidgetsAvailableTitle": "Impossibile creare il widget per il livello selezionato",
                     "noWidgetsAvailableDescription": "<p><strong> Prova a selezionare un altro livello o tipo di widget </strong> </p><p>Il server non fornisce i servizi necessari per il livello e il tipo di widget selezionato </p> <p> Le possibili cause sono: <ul> <li> Il livello selezionato è un livello raster </li> <li> Il servizio WFS non è disponibile </li><li> Il processo WPS <code>gs:aggregate</code> non è disponibile </li> </ul></p>",
                     "checkAtLeastOneAttribute": "seleziona almeno un attributo"
@@ -1179,7 +1196,7 @@
                 },
                 "line": {
                     "title": "Grafico a Linea",
-                    "description": "Crea un grafico a linea da aggiungere alla mapp",
+                    "description": "Crea un grafico a linea da aggiungere alla mappa",
                     "caption": "linea"
                 },
                 "gauge": {
@@ -1240,7 +1257,30 @@
 
         },
         "dashboard": {
-             "editor": {
+            "saveDialog": {
+                "title": "Modifica proprietà dashboard",
+                "name": "Nome",
+                "description": "Descrizione",
+                "namePlaceholder": "Inserisci un nome..",
+                "descriptionPlaceholder": "Inserisci una descrizione...",
+                "confirmCloseText": "Ci sono modifiche non salvate, sei sicuro di voler chiudere senza salvare?",
+                "close": "Chiudi",
+                "cancel": "Annulla",
+                "saveSuccessTitle": "Successo",
+                "saveSuccessMessage": "Dashboard salvata"
+            },
+            "errors":{
+                "loading": {
+                    "title": "Errore di caricamento della dashboard",
+                    "dashboardNotAccessible": "Non hai i permessi per accedere a questa dashboard. Contatta il properietario",
+                    "pleaseLogin": "Questa risorsa non è pubblica. Effettuare il login",
+                    "dashboardDoesNotExist": "La dashboard richiesta non esiste o è stata cancellata",
+                    "unknownError": "C'è stato un errore durante il caricamento della dashboard. Contattare l'amministratore"
+                },
+                "resourceAlreadyExists": "Una risorsa con questo nome esiste già. Provare con '{data}'"
+            },
+            "editor": {
+                "save": "Save the dashboard",
                 "addACardToTheDashboard": "Aggiungi un widget alla dashboard",
                 "showConnections": "Mostra connessioni",
                 "hideConnections": "Nascondi connessioni"

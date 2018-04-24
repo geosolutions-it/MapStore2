@@ -10,7 +10,8 @@ const _ = require('lodash');
 const assign = require('object-assign');
 const uuidv1 = require('uuid/v1');
 const ConfigUtils = require('../utils/ConfigUtils');
-
+const xml2js = require('xml2js');
+const xmlBuilder = new xml2js.Builder();
 const {registerErrorParser} = require('../utils/LocaleUtils');
 
 let parseOptions = (opts) => opts;
@@ -73,9 +74,14 @@ const Api = {
             "resources/resource/" + resourceId,
             this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
+    getShortResource: function(resourceId, options) {
+        return axios.get(
+            "extjs/resource/" + resourceId,
+            this.addBaseUrl(parseOptions(options))).then(function(response) { return response.data; });
+    },
     getResourcesByCategory: function(category, query, options) {
         const q = query || "*";
-        const url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail,details"; // comma-separated list of wanted attributes
+        const url = "extjs/search/category/" + category + "/*" + q + "*/thumbnail,details,featured"; // comma-separated list of wanted attributes
         return axios.get(url, this.addBaseUrl(parseOptions(options))).then(function(response) {return response.data; });
     },
     getUserDetails: function(username, password, options) {
@@ -140,6 +146,26 @@ const Api = {
                     'Content-Type': "application/xml"
                 }
             }, options)));
+    },
+    getResourceAttributes: function(resourceId, options = {}) {
+        return axios.get(
+            "resources/resource/" + resourceId + "/attributes",
+            this.addBaseUrl({
+                headers: {
+                    'Accept': "application/json"
+                },
+                ...options
+            })).then(({ data } = {}) => data)
+            .then(data => _.castArray(_.get(data, "AttributeList.Attribute")))
+            .then(attributes => (attributes && attributes[0] && attributes[0] !== "") ? attributes : []);
+    },
+    /**
+     * same of getPermissions but clean data properly and returns only the array of rules.
+     */
+    getResourcePermissions: function(resourceId, options) {
+        return Api.getPermissions(resourceId, options)
+            .then(rl => _.castArray(_.get(rl, 'SecurityRuleList.SecurityRule')))
+            .then(rules => (rules && rules[0] && rules[0] !== "") ? rules : []);
     },
     putResourceMetadata: function(resourceId, newName, newDescription, options) {
         return axios.put(
@@ -370,6 +396,47 @@ const Api = {
         return axios.post(url, null, this.addBaseUrl(parseOptions(options))).then(function(response) {
             return response.data;
         });
+    },
+    /**
+     * send a request to /extjs/search/list
+     * @param  {object} filters
+     * @param  {object} options additional axios options
+     * @return {object}
+     * @example
+     *
+     *  const filters = {
+     *      AND: {
+     *          ATTRIBUTE: [
+     *              {
+     *                  name: ['featured'],
+     *                  operator: ['EQUAL_TO'],
+     *                  type: ['STRING'],
+     *                  value: [true]
+     *              }
+     *          ]
+     *      }
+     *  }
+     *
+     *  searchListByAttributes(filters)
+     *      .then(results => results)
+     *      .catch(error => error);
+     *
+     */
+    searchListByAttributes: (filter, options) => {
+        const url = "/extjs/search/list";
+        const xmlFilter = xmlBuilder.buildObject(filter);
+        return axios.post(
+            url,
+            xmlFilter,
+            Api.addBaseUrl({
+                ...parseOptions(options),
+                headers: {
+                   "Content-Type": "application/xml",
+                   "Accept": "application/json"
+                }
+            })
+        )
+        .then(response => response.data);
     },
     utils: {
         /**

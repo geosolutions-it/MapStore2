@@ -9,23 +9,23 @@ const PropTypes = require('prop-types');
 const React = require('react');
 
 const {connect} = require('react-redux');
-
+const { get } = require('lodash');
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 
 const ConfigUtils = require('../../utils/ConfigUtils');
 
-const {loadMapConfig} = require('../../actions/config');
+const { loadDashboard } = require('../../actions/dashboard');
 const {resetControls} = require('../../actions/controls');
 
 const HolyGrail = require('../../containers/HolyGrail');
 
-class MapsPage extends React.Component {
+class DashboardPage extends React.Component {
     static propTypes = {
         name: PropTypes.string,
         mode: PropTypes.string,
         match: PropTypes.object,
-        loadMaps: PropTypes.func,
+        loadResource: PropTypes.func,
         reset: PropTypes.func,
         plugins: PropTypes.object
     };
@@ -38,23 +38,27 @@ class MapsPage extends React.Component {
     };
 
     componentWillMount() {
-        if (this.props.match.params.mapType && this.props.match.params.mapId) {
-            if (this.props.mode === 'mobile') {
-                require('../assets/css/mobile.css');
-            }
+        const id = get(this.props, "match.params.did");
+        if (id) {
             this.props.reset();
-            this.props.loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*");
+            this.props.loadResource(id);
         }
     }
-
+    componentDidUpdate(oldProps) {
+        const id = get(this.props, "match.params.did");
+        if (get(oldProps, "match.params.did") !== get(this.props, "match.params.did")) {
+            this.props.reset();
+            this.props.loadResource(id);
+        }
+    }
     render() {
         let plugins = ConfigUtils.getConfigProp("plugins") || {};
         let pagePlugins = {
-            "desktop": [], // TODO mesh page plugins with other plugins
+            "desktop": [],
             "mobile": []
         };
         let pluginsConfig = {
-            "desktop": plugins[this.props.name] || [], // TODO mesh page plugins with other plugins
+            "desktop": plugins[this.props.name] || [],
             "mobile": plugins[this.props.name] || []
         };
 
@@ -72,6 +76,6 @@ module.exports = connect((state) => ({
     mode: urlQuery.mobile || state.browser && state.browser.mobile ? 'mobile' : 'desktop'
 }),
     {
-        loadMapConfig,
+        loadResource: loadDashboard,
         reset: resetControls
-    })(MapsPage);
+    })(DashboardPage);

@@ -5,9 +5,9 @@
         word-wrap: break-word;
     }
 
-    img {
-        /*width: 100%;*/
-    }
+    /*img {
+        width: 100%;
+    }*/
 }
 
 .mapstore-permission-group {
@@ -190,13 +190,6 @@
     }
 
     .ms-permissions-container {
-        & > .row {
-            & > .col-xs-12 {
-
-            }
-        }
-
-
         /*border-bottom: 1px solid @ms2-color-shade-lighter;*/
 
         z-index: 50;
@@ -290,6 +283,83 @@
                 cursor: pointer;
                 transform: ~"translateY(-@{move-up})";
             }*/
+        }
+    }
+}
+
+.ms-grid-container {
+    .ms-map-card-col {
+        margin: 4px 0;
+        padding-left: 4px;
+        padding-right: 4px;
+        height: @square-btn-size * 3.5;
+        overflow: visible;
+        .gridcard {
+            height: @square-btn-size * 3.5;
+            transition: all 0.3s;
+            &:hover {
+                .shadow-far;
+                cursor: pointer;
+                z-index: 10;
+                opacity: 0.8;
+            }
+            .shadow-soft;
+            .gridcard-title {
+                background-color: transparent;
+                color: #fff;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+                font-size: @font-size-large;
+                width: 100%;
+                text-align: center;
+                padding: 4px;
+                padding-top: 8px;
+                min-height: auto;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
+            }
+            .map-thumb-description {
+                background-color: transparent;
+                color: #333;
+                color: #fff;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.9);
+                width: 100%;
+                text-align: center;
+                padding: 4px;
+            }
+            .gridcard-tools {
+                overflow: hidden;
+                position: absolute;
+                padding: 0;
+                margin: 0;
+                width: ~"calc(100% - 8px)";
+                bottom: 0;
+                .btn-group {
+                    float: right;
+                }
+            }
+        }
+    }
+
+    &.ms-grid-horizontal {
+        padding: 0 20px;
+        .ms-grid {
+            .shadow-inset;
+            height: @square-btn-size * 4;
+            overflow: hidden;
+            white-space: nowrap;
+            overflow-x: auto;
+            .ms-map-card-col {
+                width: @square-btn-size * 4;
+                float: none;
+                display: inline-block;
+                overflow: hidden;
+                .gridcard {
+                    // for IOS
+                    display: flex;
+                    flex-direction: column;
+                }
+            }
         }
     }
 }

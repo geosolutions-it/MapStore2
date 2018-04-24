@@ -23,6 +23,8 @@
         "warning": "Atención",
         "errorTitleDefault": "Error",
         "errorDefault": "Ocurrió un error",
+        "pageInfoShowMore": "Resultados {count} de {total}",
+        "showMore": "Mostrar más...",
         "version": {
             "label": "Versión"
         },
@@ -110,6 +112,11 @@
         "mousePositionCoordinates": "Coordinates indicator",
         "mouseCoordinates": "Coordinates:",
         "mousePositionCRS": "CRS:",
+        "mousePositionElevation": "Elev.:",
+        "mousePositionNoElevation": "N/P",
+        "elevationLoading": "Cargando...",
+        "elevationLoadingError": "Error",
+        "elevationNotAvailable": "N/P",
         "mapScale": "Escala:",
         "showMousePositionCoordinates": "Mostrar/esconder las coordenadas",
         "menu": "Menú",
@@ -149,6 +156,8 @@
         },
         "home":{
             "open": "Abrir",
+            "shortDescription": "Modern webmapping con OL3, Leaflet y React<br/><small>visite la página de <a href=\"/mapstore/docs/\">documentación</a></small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore 2 está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que propocionone protocolos estandar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"/mapstore/docs/\">página principal</a> para más detalles.",
             "Applications": "Aplicaciones",
             "Examples": "Ejemplos",
@@ -214,11 +223,14 @@
             "mapTypes_combo": "Seleccione un visor:",
             "theme_combo": "Seleccione un tema:",
             "maps_title": "Mapa",
-            "locales_combo": "Lengua:"
+            "locales_combo": "Lengua:",
+            "featuredMaps": "Mapas Destacados"
         },
         "newMap": "Nuevo mapa",
 		"maps": {
             "title": "Mapas",
+            "addToFeaturedMaps": "Agregar a los mapas destacados",
+            "removeFromFeaturedMaps": "Eliminar de los mapas destacados",
             "feedback": {
                 "noDetailsAvailable": "Detalles del mapa no disponibles",
                 "successSavedMap": "El mapa ha sido creado correctamente",
@@ -1042,6 +1054,9 @@
                 }
             },
             "toolbar": {
+                "synchPopoverTitle": "Sincronizar mapa con filtro ",
+                "synchPopoverText": "Use esta herramienta para sincronizar el mapa con el filtro seleccionado",
+                "notShowAgain": "  No mostrar este mensaje otra vez",
                 "editMode": "Modo de edición",
                 "advancedFilter": "Búsqueda avanzada",
                 "quitEditMode": "Salir del modo de edición",
@@ -1150,6 +1165,8 @@
                     "clearConnection": "Borrar conexión"
                 },
                 "errors": {
+                    "noAttributesTitle": "No hay atributos para mostrar",
+                    "noAttributesDescription": "Las capas seleccionadas no tienen atributos que mostrar. Vuelva atrás y seleccione otra capa para usar este widget",
                     "noWidgetsAvailableTitle": "No se puede crear el widget para la capa seleccionada",
                     "noWidgetsAvailableDescription": "<p> <strong> Intente seleccionar otra capa o tipo de widget </strong> </p> <p> El servidor no proporciona los servicios necesarios para la capa y el tipo de widget seleccionado </p> <p> Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> El proceso WPS <code>gs:aggregate</code> no está disponible </li> </ul> </p> ",
                     "checkAtLeastOneAttribute": "Debes seleccionar al menos una columna"
@@ -1240,7 +1257,30 @@
 
         },
         "dashboard": {
+            "saveDialog": {
+                "title": "Editar propiedades del tablero",
+                "name": "Nombre",
+                "description": "Descripción",
+                "namePlaceholder": "Escriba un nombre ...",
+                "descriptionPlaceholder": "Escriba una descripción ...",
+                "confirmCloseText": "Hay cambios pendientes, ¿está seguro de que quiere cerrar sin guardar?",
+                "close": "Cerca",
+                "cancel": "Cancelar",
+                "saveSuccessTitle": "éxito",
+                "saveSuccessMessage": "Panel de control guardado con éxito"
+            },
+            "errors":{
+                "loading": {
+                    "title": "Error al cargar el tablero",
+                    "dashboardNotAccessible": "No tiene permiso para acceder a este panel. Póngase en contacto con el propietario del recurso",
+                    "pleaseLogin": "Este panel no es público. Intente iniciar sesión",
+                    "dashboardDoesNotExist": "El panel al que está intentando acceder no existe o se ha eliminado",
+                    "unknownError": "Hubo un error al cargar el panel. Póngase en contacto con el administrador"
+                },
+                "resourceAlreadyExists":  "Ya existe un recurso con este nombre. try '{data}'"
+            },
             "editor": {
+                "save": "Guardar el tablero",
                 "addACardToTheDashboard": "Agregar un widget al tablero",
                 "showConnections": "Mostrar conexiones",
                 "hideConnections": "Ocultar conexiones"

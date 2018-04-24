@@ -103,6 +103,14 @@
         "mobile": [{
                 "name": "Map",
                 "cfg": {
+                    "mapOptions": {
+                      "openlayers": {
+                        "interactions": {
+                          "pinchRotate": false,
+                          "altShiftDragRotate": false
+                        }
+                      }
+                    },
                     "tools": ["locate"]
                 }
             }, "Version", "DrawerMenu",
@@ -163,7 +171,7 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                    "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
                 "name": "Toolbar",
@@ -200,6 +208,10 @@
             "cfg": {
               "mapOptions": {
                 "openlayers": {
+                  "interactions": {
+                    "pinchRotate": false,
+                    "altShiftDragRotate": false
+                  },
                   "attribution": {
                     "container": "#mapstore-map-footer-container"
                   }
@@ -260,7 +272,6 @@
                 "name": "TOC",
                 "cfg": {
                     "activateQueryTool": true,
-                    "activateDownloadTool": true,
                     "activateAddLayerButton": true,
                     "spatialOperations": [
                         {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
@@ -304,7 +315,7 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                    "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
                 "name": "Toolbar",
@@ -354,8 +365,12 @@
                 "name": "Map",
                 "cfg": {
                     "tools": ["locate"],
-                  "mapOptions": {
+                    "mapOptions": {
                     "openlayers": {
+                      "interactions": {
+                        "pinchRotate": false,
+                        "altShiftDragRotate": false
+                      },
                       "attribution": {
                         "container": "#mapstore-map-footer-container"
                       }
@@ -429,7 +444,7 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                    "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
                 "name": "Toolbar",
@@ -459,17 +474,18 @@
             "cfg": {
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop", "Notifications"],
-        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "ThemeSwitcher", "CreateNewMap",
+        }, "ManagerMenu", "Login","Language", "NavMenu", "Attribution", "ScrollTop", "Notifications"],
+        "maps": ["HomeDescription", "Fork", "MapSearch", "CreateNewMap", "FeaturedMaps",
           {
             "name": "Maps",
             "cfg": {
               "mapsOptions": {
                 "start": 0,
                 "limit": 12
-              }
+              },
+              "fluid": false
             }
-          }, "Examples", "Footer", {
+          }, "MailingLists", "Footer", {
           "name": "Cookie",
           "cfg": {
             "externalCookieUrl" : "",
@@ -482,7 +498,7 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "Attribution", {
+        }, "ManagerMenu", "Login", "Language", "NavMenu", "Attribution", {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {
@@ -498,23 +514,7 @@
           "cfg": {
             "containerPosition": "columns"
           }
-        }, "Dashboard"],
-        "rulesmanager": [{
-            "name": "OmniBar",
-            "cfg": {
-                "containerPosition": "header",
-                "className": "navbar shadow navbar-home"
-            }
-          }, {
-            "name": "Home", 
-            "override": {
-              "OmniBar": {
-                  "position": 1,
-                  "priority": 1
-                }
-              }
-            },"Language", "Login", "Attribution", "RulesDataGrid", "Notifications", {
-                "name": "RulesManagerFooter" , "cfg": { "containerPosition": "footer"} }],
-        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer","RulesManager"]
+        }, "Dashboard", "Notifications"],
+        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }

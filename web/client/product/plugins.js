@@ -46,6 +46,7 @@ module.exports = {
         MapSearchPlugin: require('../plugins/MapSearch'),
         HomeDescriptionPlugin: require('./plugins/HomeDescription'),
         ExamplesPlugin: require('./plugins/Examples'),
+        MailingListsPlugin: require('./plugins/MailingLists'),
         MapTypePlugin: require('./plugins/MapType'),
         LanguagePlugin: require('../plugins/Language'),
         AttributionPlugin: require('./plugins/Attribution'),
@@ -84,7 +85,9 @@ module.exports = {
         WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder'),
         TOCItemsSettingsPlugin: require('../plugins/TOCItemsSettings'),
         RulesDataGridPlugin: require('../plugins/RulesDataGrid'),
-        RulesManagerFooter: require('../plugins/RulesManagerFooter')
+        RulesManagerFooter: require('../plugins/RulesManagerFooter'),
+        FeaturedMaps: require('../plugins/FeaturedMaps'),
+        NavMenu: require('./plugins/NavMenu')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

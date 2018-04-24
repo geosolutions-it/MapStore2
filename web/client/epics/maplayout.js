@@ -73,7 +73,8 @@ const updateMapLayoutEpic = (action$, store) =>
                 mapInfoRequestsSelector(store.getState()).length > 0 && {right: mapLayout.right.md} || null
             ].filter(panel => panel)) || {right: 0};
 
-            const bottom = isFeatureGridOpen(store.getState()) && {bottom: getDockSize(store.getState()) * 100 + '%'} || {bottom: mapLayout.bottom.sm};
+            const dockSize = getDockSize(store.getState()) * 100;
+            const bottom = isFeatureGridOpen(store.getState()) && {bottom: dockSize + '%', dockSize} || {bottom: mapLayout.bottom.sm};
 
             const transform = isFeatureGridOpen(store.getState()) && {transform: 'translate(0, -' + mapLayout.bottom.sm + 'px)'} || {transform: 'none'};
             const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};

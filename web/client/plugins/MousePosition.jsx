@@ -97,6 +97,8 @@ class MousePosition extends React.Component {
   * @name MousePosition
   * @memberof plugins
   * @class
+  * @prop {boolean} cfg.showElevation shows elevation in addition to planar coordinates (requires a WMS layer with useElevation: true to be configured in the map)
+  * @prop {function} cfg.elevationTemplate custom template to show the elevation if showElevation is true (default template shows the elevation number with no formatting)
   * @prop {object[]} projectionDefs list of additional project definitions
   * @prop {string[]} cfg.filterAllowedCRS list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
   * @prop {object} cfg.additionalCRS additional crs added to the list. The label param is used after in the combobox.
@@ -119,6 +121,16 @@ class MousePosition extends React.Component {
   *       "EPSG:3003": { "label": "EPSG:3003" }
   *     },
   *     "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"]
+  *   }
+  * }
+  * @example
+  * // to show elevation and (optionally) use a custom template configure the plugin this way:
+  * {
+  *   "cfg": {
+  *     ...
+  *     "showElevation": true,
+  *     "elevationTemplate": "{(function(elevation) {return 'myelev: ' + (elevation || 0);})}",
+  *     ...
   *   }
   * }
 */
