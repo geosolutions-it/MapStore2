@@ -12,6 +12,8 @@ const Dialog = require('./Dialog');
 const Toolbar = require('./toolbar/Toolbar');
 const {withState} = require('recompose');
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
+const LoadingSpinner = require('./LoadingSpinner');
+
 
 const sizes = {
     xs: ' ms-xs',
@@ -58,6 +60,7 @@ const fullscreen = {
 
 const ResizableModal = ({
     show = false,
+    loading,
     onClose = () => {},
     title = '',
     clickOutEnabled = true,
@@ -108,6 +111,12 @@ const ResizableModal = ({
                     {children}
                 </div>
                 <div role="footer">
+                    {loading ? <LoadingSpinner style={{
+                        position: "absolute",
+                        left: 0,
+                        bottom: 0,
+                        margin: 18
+                    }}/> : null}
                     <Toolbar buttons={buttons}/>
                 </div>
             </Dialog>

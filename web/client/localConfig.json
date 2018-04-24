@@ -470,7 +470,8 @@
                 "className": "navbar shadow navbar-home"
             }
         }, "ManagerMenu", "Login","Language", "NavMenu", "Attribution", "ScrollTop", "Notifications"],
-        "maps": ["HomeDescription", "Fork", "MapSearch", "CreateNewMap", "FeaturedMaps",
+        "maps": ["HomeDescription", "Fork", "MapSearch", "CreateNewMap", "FeaturedMaps", "ContentTabs",
+
           {
             "name": "Maps",
             "cfg": {
@@ -478,7 +479,16 @@
                 "start": 0,
                 "limit": 12
               },
-              "fluid": false
+              "fluid": true
+            }
+          }, {
+            "name": "Dashboards",
+            "cfg": {
+              "mapsOptions": {
+                "start": 0,
+                "limit": 12
+              },
+              "fluid": true
             }
           }, "MailingLists", "Footer", {
           "name": "Cookie",
@@ -494,6 +504,13 @@
                 "className": "navbar shadow navbar-home"
             }
         }, "ManagerMenu", "Login", "Language", "NavMenu", "Attribution", {
+          "name": "Home",
+          "override": {
+            "OmniBar": {
+              "position": 11
+            }
+          }
+        }, {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {

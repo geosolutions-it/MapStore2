@@ -157,8 +157,8 @@ const updateOtherLinkedResourcesPermissions = (id, linkedResources, permission, 
 const getResource = (id, { includeAttributes = true, withData = true } = {}, API = GeoStoreDAO) =>
     Rx.Observable.forkJoin([
         Rx.Observable.defer(() => API.getShortResource(id)).pluck("ShortResource"),
-        Rx.Observable.defer(() => includeAttributes ? API.getResourceAttributes(id) : Rx.Observable.empty()),
-        Rx.Observable.defer(() => withData ? API.getData(id) : Rx.Observable.empty())
+        ...(includeAttributes ? [ Rx.Observable.defer(() => API.getResourceAttributes(id))] : []),
+        ...(withData ? [Rx.Observable.defer(() =>API.getData(id))] : [])
     ]).map(([resource, attributes, data]) => ({
         ...resource,
         attributes: (attributes || []).reduce((acc, curr) => ({

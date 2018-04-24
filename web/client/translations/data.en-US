@@ -257,6 +257,13 @@
             },
 			"search": "search for maps..."
 		},
+        "resources": {
+            "dashboards": "Dashboards ({number})",
+            "deleteConfirmTitle": "Are you sure",
+            "deleteConfirmMessage": "Are you sure you want do delete this resource?",
+            "deleteConfirmButtonText": "Delete",
+            "deleteCancelButtonText": "Close"
+        },
         "map": {
             "loading": "Loading...",
             "loadingerror": "Error during loading",

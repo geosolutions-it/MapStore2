@@ -9,7 +9,7 @@ const React = require('react');
 const { compose, withStateHandlers, withState, branch, withHandlers, renderComponent} = require('recompose');
 const {set} = require('../../../../utils/ImmutableUtils');
 const Message = require('../../../I18N/Message');
-const ConfirmDialog = require('../Confirm');
+const ConfirmDialog = require('../ConfirmModal');
 
 /**
  * Enhancer to manage resource data for a Save dialog.
@@ -47,6 +47,7 @@ module.exports = compose(
             })
         }
     ),
+    // manage close confirm
     withState('confirmClose', 'onCloseConfirm', false),
     branch(
         ({ confirmClose }) => confirmClose,
@@ -54,11 +55,14 @@ module.exports = compose(
         (<ConfirmDialog
             show
             confirmText={<Message msgId="dashboard.saveDialog.close" />}
-                cancelText={<Message msgId="dashboard.saveDialog.cancel" />}
+            cancelText={<Message msgId="dashboard.saveDialog.cancel" />}
             onConfirm={() => onClose()}
             onClose={() => onCloseConfirm(false)}
-            body={<div><Message msgId="dashboard.saveDialog.confirmCloseText" /></div>}
-            ><div></div></ConfirmDialog>))
+            >
+            <Message msgId="map.details.fieldsChanged" />
+            <br/>
+            <Message msgId="map.details.sureToClose" />
+            </ConfirmDialog>))
     ),
     withHandlers({
         onClose: ({
@@ -70,6 +74,7 @@ module.exports = compose(
                 ? onCloseConfirm(true)
                 : onClose()
     }),
+    // manage save handler
     withHandlers({
         onSave: ({onSave = () => {}, category = "DASHBOARD", data, linkedResources}) => resource => onSave({
             category,
