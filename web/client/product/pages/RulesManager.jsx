@@ -18,8 +18,72 @@ const {loadMapConfig} = require('../../actions/config');
 const {resetControls} = require('../../actions/controls');
 
 const HolyGrail = require('../../containers/HolyGrail');
+/**
+  * @name RulesManagerPage
+  * @memberof pages
+  * @class
+  * @classdesc
+  * Rules Manager allow a user with admin permissions to easly manage geofence's rules.
+  * Configure geoFenceUrl and geoFenceGeoServerInstance params in localConfig.<br/>
+  * Add services configuration to overwrite the default values used by the service and the request
+  * selectors. See the page's plugins configuration in the following example. <br/>
+  * The app is available at http://localhos:8081/#/rules-manager.
+  *
+  * @example
+  * // localConfig configuration example
+  * "geoFenceUrl": "http://localhost:8081/",
+  * "geoFenceGeoServerInstance": {
+  *      "url": "geoserver/",
+  *       "id" : 1
+  *  }
+  * "initialState": {
+  *    "defaultState": {
+  *       "rulesmanager": {
+  *          "services": {
+  *              "WFS": [
+  *                 "DescribeFeatureType",
+  *                   "GetCapabilities",
+  *                   "GetFeature",
+  *                   "GetFeatureWithLock",
+  *                   "LockFeature",
+  *                   "Transaction"
+  *               ],
+  *              "WMS": [
+  *                   "DescribeLayer",
+  *                   "GetCapabilities",
+  *                   "GetFeatureInfo",
+  *                   "GetLegendGraphic",
+  *                   "GetMap",
+  *                   "GetStyles"
+  *               ]
+  *           }
+  *       }
+  *     }
+  *   },....
+  * "plugins": {
+  *  "rulesmanager": [{
+  *           "name": "OmniBar",
+  *           "cfg": {
+  *               "containerPosition": "header",
+  *               "className": "navbar shadow navbar-home"
+  *           }
+  *         }, {
+  *           "name": "Home",
+  *           "override": {
+  *             "OmniBar": {
+  *                 "position": 1,
+  *                 "priority": 1
+  *               }
+  *             }
+  *           },"Language", "Login", "Attribution", "RulesDataGrid", "Notifications", {
+  *              "name": "RulesManagerFooter" , "cfg": { "containerPosition": "footer"} },{
+  *                 "name": "RulesEditor",
+  *                 "containerPosition": "columns"
+  *                 }}]
+  * }
+*/
 
-class MapsPage extends React.Component {
+class RulesManagerPage extends React.Component {
     static propTypes = {
         name: PropTypes.string,
         mode: PropTypes.string,
@@ -36,13 +100,6 @@ class MapsPage extends React.Component {
         reset: () => {}
     };
 
-    componentWillMount() {
-        if (this.props.match.params.mapType && this.props.match.params.mapId) {
-            this.props.reset();
-            this.props.loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*");
-        }
-    }
-
     render() {
         let plugins = ConfigUtils.getConfigProp("plugins") || {};
         let pagePlugins = {
@@ -54,14 +111,14 @@ class MapsPage extends React.Component {
             "mobile": plugins[this.props.name] || []
         };
 
-        return (<HolyGrail
+        return pluginsConfig.desktop.length > 0 && (<HolyGrail
             className="rules-manager"
             id="rules-manager-view-container"
             pagePluginsConfig={pagePlugins}
             pluginsConfig={pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.match.params}
-            />);
+            />) || <div style={{fontSize: 24, position: "absolute", top: 0, bottom: 0, right: 0, left: 0, justifyContent: "center", display: "flex", alignItems: "center"}}><label>Rules-manager page configuration missing in localConfig.json.</label></div>;
     }
 }
 
@@ -71,4 +128,4 @@ module.exports = connect((state) => ({
     {
         loadMapConfig,
         reset: resetControls
-    })(MapsPage);
+    })(RulesManagerPage);

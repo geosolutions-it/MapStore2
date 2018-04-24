@@ -41,59 +41,6 @@ const RulesGrid = rulesGridEnhancer(require('../components/manager/rulesmanager/
   * Rules-grid it's part of rules-manager page. It loads goefence's rules from configured geofence instance.
   * It uses virtualScroll to manage rules loading. It allows to order geofence's rules by drag and drop.
   * Rules can be filtered selecting values form columns' header.
-  * Prams geoFenceUrl and geoFenceGeoServerInstance have to be added to localConfig
-  * It's also possible to configure the services used by the service and request
-  * selectors. (see example).
-  *
-  * @example
-  * // localConfig configuration example
-  * "geoFenceUrl": "http://localhost:8081/",
-  * "geoFenceGeoServerInstance": {
-  *      "url": "geoserver/",
-  *       "id" : 1
-  *  }
-  * "initialState": {
-  *    "defaultState": {
-  *       "rulesmanager": {
-  *          "services": {
-  *              "WFS": [
-  *                 "DescribeFeatureType",
-  *                   "GetCapabilities",
-  *                   "GetFeature",
-  *                   "GetFeatureWithLock",
-  *                   "LockFeature",
-  *                   "Transaction"
-  *               ],
-  *              "WMS": [
-  *                   "DescribeLayer",
-  *                   "GetCapabilities",
-  *                   "GetFeatureInfo",
-  *                   "GetLegendGraphic",
-  *                   "GetMap",
-  *                   "GetStyles"
-  *               ]
-  *           }
-  *       }
-  *     }
-  *   },....
-  * "plugins": {
-  *  "rulesmanager": [{
-  *           "name": "OmniBar",
-  *           "cfg": {
-  *               "containerPosition": "header",
-  *               "className": "navbar shadow navbar-home"
-  *           }
-  *         }, {
-  *           "name": "Home",
-  *           "override": {
-  *             "OmniBar": {
-  *                 "position": 1,
-  *                 "priority": 1
-  *               }
-  *             }
-  *           },"Language", "Login", "Attribution", "RulesDataGrid", "Notifications", {
-  *              "name": "RulesManagerFooter" , "cfg": { "containerPosition": "footer"} }]
-  * }
 */
 
 class RulesDataGridPlugin extends React.Component {
