@@ -66,7 +66,9 @@
                         { "separator": true },
                         { "label": "JavaScript API", "href": "api/jsapi" },
                         { "separator": true },
-                        { "label": "Plugins", "href": "api/plugins" }
+                        { "label": "Plugins", "href": "api/plugins" },
+                        { "separator": true },
+                        { "label": "Pages", "href": "api/pages" }
                     ]
                 },
                 {
@@ -219,7 +221,10 @@
                 "web/client/plugins/WFSDownload.jsx",
                 "web/client/plugins/ZoomIn.jsx",
                 "web/client/plugins/ZoomOut.jsx"
-            ]
+            ],
+            "pages": [
+                "web/client/product/pages/RulesManager.jsx"
+            ]  
         },
         "./docs/**/*md",
         {

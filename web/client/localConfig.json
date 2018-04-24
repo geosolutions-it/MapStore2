@@ -3,6 +3,11 @@
         "url": "proxy/?url=",
         "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver"]
     },
+    "geoFenceUrl": "http://localhost:8081/",
+    "geoFenceGeoServerInstance": {
+        "url": "geoserver/",
+        "id" : 1
+    },
     "geoStoreUrl": "rest/geostore/",
     "printUrl": "pdf/info.json",
     "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
@@ -494,6 +499,22 @@
             "containerPosition": "columns"
           }
         }, "Dashboard"],
-        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
+        "rulesmanager": [{
+            "name": "OmniBar",
+            "cfg": {
+                "containerPosition": "header",
+                "className": "navbar shadow navbar-home"
+            }
+          }, {
+            "name": "Home", 
+            "override": {
+              "OmniBar": {
+                  "position": 1,
+                  "priority": 1
+                }
+              }
+            },"Language", "Login", "Attribution", "RulesDataGrid", "Notifications", {
+                "name": "RulesManagerFooter" , "cfg": { "containerPosition": "footer"} }],
+        "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer","RulesManager"]
     }
 }
