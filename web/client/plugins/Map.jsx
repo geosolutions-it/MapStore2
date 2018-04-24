@@ -152,7 +152,8 @@ class MapPlugin extends React.Component {
         toolsOptions: PropTypes.object,
         actions: PropTypes.object,
         features: PropTypes.array,
-        securityToken: PropTypes.string
+        securityToken: PropTypes.string,
+        elevationEnabled: PropTypes.bool
     };
 
     static defaultProps = {
@@ -184,7 +185,8 @@ class MapPlugin extends React.Component {
             }
         },
         securityToken: '',
-        additionalLayers: []
+        additionalLayers: [],
+        elevationEnabled: false
     };
 
     componentWillMount() {
@@ -227,7 +229,7 @@ class MapPlugin extends React.Component {
 
     renderLayers = () => {
         const projection = this.props.map.projection || 'EPSG:3857';
-        return [...this.props.layers, ...this.props.additionalLayers].map((layer, index) => {
+        return [...this.props.layers, ...this.props.additionalLayers].filter(this.filterLayer).map((layer, index) => {
             return (
                 <plugins.Layer type={layer.type} srs={projection} position={index} key={layer.id || layer.name} options={layer} securityToken={this.props.securityToken}>
                     {this.renderLayerContent(layer, projection)}
@@ -303,7 +305,9 @@ class MapPlugin extends React.Component {
                 <Message msgId={this.props.mapLoadingMessage}/>
         </div>);
     }
-
+    filterLayer = (layer) => {
+        return !layer.useForElevation || this.props.mapType === 'cesium' || this.props.elevationEnabled;
+    };
     updatePlugins = (props) => {
         plugins = require('./map/index')(props.mapType, props.actions);
     };
@@ -323,15 +327,17 @@ const selector = createSelector(
         layerSelectorWithMarkers,
         selectedFeatures,
         (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data,
-        securityTokenSelector
-    ], (projectionDefs, map, mapType, layers, features, loadingError, securityToken) => ({
+        securityTokenSelector,
+        (state) => state.mousePosition && state.mousePosition.enabled
+    ], (projectionDefs, map, mapType, layers, features, loadingError, securityToken, elevationEnabled) => ({
         projectionDefs,
         map,
         mapType,
         layers,
         features,
         loadingError,
-        securityToken
+        securityToken,
+        elevationEnabled
     })
 );
 module.exports = {
