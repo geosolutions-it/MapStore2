@@ -36,7 +36,7 @@ module.exports = {
         path: "/dashboard",
         component: require('./pages/Dashboard')
     }, {
-        name: "dashboard",            
+        name: "dashboard",
         path: "/dashboard/:did",
         component: require('./pages/Dashboard')
     }, {
