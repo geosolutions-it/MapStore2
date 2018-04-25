@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button, Glyphicon} = require('react-bootstrap');
-const {isObject} = require('lodash');
+const {isObject, truncate} = require('lodash');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const ConfigUtils = require('../../utils/ConfigUtils');
@@ -135,8 +135,6 @@ class RecordItem extends React.Component {
         }
     };
 
-
-
     render() {
         let record = this.props.record;
         return (
@@ -153,7 +151,7 @@ class RecordItem extends React.Component {
     }
 
     truncateDescription =(description, size) => {
-        return _.truncate(description, {'length': size, 'separator': /,? +/});
+        return truncate(description, {'length': size, 'separator': /,? +/});
     }
 
     isLinkCopied = (key) => {
