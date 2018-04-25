@@ -3,11 +3,6 @@
         "url": "proxy/?url=",
         "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver"]
     },
-    "geoFenceUrl": "http://localhost:8081/",
-    "geoFenceGeoServerInstance": {
-        "url": "geoserver/",
-        "id" : 1
-    },
     "geoStoreUrl": "rest/geostore/",
     "printUrl": "pdf/info.json",
     "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
