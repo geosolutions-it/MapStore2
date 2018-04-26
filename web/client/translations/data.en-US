@@ -1328,12 +1328,45 @@
         },
         "rulesmanager": {
             "placeholders": {
-                "filter": "Search..."
+                "filter": "Search...",
+                "role": "Type to search Roles",
+                "user": "Type to search Users",
+                "ip": "Select IP",
+                "service": "Type to search Services",
+                "request": "Type to search Requests",
+                "workspace": "Type to search Workspaces",
+                "layer": "Type to search Layers",
+                "access": "Type to search Access",
+                "ip": "###.###.###.###/##",
+                "priority": "Select Priority"
             },
             "menutitle": "Manage GeoFence Rules",
+            "tooltip": {
+                "addT": "Add a rule",
+                "editT": "Edit selected rule",
+                "addBeT": "Add new rule before selected",
+                "addAfT": "Add new rule after selected",
+                "deleteT": "Remove selected rules",
+                "cacheT": "Clear cache",
+                "save": "Save current rule",
+                "close": "Exit from create rule"
+            },
+            "navItems": {
+                "main": "General Rule",
+                "style": "Style",
+                "filter": "Filters",
+                "attribute": "Attributes Rule"
+            },
+            "cachetitle": "Clear Cache",
+            "cachemsg": "Are you sure to clear the GeoFence cache?",
+            "deltitle": "Delete Rule",
+            "delmsg": "Do you really want to delete this rule?",
+            "invalidForm": "The form is invalid check fields values",
+            "ip": "IP",
             "title": "Access Rules",
             "role": "Role",
             "user": "User",
+            "priority": "Priority",
             "service": "Service",
             "request": "Request",
             "workspace": "Workspace",

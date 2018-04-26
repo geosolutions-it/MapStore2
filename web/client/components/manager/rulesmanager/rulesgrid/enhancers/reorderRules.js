@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require("rxjs");
-const sameRowsCount = ({rowsCount: oR}, {rowsCount: nR}) => oR === nR;
+const samePages = ({pages: oP}, {pages: nP}) => oP === nP;
 const { moveRules } = require('../../../../../observables/rulesmanager');
 
 /**
@@ -14,30 +14,20 @@ const { moveRules } = require('../../../../../observables/rulesmanager');
  * @param {Observable} Stream of props.
  * @return {Observable} Stream of props to trigger the data fetch
  */
-module.exports = (page$) => (prop$) =>
-    prop$.distinctUntilChanged((oP, nP) => sameRowsCount(oP, nP))
-        .switchMap(({ orderRule$, setLoading, onLoadError, moreRules}) =>
-                orderRule$.withLatestFrom(page$, (orderRequest, lastPagesRequest) => ({
-                    ...orderRequest,
-                    lastPagesRequest
-                }))
-                .switchMap(({rules, targetPriority, lastPagesRequest}) => {
+module.exports = () => (prop$) =>
+    prop$.distinctUntilChanged((oP, nP) => samePages(oP, nP))
+        .switchMap(({ orderRule$, setLoading, setData, onLoadError, pages}) =>
+                orderRule$
+                .switchMap(({rules, targetPriority}) => {
+                    setData({pages, editing: true});
                     setLoading(true);
                     return moveRules(targetPriority, rules)
-                    .do(() => {
-                        const {startPage, endPage} = lastPagesRequest;
-                        const pagesToLoad = [];
-                        for (let i = startPage; i <= endPage; i++) {
-                            pagesToLoad.push(i);
-                        }
-                        setLoading(false);
-                        moreRules({startPage, endPage, pagesToLoad, pages: {}});
-                    })
                     .catch((e) => Rx.Observable.of({
                         error: e
                     }).do(() => onLoadError({
                         title: "rulesmanager.errorTitle",
                         message: "rulesmanager.errorMovingRules"
-                    })).do(() => setLoading(false)));
+                    })).do(() => setLoading(false)))
+                    .do(() => setData({pages: []}));
                 }
 ));

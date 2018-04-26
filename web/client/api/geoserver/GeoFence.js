@@ -10,7 +10,16 @@ const axios = require('../../libs/ajax');
 const assign = require('object-assign');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
-
+const EMPTY_RULE = {
+        constraints: {},
+        ipaddress: "",
+        layer: "",
+        request: "",
+        rolename: "",
+        service: "",
+        username: "",
+        workspace: ""
+    };
 var Api = {
 
     loadRules: function(page, rulesFiltersValues, entries = 10) {
@@ -55,10 +64,15 @@ var Api = {
     },
 
     addRule: function(rule) {
-        if (!rule.access) {
-            rule.access = "ALLOW";
+        const newRule = {...rule};
+        if (!newRule.instance) {
+            const {id: instanceId} = ConfigUtils.getDefaults().geoFenceGeoServerInstance;
+            newRule.instance = {id: instanceId};
         }
-        return axios.post('geofence/rest/rules', rule, this.addBaseUrl({
+        if (!newRule.grant) {
+            newRule.grant = "ALLOW";
+        }
+        return axios.post('geofence/rest/rules', newRule, this.addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }
@@ -66,7 +80,10 @@ var Api = {
     },
 
     updateRule: function(rule) {
-        return axios.post('geofence/rest/rules/id/' + rule.id, rule, this.addBaseUrl({
+        // id, priority and grant aren't updatable
+        const {id, priority, grant, position, ...others} = rule;
+        const newRule = {...EMPTY_RULE, ...others};
+        return axios.put(`geofence/rest/rules/id/${id}`, newRule, this.addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }

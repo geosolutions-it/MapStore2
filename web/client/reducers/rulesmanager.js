@@ -9,11 +9,12 @@
 const assign = require('object-assign');
 
 const { RULES_SELECTED, RULES_LOADED, UPDATE_ACTIVE_RULE,
-        ACTION_ERROR, OPTIONS_LOADED, UPDATE_FILTERS_VALUES, LOADING, SET_FILTER} = require('../actions/rulesmanager');
+        ACTION_ERROR, OPTIONS_LOADED, UPDATE_FILTERS_VALUES,
+        LOADING, EDIT_RULE, SET_FILTER, CLEAN_EDITING, RULE_SAVED} = require('../actions/rulesmanager');
 const _ = require('lodash');
 const defaultState = {
-    "services": {
-        "WFS": [
+    services: {
+        WFS: [
             "DescribeFeatureType",
             "GetCapabilities",
             "GetFeature",
@@ -21,7 +22,7 @@ const defaultState = {
             "LockFeature",
             "Transaction"
         ],
-        "WMS": [
+        WMS: [
             "DescribeLayer",
             "GetCapabilities",
             "GetFeatureInfo",
@@ -29,6 +30,18 @@ const defaultState = {
             "GetMap",
             "GetStyles"
         ]
+    },
+    triggerLoad: 0
+};
+
+const getPosition = ({targetPosition = {}}, priority) => {
+    switch (priority) {
+        case -1:
+            return targetPosition.offsetFromTop;
+        case +1:
+            return targetPosition.offsetFromTop + 1;
+        default:
+            return 0;
     }
 };
 
@@ -37,7 +50,8 @@ function rulesmanager(state = defaultState, action) {
     case RULES_SELECTED: {
         if (!action.merge) {
             return assign({}, state, {
-                selectedRules: action.rules
+                selectedRules: action.rules,
+                targetPosition: action.targetPosition
             });
         }
         const newRules = action.rules || [];
@@ -49,8 +63,7 @@ function rulesmanager(state = defaultState, action) {
             });
         }
         return assign({}, state, {
-            selectedRules: _(existingRules).concat(newRules).uniq(rule => rule.id).value()
-        });
+            selectedRules: _(existingRules).concat(newRules).uniq(rule => rule.id).value()});
     }
     case RULES_LOADED: {
         return assign({}, state, {
@@ -113,6 +126,19 @@ function rulesmanager(state = defaultState, action) {
         }
         const {[key]: omit, ...newFilters} = state.filters;
         return assign({}, state, {filters: newFilters});
+    }
+    case EDIT_RULE: {
+        const {createNew, targetPriority} = action;
+        if (createNew) {
+            return assign({}, state, {activeRule: {position: {value: getPosition(state, targetPriority), position: "offsetFromTop"}}});
+        }
+        return assign({}, state, {activeRule: {...(state.selectedRules[0] || {}), position: {value: state.targetPosition.offsetFromTop, position: "offsetFromTop"}}});
+    }
+    case RULE_SAVED: {
+        return assign({}, state, {triggerLoad: (state.triggerLoad || 0) + 1, activeRule: undefined, selectedRules: [], targetPosition: undefined });
+    }
+    case CLEAN_EDITING: {
+        return assign({}, state, {activeRule: undefined});
     }
     default:
         return state;

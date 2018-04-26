@@ -1327,12 +1327,45 @@
         },
         "rulesmanager": {
             "placeholders": {
-                "filter": "Suche..."
+                "filter": "Suche...",
+                "role": "Nach Rollen suchen",
+                "user": "Benutzer suchen",
+                "ip": "Wählen Sie IP",
+                "service": "Suchdienste",
+                "request": "Type to serach Requests",
+                "workspace": "Suchanfragen",
+                "layer": "Suche Ebenen",
+                "access": "Suchzugriff",
+                "ip": "###.###.###.###/##",
+                "priority": "Wählen Sie Priorität"
             },
             "menutitle": "GeoFence-Regeln Verwalten",
+            "tooltip": {
+                "addT": "Fügen Sie eine regel hinzu",
+                "editT": "Bearbeiten Sie die ausgewählte regel",
+                "addBeT": "Fügen Sie eine neue Regel hinzu, bevor Sie ausgewählt werden",
+                "addAfT": "Fügen Sie nach der Auswahl eine neue Regel hinzu",
+                "deleteT": "Entferne ausgewählte Regeln",
+                "cacheT": "Cache leeren",
+                "save": "Aktuelle Regel speichern",
+                "close": "Beenden Sie die Regel erstellen"
+            },
+            "navItems": {
+                "main": "Allgemeine Regel",
+                "style": "Stil",
+                "filter": "Filter",
+                "attribute": "Attribute Regel"
+            },
+            "cachetitle": "Cache leeren",
+            "cachemsg": "Möchten Sie den GeoFence-Cache wirklich löschen?",
+            "deltitle": "Regel Löschen",
+            "delmsg": "Möchten Sie diese Regel wirklich löschen?",
+            "invalidForm": "Das Formular ist ungültig. Überprüfen Sie die Felderwerte",
+            "ip": "IP",
             "title": "Zugangs Regeln",
             "role": "Rolle",
             "user": "Benutzer",
+            "priority": "Priorität",
             "service": "Service",
             "request": "Anfrage",
             "workspace": "Workspace",

@@ -15,18 +15,18 @@ const getRow = (i, pages = {}, size) => {
 };
 
 /**
- * Sort old pages by inedx distance from the average needed pages
+ * Sort old pages by index distance from the average needed pages
  * @param {numeric} avgIdx The average page index
  * @param {array} [pages=[]] old pages indexes
  * @param {numeric} firstIdx index of the first needed page
- * @param {numeric} lastIdx  index of the laset needed page
+ * @param {numeric} lastIdx  index of the latest needed page
  * @returns {array} Array of old page indexes ordered by distance from requested pages
  */
 const getIdxFarthestEl = (avgIdx, pages = [], firstIdx, lastIdx) => {
     return pages.map(val => firstIdx <= val && val <= lastIdx ? 0 : Math.abs(val - avgIdx)).map((distance, idx) => ({idx: pages[idx], distance})).sort((a, b) => a.distance - b.distance).reverse().map(({idx}) => idx);
 };
 
-
+const checkIp = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.)){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?(\/)(?:3[0-2]|[1-2]?[0-9]))\b/g;
 module.exports = {
     getPageIdx,
     getRow,
@@ -66,5 +66,17 @@ module.exports = {
         }
         return { pages: {...tempPages, ...newPages}};
     },
-    flattenPages: (pages = {}) => Object.keys(pages).reduce((rows, key) => rows.concat((pages[key] || [])), [])
+    flattenPages: (pages = {}) => Object.keys(pages).reduce((rows, key) => rows.concat((pages[key] || [])), []),
+    checkIp,
+    isRuleValid: (rule = {}) => {
+        if (rule.ipaddress && rule.ipaddress.length > 0 ) {
+            return !!rule.ipaddress.match(checkIp);
+        }
+        return true;
+    },
+    getOffsetFromTop: (row, rows) => rows.indexOf(row),
+    getClosestRows: (row, rows) => {
+        const idx = rows.indexOf(row);
+        return {prev: rows[idx - 1], next: rows[idx + 1]};
+    }
 };

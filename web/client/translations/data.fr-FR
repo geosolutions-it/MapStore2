@@ -1327,12 +1327,45 @@
         },
         "rulesmanager": {
             "placeholders": {
-                "filter": "Chercher..."
+                "filter": "Chercher...",
+                "role": "Tapez pour rechercher des rôles",
+                "user": "Tapez pour rechercher des utilisateurs",
+                "ip": "Sélectionnez IP",
+                "service": "Tapez pour rechercher des services",
+                "request": "Tapez pour rechercher des demandes",
+                "workspace": "Tapez pour rechercher des espaces de travail",
+                "layer": "Tapez pour rechercher des calques",
+                "access": "Tapez pour rechercher Access",
+                "ip": "###.###.###.###/##",
+                "priority": "Sélectionnez Priorité"
             },
             "menutitle": "Gérer les règles de GeoFence",
+            "tooltip": {
+                "addT": "Ajouter une règle",
+                "editT": "Modifier la règle sélectionnée",
+                "addBeT": "Ajouter une nouvelle règle avant de sélectionner",
+                "addAfT": "Ajouter une nouvelle règle après la sélection",
+                "deleteT": "Supprimer les règles sélectionnées",
+                "cacheT": "Vider le cache",
+                "save": "Enregistrer la règle actuelle",
+                "close": "Quitter de la règle de création"
+            },
+            "navItems": {
+                "main": "Règle générale",
+                "style": "Style",
+                "filter": "Filters",
+                "attribute": "Règle des attributs"
+            },
+            "cachetitle": "Vider le Cache",
+            "cachemsg": "Etes-vous sûr d'effacer le cache de GeoFence?",
+            "deltitle": "Supprimer la règle",
+            "delmsg": "Voulez-vous vraiment supprimer cette règle?",
+            "invalidForm": "Le formulaire est invalide vérifier les valeurs des champs",
+            "ip": "IP",
             "title": "Règles d'accès",
             "role": "Rôle",
             "user": "Utilisateur",
+            "priority": "Priorité",
             "service": "Service",
             "request": "Requête",
             "workspace": "Espace de travail",

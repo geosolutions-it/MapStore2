@@ -9,26 +9,30 @@ const filtersStream = require("./filtersStream");
 const FilterRenderers = require("../filterRenderers");
 const Message = require('../../../../I18N/Message');
 const AccessFormatter = require('../formatters/AccessFormatter');
-const {getRow} = require('../../../../../utils/RulesGridUtils');
+const {getRow, flattenPages, getOffsetFromTop} = require('../../../../../utils/RulesGridUtils');
 
 const emitStop = stream$ => stream$.filter(() => false).startWith({});
+const triggerLoadStream = prop$ => prop$.distinctUntilChanged(({triggerLoad}, nP) => triggerLoad === nP.triggerLoad)
+                        .skip(1)
+                        .do(({incrementVersion}) => incrementVersion());
 
 const dataStreamFactory = $props => {
     const {handler: onGridScroll, stream: onGridScroll$ } = createEventHandler();
     const {handler: moreRules, stream: page$ } = createEventHandler();
     const {handler: onAddFilter, stream: addFilter$ } = createEventHandler();
-    const {handler: onReordeRows, stream: orderRule$ } = createEventHandler();
+    const {handler: onReorderRows, stream: orderRule$ } = createEventHandler();
     const $p = $props.map(o => ({ ...o, onGridScroll$, addFilter$, orderRule$, moreRules}));
     return triggerFetch($p).let(emitStop)
             .combineLatest([
                 virtualScrollFetch(page$)($p).let(emitStop),
                 reorderRules(page$)($p).let(emitStop),
                 filtersStream($p).let(emitStop),
-                scrollStream($p).let(emitStop)
+                scrollStream($p).let(emitStop),
+                triggerLoadStream($props).let(emitStop)
                 ])
             .mapTo({onGridScroll,
                     onAddFilter,
-                    onReordeRows});
+                    onReorderRows});
 
 };
 
@@ -45,7 +49,7 @@ module.exports = compose(
         columns: [
             { key: 'rolename', name: <Message msgId={"rulesmanager.role"} />, filterable: true, filterRenderer: FilterRenderers.RolesFilter},
             { key: 'username', name: <Message msgId={"rulesmanager.user"} />, filterable: true, filterRenderer: FilterRenderers.UsersFilter},
-            { key: 'ipaddress', name: 'IP', filterable: false},
+            { key: 'ipaddress', name: <Message msgId={"rulesmanager.ip"} />, filterable: false},
             { key: 'service', name: <Message msgId={"rulesmanager.service"} />, filterable: true, filterRenderer: FilterRenderers.ServicesFilter},
             { key: 'request', name: <Message msgId={"rulesmanager.request"} />, filterable: true, filterRenderer: FilterRenderers.RequestsFilter },
             { key: 'workspace', name: <Message msgId={"rulesmanager.workspace"} />, filterable: true, filterRenderer: FilterRenderers.WorkspacesFilter},
@@ -56,12 +60,14 @@ module.exports = compose(
     withStateHandlers({
         pages: {},
         rowsCount: 0,
-        version: 0
+        version: 0,
+        isEditing: false
     }, {
-        setData: ({rowsCount: oldRowsCount}) => ({pages, rowsCount = oldRowsCount} = {}) => ({
+        setData: ({rowsCount: oldRowsCount}) => ({pages, rowsCount = oldRowsCount, editing = false} = {}) => ({
             pages,
             rowsCount,
-            error: undefined
+            error: undefined,
+            isEditing: editing
         }),
         setFilters: (state, {filters = {}, setFilters}) => ({column, filterTerm}) => {
             // Can add  some logic here to clean related filters
@@ -74,22 +80,28 @@ module.exports = compose(
             return {rowsCount: 0, pages: {}};
         },
         incrementVersion: ({ version }) => () => ({
-            version: version + 1
-        })
+            version: version + 1,
+            isEditing: true
+         })
     }),
     withHandlers({
         onLoad: ({ setData = () => {}, onLoad = () => {}} = {}) => (...args) => {
             setData(...args);
             onLoad(...args);
+        },
+        onSelect: ({onSelect: select, pages, rowsCount}) => (selected) => {
+            if ( selected.length === 1) {
+                const offsetFromTop = getOffsetFromTop(selected[0], flattenPages(pages));
+                select(selected, false, false, {offsetFromTop, rowsCount});
+            }else {
+                select(selected);
+            }
         }
     }),
     withPropsOnChange(
-        ["enableColumnFilters"],
-        props => ({ displayFilters: props.enableColumnFilters })
-    ),
-    withPropsOnChange(
-        ["pages"],
+        ["enableColumnFilters", "pages"],
         props => ({
+            displayFilters: props.enableColumnFilters,
             rows: props.pages
         })
     ),

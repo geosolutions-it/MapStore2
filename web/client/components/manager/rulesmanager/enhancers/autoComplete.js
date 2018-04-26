@@ -7,9 +7,28 @@ const stop = stream$ => stream$.filter(() => false);
 
 const sameParentFilter = ({parentsFilter: f1}, {parentsFilter: f2}) => f1 === f2;
 const sameFilter = ({val: f1}, {val: f2}) => f1 === f2;
+const sameEmptyRequest = ({emptyReq: f1}, {emptyReq: f2}) => f1 === f2;
 
 // ParentFilter change so resets the data
 const resetStream = prop$ => prop$.distinctUntilChanged((oP, nP) => sameParentFilter(oP, nP)).skip(1).do(({resetCombo}) => resetCombo()).let(stop);
+
+// Trigger first loading when value change
+const triggerEmptyLoadDataStream = prop$ => prop$.distinctUntilChanged((oP, nP) => sameEmptyRequest(oP, nP))
+                .skip(1)
+                .debounceTime(300)
+                .switchMap(({emptySearch, loadingErrorMsg, nextPage, prevPage, onError, parentsFilter = {}, size = 10, pagination, loadData, setData = () => {}}) => {
+                    return loadData(emptySearch, 0, size, parentsFilter, true)
+                        .do(({count, data}) => {
+                            setData({
+                                pagination: {...pagination, loadNextPage: nextPage, loadPrevPage: prevPage, firstPage: true, lastPage: Math.ceil(count / size) <= 1},
+                                data,
+                                page: 0,
+                                count
+                            });
+                        }).let(stop).startWith({busy: true}).catch((e) => Rx.Observable.of(e).do(() => {
+                            onError(loadingErrorMsg);
+                        }).mapTo({busy: false})).concat(Rx.Observable.of({busy: false}));
+                });
 
 // Trigger first loading when value change
 const triggerLoadDataStream = prop$ => prop$.distinctUntilChanged((oP, nP) => sameFilter(oP, nP))
@@ -55,7 +74,7 @@ const dataStreamFactory = prop$ => {
             setData, loadingErrorMsg})), (pageStep, other) => ({ pageStep, ...other}));
 
     const $p = prop$.map(o => ({ ...o, nextPage, prevPage, nextPage$, prevPage$}));
-    return triggerLoadDataStream($p).merge(loadPageStream(page$), resetStream($p)).startWith({busy: false});
+    return triggerLoadDataStream($p).merge(triggerEmptyLoadDataStream($p), loadPageStream(page$), resetStream($p)).startWith({busy: false});
 };
 
 
@@ -75,8 +94,8 @@ const dataStreamFactory = prop$ => {
 
 module.exports = compose(
     defaultProps({
+        emptySearch: "%",
         stopPropagation: true,
-        emitOnReset: false,
         paginated: true,
         size: 5,
         loadData: () => Rx.Observable.of({data: [], count: 0}),
@@ -94,6 +113,7 @@ module.exports = compose(
         val: selected,
         page: 0,
         data: initialData,
+        emptyReq: 0,
         pagination: {
             paginated: paginated,
             firstPage: false,
@@ -101,10 +121,7 @@ module.exports = compose(
             loadPrevPage: () => {},
             loadNextPage: () => {}
         }}), {
-        resetCombo: ({emitOnReset, onValueSelected}, {initialData = []}) => () => {
-            if (emitOnReset) {
-                onValueSelected();
-            }
+        resetCombo: ({onValueSelected}, { initialData = []}) => () => {
             return {
             data: initialData,
             page: 0,
@@ -117,14 +134,17 @@ module.exports = compose(
             page,
             count
         }),
-        onChange: (state, {initialData = []}) => (val = "") => {
-            return val.length === 0 && {val, data: initialData} || {val};
+        onChange: (state, {initialData = [], valueField}) => (val = "") => {
+            const currentVal = isObject(val) && val[valueField] || val;
+            return currentVal.length === 0 && {val: currentVal, data: initialData} || {val: currentVal};
         },
-        onToggle: ({ val = ""}, {selected, onValueSelected, initialData = []}) => (open) => {
+        onToggle: ({ val = "", data, emptyReq}, {selected, onValueSelected, initialData = []}) => (open) => {
             if (!open && val === "" && selected) {
                 onValueSelected();
             }else if (!open && val !== selected) {
                 return {val: selected, data: initialData};
+            }else if (open && val.length === 0 && data.length === 0) {
+                return {emptyReq: emptyReq + 1};
             }
         },
         onSelect: (state, {onValueSelected, selected, valueField}) => (select) => {
