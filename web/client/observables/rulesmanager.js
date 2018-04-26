@@ -29,8 +29,41 @@ const loadRoles = (filter = "", page = 0, size = 10) => Rx.Observable.defer(() =
 .switchMap( response => xmlToJson$(response).
                 map(({UserGroupList = {}}) => ({users: [].concat(UserGroupList.UserGroup || [])}))
 );
-
-
+const deleteRule = (id) => Rx.Observable.defer(() => GeoFence.deleteRule(id));
+// Full update we need to delete, save and move
+const fullUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => r.priority !== oR.priority)
+        .switchMap(({rule, origRule}) => deleteRule(rule.id)
+            .switchMap(() => {
+                const {priority, id, ...newRule} = rule;
+                return Rx.Observable.defer(() => GeoFence.addRule(newRule))
+                .catch((e) => {
+                    const {priority: p, id: omit, ...oldRule} = origRule;
+                    oldRule.position = {value: p, position: "fixedPriority"};
+                    // We have to restore original rule and to throw the exception!!
+                    return Rx.Observable.defer(() => GeoFence.addRule(oldRule)).do(() => { throw (e); });
+                });
+            })
+        .switchMap(({data: id}) => {
+            return Rx.Observable.defer(() => GeoFence.moveRules(rule.priority, [{id}]));
+        }
+));
+const grantUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => r.priority === oR.priority && (r.grant !== oR.grant || r.ipaddress !== oR.ipaddress))
+        .switchMap(({rule, origRule}) => deleteRule(rule.id)
+            .switchMap(() => {
+                const {priority, id, ...newRule} = rule;
+                newRule.position = {value: priority, position: "fixedPriority"};
+                return Rx.Observable.defer(() => GeoFence.addRule(newRule))
+                .catch((e) => {
+                    const {priority: p, id: omit, ...oldRule} = origRule;
+                    oldRule.position = {value: p, position: "fixedPriority"};
+                    // We have to restore original rule and to throw the exception!!
+                    return Rx.Observable.defer(() => GeoFence.addRule(oldRule)).do(() => { throw (e); });
+                });
+            })
+        );
+// if priority and grant are the same we just need to update new rule
+const justUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => r.priority === oR.priority && r.grant === oR.grant && r.ipaddress === oR.ipaddress)
+        .switchMap(({rule}) => Rx.Observable.defer(() => GeoFence.updateRule(rule)));
 module.exports = {
     loadRules: (pages = [], filters = {}, size) =>
         Rx.Observable.combineLatest(pages.map(p => loadSinglePage(p, filters, size)))
@@ -59,6 +92,14 @@ module.exports = {
         return Rx.Observable.defer(() =>
         CatalogAPI.workspaceSearch(catalogUrl, (page) * size + 1, size, layerFilter, workspace))
         .map((layers) => ({data: layers.records.map(layer => ({name: layer.dc.identifier.replace(/^.*?:/g, '')})), count: layers.numberOfRecordsMatched}));
-    }
+    },
+    updateRule: (rule, origRule) => {
+        const fullUp = Rx.Observable.of({rule, origRule}).let(fullUpdate);
+        const simpleUpdate = Rx.Observable.of({rule, origRule}).let(justUpdate);
+        const grant = Rx.Observable.of({rule, origRule}).let(grantUpdate);
+        return fullUp.merge(simpleUpdate, grant);
+    },
+    createRule: (rule) => Rx.Observable.defer(() => GeoFence.addRule(rule)),
+    deleteRule
 
 };

@@ -67,8 +67,7 @@
                         { "label": "JavaScript API", "href": "api/jsapi" },
                         { "separator": true },
                         { "label": "Plugins", "href": "api/plugins" },
-                        { "separator": true },
-                        { "label": "Pages", "href": "api/pages" }
+                        { "separator": true }
                     ]
                 },
                 {
@@ -212,7 +211,6 @@
                 "web/client/plugins/MousePosition.jsx",
                 "web/client/plugins/Notifications.jsx",
                 "web/client/plugins/QueryPanel.jsx",
-                "web/client/plugins/RulesDataGrid.jsx",
                 "web/client/plugins/ScaleBox.jsx",
                 "web/client/plugins/ScrollTop.jsx",
                 "web/client/plugins/Search.jsx",
@@ -221,10 +219,7 @@
                 "web/client/plugins/WFSDownload.jsx",
                 "web/client/plugins/ZoomIn.jsx",
                 "web/client/plugins/ZoomOut.jsx"
-            ],
-            "pages": [
-                "web/client/product/pages/RulesManager.jsx"
-            ]  
+            ] 
         },
         "./docs/**/*md",
         {

@@ -12,8 +12,8 @@ const RuleRenderer = require('./renderers/RuleRenderer');
 const { Draggable} = require('react-data-grid-addons');
 
 const DataGrid = require('../../../data/grid/DataGrid');
-const { Container: DraggableContainer, RowActionsCell, DropTargetRowContainer: dropTargetRowContainer } = Draggable;
-
+const { Container: DraggableContainer, DropTargetRowContainer: dropTargetRowContainer } = Draggable;
+const PriorityActionCell = require("./renderers/PriorityActionCell");
 const RowRenderer = dropTargetRowContainer(RuleRenderer);
 
 class RulesGrid extends React.Component {
@@ -29,7 +29,8 @@ class RulesGrid extends React.Component {
         rowGetter: PropTypes.func,
         onGridScroll: PropTypes.func,
         onAddFilter: PropTypes.func,
-        onReordeRows: PropTypes.func
+        onReorderRows: PropTypes.func,
+        isEditing: PropTypes.bool
     };
     static contextTypes = {
         messages: PropTypes.object
@@ -41,7 +42,8 @@ class RulesGrid extends React.Component {
         onSort: () => {},
         onSelect: () => {},
         selectedIds: [],
-        columns: []
+        columns: [],
+        isEditing: false
     };
 
     componentDidMount() {
@@ -49,8 +51,8 @@ class RulesGrid extends React.Component {
             this.grid.scrollListener();
         }
     }
-    componentDidUpdate = ({rowsCount}) => {
-        if (this.props.rowsCount > 0 && rowsCount !== this.props.rowsCount) {
+    componentDidUpdate = ({rowsCount, isEditing}) => {
+        if (this.props.rowsCount > 0 && rowsCount !== this.props.rowsCount || (isEditing && !this.props.isEditing)) {
             this.grid.scrollListener();
         }
     }
@@ -75,7 +77,7 @@ class RulesGrid extends React.Component {
                     displayFilters
                     ref={(grid) => { this.grid = grid; }}
                     enableCellSelection={false}
-                    rowActionsCell={RowActionsCell}
+                    rowActionsCell={PriorityActionCell}
                     columns={this.props.columns}
                     rowGetter={this.props.rowGetter}
                     rowsCount={this.props.rowsCount}
@@ -109,10 +111,12 @@ class RulesGrid extends React.Component {
     reorderRows = (e) => {
         if (e.rowSource.data[this.props.rowKey] === "empty_row" || e.rowTarget.data[this.props.rowKey] === "empty_row") {
             return;
+        }else if (e.rowSource.idx === e.rowTarget.idx) {
+            return;
         }
         let selectedRows = this._getSelectedRow(this.props.rowKey, this.props.selectedIds, this.props.rows);
         let draggedRows = this.isDraggedRowSelected(selectedRows, e.rowSource) ? selectedRows : [e.rowSource.data];
-        this.props.onReordeRows({rules: draggedRows, targetPriority: e.rowTarget.data.priority});
+        this.props.onReorderRows({rules: draggedRows, targetPriority: e.rowTarget.data.priority});
     };
 }
 

@@ -19,7 +19,6 @@ const { getCount } = require('../../../../../observables/rulesmanager');
 module.exports = ($props) => {
     return $props.distinctUntilChanged(
         ({filters, version}, newProps) => sameVersion(version, newProps) && sameFilter(filters, newProps))
-        // when one of the items above changed invalidates cache for before the next request
         .switchMap(({filters, setLoading, onLoad, onLoadError = () => { }}) => {
             setLoading(true);
             return getCount(filters)
