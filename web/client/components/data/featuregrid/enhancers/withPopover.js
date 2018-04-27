@@ -1,6 +1,7 @@
 const React = require('react');
 const Overlay = require('../../../misc/Overlay');
 const {Popover} = require('react-bootstrap');
+const {omit} = require('lodash');
 const ReactDOM = require('react-dom');
 
 /**
@@ -15,7 +16,7 @@ module.exports = (Wrapped) => class WithPopover extends React.Component {
         const {popoverOptions, ...props} = this.props;
         return (
             <span className="mapstore-info-popover">
-                <Wrapped {...this.props} ref={button => { target = button; }} />
+                <Wrapped {...(omit(props, ["renderPopover", "tooltipId"])) } ref={button => { target = button; }} />
                 <Overlay placement={popoverOptions.placement} show target={() => ReactDOM.findDOMNode(target)}>
                     <Popover
                         {...popoverOptions.props}>
