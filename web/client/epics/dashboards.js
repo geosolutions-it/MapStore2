@@ -6,23 +6,75 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require('rxjs');
-const { MAPS_LIST_LOADING } = require('../actions/maps');
-const { SEARCH_DASHBOARDS, searchDashboards, dashboardListLoaded } = require('../actions/dashboards');
+const { MAPS_LIST_LOADING, ATTRIBUTE_UPDATED} = require('../actions/maps');
+const { SEARCH_DASHBOARDS, DELETE_DASHBOARD, DASHBOARD_DELETED, RELOAD, searchDashboards, dashboardListLoaded, dashboardDeleted, dashboardsLoading } = require('../actions/dashboards');
+const { searchParamsSelector, searchTextSelector, totalCountSelector} = require('../selectors/dashboards');
 const GeoStoreApi = require('../api/GeoStoreDAO');
+const { wrapStartStop } = require('../observables/epics');
+const {error} = require('../actions/notifications');
+
+const {deleteResource} = require('../observables/geostore');
+
+const calculateNewParams = state => {
+    const totalCount = totalCountSelector(state);
+    const {start, limit, ...params} = searchParamsSelector(state);
+    if (start === totalCount - 1) {
+        return {
+            start: Math.max(0, start - limit),
+            limit
+        };
+    }
+    return {
+        start, limit, ...params
+    };
+};
+
 module.exports = {
-   searchDashboardsOnMapSearch:
-       (action$) => action$.ofType(MAPS_LIST_LOADING).switchMap(({ searchText }) => Rx.Observable.of(searchDashboards(searchText))), // TODO: maybe get default pagination
-    searchDashboards: action$ => action$.ofType(SEARCH_DASHBOARDS)
+   searchDashboardsOnMapSearch: action$ =>
+        action$.ofType(MAPS_LIST_LOADING)
+            .switchMap(({ searchText }) => Rx.Observable.of(searchDashboards(searchText))),
+    searchDashboards: (action$, { getState = () => { } }) =>
+        action$.ofType(SEARCH_DASHBOARDS)
             .map( ({params, searchText, geoStoreUrl}) => ({
                 searchText,
-                opts: {
-                    params, // TODO: use default pagination
+                options: {
+                    params: params || searchParamsSelector(getState()) || {start: 0, limit: 12},
                     ...(geoStoreUrl ? { baseURL: geoStoreUrl } : {})
                 }
             }))
             .switchMap(
-                ({ searchText, opts }) =>
-                    Rx.Observable.defer(() => GeoStoreApi.getResourcesByCategory("DASHBOARD", searchText, opts))
-                        .map(results => dashboardListLoaded(results))
-    )
-};
+                ({ searchText, options }) =>
+                    Rx.Observable.defer(() => GeoStoreApi.getResourcesByCategory("DASHBOARD", searchText, options))
+                        .map(results => dashboardListLoaded(results, {searchText, options}))
+                        .let(wrapStartStop(
+                            dashboardsLoading(true, "loading"),
+                            dashboardsLoading(false, "loading"),
+                            () => Rx.Observable.of(error({
+                                title: "notification.error",
+                                message: "resources.dashboards.errorLoadingDashboards",
+                                autoDismiss: 6,
+                                position: "tc"
+                            }))
+                        ))
+            ),
+    deleteDashboard: action$ => action$
+        .ofType(DELETE_DASHBOARD)
+        .switchMap(id => deleteResource(id).map(() => dashboardDeleted(id)))
+        .let(wrapStartStop(
+            dashboardsLoading(true, "loading"),
+            dashboardsLoading(false, "loading"),
+            () => Rx.Observable.of(error({
+                title: "notification.error",
+                message: "resources.dashboards.deleteError",
+                autoDismiss: 6,
+                position: "tc"
+            }))
+        )),
+    reloadOnDashboards: (action$, { getState = () => { } }) =>
+        action$.ofType(DASHBOARD_DELETED, RELOAD, ATTRIBUTE_UPDATED)
+            // .delay(1000) // workaround geostore issues
+            .switchMap( () => Rx.Observable.of(searchDashboards(
+                searchTextSelector(getState()),
+                calculateNewParams(getState())
+            )))
+        };

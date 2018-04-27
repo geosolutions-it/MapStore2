@@ -1,22 +1,20 @@
-const PropTypes = require('prop-types');
 /**
- * Copyright 2016, GeoSolutions Sas.
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
+const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
-const { get } = require('lodash');
+const { get, isNil } = require('lodash');
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 
 const ConfigUtils = require('../../utils/ConfigUtils');
 
-const { loadDashboard } = require('../../actions/dashboard');
-const {resetControls} = require('../../actions/controls');
+const { loadDashboard, resetDashboard } = require('../../actions/dashboard');
 
 const HolyGrail = require('../../containers/HolyGrail');
 
@@ -42,14 +40,22 @@ class DashboardPage extends React.Component {
         if (id) {
             this.props.reset();
             this.props.loadResource(id);
+        } else {
+            this.props.reset();
         }
     }
     componentDidUpdate(oldProps) {
         const id = get(this.props, "match.params.did");
         if (get(oldProps, "match.params.did") !== get(this.props, "match.params.did")) {
-            this.props.reset();
-            this.props.loadResource(id);
+            if (isNil(id)) {
+                this.props.reset();
+            } else {
+                this.props.loadResource(id);
+            }
         }
+    }
+    componentWillUnmount() {
+        this.props.reset();
     }
     render() {
         let plugins = ConfigUtils.getConfigProp("plugins") || {};
@@ -77,5 +83,5 @@ module.exports = connect((state) => ({
 }),
     {
         loadResource: loadDashboard,
-        reset: resetControls
+        reset: resetDashboard
     })(DashboardPage);

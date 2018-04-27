@@ -8,7 +8,7 @@
 
 const Rx = require('rxjs');
 const uuid = require('uuid/v1');
-const { includes } = require('lodash');
+const { includes, isNil } = require('lodash');
 const GeoStoreDAO = require('../api/GeoStoreDAO');
 
 const createLinkedResourceURL = (id, tail = "") => encodeURIComponent(encodeURIComponent(`rest/geostore/data/${id}${tail}`));
@@ -18,6 +18,18 @@ const getResourceIdFromURL = path => {
     const res = LINKED_RESOURCE_REGEX.exec(decodedUrl);
     return res && !!res[0] && res[1];
 };
+
+
+const getLinkedAttributesIds = (id, filterFunction = () => true, API = GeoStoreDAO) =>
+    Rx.Observable.defer(() => API.getResourceAttributes(id))
+        .map((attributes = []) => attributes
+            // excludes resources that are going to be updated
+            .filter(({ name } = {}) => filterFunction(name) )
+            // find out which attributes match the resource ids
+            .map(({ value }) => getResourceIdFromURL(value))
+            .filter(rid => !isNil(rid))
+);
+
 /**
  * Merges the permission. Now conflicts are not possible (default permission are for users, configured for groups)
  * For the future we should remove duplicates.
@@ -62,7 +74,7 @@ const updateOrDeleteLinkedResource = (id, attributeName, linkedResource = {}, re
         // update flow.
         : Rx.Observable.forkJoin([
             API.putResource(resourceId, linkedResource.data),
-            updateResourcePermissions(resourceId, permission, API)
+            ...(permission ? [updateResourcePermissions(resourceId, permission, API)] : [])
         ]);
 
 
@@ -87,7 +99,7 @@ const createLinkedResource = (id, attributeName, linkedResource, permission, API
                 // update URL of the main resource
                 Rx.Observable.defer( () => API.updateResourceAttribute(id, attributeName, createLinkedResourceURL(linkedResourceId, linkedResource.tail))),
                 // set permission
-                updateResourcePermissions(linkedResourceId, permission, API)
+                ...(permission ? [updateResourcePermissions(linkedResourceId, permission, API)] : [])
 
             ]).map(() => linkedResourceId)
         );
@@ -132,14 +144,7 @@ const updateLinkedResource = (id, attributeName, linkedResource, permission, API
  * @param {object} API the API to use
  */
 const updateOtherLinkedResourcesPermissions = (id, linkedResources, permission, API = GeoStoreDAO) =>
-    Rx.Observable.defer( () => API.getResourceAttributes(id))
-        .map( attributes => attributes
-            // excludes resources that are going to be updated
-            .filter(({ name } = {}) => !includes(Object.keys(linkedResources), name))
-            // find out which attributes match the resource ids
-            .map(({ value }) => getResourceIdFromURL(value))
-            .filter(rid => rid !== undefined)
-        )
+    getLinkedAttributesIds(id, name => !includes(Object.keys(linkedResources), name))
         .switchMap((ids = []) =>
             ids.length === 0
             ? Rx.Observable.of([])
@@ -239,14 +244,13 @@ const updateResource = ({ id, data, category, permission, metadata, linkedResour
             () => API.putResourceMetadata(id, metadata.name, metadata.description)
         ),
         // update data
-        data
-            ? Rx.Observable.defer(
+        ...(data ? [Rx.Observable.defer(
                     () => API.putResource(id, data)
-                )
-            : Rx.Observable.empty(),
+                )]
+            : []),
         // update permission
-        updateResourcePermissions(id, permission, API),
-        updateOtherLinkedResourcesPermissions(id, linkedResources, permission, API),
+        ...(permission ? [updateResourcePermissions(id, permission, API)] : []),
+        ...(permission ? [updateOtherLinkedResourcesPermissions(id, linkedResources, permission, API)] : []),
         // update linkedResources
         ...(
             Object.keys(linkedResources).map(
@@ -254,8 +258,24 @@ const updateResource = ({ id, data, category, permission, metadata, linkedResour
             )
         )
     ]).map(() => id);
+/**
+ * Deletes a resource and the linked resources
+ * @param {object} resource the resource with the id
+ * @param {object} options options
+ * @param {object} API the API to use
+ */
+const deleteResource = ({ id }, { deleteLinkedResources = true} = {}, API = GeoStoreDAO) =>
+    (deleteLinkedResources
+            ? getLinkedAttributesIds(id, () => true, API)
+            : Rx.Observable.of([])
+        ).map( (ids = []) =>
+            Rx.Observable.forkJoin(
+                [id, ...ids].map(i => API.deleteResource(i))
+            )
+    );
 module.exports = {
     getResource,
     createResource,
-    updateResource
+    updateResource,
+    deleteResource
 };

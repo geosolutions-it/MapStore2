@@ -10,6 +10,7 @@ const PropTypes = require('prop-types');
 const { Row, Col, Grid, Nav, NavItem} = require('react-bootstrap');
 const ToolsContainer = require('./containers/ToolsContainer');
 const {withState} = require('recompose');
+const DefaultTitle = ({ item = {}, index }) => <span>{ item.title || `Tab ${index}` }</span>;
 class ContentTabs extends React.Component {
     static propTypes = {
         selected: PropTypes.number,
@@ -40,7 +41,13 @@ class ContentTabs extends React.Component {
                 container={(props) => <div {...props}>
                     <div style={{marginTop: "10px"}}>
                         <Nav bsStyle="tabs" activeKey="1" onSelect={k => this.props.onSelect(k)}>
-                            {this.props.items.map((i, idx) => (<NavItem active={idx === this.props.selected} eventKey={i.key || idx} >{i.title || `Tab ${idx}`}</NavItem>))}
+                            {this.props.items.map(
+                                ({ TitleComponent = DefaultTitle, ...item }, idx) =>
+                                    (<NavItem
+                                        active={idx === this.props.selected}
+                                        eventKey={item.key || idx} >
+                                            <TitleComponent index={idx} item={item} />
+                                        </NavItem>))}
                         </Nav>
                         </div>
                     {props.children}

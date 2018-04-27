@@ -60,7 +60,11 @@ class FeaturedMaps extends React.Component {
                 title={<h3><Message msgId="manager.featuredMaps" /></h3>}
                 maps={items}
                 colProps={this.props.colProps}
-                viewerUrl={(map) => {this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id); }}
+                viewerUrl={(map) =>
+                    map.category && map.category.name === "DASHBOARD"
+                        ? this.context.router.history.push(`/dashboard/${map.id}`)
+                        : this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id)
+                }
                 metadataModal={MetadataModal}
                 bottom={this.props.bottom}
                 style={items.length === 0 ? {display: 'none'} : {}}/>
@@ -100,7 +104,7 @@ const updateFeaturedMapsStream = mapPropsStream(props$ =>
 
 /**
  * FeaturedMaps plugin. Shows featured maps in a grid.
- * @prop {string} cfg.pageSize change th epage size (only desktop)
+ * @prop {string} cfg.pageSize change the page size (only desktop)
  * @memberof plugins
  * @class
  */

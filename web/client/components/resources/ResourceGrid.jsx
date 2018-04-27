@@ -15,10 +15,10 @@ const renderLoading = () => {
     return <div style={{ width: "100px", overflow: "visible", margin: "auto" }}>Loading...<Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner" /></div>;
 };
 
-const renderMetadataModal = ({ Component, edit, resource, setEdit }) => {
+const renderMetadataModal = ({ Component, edit, resource, setEdit, onSaveSuccess }) => {
     if (Component) {
         let MetadataModal = Component;
-        return (<MetadataModal setEdit={setEdit} key="metadataModal" show={edit}
+        return (<MetadataModal setEdit={setEdit} key="metadataModal" show={edit} onSaveSuccess={onSaveSuccess}
             resource={resource} />);
     }
 };
@@ -35,9 +35,11 @@ module.exports = ({
     bottom,
     title,
     metadataModal,
+    viewerUrl,
     edit,
     onEdit = () => {},
     setEdit = () => {},
+    onSaveSuccess = () => {},
     onDelete = () => {},
     onUpdateAttribute = () => {}
 }) => (
@@ -51,6 +53,7 @@ module.exports = ({
                     : resources.map(
                         res => (<Col key={res.id} {...colProps}>
                             <ResourceCard
+                                viewerUrl={viewerUrl}
                                 resource={res}
                                 onEdit={onEdit}
                                 onDelete={onDelete}
@@ -61,6 +64,7 @@ module.exports = ({
         {bottom}
         {renderMetadataModal({
                 Component: metadataModal,
+                onSaveSuccess,
                 resource,
                 setEdit,
                 edit

@@ -15,6 +15,7 @@ const {find, get} = require('lodash');
 */
 
 const mapsResultsSelector = (state) => get(state, "maps.results", []);
+const totalCountSelector = state => get(state, "maps.totalCount");
 const mapFromIdSelector = (state, id) => find(mapsResultsSelector(state), m => m.id === id);
 const mapNameSelector = (state, id) => mapFromIdSelector(state, id) && mapFromIdSelector(state, id).name || "";
 const mapMetadataSelector = (state) => get(state, "maps.metadata", {});
@@ -28,6 +29,7 @@ module.exports = {
     mapNameSelector,
     mapFromIdSelector,
     mapsResultsSelector,
+    totalCountSelector,
     mapMetadataSelector,
     isMapsLastPageSelector,
     mapDescriptionSelector,

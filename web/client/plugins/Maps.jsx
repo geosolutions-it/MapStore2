@@ -16,6 +16,7 @@ const maptypeEpics = require('../epics/maptype');
 const mapsEpics = require('../epics/maps');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {userRoleSelector} = require('../selectors/security');
+const { totalCountSelector } = require('../selectors/maps');
 const { isFeaturedMapsEnabled } = require('../selectors/featuredmaps');
 const {createSelector} = require('reselect');
 
@@ -129,7 +130,11 @@ module.exports = {
         },
         ContentTabs: {
             name: 'maps',
-            title: <Message msgId="manager.maps_title" />,
+            TitleComponent:
+                connect(createSelector(
+                    totalCountSelector,
+                    count => ({ count })
+                ))(({ count = "" }) => <Message msgId="resources.maps.title" msgParams={{ count: count + "" }} />),
             position: 1,
             tool: true,
             priority: 1

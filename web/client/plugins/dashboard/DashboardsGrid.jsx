@@ -7,10 +7,18 @@
 */
 
 const {compose, defaultProps} = require('recompose');
+const { deleteDashboard, reloadDashboards } = require('../../actions/dashboards');
+const { updateAttribute } = require('../../actions/maps'); // TODO: extenralize
+const { connect } = require('react-redux');
 const resourceGrid = require('../../components/resources/enhancers/resourceGrid');
 const Grid = compose(
+    connect(() => ({}), {
+        onDelete: deleteDashboard,
+        onSaveSuccess: reloadDashboards,
+        onUpdateAttribute: updateAttribute
+    }),
     defaultProps({
-        category: "DASHBOARD",
+        category: "DASHBOARD"
 
     }),
     resourceGrid

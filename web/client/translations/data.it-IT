@@ -229,8 +229,8 @@
         "newMap": "Nuova Mappa",
 		"maps": {
             "title": "Mappe",
-            "addToFeaturedMaps": "Aggiungi alle featured maps",
-            "removeFromFeaturedMaps": "Rimuovi dalle featured maps",
+            "addToFeaturedMaps": "Metti in evidenza",
+            "removeFromFeaturedMaps": "Rimuovi da 'evidenza'",
             "feedback": {
                 "noDetailsAvailable": "Dettagli della mappa non disponibili",
                 "successSavedMap": "La mappa è stata salvata correttamente",

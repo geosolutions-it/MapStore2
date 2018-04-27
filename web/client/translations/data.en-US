@@ -258,11 +258,29 @@
 			"search": "search for maps..."
 		},
         "resources": {
-            "dashboards": "Dashboards ({number})",
             "deleteConfirmTitle": "Are you sure",
             "deleteConfirmMessage": "Are you sure you want do delete this resource?",
             "deleteConfirmButtonText": "Delete",
-            "deleteCancelButtonText": "Close"
+            "deleteCancelButtonText": "Close",
+            "resource": {
+                "deleteResource": "Delete",
+                "editResource": "Edit properties",
+                "addToFeatured": "Add to featured",
+                "removeFromFeatured": "Remove from featured",
+                "showDetails": "Show details"
+            },
+            "dashboards": {
+                "newDashboard: "Create new dashboard",
+                "title": "Dashboards ({count})",
+                "create": "Create Dashboard",
+                "noDashboardAvailable": "No dashboard available",
+                "createANewOne": "Create a new one",
+                "deleteError": "There was an error deleting the resource",
+                "errorLoadingDashboards": "There was an error loading dashboards"
+            },
+            "maps": {
+                "title": "Maps ({count})"
+            }
         },
         "map": {
             "loading": "Loading...",

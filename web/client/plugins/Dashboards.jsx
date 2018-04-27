@@ -9,42 +9,20 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const {connect} = require('react-redux');
-const ConfigUtils = require('../utils/ConfigUtils');
 const Message = require("../components/I18N/Message");
+const emptyState = require('../components/misc/enhancers/emptyState');
 
-const {setDashboardsAvailable } = require('../actions/dashboards');
+const { setDashboardsAvailable } = require('../actions/dashboards');
 const {mapTypeSelector} = require('../selectors/maptype');
-const {userRoleSelector} = require('../selectors/security');
+const { userRoleSelector } = require('../selectors/security');
 const { isFeaturedMapsEnabled } = require('../selectors/featuredmaps');
+const { totalCountSelector } = require('../selectors/dashboards');
 const {createSelector} = require('reselect');
+const { compose } = require('recompose');
 
 const DashboardGrid = require('./dashboard/DashboardsGrid');
-
-const { withHandlers, renameProp, compose} = require('recompose');
-const loadDashboards = () => ({type: "LOAD_DASHBOARD_DUMMY"});
-const PaginationToolbar = compose(
-    connect(({dashboards = {}}) => {
-        const { start, limit, results, loading, totalCount, searchText } = dashboards;
-        const total = Math.min(totalCount || 0, limit || 0);
-        const page = results && total && Math.ceil(start / total) || 0;
-        return {
-            page: page,
-            pageSize: limit,
-            items: results,
-            total: totalCount,
-            searchText,
-            loading
-        };
-    }),
-    renameProp('loadDashboards', 'loadPage'),
-    withHandlers({
-        onSelect: ({ loadPage = () => { }, searchText, pageSize }) => (pageNumber) => {
-            let start = pageSize * pageNumber;
-            let limit = pageSize;
-            loadPage(ConfigUtils.getDefaults().geoStoreUrl, searchText, { start, limit });
-        }
-    })
-)(require('../components/misc/PaginationToolbar'));
+const PaginationToolbar = require('./dashboard/PaginationToolbar');
+const EmptyDashboardsView = require('./dashboard/EmptyDashboardsView');
 
 class Dashboards extends React.Component {
     static propTypes = {
@@ -68,7 +46,7 @@ class Dashboards extends React.Component {
         onMount: () => {},
         loadDashboards: () => {},
         fluid: false,
-        title: <h3><Message msgId="resources.dashboards" /></h3>,
+        title: <h3><Message msgId="resources.dashboards.title" /></h3>,
         mapsOptions: {start: 0, limit: 12},
         colProps: {
             xs: 12,
@@ -82,7 +60,6 @@ class Dashboards extends React.Component {
 
     componentDidMount() {
         this.props.onMount();
-        this.props.loadDashboards(ConfigUtils.getDefaults().geoStoreUrl, this.props.searchText || ConfigUtils.getDefaults().initialMapFilter || "*", this.props.mapsOptions);
     }
 
     render() {
@@ -106,25 +83,40 @@ const dashboardsPluginSelector = createSelector([
 ], (mapType, searchText, resources, featuredEnabled, role) => ({
     mapType,
     searchText,
-    resources: resources.map(res => ({...res, featuredEnabled: false && featuredEnabled && role === 'ADMIN'})) // TODO: remove false to enable featuredEnabled
+    resources: resources.map(res => ({...res, featuredEnabled: featuredEnabled && role === 'ADMIN'})) // TODO: remove false to enable featuredEnabled
 }));
 
-const DashboardsPlugin = connect(dashboardsPluginSelector, {
-    loadDashboards,
-    onMount: () => setDashboardsAvailable(true)
-})(Dashboards);
+const DashboardsPlugin = compose(
+    connect(dashboardsPluginSelector, {
+        onMount: () => setDashboardsAvailable(true)
+    }),
+    emptyState(
+        ({resources =[], loading}) => !loading && resources.length === 0,
+        () => ({
+            glyph: "dashboard",
+            mainViewStyle: {opacity: 0.75},
+            title: <Message msgId="resources.dashboards.noDashboardAvailable" />,
+            description: <EmptyDashboardsView />
+        })
+
+    )
+)(Dashboards);
 
 module.exports = {
     DashboardsPlugin: assign(DashboardsPlugin, {
         NavMenu: {
             position: 2,
-            label: <Message msgId="resources.dashboards" />,
+            label: <Message msgId="resources.dashboards.menuText" />,
             linkId: '#mapstore-maps-grid',
-            glyph: '1-map'
+            glyph: 'dashboard'
         },
         ContentTabs: {
             name: 'maps',
-            title: <Message msgId="resources.dashboards" />,
+            TitleComponent:
+                connect(createSelector(
+                    totalCountSelector,
+                    count => ({count})
+                ))(({ count = ""}) => <Message msgId="resources.dashboards.title" msgParams={{ count: count + "" }} />),
             position: 2,
             tool: true,
             priority: 1

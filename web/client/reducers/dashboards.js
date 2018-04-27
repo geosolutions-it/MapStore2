@@ -9,7 +9,7 @@
 const { MAPS_LIST_LOADING } = require('../actions/maps');
 const { LOCATION_CHANGE } = require('react-router-redux');
 
-const { DASHBOARDS_LIST_LOADED, SET_DASHBOARDS_AVAILABLE } = require('../actions/dashboards');
+const { DASHBOARDS_LIST_LOADED, SET_DASHBOARDS_AVAILABLE, LOADING } = require('../actions/dashboards');
 const {set} = require('../utils/ImmutableUtils');
 const { castArray } = require('lodash');
 
@@ -30,23 +30,27 @@ function dashboards(state = {
         case DASHBOARDS_LIST_LOADED:
             return {
                 ...state,
-                loading: false,
                 results: action.results !== "" ? castArray(action.results) : [],
                 success: action.success,
                 totalCount: action.totalCount,
                 start: action.params && action.params.start,
                 limit: action.params && action.params.limit,
-                searchText: action.searchText
+                searchText: action.searchText,
+                options: action.options
             };
         case MAPS_LIST_LOADING:
             return {
                 ...state,
-                loading: true,
                 start: action.params && action.params.start,
                 limit: action.params && action.params.limit,
                 searchText: action.searchText
             };
-
+        case LOADING: {
+            // anyway sets loading to true
+            return set(action.name === "loading" ? "loading" : `loadFlags.${action.name}`, action.value, set(
+                "loading", action.value, state
+            ));
+        }
         default:
             return state;
     }

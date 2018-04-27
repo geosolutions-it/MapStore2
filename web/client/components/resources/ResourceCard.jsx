@@ -24,7 +24,9 @@ class ResourceCard extends React.Component {
         viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
         onEdit: PropTypes.func,
         onDelete: PropTypes.func,
-        onUpdateAttribute: PropTypes.func
+        onUpdateAttribute: PropTypes.func,
+        tooltips: PropTypes.object
+
 
     };
 
@@ -38,6 +40,13 @@ class ResourceCard extends React.Component {
         },
         backgroundOpacityStart: 0.7,
         backgroundOpacityEnd: 0.3,
+        tooltips: {
+            deleteResource: "resources.resource.deleteResource",
+            editResource: "resources.resource.editResource",
+            addToFeatured: "resources.resource.addToFeatured",
+            showDetails: "resources.resource.showDetails",
+            removeFromFeatured: "resources.resource.removeFromFeatured"
+        },
         // CALLBACKS
         onDelete: () => { },
         onEdit: () => { },
@@ -45,8 +54,8 @@ class ResourceCard extends React.Component {
 
     };
 
-    onEdit = (map, openModalProperties) => {
-        this.props.onEdit(map, openModalProperties);
+    onEdit = (resource, openModalProperties) => {
+        this.props.onEdit(resource, openModalProperties);
     };
 
     onConfirmDelete = () => {
@@ -81,7 +90,7 @@ class ResourceCard extends React.Component {
                 glyph: 'trash',
                 disabled: this.props.resource.deleting,
                 loading: this.props.resource.deleting,
-                tooltipId: 'manager.deleteMap',
+                tooltipId: this.props.tooltips.deleteResource,
                 onClick: evt => {
                     this.stopPropagate(evt);
                     this.displayDeleteDialog();
@@ -92,7 +101,7 @@ class ResourceCard extends React.Component {
                 glyph: 'wrench',
                 disabled: this.props.resource.updating,
                 loading: this.props.resource.updating,
-                tooltipId: 'manager.editMapMetadata',
+                tooltipId: this.props.tooltips.editResource,
                 onClick: evt => {
                     this.stopPropagate(evt);
                     this.onEdit(this.props.resource, true);
@@ -101,7 +110,7 @@ class ResourceCard extends React.Component {
             {
                 visible: !!(this.props.resource.details && this.props.resource.details !== 'NODATA'),
                 glyph: 'sheet',
-                tooltipId: 'map.details.show',
+                tooltipId: this.props.tooltips.showDetails,
                 onClick: evt => {
                     this.stopPropagate(evt);
                     this.onEdit(this.props.resource, false);
@@ -112,7 +121,7 @@ class ResourceCard extends React.Component {
                 visible: !!(this.props.resource.canEdit === true && this.props.resource.featuredEnabled),
                 glyph: isFeatured ? 'star' : 'star-empty',
                 bsStyle: isFeatured ? 'success' : 'primary',
-                tooltipId: isFeatured ? 'maps.removeFromFeaturedMaps' : 'maps.addToFeaturedMaps',
+                tooltipId: isFeatured ? this.props.tooltips.removeFromFeatured : this.props.tooltips.addToFeatured,
                 onClick: evt => {
                     this.stopPropagate(evt);
                     this.props.onUpdateAttribute(this.props.resource.id, 'featured', !isFeatured);

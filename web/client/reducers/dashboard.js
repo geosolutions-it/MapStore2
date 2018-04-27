@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { SET_EDITING, SET_EDITOR_AVAILABLE, SHOW_CONNECTIONS, TRIGGER_SAVE_MODAL, DASHBOARD_LOADING, DASHBOARD_LOADED, DASHBOARD_SAVED, SAVE_ERROR} = require('../actions/dashboard');
+const { SET_EDITING, SET_EDITOR_AVAILABLE, SHOW_CONNECTIONS, TRIGGER_SAVE_MODAL, DASHBOARD_LOADING, DASHBOARD_LOADED, DASHBOARD_SAVED, DASHBOARD_RESET, SAVE_ERROR} = require('../actions/dashboard');
 const {INSERT, UPDATE, DELETE} = require('../actions/widgets');
 const {set} = require('../utils/ImmutableUtils');
 const {castArray} = require('lodash');
@@ -28,6 +28,9 @@ function dashboard(state = {}, action) {
             return set("showSaveModal", action.show, set('saveErrors', undefined, state));
         case DASHBOARD_LOADED: {
             return set("resource", action.resource, state);
+        }
+        case DASHBOARD_RESET: {
+            return set("resource", undefined, state);
         }
         case SAVE_ERROR: {
             return set('saveErrors', castArray(action.error), state);
