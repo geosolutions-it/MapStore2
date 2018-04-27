@@ -385,10 +385,9 @@ describe('Test featuregrid selectors', () => {
     });
     it('test showAgainSelector default ', () => {
         const val = showAgainSelector(initialState);
-        expect(val).toExist();
-        expect(val).toBe(true);
+        expect(val).toBe(false);
     });
-    it('test showAgainSelector default ', () => {
+    it('test showPopoverSyncSelector default ', () => {
         const val = showPopoverSyncSelector(initialState);
         expect(val).toExist();
         expect(val).toBe(true);
