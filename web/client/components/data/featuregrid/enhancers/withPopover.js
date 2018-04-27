@@ -13,10 +13,10 @@ const ReactDOM = require('react-dom');
 module.exports = (Wrapped) => class WithPopover extends React.Component {
     render() {
         let target = null;
-        const {popoverOptions, ...props} = this.props;
+        const {popoverOptions, keyProp, ...props} = this.props;
         return (
             <span className="mapstore-info-popover">
-                <Wrapped {...(omit(props, ["renderPopover", "tooltipId"])) } ref={button => { target = button; }} />
+                <Wrapped {...(omit(props, ["renderPopover", "tooltipId"])) } key={keyProp} ref={button => { target = button; }} />
                 <Overlay placement={popoverOptions.placement} show target={() => ReactDOM.findDOMNode(target)}>
                     <Popover
                         {...popoverOptions.props}>
