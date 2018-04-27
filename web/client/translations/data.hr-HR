@@ -1279,6 +1279,10 @@
             "layerlabel": "Sloj"
         },
         "rulesmanager": {
+            "placeholders": {
+                "filter": "Traži..."
+            },
+            "menutitle": "Upravljanje pravilima GeoFence",
             "title": "Pravila pristupa",
             "role": "Rola",
             "user": "Korisnik",
@@ -1296,6 +1300,7 @@
             "close": "Zatvori",
             "previous": "prethodno",
             "next": "slijedeće",
+            "errorTitle": "Geofence",
             "errorLoadingRoles": "Greška prilikom učitavanja rola.",
             "errorLoadingUsers": "Greška prilikom učitavanja korisnika.",
             "errorLoadingWorkspaces": "Greška prilikom učitavanja radnih okolina.",

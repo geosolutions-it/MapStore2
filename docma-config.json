@@ -218,7 +218,7 @@
                 "web/client/plugins/WFSDownload.jsx",
                 "web/client/plugins/ZoomIn.jsx",
                 "web/client/plugins/ZoomOut.jsx"
-            ]
+            ] 
         },
         "./docs/**/*md",
         {

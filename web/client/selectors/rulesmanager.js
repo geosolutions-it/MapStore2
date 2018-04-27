@@ -8,6 +8,7 @@
 
 const assign = require('object-assign');
 const _ = require('lodash');
+const {createSelector} = require('reselect');
 
 const rulesSelector = (state) => {
     if (!state.rulesmanager || !state.rulesmanager.rules) {
@@ -42,8 +43,16 @@ const optionsSelector = (state) => {
     options.layersCount = stateOptions.layersCount || 0;
     return options;
 };
-
+const EMPTY_FILTERS = {};
+const filterSelector = (state) => state.rulesmanager && state.rulesmanager.filters || EMPTY_FILTERS;
+const selectedRules = (state) => state.rulesmanager && state.rulesmanager.selectedRules || [];
+const servicesConfigSel = (state) => state.rulesmanager && state.rulesmanager.services;
+const servicesSelector = createSelector(servicesConfigSel, (services) => ( services && Object.keys(services).map(service => ({value: service, label: service}))
+));
 module.exports = {
     rulesSelector,
-    optionsSelector
+    optionsSelector,
+    selectedRules,
+    filterSelector,
+    servicesSelector
 };

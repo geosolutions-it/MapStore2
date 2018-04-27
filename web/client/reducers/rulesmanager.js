@@ -9,10 +9,30 @@
 const assign = require('object-assign');
 
 const { RULES_SELECTED, RULES_LOADED, UPDATE_ACTIVE_RULE,
-        ACTION_ERROR, OPTIONS_LOADED, UPDATE_FILTERS_VALUES } = require('../actions/rulesmanager');
+        ACTION_ERROR, OPTIONS_LOADED, UPDATE_FILTERS_VALUES, LOADING, SET_FILTER} = require('../actions/rulesmanager');
 const _ = require('lodash');
+const defaultState = {
+    "services": {
+        "WFS": [
+            "DescribeFeatureType",
+            "GetCapabilities",
+            "GetFeature",
+            "GetFeatureWithLock",
+            "LockFeature",
+            "Transaction"
+        ],
+        "WMS": [
+            "DescribeLayer",
+            "GetCapabilities",
+            "GetFeatureInfo",
+            "GetLegendGraphic",
+            "GetMap",
+            "GetStyles"
+        ]
+    }
+};
 
-function rulesmanager(state = {}, action) {
+function rulesmanager(state = defaultState, action) {
     switch (action.type) {
     case RULES_SELECTED: {
         if (!action.merge) {
@@ -83,6 +103,16 @@ function rulesmanager(state = {}, action) {
                 [action.name + "Count"]: action.valuesCount
             })
         });
+    }
+    case LOADING:
+        return assign({}, state, {loading: action.loading});
+    case SET_FILTER: {
+        const {key, value} = action;
+        if (value) {
+            return assign({}, state, {filters: {...state.filters, [key]: value}});
+        }
+        const {[key]: omit, ...newFilters} = state.filters;
+        return assign({}, state, {filters: newFilters});
     }
     default:
         return state;

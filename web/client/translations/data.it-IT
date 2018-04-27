@@ -1326,6 +1326,10 @@
             "layerlabel": "Layer"
             },
             "rulesmanager": {
+                "placeholders": {
+                "filter": "Ricerca..."
+                },
+                "menutitle": "Configura GeoFence Rules",
                 "title": "Regole Di Accesso",
                 "role": "Ruolo",
                 "user": "Utente",
@@ -1343,6 +1347,7 @@
                 "close": "Chiudi",
                 "previous": "precedente",
                 "next": "prossima",
+                "errorTitle": "Geofence",
                 "errorLoadingRoles": "Errore durante il caricamento dei ruoli",
                 "errorLoadingUsers": "Errore durante il caricamento  degli utenti.",
                 "errorLoadingWorkspaces": "Errore durante il caricamento dei workspaces.",

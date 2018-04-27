@@ -1326,6 +1326,10 @@
             "layerlabel": "Couche"
         },
         "rulesmanager": {
+            "placeholders": {
+                "filter": "Chercher..."
+            },
+            "menutitle": "Gérer les règles de GeoFence",
             "title": "Règles d'accès",
             "role": "Rôle",
             "user": "Utilisateur",
@@ -1343,6 +1347,7 @@
             "close": "Fermer",
             "previous": "précédent",
             "next": "prochain",
+            "errorTitle": "Geofence",
             "errorLoadingRoles": "Erreur lors du chargement des rôles.",
             "errorLoadingUsers": "Erreur lors du chargement des utilisateurs.",
             "errorLoadingWorkspaces": "Erreur lors du chargement des  workspaces.",

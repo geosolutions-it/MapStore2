@@ -1326,6 +1326,10 @@
             "layerlabel": "Ebene"
         },
         "rulesmanager": {
+            "placeholders": {
+                "filter": "Suche..."
+            },
+            "menutitle": "GeoFence-Regeln Verwalten",
             "title": "Zugangs Regeln",
             "role": "Rolle",
             "user": "Benutzer",
@@ -1343,6 +1347,7 @@
             "close": "Schließen",
             "previous": "vorheriger",
             "next": "nächster",
+            "errorTitle": "Geofence",
             "errorLoadingRoles": "Fehler beim Laden der Rollen.",
             "errorLoadingUsers": "Fehler beim Laden der Benutzer.",
             "errorLoadingWorkspaces": "Fehler beim Laden der Workspaces.",

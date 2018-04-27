@@ -1326,6 +1326,10 @@
             "layerlabel": "Capa"
         },
         "rulesmanager": {
+            "placeholders": {
+                "filter": "Buscar..."
+            },
+            "menutitle": "Administrar reglas de GeoFence",
             "title": "Reglas de acceso",
             "role": "Rol",
             "user": "Ususario",
@@ -1343,6 +1347,7 @@
             "close": "Cerrar",
             "previous": "previo",
             "next": "próximo",
+            "errorTitle": "Geofence",
             "errorLoadingRoles": "Error al cargar los  roles.",
             "errorLoadingUsers": "Error al cargar los usuarios.",
             "errorLoadingWorkspaces": "Error al cargar los espacios de trabajo.",

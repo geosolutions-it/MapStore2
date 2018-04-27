@@ -1,0 +1,139 @@
+const Rx = require("rxjs");
+const { compose, withStateHandlers, defaultProps, createEventHandler, renameProp} = require('recompose');
+const propsStreamFactory = require('../../../misc/enhancers/propsStreamFactory');
+const {isObject} = require("lodash");
+const stop = stream$ => stream$.filter(() => false);
+
+
+const sameParentFilter = ({parentsFilter: f1}, {parentsFilter: f2}) => f1 === f2;
+const sameFilter = ({val: f1}, {val: f2}) => f1 === f2;
+
+// ParentFilter change so resets the data
+const resetStream = prop$ => prop$.distinctUntilChanged((oP, nP) => sameParentFilter(oP, nP)).skip(1).do(({resetCombo}) => resetCombo()).let(stop);
+
+// Trigger first loading when value change
+const triggerLoadDataStream = prop$ => prop$.distinctUntilChanged((oP, nP) => sameFilter(oP, nP))
+                .debounceTime(300)
+                .filter(({val}) => val && val.length > 0)
+                .switchMap(({loadingErrorMsg, nextPage, prevPage, onError, parentsFilter = {}, val = "", size = 10, pagination, loadData, setData = () => {}}) => {
+                    return loadData(val, 0, size, parentsFilter, true)
+                        .do(({count, data}) => {
+                            setData({
+                                pagination: {...pagination, loadNextPage: nextPage, loadPrevPage: prevPage, firstPage: true, lastPage: Math.ceil(count / size) <= 1},
+                                data,
+                                page: 0,
+                                count
+                            });
+                        }).let(stop).startWith({busy: true}).catch((e) => Rx.Observable.of(e).do(() => {
+                            onError(loadingErrorMsg);
+                        }).mapTo({busy: false})).concat(Rx.Observable.of({busy: false}));
+                });
+
+const loadPageStream = page$ => page$
+        .switchMap(({pageStep, page, parentsFilter, count, val, size,
+            pagination, setData, loadData, onError, loadingErrorMsg}) => {
+                const newPage = page + pageStep;
+                return loadData(val, newPage, size, parentsFilter)
+                        .do(({data}) => {
+                            setData({
+                                pagination: {...pagination, firstPage: newPage === 0, lastPage: Math.ceil(count / size) <= newPage + 1},
+                                data,
+                                page: newPage
+                            });
+                        }).let(stop).startWith({busy: true}).catch((e) => Rx.Observable.of(e).do(() => {
+                            onError(loadingErrorMsg);
+                        }).mapTo({busy: false})).concat(Rx.Observable.of({busy: false}));
+            });
+const dataStreamFactory = prop$ => {
+    const {handler: nextPage, stream: nextPage$ } = createEventHandler();
+    const {handler: prevPage, stream: prevPage$ } = createEventHandler();
+    const page$ = Rx.Observable
+        .merge(nextPage$.mapTo(1), prevPage$.mapTo(-1))
+        .withLatestFrom(prop$.map(({onError, loadData, page, parentsFilter, count,
+            val, size, pagination, setData, loadingErrorMsg}) => ({
+            loadData, onError, page, parentsFilter, count, val, size, pagination,
+            setData, loadingErrorMsg})), (pageStep, other) => ({ pageStep, ...other}));
+
+    const $p = prop$.map(o => ({ ...o, nextPage, prevPage, nextPage$, prevPage$}));
+    return triggerLoadDataStream($p).merge(loadPageStream(page$), resetStream($p)).startWith({busy: false});
+};
+
+
+/**
+ * Add remote loading to PaginatedCombo components. The data are managed in the enhanced state.
+ * Pass as a prop an onLoad function that returns a stream$. onLoad will be called with:
+ * search text, page (0 first page), size, count (if true should return the number of elements)
+ * The stream has to return and object with data (array of loaded elements) and [count] the number of
+ * total elements if required.
+ * Also pass onValueSelected and selected props. onValueSelected is called whe the users select a value
+ * from the downloaded data.
+ * @name autoComplete
+ * @memberof manager.rulesmanager.enhancers
+ * @param  {PaginatedCombo} Component The PaginatedCombo to enhance with remote loading
+ * @return {HOC}         An HOC that replaces the prop string with localized string.
+ */
+
+module.exports = compose(
+    defaultProps({
+        stopPropagation: true,
+        emitOnReset: false,
+        paginated: true,
+        size: 5,
+        loadData: () => Rx.Observable.of({data: [], count: 0}),
+        parentsFilter: {},
+        filter: false,
+        dataStreamFactory,
+        onValueSelected: () => {},
+        onError: () => {},
+        loadingErrorMsg: {
+            title: "",
+            message: ""
+        }
+    }),
+    withStateHandlers(({paginated, selected, initialData = []}) => ({
+        val: selected,
+        page: 0,
+        data: initialData,
+        pagination: {
+            paginated: paginated,
+            firstPage: false,
+            lastPage: false,
+            loadPrevPage: () => {},
+            loadNextPage: () => {}
+        }}), {
+        resetCombo: ({emitOnReset, onValueSelected}, {initialData = []}) => () => {
+            if (emitOnReset) {
+                onValueSelected();
+            }
+            return {
+            data: initialData,
+            page: 0,
+            val: undefined,
+            select: undefined
+        }; },
+        setData: ({count: oldCount}) => ({pagination, data, page = 0, count = oldCount} = {}) => ({
+            pagination,
+            data,
+            page,
+            count
+        }),
+        onChange: (state, {initialData = []}) => (val = "") => {
+            return val.length === 0 && {val, data: initialData} || {val};
+        },
+        onToggle: ({ val = ""}, {selected, onValueSelected, initialData = []}) => (open) => {
+            if (!open && val === "" && selected) {
+                onValueSelected();
+            }else if (!open && val !== selected) {
+                return {val: selected, data: initialData};
+            }
+        },
+        onSelect: (state, {onValueSelected, selected, valueField}) => (select) => {
+            const selectedVal = isObject(select) && select[valueField] || select;
+            if (selectedVal !== selected) {
+                onValueSelected(selectedVal);
+            }
+        }
+    }),
+    propsStreamFactory,
+    renameProp("val", "selectedValue")
+);

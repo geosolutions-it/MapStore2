@@ -18,6 +18,22 @@ const UPDATE_ACTIVE_RULE = 'UPDATE_ACTIVE_RULE';
 const UPDATE_FILTERS_VALUES = 'UPDATE_FILTERS_VALUES';
 const ACTION_ERROR = 'ACTION_ERROR';
 const OPTIONS_LOADED = 'OPTIONS_LOADED';
+const LOADING = 'RULES_MANAGER:LOADING';
+const SET_FILTER = "RULES_MANAGER:SET_FILTER";
+
+function setFilter(key, value) {
+    return {
+        type: SET_FILTER,
+        key,
+        value
+    };
+}
+function setLoading(loading) {
+    return {
+        type: LOADING,
+        loading
+    };
+}
 
 function rulesSelected(rules, merge, unselect) {
     return {
@@ -225,5 +241,7 @@ module.exports = {
     loadWorkspaces,
     loadLayers,
     actionError,
-    optionsLoaded
+    optionsLoaded,
+    LOADING, setLoading,
+    SET_FILTER, setFilter
 };

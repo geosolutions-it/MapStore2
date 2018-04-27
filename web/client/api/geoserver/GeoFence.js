@@ -13,14 +13,15 @@ const ConfigUtils = require('../../utils/ConfigUtils');
 
 var Api = {
 
-    loadRules: function(rulesPage, rulesFiltersValues) {
-        const options = {
-            'params': {
-                'page': rulesPage - 1,
-                'entries': 10
-            }
+    loadRules: function(page, rulesFiltersValues, entries = 10) {
+        const params = {
+            page,
+            entries,
+            ...this.assignFiltersValue(rulesFiltersValues)
         };
-        this.assignFiltersValue(rulesFiltersValues, options);
+        const options = {params, 'headers': {
+            'Content': 'application/json'
+        }};
         return axios.get('geofence/rest/rules', this.addBaseUrl(options))
             .then(function(response) {
                 return response.data;
@@ -30,9 +31,8 @@ var Api = {
 
     getRulesCount: function(rulesFiltersValues) {
         const options = {
-            'params': {}
+            'params': this.assignFiltersValue(rulesFiltersValues)
         };
-        this.assignFiltersValue(rulesFiltersValues, options);
         return axios.get('geofence/rest/rules/count', this.addBaseUrl(options)).then(function(response) {
             return response.data;
         });
@@ -73,22 +73,24 @@ var Api = {
         }));
     },
 
-    assignFiltersValue: function(rulesFiltersValues, options) {
-        if (rulesFiltersValues) {
-            assign(options.params, {"userName": this.normalizeFilterValue(rulesFiltersValues.userName)});
-            assign(options.params, {"roleName": this.normalizeFilterValue(rulesFiltersValues.roleName)});
-            assign(options.params, {"service": this.normalizeFilterValue(rulesFiltersValues.service)});
-            assign(options.params, {"request": this.normalizeFilterValue(rulesFiltersValues.request)});
-            assign(options.params, {"workspace": this.normalizeFilterValue(rulesFiltersValues.workspace)});
-            assign(options.params, {"layer": this.normalizeFilterValue(rulesFiltersValues.layer)});
-        }
-        return options;
+    assignFiltersValue: function(rulesFiltersValues = {}) {
+        return Object.keys(rulesFiltersValues).map(key => ({key, normKey: this.normalizeKey(key)}))
+                .reduce((params, {key, normKey}) => ({...params, [normKey]: this.normalizeFilterValue(rulesFiltersValues[key])}), {});
     },
 
     normalizeFilterValue(value) {
         return value === "*" ? undefined : value;
     },
-
+    normalizeKey(key) {
+        switch (key) {
+            case 'username':
+                return 'userName';
+            case 'rolename':
+                return 'groupName';
+            default:
+                return key;
+        }
+    },
     assignFilterValue: function(queryParameters, filterName, filterAny, filterValue) {
         if (!filterValue) {
             return;
@@ -99,29 +101,52 @@ var Api = {
             assign(queryParameters, {[filterName]: filterValue});
         }
     },
-
-    getGroups: function() {
-        return axios.get('security/rest/roles', this.addBaseUrl({
+    getGroupsCount: function(filter = " ") {
+        const encodedFilter = encodeURIComponent(`%${filter}%`);
+        return axios.get(`geofence/rest/groups/count/${encodedFilter}`, this.addBaseUrl({
             'headers': {
-                'Accept': 'application/json'
+                'Accept': 'text/plain'
+            }
+        })).then(function(response) {
+            return response.data;
+        });
+    },
+    getGroups: function(filter, page, entries = 10) {
+        const params = {
+            page,
+            entries,
+            nameLike: `%${filter}%`
+        };
+        const options = {params};
+        return axios.get(`geofence/rest/groups`, this.addBaseUrl(options)).then(function(response) {
+            return response.data;
+        });
+    },
+    getUsersCount: function(filter = " ") {
+        const encodedFilter = encodeURIComponent(`%${filter}%`);
+        return axios.get(`geofence/rest/users/count/${encodedFilter}`, this.addBaseUrl({
+            'headers': {
+                'Accept': 'text/plain'
             }
         })).then(function(response) {
             return response.data;
         });
     },
 
-    getUsers: function() {
-        return axios.get('security/rest/usergroup/users', this.addBaseUrl({
-            'headers': {
-                'Accept': 'application/json'
-            }
-        })).then(function(response) {
+    getUsers: function(filter, page, entries = 10) {
+        const params = {
+            page,
+            entries,
+            nameLike: `%${filter}%`
+        };
+        const options = {params};
+        return axios.get(`geofence/rest/users`, this.addBaseUrl(options)).then(function(response) {
             return response.data;
         });
     },
 
     getWorkspaces: function() {
-        return axios.get('rest/workspaces', this.addBaseUrl({
+        return axios.get('rest/workspaces', this.addBaseUrlGS({
             'headers': {
                 'Accept': 'application/json'
             }
@@ -134,8 +159,12 @@ var Api = {
         return !value ? '*' : value;
     },
 
-    addBaseUrl: function(options) {
-        return assign(options, {baseURL: ConfigUtils.getDefaults().geoServerUrl});
+    addBaseUrl: function(options = {}) {
+        return assign(options, {baseURL: ConfigUtils.getDefaults().geoFenceUrl});
+    },
+    addBaseUrlGS: function(options = {}) {
+        const {url: baseURL} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
+        return assign(options, {baseURL});
     }
 };
 

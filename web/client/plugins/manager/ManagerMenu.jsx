@@ -52,6 +52,11 @@ class ManagerMenu extends React.Component {
             "msgId": "users.title",
             "glyph": "1-group-mod",
             "path": "/manager/usermanager"
+        },
+        {
+            "msgId": "rulesmanager.menutitle",
+            "glyph": "lock",
+            "path": "/rules-manager"
         }],
         role: "",
         onItemClick: () => {},
