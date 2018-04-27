@@ -9,7 +9,7 @@
 const assign = require('object-assign');
 const {omit, isObject, head, isArray} = require('lodash');
 const {combineReducers} = require('redux');
-
+const {combineEpics} = require('redux-observable');
 const isPluginConfigured = (pluginsConfig, plugin) => {
     const cfg = pluginsConfig;
     const pluginName = plugin.substring(0, plugin.length - 6);
@@ -98,10 +98,35 @@ const parsePluginConfig = (requires, cfg) => {
 const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
                             .reduce((previous, current) => assign({}, previous, current), {});
 
+const getEpics = (plugins) => Object.keys(plugins).map((name) => plugins[name].epics)
+    .reduce((previous, current) => assign({}, previous, current), {});
+
+    /**
+     * default wrapper for the epics.
+     * @memberof utils.PluginsUtils
+     * @param {epic} epic the epic to wrap
+     * @return {epic} epic wrapped with error catch and re-subscribe functionalities.S
+     */
+const defaultEpicWrapper = epic => (...args) =>
+    epic(...args).catch((error, source) => {
+        setTimeout(() => { throw error; }, 0);
+        return source;
+    });
 const PluginsUtils = {
     combineReducers: (plugins, reducers) => {
         const pluginsReducers = getReducers(plugins);
         return combineReducers(assign({}, reducers, pluginsReducers));
+    },
+    /**
+     * Produces the rootEpic for the plugins, combined with other epics passed as 2nd argument
+     * @param {array} plugins the plugins
+     * @param {function[]} [epics] the epics to add to the plugins' ones
+     * @param {function} [epicWrapper] returns a function that wraps the epic
+     * @return {function} the rootEpic, obtained combining plugins' epics and the other epics passed as argument.
+     */
+    combineEpics: (plugins, epics = {}, epicWrapper = defaultEpicWrapper) => {
+        const pluginEpics = assign({}, getEpics(plugins), epics);
+        return combineEpics( ...Object.keys(pluginEpics).map(k => pluginEpics[k]).map(epicWrapper));
     },
     getReducers,
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])

@@ -32,12 +32,12 @@ var DebugUtils = {
             const DevTools = require('../components/development/DevTools');
 
             finalCreateStore = compose(
-              applyMiddleware.apply(null, middlewares),
-            window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument(),
-              persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/))
+                applyMiddleware.apply(null, middlewares),
+                persistState(window.location.href.match(/[?&]debug_session=([^&]+)\b/)),
+                window.devToolsExtension ? window.devToolsExtension() : DevTools.instrument()
           )(createStore);
         } else {
-            let middlewares = (userMiddlewares || []).concat([thunkMiddleware]);
+            let middlewares = [thunkMiddleware].concat(userMiddlewares || []);
             finalCreateStore = applyMiddleware.apply(null, middlewares)(createStore);
         }
         return finalCreateStore(reducer, initialState, enhancer);
