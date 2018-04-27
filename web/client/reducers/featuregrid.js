@@ -60,7 +60,7 @@ const emptyResultsState = {
     open: false,
     canEdit: false,
     focusOnEdit: true,
-    showAgain: true,
+    showAgain: false,
     showPopoverSync: localStorage && localStorage.getItem("showPopoverSync") !== null ? localStorage.getItem("showPopoverSync") === "true" : true,
     mode: MODES.VIEW,
     changes: [],
@@ -141,6 +141,7 @@ function featuregrid(state = emptyResultsState, action) {
     switch (action.type) {
     case INIT_PLUGIN: {
         return assign({}, state, {
+            showPopoverSync: localStorage && localStorage.getItem("showPopoverSync") !== null ? localStorage.getItem("showPopoverSync") === "true" : true,
             editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"],
             virtualScroll: !!action.options.virtualScroll,
             maxStoredPages: action.options.maxStoredPages || 5
