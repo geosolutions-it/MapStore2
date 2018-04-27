@@ -1,0 +1,62 @@
+<RuleList>
+<rule grant="ALLOW">
+<id>21</id>
+<priority>25</priority>
+<instance>
+<id>1</id>
+<name>default-gs</name>
+</instance>
+<service>WFS</service>
+<request>GETFEATURE</request>
+<workspace/>
+<layer>tasmania</layer>
+</rule>
+<rule grant="ALLOW">
+<id>4</id>
+<priority>26</priority>
+<instance>
+<id>1</id>
+<name>default-gs</name>
+</instance>
+<service>WMS</service>
+<request>GETMAP</request>
+<workspace>tiger</workspace>
+<layer>poi</layer>
+</rule>
+<rule grant="ALLOW">
+<id>25</id>
+<priority>27</priority>
+<instance>
+<id>1</id>
+<name>default-gs</name>
+</instance>
+<service>WFS</service>
+<request>GETFEATURE</request>
+<workspace>tiger</workspace>
+<layer>poly_landmarks</layer>
+</rule>
+<rule grant="ALLOW">
+<id>23</id>
+<priority>28</priority>
+<instance>
+<id>1</id>
+<name>default-gs</name>
+</instance>
+<service>WMS</service>
+<request>GETFEATURE</request>
+<workspace>tiger</workspace>
+<layer>giant_polygon</layer>
+</rule>
+<rule grant="ALLOW">
+<id>16</id>
+<priority>33</priority>
+<instance>
+<id>1</id>
+<name>default-gs</name>
+</instance>
+<service>WMS</service>
+<request>GETFEATURE</request>
+<workspace>sf</workspace>
+<layer>streams</layer>
+</rule>
+</RuleList>

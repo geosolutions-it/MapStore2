@@ -1059,6 +1059,10 @@
             "layerlabel": "Laag"
         },
         "rulesmanager": {
+            "placeholders": {
+                "filter": "Zoeken..."
+            },
+            "menutitle": "Beheer GeoFence Rules",
             "title": "Toegangsregels",
             "role": "Rol",
             "user": "Gebruiker",
@@ -1076,6 +1080,7 @@
             "close": "Sluiten",
             "previous": "vorige",
             "next": "volgende",
+            "errorTitle": "Geofence",
             "errorLoadingRoles": "Fout bij laden van de rollen.",
             "errorLoadingUsers": "Fout bij laden van de gebruikers.",
             "errorLoadingWorkspaces": "Fout bij laden van workspaces.",

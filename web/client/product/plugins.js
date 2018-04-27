@@ -84,8 +84,11 @@ module.exports = {
         WidgetsPlugin: require('../plugins/Widgets'),
         WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder'),
         TOCItemsSettingsPlugin: require('../plugins/TOCItemsSettings'),
+        RulesDataGridPlugin: require('../plugins/RulesDataGrid'),
+        RulesManagerFooter: require('../plugins/RulesManagerFooter'),
         FeaturedMaps: require('../plugins/FeaturedMaps'),
-        NavMenu: require('./plugins/NavMenu')
+        NavMenu: require('./plugins/NavMenu'),
+        RulesEditorPlugin: require('../plugins/RulesEditor')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,
