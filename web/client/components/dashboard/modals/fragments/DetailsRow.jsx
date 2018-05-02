@@ -2,10 +2,10 @@ const React = require('react');
 const {Row, Col} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 const { isNil } = require('lodash');
-const Toolbar = require('../../misc/toolbar/Toolbar');
+const Toolbar = require('../../../misc/toolbar/Toolbar');
 
-const Message = require('../../I18N/Message');
-const { NO_DETAILS_AVAILABLE } = require('../../../actions/maps');
+const Message = require('../../../I18N/Message');
+const { NO_DETAILS_AVAILABLE } = require('../../../../actions/maps');
 
 
 module.exports = ({
