@@ -9,4 +9,7 @@
     <Category>
         <name>DETAILS</name>
     </Category>
+    <Category>
+        <name>DASHBOARD</name>
+    </Category>
 </CategoryList>
