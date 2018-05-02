@@ -20,7 +20,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
     return (<ButtonGroup id="featuregrid-toolbar" className="featuregrid-toolbar featuregrid-toolbar-margin">
         <TButton
             id="edit-mode"
-            key="edit-mode"
+            keyProp="edit-mode"
             tooltipId="featuregrid.toolbar.editMode"
             disabled={disableToolbar}
             visible={mode === "VIEW" && isEditingAllowed}
@@ -28,7 +28,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             glyph="pencil"/>
         <TButton
             id="search"
-            key="search"
+            keyProp="search"
             tooltipId="featuregrid.toolbar.advancedFilter"
             disabled={disableToolbar || !isSearchAllowed}
             visible={mode === "VIEW"}
@@ -36,7 +36,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             glyph="filter"/>
         <TButton
             id="zoom-all"
-            key="zoom-all"
+            keyProp="zoom-all"
             tooltipId="featuregrid.toolbar.zoomAll"
             disabled={disableToolbar || disableZoomAll}
             visible={mode === "VIEW"}
@@ -44,7 +44,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             glyph="zoom-to"/>
         <TButton
             id="back-view"
-            key="back-view"
+            keyProp="back-view"
             tooltipId="featuregrid.toolbar.quitEditMode"
             disabled={disableToolbar}
             visible={mode === "EDIT" && !hasChanges && !hasNewFeatures}
@@ -52,7 +52,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             glyph="arrow-left"/>
         <TButton
             id="add-feature"
-            key="add-feature"
+            keyProp="add-feature"
             tooltipId="featuregrid.toolbar.addNewFeatures"
             disabled={disableToolbar}
             visible={mode === "EDIT" && !hasNewFeatures && !hasChanges && hasSupportedGeometry}
@@ -60,7 +60,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             glyph="row-add"/>
         <TButton
             id="draw-feature"
-            key="draw-feature"
+            keyProp="draw-feature"
             tooltipId={getDrawFeatureTooltip(isDrawing, isSimpleGeom)}
             disabled={disableToolbar}
             visible={mode === "EDIT" && selectedCount === 1 && (!hasGeometry || hasGeometry && !isSimpleGeom) && hasSupportedGeometry}
@@ -69,7 +69,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             glyph="pencil-add"/>
         <TButton
             id="remove-features"
-            key="remove-features"
+            keyProp="remove-features"
             tooltipId="featuregrid.toolbar.deleteSelectedFeatures"
             disabled={disableToolbar}
             visible={mode === "EDIT" && selectedCount > 0 && !hasChanges && !hasNewFeatures}
@@ -77,7 +77,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             glyph="trash-square"/>
         <TButton
             id="save-feature"
-            key="save-feature"
+            keyProp="save-feature"
             tooltipId={getSaveMessageId({saving, saved})}
             disabled={saving || saved || disableToolbar}
             visible={mode === "EDIT" && hasChanges || hasNewFeatures}
@@ -86,7 +86,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             glyph="floppy-disk"/>
         <TButton
             id="cancel-editing"
-            key="cancel-editing"
+            keyProp="cancel-editing"
             tooltipId="featuregrid.toolbar.cancelChanges"
             disabled={disableToolbar}
             visible={mode === "EDIT" && hasChanges || hasNewFeatures}
@@ -94,7 +94,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             glyph="remove-square"/>
         <TButton
             id="delete-geometry"
-            key="delete-geometry"
+            keyProp="delete-geometry"
             tooltipId="featuregrid.toolbar.deleteGeometry"
             disabled={disableToolbar}
             visible={mode === "EDIT" && hasGeometry && selectedCount === 1 && hasSupportedGeometry}
@@ -102,7 +102,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             glyph="polygon-trash"/>
         <TButton
             id="download-grid"
-            key="download-grid"
+            keyProp="download-grid"
             tooltipId="featuregrid.toolbar.downloadGridData"
             disabled={disableToolbar || disableDownload}
             active={isDownloadOpen}
@@ -111,7 +111,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             glyph="features-grid-download"/>
         <TButton
             id="grid-settings"
-            key="grid-settings"
+            keyProp="grid-settings"
             tooltipId="featuregrid.toolbar.hideShowColumns"
             disabled={disableToolbar}
             active={isColumnsOpen}
@@ -120,7 +120,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             glyph="features-grid-set"/>
         <TButton
             id="grid-map-chart"
-            key="grid-map-chart"
+            keyProp="grid-map-chart"
             tooltipId="featuregrid.toolbar.createNewChart"
             disabled={disableToolbar}
             visible={mode === "VIEW" && showChartButton}
@@ -128,7 +128,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             glyph="stats"/>
         <TButton
             id="grid-map-filter"
-            key="grid-map-filter"
+            keyProp="grid-map-filter"
             tooltipId="featuregrid.toolbar.syncOnMap"
             disabled={disableToolbar}
             active={isSyncActive}

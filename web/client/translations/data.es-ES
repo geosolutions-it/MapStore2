@@ -1140,6 +1140,7 @@
                 "wizard": {
                     "backToTypeSelection": "Volver a la selección de tipo",
                     "backToWidgetTypeSelection": "Volver a la selección del tipo de widget",
+                    "backToFeatureGrid": "Volver a la grilla de características",
                     "backToLayerSelection": "Volver a la selección de capas",
                     "backToMapSelection": "Volver a la selección del mapa",
                     "backToChartOptions": "Volver a las opciones de gráfico",
