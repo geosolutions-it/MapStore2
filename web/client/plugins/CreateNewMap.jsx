@@ -52,7 +52,7 @@ class CreateNewMap extends React.Component {
             </Button>
             {this.props.dashboardsAvailable ?
                 <Button bsStyle="primary" onClick={() => { this.context.router.history.push("/dashboard/"); }}>
-                    <Message msgId="newDashboard" />
+                    <Message msgId="resources.dashboards.newDashboard" />
                 </Button>
                 : null}
             </ButtonToolbar>

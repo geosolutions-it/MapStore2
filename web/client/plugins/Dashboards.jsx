@@ -46,7 +46,7 @@ class Dashboards extends React.Component {
         onMount: () => {},
         loadDashboards: () => {},
         fluid: false,
-        title: <h3><Message msgId="resources.dashboards.title" /></h3>,
+        title: <h3><Message msgId="resources.dashboards.titleNoCount" /></h3>,
         mapsOptions: {start: 0, limit: 12},
         colProps: {
             xs: 12,

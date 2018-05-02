@@ -9,7 +9,10 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const { Row, Col, Grid, Nav, NavItem} = require('react-bootstrap');
 const ToolsContainer = require('./containers/ToolsContainer');
+const Message = require('../components/I18N/Message');
+
 const {withState} = require('recompose');
+const assign = require('object-assign');
 const DefaultTitle = ({ item = {}, index }) => <span>{ item.title || `Tab ${index}` }</span>;
 class ContentTabs extends React.Component {
     static propTypes = {
@@ -30,11 +33,11 @@ class ContentTabs extends React.Component {
     };
     render() {
         return (
-            <Grid>
+            <Grid id={this.props.id}>
                 <Row>
                 <Col>
+                <h2><Message msgId="resources.contents.title" /></h2>
                 <ToolsContainer
-                id={this.props.id}
                 style={this.props.style}
                 className={this.props.className}
                 toolCfg={{title: ""}}
@@ -66,6 +69,13 @@ class ContentTabs extends React.Component {
 }
 
 module.exports = {
-    ContentTabsPlugin: withState('selected', 'onSelect', 0)(ContentTabs),
+    ContentTabsPlugin: assign(withState('selected', 'onSelect', 0)(ContentTabs), {
+        NavMenu: {
+            position: 2,
+            label: <Message msgId="resources.contents.title" />,
+            linkId: '#content-tabs',
+            glyph: 'dashboard'
+        }
+    }),
     reducers: {}
 };

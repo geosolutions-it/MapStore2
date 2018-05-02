@@ -72,7 +72,7 @@ module.exports = {
         )),
     reloadOnDashboards: (action$, { getState = () => { } }) =>
         action$.ofType(DASHBOARD_DELETED, RELOAD, ATTRIBUTE_UPDATED)
-            // .delay(1000) // workaround geostore issues
+            .delay(1000) // delay as a workaround for geostore issue #178
             .switchMap( () => Rx.Observable.of(searchDashboards(
                 searchTextSelector(getState()),
                 calculateNewParams(getState())

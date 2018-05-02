@@ -269,9 +269,13 @@
                 "removeFromFeatured": "Remove from featured",
                 "showDetails": "Show details"
             },
+            "contents": {
+                "title": "Contents"
+            },
             "dashboards": {
-                "newDashboard: "Create new dashboard",
+                "newDashboard": "New Dashboard",
                 "title": "Dashboards ({count})",
+                "titleNoCount": "Dashboards",
                 "create": "Create Dashboard",
                 "noDashboardAvailable": "No dashboard available",
                 "createANewOne": "Create a new one",

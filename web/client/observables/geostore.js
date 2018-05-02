@@ -73,7 +73,8 @@ const updateOrDeleteLinkedResource = (id, attributeName, linkedResource = {}, re
             .switchMap( () => Rx.Observable.fromPromise( API.updateResourceAttribute(id, attributeName, "NODATA")))
         // update flow.
         : Rx.Observable.forkJoin([
-            API.putResource(resourceId, linkedResource.data),
+            API.putResource(resourceId, linkedResource.data)
+                .switchMap(() => Rx.Observable.defer(() => API.updateResourceAttribute(id, attributeName, createLinkedResourceURL(resourceId, linkedResource.tail)))),
             ...(permission ? [updateResourcePermissions(resourceId, permission, API)] : [])
         ]);
 
@@ -242,12 +243,14 @@ const updateResource = ({ id, data, category, permission, metadata, linkedResour
         // update metadata
         Rx.Observable.defer(
             () => API.putResourceMetadata(id, metadata.name, metadata.description)
-        ),
-        // update data
-        ...(data ? [Rx.Observable.defer(
+        ).switchMap(res =>
+            // update data if present. NOTE: sequence instead of parallel because of geostore issue #179
+            data
+                ? Rx.Observable.defer(
                     () => API.putResource(id, data)
-                )]
-            : []),
+                )
+            : Rx.Observable.of(res)),
+        // update data
         // update permission
         ...(permission ? [updateResourcePermissions(id, permission, API)] : []),
         ...(permission ? [updateOtherLinkedResourcesPermissions(id, linkedResources, permission, API)] : []),

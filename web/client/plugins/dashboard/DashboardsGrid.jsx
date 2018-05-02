@@ -8,7 +8,7 @@
 
 const {compose, defaultProps} = require('recompose');
 const { deleteDashboard, reloadDashboards } = require('../../actions/dashboards');
-const { updateAttribute } = require('../../actions/maps'); // TODO: extenralize
+const { updateAttribute } = require('../../actions/maps'); // TODO: externalize
 const { connect } = require('react-redux');
 const resourceGrid = require('../../components/resources/enhancers/resourceGrid');
 const Grid = compose(
