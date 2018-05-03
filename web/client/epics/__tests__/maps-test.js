@@ -58,7 +58,6 @@ let map1 = {
     id: mapId,
     name: "name"
 };
-
 let map2 = {
     id: mapId2,
     name: "name2"
@@ -408,8 +407,6 @@ describe('maps Epics', () => {
         map8.thumbnail = "wronguri/9/";
         map8.details = "wronguri/10/";
         testEpic(addTimeoutEpic(deleteMapAndAssociatedResourcesEpic), 4, deleteMap(mapId8, {}), actions => {
-            console.log('delete map inside');
-            console.log(actions);
             expect(actions.length).toBe(4);
             actions.filter(a => !!a.type).map((action) => {
                 switch (action.type) {
