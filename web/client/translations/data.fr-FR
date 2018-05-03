@@ -1168,7 +1168,7 @@
                 },
                 "errors": {
                     "noAttributesTitle": "Aucun attribut à afficher",
-                    "noAttributesDescription": "Les couches sélectionnées n'ont aucun attribut à afficher. Veuillez revenir en arrière et sélectionner une autre couche pour utiliser ce widget",
+                    "noAttributesDescription": "La couche sélectionnée n'a aucun attribut à afficher. Veuillez sélectionner un autre type ou couche de widget",
                     "noWidgetsAvailableTitle": "Impossible de créer le widget pour le calque sélectionné",
                     "noWidgetsAvailableDescription": "<p> <strong> Veuillez essayer de sélectionner un autre type de couche ou de widget </strong> </p> <p> Le serveur ne fournit pas les services requis pour la couche et le type de widget sélectionné </p> <p> Les causes possibles sont: <ul> <li> Le calque sélectionné est une couche raster </li> <li> Le service WFS n'est pas disponible </li> <li> Le processus WPS <code> gs:aggregate </code> n'est pas disponible </li> </ul> </p> ",
                     "checkAtLeastOneAttribute": "Vous devez sélectionner au moins une colonne"
