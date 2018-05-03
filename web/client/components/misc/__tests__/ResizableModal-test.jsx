@@ -25,8 +25,16 @@ describe('ResizableModal component', () => {
 
     it('test rendering ', () => {
         ReactDOM.render(<ResizableModal />, document.getElementById("container"));
-        const modalEl = document.getElementById('ms-resizable-modal');
-        expect(modalEl).toNotExist();
+        expect(document.getElementById('ms-resizable-modal')).toNotExist();
+        ReactDOM.render(<ResizableModal show />, document.getElementById("container"));
+        expect(document.getElementById('ms-resizable-modal')).toExist();
+        // check loading
+        expect(document.getElementsByClassName('mapstore-inline-loader')[0]).toNotExist();
+
+        ReactDOM.render(<ResizableModal show loading/>, document.getElementById("container"));
+        expect(document.getElementsByClassName('mapstore-inline-loader')[0]).toExist();
+
+
     });
 
     it('ResizableModal rendering with defaults show', () => {

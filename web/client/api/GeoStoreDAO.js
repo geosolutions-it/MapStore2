@@ -156,8 +156,8 @@ const Api = {
                 },
                 ...options
             })).then(({ data } = {}) => data)
-            .then(data => _.castArray(_.get(data, "AttributeList.Attribute")))
-            .then(attributes => (attributes && attributes[0] && attributes[0] !== "") ? attributes : []);
+            .then(data => _.castArray(_.get(data, "AttributeList.Attribute") || []))
+            .then(attributes => attributes || []);
     },
     /**
      * same of getPermissions but clean data properly and returns only the array of rules.

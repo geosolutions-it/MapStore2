@@ -8,6 +8,7 @@ const SAVE_ERROR = "DASHBOARD:SAVE_ERROR";
 const DASHBOARD_SAVED = "DASHBOARD:DASHBOARD_SAVED";
 
 const LOAD_DASHBOARD = "DASHBOARD:LOAD_DASHBOARD";
+const DASHBOARD_RESET = "DASHBOARD:DASHBOARD_RESET";
 const DASHBOARD_LOADED = "DASHBOARD:DASHBOARD_LOADED";
 const DASHBOARD_LOADING = "DASHBOARD:DASHBOARD_LOADING";
 
@@ -29,6 +30,8 @@ module.exports = {
     LOAD_DASHBOARD,
     loadDashboard: id => ({ type: LOAD_DASHBOARD, id}),
     DASHBOARD_LOADED,
+    DASHBOARD_RESET,
+    resetDashboard: () => ({ type: DASHBOARD_RESET}),
     dashboardLoaded: (resource, data) => ({ type: DASHBOARD_LOADED, resource, data}),
     DASHBOARD_LOADING,
     /**

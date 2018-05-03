@@ -1,5 +1,3 @@
-import { withStateHandlers } from 'recompose';
-
 /*
  * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
@@ -8,15 +6,14 @@ import { withStateHandlers } from 'recompose';
  * LICENSE file in the root directory of this source tree.
  */
 const { connect } = require('react-redux');
-const { compose, withProps, branch, renderNothing } = require('recompose');
+const { compose } = require('recompose');
 const { createSelector } = require('reselect');
 
 const { userSelector } = require('../../selectors/security');
 const { widgetsConfig } = require('../../selectors/widgets');
 const { isShowSaveOpen, dashboardResource, isDashboardLoading, getDashboardSaveErrors } = require('../../selectors/dashboard');
 const { saveDashboard, triggerSave } = require('../../actions/dashboard');
-const handleResourceData = require('../../components/dashboard/modals/enhancers/handleResourceData');
-const handlePermission = require('../../components/dashboard/modals/enhancers/handlePermission');
+const handleSaveModal = require('../../components/resources/modals/enhancers/handleSaveModal');
 
 /**
  * Save dialog component enhanced for dashboard
@@ -35,22 +32,5 @@ module.exports = compose(
         onClose: () => triggerSave(false),
         onSave: saveDashboard
     }),
-    branch(
-        ({show}) => !show,
-        renderNothing
-    ),
-    handleResourceData,
-    handlePermission(),
-    withStateHandlers(
-        () => ({}),
-        {
-            onError: () => (formErrors) => ({ formErrors })
-        }
-    ),
-    withProps(
-        ({errors = [], formErrors = []}) => ({
-            errors: [...errors, ...formErrors]
-        })
-    )
-
-)(require('../../components/dashboard/modals/Save'));
+    handleSaveModal
+)(require('../../components/resources/modals/Save'));

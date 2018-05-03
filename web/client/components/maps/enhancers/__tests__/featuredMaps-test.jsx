@@ -47,6 +47,11 @@ describe('featuredMaps enhancher', () => {
                 items: [{
                     id: 2,
                     name: 'Map',
+                    category: {
+                        id: 1,
+                        name: "MAP"
+                    },
+                    icon: "1-map",
                     canCopy: true,
                     canDelete: true,
                     canEdit: true,

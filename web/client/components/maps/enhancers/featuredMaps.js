@@ -54,6 +54,17 @@ const parseAttributes = (record) => {
     const attributesArray = isArray(attributes) && attributes || isObject(attributes) && [attributes];
     return attributesArray && attributesArray.reduce((newAttributes, attribute) => ({...newAttributes, [attribute.name]: attribute.value}), {}) || {};
 };
+const getIcon = record => {
+    const cat = get(record, "category.name");
+    switch (cat) {
+        case "MAP":
+            return "1-map";
+        case "DASHBOARD":
+            return "dashboard";
+        default:
+            return undefined;
+    }
+};
 /*
  * converts record item into a item for MapsGrid
  */
@@ -61,6 +72,8 @@ const resultToProps = ({result = {}, permission}) => ({
     items: (isArray(result.Resource) && result.Resource || isObject(result.Resource) && [result.Resource] || []).map((record = {}) => ({
         id: record.id,
         name: record.name,
+        category: record.category,
+        icon: getIcon(record),
         canCopy: permission,
         canDelete: permission,
         canEdit: permission,

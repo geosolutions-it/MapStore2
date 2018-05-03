@@ -43,6 +43,8 @@ module.exports = {
         UndoPlugin: require('../plugins/History'),
         RedoPlugin: require('../plugins/History'),
         MapsPlugin: require('../plugins/Maps'),
+        DashboardsPlugin: require('../plugins/Dashboards'),
+        ContentTabs: require('../plugins/ContentTabs'),
         MapSearchPlugin: require('../plugins/MapSearch'),
         HomeDescriptionPlugin: require('./plugins/HomeDescription'),
         ExamplesPlugin: require('./plugins/Examples'),

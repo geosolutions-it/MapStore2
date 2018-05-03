@@ -16,6 +16,7 @@ const maptypeEpics = require('../epics/maptype');
 const mapsEpics = require('../epics/maps');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {userRoleSelector} = require('../selectors/security');
+const { totalCountSelector } = require('../selectors/maps');
 const { isFeaturedMapsEnabled } = require('../selectors/featuredmaps');
 const {createSelector} = require('reselect');
 
@@ -54,6 +55,7 @@ const PaginationToolbar = connect((state) => {
 class Maps extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
+        title: PropTypes.any,
         onGoToMap: PropTypes.func,
         loadMaps: PropTypes.func,
         maps: PropTypes.object,
@@ -72,6 +74,7 @@ class Maps extends React.Component {
         onGoToMap: () => {},
         loadMaps: () => {},
         fluid: false,
+        title: <h3><Message msgId="manager.maps_title" /></h3>,
         mapsOptions: {start: 0, limit: 12},
         colProps: {
             xs: 12,
@@ -92,7 +95,7 @@ class Maps extends React.Component {
         return (<MapsGrid
             maps={this.props.maps}
             fluid={this.props.fluid}
-            title={<h3><Message msgId="manager.maps_title" /></h3>}
+            title={this.props.title}
             colProps={this.props.colProps}
             viewerUrl={(map) => {this.context.router.history.push("/viewer/" + this.props.mapType + "/" + map.id); }}
             bottom={<PaginationToolbar />}
@@ -124,6 +127,17 @@ module.exports = {
             label: <Message msgId="manager.maps_title" />,
             linkId: '#mapstore-maps-grid',
             glyph: '1-map'
+        },
+        ContentTabs: {
+            name: 'maps',
+            TitleComponent:
+                connect(createSelector(
+                    totalCountSelector,
+                    count => ({ count })
+                ))(({ count = "" }) => <Message msgId="resources.maps.title" msgParams={{ count: count + "" }} />),
+            position: 1,
+            tool: true,
+            priority: 1
         }
     }),
     epics: {

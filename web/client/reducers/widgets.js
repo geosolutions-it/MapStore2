@@ -12,7 +12,8 @@ const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
 const {
-    DASHBOARD_LOADED
+    DASHBOARD_LOADED,
+    DASHBOARD_RESET
 } = require('../actions/dashboard');
 
 const set = require('lodash/fp/set');
@@ -117,7 +118,8 @@ function widgetsReducer(state = emptyState, action) {
         case CHANGE_LAYOUT: {
             return set(`containers[${action.target}].layout`, action.layout)(set(`containers[${action.target}].layouts`, action.allLayouts, state));
         }
-        case CLEAR_WIDGETS: {
+        case CLEAR_WIDGETS:
+        case DASHBOARD_RESET: {
             return set(`containers[${DEFAULT_TARGET}]`, emptyState.containers[DEFAULT_TARGET], state);
         }
         case ADD_DEPENDENCY: {

@@ -1,0 +1,15 @@
+{
+  "success": true,
+  "totalCount": 1,
+  "results": {
+    "canDelete": false,
+    "canEdit": false,
+    "canCopy": true,
+    "creation": "2018-05-02 18:22:43.074",
+    "lastUpdate": "2018-05-02 18:22:58.089",
+    "description": "",
+    "id": 5802,
+    "name": "test dashboard",
+    "thumbnail": "NODATA"
+  }
+}

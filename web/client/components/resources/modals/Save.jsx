@@ -1,5 +1,5 @@
 /*
-* Copyright 2017, GeoSolutions Sas.
+* Copyright 2018, GeoSolutions Sas.
 * All rights reserved.
 *
 * This source code is licensed under the BSD-style license found in the
@@ -8,7 +8,6 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const {get} = require('lodash');
-
 const Portal = require('../../misc/Portal');
 const ResizableModal = require('../../misc/ResizableModal');
 // require('./css/modals.css');
@@ -30,7 +29,6 @@ class SaveModal extends React.Component {
         rules: PropTypes.array,
         onSave: PropTypes.func,
         onUpdateRules: PropTypes.func,
-        closeGlyph: PropTypes.string,
         resource: PropTypes.object,
         linkedResources: PropTypes.object,
         style: PropTypes.object,
@@ -58,15 +56,13 @@ class SaveModal extends React.Component {
         metadataChanged: ()=> {},
         metadata: {name: "", description: ""},
         options: {},
-        closeGlyph: "",
         style: {},
         // CALLBACKS
+        onClose: () => {},
         onError: ()=> {},
         onUpdate: ()=> {},
         onUpdateLinkedResource: () => {},
-        onSaveAll: () => {},
         onSave: ()=> {},
-        onReset: () => {},
         availablePermissions: ["canRead", "canWrite"],
         availableGroups: []
     };
@@ -82,8 +78,9 @@ class SaveModal extends React.Component {
      * @return the modal for unsaved changes
     */
     render() {
-        return (<Portal>
+        return (<Portal key="saveDialog">
             {<ResizableModal
+                loading={this.props.loading}
                 title={<Message msgId="dashboard.saveDialog.title"/>}
                 show={this.props.show}
                 clickOutEnabled
@@ -93,7 +90,7 @@ class SaveModal extends React.Component {
                     onClick: this.onCloseMapPropertiesModal,
                     disabled: this.props.resource.loading
                 }, {
-                    text: <Message msgId="save"/>,
+                    text: <span><Message msgId="save"/></span>,
                     onClick: () => { this.onSave(); },
                         disabled: !this.isValidForm() || this.props.loading
                 }]}
@@ -114,8 +111,8 @@ class SaveModal extends React.Component {
                         onUpdateRules={this.props.onUpdateRules}
                         availableGroups={this.props.availableGroups}
                     />
-
-            </div></Grid>
+                </div>
+            </Grid>
         </ResizableModal>}
     </Portal>);
     }

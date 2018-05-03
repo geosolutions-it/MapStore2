@@ -1,7 +1,7 @@
 var expect = require('expect');
 var React = require('react');
 var ReactDOM = require('react-dom');
-var ConfirmDialog = require('../Confirm');
+var ConfirmModal = require('../ConfirmModal');
 
 describe("ConfirmDialog component", () => {
     beforeEach((done) => {
@@ -16,19 +16,18 @@ describe("ConfirmDialog component", () => {
     });
 
     it('creates component with defaults', () => {
-        const cmp = ReactDOM.render(<ConfirmDialog />, document.getElementById("container"));
-        expect(cmp).toExist();
+        ReactDOM.render(<ConfirmModal />, document.getElementById("container"));
+
     });
 
     it('creates component with content', () => {
-        const cmp = ReactDOM.render(<ConfirmDialog show options={{className: "modal-dialog"}}><div id="TEST">some content</div></ConfirmDialog>, document.getElementById("container"));
-        expect(cmp).toExist();
+        ReactDOM.render(<ConfirmModal show options={{ className: "modal-dialog" }}><div id="TEST">some content</div></ConfirmModal>, document.getElementById("container"));
 
-        let background = document.getElementsByClassName("modal").item(0);
+        let background = document.getElementsByClassName("modal-fixed").item(0);
         let dialog = document.getElementsByClassName("modal-dialog").item(0);
         expect(background).toExist();
         expect(dialog).toExist();
-        expect(document.querySelectorAll('button').length).toBe(3); // close, confirm, cancel
+        expect(document.querySelectorAll('button').length).toBe(2); // close, confirm, cancel
     });
 
 });

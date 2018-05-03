@@ -1,5 +1,5 @@
 /*
- * Copyright 2017, GeoSolutions Sas.
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -7,49 +7,37 @@
  */
 const PropTypes = require('prop-types');
 const React = require('react');
-const {get} = require('lodash');
 const Message = require('../I18N/Message');
 const GridCard = require('../misc/GridCard');
-const FitIcon = require('../misc/FitIcon');
-
-const thumbUrl = require('./style/default.jpg');
+const thumbUrl = require('../maps/style/default.jpg');
 const assign = require('object-assign');
 const ConfirmModal = require('./modals/ConfirmModal');
 
-class MapCard extends React.Component {
+class ResourceCard extends React.Component {
     static propTypes = {
         // props
         style: PropTypes.object,
-        map: PropTypes.object,
-        detailsSheetActions: PropTypes.object,
+        backgroundOpacityStart: PropTypes.number,
+        backgroundOpacityEnd: PropTypes.number,
+        resource: PropTypes.object,
         // CALLBACKS
         viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
         onEdit: PropTypes.func,
-        onMapDelete: PropTypes.func,
+        onDelete: PropTypes.func,
         onUpdateAttribute: PropTypes.func,
-        backgroundOpacityStart: PropTypes.number,
-        backgroundOpacityEnd: PropTypes.number,
         tooltips: PropTypes.object
-    };
 
-    static contextTypes = {
-        messages: PropTypes.object
+
     };
 
     static defaultProps = {
+        resource: {},
         style: {
             backgroundImage: 'url(' + thumbUrl + ')',
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "repeat-x"
         },
-        detailsSheetActions: {
-            onToggleDetailsSheet: () => {}
-        },
-        // CALLBACKS
-        onMapDelete: ()=> {},
-        onEdit: () => {},
-        onUpdateAttribute: () => {},
         backgroundOpacityStart: 0.7,
         backgroundOpacityEnd: 0.3,
         tooltips: {
@@ -58,15 +46,20 @@ class MapCard extends React.Component {
             addToFeatured: "resources.resource.addToFeatured",
             showDetails: "resources.resource.showDetails",
             removeFromFeatured: "resources.resource.removeFromFeatured"
-        }
+        },
+        // CALLBACKS
+        onDelete: () => { },
+        onEdit: () => { },
+        onUpdateAttribute: () => { }
+
     };
 
-    onEdit = (map, openModalProperties) => {
-        this.props.onEdit(map, openModalProperties);
+    onEdit = (resource, openModalProperties) => {
+        this.props.onEdit(resource, openModalProperties);
     };
 
     onConfirmDelete = () => {
-        this.props.onMapDelete(this.props.map.id);
+        this.props.onDelete(this.props.resource.id);
         this.close();
     };
 
@@ -75,14 +68,14 @@ class MapCard extends React.Component {
         var selection = window.getSelection();
         if (!selection.toString()) {
             this.stopPropagate(evt);
-            this.props.viewerUrl(this.props.map);
+            this.props.viewerUrl(this.props.resource);
         }
     };
 
     getCardStyle = () => {
-        if (this.props.map.thumbnail) {
+        if (this.props.resource.thumbnail) {
             return assign({}, this.props.style, {
-                background: 'linear-gradient(rgba(0, 0, 0, ' + this.props.backgroundOpacityStart + '), rgba(0, 0, 0, ' + this.props.backgroundOpacityEnd + ') ), url(' + (this.props.map.thumbnail === null || this.props.map.thumbnail === "NODATA" ? thumbUrl : decodeURIComponent(this.props.map.thumbnail)) + ')'
+                background: 'linear-gradient(rgba(0, 0, 0, ' + this.props.backgroundOpacityStart + '), rgba(0, 0, 0, ' + this.props.backgroundOpacityEnd + ') ), url(' + (this.props.resource.thumbnail === null || this.props.resource.thumbnail === "NODATA" ? thumbUrl : decodeURIComponent(this.props.resource.thumbnail)) + ')'
             });
         }
         return this.props.style;
@@ -90,13 +83,13 @@ class MapCard extends React.Component {
 
     render() {
 
-        const isFeatured = this.props.map && this.props.map.featured === 'true' || this.props.map.featured === 'added';
+        const isFeatured = this.props.resource && (this.props.resource.featured === 'true' || this.props.resource.featured === 'added');
         const availableAction = [
             {
-                visible: this.props.map.canEdit === true,
+                visible: this.props.resource.canEdit === true,
                 glyph: 'trash',
-                disabled: this.props.map.deleting,
-                loading: this.props.map.deleting,
+                disabled: this.props.resource.deleting,
+                loading: this.props.resource.deleting,
                 tooltipId: this.props.tooltips.deleteResource,
                 onClick: evt => {
                     this.stopPropagate(evt);
@@ -104,56 +97,54 @@ class MapCard extends React.Component {
                 }
             },
             {
-                visible: this.props.map.canEdit === true && (get(this.props.map, "category.name") !== "DASHBOARD"),
+                visible: this.props.resource.canEdit === true,
                 glyph: 'wrench',
-                disabled: this.props.map.updating,
-                loading: this.props.map.updating,
-                tooltipId: 'manager.editMapMetadata',
+                disabled: this.props.resource.updating,
+                loading: this.props.resource.updating,
+                tooltipId: this.props.tooltips.editResource,
                 onClick: evt => {
                     this.stopPropagate(evt);
-                    this.onEdit(this.props.map, true);
+                    this.onEdit(this.props.resource, true);
                 }
             },
             {
-                visible: !!(this.props.map.details && this.props.map.details !== 'NODATA'),
+                visible: !!(this.props.resource.details && this.props.resource.details !== 'NODATA'),
                 glyph: 'sheet',
                 tooltipId: this.props.tooltips.showDetails,
                 onClick: evt => {
                     this.stopPropagate(evt);
-                    this.onEdit(this.props.map, false);
-                    this.props.detailsSheetActions.onToggleDetailsSheet(true);
+                    this.onEdit(this.props.resource, false);
+                    // TODO show details
                 }
             },
             {
-                visible: !!(this.props.map.canEdit === true && this.props.map.featuredEnabled),
+                visible: !!(this.props.resource.canEdit === true && this.props.resource.featuredEnabled),
                 glyph: isFeatured ? 'star' : 'star-empty',
                 bsStyle: isFeatured ? 'success' : 'primary',
                 tooltipId: isFeatured ? this.props.tooltips.removeFromFeatured : this.props.tooltips.addToFeatured,
                 onClick: evt => {
                     this.stopPropagate(evt);
-                    this.props.onUpdateAttribute(this.props.map.id, 'featured', !isFeatured);
+                    this.props.onUpdateAttribute(this.props.resource.id, 'featured', !isFeatured);
                 }
             }
         ];
 
         return (
-           <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.map.title || this.props.map.name}
+            <GridCard className="map-thumb" style={this.getCardStyle()} header={this.props.resource.title || this.props.resource.name}
                 actions={availableAction} onClick={this.onClick}
-               >
-               <div className="map-thumb-description">{this.props.map.description}</div>
-                {this.props.map.icon ?
-                    <div key="icon" style={{
-                        width: "20px",
-                        height: "20px",
-                        margin: "5px 10px",
-                        color: "white",
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0 }} >
-                        <FitIcon glyph={this.props.map.icon} />
-                    </div> : null}
-               <ConfirmModal ref="deleteMapModal" show={this.state ? this.state.displayDeleteDialog : false} onHide={this.close} onClose={this.close} onConfirm={this.onConfirmDelete} titleText={<Message msgId="manager.deleteMap" />} confirmText={<Message msgId="manager.deleteMap" />} cancelText={<Message msgId="cancel" />} body={<Message msgId="manager.deleteMapMessage" />} />
-           </GridCard>
+            >
+                <div className="map-thumb-description">{this.props.resource.description}</div>
+                <ConfirmModal
+                    show={this.state ? this.state.displayDeleteDialog : false}
+                    onHide={this.close}
+                    onClose={this.close}
+                    onConfirm={this.onConfirmDelete}
+                    title={<Message msgId="resources.deleteConfirmTitle" />}
+                    confirmText={<Message msgId="resources.deleteConfirmButtonText" />}
+                    cancelText={<Message msgId="resources.deleteCancelButtonText" />}>
+                    <Message msgId="resources.deleteConfirmMessage" />
+                </ConfirmModal>
+            </GridCard>
         );
     }
 
@@ -181,4 +172,4 @@ class MapCard extends React.Component {
     };
 }
 
-module.exports = MapCard;
+module.exports = ResourceCard;

@@ -11,6 +11,7 @@ const Message = require('../../../I18N/Message');
 const {Row, Col} = require('react-bootstrap');
 const Metadata = require('../../forms/Metadata');
 const Thumbnail = require('../../forms/Thumbnail');
+const uuid = require('uuid/v1');
 
 module.exports = class MainForm extends React.Component {
     render() {
@@ -31,10 +32,10 @@ module.exports = class MainForm extends React.Component {
                     }
                     onError={onError}
                     onRemove={() => onUpdateLinkedResource("thumbnail", "NODATA", "THUMBNAIL", {
-                        tail: '/raw?decode=datauri'
+                        tail: `/raw?decode=datauri&v=${uuid()}`
                     })}
                     onUpdate={(data) => onUpdateLinkedResource("thumbnail", data, "THUMBNAIL", {
-                        tail: '/raw?decode=datauri'
+                        tail: `/raw?decode=datauri&v=${uuid()}`
                     })} />
             </Col>
             <Col xs={12}>
