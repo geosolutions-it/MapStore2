@@ -16,6 +16,7 @@ const {
     dashboardSaveError, SAVE_ERROR,
     dashboardSaved, DASHBOARD_SAVED,
     loadDashboard, LOAD_DASHBOARD,
+    resetDashboard, DASHBOARD_RESET,
     dashboardLoaded, DASHBOARD_LOADED,
     dashboardLoading, DASHBOARD_LOADING
 } = require('../dashboard');
@@ -69,6 +70,11 @@ describe('Test correctness of the dashboard actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(LOAD_DASHBOARD);
         expect(retval.id).toBe(1);
+    });
+    it('resetDashboard', () => {
+        const retval = resetDashboard();
+        expect(retval).toExist();
+        expect(retval.type).toBe(DASHBOARD_RESET);
     });
     it('dashboardLoaded', () => {
         const retval = dashboardLoaded("RES", "DATA");
