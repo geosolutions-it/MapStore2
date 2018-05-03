@@ -94,7 +94,6 @@ const DashboardsPlugin = compose(
         ({resources =[], loading}) => !loading && resources.length === 0,
         () => ({
             glyph: "dashboard",
-            mainViewStyle: {opacity: 0.75},
             title: <Message msgId="resources.dashboards.noDashboardAvailable" />,
             description: <EmptyDashboardsView />
         })
