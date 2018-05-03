@@ -256,6 +256,35 @@
             },
 			"search": "Cerca mappe..."
 		},
+        "resources": {
+            "deleteConfirmTitle": "Sei sicuro",
+            "deleteConfirmMessage": "Sei sicuro di voler eliminare questa risorsa?",
+            "deleteConfirmButtonText": "Elimina",
+            "deleteCancelButtonText": "Chiudi",
+            "resource": {
+                "deleteResource": "Elimina",
+                "editResource": "Modifica properietà",
+                "addToFeatured": "Metti in evidenza",
+                "removeFromFeatured": "Rimuovi da 'in evidenza'",
+                "showDetails": "mostra dettagli"
+            },
+            "contents": {
+                "title": "Contenuti"
+            },
+            "dashboards": {
+                "newDashboard": "Nuova Dashboard",
+                "title": "Dashboards ({count})",
+                "titleNoCount": "Dashboards",
+                "create": "Crea Dashboard",
+                "noDashboardAvailable": "Nessuna dashboard disponibile",
+                "createANewOne": "Creane una",
+                "deleteError": "C'è stato un errore eliminando la risorsa",
+                "errorLoadingDashboards": "C'è stato un errore caricando le dashboards"
+            },
+            "maps": {
+                "title": "Mappe ({count})"
+            }
+        },
         "map": {
             "loading": "In caricamento...",
             "loadingerror": "Errore di caricamento",
@@ -1356,7 +1385,7 @@
                 "style": "Stile",
                 "filter": "Filtri",
                 "attribute": "Attributi"
-            }, 
+            },
             "cachetitle": "Pulisci Cache",
             "cachemsg": "Sei sicuro di voler rimuovere la cache di Geofance?",
             "deltitle": "Rimuovi Regola",

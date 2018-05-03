@@ -256,7 +256,36 @@
                 "errorSizeExceeded": "S'il vous plaît, réduisez la taille des détails ou la qualité des images"
             },
             "search": "rechercher des cartes ..."
-		},
+        },
+        "resources": {
+            "deleteConfirmTitle": "Etes-vous sûr",
+            "deleteConfirmMessage": "Etes-vous sûr de vouloir supprimer cette ressource?",
+            "deleteConfirmButtonText": "Supprimer",
+            "deleteCancelButtonText": "Fermer",
+            "resource": {
+                "deleteResource": "Supprimer",
+                "editResource": "Modifier les propriétés",
+                "addToFeatured": "Ajouter à la présentation",
+                "removeFromFeatured": "Supprimer de featured",
+                "showDetails": "Afficher les détails"
+            },
+            "contents": {
+                "title": "Contenu"
+            },
+            "dashboards": {
+                "newDashboard": "Nouveau tableau de bord",
+                "title": "Tableaux de bord ({count})",
+                "titleNoCount": "Tableaux de bord",
+                "create": "Créer un tableau de bord",
+                "noDashboardAvailable": "Aucun tableau de bord disponible",
+                "createANewOne": "Créer un nouveau",
+                "deleteError": "Une erreur s'est produite lors de la suppression de la ressource",
+                "errorLoadingDashboards": "Une erreur s'est produite lors du chargement des tableaux de bord"
+            },
+            "maps": {
+                "title": "Cartes ({count})"
+            }
+        },
         "map": {
             "loading": "Chargement...",
             "loadingerror": "Erreur de chargement",

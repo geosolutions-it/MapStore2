@@ -254,8 +254,37 @@
                 "errorWhenDeleting": "Se produjo un error durante el proceso de eliminación",
                 "errorSizeExceeded": "Por favor, reduzca el tamaño de los detalles o la calidad de las imágenes"
             },
-			"search": "buscador de mapas ..."
-		},
+            "search": "buscador de mapas ..."
+        },
+        "resources": {
+            "deleteConfirmTitle": "¿Estás seguro?",
+            "deleteConfirmMessage": "¿Estás seguro de que quieres eliminar este recurso?",
+            "deleteConfirmButtonText": "Eliminar",
+            "deleteCancelButtonText": "Cerrar",
+            "resource": {
+                    "deleteResource": "Eliminar",
+                    "editResource": "Editar propiedades",
+                    "addToFeatured": "Agregar a destacados",
+                    "removeFromFeatured": "Eliminar de la función",
+                    "showDetails": "Mostrar detalles"
+            },
+            "contents": {
+                    "title": "Contenido"
+            },
+            "dashboards": {
+                    "newDashboard": "Nuevo tablero de instrumentos",
+                    "title": "Tableros ({count})",
+                    "titleNoCount": "Dashboards",
+                    "create": "Crear panel",
+                    "noDashboardAvailable": "No hay tablero disponible",
+                    "createANewOne": "Crea uno nuevo",
+                    "deleteError": "Hubo un error al eliminar el recurso",
+                    "errorLoadingDashboards": "Hubo un error al cargar los paneles"
+            },
+            "maps": {
+                "title": "Mapas ({count})"
+            }
+        },
         "map": {
             "loading": "Cargando...",
             "loadingerror": "Error en la carga",

@@ -256,6 +256,35 @@
             },
             "search": "Suche nach Karten..."
         },
+        "resources": {
+            "deleteConfirmTitle": "Bist du sicher",
+            "deleteConfirmMessage": "Möchten Sie diese Ressource wirklich löschen?",
+            "deleteConfirmButtonText": "Löschen",
+            "deleteCancelButtonText": "Schließen",
+            "resource": {
+                "deleteResource": "Löschen",
+                "editResource": "Eigenschaften bearbeiten",
+                "addToFeatured": "Zum Featured hinzufügen",
+                "removeFromFeatured": "Remove from featured",
+                "showDetails": "Details anzeigen"
+            },
+            "contents": {
+                "title": "Inhalt"
+            },
+            "dashboards": {
+                "newDashboard": "Neues Dashboard",
+                "title": "Dashboards ({count})",
+                "titleNoCount": "Dashboards",
+                "create": "Dashboard erstellen",
+                "noDashboardAvailable": "Kein Dashboard verfügbar",
+                "createANewOne": "Erstelle ein neues",
+                "deleteError": "Beim Löschen der Ressource ist ein Fehler aufgetreten",
+                "errorLoadingDashboards": "Beim Laden von Dashboards ist ein Fehler aufgetreten"
+            },
+            "maps": {
+                "title": "Karten ({count})"
+            }
+        },
         "map": {
             "loading": "Wird geladen...",
             "loadingerror": "Fehler während des Ladens",
