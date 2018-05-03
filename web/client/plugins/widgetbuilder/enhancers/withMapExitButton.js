@@ -16,8 +16,8 @@ const {returnToFeatureGridSelector} = require('../../../selectors/widgets');
  * Reset widgets
  */
 module.exports = compose(
-    connect(() => ({
-        returnToFeatureGrid: state => returnToFeatureGridSelector(state)}),
+    connect((state) => ({
+        returnToFeatureGrid: returnToFeatureGridSelector(state)}),
     {
         backToWidgetList: () => onEditorChange('widgetType', undefined),
         closeWidgetBuilder: () => setControlProperty("widgetBuilder", "enabled", false, false),
@@ -42,11 +42,11 @@ module.exports = compose(
             }
         }
     }),
-    withProps(({ backFromWizard = () => {} }) => ({
+    withProps(({ returnToFeatureGrid, backFromWizard = () => {} }) => ({
         exitButton: {
             onClick: backFromWizard,
             glyph: 'arrow-left',
-            tooltipId: "widgets.builder.wizard.backToWidgetTypeSelection"
+            tooltipId: returnToFeatureGrid ? "widgets.builder.wizard.backToFeatureGrid" : "widgets.builder.wizard.backToWidgetTypeSelection"
         }
     }))
 );

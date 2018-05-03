@@ -1141,6 +1141,7 @@
                 "wizard": {
                     "backToTypeSelection": "Retour à la sélection du type",
                     "backToWidgetTypeSelection": "Retour à la sélection du type de widget",
+                    "backToFeatureGrid": "Retour à la grille des fonctionnalités",
                     "backToLayerSelection": "Retour à la sélection du calque",
                     "backToMapSelection": "Retour à la sélection de la carte",
                     "backToChartOptions": "retour aux options de graphique",
@@ -1326,9 +1327,46 @@
             "layerlabel": "Couche"
         },
         "rulesmanager": {
+            "placeholders": {
+                "filter": "Chercher...",
+                "role": "Tapez pour rechercher des rôles",
+                "user": "Tapez pour rechercher des utilisateurs",
+                "ip": "Sélectionnez IP",
+                "service": "Tapez pour rechercher des services",
+                "request": "Tapez pour rechercher des demandes",
+                "workspace": "Tapez pour rechercher des espaces de travail",
+                "layer": "Tapez pour rechercher des calques",
+                "access": "Tapez pour rechercher Access",
+                "ip": "###.###.###.###/##",
+                "priority": "Sélectionnez Priorité"
+            },
+            "menutitle": "Gérer les règles de GeoFence",
+            "tooltip": {
+                "addT": "Ajouter une règle",
+                "editT": "Modifier la règle sélectionnée",
+                "addBeT": "Ajouter une nouvelle règle avant de sélectionner",
+                "addAfT": "Ajouter une nouvelle règle après la sélection",
+                "deleteT": "Supprimer les règles sélectionnées",
+                "cacheT": "Vider le cache",
+                "save": "Enregistrer la règle actuelle",
+                "close": "Quitter de la règle de création"
+            },
+            "navItems": {
+                "main": "Règle générale",
+                "style": "Style",
+                "filter": "Filters",
+                "attribute": "Règle des attributs"
+            },
+            "cachetitle": "Vider le Cache",
+            "cachemsg": "Etes-vous sûr d'effacer le cache de GeoFence?",
+            "deltitle": "Supprimer la règle",
+            "delmsg": "Voulez-vous vraiment supprimer cette règle?",
+            "invalidForm": "Le formulaire est invalide vérifier les valeurs des champs",
+            "ip": "IP",
             "title": "Règles d'accès",
             "role": "Rôle",
             "user": "Utilisateur",
+            "priority": "Priorité",
             "service": "Service",
             "request": "Requête",
             "workspace": "Espace de travail",
@@ -1343,6 +1381,7 @@
             "close": "Fermer",
             "previous": "précédent",
             "next": "prochain",
+            "errorTitle": "Geofence",
             "errorLoadingRoles": "Erreur lors du chargement des rôles.",
             "errorLoadingUsers": "Erreur lors du chargement des utilisateurs.",
             "errorLoadingWorkspaces": "Erreur lors du chargement des  workspaces.",
