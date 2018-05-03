@@ -15,7 +15,7 @@ const VisibilityCheck = require('./fragments/VisibilityCheck');
 const Title = require('./fragments/Title');
 const WMSLegend = require('./fragments/WMSLegend');
 const LayersTool = require('./fragments/LayersTool');
-const Slider = require('react-nouislider');
+const Slider = require('../misc/Slider');
 
 class DefaultLayer extends React.Component {
     static propTypes = {
@@ -67,31 +67,26 @@ class DefaultLayer extends React.Component {
         return translation || layer.name;
     };
 
-    renderCollapsible = () => {
+    renderOpacitySlider = () => {
         const layerOpacity = this.props.node.opacity !== undefined ? Math.round(this.props.node.opacity * 100) : 100;
+        return this.props.activateOpacityTool ?
+            <Slider
+                disabled={!this.props.node.visibility}
+                start={[layerOpacity]}
+                range={{min: 0, max: 100}}
+                onChange={(opacity) => {
+                    if (isArray(opacity) && opacity[0]) {
+                        this.props.onUpdateNode(this.props.node.id, 'layers', { opacity: parseFloat(opacity[0].replace(' %', '')) / 100 });
+                    }
+                }}/>
+        : null;
+    }
+
+    renderCollapsible = () => {
         return (
             <div key="legend" position="collapsible" className="collapsible-toc">
                 <Grid fluid>
                     {this.props.showFullTitleOnExpand ? <Row><Col xs={12} className="toc-full-title">{this.getTitle(this.props.node)}</Col></Row> : null}
-                    {this.props.activateOpacityTool ?
-                        <Row>
-
-                            <Col xs={12} className="mapstore-slider with-tooltip">
-                                <Slider start={[layerOpacity]}
-                                    disabled={!this.props.node.visibility}
-                                    range={{ min: 0, max: 100 }}
-                                    tooltips
-                                    format={{
-                                        from: value => Math.round(value),
-                                        to: value => Math.round(value) + ' %'
-                                    }}
-                                    onChange={(opacity) => {
-                                        if (isArray(opacity) && opacity[0]) {
-                                            this.props.onUpdateNode(this.props.node.id, 'layers', { opacity: parseFloat(opacity[0].replace(' %', '')) / 100 });
-                                        }
-                                    }} />
-                            </Col>
-                        </Row> : null}
                     {this.props.activateLegendTool ?
                         <Row>
                             <Col xs={12}>
@@ -99,6 +94,7 @@ class DefaultLayer extends React.Component {
                             </Col>
                         </Row> : null}
                 </Grid>
+                {this.renderOpacitySlider()}
             </div>);
     };
 
@@ -140,6 +136,7 @@ class DefaultLayer extends React.Component {
                     <Title tooltip={this.props.titleTooltip} filterText={this.props.filterText} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onSelect} onContextMenu={this.props.onContextMenu} />
                     {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
                 </div>
+                {isEmpty || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider()}
                 {isEmpty ? null : this.renderCollapsible()}
             </Node>
         );

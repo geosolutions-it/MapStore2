@@ -802,7 +802,8 @@ const CoordinatesUtils = {
             zoom: map.zoom,
             crs: 'EPSG:4326'
         };
-    }
+    },
+    parseLayoutValue
 };
 
 module.exports = CoordinatesUtils;
