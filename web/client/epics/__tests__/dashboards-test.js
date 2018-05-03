@@ -29,9 +29,11 @@ const {
 const {
     mapsLoading
 } = require('../../actions/maps');
+let getDefaults = ConfigUtils.getDefaults;
 describe('dashboards epics', () => {
-    const getDefaults = ConfigUtils.getDefaults;
-
+    beforeEach( () => {
+        getDefaults = ConfigUtils.getDefaults;
+    });
     afterEach(() => {
         ConfigUtils.getDefaults = getDefaults;
     });
