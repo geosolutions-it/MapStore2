@@ -9,7 +9,7 @@
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
-const { compose, withProps, withStateHandlers} = require('recompose');
+const { compose, withProps} = require('recompose');
 const {mapIdSelector} = require('../selectors/map');
 const {getFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout} = require('../selectors/widgets');
 const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage} = require('../actions/widgets');
