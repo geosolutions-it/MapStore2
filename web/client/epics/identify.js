@@ -16,7 +16,7 @@ const {centerToMarkerSelector} = require('../selectors/layers');
 const {mapSelector} = require('../selectors/map');
 const {boundingMapRectSelector} = require('../selectors/maplayout');
 const {centerToVisibleArea, isInsideVisibleArea} = require('../utils/CoordinatesUtils');
-const {getCurrentResolution} = require('../utils/MapUtils');
+const {getCurrentResolution, parseLayoutValue} = require('../utils/MapUtils');
 
 /**
  * Epics for Identify and map info
@@ -57,11 +57,17 @@ module.exports = {
                 const boundingMapRect = boundingMapRectSelector(state);
                 const coords = action.point && action.point && action.point.latlng;
                 const resolution = getCurrentResolution(Math.round(map.zoom), 0, 21, 96);
+                const layoutBounds = boundingMapRect && map && map.size && {
+                    left: parseLayoutValue(boundingMapRect.left, map.size.width),
+                    bottom: parseLayoutValue(boundingMapRect.bottom, map.size.height),
+                    right: parseLayoutValue(boundingMapRect.right, map.size.width),
+                    top: parseLayoutValue(boundingMapRect.top, map.size.height)
+                };
                 // exclude cesium with cartographic options
-                if (!map || !boundingMapRect || !coords || action.point.cartographic || isInsideVisibleArea(coords, map, boundingMapRect, resolution)) {
+                if (!map || !layoutBounds || !coords || action.point.cartographic || isInsideVisibleArea(coords, map, layoutBounds, resolution)) {
                     return Rx.Observable.of(updateCenterToMarker('disabled'));
                 }
-                const center = centerToVisibleArea(coords, map, boundingMapRect, resolution);
+                const center = centerToVisibleArea(coords, map, layoutBounds, resolution);
                 return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs));
             })
         )

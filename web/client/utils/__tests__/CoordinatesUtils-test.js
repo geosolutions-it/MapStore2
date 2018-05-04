@@ -653,15 +653,4 @@ describe('CoordinatesUtils', () => {
         expect(newCenter.crs).toBe('EPSG:4326');
     });
 
-    it('test parseLayoutValue', () => {
-        const percentageValue = CoordinatesUtils.parseLayoutValue('20%', 500);
-        expect(percentageValue).toBe(100);
-
-        const numberValue = CoordinatesUtils.parseLayoutValue(20);
-        expect(numberValue).toBe(20);
-
-        const noNumberValue = CoordinatesUtils.parseLayoutValue('value');
-        expect(noNumberValue).toBe(0);
-    });
-
 });

@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const {isString, trim, isNumber} = require('lodash');
+
 const DEFAULT_SCREEN_DPI = 96;
 
 const METERS_PER_UNIT = {
@@ -395,6 +397,19 @@ const getIdFromUri = (uri, regex = /data\/(\d+)/) => {
     return findDataDigit && findDataDigit.length && findDataDigit.length > 1 ? findDataDigit[1] : null;
 };
 
+/**
+ * Return parsed number from layout value
+ * @param value {number|string} number or percentage value string
+ * @param size {number} only in case of percentage
+ * @return {number}
+ */
+const parseLayoutValue = (value, size = 0) => {
+    if (isString(value) && value.indexOf('%') !== -1) {
+        return parseFloat(trim(value)) * size / 100;
+    }
+    return isNumber(value) ? value : 0;
+};
+
 module.exports = {
     EXTENT_TO_ZOOM_HOOK,
     RESOLUTIONS_HOOK,
@@ -425,5 +440,6 @@ module.exports = {
     isSimpleGeomType,
     getSimpleGeomType,
     extractTileMatrixSetFromLayers,
-    getIdFromUri
+    getIdFromUri,
+    parseLayoutValue
 };

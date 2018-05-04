@@ -21,8 +21,7 @@ const {boundingMapRectSelector} = require('../selectors/maplayout');
 const {isFeatureGridOpen} = require('../selectors/featuregrid');
 const {legendSizeSelector, legendExpandedSelector} = require('../selectors/legendaction');
 const LegendAction = require('../components/TOC/LegendAction');
-const {parseLayoutValue} = require('../utils/CoordinatesUtils');
-const MapUtils = require('../utils/MapUtils');
+const {parseLayoutValue, getScales} = require('../utils/MapUtils');
 
 /**
  * LegendAction plugin.
@@ -93,7 +92,7 @@ const legendActionSelector = createSelector(
         maxHeight: map && map.size && map.size.height - 134 - (boundingMapRect && boundingMapRect.bottom && parseLayoutValue(boundingMapRect.bottom, map && map.size && map.size.height) || 0)
             || 9999,
         currentZoomLvl: map && map.zoom,
-        scales: MapUtils.getScales(
+        scales: getScales(
             map && map.projection || 'EPSG:3857',
             map && map.mapOptions && map.mapOptions.view && map.mapOptions.view.DPI || null
         )
