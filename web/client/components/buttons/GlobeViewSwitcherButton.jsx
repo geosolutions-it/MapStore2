@@ -62,7 +62,7 @@ class GlobeViewSwitcherButton extends React.Component {
         tooltipPlace: 'left',
         defaultStyle: 'primary',
         pressedStyle: 'success',
-        glyphicon: 'globe',
+        glyphicon: '3d',
         btnConfig: {
             className: "square-button"
         }
