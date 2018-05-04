@@ -7,8 +7,9 @@ const {updateRule, createRule, deleteRule} = require("../observables/rulesmanage
 const {get} = require("lodash");
 const saveRule = stream$ => stream$
                 .mapTo({type: RULE_SAVED})
-                .catch(() => {
-                    return Rx.Observable.of(error({title: "rulesmanager.errorTitle", message: "rulesmanager.errorUpdatingRule"}));
+                .catch(({data}) => {
+                    const isDuplicate = data.indexOf("Duplicate Rule") === 0;
+                    return Rx.Observable.of(error({title: "rulesmanager.errorTitle", message: isDuplicate ? "rulesmanager.errorDuplicateRule" : "rulesmanager.errorUpdatingRule"}));
                 })
                 .startWith(setLoading(true))
                 .concat(Rx.Observable.of(setLoading(false)));

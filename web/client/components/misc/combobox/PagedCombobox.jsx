@@ -35,7 +35,7 @@ class PagedCombobox extends React.Component {
         itemComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         label: PropTypes.string,
         loading: PropTypes.bool,
-        filter: PropTypes.string,
+        filter: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
         messages: PropTypes.object,
         onChange: PropTypes.func,
         onFocus: PropTypes.func,
