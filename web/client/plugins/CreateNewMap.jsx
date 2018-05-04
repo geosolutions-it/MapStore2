@@ -9,8 +9,9 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 
-const {ButtonToolbar, Button, Grid, Col} = require('react-bootstrap');
-const Message = require('../components/I18N/Message');
+const {ButtonToolbar, Button: ButtonB, Grid, Col, Glyphicon} = require('react-bootstrap');
+const tooltip = require('../components/misc/enhancers/tooltip');
+const Button = tooltip(ButtonB);
 const {mapTypeSelector} = require('../selectors/maptype');
 
 
@@ -42,17 +43,18 @@ class CreateNewMap extends React.Component {
         },
         fluid: false
     };
+
     render() {
         const display = this.isAllowed() ? null : "none";
         return (<Grid fluid={this.props.fluid} style={{marginBottom: "30px", padding: 0, display}}>
         <Col {...this.props.colProps} >
             <ButtonToolbar>
-            <Button bsStyle="primary" onClick={() => { this.context.router.history.push("/viewer/" + this.props.mapType + "/new"); }}>
-                <Message msgId="newMap" />
+            <Button tooltipId="newMap" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/viewer/" + this.props.mapType + "/new"); }}>
+                <Glyphicon glyph="add-map" />
             </Button>
             {this.props.dashboardsAvailable ?
-                <Button bsStyle="primary" onClick={() => { this.context.router.history.push("/dashboard/"); }}>
-                    <Message msgId="resources.dashboards.newDashboard" />
+                <Button tooltipId="resources.dashboards.newDashboard" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/dashboard/"); }}>
+                    <Glyphicon glyph="add-dashboard" />
                 </Button>
                 : null}
             </ButtonToolbar>
