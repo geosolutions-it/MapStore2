@@ -1,0 +1,21 @@
+{
+    "AttributeList": {
+        "Attribute": [
+            {
+                "name": "owner",
+                "type": "STRING",
+                "value": "Gnafu"
+            },
+            {
+                "name": "details",
+                "type": "STRING",
+                "value": "rest%2Fgeostore%2Fdata%2F3983%2Fraw%3Fdecode%3Ddatauri"
+            },
+            {
+                "name": "featured",
+                "type": "STRING",
+                "value": false
+            }
+        ]
+    }
+}

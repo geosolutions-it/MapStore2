@@ -13,9 +13,10 @@ const {createEpicMiddleware, combineEpics } = require('redux-observable');
 const {
     saveDetails, SET_DETAILS_CHANGED,
     CLOSE_DETAILS_PANEL, closeDetailsPanel,
-    openDetailsPanel, UPDATE_DETAILS,
+    openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED,
     MAP_DELETING, MAP_DELETED, deleteMap, TOGGLE_DETAILS_SHEET
 } = require('../../actions/maps');
+const { mapInfoLoaded } = require('../../actions/config');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {TOGGLE_CONTROL} = require('../../actions/controls');
 const {RESET_CURRENT_MAP, editMap} = require('../../actions/currentMap');
@@ -24,7 +25,7 @@ const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
 const {
     setDetailsChangedEpic,
     closeDetailsPanelEpic, fetchDataForDetailsPanel,
-    fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic} = require('../maps');
+    fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic, storeDetailsInfoEpic} = require('../maps');
 const rootEpic = combineEpics(setDetailsChangedEpic, closeDetailsPanelEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -49,12 +50,17 @@ const locale = {
     }
 };
 const mapId = 1;
+const mapId2 = 2;
 const mapId8 = 8;
 const detailsText = "<p>details of this map</p>";
 const detailsUri = "data/2";
 let map1 = {
     id: mapId,
     name: "name"
+};
+let map2 = {
+    id: mapId2,
+    name: "name2"
 };
 let map8 = {
     id: mapId8,
@@ -433,5 +439,24 @@ describe('maps Epics', () => {
             }
         });
     });
+    it('test storeDetailsInfoEpic', (done) => {
+        testEpic(addTimeoutEpic(storeDetailsInfoEpic), 1, mapInfoLoaded(map2, mapId2), actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case DETAILS_LOADED:
+                        expect(action.mapId).toBe(mapId2);
+                        expect(action.detailsUri).toBe("rest%2Fgeostore%2Fdata%2F3983%2Fraw%3Fdecode%3Ddatauri");
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        }, {mapInitialConfig: {
+            "mapId": mapId2
+        }});
+    });
+
 
 });
