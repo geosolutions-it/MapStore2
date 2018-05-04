@@ -48,7 +48,7 @@ class PropertiesViewer extends React.Component {
             .filter(this.toExlude)
             .map((key) => {
                 return (
-                    <p key={key} style={this.props.listStyle}><b>{key}</b> {this.renderProperty(this.props[key])}</p>
+                    <p key={key} style={this.props.listStyle}><b>{key}</b> <span dangerouslySetInnerHTML={{__html: this.renderProperty(this.props[key])}}/></p>
                 );
             });
     };
