@@ -1310,7 +1310,7 @@
                 "resourceAlreadyExists": "Una risorsa con questo nome esiste già. Provare con '{data}'"
             },
             "editor": {
-                "save": "Save the dashboard",
+                "save": "Salva la dashboard",
                 "addACardToTheDashboard": "Aggiungi un widget alla dashboard",
                 "showConnections": "Mostra connessioni",
                 "hideConnections": "Nascondi connessioni"
