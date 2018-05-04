@@ -254,7 +254,7 @@
                 "errorWhenDeleting": "C'è stato un errore durante la cancellazione",
                 "errorSizeExceeded": "Riduci il contenuto o la qualità delle immagini"
             },
-			"search": "Cerca mappe..."
+			"search": "Cerca..."
 		},
         "resources": {
             "deleteConfirmTitle": "Sei sicuro",
@@ -1157,6 +1157,7 @@
             "title": "Titolo",
             "description": "Descrizione",
             "errors": {
+                "notext": "Nessun testo disponibile",
                 "nodata": "Nessun dato disponibile per il livello/filtro selezionati",
                 "nodatainviewport": "Nessun dato per la vista selezionata",
                 "timeoutExpired": "Il servizio ha impiegato troppo tempo a rispondere. La query potrebbe essere troppo complicata o il server troppo occupato",
