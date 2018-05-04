@@ -31,7 +31,8 @@ const defaultState = {
             "GetStyles"
         ]
     },
-    triggerLoad: 0
+    triggerLoad: 0,
+    grantDefault: "ALLOW"
 };
 
 const getPosition = ({targetPosition = {}}, priority) => {
@@ -130,7 +131,7 @@ function rulesmanager(state = defaultState, action) {
     case EDIT_RULE: {
         const {createNew, targetPriority} = action;
         if (createNew) {
-            return assign({}, state, {activeRule: {position: {value: getPosition(state, targetPriority), position: "offsetFromTop"}}});
+            return assign({}, state, {activeRule: {grant: state.grantDefault, position: {value: getPosition(state, targetPriority), position: "offsetFromTop"}}});
         }
         return assign({}, state, {activeRule: {...(state.selectedRules[0] || {}), position: {value: state.targetPosition.offsetFromTop, position: "offsetFromTop"}}});
     }

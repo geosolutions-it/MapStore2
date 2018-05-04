@@ -1356,6 +1356,12 @@
             "layerlabel": "Ebene"
         },
         "rulesmanager": {
+            "resetconstraints": "Setzt Einschränkungen zurück",
+            "constraintsmsg": "Wenn Sie die Berechtigung, den Arbeitsbereich oder die Ebene ändern, werden die Details gelöscht. Bist du sicher, dass du das machen willst?",
+            "defstyle": "Standardstil",
+            "avstyle": "Verfügbare Stile",
+            "clearbtn": "Alles Löschen",
+            "selectbtn": "Wählen Sie Alle",
             "placeholders": {
                 "filter": "Suche...",
                 "role": "Nach Rollen suchen",
@@ -1386,6 +1392,7 @@
                 "filter": "Filter",
                 "attribute": "Attribute Regel"
             },
+            "rule": "Regle",
             "cachetitle": "Cache leeren",
             "cachemsg": "Möchten Sie den GeoFence-Cache wirklich löschen?",
             "deltitle": "Regel Löschen",
@@ -1420,10 +1427,15 @@
             "errorDeletingRules": "Fehler beim Löschen der Regeln.",
             "errorAddingRule": "Fehler beim Hinzufügen der Regel.",
             "errorUpdatingRule": "Fehler beim Ändern der Regel.",
+            "errorDuplicateRule": "Duplizierte Regel",
+            "errorLoading": "Ladefehler",
             "deleteModal": "Regeln löschen",
             "selectedRulesDelete": "Ausgewählte Regeln löschen ?",
             "deleteButton": "Löschen",
-            "cancelButton": "Abbrechen"
+            "cancelButton": "Abbrechen",
+            "cqlRead": "CQL Filter Lese Regeln",
+            "cqlWrite": "CQL Filter Write Rules",
+            "missingconfig": "Der Regeln-Manager vermisst die Konfiguration. Zugriff abgelehnt!"
         },
         "tutorial": {
             "title": "Anleitung",

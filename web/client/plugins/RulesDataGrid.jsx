@@ -55,7 +55,7 @@ class RulesDataGrid extends React.Component {
         return (<ContainerDimensions>{({width, height}) =>
             (<div className={`rules-data-gird ${this.props.enabled ? "" : "hide-locked-cell"}`}>
                 {!this.props.enabled && (<div className="ms-overlay"/>)}
-                <RulesGrid width={width} height={height - 52}/>
+                <RulesGrid width={width} height={height}/>
             </div>)
         }
         </ContainerDimensions>);

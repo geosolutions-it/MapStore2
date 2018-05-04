@@ -13,6 +13,7 @@ const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 
 const ConfigUtils = require('../../utils/ConfigUtils');
+const Message = require("../../components/I18N/Message");
 
 const {loadMapConfig} = require('../../actions/config');
 const {resetControls} = require('../../actions/controls');
@@ -118,7 +119,7 @@ class RulesManagerPage extends React.Component {
             pluginsConfig={pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.match.params}
-            />) || <div style={{fontSize: 24, position: "absolute", top: 0, bottom: 0, right: 0, left: 0, justifyContent: "center", display: "flex", alignItems: "center"}}><label>Rules-manager page configuration missing in localConfig.json.</label></div>;
+            />) || <div style={{fontSize: 24, position: "absolute", top: 0, bottom: 0, right: 0, left: 0, justifyContent: "center", display: "flex", alignItems: "center"}}><label><Message msgId="rulesmanager.missingconfig"/></label></div>;
     }
 }
 
