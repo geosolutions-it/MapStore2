@@ -62,25 +62,21 @@ const HolyGrail = require('../../containers/HolyGrail');
   *     }
   *   },....
   * "plugins": {
-  *  "rulesmanager": [{
-  *           "name": "OmniBar",
-  *           "cfg": {
-  *               "containerPosition": "header",
-  *               "className": "navbar shadow navbar-home"
-  *           }
-  *         }, {
-  *           "name": "Home",
-  *           "override": {
-  *             "OmniBar": {
-  *                 "position": 1,
-  *                 "priority": 1
-  *               }
-  *             }
-  *           },"Language", "Login", "Attribution", "RulesDataGrid", "Notifications", {
-  *              "name": "RulesManagerFooter" , "cfg": { "containerPosition": "footer"} },{
-  *                 "name": "RulesEditor",
-  *                 "containerPosition": "columns"
-  *                 }}]
+  *  "rulesmanager": [
+  *         "Redirect" ,
+  *         {
+  *             "name": "OmniBar",
+  *                 "cfg": {
+  *                      "containerPosition": "header",
+  *                    "className": "navbar shadow navbar-home"
+  *                 }
+  *         }, "ManagerMenu", "Login", "Language", "NavMenu",
+  *         "Attribution", "RulesDataGrid", "Notifications"
+  *         ,{
+  *              "name": "RulesEditor",
+  *            "cfg": {"containerPosition": "columns"}
+  *         }
+  *     ]
   * }
 */
 
