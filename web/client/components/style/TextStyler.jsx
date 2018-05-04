@@ -42,7 +42,7 @@ class TextStyler extends React.Component {
         styleType: "Text",
         uomValues: [{value: "px"}, {value: "em"}],
         fontWeightValues: [{value: "normal"}, {value: "bold"}],
-        alignValues: [{value: "start"}, {value: "center"}, {value: "end"}],
+        alignValues: [{value: "start", label: "left"}, {value: "center", label: "center"}, {value: "end", label: "right"}],
         fontStyleValues: [{value: "normal"}, {value: "italic"}],
         fontFamilyValues: [{value: "Arial"}, {value: "FontAwesome"}, {value: "Courier"}],
         shapeStyle: {},
@@ -164,7 +164,7 @@ class TextStyler extends React.Component {
                         <Col xs={6} style={{position: 'static'}}>
                             <Combobox
                                 value={style.textAlign || "center"}
-                                textField="value"
+                                textField="label"
                                 valueField="value"
                                 messages={messages}
                                 data={this.props.alignValues}
