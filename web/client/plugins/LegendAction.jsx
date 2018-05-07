@@ -31,6 +31,8 @@ const {parseLayoutValue, getScales} = require('../utils/MapUtils');
  * @name LegendAction
  * @class
  * @prop {bool} cfg.disableOpacitySlider disable and hide opacity slider
+ * @prop {bool} expandedOnMount show expanded legend when component did mount
+ * @prop {number} width width dimension of legend
  */
 
 class LegendActionComponent extends React.Component {

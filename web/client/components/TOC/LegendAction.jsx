@@ -41,6 +41,7 @@ const WMSLegend = require('./fragments/WMSLegend');
  * @prop {number} currentZoomLvl current zoom level of map
  * @prop {array} scales array of supported scales
  * @prop {bool} disableOpacitySlider disable and hide opacity slider
+ * @prop {bool} expandedOnMount show expanded legend when component did mount
  */
 
 class LegendAction extends React.Component {
@@ -62,7 +63,8 @@ class LegendAction extends React.Component {
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
         disableOpacitySlider: PropTypes.bool,
-        deltaHeight: PropTypes.number
+        deltaHeight: PropTypes.number,
+        expandedOnMount: PropTypes.bool
     };
 
     static defaultProps = {
@@ -83,11 +85,14 @@ class LegendAction extends React.Component {
 
     state = {};
 
+    componentDidMount() {
+        this.props.onExpand(this.props.expandedOnMount);
+    }
+
     componentDidUpdate(prevProps) {
         delay(() => {
             if (!isEqual(this.props.layers, prevProps.layers)
             || this.props.maxHeight !== prevProps.maxHeight
-            || this.props.expanded !== prevProps.expanded
             || this.props.disabled !== prevProps.disabled) {
                 const listHeight = this.findListHeight();
                 if (this.props.maxHeight < this.props.height) {
@@ -99,6 +104,13 @@ class LegendAction extends React.Component {
                         height: listHeight
                     });
                 }
+            }
+            if (this.props.layers.length !== prevProps.layers.length
+            || this.props.expanded && !prevProps.expanded) {
+                const listHeight = this.findListHeight();
+                this.props.onResize({
+                    height: listHeight < this.props.maxHeight ? listHeight : this.props.maxHeight
+                });
             }
         }, 100);
     }
