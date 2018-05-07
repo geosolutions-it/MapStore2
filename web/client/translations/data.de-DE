@@ -254,7 +254,7 @@
                 "errorWhenDeleting": "Beim Löschen ist ein Fehler aufgetreten",
                 "errorSizeExceeded": "Bitte verkleinern Sie die Größe der Details oder die Qualität der Bilder"
             },
-            "search": "Suche nach Karten..."
+            "search": "Suche..."
         },
         "resources": {
             "deleteConfirmTitle": "Bist du sicher",
@@ -1157,6 +1157,7 @@
             "title": "Titel",
             "description": "Beschreibung",
             "errors": {
+                "notext": "Kein Text verfügbar",
                 "nodata": "Keine Daten für den ausgewählten Layer / Filter verfügbar",
                 "nodatainviewport": "Keine Daten im aktuellen Ansichtsfenster",
                 "timeoutExpired": "Der Service hat zu lange gedauert. Vielleicht ist die Abfrage zu komplex oder der Server ist beschäftigt",

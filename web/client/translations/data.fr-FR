@@ -255,7 +255,7 @@
                 "errorWhenDeleting": "Une erreur s'est produite lors du processus de suppression",
                 "errorSizeExceeded": "S'il vous plaît, réduisez la taille des détails ou la qualité des images"
             },
-            "search": "rechercher des cartes ..."
+            "search": "rechercher ..."
         },
         "resources": {
             "deleteConfirmTitle": "Etes-vous sûr",
@@ -1158,6 +1158,7 @@
             "title": "Titre",
             "description": "Description",
             "errors": {
+                "notext": "Aucun texte disponible",
                 "nodata": "Aucune donnée disponible pour la couche / filtre sélectionné",
                 "nodatainviewport": "Aucune donnée dans la fenêtre courante",
                 "timeoutExpired": "Le service a pris trop de temps pour répondre. Peut-être que la requête est trop complexe ou que le serveur est occupé",

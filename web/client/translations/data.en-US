@@ -255,7 +255,7 @@
                 "errorWhenDeleting": "An error occurred during deleting process",
                 "errorSizeExceeded": "Please, reduce the size of the details or the quality of the images"
             },
-			"search": "search for maps..."
+			"search": "search..."
 		},
         "resources": {
             "deleteConfirmTitle": "Are you sure",
@@ -1158,6 +1158,7 @@
             "title": "Title",
             "description": "Description",
             "errors": {
+                "notext": "No text available",
                 "nodata": "No data available for the selected layer/filter",
                 "nodatainviewport": "No data in the current viewport",
                 "timeoutExpired": "The service took too much time to respond. Maybe the query is too complex or the server is busy",

@@ -254,7 +254,7 @@
                 "errorWhenDeleting": "Se produjo un error durante el proceso de eliminación",
                 "errorSizeExceeded": "Por favor, reduzca el tamaño de los detalles o la calidad de las imágenes"
             },
-            "search": "buscador de mapas ..."
+            "search": "buscar..."
         },
         "resources": {
             "deleteConfirmTitle": "¿Estás seguro?",
@@ -1157,6 +1157,7 @@
             "title": "Título",
             "description": "Descripción",
             "errors": {
+                "notext": "Sin texto disponible",
                 "nodata": "No hay datos disponibles para la capa / filtro seleccionado",
                 "nodatainviewport": "Sin datos en la ventana gráfica actual",
                 "timeoutExpired": "El servicio tomó demasiado tiempo para responder. Tal vez la consulta es demasiado compleja o el servidor está ocupado",
