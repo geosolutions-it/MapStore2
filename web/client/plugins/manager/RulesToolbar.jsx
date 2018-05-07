@@ -16,11 +16,12 @@ const Toolbar = require('../../components/misc/toolbar/Toolbar');
 const Modal = require("./ModalDialog");
 const Message = require("../../components/I18N/Message");
 
-const ToolbarWithModal = ({modalsProps, ...props}) => {
+const ToolbarWithModal = ({modalsProps, loading, ...props}) => {
     return (
     <div>
         <Toolbar {...props}/>
         <Modal {...modalsProps}/>
+        <div className={`toolbar-loader ${loading ? 'ms-circle-loader-md' : ''}`}/>
     </div>
     );
 };

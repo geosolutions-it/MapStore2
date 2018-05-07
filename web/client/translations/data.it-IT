@@ -1362,6 +1362,12 @@
             "layerlabel": "Layer"
             },
         "rulesmanager": {
+            "resetconstraints": "Resetta Vincoli",
+            "constraintsmsg": "Cambinado grant, workspace o layer, i dettagli saranno eliminati. Sei sicuro di volerlo fare?",
+            "defstyle": "Stile Predefinito",
+            "avstyle": "Stili Disponibile",
+            "clearbtn": "Rimuovi Tutti",
+            "selectbtn": "Seleziona Tutti",
             "placeholders": {
                 "filter": "Ricerca...",
                 "role": "Cerca Gruppo",
@@ -1391,7 +1397,8 @@
                 "style": "Stile",
                 "filter": "Filtri",
                 "attribute": "Attributi"
-            },
+            }, 
+            "rule": "Regola",
             "cachetitle": "Pulisci Cache",
             "cachemsg": "Sei sicuro di voler rimuovere la cache di Geofance?",
             "deltitle": "Rimuovi Regola",
@@ -1426,10 +1433,15 @@
             "errorDeletingRules": "Errore durante la cancellazione della regola.",
             "errorAddingRule": "Errore durante la creazione della regola.",
             "errorUpdatingRule": "Errore durante l'aggiornamento della regola.",
+            "errorDuplicateRule": "Regola duplicata",
+            "errorLoading": "Errore caricamento",
             "deleteModal": "Elimina Regola",
             "selectedRulesDelete": "Vuoi eliminare le regole selezionate?",
             "deleteButton": "Elimina",
-            "cancelButton": "Annulla"
+            "cancelButton": "Annulla",
+            "cqlRead": "Filtro CQL lettura",
+            "cqlWrite": "Filtero CQL scrittura",
+            "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!"
         },
             "tutorial": {
                 "title": "Tutorial",

@@ -1362,6 +1362,12 @@
             "layerlabel": "Couche"
         },
         "rulesmanager": {
+            "resetconstraints": "Réinitialise les contraintes",
+            "constraintsmsg": "En changeant la subvention, l'espace de travail ou la couche, les détails seront supprimés. Êtes-vous sûr de vouloir faire ça?",
+            "defstyle": "Style par Défaut",
+            "avstyle": "Styles Disponibles",
+            "clearbtn": "Tout Effacer",
+            "selectbtn": "Tout Sélectionner",
             "placeholders": {
                 "filter": "Chercher...",
                 "role": "Tapez pour rechercher des rôles",
@@ -1392,6 +1398,7 @@
                 "filter": "Filters",
                 "attribute": "Règle des attributs"
             },
+            "rule": "Règle",
             "cachetitle": "Vider le Cache",
             "cachemsg": "Etes-vous sûr d'effacer le cache de GeoFence?",
             "deltitle": "Supprimer la règle",
@@ -1425,11 +1432,16 @@
             "errorMovingRules": "Erreur lors du déplacement des règles.",
             "errorDeletingRules": "Erreur de suppression des règles.",
             "errorAddingRule": "Erreur lors de l'ajout de la règle.",
+            "errorDuplicateRule": "Règle dupliquée",
+            "errorLoading": "Erreur de chargement",
             "errorUpdatingRule": "Erreur lors de la mise à jour règle.",
             "deleteModal": "Supprimer la règle",
             "selectedRulesDelete": "Voulez-vous supprimer les règles sélectionnées ?",
             "deleteButton": "Effacer",
-            "cancelButton": "Annuler"
+            "cancelButton": "Annuler",
+            "cqlRead": "Règles de lecture du filtre CQL",
+            "cqlWrite": "Règles d'écriture du filtre CQL",
+            "missingconfig": "Le gestionnaire de règles manque la configuration. Accès refusé!"
         },
         "tutorial": {
             "title": "Tutoriel",

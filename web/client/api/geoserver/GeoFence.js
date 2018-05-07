@@ -11,7 +11,9 @@ const assign = require('object-assign');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
 const EMPTY_RULE = {
-        constraints: {},
+        constraints: {
+            allowedStyles: {style: []}
+        },
         ipaddress: "",
         layer: "",
         request: "",
@@ -20,6 +22,15 @@ const EMPTY_RULE = {
         username: "",
         workspace: ""
     };
+const cleanConstraints = (rule) => {
+    if (!rule.constraints ) {
+        return rule;
+    }
+    let constraints = {...rule.constraints};
+    constraints.allowedStyles = constraints.allowedStyles && constraints.allowedStyles.style || [];
+    constraints.attributes = constraints.attributes && constraints.attributes.attribute || [];
+    return {...rule, constraints};
+};
 var Api = {
 
     loadRules: function(page, rulesFiltersValues, entries = 10) {
@@ -72,7 +83,7 @@ var Api = {
         if (!newRule.grant) {
             newRule.grant = "ALLOW";
         }
-        return axios.post('geofence/rest/rules', newRule, this.addBaseUrl({
+        return axios.post('geofence/rest/rules', cleanConstraints(newRule), this.addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }
@@ -83,7 +94,7 @@ var Api = {
         // id, priority and grant aren't updatable
         const {id, priority, grant, position, ...others} = rule;
         const newRule = {...EMPTY_RULE, ...others};
-        return axios.put(`geofence/rest/rules/id/${id}`, newRule, this.addBaseUrl({
+        return axios.put(`geofence/rest/rules/id/${id}`, cleanConstraints(newRule), this.addBaseUrl({
             'headers': {
                 'Content': 'application/json'
             }
