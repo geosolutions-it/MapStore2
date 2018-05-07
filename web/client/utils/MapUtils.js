@@ -399,6 +399,7 @@ const getIdFromUri = (uri, regex = /data\/(\d+)/) => {
 
 /**
  * Return parsed number from layout value
+ * if percentage returns percentage of second argument
  * @param value {number|string} number or percentage value string
  * @param size {number} only in case of percentage
  * @return {number}

@@ -89,7 +89,7 @@ module.exports = {
         FeaturedMaps: require('../plugins/FeaturedMaps'),
         NavMenu: require('./plugins/NavMenu'),
         RulesEditorPlugin: require('../plugins/RulesEditor'),
-        LegendActionPlugin: require('../plugins/LegendAction')
+        FloatingLegendPlugin: require('../plugins/FloatingLegend')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

@@ -8,17 +8,17 @@
 
 const expect = require('expect');
 
-const {RESIZE_LEGEND, EXPAND_LEGEND} = require('../../actions/legendaction');
-const legendaction = require('../legendaction');
+const {RESIZE_LEGEND, EXPAND_LEGEND} = require('../../actions/floatinglegend');
+const floatinglegend = require('../floatinglegend');
 
-describe('Test the legendaction reducer', () => {
+describe('Test the floatinglegend reducer', () => {
     it('change legend size height and/or width', () => {
         const size = {height: 300, width: 300};
         const action = {
             type: RESIZE_LEGEND,
             size
         };
-        const state = legendaction({}, action);
+        const state = floatinglegend({}, action);
         expect(state.size).toEqual(size);
     });
     it('change legend expanded state', () => {
@@ -27,7 +27,7 @@ describe('Test the legendaction reducer', () => {
             type: EXPAND_LEGEND,
             expanded
         };
-        const state = legendaction({}, action);
+        const state = floatinglegend({}, action);
         expect(state.expanded).toEqual(expanded);
     });
 });

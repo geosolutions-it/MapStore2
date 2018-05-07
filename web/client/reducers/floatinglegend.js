@@ -6,17 +6,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { RESIZE_LEGEND, EXPAND_LEGEND } = require('../actions/legendaction');
+const { RESIZE_LEGEND, EXPAND_LEGEND } = require('../actions/floatinglegend');
 
 const {set} = require('../utils/ImmutableUtils');
 /**
- * Manages the state of the legendaction
+ * Manages the state of the floatinglegend
  * The properties represent the shape of the state
  * @prop {object} size size of legend {width: 0, height: 0}
  * @prop {boolan} expanded expanded state
  * @memberof reducers
  */
-function legendaction(state = {}, action) {
+function floatinglegend(state = {}, action) {
     switch (action.type) {
         case RESIZE_LEGEND: {
             return set('size', {
@@ -31,4 +31,4 @@ function legendaction(state = {}, action) {
             return state;
     }
 }
-module.exports = legendaction;
+module.exports = floatinglegend;

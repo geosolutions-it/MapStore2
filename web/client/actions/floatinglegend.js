@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const RESIZE_LEGEND = 'RESIZE_LEGEND';
-const EXPAND_LEGEND = 'EXPAND_LEGEND';
+const RESIZE_LEGEND = 'FLOATINGLEGEND:RESIZE_LEGEND';
+const EXPAND_LEGEND = 'FLOATINGLEGEND:EXPAND_LEGEND';
 /**
  * resizeLegend action, type `RESIZE_LEGEND`
- * @memberof actions.legendaction
+ * @memberof actions.floatinglegend
  * @param  {object} size size of legend {width: 0, height: 0}
  * @return {action} type `RESIZE_LEGEND` with size
  */
@@ -22,7 +22,7 @@ function resizeLegend(size) {
 }
 /**
  * expandLegend action, type `EXPAND_LEGEND`
- * @memberof actions.legendaction
+ * @memberof actions.floatinglegend
  * @param  {boolean} expanded expanded state of legend action
  * @return {action} type `EXPAND_LEGEND` with expanded
  */
@@ -33,8 +33,8 @@ function expandLegend(expanded) {
     };
 }
 /**
- * Actions for legendaction.
- * @name actions.legendaction
+ * Actions for floatinglegend.
+ * @name actions.floatinglegend
  */
 module.exports = {
     RESIZE_LEGEND,

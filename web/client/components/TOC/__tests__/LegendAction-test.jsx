@@ -8,11 +8,11 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 
-const LegendAction = require('../LegendAction');
+const FloatingLegend = require('../FloatingLegend');
 const expect = require('expect');
 const TestUtils = require('react-dom/test-utils');
 
-describe('tests LegendAction component', () => {
+describe('tests FloatingLegend component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -25,7 +25,7 @@ describe('tests LegendAction component', () => {
     });
 
     it('render component', () => {
-        const cmp = ReactDOM.render(<LegendAction />, document.getElementById("container"));
+        const cmp = ReactDOM.render(<FloatingLegend />, document.getElementById("container"));
         expect(cmp).toExist();
 
         const toggleButtonContainer = document.getElementById('ms-legend-action');
@@ -38,7 +38,7 @@ describe('tests LegendAction component', () => {
 
     it('render width layers', () => {
         const cmp = ReactDOM.render(
-            <LegendAction
+            <FloatingLegend
                 expanded
                 layers={[
                     {
@@ -70,7 +70,7 @@ describe('tests LegendAction component', () => {
 
     it('render width layers and disabled opacity slider', () => {
         const cmp = ReactDOM.render(
-            <LegendAction
+            <FloatingLegend
                 expanded
                 disableOpacitySlider
                 layers={[
@@ -110,7 +110,7 @@ describe('tests LegendAction component', () => {
         const spyExpand = expect.spyOn(actions, 'onExpand');
 
         ReactDOM.render(
-            <LegendAction
+            <FloatingLegend
                 onExpand={actions.onExpand}
                 layers={[
                     {
@@ -128,7 +128,7 @@ describe('tests LegendAction component', () => {
         expect(spyExpand).toHaveBeenCalledWith(false);
 
         ReactDOM.render(
-            <LegendAction
+            <FloatingLegend
                 expanded={false}
                 layers={[
                     {
@@ -153,7 +153,7 @@ describe('tests LegendAction component', () => {
         const spyChange = expect.spyOn(actions, 'onChange');
 
         ReactDOM.render(
-            <LegendAction
+            <FloatingLegend
                 onChange={actions.onChange}
                 layers={[
                     {
@@ -173,7 +173,7 @@ describe('tests LegendAction component', () => {
         const deltaHeight = 110;
 
         let cmp = ReactDOM.render(
-            <LegendAction
+            <FloatingLegend
                 expanded
                 deltaHeight={deltaHeight}
                 layers={[
@@ -210,7 +210,7 @@ describe('tests LegendAction component', () => {
         };
 
         cmp = ReactDOM.render(
-            <LegendAction
+            <FloatingLegend
                 expanded
                 deltaHeight={deltaHeight}
                 layers={[

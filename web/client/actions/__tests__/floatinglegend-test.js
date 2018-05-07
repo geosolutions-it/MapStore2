@@ -12,9 +12,9 @@ const {
     EXPAND_LEGEND,
     resizeLegend,
     expandLegend
-} = require('../legendaction');
+} = require('../floatinglegend');
 
-describe('Test legendaction actions', () => {
+describe('Test floatinglegend actions', () => {
     it('resizeLegend', () => {
         const size = {height: 100};
         const retval = resizeLegend(size);

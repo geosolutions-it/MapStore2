@@ -355,7 +355,7 @@
                 }
             },
             "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets",
-            "LegendAction"
+            "FloatingLegend"
         ],
         "embedded": [{
                 "name": "Map",

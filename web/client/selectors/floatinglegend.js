@@ -7,27 +7,27 @@
 */
 
 /**
- * selects legendaction state
- * @name legendaction
+ * selects floatinglegend state
+ * @name floatinglegend
  * @memberof selectors
  * @static
  */
 
 module.exports = {
     /**
-     * Get size of legendaction
+     * Get size of floatinglegend
      * @function
-     * @memberof selectors.legendaction
+     * @memberof selectors.floatinglegend
      * @param  {object} state the state
      * @return {object} size {width: 0, height: 0}
      */
-    legendSizeSelector: state => state.legendaction && state.legendaction.size || {width: 0, height: 0},
+    legendSizeSelector: state => state.floatinglegend && state.floatinglegend.size || {width: 0, height: 0},
     /**
-     * Get expanded state of legendaction
+     * Get expanded state of floatinglegend
      * @function
-     * @memberof selectors.legendaction
+     * @memberof selectors.floatinglegend
      * @param  {object} state the state
      * @return {boolean}
      */
-    legendExpandedSelector: state => state.legendaction && state.legendaction.expanded ? true : false
+    legendExpandedSelector: state => state.floatinglegend && state.floatinglegend.expanded ? true : false
 };

@@ -13,29 +13,29 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {reverse, head, get, isObject} = require('lodash');
 const {updateNode} = require('../actions/layers');
-const {resizeLegend, expandLegend} = require('../actions/legendaction');
+const {resizeLegend, expandLegend} = require('../actions/floatinglegend');
 const {layersSelector} = require('../selectors/layers');
 const {currentLocaleSelector} = require('../selectors/locale');
 const {mapSelector} = require('../selectors/map');
 const {boundingMapRectSelector} = require('../selectors/maplayout');
 const {isFeatureGridOpen} = require('../selectors/featuregrid');
-const {legendSizeSelector, legendExpandedSelector} = require('../selectors/legendaction');
-const LegendAction = require('../components/TOC/LegendAction');
+const {legendSizeSelector, legendExpandedSelector} = require('../selectors/floatinglegend');
+const FloatingLegend = require('../components/TOC/FloatingLegend');
 const {parseLayoutValue, getScales} = require('../utils/MapUtils');
 
 /**
- * LegendAction plugin.
+ * FloatingLegend plugin.
  * This plugin shows a list of layers with visibility and opacity controls.
  * If DrawerMenu is in localConfig it will be integrated with current plugin
  * @memberof plugins
- * @name LegendAction
+ * @name FloatingLegend
  * @class
  * @prop {bool} cfg.disableOpacitySlider disable and hide opacity slider
  * @prop {bool} expandedOnMount show expanded legend when component did mount
  * @prop {number} width width dimension of legend
  */
 
-class LegendActionComponent extends React.Component {
+class FloatingLegendComponent extends React.Component {
     static propTypes = {
         items: PropTypes.array,
         pluginName: PropTypes.string
@@ -59,7 +59,7 @@ class LegendActionComponent extends React.Component {
     render() {
         return (
             <div style={{position: 'absolute', height: '100%'}}>
-                <LegendAction
+                <FloatingLegend
                     {...this.props}
                     toggleButton={this.renderToggleButton()}/>
                 {this.renderPanel()}
@@ -70,7 +70,7 @@ class LegendActionComponent extends React.Component {
 
 const parseTitleObject = (title, currentLocale) => title && isObject(title) && (title[currentLocale] || title.default) || title || '';
 
-const legendActionSelector = createSelector(
+const floatingLegendSelector = createSelector(
     [
         layersSelector,
         currentLocaleSelector,
@@ -101,17 +101,17 @@ const legendActionSelector = createSelector(
     })
 );
 
-const LegendActionPlugin = connect(legendActionSelector, {
+const FloatingLegendPlugin = connect(floatingLegendSelector, {
     onChange: updateNode,
     onResize: resizeLegend,
     onExpand: expandLegend
-})(LegendActionComponent);
+})(FloatingLegendComponent);
 
 module.exports = {
-    LegendActionPlugin: assign(LegendActionPlugin, {
+    FloatingLegendPlugin: assign(FloatingLegendPlugin, {
         disablePluginIf: "{state('featuregridmode') === 'EDIT'}"
     }),
     reducers: {
-        legendaction: require('../reducers/legendaction')
+        floatinglegend: require('../reducers/floatinglegend')
     }
 };

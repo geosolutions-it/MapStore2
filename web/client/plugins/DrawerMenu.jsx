@@ -178,7 +178,7 @@ const DrawerMenuPlugin = connect((state) => ({
 module.exports = {
     DrawerMenuPlugin: assign(DrawerMenuPlugin, {
         disablePluginIf: "{state('featuregridmode') === 'EDIT'}",
-        LegendAction: {
+        FloatingLegend: {
             priority: 1,
             name: 'drawer-menu',
             button: DrawerButton

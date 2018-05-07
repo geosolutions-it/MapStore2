@@ -7,32 +7,32 @@
 */
 
 const expect = require('expect');
-const {legendSizeSelector, legendExpandedSelector} = require('../legendaction');
+const {legendSizeSelector, legendExpandedSelector} = require('../floatinglegend');
 
-describe('Test legendaction selectors', () => {
+describe('Test floatinglegend selectors', () => {
     it('test legendSizeSelector', () => {
         let props = legendSizeSelector({});
         expect(props).toEqual({width: 0, height: 0});
 
-        const legendaction = {
+        const floatinglegend = {
             size: {
                 width: 300,
                 height: 7
             }
         };
-        props = legendSizeSelector({legendaction});
-        expect(props).toBe(legendaction.size);
+        props = legendSizeSelector({floatinglegend});
+        expect(props).toBe(floatinglegend.size);
     });
 
     it('test legendExpandedSelector', () => {
         let props = legendExpandedSelector({});
         expect(props).toBe(false);
 
-        const legendaction = {
+        const floatinglegend = {
             expanded: true
         };
-        props = legendExpandedSelector({legendaction});
-        expect(props).toBe(legendaction.expanded);
+        props = legendExpandedSelector({floatinglegend});
+        expect(props).toBe(floatinglegend.expanded);
     });
 
 });
