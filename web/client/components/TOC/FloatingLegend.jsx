@@ -22,7 +22,7 @@ const WMSLegend = require('./fragments/WMSLegend');
  * Component for rendering a legend component.
  * This component shows a list of layers with visibility and opacity controls
  * @memberof components.TOC
- * @name LegendAction
+ * @name FloatingLegend
  * @class
  * @prop {array} layers array of layer objects
  * @prop {bool} expanded expanded state
@@ -44,7 +44,7 @@ const WMSLegend = require('./fragments/WMSLegend');
  * @prop {bool} expandedOnMount show expanded legend when component did mount
  */
 
-class LegendAction extends React.Component {
+class FloatingLegend extends React.Component {
 
     static propTypes = {
         layers: PropTypes.array,
@@ -222,4 +222,4 @@ class LegendAction extends React.Component {
     };
 }
 
-module.exports = LegendAction;
+module.exports = FloatingLegend;
