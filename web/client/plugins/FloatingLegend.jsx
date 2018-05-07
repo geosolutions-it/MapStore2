@@ -38,12 +38,14 @@ const {parseLayoutValue, getScales} = require('../utils/MapUtils');
 class FloatingLegendComponent extends React.Component {
     static propTypes = {
         items: PropTypes.array,
-        pluginName: PropTypes.string
+        pluginName: PropTypes.string,
+        tooltipId: PropTypes.string
     };
 
     static defaultProps = {
         items: [],
-        pluginName: 'drawer-menu'
+        pluginName: 'drawer-menu',
+        tooltipId: 'floatinglegend.showTOC'
     };
 
     renderPanel() {
@@ -53,7 +55,7 @@ class FloatingLegendComponent extends React.Component {
 
     renderToggleButton() {
         const Plugin = this.props.items && head(this.props.items.filter(item => item && item.name === this.props.pluginName));
-        return Plugin && Plugin.button && <Plugin.button {...(Plugin.cgf || {})}/>;
+        return Plugin && Plugin.button && <Plugin.button {...(Plugin.cgf || {})} tooltipId={this.props.tooltipId}/>;
     }
 
     render() {

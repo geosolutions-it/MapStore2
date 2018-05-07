@@ -243,6 +243,11 @@
                 "title": "权限组"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Show layers",
+            "showLegend": "Show legend",
+            "hideLegend": "Hide legend"
+        },
         "toc": {
             "toggleLayerVisibility": "切换图层可见性",
             "displayLegendAndTools": "显示图例和工具",

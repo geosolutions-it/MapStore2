@@ -11,9 +11,11 @@ const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
 const {isNil, isEqual, delay} = require('lodash');
 
-const {Glyphicon, Panel, Grid, Row, Col, Button} = require('react-bootstrap');
+const {Glyphicon, Panel, Grid, Row, Col, Button: ButtonB} = require('react-bootstrap');
 const {Resizable} = require('react-resizable');
 const ContainerDimensions = require('react-container-dimensions').default;
+const tooltip = require('../misc/enhancers/tooltip');
+const Button = tooltip(ButtonB);
 const SideGrid = require('../misc/cardgrids/SideGrid');
 const Slider = require('../misc/Slider');
 const WMSLegend = require('./fragments/WMSLegend');
@@ -157,6 +159,8 @@ class FloatingLegend extends React.Component {
                                                 <h5>{this.props.title}</h5>
                                             </div>
                                             {this.props.layers && this.props.layers.length > 0 && <Button
+                                                tooltipId={this.props.expanded ? 'floatinglegend.hideLegend' : 'floatinglegend.showLegend'}
+                                                tooltipPosition="bottom"
                                                 className="no-border square-button-md"
                                                 onClick={() => this.props.onExpand(!this.props.expanded)}>
                                                 <Glyphicon glyph={this.props.expanded ? "chevron-down" : "chevron-left"} />

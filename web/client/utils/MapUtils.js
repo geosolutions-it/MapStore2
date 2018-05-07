@@ -399,7 +399,10 @@ const getIdFromUri = (uri, regex = /data\/(\d+)/) => {
 
 /**
  * Return parsed number from layout value
- * if percentage returns percentage of second argument
+ * if percentage returns percentage of second argument that should be a number
+ * eg. 20% of map height parseLayoutValue(20%, map.size.height)
+ * but if value is stored as number it will return the number
+ * eg. parseLayoutValue(50, map.size.height) returns 50
  * @param value {number|string} number or percentage value string
  * @param size {number} only in case of percentage
  * @return {number}

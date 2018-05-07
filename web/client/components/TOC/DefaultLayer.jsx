@@ -127,7 +127,7 @@ class DefaultLayer extends React.Component {
     }
 
     renderNode = (grab, hide, selected, error, warning, other) => {
-        const isEmpty = !this.props.activateLegendTool && !this.props.activateOpacityTool;
+        const isEmpty = !this.props.activateLegendTool && !this.props.showFullTitleOnExpand;
         return (
             <Node className={'toc-default-layer' + hide + selected + error + warning} sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
                 <div className="toc-default-layer-head">
@@ -136,7 +136,7 @@ class DefaultLayer extends React.Component {
                     <Title tooltip={this.props.titleTooltip} filterText={this.props.filterText} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onSelect} onContextMenu={this.props.onContextMenu} />
                     {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
                 </div>
-                {isEmpty || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider()}
+                {!this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider()}
                 {isEmpty ? null : this.renderCollapsible()}
             </Node>
         );

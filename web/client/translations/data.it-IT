@@ -313,6 +313,11 @@
                 "fieldsChanged": "Alcuni dati sono cambiati"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Mostra layers",
+            "showLegend": "Mostra legenda",
+            "hideLegend": "Nascondi legenda"
+        },
         "toc": {
             "toggleLayerVisibility": "Attiva o disattiva la visibilità del livello",
             "displayLegendAndTools": "Visualizza legenda e strumenti aggiuntivi",

@@ -217,28 +217,41 @@ describe('test DefaultLayer module component', () => {
         const slider = domNode.getElementsByClassName("mapstore-slider");
         expect(slider.length).toBe(0);
     });
-    it('show full title', () => {
+    it('show full title enabled', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
             visibility: false,
             storeIndex: 9,
             type: 'wms',
-            opacity: 0.5
+            opacity: 0.5,
+            expanded: true
         };
 
-        let comp = ReactDOM.render(<Layer showFullTitleOnExpand visibilityCheckType="checkbox" node={l} />,
+        const comp = ReactDOM.render(<Layer showFullTitleOnExpand node={l} />,
             document.getElementById("container"));
         expect(comp).toExist();
-        let domNode = ReactDOM.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        let title = domNode.getElementsByClassName("toc-full-title");
+        const title = domNode.getElementsByClassName("toc-full-title");
         expect(title.length).toBe(1);
-        comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} />,
-            document.getElementById("container"));
-        domNode = ReactDOM.findDOMNode(comp);
+    });
+    it('show full title disabled', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            storeIndex: 9,
+            type: 'wms',
+            opacity: 0.5,
+            expanded: true
+        };
+
+        const comp = ReactDOM.render(<Layer showFullTitleOnExpand={false} node={l} />,
+        document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        title = domNode.getElementsByClassName("toc-full-title");
+        const title = domNode.getElementsByClassName("toc-full-title");
         expect(title.length).toBe(0);
 
     });

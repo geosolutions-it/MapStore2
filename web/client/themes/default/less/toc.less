@@ -654,6 +654,8 @@
                 .mapstore-side-card {
                     &:hover {
                         transform: unset;
+                        cursor: default;
+                        .shadow-soft;
                     }
                     .ms-head {
                         display: flex;
@@ -663,6 +665,7 @@
                             overflow: visible;
                             > span {
                                 font-size: @icon-size-md;
+                                cursor: pointer;
                             }
                         }
                         .mapstore-side-card-info {

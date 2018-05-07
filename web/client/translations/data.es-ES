@@ -313,6 +313,11 @@
                 "fieldsChanged": "Algunos campos han sido cambiados"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Mostrar capas",
+            "showLegend": "Mostrar leyenda",
+            "hideLegend": "Ocultar leyenda"
+        },
         "toc": {
             "toggleLayerVisibility": "Activar / desactivar la visibilidad del mapa",
             "displayLegendAndTools": "Mostrar la leyenda y las herramientas",
