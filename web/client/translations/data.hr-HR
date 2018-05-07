@@ -314,6 +314,11 @@
                 "fieldsChanged": "Neka polja su izmijenjena"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Show layers",
+            "showLegend": "Show legend",
+            "hideLegend": "Hide legend"
+        },
         "toc": {
             "toggleLayerVisibility": "Izmijeni vidljivost sloja",
             "displayLegendAndTools": "Prikaži kazalo i alate",

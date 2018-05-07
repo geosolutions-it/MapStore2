@@ -343,6 +343,11 @@
                 "fieldsChanged": "Some fields has been changed"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Show layers",
+            "showLegend": "Show legend",
+            "hideLegend": "Hide legend"
+        },
         "toc": {
             "toggleLayerVisibility": "Toggle layer visibility",
             "displayLegendAndTools": "Display legend and tools",

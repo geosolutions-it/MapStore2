@@ -342,6 +342,11 @@
                 "fieldsChanged": "Einige Felder wurden geändert"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Ebenen anzeigen",
+            "showLegend": "Legende anzeigen",
+            "hideLegend": "Legende ausblenden"
+        },
         "toc": {
             "toggleLayerVisibility": "Ändere die Ebenen Sichtbarkeit",
             "displayLegendAndTools": "Legende und Werkzeuge zeigen",

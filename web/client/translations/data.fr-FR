@@ -343,6 +343,11 @@
                 "fieldsChanged": "Certains champs ont été modifiés"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Afficher les calques",
+            "showLegend": "Afficher la légende",
+            "hideLegend": "Cacher la légende"
+        },
         "toc": {
             "toggleLayerVisibility": "Activer / désactiver la visibilité du calque",
             "displayLegendAndTools": "Afficher la légende et les outils",
