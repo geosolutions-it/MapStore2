@@ -36,6 +36,11 @@ const DEFAULT_TYPES = [{
     type: "map",
     glyph: "1-map",
     caption: <Message msgId={"widgets.types.map.caption"} />
+}, {
+    title: <Message msgId={"widgets.types.legend.title"} />,
+    type: "legend",
+    glyph: "list",
+    caption: <Message msgId={"widgets.types.legend.caption"} />
 }];
 
 module.exports = ({widgetTypes = DEFAULT_TYPES, typeFilter = () => true, onSelect= () => {}}) =>
