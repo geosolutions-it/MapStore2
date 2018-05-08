@@ -500,7 +500,15 @@ const LayersUtils = {
 
         }
         return layers;
-    }
+    },
+    /**
+     * Retrieve title of layer from localized object or string
+     * and return a string
+     * @param {object} layer layer object, source of title
+     * @param {string} currentLocale code of locale, eg. en-US
+     * @returns {string} title of layer
+     */
+    getTitle: (layer, currentLocale) => layer && layer.title && isObject(layer.title) && (layer.title[currentLocale] || layer.title.default) || layer && layer.title || ''
 };
 
 module.exports = LayersUtils;

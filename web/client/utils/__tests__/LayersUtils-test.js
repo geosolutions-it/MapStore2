@@ -458,4 +458,10 @@ describe('LayersUtils', () => {
 
     });
 
+    it('getTitle', () => {
+        expect(LayersUtils.getTitle()).toBe('');
+        expect(LayersUtils.getTitle('title')).toBe('title');
+        expect(LayersUtils.getTitle({'it-IT': 'titolo', 'default': 'title'}, 'it-IT')).toBe('titolo');
+        expect(LayersUtils.getTitle({'it-IT': 'titolo', 'default': 'title'}, 'fr-FR')).toBe('title');
+    });
 });
