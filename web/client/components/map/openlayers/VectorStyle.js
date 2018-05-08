@@ -228,10 +228,13 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
                 font: tempStyle.font,
                 fill: new ol.style.Fill({
                     color: colorToRgbaStr(tempStyle.stroke || tempStyle.color || '#000000', tempStyle.opacity || 1)
-                })
+                }),
+                stroke: options.style.highlight ? new ol.style.Stroke({
+                    color: colorToRgbaStr(tempStyle.stroke || tempStyle.color || '#000000', tempStyle.opacity || 1),
+                    width: 1
+                }) : null
             })
         });
-
     }
     if (geomType === "MultiPolygon" || geomType === "Polygon") {
         style = {
