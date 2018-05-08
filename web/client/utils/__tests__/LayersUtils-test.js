@@ -460,8 +460,10 @@ describe('LayersUtils', () => {
 
     it('getTitle', () => {
         expect(LayersUtils.getTitle()).toBe('');
-        expect(LayersUtils.getTitle('title')).toBe('title');
-        expect(LayersUtils.getTitle({'it-IT': 'titolo', 'default': 'title'}, 'it-IT')).toBe('titolo');
-        expect(LayersUtils.getTitle({'it-IT': 'titolo', 'default': 'title'}, 'fr-FR')).toBe('title');
+        const layerWithTitleString = {title: 'title'};
+        expect(LayersUtils.getTitle(layerWithTitleString)).toBe('title');
+        const layerWithLocalizedTitle = {title: {'it-IT': 'titolo', 'default': 'title'}};
+        expect(LayersUtils.getTitle(layerWithLocalizedTitle, 'it-IT')).toBe('titolo');
+        expect(LayersUtils.getTitle(layerWithLocalizedTitle, 'fr-FR')).toBe('title');
     });
 });
