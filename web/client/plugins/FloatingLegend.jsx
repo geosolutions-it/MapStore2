@@ -11,7 +11,7 @@ const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
-const {reverse, head, get, isObject} = require('lodash');
+const {reverse, head, get} = require('lodash');
 const {updateNode} = require('../actions/layers');
 const {resizeLegend, expandLegend} = require('../actions/floatinglegend');
 const {layersSelector} = require('../selectors/layers');
@@ -22,6 +22,7 @@ const {isFeatureGridOpen} = require('../selectors/featuregrid');
 const {legendSizeSelector, legendExpandedSelector} = require('../selectors/floatinglegend');
 const FloatingLegend = require('../components/TOC/FloatingLegend');
 const {parseLayoutValue, getScales} = require('../utils/MapUtils');
+const {getLocalizedProp} = require('../utils/LocaleUtils');
 
 /**
  * FloatingLegend plugin.
@@ -70,8 +71,6 @@ class FloatingLegendComponent extends React.Component {
     }
 }
 
-const parseTitleObject = (title, currentLocale) => title && isObject(title) && (title[currentLocale] || title.default) || title || '';
-
 const floatingLegendSelector = createSelector(
     [
         layersSelector,
@@ -87,7 +86,7 @@ const floatingLegendSelector = createSelector(
         layers: featuredGridOpen && [] || layers && reverse([
             ...layers
                 .filter(layer => layer && layer.group !== 'background' && !layer.loadingError)
-                .map(({title, ...layer}) => ({...layer, title: parseTitleObject(title, currentLocale)}))
+                .map(({title, ...layer}) => ({...layer, title: getLocalizedProp(currentLocale, title)}))
         ]) || [],
         title: map && map.info && map.info.name || '',
         height: size.height || 300,
