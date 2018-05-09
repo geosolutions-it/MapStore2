@@ -244,6 +244,11 @@
                 "title": "geautoriseerde groepen"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Show layers",
+            "showLegend": "Show legend",
+            "hideLegend": "Hide legend"
+        },
         "toc": {
             "toggleLayerVisibility": "Zet de zichtbaarheid van de laag aan / uit",
             "displayLegendAndTools": "Toon de legende en de tools",

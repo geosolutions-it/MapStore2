@@ -343,6 +343,11 @@
                 "fieldsChanged": "Some fields has been changed"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Show layers",
+            "showLegend": "Show legend",
+            "hideLegend": "Hide legend"
+        },
         "toc": {
             "toggleLayerVisibility": "Toggle layer visibility",
             "displayLegendAndTools": "Display legend and tools",
@@ -1358,6 +1363,12 @@
             "layerlabel": "Layer"
         },
         "rulesmanager": {
+            "resetconstraints": "Resets Constraints",
+            "constraintsmsg": "Changing grant, workspace or layer, the details will be deleted. Are you sure you want to do that?",
+            "defstyle": "Default Style",
+            "avstyle": "Available Styles",
+            "clearbtn": "Clear All",
+            "selectbtn": "Select All",
             "placeholders": {
                 "filter": "Search...",
                 "role": "Type to search Roles",
@@ -1369,7 +1380,8 @@
                 "layer": "Type to search Layers",
                 "access": "Type to search Access",
                 "ip": "###.###.###.###/##",
-                "priority": "Select Priority"
+                "priority": "Select Priority",
+                "filter": "Filter styles..."
             },
             "menutitle": "Manage GeoFence Rules",
             "tooltip": {
@@ -1388,6 +1400,7 @@
                 "filter": "Filters",
                 "attribute": "Attributes Rule"
             },
+            "rule": "Rule",
             "cachetitle": "Clear Cache",
             "cachemsg": "Are you sure to clear the GeoFence cache?",
             "deltitle": "Delete Rule",
@@ -1421,11 +1434,16 @@
             "errorMovingRules": "Error moving rules.",
             "errorDeletingRules": "Error deleting rules.",
             "errorAddingRule": "Error adding rule.",
-            "errorUpdatingRule": "Error updating rule.",
+            "errorUpdatingRule": "Error saving rule.",
+            "errorDuplicateRule": "Duplicated rule.",
+            "errorLoading": "Error loading",
             "deleteModal": "Delete Rules",
             "selectedRulesDelete": "Delete selected rules ?",
             "deleteButton": "Delete",
-            "cancelButton": "Cancel"
+            "cancelButton": "Cancel",
+            "cqlRead": "CQL Filter Read Rules",
+            "cqlWrite": "CQL Filter Write Rules",
+            "missingconfig": "Rules manager misses the configuration. Access denied!"
         },
         "tutorial": {
             "title": "Tutorial",

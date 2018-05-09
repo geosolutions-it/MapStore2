@@ -10,7 +10,6 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
-const OverlayTrigger = require('../components/misc/OverlayTrigger');
 
 const Message = require('./locale/Message');
 
@@ -18,7 +17,7 @@ const {toggleControl, setControlProperty} = require('../actions/controls');
 
 const {changeMapStyle} = require('../actions/map');
 
-const {Button, Glyphicon, Panel, Tooltip} = require('react-bootstrap');
+const {Button: ButtonB, Glyphicon, Panel} = require('react-bootstrap');
 
 const Section = require('./drawer/Section');
 
@@ -27,6 +26,8 @@ const {partialRight} = require('lodash');
 const assign = require('object-assign');
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+const tooltip = require('../components/misc/enhancers/tooltip');
+const Button = tooltip(ButtonB);
 
 const menuSelector = createSelector([
     state => state.controls.drawer && state.controls.drawer.enabled,
@@ -47,6 +48,35 @@ const Menu = connect(menuSelector, {
 })(require('./drawer/Menu'));
 
 require('./drawer/drawer.css');
+
+const DrawerButton = connect(state => ({
+    disabled: state.controls && state.controls.drawer && state.controls.drawer.disabled
+}), {
+    toggleMenu: toggleControl.bind(null, 'drawer', null)
+})(({
+    id = '',
+    menuButtonStyle = {},
+    buttonStyle = 'primary',
+    buttonClassName = 'square-button',
+    toggleMenu = () => {},
+    disabled = false,
+    glyph = '1-layer',
+    tooltipId = 'toc.drawerButton',
+    tooltipPosition = 'bottom'
+}) =>
+    <Button
+        id={id}
+        style={menuButtonStyle}
+        bsStyle={buttonStyle}
+        key="menu-button"
+        className={buttonClassName}
+        onClick={toggleMenu}
+        disabled={disabled}
+        tooltipId={tooltipId}
+        tooltipPosition={tooltipPosition}>
+        <Glyphicon glyph={glyph}/>
+    </Button>
+);
 
 /**
  * DrawerMenu plugin. Shows a left menu with some pluins rendered inside it (typically the TOC).
@@ -127,13 +157,9 @@ class DrawerMenu extends React.Component {
     };
 
     render() {
-        let tooltip = <Tooltip key="drawerButtonTooltip" id="drawerButtonTooltip"><Message msgId={"toc.drawerButton"}/></Tooltip>;
         return (
             <div id={this.props.id}>
-                <OverlayTrigger placement="bottom" key="drawerButtonTooltip"
-                    overlay={tooltip}>
-                    <Button id="drawer-menu-button" style={this.props.menuButtonStyle} bsStyle={this.props.buttonStyle} key="menu-button" className={this.props.buttonClassName} onClick={this.props.toggleMenu} disabled={this.props.disabled}><Glyphicon glyph={this.props.glyph}/></Button>
-                </OverlayTrigger>
+                <DrawerButton {...this.props} id="drawer-menu-button"/>
                 <Menu single={this.props.singleSection} {...this.props.menuOptions} title={<Message msgId="menu" />} alignment="left">
                     {this.renderItems()}
                 </Menu>
@@ -142,12 +168,21 @@ class DrawerMenu extends React.Component {
     }
 }
 
+const DrawerMenuPlugin = connect((state) => ({
+    active: state.controls && state.controls.drawer && state.controls.drawer.active,
+    disabled: state.controls && state.controls.drawer && state.controls.drawer.disabled
+}), {
+    toggleMenu: toggleControl.bind(null, 'drawer', null)
+})(DrawerMenu);
+
 module.exports = {
-    DrawerMenuPlugin: connect((state) => ({
-        active: state.controls && state.controls.drawer && state.controls.drawer.active,
-        disabled: state.controls && state.controls.drawer && state.controls.drawer.disabled
-    }), {
-        toggleMenu: toggleControl.bind(null, 'drawer', null)
-    })(assign(DrawerMenu, {disablePluginIf: "{state('featuregridmode') === 'EDIT'}"})),
+    DrawerMenuPlugin: assign(DrawerMenuPlugin, {
+        disablePluginIf: "{state('featuregridmode') === 'EDIT'}",
+        FloatingLegend: {
+            priority: 1,
+            name: 'drawer-menu',
+            button: DrawerButton
+        }
+    }),
     reducers: {}
 };

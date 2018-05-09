@@ -342,6 +342,11 @@
                 "fieldsChanged": "Algunos campos han sido cambiados"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Mostrar capas",
+            "showLegend": "Mostrar leyenda",
+            "hideLegend": "Ocultar leyenda"
+        },
         "toc": {
             "toggleLayerVisibility": "Activar / desactivar la visibilidad del mapa",
             "displayLegendAndTools": "Mostrar la leyenda y las herramientas",
@@ -1357,6 +1362,12 @@
             "layerlabel": "Capa"
         },
         "rulesmanager": {
+            "resetconstraints": "Restablece las restricciones",
+            "constraintsmsg": "Cambiando concesión, área de trabajo o capa, los detalles serán eliminados. ¿Estás seguro de que quieres hacer eso?",
+            "defstyle": "Estilo por Defecto",
+            "avstyle": "Estilos disponibles",
+            "clearbtn": "Limpiar Todo",
+            "selectbtn": "Seleccionar Todo",
             "placeholders": {
                 "filter": "Buscar...",
                 "role": "Escriba para buscar Roles",
@@ -1387,6 +1398,7 @@
                 "filter": "Filtros",
                 "attribute": "Regla de atributos"
             },
+            "rule": "Regla",
             "cachetitle": "Limpiar Cache",
             "cachemsg": "¿Estás seguro de limpiar el caché GeoFence?",
             "deltitle": "Eliminar Regla",
@@ -1421,10 +1433,15 @@
             "errorDeletingRules": "Error al borrar las reglas.",
             "errorAddingRule": "Error al añadir las reglas.",
             "errorUpdatingRule": "Error al actualizar las reglas.",
+            "errorDuplicateRule": "Regla duplicada.",
+            "errorLoading": "Error de carga",
             "deleteModal": "Borrar la regla",
             "selectedRulesDelete": "¿Está seguro de borrar las reglas seleccionadas?",
             "deleteButton": "Borrar",
-            "cancelButton": "Cancelar"
+            "cancelButton": "Cancelar",
+            "cqlRead": "Reglas de lectura del filtro CQL",
+            "cqlWrite": "Reglas de escritura de filtro CQL",
+            "missingconfig": "El administrador de reglas pierde la configuración. ¡Acceso denegado!"
         },
         "tutorial": {
             "title": "Tutorial",

@@ -29,8 +29,7 @@ const LayerSelector = (props) => (
 module.exports = compose(
     connect(() => ({}), {onError: error}),
     defaultProps({
-        paginated: false,
-        emitOnReset: true,
+        paginated: true,
         size: 5,
         textField: "name",
         valueField: "name",

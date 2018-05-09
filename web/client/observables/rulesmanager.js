@@ -1,10 +1,16 @@
 const Rx = require('rxjs');
 
+
+
 const {parseString} = require('xml2js');
 const {stripPrefix} = require('xml2js/lib/processors');
 const CatalogAPI = require('../api/CSW');
 const GeoFence = require('../api/geoserver/GeoFence');
 const ConfigUtils = require('../utils/ConfigUtils');
+const {trim} = require("lodash");
+
+const {getLayerCapabilities, describeLayer} = require("./wms");
+const {describeFeatureType} = require("./wfs");
 
 const xmlToJson$ = response => Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
     tagNameProcessors: [stripPrefix],
@@ -13,9 +19,29 @@ const xmlToJson$ = response => Rx.Observable.bindNodeCallback( (data, callback) 
 }, callback))(response);
 
 
+const fixUrl = (url) => {
+    const u = trim(url, "/");
+    return u.indexOf("http") === 0 ? `${u}/` : `/${u}/`;
+};
+const getUpdateType = (o, n) => {
+    if (o.priority !== n.priority) {
+        return 'full';
+    }else if (o.grant !== n.grant || o.ipaddress !== n.ipaddress) {
+        return 'grant';
+    }
+    return "simple";
+};
 const loadSinglePage = (page = 0, filters = {}, size = 10) => Rx.Observable.defer(() => GeoFence.loadRules(page, filters, size))
                             .switchMap( response => xmlToJson$(response)
-                            .map(({RuleList = {}}) => ({ page, rules: [].concat(RuleList.rule || [])}))
+                            .map(({RuleList = {}}) => ({ page, rules: ([].concat(RuleList.rule || [])).map(r => {
+                                if (!r.constraints) {
+                                    return r;
+                                }
+                                const style = [].concat(r.constraints.allowedStyles.style || []);
+                                r.constraints.allowedStyles = {style};
+                                return r;
+                            }
+                            )}))
                         );
 const countUsers = (filter = "") => Rx.Observable.defer(() => GeoFence.getUsersCount(filter));
 const loadUsers = (filter = "", page = 0, size = 10) => Rx.Observable.defer(() => GeoFence.getUsers(filter, page, size))
@@ -31,7 +57,7 @@ const loadRoles = (filter = "", page = 0, size = 10) => Rx.Observable.defer(() =
 );
 const deleteRule = (id) => Rx.Observable.defer(() => GeoFence.deleteRule(id));
 // Full update we need to delete, save and move
-const fullUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => r.priority !== oR.priority)
+const fullUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) =>getUpdateType(oR, r) === 'full')
         .switchMap(({rule, origRule}) => deleteRule(rule.id)
             .switchMap(() => {
                 const {priority, id, ...newRule} = rule;
@@ -47,7 +73,7 @@ const fullUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => r.pr
             return Rx.Observable.defer(() => GeoFence.moveRules(rule.priority, [{id}]));
         }
 ));
-const grantUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => r.priority === oR.priority && (r.grant !== oR.grant || r.ipaddress !== oR.ipaddress))
+const grantUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => getUpdateType(oR, r) === 'grant')
         .switchMap(({rule, origRule}) => deleteRule(rule.id)
             .switchMap(() => {
                 const {priority, id, ...newRule} = rule;
@@ -62,7 +88,7 @@ const grantUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => r.p
             })
         );
 // if priority and grant are the same we just need to update new rule
-const justUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => r.priority === oR.priority && r.grant === oR.grant && r.ipaddress === oR.ipaddress)
+const justUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => getUpdateType(oR, r) === 'simple')
         .switchMap(({rule}) => Rx.Observable.defer(() => GeoFence.updateRule(rule)));
 module.exports = {
     loadRules: (pages = [], filters = {}, size) =>
@@ -100,6 +126,18 @@ module.exports = {
         return fullUp.merge(simpleUpdate, grant);
     },
     createRule: (rule) => Rx.Observable.defer(() => GeoFence.addRule(rule)),
-    deleteRule
+    deleteRule,
+    getStylesAndAttributes: (layer, workspace) => {
+        const {url} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
+        const l = {url: `${fixUrl(url)}ows`, name: `${workspace}:${layer}`};
+        return Rx.Observable.combineLatest(getLayerCapabilities(l)
+                .map(({style}) => ({style})),
+                describeLayer(l).map(({data}) => data.layerDescriptions[0])
+                .switchMap(({owsType}) => {
+                    return owsType === "WCS" ? Rx.Observable.of({properties: [], type: "RASTER"}) : describeFeatureType({layer: l})
+                    .map(({data}) => ({properties: data.featureTypes[0] && data.featureTypes[0].properties || [], type: "VECTOR"}));
+                }), ({style}, {properties, type}) => ({styles: style || [], properties, type}));
+
+    }
 
 };

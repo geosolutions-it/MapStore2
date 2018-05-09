@@ -27,7 +27,8 @@ var {
     getCurrentResolution,
     saveMapConfiguration,
     extractTileMatrixSetFromLayers,
-    getIdFromUri
+    getIdFromUri,
+    parseLayoutValue
 } = require('../MapUtils');
 
 describe('Test the MapUtils', () => {
@@ -1176,6 +1177,17 @@ describe('Test the MapUtils', () => {
         expect(getIdFromUri('rest%2Fgeostore%2Fdata%2F578%2Fraw%3Fid%3D1568321658464')).toBe('578');
         // rest/geostore/data/
         expect(getIdFromUri('rest%2Fgeostore%2Fdata%2F')).toBe(null);
+    });
+
+    it('test parseLayoutValue', () => {
+        const percentageValue = parseLayoutValue('20%', 500);
+        expect(percentageValue).toBe(100);
+
+        const numberValue = parseLayoutValue(20);
+        expect(numberValue).toBe(20);
+
+        const noNumberValue = parseLayoutValue('value');
+        expect(noNumberValue).toBe(0);
     });
 
 });
