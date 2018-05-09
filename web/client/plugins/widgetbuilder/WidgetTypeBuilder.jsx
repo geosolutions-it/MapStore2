@@ -27,7 +27,8 @@ const Builders = {
     text: require('./TextBuilder'),
     table: require('./TableBuilder'),
     map: require('./MapBuilder'),
-    counter: require('./CounterBuilder')
+    counter: require('./CounterBuilder'),
+    legend: require('./LegendBuilder')
 };
 
 /**
