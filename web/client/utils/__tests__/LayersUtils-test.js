@@ -458,12 +458,4 @@ describe('LayersUtils', () => {
 
     });
 
-    it('getTitle', () => {
-        expect(LayersUtils.getTitle()).toBe('');
-        const layerWithTitleString = {title: 'title'};
-        expect(LayersUtils.getTitle(layerWithTitleString)).toBe('title');
-        const layerWithLocalizedTitle = {title: {'it-IT': 'titolo', 'default': 'title'}};
-        expect(LayersUtils.getTitle(layerWithLocalizedTitle, 'it-IT')).toBe('titolo');
-        expect(LayersUtils.getTitle(layerWithLocalizedTitle, 'fr-FR')).toBe('title');
-    });
 });

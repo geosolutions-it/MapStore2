@@ -22,7 +22,7 @@ const {isFeatureGridOpen} = require('../selectors/featuregrid');
 const {legendSizeSelector, legendExpandedSelector} = require('../selectors/floatinglegend');
 const FloatingLegend = require('../components/TOC/FloatingLegend');
 const {parseLayoutValue, getScales} = require('../utils/MapUtils');
-const {getTitle} = require('../utils/LayersUtils');
+const {getLocalizedProp} = require('../utils/LocaleUtils');
 
 /**
  * FloatingLegend plugin.
@@ -86,7 +86,7 @@ const floatingLegendSelector = createSelector(
         layers: featuredGridOpen && [] || layers && reverse([
             ...layers
                 .filter(layer => layer && layer.group !== 'background' && !layer.loadingError)
-                .map((layer) => ({...layer, title: getTitle(layer, currentLocale)}))
+                .map(({title, ...layer}) => ({...layer, title: getLocalizedProp(currentLocale, title)}))
         ]) || [],
         title: map && map.info && map.info.name || '',
         height: size.height || 300,
