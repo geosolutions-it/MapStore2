@@ -7,7 +7,6 @@
  */
 const { withProps, compose } = require('recompose');
 
-const withMapConnect = require('./withMapConnect');
 /**
  * Enhancer for MapBuilder to allow connection configuration.
  *
@@ -19,6 +18,5 @@ module.exports = compose(
     withProps(({ editorData = {}, availableDependencies = []}) => ({
         canConnect: availableDependencies.length > 0,
         connected: !!editorData.mapSync
-    })),
-    withMapConnect({center: "center", "zoom": "zoom"})
+    }))
 );

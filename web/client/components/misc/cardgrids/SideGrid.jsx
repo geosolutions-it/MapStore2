@@ -28,20 +28,22 @@ class SideGrid extends React.Component {
         onItemClick: PropTypes.func,
         colProps: PropTypes.object,
         items: PropTypes.array,
-        cardComponent: PropTypes.element
+        cardComponent: PropTypes.element,
+        className: PropTypes.string
     };
 
     static defaultProps = {
         size: '',
         onItemClick: () => {},
         colProps: {xs: 12},
+        className: "",
         items: []
     };
 
     render() {
         const {cardComponent, items, colProps, onItemClick, size} = this.props;
         const Card = cardComponent || SideCard;
-        return (<div className="msSideGrid">
+        return (<div className={"msSideGrid" + (this.props.className ? " " + this.props.className : "")}>
             <Row className="items-list">
                 {items.map((item, i) =>
                     (<Col key={item.id || i} {...colProps}>

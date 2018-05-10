@@ -35,7 +35,13 @@ const getConnectionList = (widgets = []) => {
         const dependencies = Object.keys(depMap).map(k => getDependentWidget(depMap[k], widgets)) || [];
         return [
             ...acc,
-            ...(dependencies.map(d => [curr.id, d.id]))
+            ...(dependencies
+                    /**
+                     * This filter removes temp orphan dependencies, but can not recover connection when the value of the connected element is undefined
+                     * TODO: remove this filter and clean orphan dependencies
+                     */
+                    .filter(d => d !== undefined)
+                    .map(d => [curr.id, d.id]))
         ];
     }, []);
 };

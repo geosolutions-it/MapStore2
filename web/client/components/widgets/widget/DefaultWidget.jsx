@@ -9,6 +9,7 @@ const React = require('react');
 const enhanceChartWidget = require('../enhancers/chartWidget');
 const deleteWidget = require('../enhancers/deleteWidget');
 const enhanceTableWidget = require('../enhancers/tableWidget');
+const legendWidget = require('../enhancers/legendWidget');
 const wpsChart = require('../enhancers/wpsChart');
 const {compose} = require('recompose');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
@@ -38,6 +39,11 @@ const CounterWidget = compose(
     dependenciesToFilter,
     enhanceCounter
 )(require("./CounterWidget"));
+
+const LegendWidget = compose(
+    legendWidget,
+    deleteWidget
+)(require("./LegendWidget"));
 module.exports = ({
     dependencies,
     exportCSV = () => {},
@@ -66,7 +72,11 @@ module.exports = ({
                 dependencies={dependencies}
                 onDelete={onDelete}
                 onEdit={onEdit} />
-
+            : w.widgetType === "legend"
+            ? <LegendWidget {...w}
+                dependencies={dependencies}
+                onDelete={onDelete}
+                onEdit={onEdit} />
             : (<ChartWidget {...w}
                 exportCSV={exportCSV}
                 dependencies={dependencies}

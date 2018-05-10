@@ -9,38 +9,42 @@
 const React = require('react');
 const { connect } = require('react-redux');
 const {get} = require('lodash');
-const { compose, renameProps, mapPropsStream } = require('recompose');
+const { compose, renameProps, mapPropsStream, withProps } = require('recompose');
 const InfoPopover = require('../../components/widgets/widget/InfoPopover');
 const Message = require('../../components/I18N/Message');
 const BorderLayout = require('../../components/layout/BorderLayout');
 
-const { insertWidget, onEditorChange, setPage, openFilterEditor, changeEditorSetting } = require('../../actions/widgets');
-const withMapConnect = require('./enhancers/connection/withMapConnect');
+const { insertWidget, onEditorChange, setPage, openFilterEditor } = require('../../actions/widgets');
 
 const legendBuilderConnect = require('./enhancers/connection/legendBuilderConnect');
 const viewportBuilderConnectMask = require('./enhancers/connection/viewportBuilderConnectMask');
 const withExitButton = require('./enhancers/withExitButton');
 const withConnectButton = require('./enhancers/connection/withConnectButton');
+const withMapConnect = require('./enhancers/connection/withMapConnect');
+const withValidMap = withProps(({ availableDependencies = [], editorData }) => ({ valid: availableDependencies.length > 0 && editorData.mapSync }));
+
 const {
     wizardStateToProps,
     wizardSelector
 } = require('./commons');
 
-const Builder = connect(
-    wizardSelector,
-    {
-        setPage,
-        setValid: valid => changeEditorSetting("valid", valid),
-        onEditorChange,
-        insertWidget
-    },
-    wizardStateToProps
-)(compose(
+const Builder = compose(
+    connect(
+        wizardSelector,
+        {
+            setPage,
+            onEditorChange,
+            insertWidget
+        },
+        wizardStateToProps
+    ),
+    withValidMap,
     renameProps({
         editorData: "data",
         onEditorChange: "onChange"
-    })
-)(require('../../components/widgets/builder/wizard/TableWizard')));
+    }),
+
+)(require('../../components/widgets/builder/wizard/LegendWizard'));
 
 const BuilderHeader = require('./BuilderHeader');
 const Toolbar = compose(
@@ -53,9 +57,23 @@ const Toolbar = compose(
         wizardStateToProps
     ),
     legendBuilderConnect,
-    withExitButton(),
+    withValidMap,
+    // exit support
+    connect(() => ({}), {
+        onLayerChoice: (l) => onEditorChange("layer", l),
+        onResetChange: onEditorChange
+    }),
+    withProps(({ onResetChange = () => { } }) => ({
+        exitButton: {
+            glyph: 'arrow-left',
+            tooltipId: "widgets.builder.wizard.backToWidgetTypeSelection",
+            onClick: () => onResetChange('widgetType', undefined)
+        }
+    })),
+    withExitButton(({ step}) => step === 0),
+    // end exit support
     withConnectButton(({ step }) => step === 0)
-)(require('../../components/widgets/builder/wizard/table/Toolbar'));
+)(require('../../components/widgets/builder/wizard/legend/Toolbar'));
 
 /*
  * in case you don't have a layer selected (e.g. dashboard) the table builder
@@ -65,14 +83,15 @@ const builderEnhancer = compose(
     connect(wizardSelector),
     viewportBuilderConnectMask,
     legendBuilderConnect,
-    withMapConnect({ center: "center", "zoom": "zoom" }),
+    withMapConnect({ layers: "layers", "zoom": "zoom", "viewport": "viewport" }),
     // auto trigger connect if not in sync
     mapPropsStream(
         props$ => props$.merge(
             props$
-                .distinctUntilKeyChanged('mapSync')
-                .filter( ({mapSync}) => !mapSync)
-                .do(({ toggleConnection = () => {} }) => toggleConnection())
+                .filter(({ editorData = {} }) => !editorData.mapSync)
+                .take(1)
+                .distinctUntilChanged()
+                .do(({ toggleConnection = () => { }, availableDependencies }) => toggleConnection(availableDependencies))
                 .ignoreElements()
         )
     )
@@ -96,5 +115,5 @@ module.exports = builderEnhancer(({ enabled, onClose = () => { }, editorData = {
                     text={<Message msgId="widgets.builder.errors.checkAtLeastOneAttribute" />} /> : null}
             </BuilderHeader>}
     >
-        {enabled ? <Builder editorData={editorData} dependencies={dependencies} {...props} /> : null}
+        {enabled ? <Builder availableDependencies={availableDependencies} editorData={editorData} dependencies={dependencies} {...props} /> : null}
     </BorderLayout>));
