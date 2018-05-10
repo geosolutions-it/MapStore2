@@ -28,7 +28,7 @@
         "emoji": true
     },
     "app": {
-        "title": "MapStore 2 documentation",
+        "title": "MapStore documentation",
         "base": "/mapstore/docs",
         "entrance": "content:site",
         "routing": { "method": "path", "caseSensitive": true }
@@ -36,7 +36,7 @@
     "template": {
         "path": "./docma-template",
         "options": {
-            "title": "MapStore 2",
+            "title": "MapStore",
             "sidebar": true,
             "collapsed": false,
             "outline": "tree",
@@ -75,17 +75,17 @@
                     "href": "index.html",
                     "items": [
                         {
-                            "label": "MapStore 2 Releases",
+                            "label": "MapStore Releases",
                             "href": "https://github.com/geosolutions-it/MapStore2/releases",
                             "target": "_blank"
                         },
                         {
-                            "label": "MapStore 2 tar.gz",
+                            "label": "MapStore tar.gz",
                             "href": "https://github.com/geosolutions-it/MapStore2/tarball/master",
                             "target": "_blank"
                         },
                         {
-                            "label": "MapStore 2 .zip",
+                            "label": "MapStore .zip",
                             "href": "https://github.com/geosolutions-it/MapStore2/zipball/master",
                             "target": "_blank"
                         }
@@ -224,7 +224,7 @@
                 "web/client/plugins/WFSDownload.jsx",
                 "web/client/plugins/ZoomIn.jsx",
                 "web/client/plugins/ZoomOut.jsx"
-            ] 
+            ]
         },
         "./docs/**/*md",
         {
