@@ -1185,6 +1185,7 @@
                     "backToFeatureGrid": "Back to the feature grid",
                     "backToLayerSelection": "Back to layer selection",
                     "backToMapSelection": "Back to map selection",
+                    "backToPreview": "Back to Preview",
                     "backToChartOptions": "Back to chart options",
                     "selectALayer": "Select a layer",
                     "selectAMap": "Select a map",

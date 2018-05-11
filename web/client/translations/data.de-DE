@@ -1128,6 +1128,10 @@
                     "title": "Karte",
                     "caption": "Eine Karte hinzufügen"
                 },
+                "legend": {
+                    "title": "Legende",
+                    "caption": "füge eine Legende hinzu"
+                },
                 "chart": {
                     "title": "Grafik",
                     "caption": "füge ein Diagramm hinzu"
@@ -1164,6 +1168,8 @@
             "errors": {
                 "notext": "Kein Text verfügbar",
                 "nodata": "Keine Daten für den ausgewählten Layer / Filter verfügbar",
+                "noLegend": "Keine Legenden zu zeigen",
+                "noLegendDescription": "Die verbundene Karte hat keine Ebenen, die in der Legende angezeigt werden",
                 "nodatainviewport": "Keine Daten im aktuellen Ansichtsfenster",
                 "timeoutExpired": "Der Service hat zu lange gedauert. Vielleicht ist die Abfrage zu komplex oder der Server ist beschäftigt",
                 "genericError": "Beim Abrufen der Daten ist ein Fehler aufgetreten"
@@ -1178,6 +1184,7 @@
                     "backToFeatureGrid": "Zurück zum Feature-Raster",
                     "backToLayerSelection": "Zurück zur Ebenenauswahl",
                     "backToMapSelection": "Zurück zur Kartenauswahl",
+                    "backToPreview": "Zurück zur Vorschau",
                     "backToChartOptions": "Zurück zu den Diagrammoptionen",
                     "selectALayer": "Wähle eine Ebene",
                     "selectAMap": "Wählen Sie eine Karte",
@@ -1205,7 +1212,9 @@
                     "noAttributesDescription": "Die ausgewählte Ebene enthält keine anzuzeigenden Attribute. Bitte wählen Sie einen anderen Widget-Typ oder Layer",
                     "noWidgetsAvailableTitle": "Das Widget für die ausgewählte Ebene kann nicht erstellt werden",
                     "noWidgetsAvailableDescription": "<p><strong>Bitte wählen Sie eine andere Ebene oder einen anderen Widgets-Typ</strong></p><p>Der Server bietet nicht die erforderlichen Dienste für die Ebene und den ausgewählten Widget-Typ</p><p> Mögliche Ursachen sind: <ul> <li> Der ausgewählte Layer ist ein Raster-Layer </li> <li> Der WFS-Service ist nicht verfügbar </li> <li> Der WPS-Prozess <code>gs:aggregate</code> ist nicht verfügbar </li> </ul> </p>",
-                    "checkAtLeastOneAttribute": "Sie müssen mindestens eine Spalte auswählen"
+                    "checkAtLeastOneAttribute": "Sie müssen mindestens eine Spalte auswählen",
+                    "noMapAvailableForLegend": "Keine Karte verfügbar",
+                    "noMapAvailableForLegendDescription": "Sie benötigen mindestens ein Karten-Widget, um die Legende zu erstellen"
                 },
                 "setupFilter": "Konfigurieren Sie einen Filter für die Widgetdaten"
             },

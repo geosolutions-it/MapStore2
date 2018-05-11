@@ -1128,9 +1128,13 @@
                     "title": "Mapa",
                     "caption": "agregar un mapa"
                 },
+                "legend": {
+                    "title": "Leyenda",
+                    "caption": "add a legend"
+                },
                 "chart": {
                     "title": "Gráfico",
-                    "caption": "agregar un gráfico"
+                    "caption": "agregar una leyenda"
                 },
                 "text": {
                     "title": "Texto",
@@ -1164,6 +1168,8 @@
             "errors": {
                 "notext": "Sin texto disponible",
                 "nodata": "No hay datos disponibles para la capa / filtro seleccionado",
+                "noLegend": "No hay elementos de leyenda para mostrar",
+                "noLegendDescription": "El mapa conectado no tiene capas para mostrar en la leyenda",
                 "nodatainviewport": "Sin datos en la ventana gráfica actual",
                 "timeoutExpired": "El servicio tomó demasiado tiempo para responder. Tal vez la consulta es demasiado compleja o el servidor está ocupado",
                 "genericError": "Hubo un error durante la recuperación de datos"
@@ -1178,6 +1184,7 @@
                     "backToFeatureGrid": "Volver a la grilla de características",
                     "backToLayerSelection": "Volver a la selección de capas",
                     "backToMapSelection": "Volver a la selección del mapa",
+                    "backToPreview": "Volver a vista previa",
                     "backToChartOptions": "Volver a las opciones de gráfico",
                     "selectALayer": "Seleccionar una capa",
                     "selectAMap": "Seleccionar un mapa",
@@ -1205,7 +1212,9 @@
                     "noAttributesDescription": "La capa seleccionada no tiene atributos para mostrar. Seleccione otro tipo de widget o capa",
                     "noWidgetsAvailableTitle": "No se puede crear el widget para la capa seleccionada",
                     "noWidgetsAvailableDescription": "<p> <strong> Intente seleccionar otra capa o tipo de widget </strong> </p> <p> El servidor no proporciona los servicios necesarios para la capa y el tipo de widget seleccionado </p> <p> Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> El proceso WPS <code>gs:aggregate</code> no está disponible </li> </ul> </p> ",
-                    "checkAtLeastOneAttribute": "Debes seleccionar al menos una columna"
+                    "checkAtLeastOneAttribute": "Debes seleccionar al menos una columna",
+                    "noMapAvailableForLegend": "No hay mapa disponible",
+                    "noMapAvailableForLegendDescription": "Necesita al menos un widget de mapa para crear la leyenda"
                 },
                 "setupFilter": "Configurar un filtro para los datos del widget"
             },

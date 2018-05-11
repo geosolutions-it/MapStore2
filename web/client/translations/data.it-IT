@@ -1128,6 +1128,10 @@
                     "title": "Mappa",
                     "caption": "aggiungi una mappa"
                 },
+                "legend": {
+                    "title": "Legenda",
+                    "caption": "aggiungi una legenda"
+                },
                 "chart": {
                     "title": "Grafico",
                     "caption": "aggiungi un grafico"
@@ -1164,6 +1168,8 @@
             "errors": {
                 "notext": "Nessun testo disponibile",
                 "nodata": "Nessun dato disponibile per il livello/filtro selezionati",
+                "noLegend": "Nessuna legenda da mostrare",
+                "noLegendDescription": "La mappa connessa non ha legende da mostrare",
                 "nodatainviewport": "Nessun dato per la vista selezionata",
                 "timeoutExpired": "Il servizio ha impiegato troppo tempo a rispondere. La query potrebbe essere troppo complicata o il server troppo occupato",
                 "genericError": "C'è stato un errore durante la generazione del grafico"
@@ -1178,6 +1184,7 @@
                     "backToFeatureGrid": "Torna alla tabella degli attributi",
                     "backToLayerSelection": "Torna alla selezione del livello",
                     "backToMapSelection": "Torna alla selezione della mappa",
+                    "backToPreview": "Torna all'anteprima",
                     "backToChartOptions": "Torna alle opzioni del grafico",
                     "selectALayer": "Seleziona un livello",
                     "selectAMap": "Seleziona una mappa",
@@ -1205,7 +1212,9 @@
                     "noAttributesDescription": "Il layer selezonato non ha atrributi da mostrare. Selezionare un altro layer o un altro tipo di widget.",
                     "noWidgetsAvailableTitle": "Impossibile creare il widget per il livello selezionato",
                     "noWidgetsAvailableDescription": "<p><strong> Prova a selezionare un altro livello o tipo di widget </strong> </p><p>Il server non fornisce i servizi necessari per il livello e il tipo di widget selezionato </p> <p> Le possibili cause sono: <ul> <li> Il livello selezionato è un livello raster </li> <li> Il servizio WFS non è disponibile </li><li> Il processo WPS <code>gs:aggregate</code> non è disponibile </li> </ul></p>",
-                    "checkAtLeastOneAttribute": "seleziona almeno un attributo"
+                    "checkAtLeastOneAttribute": "seleziona almeno un attributo",
+                    "noMapAvailableForLegend": "Nessuna mappa disponibile",
+                    "noMapAvailableForLegendDescription": "C'è bisogno almeno di una mappa per creare una lagenda"
                 },
                 "setupFilter": "Configura un filtro per il livello selezionato"
             },
@@ -1397,7 +1406,7 @@
                 "style": "Stile",
                 "filter": "Filtri",
                 "attribute": "Attributi"
-            }, 
+            },
             "rule": "Regola",
             "cachetitle": "Pulisci Cache",
             "cachemsg": "Sei sicuro di voler rimuovere la cache di Geofance?",
