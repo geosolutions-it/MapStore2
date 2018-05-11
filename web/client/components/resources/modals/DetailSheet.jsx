@@ -23,7 +23,7 @@ module.exports = ({
             toolbar: [
                 [{ 'size': ['small', false, 'large', 'huge'] }, 'bold', 'italic', 'underline', 'blockquote'],
                 [{ 'list': 'bullet' }, { 'align': [] }],
-                [{ 'color': [] }, { 'background': [] }, 'clean'], ['image', 'video', 'link']
+                [{ 'color': [] }, { 'background': [] }, 'clean'], ['image', 'link']
             ]
         },
         detailsText,
