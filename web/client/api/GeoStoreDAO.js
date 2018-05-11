@@ -13,7 +13,10 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const xml2js = require('xml2js');
 const xmlBuilder = new xml2js.Builder();
 const {registerErrorParser} = require('../utils/LocaleUtils');
-
+const generateMetadata = (name, description) =>
+    "<description><![CDATA[" + description + "]]></description>"
+    + "<metadata></metadata>"
+    + "<name><![CDATA[" + (name || "") + "]]></name>";
 let parseOptions = (opts) => opts;
 
 let parseAdminGroups = (groupsObj) => {
@@ -59,6 +62,7 @@ registerErrorParser('geostore', {...errorParser});
  * API for local config
  */
 const Api = {
+    generateMetadata,
     authProviderName: "geostore",
     addBaseUrl: function(options) {
         return assign(options || {}, {baseURL: ConfigUtils.getDefaults().geoStoreUrl});
@@ -170,8 +174,7 @@ const Api = {
     putResourceMetadata: function(resourceId, newName, newDescription, options) {
         return axios.put(
             "resources/resource/" + resourceId,
-            "<Resource><description>" + (newDescription || "") + "</description><metadata></metadata>" +
-            "<name>" + (newName || "") + "</name></Resource>",
+            "<Resource>" + generateMetadata(newName, newDescription) + "</Resource>",
             this.addBaseUrl(_.merge({
                 headers: {
                     'Content-Type': "application/xml"
@@ -239,8 +242,7 @@ const Api = {
         }
         return axios.post(
             "resources/",
-                "<Resource><description>" + description + "</description><metadata></metadata>" +
-                "<name>" + (name || "") + "</name><category><name>" + (category || "") + "</name></category>" +
+                "<Resource>" + generateMetadata(name, description) + "<category><name>" + (category || "") + "</name></category>" +
                 attributesSection +
                 "<store><data><![CDATA[" + (
                     data

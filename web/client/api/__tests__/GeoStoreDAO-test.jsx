@@ -100,8 +100,8 @@ describe('Test correctness of the GeoStore APIs', () => {
             message: 'map.mapError.errorDefault'
         });
     });
-    it('test security rules utils (writeSecurityRules)', () => {
-        const payload = API.writeSecurityRules(SAMPLE_RULES.SecurityRuleList);
-        expect(payload).toBe(SAMPLE_XML_RULES);
+    it('test generatemeatadata', () => {
+        const payload = API.generateMetadata("Special & chars", "&<>'\"");
+        expect(payload).toBe('<description><![CDATA[&<>\'"]]></description><metadata></metadata><name><![CDATA[Special & chars]]></name>');
     });
 });
