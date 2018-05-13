@@ -708,7 +708,8 @@
                     "box": "BoundingBox",
                     "buffer": "Buffer",
                     "circle": "Kreis",
-                    "poly": "Polygon"
+                    "poly": "Polygon",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "Schneidet",
@@ -1362,6 +1363,8 @@
             "layerlabel": "Ebene"
         },
         "rulesmanager": {
+            "apply": "Anwenden",
+            "remove": "Entfernen Sie die Geometrie",
             "resetconstraints": "Setzt Einschränkungen zurück",
             "constraintsmsg": "Wenn Sie die Berechtigung, den Arbeitsbereich oder die Ebene ändern, werden die Details gelöscht. Bist du sicher, dass du das machen willst?",
             "defstyle": "Standardstil",
@@ -1423,7 +1426,10 @@
             "close": "Schließen",
             "previous": "vorheriger",
             "next": "nächster",
+            "cacheCleaned": "Der Cache wurde erfolgreich bereinigt",
             "errorTitle": "Geofence",
+            "errorCQL": "Geometrie nicht gültig!",
+            "errorCleaningCache": "Fehler beim Reinigen des Geofence-Cache.",
             "errorLoadingRoles": "Fehler beim Laden der Rollen.",
             "errorLoadingUsers": "Fehler beim Laden der Benutzer.",
             "errorLoadingWorkspaces": "Fehler beim Laden der Workspaces.",

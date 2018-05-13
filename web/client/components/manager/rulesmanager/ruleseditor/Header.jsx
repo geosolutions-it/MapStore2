@@ -9,8 +9,8 @@ const React = require('react');
 const Toolbar = require('../../../misc/toolbar/Toolbar');
 const {NavItem, Nav} = require('react-bootstrap');
 const Message = require('../../../I18N/Message');
-
-module.exports = ({onNavChange = () => {}, onExit = () => {}, disableSave = true, onSave = () => {}, activeTab = "1", loading = false, detailsActive = false, type = ""}) => {
+const {areDetailsActive} = require("../../../../utils/RulesEditor");
+module.exports = ({rule = {}, onNavChange = () => {}, onExit = () => {}, disableSave = true, onSave = () => {}, activeTab = "1", loading = false, type = ""}) => {
     const buttons = [{
             glyph: '1-close',
             tooltipId: 'rulesmanager.tooltip.close',
@@ -23,6 +23,7 @@ module.exports = ({onNavChange = () => {}, onExit = () => {}, disableSave = true
             onClick: onSave,
             disabled: disableSave || loading
         }];
+    const detailsActive = areDetailsActive(rule);
     return (<div className="ms-panel-header-container">
                 <div className="ms-toolbar-container">
                     <Toolbar btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary', tooltipPosition: 'bottom'}} buttons={buttons}/>
@@ -30,9 +31,9 @@ module.exports = ({onNavChange = () => {}, onExit = () => {}, disableSave = true
                 <div className={`loading-header ${loading ? 'ms-circle-loader-md' : ''}`}/>
                 <Nav bsStyle="tabs" activeKey={activeTab} justified onSelect={onNavChange}>
                     <NavItem eventKey="1" ><Message msgId={"rulesmanager.navItems.main"}/></NavItem>
-                    <NavItem eventKey="2" disabled={!detailsActive}><Message msgId={"rulesmanager.navItems.style"}/></NavItem>
-                    <NavItem eventKey="3" disabled={!detailsActive}><Message msgId={"rulesmanager.navItems.filter"}/></NavItem>
-                    <NavItem eventKey="4" disabled={!detailsActive || type === "RASTER"}><Message msgId={"rulesmanager.navItems.attribute"}/></NavItem>
+                    <NavItem eventKey="2" disabled={!detailsActive || rule.grant === "DENY"}><Message msgId={"rulesmanager.navItems.style"}/></NavItem>
+                    <NavItem eventKey="3" disabled={!detailsActive || rule.grant === "DENY"}><Message msgId={"rulesmanager.navItems.filter"}/></NavItem>
+                    <NavItem eventKey="4" disabled={!detailsActive || type === "RASTER" || rule.grant === "DENY"}><Message msgId={"rulesmanager.navItems.attribute"}/></NavItem>
                 </Nav>
             </div>);
 };

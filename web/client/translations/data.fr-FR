@@ -709,7 +709,8 @@
                     "box": "Rectangle",
                     "buffer": "Zone tampon",
                     "circle": "Cercle",
-                    "poly": "Polygone"
+                    "poly": "Polygone",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "intersecte",
@@ -1362,6 +1363,8 @@
             "layerlabel": "Couche"
         },
         "rulesmanager": {
+            "apply": "Appliquer",
+            "remove": "Supprimer la géométrie",
             "resetconstraints": "Réinitialise les contraintes",
             "constraintsmsg": "En changeant la subvention, l'espace de travail ou la couche, les détails seront supprimés. Êtes-vous sûr de vouloir faire ça?",
             "defstyle": "Style par Défaut",
@@ -1423,7 +1426,10 @@
             "close": "Fermer",
             "previous": "précédent",
             "next": "prochain",
+            "cacheCleaned": "Cache nettoyé avec succès",
             "errorTitle": "Geofence",
+            "errorCQL": "La géométrie n'est pas valide!",
+            "errorCleaningCache": "Erreur lors du nettoyage du cache de geofence.",
             "errorLoadingRoles": "Erreur lors du chargement des rôles.",
             "errorLoadingUsers": "Erreur lors du chargement des utilisateurs.",
             "errorLoadingWorkspaces": "Erreur lors du chargement des  workspaces.",

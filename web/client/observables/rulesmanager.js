@@ -1,16 +1,16 @@
 const Rx = require('rxjs');
 
 
-
 const {parseString} = require('xml2js');
 const {stripPrefix} = require('xml2js/lib/processors');
 const CatalogAPI = require('../api/CSW');
 const GeoFence = require('../api/geoserver/GeoFence');
 const ConfigUtils = require('../utils/ConfigUtils');
 const {trim} = require("lodash");
-
+const WMS = require('../api/WMS');
 const {getLayerCapabilities, describeLayer} = require("./wms");
 const {describeFeatureType} = require("./wfs");
+const {RULE_SAVED} = require("../actions/rulesmanager");
 
 const xmlToJson$ = response => Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
     tagNameProcessors: [stripPrefix],
@@ -66,7 +66,7 @@ const fullUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) =>getUp
                     const {priority: p, id: omit, ...oldRule} = origRule;
                     oldRule.position = {value: p, position: "fixedPriority"};
                     // We have to restore original rule and to throw the exception!!
-                    return Rx.Observable.defer(() => GeoFence.addRule(oldRule)).do(() => { throw (e); });
+                    return Rx.Observable.defer(() => GeoFence.addRule(oldRule)).concat(Rx.Observable.of({type: RULE_SAVED}).do(() => { throw (e); }));
                 });
             })
         .switchMap(({data: id}) => {
@@ -82,8 +82,8 @@ const grantUpdate = (update$) => update$.filter(({rule: r, origRule: oR}) => get
                 .catch((e) => {
                     const {priority: p, id: omit, ...oldRule} = origRule;
                     oldRule.position = {value: p, position: "fixedPriority"};
-                    // We have to restore original rule and to throw the exception!!
-                    return Rx.Observable.defer(() => GeoFence.addRule(oldRule)).do(() => { throw (e); });
+                    // We have to restore original rule and to throw the exception and reload the rules!!
+                    return Rx.Observable.defer(() => GeoFence.addRule(oldRule)).concat(Rx.Observable.of({type: RULE_SAVED}).do(() => { throw (e); }));
                 });
             })
         );
@@ -129,15 +129,17 @@ module.exports = {
     deleteRule,
     getStylesAndAttributes: (layer, workspace) => {
         const {url} = ConfigUtils.getDefaults().geoFenceGeoServerInstance || {};
-        const l = {url: `${fixUrl(url)}ows`, name: `${workspace}:${layer}`};
+        const name = `${workspace}:${layer}`;
+        const l = {url: `${fixUrl(url)}ows`, name};
         return Rx.Observable.combineLatest(getLayerCapabilities(l)
-                .map(({style}) => ({style})),
+                .map((cp) => ({style: cp.style, ly: {bbox: WMS.getBBox(cp), name, url: `${fixUrl(url)}wms`, type: "wms", visibility: true, format: "image/png", title: cp.title}})),
                 describeLayer(l).map(({data}) => data.layerDescriptions[0])
                 .switchMap(({owsType}) => {
                     return owsType === "WCS" ? Rx.Observable.of({properties: [], type: "RASTER"}) : describeFeatureType({layer: l})
                     .map(({data}) => ({properties: data.featureTypes[0] && data.featureTypes[0].properties || [], type: "VECTOR"}));
-                }), ({style}, {properties, type}) => ({styles: style || [], properties, type}));
+                }), ({style, ly}, {properties, type}) => ({styles: style || [], properties, type, layer: ly}));
 
-    }
+    },
+    cleanCache: () => Rx.Observable.defer(() => GeoFence.cleanCache())
 
 };

@@ -708,7 +708,8 @@
                     "box": "Rettangolo",
                     "buffer": "Buffer",
                     "circle": "Cerchio",
-                    "poly": "Poligono"
+                    "poly": "Poligono",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "Intersezione",
@@ -1362,6 +1363,8 @@
             "layerlabel": "Layer"
             },
         "rulesmanager": {
+            "apply": "Applica",
+            "remove": "Elimina la geometia",
             "resetconstraints": "Resetta Vincoli",
             "constraintsmsg": "Cambinado grant, workspace o layer, i dettagli saranno eliminati. Sei sicuro di volerlo fare?",
             "defstyle": "Stile Predefinito",
@@ -1423,7 +1426,10 @@
             "close": "Chiudi",
             "previous": "precedente",
             "next": "prossima",
+            "cacheCleaned": "Cache eliminata",
             "errorTitle": "Geofence",
+            "errorCQL": "Geometria non valida!",
+            "errorCleaningCache": "Errore durante la pulizia della cache.",
             "errorLoadingRoles": "Errore durante il caricamento dei ruoli",
             "errorLoadingUsers": "Errore durante il caricamento  degli utenti.",
             "errorLoadingWorkspaces": "Errore durante il caricamento dei workspaces.",
