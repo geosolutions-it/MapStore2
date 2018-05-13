@@ -10,13 +10,13 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const { createSink, setObservableConfig} = require('recompose');
 const expect = require('expect');
-const autoComplete = require('../autoComplete');
+const fixedOptions = require('../fixedOptions');
 
 const rxjsConfig = require('recompose/rxjsObservableConfig').default;
 setObservableConfig(rxjsConfig);
 
 
-describe('autoComplete enhancer', () => {
+describe('fixedOption enhancer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -26,36 +26,9 @@ describe('autoComplete enhancer', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('it calls load function', (done) => {
-        let counter = 0;
-        const Sink = autoComplete(createSink( props => {
-            switch (counter) {
-                case 0: {
-                    expect(props).toExist();
-                    expect(props.onChange).toExist();
-                    expect(props.onSelect).toExist();
-                    expect(props.onToggle).toExist();
-                    props.onChange("%");
-                    counter++;
-                    break;
-                }
-                default: return;
-            }
-        }));
-        const loadData = (search, page, size, parentsFilter, count) => {
-            expect(search).toBe("%");
-            expect(page).toBe(0);
-            expect(size).toBe(5);
-            expect(parentsFilter.workspaces).toBe("cite");
-            expect(count).toBe(true);
-            done();
-        };
-        ReactDOM.render(<Sink size={5} parentsFilter={{workspaces: "cite"}}
-        loadData={loadData}/>, document.getElementById("container"));
-    });
     it('it emits selected val', (done) => {
         let counter = 0;
-        const Sink = autoComplete(createSink( props => {
+        const Sink = fixedOptions(createSink( props => {
             switch (counter) {
                 case 0: {
                     expect(props).toExist();
@@ -76,7 +49,7 @@ describe('autoComplete enhancer', () => {
     });
     it('on toggle with empty val it cleans selected', (done) => {
         let counter = 0;
-        const Sink = autoComplete(createSink( props => {
+        const Sink = fixedOptions(createSink( props => {
             switch (counter) {
                 case 0: {
                     expect(props).toExist();
@@ -106,7 +79,7 @@ describe('autoComplete enhancer', () => {
     });
     it('on toggle', (done) => {
         let counter = 0;
-        const Sink = autoComplete(createSink( props => {
+        const Sink = fixedOptions(createSink( props => {
             switch (counter) {
                 case 0: {
                     expect(props).toExist();
@@ -138,37 +111,9 @@ describe('autoComplete enhancer', () => {
         }));
         ReactDOM.render(<Sink selected="%"/>, document.getElementById("container"));
     });
-    it('on toggle call onLoad function', (done) => {
-        let counter = 0;
-        const Sink = autoComplete(createSink( props => {
-            switch (counter) {
-                case 0: {
-                    expect(props).toExist();
-                    props.onToggle(true);
-                    counter++;
-                    break;
-                }
-                case 1: {
-                    expect(props).toExist();
-                    expect(props.emptyReq).toBe(1);
-                    break;
-                }
-                default:
-                    return counter++;
-            }
-        }));
-        const loadData = (search, page, size, parentsFilter, count) => {
-            expect(search).toBe("%");
-            expect(page).toBe(0);
-            expect(size).toBe(5);
-            expect(count).toBe(true);
-            done();
-        };
-        ReactDOM.render(<Sink loadData={loadData} selected="%"/>, document.getElementById("container"));
-    });
     it('on rest clean the selected value', (done) => {
         let counter = 0;
-        const Sink = autoComplete(createSink( props => {
+        const Sink = fixedOptions(createSink( props => {
             switch (counter) {
                 case 0: {
                     expect(props).toExist();

@@ -9,8 +9,10 @@ const React = require('react');
 const {Grid, Row, Col} = require('react-bootstrap');
 const Message = require("../../../I18N/Message");
 const Select = require("../AttributeAccessSelect");
+const {castArray} = require("lodash");
+
 const getAttribute = (name, {attributes = {}}) => {
-    return (attributes.attribute || []).filter(a => a.name === name)[0];
+    return castArray((attributes.attribute || [])).filter(a => a.name === name)[0];
 };
 const getAttributeValue = (name, constraints) => {
     return (getAttribute(name, constraints) || {}).access || "READWRITE";
