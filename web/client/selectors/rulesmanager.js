@@ -65,6 +65,7 @@ const isRulesManagerConfigured = state => state.localConfig && state.localConfig
 const isEditorActive = state => state.rulesmanager && !!state.rulesmanager.activeRule;
 const triggerLoadSel = state => state.rulesmanager && state.rulesmanager.triggerLoad;
 const isLoading = state => state.rulesmanager && state.rulesmanager.loading;
+const geometryStateSel = state => state.rulesmanager && state.rulesmanager.geometryState;
 module.exports = {
     rulesSelector,
     optionsSelector,
@@ -77,5 +78,6 @@ module.exports = {
     servicesConfigSel,
     triggerLoadSel,
     isLoading,
-    isRulesManagerConfigured
+    isRulesManagerConfigured,
+    geometryStateSel
 };

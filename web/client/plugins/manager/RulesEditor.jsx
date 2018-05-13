@@ -13,9 +13,9 @@ const {createSelector} = require("reselect");
 const {compose} = require('recompose');
 const enhancer = require("./EditorEnhancer");
 const {cleanEditing, saveRule, setLoading} = require("../../actions/rulesmanager");
-const {activeRuleSelector} = require("../../selectors/rulesmanager");
+const {activeRuleSelector, geometryStateSel} = require("../../selectors/rulesmanager");
 
-const {isSaveDisabled, areDetailsActive, isRulePristine, isRuleValid, askConfirm} = require("../../utils/RulesEditor");
+const {isSaveDisabled, isRulePristine, isRuleValid, askConfirm} = require("../../utils/RulesEditor");
 const Message = require('../../components/I18N/Message');
 const BorderLayout = require("../../components/layout/BorderLayout");
 const Header = require("../../components/manager/rulesmanager/ruleseditor/Header");
@@ -41,7 +41,8 @@ class RuleEditor extends React.Component {
         type: PropTypes.string,
         properties: PropTypes.array,
         loading: PropTypes.bool,
-        cleanConstraints: PropTypes.func
+        cleanConstraints: PropTypes.func,
+        layer: PropTypes.object
     }
     static defaultProps = {
         activeEditor: "1",
@@ -53,7 +54,7 @@ class RuleEditor extends React.Component {
         type: ""
     }
     render() {
-        const {loading, activeRule, activeEditor, onNavChange, initRule, styles = [], setConstraintsOption, type, properties} = this.props;
+        const {loading, activeRule, layer, activeEditor, onNavChange, initRule, styles = [], setConstraintsOption, type, properties} = this.props;
         const {modalProps} = this.state || {};
         return (
             <BorderLayout
@@ -64,12 +65,12 @@ class RuleEditor extends React.Component {
                                 onExit={this.cancelEditing}
                                 activeTab={activeEditor}
                                 disableSave={isSaveDisabled(activeRule, initRule)}
-                                detailsActive={areDetailsActive(activeRule)}
+                                rule={activeRule}
                                 onNavChange={onNavChange}/>}
             >
                 <MainEditor key="main-editor" rule={activeRule} setOption={this.setOption} active={activeEditor === "1"}/>
                 <StylesEditor styles={styles} key="styles-editor" constraints={activeRule.constraints} setOption={setConstraintsOption} active={activeEditor === "2"}/>
-                <FiltersEditor key="filters-editor" setOption={setConstraintsOption} constraints={activeRule.constraints} active={activeEditor === "3"}/>
+                <FiltersEditor layer={layer} key="filters-editor" setOption={setConstraintsOption} constraints={activeRule.constraints} active={activeEditor === "3"}/>
                 <AttributesEditor key="attributes-editor" active={activeEditor === "4"} attributes={properties} constraints={activeRule.constraints} setOption={setConstraintsOption}/>
                 <ModalDialog {...modalProps}/>
             </BorderLayout>);
@@ -125,7 +126,7 @@ class RuleEditor extends React.Component {
                     onClick: () => {
                         this.cancel();
                         this.props.setOption({key, value});
-                        this.props.cleanConstraints();
+                        this.props.cleanConstraints(key === 'grant');
                     }
                 }
             ], closeAction: this.cancel, msg: "rulesmanager.constraintsmsg"}}));
@@ -138,7 +139,7 @@ class RuleEditor extends React.Component {
 }
 
 module.exports = compose(
-    connect(createSelector(activeRuleSelector, activeRule => ({activeRule})), {
+    connect(createSelector([activeRuleSelector, geometryStateSel], (activeRule, geometryState) => ({activeRule, geometryState})), {
         onExit: cleanEditing,
         onSave: saveRule,
         setLoading
