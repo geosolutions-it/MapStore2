@@ -11,7 +11,12 @@ const {createSelector, createStructuredSelector} = require('reselect');
 const {bindActionCreators} = require('redux');
 const {get} = require('lodash');
 
-const Grid = require('../components/data/featuregrid/FeatureGrid');
+const {lifecycle} = require('recompose');
+const Grid = lifecycle({
+    componentDidMount() {
+        this.props.onMount(this.props.showFilteredObject);
+    }
+})(require('../components/data/featuregrid/FeatureGrid'));
 const {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} = require('../selectors/query');
 const {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector, getDockSize} = require('../selectors/featuregrid');
 const { toChangesMap} = require('../utils/FeatureGridUtils');
@@ -20,7 +25,7 @@ const BorderLayout = require('../components/layout/BorderLayout');
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
 const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
-const {initPlugin, sizeChange} = require('../actions/featuregrid');
+const {initPlugin, sizeChange, setShowCurrentFilter} = require('../actions/featuregrid');
 const ContainerDimensions = require('react-container-dimensions').default;
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const Dock = connect(createSelector(
@@ -139,6 +144,8 @@ const FeatureDock = (props = {
             footer={getFooter(props)}>
             {getDialogs(props.tools)}
             <Grid
+                onMount={props.onMount}
+                showFilteredObject={props.showFilteredObject}
                 editingAllowedRoles={props.editingAllowedRoles}
                 initPlugin={props.initPlugin}
                 customEditorsOptions={props.customEditorsOptions}
@@ -217,6 +224,7 @@ const selector = createSelector(
 );
 const EditorPlugin = connect(selector,
     (dispatch) => ({
+        onMount: bindActionCreators(setShowCurrentFilter, dispatch),
         gridEvents: bindActionCreators(gridEvents, dispatch),
         pageEvents: bindActionCreators(pageEvents, dispatch),
         initPlugin: bindActionCreators((options) => initPlugin(options), dispatch),
