@@ -504,14 +504,7 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "NavMenu", "Attribution", {
-          "name": "Home",
-          "override": {
-            "OmniBar": {
-              "position": 11
-            }
-          }
-        }, {
+        }, "ManagerMenu", "Login", "Language", "NavMenu", "Attribution", "Home", {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {
