@@ -128,7 +128,7 @@ var Api = {
                                                 bbox = [lc[1], lc[0], uc[1], uc[0]];
                                                 // TODO parse the extent's crs
                                                 let crsCode = el.value && el.value.crs && _.last(el.value.crs.split(":"));
-                                                if (crsCode === "WGS 1984") {
+                                                if (crsCode === "WGS 1984" || crsCode === "WGS84") {
                                                     crs = "EPSG:4326";
                                                 } else if (crsCode) {
                                                     // TODO check is valid EPSG code
