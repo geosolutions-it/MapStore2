@@ -1129,6 +1129,10 @@
                     "title": "Carte",
                     "caption": "ajouter une carte"
                 },
+                "legend": {
+                    "title": "Légende",
+                    "caption": "ajouter une légende"
+                },
                 "chart": {
                     "title": "Graphique",
                     "caption": "ajouter un graphique"
@@ -1165,6 +1169,8 @@
             "errors": {
                 "notext": "Aucun texte disponible",
                 "nodata": "Aucune donnée disponible pour la couche / filtre sélectionné",
+                "noLegend": "Aucun élément de légende à afficher",
+                "noLegendDescription": "La carte connectée n'a aucune couche à afficher dans la légende",
                 "nodatainviewport": "Aucune donnée dans la fenêtre courante",
                 "timeoutExpired": "Le service a pris trop de temps pour répondre. Peut-être que la requête est trop complexe ou que le serveur est occupé",
                 "genericError": "Il y a une erreur lors de la récupération des données"
@@ -1179,6 +1185,7 @@
                     "backToFeatureGrid": "Retour à la grille des fonctionnalités",
                     "backToLayerSelection": "Retour à la sélection du calque",
                     "backToMapSelection": "Retour à la sélection de la carte",
+                    "backToPreview": "Retour à l'aperçu",
                     "backToChartOptions": "retour aux options de graphique",
                     "selectALayer": "Sélectionner une couche",
                     "selectAMap": "Sélectionnez une carte",
@@ -1206,7 +1213,9 @@
                     "noAttributesDescription": "La couche sélectionnée n'a aucun attribut à afficher. Veuillez sélectionner un autre type ou couche de widget",
                     "noWidgetsAvailableTitle": "Impossible de créer le widget pour le calque sélectionné",
                     "noWidgetsAvailableDescription": "<p> <strong> Veuillez essayer de sélectionner un autre type de couche ou de widget </strong> </p> <p> Le serveur ne fournit pas les services requis pour la couche et le type de widget sélectionné </p> <p> Les causes possibles sont: <ul> <li> Le calque sélectionné est une couche raster </li> <li> Le service WFS n'est pas disponible </li> <li> Le processus WPS <code> gs:aggregate </code> n'est pas disponible </li> </ul> </p> ",
-                    "checkAtLeastOneAttribute": "Vous devez sélectionner au moins une colonne"
+                    "checkAtLeastOneAttribute": "Vous devez sélectionner au moins une colonne",
+                    "noMapAvailableForLegend": "Aucune carte disponible",
+                    "noMapAvailableForLegendDescription": "Vous avez besoin d'au moins un widget de carte pour créer la légende"
                 },
                 "setupFilter": "Configurer un filtre pour les données du widget"
             },

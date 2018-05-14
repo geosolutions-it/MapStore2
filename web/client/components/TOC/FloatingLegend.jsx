@@ -34,9 +34,9 @@ const WMSLegend = require('./fragments/WMSLegend');
  * @prop {object} legendProps props for WMSLegend
  * @prop {function} onChange return three arguments, layerId, node type and object with changed value of layer
  * @prop {function} onResize return changed size of legend, e.g {height: 700}
- * @prop {function} onExpand return current expaneded state
+ * @prop {function} onExpand return current expanded state
  * @prop {node} toggleButton component added on legend header, left side
- * @prop {number} minHeight minimun height of legend
+ * @prop {number} minHeight minimum height of legend
  * @prop {number} maxHeight maximum height of legend
  * @prop {number} deltaHeight additional height to increase the evaluated list height
  * @prop {bool} disabled disable and hide the component
