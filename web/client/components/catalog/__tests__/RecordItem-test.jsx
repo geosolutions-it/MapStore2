@@ -387,4 +387,31 @@ describe('This test for RecordItem', () => {
         expect(titleAndIdentifier.length).toBe(2);
         expect(titleAndIdentifier.item(0).innerText).toBe('');
     });
+
+    it('record without references', () => {
+        const recordWithoutRef = {
+            identifier: "test-identifier",
+            title: "sample title",
+            tags: ["subject1", "subject2"],
+            description: "sample abstract",
+            thumbnail: "img.jpg",
+            boundingBox: {
+                extent: [10.686,
+                    44.931,
+                    46.693,
+                    12.54],
+                crs: "EPSG:4326"
+            },
+            references: []
+        };
+
+        const item = ReactDOM.render(<ReactItem record={recordWithoutRef}/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        const dangerText = itemDom.getElementsByClassName('text-danger');
+        expect(dangerText.length).toBe(1);
+    });
+
 });

@@ -66,7 +66,7 @@ class CreateNewMap extends React.Component {
 const {areDashboardsAvailable} = require('../selectors/dashboards');
 module.exports = {
     CreateNewMapPlugin: connect((state) => ({
-        dashboardsAvailable: areDashboardsAvailable,
+        dashboardsAvailable: areDashboardsAvailable(state),
         mapType: mapTypeSelector(state),
         isLoggedIn: state && state.security && state.security.user && state.security.user.enabled && !(state.browser && state.browser.mobile) && true || false,
         user: state && state.security && state.security.user

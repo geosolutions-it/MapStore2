@@ -60,6 +60,7 @@
             "deleteLayerMessage": "Está totalmente seguro de querer borrar este mapa?",
             "confirmDelete": "Está seguro?",
             "featureTypeError": "Imposible cargar los atributos del mapa",
+            "featureTypeErrorInvalidJSON": "Imposible cargar los atributos del mapa. La respuesta no es un objeto JSON válido", 
             "elevation": "Elevación",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
@@ -383,6 +384,7 @@
             "refreshConfirm": "Refrescar",
             "refreshMessage": "Recargue la configuración de las capas WMS a partir del/delos servidor(es)",
             "refreshError": "Error refrescando los mapas: ",
+            "epsgNotSupported": "CRS {epsg} no es compatible con el zoom a la capa",
             "refreshOptions": {
                 "bbox": "Refrecar BBOX",
                 "search": "Refrescar las optiones de búsqueda",
@@ -906,6 +908,7 @@
             "type": "Tipo",
             "serviceTitle": "Título",
             "serviceTitlePlaceholder": "escribe un título",
+            "missingReference": "Metadatos de referencia OGC faltantes",
             "notification": {
                 "warningAddCatalogService": "Insertar una url y un título válidos",
                 "addCatalogService": "Servicio añadido correctamente",

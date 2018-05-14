@@ -14,6 +14,8 @@ const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 const {head} = require('lodash');
 const ConfirmModal = require('../maps/modals/ConfirmModal');
 const LayerMetadataModal = require('./fragments/LayerMetadataModal');
+const Proj4js = require('proj4').default;
+const Message = require('../I18N/Message');
 
 class Toolbar extends React.Component {
 
@@ -137,6 +139,9 @@ class Toolbar extends React.Component {
 
     render() {
         const status = this.getStatus();
+        const currentEPSG = this.checkBbox();
+        const epsgIsSupported = currentEPSG && Proj4js.defs(currentEPSG);
+
         const layerMetadataModal = (<LayerMetadataModal
                                 key="toollayermetadatamodal"
                                 layerMetadata={this.props.layerMetadata}
@@ -154,12 +159,19 @@ class Toolbar extends React.Component {
                         {this.props.text.addLayer}
                     </Button>
                 : null}
-                {this.props.activateTool.activateZoomTool && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS') && this.checkBbox() ?
+                {this.props.activateTool.activateZoomTool && (status === 'LAYER' || status === 'GROUP' || status === 'LAYERS' || status === 'GROUPS') && currentEPSG ?
                     <OverlayTrigger
                         key="zoomTo"
                         placement="top"
-                        overlay={<Tooltip id="toc-tooltip-zoomTo">{this.props.text.zoomToTooltip[this.props.selectedLayers.length > 1 ? 'LAYERS' : 'LAYER']}</Tooltip>}>
-                        <Button bsStyle="primary" className="square-button-md" onClick={this.zoomTo}>
+                        overlay={<Tooltip id="toc-tooltip-zoomTo">{
+                            epsgIsSupported ? this.props.text.zoomToTooltip[this.props.selectedLayers.length > 1 ? 'LAYERS' : 'LAYER']
+                            : <Message msgId="toc.epsgNotSupported" msgParams={{epsg: currentEPSG || ' '}}/>
+                        }</Tooltip>}>
+                        <Button
+                            bsStyle="primary"
+                            className="square-button-md"
+                            style={epsgIsSupported ? {opacity: 1.0, cursor: 'pointer'} : {opacity: 0.5, cursor: 'default'}}
+                            onClick={epsgIsSupported ? this.zoomTo : () => {}}>
                             <Glyphicon glyph="zoom-to" />
                         </Button>
                     </OverlayTrigger>
@@ -268,7 +280,7 @@ class Toolbar extends React.Component {
     checkBbox = () => {
         const layersBbox = this.props.selectedLayers.filter(l => l.bbox).map(l => l.bbox);
         const uniqueCRS = layersBbox.length > 0 ? layersBbox.reduce((a, b) => a.crs === b.crs ? a : {crs: 'differentCRS'}) : {crs: 'differentCRS'};
-        return !!head(layersBbox) && uniqueCRS.crs !== 'differentCRS';
+        return !!head(layersBbox) && uniqueCRS.crs !== 'differentCRS' && uniqueCRS.crs;
     }
 
     zoomTo = () => {

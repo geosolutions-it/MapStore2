@@ -85,7 +85,6 @@ var Api = {
         return new Promise((resolve) => {
             require.ensure(['../utils/ogc/CSW', '../utils/ogc/Filter'], () => {
                 const {CSW, marshaller, unmarshaller} = require('../utils/ogc/CSW');
-
                 let body = marshaller.marshalString({
                     name: "csw:GetRecords",
                     value: CSW.getRecords(startPosition, maxRecords, filter)
@@ -128,7 +127,7 @@ var Api = {
                                                 let uc = el.value.upperCorner;
                                                 bbox = [lc[1], lc[0], uc[1], uc[0]];
                                                 // TODO parse the extent's crs
-                                                let crsCode = el.value && el.value.crs && el.value.crs.split(":::")[1];
+                                                let crsCode = el.value && el.value.crs && _.last(el.value.crs.split(":"));
                                                 if (crsCode === "WGS 1984") {
                                                     crs = "EPSG:4326";
                                                 } else if (crsCode) {

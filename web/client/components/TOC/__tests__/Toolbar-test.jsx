@@ -70,7 +70,7 @@ describe('TOC Toolbar', () => {
                     maxy: 9,
                     minx: -10,
                     miny: -9
-                }, crs: 'EPSG'
+                }, crs: 'EPSG:4326'
             },
             search: {
                 url: 'l001url'
@@ -92,7 +92,7 @@ describe('TOC Toolbar', () => {
             maxy: 9,
             minx: -10,
             miny: -9
-        }, 'EPSG');
+        }, 'EPSG:4326');
 
         TestUtils.Simulate.click(btn[1]);
         expect(spySettings).toHaveBeenCalledWith('l001', 'layers', {opacity: 1 });
@@ -130,7 +130,7 @@ describe('TOC Toolbar', () => {
                     maxy: 9,
                     minx: -10,
                     miny: -9
-                }, crs: 'EPSG'
+                }, crs: 'EPSG:4326'
             }
         }];
 
@@ -149,7 +149,7 @@ describe('TOC Toolbar', () => {
             maxy: 9,
             minx: -10,
             miny: -9
-        }, 'EPSG');
+        }, 'EPSG:4326');
 
         TestUtils.Simulate.click(btn[1]);
         expect(spySettings).toHaveBeenCalledWith('l001', 'layers', {opacity: 1 });
@@ -173,7 +173,7 @@ describe('TOC Toolbar', () => {
                     maxy: 9,
                     minx: -10,
                     miny: -9
-                }, crs: 'EPSG'
+                }, crs: 'EPSG:4326'
             }
         }];
 
@@ -207,7 +207,7 @@ describe('TOC Toolbar', () => {
                     maxy: 9,
                     minx: -10,
                     miny: -9
-                }, crs: 'EPSG'
+                }, crs: 'EPSG:4326'
             },
             search: {
                 url: 'l001url'
@@ -248,7 +248,7 @@ describe('TOC Toolbar', () => {
                     maxy: 9,
                     minx: -10,
                     miny: -9
-                }, crs: 'EPSG'
+                }, crs: 'EPSG:4326'
             },
             search: {
                 url: 'l001url'
@@ -263,7 +263,7 @@ describe('TOC Toolbar', () => {
                     maxy: 29,
                     minx: 28,
                     miny: 27
-                }, crs: 'EPSG'
+                }, crs: 'EPSG:4326'
             },
             search: {
                 url: 'l002url'
@@ -292,7 +292,7 @@ describe('TOC Toolbar', () => {
             maxy: 29,
             minx: -10,
             miny: -9
-        }, 'EPSG');
+        }, 'EPSG:4326');
 
         TestUtils.Simulate.click(btn[1]);
         expect(spySettings).toHaveBeenCalledWith('g001', 'groups', {});
@@ -313,7 +313,7 @@ describe('TOC Toolbar', () => {
                     maxy: 9,
                     minx: -10,
                     miny: -9
-                }, crs: 'EPSG'
+                }, crs: 'EPSG:4326'
             },
             search: {
                 url: 'l001url'
@@ -328,7 +328,7 @@ describe('TOC Toolbar', () => {
                     maxy: 29,
                     minx: 28,
                     miny: 27
-                }, crs: 'EPSG'
+                }, crs: 'EPSG:4326'
             },
             search: {
                 url: 'l002url'
@@ -375,6 +375,31 @@ describe('TOC Toolbar', () => {
         TestUtils.Simulate.click(btn[0]);
         const removeModal = document.getElementsByClassName('modal-dialog').item(0);
         expect(removeModal).toExist();
+    });
+
+    it('layer single selection (epsg not supported)', () => {
+
+        const selectedLayers = [{
+            id: 'l001',
+            title: 'layer001',
+            name: 'layer001name',
+            bbox: {
+                bounds: {
+                    maxx: 10,
+                    maxy: 9,
+                    minx: -10,
+                    miny: -9
+                }, crs: 'EPSG:3003'
+            }
+        }];
+
+        const cmp = ReactDOM.render(<Toolbar selectedLayers={selectedLayers} onToolsActions={onToolsActions}/>, document.getElementById("container"));
+
+        const el = ReactDOM.findDOMNode(cmp);
+        expect(el).toExist();
+        const btn = el.getElementsByClassName('btn');
+        expect(btn.length).toBe(3);
+        expect(btn[0].style.cursor).toBe('default');
     });
 
 });
