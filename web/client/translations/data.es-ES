@@ -708,7 +708,8 @@
                     "box": "Rectángulo",
                     "buffer": "Buffer",
                     "circle": "Círculo",
-                    "poly": "Polígono"
+                    "poly": "Polígono",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "intersecciona",
@@ -1371,6 +1372,8 @@
             "layerlabel": "Capa"
         },
         "rulesmanager": {
+            "apply": "Aplicar",
+            "remove": "Eliminar geometría",
             "resetconstraints": "Restablece las restricciones",
             "constraintsmsg": "Cambiando concesión, área de trabajo o capa, los detalles serán eliminados. ¿Estás seguro de que quieres hacer eso?",
             "defstyle": "Estilo por Defecto",
@@ -1432,7 +1435,10 @@
             "close": "Cerrar",
             "previous": "previo",
             "next": "próximo",
+            "cacheCleaned": "Caché limpiada con éxito",
             "errorTitle": "Geofence",
+            "errorCQL": "Geometría no válida!",
+            "errorCleaningCache": "Error al limpiar la memoria caché geofence.",
             "errorLoadingRoles": "Error al cargar los  roles.",
             "errorLoadingUsers": "Error al cargar los usuarios.",
             "errorLoadingWorkspaces": "Error al cargar los espacios de trabajo.",

@@ -24,8 +24,14 @@ const EDIT_RULE = "RULES_MANAGER:EDIT_RULE";
 const CLEAN_EDITING = "RULES_MANAGER:CLEAN_EDITING";
 const SAVE_RULE = "RULES_MANAGER:SAVE_RULE";
 const RULE_SAVED = "RULES_MANAGER:RULE_SAVED";
-const DELETE_RULES = "RULES_MANAGER: DELETE_RULES";
+const DELETE_RULES = "RULES_MANAGER:DELETE_RULES";
+const CACHE_CLEAN = "RULES_MANAGER:CACHE_CLEAN";
 
+function onCacheClean() {
+    return {
+        type: CACHE_CLEAN
+    };
+}
 function delRules(ids) {
     return {
         type: DELETE_RULES,
@@ -277,5 +283,6 @@ module.exports = {
     EDIT_RULE, onEditRule,
     CLEAN_EDITING, cleanEditing,
     SAVE_RULE, saveRule, RULE_SAVED,
-    DELETE_RULES, delRules
+    DELETE_RULES, delRules,
+    CACHE_CLEAN, onCacheClean
 };

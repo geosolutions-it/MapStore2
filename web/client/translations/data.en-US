@@ -709,7 +709,8 @@
                     "box": "Rectangle",
                     "buffer": "Buffer",
                     "circle": "Circle",
-                    "poly": "Polygon"
+                    "poly": "Polygon",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "Intersects",
@@ -1372,6 +1373,8 @@
             "layerlabel": "Layer"
         },
         "rulesmanager": {
+            "apply": "Apply",
+            "remove": "Remove geometry",
             "resetconstraints": "Resets Constraints",
             "constraintsmsg": "Changing grant, workspace or layer, the details will be deleted. Are you sure you want to do that?",
             "defstyle": "Default Style",
@@ -1434,7 +1437,10 @@
             "close": "Close",
             "previous": "previous",
             "next": "next",
+            "cacheCleaned": "Cache successfully cleaned",
             "errorTitle": "Geofence",
+            "errorCQL": "Geometry not valid!",
+            "errorCleaningCache": "Error cleaning geofence cache.",
             "errorLoadingRoles": "Error loading roles.",
             "errorLoadingUsers": "Error loading users.",
             "errorLoadingWorkspaces": "Error loading workspaces.",

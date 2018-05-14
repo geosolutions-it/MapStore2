@@ -1,7 +1,10 @@
-const {compose, withStateHandlers, defaultProps} = require('recompose');
+const {compose, withStateHandlers, defaultProps, withPropsOnChange} = require('recompose');
 const propsStreamFactory = require('../../components/misc/enhancers/propsStreamFactory');
 const Rx = require("rxjs");
+const {isEmpty} = require("lodash");
 
+const {connect} = require("react-redux");
+const {changeDrawingStatus} = require("../..//actions/draw");
 const sameLayer = ({activeRule: f1}, {activeRule: f2}) => f1.layer === f2.layer;
 const emitStop = stream$ => stream$.filter(() => false).startWith({});
 const {getStylesAndAttributes} = require("../../observables/rulesmanager");
@@ -21,7 +24,9 @@ const dataStreamFactory = prop$ => {
                 }).do(() => setLoading(false));
     }).let(emitStop);
 };
-module.exports = compose(
+module.exports = compose(connect(() => ({}), {
+    onChangeDrawingStatus: changeDrawingStatus
+    }),
     defaultProps({dataStreamFactory}),
     withStateHandlers(({activeRule: initRule}) => ({
         activeRule: initRule,
@@ -49,6 +54,7 @@ module.exports = compose(
                 activeRule: {...activeRule, [key]: value}
             };
         },
+        setRule: () => (activeRule) => ({activeRule}),
         setConstraintsOption: ({activeRule, type}) => ({key, value}) => {
             const constraints = {...(activeRule.constraints || {}), type, [key]: value};
             return {activeRule: {...activeRule, constraints}};
@@ -56,13 +62,25 @@ module.exports = compose(
         onNavChange: () => activeEditor => ({
             activeEditor
         }),
-        cleanConstraints: ({activeRule}) => () => {
+        cleanConstraints: ({activeRule}, {onChangeDrawingStatus}) => (keepLayer) => {
             const {constraints, ...rule} = activeRule;
-            return {activeRule: rule};
+            onChangeDrawingStatus( "clean",
+            "",
+            "rulesmanager",
+            [],
+            {});
+            return keepLayer && {activeRule: rule} || {activeRule: rule, styles: undefined, properties: undefined, type: undefined, layer: undefined};
         },
-        optionsLoaded: () => ({styles, properties, type}) => {
-            return {styles, properties, type};
+        optionsLoaded: () => ({styles, properties, type, layer}) => {
+            return {styles, properties, type, layer};
         }
+    }),// Merge geometry state from draw into activeRule
+    withPropsOnChange(["geometryState"], ({activeRule = {}, geometryState, setRule}) => {
+        if (!isEmpty(geometryState)) {
+            const {constraints = {}} = activeRule;
+            setRule({...activeRule, constraints: {...constraints, restrictedAreaWkt: geometryState.wkt}});
+        }
+        return {};
     }),
     propsStreamFactory
 );

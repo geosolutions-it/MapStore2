@@ -10,7 +10,7 @@ import { withPropsOnChange } from "recompose";
 const React = require("react");
 const {compose, withProps, withStateHandlers} = require("recompose");
 const {connect} = require("react-redux");
-const { onEditRule, delRules} = require('../../actions/rulesmanager');
+const { onEditRule, delRules, onCacheClean} = require('../../actions/rulesmanager');
 const {rulesEditorToolbarSelector} = require('../../selectors/rulesmanager');
 const Toolbar = require('../../components/misc/toolbar/Toolbar');
 const Modal = require("./ModalDialog");
@@ -31,7 +31,8 @@ const EditorToolbar = compose(
         rulesEditorToolbarSelector,
         {
             deleteRules: delRules,
-            editOrCreate: onEditRule
+            editOrCreate: onEditRule,
+            cleanCache: onCacheClean
         }
     ),
     withStateHandlers(() => ({
@@ -84,7 +85,7 @@ const EditorToolbar = compose(
                 }
             }]
         })),
-        withPropsOnChange(["modal"], ({modal, cancelModal, deleteRules}) => {
+        withPropsOnChange(["modal"], ({modal, cancelModal, deleteRules, cleanCache}) => {
             switch (modal) {
                 case "delete":
                     return {
@@ -119,7 +120,7 @@ const EditorToolbar = compose(
                                 {
                                     text: <Message msgId="yes"/>,
                                     bsStyle: 'primary',
-                                    onClick: () => { cancelModal(); }
+                                    onClick: () => { cancelModal(); cleanCache(); }
                                 }
                             ],
                             closeAction: cancelModal,
