@@ -56,7 +56,7 @@ class ManagerMenu extends React.Component {
         },
         {
             "msgId": "rulesmanager.menutitle",
-            "glyph": "lock",
+            "glyph": "admin-geofence",
             "path": "/rules-manager"
         }],
         role: "",
