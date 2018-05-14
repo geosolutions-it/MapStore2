@@ -208,12 +208,13 @@ describe('Tests ajax library', () => {
         expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
         // authkey authentication with user
         expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
-        axios.get('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2').then(() => {
+        axios.get('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2&authkey=TEST_AUTHKEY').then(() => {
             done();
         }).catch((exception) => {
             expect(exception.config).toExist();
             expect(exception.config.url).toExist();
             expect(exception.config.url.indexOf('authkey')).toBeGreaterThan(-1);
+            expect(exception.config.url.indexOf("TEST_AUTHKEY")).toBeLessThan(0);
             done();
         });
     });
