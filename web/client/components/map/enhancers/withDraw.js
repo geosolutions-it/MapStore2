@@ -18,7 +18,12 @@ state.draw || {}, {
     onDrawStopped: drawStopped,
     setCurrentStyle: setCurrentStyle
 });
-
+/**
+ * Add the draw tool to base-map. The draw support is already present in plugins but It needs
+ * to be connected and added to tools to work.
+ * It's possible to pass a connect function to override default connection to state and action
+ * @param {function} connectFunction connect function to override default connection of the draw tool.
+ */
 module.exports = (connectFunction = defaultDrawConnect) => withPropsOnChange(
     ['plugins'],
     ({plugins}= {}) => {

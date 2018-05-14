@@ -100,7 +100,8 @@ class SpatialFilter extends React.Component {
             </div>
         );
     };
-    renderSpatialPanel = (drawLabel) => {
+    renderSpatialPanel = () => {
+        const showLabel = this.getMethodFromId(this.props.spatialField.method) && this.props.spatialField.method !== "CQL" && !this.props.spatialField.geometry;
         return (
             <Panel className="spatial-panel">
                 {this.props.spatialMethodOptions.length > 1 ? this.renderSpatialHeader() : <span/>}
@@ -109,7 +110,13 @@ class SpatialFilter extends React.Component {
                 )}
                 <Row>
                     <Col xs={12}>
-                        {drawLabel}
+                        {showLabel && (
+                            <span>
+                                <div className="m-label m-caption text-center">
+                                    <I18N.Message msgId={"queryform.spatialfilter.draw_start_label"}/>
+                                </div>
+                            </span>)
+                        }
                     </Col>
                 </Row>
             </Panel>
@@ -128,10 +135,6 @@ class SpatialFilter extends React.Component {
         return buttons;
     };
     render() {
-        let drawLabel = null;
-        if ( this.getMethodFromId(this.props.spatialField.method) && this.props.spatialField.method !== "CQL" && !this.props.spatialField.geometry) {
-            drawLabel = (<span><div className="m-label m-caption text-center"><I18N.Message msgId={"queryform.spatialfilter.draw_start_label"}/></div></span>);
-        }
         return (
             <div className="query-filter-container">
                 <SwitchPanel
@@ -142,7 +145,7 @@ class SpatialFilter extends React.Component {
                     expanded={this.props.spatialPanelExpanded}
                     onSwitch={(expanded) => this.props.actions.onExpandSpatialFilterPanel(expanded)}
                     >
-                    {this.renderSpatialPanel(drawLabel)}
+                    {this.renderSpatialPanel()}
                 </SwitchPanel>
             </div>
         );

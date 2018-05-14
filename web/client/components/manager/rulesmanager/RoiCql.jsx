@@ -49,7 +49,7 @@ class RoiCql extends React.Component {
                             lineNumbers: true,
                             lineWrapping: true
                         }}/>
-                        <Button style={{"float": "rigth"}} disabled={this.props.wkt === this.state.cql} text={LocaleUtils.getMessageById(this.context.messages, "rulesmanager.apply")} onClick={this.apply}/>
+                        <Button disabled={this.props.wkt === this.state.cql} text={LocaleUtils.getMessageById(this.context.messages, "rulesmanager.apply")} onClick={this.apply}/>
                 </div>}
             </ContainerDimensions>);
     }
