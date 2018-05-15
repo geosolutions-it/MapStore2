@@ -22,9 +22,9 @@ module.exports =
         widthProvider({ overrideWidthProvider: true}),
         emptyState(
             ({widgets = []} = {}) => widgets.length === 0,
-            () => ({
+            ({loading}) => ({
                 glyph: "dashboard",
-                title: <Message msgId="dashboard.emptyTitle" />
+                title: loading ? <Message msgId="loading" /> : <Message msgId="dashboard.emptyTitle" />
             })
         ),
         defaultProps({

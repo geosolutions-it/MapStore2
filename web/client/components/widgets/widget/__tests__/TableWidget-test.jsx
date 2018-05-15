@@ -36,6 +36,14 @@ describe('TableWidget component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-card');
         expect(el).toExist();
+        expect(container.querySelector('.glyphicon-pencil')).toExist();
+        expect(container.querySelector('.glyphicon-trash')).toExist();
+    });
+    it('view only mode', () => {
+        ReactDOM.render(<TableWidget canEdit={false} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container.querySelector('.glyphicon-pencil')).toNotExist();
+        expect(container.querySelector('.glyphicon-trash')).toNotExist();
     });
     it('Test TableWidget onEdit callback', () => {
         const actions = {
