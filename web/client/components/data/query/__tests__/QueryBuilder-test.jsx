@@ -141,6 +141,51 @@ describe('QueryBuilder', () => {
         const queryButton = document.getElementById('query-toolbar-query');
         expect(queryButton).toExist();
         expect(queryButton.getAttribute("disabled")).toBe('');
+        // check presence of attribute, spatial and cross layer filter
+        expect(document.querySelectorAll('.mapstore-switch-panel').length).toBe(3);
+    });
+    it('tool options', () => {
+        const groupLevels = 5;
+
+        const groupFields = [];
+
+        const filterFields = [{
+            rowId: 100,
+            groupId: 1,
+            attribute: "",
+            operator: null,
+            value: null,
+            exception: null
+        }];
+
+        const attributes = [{
+            id: "Attribute",
+            type: "list",
+            values: [
+                "attribute1",
+                "attribute2",
+                "attribute3",
+                "attribute4",
+                "attribute5"
+            ]
+        }];
+
+        const querybuilder = ReactDOM.render(
+            <QueryBuilder
+                toolsOptions={{
+                    hideCrossLayer: true,
+                    hideSpatialFilter: true
+                }}
+                filterFields={filterFields}
+                attributes={attributes}
+                groupFields={groupFields}
+                groupLevels={groupLevels}
+            />,
+            document.getElementById("container")
+        );
+        expect(querybuilder).toExist();
+        // only attribute filter should be shown
+        expect(document.querySelectorAll('.mapstore-switch-panel').length).toBe(1);
     });
 
     it('creates the QueryBuilder component in error state', () => {

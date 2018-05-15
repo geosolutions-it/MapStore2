@@ -204,7 +204,8 @@ class QueryPanel extends React.Component {
         activateSettingsTool: PropTypes.bool,
         visibilityCheckType: PropTypes.string,
         settingsOptions: PropTypes.object,
-        layout: PropTypes.object
+        layout: PropTypes.object,
+        toolsOptions: PropTypes.object
     };
 
     static defaultProps = {
@@ -226,7 +227,8 @@ class QueryPanel extends React.Component {
         visibilityCheckType: "checkbox",
         settingsOptions: {},
         querypanelEnabled: false,
-        layout: {}
+        layout: {},
+        toolsOptions: {}
     };
 
     componentWillReceiveProps(newProps) {
@@ -275,6 +277,7 @@ class QueryPanel extends React.Component {
                 header={<QueryPanelHeader onToggleQuery={this.props.onToggleQuery} />}
                 spatialOperations={this.props.spatialOperations}
                 spatialMethodOptions={this.props.spatialMethodOptions}
+                toolsOptions={this.props.toolsOptions}
                 featureTypeErrorText={<Message msgId="layerProperties.featureTypeError"/>}/>
         </div>);
     };
@@ -301,15 +304,18 @@ class QueryPanel extends React.Component {
  *   - blacklist {string[]} a list of banned words excluded from the wfs search
  *   - maxFeatures {number} the maximum features fetched per request
  *   - predicate {string} the cql predicate
- *   - queriableAttributes {string[]} list of attributes to query on.
- *   - typeName {string} the workspace + layer name on geosever
+ *   - querableAttributes {string[]} list of attributes to query on.
+ *   - typeName {string} the workspace + layer name on geoserver
  *   - valueField {string} the attribute from features properties used as value/label in the autocomplete list
  *   - srsName {string} The projection of the requested features fetched via wfs
  *
  * @prop {object[]} cfg.spatialOperations: The list of geometric operations use to create the spatial filter.<br/>
+ * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer to hide
+ * @prop {boolean} cfg.toolsOptions.hideCrossLayer force cross layer filter panel to hide (when is not used or not usable)
+ * @prop {boolean} cfg.toolsOptions.hideSpatialFilter force spatial filter panel to hide (when is not used or not usable)
  *
  * @example
- * // This example configure a layer with polyogns geometry as spatial filter method
+ * // This example configure a layer with polygons geometry as spatial filter method
  * "spatialOperations": [
  *      {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
  *      {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},
@@ -339,7 +345,7 @@ class QueryPanel extends React.Component {
  *            "queriableAttributes": ["ATTRIBUTE_X"],
  *            "typeName": "workspace:typeName",
  *            "valueField": "ATTRIBUTE_Y",
- *            "srsName": "ESPG:3857"
+ *            "srsName": "EPSG:3857"
  *        },
  *        "customItemClassName": "customItemClassName"
  *    }
