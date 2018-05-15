@@ -270,12 +270,14 @@ class MapPlugin extends React.Component {
 
     render() {
         if (this.props.map) {
+            const {mapOptions = {}} = this.props.map;
+
             return (
                 <plugins.Map id="map"
                     {...this.props.options}
-                    mapOptions={this.getMapOptions()}
                     projectionDefs={this.props.projectionDefs}
                     {...this.props.map}
+                    mapOptions={assign({}, mapOptions, this.getMapOptions())}
                     zoomControl={this.props.zoomControl}>
                     {this.renderLayers()}
                     {this.renderSupportTools()}
