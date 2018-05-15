@@ -518,6 +518,10 @@
         }, {
           "name": "QueryPanel",
           "cfg": {
+            "toolsOptions": {
+              "hideCrossLayer": true,
+              "hideSpatialFilter": true
+            },
             "containerPosition": "columns"
           }
         }, "Dashboard", "Notifications"],
