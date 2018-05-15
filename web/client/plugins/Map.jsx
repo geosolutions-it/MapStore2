@@ -346,7 +346,7 @@ const filteredFeatures = createSelector(
                 }
             ]
         };
-        return reprojectGeoJson(geometry, geometryCrs, 'EPSG:4326').features;
+        return geometryCoordinates.length > 0 && geometryType ? reprojectGeoJson(geometry, geometryCrs, 'EPSG:4326').features : [];
     }
 
 );

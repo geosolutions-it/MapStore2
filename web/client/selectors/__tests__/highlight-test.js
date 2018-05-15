@@ -40,7 +40,8 @@ const initialState = {
         mode: modeEdit,
         select: [feature1, feature2],
         changes: [feature2],
-        showFilteredObject: true
+        showFilteredObject: true,
+        open: true
     },
     highlight: {
         featuresPath: "featuregrid.select"

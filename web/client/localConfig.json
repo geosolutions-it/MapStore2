@@ -244,13 +244,7 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "Home",
-            {
-                "name": "FeatureEditor",
-                "cfg": {
-                    "showFilteredObject": true
-                }
-            },
+            }, "Home","FeatureEditor",
             "WFSDownload",
             {
               "name": "QueryPanel",
