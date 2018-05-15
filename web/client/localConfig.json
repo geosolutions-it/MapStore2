@@ -244,7 +244,7 @@
                         "alwaysVisible": true
                     }
                 }
-            }, "Home","FeatureEditor",
+            }, "Home", "FeatureEditor",
             "WFSDownload",
             {
               "name": "QueryPanel",
