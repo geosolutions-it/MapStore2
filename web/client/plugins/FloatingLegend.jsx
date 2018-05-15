@@ -72,7 +72,7 @@ class FloatingLegendComponent extends React.Component {
         return (
             <div
                 className={this.props.className}
-                style={{...this.props.style}}>
+                style={this.props.style}>
                 <FloatingLegend
                     {...this.props}
                     toggleButton={this.renderToggleButton()}/>
