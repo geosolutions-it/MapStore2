@@ -207,6 +207,7 @@ class MapPlugin extends React.Component {
                             key={feature.id}
                             crs={projection}
                             type={feature.type}
+                            style={feature.style || null }
                             geometry={feature.geometry}/>);
                     })}
                 </plugins.Layer>);
@@ -316,16 +317,54 @@ class MapPlugin extends React.Component {
 const {mapSelector, projectionDefsSelector} = require('../selectors/map');
 const { mapTypeSelector } = require('../selectors/maptype');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
-const {selectedFeatures} = require('../selectors/highlight');
+const {selectedFeatures, filteredspatialObjectCoord, filteredspatialObjectType, filteredSpatialObjectCrs, filteredSpatialObjectId} = require('../selectors/highlight');
 const {securityTokenSelector} = require('../selectors/security');
+const {reprojectGeoJson} = require('../utils/CoordinatesUtils');
 
+const filteredFeatures = createSelector(
+    [
+        filteredspatialObjectCoord,
+        filteredspatialObjectType,
+        filteredSpatialObjectId,
+        filteredSpatialObjectCrs
+    ],
+    ( geometryCoordinates, geometryType, geometryId, geometryCrs) => {
+        let geometry = {
+            type: "FeatureCollection",
+            features: [
+                {
+                    type: "Feature",
+                    geometry: {
+                        type: geometryType,
+                        coordinates: geometryCoordinates
+                    },
+                    style: {
+                        fillColor: 'rgba(255, 255, 255, 0.2)',
+                        color: '#ffcc33'
+                    },
+                    id: geometryId
+                }
+            ]
+        };
+        return reprojectGeoJson(geometry, geometryCrs, 'EPSG:4326').features;
+    }
+
+);
+
+const getFeatures = createSelector(
+    [
+        filteredFeatures,
+        selectedFeatures
+    ],
+    (featuresFiltered, featuresSelected) => [ ...featuresSelected, ...featuresFiltered]
+);
 const selector = createSelector(
     [
         projectionDefsSelector,
         mapSelector,
         mapTypeSelector,
         layerSelectorWithMarkers,
-        selectedFeatures,
+        getFeatures,
         (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data,
         securityTokenSelector,
         (state) => state.mousePosition && state.mousePosition.enabled
