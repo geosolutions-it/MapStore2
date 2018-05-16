@@ -40,13 +40,22 @@ class FloatingLegendComponent extends React.Component {
     static propTypes = {
         items: PropTypes.array,
         pluginName: PropTypes.string,
-        tooltipId: PropTypes.string
+        tooltipId: PropTypes.string,
+        className: PropTypes.string,
+        style: PropTypes.object
     };
 
     static defaultProps = {
         items: [],
         pluginName: 'drawer-menu',
-        tooltipId: 'floatinglegend.showTOC'
+        tooltipId: 'floatinglegend.showTOC',
+        className: 'ms-floatinglegend-container',
+        style: {
+            top: 0,
+            left: 0,
+            position: 'absolute',
+            height: '100%'
+        }
     };
 
     renderPanel() {
@@ -61,7 +70,9 @@ class FloatingLegendComponent extends React.Component {
 
     render() {
         return (
-            <div style={{position: 'absolute', height: '100%'}}>
+            <div
+                className={this.props.className}
+                style={this.props.style}>
                 <FloatingLegend
                     {...this.props}
                     toggleButton={this.renderToggleButton()}/>
