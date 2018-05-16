@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
@@ -8,7 +7,9 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const {isString} = require('lodash');
+const {containsHTML} = require('../../../../../utils/StringUtils');
 
 const alwaysExcluded = ["exclude", "titleStyle", "listStyle", "componentStyle", "title", "feature"];
 
@@ -43,13 +44,13 @@ class PropertiesViewer extends React.Component {
         }
     };
 
+
     getBodyItems = () => {
         return Object.keys(this.props)
             .filter(this.toExlude)
             .map((key) => {
-                return (
-                    <p key={key} style={this.props.listStyle}><b>{key}</b> {this.renderProperty(this.props[key])}</p>
-                );
+                const val = this.renderProperty(this.props[key]);
+                return <p key={key} style={this.props.listStyle}><b>{key}</b> {containsHTML(val) ? <span dangerouslySetInnerHTML={{__html: val}}/> : val}</p>;
             });
     };
 
