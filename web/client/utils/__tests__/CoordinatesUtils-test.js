@@ -466,4 +466,8 @@ describe('CoordinatesUtils', () => {
         expect(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] )).toNotBe(null);
         expect(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] ).length).toBe(100);
     });
+    it('test transformLineToArcs with 2 equal points', () => {
+        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [1, 1]] )).toNotBe(null);
+        expect(CoordinatesUtils.transformLineToArcs([[1, 1], [1, 1]] ).length).toBe(0);
+    });
 });

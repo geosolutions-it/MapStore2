@@ -273,6 +273,13 @@ class MeasurementSupport extends React.Component {
         }
         const geojsonFormat = new ol.format.GeoJSON();
         let feature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
+        if (this.props.measurement.geomType === 'LineString') {
+            feature = assign({}, feature, {
+                geometry: assign({}, feature.geometry, {
+                    coordinates: transformLineToArcs(feature.geometry.coordinates)
+                })
+            });
+        }
 
         let newMeasureState = assign({}, this.props.measurement,
             {

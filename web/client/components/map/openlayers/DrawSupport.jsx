@@ -935,11 +935,12 @@ class DrawSupport extends React.Component {
             if (g.getType() !== "Circle") {
                 return g;
             }
-            if (feature.getProperties().circles.indexOf(i) !== -1) {
+            if (feature.getProperties() && feature.getProperties().circles && feature.getProperties().circles.indexOf(i) !== -1) {
                 const center = g.getCenter();
                 const radius = g.getRadius();
                 return this.polygonFromCircle(center, radius);
             }
+            return g;
         });
     }
     /**
@@ -953,12 +954,13 @@ class DrawSupport extends React.Component {
             if (g.getType() !== "Polygon") {
                 return g;
             }
-            if (feature.getProperties().circles.indexOf(i) !== -1) {
+            if (feature.getProperties() && feature.getProperties().circles && feature.getProperties().circles.indexOf(i) !== -1) {
                 const extent = g.getExtent();
                 const center = ol.extent.getCenter(extent);
                 const radius = this.calculateRadius(center, g.getCoordinates());
                 return new ol.geom.Circle(center, radius);
             }
+            return g;
         });
     }
 
