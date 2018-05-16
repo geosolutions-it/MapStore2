@@ -432,6 +432,7 @@ class MeasurementSupport extends React.Component {
             this.drawControl.disable();
             this.drawControl = null;
             this.removeLastLayer();
+            this.removeArcLayer();
             this.props.map.off('draw:created', this.onDrawCreated, this);
             this.props.map.off('draw:drawstart', this.onDrawStart, this);
             this.props.map.off('draw:drawvertex', this.onDrawVertex, this);
