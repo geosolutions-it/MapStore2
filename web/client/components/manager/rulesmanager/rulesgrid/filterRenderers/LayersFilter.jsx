@@ -20,7 +20,6 @@ const parentFiltersSel = createSelector(workspaceSelector, (workspace) => ({
 }));
 const selector = createSelector([filterSelector, parentFiltersSel], (filter, parentsFilter) => ({
     selected: filter.layer,
-    disabled: !filter.workspace,
     parentsFilter
 }));
 
