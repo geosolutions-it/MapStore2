@@ -47,6 +47,7 @@ const Dock = connect(createSelector(
   * @prop {number} cfg.maxStoredPages default 5. In virtual Scroll mode determines the size of the loaded pages cache
   * @prop {number} cfg.vsOverScan default 20. Number of rows to load above/below the visible slice of the grid
   * @prop {number} cfg.scrollDebounce default 50. milliseconds of debounce interval between two scroll event
+  * @prop {boolean} cfg.showFilteredObject default false. Displays spatial filter selection area when true
   * @classdesc
   * FeatureEditor Plugin Provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
   * <br/>virtual scroll mechanisms. By defualt virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param

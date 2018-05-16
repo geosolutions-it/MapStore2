@@ -8,7 +8,9 @@
 
 const expect = require('expect');
 const {
-    selectedFeatures, filteredspatialObject, filteredspatialObjectCoord, filteredGeometry, filteredSpatialObjectId, filteredSpatialObjectCrs, filteredspatialObjectType} = require('../highlight');
+    selectedFeatures, filteredspatialObject, filteredspatialObjectCoord,
+    filteredGeometry, filteredSpatialObjectId, filteredSpatialObjectCrs,
+    filteredspatialObjectType, filteredFeatures, highlighedFeatures} = require('../highlight');
 
 const idFt1 = "idFt1";
 const idFt2 = "idFt2";
@@ -35,6 +37,19 @@ let feature2 = {
         someProp: "someValue"
     }
 };
+
+let feature3 = [{
+    type: "Feature",
+    geometry: {
+        type: 'Polygon',
+        coordinates: [ [ 0.000008983152841195214, 0.000017966305681987637 ] ]
+    },
+    style: {
+        fillColor: 'rgba(255, 255, 255, 0.2)',
+        color: '#ffcc33'
+    },
+    id: 'spatial_object'
+}];
 const initialState = {
     featuregrid: {
         mode: modeEdit,
@@ -109,5 +124,17 @@ describe('Test highlight selectors', () => {
         const features = filteredspatialObjectType(initialState);
         expect(features).toExist();
         expect(features).toBe(geometryType);
+    });
+    it('test filteredFeatures', () => {
+        const features = filteredFeatures(initialState);
+        expect(features).toExist();
+        expect(features).toEqual(feature3);
+    });
+    it('test highlighedFeatures', () => {
+        const features = highlighedFeatures(initialState);
+        const featuresSelected = initialState.featuregrid.select;
+        const combinedFeatures = [...featuresSelected, ...feature3];
+        expect(features).toExist();
+        expect(features).toEqual(combinedFeatures);
     });
 });
