@@ -20,6 +20,7 @@ const getAllowedAggregationOptions = (propertyName, featureTypeProperties = []) 
           {value: "Count", label: "COUNT"},
           {value: "Sum", label: "SUM"},
           {value: "Average", label: "AVG"},
+          {value: "StdDev", label: "STDDEV"},
           {value: "Min", label: "MIN"},
           {value: "Max", label: "MAX"}
       ];

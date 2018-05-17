@@ -35,9 +35,13 @@ describe('CounterWizard Toolbar component', () => {
         const buttons = container.querySelectorAll('button');
         expect(buttons.length).toBe(2);
         expect(buttons[0].querySelector('.glyphicon-filter')).toExist();
+        // filter should not enabled because valid means also that
+        // there are some attributes
+        expect(buttons[0].disabled).toBe(true);
         expect(buttons[1].querySelector('.glyphicon-arrow-right')).toExist();
         expect(buttons[1].disabled).toBe(true);
         ReactDOM.render(<Toolbar step={0} valid />, document.getElementById("container"));
+        expect(container.querySelectorAll('button')[1].disabled).toBe(false);
         expect(container.querySelectorAll('button')[1].disabled).toBeFalsy();
     });
     it('step 1', () => {

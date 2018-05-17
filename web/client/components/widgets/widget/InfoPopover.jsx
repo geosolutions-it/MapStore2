@@ -82,7 +82,7 @@ class InfoPopover extends React.Component {
                             </OverlayTrigger>)
                     : [
                         this.renderContent(),
-                        <Overlay show target={() => ReactDOM.findDOMNode(this.target)}>
+                        <Overlay placement={this.props.placement} show target={() => ReactDOM.findDOMNode(this.target)}>
                         {this.renderPopover()}
                         </Overlay>
                     ]}

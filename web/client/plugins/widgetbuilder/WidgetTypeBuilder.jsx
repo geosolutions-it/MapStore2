@@ -9,7 +9,7 @@
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
-const {compose, branch, renderComponent} = require('recompose');
+const { compose, branch, renderComponent, withProps} = require('recompose');
 
 const {getEditingWidget} = require('../../selectors/widgets');
 
@@ -27,7 +27,8 @@ const Builders = {
     text: require('./TextBuilder'),
     table: require('./TableBuilder'),
     map: require('./MapBuilder'),
-    counter: require('./CounterBuilder')
+    counter: require('./CounterBuilder'),
+    legend: require('./LegendBuilder')
 };
 
 /**
@@ -35,6 +36,9 @@ const Builders = {
  */
 module.exports = compose(
         connect(mapStateToProps),
+        withProps(({ typeFilter = () => true, availableDependencies = []}) => ({
+            typeFilter: (w = {}) => typeFilter(w) && !(w.type === 'legend' && availableDependencies.length === 0)
+        })),
         branch(
            ({widgetType} = {}) => !widgetType,
            renderComponent(WidgetTypeSelector),

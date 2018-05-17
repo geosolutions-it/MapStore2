@@ -27,6 +27,8 @@ const SearchBar = connect((state) => ({
     hideOnBlur: false,
     placeholderMsgId: "maps.search",
     typeAhead: false,
+    splitTools: false,
+    isSearchClickable: true,
     start: state && state.maps && state.maps.start,
     limit: state && state.maps && state.maps.limit,
     searchText: state.maps && state.maps.searchText !== '*' && state.maps.searchText || ""

@@ -31,6 +31,7 @@ describe('TableOptions component', () => {
         expect(el).toExist();
         const resetButton = document.querySelector('.btn');
         expect(resetButton).toNotExist();
+        expect(document.querySelector('.empty-state-container')).toExist();
     });
     it('Test TableOptions tools visibility', () => {
 

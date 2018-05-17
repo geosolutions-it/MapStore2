@@ -5,7 +5,7 @@ const {DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../act
 const { getWidgetsGroups, getWidgetDependency} = require('../utils/WidgetsUtils');
 
 const {isDashboardAvailable, isDashboardEditing} = require('./dashboard');
-const {defaultMemoize, createSelector, createSelectorCreator} = require('reselect');
+const { defaultMemoize, createSelector, createSelectorCreator, createStructuredSelector} = require('reselect');
 
 const isShallowEqual = (el1, el2) => {
     if (Array.isArray(el1) && Array.isArray(el2)) {
@@ -58,15 +58,20 @@ const getWidgetsDependenciesGroups = createSelector(
     getFloatingWidgets,
     widgets => getWidgetsGroups(widgets)
 );
+const getFloatingWidgetsLayout = state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
+
+const getDashboardWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
 
 module.exports = {
     getFloatingWidgets,
-    getFloatingWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
+    getFloatingWidgetsLayout,
     // let's use the same container for the moment
-    getDashboardWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
+    getDashboardWidgets,
+    dashboardHasWidgets: state => (getDashboardWidgets(state) || []).length > 0,
     getDashboardWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
     getEditingWidget,
     getEditingWidgetLayer: state => get(getEditingWidget(state), "layer"),
+    returnToFeatureGridSelector: (state) => get(state, "widgets.builder.editor.returnToFeatureGrid", false),
     getEditingWidgetFilter: state => get(getEditingWidget(state), "filter"),
     getEditorSettings,
     getWidgetLayer,
@@ -97,5 +102,9 @@ module.exports = {
     ),
     isWidgetSelectionActive,
     getDependencySelectorConfig,
-    getWidgetsDependenciesGroups
+    getWidgetsDependenciesGroups,
+    widgetsConfig: createStructuredSelector({
+        widgets: getFloatingWidgets,
+        layouts: getFloatingWidgetsLayout
+    })
 };

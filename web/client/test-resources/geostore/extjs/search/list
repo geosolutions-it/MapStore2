@@ -1,0 +1,32 @@
+{
+    "ExtResourceList": {
+        "ResourceCount": 1,
+        "Resource": [
+            {
+                "Attributes": {
+                    "attribute": [
+                        {
+                            "@type": "STRING",
+                            "name": "owner",
+                            "value": "admin"
+                        },
+                        {
+                            "@type": "STRING",
+                            "name": "featured",
+                            "value": true
+                        }
+                    ]
+                },
+                "category": {
+                    "id": 1,
+                    "name": "MAP"
+                },
+                "creation": "2017-11-10T14:26:34.167+01:00",
+                "description": "Map",
+                "id": 2,
+                "lastUpdate": "2018-02-12T11:42:31.676+01:00",
+                "name": "Map"
+            }
+        ]
+    }
+}

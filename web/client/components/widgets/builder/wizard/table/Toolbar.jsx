@@ -23,7 +23,7 @@ const getBackTooltipId = step => {
     }
 };
 
-const getNextTooltipId = (step, valid) => valid ? "widgets.builder.wizard.configureWidgetOptions" : "widget.builder.wizard.errors.checkAtLeastOneAttribute";
+const getNextTooltipId = (step, valid) => valid ? "widgets.builder.wizard.configureWidgetOptions" : "widgets.builder.errors.checkAtLeastOneAttribute";
 
 const getSaveTooltipId = (step, {id} = {}) => {
     if (id) {
@@ -43,6 +43,13 @@ module.exports = ({ openFilterEditor = () => { }, step = 0, stepButtons = [], ed
     }, ...stepButtons, {
         visible: step >= 0,
         onClick: openFilterEditor,
+         /* if no valid attribute is present, filter must be disabled
+         * (Query panel don't work you can not proceed, so it doesn't make sense to
+         * create a filter if you can not create the widget)
+         * TODO: improve checking valid attributes presence instead
+         * of valid flag.
+         */
+        disabled: !isValidStep1(editorData),
         glyph: "filter",
         tooltipId: "widgets.builder.setupFilter"
     }, {

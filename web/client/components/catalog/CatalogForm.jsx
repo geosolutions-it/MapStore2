@@ -7,10 +7,11 @@
  */
 const React = require('react');
 const { Col, FormGroup, FormControl, Grid, Row } = require('react-bootstrap');
+const Message = require('../I18N/Message');
 const CatalogServiceSelector = require('./CatalogServiceSelector');
 const localizeProps = require('../misc/enhancers/localizedProps');
 const SearchInput = localizeProps("placeholder")(FormControl);
-module.exports = ({ onSearchTextChange = () => { }, searchText, title, catalog, services, isValidServiceSelected, showCatalogSelector}) =>
+module.exports = ({ onSearchTextChange = () => { }, searchText, title = <Message msgId={"catalog.title"} />, catalog, services, isValidServiceSelected, showCatalogSelector}) =>
 ( <Grid className="catalog-form" fluid><Row><Col xs={12}>
     <h4 className="text-center">{title}</h4>
     {showCatalogSelector

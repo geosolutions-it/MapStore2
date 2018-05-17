@@ -11,7 +11,7 @@ const { uniq, castArray, includes } = require('lodash');
 const { Row, Col, Form, Button } = require('react-bootstrap');
 const Message = require('../../../../I18N/Message');
 const StepHeader = require('../../../../misc/wizard/StepHeader');
-
+const noAttributes = require('../common/noAttributesEmptyView');
 const {withProps, withHandlers, compose} = require('recompose');
 const updatePropertyName = (arr, name, hide) => {
     const names = castArray(name);
@@ -20,18 +20,20 @@ const updatePropertyName = (arr, name, hide) => {
     }
     return uniq([...arr, ...names]);
 };
-const AttributeSelector = compose(withProps(
-    ({ attributes = [], options = {}} = {}) => ({ // TODO manage hide condition
-        attributes: attributes
-            .filter(a => !isGeometryType(a))
-            .map( a => ({
-                ...a,
-                label: a.name,
-                attribute: a.name,
-                hide: options.propertyName && (options.propertyName.indexOf( a.name ) < 0)
-            })
-        )
-    })),
+const AttributeSelector = compose(
+    withProps(
+        ({ attributes = [], options = {}} = {}) => ({ // TODO manage hide condition
+            attributes: attributes
+                .filter(a => !isGeometryType(a))
+                .map( a => ({
+                    ...a,
+                    label: a.name,
+                    attribute: a.name,
+                    hide: options.propertyName && (options.propertyName.indexOf( a.name ) < 0)
+                })
+            )
+        })),
+    noAttributes(({ attributes = []}) => attributes.length === 0),
     withHandlers({
         onChange: ({ onChange = () => {}, options = {}}) => (name, hide) => onChange("options.propertyName", updatePropertyName(options && options.propertyName || [], name, hide))
     })

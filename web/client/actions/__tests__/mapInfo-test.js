@@ -19,6 +19,7 @@ var {
     HIDE_REVERSE_GEOCODE,
     GET_VECTOR_INFO,
     TOGGLE_MAPINFO_STATE,
+    UPDATE_CENTER_TO_MARKER,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
@@ -27,7 +28,8 @@ var {
     showMapinfoRevGeocode,
     hideMapinfoRevGeocode,
     getVectorInfo,
-    toggleMapInfoState
+    toggleMapInfoState,
+    updateCenterToMarker
 } = require('../mapInfo');
 
 describe('Test correctness of the map actions', () => {
@@ -197,5 +199,11 @@ describe('Test correctness of the map actions', () => {
     it('toggle map info state', () => {
         const retval = toggleMapInfoState();
         expect(retval.type).toBe(TOGGLE_MAPINFO_STATE);
+    });
+
+    it('update center to marker', () => {
+        const retval = updateCenterToMarker('enabled');
+        expect(retval.type).toBe(UPDATE_CENTER_TO_MARKER);
+        expect(retval.status).toBe('enabled');
     });
 });

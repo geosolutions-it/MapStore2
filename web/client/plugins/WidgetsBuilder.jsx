@@ -82,7 +82,7 @@ class SideBarComponent extends React.Component {
             fluid={this.props.fluid}
             dockStyle={{...this.props.layout, background: "white" /* TODO set it to undefined when you can inject a class inside Dock, to use theme */}}
         >
-            <Builder enabled={this.props.enabled} onClose={this.props.onClose} typeFilter={({ type } = {}) => type !== 'map'}/>
+            <Builder enabled={this.props.enabled} onClose={this.props.onClose} typeFilter={({ type } = {}) => type !== 'map' && type !== 'legend' }/>
         </Dock>);
 
     }

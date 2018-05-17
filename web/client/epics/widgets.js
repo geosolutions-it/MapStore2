@@ -7,6 +7,7 @@ const {
 } = require('../actions/config');
 const { availableDependenciesSelector, isWidgetSelectionActive, getDependencySelectorConfig } = require('../selectors/widgets');
 const { MAP_CREATED, SAVING_MAP, MAP_ERROR } = require('../actions/maps');
+const { DASHBOARD_LOADED } = require('../actions/dashboard');
 const {LOCATION_CHANGE} = require('react-router-redux');
 const {saveAs} = require('file-saver');
 const FileUtils = require('../utils/FileUtils');
@@ -71,7 +72,7 @@ module.exports = {
      * Then re-configures the dependencies to it.
      */
     alignDependenciesToWidgets: (action$, { getState = () => { } } = {}) =>
-        action$.ofType(MAP_CONFIG_LOADED, INSERT)
+        action$.ofType(MAP_CONFIG_LOADED, DASHBOARD_LOADED, INSERT)
         .map(() => availableDependenciesSelector(getState()))
         .pluck('availableDependencies')
         .distinctUntilChanged( (oldMaps = [], newMaps = []) => isEqual([...oldMaps], [...newMaps]))
@@ -81,7 +82,8 @@ module.exports = {
             ...deps,
             [m === "map" ? "viewport" : `${m}.viewport`]: `${m}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].viewport": "widgets[ID_W].bbox"}
             [m === "map" ? "center" : `${m}.center`]: `${m}.center`, // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
-            [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`
+            [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`,
+            [m === "map" ? "layers" : `${m}.layers`]: `${m}.layers`
         }), {}))
     ),
     /**
@@ -90,7 +92,7 @@ module.exports = {
      */
     toggleWidgetConnectFlow: (action$, {getState = () => {}} = {}) =>
         action$.ofType(TOGGLE_CONNECTION).switchMap(({ active, availableDependencies = [], options}) =>
-            active
+            (active && availableDependencies.length > 0)
                 // activate flow
                 ? availableDependencies.length === 1
                     // case singleMap

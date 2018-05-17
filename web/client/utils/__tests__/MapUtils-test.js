@@ -27,7 +27,8 @@ var {
     getCurrentResolution,
     saveMapConfiguration,
     extractTileMatrixSetFromLayers,
-    getIdFromUri
+    getIdFromUri,
+    parseLayoutValue
 } = require('../MapUtils');
 
 describe('Test the MapUtils', () => {
@@ -261,7 +262,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 },
                 {
                     allowedSRS: {},
@@ -299,7 +302,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 },
                 {
                     allowedSRS: {},
@@ -337,7 +342,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -497,7 +504,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 },
                 {
                     allowedSRS: {},
@@ -535,7 +544,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 },
                 {
                     allowedSRS: {},
@@ -573,7 +584,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 }],
                 mapOptions: {
                     view: {
@@ -751,7 +764,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "http:url001",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 },
                 {
                     allowedSRS: {},
@@ -789,7 +804,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "http:url001",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 },
                 {
                     allowedSRS: {},
@@ -827,7 +844,9 @@ describe('Test the MapUtils', () => {
                     type: "wms",
                     url: "http:url001",
                     visibility: true,
-                    catalogURL: "url"
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -1158,6 +1177,17 @@ describe('Test the MapUtils', () => {
         expect(getIdFromUri('rest%2Fgeostore%2Fdata%2F578%2Fraw%3Fid%3D1568321658464')).toBe('578');
         // rest/geostore/data/
         expect(getIdFromUri('rest%2Fgeostore%2Fdata%2F')).toBe(null);
+    });
+
+    it('test parseLayoutValue', () => {
+        const percentageValue = parseLayoutValue('20%', 500);
+        expect(percentageValue).toBe(100);
+
+        const numberValue = parseLayoutValue(20);
+        expect(numberValue).toBe(20);
+
+        const noNumberValue = parseLayoutValue('value');
+        expect(noNumberValue).toBe(0);
     });
 
 });

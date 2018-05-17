@@ -20,6 +20,8 @@ const urlUtil = require('url');
 function addParameterToAxiosConfig(axiosConfig, parameterName, parameterValue) {
     // FIXME: the parameters can also be a URLSearchParams
     axiosConfig.params = assign({}, axiosConfig.params, {[parameterName]: parameterValue});
+    // remove from URL auth parameters if any, to avoid possible duplication
+    axiosConfig.url = axiosConfig.url ? ConfigUtils.getUrlWithoutParameters(axiosConfig.url, [parameterName]) : axiosConfig.url;
 }
 
 /**

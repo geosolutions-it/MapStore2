@@ -28,6 +28,13 @@ describe('SideGrid component', () => {
         expect(el).toExist();
         expect(el.querySelector(".items-list")).toExist();
     });
+    it('SideGrid rendering with className', () => {
+        ReactDOM.render(<SideGrid className="TEST_CLASS"/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.TEST_CLASS');
+        expect(el).toExist();
+        expect(el.querySelector(".items-list")).toExist();
+    });
     it('Test SideGrid onItemClick', () => {
         const actions = {
             onItemClick: () => {}

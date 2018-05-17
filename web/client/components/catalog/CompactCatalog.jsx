@@ -87,10 +87,10 @@ module.exports = compose(
                     .ignoreElements() // don't want to emit props
         )))
 
-)(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, showCatalogSelector}) => {
+)(({ setSearchText = () => { }, selected, onRecordSelected, loading, searchText, items = [], total, catalog, services, title, showCatalogSelector}) => {
     return (<BorderLayout
                 className="compat-catalog"
-        header={<CatalogForm services={services ? services : [catalog]} showCatalogSelector={showCatalogSelector} title={<Message msgId={"catalog.title"} />} searchText={searchText} onSearchTextChange={setSearchText}/>}
+        header={<CatalogForm services={services ? services : [catalog]} showCatalogSelector={showCatalogSelector} title={title} searchText={searchText} onSearchTextChange={setSearchText}/>}
                 footer={<div className="catalog-footer">
                     <span>{loading ? <LoadingSpinner /> : null}</span>
                     {!isNil(total) ? <span className="res-info"><Message msgId="catalog.pageInfoInfinite" msgParams={{loaded: items.length, total}}/></span> : null}

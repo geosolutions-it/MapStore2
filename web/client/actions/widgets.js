@@ -27,6 +27,7 @@ const OPEN_FILTER_EDITOR = "WIDGETS:OPEN_FILTER_EDITOR";
 const EXPORT_CSV = "WIDGETS:EXPORT_CSV";
 const EXPORT_IMAGE = "WIDGETS:EXPORT_IMAGE";
 const WIDGET_SELECTED = "WIDGETS:WIDGET_SELECTED";
+const NEW_CHART = "WIDGETS:NEW_CHART";
 const DEFAULT_TARGET = "floating";
 const DEPENDENCY_SELECTOR_KEY = "dependencySelector";
 const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
@@ -40,6 +41,14 @@ const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
 const createWidget = (widget) => ({
     type: NEW,
     widget
+});
+
+/**
+ * Intent to create a new chart Widget
+ * @return {object}        action with type `WIDGETS:NEW_CHART`
+ */
+const createChart = () => ({
+    type: NEW_CHART
 });
 
 /**
@@ -178,7 +187,8 @@ const loadDependencies = (dependencies) => ({
 /**
  * Action triggered to start the connection flow. Typically starts the connection flow
  * @param {array} availableDependencies Array of available dependency keys
- * @param {object} options a map of connections to apply when the dependencies has been resolved
+ * @param {object} the map of available dependencies where to choose.
+ * @param {object} options a map of connections to apply when the dependencies has been resolved. E.g. mappings for dependenciesMap
  * @param {string} target target of the connection. If not present we assume is the current editing widget (not yet supported)
  */
 const toggleConnection = (active, availableDependencies, options, target) => ({
@@ -260,6 +270,7 @@ module.exports = {
     EXPORT_IMAGE,
     TOGGLE_CONNECTION,
     WIDGET_SELECTED,
+    createChart, NEW_CHART,
     exportCSV,
     exportImage,
     openFilterEditor,

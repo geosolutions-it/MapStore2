@@ -8,7 +8,7 @@
 
 const assign = require('object-assign');
 const toBbox = require('turf-bbox');
-const {isString, isObject, isArray, head, isEmpty} = require('lodash');
+const { isString, isObject, isArray, head, isEmpty, findIndex} = require('lodash');
 const REG_GEOSERVER_RULE = /\/[\w- ]*geoserver[\w- ]*\//;
 const findGeoServerName = ({url, regex = REG_GEOSERVER_RULE}) => {
     return regex.test(url) && url.match(regex)[0] || null;
@@ -397,6 +397,8 @@ const LayersUtils = {
             handleClickOnLayer: layer.handleClickOnLayer || false,
             featureInfo: layer.featureInfo,
             catalogURL: layer.catalogURL,
+            useForElevation: layer.useForElevation || false,
+            hidden: layer.hidden || false,
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },
@@ -468,6 +470,36 @@ const LayersUtils = {
             SecurityUtils.addAuthenticationParameter(url, authenticationParam, options.securityToken);
         });
         return authenticationParam;
+    },
+    /**
+     * Removes google backgrounds and select an alternative one as visible
+     * returns a new list of layers modified accordingly
+     */
+    excludeGoogleBackground: ll => {
+        const hasVisibleGoogleBackground = ll.filter(({ type, group, visibility } = {}) => group === 'background' && type === 'google' && visibility).length > 0;
+        const layers = ll.filter(({ type } = {}) => type !== 'google');
+        const backgrounds = layers.filter(({ group } = {}) => group === 'background');
+
+        // check if the selection of a new background is required
+        if (hasVisibleGoogleBackground && backgrounds.filter(({ visibility } = {}) => visibility).length === 0) {
+            // select the first available
+            if (backgrounds.length > 0) {
+                const candidate = findIndex(layers, {group: 'background'});
+                return layers.map((l, i) => i === candidate ? {...l, visibility: true} : l);
+            }
+            // add osm if any other background is missing
+            return [{
+                "type": "osm",
+                "title": "Open Street Map",
+                "name": "mapnik",
+                "source": "osm",
+                "group": "background",
+                "visibility": true
+            }, ...layers];
+
+
+        }
+        return layers;
     }
 };
 

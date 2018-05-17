@@ -10,15 +10,17 @@ const React = require('react');
 
 require('rxjs');
 const GeoStoreDAO = require('../../../../../api/GeoStoreDAO');
+const axios = require('../../../../../libs/ajax');
 const ConfigUtils = require('../../../../../utils/ConfigUtils');
-
+const { excludeGoogleBackground } = require('../../../../../utils/LayersUtils');
 const BorderLayout = require('../../../../layout/BorderLayout');
 
 const Toolbar = require('../../../../misc/toolbar/Toolbar');
 const BuilderHeader = require('../../BuilderHeader');
 
 const { compose, withState, mapPropsStream, withHandlers } = require('recompose');
-const mcEnhancer = require('../../../../maps/enhancers/mapCatalog');
+const mcEnhancer = require('../../../../maps/enhancers/mapCatalogWithEmptyMap');
+const Message = require('../../../../I18N/Message');
 const MapCatalog = mcEnhancer(require('../../../../maps/MapCatalog'));
 /**
  * Builder page that allows layer's selection
@@ -26,18 +28,20 @@ const MapCatalog = mcEnhancer(require('../../../../maps/MapCatalog'));
 module.exports = compose(
     withState('selected', "setSelected", null),
     withHandlers({
-        onMapChoice: ({ onMapSelected = () => { } } = {}) => map => GeoStoreDAO
-            .getData(map.id)
-            .then((config => {
-                let mapState = !config.version ? ConfigUtils.convertFromLegacy(config) : ConfigUtils.normalizeConfig(config.map);
+        onMapChoice: ({ onMapSelected = () => { } } = {}) => map =>
+            (typeof map.id === 'string'
+                ? axios.get(map.id).then(response => response.data)
+                : GeoStoreDAO.getData(map.id)
+            ).then((config => {
+                let mapState = (!config.version && typeof map.id !== 'string') ? ConfigUtils.convertFromLegacy(config) : ConfigUtils.normalizeConfig(config.map);
                 return {
-                    ...mapState,
-                    layers: mapState.layers.map(l => {
+                    ...(mapState && mapState.map || {}),
+                    layers: excludeGoogleBackground(mapState.layers.map(l => {
                         if (l.group === "background" && (l.type === "ol" || l.type === "OpenLayers.Layer")) {
                             l.type = "empty";
                         }
                         return l;
-                    })
+                    }))
                 };
             }))
             .then(res => onMapSelected({
@@ -71,5 +75,5 @@ module.exports = compose(
             }]} />
         </BuilderHeader>}
     >
-        <MapCatalog selected={selected} onSelected={r => setSelected(r)} />
+        <MapCatalog title={<Message msgId="widgets.builder.wizard.selectAMap" />} selected={selected} onSelected={r => setSelected(r)} />
     </BorderLayout>));

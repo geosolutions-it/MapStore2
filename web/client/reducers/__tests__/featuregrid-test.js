@@ -46,7 +46,8 @@ const expect = require('expect');
 const featuregrid = require('../featuregrid');
 const {setFeatures, dockSizeFeatures, setLayer, toggleTool, customizeAttribute, selectFeatures, deselectFeatures, createNewFeatures, updateFilter,
     featureSaving, toggleSelection, clearSelection, MODES, toggleEditMode, toggleViewMode, saveSuccess, clearChanges, saveError, startDrawingFeature,
-    deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission, disableToolbar, openFeatureGrid, closeFeatureGrid, initPlugin, sizeChange, storeAdvancedSearchFilter} = require('../../actions/featuregrid');
+    deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission, disableToolbar, openFeatureGrid, closeFeatureGrid,
+    toggleShowAgain, hideSyncPopover, initPlugin, sizeChange, storeAdvancedSearchFilter} = require('../../actions/featuregrid');
 const {featureTypeLoaded, createQuery} = require('../../actions/wfsquery');
 
 const {changeDrawingStatus} = require('../../actions/draw');
@@ -64,6 +65,17 @@ describe('Test the featuregrid reducer', () => {
         expect(state.pagination).toExist();
         expect(state.select).toExist();
         expect(state.features).toExist();
+    });
+    it('hideSyncPopover', () => {
+        let state = featuregrid({}, hideSyncPopover());
+        expect(state.showPopoverSync).toBe(false);
+    });
+    it('toggleShowAgain toggling', () => {
+        let state = featuregrid({showAgain: false}, toggleShowAgain());
+        expect(state).toExist();
+        expect(state.showAgain).toBe(true);
+        let state2 = featuregrid({showAgain: true}, toggleShowAgain());
+        expect(state2.showAgain).toBe(false);
     });
     it('initPlugin', () => {
         const someValue = "someValue";

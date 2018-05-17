@@ -60,6 +60,7 @@ const TOGGLE_DETAILS_EDITABILITY = 'DETAILS:TOGGLE_DETAILS_EDITABILITY';
 const DETAILS_LOADED = 'DETAILS:DETAILS_LOADED';
 const DETAILS_SAVING = 'DETAILS:DETAILS_SAVING';
 const NO_DETAILS_AVAILABLE = "NO_DETAILS_AVAILABLE";
+const FEATURED_MAPS_SET_ENABLED = "FEATURED_MAPS:SET_ENABLED";
 
 
 /**
@@ -893,6 +894,15 @@ function doNothing() {
     };
 }
 
+/**
+ * enable/disabled the "featured maps" functionality
+ * @memberof actions.maps
+ * @param {boolean} enabled the `enabled` flag
+ */
+const setFeaturedMapsEnabled = (enabled) => ({
+    type: FEATURED_MAPS_SET_ENABLED,
+    enabled
+});
 
 /**
  * Actions for maps
@@ -941,6 +951,7 @@ module.exports = {
     detailsLoaded, DETAILS_LOADED,
     detailsSaving, DETAILS_SAVING,
     toggleDetailsEditability, TOGGLE_DETAILS_EDITABILITY,
+    setFeaturedMapsEnabled, FEATURED_MAPS_SET_ENABLED,
     metadataChanged,
     loadMaps,
     mapsLoading,

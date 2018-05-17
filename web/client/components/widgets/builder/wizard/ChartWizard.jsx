@@ -9,8 +9,11 @@ const React = require('react');
 
 const { wizardHandlers } = require('../../../misc/wizard/enhancers');
 const loadingState = require('../../../misc/enhancers/loadingState')(({ loading, data }) => loading || !data, { width: 500, height: 200 });
-
-const ChartType = require('./chart/ChartType');
+const noAttribute = require('./common/noAttributesEmptyView');
+const hasNoAttributes = ({ featureTypeProperties = [] }) => featureTypeProperties.filter(({ type =""} = {}) => type.indexOf("gml:") !== 0).length === 0;
+const ChartType = noAttribute(
+    hasNoAttributes
+)(require('./chart/ChartType'));
 const wfsChartOptions = require('./common/wfsChartOptions');
 const ChartOptions = wfsChartOptions(require('./common/WPSWidgetOptions'));
 const WidgetOptions = require('./common/WidgetOptions');
@@ -91,6 +94,7 @@ module.exports = enhanceWizard(({ onChange = () => { }, onFinish = () => { }, se
                 } hideButtons>
         <ChartType
             key="type"
+            featureTypeProperties={featureTypeProperties}
             type={data.type}
             onSelect={i => {
                 onChange("type", i);

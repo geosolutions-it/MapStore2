@@ -30,9 +30,8 @@ const Message = require('../../I18N/Message');
  */
 module.exports = branch(
     ({tooltip, tooltipId} = {}) => tooltip || tooltipId,
-    // TODO return proper HOC
-    (Wrapped) => ({tooltip, tooltipId, tooltipPosition = "top", tooltipTrigger, key, ...props} = {}) => (<OverlayTrigger
+    (Wrapped) => ({tooltip, tooltipId, tooltipPosition = "top", tooltipTrigger, keyProp, ...props} = {}) => (<OverlayTrigger
         trigger={tooltipTrigger}
-        key={key}
+        key={keyProp}
         placement={tooltipPosition}
-        overlay={<Tooltip id={"tooltip-" + {key}}>{tooltipId ? <Message msgId={tooltipId} /> : tooltip}</Tooltip>}><Wrapped {...props}/></OverlayTrigger>));
+        overlay={<Tooltip id={"tooltip-" + {keyProp}}>{tooltipId ? <Message msgId={tooltipId} /> : tooltip}</Tooltip>}><Wrapped {...props}/></OverlayTrigger>));

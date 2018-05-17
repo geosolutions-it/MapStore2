@@ -27,6 +27,8 @@ const {
     TOGGLE_MODE,
     MODES,
     GEOMETRY_CHANGED,
+    HIDE_SYNC_POPOVER,
+    TOGGLE_SHOW_AGAIN_FLAG,
     DELETE_GEOMETRY_FEATURE,
     START_DRAWING_FEATURE,
     SET_PERMISSION,
@@ -58,6 +60,8 @@ const emptyResultsState = {
     open: false,
     canEdit: false,
     focusOnEdit: true,
+    showAgain: false,
+    showPopoverSync: localStorage && localStorage.getItem("showPopoverSync") !== null ? localStorage.getItem("showPopoverSync") === "true" : true,
     mode: MODES.VIEW,
     changes: [],
     pagination: {
@@ -137,6 +141,7 @@ function featuregrid(state = emptyResultsState, action) {
     switch (action.type) {
     case INIT_PLUGIN: {
         return assign({}, state, {
+            showPopoverSync: localStorage && localStorage.getItem("showPopoverSync") !== null ? localStorage.getItem("showPopoverSync") === "true" : true,
             editingAllowedRoles: action.options.editingAllowedRoles || state.editingAllowedRoles || ["ADMIN"],
             virtualScroll: !!action.options.virtualScroll,
             maxStoredPages: action.options.maxStoredPages || 5
@@ -367,6 +372,12 @@ function featuregrid(state = emptyResultsState, action) {
     }
     case GRID_QUERY_RESULT: {
         return assign({}, state, {features: action.features || [], pages: action.pages || []});
+    }
+    case HIDE_SYNC_POPOVER: {
+        return assign({}, state, {showPopoverSync: false});
+    }
+    case TOGGLE_SHOW_AGAIN_FLAG: {
+        return assign({}, state, {showAgain: !state.showAgain});
     }
     default:
         return state;
