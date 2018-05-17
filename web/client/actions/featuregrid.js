@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
+const SET_SHOW_CURRENT_FILTER = 'SET_SHOW_CURRENT_FILTER';
 const SELECT_FEATURES = 'FEATUREGRID:SELECT_FEATURES';
 const DESELECT_FEATURES = 'FEATUREGRID:DESELECT_FEATURES';
 const CLEAR_SELECTION = 'FEATUREGRID:CLEAR_SELECTION';
@@ -104,6 +105,12 @@ function selectFeatures(features, append) {
         type: SELECT_FEATURES,
         features,
         append
+    };
+}
+function setShowCurrentFilter(showFilteredObject) {
+    return {
+        type: SET_SHOW_CURRENT_FILTER,
+        showFilteredObject
     };
 }
 function geometryChanged(features) {
@@ -364,6 +371,7 @@ module.exports = {
     OPEN_FEATURE_GRID, openFeatureGrid,
     CLOSE_FEATURE_GRID_CONFIRM, closeFeatureGridConfirm,
     FEATURE_GRID_CLOSE_CONFIRMED, closeFeatureGridConfirmed,
+    SET_SHOW_CURRENT_FILTER, setShowCurrentFilter,
     DISABLE_TOOLBAR, disableToolbar,
     OPEN_ADVANCED_SEARCH, openAdvancedSearch,
     ZOOM_ALL, zoomAll,

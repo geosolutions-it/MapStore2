@@ -47,7 +47,7 @@ const featuregrid = require('../featuregrid');
 const {setFeatures, dockSizeFeatures, setLayer, toggleTool, customizeAttribute, selectFeatures, deselectFeatures, createNewFeatures, updateFilter,
     featureSaving, toggleSelection, clearSelection, MODES, toggleEditMode, toggleViewMode, saveSuccess, clearChanges, saveError, startDrawingFeature,
     deleteGeometryFeature, geometryChanged, setSelectionOptions, changePage, featureModified, setPermission, disableToolbar, openFeatureGrid, closeFeatureGrid,
-    toggleShowAgain, hideSyncPopover, initPlugin, sizeChange, storeAdvancedSearchFilter} = require('../../actions/featuregrid');
+    toggleShowAgain, hideSyncPopover, initPlugin, sizeChange, storeAdvancedSearchFilter, setShowCurrentFilter} = require('../../actions/featuregrid');
 const {featureTypeLoaded, createQuery} = require('../../actions/wfsquery');
 
 const {changeDrawingStatus} = require('../../actions/draw');
@@ -323,5 +323,9 @@ describe('Test the featuregrid reducer', () => {
         const filterObj = {test: 'test'};
         let state = featuregrid({selectedLayer: "test_layer"}, storeAdvancedSearchFilter(filterObj));
         expect(state.advancedFilters.test_layer).toBe(filterObj);
+    });
+    it('SET_SHOW_CURRENT_FILTER', () => {
+        let state = featuregrid({}, setShowCurrentFilter(true));
+        expect(state.showFilteredObject).toBe(true);
     });
 });

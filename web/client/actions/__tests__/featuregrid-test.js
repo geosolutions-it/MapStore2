@@ -40,6 +40,7 @@ const {
     sizeChange, SIZE_CHANGE,
     START_SYNC_WMS, startSyncWMS,
     storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER,
+    setShowCurrentFilter, SET_SHOW_CURRENT_FILTER,
     fatureGridQueryResult, GRID_QUERY_RESULT,
     moreFeatures, LOAD_MORE_FEATURES,
     hideSyncPopover, HIDE_SYNC_POPOVER,
@@ -293,5 +294,13 @@ describe('Test correctness of featurgrid actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(LOAD_MORE_FEATURES);
         expect(retval.pages).toBe(pages);
+    });
+
+    it('Test setShowCurrentFilter', () => {
+        const showFilteredObject = true;
+        const retval = setShowCurrentFilter(showFilteredObject);
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_SHOW_CURRENT_FILTER);
+        expect(retval.showFilteredObject).toBe(showFilteredObject);
     });
 });
