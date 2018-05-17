@@ -13,8 +13,9 @@ const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const uuid = require('uuid');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
-const {reprojectGeoJson} = require('../../../utils/CoordinatesUtils');
+const {reprojectGeoJson, calculateDistance, reproject} = require('../../../utils/CoordinatesUtils');
 const VectorStyle = require('./VectorStyle');
+const wgs84Sphere = new ol.Sphere(6378137);
 
 /**
  * Component that allows to draw and edit geometries as (Point, LineString, Polygon, Rectangle, Circle, MultiGeometries)
@@ -513,6 +514,7 @@ class DrawSupport extends React.Component {
         let extent = geometry.getExtent();
         let center = ol.extent.getCenter(extent);
         let coordinates = geometry.getCoordinates();
+        let projection = this.props.map.getView().getProjection().getCode();
         let radius;
 
         let type = geometry.getType();
@@ -522,7 +524,10 @@ class DrawSupport extends React.Component {
         }
 
         if (this.props.drawMethod === "Circle") {
-            radius = Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
+            const wgs84Coordinates = [[...center], [...coordinates[0][0]]].map((coordinate) => {
+                return this.reprojectCoordinatesToWGS84(coordinate, projection);
+            });
+            radius = calculateDistance(wgs84Coordinates, 'haversine');
         }
 
         return assign({}, {
@@ -533,8 +538,13 @@ class DrawSupport extends React.Component {
             coordinates,
             radius,
             style: this.fromOlStyle(feature.getStyle()),
-            projection: this.props.map.getView().getProjection().getCode()
+            projection
         });
+    };
+
+    reprojectCoordinatesToWGS84 = (coordinate, projection) => {
+        let reprojectedCoordinate = reproject(coordinate, projection, 'EPSG:4326');
+        return [reprojectedCoordinate.x, reprojectedCoordinate.y];
     };
 
     toOlFeature = (feature) => {
@@ -654,9 +664,8 @@ class DrawSupport extends React.Component {
         this.props.map.addInteraction(this.translateInteraction);
     }
 
-    createOLGeometry = ({type, coordinates, radius, center}) => {
+    createOLGeometry = ({type, coordinates, radius, center, projection}) => {
         let geometry;
-
         switch (type) {
             case "Point": { geometry = new ol.geom.Point(coordinates ? coordinates : []); break; }
             case "LineString": { geometry = new ol.geom.LineString(coordinates ? coordinates : []); break; }
@@ -664,8 +673,13 @@ class DrawSupport extends React.Component {
             case "MultiLineString": { geometry = new ol.geom.MultiLineString(coordinates ? coordinates : []); break; }
             case "MultiPolygon": { geometry = new ol.geom.MultiPolygon(coordinates ? coordinates : []); break; }
             // defaults is Polygon
-            default: { geometry = radius && center ?
-                    ol.geom.Polygon.fromCircle(new ol.geom.Circle([center.x, center.y], radius), 100) : new ol.geom.Polygon(coordinates ? coordinates : []);
+            default: { geometry = projection
+                && !isNaN(parseFloat(radius))
+                && center
+                && !isNaN(parseFloat(center.x))
+                && !isNaN(parseFloat(center.y)) ?
+                ol.geom.Polygon.circular(wgs84Sphere, this.reprojectCoordinatesToWGS84([center.x, center.y], projection), radius, 100).clone().transform('EPSG:4326', projection)
+                : new ol.geom.Polygon(coordinates ? [coordinates] : []);
             }
         }
         return geometry;

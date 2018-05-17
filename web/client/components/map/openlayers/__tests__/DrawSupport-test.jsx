@@ -1110,4 +1110,91 @@ describe('Test DrawSupport', () => {
         expect(spyChangeStatus.calls.length).toBe(1);
         expect(spyChange.calls.length).toBe(1);
     });
+
+    it('test createOLGeometry type Circle', () => {
+        const support = ReactDOM.render(<DrawSupport/>, document.getElementById("container"));
+        const type = 'Circle';
+        const coordinates = [];
+        const radius = 50;
+        const center = {
+            x: 0,
+            y: 0
+        };
+        const projection = 'EPSG:3857';
+        const geometry = support.createOLGeometry({type, coordinates, radius, center, projection});
+        const geometryCoordinates = geometry.getCoordinates();
+        expect(geometryCoordinates[0].length).toBe(101);
+    });
+
+    it('test createOLGeometry type Circle missing param', () => {
+        const support = ReactDOM.render(<DrawSupport/>, document.getElementById("container"));
+        const type = 'Circle';
+        const radius = 50;
+        const projection = 'EPSG:3857';
+        const center = {
+            x: 0,
+            y: 0
+        };
+
+        const geometryMissingCenter = support.createOLGeometry({type, radius, projection});
+        let geometryCoordinates = geometryMissingCenter.getCoordinates();
+        expect(geometryCoordinates.length).toBe(0);
+
+        const geometryMissingProjection = support.createOLGeometry({type, radius, center});
+        geometryCoordinates = geometryMissingProjection.getCoordinates();
+        expect(geometryCoordinates.length).toBe(0);
+
+        const geometryMissingRadius = support.createOLGeometry({type, projection, center});
+        geometryCoordinates = geometryMissingRadius.getCoordinates();
+        expect(geometryCoordinates.length).toBe(0);
+    });
+
+    it('test createOLGeometry type Circle wrong center', () => {
+        const support = ReactDOM.render(<DrawSupport/>, document.getElementById("container"));
+        const type = 'Circle';
+        const radius = 50;
+        const center = {
+            x: 'AAAA',
+            y: 0
+        };
+        const projection = 'EPSG:3857';
+        const geometry = support.createOLGeometry({type, radius, center, projection});
+        const geometryCoordinates = geometry.getCoordinates();
+        expect(geometryCoordinates.length).toBe(0);
+    });
+
+    it('test fromOLFeature verify radius', () => {
+
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:3857'
+                })
+            })
+        };
+
+        const simplifiedCircle = new ol.Feature({
+            geometry: new ol.geom.Polygon([[
+                [1260844.6064174946, 5858067.29727681],
+                [1260960.7874218025, 5857951.114737838],
+                [1260844.6064174946, 5857834.9352681665],
+                [1260728.4254131867, 5857951.114737838],
+                [1260844.6064174946, 5858067.29727681]
+            ]])
+        });
+
+        const support = ReactDOM.render(<DrawSupport drawMethod="Circle" map={fakeMap}/>, document.getElementById("container"));
+        const featureData = support.fromOLFeature(simplifiedCircle);
+
+        expect(Math.round(featureData.radius)).toBe(80);
+    });
 });

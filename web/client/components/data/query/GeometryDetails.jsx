@@ -85,7 +85,7 @@ class GeometryDetails extends React.Component {
     onUpdateCircle = (value, name) => {
         this.tempCircle[name] = parseFloat(value);
 
-        let center = !this.props.useMapProjection ?
+        let center = !this.props.useMapProjection && !isNaN(parseFloat(this.tempCircle.x)) && !isNaN(parseFloat(this.tempCircle.y)) ?
             CoordinatesUtils.reproject([this.tempCircle.x, this.tempCircle.y], 'EPSG:4326', this.props.geometry.projection) : [this.tempCircle.x, this.tempCircle.y];
 
         center = center.x === undefined ? {x: center[0], y: center[1]} : center;
