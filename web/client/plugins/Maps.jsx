@@ -23,7 +23,7 @@ const {createSelector} = require('reselect');
 const MapsGrid = require('./maps/MapsGrid');
 const MetadataModal = require('./maps/MetadataModal');
 
-const {loadMaps} = require('../actions/maps');
+const {loadMaps, setShowMapDetails} = require('../actions/maps');
 
 const PaginationToolbar = connect((state) => {
     if (!state.maps ) {
@@ -58,6 +58,8 @@ class Maps extends React.Component {
         title: PropTypes.any,
         onGoToMap: PropTypes.func,
         loadMaps: PropTypes.func,
+        setShowMapDetails: PropTypes.func,
+        showMapDetails: PropTypes.bool,
         maps: PropTypes.object,
         searchText: PropTypes.string,
         mapsOptions: PropTypes.object,
@@ -73,6 +75,7 @@ class Maps extends React.Component {
         mapType: "leaflet",
         onGoToMap: () => {},
         loadMaps: () => {},
+        setShowMapDetails: () => {},
         fluid: false,
         title: <h3><Message msgId="manager.maps_title" /></h3>,
         mapsOptions: {start: 0, limit: 12},
@@ -89,6 +92,7 @@ class Maps extends React.Component {
     componentDidMount() {
         // if there is a change in the search text it uses that before the initialMapFilter
         this.props.loadMaps(ConfigUtils.getDefaults().geoStoreUrl, this.props.searchText || ConfigUtils.getDefaults().initialMapFilter || "*", this.props.mapsOptions);
+        this.props.setShowMapDetails(this.props.showMapDetails);
     }
 
     render() {
@@ -117,7 +121,7 @@ const mapsPluginSelector = createSelector([
 }));
 
 const MapsPlugin = connect(mapsPluginSelector, {
-    loadMaps
+    loadMaps, setShowMapDetails
 })(Maps);
 
 module.exports = {

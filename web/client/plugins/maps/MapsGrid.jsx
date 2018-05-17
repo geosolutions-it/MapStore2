@@ -19,6 +19,7 @@ const MapsGrid = connect((state) => {
     return {
         bsSize: "small",
         currentMap: state.currentMap,
+        showMapDetails: state.maps && state.maps.showMapDetails,
         loading: state.maps && state.maps.loading,
         mapType: mapTypeSelector(state)
     };

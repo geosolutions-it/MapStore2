@@ -21,6 +21,7 @@ class MapCard extends React.Component {
         // props
         style: PropTypes.object,
         map: PropTypes.object,
+        showMapDetails: PropTypes.bool,
         detailsSheetActions: PropTypes.object,
         // CALLBACKS
         viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
@@ -115,7 +116,7 @@ class MapCard extends React.Component {
                 }
             },
             {
-                visible: !!(this.props.map.details && this.props.map.details !== 'NODATA'),
+                visible: !!(this.props.showMapDetails && this.props.map.details && this.props.map.details !== 'NODATA'),
                 glyph: 'sheet',
                 tooltipId: this.props.tooltips.showDetails,
                 onClick: evt => {
