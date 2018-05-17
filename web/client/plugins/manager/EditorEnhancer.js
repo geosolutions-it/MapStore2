@@ -4,7 +4,9 @@ const Rx = require("rxjs");
 const {isEmpty} = require("lodash");
 
 const {connect} = require("react-redux");
-const {changeDrawingStatus} = require("../..//actions/draw");
+const {changeDrawingStatus} = require("../../actions/draw");
+const {error} = require("../../actions/notifications");
+
 const sameLayer = ({activeRule: f1}, {activeRule: f2}) => f1.layer === f2.layer;
 const emitStop = stream$ => stream$.filter(() => false).startWith({});
 const {getStylesAndAttributes} = require("../../observables/rulesmanager");
@@ -25,7 +27,8 @@ const dataStreamFactory = prop$ => {
     }).let(emitStop);
 };
 module.exports = compose(connect(() => ({}), {
-    onChangeDrawingStatus: changeDrawingStatus
+    onChangeDrawingStatus: changeDrawingStatus,
+    onError: error
     }),
     defaultProps({dataStreamFactory}),
     withStateHandlers(({activeRule: initRule}) => ({
