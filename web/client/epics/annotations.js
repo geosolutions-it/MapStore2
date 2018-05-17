@@ -69,15 +69,14 @@ const mergeGeometry = (features) => {
 };
 
 const toggleDrawOrEdit = (state, featureType) => {
-    const drawing = state.annotations.drawing;
     const feature = state.annotations.editing;
     const type = featureType || state.annotations.featureType;
     const multiGeom = state.annotations.config.multiGeometry;
     const drawOptions = {
         featureProjection: "EPSG:4326",
         stopAfterDrawing: !multiGeom,
-        editEnabled: !drawing,
-        drawEnabled: drawing,
+        editEnabled: true,
+        drawEnabled: false,
         transformToFeatureCollection: true
     };
     return changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, feature.style/* || {[type]: DEFAULT_ANNOTATIONS_STYLES[type]}*/);
@@ -169,7 +168,18 @@ module.exports = (viewer) => ({
         }),
     startDrawMarkerEpic: (action$, store) => action$.ofType(TOGGLE_ADD)
         .switchMap( (a) => {
-            return Rx.Observable.of(toggleDrawOrEdit(store.getState(), a.featureType));
+            const state = store.getState();
+            const feature = state.annotations.editing;
+            const type = a.featureType || state.annotations.featureType;
+            const multiGeom = state.annotations.config.multiGeometry;
+            const drawOptions = {
+                featureProjection: "EPSG:4326",
+                stopAfterDrawing: !multiGeom,
+                editEnabled: true,
+                drawEnabled: false,
+                transformToFeatureCollection: true
+            };
+            return Rx.Observable.of(changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, feature.style));
         }),
     stopDrawingMultiGeomEpic: (action$, store) => action$.ofType(STOP_DRAWING)
         .filter(() => store.getState().annotations.editing.features && !!store.getState().annotations.editing.features.length)
@@ -318,8 +328,7 @@ module.exports = (viewer) => ({
             const selected = state.annotations.selected;
             const multiGeometry = state.annotations.config.multiGeometry;
             const style = feature.style;
-
-            const action = changeDrawingStatus("drawOrEdit", "FeatureCollection", "annotations", [feature], {
+            const action = changeDrawingStatus("drawOrEdit", "FeatureCollection", "annotations", [selected], {
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,

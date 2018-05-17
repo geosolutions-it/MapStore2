@@ -10,7 +10,7 @@ const assign = require('object-assign');
 
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 const {TOGGLE_CONTROL} = require('../actions/controls');
-const {FEATURES_SELECTED} = require('../actions/draw');
+const {FEATURES_SELECTED, DRAWING_FEATURE} = require('../actions/draw');
 const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, CLOSE_ANNOTATIONS,
     CONFIRM_CLOSE_ANNOTATIONS, CANCEL_CLOSE_ANNOTATIONS,
     EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
@@ -32,6 +32,13 @@ const fixCoordinates = (coords, type) => {
     }
 };
 
+const getBaseCoord = (type) => {
+    switch (type) {
+        case "Polygon": return [[[], [], [], []]];
+        case "LineString": return [[], []];
+        default: return [];
+    }
+};
 const updateFeatures = (state, geom) => {
     let {coordinates, radius, text} = geom;
     let validCoordinates;
@@ -115,6 +122,16 @@ function annotations(state = { validationErrors: {} }, action) {
             return assign({}, state, { selected,
                 coordinateEditorEnabled: !!selected
              });
+        }
+        case DRAWING_FEATURE: {
+            let selected = head(action.features) || null;
+            if (selected && selected.properties && (selected.properties.isCircle)) {
+                selected = {...selected, geometry: {coordinates: selected.properties.center, type: "Circle"}, type: "Feature"};
+            }
+            if (selected && selected.properties && selected.properties.isText) {
+                selected = {...selected, geometry: {coordinates: selected.geometry.coordinates, type: "Text"}, type: "Feature"};
+            }
+            return assign({}, state, { selected});
         }
         case REMOVE_ANNOTATION:
             return assign({}, state, {
@@ -220,14 +237,16 @@ function annotations(state = { validationErrors: {} }, action) {
             const id = uuid.v1();
             return assign({}, state, {
                 editing: {
-                    type: "Feature",
+                    type: "FeatureCollection",
                     id,
                     geometry: null,
+                    features: [],
                     newFeature: true,
                     properties: {
                         id
                     }
                 },
+                selected: {},
                 originalStyle: null
             });
         case CONFIRM_REMOVE_ANNOTATION:
@@ -346,12 +365,14 @@ function annotations(state = { validationErrors: {} }, action) {
                     show: false,
                     drawing: false
                 },
+                coordinateEditorEnabled: true,
                 editing: assign({}, state.editing, {
                         style: assign({}, state.editing.style, {
                             type: newtype,
                             [type]: state.editing.style && state.editing.style[type] || DEFAULT_ANNOTATIONS_STYLES[type]
                         })
-                    })
+                    }),
+                    selected: {type: "Feature", geometry: {type, coordinates: []}, properties: {"new": true}}
                 });
         }
         case TOGGLE_STYLE:

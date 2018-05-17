@@ -8,13 +8,16 @@
 
 const React = require('react');
 const ol = require('openlayers');
-const {concat, head, find} = require('lodash');
+const {concat, head, find, slice} = require('lodash');
 const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const uuid = require('uuid');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
 const {reprojectGeoJson, reproject} = require('../../../utils/CoordinatesUtils');
+const {set} = require('../../../utils/ImmutableUtils');
 const VectorStyle = require('./VectorStyle');
+const geojsonFormat = new ol.format.GeoJSON();
+
 /**
  * Component that allows to draw and edit geometries as (Point, LineString, Polygon, Rectangle, Circle, MultiGeometries)
  * @class DrawSupport
@@ -42,6 +45,7 @@ class DrawSupport extends React.Component {
         features: PropTypes.array,
         onChangeDrawingStatus: PropTypes.func,
         onGeometryChanged: PropTypes.func,
+        onDrawingFeatures: PropTypes.func,
         onSelectFeatures: PropTypes.func,
         onDrawStopped: PropTypes.func,
         onEndDrawing: PropTypes.func,
@@ -61,6 +65,7 @@ class DrawSupport extends React.Component {
         onChangeDrawingStatus: () => {},
         onGeometryChanged: () => {},
         onDrawStopped: () => {},
+        onDrawingFeatures: () => {},
         onSelectFeatures: () => {},
         onEndDrawing: () => {},
         onTextChanged: () => {}
@@ -239,7 +244,7 @@ class DrawSupport extends React.Component {
         if (this.drawInteraction) {
             this.removeDrawInteraction();
         }
-        this.drawInteraction = new ol.interaction.Draw(this.drawPropertiesForGeometryType(drawMethod, maxPoints, this.drawSource, this.props.style));
+        this.drawInteraction = new ol.interaction.Draw(this.drawPropertiesForGeometryType(drawMethod, maxPoints, this.drawSource, this.props.options.selected));
         this.props.map.disableEventListener('singleclick');
         this.drawInteraction.on('drawstart', function(evt) {
             this.sketchFeature = evt.feature;
@@ -281,12 +286,13 @@ class DrawSupport extends React.Component {
         return geometry;
     };
 
-    handleDrawAndEdit = (drawMethod, startingPoint, maxPoints, style) => {
+    handleDrawAndEdit = (drawMethod, startingPoint, maxPoints, selected) => {
         if (this.drawInteraction) {
             this.removeDrawInteraction();
         }
-        this.drawInteraction = new ol.interaction.Draw(this.drawPropertiesForGeometryType(getSimpleGeomType(drawMethod), maxPoints, isSimpleGeomType(drawMethod) ? this.drawSource : null, style ));
-        this.props.map.disableEventListener('singleclick');
+        this.drawInteraction = new ol.interaction.Draw(this.drawPropertiesForGeometryType(getSimpleGeomType(drawMethod), maxPoints, isSimpleGeomType(drawMethod) ? this.drawSource : null, selected ));
+
+        this.props.map.disableEventListener('singleclick'); // this method does not
         this.drawInteraction.on('drawstart', function(evt) {
             this.sketchFeature = evt.feature;
             if (this.selectInteraction) {
@@ -294,6 +300,7 @@ class DrawSupport extends React.Component {
                 this.selectInteraction.setActive(false);
             }
         }, this);
+
         this.drawInteraction.on('drawend', function(evt) {
             this.sketchFeature = evt.feature;
             this.sketchFeature.set('id', uuid.v1());
@@ -332,7 +339,6 @@ class DrawSupport extends React.Component {
                 newFeature.setProperties({id: uuid.v1()});
                 const newFeatures = [...previousFeatures, newFeature];
                 // create FeatureCollection externalize as function
-                const geojsonFormat = new ol.format.GeoJSON();
                 let newFeatureColl = geojsonFormat.writeFeaturesObject(newFeatures);
                 const vectorSource = new ol.source.Vector({
                     features: (new ol.format.GeoJSON()).readFeatures(newFeatureColl)
@@ -450,7 +456,6 @@ class DrawSupport extends React.Component {
                   });
                 this.drawLayer.setSource(vectorSource);
 
-                const geojsonFormat = new ol.format.GeoJSON();
                 let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
                 if (newFeature.geometry.type === "Polygon") {
                     newFeature.geometry.coordinates[0].push(newFeature.geometry.coordinates[0][0]);
@@ -476,6 +481,22 @@ class DrawSupport extends React.Component {
                     this.selectInteraction.setActive(true);
                 }
             }
+
+            if (this.props.options && drawMethod === "Polygon" || drawMethod === "LineString") {
+                let ft = reprojectGeoJson(geojsonFormat.writeFeaturesObject([this.sketchFeature.clone()]), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
+                let coords = ft.features[0].geometry.coordinates;
+                let drawingFt = head(this.props.features);
+                if (drawingFt.geometry === null) {
+                    drawingFt = set('geometry', {}, drawingFt);
+                    drawingFt = set('geometry.type', drawMethod, drawingFt);
+                }
+                drawingFt = set('type', "Feature", drawingFt);
+                // TODO CHECK TYPE, LINESTRING OR POLYGON, OTHERS HAS NO NEED TO MERGE DATA
+                drawingFt = set('geometry.coordinates', coords, drawingFt);
+                setTimeout(() => {
+                    this.props.onDrawingFeatures([drawingFt]);
+                }, 300);
+            }
         }, this);
 
         this.props.map.addInteraction(this.drawInteraction);
@@ -483,6 +504,12 @@ class DrawSupport extends React.Component {
     };
 
     drawPropertiesForGeometryType = (geometryType, maxPoints, source) => {
+        /*
+            let features = (new ol.format.GeoJSON()).readFeatures({
+                type: "FeatureCollection", features: startingFeature !== null ? [startingFeature] : []
+            });
+        */
+
         let drawBaseProps = {
             source,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
@@ -658,10 +685,31 @@ class DrawSupport extends React.Component {
             // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
             this.addTranslateInteraction();
             this.addSelectInteraction(newProps.options && newProps.options.selected);
+            this.props.map.on('singleclick', (e) => {
+                if (this.props.options && newProps.drawMethod === "Polygon" || newProps.drawMethod === "LineString") {
+                    let ft = this.getNewFeature(newProps.drawMethod, newProps.drawMethod === "LineString" ? [e.coordinate] : [[e.coordinate]]);
+                    ft = reprojectGeoJson(geojsonFormat.writeFeaturesObject([ft.clone()]), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
+                    let coords = ft.features[0].geometry.coordinates;
+                    /*if (newProps.drawMethod === "LineString") {
+                        coords = slice(coords, 0, coords.length - 1 );
+                    }*/
+                    let drawingFt = head(this.props.features);
+                    if (drawingFt.geometry === null) {
+                        drawingFt = set('geometry', {}, drawingFt);
+                        drawingFt = set('geometry.type', newProps.drawMethod, drawingFt);
+                    }
+                    drawingFt = set('type', "Feature", drawingFt);
+                    // TODO CHECK TYPE, LINESTRING OR POLYGON, OTHERS HAS NO NEED TO MERGE DATA
+                    drawingFt = set('geometry.coordinates', coords, drawingFt);
+                    this.props.onDrawingFeatures([drawingFt]);
+                }
+                console.log(e);
+            });
+
         }
 
         if (newProps.options.drawEnabled) {
-            this.handleDrawAndEdit(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints, newProps.style);
+            this.handleDrawAndEdit(newProps.drawMethod, newProps.options.startingPoint, newProps.options.maxPoints, newProps.options.selected);
         }
     };
 
@@ -672,12 +720,14 @@ class DrawSupport extends React.Component {
         let olFt;
         if (selectedFeature) {
             olFt = find(this.drawSource.getFeatures(), f => f.getProperties().id === selectedFeature.properties.id );
-            this.selectFeature(olFt);
+            if (olFt) {
+                this.selectFeature(olFt);
+            }
         }
 
         this.selectInteraction = new ol.interaction.Select({
             layers: [this.drawLayer],
-            features: new ol.Collection(selectedFeature ? [olFt] : null)
+            features: new ol.Collection(selectedFeature && olFt ? [olFt] : null)
         });
 
         this.selectInteraction.on('select', (evt) => {
@@ -691,7 +741,7 @@ class DrawSupport extends React.Component {
                         let ftSelected = head(selectedFeatures);
                         this.selectFeature(ftSelected);
                         // TODO SELECT SMALLEST ONE IF THERE ARE >= 2 features selected
-                        const geojsonFormat = new ol.format.GeoJSON();
+
                         if (ftSelected.getGeometry && ftSelected.getGeometry().getType() === "Circle") {
                             let radius = ftSelected.getGeometry().getRadius();
                             let center = reproject(ftSelected.getGeometry().getCenter(), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
@@ -933,9 +983,11 @@ class DrawSupport extends React.Component {
                     return ol.events.condition.primaryAction(e) && !ol.events.condition.altKeyOnly(e);
                 }
             });
+
+
         this.modifyInteraction.on('modifyend', (e) => {
 
-            const geojsonFormat = new ol.format.GeoJSON();
+
             let features = e.features.getArray().map((f) => {
                 // transform back circles in polygons
                 let newFt = f.clone();
@@ -973,7 +1025,7 @@ class DrawSupport extends React.Component {
         this.translateInteraction.setActive(false);
         this.translateInteraction.on('translateend', (e) => {
 
-            const geojsonFormat = new ol.format.GeoJSON();
+
             let features = e.features.getArray().map(f => {
                 // transform back circles in polygons
                 let newFt = f.clone();

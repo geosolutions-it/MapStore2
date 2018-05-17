@@ -12,6 +12,7 @@ const SET_CURRENT_STYLE = 'DRAW:SET_CURRENT_STYLE';
 const GEOMETRY_CHANGED = 'DRAW:GEOMETRY_CHANGED';
 const DRAW_SUPPORT_STOPPED = 'DRAW:DRAW_SUPPORT_STOPPED';
 const FEATURES_SELECTED = 'DRAW:FEATURES_SELECTED';
+const DRAWING_FEATURE = 'DRAW:DRAWING_FEATURES';
 
 function geometryChanged(features, owner, enableEdit, textChanged, circleChanged) {
     return {
@@ -29,6 +30,12 @@ function geometryChanged(features, owner, enableEdit, textChanged, circleChanged
 function selectFeatures(features = []) {
     return {
         type: FEATURES_SELECTED,
+        features
+    };
+}
+function drawingFeatures(features = []) {
+    return {
+        type: DRAWING_FEATURE,
         features
     };
 }
@@ -73,6 +80,7 @@ module.exports = {
     END_DRAWING, endDrawing,
     SET_CURRENT_STYLE, setCurrentStyle,
     FEATURES_SELECTED, selectFeatures,
+    DRAWING_FEATURE, drawingFeatures,
     DRAW_SUPPORT_STOPPED, drawStopped,
     GEOMETRY_CHANGED, geometryChanged
 };
