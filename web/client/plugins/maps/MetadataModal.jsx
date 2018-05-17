@@ -11,11 +11,12 @@ const {metadataChanged} = require('../../actions/maps');
 const {loadPermissions, updatePermissions, loadAvailableGroups} = require('../../actions/maps');
 const {updateCurrentMapPermissions, addCurrentMapPermission} = require('../../actions/currentMap');
 const {setControlProperty} = require('../../actions/controls');
+const {showMapDetailsSelector} = require('../../selectors/maps.js');
 
 const MetadataModal = connect(
     (state = {}) => ({
         metadata: state.currentMap.metadata,
-        showDetailsRow: state.maps && state.maps.showMapDetails,
+        showDetailsRow: showMapDetailsSelector(state),
         availableGroups: state.currentMap && state.currentMap.availableGroups || [ ], // TODO: add message when array is empty
         newGroup: state.controls && state.controls.permissionEditor && state.controls.permissionEditor.newGroup,
         newPermission: state.controls && state.controls.permissionEditor && state.controls.permissionEditor.newPermission || "canRead",
