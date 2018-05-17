@@ -12,7 +12,7 @@ const emitStop = stream$ => stream$.filter(() => false).startWith({});
 const {getStylesAndAttributes} = require("../../observables/rulesmanager");
 const dataStreamFactory = prop$ => {
     return prop$.distinctUntilChanged((oP, nP) => sameLayer(oP, nP))
-    .filter(({activeRule}) => activeRule.layer)
+    .filter(({activeRule}) => activeRule.layer && activeRule.workspace)
     .switchMap(({activeRule, optionsLoaded, onError = () => {}, setLoading}) => {
         const {workspace, layer} = activeRule;
         setLoading(true);
@@ -42,7 +42,14 @@ module.exports = compose(connect(() => ({}), {
             // Add some reference logic here
             if (key === "workspace") {
                 const {layer, workspace, constraints, ...newActive} = activeRule;
-                return {activeRule: { ...newActive, workspace: value}};
+                const l = !value ? {layer} : {};
+                return {
+                    activeRule: { ...newActive, workspace: value, ...l},
+                    styles: [],
+                    properties: [],
+                    type: undefined,
+                    layer: undefined
+                };
             }else if (key === "layer") {
                 const {layer, constraints, ...newActive} = activeRule;
                 return {activeRule: { ...newActive, layer: value}};

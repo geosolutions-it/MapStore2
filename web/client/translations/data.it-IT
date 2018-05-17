@@ -1456,7 +1456,8 @@
             "cancelButton": "Annulla",
             "cqlRead": "Filtro CQL lettura",
             "cqlWrite": "Filtero CQL scrittura",
-            "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!"
+            "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!",
+            "selectworkspace": "Seleziona un workspace per abilitare le opzioni avanzate!"
         },
             "tutorial": {
                 "title": "Tutorial",

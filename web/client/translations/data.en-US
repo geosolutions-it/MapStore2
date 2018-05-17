@@ -1458,7 +1458,8 @@
             "cancelButton": "Cancel",
             "cqlRead": "CQL Filter Read Rules",
             "cqlWrite": "CQL Filter Write Rules",
-            "missingconfig": "Rules manager misses the configuration. Access denied!"
+            "missingconfig": "Rules manager misses the configuration. Access denied!",
+            "selectworkspace": "Select a workspace to enable advanced options!"
         },
         "tutorial": {
             "title": "Tutorial",
