@@ -60,7 +60,7 @@
             "deleteLayerMessage": "Sei sicuro di voler eliminare questo livello?",
             "confirmDelete": "Sei sicuro?",
             "featureTypeError": "Impossibile caricare gli attributi del layer",
-            "featureTypeErrorInvalidJSON": "Impossibile caricare gli attributi del layer. La risposta non è un oggetto JSON valido",
+            "featureTypeErrorInvalidJSON": "Impossibile caricare gli attributi del layer. La risposta non è valida",
             "elevation": "Elevazione",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",

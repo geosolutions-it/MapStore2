@@ -60,7 +60,7 @@
             "deleteLayerMessage": "Do you really want to delete this Layer?",
             "confirmDelete": "Are you sure?",
             "featureTypeError": "Cannot load layer attributes",
-            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not a valid JSON object", 
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid", 
             "elevation": "Elevation",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",

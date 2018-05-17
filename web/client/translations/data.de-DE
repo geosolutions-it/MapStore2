@@ -60,7 +60,7 @@
             "deleteLayerMessage": "Möchtest du wirklich diese Ebene löschen?",
             "confirmDelete": "Bist du sicher?",
             "featureTypeError": "Layerattribute können nicht geladen werden",
-            "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Die Antwort ist kein gültiges JSON-Objekt", 
+            "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Antwort ist nicht gültig", 
             "elevation": "Höhe",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",

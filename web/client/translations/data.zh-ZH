@@ -52,7 +52,7 @@
             "deleteLayerMessage": "你真的想删除这个层？",
             "confirmDelete": "你确定?",
             "featureTypeError": "无法加载图层属性",
-            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not a valid JSON object",
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "海拔",
             "titleTranslations": "标题 translations",
             "groupProperties": "组属性",

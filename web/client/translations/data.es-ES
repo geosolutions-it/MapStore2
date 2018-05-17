@@ -60,7 +60,7 @@
             "deleteLayerMessage": "Está totalmente seguro de querer borrar este mapa?",
             "confirmDelete": "Está seguro?",
             "featureTypeError": "Imposible cargar los atributos del mapa",
-            "featureTypeErrorInvalidJSON": "Imposible cargar los atributos del mapa. La respuesta no es un objeto JSON válido", 
+            "featureTypeErrorInvalidJSON": "Imposible cargar los atributos del mapa. La respuesta no es válida", 
             "elevation": "Elevación",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",

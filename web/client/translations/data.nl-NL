@@ -54,7 +54,7 @@
             "deleteLayerMessage": "Weet u zeker dat u deze laag wilt verwijderen?",
             "confirmDelete": "Bent u zeker?",
             "featureTypeError": "De atributen van de laag kunnen niet geladen worden",
-            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not a valid JSON object",
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "hoogte",
             "titleTranslations": "Title translations",
             "groupProperties": "Groep properties",

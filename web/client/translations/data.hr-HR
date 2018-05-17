@@ -60,7 +60,7 @@
             "deleteLayerMessage": "Želite li zaista izbrisati ovaj sloj?",
             "confirmDelete": "Jeste li sigurni?",
             "featureTypeError": "Nije moguće učitavanje atributa sloja",
-            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not a valid JSON object",
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "Nadmorska visina",
             "titleTranslations": "Prijevodi naslova",
             "groupProperties": "Svojstva grupe",
