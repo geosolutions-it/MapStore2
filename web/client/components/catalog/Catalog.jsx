@@ -206,7 +206,7 @@ class Catalog extends React.Component {
                     records={this.props.records}
                     authkeyParamNames={this.props.authkeyParamNames}
                     catalogURL={this.isValidServiceSelected() && this.props.services[this.props.selectedService].url || ""}
-                    catalogType={this.props.services[this.props.selectedService].type}
+                    catalogType={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].type}
                     onLayerAdd={this.props.onLayerAdd}
                     onZoomToExtent={this.props.onZoomToExtent}
                     zoomToLayer={this.props.zoomToLayer}

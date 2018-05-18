@@ -54,6 +54,7 @@
             "deleteLayerMessage": "Weet u zeker dat u deze laag wilt verwijderen?",
             "confirmDelete": "Bent u zeker?",
             "featureTypeError": "De atributen van de laag kunnen niet geladen worden",
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "hoogte",
             "titleTranslations": "Title translations",
             "groupProperties": "Groep properties",
@@ -267,6 +268,7 @@
             "refreshConfirm": "Bijwerken",
             "refreshMessage": "Laad de configuratie van de WMS-lagen opnieuw vanaf de server(s)",
             "refreshError": "Fout bij het bijwerken van de lagen: ",
+            "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
             "refreshOptions": {
                 "bbox": "BBOX bijwerken",
                 "search": "De zoekopties bijwerken",
@@ -723,7 +725,8 @@
             "search": "Zoek",
             "reset": "Verwijder",
             "options": "Opties",
-            "srs_not_allowed": "Deze service ondersteunt het geografische coördinatensysteem van de kaart niet"
+            "srs_not_allowed": "Deze service ondersteunt het geografische coördinatensysteem van de kaart niet",
+            "missingReference": "Missing OGC reference metadata"
         },
         "uploader": {
             "filename": "File Name",

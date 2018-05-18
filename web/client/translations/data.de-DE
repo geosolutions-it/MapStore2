@@ -60,6 +60,7 @@
             "deleteLayerMessage": "Möchtest du wirklich diese Ebene löschen?",
             "confirmDelete": "Bist du sicher?",
             "featureTypeError": "Layerattribute können nicht geladen werden",
+            "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Antwort ist nicht gültig", 
             "elevation": "Höhe",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
@@ -383,6 +384,7 @@
             "refreshConfirm": "Aktualisieren",
             "refreshMessage": "Laden Sie die WMS-Layer-Konfiguration von dem Server(s)",
             "refreshError": "Fehler beim Aktualisieren von Ebenen: ",
+            "epsgNotSupported": "CRS {epsg} wird für das Zoomen auf Layer nicht unterstützt",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
@@ -907,6 +909,7 @@
             "type": "Typ",
             "serviceTitle": "Titel",
             "serviceTitlePlaceholder": "Geben Sie einen Titel ein",
+            "missingReference": "Fehlende OGC-Referenzmetadaten",
             "notification": {
                 "warningAddCatalogService": "Geben Sie eine gültige URL und einen Titel ein",
                 "addCatalogService": "Service wurde korrekt hinzugefügt",

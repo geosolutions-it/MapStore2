@@ -52,6 +52,7 @@
             "deleteLayerMessage": "你真的想删除这个层？",
             "confirmDelete": "你确定?",
             "featureTypeError": "无法加载图层属性",
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "海拔",
             "titleTranslations": "标题 translations",
             "groupProperties": "组属性",
@@ -283,6 +284,7 @@
             "refreshConfirm": "更新",
             "refreshMessage": "从服务器重新加载WMS图层配置",
             "refreshError": "更新图层时出错： ",
+            "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
             "refreshOptions": {
                 "bbox": "更新BBOX",
                 "search": "更新搜索选项",
@@ -777,6 +779,7 @@
             "type": "Type",
             "serviceTitle": "Title",
             "serviceTitlePlaceholder": "type a title",
+            "missingReference": "Missing OGC reference metadata",
             "notification": {
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",

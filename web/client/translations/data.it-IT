@@ -60,6 +60,7 @@
             "deleteLayerMessage": "Sei sicuro di voler eliminare questo livello?",
             "confirmDelete": "Sei sicuro?",
             "featureTypeError": "Impossibile caricare gli attributi del layer",
+            "featureTypeErrorInvalidJSON": "Impossibile caricare gli attributi del layer. La risposta non è valida",
             "elevation": "Elevazione",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
@@ -383,6 +384,7 @@
             "refreshConfirm": "Aggiorna",
             "refreshMessage": "Ricarica la configurazione dei layer WMS dai rispettivi server",
             "refreshError": "Errore di aggiornamento sui layer: ",
+            "epsgNotSupported": "CRS {epsg} non supportato per zoom al layer",
             "refreshOptions": {
                 "bbox": "Aggiorna area di zoom",
                 "search": "Aggiorna opzioni di ricerca",
@@ -907,6 +909,7 @@
             "type": "Tipo",
             "serviceTitle": "Titolo",
             "serviceTitlePlaceholder": "inserisci un titolo",
+            "missingReference": "Metadati di riferimento OGC mancanti",
             "notification": {
                 "warningAddCatalogService": "Inserisci un url e titolo validi.",
                 "addCatalogService": "Servizio aggiunto corretamente.",

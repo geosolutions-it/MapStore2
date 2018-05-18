@@ -141,5 +141,16 @@ module.exports = {
      * @return {boolean}       true if the geometry is supported, false otherwise
      */
     hasSupportedGeometry,
-    getDockSize: state => state.featuregrid && state.featuregrid.dockSize
+    getDockSize: state => state.featuregrid && state.featuregrid.dockSize,
+    /**
+     * get selected layer name
+     * @function
+     * @memberof selectors.featuregrid
+     * @param  {object}  state applications state
+     * @return {string}       name of selected layer
+     */
+    selectedLayerNameSelector: state => {
+        const layer = getLayerById(state, selectedLayerIdSelector(state));
+        return layer && layer.name || '';
+    }
 };

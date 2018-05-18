@@ -60,6 +60,7 @@
             "deleteLayerMessage": "Želite li zaista izbrisati ovaj sloj?",
             "confirmDelete": "Jeste li sigurni?",
             "featureTypeError": "Nije moguće učitavanje atributa sloja",
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "Nadmorska visina",
             "titleTranslations": "Prijevodi naslova",
             "groupProperties": "Svojstva grupe",
@@ -355,6 +356,7 @@
             "refreshConfirm": "Ažuriraj",
             "refreshMessage": "Ponovno učitaj konfiguraciju WMS slojeva sa servera",
             "refreshError": "Greška prilikom ažuriranja slojeva: ",
+            "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
             "refreshOptions": {
                 "bbox": "Ažuriraj granični okvir",
                 "search": "Ažuriraj postavke pretraživanja",
@@ -878,6 +880,7 @@
             "type": "Tip",
             "serviceTitle": "Naslov",
             "serviceTitlePlaceholder": "unesi naslov",
+            "missingReference": "Missing OGC reference metadata",
             "notification": {
                 "warningAddCatalogService": "Unesi ispravni url i naslov",
                 "addCatalogService": "Servis je dodan ispravno",

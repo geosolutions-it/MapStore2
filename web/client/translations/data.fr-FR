@@ -61,6 +61,7 @@
             "deleteLayerMessage": "Voulez-vous vraiment supprimer cette couche?",
             "confirmDelete": "Êtes-vous sûr?",
             "featureTypeError": "Impossible de charger les attributs de calque",
+            "featureTypeErrorInvalidJSON": "Impossible de charger les attributs de calque. La réponse n'est pas valide",
             "elevation": "élévation",
             "titleTranslations": "Traductions du titre",
             "groupProperties": "Propriétés du groupe",
@@ -384,6 +385,7 @@
             "refreshConfirm": "Mettre à jour",
             "refreshMessage": "Rechargez la configuration des couches WMS à partir du(s) serveur(s)",
             "refreshError": "Erreur lors de la mise à jour des couches: ",
+            "epsgNotSupported": "CRS {epsg} non pris en charge pour le zoom sur la couche",
             "refreshOptions": {
                 "bbox": "Mettre à jour BBOX",
                 "search": "Mettre à jour les options de recherche",
@@ -908,6 +910,7 @@
             "type": "Type",
             "serviceTitle": "Titre",
             "serviceTitlePlaceholder": "tapez un titre",
+            "missingReference": "Missing OGC reference metadata",
             "notification": {
                 "warningAddCatalogService": "Insérer une URL et un titre valides",
                 "addCatalogService": "Service ajouté correctement",

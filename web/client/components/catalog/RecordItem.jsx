@@ -137,6 +137,7 @@ class RecordItem extends React.Component {
 
     render() {
         let record = this.props.record;
+        const {wms, wmts} = extractOGCServicesReferences(record);
         return (
             <Panel className="record-item" style={{padding: 0}}>
                 {this.renderThumb(record && record.thumbnail, record)}
@@ -144,6 +145,7 @@ class RecordItem extends React.Component {
                     <h4 className="truncateText">{record && this.getTitle(record.title)}</h4>
                     <h4 className="truncateText"><small>{record && record.identifier}</small></h4>
                     <p className="truncateText record-item-description">{this.truncateDescription(this.renderDescription(record), 70)}</p>
+                    {!wms && !wmts && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}
                 </div>
                   {this.renderButtons(record)}
             </Panel>
