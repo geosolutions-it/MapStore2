@@ -45,6 +45,7 @@ const CHANGED_SELECTED = 'ANNOTATIONS:CHANGED_SELECTED';
 const RESET_COORD_EDITOR = 'ANNOTATIONS:RESET_COORD_EDITOR';
 const CHANGE_RADIUS = 'ANNOTATIONS:CHANGE_RADIUS';
 const CHANGE_TEXT = 'ANNOTATIONS:CHANGE_TEXT';
+const ADD_NEW_FEATURE = 'ANNOTATIONS:ADD_NEW_FEATURE';
 
 function loadAnnotations(features, override = false) {
     return {
@@ -240,6 +241,12 @@ function setUnsavedStyle(unsavedStyle) {
         unsavedStyle
     };
 }
+function addNewFeature(feature) {
+    return {
+        type: ADD_NEW_FEATURE,
+        feature
+    };
+}
 function cancelCloseAnnotations() {
     return {
         type: CANCEL_CLOSE_ANNOTATIONS
@@ -346,6 +353,7 @@ module.exports = {
     confirmCloseAnnotations,
     cancelCloseAnnotations,
     DOWNLOAD, download,
+    ADD_NEW_FEATURE, addNewFeature,
     LOAD_ANNOTATIONS, loadAnnotations,
     RESET_COORD_EDITOR, resetCoordEditor,
     CHANGE_TEXT, changeText,

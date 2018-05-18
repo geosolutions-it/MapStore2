@@ -13,7 +13,8 @@ const {TOGGLE_CONTROL, toggleControl} = require('../actions/controls');
 const {addLayer, updateNode, changeLayerProperties, removeLayer} = require('../actions/layers');
 const {hideMapinfoMarker, purgeMapInfoResults} = require('../actions/mapInfo');
 const {reprojectGeoJson} = require('../utils/CoordinatesUtils');
-
+const {set} = require('../utils/ImmutableUtils');
+const {validateCoordsArray} = require('../utils/AnnotationsUtils');
 const {error} = require('../actions/notifications');
 
 const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAdd, showTextArea,
@@ -181,11 +182,11 @@ module.exports = (viewer) => ({
             };
             return Rx.Observable.of(changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, feature.style));
         }),
-    stopDrawingMultiGeomEpic: (action$, store) => action$.ofType(STOP_DRAWING)
+    /*stopDrawingMultiGeomEpic: (action$, store) => action$.ofType(STOP_DRAWING)
         .filter(() => store.getState().annotations.editing.features && !!store.getState().annotations.editing.features.length)
         .switchMap( () => {
             return Rx.Observable.of(toggleDrawOrEdit(store.getState()));
-        }),
+        }),*/
     addTextEpic: (action$, store) => action$.ofType(CLICK_ON_MAP)
         .filter(() => store.getState().annotations && store.getState().annotations.drawingText && store.getState().annotations.drawingText.drawing)
         .switchMap( () => {
@@ -325,15 +326,18 @@ module.exports = (viewer) => ({
         .switchMap(({}) => {
             const state = getState();
             const feature = state.annotations.editing;
-            const selected = state.annotations.selected;
+            let selected = state.annotations.selected;
+            if (selected.geometry.type === "LineString") {
+                selected = set("geometry.coordinates", selected.geometry.coordinates.filter(validateCoordsArray), selected);
+            }
             const multiGeometry = state.annotations.config.multiGeometry;
             const style = feature.style;
-            const action = changeDrawingStatus("drawOrEdit", "FeatureCollection", "annotations", [selected], {
+            const action = changeDrawingStatus("drawOrEdit", selected.geometry.type, "annotations", [selected], {
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,
                 drawEnabled: false,
-                selected,
+                selected: null,
                 transformToFeatureCollection: true
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
@@ -345,21 +349,22 @@ module.exports = (viewer) => ({
             const multiGeometry = state.annotations.config.multiGeometry;
             const style = feature.style;
 
-            const action = changeDrawingStatus("drawOrEdit", "FeatureCollection", "annotations", [feature], {
+            const action = changeDrawingStatus("clean", "", "annotations", [feature], {
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
-                editEnabled: true,
+                editEnabled: false,
                 drawEnabled: false,
                 selected: null,
                 transformToFeatureCollection: true
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
+            // return Rx.Observable.empty();
         }),
     redrawOnChangeRadiusEpic: (action$, {getState}) => action$.ofType( CHANGE_RADIUS )
         .switchMap(({}) => {
             const state = getState();
             const feature = state.annotations.editing;
-            const selected = state.annotations.selected;
+            // const selected = state.annotations.selected;
             const multiGeometry = state.annotations.config.multiGeometry;
             const style = feature.style;
 
@@ -368,7 +373,7 @@ module.exports = (viewer) => ({
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,
                 drawEnabled: false,
-                selected,
+                selected: null,
                 transformToFeatureCollection: true
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);

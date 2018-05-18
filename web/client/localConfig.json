@@ -214,7 +214,7 @@
                 }
               }
             }
-          }, "AutoMapUpdate", "HelpLink", "Share", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
+          }, "AutoMapUpdate", "DrawerMenu", "Version", "Notifications", "BackgroundSelector", "Annotations",
             {
                 "name": "Identify",
                 "cfg": {
@@ -274,23 +274,8 @@
                     ]
                 }
             },
-            "TOCItemsSettings",
-            "Tutorial", "MapFooter", {
-                "name": "Measure"
-            }, "Print", "ShapeFile", {
-                "name": "Settings",
-                "cfg": {
-                    "wrap": true
-                }
-            }, {
-                "name": "MetadataExplorer",
-                "cfg": {
-                    "wrap": true
-                }
-            }, {
-              "name": "About",
-              "showIn": ["BurgerMenu"]
-            }, {
+            "TOCItemsSettings"
+            , "MapFooter", {
               "name": "MousePosition",
               "cfg": {
                 "editCRS": true,
@@ -346,7 +331,7 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets"
+            "OmniBar", "Login", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets"
         ],
         "embedded": [{
                 "name": "Map",

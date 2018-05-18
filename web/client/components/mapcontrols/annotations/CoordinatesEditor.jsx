@@ -1,7 +1,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {Grid, Row, Col, FormGroup, ControlLabel, FormControl} = require('react-bootstrap');
-const {/*isEqual,*/ head} = require('lodash');
+const {/*isEqual,*/ head, isNaN} = require('lodash');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const draggableContainer = require('../../misc/enhancers/draggableContainer');
 const {validateCoords} = require('../../../utils/AnnotationsUtils');
@@ -115,15 +115,18 @@ class CoordinateEditor extends React.Component {
     }
     render() {
         const {componentsValidation, type} = this.props;
+        const actualComponents = [...this.state.components];
+        const actualValidComponents = actualComponents.filter(validateCoords);
+        const allValidComponents = actualValidComponents.length === actualComponents.length;
+        const validationCompleteButton = this[componentsValidation[type].validation]() && allValidComponents;
         const buttons = [
             {
-                glyph: this[componentsValidation[type].validation]() ? 'ok' : 'exclamation-mark',
-                tooltip: this[componentsValidation[type].validation]() ? 'Complete current geometry' : componentsValidation[type].notValid,
+                glyph: validationCompleteButton ? 'ok' : 'exclamation-mark text-danger',
+                tooltip: validationCompleteButton ? 'Complete current geometry' : componentsValidation[type].notValid,
                 visible: this.props.completeGeometry,
                 onClick: () => {
-                    if (this[componentsValidation[type].validation]()) {
-                        const components = [...this.state.components];
-                        this.props.onComplete(components);
+                    if (validationCompleteButton) {
+                        this.props.onComplete(actualComponents);
                         this.setState({
                             components: []
                         });
@@ -177,7 +180,7 @@ class CoordinateEditor extends React.Component {
                         isDraggable={this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]()}
                         removeEnabled={componentsValidation[type].remove && this[componentsValidation[type].validation](this.state.components, componentsValidation[type].remove)}
                         onChange={(id, key, value) => {
-                            this.state.components[id][key] = parseFloat(value);
+                            this.state.components[id][key] = isNaN(parseFloat(value)) ? undefined : parseFloat(value);
                             this.setState({
                                 components: this.state.components
                             });
@@ -186,6 +189,7 @@ class CoordinateEditor extends React.Component {
                                 this.props.onChange(validComponents);
                             }
                         }}
+
                         onSort={(targetId, currentId) => {
                             const components = this.state.components.reduce((allCmp, cmp, id) => {
                                 if (targetId === id) {
@@ -222,8 +226,8 @@ class CoordinateEditor extends React.Component {
     }
     validateCoordinates = (components = this.state.components, remove = false) => {
         if (components && components.length) {
-            // const validComponents = components.filter(validateCoords);
-            const validComponents = components;
+            const validComponents = components.filter(validateCoords);
+
             if (remove) {
                 return validComponents.length > this.props.componentsValidation[this.props.type].min;
             }
@@ -244,6 +248,9 @@ class CoordinateEditor extends React.Component {
             return this.props.properties && !!this.props.properties.valueText && validateCoords(cmp);
         }
         return false;
+    }
+    isValidForm = (components) => {
+        return this[this.props.componentsValidation[this.props.type].validation](components, false);
     }
     isValid = (components) => {
         return this[this.props.componentsValidation[this.props.type].validation](components, false);

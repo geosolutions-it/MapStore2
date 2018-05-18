@@ -61,6 +61,7 @@ const bbox = require('@turf/bbox');
  * @prop {function} onToggleUnsavedChangesModal toggles the view of the UnsavedChangesModal
  * @prop {function} onToggleUnsavedStyleModal toggles the view of the UnsavedStyleModal
  * @prop {function} onSetUnsavedChanges triggered when the user changes the value of any field, it sets a flag used to trigger the view of the UnsavedChangesModal
+ * @prop {function} onAddNewFeature
  * @prop {function} onChangeProperties triggered when the user changes the value of any field
  * @prop {function} onSetUnsavedStyle triggered when the user changes the style , it sets a flag used to trigger the view of the UnsavedStyleModal
  * @prop {function} onConfirmRemove triggered when the user confirms removal
@@ -121,6 +122,7 @@ class AnnotationsEditor extends React.Component {
         onChangeText: PropTypes.func,
         onCancelClose: PropTypes.func,
         onDeleteGeometry: PropTypes.func,
+        onAddNewFeature: PropTypes.func,
         onStyleGeometry: PropTypes.func,
         onResetCoordEditor: PropTypes.func,
         onSetStyle: PropTypes.func,
@@ -314,6 +316,16 @@ class AnnotationsEditor extends React.Component {
                             onClick: () => {
                                 // TODO back should return to editing form
                                 this.props.onResetCoordEditor();
+                            }
+                        }, {
+                            glyph: 'floppy-disk',
+                            tooltipId: "annotations.save",
+                            visible: true,
+                            disabled: this.props.selected && this.props.selected.properties && !this.props.selected.properties.allValidPoints,
+                            onClick: () => {
+                                if (this.props.selected) {
+                                    this.props.onAddNewFeature(this.props.selected);
+                                }
                             }
                         }
                         ]}/>

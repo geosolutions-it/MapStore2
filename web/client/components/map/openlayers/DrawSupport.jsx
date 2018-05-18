@@ -8,7 +8,7 @@
 
 const React = require('react');
 const ol = require('openlayers');
-const {concat, head, find, slice} = require('lodash');
+const {concat, head, find} = require('lodash');
 const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const uuid = require('uuid');
@@ -173,6 +173,7 @@ class DrawSupport extends React.Component {
                     const feature = new ol.Feature({
                         geometry: this.createOLGeometry(geometry.geometry ? geometry.geometry : geometry)
                     });
+                    feature.setProperties(f.properties);
                     feature.set("textGeometriesIndexes", f.properties && f.properties.textGeometriesIndexes);
                     feature.set("textValues", f.properties && f.properties.textValues);
                     feature.set("circles", f.properties && f.properties.circles);
@@ -481,7 +482,7 @@ class DrawSupport extends React.Component {
                     this.selectInteraction.setActive(true);
                 }
             }
-
+/*
             if (this.props.options && drawMethod === "Polygon" || drawMethod === "LineString") {
                 let ft = reprojectGeoJson(geojsonFormat.writeFeaturesObject([this.sketchFeature.clone()]), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
                 let coords = ft.features[0].geometry.coordinates;
@@ -496,7 +497,7 @@ class DrawSupport extends React.Component {
                 setTimeout(() => {
                     this.props.onDrawingFeatures([drawingFt]);
                 }, 300);
-            }
+            }*/
         }, this);
 
         this.props.map.addInteraction(this.drawInteraction);
@@ -659,7 +660,41 @@ class DrawSupport extends React.Component {
     };
 
     addDrawOrEditInteractions = (newProps) => {
+        const singleClickCallback = (e) => {
+            if (this.props.options && newProps.drawMethod === "Polygon" || newProps.drawMethod === "LineString") {
+                const previousCoords = this.drawSource.getFeatures() && this.drawSource.getFeatures().length && this.drawSource.getFeatures()[0].getGeometry().getCoordinates() || [];
+                let olFt = this.getNewFeature(newProps.drawMethod, newProps.drawMethod === "LineString" ? [...previousCoords, e.coordinate] : [[...previousCoords, e.coordinate]]);
+
+                let drawnFtWGS84 = reprojectGeoJson(geojsonFormat.writeFeaturesObject([olFt.clone()]), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
+
+                let coords = [...drawnFtWGS84.features[0].geometry.coordinates];
+
+                let drawnFt3857 = head(newProps.options.selected || []);
+                if (drawnFt3857 === undefined || drawnFt3857 && drawnFt3857.geometry === null) {
+                    drawnFt3857 = set('geometry', {}, drawnFt3857);
+                    drawnFt3857 = set('geometry.type', newProps.drawMethod, drawnFt3857);
+                    drawnFt3857 = set('properties.id', uuid.v1(), drawnFt3857);
+                }
+                drawnFt3857 = set('type', "Feature", drawnFt3857);
+                drawnFt3857 = set('geometry.coordinates', coords, drawnFt3857);
+                this.props.onDrawingFeatures([drawnFt3857]);
+                // this.props.onChangeDrawingStatus("drawOrEdit", newProps.drawMethod, newProps.owner, [drawnFt3857], newProps.options, newProps.style);
+
+                // let featureOL = this.transformPolygonToCircle(olFt);
+                drawnFt3857 = reprojectGeoJson(drawnFt3857, "EPSG:4326", this.props.map.getView().getProjection().getCode());
+
+                this.drawSource = new ol.source.Vector({
+                    features: (new ol.format.GeoJSON()).readFeatures(
+                        {
+                            type: "FeatureCollection", features: [drawnFt3857]
+                        })
+                });
+                this.drawLayer.setSource(this.drawSource);
+                this.addModifyInteraction();
+            }
+        };
         this.clean();
+        this.props.map.removeEventListener('singleclick');
         /*
         const newFeature = reprojectGeoJson(mockFeatureCollection, newProps.options.featureProjection, this.props.map.getView().getProjection().getCode());
         const props = assign({}, newProps, {features: newFeature.features.length ? newFeature.features : [], newFeature});
@@ -684,27 +719,10 @@ class DrawSupport extends React.Component {
             this.addModifyInteraction();
             // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
             this.addTranslateInteraction();
-            this.addSelectInteraction(newProps.options && newProps.options.selected);
-            this.props.map.on('singleclick', (e) => {
-                if (this.props.options && newProps.drawMethod === "Polygon" || newProps.drawMethod === "LineString") {
-                    let ft = this.getNewFeature(newProps.drawMethod, newProps.drawMethod === "LineString" ? [e.coordinate] : [[e.coordinate]]);
-                    ft = reprojectGeoJson(geojsonFormat.writeFeaturesObject([ft.clone()]), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
-                    let coords = ft.features[0].geometry.coordinates;
-                    /*if (newProps.drawMethod === "LineString") {
-                        coords = slice(coords, 0, coords.length - 1 );
-                    }*/
-                    let drawingFt = head(this.props.features);
-                    if (drawingFt.geometry === null) {
-                        drawingFt = set('geometry', {}, drawingFt);
-                        drawingFt = set('geometry.type', newProps.drawMethod, drawingFt);
-                    }
-                    drawingFt = set('type', "Feature", drawingFt);
-                    // TODO CHECK TYPE, LINESTRING OR POLYGON, OTHERS HAS NO NEED TO MERGE DATA
-                    drawingFt = set('geometry.coordinates', coords, drawingFt);
-                    this.props.onDrawingFeatures([drawingFt]);
-                }
-                console.log(e);
-            });
+            if (newProps.options && newProps.options.selected) {
+                this.addSelectInteraction(newProps.options && newProps.options.selected, newProps);
+            }
+            this.props.map.on('singleclick', singleClickCallback);
 
         }
 
@@ -713,7 +731,7 @@ class DrawSupport extends React.Component {
         }
     };
 
-    addSelectInteraction = (selectedFeature) => {
+    addSelectInteraction = (selectedFeature, props) => {
         if (this.selectInteraction) {
             this.props.map.removeInteraction(this.selectInteraction);
         }
@@ -724,10 +742,21 @@ class DrawSupport extends React.Component {
                 this.selectFeature(olFt);
             }
         }
-
+        let layerStyle = null;
+        const styleType = this.convertGeometryTypeToStyleType(props.drawMethod);
+        if (selectedFeature && selectedFeature.style) {
+            layerStyle = selectedFeature.style.type ? VectorStyle.getStyle(props, false, props.features[0] && props.features[0].properties && props.features[0].properties.textValues || [] ) : this.toOlStyle(props.style, null, props.features[0] && props.features[0].type);
+        } else if (props.style) {
+            layerStyle = props.style.type ? VectorStyle.getStyle(props, false, props.features[0] && props.features[0].properties && props.features[0].properties.textValues || [] ) : this.toOlStyle(props.style, null, props.features[0] && props.features[0].type);
+        } else {
+            const style = VectorStyle.defaultStyles[styleType] || VectorStyle.defaultStyles;
+            layerStyle = VectorStyle.getStyle({ ...props, style: {...style, type: styleType }}, false, props.features[0] && props.features[0].properties && props.features[0].properties.textValues || [] );
+        }
         this.selectInteraction = new ol.interaction.Select({
             layers: [this.drawLayer],
-            features: new ol.Collection(selectedFeature && olFt ? [olFt] : null)
+            features: new ol.Collection(selectedFeature && olFt ? [olFt] : null),
+            style: layerStyle
+
         });
 
         this.selectInteraction.on('select', (evt) => {
@@ -806,6 +835,7 @@ class DrawSupport extends React.Component {
 
         if (this.modifyInteraction) {
             this.props.map.removeInteraction(this.modifyInteraction);
+            this.props.map.un('singleclick');
         }
 
         if (this.translateInteraction) {
@@ -974,11 +1004,15 @@ class DrawSupport extends React.Component {
     };
 
     addModifyInteraction = () => {
+        this.props.map.un('singleclick', () => {
+            console.log("remove listener");
+        });
         if (this.modifyInteraction) {
             this.props.map.removeInteraction(this.modifyInteraction);
         }
+        this.modifyFeature = new ol.Collection(this.drawLayer.getSource().getFeatures());
         this.modifyInteraction = new ol.interaction.Modify({
-                features: new ol.Collection(this.drawLayer.getSource().getFeatures()),
+                features: this.modifyFeature,
                 condition: (e) => {
                     return ol.events.condition.primaryAction(e) && !ol.events.condition.altKeyOnly(e);
                 }
@@ -1008,6 +1042,7 @@ class DrawSupport extends React.Component {
             });
             if (this.props.options.transformToFeatureCollection) {
                 this.props.onGeometryChanged([{type: "FeatureCollection", features}], this.props.drawOwner, false, "editing", "editing"); // TODO FIX THIS
+                this.props.onDrawingFeatures(features);
             } else {
                 this.props.onGeometryChanged(features, this.props.drawOwner, false, "editing", "editing"); // TODO FIX THIS
             }

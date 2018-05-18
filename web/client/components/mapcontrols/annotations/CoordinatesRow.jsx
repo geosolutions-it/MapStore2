@@ -73,6 +73,9 @@ class CoordinatesRowComponent extends React.Component {
                                     lon: this.state.lon,
                                     lat: e.target.value
                                 });
+                                if (e.target.value === "") {
+                                    this.props.onChange(idx, 'lat', undefined);
+                                }
                                 if (this.getValidationStateLat(e.target.value) === null) {
                                     this.props.onChange(idx, 'lat', e.target.value);
                                 }
@@ -93,6 +96,9 @@ class CoordinatesRowComponent extends React.Component {
                                 lon: e.target.value,
                                 lat: this.state.lat
                             });
+                            if (e.target.value === "") {
+                                this.props.onChange(idx, 'lon', undefined);
+                            }
                             if (this.getValidationStateLon(e.target.value) === null) {
                                 this.props.onChange(idx, 'lon', e.target.value);
                             }

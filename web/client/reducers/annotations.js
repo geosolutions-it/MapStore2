@@ -17,7 +17,8 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
     UPDATE_ANNOTATION_GEOMETRY, VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY, TOGGLE_STYLE,
     SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION, FILTER_ANNOTATIONS, STOP_DRAWING,
     CHANGE_STYLER, UNSAVED_CHANGES, TOGGLE_CHANGES_MODAL, CHANGED_PROPERTIES, TOGGLE_STYLE_MODAL, UNSAVED_STYLE,
-    ADD_TEXT, CANCEL_CLOSE_TEXT, SHOW_TEXT_AREA, SAVE_TEXT, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS, CHANGE_TEXT} = require('../actions/annotations');
+    ADD_TEXT, CANCEL_CLOSE_TEXT, SHOW_TEXT_AREA, SAVE_TEXT, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS, CHANGE_TEXT,
+    ADD_NEW_FEATURE} = require('../actions/annotations');
 
 const {getAvailableStyler, DEFAULT_ANNOTATIONS_STYLES, convertGeoJSONToInternalModel, addIds, validateCoordsArray} = require('../utils/AnnotationsUtils');
 const {head, includes, slice, findIndex, isNil} = require('lodash');
@@ -31,7 +32,7 @@ const fixCoordinates = (coords, type) => {
         default: return coords[0];
     }
 };
-
+/*
 const getBaseCoord = (type) => {
     switch (type) {
         case "Polygon": return [[[], [], [], []]];
@@ -39,18 +40,24 @@ const getBaseCoord = (type) => {
         default: return [];
     }
 };
+*/
 const updateFeatures = (state, geom) => {
     let {coordinates, radius, text} = geom;
     let validCoordinates;
     let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === state.selected.properties.id);
-    if (ftChangedIndex === -1) {
+    /*if (ftChangedIndex === -1) {
         return state;
-    }
-    let ftChanged = assign({}, state.editing.features[ftChangedIndex]);
+    }*/
+    /*let ftChanged = ftChangedIndex === -1 ? {type: "Feature", geometry: {
+        type: state.selected.geometry.type
+    }, properties: state.selected.properties} : assign({}, state.editing.features[ftChangedIndex]);*/
+    let ftChanged = ftChangedIndex === -1 ? {type: "Feature", geometry: {
+        type: state.selected.geometry.type
+    }, properties: {...state.selected.properties, allValidPoints: coordinates.filter(validateCoordsArray).length === coordinates.length}} : assign({}, state.editing.features[ftChangedIndex]);
 
     if (!isNil(coordinates)) {
 
-        validCoordinates = coordinates.filter(validateCoordsArray);
+        validCoordinates = coordinates;// .filter(validateCoordsArray);
         switch (ftChanged.geometry.type) {
             case "Polygon": ftChanged = assign({}, ftChanged, {
                     geometry: assign({}, ftChanged.geometry, {
@@ -158,11 +165,21 @@ function annotations(state = { validationErrors: {} }, action) {
                     ...state.editing,
                     features
                 },
+                drawing: false,
                 coordinateEditorEnabled: false,
                 selected: null
             });
 
         }
+        case ADD_NEW_FEATURE:
+            return assign({}, state, {
+                editing: assign({}, state.editing, {
+                    features: state.editing.features.concat(action.feature)
+                }),
+                coordinateEditorEnabled: false,
+                drawing: false,
+                selected: null
+            });
         case CHANGE_STYLER:
             return assign({}, state, {
                 stylerType: action.stylerType
