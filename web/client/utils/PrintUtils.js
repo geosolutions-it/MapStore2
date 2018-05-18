@@ -215,6 +215,7 @@ const PrintUtils = {
                                  REQUEST: "GetLegendGraphic",
                                  LAYER: layer.name,
                                  STYLE: layer.style || '',
+                                 SCALE: spec.scale,
                                  height: spec.iconSize,
                                  width: spec.iconSize,
                                  minSymbolSize: spec.iconSize,
