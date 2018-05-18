@@ -21,6 +21,8 @@
         "enable": "启用",
         "layers": "图层",
         "warning": "警告",
+        "pageInfoShowMore": "Results {count} of {total}",
+        "showMore": "Show more...",
         "version": {
             "label": "版本"
         },
@@ -86,6 +88,11 @@
         "mousePositionCoordinates": "坐标指示器",
         "mouseCoordinates": "坐标:",
         "mousePositionCRS": "CRS:",
+        "mousePositionElevation": "Elev.:",
+        "mousePositionNoElevation": "N/A",
+        "elevationLoading": "Loading...",
+        "elevationLoadingError": "Error",
+        "elevationNotAvailable": "N/A",
         "mapScale": "比例尺:",
         "showMousePositionCoordinates": "显示/隐藏坐标",
         "menu": "菜单",
@@ -123,6 +130,8 @@
         },
         "home":{
             "open": "打开",
+            "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore 2的开发旨在以简单直观的方式创建，保存和共享地图和混搭，这些地图和混搭创建的内容来自知名来源，如Google Maps和OpenStreetMap，或者由使用开放协议的组织提供的服务，如OGC WMS，WFS，WMTS 或TMS等等。<br/>有关更多详细信息，请访问<a href=\"/mapstore/docs/\">主页</a>。",
             "Applications": "应用",
             "Examples": "例子",
@@ -188,11 +197,14 @@
             "mapTypes_combo": "选择地图查看器: ",
             "theme_combo": "选择主题:",
             "maps_title": "地图",
-            "locales_combo": "语言:"
+            "locales_combo": "语言:",
+            "featuredMaps": "Featured Maps"
         },
         "newMap": "新地图",
 		"maps": {
-			"search": "搜索地图..."
+			"search": "搜索地图...",
+            "addToFeaturedMaps": "Add to featured maps",
+            "removeFromFeaturedMaps": "Remove from featured maps"
 		},
         "map": {
             "loading": "加载中...",
@@ -230,6 +242,11 @@
                 "noResult": "未找到结果",
                 "title": "权限组"
             }
+        },
+        "floatinglegend": {
+            "showTOC": "Show layers",
+            "showLegend": "Show legend",
+            "hideLegend": "Hide legend"
         },
         "toc": {
             "toggleLayerVisibility": "切换图层可见性",
@@ -941,6 +958,9 @@
                 }
             },
             "toolbar": {
+                "synchPopoverTitle": "Sync map with filter ",
+                "synchPopoverText": "Use this tool to synchronize the map with the selected filter",
+                "notShowAgain": "  Don't show this message again",
                 "editMode": "Edit mode",
                 "advancedFilter": "Advanced Search",
                 "quitEditMode": "Quit edit mode",
@@ -1107,6 +1127,10 @@
             "layerlabel": "图层"
         },
         "rulesmanager": {
+            "placeholders": {
+                "filter": "Search..."
+            },
+            "menutitle": "Manage GeoFence Rules",
             "title": "访问规则",
             "role": "角色",
             "user": "用户",
