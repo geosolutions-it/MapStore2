@@ -399,6 +399,7 @@ const LayersUtils = {
             catalogURL: layer.catalogURL,
             useForElevation: layer.useForElevation || false,
             hidden: layer.hidden || false,
+            origin: layer.origin,
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },
