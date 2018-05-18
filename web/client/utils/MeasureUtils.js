@@ -33,83 +33,116 @@ function getFormattedBearingValue(azimuth = 0) {
     return bearing;
 }
 
-function mToft(length) {
-    return length * 3.28084;
-}
 
-function mTokm(length) {
-    return length * 0.001;
-}
-
-function mTomi(length) {
-    return length * 0.000621371;
-}
-
-function mTonm(length) {
-    return length * 0.000539956803;
-}
-
-function sqmTosqft(area) {
-    return area * 10.7639;
-}
-
-function sqmTosqkm(area) {
-    return area * 0.000001;
-}
-
-function sqmTosqmi(area) {
-    return area * 0.000000386102159;
-}
-function sqmTosqnm(area) {
-    return area * 0.00000029155;
-}
-
-function getFormattedLength(unit = "m", length = 0) {
-    switch (unit) {
-    case 'm':
-        return length;
-    case 'ft':
-        return mToft(length);
-    case 'km':
-        return mTokm(length);
-    case 'mi':
-        return mTomi(length);
-    case 'nm':
-        return mTonm(length);
-    default:
-        return length;
+const CONVERSION_RATE = {
+    // length
+    "yd": {
+        "ft": 3,
+        "m": 0.9144,
+        "km": 0.0009144,
+        "yd": 1,
+        "mi": 0.00056818181818,
+        "nm": 0.00049373650107
+    },
+    "ft": {
+        "ft": 1,
+        "m": 0.3048,
+        "km": 0.0003048,
+        "yd": 0.33333333333334,
+        "mi": 0.0001893932,
+        "nm": 0.000164579
+    },
+    "m": {
+        "ft": 3.28084,
+        "m": 1,
+        "km": 0.001,
+        "yd": 1.0936132983377,
+        "mi": 0.000621371,
+        "nm": 0.000539956803
+    },
+    "km": {
+        "ft": 3280.84,
+        "m": 1000,
+        "km": 1,
+        "yd": 1093.6132983377,
+        "mi": 0.62137121212121,
+        "nm": 0.53995682073433948212
+    },
+    "mi": {
+        "ft": 5280.0001689599821475,
+        "m": 1609.3440514990027168,
+        "km": 1.6093440514990027257,
+        "yd": 1760,
+        "mi": 1,
+        "nm": 0.86897626970788488521
+    },
+    "nm": {
+        "ft": 6076.1156799999789655,
+        "m": 1852.0000592639937622,
+        "km": 1.8520000592639938031,
+        "yd": 2025.3718285214,
+        "mi": 1.1507794848484809158,
+        "nm": 1
+    },
+    "sqft": {
+        "sqft": 1,
+        "sqm": 0.09290304,
+        "sqkm": 9.2903043596611E-8,
+        "sqmi": 3.587E-8,
+        "sqnm": 2.7051601137505E-8
+    },
+    "sqyd": {
+        "sqft": 8.9999247491639,
+        "sqm": 0.83612040133779,
+        "sqkm": 8.3612040133779e-7,
+        "sqyd": 1,
+        "sqmi": 3.228278917579e-7,
+        "sqnm": 2.4346237458194e-7
+    },
+    // area
+    "sqm": {
+        "sqft": 10.76391,
+        "sqm": 1,
+        "sqkm": 1.0E-6,
+        "sqyd": 1.196,
+        "sqmi": 3.8610215854245e-7,
+        "sqnm": 2.91181e-7
+    },
+    "sqkm": {
+        "sqft": 10763910,
+        "sqm": 1.0E6,
+        "sqkm": 1,
+        "sqyd": 1196000,
+        "sqmi": 0.38610215854245,
+        "sqnm": 0.291181
+    },
+    "sqmi": {
+        "sqft": 27878398.920726,
+        "sqm": 2589988.110336,
+        "sqkm": 2.589988110336,
+        "sqyd": 27878398.920726,
+        "sqmi": 1,
+        "sqnm": 0.75415532795574
+    },
+    "sqnm": {
+        "sqft": 36966388.603652,
+        "sqm": 3434290.0120544,
+        "sqkm": 3.4342900120544,
+        "sqyd": 36966388.603652,
+        "sqmi": 1.325986786715,
+        "sqnm": 1
     }
-}
+};
 
-function getFormattedArea(unit = "sqm", area = 0) {
-    switch (unit) {
-    case 'sqm':
-        return area;
-    case 'sqft':
-        return sqmTosqft(area);
-    case 'sqkm':
-        return sqmTosqkm(area);
-    case 'sqmi':
-        return sqmTosqmi(area);
-    case 'sqnm':
-        return sqmTosqnm(area);
-    default:
-        return area;
+function convertUom(value, source = "m", dest = "m") {
+    if (!!CONVERSION_RATE[source] && !!CONVERSION_RATE[source][dest]) {
+        return value * CONVERSION_RATE[source][dest];
     }
+    return value;
 }
-
 
 module.exports = {
+    convertUom,
     getFormattedBearingValue,
-    getFormattedLength,
-    getFormattedArea,
-    degToDms,
-    mToft,
-    mTokm,
-    mTomi,
-    mTonm,
-    sqmTosqmi,
-    sqmTosqkm,
-    sqmTosqnm,
-    sqmTosqft
+    degToDms
 };

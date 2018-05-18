@@ -12,6 +12,7 @@ const typeV1 = "empty";
 const emptyBackground = {
     type: typeV1
 };
+
 const bingLayerWithApikey = {
     type: 'bing',
     apiKey: "SOME_APIKEY_VALUE"
@@ -418,6 +419,43 @@ describe('LayersUtils', () => {
     it('getURLs', () => {
         expect(LayersUtils.getURLs(['http://url/?delete=param'])).toEqual(['http://url/']);
         expect(LayersUtils.getURLs(['http://url/?delete=param'], '?custom=param')).toEqual(['http://url/?custom=param']);
+    });
+    it('excludeGoogleBackground', () => {
+        const GOOGLE_BG = {
+            type: 'google',
+            group: 'background',
+            visibility: true
+        };
+
+        const LAYERS_1 = [GOOGLE_BG, wmsLayer];
+        const LAYERS_2 = [GOOGLE_BG, bingLayerWithApikey, wmsLayer];
+        const LAYERS_3 = [GOOGLE_BG, {group: 'background', ...bingLayerWithApikey}, wmsLayer];
+        const LAYERS_4 = [{visibility: false, ...GOOGLE_BG}, { group: 'background', visibility: true, ...bingLayerWithApikey }, wmsLayer];
+
+        // check adds a osm as default background
+        const RES_1 = LayersUtils.excludeGoogleBackground(LAYERS_1);
+        expect(RES_1.length).toBe(2);
+        expect(RES_1[0].type).toBe('osm');
+        expect(RES_1[0].visibility).toBe(true);
+
+        // check adds anyway osm as default background
+        const RES_2 = LayersUtils.excludeGoogleBackground(LAYERS_2);
+        expect(RES_2.length).toBe(3);
+        expect(RES_2[0].type).toBe('osm');
+        expect(RES_2[0].visibility).toBe(true);
+
+        // check select as visible the first background available
+        const RES_3 = LayersUtils.excludeGoogleBackground(LAYERS_3);
+        expect(RES_3.length).toBe(2);
+        expect(RES_3[0].type).toBe('bing');
+        expect(RES_3[0].visibility).toBe(true);
+
+        // check select as visible the first background available
+        const RES_4 = LayersUtils.excludeGoogleBackground(LAYERS_4);
+        expect(RES_4.length).toBe(2);
+        expect(RES_4[0].type).toBe('bing');
+        expect(RES_4[0].visibility).toBe(true);
+
     });
 
 });

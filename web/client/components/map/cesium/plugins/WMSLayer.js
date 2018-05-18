@@ -7,9 +7,10 @@
  */
 
 const Layers = require('../../../../utils/cesium/Layers');
+const Cesium = require('../../../../libs/cesium');
+const BILTerrainProvider = require('../../../../utils/cesium/BILTerrainProvider')(Cesium);
 const ConfigUtils = require('../../../../utils/ConfigUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
-const Cesium = require('../../../../libs/cesium');
 const assign = require('object-assign');
 const {isArray} = require('lodash');
 const WMSUtils = require('../../../../utils/cesium/WMSUtils');
@@ -103,8 +104,27 @@ function wmsToCesiumOptions(options) {
     });
 }
 
+function wmsToCesiumOptionsBIL(options) {
+    let proxyUrl = ConfigUtils.getProxyUrl({});
+    let proxy;
+    let url = options.url;
+    if (proxyUrl) {
+        proxy = ProxyUtils.needProxy(options.url) && proxyUrl;
+        if (proxy) {
+            url = proxy + encodeURIComponent(url);
+        }
+    }
+    return assign({
+        url,
+        layerName: options.name
+    });
+}
+
 const createLayer = (options) => {
     let layer;
+    if (options.useForElevation) {
+        return new BILTerrainProvider(wmsToCesiumOptionsBIL(options));
+    }
     if (options.singleTile) {
         layer = new Cesium.SingleTileImageryProvider(wmsToCesiumOptionsSingleTile(options));
     } else {

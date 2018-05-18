@@ -10,7 +10,7 @@ const { mapPropsStream, createEventHandler} = require('recompose');
 const Rx = require('rxjs');
 
 /**
- * Create a stream that does the implements the infinite scrollTop
+ * Create a stream that implements the infinite scrolling
  * @param  {Observable} initialLoadStream$ A stream that emits the first load with load page parameters
  * @param  {Observable} loadMore$          Stream of events triggered to load more pages
  * @param  {function} loadPage           A function that returns the observable that emits the page loaded. the event emitted must have at least { items [ ...items of the new page], total: the total number of results}

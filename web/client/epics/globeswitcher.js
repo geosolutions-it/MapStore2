@@ -6,17 +6,22 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {TOGGLE_3D, updateLast2dMapType} = require('../actions/globeswitcher');
+const {MAP_TYPE_CHANGED} = require('../actions/maptype');
+const { mapTypeSelector } = require('../selectors/maptype');
+const {LOCAL_CONFIG_LOADED} = require('../actions/localConfig');
 
 const Rx = require('rxjs');
 const {get} = require('lodash');
 
-const defaultRegex = /\/(viewer)\/(\w+)\/(\w+)/;
+const defaultRegexes = [/\/viewer\/\w+\/(\w+)/, /\/viewer\/(\w+)/];
 const { push } = require('react-router-redux');
 
 const replaceMapType = (path, newMapType) => {
-    let match = path.match(defaultRegex);
+    const match = defaultRegexes.reduce((previous, regex) => {
+        return previous || path.match(regex);
+    }, null);
     if (match) {
-        return `/viewer/${newMapType}/${match[3]}`;
+        return `/viewer/${newMapType}/${match[1]}`;
     }
 };
 /**
@@ -27,18 +32,23 @@ const replaceMapType = (path, newMapType) => {
  */
 const updateRouteOn3dSwitch = (action$, store) =>
     action$.ofType(TOGGLE_3D)
-        .switchMap( action => {
-            const newPath = replaceMapType(action.hash || location.hash, action.enable ? "cesium" : get(store.getState(), "globeswitcher.last2dMapType") || "leaflet");
+        .switchMap( (action) => {
+            const newPath = replaceMapType(action.hash || location.hash, action.enable ? "cesium" : get(store.getState(), "globeswitcher.last2dMapType") || 'leaflet');
             if (newPath) {
-                return Rx.Observable.from([push(newPath), updateLast2dMapType(action.originalMapType)]);
+                return Rx.Observable.from([push(newPath)]);
             }
-            Rx.Observable.of(updateLast2dMapType(action.mapType));
+            Rx.Observable.empty();
         });
+const updateLast2dMapTypeOnChangeEvents = (action$, store) => action$
+    .ofType(LOCAL_CONFIG_LOADED).map(() => mapTypeSelector(store.getState()))
+    .merge(action$.ofType(MAP_TYPE_CHANGED, TOGGLE_3D).pluck('mapType').filter((mapType) => mapType && mapType !== "cesium"))
+    .switchMap(type => Rx.Observable.of(updateLast2dMapType(type)));
 /**
  * Epics for 3d switcher functionality
  * @name epics.globeswitcher
  * @type {Object}
  */
 module.exports = {
-    updateRouteOn3dSwitch
+    updateRouteOn3dSwitch,
+    updateLast2dMapTypeOnChangeEvents
 };

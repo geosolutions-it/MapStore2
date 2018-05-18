@@ -1,279 +1,178 @@
-.mapstore-sidebar {
-    background-color: @ms2-color-background;
-}
-
-.mapstore-sidebar-right {
-    background-color: rgba(255,255,255,0.4);
-}
-
-.mapstore-sidebar .panel-heading {
-    padding: 0;
-    border: none;
-}
-
-.mapstore-sidebar .panel-heading .btn {
-    border: none;
-}
-
-.mapstore-sidebar .panel-body {
-    padding: 0;
-    border: none;
-}
-
-.mapstore-sidebar .nav {
-    height: 52px;
-    padding-top: 6px;
-}
-
-.mapstore-sidebar .panel-default {
-    margin-bottom: 0;
-    box-shadow: none;
-}
-
-.mapstore-sidebar .row {
-    margin-left: 0;
-    margin-right: 0;
-}
-
-.mapstore-sidebar .col-xs-12 {
-
-    padding-left: 0;
-    padding-right: 0;
-}
-
-.mapstore-sidebar .col-xs-6 {
-    padding-left: 0;
-    padding-right: 0;
-}
-
-.mapstore-sidebar .panel {
-    border: none;
-}
-
-.mapstore-sidebar .container-fluid {
-    padding: 0;
-    margin: 0;
-}
 .msSideGrid {
     margin: 30px;
-}
-.shadow-soft {
-    -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12);
-    -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12);
-}
-
-.m-header {
-    .shadow-soft;
-    position: relative;
-    padding-bottom: 10px;
-
-}
-
-
-.mapstore-side-card {
-    overflow: hidden;
-    width: 100%;
-    height: 104px; /* sq-btn * 2 */
-    webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
-    -moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
-    margin: 10px 0 0 0;
-    transition: all 0.3s;
-    background-color: @ms2-color-background;
-    &.selected {
-        background-color: @ms2-color-primary;
-        color: @ms2-color-text-primary;
-        webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-        -moz-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-        .mapstore-side-glyph {
-            color: @ms2-color-primary;
-            background-color: @ms2-color-text-primary;
+    width: ~"calc(100% - 60px)";
+    position: absolute;
+    .ms-drag-over {
+        margin-top: 8px;
+        padding: 4px;
+        box-sizing: border-box;
+        border: 1px dashed @ms2-color-primary;
+        background-color: @ms2-color-background;
+        &.ms-sm {
+            height: @square-btn-size;
         }
-        .mapstore-side-card-tool .glyphicon {
-            color: @ms2-color-text-primary;
+    }
+
+    .items-list {
+        .col-xs-12 {
+            &:hover {
+                z-index: 1;
+            }
         }
     }
 }
 
-.mapstore-side-card:hover {
-    transform: scale(1.05);
-    cursor: pointer;
-    webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-    -moz-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-    box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+.ms-wizard {
+    .msSideGrid {
+        width: ~"calc(100% - 30px)";
+    }  
 }
 
-.mapstore-side-card > div {
-    float: left;
-}
-
-.mapstore-side-card img {
-    height: 98px; /* sq-btn * 2 - 4px */
-    width: 98px;
-    margin: 4px;
-    border: none;
-
-}
-
-.mapstore-side-glyph {
-    height: 94px; /* sq-btn * 2 - 4px */
-    width: 94px;
-    margin: 4px;
-    padding: 23px;
-}
-
-.mapstore-side-preview {
-    height: 98px; /* sq-btn * 2 - 4px */
-    width: 98px;
-    margin: 4px;
-}
-
-.mapstore-side-glyph span {
-    font-size: 52px;
-}
-
-.mapstore-side-card .mapstore-side-card-info {
-    width: 72%;
-    height: 104px;
-    padding: 8px;
-}
-
-.mapstore-side-card .mapstore-side-card-info div {
-    margin-bottom: 10px;
-}
-
-.mapstore-side-card .mapstore-side-card-info  .mapstore-side-card-title {
-    font-weight: bold;
-}
-
-.mapstore-side-card .mapstore-side-card-info  .mapstore-side-card-desc {
-    border-bottom: 1px solid @ms2-color-shade-lighter;
-}
-
-.mapstore-side-card .mapstore-side-card-info  .mapstore-side-card-caption {
-    font-style: italic;
-    font-size: 12px;
-}
-
-.mapstore-side-card-tool {
-    display: table;
-    height: 100%;
-    width: 50px;
-}
-
-.mapstore-side-card-tool span{
-    display: table-cell;
-    height: 100%;
-    vertical-align: middle;
-    font-size: 20px;
-}
-
-.mapstore-side-footer {
-    height: 52px;
-    padding-top: 9px;
-    position: absolute;
-    bottom: 0;
+.mapstore-side-card {
+    .shadow-soft;
     width: 100%;
-    left: 0;
-    padding-right: 10px !important;
-}
-
-.mapstore-sidebar-header-title {
-    height: 52px;
-    line-height: 52px;
-}
-
-.mapstore-scroll-container {
-    height: calc(100% - 312px);
-    position: absolute;
-    overflow-y: auto;
-    width: 100%;
-    padding: 0 30px;
-    border-bottom: 1px solid @ms2-color-shade-lighter;
-}
-
-.mapstore-scroll-container-w {
-    height: calc(100% - 260px);
-    position: absolute;
-    overflow-y: auto;
-    width: 100%;
-    padding: 0 30px;
-    border-bottom: 1px solid @ms2-color-shade-lighter;
-}
-
-
-
-.mapstore-scroll-container-1 {
-    position: absolute;
-    overflow-y: auto;
-    width: 100%;
-    padding: 0 30px;
-    border-bottom: 1px solid @ms2-color-shade-lighter;
-    border-top: 1px solid @ms2-color-shade-lighter;
-}
-
-.mapstore-scroll-container-2 {
-    height: calc(100% - 156px);
-    position: absolute;
-    overflow-y: auto;
-    width: 100%;
-    padding: 0 30px;
-    border-bottom: 1px solid @ms2-color-shade-lighter;
-    border-top: 1px solid @ms2-color-shade-lighter;
-}
-
-.mapstore-side-card  {
-    &.ms-sm {
-        width: 100% !important;
-        height: @square-btn-size !important;
+    
+    margin: 10px 0 0 0;
+    display: flex;
+    transition: all 0.3s;
+    flex-direction: column;
+    .ms-head {
         display: flex;
-        &.ms-dragging {
-            * {
-                display: none;
+        height: @square-btn-size * 2; 
+    }
+    .mapstore-side-preview {
+        display: flex;
+        margin: 0;
+        width: @square-btn-size * 2;
+        height: @square-btn-size * 2;
+        overflow: hidden;
+        padding: 4px;
+        > * {
+            margin: auto;
+            padding: 0;
+            width: 100%;
+        }
+
+        > img {
+            height: 100%;
+            width: auto;
+            z-index: 0;
+        }
+        > .glyphicon {
+            padding: 0 !important;
+            margin: auto !important;
+        }
+    }
+    .mapstore-side-card-info {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+        padding: 8px 16px 8px 8px;
+        & > div {
+            display: flex;
+            margin-bottom: 0;
+            overflow: hidden;
+            min-width: 0;
+            align-items: center;
+            span {
+                text-overflow: ellipsis;
+                white-space: nowrap;
+                overflow: hidden;
+                width: 100%;
             }
         }
+        .mapstore-side-card-title {
+            font-family: @headings-font-family;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .mapstore-side-card-desc {
+            border-bottom: none;
+            font-size: @font-size-small;
+            margin-bottom: 10px;
+            border-bottom: 1px solid @ms2-color-shade-lighter; 
+        }
+        .mapstore-side-card-caption {
+            font-style: italic;
+            font-size: @font-size-small;
+        }
+    }
+    .mapstore-side-card-tool {
+        width: auto;
+        display: flex;
+        width: auto;
+        > * {
+            margin: auto 10px;
+        }
+    }
+
+    &.selected {
+        background-color: @ms2-color-primary;
+        color: @ms2-color-text-primary;
+        .shadow-far;
+        .mapstore-side-glyph {
+            color: @ms2-color-primary;
+            background-color: @ms2-color-text-primary;
+        }
+        .mapstore-side-card-tool {
+            > .glyphicon {
+                color: @ms2-color-text-primary;
+            }
+        }
+ 
+    }
+    &:hover {
+        transform: scale(1.05);
+        cursor: pointer;
+        .shadow-far;
+    }
+
+    &.ms-sm {
+        
+        .ms-head {
+            height: @square-btn-size;
+        }
         .mapstore-side-preview {
-            margin: 0 !important;
-            width: @square-btn-size !important;
-            height: @square-btn-size !important;
-            display: flex;
-            .glyphicon  {
-                margin: auto;
+            width: @square-btn-size;
+            height: @square-btn-size;
+            padding: 8px;
+            > .glyphicon {
+                text-align: center;
                 font-size: @icon-size;
             }
         }
-        .mapstore-side-card-info {
-            width: 100% !important;
-            height: 100% !important;
-            overflow: hidden;
-            .mapstore-side-card-title {
-                width: 100% !important;
-                font-size: @font-size-small !important;
-                margin: 0 !important;
-                height: @square-btn-size / 3 !important;
-                overflow: hidden;
-            }
-            .mapstore-side-card-desc {
-                width: 100% !important;
-                font-size: @font-size-small !important;
-                margin: 0 !important;
-                height: @square-btn-size / 3 !important;
-                overflow: hidden;
     
-            }
-            .mapstore-side-card-caption {
+        .mapstore-side-card-info {
+            padding: 8px 16px 8px 8px;
+        }
+        .mapstore-side-card-title {
+            font-size: @font-size-base;
+            margin-bottom: 0;
+        }
+
+        .mapstore-side-card-desc {
+            margin-bottom: 0;
+        }
+    }
+
+    &.ms-dragging {
+        box-sizing: border-box;
+        border: 1px dashed @ms2-color-shade-lighter;
+        background-color: @ms2-color-background;
+        .shadow-soft;
+        .ms-head {
+            background-color: @ms2-color-background;
+            > * {
                 display: none;
             }
         }
-        .mapstore-side-card-tool {
-            width: auto !important;
+        .ms-body {
+            display: none;
         }
-        &.ms-selected {
-            color: @ms2-color-text-primary;
-            background-color: @ms2-color-primary;
-            .shadow-far;
-        }
+    }
+    &.ms-over {
+        .shadow-soft;
     }
 }

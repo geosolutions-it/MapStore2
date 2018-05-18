@@ -63,7 +63,8 @@ class QueryBuilder extends React.Component {
         autocompleteEnabled: PropTypes.bool,
         emptyFilterWarning: PropTypes.bool,
         header: PropTypes.node,
-        zoom: PropTypes.number
+        zoom: PropTypes.number,
+        toolsOptions: PropTypes.object
     };
 
     static defaultProps = {
@@ -127,7 +128,8 @@ class QueryBuilder extends React.Component {
             onQuery: () => {},
             onReset: () => {},
             onChangeDrawingStatus: () => {}
-        }
+        },
+        toolsOptions: {}
     };
 
     render() {
@@ -174,7 +176,7 @@ class QueryBuilder extends React.Component {
                         addButtonIcon={this.props.addButtonIcon}
                         attributePanelExpanded={this.props.attributePanelExpanded}
                         actions={this.props.attributeFilterActions}/>
-                    <SpatialFilter
+                {this.props.toolsOptions.hideSpatialFilter ? null : <SpatialFilter
                         useMapProjection={this.props.useMapProjection}
                         spatialField={this.props.spatialField}
                         spatialOperations={this.props.spatialOperations}
@@ -182,15 +184,15 @@ class QueryBuilder extends React.Component {
                         spatialPanelExpanded={this.props.spatialPanelExpanded}
                         showDetailsPanel={this.props.showDetailsPanel}
                         actions={this.props.spatialFilterActions}
-                        zoom={this.props.zoom}/>
-                    <CrossLayerFilter
+                        zoom={this.props.zoom}/>}
+                {this.props.toolsOptions.hideCrossLayer ? null : <CrossLayerFilter
                         spatialOperations={this.props.spatialOperations}
                         crossLayerExpanded={this.props.crossLayerExpanded}
                         searchUrl={this.props.searchUrl}
                         featureTypeName={this.props.featureTypeName}
                         {...this.props.crossLayerFilterOptions}
                         {...this.props.crossLayerFilterActions}
-                        />
+                        />}
             </BorderLayout>
          : <div style={{margin: "0 auto", width: "60px"}}><Spinner spinnerName="three-bounce" overrideSpinnerClassName="spinner"/></div>;
     }

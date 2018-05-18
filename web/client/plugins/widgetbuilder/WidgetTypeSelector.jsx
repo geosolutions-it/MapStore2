@@ -12,7 +12,7 @@ const {connect} = require('react-redux');
 const BorderLayout = require('../../components/layout/BorderLayout');
 const BuilderHeader = require('./BuilderHeader');
 const TypeSelector = connect(
-    () => {},
+    () => ({}),
     {
         onSelect: (type) => onEditorChange("widgetType", type)
     }
@@ -21,11 +21,11 @@ const TypeSelector = connect(
 /**
  * Builder page that shows the type selector
  */
-module.exports = ({enabled, onClose = () => {}} = {}) =>
+module.exports = ({enabled, onClose = () => {}, typeFilter} = {}) =>
 
     (<BorderLayout
         className="bg-body"
         header={<BuilderHeader onClose={onClose}><Message msgId="widgets.selectWidgetType" /></BuilderHeader>}
         >
-        {enabled ? <TypeSelector /> : null}
+        {enabled ? <TypeSelector typeFilter={typeFilter}/> : null}
     </BorderLayout>);

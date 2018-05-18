@@ -22,6 +22,8 @@ const {
     OPEN_FILTER_EDITOR,
     EXPORT_CSV,
     EXPORT_IMAGE,
+    DEPENDENCY_SELECTOR_KEY,
+    createChart, NEW_CHART,
     exportCSV,
     exportImage,
     openFilterEditor,
@@ -35,7 +37,9 @@ const {
     editNewWidget,
     onEditorChange,
     changeEditorSetting,
-    setPage
+    setPage,
+    setupDependencySelector,
+    toggleDependencySelector
 } = require('../widgets');
 
 describe('Test correctness of the widgets actions', () => {
@@ -155,6 +159,28 @@ describe('Test correctness of the widgets actions', () => {
         expect(retval.type).toBe(EDITOR_SETTING_CHANGE);
         expect(retval.key).toBe("step");
         expect(retval.value).toBe(1);
+    });
+    it('setupDependencySelector', () => {
+        const value = { active: true, setup: "setup" };
+        const retval = setupDependencySelector(value);
+        expect(retval).toExist();
+        expect(retval.type).toBe(EDITOR_SETTING_CHANGE);
+        expect(retval.key).toBe(`${DEPENDENCY_SELECTOR_KEY}`);
+        expect(retval.value).toBe(value);
+    });
+    it('toggleDependencySelector', () => {
+        const value = { setup: "setup" };
+        const retval = toggleDependencySelector(true, value);
+        expect(retval).toExist();
+        expect(retval.type).toBe(EDITOR_SETTING_CHANGE);
+        expect(retval.key).toBe(`${DEPENDENCY_SELECTOR_KEY}`);
+        expect(retval.value.setup).toBe("setup");
+        expect(retval.value.active).toBe(true);
+    });
+    it('createChart', () => {
+        const retval = createChart(true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(NEW_CHART);
     });
 
 });

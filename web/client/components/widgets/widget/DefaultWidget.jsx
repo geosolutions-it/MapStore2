@@ -7,15 +7,43 @@
  */
 const React = require('react');
 const enhanceChartWidget = require('../enhancers/chartWidget');
-const enhanceTextWidget = require('../enhancers/deleteWidget');
+const deleteWidget = require('../enhancers/deleteWidget');
 const enhanceTableWidget = require('../enhancers/tableWidget');
+const legendWidget = require('../enhancers/legendWidget');
 const wpsChart = require('../enhancers/wpsChart');
+const {compose} = require('recompose');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
-const ChartWidget = dependenciesToFilter(wpsChart(enhanceChartWidget(require('./ChartWidget'))));
-const TextWidget = enhanceTextWidget(require('./TextWidget'));
-const TableWidget = dependenciesToFilter(enhanceTableWidget(require('./TableWidget')));
+const dependenciesToWidget = require('../enhancers/dependenciesToWidget');
+const dependenciesToMapProp = require('../enhancers/dependenciesToMapProp');
+const ChartWidget = compose(
+    dependenciesToWidget,
+    dependenciesToFilter,
+    wpsChart,
+    enhanceChartWidget
+)(require('./ChartWidget'));
+const TextWidget = deleteWidget(require('./TextWidget'));
+const MapWidget = compose(
+    dependenciesToWidget,
+    dependenciesToMapProp('center'),
+    dependenciesToMapProp('zoom'),
+    deleteWidget
+)(require('./MapWidget'));
+const TableWidget = compose(
+    dependenciesToWidget,
+    dependenciesToFilter,
+    enhanceTableWidget
+)(require('./TableWidget'));
 const enhanceCounter = require('../enhancers/counterWidget');
-const CounterWidget = dependenciesToFilter(enhanceCounter(require("./CounterWidget")));
+const CounterWidget = compose(
+    dependenciesToWidget,
+    dependenciesToFilter,
+    enhanceCounter
+)(require("./CounterWidget"));
+
+const LegendWidget = compose(
+    legendWidget,
+    deleteWidget
+)(require("./LegendWidget"));
 module.exports = ({
     dependencies,
     exportCSV = () => {},
@@ -36,6 +64,16 @@ module.exports = ({
             />
             : w.widgetType === "counter"
             ? <CounterWidget {...w}
+                dependencies={dependencies}
+                onDelete={onDelete}
+                onEdit={onEdit} />
+            : w.widgetType === "map"
+            ? <MapWidget {...w}
+                dependencies={dependencies}
+                onDelete={onDelete}
+                onEdit={onEdit} />
+            : w.widgetType === "legend"
+            ? <LegendWidget {...w}
                 dependencies={dependencies}
                 onDelete={onDelete}
                 onEdit={onEdit} />

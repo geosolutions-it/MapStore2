@@ -7,7 +7,7 @@
  */
 
 var {TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_RESET, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_TEXT_CHANGE, TEXT_SEARCH_LOADING, TEXT_SEARCH_ERROR,
-    TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_CANCEL_ITEM, TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE} = require('../actions/search');
+    TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_CANCEL_ITEM, TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE, UPDATE_RESULTS_STYLE} = require('../actions/search');
 var {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
@@ -107,6 +107,8 @@ function search(state = null, action) {
             selectedItems: state.selectedItems && state.selectedItems.filter(item => item !== action.item),
             searchText: state.searchText === "" && action.item && action.item.text ? action.item.text.substring(0, action.item.text.length) : state.searchText
         });
+    case UPDATE_RESULTS_STYLE:
+        return assign({}, state, {style: action.style});
     default:
         return state;
     }

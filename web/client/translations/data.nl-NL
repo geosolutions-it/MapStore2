@@ -6,13 +6,13 @@
         "htmlTest": "{name} {surname}",
         "about_title": "Info over deze app...",
         "aboutLbl": "Meer info",
-        "about_p0-0": "MapStore 2 is een framework dat het mogelijk maakt cartografische webtoepassingen te ontwikkelen met behulp van de standaard libraries zoals",
+        "about_p0-0": "MapStore is een framework dat het mogelijk maakt cartografische webtoepassingen te ontwikkelen met behulp van de standaard libraries zoals",
         "about_p0-1": "en",
-        "about_p1": "MapStore 2 heeft meerdere toepassingsvoorbeelden:",
+        "about_p1": "MapStore heeft meerdere toepassingsvoorbeelden:",
         "about_ul0_li0": "MapViewer is een eenvoudige viewer van gepreconfigureerde kaarten (optioneel opgeslagen in een GeoStore database)",
         "about_ul0_li1": "MapPublisher is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. Voor meer informatie: ",
         "about_h20": "Licentie",
-        "about_p3": "MapStore 2 is open source software, gebaseerd op OpenLayers 3, Leaflet and ReactJS, en is beschikbaar onder Simplified BSD License.",
+        "about_p3": "MapStore is open source software, gebaseerd op OpenLayers 3, Leaflet and ReactJS, en is beschikbaar onder Simplified BSD License.",
         "about_p5-0": "Voor meer informatie, zie",
         "about_a0": "deze",
         "about_p5-1": "bladzijde.",
@@ -21,6 +21,8 @@
         "enable": "Activeren",
         "layers": "Lagen",
         "warning": "Opgepast",
+        "pageInfoShowMore": "Results {count} of {total}",
+        "showMore": "Show more...",
         "version": {
             "label": "Versie"
         },
@@ -88,6 +90,11 @@
         "mousePositionCoordinates": "Coördinaten",
         "mouseCoordinates": "Coördinaten:",
         "mousePositionCRS": "CRS:",
+        "mousePositionElevation": "Elev.:",
+        "mousePositionNoElevation": "N/A",
+        "elevationLoading": "Loading...",
+        "elevationLoadingError": "Error",
+        "elevationNotAvailable": "N/A",
         "mapScale": "Schaal:",
         "showMousePositionCoordinates": "Toon de coördinaten",
         "menu": "Menu",
@@ -124,7 +131,9 @@
         },
         "home":{
             "open": "Openen",
-            "description": "MapStore 2 is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. <br/>Bezoek onze <a href=\"/mapstore/docs/\">homepage</a> voor meer detail.",
+            "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
+            "description": "MapStore is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. <br/>Bezoek onze <a href=\"/mapstore/docs/\">homepage</a> voor meer detail.",
             "Applications": "Toepassingen",
             "Examples": "Voorbeelden",
             "LinkedinGroup": "Mapstore Linkedin groep",
@@ -189,11 +198,14 @@
             "mapTypes_combo": "De kaart-viewer kiezen: ",
             "theme_combo": "Kies een thema:",
             "maps_title": "Kaarten",
-            "locales_combo": "Taal:"
+            "locales_combo": "Taal:",
+            "featuredMaps": "Featured Maps"
         },
         "newMap": "Nieuwe kaart",
 		"maps": {
-			"search": "Kaarten opzoeken..."
+			"search": "Kaarten opzoeken...",
+            "addToFeaturedMaps": "Add to featured maps",
+            "removeFromFeaturedMaps": "Remove from featured maps"
 		},
         "map": {
             "loading": "Bezig met laden...",
@@ -231,6 +243,11 @@
                 "noResult": "geen enkel resultaat gevonden",
                 "title": "geautoriseerde groepen"
             }
+        },
+        "floatinglegend": {
+            "showTOC": "Show layers",
+            "showLegend": "Show legend",
+            "hideLegend": "Hide legend"
         },
         "toc": {
             "toggleLayerVisibility": "Zet de zichtbaarheid van de laag aan / uit",
@@ -865,7 +882,23 @@
                 "featureClose":"Wilt u echt het rooster sluiten?",
                 "delete": "Valideren om de elementen te verwijderen?",
                 "missingGeometry": "Ontbrekende geometrie",
+                "filter": {
+                    "placeholders": {
+                        "default": "Search...",
+                        "string": "Type text to filter...",
+                        "number": "Type number or expression..."
+                    },
+                    "tooltips": {
+                        "editMode": "Quick search is not available in edit mode",
+                        "default": "Search...",
+                        "string": "Type text to filter...",
+                        "number": "Type a number or an expression. Examples: 10, > 2, < 10"
+                    }
+                },
                 "toolbar": {
+                    "synchPopoverTitle": "Sync map with filter ",
+                    "synchPopoverText": "Use this tool to synchronize the map with the selected filter",
+                    "notShowAgain": "  Don't show this message again",
                     "editMode": "Bewerkingsmodus",
                     "advancedFilter": "Geavanceerd zoeken",
                     "quitEditMode": "Verlaat de bewerkingsmodus",
@@ -1031,6 +1064,10 @@
             "layerlabel": "Laag"
         },
         "rulesmanager": {
+            "placeholders": {
+                "filter": "Zoeken..."
+            },
+            "menutitle": "Beheer GeoFence Rules",
             "title": "Toegangsregels",
             "role": "Rol",
             "user": "Gebruiker",
@@ -1048,6 +1085,7 @@
             "close": "Sluiten",
             "previous": "vorige",
             "next": "volgende",
+            "errorTitle": "Geofence",
             "errorLoadingRoles": "Fout bij laden van de rollen.",
             "errorLoadingUsers": "Fout bij laden van de gebruikers.",
             "errorLoadingWorkspaces": "Fout bij laden van workspaces.",

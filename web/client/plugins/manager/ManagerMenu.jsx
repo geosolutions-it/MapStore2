@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 
 const { itemSelected } = require('../../actions/manager');
 const assign = require('object-assign');
-
+const {isRulesManagerConfigured} = require("../../selectors/rulesmanager");
 const {DropdownButton, Glyphicon, MenuItem} = require('react-bootstrap');
 
 const Container = connect(() => ({
@@ -38,7 +38,8 @@ class ManagerMenu extends React.Component {
         controls: PropTypes.object,
         mapType: PropTypes.string,
         panelStyle: PropTypes.object,
-        panelClassName: PropTypes.string
+        panelClassName: PropTypes.string,
+        enableRulesManager: PropTypes.bool
     };
 
     static contextTypes = {
@@ -52,6 +53,11 @@ class ManagerMenu extends React.Component {
             "msgId": "users.title",
             "glyph": "1-group-mod",
             "path": "/manager/usermanager"
+        },
+        {
+            "msgId": "rulesmanager.menutitle",
+            "glyph": "admin-geofence",
+            "path": "/rules-manager"
         }],
         role: "",
         onItemClick: () => {},
@@ -70,7 +76,7 @@ class ManagerMenu extends React.Component {
     };
 
     getTools = () => {
-        return [{element: <span key="burger-menu-title">{this.props.title}</span>}, ...this.props.entries.sort((a, b) => a.position - b.position).map((entry) => {
+        return [{element: <span key="burger-menu-title">{this.props.title}</span>}, ...this.props.entries.filter(e => this.props.enableRulesManager || e.path !== "/rules-manager").sort((a, b) => a.position - b.position).map((entry) => {
             return {
                 action: (context) => {context.router.history.push(entry.path); return this.props.itemSelected(entry.id); },
                 text: entry.msgId ? <Message msgId={entry.msgId} /> : entry.text,
@@ -101,6 +107,7 @@ class ManagerMenu extends React.Component {
 
 module.exports = {
     ManagerMenuPlugin: assign(connect((state) => ({
+        enableRulesManager: isRulesManagerConfigured(state),
         controls: state.controls,
         role: state.security && state.security.user && state.security.user.role
     }), {

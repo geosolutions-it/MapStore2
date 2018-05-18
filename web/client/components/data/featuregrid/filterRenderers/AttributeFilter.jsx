@@ -9,7 +9,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const LocaleUtils = require('../../../../utils/LocaleUtils');
-const {OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../../misc/OverlayTrigger');
 
 class AttributeFilter extends React.PureComponent {
     static propTypes = {

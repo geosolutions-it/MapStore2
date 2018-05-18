@@ -187,6 +187,31 @@ describe('Leaflet layer', () => {
         expect(urls.length).toBe(1);
     });
 
+    it('creates a wms elevation layer for leaflet map', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "application/bil16",
+            "useForElevation": true,
+            "url": "http://sample.server/geoserver/wms"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <LeafLetLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+        var lcount = 0;
+
+        expect(layer).toExist();
+        // count layers
+        map.eachLayer(function() { lcount++; });
+        expect(lcount).toBe(1);
+        let elevationFunc;
+        map.eachLayer((l) => elevationFunc = l.getElevation);
+        expect(elevationFunc).toExist();
+    });
+
     it('creates a wmts layer for leaflet map', () => {
         var options = {
             "type": "wmts",

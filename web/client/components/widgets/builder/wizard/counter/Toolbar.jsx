@@ -37,7 +37,7 @@ const getSaveTooltipId = (step, {id} = {}) => {
     }
     return "widgets.builder.wizard.addToTheMap";
 };
-module.exports = ({openFilterEditor = () => {}, step = 0, editorData = {}, valid, setPage = () => {}, onFinish = () => {}} = {}) => (<Toolbar btnDefaultProps={{
+module.exports = ({openFilterEditor = () => {}, step = 0, stepButtons = [], editorData = {}, valid, setPage = () => {}, onFinish = () => {}} = {}) => (<Toolbar btnDefaultProps={{
         bsStyle: "primary",
         bsSize: "sm"
     }}
@@ -46,9 +46,16 @@ module.exports = ({openFilterEditor = () => {}, step = 0, editorData = {}, valid
         visible: step > 0,
         glyph: "arrow-left",
         tooltipId: getBackTooltipId(step)
-    }, {
+    }, ...stepButtons, {
         visible: step === 0,
         onClick: openFilterEditor,
+        /* if no valid attribute is present, filter must be disabled
+         * (Query panel don't work you can not proceed, so it doesn't make sense to
+         * create a filter if you can not create the widget)
+         * TODO: improve checking valid attributes presence instead
+         * of valid flag.
+         */
+        disabled: !valid,
         glyph: "filter",
         tooltipId: "widgets.builder.setupFilter"
     }, {

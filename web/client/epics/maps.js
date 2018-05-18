@@ -11,7 +11,7 @@ const uuidv1 = require('uuid/v1');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
 const { MAP_INFO_LOADED } = require('../actions/config');
-const {isNil} = require('lodash');
+const {isNil, find} = require('lodash');
 const {
     SAVE_DETAILS, SAVE_RESOURCE_DETAILS,
     DELETE_MAP, OPEN_DETAILS_PANEL,
@@ -255,17 +255,15 @@ const storeDetailsInfoEpic = (action$, store) =>
         return !mapId ?
             Rx.Observable.empty() :
             Rx.Observable.fromPromise(
-                GeoStoreApi.getResourceAttribute(mapId, "details")
-                    .then(res => res.data).catch(() => {
-                        return null;
-                    })
+                GeoStoreApi.getResourceAttributes(mapId)
             )
-            .switchMap((details) => {
+            .switchMap((attributes) => {
+                let details = find(attributes, {name: 'details'});
                 if (!details) {
                     return Rx.Observable.empty();
                 }
                 return Rx.Observable.of(
-                        detailsLoaded(mapId, details)
+                        detailsLoaded(mapId, details.value)
                     );
             });
     });

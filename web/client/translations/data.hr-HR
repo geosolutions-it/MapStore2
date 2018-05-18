@@ -1,0 +1,1414 @@
+{
+    "locale": "hr-HR",
+    "messages": {
+        "Language": "Jezik",
+        "msgId0": "{name} je snimio/la {numPhotos, plural, =0 {niti jednu fotografiju} =1 {jednu fotografiju} other {# fotografija}} {takenDate, date, long}.",
+        "htmlTest": "{name} {surname}",
+        "about_title": "O aplikaciji...",
+        "aboutLbl": "O",
+        "about_p0-0": "MapStore je framework za izgradnju web mapping aplikacija koristeći standardne mapping biblioteke kao što su",
+        "about_p0-1": "i",
+        "about_p1": "MapStore ima nekoliko oglednih aplikacija:",
+        "about_ul0_li0": "MapViewer je jednostavni preglednik predefiniranih karata (po izboru pohranjenih u bazi koristeći GeoStore)",
+        "about_ul0_li1": "MapPublisher je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd. Za više informacija provjerite",
+        "about_h20": "Licenca",
+        "about_p3": "MapStore je slobodan softver otvorenoga koda, baziran je na OpenLayers 3, Leaflet i ReactJS bibiliotekama i licenciran je pod Simplified BSD License.",
+        "about_p5-0": "Za više informacija posjetite",
+        "about_a0": "ovu",
+        "about_p5-1": "stranicu.",
+        "about_h21": "Zasluge",
+        "about_p6": "MapStore2 je razvijan od:",
+        "enable": "Omogući",
+        "layers": "Slojevi",
+        "warning": "Upozorenje",
+        "errorTitleDefault": "Greška",
+        "errorDefault": "Došlo je do greške",
+        "pageInfoShowMore": "Results {count} of {total}",
+        "showMore": "Show more...",
+        "version": {
+            "label": "Verzija"
+        },
+        "autorefresh": {
+            "of": "od",
+            "updating": "Ažuriranje...",
+            "layers": "slojevi"
+        },
+        "localeErrors": {
+            "404": "Datoteka sa prijevodom nije pronađena"
+        },
+        "details": {
+            "title": "O karti"
+        },
+        "layerProperties": {
+            "windowTitle": "Svojstva sloja",
+            "title": "Naslov",
+            "name": "Naziv",
+            "group": "Grupa",
+            "general": "Općenito",
+            "description": "Opis",
+            "display": "Prikaz",
+            "style": "Stil",
+            "transparent": "Prozirno",
+            "singleTile": "Neopločeni prikaz",
+            "cached": "Koristi pohranu u predmemoriju",
+            "styleCustom": "Koristi stil naziva \"{value}\"",
+            "styleListLoadError": "Došlo je do greške prilikom učitavanja liste stilova",
+            "stylesRefreshList": "Osvježi listu stilova",
+            "format": "Format",
+            "delete": "Izbriši",
+            "deleteLayer":"Izbriši sloj",
+            "deleteLayerMessage": "Želite li zaista izbrisati ovaj sloj?",
+            "confirmDelete": "Jeste li sigurni?",
+            "featureTypeError": "Nije moguće učitavanje atributa sloja",
+            "elevation": "Nadmorska visina",
+            "titleTranslations": "Prijevodi naslova",
+            "groupProperties": "Svojstva grupe",
+            "featureInfo": "Informacije o objektu",
+            "featureInfoFormatLbl": "Format odziva informacija o objektima",
+            "legenderror": "Legenda nije dostupna",
+            "editCustomFormat": "Izmijeni prilagođeni format",
+            "exampleOfResponse": "Primjer",
+            "changedSettings": "Izmijenjene postavke",
+            "changedSettingsAlert": "Zatvarate panel postavki bez da ste spremili izmjene",
+            "textFormatTitle": "TEKST",
+            "textFormatDescription": "Prikaz informacija o objektu u jednostavnom tekstualnom formatu",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Prikaz informacija o objektu u html formatu",
+            "propertiesFormatTitle": "SVOJSTVA",
+            "propertiesFormatDescription": "Prikaz informacija o objektu kao lista svojstava",
+            "templateFormatTitle": "PREDLOŽAK",
+            "templateFormatDescription": "Prilagodba prikaza informacija o objektu",
+            "templateFormatInfoAlert1": "Klikni na dugme za editiranje za dodavanje novog predloška.",
+            "templateFormatInfoAlert2": "Koristi ${ attribute } za označavanje atributa za prikaz",
+            "templateFormatInfoAlertExample": "Id objekta je ${ properties }",
+            "templatePreview": "Pregled predloška"
+
+        },
+        "notification": {
+            "update": "Ažuriranje",
+            "warning": "Upozorenje",
+            "success": "Uspješno",
+            "backgroundLayerNotSupported": "Prethodno odabrana podloga nije podržana za ovaj tip karte. Slijedeća dostupna je odabrana u tom slučaju.",
+            "noBackgroundLayerSupported": "Nema dostupnih pozadinskih slojeva za ovaj tip karte.",
+            "updateOldMap": "Ovo je stara karta, stoga sve funkcionalnosti ne mogu biti omogućene. Kliknite na dugme za ažuriranje ili zanemarite ovo upozorenje ako ne želite ažurirati kartu.",
+            "warningSaveUpdatedMap": "Neki od slojeva se nisu ispravno ažurirali",
+            "saveUpdatedMap": "Svi slojevi su uspješno ažurirani"
+        },
+        "dock": {
+            "row": "{rowsSelected} redak odabran",
+            "rows": "{rowsSelected} redaka odabrano"
+        },
+        "globeswitcher": {
+            "tooltipDeactivate": "Napusti 3D prikaz",
+            "tooltipActivate": "Uđi u 3D prikaz"
+        },
+        "cookie":{
+            "info": "Ova stranica koristi kolačiće za pružanje boljeg korisničkog iskustva i funkcionalnosti. Postavke kolačića mogu se kontrolirati i konfigurirati u vašem web pregledniku.",
+            "moreDetailsButton": "Više detalja",
+            "leave": "Napusti",
+            "accept": "Prihvati"
+        },
+        "background": "Podloga",
+        "language": "Jezik",
+        "mousePositionCoordinates": "Indikator koordinata",
+        "mouseCoordinates": "Koordinate:",
+        "mousePositionCRS": "CRS:",
+        "mousePositionElevation": "Elev.:",
+        "mousePositionNoElevation": "N/A",
+        "elevationLoading": "Loading...",
+        "elevationLoadingError": "Error",
+        "elevationNotAvailable": "N/A",
+        "mapScale": "Mjerilo:",
+        "showMousePositionCoordinates": "Prikaži/Sakrij koordinate",
+        "menu": "Meni",
+        "options": "Mogućnosti",
+        "settings": "Postavke",
+        "help": "Pomoć",
+        "gohome": "Početna stranica",
+        "back": "Natrag na uvoz podataka",
+        "printbutton": "Ispis",
+        "annotationsbutton": "Pribilješke",
+        "noresultfound": "Nije pronađen nijedan rezultat",
+        "save": "Spremi",
+        "saveAs": "Spremi kao...",
+        "opacity": "Prozirnost",
+        "elevation": "Nadmorska visina",
+        "close": "Zatvori",
+        "cancel": "Odustani",
+        "no": "Ne",
+        "yes": "Da",
+        "confirm": "Potvrdi",
+        "confirmTitle": "Potvrđujete?",
+        "pageInfo": "{total, plural, =0 {Nema objekata} =1 {{total} objekt od {total}} other {Objekti {start}-{end} od {total}}}",
+        "loading": "Učitavanje...",
+        "group": "Grupa",
+        "groups": "Grupe",
+        "permission": "Dozvola",
+        "permissions": "Dozvole",
+        "global": {
+            "colors": {
+                "red": "{number, plural, =0 {Crveno} =1 {Crveno} other {Crvene}}",
+                "blue": "{number, plural, =0 {Plavo} =1 {Plavo} other {Plave}}",
+                "green": "{number, plural, =0 {Zeleno} =1 {Zeleno} other {Zelene}}",
+                "brown": "{number, plural, =0 {Smeđe} =1 {Smeđe} other {Smeđe}}",
+                "purple": "{number, plural, =0 {Ljubičasto} =1 {Ljubičasto} other {Ljubičaste}}",
+                "random": "{number, plural, =0 {Nasumično} =1 {Nasumično} other {Nasumične}}"
+            }
+        },
+        "home":{
+            "open": "Otvori",
+            "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
+            "description": "MapStore je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd.<br/>Posjetite <a href=\"/mapstore/docs/\">početnu stranicu</a> za više informacija.",
+            "Applications": "Aplikacije",
+            "Examples": "Primjeri",
+            "LinkedinGroup": "Mapstore Linkedin grupa",
+            "scrollTop": "Pomakni gore na vrh stranice",
+            "ml": {
+                "title": "Ostanite u kontaktu i informirani putem E-mail lista",
+                "subscribe_users": "Pretplati se na korisničku E-mail listu",
+                "subscribe_devel": "Pretplati se na razvojnu E-mail listu",
+                "visit_group": "Posjeti ovu grupu",
+                "subscribe": "Pretplata",
+                "email": "E-mail:"
+            },
+            "examples":{
+                "viewer":{
+                    "html":"<h3>Preglednik</h3><p>Jednostavni preglednik</p>"
+                },
+                "3dviewer":{
+                    "html":"<h3>3D Preglednik</h3><p>Jednostavni CesiumJS bazirani 3D preglednik</p>"
+                },
+                "manager":{
+                    "html":"<h3>Upravitelj</h3><p>Predgled MapStore karata</p>"
+                },
+                "mouseposition":{
+                    "html":"<h3>Kontrola pozicije miša</h3><p>Primjeri prilagodbe</p>"
+                },
+                "scalebar":{
+                    "html":"<h3>Kontrola mjerila</h3><p>Primjeri prilagodbe</p>"
+                },
+                "layertree":{
+                    "html":"<h3>Napredno stablo slojeva</h3><p>Primjeri prilagodbe</p>"
+                },
+                "queryform":{
+                    "html":"<h3>Graditelj upita</h3><p>Primjeri prilagodbe</p>"
+                },
+                "featuregrid":{
+                    "html":"<h3>Uređivač objekata</h3><p>Primjeri prilagodbe</p>"
+                },
+                "print":{
+                    "html":"<h3>Ispis</h3><p>Primjeri prilagodbe</p>"
+                },
+                "plugins":{
+                    "html":"<h3>Pluginovi</h3><p>Izgradi vlastitu aplikaciju</p>"
+                },
+                "api":{
+                    "html":"<h3>API</h3><p>Korist API kako bi uključio MapStore2 kartu u svojoj aplikaciji</p>"
+                },
+                "rasterstyler":{
+                    "html":"<h3>Uređivač stila rastera</h3><p>Stiliziraj svoje rastere</p>"
+                }
+            }
+        },
+        "cookiesPolicyNotification": {
+            "title": "Ova stranica koristi kolačiće",
+            "message": "Nastavkom korištenja ove stranice prihvaćate naše korištenje kolačića.",
+            "confirm": "Prihvaćam"
+        },
+        "manager": {
+            "openInANewTab":"Otvori kartu",
+            "deleteMap":"Izbriši kartu",
+            "deleteMapMessage": "Želite li zaista izbrisati ovu kartu?",
+            "editMapMetadata":"Izmjena svojstava karte",
+            "mapTypes_combo": "Odaberi preglednik karte: ",
+            "theme_combo": "Odaberi temu:",
+            "maps_title": "Karte",
+            "locales_combo": "Jezik:",
+            "featuredMaps": "Featured Maps"
+        },
+        "newMap": "Nova karta",
+	    "maps": {
+            "title": "Karte",
+            "addToFeaturedMaps": "Add to featured maps",
+            "removeFromFeaturedMaps": "Remove from featured maps",
+            "feedback": {
+                "noDetailsAvailable": "Detalji nisu dostupni",
+                "successSavedMap": "Karta je ispravno kreirana",
+                "errorDeletingMap": "Greška prilikom brisanja ove karte",
+                "errorDeletingThumbnailOfMap": "Greška prilikom brisanja sličice ove karte",
+                "errorDeletingDetailsOfMap": "Greška prilikom brisanja detalja ove karte",
+                "allResDeleted": "Svi resursi povezani s ovom kartom su uspješno izbrisani",
+                "errorFetchingDetailsOfMap": "Greška u dohvatu detalja za ovu kartu",
+                "details": {
+                    "deletedSuccesfully": "Detalji su uspješno uklonjeni",
+                    "savedSuccesfully": "Detalji su uspješno spremljeni",
+                    "updatedSuccesfully": "Detalji su uspješno ažurirani"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "Sličica je uspješno uklonjena",
+                    "savedSuccesfully": "Sličica je uspješno spremljena",
+                    "updatedSuccesfully": "Sličica je uspješno ažurirana"
+                },
+                "errorWhenSaving": "Došlo je do greške prilikom postupka spremanja",
+                "errorWhenUpdating": "Došlo je do greške prilikom postupka ažuriranja",
+                "errorWhenDeleting": "Došlo je do greške prilikom postupka brisanja",
+                "errorSizeExceeded": "Molimo, smanjite veličinu detalja ili kvalitetu slika"
+            },
+			"search": "pretraži karte..."
+		},
+        "map": {
+            "loading": "Učitavanje...",
+            "loadingerror": "Greška prilikom učitavanja",
+            "name": "Ime",
+            "description": "Opis",
+            "namePlaceholder": "Ime karte",
+            "descriptionPlaceholder": "Opis karte",
+            "saveTitle": "Spremi kartu",
+            "saveText": "Spremi trenutnu kartu?",
+            "thumbnail": "Sličica",
+            "message": "Prebacite ili kliknite za uvoz slike",
+            "suggestion": "(najbolje 300px X 180px, maksimalno 500kb)",
+            "errorFormat": "Podržani formati: png/jpg",
+            "errorSize": "Maksimalna dozvoljena veličina: 500kb",
+            "error": "Slika je neispravna",
+            "savedMapTitle": "Spremljena karta",
+            "savedMapMessage": "Karta je ispravno spremljena",
+            "thumbnailError": {
+                "error403": "Nemate dozvole za ažuriranje sličica",
+                "error404": "Došlo je do pogreške prilikom stvaranja sličice",
+                "error409": "Sličica sa tim imenom već postoji",
+                "errorDefault": "Mrežna greška"
+            },
+            "mapError": {
+                "errorTitle": "Cannot save current map",
+                "error403": "Nemate dozvole za ažuriranje karte",
+                "error404": "Došlo je do pogreške prilikom stvaranja karte",
+                "error409": "Karta sa tim imenom već postoji",
+                "error500": "Interna greška poslužitelja. Provjerite prelazi li veličina konfiguracijske datoteke karte veličinu fiksnog ograničenja",
+                "errorDefault": "Mrežna greška"
+            },
+            "permissions": {
+                "noRules": "Nema pravila",
+                "addRule": "Dodaj pravilo...",
+                "selectGroup": "Odaberi grupu...",
+                "canView": "može pregledavati",
+                "canWrite": "može mijenjati",
+                "noResult": "nema pronađenih rezultata",
+                "title": "Grupe za dozvole"
+            },
+            "details": {
+                "back": "Natrag",
+                "save": "Spremi",
+                "show": "Prikaži ploču sa detaljima",
+                "add": "Dodaj novi detalj",
+                "edit": "Izmijeni detalj",
+                "rowTitle": "Ploča detalja",
+                "title": "Ploča detalja - {name}",
+                "undo": "Poništi uklanjanje",
+                "showPreview": "Prikaži pregled",
+                "hidePreview": "Sakrij pregled",
+                "delete": "Izbriši ploču detalja",
+                "titleUnsavedChanges": "Jeste li sigurni da želite zatvoriti bez spremanja promjena?",
+                "sureToClose": "Jeste li sigurni da želite zatvoriti bez spremanja promjena?",
+                "fieldsChanged": "Neka polja su izmijenjena"
+            }
+        },
+        "floatinglegend": {
+            "showTOC": "Show layers",
+            "showLegend": "Show legend",
+            "hideLegend": "Hide legend"
+        },
+        "toc": {
+            "toggleLayerVisibility": "Izmijeni vidljivost sloja",
+            "displayLegendAndTools": "Prikaži kazalo i alate",
+            "zoomToLayerExtent": "Prikaži puni opseg sloja",
+            "addLayer": "Dodaj sloj",
+            "toolZoomToLayerTooltip": "Prikaži puni opseg odabranog sloja",
+            "toolZoomToLayersTooltip": "Prikaži puni opseg odabranih slojeva",
+            "toolLayerSettingsTooltip": "Svojstva odabranog sloja",
+            "toolGroupSettingsTooltip": "Svojstva odabrane grupe",
+            "toolTrashLayerTooltip": "Ukloni odabrani sloj",
+            "toolTrashLayersTooltip": "Ukloni odabrane slojeve",
+            "toolFeaturesGridTooltip": "Otvori atributnu tabelu",
+            "toolDownloadTooltip": "Izvezi podatke sloja",
+            "noFilteredResults": "Nema rezultata",
+            "filterPlaceholder": "Filtriraj slojeve",
+            "clearFilter": "Očisti filter",
+            "toolReloadLayerTooltip": "Ponovno učitavanje odabranog sloja",
+            "toolReloadLayersTooltip": "Ponovno učitavanje odabranih slojeva",
+            "statusIconOpen": "Zatvori grupu",
+            "statusIconClose": "Otvori grupu",
+            "grabLayerIcon": "Zahvati i sortiraj sloj",
+            "grabGroupIcon": "Zahvati i sortiraj grupu",
+            "toggleLayerVisibilityWarning": "Izmijeni vidljivost sloja, Upozorenje: sloj se nije učitao ispravno",
+            "createWidget": "Izradi widget za odabrani sloj",
+            "editLayerProperties": "Izmijeni svojstva sloja",
+            "browseData": "Otvori atributnu tabelu",
+            "removeLayer": "Ukloni sloj",
+            "loadingerror": "Sloj se nije učitao ispravno ili nije dostupan",
+            "measure": "Izmjeri",
+            "backgroundSwitcher": "Podloge",
+            "layers": "Slojevi",
+            "drawerButton": "Slojevi",
+            "refreshTitle": "Ažuriraj slojeve",
+            "refreshConfirm": "Ažuriraj",
+            "refreshMessage": "Ponovno učitaj konfiguraciju WMS slojeva sa servera",
+            "refreshError": "Greška prilikom ažuriranja slojeva: ",
+            "refreshOptions": {
+                "bbox": "Ažuriraj granični okvir",
+                "search": "Ažuriraj postavke pretraživanja",
+                "title": "Ažuriraj naslov",
+                "dimensions": "Ažuriraj dimenzije"
+            },
+            "layerMetadata": {
+                "identifier": "Identifikator",
+                "title": "Naslov",
+                "abstract": "Sažetak",
+                "subject": "Subjekt",
+                "type": "Tip",
+                "creator": "Autor",
+                "toolLayerMetadataTooltip": "Prikaži metapodatke odabranoga sloja",
+                "layerMetadataPanelTitle": "Metapodaci sloja",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Greška u pretrazi metapodataka"
+                }
+            }
+        },
+        "print":{
+            "paneltitle": "Ispis",
+            "layout": "Raspored",
+            "sheetsize": "Veličina lista:",
+            "legendoptions": "Postavke kazala",
+            "submit": "Ispiši",
+            "title": "Naslov",
+            "titleplaceholder": "Unesi naslov...",
+            "description": "Opis",
+            "descriptionplaceholder": "Unesi opis...",
+            "resolution": "Rezolucija:",
+            "defaultBackground": "Koristi OSM kao podlogu",
+            "printtooltip": "Ispis",
+            "alternatives": {
+                "legend": "Uključi kazalo",
+                "2pages": "Kazalo na zasebnoj stranici",
+                "landscape": "Vodoravno",
+                "portrait": "Okomito"
+            },
+            "legend": {
+                "font": "Konfiguracija oznaka:",
+                "forceLabels": "Forsiraj oznake:",
+                "antiAliasing": "Uklanjanje oštrih rubova slova:",
+                "iconsSize": "Veličina fonta:",
+                "dpi": "Dpi:"
+            },
+            "layoutWarning": "Nedopušten raspored"
+        },
+        "backgroundSwither":{
+            "tooltip": "Odaberi podlogu"
+        },
+        "info":{
+            "tooltip": "Informacije o objektima na karti"
+        },
+        "expandtoolbar": {
+            "tooltip": "Proširi / Suzi"
+        },
+        "getFeatureInfoTitle": "Informacije o objekima",
+        "identifyTitle": "Informacije o objektu",
+        "identifyNoQueryableLayers": "Nema aktivnih slojeva za dohvat informacija",
+        "identifyRevGeocodeHeader": "Koordinate",
+        "identifyRevGeocodeModalTitle": "Adresa",
+        "identifyRevGeocodeSubmitText": "Više informacija",
+        "identifyRevGeocodeCloseText": "Zatvori",
+        "identifyRevGeocodeError": "Nemoguće geokodirati",
+        "getFeatureInfoError": {
+            "title": "Ups! Nešto je pošlo po zlu",
+            "text": "Došlo je do greške tijekom ovoga <b>GetFeatureInfo</b> upita"
+        },
+        "noFeatureInfo": "Nema dostupnih informacija za točku koju ste kliknuli",
+        "noInfoForLayers": "Nema objekata u slijedećim slojevima: ",
+        "history":{
+            "barLabel": "Povijest karte",
+            "undoBtnTooltip": "Idi nazad",
+            "redoBtnTooltip": "Idi naprijed"
+        },
+        "infoFormatLbl": "Format odziva informacije o objektima",
+        "measureSupport": {
+            "continueLine": "Klikni za nastavak crtanja linije",
+            "continuePolygon": "Klikni za nastavak crtanja poligona",
+            "startDrawing": "Klikni za početak crtanja"
+        },
+        "measureComponent": {
+            "Measure": "Mjerenje",
+            "MeasureLength": "Mjerenje duljine",
+            "MeasureArea": "Mjerenje površine",
+            "MeasureBearing": "Mjerenje azimuta",
+            "tooltip": "Mjerenje duljine i površine",
+            "title": "Mjerenje",
+            "lengthButtonText": "Linija",
+            "areaButtonText": "Površina",
+            "resetButtonText": "Poništi",
+            "lengthLabel": "Duljina",
+            "areaLabel": "Površina",
+            "bearingLabel": "Azimut",
+            "formula": "Formula za izračun udaljenosti",
+            "showLabel": "Prikaži oznaku mjerenja"
+        },
+        "search":{
+            "placeholder": "Pretraži po imenu lokacije ili koordinatama ...",
+            "searchservicesbutton": "Konfiguriraj servise preraživanja",
+            "configpaneltitle": "Kreiraj/izmijeni servis pretraživanja",
+            "serviceslistlabel": "Dostupni servisi",
+            "overriedservice": "Nadjačaj zadane servise",
+            "addbtn": "Dodaj",
+            "nextbtn": "Slijedeći",
+            "prevbtn": "Nazad",
+            "savebtn": "Spremi/Ažuriraj",
+            "cancelbtn": "Odustani",
+            "confirmremove": "Izbriši?",
+            "cancelconfirm": "Jeste li sigurni?",
+            "s_name": "Ime",
+            "s_title": "Naslov",
+            "s_description": "Opis",
+            "s_priority": "Prioritet",
+            "s_url": "Url servisa",
+            "s_layer": "Sloj",
+            "s_attributes": "Atributi",
+            "s_sort": "Poredaj po",
+            "s_max_features": "Max objekata",
+            "s_wfs_props_label" : "Svojstva WFS servisa",
+            "s_wfs_opt_props_label" : "Dodatna svojstva",
+            "s_result_props_label": "Svojstva prikaza rezultata",
+            "s_priority_info": "Koristi se za sortiranje rezultata pretrage, veće vrijednosti prvo. Nominatim razultati imaju prednost = 5",
+            "serviceslistempty": "Nije definiran niti jedan servis"
+        },
+        "drawLocal": {
+            "draw": {
+                "toolbar": {
+                    "actions": {
+                        "title": "Odustani od crtanja",
+                        "text": "Odustani"
+                    },
+                    "undo": {
+                        "title": "Izbriši zadnje nacrtanu točku",
+                        "text": "Izbriši zadnju točku"
+                    },
+                    "buttons": {
+                        "polyline": "Nacrtaj poliliniju",
+                        "polygon": "Nacrtaj poligon",
+                        "rectangle": "Nacrtaj pravokutnik",
+                        "circle": "ncrtaj kružnicu",
+                        "marker": "Nacrtaj marker"
+                    }
+                },
+                "handlers": {
+                    "circle": {
+                        "tooltip": {
+                            "start": "Klikni i povuci za crtanje kružnice."
+                        }
+                    },
+                    "marker": {
+                        "tooltip": {
+                            "start": "Klikni na kartu za postavljanje markera."
+                        }
+                    },
+                    "polygon": {
+                        "tooltip": {
+                            "start": "Klinkni za početak crtanja objekta.",
+                            "cont": "Klikni za nastavak crtanja objekta.",
+                            "end": "Klikni na prvu točku za zatvaranje ovog objekta."
+                        }
+                    },
+                    "polyline": {
+                        "error": "Greška: rubovi objekta se ne smiju presijecati!",
+                        "tooltip": {
+                            "start": "Klikni za početak crtanja linije.",
+                            "cont": "Klikni za nastavak crtanja linije.",
+                            "end": "Klikni na zadnju točku za završavanje linije."
+                        }
+                    },
+                    "rectangle": {
+                        "tooltip": {
+                            "start": "Klikni i povuci za crtanje pravokutnika."
+                        }
+                    },
+                    "simpleshape": {
+                        "tooltip": {
+                            "end": "Otpusti miš za završetak crtanja."
+                        }
+                    }
+                }
+            },
+            "edit": {
+                "toolbar": {
+                    "actions": {
+                        "save": {
+                            "title": "Spremi promjene.",
+                            "text": "Spremi"
+                        },
+                        "cancel": {
+                            "title": "Završi uređivanje, odustani od svih promjena.",
+                            "text": "Odustani"
+                        }
+                    },
+                    "buttons": {
+                        "edit": "Uredi sloj.",
+                        "editDisabled": "Nema slojeva za uređivanje.",
+                        "remove": "Izbriši slojeve.",
+                        "removeDisabled": "Nema slojeva za brisanje."
+                    }
+                },
+                "handlers": {
+                    "edit": {
+                        "tooltip": {
+                            "text": "Povucite ručke ili marker za uređivanje objekta.",
+                            "subtext": "Kliknite na odustani za poništavanje promjena."
+                        }
+                    },
+                    "remove": {
+                        "tooltip": {
+                            "text": "Kliknite na objekt da biste ga uklonili"
+                        }
+                    }
+                }
+            }
+        },
+        "locate": {
+            "tooltip": "Lociraj me",
+            "metersUnit": "metara",
+            "feetUnit": "stopa",
+            "popup": "Nalazite se unutar {distance} {unit} od ove točke",
+            "outsideMapBoundsMsg": "Čini se da se nalazite izvan granica ove karte"
+        },
+        "zoombuttons": {
+            "zoomInTooltip": "Približi",
+            "zoomOutTooltip": "Udalji",
+            "zoomAllTooltip": "Prikaži maksimalni opseg"
+        },
+        "fullscreen": {
+            "tooltipActivate": "Prikaži u punom ekranu",
+            "tooltipDeactivate": "Izađi iz punog ekrana",
+            "viewLargerMap": "Prikaži veću kartu"
+        },
+        "helptexts": {
+            "scaleBox": "Ovo je pomoć za kontrolu mjerila",
+            "zoomToMaxExtentButton": "Ovo je pomoć za kontrolu prikaza punog opsega",
+            "zoomIn": "Ovo je pomoć za kontrolu približavanja",
+            "zoomOut": "Ovo je pomoć za kontrolu udaljivanja",
+            "searchBar": "Unesite adresu mjesta za pretragu npr. 'Ilica, Zagreb'. Možete također unijeti kordinate u ovom formatu: 43.87,10.20",
+            "metadataexplorer": "Ovo je pomoć za kontrolu pregleda metapodataka",
+            "settingsPanel": "Ovo je pomoć za kontrolu postavki",
+            "gohome": "Ovo je pomoć za kontrolu početne stranice",
+            "measureComponent": "Ovo je pomoć za kontrolu mjerenja",
+            "backgroundSwitcher": "Ovo je pomoć za kontrolu promjene podloga",
+            "layerSwitcher": "Ovo je pomoć za kontrolu prekidača za slojeve",
+            "infoButton": "Ovo je pomoć za kontrolu dohvata informacija",
+            "locateBtn": "Ovo je pomoć za kontrolu lokacije",
+            "snapshot": "Ovo je pomoć za kontrolu snimke",
+            "print": "Ovo je pomoć za kontrolu ispisa",
+            "shapefile": "Ovo je pomoć za kontrolu podizanja Shapefile-a",
+            "rasterstyler": "Odredite minimalnu i maksimalnu vrijednost te broj klasa i paletu boja za stvaranje nove klasifikacije za odabrani rasterski sloj",
+            "expandToolbar": "Ovo je pomoć za kontrolu Proširi / Suzi",
+            "historyundo": "Koristite ovo dugme za povratak na posljednje uvećanje i položaj karte",
+            "historyredo": "Koristite ovo dugme za odlazak na slijedeće uvećanje i položaj karte",
+            "vectorstyler": "Dodajte pravilo i stvorite novi stilizirani vektorski sloj",
+            "styler": "Dodajte pravilo i stvorite novi stilizirani sloj"
+        },
+        "queryform": {
+            "title": "Napredna pretraga",
+            "query": "Pretraži",
+            "reset": "Poništi",
+            "query_request_exception": "Greška upita",
+            "config": {
+                "load_config_exception": "Greška učitavanja postavki"
+            },
+            "comboField": {
+                "default_placeholder": "Odaberi..."
+            },
+            "form": {
+                "header": "Pronađi u skupu podataka",
+                "dataset_header": "Skup podataka"
+            },
+            "emptyfilter": "Nije postavljen filter. Pretraga bi mogla biti prekinuta ukoliko poslužitelj ne podržava parcijalni dohvat podataka.",
+            "attributefilter":{
+                "add_condition": " Dodaj uvjet",
+                "add_group": " Dodaj grupu",
+                "group_label_a": "Odgovara",
+                "group_label_b": "od slijedećih uvjeta:",
+                "combo_placeholder": "Atribut",
+                "text_placeholder": "Unesi tekst za pretragu",
+                "attribute_filter_header": "Filter atributa",
+                "tooltipTextField": "koristite <b>*</b> za bilo koji broj bilo kojih znakova</br>use <b>.</b> za jedan znak</br>koristi <b>!</b> za korištenje prethodnih znakova u izrazu (!* i !.)</br>",
+                "groupField": {
+                    "any": "ijednom",
+                    "all": "svima",
+                    "none": "nijednom"
+                },
+                "numberfield": {
+                    "isRequired": "Obavezna vrijednost u polju",
+                    "wrong_range": "Donja vrijednost mora biti manja od gornje vrijednosti"
+                },
+                "datefield": {
+                    "wrong_date_range": "Početni datum mora biti ranije od krajnjeg datuma"
+                },
+                "autocomplete": {
+                    "emptyList": "Nema rezultata",
+                    "emptyFilter": "Filter nije vratio niti jedan rezultat",
+                    "open": "Otvori odabirnu listu"
+                }
+            },
+            "spatialfilter": {
+                "filterType": "Tip filtra",
+                "geometric_operation": "Geometrijske operacije",
+                "combo_placeholder": "Odaberi...",
+                "spatial_filter_header": "Prostorni filter",
+                "draw_start_label": "Nacrtaj područje od interesa na karti",
+                "dwithin_label": "metara",
+                "details": {
+                    "detail_button_label": "Detalji",
+                    "details_header": "Detalji odabira",
+                    "details_bbox_label": "Uredi koordinate za izmjenu područja",
+                    "details_circle_label": "Uredi numeričko polje za prilagodbu promjera i središta kružnice",
+                    "reset_bbox": "Poništi",
+                    "save_bbox": "Spremi izmjenu graničnog okvira",
+                    "save_radius": "Spremi izmjenu promjera/središta",
+                    "radius": "Promjer"
+                },
+                "methods": {
+                    "zone": "Zona",
+                    "viewport": "Početni prikaz",
+                    "regions": "Regije",
+                    "box": "Pravokutnik",
+                    "buffer": "Obrub",
+                    "circle": "Kružnica",
+                    "poly": "Poligon"
+                },
+                "operations": {
+                    "intersects": "Presijeca",
+                    "bbox": "Granični okvir",
+                    "contains": "Je sadržan",
+                    "dwithin": "Udaljen od",
+                    "within": "Sadrži"
+                }
+            },
+            "crossLayerFilter": {
+                "title": "Filter sloja",
+                "targetLayer": "Ciljani sloj",
+                "clear": "Izbriši filter",
+                "operation": "Operacija",
+                "errors": {
+                    "noCrossLayerAvailable": "Unakrsni filter više slojeva nije omogućen za odabrani sloj"
+                }
+            }
+        },
+        "user":{
+            "login": "Prijava",
+            "logout": "Odjava",
+            "info": " Informacije o računu",
+            "details": " Detalji korisnika",
+            "noAttributesMessage": "Nema podataka vezanih uz vaš račun",
+            "changePwd": "Promijeni zaporku",
+            "newPwd": "Nova zaporka",
+            "retypePwd": "Ponovno upiši zaporku",
+            "passwordMinlenght": "Vaša zaporka mora imati najmanje {minSize} znakova",
+            "passwordCheckFail": "Zaporke se ne podudaraju!",
+            "passwordInvalid": "Neispravna zaporka",
+            "username": "Korisničko ime",
+            "password": "Zaporka",
+            "passwordChanged": "Zaporka je promijenjena",
+            "passwordError": "Greška prilikom izmjene zaporke",
+            "signIn": "Prijava",
+            "loginFail": "Pogreška prilikom prijave",
+            "loginFailedStatusMessages": {
+                "usernamePwdInsert": "Molimo unesite korisničko ime i zaporku",
+                "usernamePwdIncorrect": "Korisničko ime ili zaporka nisu ispravni"
+            },
+            "detailsName": "Ime",
+            "detailsRole": "Rola",
+            "detailsGroups": "Grupe",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Tvrtka",
+            "detailsNotes": "Bilješke"
+        },
+        "annotations": {
+            "edit": "Uredi",
+            "remove": "Izbriši",
+            "save": "Spremi",
+            "cancel": "Odustani",
+            "back": "Natrag",
+            "addMarker": "Dodaj novu točku na karti",
+            "styleGeometry": "Odaberi različiti stil za točke",
+            "deleteGeometry": "Ukloni postojeće točke",
+            "removeannotation": "Želite li ukloniti pribilješku?",
+            "removegeometry": "Želite li ukloniti sve pribilješke?",
+            "confirm": "Potvrdi",
+            "mandatory": "Obavezno polje",
+            "emptygeometry": "Geometrija ne može biti prazna",
+            "add": "Nova",
+            "filter": "Filtriraj pribilješke...",
+            "undo": "Želite li zaista napustiti trenutno uređivanje pribilješki?",
+            "title": "Pribilješke",
+            "zoomTo": "Približi",
+            "field": {
+                "title": "Naslov",
+                "description": "Opis"
+            }
+        },
+        "users": {
+            "title": "Upravljaj korisničkim računima",
+            "users": "Korisnici",
+            "manageUsers": "Upravljaj korisnicima",
+            "searchUsers": "Pretraži korisnike...",
+            "newUser": "Novi korisnik",
+            "editUser": "Uredi korisnika",
+            "deleteUser": "Izbriši korisnika",
+            "statusTitle": "status",
+            "enabled": "Omogućen",
+            "groupTitle": "Grupe:",
+            "roleTitle": "Rola",
+            "saveUser": "Spremi",
+            "savingUser": "Spremanje...",
+            "userSaved": "Spremljeno!",
+            "createUser": "Kreiraj",
+            "creatingUser": "Kreiranje...",
+            "userCreated": "Kreiran!",
+            "deleting": "Brisanje...",
+            "delete": "Briši",
+            "confirmDeleteUser": "Želite li zaista izbrisati ovoga korisnika?",
+            "errorDelete": "Došlo je do greške prilikom brisanja ovoga korisnika:",
+            "errorSaving": "Došlo je do greške prilikom spremanja ovoga korisnika:",
+            "selectedGroups": "ODABRANE GRUPE"
+        },
+        "usergroups": {
+          "searchGroups": "Pretraži grupe...",
+          "groups": "Grupe",
+          "nameLimit": "Ime je ograničeno na 255 znakova.",
+          "descLimit": "Opis je ogranien na 255 znakova.",
+          "editGroup": "Uredi grupu",
+          "deleteGroup": "Izbriši grupu",
+          "removeUser": "Ukloni korisnika",
+          "newGroup": "Nova grupa",
+          "manageGroups": "Upravljaj grupama",
+          "description": "Opis:",
+          "noDescriptionAvailable": "(Nema opisa)",
+          "groupName": "Ime grupe",
+          "groupDescription": "Opis",
+          "saveGroup": "Spremi",
+          "createGroup": "Kreiraj",
+          "creatingGroup": "Kreirana...",
+          "groupMembers": "Članovi:",
+          "addMember": "Dodaj člana:",
+          "noUsers": "Nema korisnika za ovu grupu",
+          "errorSaving": "Došlo je do greške prilikom spremanja ove grupe",
+          "errorDelete": "Došlo je do greške prilikom brisanja ove grupe",
+          "confirmDeleteGroup": "Želite li zaista izbrisati ovu grupu?"
+        },
+        "share":{
+            "title": "Podijeli",
+            "titlePanel": "Podijeli kartu",
+            "socialIntro": "Na svojoj omiljenoj društvenoj mreži",
+            "directLinkTitle": "Putem izravne poveznice",
+            "social": "Socijalna mreža",
+            "direct": "Poveznica",
+            "code": "Ugradi",
+            "embeddedLinkTitle": "Putem ugrađenoga koda",
+            "forceDrawer": "Prikaži kontrolu sadržaja",
+            "apiLinkTitle": "Koristeći API",
+            "QRCodeLinkTitle": "QR kod",
+            "msgCopiedUrl": "Kopirano",
+            "msgToCopyUrl": "Klikni za kopiranje",
+            "sharedTitle": "Posjeti moju novu kartu: "
+        },
+        "snapshot": {
+            "title": "Pregled snimke",
+            "save": "Spremi",
+            "tooltip": "Spremi snimku karte.",
+            "googleBingError": "Google i Bing slojevi nisu dostupni za snimku, zbog ograničenja uvjetovanih autorskim pravima.",
+            "downloadingSnapshots": "izrada snimke je u tijeku",
+            "date": "Datum",
+            "layers": "Slojevi",
+            "size": "Veličina",
+            "notsupported": "Snimka nije podržana",
+            "taintedMessage": "Funkcionalnost spremanja snimke je ograničena zbog neke od sigurnosnih postavki preglednika. Pokušajte kliknuti desnim klikom na pregled i odaberite 'Spremi sliku kao' (podržano u Firefox i Chrome)."
+        },
+        "shapefile": {
+            "title": "Dodaj lokalnu datoteku",
+            "tooltip": "Dodaj lokalnu vektorsku datoteku.",
+            "placeholder": "Dovucite datoteku ovdje ili kliknite za odabir shapefileova za uvoz. (podržani formati: shapefile-ovi moraju biti sadržani u zip arhivi, KML/KMZ i GPX)",
+            "defaultStyle": "Zadani stil",
+            "zoom": "Prikaži kartu u opsegu vektorske datoteke",
+            "error": {
+                "select": "Odaberi jednu ili više vektorskih datoteka (podržani formati: shapefile-ovi moraju biti sadržani u zip arhivi, KML/KMZ i GPX)",
+                "shapeFileParsingError": "Nije moguće učitavanje vektorske datoteke. Datoteka je oštećena ili neispravno kreirana",
+                "genericLoadError": "Nije moguće učitavanje vektorske datoteke na kartu",
+                "missingPrj": "Ne postoji informacija o projekciji(.prj), koordinatni sustav bi trebao biti EPSG:4326"
+            },
+            "add": "Dodaj",
+            "cancel": "Odustani",
+            "success": " ispravno uvezeno"
+        },
+        "catalog": {
+            "title": "Katalog",
+            "autoload": "Traži prilikom odabira servisa",
+            "clearValueText": "Očisti odabir",
+            "noResultsText": "Nema rezultata",
+            "tooltip": "Pregledaj katalog",
+            "addToMap": "Dodaj na kartu",
+            "getWMSLink": "Dohvati poveznicu na WMS",
+            "error": "Došlo je do greške prilikom učitavanja zapisa sa kataloga",
+            "pageInfo": "Rezultati {start}-{end} od {total}",
+            "resultInfo": "{total, plural, =0 {Nema rezultata} =1 {{total} Objekata od {total}} other {{start}-{end} od {total}}}",
+            "pageInfoInfinite": "{total, plural, =undefined {} =0 {Nema rezultata} =1 {{total} od {total} odgovarajućih} other {Učitano {loaded} od {total} odgovarajućih}}",
+            "noRecordsMatched": "Nema podudarajućih zapisa",
+            "wmsGetCapLink": "WMS",
+            "wfsGetCapLink": "WFS",
+            "share": "Dijeli",
+            "copyToClipboard": "Kopiraj u međuspremnik",
+            "copied": "Kopirano!",
+            "textSearchPlaceholder": "tekst za pretragu...",
+            "search": "Traži",
+            "delete": "Izbriši",
+            "reset": "Očisti",
+            "options": "Mogućnosti",
+            "srs_not_allowed": "Projekcija karte nije podržane od strane ovoga servisa",
+            "add": "Dodaj",
+            "service": "Servis",
+            "servicePlaceholder": "unesi servis",
+            "url": "Url",
+            "urlPlaceholder": "unesi URL",
+            "type": "Tip",
+            "serviceTitle": "Naslov",
+            "serviceTitlePlaceholder": "unesi naslov",
+            "notification": {
+                "warningAddCatalogService": "Unesi ispravni url i naslov",
+                "addCatalogService": "Servis je dodan ispravno",
+                "duplicatedServiceTitle": "Servis sa tim naslovom već postoji. Molim, promijenite naslov",
+                "serviceDeletedCorrectly": "Servis je izbrisan ispravno",
+                "errorServiceUrl": "Servis nije dostupan. Molim, provjerite uneseni url"
+            }
+        },
+        "uploader": {
+            "filename": "Ime datoteke",
+            "type": "Tip",
+            "lastModified": "Zadnji puta mijenjano",
+            "filesize": "Veličina",
+            "beforeUpload": "Priprema za prijenos... ",
+            "uploadingFiles": "Prijenos datoteka...",
+            "dropfile": "dovuci ovdje datoteke za prijenos",
+            "dropfileImport": "dovuci ovdje datoteke za uključivanje u prijenos"
+        },
+        "importer": {
+            "title": "Uvezi podatke",
+            "imports": "Uvezi sesije",
+            "importN": "Sesija {id}",
+            "creatingImportProcess": " Kreiranje sesije uvoza... ",
+            "dropfile": "dovuci ovdje datoteke za kreiranje nove sesije uvoza",
+            "dropfileImport": "dovuci ovdje datoteke za uključivanje u uvoz",
+            "process": "Sesija",
+            "number": "#",
+            "workspace": {
+                "create": "Kreiraj",
+                "createWS": "kreiraj novu radnu okolinu: ",
+                "target": "odredišna radna okolina: ",
+                "failure": "Greška u kreiranju radne okoline: {statusWS}",
+                "success": "Radna okolina {statusWS} je uspješno kreirana",
+                "select": "Odaberi odredišnu radnu okolinu",
+                "new": "Ime nove radne okoline..."
+            },
+            "import": {
+                "actions": "Radnje",
+                "tasks": "Paketi",
+                "runImport": "Izvrši",
+                "deleteImport": "Izbriši sesiju",
+                "deleteTask": "Izbriši",
+                "status": "Status",
+                "archive": "Arhiviraj",
+                "deleting": "Brisanje...",
+                "analyzing": "Provera paketa...",
+                "applyingPreset": "Primjena prilagodbe..."
+            },
+            "task": {
+                "panelTitle": "Uvezi paket {id}",
+                "general": "Općenite informacije",
+                "status": "Status",
+                "updateMode": "Način ažuriranja",
+                "originalData": "Izvorna datoteka",
+                "file": "Ime datoteke",
+                "format": "Format",
+                "targetStore": "Odredišno skladište podataka",
+                "storeType": "Tip skladišta",
+                "storeName": "Ime skladišta",
+                "layer": "Sloj",
+                "transforms": "Lanac transformacija",
+                "update": "Ažuriraj",
+                "run": "Uvezi ovaj paket",
+                "edit": "Ažuriraj zadani stil",
+                "delete": "Izbriši ovaj paket"
+            },
+            "transform": {
+                "panelTitle": "Transformacija {id}",
+                "type": "Tip transformacije",
+                "actions": "Radnje",
+                "options": "Postavke transformacije",
+                "overviewlevels": "Razine pregleda",
+                "delete": "Izbriši ovu trnsformaciju"
+            }
+        },
+        "rasterstyler": {
+            "tooltip": "Kreiraj i izmijeni stil rasterskog sloja",
+            "paneltitle": "Raster stilizator",
+            "layerlabel": "Sloj",
+            "typelabel": "Tip stila",
+            "opacitylabel": "Prozirnost",
+            "redtitle": "Crveno",
+            "greentitle": "Zeleno",
+            "bluetitle": "Plavo",
+            "graytitle": "Sivo",
+            "pseudobandtitle": "Odabir kanala",
+            "eqinttitle": "Klasifikacija jednakih intervala",
+            "pseudotitle": "Pseudokolor postavke",
+            "applybtn": "Primijeni stil"
+        },
+        "bandselector": {
+            "band": "Kanal",
+            "enhancement": "Poboljšanje",
+            "algorithmTitle": "Dodatni alogoritam",
+            "value": "Vrijednost",
+            "min": "Min",
+            "max": "Max",
+            "enha": {
+                "none": "Ništa",
+                "Normalize": "Normaliziraj",
+                "Histogram": "Histogram",
+                "GammaValue": "Gamma korekcija"
+            },
+            "algorithm": {
+                "none": "Ništa",
+                "StretchToMinimumMaximum": "Rastegni",
+                "ClipToMinimumMaximum": "Odreži",
+                "ClipToZero": "Odreži na nulu"
+            }
+        },
+        "equalinterval": {
+            "min": "Min",
+            "max": "Max",
+            "classes": "Klase",
+            "ramp": "Paleta boja",
+            "classify": "Klasificiraj",
+            "maxerror": "Max vrijednost mora biti veća od Min vrijednosti",
+            "minerror": "Min vrijednost mora biti manja od Max vrijednosti"
+        },
+        "colormapgrid": {
+            "color": "Boja",
+            "quantity": "Količina",
+            "label": "Oznaka",
+            "minmaxerror": "Vrijednost mora biti između vrijednosti prethodne i slijedeće ćelije"
+        },
+        "pseudocolorsettings": {
+            "type": "Tip",
+            "extended": "Prošireno",
+            "colormap": "Mapa boja",
+            "add": "Dodaj unos",
+            "remove": "Ukloni unos"
+        },
+        "rasterstyletype": {
+            "rgb": "RGB",
+            "gray": "U sivim tonovima",
+            "pseudo": "Pseudokolor",
+            "multi": "Više kanala",
+            "single": "Jedan kanal"
+        },
+        "featuregrid": {
+            "columns": "Kolone",
+            "header": "Pretraži listu rezultata",
+            "tools": "Alatna ploča",
+            "export": "Izvoz",
+            "selectall": "Odaberi sve",
+            "deselectall": "Očisti odabir",
+            "backtosearch": "Natrag na pretragu",
+            "resultInfo": "{total, plural, =0 {Niti jedan objekt} =1 {{total} objekata {total}} other {{start}-{end} od {total}}}",
+            "resultInfoVirtual": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {{total} Items}}",
+            "pageInfo": "{totalPages, plural, =0 {Niti jedna stranica} =1 {Stranica {totalPages} od {totalPages}} other {Stranica {page} od {totalPages}}}",
+            "pagination": {
+                "page": "Stranica",
+                "of":   "od",
+                "to":   "do",
+                "more": "više"
+            },
+            "noFeaturesAvailable": "Nema dostupnih objekata",
+            "errorSaving": "Došlo je do greške prilikom operacije spremanja",
+            "errorProjFetch": "Greška u dohvatu proj4 izraza sa spatialreference.org. Alat ne može primijeniti prostorni filter.",
+            "notSupportedGeometryTitle": "Tip geometrije nije podržan ",
+            "notSupportedGeometry": "Tip geometrije trenutnoga sloja nije podržan, međutim, možete ažurirati atribute",
+            "yesButton": "Da",
+            "noButton": "Ne",
+            "deleteButton": "Izbriši",
+            "clear": "Želite li zaista zanemariti sve promjene učinjene dosada?",
+            "featureClose": "Želite li zaista zatvoriti tablicu objekata?",
+            "delete": "Želite li potvrditi brisanje {count} objekata?",
+            "missingGeometry": "Nedostaje geometrija",
+            "filter": {
+                "placeholders": {
+                    "default": "Traži...",
+                    "string": "Unesi tekst za filter...",
+                    "number": "Unesi vrijednost ili izraz..."
+                },
+                "tooltips": {
+                    "editMode": "Brza pretraga nije dostupna dok je aktivno editiranje",
+                    "default": "Traži...",
+                    "string": "Unesi tekst za filter...",
+                    "number": "Unesi vrijednost ili izraz. Primjeri: 10, > 2, < 10"
+                }
+            },
+            "toolbar": {
+                "synchPopoverTitle": "Sync map with filter ",
+                "synchPopoverText": "Use this tool to synchronize the map with the selected filter",
+                "notShowAgain": "  Don't show this message again",
+                "editMode": "Editiranje",
+                "advancedFilter": "Napredna pretraga",
+                "quitEditMode": "Napusti editiranje",
+                "addNewFeatures": "Dodaj novi objekt",
+                "editFeature": "Izmijeni objekt",
+                "drawGeom": "Nacrtaj objekt",
+                "stopDrawGeom": "Odustani od stvaranja geometrije",
+                "addGeom": "Dodaj geometriju postojećem objektu",
+                "deleteSelectedFeatures": "Izbriši odabrane objekte",
+                "saveChanges": "Spremi promjene",
+                "saving": "Spremanje...",
+                "cancelChanges": "Poništi promjene",
+                "deleteGeometry": "Izbriši geometriju",
+                "downloadGridData": "Preuzmi podatke iz tablice objekata",
+                "hideShowColumns": "Sakrij/prikaži kolone",
+                "zoomAll": "Prikaz na opseg stranice",
+                "syncOnMap": "Uskladi kartu sa aktivnim filtrom"
+            }
+        },
+        "wfsdownload": {
+            "title": "Izvezi podatke",
+            "format": "Format datoteke",
+            "srs":  "Koordinatni sustav",
+            "export": "Izvoz",
+            "downloadonlycurrentpage": "Izvezi samo trenutnu stranicu",
+            "error": {
+                "title": "Greška prilikom izvoza",
+                "invalidOutputFormat": "Odabrani format nije podržan"
+            }
+        },
+        "widgets": {
+            "types": {
+                "map": {
+                    "title": "Karta",
+                    "caption": "dodaj kartu"
+                },
+                "chart": {
+                    "title": "Grafikon",
+                    "caption": "dodaj grafikon"
+                },
+                "text": {
+                    "title": "Tekst",
+                    "caption": "dodaj tekstualno područje"
+                },
+                "table": {
+                    "title": "Tabela",
+                    "caption": "dodaj tabelu"
+                },
+                "counter": {
+                    "title": "Mjerač",
+                    "caption": "dodaj mjerač"
+                }
+            },
+            "selectWidgetType": "Odaberi tip widgeta",
+            "selectChartType": {
+                "title": "Odaberi tip widgeta"
+            },
+            "title": "Naslov",
+            "description": "Opis",
+            "errors": {
+                "nodata": "Nema dostupnih podataka za odabrani sloj/filter",
+                "nodatainviewport": "Nema podataka na trenutnom prikazu",
+                "timeoutExpired": "Servisu je potrebno previše vremena za odziv. Moguće je da je upit presložen ili je poslužitelj prezauzet",
+                "genericError": "Došlo je do greške prilikom dohvata podataka"
+            },
+            "builder": {
+                "header": {
+                    "title": "Widget"
+                },
+                "wizard": {
+                    "backToTypeSelection": "Natrag na odabir tipa",
+                    "backToChartOptions": "Natrag na postavke grafikona",
+                    "configureChartOptions": "Prilagodi postavke grafikona",
+                    "configureWidgetOptions": "Prilagodi postavke widgeta",
+                    "backToTableOptions": "Natrag na postavke tabele",
+                    "configureTableOptions": "Prilagodi postavke tabele",
+                    "resetColumnsSizes": "Poništo sve promjene širine kolona",
+                    "updateWidget": "Ažuriraj widget",
+                    "addToTheMap": "Dodaj widget na kartu",
+                    "titlePlaceholder": "Umetni naslov...",
+                    "textPlaceholder": "Umetni tekst...",
+                    "useThisMap": "Koristi ovu kartu",
+                    "configureMapOptions": "Konfiguriraj postavke karte",
+                    "addLayer": "Dodaj sloj na kartu",
+                    "useTheSelectedLayer": "Koristi odabrani sloj"
+                },
+                "errors": {
+                    "noWidgetsAvailableTitle": "Nema dostupnih widgeta",
+                    "noWidgetsAvailableDescription": "<p>Nije moguće kreirati niti jedan widget za odabrani sloj. To je vjerojatno zbog toga što sloj nije pogodan za dostupne widgete ili na poslužiteljz nisu objavljeni svi potrebni servisi ili informacije za izradu widgeta. Mogući uzroci su: <ul><li>Odabrani sloj je rasterski sloj</li><li>WFS servis nije dostupan</li><li>gs:aggregate proces nije dostupan</li></ul> )<p>",
+                    "checkAtLeastOneAttribute": "Obavezan odabir barem jedne kolone"
+                },
+                "setupFilter": "Izradi filter za podatke widgeta"
+            },
+            "widget": {
+                "menu": {
+                    "showChartData": "Prikaži podatke grafikona",
+                    "edit": "Uredi",
+                    "delete": "Izbriši",
+                    "confirmDelete": "Jeste li sigurni?",
+                    "downloadData": "Preuzmi podatke",
+                    "exportImage": "Izvezi sliku"
+                }
+            },
+            "chartType": {
+                "bar": {
+                    "title": "Stupčani grafikon",
+                    "description": "Stvori stupčani grafikon za dodavanje na kartu",
+                    "caption": "stupčani"
+                },
+                "pie": {
+                    "title": "Grafikon oblika torte",
+                    "description": "Stvori grafikon oblika torte za dodavanje na kartu",
+                    "caption": "torta"
+                },
+                "line": {
+                    "title": "Linijski grafikon",
+                    "description": "Stvori linijski grafikon za dodavanje na kartu",
+                    "caption": "linija"
+                },
+                "gauge": {
+                    "title": "Grafikon mjerača",
+                    "description": "Stvori grafikon mjerača za dodavanje na kartu",
+                    "caption": "mjerač"
+                }
+            },
+            "chartOptionsTitle": "Podaci grafikona",
+            "widgetOptionsTitle": "Informacije widgeta",
+            "groupByAttributes": {
+                "line": "X atribut",
+                "pie": "Grupiraj po",
+                "bar": "X atribut",
+                "gauge": "Grupiraj po",
+                "counter": "Grupiraj po",
+                "default": "Grupiraj po"
+            },
+            "aggregationAttribute": {
+                "line": "Y atribut",
+                "pie": "Vrijednost",
+                "bar": "Y atribut",
+                "gauge": "Vrijednost",
+                "counter": "Vrijednost",
+                "default": "Vrijednost"
+            },
+            "aggregateFunction": {
+                "line": "Operacija",
+                "pie": "Operacija",
+                "bar": "Operacija",
+                "gauge": "Operacija",
+                "counter": "Operacija",
+                "default": "Operacija"
+            },
+            "colorRamp": {
+                "line": "Boja",
+                "pie": "Paleta boja",
+                "bar": "Boja",
+                "gauge": "Boja",
+                "counter": "Boja",
+                "default": "Boja"
+            },
+            "uom": {
+                "line": "Jedinica mjere",
+                "pie": "Jedinica mjere",
+                "bar": "Jedinica mjere",
+                "gauge": "Jedinica mjere",
+                "counter": "Jedinica mjere",
+                "default": "Jedinica mjere"
+            },
+            "mapSync": "Dinamični filter prema pregledu karte",
+            "displayLegend": {
+                "line": "Prikaži legendu",
+                "pie": "Prikaži legendu",
+                "bar": "Prikaži legendu",
+                "gauge": "Prikaži oznake"
+            }
+
+        },
+        "dashboard": {
+            "editor": {
+                "addACardToTheDashboard": "Dodaj widget na kontronu ploču"
+            },
+            "emptyTitle": "Ploča je prazna"
+        },
+        "wizard": {
+            "next": "Naprijed",
+            "prev": "Natrag",
+            "finish": "Završi"
+        },
+        "vectorstyler": {
+            "tooltip": "Kreiraj i izmijeni stil vektorskog sloja",
+            "paneltitle": "Vektorski stilizator",
+            "layerlabel": "Sloj",
+            "rulelabel": "Pravila",
+            "namelabel": "Ime pravila",
+            "symboltitle": "Simbol",
+            "labeltitle": "Oznaka",
+            "conditiontitle": "Uvjeti",
+            "applybtn": "Primijeni stil",
+            "addrulebtn": "Dodaj pravilo",
+            "removerulebtn": "Ukloni pravilo"
+        },
+        "scaledenominator": {
+            "minlabel": "Minimalno mjerilo",
+            "maxlabel": "Maksimalno mjerilo",
+            "maxerror": "Maksimalna vrijednost mora biti veća od minimalne",
+            "minerror": "Minimalna vrijednost mora biti manja od maksimalne",
+            "none": "None"
+        },
+        "markNameSelector": {
+            "circle": "Kružnica",
+            "square": "Kvadrat",
+            "triangle": "Trokut",
+            "star": "Zvijezda",
+            "cross": "Križ",
+            "x": "X"
+        },
+        "styler": {
+            "tooltip": "Kreiraj i izmijeni stil sloja",
+            "paneltitle": "Stilizator",
+            "layerlabel": "Sloj"
+        },
+        "rulesmanager": {
+            "placeholders": {
+                "filter": "Traži..."
+            },
+            "menutitle": "Upravljanje pravilima GeoFence",
+            "title": "Pravila pristupa",
+            "role": "Rola",
+            "user": "Korisnik",
+            "service": "Servis",
+            "request": "Upit",
+            "workspace": "Radna okolina",
+            "layer": "Sloj",
+            "filters": "Filter",
+            "rules": "Pravilo",
+            "access": "Pristup",
+            "newModal": "Novo pravilo",
+            "editModal": "Dodaj pravilo",
+            "newButton": "Stvori",
+            "editButton": "Spremi",
+            "close": "Zatvori",
+            "previous": "prethodno",
+            "next": "slijedeće",
+            "errorTitle": "Geofence",
+            "errorLoadingRoles": "Greška prilikom učitavanja rola.",
+            "errorLoadingUsers": "Greška prilikom učitavanja korisnika.",
+            "errorLoadingWorkspaces": "Greška prilikom učitavanja radnih okolina.",
+            "errorLoadingLayers": "Greška prilikom učitavanja slojeva.",
+            "errorLoadingRules": "Greška prilikom učitavanja pravila.",
+            "errorMovingRules": "Greška prilikom pomicanja pravila.",
+            "errorDeletingRules": "Greška prilikom brisanja pravila.",
+            "errorAddingRule": "Greška prilikom dodavanja pravila.",
+            "errorUpdatingRule": "Greška prilikom izmjene pravila.",
+            "deleteModal": "Izbriši pravilo",
+            "selectedRulesDelete": "Izbriši odabrana pravila ?",
+            "deleteButton": "Izbriši",
+            "cancelButton": "Odustani"
+        },
+        "tutorial": {
+            "title": "Tutorijal",
+            "back": "Natrag",
+            "next": "Naprijed",
+            "close": "Zatvori",
+            "skip": "Preskoči",
+            "last": "Završi",
+            "start": "Kreni",
+            "checkbox": "nemoj više prikazivati ovu poruku",
+            "error": "Greška: cilj nije pronađen",
+            "intro": {
+                "title": "Dobrodošli u MapStore2",
+                "text": "framework za izradu web mapping aplikacija koristeći standardne biblioteke kao što su OpenLayers 3 i Leaflet."
+            },
+            "drawerMenu": {
+                "title": "Glavni izbornik",
+                "text": "Ovdje možete pronaći informacije i alate za upravljanje slojevima"
+            },
+            "searchBar": {
+                "title": "Traka za pretragu",
+                "text": "Upišite adresu mjesta za pretragu npr. 'Ilica, Zagreb'. Također, možete upisati i koordinate u slijedećem formatu: 43.87,10.20"
+            },
+            "home": {
+                "title": "Početna stranica",
+                "text": "Kliknite za povratak na početnu stranicu"
+            },
+            "searchButton": {
+                "title": "Pretraga",
+                "text": "Kliknite za otvaranje take za pretragu, potom adresu mjesta za pretragu npr. 'Ilica, Zagreb'. Također, možete upisati i koordinate u slijedećem formatu: 43.87,10.20"
+            },
+            "burgerMenu": {
+                "title": "Izbornik opcija",
+                "text": "ovdje možete pronaći postavke i pomoć"
+            },
+            "zoomInButton": {
+                "title": "Približi",
+                "text": "Kliknite za približavanje sadržaja karte"
+            },
+            "zoomOutButton": {
+                "title": "Udalji",
+                "text": "Kliknite za udaljivanje sadržaja karte"
+            },
+            "fullscreen": {
+                "title": "Puni ekran",
+                "text": "Kliknite za prikaz na čitavom ekranu"
+            },
+            "identifyButton": {
+                "title": "Informacije o objektima",
+                "text": "Kliknite za aktiviranje alata, zatim kliknite na kartu da bi dobili informacije o prikazanim slojevima"
+            },
+            "mapType": {
+                "title": "Biblioteke",
+                "text": "Možete birati između Leaflet i OpenLayers biblioteka za renderiranje vaših karata"
+            },
+            "mapsGrid": {
+                "title": "Karte",
+                "text": "Ovdje su neki od primjera za. Kliknite na sličicu za isprobavanje demo karata."
+            },
+            "examples": {
+                "title": "Prilagođena aplikacija",
+                "text": "Možete koristiti Mapstore2 komponente i pluginove kako bi izgradili vlastite aplikacije"
+            },
+            "introCesium": {
+                "title": "Upute za 3D prikaz",
+                "text": "Kliknite na dugme Dalje za početak tutorijala"
+            },
+            "cesium": {
+                "title": "Interakcija sa kartom",
+                "pan": "Pomicanje prikaza",
+                "zoom": "Zumiranje prikaza",
+                "tilt": "Nagib prikaza",
+                "rotate": "Rotiraj prikaz",
+                "oneDrag": "Pomicanje jednim prstom",
+                "twoPinch": "Hvatanje sa dva prsta",
+                "twoDragSame": "Povlačenje s dva prsta, isti smjer",
+                "twoDragOpposite": "Povlačenje s dva prsta, suprotni smjer",
+                "leftClick": "Lijevi klik + povlačenje",
+                "rightClick": "Desni klik + povlačenje, ili skrolanje mišem",
+                "middleClick": "Srednji klik + povlačenje ili CTRL + Lijevi/Desni klik + povlačenje"
+
+            },
+            "cesiumCompass": {
+                "title": "Busola",
+                "text": "Možete koristiti buslu za kruženje oko zemaljske kugle. Povuci za rotiranje karte"
+            },
+            "cesiumNavigation": {
+                "title": "Navigacija",
+                "text": "Ovdje možete naći dugmad za približavanje i udaljavanje sadržaja karte"
+            }
+        }
+    }
+}

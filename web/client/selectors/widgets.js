@@ -1,9 +1,11 @@
-const {get, isEqualWith} = require('lodash');
+const { get, castArray, isEqualWith} = require('lodash');
 const {mapSelector} = require('./map');
 const {getSelectedLayer} = require('./layers');
-const {DEFAULT_TARGET} = require('../actions/widgets');
+const {DEFAULT_TARGET, DEPENDENCY_SELECTOR_KEY, WIDGETS_REGEX} = require('../actions/widgets');
+const { getWidgetsGroups, getWidgetDependency} = require('../utils/WidgetsUtils');
+
 const {isDashboardAvailable, isDashboardEditing} = require('./dashboard');
-const {defaultMemoize, createSelector, createSelectorCreator} = require('reselect');
+const { defaultMemoize, createSelector, createSelectorCreator, createStructuredSelector} = require('reselect');
 
 const isShallowEqual = (el1, el2) => {
     if (Array.isArray(el1) && Array.isArray(el2)) {
@@ -27,17 +29,54 @@ const getWidgetLayer = createSelector(
     ({layer} = {}, selectedLayer, dashboardEditing) => layer || !dashboardEditing && selectedLayer
 );
 
+const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
+
+const getMapWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
+
+/**
+ * Find in the state the available dependencies to connect
+ */
+const availableDependenciesSelector = createSelector(
+    getMapWidgets,
+    mapSelector,
+    (ws = [], map = []) => ({
+        availableDependencies: ws.map(({id}) => `widgets[${id}].map`).concat(castArray(map).map(() => "map"))
+    })
+);
+/**
+ * returns if the dependency selector state
+ * @param {object} state the state
+ */
+const getDependencySelectorConfig = state => get(getEditorSettings(state), `${DEPENDENCY_SELECTOR_KEY}`);
+/**
+ * Determines if the dependencySelector is active
+ * @param {object} state the state
+ */
+const isWidgetSelectionActive = state => get(getDependencySelectorConfig(state), 'active');
+
+const getWidgetsDependenciesGroups = createSelector(
+    getFloatingWidgets,
+    widgets => getWidgetsGroups(widgets)
+);
+const getFloatingWidgetsLayout = state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
+
+const getDashboardWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
+
 module.exports = {
-    getFloatingWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
-    getFloatingWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
+    getFloatingWidgets,
+    getFloatingWidgetsLayout,
     // let's use the same container for the moment
-    getDashboardWidgets: state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`),
+    getDashboardWidgets,
+    dashboardHasWidgets: state => (getDashboardWidgets(state) || []).length > 0,
     getDashboardWidgetsLayout: state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`),
     getEditingWidget,
     getEditingWidgetLayer: state => get(getEditingWidget(state), "layer"),
+    returnToFeatureGridSelector: (state) => get(state, "widgets.builder.editor.returnToFeatureGrid", false),
     getEditingWidgetFilter: state => get(getEditingWidget(state), "filter"),
     getEditorSettings,
     getWidgetLayer,
+    getMapWidgets,
+    availableDependenciesSelector,
     dashBoardDependenciesSelector: () => ({}), // TODO dashboard dependencies
     /**
      * transforms dependencies in the form `{ k1: "path1", k1, "path2" }` into
@@ -49,11 +88,23 @@ module.exports = {
         getDependenciesMap,
         getDependenciesKeys,
         // produces the array of values of the keys in getDependenciesKeys
-        state => getDependenciesKeys(state).map(k => k.indexOf("map.") === 0 ? get(mapSelector(state), k.slice(4)) : get(state, k) ),
+        state => getDependenciesKeys(state).map(k =>
+            k.indexOf("map.") === 0
+            ? get(mapSelector(state), k.slice(4))
+            : k.match(WIDGETS_REGEX)
+            ? getWidgetDependency(k, getFloatingWidgets(state))
+            : get(state, k) ),
         // iterate the dependencies keys to set the dependencies values in a map
         (map, keys, values) => keys.reduce((acc, k, i) => ({
             ...acc,
             [Object.keys(map)[i]]: values[i]
         }), {})
-    )
+    ),
+    isWidgetSelectionActive,
+    getDependencySelectorConfig,
+    getWidgetsDependenciesGroups,
+    widgetsConfig: createStructuredSelector({
+        widgets: getFloatingWidgets,
+        layouts: getFloatingWidgetsLayout
+    })
 };

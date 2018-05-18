@@ -4,6 +4,8 @@ const {toggleTool,
     toggleViewMode,
     closeFeatureGridConfirm,
     saveChanges,
+    hideSyncPopover,
+    toggleShowAgain,
     createNewFeatures,
     startEditingFeature,
     startDrawingFeature,
@@ -11,6 +13,9 @@ const {toggleTool,
     openAdvancedSearch,
     zoomAll
 } = require('../../actions/featuregrid');
+const {
+    createChart
+} = require('../../actions/widgets');
 const {toggleSyncWms} = require('../../actions/wfsquery');
 
 module.exports = {
@@ -28,5 +33,8 @@ module.exports = {
     onClose: () => closeFeatureGridConfirm(),
     showQueryPanel: () => openAdvancedSearch(),
     zoomAll: () => zoomAll(),
-    sync: () => toggleSyncWms()
+    sync: () => toggleSyncWms(),
+    hideSyncPopover: () => hideSyncPopover(),
+    toggleShowAgain: () => toggleShowAgain(),
+    chart: () => createChart()
 };

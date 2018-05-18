@@ -44,6 +44,7 @@ module.exports = {
     rulesSelector,
     userSelector,
     userParamsSelector,
+    isLoggedIn: state => state && state.security && state.security.user,
     userRoleSelector,
     securityTokenSelector: state => state.security && state.security.token,
     userGroupSecuritySelector,

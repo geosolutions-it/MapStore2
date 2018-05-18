@@ -8,7 +8,8 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {ButtonGroup, Button, Glyphicon, Tooltip, OverlayTrigger} = require('react-bootstrap');
+const {ButtonGroup, Button, Glyphicon, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../misc/OverlayTrigger');
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 const {head} = require('lodash');
 const ConfirmModal = require('../maps/modals/ConfirmModal');

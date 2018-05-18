@@ -26,6 +26,8 @@ class GroupManager extends React.Component {
         hideOnBlur: PropTypes.bool,
         placeholderMsgId: PropTypes.string,
         typeAhead: PropTypes.bool,
+        splitTools: PropTypes.bool,
+        isSearchClickable: PropTypes.bool,
         searchText: PropTypes.string,
         onSearch: PropTypes.func,
         onSearchReset: PropTypes.func,
@@ -37,6 +39,8 @@ class GroupManager extends React.Component {
     static defaultProps = {
         className: "user-search",
         hideOnBlur: false,
+        isSearchClickable: true,
+        splitTools: false,
         placeholderMsgId: "usergroups.searchGroups",
         typeAhead: false,
         searchText: "",
@@ -56,6 +60,8 @@ class GroupManager extends React.Component {
         return (<div>
             <SearchBar
                 className={this.props.className}
+                splitTools={this.props.splitTools}
+                isSearchClickable={this.props.isSearchClickable}
                 hideOnBlur={this.props.hideOnBlur}
                 placeholderMsgId ={this.props.placeholderMsgId}
                 onSearch={this.props.onSearch}
@@ -91,10 +97,11 @@ module.exports = {
             onNewGroup: editGroup.bind(null, {}),
             onSearchTextChange: groupSearchTextChanged,
             onSearch: getUserGroups
-        }, (stateProps, dispatchProps) => {
+        }, (stateProps, dispatchProps, ownProps) => {
             return {
                 ...stateProps,
                 ...dispatchProps,
+                ...ownProps,
                 onSearchReset: (text) => {
                     let limit = stateProps.limit;
                     let searchText = text && text !== "" ? "*" + text + "*" : "*";

@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,21 +6,37 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
+const PropTypes = require('prop-types');
+const {Jumbotron, Grid, Row, Col} = require('react-bootstrap');
 const HTML = require('../../components/I18N/HTML');
-
-require('./homedescription/homedescription.css');
 
 class HomeDescription extends React.Component {
     static propTypes = {
         style: PropTypes.object,
-        className: PropTypes.object
+        className: PropTypes.object,
+        name: PropTypes.string
+    };
+
+    static defaultProps = {
+        name: 'MapStore',
+        className: 'ms-home-description',
+        style: {}
     };
 
     render() {
         return (
-            <div style={this.props.style} className="mapstore-home-description">
-                <HTML msgId="home.description" />
-            </div>
+            <Jumbotron className={this.props.className} style={this.props.style}>
+                <Grid>
+                    <Row>
+                        <Col xs={12} className="text-center">
+                            <h1>{this.props.name}</h1>
+                            <p>
+                                <HTML msgId="home.shortDescription"/>
+                            </p>
+                        </Col>
+                    </Row>
+                </Grid>
+            </Jumbotron>
         );
     }
 }

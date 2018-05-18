@@ -111,7 +111,7 @@ class Viewer extends React.Component {
                         }}>
                             <label>Graticule:&nbsp;&nbsp;<input type="checkbox" checked={this.props.showGraticule} onChange={this.props.toggleGraticule}/></label>
                         </div>
-                        <SearchBar key="seachBar" searchText={this.props.searchText} onSearchTextChange={this.props.searchTextChanged} onSearch={this.props.textSearch} onSearchReset={this.props.resultsPurge} />
+                        <SearchBar key="seachBar" removeIcon="remove" searchText={this.props.searchText} onSearchTextChange={this.props.searchTextChanged} onSearch={this.props.textSearch} onSearchReset={this.props.resultsPurge} />
                         <SearchResultList key="nominatimresults"
                             results={this.props.searchResults}
                             onItemClick={this.onSearchClick}

@@ -16,6 +16,7 @@ const {toChangesMap} = require('../utils/FeatureGridUtils');
 const getLayerById = (state, id) => head(layersSelector(state).filter(l => l.id === id));
 const getTitle = (layer = {}) => layer.title || layer.name;
 const selectedLayerIdSelector = state => get(state, "featuregrid.selectedLayer");
+const chartDisabledSelector = state => get(state, "featuregrid.chartDisabled", false);
 const getCustomAttributeSettings = (state, att) => get(state, `featuregrid.attributes[${att.name || att.attribute}]`);
 const {attributesSelector} = require('./query');
 const selectedFeaturesSelector = state => state && state.featuregrid && state.featuregrid.select;
@@ -121,11 +122,14 @@ module.exports = {
     hasGeometrySelector: state => hasGeometrySelectedFeature(state),
     newFeaturesSelector,
     hasNewFeaturesSelector,
+    showAgainSelector: state => get(state, "featuregrid.showAgain", false),
+    showPopoverSyncSelector: state => get(state, "featuregrid.showPopoverSync", true),
     isSavingSelector: state => state && state.featuregrid && state.featuregrid.saving,
     editingAllowedRolesSelector: state => get(state, "featuregrid.editingAllowedRoles", ["ADMIN"]),
     isSavedSelector: state => state && state.featuregrid && state.featuregrid.saved,
     isDrawingSelector: state => state && state.featuregrid && state.featuregrid.drawing,
     geomTypeSelectedFeatureSelector,
+    chartDisabledSelector,
     hasNewFeaturesOrChanges: state => hasNewFeaturesSelector(state) || hasChangesSelector(state),
     isSimpleGeomSelector: state => isSimpleGeomType(geomTypeSelectedFeatureSelector(state)),
     canEditSelector: state => state && state.featuregrid && state.featuregrid.canEdit,

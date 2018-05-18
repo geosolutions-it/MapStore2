@@ -27,6 +27,7 @@ class DataGrid extends Grid {
     componentWillUnmount() {
         if (this.canvas) {
             this.canvas.removeEventListener('scroll', this.scrollListener);
+            this.canvas = null;
         }
         if (this.props.displayFilters) {
             this.onToggleFilter();

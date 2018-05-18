@@ -8,9 +8,11 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
-
+const {get} = require('lodash');
 const expect = require('expect');
 const CounterWizard = require('../CounterWizard');
+
+const describeStates = require('json-loader!../../../../../test-resources/wfs/describe-states.json');
 describe('CounterWizard component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -21,8 +23,17 @@ describe('CounterWizard component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('CounterWizard rendering with defaults', () => {
+    it('CounterWizard rendering empty-view', () => {
         ReactDOM.render(<CounterWizard />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.ms-wizard');
+        expect(el).toExist();
+        expect(container.querySelector('.chart-options-form')).toNotExist();
+        expect(container.querySelector('.empty-state-container')).toExist();
+
+    });
+    it('CounterWizard rendering with base attributes', () => {
+        ReactDOM.render(<CounterWizard featureTypeProperties={get(describeStates, "featureTypes[0].properties")}/>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-wizard');
         expect(el).toExist();

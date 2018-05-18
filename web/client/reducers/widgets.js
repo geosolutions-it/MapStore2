@@ -6,10 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { EDIT_NEW, INSERT, EDIT, UPDATE_PROPERTY, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT, CLEAR_WIDGETS, DEFAULT_TARGET} = require('../actions/widgets');
+const { EDIT_NEW, INSERT, EDIT, UPDATE_PROPERTY, DELETE, EDITOR_CHANGE, EDITOR_SETTING_CHANGE, CHANGE_LAYOUT, CLEAR_WIDGETS, DEFAULT_TARGET,
+ADD_DEPENDENCY, REMOVE_DEPENDENCY, LOAD_DEPENDENCIES, RESET_DEPENDENCIES} = require('../actions/widgets');
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
+const {
+    DASHBOARD_LOADED,
+    DASHBOARD_RESET
+} = require('../actions/dashboard');
 
 const set = require('lodash/fp/set');
 const { get, find} = require('lodash');
@@ -17,7 +22,9 @@ const {arrayUpsert, arrayDelete} = require('../utils/ImmutableUtils');
 
 const emptyState = {
     dependencies: {
-        viewport: "map.bbox"
+        viewport: "map.bbox",
+        center: "map.center",
+        zoom: "map.zoom"
     },
     containers: {
         floating: {
@@ -98,17 +105,36 @@ function widgetsReducer(state = emptyState, action) {
             return arrayDelete(`containers[${action.target}].widgets`, {
                 id: action.widget.id
             }, state);
+        case DASHBOARD_LOADED:
+            const { data } = action;
+            return set(`containers[${DEFAULT_TARGET}]`, {
+                ...data
+            }, state);
         case MAP_CONFIG_LOADED:
-            const {widgetsConfig} = (action.config || {});
+            const { widgetsConfig } = (action.config || {});
             return set(`containers[${DEFAULT_TARGET}]`, {
                 ...widgetsConfig
             }, state);
         case CHANGE_LAYOUT: {
             return set(`containers[${action.target}].layout`, action.layout)(set(`containers[${action.target}].layouts`, action.allLayouts, state));
         }
-        case CLEAR_WIDGETS: {
+        case CLEAR_WIDGETS:
+        case DASHBOARD_RESET: {
             return set(`containers[${DEFAULT_TARGET}]`, emptyState.containers[DEFAULT_TARGET], state);
         }
+        case ADD_DEPENDENCY: {
+            const {key, value} = action;
+            return set(`dependencies[${key}]`, value, state);
+        }
+        case REMOVE_DEPENDENCY: {
+            const {key} = action;
+            return set(`dependencies[${key}]`, null, state);
+        }
+        case LOAD_DEPENDENCIES:
+            const {dependencies} = action;
+            return set(`dependencies`, dependencies, state);
+        case RESET_DEPENDENCIES:
+            return set('dependencies', emptyState.dependencies, state);
         default:
             return state;
     }
