@@ -20,7 +20,11 @@ describe('map layout epics', () => {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
-                    expect(action.layout).toEqual({ left: 600, right: 658, bottom: 30, transform: 'none', height: 'calc(100% - 30px)' } );
+                    expect(action.layout).toEqual({ left: 600, right: 658, bottom: 30, transform: 'none', height: 'calc(100% - 30px)', boundingMapRect: {
+                        left: 600,
+                        right: 658,
+                        bottom: 30
+                    }});
                 });
             } catch(e) {
                 done(e);
@@ -37,7 +41,9 @@ describe('map layout epics', () => {
                 expect(actions.length).toBe(1);
                 actions.map((action) => {
                     expect(action.type).toBe(UPDATE_MAP_LAYOUT);
-                    expect(action.layout).toEqual({ height: 'calc(100% - 30px)' } );
+                    expect(action.layout).toEqual({ height: 'calc(100% - 30px)', boundingMapRect: {
+                        bottom: undefined
+                    }} );
                 });
             } catch(e) {
                 done(e);

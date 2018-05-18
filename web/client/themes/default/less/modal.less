@@ -6,7 +6,7 @@
     margin: 0;
     top: 0;
     left: 0;
-    
+
     .ms-header {
         .row {
             &:first-child {
@@ -159,7 +159,7 @@
                 margin: (@square-btn-size - 34) / 2;
             }
         }
-    }    
+    }
 }
 
 @media (min-width: 505px) and (max-width: 768px) {
@@ -295,6 +295,19 @@
         .modal-dialog {
             transition: 0.3s ease-in;
             transform: translateY(-25%);
+        }
+    }
+}
+
+.toolbar-panel.portal-dialog {
+    .modal-body {
+        table {
+            tr {
+                td:nth-child(2) {
+                    word-break: break-word;
+                }
+            }
+
         }
     }
 }

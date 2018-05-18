@@ -5,7 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
+const React = require('react');
+const Message = require('../../../../components/I18N/Message');
 const Layers = require('../../../../utils/openlayers/Layers');
 const ol = require('openlayers');
 const {isNil} = require('lodash');
@@ -16,7 +17,7 @@ const {isArray} = require('lodash');
 const FilterUtils = require('../../../../utils/FilterUtils');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const mapUtils = require('../../../../utils/MapUtils');
-
+const ElevationUtils = require('../../../../utils/ElevationUtils');
 /**
     @param {object} options of the layer
     @return the Openlayers options from the layers ones and/or default.
@@ -56,6 +57,62 @@ function proxyTileLoadFunction(imageTile, src) {
     imageTile.getImage().src = newSrc;
 }
 
+function tileCoordsToKey(coords) {
+    return coords.join(':');
+}
+
+function elevationLoadFunction(forceProxy, imageTile, src) {
+    let newSrc = src;
+    if (forceProxy && ProxyUtils.needProxy(src)) {
+        let proxyUrl = ProxyUtils.getProxyUrl();
+        newSrc = proxyUrl + encodeURIComponent(src);
+    }
+    const coords = imageTile.getTileCoord();
+    imageTile.getImage().src = "";
+    ElevationUtils.loadTile(newSrc, coords, tileCoordsToKey(coords));
+}
+
+function addTileLoadFunction(sourceOptions, options) {
+    if (options.useForElevation) {
+        return objectAssign({}, sourceOptions, { tileLoadFunction: elevationLoadFunction.bind(null, [options.forceProxy]) });
+        // return objectAssign({}, sourceOptions, { tileLoadFunction: (imageTile, src) => { imageTile.getImage().src = src; } });
+    }
+    if (options.forceProxy) {
+        return objectAssign({}, sourceOptions, {tileLoadFunction: proxyTileLoadFunction});
+    }
+    return sourceOptions;
+}
+
+function getTileFromCoords(layer, pos) {
+    const map = layer.get('map');
+    const tileGrid = layer.getSource().getTileGrid();
+    return tileGrid.getTileCoordForCoordAndZ(pos, map.getView().getZoom());
+}
+
+
+function getTileRelativePixel(layer, pos, tilePoint) {
+    const tileGrid = layer.getSource().getTileGrid();
+    const extent = tileGrid.getTileCoordExtent(tilePoint);
+    const ratio = tileGrid.getTileSize() / (extent[2] - extent[0]);
+    const x = Math.floor((pos[0] - extent[0]) * ratio);
+    const y = Math.floor((extent[3] - pos[1]) * ratio);
+    return { x, y };
+}
+
+function getElevation(pos) {
+    try {
+        const tilePoint = getTileFromCoords(this, pos);
+        const tileSize = this.getSource().getTileGrid().getTileSize();
+        const elevation = ElevationUtils.getElevation(tileCoordsToKey(tilePoint), getTileRelativePixel(this, pos, tilePoint), tileSize, this.get('nodata'));
+        if (elevation.available) {
+            return elevation.value;
+        }
+        return <Message msgId={elevation.message} />;
+    } catch (e) {
+        return <Message msgId="elevationLoadingError" />;
+    }
+}
+
 Layers.registerType('wms', {
     create: (options, map) => {
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
@@ -69,27 +126,34 @@ Layers.registerType('wms', {
                 source: new ol.source.ImageWMS({
                     url: urls[0],
                     params: queryParameters,
-                    ratio: options.ratio
+                    ratio: options.ratio || 1
                 })
             });
         }
         const mapSrs = map && map.getView() && map.getView().getProjection() && map.getView().getProjection().getCode() || 'EPSG:3857';
         const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(options.srs || mapSrs, options.allowedSRS)).getExtent();
-        return new ol.layer.Tile({
+        const sourceOptions = addTileLoadFunction({
+            urls: urls,
+            params: queryParameters,
+            tileGrid: new ol.tilegrid.TileGrid({
+                extent: extent,
+                resolutions: mapUtils.getResolutions(),
+                tileSize: options.tileSize ? options.tileSize : 256,
+                origin: options.origin ? options.origin : [extent[0], extent[1]]
+            })
+        }, options);
+        const layer = new ol.layer.Tile({
             opacity: options.opacity !== undefined ? options.opacity : 1,
             visible: options.visibility !== false,
             zIndex: options.zIndex,
-            source: new ol.source.TileWMS(objectAssign({
-                urls: urls,
-                params: queryParameters,
-                tileGrid: new ol.tilegrid.TileGrid({
-                    extent: extent,
-                    resolutions: mapUtils.getResolutions(),
-                    tileSize: options.tileSize ? options.tileSize : 256,
-                    origin: options.origin ? options.origin : [extent[0], extent[1]]
-                })
-            }, options.forceProxy ? {tileLoadFunction: proxyTileLoadFunction} : {}))
+            source: new ol.source.TileWMS(sourceOptions)
         });
+        layer.set('map', map);
+        if (options.useForElevation) {
+            layer.set('nodata', options.nodata);
+            layer.set('getElevation', getElevation.bind(layer));
+        }
+        return layer;
     },
     update: (layer, newOptions, oldOptions, map) => {
         if (oldOptions && layer && layer.getSource() && layer.getSource().updateParams) {
@@ -124,7 +188,7 @@ Layers.registerType('wms', {
             if (changed) {
                 layer.getSource().updateParams(objectAssign(newParams, newOptions.params));
             }
-            if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken) {
+            if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken || oldOptions.ratio !== newOptions.ratio) {
                 const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
                 const queryParameters = wmsToOpenlayersOptions(newOptions) || {};
                 urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, newOptions.securityToken));
@@ -137,7 +201,8 @@ Layers.registerType('wms', {
                         zIndex: newOptions.zIndex,
                         source: new ol.source.ImageWMS({
                             url: urls[0],
-                            params: queryParameters
+                            params: queryParameters,
+                            ratio: newOptions.ratio || 1
                         })
                     });
                 } else {

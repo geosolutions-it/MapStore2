@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const url = require('url');
-
+const {isObject} = require('lodash');
 const {addLocaleData} = require('react-intl');
 
 const en = require('react-intl/locale-data/en');
@@ -16,7 +16,8 @@ const de = require('react-intl/locale-data/de');
 const es = require('react-intl/locale-data/es');
 const nl = require('react-intl/locale-data/nl');
 const zh = require('react-intl/locale-data/zh');
-addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl, ...zh]);
+const hr = require('react-intl/locale-data/hr');
+addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl, ...zh, ...hr]);
 
 /*
  * it, en, fr, de, es are the default locales and it is preferrable to customize them via configuration.
@@ -50,6 +51,10 @@ let supportedLocales = {
     "nl": {
         code: "nl-NL",
         description: "Nederlands"
+    },
+    "hr": {
+        code: "hr-HR",
+        description: "Hrvatski"
     }
 };
 const DATE_FORMATS = {
@@ -57,7 +62,8 @@ const DATE_FORMATS = {
     "en-US": "MM/dd/yyyy",
     "it-IT": "dd/MM/yyyy",
     "nl-NL": "dd/MM/yyyy",
-    "zh-ZH": "yyyy/MM/dd"
+    "zh-ZH": "yyyy/MM/dd",
+    "hr-HR": "dd/MM/yyyy"
 };
 
 let errorParser = {};
@@ -68,7 +74,7 @@ let errorParser = {};
  */
 const LocaleUtils = {
     ensureIntl(callback) {
-        require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js', 'intl/locale-data/jsonp/de.js', 'intl/locale-data/jsonp/es.js', 'intl/locale-data/jsonp/nl.js', 'intl/locale-data/jsonp/zh.js'], (require) => {
+        require.ensure(['intl', 'intl/locale-data/jsonp/en.js', 'intl/locale-data/jsonp/it.js', 'intl/locale-data/jsonp/fr.js', 'intl/locale-data/jsonp/de.js', 'intl/locale-data/jsonp/es.js', 'intl/locale-data/jsonp/nl.js', 'intl/locale-data/jsonp/zh.js', 'intl/locale-data/jsonp/hr.js'], (require) => {
             global.Intl = require('intl');
             require('intl/locale-data/jsonp/en.js');
             require('intl/locale-data/jsonp/it.js');
@@ -77,6 +83,7 @@ const LocaleUtils = {
             require('intl/locale-data/jsonp/es.js');
             require('intl/locale-data/jsonp/nl.js');
             require('intl/locale-data/jsonp/zh.js');
+            require('intl/locale-data/jsonp/hr.js');
             if (callback) {
                 callback();
             }
@@ -144,7 +151,14 @@ const LocaleUtils = {
             title: 'errorTitleDefault',
             message: 'errorDefault'
         };
-    }
+    },
+    /**
+     * Retrieve localized string from object of translations
+     * @param {string} locale code of locale, eg. en-US
+     * @param {string|object} prop source of translation
+     * @returns {string} localized string
+     */
+    getLocalizedProp: (locale, prop) => isObject(prop) ? prop[locale] || prop.default : prop || ''
 };
 
 module.exports = LocaleUtils;

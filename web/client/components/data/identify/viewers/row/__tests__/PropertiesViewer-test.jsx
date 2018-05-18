@@ -77,4 +77,22 @@ describe('PropertiesViewer', () => {
         expect(cmpDom.innerText.indexOf('myfeature')).toBe(-1);
     });
 
+
+    it('test rendering an html property', () => {
+        const testProps = {
+            withHtml: "<div> some text </div>"
+        };
+        const cmp = ReactDOM.render(<PropertiesViewer {...testProps}/>, document.getElementById("container"));
+        expect(cmp).toExist();
+
+        const cmpDom = ReactDOM.findDOMNode(cmp);
+        expect(cmpDom).toExist();
+        expect(cmpDom.childNodes.length).toBe(1);
+
+        const body = cmpDom.childNodes.item(0);
+        const pChild = body.childNodes.item(0);
+        const spanChild = pChild.childNodes.item(4);
+        expect(spanChild).toExist();
+        expect(spanChild.childNodes.item(0).outerHTML).toBe(testProps.withHtml);
+    });
 });

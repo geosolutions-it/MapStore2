@@ -893,6 +893,17 @@ const FilterUtils = {
     ogcListField,
     ogcBooleanField,
     ogcStringField,
+    getWFSFilterData: (filterObj) => {
+        let data;
+        if (typeof filterObj === 'string') {
+            data = filterObj;
+        } else {
+            data = filterObj.filterType === "OGC"
+                ? FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits)
+                : FilterUtils.toCQLFilter(filterObj);
+        }
+        return data;
+    },
     isLikeOrIlike: (operator) => operator === "ilike" || operator === "like",
     isFilterValid: (f = {}) =>
         (f.filterFields && f.filterFields.length > 0)

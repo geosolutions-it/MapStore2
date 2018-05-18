@@ -10,7 +10,8 @@ const {createSelector} = require('reselect');
 
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
-const {head, isEmpty, find} = require('lodash');
+const {getNormalizedLatLon} = require('../utils/CoordinatesUtils');
+const {get, head, isEmpty, find, isObject} = require('lodash');
 
 const layersSelector = state => state.layers && state.layers.flat || state.layers || state.config && state.config.layers || [];
 const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
@@ -22,25 +23,29 @@ const geoColderSelector = state => state.search && state.search;
 // TODO currently loading flag causes a re-creation of the selector on any pan
 // to avoid this separate loading from the layer object
 
+const centerToMarkerSelector = (state) => get(state, "mapInfo.centerToMarker", '');
+const defaultIconStyle = {
+    iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+};
+
 const layerSelectorWithMarkers = createSelector(
-    [layersSelector, markerSelector, geoColderSelector],
-    (layers = [], markerPosition, geocoder) => {
+    [layersSelector, markerSelector, geoColderSelector, centerToMarkerSelector],
+    (layers = [], markerPosition, geocoder, centerToMarker) => {
         let newLayers = [...layers];
         if ( markerPosition ) {
-            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", markerPosition.latlng));
+            const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
+            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", coords));
         }
         if (geocoder && geocoder.markerPosition) {
             newLayers.push(MapInfoUtils.getMarkerLayer("GeoCoder", geocoder.markerPosition, "marker",
                 {
                     overrideOLStyle: true,
-                    style: {
-                        iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-                        shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-                        iconSize: [25, 41],
-                        iconAnchor: [12, 41],
-                        popupAnchor: [1, -34],
-                        shadowSize: [41, 41]
-                    }
+                    style: isObject(geocoder.style) && !isEmpty(geocoder.style) && {...defaultIconStyle, ...geocoder.style} || defaultIconStyle
                 }, geocoder.markerLabel
             ));
         }
@@ -93,5 +98,6 @@ module.exports = {
     wfsDownloadSelector,
     backgroundControlsSelector,
     currentBackgroundSelector,
-    tempBackgroundSelector
+    tempBackgroundSelector,
+    centerToMarkerSelector
 };

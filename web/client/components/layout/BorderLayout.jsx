@@ -32,7 +32,7 @@ module.exports = ({id, children, header, footer, columns, height, className}) =>
             display: "flex",
             flex: 1,
             overflowY: "auto"
-            }}>
+        }}>
             <main className="ms2-border-layout-content" style={{flex: 1}}>
                 {height ? <div style={{height}}>{children}</div> : children}
             </main>

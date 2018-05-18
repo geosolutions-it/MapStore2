@@ -150,6 +150,89 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
     });
 
+    it('creates a wms elevation layer for openlayers map', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "application/bil16",
+            "useForElevation": true,
+            "url": "http://sample.server/geoserver/wms"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).get('getElevation')).toExist();
+    });
+
+    it('creates a single tile wms layer for openlayers map', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "singleTile": true,
+            "url": "http://sample.server/geoserver/wms"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource().getUrl()).toExist();
+    });
+
+    it('creates a single tile wms layer for openlayers map ratio', (done) => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "singleTile": true,
+            "url": "http://sample.server/geoserver/wms"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <OpenlayersLayer type="wms"
+                options={options} map={map} />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(map.getLayers().item(0).getSource().getUrl()).toExist();
+        let width = 0;
+        const loadFun = (image, src) => {
+            if (width === 0) {
+                width = parseInt(src.match(/WIDTH=([0-9]+)/i)[1], 10);
+                layer = ReactDOM.render(
+                    <OpenlayersLayer type="wms"
+                        options={assign({}, options, {
+                            ratio: 2
+                        })} map={map} />, document.getElementById("container"));
+                map.getLayers().item(0).getSource().setImageLoadFunction(loadFun);
+                map.getLayers().item(0).getSource().refresh();
+            } else {
+                const oldWidth = width;
+                width = parseInt(src.match(/WIDTH=([0-9]+)/i)[1], 10);
+                expect(oldWidth !== width).toBe(true);
+                done();
+            }
+        };
+        map.getLayers().item(0).getSource().setImageLoadFunction(loadFun);
+        map.getLayers().item(0).getSource().refresh();
+    });
+
     it('creates a wmts layer for openlayers map', () => {
         var options = {
             "type": "wmts",

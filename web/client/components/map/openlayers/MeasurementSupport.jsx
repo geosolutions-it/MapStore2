@@ -13,7 +13,7 @@ const assign = require('object-assign');
 const ol = require('openlayers');
 const wgs84Sphere = new ol.Sphere(6378137);
 const {reprojectGeoJson, reproject, calculateAzimuth, calculateDistance, transformLineToArcs} = require('../../../utils/CoordinatesUtils');
-const {getFormattedLength, getFormattedArea, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
+const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
 const {getMessageById} = require('../../../utils/LocaleUtils');
 
 class MeasurementSupport extends React.Component {
@@ -352,7 +352,7 @@ class MeasurementSupport extends React.Component {
         const reprojectedCoords = this.reprojectedCoordinates(sketchCoords);
         const length = calculateDistance(reprojectedCoords, this.props.measurement.lengthFormula);
         const {label, unit} = this.props.uom && this.props.uom.length;
-        const output = round(getFormattedLength(unit, length), 2);
+        const output = round(convertUom(length, "m", unit), 2);
         return output + " " + (label);
     };
 
@@ -364,7 +364,7 @@ class MeasurementSupport extends React.Component {
     formatArea = (polygon) => {
         const area = this.calculateGeodesicArea(polygon.getLinearRing(0).getCoordinates());
         const {label, unit} = this.props.uom && this.props.uom.area;
-        const output = round(getFormattedArea(unit, area), 2);
+        const output = round(convertUom(area, "sqm", unit), 2);
 
         return output + " " + label;
     };

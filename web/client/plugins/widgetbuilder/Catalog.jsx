@@ -5,5 +5,10 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-module.exports = require('../../components/catalog/CompactCatalog');
+const React = require('react');
+const Message = require('../../components/I18N/Message');
+const {defaultProps} = require('recompose');
+module.exports =
+    defaultProps({
+        title: <Message msgId="widgets.builder.wizard.selectALayer" />
+    })(require('../../components/catalog/CompactCatalog'));

@@ -4,7 +4,7 @@
         "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver"]
     },
     "geoStoreUrl": "rest/geostore/",
-    "printUrl": "https://demo.geo-solutions.it/geoserver/pdf/info.json",
+    "printUrl": "pdf/info.json",
     "bingApiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn",
     "mapquestApiKey": "__API_KEY_MAPQUEST__",
     "initialMapFilter": "",
@@ -38,6 +38,9 @@
             "multiGeometry": true,
             "validationErrors": {}
           }
+        },
+        "maptype": {
+            "mapType": "{context.mode === 'desktop' ? 'openlayers' : 'leaflet'}"
         },
         "catalog": {
           "default": {
@@ -101,6 +104,14 @@
         "mobile": [{
                 "name": "Map",
                 "cfg": {
+                    "mapOptions": {
+                      "openlayers": {
+                        "interactions": {
+                          "pinchRotate": false,
+                          "altShiftDragRotate": false
+                        }
+                      }
+                    },
                     "tools": ["locate"]
                 }
             }, "Version", "DrawerMenu",
@@ -161,7 +172,7 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                    "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
                 "name": "Toolbar",
@@ -198,6 +209,10 @@
             "cfg": {
               "mapOptions": {
                 "openlayers": {
+                  "interactions": {
+                    "pinchRotate": false,
+                    "altShiftDragRotate": false
+                  },
                   "attribution": {
                     "container": "#mapstore-map-footer-container"
                   }
@@ -258,7 +273,6 @@
                 "name": "TOC",
                 "cfg": {
                     "activateQueryTool": true,
-                    "activateDownloadTool": true,
                     "activateAddLayerButton": true,
                     "spatialOperations": [
                         {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
@@ -302,7 +316,7 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                    "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
                 "name": "Toolbar",
@@ -346,14 +360,19 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets"
+            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets",
+            "FloatingLegend"
         ],
         "embedded": [{
                 "name": "Map",
                 "cfg": {
                     "tools": ["locate"],
-                  "mapOptions": {
+                    "mapOptions": {
                     "openlayers": {
+                      "interactions": {
+                        "pinchRotate": false,
+                        "altShiftDragRotate": false
+                      },
                       "attribution": {
                         "container": "#mapstore-map-footer-container"
                       }
@@ -427,7 +446,7 @@
             }, {
                 "name": "Search",
                 "cfg": {
-                    "withToggle": ["max-width: 768px", "min-width: 768px"]
+                  "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
                 "name": "Toolbar",
@@ -457,17 +476,28 @@
             "cfg": {
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "Attribution", "ScrollTop", "Notifications"],
-        "maps": ["Header", "Fork", "MapSearch", "HomeDescription", "MapType", "ThemeSwitcher",  "GridContainer", "CreateNewMap",
+        }, "ManagerMenu", "Login","Language", "NavMenu", "Attribution", "ScrollTop", "Notifications"],
+        "maps": ["HomeDescription", "Fork", "MapSearch", "CreateNewMap", "FeaturedMaps", "ContentTabs",
+
           {
             "name": "Maps",
             "cfg": {
               "mapsOptions": {
                 "start": 0,
                 "limit": 12
-              }
+              },
+              "fluid": true
             }
-          }, "Examples", "Footer", {
+          }, {
+            "name": "Dashboards",
+            "cfg": {
+              "mapsOptions": {
+                "start": 0,
+                "limit": 12
+              },
+              "fluid": true
+            }
+          }, "MailingLists", "Footer", {
           "name": "Cookie",
           "cfg": {
             "externalCookieUrl" : "",
@@ -480,7 +510,7 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "Attribution", {
+        }, "ManagerMenu", "Login", "Language", "NavMenu", "Attribution", "Home", {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {
@@ -494,9 +524,13 @@
         }, {
           "name": "QueryPanel",
           "cfg": {
+            "toolsOptions": {
+              "hideCrossLayer": true,
+              "hideSpatialFilter": true
+            },
             "containerPosition": "columns"
           }
-        }, "Dashboard"],
+        }, "Dashboard", "Notifications"],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }

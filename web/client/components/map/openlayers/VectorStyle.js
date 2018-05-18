@@ -4,6 +4,9 @@ var ol = require('openlayers');
 // const {reprojectGeoJson} = require('../../../utils/CoordinatesUtils');
 
 const assign = require('object-assign');
+const {trim, isString} = require('lodash');
+
+const {colorToRgbaStr} = require('../../../utils/ColorUtils');
 
 const image = new ol.style.Circle({
   radius: 5,
@@ -66,61 +69,70 @@ const defaultStyles = {
     "MultiPolygon": STYLE_POLYGON
 };
 
+const strokeStyle = (options, defaultsStyle = {color: 'blue', width: 3, lineDash: [4]}) => ({
+    stroke: new ol.style.Stroke(
+        options.style ?
+        options.style.stroke || {
+            color: options.style.color || defaultsStyle.color,
+            lineDash: isString(options.style.dashArray) && trim(options.style.dashArray).split(' ') || defaultsStyle.lineDash,
+            width: options.style.weight || defaultsStyle.width,
+            lineCap: options.style.lineCap || 'round',
+            lineJoin: options.style.lineJoin || 'round',
+            lineDashOffset: options.style.dashOffset || 0
+        }
+        :
+        {...defaultsStyle}
+    )
+});
+
+const fillStyle = (options, defaultsStyle = {color: 'rgba(0, 0, 255, 0.1)'}) => ({
+    fill: new ol.style.Fill(
+        options.style ?
+        options.style.fill || {
+            color: colorToRgbaStr(options.style.fillColor, options.style.fillOpacity) || defaultsStyle.color
+        }
+        :
+        {...defaultsStyle}
+    )
+});
+
 const defaultOLStyles = {
-  'Point': () => [new ol.style.Style({
-      image: image
-  })],
-  'LineString': () => [new ol.style.Style({
-    stroke: new ol.style.Stroke({
-      color: 'green',
-      width: 1
-    })
-  })],
-  'MultiLineString': () => [new ol.style.Style({
-    stroke: new ol.style.Stroke({
-      color: 'green',
-      width: 1
-    })
-  })],
-  'MultiPoint': () => [new ol.style.Style({
-    image: image
-  })],
-  'MultiPolygon': () => [new ol.style.Style({
-    stroke: new ol.style.Stroke({
-        color: 'blue',
-        lineDash: [4],
-        width: 3
-    }),
-    fill: new ol.style.Fill({
-      color: 'rgba(0, 0, 255, 0.1)'
-    })
-  })],
-  'Polygon': () => [new ol.style.Style({
-    stroke: new ol.style.Stroke({
-      color: 'blue',
-      lineDash: [4],
-      width: 3
-    }),
-    fill: new ol.style.Fill({
-      color: 'rgba(0, 0, 255, 0.1)'
-    })
-  })],
-  'GeometryCollection': () => [new ol.style.Style({
-    stroke: new ol.style.Stroke({
-      color: 'magenta',
-      width: 2
-    }),
-    fill: new ol.style.Fill({
-      color: 'magenta'
-    }),
-    image: new ol.style.Circle({
-      radius: 10,
-      fill: null,
+    'Point': () => [new ol.style.Style({
+        image: image
+    })],
+    'LineString': options => [new ol.style.Style(assign({},
+        strokeStyle(options, {color: 'green', width: 1})
+    ))],
+    'MultiLineString': options => [new ol.style.Style(assign({},
+        strokeStyle(options, {color: 'green', width: 1})
+    ))],
+    'MultiPoint': () => [new ol.style.Style({
+        image: image
+    })],
+    'MultiPolygon': options => [new ol.style.Style(assign({},
+        strokeStyle(options),
+        fillStyle(options)
+    ))],
+    'Polygon': options => [new ol.style.Style(assign({},
+        strokeStyle(options),
+        fillStyle(options)
+    ))],
+    'GeometryCollection': () => [new ol.style.Style({
       stroke: new ol.style.Stroke({
+        color: 'magenta',
+        width: 2
+      }),
+      fill: new ol.style.Fill({
         color: 'magenta'
+      }),
+      image: new ol.style.Circle({
+        radius: 10,
+        fill: null,
+        stroke: new ol.style.Stroke({
+          color: 'magenta'
+        })
       })
-    })
-  })],
+    })],
   'Circle': () => [new ol.style.Style({
     stroke: new ol.style.Stroke({
       color: 'red',
@@ -154,8 +166,11 @@ const defaultOLStyles = {
     })]
 };
 
-var styleFunction = function(feature, options) {
+const styleFunction = function(feature, options) {
     return defaultOLStyles[feature.getGeometry().getType()](options);
+/*const styleFunction = function(feature, options) {
+    const type = feature.getGeometry().getType();
+    return defaultStyles[type](options && options.style && options.style[type] && {style: {...options.style[type]}} || options || {});*/
 };
 
 function getMarkerStyle(options) {
@@ -285,7 +300,7 @@ function getStyle(options, isDrawing = false, textValues = []) {
                     case "MultiPoint":
                         return markerStyle;
                     default:
-                        return styleFunction(feature);
+                        return styleFunction(feature, options);
                 }
             };
             return style;

@@ -200,4 +200,11 @@ describe('Test security utils methods', () => {
         expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
         expect(SecurityUtils.addAuthenticationParameter("a test url", null)).toEqual({'authkey': 'goodtoken'});
     });
+    it('cleanAuthParamsFromURL', () => {
+        // mocking the authentication rules
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+        expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoC);
+        expect(SecurityUtils.cleanAuthParamsFromURL('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2&authkey=SOME_AUTH_KEY').indexOf('authkey')).toBe(-1);
+    });
 });

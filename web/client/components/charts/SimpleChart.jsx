@@ -29,7 +29,7 @@ const AUTOCOLOR_DEFAULTS = {
  * @param {String} [type="line"]                         Type of the chart. One of "line", "pie", "bar", "gauge"
  * @param {Object} [tooltip={}]                          false to disable tooltip. TooltipOptions otherwise
  * @param {Object} [legend={}]                           false to disable legend. Legend options otherwise
- * @param {Object} [autoColorOptions] [description]      Optiopns to generate colors for the chart
+ * @param {Object} [autoColorOptions] [description]      Options to generate colors for the chart
  * @param {[type]} props                                 [description]
  */
 const SimpleChart = ({type="line", tooltip = {}, legend = {}, autoColorOptions = AUTOCOLOR_DEFAULTS, colorGenerator, ...props} = {}) => {

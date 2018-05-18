@@ -9,7 +9,24 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {head} = require('lodash');
 const L = require('leaflet');
+
 require('leaflet-draw');
+
+L.Draw.Polygon.prototype._calculateFinishDistance = function(t) {
+    if (this._markers.length > 0) {
+        const first = this._map.latLngToContainerPoint(this._markers[0].getLatLng());
+        const last = this._map.latLngToContainerPoint(this._markers[this._markers.length - 1].getLatLng());
+
+        const clickedMarker = new L.Marker(t, {
+            icon: this.options.icon,
+            zIndexOffset: 2 * this.options.zIndexOffset
+        });
+        const clicked = this._map.latLngToContainerPoint(clickedMarker.getLatLng());
+        return Math.min(first.distanceTo(clicked), last.distanceTo(clicked));
+    }
+    return 1 / 0;
+};
+
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
 const {boundsToOLExtent} = require('../../../utils/DrawSupportUtils');
 const assign = require('object-assign');
@@ -347,6 +364,7 @@ class DrawSupport extends React.Component {
                     fillColor: '#ffffff',
                     fillOpacity: 0.2
                 },
+                showLength: false,
                 repeatMode: true,
                 icon: new L.DivIcon({
                     iconSize: new L.Point(8, 8),
@@ -367,6 +385,9 @@ class DrawSupport extends React.Component {
                     dashArray: [5, 5],
                     guidelineDistance: 5
                 },
+                allowIntersection: false,
+                showLength: false,
+                showArea: false,
                 repeatMode: true,
                 icon: new L.DivIcon({
                     iconSize: new L.Point(8, 8),
@@ -421,6 +442,9 @@ class DrawSupport extends React.Component {
         }
 
         // start the draw control
+        if (this.props.map.doubleClickZoom) {
+            this.props.map.doubleClickZoom.disable();
+        }
         this.drawControl.enable();
     };
 
@@ -504,23 +528,26 @@ class DrawSupport extends React.Component {
         });
 
         let allLayers = this.drawLayer.getLayers();
-        allLayers.forEach(l => {
-            if (l.getLayers && l.getLayers() && l.getLayers().length) {
-                l.getLayers().forEach((layer) => {
-                    layer.on('edit', (e) => this.onUpdateGeom(e.target, newProps));
-                    layer.on('moveend', (e) => this.onUpdateGeom(e.target, newProps));
-                    if (layer.editing) {
-                        layer.editing.enable();
+
+        setTimeout(() => {
+            allLayers.forEach(l => {
+                if (l.getLayers && l.getLayers() && l.getLayers().length) {
+                    l.getLayers().forEach((layer) => {
+                        layer.on('edit', (e) => this.onUpdateGeom(e.target, newProps));
+                        layer.on('moveend', (e) => this.onUpdateGeom(e.target, newProps));
+                        if (layer.editing) {
+                            layer.editing.enable();
+                        }
+                    });
+                } else {
+                    l.on('edit', (e) => this.onUpdateGeom(e.target, newProps));
+                    l.on('moveend', (e) => this.onUpdateGeom(e.target, newProps));
+                    if (l.editing) {
+                        l.editing.enable();
                     }
-                });
-            } else {
-                l.on('edit', (e) => this.onUpdateGeom(e.target, newProps));
-                l.on('moveend', (e) => this.onUpdateGeom(e.target, newProps));
-                if (l.editing) {
-                    l.editing.enable();
                 }
-            }
-        });
+            });
+        }, 0);
 
         this.editControl = new L.Control.Draw({
                 edit: {
@@ -537,6 +564,9 @@ class DrawSupport extends React.Component {
                     }
                 }
             });
+        if (this.props.map.doubleClickZoom) {
+            this.props.map.doubleClickZoom.disable();
+        }
     }
 
     removeAllInteractions = () => {
@@ -556,6 +586,9 @@ class DrawSupport extends React.Component {
             this.drawControl = null;
             this.props.map.off('draw:created', this.onDrawCreated, this);
             this.props.map.off('draw:drawstart', this.onDrawStart, this);
+            if (this.props.map.doubleClickZoom) {
+                this.props.map.doubleClickZoom.enable();
+            }
         }
     };
 
@@ -580,6 +613,9 @@ class DrawSupport extends React.Component {
                 }
             });
             this.editControl = null;
+        }
+        if (this.props.map.doubleClickZoom) {
+            this.props.map.doubleClickZoom.enable();
         }
     };
 

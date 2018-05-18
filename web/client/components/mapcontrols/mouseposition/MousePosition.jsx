@@ -15,12 +15,15 @@ const MousePositionLabelDMS = require('./MousePositionLabelDMS');
 const MousePositionLabelYX = require('./MousePositionLabelYX');
 const CRSSelector = require('./CRSSelector');
 const Message = require('../../I18N/Message');
+const {isNumber} = require('lodash');
 
 require('./mousePosition.css');
 /**
  * MousePosition is a component that shows the coordinate of the mouse position in a selected crs.
  * @class
  * @memberof components.mousePosition
+ * @prop {boolean} showElevation shows elevation in addition to planar coordinates (requires a WMS layer with useElevation: true to be configured in the map)
+ * @prop {function} elevationTemplate custom template to show the elevation if showElevation is true (default template shows the elevation number with no formatting)
  * @prop {string[]} filterAllowedCRS list of allowed crs in the combobox list
  * @prop {object[]} projectionDefs list of additional project definitions
  * @prop {object} additionalCRS additional crs to be added to the list
@@ -39,6 +42,7 @@ class MousePosition extends React.Component {
         degreesTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         projectedTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         crsTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
+        elevationTemplate: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         style: PropTypes.object,
         copyToClipboardEnabled: PropTypes.bool,
         glyphicon: PropTypes.string,
@@ -47,7 +51,8 @@ class MousePosition extends React.Component {
         onCRSChange: PropTypes.func,
         toggle: PropTypes.object,
         showLabels: PropTypes.bool,
-        showToggle: PropTypes.bool
+        showToggle: PropTypes.bool,
+        showElevation: PropTypes.bool
     };
 
     static defaultProps = {
@@ -60,6 +65,7 @@ class MousePosition extends React.Component {
         degreesTemplate: MousePositionLabelDMS,
         projectedTemplate: MousePositionLabelYX,
         crsTemplate: crs => <span className="mouseposition-crs">{crs}</span>,
+        elevationTemplate: elevation => isNumber(elevation) ? <span className="mouseposition-elevation">{elevation} m</span> : <Message msgId="mousePositionNoElevation"/>,
         style: {},
         copyToClipboardEnabled: false,
         glyphicon: "paste",
@@ -68,7 +74,8 @@ class MousePosition extends React.Component {
         onCRSChange: function() {},
         toggle: <div></div>,
         showLabels: false,
-        showToggle: false
+        showToggle: false,
+        showElevation: false
     };
 
     getUnits = (crs) => {
@@ -76,18 +83,18 @@ class MousePosition extends React.Component {
     };
 
     getPosition = () => {
-        let {x, y} = this.props.mousePosition ? this.props.mousePosition : [null, null];
+        let {x, y, z} = this.props.mousePosition ? this.props.mousePosition : [null, null];
         if (!x && !y) {
             // if we repoject null coordinates we can end up with -0.00 instead of 0.00
-            ({x, y} = {x: 0, y: 0});
+            ({x, y} = {x: 0, y: 0, z});
         } else if (proj4js.defs(this.props.mousePosition.crs) !== proj4js.defs(this.props.crs)) {
             ({x, y} = CoordinatesUtils.reproject([x, y], this.props.mousePosition.crs, this.props.crs));
         }
         let units = this.getUnits(this.props.crs);
         if (units === "degrees") {
-            return {lat: y, lng: x};
+            return {lat: y, lng: x, z};
         }
-        return {x, y};
+        return {x, y, z};
     };
 
     getTemplateComponent = () => {
@@ -115,6 +122,10 @@ class MousePosition extends React.Component {
                                 </Button>
                             </CopyToClipboard>
                         }
+                        {this.props.showElevation ? <span className="mapstore-mouse-elevation">
+                            {this.props.showLabels ? <label><Message msgId="mousePositionElevation" /></label> : null}
+                            <h5>{this.props.elevationTemplate(position.z)}</h5>
+                        </span> : null}
                         {this.props.showCRS ? this.props.crsTemplate(this.props.crs) : null}
                         {this.props.editCRS ?
                             <CRSSelector projectionDefs={this.props.projectionDefs}

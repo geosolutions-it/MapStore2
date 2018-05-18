@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
+const SET_SHOW_CURRENT_FILTER = 'SET_SHOW_CURRENT_FILTER';
 const SELECT_FEATURES = 'FEATUREGRID:SELECT_FEATURES';
 const DESELECT_FEATURES = 'FEATUREGRID:DESELECT_FEATURES';
 const CLEAR_SELECTION = 'FEATUREGRID:CLEAR_SELECTION';
@@ -45,6 +46,8 @@ const OPEN_ADVANCED_SEARCH = 'FEATUREGRID:ADVANCED_SEARCH';
 const ZOOM_ALL = 'FEATUREGRID:ZOOM_ALL';
 const INIT_PLUGIN = 'FEATUREGRID:INIT_PLUGIN';
 const SIZE_CHANGE = 'FEATUREGRID:SIZE_CHANGE';
+const TOGGLE_SHOW_AGAIN_FLAG = 'FEATUREGRID:TOGGLE_SHOW_AGAIN_FLAG';
+const HIDE_SYNC_POPOVER = 'FEATUREGRID:HIDE_SYNC_POPOVER';
 
 const MODES = {
     EDIT: "EDIT",
@@ -56,6 +59,16 @@ const STORE_ADVANCED_SEARCH_FILTER = 'STORE_ADVANCED_SEARCH_FILTER';
 const LOAD_MORE_FEATURES = "LOAD_MORE_FEATURES";
 const GRID_QUERY_RESULT = 'FEATUREGRID:QUERY_RESULT';
 
+function toggleShowAgain() {
+    return {
+        type: TOGGLE_SHOW_AGAIN_FLAG
+    };
+}
+function hideSyncPopover() {
+    return {
+        type: HIDE_SYNC_POPOVER
+    };
+}
 function fatureGridQueryResult(features, pages) {
     return {
         type: GRID_QUERY_RESULT,
@@ -92,6 +105,12 @@ function selectFeatures(features, append) {
         type: SELECT_FEATURES,
         features,
         append
+    };
+}
+function setShowCurrentFilter(showFilteredObject) {
+    return {
+        type: SET_SHOW_CURRENT_FILTER,
+        showFilteredObject
     };
 }
 function geometryChanged(features) {
@@ -352,6 +371,7 @@ module.exports = {
     OPEN_FEATURE_GRID, openFeatureGrid,
     CLOSE_FEATURE_GRID_CONFIRM, closeFeatureGridConfirm,
     FEATURE_GRID_CLOSE_CONFIRMED, closeFeatureGridConfirmed,
+    SET_SHOW_CURRENT_FILTER, setShowCurrentFilter,
     DISABLE_TOOLBAR, disableToolbar,
     OPEN_ADVANCED_SEARCH, openAdvancedSearch,
     ZOOM_ALL, zoomAll,
@@ -381,6 +401,8 @@ module.exports = {
     toggleEditMode,
     toggleViewMode,
     initPlugin, INIT_PLUGIN,
+    hideSyncPopover, HIDE_SYNC_POPOVER,
+    toggleShowAgain, TOGGLE_SHOW_AGAIN_FLAG,
     START_SYNC_WMS, startSyncWMS,
     STOP_SYNC_WMS,
     storeAdvancedSearchFilter, STORE_ADVANCED_SEARCH_FILTER,

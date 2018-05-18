@@ -27,7 +27,6 @@ module.exports = ({data = {}, onChange = () => {}, sampleChart}) => (<Row>
                   <FormControl value={data.title} type="text" onChange={ e => onChange("title", e.target.value)} />
               </Col>
             </FormGroup>
-
             <FormGroup controlId="aggregationAttribute">
                 <Col componentClass={ControlLabel} sm={6}>
                   <Message msgId={`widgets.description`} />

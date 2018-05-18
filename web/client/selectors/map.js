@@ -60,7 +60,7 @@ const scalesSelector = createSelector(
  */
 const mapVersionSelector = (state) => state.map && state.map.present && state.map.present.version || 1;
 /**
- * Get name/titlet of the map
+ * Get name/title of the map
  * @function
  * @memberof selectors.map
  * @param  {object} state the state

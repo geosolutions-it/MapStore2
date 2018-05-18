@@ -21,6 +21,7 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 
 const assign = require('object-assign');
 const url = require('url');
+const {isObject, isArray} = require('lodash');
 
 const urlQuery = url.parse(window.location.href, true).query;
 
@@ -32,7 +33,8 @@ class StandardApp extends React.Component {
         initialActions: PropTypes.array,
         appComponent: PropTypes.func,
         printingEnabled: PropTypes.bool,
-        onStoreInit: PropTypes.func
+        onStoreInit: PropTypes.func,
+        mode: PropTypes.string
     };
 
     static defaultProps = {
@@ -78,7 +80,9 @@ class StandardApp extends React.Component {
             const opts = assign({}, this.props.storeOpts, {
                 onPersist: onInit.bind(null, config)
             }, {
-                initialState: config.initialState || {defaultState: {}, mobile: {}}
+                initialState: this.parseInitialState(config.initialState, {
+                    mode: this.props.mode || (ConfigUtils.getBrowserProperties().mobile ? 'mobile' : 'desktop')
+                }) || {defaultState: {}, mobile: {}}
             });
             this.store = this.props.appStore(this.props.pluginsDef.plugins, opts);
             this.props.onStoreInit(this.store);
@@ -95,7 +99,7 @@ class StandardApp extends React.Component {
 
     render() {
         const {plugins, requires} = this.props.pluginsDef;
-        const {pluginsDef, appStore, initialActions, appComponent, ...other} = this.props;
+        const {pluginsDef, appStore, initialActions, appComponent, mode, ...other} = this.props;
         const App = this.props.appComponent;
         return this.state.store ?
             <Provider store={this.state.store}>
@@ -115,6 +119,21 @@ class StandardApp extends React.Component {
         this.props.initialActions.forEach((action) => {
             this.store.dispatch(action());
         });
+    };
+    /**
+     * It returns an object of the same structure of the initialState but replacing strings like "{someExpression}" with the result of the expression between brackets.
+     * @param {object} state the object to parse
+     * @param {object} context context for expression
+     * @return {object} the modified object
+    */
+    parseInitialState = (state, context) => {
+        return Object.keys(state || {}).reduce((previous, key) => {
+            return { ...previous, ...{ [key]: isObject(state[key]) ?
+                (isArray(state[key]) ? state[key].map(s => {
+                    return isObject(s) ? this.parseInitialState(s, context) : s;
+                }) : this.parseInitialState(state[key], context)) :
+                PluginsUtils.handleExpression({}, context, state[key])}};
+        }, {});
     };
 }
 

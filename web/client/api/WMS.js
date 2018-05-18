@@ -189,10 +189,10 @@ const Api = {
     },
     getBBox: function(record, bounds) {
         let layer = record;
-        let bbox = (layer.EX_GeographicBoundingBox || CoordinatesUtils.getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
+        let bbox = (layer.EX_GeographicBoundingBox || layer.exGeographicBoundingBox || CoordinatesUtils.getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
         while (!bbox && layer.Layer && layer.Layer.length) {
             layer = layer.Layer[0];
-            bbox = (layer.EX_GeographicBoundingBox || CoordinatesUtils.getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
+            bbox = (layer.EX_GeographicBoundingBox || layer.exGeographicBoundingBox || CoordinatesUtils.getWMSBoundingBox(layer.BoundingBox) || (layer.LatLonBoundingBox && layer.LatLonBoundingBox.$) || layer.latLonBoundingBox);
         }
         if (!bbox) {
             bbox = {

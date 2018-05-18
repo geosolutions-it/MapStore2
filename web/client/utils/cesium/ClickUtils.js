@@ -10,16 +10,17 @@ const getCartesian = function(viewer, event) {
     if (event.position !== null) {
         const scene = viewer.scene;
         const ellipsoid = scene._globe.ellipsoid;
-        const cartesian = scene._camera.pickEllipsoid(event.position, ellipsoid);
+        const cartesian = scene._camera.pickEllipsoid(event.position || event.endPosition, ellipsoid);
         return cartesian;
     }
 };
 const getMouseXYZ = (viewer, event) => {
     var scene = viewer.scene;
-    if (!event.position) {
+    const mousePosition = event.position || event.endPosition;
+    if (!mousePosition) {
         return null;
     }
-    const ray = viewer.camera.getPickRay(event.position);
+    const ray = viewer.camera.getPickRay(mousePosition);
     const position = viewer.scene.globe.pick(ray, viewer.scene);
     const ellipsoid = scene._globe.ellipsoid;
     if (Cesium.defined(position)) {

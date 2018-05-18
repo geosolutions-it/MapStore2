@@ -451,12 +451,12 @@ describe('CoordinatesUtils', () => {
     });
     it('test calculateDistance', () => {
         expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "haversine")).toNotBe(null);
-        expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "haversine")).toBe(157401.56104583552);
+        expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "haversine")).toBe(157225.432);
         expect(CoordinatesUtils.calculateDistance([[1, 1], [2, 2]], "vincenty")).toBe(156876.149);
     });
     it('test calculate Geodesic Distance', () => {
         expect(CoordinatesUtils.FORMULAS.haversine([[1, 1], [2, 2]] )).toNotBe(null);
-        expect(CoordinatesUtils.FORMULAS.haversine([[1, 1], [2, 2]] )).toBe(157401.56104583552);
+        expect(CoordinatesUtils.FORMULAS.haversine([[1, 1], [2, 2]])).toBe(157225.432);
     });
     it('test calculate vincenty Distance', () => {
         expect(CoordinatesUtils.FORMULAS.vincenty([[1, 1], [2, 2]] )).toNotBe(null);
@@ -470,4 +470,191 @@ describe('CoordinatesUtils', () => {
         expect(CoordinatesUtils.transformLineToArcs([[1, 1], [1, 1]] )).toNotBe(null);
         expect(CoordinatesUtils.transformLineToArcs([[1, 1], [1, 1]] ).length).toBe(0);
     });
+    it('test getNormalizedLatLon', () => {
+
+        let normalizedCoords = CoordinatesUtils.getNormalizedLatLon({lat: 45, lng: 9});
+        expect(normalizedCoords).toEqual({lat: 45, lng: 9});
+
+        normalizedCoords = CoordinatesUtils.getNormalizedLatLon({lat: 45, lng: 369});
+        expect({lng: Math.round(normalizedCoords.lng), lat: Math.round(normalizedCoords.lat)}).toEqual({lat: 45, lng: 9});
+
+        normalizedCoords = CoordinatesUtils.getNormalizedLatLon({lat: 45, lng: -351});
+        expect({lng: Math.round(normalizedCoords.lng), lat: Math.round(normalizedCoords.lat)}).toEqual({lat: 45, lng: 9});
+
+    });
+    it('test isInsideVisibleArea inside', () => {
+
+        const coords = {lat: 36.95, lng: -79.84};
+
+        const map = {
+            size: {
+                width: 1581,
+                height: 946
+            },
+            zoom: 4,
+            projection: 'EPSG:3857',
+            bbox: {
+                bounds: {
+                    maxx: -5732165,
+                    maxy: 5722381,
+                    minx: -9599267,
+                    miny: 3408479
+                },
+                crs: 'EPSG:3857'
+            }
+        };
+
+        const layout = {
+            right: 50,
+            bottom: 10
+        };
+
+        const resolution = 9783;
+
+        const insideVisibleArea = CoordinatesUtils.isInsideVisibleArea(coords, map, layout, resolution);
+
+        expect(insideVisibleArea).toBe(true);
+
+    });
+
+    it('test isInsideVisibleArea outside', () => {
+
+        const coords = {lat: 36.95, lng: -79.84};
+
+        const map = {
+            size: {
+                width: 1581,
+                height: 946
+            },
+            zoom: 4,
+            projection: 'EPSG:3857',
+            bbox: {
+                bounds: {
+                    maxx: -5732165,
+                    maxy: 5722381,
+                    minx: -9599267,
+                    miny: 3408479
+                },
+                crs: 'EPSG:3857'
+            }
+        };
+
+        const layout = {
+            left: 500,
+            bottom: 250
+        };
+
+        const resolution = 9783;
+
+        const insideVisibleArea = CoordinatesUtils.isInsideVisibleArea(coords, map, layout, resolution);
+
+        expect(insideVisibleArea).toBe(false);
+
+    });
+
+    it('test centerToVisibleArea single bbox', () => {
+
+        const coords = {lat: 36.95, lng: -79.84};
+
+        const map = {
+            size: {
+                width: 1581,
+                height: 946
+            },
+            zoom: 4,
+            projection: 'EPSG:3857',
+            bbox: {
+                bounds: {
+                    maxx: -5732165,
+                    maxy: 5722381,
+                    minx: -9599267,
+                    miny: 3408479
+                },
+                crs: 'EPSG:3857'
+            }
+        };
+
+        const layout = {
+            left: 500,
+            bottom: 250
+        };
+
+        const resolution = 9783;
+
+        const newCenter = CoordinatesUtils.centerToVisibleArea(coords, map, layout, resolution);
+        expect(newCenter.zoom).toBe(4);
+        expect({x: parseFloat(newCenter.pos.x.toFixed(2)), y: parseFloat(newCenter.pos.y.toFixed(2))}).toEqual({x: -101.81, y: 27.68});
+        expect(newCenter.crs).toBe('EPSG:4326');
+    });
+
+    it('test centerToVisibleArea splitted bbox, first bbox width greater than second', () => {
+
+        const coords = {lat: 74.78, lng: 149.41};
+
+        const map = {
+            size: {
+                width: 1426,
+                height: 946
+            },
+            zoom: 3,
+            projection: 'EPSG:3857',
+            bbox: {
+                bounds: {
+                    maxx: -14020385,
+                    maxy: 18393806,
+                    minx: -41924181,
+                    miny: -117407
+                },
+                crs: 'EPSG:3857'
+            }
+        };
+
+        const layout = {
+            right: 500,
+            bottom: 0
+        };
+
+        const resolution = 19568;
+
+        const newCenter = CoordinatesUtils.centerToVisibleArea(coords, map, layout, resolution);
+        expect(newCenter.zoom).toBe(3);
+        expect({x: parseFloat(newCenter.pos.x.toFixed(2)), y: parseFloat(newCenter.pos.y.toFixed(2))}).toEqual({x: 193.36, y: 74.78});
+        expect(newCenter.crs).toBe('EPSG:4326');
+    });
+
+    it('test centerToVisibleArea splitted bbox, second bbox width greater than first', () => {
+
+        const coords = {lat: 76.84, lng: 98.79};
+
+        const map = {
+            size: {
+                width: 1426,
+                height: 946
+            },
+            zoom: 3,
+            projection: 'EPSG:3857',
+            bbox: {
+                bounds: {
+                    maxx: 20370162,
+                    maxy: 22679172,
+                    minx: -7533633,
+                    miny: 4167958
+                },
+                crs: 'EPSG:3857'
+            }
+        };
+
+        const layout = {
+            right: 500,
+            bottom: 0
+        };
+
+        const resolution = 19568;
+
+        const newCenter = CoordinatesUtils.centerToVisibleArea(coords, map, layout, resolution);
+        expect(newCenter.zoom).toBe(3);
+        expect({x: parseFloat(newCenter.pos.x.toFixed(2)), y: parseFloat(newCenter.pos.y.toFixed(2))}).toEqual({x: 142.74, y: 76.84});
+        expect(newCenter.crs).toBe('EPSG:4326');
+    });
+
 });

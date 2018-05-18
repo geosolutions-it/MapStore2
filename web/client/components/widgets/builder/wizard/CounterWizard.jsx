@@ -11,13 +11,15 @@ const { compose, lifecycle } = require('recompose');
 
 const {wizardHandlers} = require('../../../misc/wizard/enhancers');
 const loadingState = require('../../../misc/enhancers/loadingState')(({loading, data}) => loading || !data, {width: 500, height: 200});
-
 const wfsChartOptions = require('./common/wfsChartOptions');
-const CounterOptions = wfsChartOptions(require('./common/WPSWidgetOptions'));
+const noAttributes = require('./common/noAttributesEmptyView');
+
+const CounterOptions = wfsChartOptions(noAttributes(({options = []}) => options.length === 0)(require('./common/WPSWidgetOptions')));
 const WidgetOptions = require('./common/WidgetOptions');
 
 const wpsCounter = require('../../enhancers/wpsCounter');
 const dependenciesToFilter = require('../../enhancers/dependenciesToFilter');
+const dependenciesToWidget = require('../../enhancers/dependenciesToWidget');
 const emptyChartState = require('../../enhancers/emptyChartState');
 const errorChartState = require('../../enhancers/errorChartState');
 
@@ -32,8 +34,8 @@ const triggerSetValid = compose(
         }
     }));
 
-const enhanchePreview = compose(
-
+const enhancePreview = compose(
+    dependenciesToWidget,
     dependenciesToFilter,
     wpsCounter,
     triggerSetValid,
@@ -43,15 +45,17 @@ const enhanchePreview = compose(
 );
 
 const sampleProps = {
-    width: 430,
-    height: 200
+    style: {
+        width: 450,
+        height: 100
+    }
 };
 
 const Wizard = wizardHandlers(require('../../../misc/wizard/WizardContainer'));
 
 
 const Counter = require('../../widget/CounterView');
-const Preview = enhanchePreview(Counter);
+const Preview = enhancePreview(Counter);
 const CounterPreview = ({ data = {}, layer, dependencies = {}, valid, setValid = () => { } }) =>
     !isCounterOptionsValid(data.options)
         ? <Counter
@@ -62,6 +66,7 @@ const CounterPreview = ({ data = {}, layer, dependencies = {}, valid, setValid =
         : <Preview
             {...sampleProps}
             valid={valid}
+            dependenciesMap={data.dependenciesMap}
             dependencies={dependencies}
             setValid={setValid}
             type={data.type}

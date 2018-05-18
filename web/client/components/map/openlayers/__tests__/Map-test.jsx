@@ -95,6 +95,117 @@ describe('OpenlayersMap', () => {
         expect(map).toExist();
         expect(map.map.getView().getProjection().getCode()).toBe('EPSG:3857');
     });
+
+    it('check if the handler for "click" event is called with elevation', () => {
+        const testHandlers = {
+            handler: () => { }
+        };
+        var spy = expect.spyOn(testHandlers, 'handler');
+
+        var options = {
+            "url": "http://fake",
+            "name": "mylayer",
+            "visibility": true,
+            "useForElevation": true
+        };
+        const map = ReactDOM.render(
+            <OpenlayersMap
+                center={{ y: 43.9, x: 10.3 }}
+                zoom={11}
+                onClick={testHandlers.handler}
+            ><OpenlayersLayer type="wms" options={options} /></OpenlayersMap>
+            , document.getElementById("map"));
+        map.map.dispatchEvent({
+            type: 'singleclick',
+            coordinate: [10, 43],
+            pixel: [100, 100],
+            originalEvent: {
+                altKey: false,
+                ctrlKey: false,
+                shiftKey: false
+            }
+        });
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments.length).toBe(2);
+        expect(spy.calls[0].arguments[0].pixel).toExist();
+        expect(spy.calls[0].arguments[0].latlng).toExist();
+        expect(spy.calls[0].arguments[0].latlng.z).toExist();
+        expect(spy.calls[0].arguments[0].modifiers).toExist();
+        expect(spy.calls[0].arguments[0].modifiers.alt).toBe(false);
+        expect(spy.calls[0].arguments[0].modifiers.ctrl).toBe(false);
+        expect(spy.calls[0].arguments[0].modifiers.shift).toBe(false);
+    });
+
+    it('check if the handler for "mousemove" event is called', () => {
+        const testHandlers = {
+            handler: () => { }
+        };
+        var spy = expect.spyOn(testHandlers, 'handler');
+
+        const map = ReactDOM.render(
+            <OpenlayersMap
+                center={{ y: 43.9, x: 10.3 }}
+                zoom={11}
+                onMouseMove={testHandlers.handler}
+            />
+            , document.getElementById("map"));
+
+        map.map.dispatchEvent({
+            type: 'pointermove',
+            coordinate: [10, 43],
+            pixel: [100, 100],
+            originalEvent: {
+                altKey: false,
+                ctrlKey: false,
+                shiftKey: false
+            }
+        });
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments.length).toBe(1);
+        expect(spy.calls[0].arguments[0].pixel).toExist();
+        expect(spy.calls[0].arguments[0].x).toExist();
+        expect(spy.calls[0].arguments[0].y).toExist();
+        expect(spy.calls[0].arguments[0].z).toNotExist();
+    });
+
+    it('check if the handler for "mousemove" event is called with elevation', () => {
+        const testHandlers = {
+            handler: () => { }
+        };
+        var spy = expect.spyOn(testHandlers, 'handler');
+
+        var options = {
+            "url": "http://fake",
+            "name": "mylayer",
+            "visibility": true,
+            "useForElevation": true
+        };
+        const map = ReactDOM.render(
+            <OpenlayersMap
+                center={{ y: 43.9, x: 10.3 }}
+                zoom={11}
+                onMouseMove={testHandlers.handler}
+            ><OpenlayersLayer type="wms" options={options} /></OpenlayersMap>
+            , document.getElementById("map"));
+
+        map.map.dispatchEvent({
+            type: 'pointermove',
+            coordinate: [10, 43],
+            pixel: [100, 100],
+            originalEvent: {
+                altKey: false,
+                ctrlKey: false,
+                shiftKey: false
+            }
+        });
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments.length).toBe(1);
+        expect(spy.calls[0].arguments[0].pixel).toExist();
+        expect(spy.calls[0].arguments[0].x).toExist();
+        expect(spy.calls[0].arguments[0].y).toExist();
+        expect(spy.calls[0].arguments[0].z).toExist();
+    });
+
     it('click on feature', (done) => {
         const testHandlers = {
             handler: () => {}
@@ -258,6 +369,20 @@ describe('OpenlayersMap', () => {
         </OpenlayersMap>, document.getElementById("map"));
         expect(map).toExist();
         expect(map.map.getLayers().getLength()).toBe(1);
+    });
+
+    it('check layers for elevation', () => {
+        var options = {
+            "url": "http://fake",
+            "name": "mylayer",
+            "visibility": true,
+            "useForElevation": true
+        };
+        const map = ReactDOM.render(<OpenlayersMap center={{y: 43.9, x: 10.3}} zoom={11}>
+            <OpenlayersLayer type="wms" options={options} />
+        </OpenlayersMap>, document.getElementById("map"));
+        expect(map).toExist();
+        expect(map.map.get('elevationLayer')).toExist();
     });
 
     it('check if the handler for "moveend" event is called after setZoom', (done) => {

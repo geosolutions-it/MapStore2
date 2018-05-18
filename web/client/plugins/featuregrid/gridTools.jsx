@@ -2,7 +2,9 @@ const React = require('react');
 const bbox = require('@turf/bbox');
 const {zoomToExtent} = require('../../actions/map');
 const Message = require('../../components/I18N/Message');
-const {Glyphicon, OverlayTrigger, Tooltip} = require('react-bootstrap');
+const {Glyphicon, Tooltip} = require('react-bootstrap');
+const OverlayTrigger = require('../../components/misc/OverlayTrigger');
+
 module.exports = [{
         name: '',
         key: "geometry",

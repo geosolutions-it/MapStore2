@@ -18,6 +18,8 @@ const TEXT_SEARCH_ERROR = 'TEXT_SEARCH_ERROR';
 const TEXT_SEARCH_CANCEL_ITEM = 'TEXT_SEARCH_CANCEL_ITEM';
 const TEXT_SEARCH_ITEM_SELECTED = 'TEXT_SEARCH_ITEM_SELECTED';
 const TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE = 'TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE';
+const UPDATE_RESULTS_STYLE = 'UPDATE_RESULTS_STYLE';
+
 /**
  * updates the results of the search result loaded
  * @memberof actions.search
@@ -120,12 +122,14 @@ function textSearch(searchText, {services = null} = {}) {
  * @memberof actions.search
  * @param {object} item the selected item
  * @param {object} mapConfig the current map configuration (with size, projection...)
+ * @param {object} resultsStyle style to apply to results geometries
  */
-function selectSearchItem(item, mapConfig) {
+function selectSearchItem(item, mapConfig, resultsStyle) {
     return {
         type: TEXT_SEARCH_ITEM_SELECTED,
         item,
-        mapConfig
+        mapConfig,
+        resultsStyle
     };
 
 }
@@ -172,6 +176,18 @@ function setHighlightedFeature(feature) {
 }
 
 /**
+ * Change default style of results geometries
+ * @memberof actions.search
+ * @param {object} style style of results geometries
+ */
+function updateResultsStyle(style) {
+    return {
+        type: UPDATE_RESULTS_STYLE,
+        style
+    };
+}
+
+/**
  * Actions for search
  * @name actions.search
  */
@@ -189,6 +205,7 @@ module.exports = {
     TEXT_SEARCH_NESTED_SERVICES_SELECTED,
     TEXT_SEARCH_CANCEL_ITEM,
     TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE,
+    UPDATE_RESULTS_STYLE,
     searchTextLoading,
     searchResultError,
     searchResultLoaded,
@@ -200,5 +217,6 @@ module.exports = {
     selectNestedService,
     selectSearchItem,
     cancelSelectedItem,
-    setHighlightedFeature
+    setHighlightedFeature,
+    updateResultsStyle
 };

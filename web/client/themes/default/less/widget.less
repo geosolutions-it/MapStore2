@@ -12,6 +12,22 @@
     &.react-grid-layout.on-map > * {
         pointer-events: auto;
     }
+    /* selection */
+    &.selection-active {
+        background-color: #555;
+        .disabled {
+            opacity: 0.2;
+            pointer-events: none;
+        }
+        .mapstore-widget-card:not(.disabled) {
+            transition: all 200ms ease-in-out;
+            &:hover {
+                transform: scale(1.03);
+                cursor: pointer;
+            }
+        }
+    }
+
     .mapstore-widget-card {
         background: @ms2-color-background;
         margin: 20px 0;
@@ -88,6 +104,17 @@
             overflow-x: hidden;
             overflow-y: auto;
         }
+
+        .counter-widget-view > div > div {
+            transform: translate(-50%, -50%);
+            position: absolute;
+            top: 38%;
+            left: 50%;
+        }
+        .counter-widget .ms2-border-layout-body {
+            position: relative;
+        }
+
     }
 }
 
@@ -144,19 +171,41 @@
      * to have the optical illusion of the search input and title
      * inside the global dashboard editor
      */
-    .layer-selector .ms2-border-layout-body{
-        position: relative;
-        .compat-catalog {
-            .catalog-footer {
-                z-index: 100;
-                box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.06), 0 -1px 2px rgba(0, 0, 0, 0.12);
-            }
-            .catalog-form {
-                width: 100%;
-                padding: 0 auto;
-                z-index: 100;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.12);
+     position: relative;
+    .layer-selector, .map-selector {
+        .ms2-border-layout-body {
+            position: relative;
+            .compat-catalog, .map-catalog {
+                .catalog-footer {
+                    z-index: 100;
+                    .shadow-soft-up;
+                }
+                .catalog-form {
+                    width: 100%;
+                    padding: 0 auto;
+                    z-index: 100;
+                    .shadow-soft;
+                }
             }
         }
     }
+
+    /*
+     * fix for google map layer in preview
+     */
+    .map-selector {
+        .ms2-border-layout-body {
+            overflow: hidden;
+        }
+        #__base_map__ {
+            position: relative;
+        }
+    }
+    /*
+     * end - fix for google map layer in preview
+     */
+}
+
+.m-padding-md {
+    padding-bottom: 15px;
 }

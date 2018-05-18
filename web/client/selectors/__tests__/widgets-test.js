@@ -17,7 +17,9 @@ const {
     getEditingWidgetFilter,
     getEditorSettings,
     getWidgetLayer,
-    dependenciesSelector
+    dependenciesSelector,
+    availableDependenciesSelector,
+    returnToFeatureGridSelector
 } = require('../widgets');
 const {set} = require('../../utils/ImmutableUtils');
 describe('widgets selectors', () => {
@@ -64,6 +66,11 @@ describe('widgets selectors', () => {
         expect(getEditorSettings(state)).toExist();
         expect(getEditorSettings(state).flag).toBe(true);
     });
+    it('returnToFeatureGridSelector', () => {
+        const state = set(`widgets.builder.editor`, { returnToFeatureGrid: true }, {});
+        expect(returnToFeatureGridSelector(state)).toExist();
+        expect(returnToFeatureGridSelector(state)).toBe(true);
+    });
     it('getWidgetLayer', () => {
         const tocLayerState = {'layers': { selected: ["TEST1"], flat: [{id: "TEST1", name: "TEST1"}] }};
         expect(getWidgetLayer(tocLayerState)).toExist();
@@ -73,14 +80,64 @@ describe('widgets selectors', () => {
         const widgetLayer = set(`widgets.builder.editor`, { layer: { name: "TEST2" } }, dashboardNoLayer);
         expect(getWidgetLayer(widgetLayer).name).toBe("TEST2");
     });
+    it('getMapWidgets', () => {
+        const state = {
+            widgets: {
+                containers: {
+                    [DEFAULT_TARGET]: {
+                        widgets: [{
+                            id: "WIDGET",
+                            widgetType: "map"
+                        }, {
+
+                        }, {
+                            widgetType: "table"
+                        }]
+                    }
+                }
+            }
+        };
+        expect(availableDependenciesSelector(state)).toExist();
+        expect(availableDependenciesSelector(state).availableDependencies[0]).toBe('widgets[WIDGET].map');
+        expect(availableDependenciesSelector(state).availableDependencies[1]).toBe('map');
+    });
     it('dependenciesSelector', () => {
         const state = {
             widgets: {
+                containers: {
+                    [DEFAULT_TARGET]: {
+                        widgets: [{
+                            id: "WIDGET_ID",
+                            map: {
+                                center: {
+                                    x: -4.866943359375001,
+                                    y: 43.96119063892024,
+                                    crs: 'EPSG:4326'
+                                },
+                                bbox: {
+                                    bounds: {
+                                        minx: -1346514.6902716649,
+                                        miny: 5126784.36114334,
+                                        maxx: 262943.37730100635,
+                                        maxy: 5792092.255337515
+                                    }
+                                }
+                            }
+                        }]
+                    }
+                },
                 dependencies: {
                     a: "mydep.a",
                     b: "mydep.b",
-                    c: "map.abc"
-                }
+                    // special map path
+                    c: "map.abc",
+                    // special widgets path
+                    d: "widgets[\"WIDGET_ID\"].map.center",
+                    e: "widgets[WIDGET_ID].map.center",
+                    f: "widgets[NO_ID].map.center",
+                    g: "widgets.otherStateSlice"
+                },
+             otherStateSlice: "otherStateValue"
              },
              mydep: {
                  a: "A",
@@ -96,6 +153,9 @@ describe('widgets selectors', () => {
         expect(dependencies.a).toBe("A");
         expect(dependencies.b).toBe("B");
         expect(dependencies.c).toBe("ABC");
+        expect(dependencies.d).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].map.center);
+        expect(dependencies.e).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].map.center);
+        expect(dependencies.f).toBeFalsy();
+        expect(dependencies.g).toBe(state.widgets.otherStateSlice);
     });
-
 });
