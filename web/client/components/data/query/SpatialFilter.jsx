@@ -269,10 +269,11 @@ class SpatialFilter extends React.Component {
                 ? (<span><div className="m-label m-caption text-center"><I18N.Message msgId={"queryform.spatialfilter.draw_start_label"}/></div></span>)
                 : null;
         }
-
+        const selectedMethod = this.getMethodFromId(this.props.spatialField.method);
         const detailsPanel = this.props.showDetailsPanel ?
             (<GeometryDetails
                 useMapProjection={this.props.useMapProjection}
+                enableGeodesicCircle={selectedMethod && selectedMethod.geodesicCircle}
                 geometry={this.props.spatialField.geometry}
                 type={this.props.spatialField.method}
                 onShowPanel={this.props.actions.onShowSpatialSelectionDetails}
@@ -333,6 +334,7 @@ class SpatialFilter extends React.Component {
             }
         })[0].id;
 
+        const selectedMethod = this.getMethodFromId(method);
         this.props.actions.onSelectSpatialMethod(method, name);
 
         if (this.getMethodFromId(method).type !== "wfsGeocoder") {
@@ -346,7 +348,7 @@ class SpatialFilter extends React.Component {
                     break;
                 }
                 default: {
-                    this.changeDrawingStatus('start', method, "queryform", [], {stopAfterDrawing: true});
+                    this.changeDrawingStatus('start', method, "queryform", [], {geodesicCircle: selectedMethod && selectedMethod.geodesicCircle, stopAfterDrawing: true});
                 }
             }
         } else {

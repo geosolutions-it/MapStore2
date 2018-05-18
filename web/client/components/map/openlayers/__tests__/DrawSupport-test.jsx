@@ -1111,8 +1111,8 @@ describe('Test DrawSupport', () => {
         expect(spyChange.calls.length).toBe(1);
     });
 
-    it('test createOLGeometry type Circle', () => {
-        const support = ReactDOM.render(<DrawSupport/>, document.getElementById("container"));
+    it('test createOLGeometry type Circle geodesic', () => {
+        const support = ReactDOM.render(<DrawSupport options={{geodesicCircle: true}}/>, document.getElementById("container"));
         const type = 'Circle';
         const coordinates = [];
         const radius = 50;
@@ -1127,7 +1127,7 @@ describe('Test DrawSupport', () => {
     });
 
     it('test createOLGeometry type Circle missing param', () => {
-        const support = ReactDOM.render(<DrawSupport/>, document.getElementById("container"));
+        const support = ReactDOM.render(<DrawSupport options={{geodesicCircle: true}}/>, document.getElementById("container"));
         const type = 'Circle';
         const radius = 50;
         const projection = 'EPSG:3857';
@@ -1150,7 +1150,7 @@ describe('Test DrawSupport', () => {
     });
 
     it('test createOLGeometry type Circle wrong center', () => {
-        const support = ReactDOM.render(<DrawSupport/>, document.getElementById("container"));
+        const support = ReactDOM.render(<DrawSupport options={{geodesicCircle: true}}/>, document.getElementById("container"));
         const type = 'Circle';
         const radius = 50;
         const center = {
@@ -1192,7 +1192,7 @@ describe('Test DrawSupport', () => {
             ]])
         });
 
-        const support = ReactDOM.render(<DrawSupport drawMethod="Circle" map={fakeMap}/>, document.getElementById("container"));
+        const support = ReactDOM.render(<DrawSupport drawMethod="Circle" map={fakeMap} options={{geodesicCircle: true}}/>, document.getElementById("container"));
         const featureData = support.fromOLFeature(simplifiedCircle);
 
         expect(Math.round(featureData.radius)).toBe(80);
