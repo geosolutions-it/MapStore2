@@ -347,7 +347,7 @@ const PrintUtils = {
              // "graphicName": "circle",
              // "graphicOpacity": 0.4,
             "pointRadius": style.radius,
-            "strokeColor": colorToHexStr(style.fillColor),
+            "strokeColor": colorToHexStr(style.color),
             "strokeOpacity": style.opacity,
             "strokeWidth": style.weight
              // "strokeLinecap": "round",
