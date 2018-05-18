@@ -273,7 +273,7 @@ class SpatialFilter extends React.Component {
         const detailsPanel = this.props.showDetailsPanel ?
             (<GeometryDetails
                 useMapProjection={this.props.useMapProjection}
-                enableGeodesicCircle={selectedMethod && selectedMethod.geodesicCircle}
+                enableGeodesic={selectedMethod && selectedMethod.geodesic}
                 geometry={this.props.spatialField.geometry}
                 type={this.props.spatialField.method}
                 onShowPanel={this.props.actions.onShowSpatialSelectionDetails}
@@ -348,7 +348,7 @@ class SpatialFilter extends React.Component {
                     break;
                 }
                 default: {
-                    this.changeDrawingStatus('start', method, "queryform", [], {geodesicCircle: selectedMethod && selectedMethod.geodesicCircle, stopAfterDrawing: true});
+                    this.changeDrawingStatus('start', method, "queryform", [], {geodesic: selectedMethod && selectedMethod.geodesic, stopAfterDrawing: true});
                 }
             }
         } else {

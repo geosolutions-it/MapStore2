@@ -26,7 +26,7 @@ class GeometryDetails extends React.Component {
         onChangeDrawingStatus: PropTypes.func,
         onEndDrawing: PropTypes.func,
         zoom: PropTypes.number,
-        enableGeodesicCircle: PropTypes.bool
+        enableGeodesic: PropTypes.bool
     };
 
     static defaultProps = {
@@ -100,7 +100,7 @@ class GeometryDetails extends React.Component {
             projection: this.props.geometry.projection
         };
 
-        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry], {geodesicCircle: this.props.enableGeodesicCircle});
+        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry], {geodesic: this.props.enableGeodesic});
     };
 
     onModifyGeometry = () => {

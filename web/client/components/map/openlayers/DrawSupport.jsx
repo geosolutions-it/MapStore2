@@ -26,6 +26,7 @@ const wgs84Sphere = new ol.Sphere(6378137);
  * @prop {string} drawStatus the status that allows to do different things. see componentWillReceiveProps method
  * @prop {string} drawMethod the method used to draw different geometries. can be Circle,BBOX, or a geomType from Point to MultiPolygons
  * @prop {object} options it contains the params used to enable the interactions or simply stop the DrawSupport after a ft is drawn
+ * @prop {boolean} options.geodesic enable to draw a geodesic geometry (supported only for Circle)
  * @prop {object[]} features an array of geojson features used as a starting point for drawing new shapes or edit them
  * @prop {func} onChangeDrawingStatus method use to change the status of the DrawSupport
  * @prop {func} onGeometryChanged when a features is edited or drawn this methos is fired
@@ -323,7 +324,7 @@ class DrawSupport extends React.Component {
             }
             case "Circle": {
                 roiProps.maxPoints = 100;
-                if (newProps.options && newProps.options.geodesicCircle) {
+                if (newProps.options && newProps.options.geodesic) {
                     roiProps.geometryFunction = (coordinates, geometry) => {
                         let geom = geometry;
                         if (!geom) {
@@ -541,7 +542,7 @@ class DrawSupport extends React.Component {
         }
 
         if (this.props.drawMethod === "Circle") {
-            if (this.props.options.geodesicCircle) {
+            if (this.props.options.geodesic) {
                 const wgs84Coordinates = [[...center], [...coordinates[0][0]]].map((coordinate) => {
                     return this.reprojectCoordinatesToWGS84(coordinate, projection);
                 });
@@ -699,7 +700,7 @@ class DrawSupport extends React.Component {
                 && center
                 && !isNaN(parseFloat(center.x))
                 && !isNaN(parseFloat(center.y)) ?
-                options.geodesicCircle ?
+                options.geodesic ?
                 ol.geom.Polygon.circular(wgs84Sphere, this.reprojectCoordinatesToWGS84([center.x, center.y], projection), radius, 100).clone().transform('EPSG:4326', projection)
                 : ol.geom.Polygon.fromCircle(new ol.geom.Circle([center.x, center.y], radius), 100)
                     : new ol.geom.Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
