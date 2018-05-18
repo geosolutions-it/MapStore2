@@ -15,7 +15,6 @@ const image = new ol.style.Circle({
 });
 
 const Icons = require('../../../utils/openlayers/Icons');
-const {colorToRgbaStr} = require('../../../utils/ColorUtils');
 
 const STYLE_POINT = {
     color: '#ffcc33',
