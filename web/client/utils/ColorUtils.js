@@ -7,6 +7,7 @@
   */
 const tinycolor = require("tinycolor2");
 const {toNumber} = require("lodash");
+
 /**
  * Porting of various MapStore(1) utilities for random/color scale generations
  * @name ColorUtils
@@ -157,6 +158,7 @@ const ColorUtils = {
             return ColorUtils.rgbToHsv(rgb);
         }
     },
+    colorToHexStr: (color = 'red') => tinycolor(color).toHexString(),
     /**
      * Return with position of a character in this.HCHARS string
      * @private
