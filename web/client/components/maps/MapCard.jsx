@@ -38,6 +38,7 @@ class MapCard extends React.Component {
     };
 
     static defaultProps = {
+        showMapDetails: true,
         style: {
             backgroundImage: 'url(' + thumbUrl + ')',
             backgroundSize: "cover",
