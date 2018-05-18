@@ -1457,7 +1457,7 @@
             "cqlRead": "Reglas de lectura del filtro CQL",
             "cqlWrite": "Reglas de escritura de filtro CQL",
             "missingconfig": "El administrador de reglas pierde la configuración. ¡Acceso denegado!",
-            "selectworkspace": "Seleccione un espacio de trabajo para habilitar opciones avanzadas!"
+            "selectworkspace": "Debe seleccionar el espacio de trabajo para habilitar opciones avanzadas."
         },
         "tutorial": {
             "title": "Tutorial",

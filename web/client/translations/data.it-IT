@@ -1457,7 +1457,7 @@
             "cqlRead": "Filtro CQL lettura",
             "cqlWrite": "Filtero CQL scrittura",
             "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!",
-            "selectworkspace": "Seleziona un workspace per abilitare le opzioni avanzate!"
+            "selectworkspace": "È necessario selezionare lo spazio di lavoro per abilitare le opzioni avanzate."
         },
             "tutorial": {
                 "title": "Tutorial",
