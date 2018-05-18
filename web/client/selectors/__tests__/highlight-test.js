@@ -94,8 +94,9 @@ describe('Test highlight selectors', () => {
         const features = filteredspatialObject(initialState);
         expect(features).toExist();
         expect(features).toBe(spatialObject);
-
-        expect(filteredspatialObject({})).toBe('emptyObject');
+    });
+    it('test filteredspatialObject with empty state', () => {
+        expect(filteredspatialObject({})).toBe(undefined);
     });
     it('test filteredGeometry', () => {
         const geometry = initialState.query.filterObj.spatialField.geometry;
