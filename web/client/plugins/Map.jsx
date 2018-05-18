@@ -111,9 +111,28 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  * ```
  *  - name is a unique name for the tool
  *  - impl is a placeholder (“{context.ToolName}”) where ToolName is the name you gave the tool in plugins.js (TestSupportLeaflet in our example)
+ *
  * @memberof plugins
  * @class Map
+ * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
  * @static
+ * @example
+  * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)
+  * {
+  *   "cfg": {
+  *     "additionalLayers": [{
+  *         "type": "wms",
+  *         "url": "http://localhost:8090/geoserver/wms",
+  *         "visibility": true,
+  *         "title": "Elevation",
+  *         "name": "topp:elevation",
+  *         "format": "application/bil16",
+  *         "useForElevation": true,
+  *         "nodata": -9999,
+  *         "hidden": true
+  *      }]
+  *   }
+  * }
  *
  */
 class MapPlugin extends React.Component {
@@ -121,6 +140,7 @@ class MapPlugin extends React.Component {
         mapType: PropTypes.string,
         map: PropTypes.object,
         layers: PropTypes.array,
+        additionalLayers: PropTypes.array,
         zoomControl: PropTypes.bool,
         mapLoadingMessage: PropTypes.string,
         loadingSpinner: PropTypes.bool,
@@ -132,7 +152,8 @@ class MapPlugin extends React.Component {
         toolsOptions: PropTypes.object,
         actions: PropTypes.object,
         features: PropTypes.array,
-        securityToken: PropTypes.string
+        securityToken: PropTypes.string,
+        elevationEnabled: PropTypes.bool
     };
 
     static defaultProps = {
@@ -163,7 +184,9 @@ class MapPlugin extends React.Component {
                 layers: [{type: "osm"}]
             }
         },
-        securityToken: ''
+        securityToken: '',
+        additionalLayers: [],
+        elevationEnabled: false
     };
 
     componentWillMount() {
@@ -184,6 +207,7 @@ class MapPlugin extends React.Component {
                             key={feature.id}
                             crs={projection}
                             type={feature.type}
+                            style={feature.style || null }
                             geometry={feature.geometry}/>);
                     })}
                 </plugins.Layer>);
@@ -206,7 +230,7 @@ class MapPlugin extends React.Component {
 
     renderLayers = () => {
         const projection = this.props.map.projection || 'EPSG:3857';
-        return this.props.layers.map((layer, index) => {
+        return [...this.props.layers, ...this.props.additionalLayers].filter(this.filterLayer).map((layer, index) => {
             return (
                 <plugins.Layer type={layer.type} srs={projection} position={index} key={layer.id || layer.name} options={layer} securityToken={this.props.securityToken}>
                     {this.renderLayerContent(layer, projection)}
@@ -247,12 +271,14 @@ class MapPlugin extends React.Component {
 
     render() {
         if (this.props.map) {
+            const {mapOptions = {}} = this.props.map;
+
             return (
                 <plugins.Map id="map"
                     {...this.props.options}
-                    mapOptions={this.getMapOptions()}
                     projectionDefs={this.props.projectionDefs}
                     {...this.props.map}
+                    mapOptions={assign({}, mapOptions, this.getMapOptions())}
                     zoomControl={this.props.zoomControl}>
                     {this.renderLayers()}
                     {this.renderSupportTools()}
@@ -282,39 +308,47 @@ class MapPlugin extends React.Component {
                 <Message msgId={this.props.mapLoadingMessage}/>
         </div>);
     }
-
+    filterLayer = (layer) => {
+        return !layer.useForElevation || this.props.mapType === 'cesium' || this.props.elevationEnabled;
+    };
     updatePlugins = (props) => {
         plugins = require('./map/index')(props.mapType, props.actions);
     };
 }
 
 const {mapSelector, projectionDefsSelector} = require('../selectors/map');
+const { mapTypeSelector } = require('../selectors/maptype');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
-const {selectedFeatures} = require('../selectors/highlight');
+const {highlighedFeatures} = require('../selectors/highlight');
 const {securityTokenSelector} = require('../selectors/security');
 
 const selector = createSelector(
     [
         projectionDefsSelector,
         mapSelector,
+        mapTypeSelector,
         layerSelectorWithMarkers,
-        selectedFeatures,
+        highlighedFeatures,
         (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data,
-        securityTokenSelector
-    ], (projectionDefs, map, layers, features, loadingError, securityToken) => ({
+        securityTokenSelector,
+        (state) => state.mousePosition && state.mousePosition.enabled
+    ], (projectionDefs, map, mapType, layers, features, loadingError, securityToken, elevationEnabled) => ({
         projectionDefs,
         map,
+        mapType,
         layers,
         features,
         loadingError,
-        securityToken
+        securityToken,
+        elevationEnabled
     })
 );
 module.exports = {
     MapPlugin: connect(selector)(MapPlugin),
     reducers: {
         draw: require('../reducers/draw'),
-        highlight: require('../reducers/highlight')
-     },
+        highlight: require('../reducers/highlight'),
+        maptype: require('../reducers/maptype')
+    },
     epics: assign({}, {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit})
 };

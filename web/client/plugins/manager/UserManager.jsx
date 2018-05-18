@@ -22,6 +22,8 @@ const {trim} = require('lodash');
 class UserManager extends React.Component {
     static propTypes = {
         onNewUser: PropTypes.func,
+        splitTools: PropTypes.bool,
+        isSearchClickable: PropTypes.bool,
         className: PropTypes.string,
         hideOnBlur: PropTypes.bool,
         placeholderMsgId: PropTypes.string,
@@ -37,6 +39,8 @@ class UserManager extends React.Component {
     static defaultProps = {
         className: "user-search",
         hideOnBlur: false,
+        isSearchClickable: true,
+        splitTools: false,
         placeholderMsgId: "users.searchUsers",
         typeAhead: false,
         searchText: "",
@@ -56,6 +60,8 @@ class UserManager extends React.Component {
         return (<div>
                 <SearchBar
                     className={this.props.className}
+                    splitTools={this.props.splitTools}
+                    isSearchClickable={this.props.isSearchClickable}
                     hideOnBlur={this.props.hideOnBlur}
                     placeholderMsgId ={this.props.placeholderMsgId}
                     onSearch={this.props.onSearch}
@@ -90,10 +96,11 @@ module.exports = {
                 onNewUser: editUser.bind(null, {role: "USER", "enabled": true}),
                 onSearchTextChange: usersSearchTextChanged,
                 onSearch: getUsers
-            }, (stateProps, dispatchProps) => {
+            }, (stateProps, dispatchProps, ownProps) => {
                 return {
                     ...stateProps,
                     ...dispatchProps,
+                    ...ownProps,
                     onSearchReset: (text) => {
                         let limit = stateProps.limit;
                         let searchText = text && text !== "" ? "*" + text + "*" : "*";

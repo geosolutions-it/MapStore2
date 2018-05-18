@@ -17,7 +17,7 @@ const {head, isNil} = require('lodash');
 const SecurityUtils = {
 
     /**
-     * Stores the logged user secuirty information.
+     * Stores the logged user security information.
      */
     setStore: function(store) {
         this.store = store;
@@ -65,7 +65,7 @@ const SecurityUtils = {
 
     /**
      * Return the user attributes as an array. If the user is undefined or
-     * doens't have any attributes an empty array is returned.
+     * doesn't have any attributes an empty array is returned.
      */
     getUserAttributes: function(providedUser) {
         const user = providedUser ? providedUser : this.getUser();
@@ -79,7 +79,7 @@ const SecurityUtils = {
     },
 
     /**
-     * Search in the user attributes an attribute that matchs the provided
+     * Search in the user attributes an attribute that matches the provided
      * attribute name. The search will not be case sensitive. Undefined is
      * returned if the attribute could not be found.
      */
@@ -95,7 +95,7 @@ const SecurityUtils = {
     },
 
     /**
-     * Search in the user attributes an attribute that matchs the provided
+     * Search in the user attributes an attribute that matches the provided
      * attribute name. The search will not be case sensitive. Undefined is
      * returned if the attribute could not be found otherwise the attribute
      * value is returned.
@@ -122,8 +122,8 @@ const SecurityUtils = {
 
     /**
      * Returns the authentication method that should be used for the provided URL.
-     * We go through the authentication rules and find the first one that matchs
-     * the provided URL, if no rule matchs the provided URL undefined is returned.
+     * We go through the authentication rules and find the first one that matches
+     * the provided URL, if no rule matches the provided URL undefined is returned.
      */
     getAuthenticationMethod: function(url) {
         const foundRule = head(this.getAuthenticationRules().filter(
@@ -133,8 +133,8 @@ const SecurityUtils = {
 
     /**
      * Returns the authentication rule that should be used for the provided URL.
-     * We go through the authentication rules and find the first one that matchs
-     * the provided URL, if no rule matchs the provided URL undefined is returned.
+     * We go through the authentication rules and find the first one that matches
+     * the provided URL, if no rule matches the provided URL undefined is returned.
      */
     getAuthenticationRule: function(url) {
         return head(this.getAuthenticationRules().filter(
@@ -157,7 +157,7 @@ const SecurityUtils = {
 
     /**
      * This method will add query parameter based authentications to an object
-     * containing query paramaters.
+     * containing query parameters.
      */
     addAuthenticationParameter: function(url, parameters, securityToken) {
         if (!url || !this.isAuthenticationActivated()) {
@@ -172,7 +172,7 @@ const SecurityUtils = {
             const authParam = this.getAuthKeyParameter(url);
             return assign(parameters || {}, {[authParam]: token});
         default:
-                // we cannot handle the required authentication method
+            // we cannot handle the required authentication method
             return parameters;
         }
     },
@@ -180,7 +180,9 @@ const SecurityUtils = {
         const foundRule = head(this.getAuthenticationRules().filter(
             rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))));
         return foundRule && foundRule.authkeyParamName ? foundRule.authkeyParamName : 'authkey';
-    }
+    },
+    cleanAuthParamsFromURL: (url) => ConfigUtils.filterUrlParams(url, [SecurityUtils.getAuthKeyParameter(url)].filter(p => p))
+
 };
 
 module.exports = SecurityUtils;

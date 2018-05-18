@@ -20,6 +20,10 @@ module.exports = {
         path: "/viewer/:mapType/:mapId",
         component: require('./pages/MapViewer')
     }, {
+        name: "mapviewer",
+        path: "/viewer/:mapId",
+        component: require('./pages/MapViewer')
+    }, {
         name: "manager",
         path: "/manager",
         component: require('./pages/Manager')
@@ -31,6 +35,14 @@ module.exports = {
         name: "dashboard",
         path: "/dashboard",
         component: require('./pages/Dashboard')
+    }, {
+        name: "dashboard",
+        path: "/dashboard/:did",
+        component: require('./pages/Dashboard')
+    }, {
+        name: "rulesmanager",
+        path: "/rules-manager",
+        component: require('./pages/RulesManager')
     }],
     initialState: {
         defaultState: {

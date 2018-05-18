@@ -1,20 +1,21 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2015, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
-var React = require('react');
-var {FormControl, FormGroup, Glyphicon, Tooltip} = require('react-bootstrap');
+const PropTypes = require('prop-types');
+const React = require('react');
+const {FormControl, FormGroup, Glyphicon, Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
-var LocaleUtils = require('../../../utils/LocaleUtils');
-var Spinner = require('react-spinkit');
+const LocaleUtils = require('../../../utils/LocaleUtils');
+const Spinner = require('react-spinkit');
+const assign = require('object-assign');
 
 
-var delay = (
+const delay = (
     function() {
         var timer = 0;
         return function(callback, ms) {
@@ -36,6 +37,8 @@ require('./searchbar.css');
  * @prop {function} onCancelSelectedItem triggered when the user deletes the selected item (by hitting backspace) when text is empty
  * @prop {string} placeholder string to use as placeholder when text is empty
  * @prop {string} placeholderMsgId msgId for the placeholder. Used if placeholder is not defined
+ * @prop {string} removeIcon glyphicon used for reset button, default 1-close
+ * @prop {string} searchIcon glyphicon used for search button, default search
  * @prop {number} delay milliseconds after trigger onSearch if typeAhead is true
  * @prop {boolean} hideOnBlur if true, it triggers onPurgeResults on blur
  * @prop {boolean} typeAhead if true, onSearch is triggered when users change the search text, after `delay` milliseconds
@@ -43,6 +46,9 @@ require('./searchbar.css');
  * @prop {searchText} the text to display in the component
  * @prop {object[]} selectedItems the items selected. Must have `text` property to display
  * @prop {boolean} autoFocusOnSelect if true, the component gets focus when items are added, or deleted but some item is still selected. Useful for continue writing after selecting an item (with nested services for instance)
+ * @prop {boolean} splitTools if false, the search and reset can appear both at the same time, otherwise the search appear only with empty text, the reset if a text is entered
+ * @prop {boolean} isSearchClickable if true, the magnifying-glass uses a clickable style otherwise it doesn't. see map-search-bar.less for more info on the style.
+ Also the onClick method will be added only if this flag is true
  * @prop {boolean} loading if true, shows the loading tool
  * @prop {object} error if not null, an error icon will be display
  * @prop {object} style css style to apply to the component
@@ -64,8 +70,12 @@ class SearchBar extends React.Component {
         blurResetDelay: PropTypes.number,
         typeAhead: PropTypes.bool,
         searchText: PropTypes.string,
+        removeIcon: PropTypes.string,
+        searchIcon: PropTypes.string,
         selectedItems: PropTypes.array,
         autoFocusOnSelect: PropTypes.bool,
+        splitTools: PropTypes.bool,
+        isSearchClickable: PropTypes.bool,
         loading: PropTypes.bool,
         error: PropTypes.object,
         style: PropTypes.object,
@@ -84,9 +94,13 @@ class SearchBar extends React.Component {
         onCancelSelectedItem: () => {},
         selectedItems: [],
         placeholderMsgId: "search.placeholder",
+        removeIcon: "1-close",
+        searchIcon: "search",
         delay: 1000,
         blurResetDelay: 300,
         autoFocusOnSelect: true,
+        splitTools: true,
+        isSearchClickable: false,
         hideOnBlur: true,
         typeAhead: true,
         searchText: ""
@@ -138,6 +152,17 @@ class SearchBar extends React.Component {
         }
     };
 
+    getSpinnerStyle = () => {
+        const nonSplittedStyle = {
+            right: "19px",
+            top: "7px"
+        };
+        const splittedStyle = {
+            right: "16px",
+            top: "12px"
+        };
+        return assign({}, {position: "absolute"}, this.props.splitTools ? {...splittedStyle} : {...nonSplittedStyle} );
+    }
     renderAddonBefore = () => {
         return this.props.selectedItems && this.props.selectedItems.map((item, index) =>
             <span key={"selected-item" + index} className="input-group-addon"><div className="selectedItem-text">{item.text}</div></span>
@@ -145,15 +170,18 @@ class SearchBar extends React.Component {
     };
 
     renderAddonAfter = () => {
-        const remove = <Glyphicon className="searchclear" glyph="remove" onClick={this.clearSearch} key="searchbar_remove_glyphicon"/>;
-        var showRemove = this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0;
-        let addonAfter = showRemove ? [remove] : [<Glyphicon glyph="search" key="searchbar_search_glyphicon"/>];
+        const searchProps = assign({}, {
+            key: "searchbar_search_glyphicon",
+            glyph: this.props.searchIcon,
+            className: this.props.isSearchClickable ? "magnifying-glass clickable" : "magnifying-glass"},
+            this.props.isSearchClickable ? { onClick: this.search } : {});
+        const search = <Glyphicon {...searchProps}/>;
+
+        const remove = <Glyphicon className="searchclear" glyph={this.props.removeIcon} onClick={this.clearSearch} key="searchbar_remove_glyphicon"/>;
+        const showRemove = this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0;
+        let addonAfter = showRemove ? (this.props.splitTools ? [remove] : [remove, search]) : [search];
         if (this.props.loading) {
-            addonAfter = [<Spinner style={{
-                position: "absolute",
-                right: "16px",
-                top: "12px"
-            }} spinnerName="pulse" noFadeIn/>, addonAfter];
+            addonAfter = [<Spinner style={this.getSpinnerStyle()} spinnerName="pulse" noFadeIn/>, addonAfter];
         }
         if (this.props.error) {
             let tooltip = <Tooltip id="tooltip">{this.props.error && this.props.error.message || null}</Tooltip>;

@@ -7,13 +7,13 @@
         "htmlTest": "{name} {surname}",
         "about_title": "A propos de cette app...",
         "aboutLbl": "A propos",
-        "about_p0-0": "MapStore 2 est un cadriciel permettant de développer des applications cartographiques web à l'aide des librairies standards cartographiques telles que",
+        "about_p0-0": "MapStore est un cadriciel permettant de développer des applications cartographiques web à l'aide des librairies standards cartographiques telles que",
         "about_p0-1": "et",
-        "about_p1": "MapStore 2 a plusieurs exemples d'applications:",
+        "about_p1": "MapStore a plusieurs exemples d'applications:",
         "about_ul0_li0": "MapViewer est un visualiseur simple de cartes préconfigurées (contenues optionnellement dans une base de données GeoStore)",
         "about_ul0_li1": "MapPublisher a été développé pour créer, sauver et partager de façon simple et intuitive cartes et assemblages créés à partir des contenus de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce. Pour plus d'information: ",
         "about_h20": "License",
-        "about_p3": "MapStore 2 est un logiciel libre de droit à sources ouverts, basé sur OpenLayers 3, Leaflet et ReactJS, et est disponible sous Licence Simplifiée BSD.",
+        "about_p3": "MapStore est un logiciel libre de droit à sources ouverts, basé sur OpenLayers 3, Leaflet et ReactJS, et est disponible sous Licence Simplifiée BSD.",
         "about_p5-0": "Pour plus d'informations, consultez",
         "about_a0": "ceci",
         "about_p5-1": "page.",
@@ -24,6 +24,8 @@
         "warning": "Attention",
         "errorTitleDefault": "Erreur",
         "errorDefault": "Une erreur est survenue",
+        "pageInfoShowMore": "Résultats {count} de {total}",
+        "showMore": "Montre plus...",
         "version": {
             "label": "Version"
         },
@@ -112,6 +114,11 @@
         "mousePositionCoordinates": "Coordonnées",
         "mouseCoordinates": "Coordonnées:",
         "mousePositionCRS": "CRS:",
+        "mousePositionElevation": "Élév.:",
+        "mousePositionNoElevation": "Int.",
+        "elevationLoading": "Chargement...",
+        "elevationLoadingError": "Erreur",
+        "elevationNotAvailable": "Int.",
         "mapScale": "Échelle:",
         "showMousePositionCoordinates": "Montrer/cacher les Coordonnées",
         "menu": "Menu",
@@ -151,7 +158,9 @@
         },
         "home":{
             "open": "Ouvrir",
-            "description": "MapStore 2 est développé pour créer, sauvegarder et partager de façon simple et intuitive cartes et assemblages créés à partir du contenu de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce.<br/>Visitez notre <a href=\"/mapstore/docs/\">page d'accueil</a> pour plus de détails.",
+            "shortDescription": "Modern webmapping avec OL3, Leaflet et React<br/><small>consultez la page <a href=\"/mapstore/docs/\"> documentation </a> </ small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
+            "description": "MapStore est développé pour créer, sauvegarder et partager de façon simple et intuitive cartes et assemblages créés à partir du contenu de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce.<br/>Visitez notre <a href=\"/mapstore/docs/\">page d'accueil</a> pour plus de détails.",
             "Applications": "Applications",
             "Examples": "Exemples",
             "LinkedinGroup": "Groupe Linkedin Mapstore",
@@ -216,10 +225,14 @@
             "mapTypes_combo": "Selectionner le viewer de carte: ",
             "theme_combo": "Sélectionne un thème:",
             "maps_title": "Cartes",
-            "locales_combo": "Langue:"
+            "locales_combo": "Langue:",
+            "featuredMaps": "Cartes en vedette"
         },
         "newMap": "Nouvelle carte",
 		"maps": {
+            "title": "Cartes",
+            "addToFeaturedMaps": "Ajouter aux cartes sélectionnées",
+            "removeFromFeaturedMaps": "Supprimer des cartes en vedette",
             "feedback": {
                 "noDetailsAvailable": "Détails de la carte non disponibles",
                 "successSavedMap": "La carte a été créée correctement",
@@ -243,8 +256,37 @@
                 "errorWhenDeleting": "Une erreur s'est produite lors du processus de suppression",
                 "errorSizeExceeded": "S'il vous plaît, réduisez la taille des détails ou la qualité des images"
             },
-            "search": "rechercher des cartes ..."
-		},
+            "search": "rechercher ..."
+        },
+        "resources": {
+            "deleteConfirmTitle": "Etes-vous sûr",
+            "deleteConfirmMessage": "Etes-vous sûr de vouloir supprimer cette ressource?",
+            "deleteConfirmButtonText": "Supprimer",
+            "deleteCancelButtonText": "Fermer",
+            "resource": {
+                "deleteResource": "Supprimer",
+                "editResource": "Modifier les propriétés",
+                "addToFeatured": "Ajouter à la présentation",
+                "removeFromFeatured": "Supprimer de featured",
+                "showDetails": "Afficher les détails"
+            },
+            "contents": {
+                "title": "Contenu"
+            },
+            "dashboards": {
+                "newDashboard": "Nouveau tableau de bord",
+                "title": "Tableaux de bord ({count})",
+                "titleNoCount": "Tableaux de bord",
+                "create": "Créer un tableau de bord",
+                "noDashboardAvailable": "Aucun tableau de bord disponible",
+                "createANewOne": "Créer un nouveau",
+                "deleteError": "Une erreur s'est produite lors de la suppression de la ressource",
+                "errorLoadingDashboards": "Une erreur s'est produite lors du chargement des tableaux de bord"
+            },
+            "maps": {
+                "title": "Cartes ({count})"
+            }
+        },
         "map": {
             "loading": "Chargement...",
             "loadingerror": "Erreur de chargement",
@@ -301,6 +343,11 @@
                 "sureToClose": "Êtes-vous sûr de fermer sans enregistrer vos modifications?",
                 "fieldsChanged": "Certains champs ont été modifiés"
             }
+        },
+        "floatinglegend": {
+            "showTOC": "Afficher les calques",
+            "showLegend": "Afficher la légende",
+            "hideLegend": "Cacher la légende"
         },
         "toc": {
             "toggleLayerVisibility": "Activer / désactiver la visibilité du calque",
@@ -676,7 +723,8 @@
                     "box": "Rectangle",
                     "buffer": "Zone tampon",
                     "circle": "Cercle",
-                    "poly": "Polygone"
+                    "poly": "Polygone",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "intersecte",
@@ -1073,6 +1121,9 @@
                 }
             },
             "toolbar": {
+                "synchPopoverTitle": "Synchroniser la carte avec un filtre ",
+                "synchPopoverText": "Utilisez cet outil pour synchroniser la carte avec le filtre sélectionné",
+                "notShowAgain": "  Ne plus afficher ce message",
                 "editMode": "Mode édition",
                 "advancedFilter": "Recherche Avancée",
                 "quitEditMode": "Quitter le mode d'édition",
@@ -1089,7 +1140,8 @@
                 "downloadGridData": "Télécharger les données",
                 "hideShowColumns": "Masquer / afficher les colonnes",
                 "zoomAll": "Zoom sur la page",
-                "syncOnMap": "Synchroniser la carte avec un filtre"
+                "syncOnMap": "Synchroniser la carte avec un filtre",
+                "createNewChart": "Créer un graphique pour le calque sélectionné"
             }
         },
         "wfsdownload": {
@@ -1105,6 +1157,14 @@
         },
         "widgets": {
             "types": {
+                 "map": {
+                    "title": "Carte",
+                    "caption": "ajouter une carte"
+                },
+                "legend": {
+                    "title": "Légende",
+                    "caption": "ajouter une légende"
+                },
                 "chart": {
                     "title": "Graphique",
                     "caption": "ajouter un graphique"
@@ -1126,10 +1186,23 @@
             "selectChartType": {
                 "title": "Sélectionnez le type de widget"
             },
+           "selectMap": {
+                "TOC": {
+                    "noLayerTitle": "Pas de couches",
+                    "noLayerDescription": "Il n'y a pas de couches dans la carte. Si vous voulez ajouter une couche à partir du catalogue, cliquez sur le bouton '+' dans la barre d'outils"
+                },
+                "emptyMap": {
+                    "title": "Carte vide",
+                    "description": "Démarrer à partir d'une carte vide"
+                }
+            },
             "title": "Titre",
             "description": "Description",
             "errors": {
+                "notext": "Aucun texte disponible",
                 "nodata": "Aucune donnée disponible pour la couche / filtre sélectionné",
+                "noLegend": "Aucun élément de légende à afficher",
+                "noLegendDescription": "La carte connectée n'a aucune couche à afficher dans la légende",
                 "nodatainviewport": "Aucune donnée dans la fenêtre courante",
                 "timeoutExpired": "Le service a pris trop de temps pour répondre. Peut-être que la requête est trop complexe ou que le serveur est occupé",
                 "genericError": "Il y a une erreur lors de la récupération des données"
@@ -1140,7 +1213,14 @@
                 },
                 "wizard": {
                     "backToTypeSelection": "Retour à la sélection du type",
+                    "backToWidgetTypeSelection": "Retour à la sélection du type de widget",
+                    "backToFeatureGrid": "Retour à la grille des fonctionnalités",
+                    "backToLayerSelection": "Retour à la sélection du calque",
+                    "backToMapSelection": "Retour à la sélection de la carte",
+                    "backToPreview": "Retour à l'aperçu",
                     "backToChartOptions": "retour aux options de graphique",
+                    "selectALayer": "Sélectionner une couche",
+                    "selectAMap": "Sélectionnez une carte",
                     "configureChartOptions": "Configurer les options de graphique",
                     "configureWidgetOptions": "Configurer les options du widget",
                     "backToTableOptions": "Retour à l'option de table",
@@ -1149,12 +1229,25 @@
                     "updateWidget": "Mettre à jour le widget",
                     "addToTheMap": "Ajouter le widget à la carte",
                     "titlePlaceholder": "Entrez le titre...",
-                    "textPlaceholder": "Entrez le texte..."
+                    "textPlaceholder": "Entrez le texte...",
+                    "useThisMap": "Utiliser cette carte",
+                    "configureMapOptions": "Configurer les options de la carte",
+                    "preview": "Aperçu",
+                    "addLayer": "Ajouter une couche à la carte",
+                    "useTheSelectedLayer": "Utiliser le calque sélectionné",
+                    "connectToAMap": "Se connecter à une carte",
+                    "connectToTheMap": "Se connecter à la carte",
+                    "selectMapToConnect": "Sélectionnez la carte à connecter",
+                    "clearConnection": "Effacer la connexion"
                 },
                 "errors": {
-                    "noWidgetsAvailableTitle": "Aucun widget disponible",
-                    "noWidgetsAvailableDescription": "<p> Vous ne pouvez pas créer de widget pour le calque sélectionné. C'est probablement parce que la couche ne convient pas aux widgets ou que le serveur n'expose pas tous les services ou informations nécessaires pour générer un widget. Les causes possibles sont: <ul> <li> Le calque sélectionné est une couche raster </li><li> Le service WFS n'est pas disponible</li><li>gs:aggregate process n'est pas disponible </li> </ul>) <p>",
-                    "checkAtLeastOneAttribute": "Vous devez sélectionner au moins une colonne"
+                    "noAttributesTitle": "Aucun attribut à afficher",
+                    "noAttributesDescription": "La couche sélectionnée n'a aucun attribut à afficher. Veuillez sélectionner un autre type ou couche de widget",
+                    "noWidgetsAvailableTitle": "Impossible de créer le widget pour le calque sélectionné",
+                    "noWidgetsAvailableDescription": "<p> <strong> Veuillez essayer de sélectionner un autre type de couche ou de widget </strong> </p> <p> Le serveur ne fournit pas les services requis pour la couche et le type de widget sélectionné </p> <p> Les causes possibles sont: <ul> <li> Le calque sélectionné est une couche raster </li> <li> Le service WFS n'est pas disponible </li> <li> Le processus WPS <code> gs:aggregate </code> n'est pas disponible </li> </ul> </p> ",
+                    "checkAtLeastOneAttribute": "Vous devez sélectionner au moins une colonne",
+                    "noMapAvailableForLegend": "Aucune carte disponible",
+                    "noMapAvailableForLegendDescription": "Vous avez besoin d'au moins un widget de carte pour créer la légende"
                 },
                 "setupFilter": "Configurer un filtre pour les données du widget"
             },
@@ -1190,8 +1283,8 @@
                     "caption": "jauge"
                 }
             },
-            "chartOptionsTitle": "Données",
-            "widgetOptionsTitle": "Info sur le widget",
+            "chartOptionsTitle": "Configurer les données",
+            "widgetOptionsTitle": "Configurer les informations du widget",
             "groupByAttributes": {
                 "line": "Attributs X",
                 "pie": "Grouper par",
@@ -1241,8 +1334,33 @@
             }
         },
         "dashboard": {
-             "editor": {
-                "addACardToTheDashboard": "Ajouter un widget au tableau de bord"
+            "saveDialog": {
+                "title": "Modifier les propriétés du tableau de bord",
+                "name": "Nom",
+                "description": "Description",
+                "namePlaceholder": "Tapez un nom ...",
+                "descriptionPlaceholder": "Tapez une description ...",
+                "confirmCloseText": "Des modifications sont en attente, êtes-vous sûr de vouloir fermer sans enregistrer?",
+                "close": "Fermer",
+                "cancel": "Annuler",
+                "saveSuccessTitle": "Succès",
+                "saveSuccessMessage": "Tableau de bord enregistré avec succès"
+            },
+            "errors":{
+                "loading": {
+                    "title":  "Erreur lors du chargement du tableau de bord",
+                    "dashboardNotAccessible": "Vous n'êtes pas autorisé à accéder à ce tableau de bord. Veuillez contacter le propriétaire de la ressource",
+                    "pleaseLogin": "Ce tableau de bord n'est pas public. Veuillez essayer de vous connecter",
+                    "dashboardDoesNotExist": "Le tableau de bord auquel vous essayez d'accéder n'existe pas ou a été supprimé",
+                    "unknownError": "Une erreur est survenue lors du chargement du tableau de bord. Veuillez contacter l'administrateur"
+                },
+                "resourceAlreadyExists": "Une ressource avec ce nom existe déjà. try '{data}'"
+            },
+            "editor": {
+                "save": "Sauvegarder le tableau de bord",
+                "addACardToTheDashboard": "Ajouter un widget au tableau de bord",
+                "showConnections": "Afficher les connexions",
+                "hideConnections": "Masquer les connexions"
             },
             "emptyTitle": "Le tableau de bord est vide"
         },
@@ -1285,9 +1403,55 @@
             "layerlabel": "Couche"
         },
         "rulesmanager": {
+            "apply": "Appliquer",
+            "remove": "Supprimer la géométrie",
+            "resetconstraints": "Réinitialise les contraintes",
+            "constraintsmsg": "En changeant la subvention, l'espace de travail ou la couche, les détails seront supprimés. Êtes-vous sûr de vouloir faire ça?",
+            "defstyle": "Style par Défaut",
+            "avstyle": "Styles Disponibles",
+            "clearbtn": "Tout Effacer",
+            "selectbtn": "Tout Sélectionner",
+            "placeholders": {
+                "filter": "Chercher...",
+                "role": "Tapez pour rechercher des rôles",
+                "user": "Tapez pour rechercher des utilisateurs",
+                "ip": "Sélectionnez IP",
+                "service": "Tapez pour rechercher des services",
+                "request": "Tapez pour rechercher des demandes",
+                "workspace": "Tapez pour rechercher des espaces de travail",
+                "layer": "Tapez pour rechercher des calques",
+                "access": "Tapez pour rechercher Access",
+                "ip": "###.###.###.###/##",
+                "priority": "Sélectionnez Priorité"
+            },
+            "menutitle": "Gérer les règles de GeoFence",
+            "tooltip": {
+                "addT": "Ajouter une règle",
+                "editT": "Modifier la règle sélectionnée",
+                "addBeT": "Ajouter une nouvelle règle avant de sélectionner",
+                "addAfT": "Ajouter une nouvelle règle après la sélection",
+                "deleteT": "Supprimer les règles sélectionnées",
+                "cacheT": "Vider le cache",
+                "save": "Enregistrer la règle actuelle",
+                "close": "Quitter de la règle de création"
+            },
+            "navItems": {
+                "main": "Règle générale",
+                "style": "Style",
+                "filter": "Filters",
+                "attribute": "Règle des attributs"
+            },
+            "rule": "Règle",
+            "cachetitle": "Vider le Cache",
+            "cachemsg": "Etes-vous sûr d'effacer le cache de GeoFence?",
+            "deltitle": "Supprimer la règle",
+            "delmsg": "Voulez-vous vraiment supprimer cette règle?",
+            "invalidForm": "Le formulaire est invalide vérifier les valeurs des champs",
+            "ip": "IP",
             "title": "Règles d'accès",
             "role": "Rôle",
             "user": "Utilisateur",
+            "priority": "Priorité",
             "service": "Service",
             "request": "Requête",
             "workspace": "Espace de travail",
@@ -1302,6 +1466,10 @@
             "close": "Fermer",
             "previous": "précédent",
             "next": "prochain",
+            "cacheCleaned": "Cache nettoyé avec succès",
+            "errorTitle": "Geofence",
+            "errorCQL": "La géométrie n'est pas valide!",
+            "errorCleaningCache": "Erreur lors du nettoyage du cache de geofence.",
             "errorLoadingRoles": "Erreur lors du chargement des rôles.",
             "errorLoadingUsers": "Erreur lors du chargement des utilisateurs.",
             "errorLoadingWorkspaces": "Erreur lors du chargement des  workspaces.",
@@ -1310,11 +1478,16 @@
             "errorMovingRules": "Erreur lors du déplacement des règles.",
             "errorDeletingRules": "Erreur de suppression des règles.",
             "errorAddingRule": "Erreur lors de l'ajout de la règle.",
+            "errorDuplicateRule": "Règle dupliquée",
+            "errorLoading": "Erreur de chargement",
             "errorUpdatingRule": "Erreur lors de la mise à jour règle.",
             "deleteModal": "Supprimer la règle",
             "selectedRulesDelete": "Voulez-vous supprimer les règles sélectionnées ?",
             "deleteButton": "Effacer",
-            "cancelButton": "Annuler"
+            "cancelButton": "Annuler",
+            "cqlRead": "Règles de lecture du filtre CQL",
+            "cqlWrite": "Règles d'écriture du filtre CQL",
+            "missingconfig": "Le gestionnaire de règles manque la configuration. Accès refusé!"
         },
         "tutorial": {
             "title": "Tutoriel",

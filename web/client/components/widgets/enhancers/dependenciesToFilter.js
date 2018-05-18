@@ -9,6 +9,9 @@ const {compose, withPropsOnChange} = require('recompose');
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 const FilterUtils = require('../../../utils/FilterUtils');
 const filterBuilder = require('../../../utils/ogc/Filter/FilterBuilder');
+/**
+ * Merges filter object and dependencies map into an ogc filter
+ */
 module.exports = compose(
    withPropsOnChange(
        ({mapSync, geomProp, dependencies = {}} = {}, nextProps = {}, filter) =>

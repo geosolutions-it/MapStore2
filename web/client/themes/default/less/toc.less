@@ -181,6 +181,11 @@
 }
 
 
+#mapstore-layers > .Sortable > .toc-default-group > span > .toc-group-children {
+    margin-left: 8px;
+    margin-right: 8px;
+}
+
 .toc-default-group {
 
     background-color: @ms2-color-background;
@@ -321,14 +326,32 @@
 
         -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
     	-moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
-    	box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
+        box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
+
+        .noUi-target {
+            background-color: @ms2-color-primary;
+            &.noUi-horizontal {
+                margin: 0;
+                .noUi-base {
+                    .noUi-origin {
+                        .noUi-handle {
+                            border-top: 1px solid @ms2-color-background;
+                            width: 10px;
+                            height: 15px;
+                            left: -5px;
+                            top: -8px;
+                        }
+                    }
+                }
+            }
+        }
 
         .toc-default-layer-head {
             height: @square-btn-size;
             width: 100%;
             color: @ms2-color-text;
             background-color: @ms2-color-background;
-            margin-bottom: 10px;
+            margin-bottom: 0;
             padding: floor((@square-btn-size - @icon-size-md) / 2) 0;
 
             .toc-title {
@@ -363,7 +386,7 @@
         }
 
         .collapsible-toc {
-            padding: 10px;
+            padding: 10px 0 0 0;
             .row {
                 margin-bottom: 10px;
 
@@ -481,6 +504,10 @@
             color: @ms2-color-text;
         }
     }
+
+    .noUi-target {
+        display: none;
+    }
 }
 
 .SortableItem.is-placeholder.toc-default-layer,
@@ -495,6 +522,9 @@
     }
 
     .collapsible-toc {
+        display: none;
+    }
+    .noUi-target {
         display: none;
     }
 }
@@ -519,6 +549,10 @@
             color: @ms2-color-text;
         }
     }
+
+    .noUi-target {
+        display: none;
+    }
 }
 
 .SortableItem.is-placeholder.toc-default-group,
@@ -541,4 +575,162 @@
     .toc-group-children {
         display: none;
     }
+
+    .noUi-target {
+        display: none;
+    }
 }
+
+.compact-legend-grid {
+    margin: 15px;
+    background-color: @ms2-color-background;
+    width: ~"calc(100% - 30px)";
+    position: relative;
+    .mapstore-side-card {
+        &:hover {
+            transform: unset;
+            cursor: default;
+            .shadow-soft;
+        }
+        .ms-head {
+            display: flex;
+            .mapstore-side-preview {
+                width: auto;
+                padding: 8px;
+                overflow: visible;
+                > span {
+                    font-size: @icon-size-md;
+                    cursor: pointer;
+                }
+            }
+            .mapstore-side-card-info {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                padding: 8px 16px 8px 8px;
+                .mapstore-side-card-title {
+                    flex: 1;
+                    font-size: @font-size-small;
+                }
+            }
+        }
+
+        .ms-legend-container {
+            > div {
+                padding: 8px 0 8px 24px;
+                span {
+                    font-size: @font-size-small * 0.85;
+                    font-style: italic;
+                }
+            }
+        }
+
+    }
+    .noUi-target {
+        background-color: @ms2-color-primary;
+        &.noUi-horizontal {
+            margin: 0;
+            .noUi-base {
+                .noUi-origin {
+                    .noUi-handle {
+                        border-top: 1px solid @ms2-color-background;
+                        width: 10px;
+                        height: 15px;
+                        left: -5px;
+                        top: -8px;
+                    }
+                }
+            }
+        }
+    }
+}
+.ms-legend-action {
+    .shadow-far;
+    position: absolute;
+    background-color: @ms2-color-background;
+    overflow: hidden;
+    display: flex;
+    left: 4px;
+    top: 4px;
+    flex-direction: column;
+    margin: 0;
+    border: none;
+    .panel-heading {
+        a {
+            &:hover {
+                text-decoration: none;
+            }
+        }
+        border: none;
+        padding: 0;
+        .panel-title {
+            a {
+                text-decoration: none;
+                cursor: default;
+                &:focus {
+                    text-decoration: none;
+                }
+            }
+            .row {
+                display: flex;
+                align-items: center;
+                .ms-legend-header {
+                    padding: 0;
+                    display: flex;
+                    align-items: center;
+                    > .glyphicon {
+                        color: @ms2-color-primary;
+                    }
+                    > div {
+                        flex: 1;
+                        padding: 0 8px;
+                        overflow: hidden;
+                        h5 {
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                        }
+                    }
+
+                    > button {
+                        &:last-child {
+                            margin: 4px;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    .panel-collapse {
+        flex: 1;
+        transition: unset;
+        overflow: auto;
+        border-top: 1px solid @ms2-color-shade-lighter;
+        .panel-body {
+            padding: 0;
+            .msSideGrid {
+                .compact-legend-grid
+            }
+        }
+    }
+
+    .react-resizable {
+        position: relative;
+    }
+
+    .react-resizable-handle {
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        bottom: 0;
+        right: 0;
+        background: url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA2IDYiIHN0eWxlPSJiYWNrZ3JvdW5kLWNvbG9yOiNmZmZmZmYwMCIgeD0iMHB4IiB5PSIwcHgiIHdpZHRoPSI2cHgiIGhlaWdodD0iNnB4Ij48ZyBvcGFjaXR5PSIwLjMwMiI+PHBhdGggZD0iTSA2IDYgTCAwIDYgTCAwIDQuMiBMIDQgNC4yIEwgNC4yIDQuMiBMIDQuMiAwIEwgNiAwIEwgNiA2IEwgNiA2IFoiIGZpbGw9IiMwMDAwMDAiLz48L2c+PC9zdmc+');
+        background-position: bottom right;
+        padding: 0 3px 3px 0;
+        background-repeat: no-repeat;
+        background-origin: content-box;
+        box-sizing: border-box;
+        cursor: se-resize;
+    }
+}
+

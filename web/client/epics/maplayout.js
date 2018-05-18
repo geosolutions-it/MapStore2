@@ -10,7 +10,7 @@ const {updateMapLayout} = require('../actions/maplayout');
 const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY} = require('../actions/controls');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID} = require('../actions/featuregrid');
-const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
+const {PURGE_MAPINFO_RESULTS, ERROR_FEATURE_INFO} = require('../actions/mapInfo');
 const {SHOW_SETTINGS, HIDE_SETTINGS} = require('../actions/layers');
 const {mapInfoRequestsSelector} = require('../selectors/mapinfo');
 
@@ -32,19 +32,30 @@ const {isFeatureGridOpen, getDockSize} = require('../selectors/featuregrid');
  */
 
 const updateMapLayoutEpic = (action$, store) =>
-    action$.ofType(MAP_CONFIG_LOADED, SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID, PURGE_MAPINFO_RESULTS, TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SHOW_SETTINGS, HIDE_SETTINGS)
+    action$.ofType(MAP_CONFIG_LOADED, SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID, PURGE_MAPINFO_RESULTS, TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SHOW_SETTINGS, HIDE_SETTINGS, ERROR_FEATURE_INFO)
         .switchMap(() => {
 
             if (get(store.getState(), "browser.mobile")) {
-                return Rx.Observable.empty();
+                const bottom = mapInfoRequestsSelector(store.getState()).length > 0 ? {bottom: '50%'} : {bottom: undefined};
+                const boundingMapRect = {
+                    ...bottom
+                };
+                return Rx.Observable.of(updateMapLayout({
+                    boundingMapRect
+                }));
             }
 
             const mapLayout = {left: {sm: 300, md: 500, lg: 600}, right: {md: 658}, bottom: {sm: 30}};
 
             if (get(store.getState(), "mode") === 'embedded') {
                 const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
+                const bottom = mapInfoRequestsSelector(store.getState()).length > 0 ? {bottom: '50%'} : {bottom: undefined};
+                const boundingMapRect = {
+                    ...bottom
+                };
                 return Rx.Observable.of(updateMapLayout({
-                    ...height
+                    ...height,
+                    boundingMapRect
                 }));
             }
 
@@ -62,17 +73,25 @@ const updateMapLayoutEpic = (action$, store) =>
                 mapInfoRequestsSelector(store.getState()).length > 0 && {right: mapLayout.right.md} || null
             ].filter(panel => panel)) || {right: 0};
 
-            const footer = isFeatureGridOpen(store.getState()) && {bottom: getDockSize(store.getState()) * 100 + '%'} || {bottom: mapLayout.bottom.sm};
+            const dockSize = getDockSize(store.getState()) * 100;
+            const bottom = isFeatureGridOpen(store.getState()) && {bottom: dockSize + '%', dockSize} || {bottom: mapLayout.bottom.sm};
 
             const transform = isFeatureGridOpen(store.getState()) && {transform: 'translate(0, -' + mapLayout.bottom.sm + 'px)'} || {transform: 'none'};
             const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
 
+            const boundingMapRect = {
+                ...bottom,
+                ...leftPanels,
+                ...rightPanels
+            };
+
             return Rx.Observable.of(updateMapLayout({
                 ...leftPanels,
                 ...rightPanels,
-                ...footer,
+                ...bottom,
                 ...transform,
-                ...height
+                ...height,
+                boundingMapRect
             }));
         });
 

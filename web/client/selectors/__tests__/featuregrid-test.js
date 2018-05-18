@@ -27,6 +27,8 @@ const {
     isSavingSelector,
     isSavedSelector,
     canEditSelector,
+    showAgainSelector,
+    showPopoverSyncSelector,
     hasSupportedGeometry,
     getDockSize
 } = require('../featuregrid');
@@ -380,6 +382,23 @@ describe('Test featuregrid selectors', () => {
         const feature = selectedFeatureSelector(initialState);
         expect(feature).toExist();
         expect(feature.id).toBe(idFt1);
+    });
+    it('test showAgainSelector default ', () => {
+        const val = showAgainSelector(initialState);
+        expect(val).toBe(false);
+    });
+    it('test showPopoverSyncSelector default ', () => {
+        const val = showPopoverSyncSelector(initialState);
+        expect(val).toExist();
+        expect(val).toBe(true);
+    });
+    it('test showAgainSelector ', () => {
+        const val = showAgainSelector({featuregrid: {showAgain: false}});
+        expect(val).toBe(false);
+    });
+    it('test showPopoverSyncSelector ', () => {
+        const val = showPopoverSyncSelector({featuregrid: {showPopoverSync: false}});
+        expect(val).toBe(false);
     });
     it('test selectedFeaturesSelector ', () => {
         const features = selectedFeaturesSelector(initialState);

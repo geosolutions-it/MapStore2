@@ -99,9 +99,7 @@ class GroupsGrid extends React.Component {
                     <Row key="users">
                         {this.renderGroups(this.props.groups || [])}
                     </Row>
-                    <Row key="bottom">
-                        {this.props.bottom}
-                    </Row>
+                    {this.props.bottom}
                 </Grid>
         );
     }

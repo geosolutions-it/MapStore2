@@ -72,4 +72,12 @@ describe('LocaleUtils', () => {
             message: 'errorDefault'
         });
     });
+    it('getLocalizedProp', () => {
+        expect(LocaleUtils.getLocalizedProp()).toBe('');
+        const stringProp = 'title';
+        expect(LocaleUtils.getLocalizedProp(undefined, stringProp)).toBe('title');
+        const localizedObjectProp = {'it-IT': 'titolo', 'default': 'title'};
+        expect(LocaleUtils.getLocalizedProp('it-IT', localizedObjectProp)).toBe('titolo');
+        expect(LocaleUtils.getLocalizedProp('fr-FR', localizedObjectProp)).toBe('title');
+    });
 });

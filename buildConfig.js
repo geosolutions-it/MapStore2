@@ -161,6 +161,14 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
                 target: "https://dev.mapstore2.geo-solutions.it/mapstore",
                 secure: false
             },
+            '/pdf': {
+                target: "https://dev.mapstore2.geo-solutions.it/mapstore",
+                secure: false
+            },
+            '/mapstore/pdf': {
+                target: "https://dev.mapstore2.geo-solutions.it",
+                secure: false
+            },
             '/proxy': {
                 target: "https://dev.mapstore2.geo-solutions.it/mapstore",
                 secure: false

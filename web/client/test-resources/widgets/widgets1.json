@@ -1,0 +1,590 @@
+{
+  "widgets": [
+    {
+      "id": "e448d550-37ef-11e8-a12b-f182297314df",
+      "layer": false,
+      "url": false,
+      "legend": false,
+      "mapSync": false,
+      "widgetType": "map",
+      "map": {
+        "map": {
+          "center": {
+            "x": 13.7109375,
+            "y": 45.40616374516014,
+            "crs": "EPSG:4326"
+          },
+          "maxExtent": [
+            -20037508.34,
+            -20037508.34,
+            20037508.34,
+            20037508.34
+          ],
+          "projection": "EPSG:900913",
+          "zoom": 6,
+          "mapOptions": {}
+        },
+        "layers": [
+          {
+            "id": "Aerial__0",
+            "group": "background",
+            "source": "bing",
+            "name": "Aerial",
+            "title": "Bing Aerial",
+            "type": "bing",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "apiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn"
+          },
+          {
+            "id": "mapnik__1",
+            "group": "background",
+            "source": "osm",
+            "name": "mapnik",
+            "title": "Open Street Map",
+            "type": "osm",
+            "visibility": true,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "osm__2",
+            "group": "background",
+            "source": "mapquest",
+            "name": "osm",
+            "title": "MapQuest OpenStreetMap",
+            "type": "mapquest",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "apiKey": "__API_KEY_MAPQUEST__"
+          },
+          {
+            "id": "ROADMAP__3",
+            "group": "background",
+            "source": "google",
+            "name": "ROADMAP",
+            "opacity": 1,
+            "title": "Google Roadmap",
+            "type": "google",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "TERRAIN__4",
+            "group": "background",
+            "source": "google",
+            "name": "TERRAIN",
+            "opacity": 1,
+            "title": "Google Terrain",
+            "type": "google",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "HYBRID__5",
+            "group": "background",
+            "source": "google",
+            "name": "HYBRID",
+            "opacity": 1,
+            "title": "Google Hybrid",
+            "type": "google",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "geosolutions:regioni__7",
+            "search": {
+              "url": "https://demo.geo-solutions.it:443/geoserver/wfs",
+              "type": "wfs"
+            },
+            "name": "geosolutions:regioni",
+            "description": "Regioni Italiane",
+            "title": "Regioni Italiane",
+            "type": "wms",
+            "url": "https://demo.geo-solutions.it/geoserver/wms",
+            "bbox": {
+              "crs": "EPSG:4326",
+              "bounds": {
+                "minx": "5.8584576618073285",
+                "miny": "33.95924422826462",
+                "maxx": "20.294159056849427",
+                "maxy": "48.394945623306725"
+              }
+            },
+            "visibility": true,
+            "singleTile": false,
+            "allowedSRS": {
+              "CRS:84": true
+            },
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "catalogURL": null,
+            "params": {}
+          },
+          {
+            "id": "unesco:Unesco_point__6",
+            "search": {
+              "url": "https://demo.geo-solutions.it:443/geoserver/wfs?",
+              "type": "wfs"
+            },
+            "name": "unesco:Unesco_point",
+            "title": "Unesco Items",
+            "type": "wms",
+            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+            "bbox": {
+              "crs": "EPSG:4326",
+              "bounds": {
+                "minx": 7.466999156080053,
+                "miny": 36.67491984727179,
+                "maxx": 18.033902263137904,
+                "maxy": 46.656160442453356
+              }
+            },
+            "visibility": true,
+            "singleTile": false,
+            "allowedSRS": {},
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "params": {
+              "layers": "unesco:Unesco_point"
+            }
+          }
+        ],
+        "groups": [
+          {
+            "id": "Default",
+            "expanded": true
+          }
+        ],
+        "center": {
+          "x": 14.062500000000007,
+          "y": 41.31082388091819,
+          "crs": "EPSG:4326"
+        },
+        "bbox": {
+          "bounds": {
+            "minx": -391357.58482010174,
+            "miny": 3727680.995411477,
+            "maxx": 3522218.2633809224,
+            "maxy": 6388912.572188173
+          },
+          "crs": "EPSG:3857",
+          "rotation": 0
+        },
+        "zoom": 3,
+        "size": {
+          "width": 200,
+          "height": 136
+        },
+        "projection": "EPSG:3857",
+        "mapStateSource": "e448d550-37ef-11e8-a12b-f182297314df"
+      },
+      "dataGrid": {
+        "y": 0,
+        "x": 0,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "ec974c50-37ef-11e8-a12b-f182297314df",
+      "layer": {
+        "type": "wms",
+        "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+        "visibility": true,
+        "dimensions": [],
+        "name": "unesco:Unesco_point",
+        "title": "Unesco Items",
+        "description": "",
+        "bbox": {
+          "crs": "EPSG:4326",
+          "bounds": {
+            "minx": 7.466999156080053,
+            "miny": 36.67491984727179,
+            "maxx": 18.033902263137904,
+            "maxy": 46.656160442453356
+          }
+        },
+        "links": [],
+        "params": {
+          "layers": "unesco:Unesco_point"
+        },
+        "allowedSRS": {},
+        "search": {
+          "type": "wfs",
+          "url": "https://demo.geo-solutions.it:443/geoserver/wfs?"
+        }
+      },
+      "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+      "legend": false,
+      "mapSync": true,
+      "widgetType": "counter",
+      "geomProp": "the_geom",
+      "dependenciesMap": {
+        "viewport": "widgets[e448d550-37ef-11e8-a12b-f182297314df].map.viewport"
+      },
+      "options": {
+        "aggregationAttribute": "cod_unesco",
+        "aggregateFunction": "Count"
+      },
+      "dataGrid": {
+        "y": 0,
+        "x": 0,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "132746e0-37f0-11e8-a12b-f182297314df",
+      "layer": false,
+      "url": false,
+      "legend": false,
+      "mapSync": false,
+      "widgetType": "map",
+      "map": {
+        "map": {
+          "center": {
+            "x": 13.7109375,
+            "y": 45.40616374516014,
+            "crs": "EPSG:4326"
+          },
+          "maxExtent": [
+            -20037508.34,
+            -20037508.34,
+            20037508.34,
+            20037508.34
+          ],
+          "projection": "EPSG:900913",
+          "zoom": 6,
+          "mapOptions": {}
+        },
+        "layers": [
+          {
+            "id": "Aerial__0",
+            "group": "background",
+            "source": "bing",
+            "name": "Aerial",
+            "title": "Bing Aerial",
+            "type": "bing",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "apiKey": "AhuXBu7ipR1gNbBfXhtUAyCZ6rkC5PkWpxs2MnMRZ1ZupxQfivjLCch22ozKSCAn"
+          },
+          {
+            "id": "mapnik__1",
+            "group": "background",
+            "source": "osm",
+            "name": "mapnik",
+            "title": "Open Street Map",
+            "type": "osm",
+            "visibility": true,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "osm__2",
+            "group": "background",
+            "source": "mapquest",
+            "name": "osm",
+            "title": "MapQuest OpenStreetMap",
+            "type": "mapquest",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "apiKey": "__API_KEY_MAPQUEST__"
+          },
+          {
+            "id": "ROADMAP__3",
+            "group": "background",
+            "source": "google",
+            "name": "ROADMAP",
+            "opacity": 1,
+            "title": "Google Roadmap",
+            "type": "google",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "TERRAIN__4",
+            "group": "background",
+            "source": "google",
+            "name": "TERRAIN",
+            "opacity": 1,
+            "title": "Google Terrain",
+            "type": "google",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "id": "HYBRID__5",
+            "group": "background",
+            "source": "google",
+            "name": "HYBRID",
+            "opacity": 1,
+            "title": "Google Hybrid",
+            "type": "google",
+            "visibility": false,
+            "singleTile": false,
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false
+          },
+          {
+            "type": "wms",
+            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+            "visibility": true,
+            "dimensions": [],
+            "name": "topp:states",
+            "title": "USA Population",
+            "description": "This is some census data on the states.",
+            "bbox": {
+              "crs": "EPSG:4326",
+              "bounds": {
+                "minx": -124.73142200000001,
+                "miny": 24.955967,
+                "maxx": -66.969849,
+                "maxy": 49.371735
+              }
+            },
+            "links": [],
+            "params": {
+              "layers": "topp:states"
+            },
+            "allowedSRS": {},
+            "search": {
+              "type": "wfs",
+              "url": "https://demo.geo-solutions.it:443/geoserver/wfs?"
+            },
+            "id": "topp:states__kv71kamysw"
+          }
+        ],
+        "groups": [
+          {
+            "id": "Default",
+            "expanded": true
+          }
+        ],
+        "center": {
+          "x": -95.44921875000004,
+          "y": 37.57941251343838,
+          "crs": "EPSG:4326"
+        },
+        "bbox": {
+          "bounds": {
+            "minx": -12582146.351966297,
+            "miny": 3189564.3162838332,
+            "maxx": -8668570.503765272,
+            "maxy": 5850795.89306053
+          },
+          "crs": "EPSG:3857",
+          "rotation": 0
+        },
+        "zoom": 3,
+        "size": {
+          "width": 200,
+          "height": 136
+        },
+        "projection": "EPSG:3857",
+        "mapStateSource": "132746e0-37f0-11e8-a12b-f182297314df"
+      },
+      "dataGrid": {
+        "y": 0,
+        "x": 0,
+        "w": 1,
+        "h": 1
+      }
+    },
+    {
+      "id": "1ac5f5e0-37f0-11e8-a12b-f182297314df",
+      "layer": {
+        "type": "wms",
+        "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+        "visibility": true,
+        "dimensions": [],
+        "name": "topp:states",
+        "title": "USA Population",
+        "description": "This is some census data on the states.",
+        "bbox": {
+          "crs": "EPSG:4326",
+          "bounds": {
+            "minx": -124.73142200000001,
+            "miny": 24.955967,
+            "maxx": -66.969849,
+            "maxy": 49.371735
+          }
+        },
+        "links": [],
+        "params": {
+          "layers": "topp:states"
+        },
+        "allowedSRS": {},
+        "search": {
+          "type": "wfs",
+          "url": "https://demo.geo-solutions.it:443/geoserver/wfs?"
+        }
+      },
+      "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+      "legend": false,
+      "mapSync": true,
+      "widgetType": "counter",
+      "geomProp": "the_geom",
+      "options": {
+        "aggregationAttribute": "STATE_NAME",
+        "aggregateFunction": "Count"
+      },
+      "dataGrid": {
+        "y": 0,
+        "x": 0,
+        "w": 1,
+        "h": 1
+      },
+      "dependenciesMap": {
+        "viewport": "widgets[132746e0-37f0-11e8-a12b-f182297314df].map.viewport"
+      }
+    },
+    {
+      "id": "2c1c48d0-37f0-11e8-a12b-f182297314df",
+      "layer": false,
+      "url": false,
+      "legend": false,
+      "mapSync": false,
+      "widgetType": "text",
+      "title": "test",
+      "text": "<p>test</p>",
+      "dataGrid": {
+        "y": 0,
+        "x": 0,
+        "w": 1,
+        "h": 1
+      }
+    }
+  ],
+  "layouts": {
+    "lg": [
+      {
+        "w": 1,
+        "h": 1,
+        "x": 1,
+        "y": 0,
+        "i": "e448d550-37ef-11e8-a12b-f182297314df",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 1,
+        "x": 0,
+        "y": 0,
+        "i": "ec974c50-37ef-11e8-a12b-f182297314df",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 1,
+        "x": 1,
+        "y": 1,
+        "i": "132746e0-37f0-11e8-a12b-f182297314df",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 1,
+        "x": 0,
+        "y": 1,
+        "i": "1ac5f5e0-37f0-11e8-a12b-f182297314df",
+        "moved": false,
+        "static": false
+      },
+      {
+        "w": 1,
+        "h": 2,
+        "x": 2,
+        "y": 0,
+        "i": "2c1c48d0-37f0-11e8-a12b-f182297314df",
+        "moved": false,
+        "static": false
+      }
+    ]
+  },
+  "layout": [
+    {
+      "w": 1,
+      "h": 1,
+      "x": 1,
+      "y": 0,
+      "i": "e448d550-37ef-11e8-a12b-f182297314df",
+      "moved": false,
+      "static": false
+    },
+    {
+      "w": 1,
+      "h": 1,
+      "x": 0,
+      "y": 0,
+      "i": "ec974c50-37ef-11e8-a12b-f182297314df",
+      "moved": false,
+      "static": false
+    },
+    {
+      "w": 1,
+      "h": 1,
+      "x": 1,
+      "y": 1,
+      "i": "132746e0-37f0-11e8-a12b-f182297314df",
+      "moved": false,
+      "static": false
+    },
+    {
+      "w": 1,
+      "h": 1,
+      "x": 0,
+      "y": 1,
+      "i": "1ac5f5e0-37f0-11e8-a12b-f182297314df",
+      "moved": false,
+      "static": false
+    },
+    {
+      "w": 1,
+      "h": 2,
+      "x": 2,
+      "y": 0,
+      "i": "2c1c48d0-37f0-11e8-a12b-f182297314df",
+      "moved": false,
+      "static": false
+    }
+  ]
+  }

@@ -36,7 +36,7 @@ describe('LangSelector', () => {
 
         const opts = cmpDom.childNodes;
         const langs = {
-            'Italiano': 'it-IT', 'English': 'en-US', 'Français': 'fr-FR', 'Deutsch': 'de-DE', 'Español': 'es-ES', "中文": "zh-ZH", 'Nederlands': 'nl-NL'};
+            'Italiano': 'it-IT', 'English': 'en-US', 'Français': 'fr-FR', 'Deutsch': 'de-DE', 'Español': 'es-ES', "中文": "zh-ZH", 'Nederlands': 'nl-NL', 'Hrvatski': 'hr-HR'};
 
         for (let i = 0; i < opts.length; i++) {
             lbl = opts[i].innerHTML;

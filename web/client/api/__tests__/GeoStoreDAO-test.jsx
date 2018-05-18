@@ -104,4 +104,8 @@ describe('Test correctness of the GeoStore APIs', () => {
         const payload = API.writeSecurityRules(SAMPLE_RULES.SecurityRuleList);
         expect(payload).toBe(SAMPLE_XML_RULES);
     });
+    it('test generate meatadata', () => {
+        const payload = API.generateMetadata("Special & chars", "&<>'\"");
+        expect(payload).toBe('<description><![CDATA[&<>\'"]]></description><metadata></metadata><name><![CDATA[Special & chars]]></name>');
+    });
 });

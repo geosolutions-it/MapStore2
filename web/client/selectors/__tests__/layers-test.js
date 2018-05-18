@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 const {layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
-    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector} = require('../layers');
+    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector, centerToMarkerSelector} = require('../layers');
 
 describe('Test layers selectors', () => {
     it('test layersSelector from config', () => {
@@ -91,6 +91,57 @@ describe('Test layers selectors', () => {
         }});
         expect(props.length).toBe(2);
         expect(props[1].type).toBe("vector");
+    });
+
+    it('test layerSelectorWithMarkers with default style', () => {
+        const props = layerSelectorWithMarkers({config: {layers: [{type: "osm"}]}, search: {
+            markerPosition: {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [0, 0]
+                }
+            }
+        }});
+        expect(props.length).toBe(2);
+        expect(props[1].type).toBe("vector");
+        expect(props[1].style).toEqual({
+            iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        });
+    });
+
+    it('test layerSelectorWithMarkers with custom style', () => {
+        const style = {
+            color: '#ff0000'
+        };
+
+        const defaultIconStyle = {
+            iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
+            iconSize: [25, 41],
+            iconAnchor: [12, 41],
+            popupAnchor: [1, -34],
+            shadowSize: [41, 41]
+        };
+
+        const props = layerSelectorWithMarkers({config: {layers: [{type: "osm"}]}, search: {
+            markerPosition: {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [0, 0]
+                }
+            },
+            style
+        }});
+        expect(props.length).toBe(2);
+        expect(props[1].type).toBe("vector");
+        expect(props[1].style).toEqual({...defaultIconStyle, ...style});
     });
 
     it('test groupsSelector from layers flat one group', () => {
@@ -336,5 +387,23 @@ describe('Test layers selectors', () => {
         expect(props).toEqual({});
     });
 
+    it('test centerToMarkerSelector', () => {
+        let props = centerToMarkerSelector({});
+        expect(props).toEqual(false);
+
+        props = centerToMarkerSelector({
+            mapInfo: {
+                centerToMarker: false
+            }
+        });
+        expect(props).toEqual(false);
+
+        props = centerToMarkerSelector({
+            mapInfo: {
+                centerToMarker: true
+            }
+        });
+        expect(props).toEqual(true);
+    });
 
 });

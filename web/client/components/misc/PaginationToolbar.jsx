@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -8,10 +7,10 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-const {Pagination} = require('react-bootstrap');
+const PropTypes = require('prop-types');
+const {Row, Col, Pagination} = require('react-bootstrap');
 const Message = require("../I18N/Message");
-const Spinner = require('react-spinkit');
-require('./style/pagination-toolbar.css');
+const Loader = require('../misc/Loader');
 
 class PaginationToolbar extends React.Component {
     static propTypes = {
@@ -23,7 +22,8 @@ class PaginationToolbar extends React.Component {
         msgId: PropTypes.string,
         loading: PropTypes.bool,
         onSelect: PropTypes.func,
-        bsSize: PropTypes.string
+        bsSize: PropTypes.string,
+        maxButtons: PropTypes.number
     };
 
     static defaultProps = {
@@ -31,8 +31,8 @@ class PaginationToolbar extends React.Component {
         pageSize: 20,
         msgId: "pageInfo",
         items: [],
-        onSelect: () => {}
-
+        onSelect: () => {},
+        maxButtons: 5
     };
 
     onSelect = (eventKey) => {
@@ -40,7 +40,7 @@ class PaginationToolbar extends React.Component {
     };
 
     renderLoading = () => {
-        return <div>Loading...<Spinner spinnerName="circle" noFadeIn overrideSpinnerClassName="spinner"/></div>;
+        return this.props.loading ? <Loader size={26} style={{margin: '8px auto'}}/> : <div style={{height: 26, width: 26, margin: '8px auto'}}/>;
     };
 
     render() {
@@ -49,17 +49,25 @@ class PaginationToolbar extends React.Component {
         if (this.props.loading && this.props.items.length === 0) {
             return null; // no pagination
         }
-        return (<div className="pagination-toolbar"><Pagination
-          prev next first last ellipsis boundaryLinks
-          bsSize={this.props.bsSize}
-          items={Math.ceil(total / pageSize)}
-          maxButtons={5}
-          activePage={page + 1}
-          onSelect={this.onSelect} />
-      <div style={{"float": "right", fontWeight: "bold", marginRight: "20px", marginTop: "5px"}}>
-            {this.props.loading ? this.renderLoading() : msg}
-        </div>
-    </div>);
+        return (
+            <Row className="pagination-toolbar">
+                <Col xs={12} className="text-center">
+                    {this.renderLoading()}
+                </Col>
+                <Col xs={12} className="text-center">
+                    <Pagination
+                        prev next first last ellipsis boundaryLinks
+                        bsSize={this.props.bsSize}
+                        items={Math.ceil(total / pageSize)}
+                        maxButtons={this.props.maxButtons}
+                        activePage={page + 1}
+                        onSelect={this.onSelect} />
+                </Col>
+                <Col xs={12}>
+                    <h5>{this.props.loading ? <Message msgId="loading"/> : msg}</h5>
+                </Col>
+            </Row>
+        );
     }
 }
 

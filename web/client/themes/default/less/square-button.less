@@ -1,11 +1,20 @@
 .square-button {
+    // !important due to vertical btn-group eg. dashboard
     height: @square-btn-size;
     width: @square-btn-size;
-    padding: floor((@padding-left-square - 1) / 1.230769231 /* font ratio height/width */) (@padding-left-square - 1);
-    outline: 0 !important;
-
+    outline: 0;
     .glyphicon {
+        margin: auto;
         font-size: @icon-size;
+    }
+    .ms-loader {
+        height: @icon-size;
+        width: @icon-size;
+        margin: auto;
+        > div {
+            margin: auto;
+            .mapstore-circle-loader(@icon-size / 10, @icon-size, @ms2-color-text-primary);
+        }
     }
 }
 
@@ -14,23 +23,41 @@
 }
 
 .square-button-md {
-    height: @square-btn-medium-size;
-    width: @square-btn-medium-size;
-    padding: floor((@padding-left-square-md)/1.230769231) (@padding-left-square-md);
-    outline: 0 !important;
+    // !important due to vertical btn-group eg. dashboard
+    &.input-group-addon {
+        display: flex;
+    }
+    &, .btn-group-vertical & {
+        height: @square-btn-medium-size;
+        width: @square-btn-medium-size;
+        padding: 0;
+        outline: 0;
+    }
 
     .glyphicon {
+        margin: auto;
         font-size: @icon-size-md;
+    }
+    .ms-loader {
+        height: @icon-size-md;
+        width: @icon-size-md;
+        margin: auto;
+        > div {
+            margin: auto;
+            .mapstore-circle-loader(@icon-size-md / 10, @icon-size-md, @ms2-color-text-primary);
+        }
     }
 }
 
 .square-button-sm {
-    height: @square-btn-small-size;
-    width: @square-btn-small-size;
-    padding: 0 @padding-left-square-sm - 1;
-    outline: 0 !important;
-
+     &, .btn-group-vertical & {
+        height: @square-btn-small-size;
+        width: @square-btn-small-size ;
+        padding: 0;
+        outline: 0 ;
+     }
     .glyphicon {
+        margin: auto;
         font-size: @icon-size-sm;
     }
 }

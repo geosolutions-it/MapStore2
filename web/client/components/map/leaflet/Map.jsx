@@ -120,7 +120,8 @@ class LeafletMap extends React.Component {
                     },
                     latlng: {
                         lat: event.latlng.lat,
-                        lng: event.latlng.lng
+                        lng: event.latlng.lng,
+                        z: this.elevationLayer && this.elevationLayer.getElevation(event.latlng, event.containerPoint) || undefined
                     },
                     modifiers: {
                         alt: event.originalEvent.altKey,
@@ -153,6 +154,9 @@ class LeafletMap extends React.Component {
                 return;
             }
             event.layer._ms2Added = true;
+            if (event.layer.getElevation) {
+                this.elevationLayer = event.layer;
+            }
 
             // avoid binding if not possible, e.g. for measurement vector layers
             if (!event.layer.layerId) {
@@ -335,6 +339,7 @@ class LeafletMap extends React.Component {
         this.props.onMouseMove({
             x: pos.lng || 0.0,
             y: pos.lat || 0.0,
+            z: this.elevationLayer && this.elevationLayer.getElevation(pos, event.containerPoint) || undefined,
             crs: "EPSG:4326",
             pixel: {
                 x: event.containerPoint.x,

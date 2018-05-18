@@ -7,6 +7,9 @@
  */
 const {Observable} = require('rxjs');
 const axios = require('../libs/ajax');
+const WMS = require('../api/WMS');
+const LayersUtils = require('../utils/LayersUtils');
+const SecurityUtils = require('../utils/SecurityUtils');
 const urlUtil = require('url');
 const {interceptOGCError} = require('../utils/ObservableUtils');
 const toDescribeLayerURL = ({name, search = {}, url} = {}) => {
@@ -28,15 +31,19 @@ const toDescribeLayerURL = ({name, search = {}, url} = {}) => {
 };
 const describeLayer = l => Observable.defer( () => axios.get(toDescribeLayerURL(l))).let(interceptOGCError);
 module.exports = {
+    getLayerCapabilities: l => Observable.defer(() => WMS.getCapabilities(LayersUtils.getCapabilitiesUrl(l)))
+        .let(interceptOGCError)
+        .map(c => WMS.parseLayerCapabilities(c, l)),
     describeLayer,
     addSearch: l =>
         describeLayer(l)
         .map( ({data = {}}) => data && data.layerDescriptions[0])
         .map(({owsURL} = {}) => ({
             ...l,
+            params: {}, // TODO: if needed, clean them up
             search: owsURL ? {
                 type: "wfs",
-                url: owsURL // TODO maybe we should we clean URL from authkey params
+                url: SecurityUtils.cleanAuthParamsFromURL(owsURL)
             } : undefined
         }))
 };

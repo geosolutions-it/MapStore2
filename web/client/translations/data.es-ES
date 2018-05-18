@@ -6,13 +6,13 @@
         "htmlTest": "{name} {surname}",
         "about_title": "A proposito de esta aplicación ...",
         "aboutLbl": "A proposito",
-        "about_p0-0": "MapStore 2 es un marco de trabajo para el desarrollo de aplicaciones cartográficas con la ayuda de librerias cartográficas estandar, tales como:",
+        "about_p0-0": "MapStore es un marco de trabajo para el desarrollo de aplicaciones cartográficas con la ayuda de librerias cartográficas estandar, tales como:",
         "about_p0-1": "y",
-        "about_p1": "MapStore 2  tiene varias aplicaciones de ejemplo:",
+        "about_p1": "MapStore  tiene varias aplicaciones de ejemplo:",
         "about_ul0_li0": "MapViewer es un visualizador simple de mapas preconfugurados (almacenados opcionalmente en una base de datos GeoStore)",
         "about_ul0_li1": "MapPublisher está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que propocionone protocolos estandar tales como OGC WMS, WFS, WMTS o TMS y otros. Para más información: ",
         "about_h20": "Licencia",
-        "about_p3": "MapStore 2 es un software libre y de código abiertas, basado en OpenLayers 3, Leaflet y ReactJS, y está  disponible bajo Licence Simplifiicada BSD.",
+        "about_p3": "MapStore es un software libre y de código abiertas, basado en OpenLayers 3, Leaflet y ReactJS, y está  disponible bajo Licence Simplifiicada BSD.",
         "about_p5-0": "Para más información, consulte",
         "about_a0": "esta",
         "about_p5-1": "página.",
@@ -23,6 +23,8 @@
         "warning": "Atención",
         "errorTitleDefault": "Error",
         "errorDefault": "Ocurrió un error",
+        "pageInfoShowMore": "Resultados {count} de {total}",
+        "showMore": "Mostrar más...",
         "version": {
             "label": "Versión"
         },
@@ -111,6 +113,11 @@
         "mousePositionCoordinates": "Coordinates indicator",
         "mouseCoordinates": "Coordinates:",
         "mousePositionCRS": "CRS:",
+        "mousePositionElevation": "Elev.:",
+        "mousePositionNoElevation": "N/P",
+        "elevationLoading": "Cargando...",
+        "elevationLoadingError": "Error",
+        "elevationNotAvailable": "N/P",
         "mapScale": "Escala:",
         "showMousePositionCoordinates": "Mostrar/esconder las coordenadas",
         "menu": "Menú",
@@ -150,7 +157,9 @@
         },
         "home":{
             "open": "Abrir",
-            "description": "MapStore 2 está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que propocionone protocolos estandar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"/mapstore/docs/\">página principal</a> para más detalles.",
+            "shortDescription": "Modern webmapping con OL3, Leaflet y React<br/><small>visite la página de <a href=\"/mapstore/docs/\">documentación</a></small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
+            "description": "MapStore está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que propocionone protocolos estandar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"/mapstore/docs/\">página principal</a> para más detalles.",
             "Applications": "Aplicaciones",
             "Examples": "Ejemplos",
             "LinkedinGroup": "Grupo Linkedin de Mapstore",
@@ -215,10 +224,14 @@
             "mapTypes_combo": "Seleccione un visor:",
             "theme_combo": "Seleccione un tema:",
             "maps_title": "Mapa",
-            "locales_combo": "Lengua:"
+            "locales_combo": "Lengua:",
+            "featuredMaps": "Mapas Destacados"
         },
         "newMap": "Nuevo mapa",
 		"maps": {
+            "title": "Mapas",
+            "addToFeaturedMaps": "Agregar a los mapas destacados",
+            "removeFromFeaturedMaps": "Eliminar de los mapas destacados",
             "feedback": {
                 "noDetailsAvailable": "Detalles del mapa no disponibles",
                 "successSavedMap": "El mapa ha sido creado correctamente",
@@ -242,8 +255,37 @@
                 "errorWhenDeleting": "Se produjo un error durante el proceso de eliminación",
                 "errorSizeExceeded": "Por favor, reduzca el tamaño de los detalles o la calidad de las imágenes"
             },
-			"search": "buscador de mapas ..."
-		},
+            "search": "buscar..."
+        },
+        "resources": {
+            "deleteConfirmTitle": "¿Estás seguro?",
+            "deleteConfirmMessage": "¿Estás seguro de que quieres eliminar este recurso?",
+            "deleteConfirmButtonText": "Eliminar",
+            "deleteCancelButtonText": "Cerrar",
+            "resource": {
+                    "deleteResource": "Eliminar",
+                    "editResource": "Editar propiedades",
+                    "addToFeatured": "Agregar a destacados",
+                    "removeFromFeatured": "Eliminar de la función",
+                    "showDetails": "Mostrar detalles"
+            },
+            "contents": {
+                    "title": "Contenido"
+            },
+            "dashboards": {
+                    "newDashboard": "Nuevo tablero de instrumentos",
+                    "title": "Tableros ({count})",
+                    "titleNoCount": "Dashboards",
+                    "create": "Crear panel",
+                    "noDashboardAvailable": "No hay tablero disponible",
+                    "createANewOne": "Crea uno nuevo",
+                    "deleteError": "Hubo un error al eliminar el recurso",
+                    "errorLoadingDashboards": "Hubo un error al cargar los paneles"
+            },
+            "maps": {
+                "title": "Mapas ({count})"
+            }
+        },
         "map": {
             "loading": "Cargando...",
             "loadingerror": "Error en la carga",
@@ -300,6 +342,11 @@
                 "sureToClose": "Estás seguro de cerrar sin guardar los cambios?",
                 "fieldsChanged": "Algunos campos han sido cambiados"
             }
+        },
+        "floatinglegend": {
+            "showTOC": "Mostrar capas",
+            "showLegend": "Mostrar leyenda",
+            "hideLegend": "Ocultar leyenda"
         },
         "toc": {
             "toggleLayerVisibility": "Activar / desactivar la visibilidad del mapa",
@@ -675,7 +722,8 @@
                     "box": "Rectángulo",
                     "buffer": "Buffer",
                     "circle": "Círculo",
-                    "poly": "Polígono"
+                    "poly": "Polígono",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "intersecciona",
@@ -1072,6 +1120,9 @@
                 }
             },
             "toolbar": {
+                "synchPopoverTitle": "Sincronizar mapa con filtro ",
+                "synchPopoverText": "Use esta herramienta para sincronizar el mapa con el filtro seleccionado",
+                "notShowAgain": "  No mostrar este mensaje otra vez",
                 "editMode": "Modo de edición",
                 "advancedFilter": "Búsqueda avanzada",
                 "quitEditMode": "Salir del modo de edición",
@@ -1088,7 +1139,8 @@
                 "downloadGridData": "Descargar datos",
                 "hideShowColumns": "Ocultar / mostrar columnas",
                 "zoomAll": "Zoom a la extensión de la página",
-                "syncOnMap": "Sincronizar mapa con filtro"
+                "syncOnMap": "Sincronizar mapa con filtro",
+                "createNewChart": "Crea un gráfico para la capa seleccionada"
             }
         },
         "wfsdownload": {
@@ -1104,9 +1156,17 @@
         },
         "widgets": {
              "types": {
+                "map": {
+                    "title": "Mapa",
+                    "caption": "agregar un mapa"
+                },
+                "legend": {
+                    "title": "Leyenda",
+                    "caption": "add a legend"
+                },
                 "chart": {
                     "title": "Gráfico",
-                    "caption": "agregar un gráfico"
+                    "caption": "agregar una leyenda"
                 },
                 "text": {
                     "title": "Texto",
@@ -1125,10 +1185,23 @@
             "selectChartType": {
                 "title": "Seleccione el tipo de widget"
             },
+            "selectMap": {
+                "TOC": {
+                    "noLayerTitle": "Sin capas",
+                    "noLayerDescription": "No hay capas en el mapa. Si desea agregar una capa desde el catálogo, haga clic en el botón '+' en la barra de herramientas en la parte superior"
+                },
+                "emptyMap": {
+                    "title": "Mapa vacío",
+                    "description": "Comience desde un mapa vacío"
+                 }
+            },
             "title": "Título",
             "description": "Descripción",
             "errors": {
+                "notext": "Sin texto disponible",
                 "nodata": "No hay datos disponibles para la capa / filtro seleccionado",
+                "noLegend": "No hay elementos de leyenda para mostrar",
+                "noLegendDescription": "El mapa conectado no tiene capas para mostrar en la leyenda",
                 "nodatainviewport": "Sin datos en la ventana gráfica actual",
                 "timeoutExpired": "El servicio tomó demasiado tiempo para responder. Tal vez la consulta es demasiado compleja o el servidor está ocupado",
                 "genericError": "Hubo un error durante la recuperación de datos"
@@ -1139,21 +1212,41 @@
                 },
                 "wizard": {
                     "backToTypeSelection": "Volver a la selección de tipo",
+                    "backToWidgetTypeSelection": "Volver a la selección del tipo de widget",
+                    "backToFeatureGrid": "Volver a la grilla de características",
+                    "backToLayerSelection": "Volver a la selección de capas",
+                    "backToMapSelection": "Volver a la selección del mapa",
+                    "backToPreview": "Volver a vista previa",
                     "backToChartOptions": "Volver a las opciones de gráfico",
+                    "selectALayer": "Seleccionar una capa",
+                    "selectAMap": "Seleccionar un mapa",
                     "configureChartOptions": "Configurar opciones de gráfico",
                     "configureWidgetOptions": "Configurar las opciones del widget",
-                     "backToTableOptions": "Volver a las opciones de mesa",
+                    "backToTableOptions": "Volver a las opciones de mesa",
                     "configureTableOptions": "Configurar opciones de tabla",
                     "resetColumnsSizes": "Restablecer todos los cambios en los tamaños de columna",
                     "updateWidget": "Actualiza el widget",
                     "addToTheMap": "Agrega el widget al mapa",
                     "titlePlaceholder": "Ingrese el título...",
-                    "textPlaceholder": "Ingresar texto..."
+                    "textPlaceholder": "Ingresar texto...",
+                    "useThisMap": "Usar este mapa",
+                    "configureMapOptions": "Configurar opciones de mapa",
+                    "preview": "Vista previa",
+                    "addLayer": "Agregar una capa al mapa",
+                    "useTheSelectedLayer": "Usar la capa seleccionada",
+                    "connectToAMap": "Conectar a un mapa",
+                    "connectToTheMap": "Conectarse al mapa",
+                    "selectMapToConnect": "Seleccione el mapa para conectarse",
+                    "clearConnection": "Borrar conexión"
                 },
                 "errors": {
-                    "noWidgetsAvailableTitle": "Sin widgets disponibles",
-                    "noWidgetsAvailableDescription": "<p> No puede crear ningún widgets para la capa seleccionada. Esto es probablemente porque la capa no es adecuada para los widgets disponibles o el servidor no expone todos los servicios o información necesarios para generar el widget. Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> gs: el proceso agregado no está disponible </li> </ul >) <p>",
-                    "checkAtLeastOneAttribute": "Debes seleccionar al menos una columna"
+                    "noAttributesTitle": "No hay atributos para mostrar",
+                    "noAttributesDescription": "La capa seleccionada no tiene atributos para mostrar. Seleccione otro tipo de widget o capa",
+                    "noWidgetsAvailableTitle": "No se puede crear el widget para la capa seleccionada",
+                    "noWidgetsAvailableDescription": "<p> <strong> Intente seleccionar otra capa o tipo de widget </strong> </p> <p> El servidor no proporciona los servicios necesarios para la capa y el tipo de widget seleccionado </p> <p> Las posibles causas son: <ul> <li> La capa seleccionada es una capa ráster </li> <li> El servicio WFS no está disponible </li> <li> El proceso WPS <code>gs:aggregate</code> no está disponible </li> </ul> </p> ",
+                    "checkAtLeastOneAttribute": "Debes seleccionar al menos una columna",
+                    "noMapAvailableForLegend": "No hay mapa disponible",
+                    "noMapAvailableForLegendDescription": "Necesita al menos un widget de mapa para crear la leyenda"
                 },
                 "setupFilter": "Configurar un filtro para los datos del widget"
             },
@@ -1189,8 +1282,8 @@
                     "caption": "indicatores"
                 }
             },
-            "chartOptionsTitle": "Datos",
-            "widgetOptionsTitle": "Información de widget",
+            "chartOptionsTitle": "Configurar Datos",
+            "widgetOptionsTitle": "Configurar Información de widget",
             "groupByAttributes": {
                 "line": "Atributo X",
                 "pie": "Agrupar por",
@@ -1241,8 +1334,33 @@
 
         },
         "dashboard": {
+            "saveDialog": {
+                "title": "Editar propiedades del tablero",
+                "name": "Nombre",
+                "description": "Descripción",
+                "namePlaceholder": "Escriba un nombre ...",
+                "descriptionPlaceholder": "Escriba una descripción ...",
+                "confirmCloseText": "Hay cambios pendientes, ¿está seguro de que quiere cerrar sin guardar?",
+                "close": "Cerca",
+                "cancel": "Cancelar",
+                "saveSuccessTitle": "éxito",
+                "saveSuccessMessage": "Panel de control guardado con éxito"
+            },
+            "errors":{
+                "loading": {
+                    "title": "Error al cargar el tablero",
+                    "dashboardNotAccessible": "No tiene permiso para acceder a este panel. Póngase en contacto con el propietario del recurso",
+                    "pleaseLogin": "Este panel no es público. Intente iniciar sesión",
+                    "dashboardDoesNotExist": "El panel al que está intentando acceder no existe o se ha eliminado",
+                    "unknownError": "Hubo un error al cargar el panel. Póngase en contacto con el administrador"
+                },
+                "resourceAlreadyExists":  "Ya existe un recurso con este nombre. try '{data}'"
+            },
             "editor": {
-                "addACardToTheDashboard": "Agregar un widget al tablero"
+                "save": "Guardar el tablero",
+                "addACardToTheDashboard": "Agregar un widget al tablero",
+                "showConnections": "Mostrar conexiones",
+                "hideConnections": "Ocultar conexiones"
             },
             "emptyTitle": "El tablero está vacío"
         },
@@ -1285,9 +1403,55 @@
             "layerlabel": "Capa"
         },
         "rulesmanager": {
+            "apply": "Aplicar",
+            "remove": "Eliminar geometría",
+            "resetconstraints": "Restablece las restricciones",
+            "constraintsmsg": "Cambiando concesión, área de trabajo o capa, los detalles serán eliminados. ¿Estás seguro de que quieres hacer eso?",
+            "defstyle": "Estilo por Defecto",
+            "avstyle": "Estilos disponibles",
+            "clearbtn": "Limpiar Todo",
+            "selectbtn": "Seleccionar Todo",
+            "placeholders": {
+                "filter": "Buscar...",
+                "role": "Escriba para buscar Roles",
+                "user": "Escriba para buscar usuarios",
+                "ip": "Seleccionar IP",
+                "service": "Escriba para buscar Servicios",
+                "request": "Escriba para buscar Solicitudes",
+                "workspace": "Escriba para buscar espacios de trabajo",
+                "layer": "Escriba para buscar Capas",
+                "access": "Escriba para buscar Acceso",
+                "ip": "###.###.###.###/##",
+                "priority": "Seleccionar prioridad"
+            },
+            "menutitle": "Administrar reglas de GeoFence",
+            "tooltip": {
+                "addT": "Agregar una regla",
+                "editT": "Editar la regla seleccionada",
+                "addBeT": "Agregar nueva regla antes de seleccionar",
+                "addAfT": "Agregar nueva regla después de seleccionar",
+                "deleteT": "Eliminar las reglas seleccionadas",
+                "cacheT": "Limpiar cache",
+                "save": "Salir de crear regla",
+                "close": "Exit from create rule"
+            },
+            "navItems": {
+                "main": "Regla general",
+                "style": "Estilo",
+                "filter": "Filtros",
+                "attribute": "Regla de atributos"
+            },
+            "rule": "Regla",
+            "cachetitle": "Limpiar Cache",
+            "cachemsg": "¿Estás seguro de limpiar el caché GeoFence?",
+            "deltitle": "Eliminar Regla",
+            "delmsg": "¿De verdad quieres eliminar esta regla?",
+            "invalidForm": "El formulario no es válido para verificar los valores de los campos",
+            "ip": "IP",
             "title": "Reglas de acceso",
             "role": "Rol",
             "user": "Ususario",
+            "priority": "Prioridad",
             "service": "Servicio",
             "request": "Peticion",
             "workspace": "Espacio de trabajo",
@@ -1302,6 +1466,10 @@
             "close": "Cerrar",
             "previous": "previo",
             "next": "próximo",
+            "cacheCleaned": "Caché limpiada con éxito",
+            "errorTitle": "Geofence",
+            "errorCQL": "Geometría no válida!",
+            "errorCleaningCache": "Error al limpiar la memoria caché geofence.",
             "errorLoadingRoles": "Error al cargar los  roles.",
             "errorLoadingUsers": "Error al cargar los usuarios.",
             "errorLoadingWorkspaces": "Error al cargar los espacios de trabajo.",
@@ -1311,10 +1479,15 @@
             "errorDeletingRules": "Error al borrar las reglas.",
             "errorAddingRule": "Error al añadir las reglas.",
             "errorUpdatingRule": "Error al actualizar las reglas.",
+            "errorDuplicateRule": "Regla duplicada.",
+            "errorLoading": "Error de carga",
             "deleteModal": "Borrar la regla",
             "selectedRulesDelete": "¿Está seguro de borrar las reglas seleccionadas?",
             "deleteButton": "Borrar",
-            "cancelButton": "Cancelar"
+            "cancelButton": "Cancelar",
+            "cqlRead": "Reglas de lectura del filtro CQL",
+            "cqlWrite": "Reglas de escritura de filtro CQL",
+            "missingconfig": "El administrador de reglas pierde la configuración. ¡Acceso denegado!"
         },
         "tutorial": {
             "title": "Tutorial",

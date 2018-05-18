@@ -316,4 +316,16 @@ describe('Featuregrid toolbar component', () => {
         zoomAllButton = document.getElementById("fg-zoom-all");
         expect(el.children[2].disabled).toBe(false);
     });
+    it('check chart button', () => {
+        const events = {
+            chart: () => {}
+        };
+        spyOn(events, "chart");
+        ReactDOM.render(<Toolbar events={events} mode="VIEW" showChartButton />, document.getElementById("container"));
+        const el = document.getElementsByClassName("featuregrid-toolbar")[0];
+        expect(el).toExist();
+        let chart = document.getElementById("fg-grid-map-chart");
+        expect(isVisibleButton(chart)).toBe(true);
+
+    });
 });

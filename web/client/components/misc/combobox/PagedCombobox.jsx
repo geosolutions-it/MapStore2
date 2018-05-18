@@ -35,7 +35,7 @@ class PagedCombobox extends React.Component {
         itemComponent: PropTypes.oneOfType([PropTypes.object, PropTypes.func]),
         label: PropTypes.string,
         loading: PropTypes.bool,
-        filter: PropTypes.string,
+        filter: PropTypes.oneOfType([PropTypes.string, PropTypes.bool]),
         messages: PropTypes.object,
         onChange: PropTypes.func,
         onFocus: PropTypes.func,
@@ -48,7 +48,11 @@ class PagedCombobox extends React.Component {
         selectedValue: PropTypes.string,
         textField: PropTypes.string,
         tooltip: PropTypes.object,
-        valueField: PropTypes.string
+        valueField: PropTypes.string,
+        placeholder: PropTypes.string,
+        stopPropagation: PropTypes.bool,
+        clearable: PropTypes.bool,
+        onReset: PropTypes.func
     };
 
     static contextTypes = {
@@ -56,6 +60,7 @@ class PagedCombobox extends React.Component {
     };
 
     static defaultProps = {
+        stopPropagation: false,
         dropUp: false,
         itemComponent: AutocompleteListItem,
         loading: false,
@@ -74,6 +79,7 @@ class PagedCombobox extends React.Component {
         onToggle: () => {},
         onChange: () => {},
         onSelect: () => {},
+        onReset: () => {},
         textField: "label",
         tooltip: {
             customizedTooltip: undefined,
@@ -83,7 +89,8 @@ class PagedCombobox extends React.Component {
             overlayTriggerKey: "",
             placement: "top"
         },
-        valueField: "value"
+        valueField: "value",
+        clearable: false
     };
 
     renderWithTooltip = (field) => {
@@ -106,10 +113,20 @@ class PagedCombobox extends React.Component {
         return (
             <div className="autocomplete-toolbar">
                 { !firstPage &&
-                    <Glyphicon className={this.props.prevPageIcon} glyph={this.props.prevPageIcon} onClick={() => this.props.pagination.loadPrevPage() }/>
+                    <Glyphicon className={this.props.prevPageIcon} glyph={this.props.prevPageIcon} onClick={(e) => {
+                        if (this.props.stopPropagation) {
+                            e.stopPropagation();
+                        }
+                        this.props.pagination.loadPrevPage();
+                    }}/>
                 }
                 { !lastPage &&
-                    <Glyphicon className={this.props.nextPageIcon} glyph={this.props.nextPageIcon} onClick={() => this.props.pagination.loadNextPage()}/>
+                    <Glyphicon className={this.props.nextPageIcon} glyph={this.props.nextPageIcon} onClick={(e) => {
+                        if (this.props.stopPropagation) {
+                            e.stopPropagation();
+                        }
+                        this.props.pagination.loadNextPage();
+                    }}/>
                 }
             </div>
         );
@@ -130,6 +147,7 @@ class PagedCombobox extends React.Component {
         }
         const data = this.props.loading ? [] : options;
         const field = (<Combobox
+            placeholder={this.props.placeholder}
             dropUp={this.props.dropUp}
             busy={this.props.busy}
             data={data}
@@ -141,21 +159,29 @@ class PagedCombobox extends React.Component {
             onChange={(val) => this.props.onChange(val)}
             onFocus={() => this.props.onFocus(this.props.data)}
             onSelect={(v) => this.props.onSelect(v)}
-            onToggle={() => this.props.onToggle()}
+            onToggle={(stato) => this.props.onToggle(stato)}
             textField={this.props.textField}
             valueField={this.props.valueField}
             value={this.props.selectedValue}
-            />);
+            />
+            );
         return this.props.tooltip && this.props.tooltip.enabled ? this.renderWithTooltip(field) : field;
     }
     render() {
-        let label = this.props.label ? (<label>{this.props.label}</label>) : (<span/>); // TODO change "the else case" value with null ?
+        const {selectedValue: v, disabled, onReset, label: l, clearable} = this.props;
+        let label = l ? (<label>{l}</label>) : (<span/>); // TODO change "the else case" value with null ?
         return (
             <div className="autocompleteField">
                 {label}
-                {this.renderField()}
+                {clearable ? (
+                    <div className={`rw-combo-clearable ${disabled && 'disabled' || ''}`}>
+                        {this.renderField()}
+                        <span className={`rw-combo-clear ${!v && 'hidden' || ''}`} onClick={onReset}>x</span>
+                    </div>) : this.renderField()
+                }
             </div>);
     }
 }
+
 
 module.exports = PagedCombobox;

@@ -13,13 +13,24 @@ const Dock = require('react-dock').default;
 
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
+const { compose } = require('recompose');
 
 const {setControlProperty} = require('../actions/controls');
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {widgetBuilderSelector} = require('../selectors/controls');
-const {dependenciesSelector} = require('../selectors/widgets');
-const Builder = connect(createSelector(dependenciesSelector, dependencies => ({dependencies})))(require('./widgetbuilder/WidgetTypeBuilder'));
+const { dependenciesSelector, availableDependenciesSelector} = require('../selectors/widgets');
+const { toggleConnection } = require('../actions/widgets');
+const withMapExitButton = require('./widgetbuilder/enhancers/withMapExitButton');
+const Builder = compose(
+    connect(
+        createSelector(
+            dependenciesSelector,
+            availableDependenciesSelector,
+            (dependencies, availableDependenciesProps) => ({ dependencies, ...availableDependenciesProps }))
+    , { toggleConnection }),
+    withMapExitButton
+)(require('./widgetbuilder/WidgetTypeBuilder'));
 
 class SideBarComponent extends React.Component {
      static propTypes = {
@@ -71,7 +82,7 @@ class SideBarComponent extends React.Component {
             fluid={this.props.fluid}
             dockStyle={{...this.props.layout, background: "white" /* TODO set it to undefined when you can inject a class inside Dock, to use theme */}}
         >
-        <Builder enabled={this.props.enabled} onClose={this.props.onClose}/>
+            <Builder enabled={this.props.enabled} onClose={this.props.onClose} typeFilter={({ type } = {}) => type !== 'map' && type !== 'legend' }/>
         </Dock>);
 
     }

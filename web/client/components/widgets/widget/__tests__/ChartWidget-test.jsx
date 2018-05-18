@@ -25,7 +25,15 @@ describe('ChartWidget component', () => {
         ReactDOM.render(<ChartWidget />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-card');
+        expect(container.querySelector('.glyphicon-pencil')).toExist();
+        expect(container.querySelector('.glyphicon-trash')).toExist();
         expect(el).toExist();
+    });
+    it('view only mode', () => {
+        ReactDOM.render(<ChartWidget canEdit={false} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container.querySelector('.glyphicon-pencil')).toNotExist();
+        expect(container.querySelector('.glyphicon-trash')).toNotExist();
     });
     it('Test ChartWidget onEdit callback', () => {
         const actions = {

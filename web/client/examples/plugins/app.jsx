@@ -21,7 +21,7 @@ const startApp = () => {
     const {loadLocale} = require('../../actions/locale');
     const {loadPrintCapabilities} = require('../../actions/print');
     const {selectTheme} = require('../../actions/theme');
-
+    const {changeMapType} = require('../../actions/maptype');
     const PluginsContainer = connect((state) => ({
         pluginsState: state && state.controls || {}
     }))(require('../../components/plugins/PluginsContainer'));
@@ -188,8 +188,9 @@ const startApp = () => {
         };
     };
 
-    const changeMapType = (callback, e) => {
+    const onChangeMapType = (callback, e) => {
         mapType = e.target.options[e.target.selectedIndex].value;
+        store.dispatch(changeMapType(mapType));
         callback();
     };
 
@@ -237,7 +238,7 @@ const startApp = () => {
                                 <ul>
                                   <FormGroup bsSize="small">
                                     <label>Choose a map library</label>
-                                    <FormControl value={mapType} componentClass="select" onChange={changeMapType.bind(null, renderPage)}>
+                                    <FormControl value={mapType} componentClass="select" onChange={onChangeMapType.bind(null, renderPage)}>
                                         <option value="leaflet" key="leaflet">Leaflet</option>
                                         <option value="openlayers" key="openlayer">OpenLayers</option>
                                         <option value="cesium" key="cesium">CesiumJS</option>

@@ -72,17 +72,7 @@ const workaroundGEOS7233 = ({ totalFeatures, features, ...rest } = {}, { startIn
     };
 
 };
-const getWFSFilterData = (filterObj) => {
-    let data;
-    if (typeof filterObj === 'string') {
-        data = filterObj;
-    } else {
-        data = filterObj.filterType === "OGC"
-            ? FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits)
-            : FilterUtils.toCQLFilter(filterObj);
-    }
-    return data;
-};
+
 
 const getPagination = (filterObj = {}, options = {}) =>
     filterObj.pagination
@@ -100,7 +90,7 @@ const getPagination = (filterObj = {}, options = {}) =>
  * @return {Observable} a stream that emits the GeoJSON or an error.
  */
 const getJSONFeature = (searchUrl, filterObj, options = {}) => {
-    const data = getWFSFilterData(filterObj);
+    const data = FilterUtils.getWFSFilterData(filterObj);
 
     const urlParsedObj = Url.parse(searchUrl, true);
     let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};

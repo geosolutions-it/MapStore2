@@ -7,7 +7,7 @@
  */
 const React = require('react');
 
-class Fork extends React.Component {
+class ForkPlugin extends React.Component {
     render() {
         return (
             <a href="https://github.com/geosolutions-it/MapStore2">
@@ -18,5 +18,5 @@ class Fork extends React.Component {
 }
 
 module.exports = {
-    ForkPlugin: Fork
+    ForkPlugin
 };

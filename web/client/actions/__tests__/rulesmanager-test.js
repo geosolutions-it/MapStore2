@@ -10,11 +10,44 @@ const expect = require('expect');
 const { RULES_SELECTED, RULES_LOADED, UPDATE_ACTIVE_RULE,
         ACTION_ERROR, OPTIONS_LOADED, UPDATE_FILTERS_VALUES,
         rulesSelected, rulesLoaded, updateActiveRule,
-        actionError, optionsLoaded, updateFiltersValues} = require('../rulesmanager');
+        actionError, optionsLoaded, updateFiltersValues,
+        SET_FILTER, setFilter,
+        SAVE_RULE, saveRule, cleanEditing, CLEAN_EDITING,
+        onEditRule, EDIT_RULE, delRules, DELETE_RULES} = require('../rulesmanager');
 
 describe('test rules manager actions', () => {
-
-    it('rules slected', () => {
+    it('save rule', () => {
+        const rule = {};
+        const action = saveRule(rule);
+        expect(action).toExist();
+        expect(action.type).toBe(SAVE_RULE);
+        expect(action.rule).toBe(rule);
+    });
+    it('clean editing', () => {
+        const action = cleanEditing();
+        expect(action).toExist();
+        expect(action.type).toBe(CLEAN_EDITING);
+    });
+    it('on edit rule', () => {
+        const action = onEditRule();
+        expect(action).toExist();
+        expect(action.type).toBe(EDIT_RULE);
+        expect(action.createNew).toBe(false);
+        expect(action.targetPriority).toBe(0);
+    });
+    it('delete rules', () => {
+        const action = delRules();
+        expect(action).toExist();
+        expect(action.type).toBe(DELETE_RULES);
+    });
+    it('set Filter', () => {
+        const action = setFilter("key", "value");
+        expect(action).toExist();
+        expect(action.type).toBe(SET_FILTER);
+        expect(action.key).toBe("key");
+        expect(action.value).toBe("value");
+    });
+    it('rules selected', () => {
         const rules = [
             { id: "rules1" },
             { id: "rules2" }

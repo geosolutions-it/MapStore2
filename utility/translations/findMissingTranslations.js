@@ -101,6 +101,6 @@ files.forEach(file => {
 if (fail) {
     throw Error("i18n files failed");
 }
-log('## mandatory translations checks passed!! ##');
+log('## mandatory translations checks passed!! ##\n');
 
 

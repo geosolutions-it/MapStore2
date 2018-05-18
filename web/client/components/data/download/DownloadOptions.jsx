@@ -33,7 +33,7 @@ module.exports = class extends React.Component {
             defaultSrs: PropTypes.string,
             layer: PropTypes.object,
             formatsLoading: PropTypes.bool,
-            virtualScroll: React.PropTypes.bool
+            virtualScroll: PropTypes.bool
     };
 
     static defaultProps = {

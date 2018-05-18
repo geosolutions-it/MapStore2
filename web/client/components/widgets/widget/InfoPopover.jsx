@@ -7,13 +7,25 @@
  */
 
 const React = require('react');
+const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
 const {
     Popover,
-    OverlayTrigger,
     Glyphicon
 } = require('react-bootstrap');
 
+const Overlay = require('../../misc/Overlay');
+const OverlayTrigger = require('../../misc/OverlayTrigger');
+/**
+ * InfoPopover. A component that renders a icon with a Popover.
+ * @prop {string} title the title of popover
+ * @prop {string} text the text of popover
+ * @prop {string} glyph glyph id for the icon
+ * @prop {number} left left prop of popover
+ * @prop {number} right right prop of popover
+ * @prop {string} placement position of popover
+ * @prop {boolean|String[]} trigger ['hover', 'focus'] by default. false always show the popover. Array with hover, focus and/or click string to specify events that trigger popover to show.
+ */
 class InfoPopover extends React.Component {
 
     static propTypes = {
@@ -24,7 +36,8 @@ class InfoPopover extends React.Component {
         bsStyle: PropTypes.string,
         placement: PropTypes.string,
         left: PropTypes.number,
-        top: PropTypes.number
+        top: PropTypes.number,
+        trigger: PropTypes.oneOf([PropTypes.array, PropTypes.bool])
     };
 
     static defaultProps = {
@@ -35,7 +48,8 @@ class InfoPopover extends React.Component {
         left: 200,
         top: 50,
         glyph: "question-sign",
-        bsStyle: 'info'
+        bsStyle: 'info',
+        trigger: ['hover', 'focus']
     };
 
     renderPopover() {
@@ -50,13 +64,28 @@ class InfoPopover extends React.Component {
             </Popover>
         );
     }
-
+    renderContent() {
+        return (<Glyphicon
+            ref={button => {
+                this.target = button;
+            }}
+            className={`text-${this.props.bsStyle}`}
+            glyph={this.props.glyph} />);
+    }
     render() {
+        const trigger = this.props.trigger === true ? ['hover', 'focus'] : this.props.trigger;
         return (
             <span className="mapstore-info-popover">
-                <OverlayTrigger trigger={['hover', 'focus']} placement={this.props.placement} overlay={this.renderPopover()}>
-                    <Glyphicon className={`text-${this.props.bsStyle}`} glyph="question-sign"/>
-                </OverlayTrigger>
+                {this.props.trigger
+                        ? (<OverlayTrigger trigger={trigger} placement={this.props.placement} overlay={this.renderPopover()}>
+                                {this.renderContent()}
+                            </OverlayTrigger>)
+                    : [
+                        this.renderContent(),
+                        <Overlay placement={this.props.placement} show target={() => ReactDOM.findDOMNode(this.target)}>
+                        {this.renderPopover()}
+                        </Overlay>
+                    ]}
             </span>
         );
     }

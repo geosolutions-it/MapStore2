@@ -112,6 +112,10 @@ const tocSelector = createSelector(
             {
                 options: {expanded: true, showComponent: true},
                 func: (node) => filterText && head(node.nodes.filter(l => filterLayersByTitle(l, filterText, currentLocale) || l.nodes && head(node.nodes.filter(g => g.showComponent))))
+            },
+            {
+                options: { showComponent: false },
+                func: (node) => head(node.nodes.filter(l => l.hidden))
             }
         ]),
         catalogActive,
@@ -307,7 +311,8 @@ class LayerTree extends React.Component {
                 currentLocale={this.props.currentLocale}
                 selectedNodes={this.props.selectedNodes}
                 filterText={this.props.filterText}
-                onUpdateNode={this.props.updateNode}/>);
+                onUpdateNode={this.props.updateNode}
+                />);
     }
 
     renderTOC = () => {
@@ -445,12 +450,12 @@ class LayerTree extends React.Component {
  * @prop {boolean} cfg.activateRemoveLayer: activate remove layer tool, default `true`
  * @prop {boolean} cfg.activateQueryTool: activate query tool options, default `false`
  * @prop {boolean} cfg.activateDownloadTool: activate a button to download layer data through wfs, default `false`
- * @prop {boolean} cfg.activateSortLayer: activate drag and drob to sort layers, default `true`
+ * @prop {boolean} cfg.activateSortLayer: activate drag and drop to sort layers, default `true`
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
  * @prop {object} cfg.layerOptions: options to pass to the layer.
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
- * For instance you can pass some stying props to the legend.
+ * For instance you can pass some styling props to the legend.
  * this example is to make the legend scrollable horizontally
  * ```
  * "layerOptions": {

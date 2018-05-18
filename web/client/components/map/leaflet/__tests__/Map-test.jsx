@@ -99,6 +99,21 @@ describe('LeafletMap', () => {
         expect(document.getElementsByClassName('leaflet-layer').length).toBe(1);
     });
 
+    it('check layers for elevation', () => {
+        var options = {
+            "url": "http://fake",
+            "name": "mylayer",
+            "visibility": true,
+            "useForElevation": true
+        };
+        const map = ReactDOM.render(<LeafletMap center={{ y: 43.9, x: 10.3 }} zoom={11} mapOptions={{ zoomAnimation: false }}>
+            <LeafLetLayer type="wms" options={options} />
+        </LeafletMap>, document.getElementById("container"));
+        expect(map).toExist();
+        expect(map.elevationLayer).toExist();
+        expect(document.getElementsByClassName('leaflet-layer').length).toBe(1);
+    });
+
     it('check if the handler for "moveend" event is called', () => {
         const expectedCalls = 2;
         const testHandlers = {
@@ -173,10 +188,147 @@ describe('LeafletMap', () => {
         expect(spy.calls[0].arguments.length).toBe(1);
         expect(spy.calls[0].arguments[0].pixel).toExist();
         expect(spy.calls[0].arguments[0].latlng).toExist();
+        expect(spy.calls[0].arguments[0].latlng.z).toNotExist();
         expect(spy.calls[0].arguments[0].modifiers).toExist();
         expect(spy.calls[0].arguments[0].modifiers.alt).toBe(false);
         expect(spy.calls[0].arguments[0].modifiers.ctrl).toBe(false);
         expect(spy.calls[0].arguments[0].modifiers.shift).toBe(false);
+    });
+
+    it('check if the handler for "click" event is called with elevation', () => {
+        const testHandlers = {
+            handler: () => { }
+        };
+        var spy = expect.spyOn(testHandlers, 'handler');
+
+        var options = {
+            "url": "http://fake",
+            "name": "mylayer",
+            "visibility": true,
+            "useForElevation": true
+        };
+        const map = ReactDOM.render(
+            <LeafletMap
+                center={{ y: 43.9, x: 10.3 }}
+                zoom={11}
+                onClick={testHandlers.handler}
+                mapOptions={{ zoomAnimation: false }}
+            ><LeafLetLayer type="wms" options={options} /></LeafletMap>
+            , document.getElementById("container"));
+
+        const leafletMap = map.map;
+        leafletMap.fire('singleclick', {
+            containerPoint: {
+                x: 100,
+                y: 100
+            },
+            latlng: {
+                lat: 43,
+                lng: 10
+            },
+            originalEvent: {
+                altKey: false,
+                ctrlKey: false,
+                shiftKey: false
+            }
+        });
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments.length).toBe(1);
+        expect(spy.calls[0].arguments[0].pixel).toExist();
+        expect(spy.calls[0].arguments[0].latlng).toExist();
+        expect(spy.calls[0].arguments[0].latlng.z).toExist();
+        expect(spy.calls[0].arguments[0].modifiers).toExist();
+        expect(spy.calls[0].arguments[0].modifiers.alt).toBe(false);
+        expect(spy.calls[0].arguments[0].modifiers.ctrl).toBe(false);
+        expect(spy.calls[0].arguments[0].modifiers.shift).toBe(false);
+    });
+
+    it('check if the handler for "mousemove" event is called', () => {
+        const testHandlers = {
+            handler: () => { }
+        };
+        var spy = expect.spyOn(testHandlers, 'handler');
+
+        const map = ReactDOM.render(
+            <LeafletMap
+                center={{ y: 43.9, x: 10.3 }}
+                zoom={11}
+                onMouseMove={testHandlers.handler}
+                mapOptions={{ zoomAnimation: false }}
+            />
+            , document.getElementById("container"));
+
+        const leafletMap = map.map;
+        leafletMap.fire('mousemove', {
+            containerPoint: {
+                x: 100,
+                y: 100
+            },
+            latlng: {
+                wrap: () => ({
+                    lat: 43,
+                    lng: 10
+                })
+            },
+            originalEvent: {
+                altKey: false,
+                ctrlKey: false,
+                shiftKey: false
+            }
+        });
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments.length).toBe(1);
+        expect(spy.calls[0].arguments[0].pixel).toExist();
+        expect(spy.calls[0].arguments[0].x).toExist();
+        expect(spy.calls[0].arguments[0].y).toExist();
+        expect(spy.calls[0].arguments[0].z).toNotExist();
+    });
+
+    it('check if the handler for "mousemove" event is called with elevation', () => {
+        const testHandlers = {
+            handler: () => { }
+        };
+        var spy = expect.spyOn(testHandlers, 'handler');
+
+        var options = {
+            "url": "http://fake",
+            "name": "mylayer",
+            "visibility": true,
+            "useForElevation": true
+        };
+        const map = ReactDOM.render(
+            <LeafletMap
+                center={{ y: 43.9, x: 10.3 }}
+                zoom={11}
+                onMouseMove={testHandlers.handler}
+                mapOptions={{ zoomAnimation: false }}
+            ><LeafLetLayer type="wms" options={options} /></LeafletMap>
+            , document.getElementById("container"));
+
+        const leafletMap = map.map;
+        leafletMap.fire('mousemove', {
+            containerPoint: {
+                x: 100,
+                y: 100
+            },
+            latlng: {
+                wrap: () => ({
+                    lat: 43,
+                    lng: 10
+                })
+            },
+            originalEvent: {
+                altKey: false,
+                ctrlKey: false,
+                shiftKey: false
+            }
+        });
+        expect(spy.calls.length).toBe(1);
+        expect(spy.calls[0].arguments.length).toBe(1);
+        expect(spy.calls[0].arguments[0].pixel).toExist();
+        expect(spy.calls[0].arguments[0].x).toExist();
+        expect(spy.calls[0].arguments[0].y).toExist();
+        expect(spy.calls[0].arguments[0].z).toExist();
     });
 
     it('check if the map changes when receive new props', () => {

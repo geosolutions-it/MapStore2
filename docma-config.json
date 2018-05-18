@@ -28,7 +28,7 @@
         "emoji": true
     },
     "app": {
-        "title": "MapStore 2 documentation",
+        "title": "MapStore documentation",
         "base": "/mapstore/docs",
         "entrance": "content:site",
         "routing": { "method": "path", "caseSensitive": true }
@@ -36,7 +36,7 @@
     "template": {
         "path": "./docma-template",
         "options": {
-            "title": "MapStore 2",
+            "title": "MapStore",
             "sidebar": true,
             "collapsed": false,
             "outline": "tree",
@@ -75,17 +75,17 @@
                     "href": "index.html",
                     "items": [
                         {
-                            "label": "MapStore 2 Releases",
+                            "label": "MapStore Releases",
                             "href": "https://github.com/geosolutions-it/MapStore2/releases",
                             "target": "_blank"
                         },
                         {
-                            "label": "MapStore 2 tar.gz",
+                            "label": "MapStore tar.gz",
                             "href": "https://github.com/geosolutions-it/MapStore2/tarball/master",
                             "target": "_blank"
                         },
                         {
-                            "label": "MapStore 2 .zip",
+                            "label": "MapStore .zip",
                             "href": "https://github.com/geosolutions-it/MapStore2/zipball/master",
                             "target": "_blank"
                         }
@@ -120,6 +120,8 @@
             "web/client/components/mapcontrols/annotations/Annotations.jsx",
             "web/client/components/mapcontrols/annotations/AnnotationsEditor.jsx",
             "web/client/components/mapcontrols/annotations/AnnotationsConfig.js",
+            "web/client/components/misc/cardgrids/SideCard.jsx",
+            "web/client/components/misc/cardgrids/SideGrid.jsx",
             "web/client/components/misc/enhancers/emptyState.jsx",
             "web/client/components/misc/enhancers/tooltip.jsx",
             "web/client/components/misc/panels/Accordion.jsx",
@@ -130,6 +132,8 @@
             "web/client/components/misc/toolbar/Toolbar.jsx",
             "web/client/components/misc/EmptyView.jsx",
             "web/client/components/misc/ResizableModal.jsx",
+            "web/client/components/misc/Slider.jsx",
+            "web/client/components/TOC/FloatingLegend.jsx",
             "web/client/components/TOC/TOCItemsSettings.jsx",
             "web/client/components/TOC/fragments/settings/FeatureInfo.jsx",
             "web/client/components/TOC/fragments/settings/FeatureInfoEditor.jsx",
@@ -138,6 +142,7 @@
             "web/client/actions/controls.js",
             "web/client/actions/fullscreen.js",
             "web/client/actions/globeswitcher.js",
+            "web/client/actions/floatinglegend.js",
             "web/client/actions/maplayout.js",
             "web/client/actions/maps.js",
             "web/client/actions/maptype.js",
@@ -146,6 +151,7 @@
 
             "web/client/selectors/index.jsdoc",
             "web/client/selectors/featuregrid.js",
+            "web/client/selectors/floatinglegend.js",
             "web/client/selectors/map.js",
             "web/client/selectors/mapinfo.js",
             "web/client/selectors/maplayout.js",
@@ -156,6 +162,7 @@
             "web/client/reducers/controls.js",
             "web/client/reducers/featuregrid.js",
             "web/client/reducers/globeswitcher.js",
+            "web/client/reducers/floatinglegend.js",
             "web/client/reducers/maps.js",
             "web/client/reducers/maptype.js",
             "web/client/reducers/notifications.js",
@@ -197,11 +204,13 @@
                 "web/client/plugins/GlobeViewSwitcher.jsx",
                 "web/client/plugins/GoFull.jsx",
                 "web/client/plugins/Map.jsx",
+                "web/client/plugins/MapSearch.jsx",
                 "web/client/plugins/Measure.jsx",
                 "web/client/plugins/MeasurePanel.jsx",
                 "web/client/plugins/MeasureResults.jsx",
                 "web/client/plugins/FullScreen.jsx",
                 "web/client/plugins/Identify.jsx",
+                "web/client/plugins/FloatingLegend.jsx",
                 "web/client/plugins/Locate.jsx",
                 "web/client/plugins/Login.jsx",
                 "web/client/plugins/MousePosition.jsx",

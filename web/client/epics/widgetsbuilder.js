@@ -7,10 +7,11 @@
  */
 const Rx = require('rxjs');
 const {
-    NEW, INSERT, EDIT, OPEN_FILTER_EDITOR,
+    NEW, INSERT, EDIT, OPEN_FILTER_EDITOR, NEW_CHART,
     editNewWidget,
     onEditorChange
 } = require('../actions/widgets');
+const {closeFeatureGrid} = require('../actions/featuregrid');
 
 const {
     drawSupportReset
@@ -22,6 +23,7 @@ const {LOCATION_CHANGE} = require('react-router-redux');
 
 const {featureTypeSelected} = require('../actions/wfsquery');
 const {getWidgetLayer, getEditingWidgetFilter} = require('../selectors/widgets');
+const {wfsFilter} = require('../selectors/query');
 const {widgetBuilderAvailable} = require('../selectors/controls');
 const getFTSelectedArgs = (state) => {
     let layer = getWidgetLayer(state);
@@ -30,7 +32,7 @@ const getFTSelectedArgs = (state) => {
     return [url, typeName];
 };
 module.exports = {
-    openWidgetEditor: (action$, {getState = () => {}} = {}) => action$.ofType(NEW, EDIT)
+    openWidgetEditor: (action$, {getState = () => {}} = {}) => action$.ofType(NEW, EDIT, NEW_CHART)
         .filter(() => widgetBuilderAvailable(getState()))
         .switchMap(() => Rx.Observable.of(
             setControlProperty("widgetBuilder", "enabled", true),
@@ -48,6 +50,17 @@ module.exports = {
             // override action's type
             type: undefined
         }, {step: 0}))),
+    initEditorOnNewChart: (action$, {getState = () => {}} = {}) => action$.ofType(NEW_CHART)
+        .filter(() => widgetBuilderAvailable(getState()))
+        .switchMap((w) => Rx.Observable.of(closeFeatureGrid(), editNewWidget({
+            legend: false,
+            mapSync: true,
+            widgetType: "chart",
+            filter: wfsFilter(getState()),
+            ...w,
+            // override action's type
+            type: undefined
+        }, {step: 0}), onEditorChange("returnToFeatureGrid", true))),
     /**
      * Manages interaction with QueryPanel and widgetBuilder
      */

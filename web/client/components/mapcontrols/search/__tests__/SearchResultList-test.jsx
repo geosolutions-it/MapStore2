@@ -135,7 +135,9 @@ describe("test the SearchResultList", () => {
             boundingbox: [1, 2, 3, 4]
         }];
         const spy = expect.spyOn(testHandlers, 'clickHandler');
-        var tb = ReactDOM.render(<SearchResultList results={items} mapConfig={{size: 100, projection: "EPSG:4326"}}
+        const mapConfig = {size: 100, projection: "EPSG:4326"};
+        const resultsStyle = {color: '#ff0000'};
+        var tb = ReactDOM.render(<SearchResultList results={items} mapConfig={mapConfig} resultsStyle={resultsStyle}
             onItemClick={testHandlers.clickHandler}
             afterItemClick={testHandlers.afterItemClick}/>, document.getElementById("container"));
         let elem = TestUtils.scryRenderedComponentsWithType(tb, SearchResult);
@@ -144,6 +146,7 @@ describe("test the SearchResultList", () => {
         let elem1 = TestUtils.findRenderedDOMComponentWithClass(elem[0], "search-result");
         ReactDOM.findDOMNode(elem1).click();
         expect(spy.calls.length).toEqual(1);
+        expect(spy).toHaveBeenCalledWith(items[0], mapConfig, resultsStyle);
     });
 
 

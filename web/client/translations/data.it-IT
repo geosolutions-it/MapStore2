@@ -6,13 +6,13 @@
         "htmlTest": "{name} {surname}",
         "about_title": "Riguardo a questa app...",
         "aboutLbl": "Info",
-        "about_p0-0": "MapStore 2 un framework per realizzare applicazioni di web mapping usando librerie di mapping standard, come",
+        "about_p0-0": "MapStore un framework per realizzare applicazioni di web mapping usando librerie di mapping standard, come",
         "about_p0-1": "e",
-        "about_p1": "MapStore 2 contiene alcune applicazioni di esempio:",
+        "about_p1": "MapStore contiene alcune applicazioni di esempio:",
         "about_ul0_li0": "MapViewer è un semplice visualizzatore di mappe preconfigurate (opzionalmente memorizzare in un database usando GeoStore)",
         "about_ul0_li1": "MapPublisher è stato sviluppato per creare, salvare a condividere in modo semplice ed intuitivo mappe e mashups creati selezionando contenuti da server come OpenStreetMap, Google Maps, MapQuest o da specifici servizi forniti dalla tua organizzazione o da terze parti. Per maggiori informazioni controlla la",
         "about_h20": "Licenza",
-        "about_p3": "MapStore 2 è un software Free ed Open Source, basato su OpenLayers 3, Leaflet e ReactJS, ed è rilasciato sotto licenza Simplified BSD License.",
+        "about_p3": "MapStore è un software Free ed Open Source, basato su OpenLayers 3, Leaflet e ReactJS, ed è rilasciato sotto licenza Simplified BSD License.",
         "about_p5-0": "Per informazioni controlla",
         "about_a0": "questa",
         "about_p5-1": "pagina.",
@@ -23,6 +23,8 @@
         "warning": "Attenzione",
         "errorTitleDefault": "Errore",
         "errorDefault": "Si è verificato un errore",
+        "pageInfoShowMore": "Elementi {count} di {total}",
+        "showMore": "Mostra altri...",
         "version": {
             "label": "Versione"
         },
@@ -111,6 +113,11 @@
         "mousePositionCoordinates": "Indicatore di coordinate",
         "mouseCoordinates": "Coordinate:",
         "mousePositionCRS": "CRS:",
+        "mousePositionElevation": "Elev.:",
+        "mousePositionNoElevation": "Non disp.",
+        "elevationLoading": "Attendi...",
+        "elevationLoadingError": "Errore",
+        "elevationNotAvailable": "Non disp.",
         "mapScale": "Scala:",
         "showMousePositionCoordinates": "Mostra/Nascondi Coordinate",
         "menu": "Menu",
@@ -150,6 +157,8 @@
         },
         "home":{
             "open": "Apri",
+            "shortDescription": "Modern webmapping con OL3, Leaflet e React<br/><small>visita la pagina di <a href=\"/mapstore/docs/\">documentazione</a></small>",
+            "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"/mapstore/docs/\">home page</a> per maggiori dettagli.",
             "Applications": "Applicazioni",
             "Examples": "Esempi",
@@ -215,10 +224,14 @@
             "mapTypes_combo": "Seleziona il visualizzatore di mappa:",
             "theme_combo": "Seleziona Tema:",
             "maps_title": "Mappe",
-            "locales_combo": "Lingua:"
+            "locales_combo": "Lingua:",
+            "featuredMaps": "In Evidenza"
         },
         "newMap": "Nuova Mappa",
 		"maps": {
+            "title": "Mappe",
+            "addToFeaturedMaps": "Metti in evidenza",
+            "removeFromFeaturedMaps": "Rimuovi da 'evidenza'",
             "feedback": {
                 "noDetailsAvailable": "Dettagli della mappa non disponibili",
                 "successSavedMap": "La mappa è stata salvata correttamente",
@@ -242,8 +255,37 @@
                 "errorWhenDeleting": "C'è stato un errore durante la cancellazione",
                 "errorSizeExceeded": "Riduci il contenuto o la qualità delle immagini"
             },
-			"search": "Cerca mappe..."
+			"search": "Cerca..."
 		},
+        "resources": {
+            "deleteConfirmTitle": "Sei sicuro",
+            "deleteConfirmMessage": "Sei sicuro di voler eliminare questa risorsa?",
+            "deleteConfirmButtonText": "Elimina",
+            "deleteCancelButtonText": "Chiudi",
+            "resource": {
+                "deleteResource": "Elimina",
+                "editResource": "Modifica properietà",
+                "addToFeatured": "Metti in evidenza",
+                "removeFromFeatured": "Rimuovi da 'in evidenza'",
+                "showDetails": "mostra dettagli"
+            },
+            "contents": {
+                "title": "Contenuti"
+            },
+            "dashboards": {
+                "newDashboard": "Nuova Dashboard",
+                "title": "Dashboards ({count})",
+                "titleNoCount": "Dashboards",
+                "create": "Crea Dashboard",
+                "noDashboardAvailable": "Nessuna dashboard disponibile",
+                "createANewOne": "Creane una",
+                "deleteError": "C'è stato un errore eliminando la risorsa",
+                "errorLoadingDashboards": "C'è stato un errore caricando le dashboards"
+            },
+            "maps": {
+                "title": "Mappe ({count})"
+            }
+        },
         "map": {
             "loading": "In caricamento...",
             "loadingerror": "Errore di caricamento",
@@ -300,6 +342,11 @@
                 "sureToClose": "Sicuro di chiudere senza salvare?",
                 "fieldsChanged": "Alcuni dati sono cambiati"
             }
+        },
+        "floatinglegend": {
+            "showTOC": "Mostra layers",
+            "showLegend": "Mostra legenda",
+            "hideLegend": "Nascondi legenda"
         },
         "toc": {
             "toggleLayerVisibility": "Attiva o disattiva la visibilità del livello",
@@ -675,7 +722,8 @@
                     "box": "Rettangolo",
                     "buffer": "Buffer",
                     "circle": "Cerchio",
-                    "poly": "Poligono"
+                    "poly": "Poligono",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "Intersezione",
@@ -1072,6 +1120,9 @@
                 }
             },
             "toolbar": {
+                "synchPopoverTitle": "Sincronizza la mappa con il filtro ",
+                "synchPopoverText": "Usa questa icona per sincronizzare la mappa con il filtro selezionato",
+                "notShowAgain": "  Non mostrare più",
                 "editMode": "Entra in modalità editing",
                 "advancedFilter": "Ricerca avanzata",
                 "quitEditMode": "Esci dalla modalità editing",
@@ -1088,7 +1139,8 @@
                 "downloadGridData": "Esporta i dati della griglia",
                 "hideShowColumns": "Nascondi/mostra colonne",
                 "zoomAll": "Zoom all'estensione della pagina",
-                "syncOnMap": "Sincronizza la mappa con i filtri"
+                "syncOnMap": "Sincronizza la mappa con i filtri",
+                "createNewChart": "crea un grafico per il livello selezionato"
             }
         },
         "wfsdownload": {
@@ -1104,6 +1156,14 @@
         },
         "widgets": {
             "types": {
+                "map": {
+                    "title": "Mappa",
+                    "caption": "aggiungi una mappa"
+                },
+                "legend": {
+                    "title": "Legenda",
+                    "caption": "aggiungi una legenda"
+                },
                 "chart": {
                     "title": "Grafico",
                     "caption": "aggiungi un grafico"
@@ -1125,10 +1185,23 @@
             "selectChartType": {
                 "title": "Seleziona il tipo di widget"
             },
+            "selectMap": {
+                "TOC": {
+                    "noLayerTitle": "Nessun livello",
+                    "noLayerDescription": "Non ci sono livelli nella mappa. Se si desidera aggiungere un layer dal catalogo fare clic sul pulsante '+' nella barra degli strumenti in alto"
+                },
+                "emptyMap": {
+                    "title": "Mappa vuota",
+                    "description": "Inizia da una mappa vuota"
+                }
+            },
             "title": "Titolo",
             "description": "Descrizione",
             "errors": {
+                "notext": "Nessun testo disponibile",
                 "nodata": "Nessun dato disponibile per il livello/filtro selezionati",
+                "noLegend": "Nessuna legenda da mostrare",
+                "noLegendDescription": "La mappa connessa non ha legende da mostrare",
                 "nodatainviewport": "Nessun dato per la vista selezionata",
                 "timeoutExpired": "Il servizio ha impiegato troppo tempo a rispondere. La query potrebbe essere troppo complicata o il server troppo occupato",
                 "genericError": "C'è stato un errore durante la generazione del grafico"
@@ -1139,7 +1212,14 @@
                 },
                 "wizard": {
                     "backToTypeSelection": "Torna alla selezione del tipo",
+                    "backToWidgetTypeSelection": "Torna alla selezione del tipo di widget",
+                    "backToFeatureGrid": "Torna alla tabella degli attributi",
+                    "backToLayerSelection": "Torna alla selezione del livello",
+                    "backToMapSelection": "Torna alla selezione della mappa",
+                    "backToPreview": "Torna all'anteprima",
                     "backToChartOptions": "Torna alle opzioni del grafico",
+                    "selectALayer": "Seleziona un livello",
+                    "selectAMap": "Seleziona una mappa",
                     "configureChartOptions": "Configura le opzioni del grafico",
                     "configureWidgetOptions": "Configura le opzioni del widget",
                      "backToTableOptions": "Torna alle opzioni della tabella",
@@ -1148,12 +1228,25 @@
                     "updateWidget": "Aggiorna il widget",
                     "addToTheMap": "Aggiungi il widget alla mappa",
                     "titlePlaceholder": "Inserisci il titolo...",
-                    "textPlaceholder": "Inserisci il testo..."
+                    "textPlaceholder": "Inserisci il testo...",
+                    "useThisMap": "Usa questa mappa",
+                    "configureMapOptions": "Configura opzioni mappa",
+                    "preview": "Anteprima",
+                    "addLayer": "Aggiungi un livello alla mappa",
+                    "useTheSelectedLayer": "Usa il livello selezionato",
+                    "connectToAMap": "Connetti a una mappa",
+                    "connectToTheMap": "Connetti alla mappa",
+                    "selectMapToConnect": "Seleziona la mappa da connettere",
+                    "clearConnection": "Disconnetti"
                 },
                 "errors": {
-                    "noWidgetsAvailableTitle": "Nessun widgets disponibile",
-                    "noWidgetsAvailableDescription": "<p>Non si possono creare widget per il livello selezionato. Questo perchè il livello non è adatto a nessuno degli widget disponibili o perché il server non espone sufficienti servizi per gernerali. Possibili cause: <ul><li>Hai selezionato un livello raster</li><li>Il servizio WFS non è disponibile per il livello in oggetto</li><li>Il processo gs:aggregate non è disponibile sul server</li></ul> )<p>",
-                    "checkAtLeastOneAttribute": "seleziona almeno un attributo"
+                    "noAttributesTitle": "Nessun attributo disponibile",
+                    "noAttributesDescription": "Il layer selezonato non ha atrributi da mostrare. Selezionare un altro layer o un altro tipo di widget.",
+                    "noWidgetsAvailableTitle": "Impossibile creare il widget per il livello selezionato",
+                    "noWidgetsAvailableDescription": "<p><strong> Prova a selezionare un altro livello o tipo di widget </strong> </p><p>Il server non fornisce i servizi necessari per il livello e il tipo di widget selezionato </p> <p> Le possibili cause sono: <ul> <li> Il livello selezionato è un livello raster </li> <li> Il servizio WFS non è disponibile </li><li> Il processo WPS <code>gs:aggregate</code> non è disponibile </li> </ul></p>",
+                    "checkAtLeastOneAttribute": "seleziona almeno un attributo",
+                    "noMapAvailableForLegend": "Nessuna mappa disponibile",
+                    "noMapAvailableForLegendDescription": "C'è bisogno almeno di una mappa per creare una lagenda"
                 },
                 "setupFilter": "Configura un filtro per il livello selezionato"
             },
@@ -1180,7 +1273,7 @@
                 },
                 "line": {
                     "title": "Grafico a Linea",
-                    "description": "Crea un grafico a linea da aggiungere alla mapp",
+                    "description": "Crea un grafico a linea da aggiungere alla mappa",
                     "caption": "linea"
                 },
                 "gauge": {
@@ -1189,8 +1282,8 @@
                     "caption": "cruscotto"
                 }
             },
-            "chartOptionsTitle": "Dati",
-            "widgetOptionsTitle": "Informazioni",
+            "chartOptionsTitle": "Configura dati",
+            "widgetOptionsTitle": "Configura informazioni widget",
             "groupByAttributes": {
                 "line": "Attributo X",
                 "pie": "Raggruppa per",
@@ -1241,8 +1334,33 @@
 
         },
         "dashboard": {
-             "editor": {
-                "addACardToTheDashboard": "Aggiungi un widget alla dashboard"
+            "saveDialog": {
+                "title": "Modifica proprietà dashboard",
+                "name": "Nome",
+                "description": "Descrizione",
+                "namePlaceholder": "Inserisci un nome..",
+                "descriptionPlaceholder": "Inserisci una descrizione...",
+                "confirmCloseText": "Ci sono modifiche non salvate, sei sicuro di voler chiudere senza salvare?",
+                "close": "Chiudi",
+                "cancel": "Annulla",
+                "saveSuccessTitle": "Successo",
+                "saveSuccessMessage": "Dashboard salvata"
+            },
+            "errors":{
+                "loading": {
+                    "title": "Errore di caricamento della dashboard",
+                    "dashboardNotAccessible": "Non hai i permessi per accedere a questa dashboard. Contatta il properietario",
+                    "pleaseLogin": "Questa risorsa non è pubblica. Effettuare il login",
+                    "dashboardDoesNotExist": "La dashboard richiesta non esiste o è stata cancellata",
+                    "unknownError": "C'è stato un errore durante il caricamento della dashboard. Contattare l'amministratore"
+                },
+                "resourceAlreadyExists": "Una risorsa con questo nome esiste già. Provare con '{data}'"
+            },
+            "editor": {
+                "save": "Salva la dashboard",
+                "addACardToTheDashboard": "Aggiungi un widget alla dashboard",
+                "showConnections": "Mostra connessioni",
+                "hideConnections": "Nascondi connessioni"
             },
             "emptyTitle": "La dashboard è vuota"
         },
@@ -1284,38 +1402,93 @@
             "paneltitle": "Styler",
             "layerlabel": "Layer"
             },
-            "rulesmanager": {
-                "title": "Regole Di Accesso",
-                "role": "Ruolo",
-                "user": "Utente",
-                "service": "Servizio",
-                "request": "Richiesta",
-                "workspace": "Workspace",
-                "layer": "Layer",
-                "filters": "Filtri",
-                "rules": "Regole",
-                "access": "Accesso",
-                "newModal": "Nuova Regola",
-                "editModal": "Modifica Regola",
-                "newButton": "Crea",
-                "editButton": "Salva",
-                "close": "Chiudi",
-                "previous": "precedente",
-                "next": "prossima",
-                "errorLoadingRoles": "Errore durante il caricamento dei ruoli",
-                "errorLoadingUsers": "Errore durante il caricamento  degli utenti.",
-                "errorLoadingWorkspaces": "Errore durante il caricamento dei workspaces.",
-                "errorLoadingLayers": "Errore durante il caricamento dei layers.",
-                "errorLoadingRules": "Errore durante il caricamento delle regole.",
-                "errorMovingRules": "Errore durante il caricamento delle regole.",
-                "errorDeletingRules": "Errore durante la cancellazione della regola.",
-                "errorAddingRule": "Errore durante la creazione della regola.",
-                "errorUpdatingRule": "Errore durante l'aggiornamento della regola.",
-                "deleteModal": "Elimina Regola",
-                "selectedRulesDelete": "Vuoi eliminare le regole selezionate?",
-                "deleteButton": "Elimina",
-                "cancelButton": "Annulla"
+        "rulesmanager": {
+            "apply": "Applica",
+            "remove": "Elimina la geometia",
+            "resetconstraints": "Resetta Vincoli",
+            "constraintsmsg": "Cambinado grant, workspace o layer, i dettagli saranno eliminati. Sei sicuro di volerlo fare?",
+            "defstyle": "Stile Predefinito",
+            "avstyle": "Stili Disponibile",
+            "clearbtn": "Rimuovi Tutti",
+            "selectbtn": "Seleziona Tutti",
+            "placeholders": {
+                "filter": "Ricerca...",
+                "role": "Cerca Gruppo",
+                "user": "Cerca Utenti",
+                "ip": "Seleziona IP",
+                "service": "Cerca Servizi",
+                "request": "Cerca Richieste",
+                "workspace": "Cerca Workspacs",
+                "layer": "Cerca Layers",
+                "access": "Cerca Permesso",
+                "ip": "###.###.###.###/##",
+                "priority": "Seleziona Priorità"
             },
+            "menutitle": "Configura GeoFence Rules",
+            "tooltip": {
+                "addT": "Crea regola",
+                "editT": "Modifica regola selezionata",
+                "addBeT": "Crea regola prima di quella selezionata",
+                "addAfT": "Crea regola dopo quella selezionata",
+                "deleteT": "Rimuovi regole selezionate",
+                "cacheT": "Pulisci la cache",
+                "save": "Salva regola corrente",
+                "close": "Esci da modifica regola"
+            },
+            "navItems": {
+                "main": "Regola Generica",
+                "style": "Stile",
+                "filter": "Filtri",
+                "attribute": "Attributi"
+            },
+            "rule": "Regola",
+            "cachetitle": "Pulisci Cache",
+            "cachemsg": "Sei sicuro di voler rimuovere la cache di Geofance?",
+            "deltitle": "Rimuovi Regola",
+            "delmsg": "Sei sicuro di voler rimuovere la regola?",
+            "invalidForm": "I campi inseriti non sono validi, controlla la form",
+            "ip": "IP",
+            "title": "Regole Di Accesso",
+            "role": "Ruolo",
+            "user": "Utente",
+            "priority": "Priorità",
+            "service": "Servizio",
+            "request": "Richiesta",
+            "workspace": "Workspace",
+            "layer": "Layer",
+            "filters": "Filtri",
+            "rules": "Regole",
+            "access": "Accesso",
+            "newModal": "Nuova Regola",
+            "editModal": "Modifica Regola",
+            "newButton": "Crea",
+            "editButton": "Salva",
+            "close": "Chiudi",
+            "previous": "precedente",
+            "next": "prossima",
+            "cacheCleaned": "Cache eliminata",
+            "errorTitle": "Geofence",
+            "errorCQL": "Geometria non valida!",
+            "errorCleaningCache": "Errore durante la pulizia della cache.",
+            "errorLoadingRoles": "Errore durante il caricamento dei ruoli",
+            "errorLoadingUsers": "Errore durante il caricamento  degli utenti.",
+            "errorLoadingWorkspaces": "Errore durante il caricamento dei workspaces.",
+            "errorLoadingLayers": "Errore durante il caricamento dei layers.",
+            "errorLoadingRules": "Errore durante il caricamento delle regole.",
+            "errorMovingRules": "Errore durante il caricamento delle regole.",
+            "errorDeletingRules": "Errore durante la cancellazione della regola.",
+            "errorAddingRule": "Errore durante la creazione della regola.",
+            "errorUpdatingRule": "Errore durante l'aggiornamento della regola.",
+            "errorDuplicateRule": "Regola duplicata",
+            "errorLoading": "Errore caricamento",
+            "deleteModal": "Elimina Regola",
+            "selectedRulesDelete": "Vuoi eliminare le regole selezionate?",
+            "deleteButton": "Elimina",
+            "cancelButton": "Annulla",
+            "cqlRead": "Filtro CQL lettura",
+            "cqlWrite": "Filtero CQL scrittura",
+            "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!"
+        },
             "tutorial": {
                 "title": "Tutorial",
                 "back": "Indietro",
