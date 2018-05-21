@@ -32,7 +32,7 @@ class CreateNewMap extends React.Component {
 
     static defaultProps = {
         mapType: "leaflet",
-        showNewDashboard: false,
+        showNewDashboard: true,
         isLoggedIn: false,
         allowedRoles: ["ADMIN", "USER"],
         colProps: {
