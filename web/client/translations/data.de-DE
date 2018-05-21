@@ -1459,7 +1459,8 @@
             "cancelButton": "Abbrechen",
             "cqlRead": "CQL Filter Lese Regeln",
             "cqlWrite": "CQL Filter Write Rules",
-            "missingconfig": "Der Regeln-Manager vermisst die Konfiguration. Zugriff abgelehnt!"
+            "missingconfig": "Der Regeln-Manager vermisst die Konfiguration. Zugriff abgelehnt!",
+            "selectworkspace": "Sie müssen den Arbeitsbereich auswählen, um erweiterte Optionen zu aktivieren."
         },
         "tutorial": {
             "title": "Anleitung",

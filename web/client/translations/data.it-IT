@@ -1380,7 +1380,7 @@
             "resetconstraints": "Resetta Vincoli",
             "constraintsmsg": "Cambinado grant, workspace o layer, i dettagli saranno eliminati. Sei sicuro di volerlo fare?",
             "defstyle": "Stile Predefinito",
-            "avstyle": "Stili Disponibile",
+            "avstyle": "Stili Disponibili",
             "clearbtn": "Rimuovi Tutti",
             "selectbtn": "Seleziona Tutti",
             "placeholders": {
@@ -1459,7 +1459,8 @@
             "cancelButton": "Annulla",
             "cqlRead": "Filtro CQL lettura",
             "cqlWrite": "Filtero CQL scrittura",
-            "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!"
+            "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!",
+            "selectworkspace": "È necessario selezionare lo spazio di lavoro per abilitare le opzioni avanzate."
         },
             "tutorial": {
                 "title": "Tutorial",

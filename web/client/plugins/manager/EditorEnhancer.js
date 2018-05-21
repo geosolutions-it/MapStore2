@@ -4,13 +4,15 @@ const Rx = require("rxjs");
 const {isEmpty} = require("lodash");
 
 const {connect} = require("react-redux");
-const {changeDrawingStatus} = require("../..//actions/draw");
+const {changeDrawingStatus} = require("../../actions/draw");
+const {error} = require("../../actions/notifications");
+
 const sameLayer = ({activeRule: f1}, {activeRule: f2}) => f1.layer === f2.layer;
 const emitStop = stream$ => stream$.filter(() => false).startWith({});
 const {getStylesAndAttributes} = require("../../observables/rulesmanager");
 const dataStreamFactory = prop$ => {
     return prop$.distinctUntilChanged((oP, nP) => sameLayer(oP, nP))
-    .filter(({activeRule}) => activeRule.layer)
+    .filter(({activeRule}) => activeRule.layer && activeRule.workspace)
     .switchMap(({activeRule, optionsLoaded, onError = () => {}, setLoading}) => {
         const {workspace, layer} = activeRule;
         setLoading(true);
@@ -25,7 +27,8 @@ const dataStreamFactory = prop$ => {
     }).let(emitStop);
 };
 module.exports = compose(connect(() => ({}), {
-    onChangeDrawingStatus: changeDrawingStatus
+    onChangeDrawingStatus: changeDrawingStatus,
+    onError: error
     }),
     defaultProps({dataStreamFactory}),
     withStateHandlers(({activeRule: initRule}) => ({
@@ -39,7 +42,14 @@ module.exports = compose(connect(() => ({}), {
             // Add some reference logic here
             if (key === "workspace") {
                 const {layer, workspace, constraints, ...newActive} = activeRule;
-                return {activeRule: { ...newActive, workspace: value}};
+                const l = !value ? {layer} : {};
+                return {
+                    activeRule: { ...newActive, workspace: value, ...l},
+                    styles: [],
+                    properties: [],
+                    type: undefined,
+                    layer: undefined
+                };
             }else if (key === "layer") {
                 const {layer, constraints, ...newActive} = activeRule;
                 return {activeRule: { ...newActive, layer: value}};
