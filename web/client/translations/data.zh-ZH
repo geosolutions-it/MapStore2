@@ -1016,7 +1016,8 @@
                     "configureChartOptions": "Configure chart options",
                     "configureWidgetOptions": "Configure widget options",
                     "updateWidget": "Update the widget",
-                    "addToTheMap": "Add the widget to the map"
+                    "saveTheWidget":
+                    "addTheWidget": "Add the widget"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "No Widgets available",

@@ -60,7 +60,7 @@
             "deleteLayerMessage": "Do you really want to delete this Layer?",
             "confirmDelete": "Are you sure?",
             "featureTypeError": "Cannot load layer attributes",
-            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid", 
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "Elevation",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
@@ -1184,7 +1184,7 @@
                     "title": "Widget"
                 },
                 "wizard": {
-                    "backToTypeSelection": "Back to type selection",
+                    "backToTypeSelection": "Back to chart type selection",
                     "backToWidgetTypeSelection": "Back to widget type selection",
                     "backToFeatureGrid": "Back to the feature grid",
                     "backToLayerSelection": "Back to layer selection",
@@ -1199,7 +1199,7 @@
                     "configureTableOptions": "Configure table options",
                     "resetColumnsSizes": "Reset all changes to the column sizes",
                     "updateWidget": "Update the widget",
-                    "addToTheMap": "Add the widget to the map",
+                    "addTheWidget": "Add the widget",
                     "titlePlaceholder": "Insert title...",
                     "textPlaceholder": "Insert text...",
                     "useThisMap": "Use this map",

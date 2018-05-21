@@ -1183,7 +1183,7 @@
                     "title": "Widget"
                 },
                 "wizard": {
-                    "backToTypeSelection": "Torna alla selezione del tipo",
+                    "backToTypeSelection": "Torna alla selezione del tipo di grafico",
                     "backToWidgetTypeSelection": "Torna alla selezione del tipo di widget",
                     "backToFeatureGrid": "Torna alla tabella degli attributi",
                     "backToLayerSelection": "Torna alla selezione del livello",
@@ -1198,7 +1198,7 @@
                     "configureTableOptions": "Configura le opzioni della tabella",
                     "resetColumnsSizes": "Reimposta larghezza automatica delle colonne",
                     "updateWidget": "Aggiorna il widget",
-                    "addToTheMap": "Aggiungi il widget alla mappa",
+                    "addTheWidget": "Aggiungi il widget",
                     "titlePlaceholder": "Inserisci il titolo...",
                     "textPlaceholder": "Inserisci il testo...",
                     "useThisMap": "Usa questa mappa",
