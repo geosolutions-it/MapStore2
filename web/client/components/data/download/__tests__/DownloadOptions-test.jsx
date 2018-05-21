@@ -43,16 +43,22 @@ describe('Test for DownloadOptions component', () => {
             onChange: () => {}
         };
         spyOn(events, "onChange");
-        ReactDOM.render(<DownloadOptions onChange={events.onChange} downloadOptions={{selectedFormat: "test"}} formats={[{name: "test"}]}/>, document.getElementById("container"));
+        ReactDOM.render(<DownloadOptions onChange={events.onChange} virtualScroll={false} downloadOptions={{selectedFormat: "test"}} formats={[{name: "test"}]}/>, document.getElementById("container"));
         const check = document.querySelector('input[type=checkbox]');
         check.click();
         expect(events.onChange).toHaveBeenCalled();
 
     });
-    it('singlePage checkbox not to render in virtualScroll mode', () => {
-        ReactDOM.render(<DownloadOptions virtualScroll downloadOptions={{selectedFormat: "test"}} formats={[{name: "test"}]}/>, document.getElementById("container"));
+    it('singlePage checkbox not to render: virtualScroll=true', () => {
+        ReactDOM.render(<DownloadOptions downloadOptions={{selectedFormat: "test"}} formats={[{name: "test"}]}/>, document.getElementById("container"));
         const check = document.querySelector('input[type=checkbox]');
         expect(check).toNotExist();
+
+    });
+    it('singlePage checkbox to render: virtualScroll=false', () => {
+        ReactDOM.render(<DownloadOptions virtualScroll={false} downloadOptions={{selectedFormat: "test"}} formats={[{name: "test"}]}/>, document.getElementById("container"));
+        const check = document.querySelector('input[type=checkbox]');
+        expect(check).toExist();
 
     });
 });
