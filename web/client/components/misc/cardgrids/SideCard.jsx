@@ -27,9 +27,9 @@ const React = require('react');
  */
 
 
-module.exports = ({body, className = '', style = {}, onClick=() => {}, size, title, preview, description, caption, tools, selected, ...more} = {}) => {
-    const {onMouseEnter, onMouseLeave} = more;
-    return (<div className={`mapstore-side-card${selected ? ' selected' : ''}${size ? ' ms-' + size : ''} ${className}`}
+module.exports = ({body, className = '', style = {}, onClick=() => {}, size, title, preview, description, caption, tools, selected,
+ onMouseEnter = () => {}, onMouseLeave = () => {}, ...more} = {}) =>
+<div className={`mapstore-side-card${selected ? ' selected' : ''}${size ? ' ms-' + size : ''} ${className}`}
         onClick={() => onClick({title, preview, description, caption, tools, ...more})}
         style={style} onMouseEnter={onMouseEnter} onMouseLeave={onMouseLeave}>
         <div className="ms-head">
@@ -54,5 +54,4 @@ module.exports = ({body, className = '', style = {}, onClick=() => {}, size, tit
         {body && <div className="ms-body">
             {body}
         </div>}
-    </div>);
-};
+    </div>;
