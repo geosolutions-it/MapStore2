@@ -59,7 +59,9 @@ class RuleEditor extends React.Component {
         return (
             <BorderLayout
                 className="bg-body"
-                header={<Header loading={loading}
+                header={<Header
+                                layer={layer}
+                                loading={loading}
                                 type={type}
                                 onSave={this.save}
                                 onExit={this.cancelEditing}

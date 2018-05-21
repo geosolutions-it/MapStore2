@@ -24,6 +24,8 @@ const {changeDrawingStatus} = require('../actions/draw');
 const {INIT_QUERY_PANEL} = require('../actions/wfsquery');
 const {getJSONFeatureWA} = require('../observables/wfs');
 const {describeFeatureTypeToAttributes} = require('../utils/FeatureTypeUtils');
+const notifications = require('../actions/notifications');
+
 const extractInfo = (data) => {
     return {
         geometry: data.featureTypes[0].properties
@@ -79,7 +81,15 @@ const featureTypeSelectedEpic = (action$, store) =>
                     try {
                         JSON.parse(response.data);
                     } catch (e) {
-                        return Rx.Observable.from([featureTypeError(action.typeName, 'Error from WFS: ' + e.message)]);
+                        return Rx.Observable.from([
+                            featureTypeError(action.typeName, 'Error from WFS: ' + e.message),
+                            notifications.error({
+                                title: 'warning',
+                                message: 'layerProperties.featureTypeErrorInvalidJSON',
+                                autoDismiss: 3,
+                                position: 'tc'
+                            })
+                        ]);
                     }
                     return Rx.Observable.from([featureTypeError(action.typeName, 'Error: feature types are empty')]);
                 })

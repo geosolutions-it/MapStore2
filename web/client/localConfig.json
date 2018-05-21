@@ -151,6 +151,7 @@
             }, "Home", {
                 "name": "TOC",
                 "cfg": {
+                    "activateMetedataTool": false,
                     "activateMapTitle": false,
                     "activateSortLayer": false
                 }
@@ -274,6 +275,7 @@
                 "cfg": {
                     "activateQueryTool": true,
                     "activateAddLayerButton": true,
+                    "activateMetedataTool": false,
                     "spatialOperations": [
                         {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
                         {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},
@@ -435,6 +437,7 @@
                 "cfg": {
                     "activateMapTitle": false,
                     "activateSettingsTool": false,
+                    "activateMetedataTool": false,
                     "activateRemoveLayer": false
                 }
 

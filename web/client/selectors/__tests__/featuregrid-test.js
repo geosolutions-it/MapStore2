@@ -30,7 +30,8 @@ const {
     showAgainSelector,
     showPopoverSyncSelector,
     hasSupportedGeometry,
-    getDockSize
+    getDockSize,
+    selectedLayerNameSelector
 } = require('../featuregrid');
 
 const idFt1 = "idFt1";
@@ -472,4 +473,23 @@ describe('Test featuregrid selectors', () => {
         expect(getDockSize({ featuregrid: {dockSize: 0.5} })).toBe(0.5);
         expect(getDockSize({})).toBe(undefined);
     });
+
+    it('test selectedLayerNameSelector', () => {
+        const state = {...initialState, layers: {
+            flat: [{
+                id: "TEST_LAYER",
+                title: "Test Layer",
+                name: 'editing:polygons'
+            }]
+        }, featuregrid: {
+          open: true,
+          selectedLayer: "TEST_LAYER",
+          mode: modeEdit,
+          select: [feature1, feature2],
+          changes: [{id: feature2.id, updated: {geometry: null}}]
+        }};
+        expect(selectedLayerNameSelector(state)).toBe('editing:polygons');
+        expect(selectedLayerNameSelector({})).toBe('');
+    });
+
 });

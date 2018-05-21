@@ -199,6 +199,7 @@
                 "web/client/plugins/AutoMapUpdate.jsx",
                 "web/client/plugins/BackgroundSelector.jsx",
                 "web/client/plugins/BackgroundSwitcher.jsx",
+                "web/client/plugins/CreateNewMap.jsx",
                 "web/client/plugins/DrawerMenu.jsx",
                 "web/client/plugins/FeatureEditor.jsx",
                 "web/client/plugins/GlobeViewSwitcher.jsx",

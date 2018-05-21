@@ -160,57 +160,6 @@ const ColorUtils = {
     },
     colorToHexStr: (color = 'red') => tinycolor(color).toHexString(),
     /**
-     * Return with position of a character in this.HCHARS string
-     * @private
-     * @param {Char} c
-     * @return {Integer}
-    */
-    getHCharPos: (c) => {
-        const HCHARS = '0123456789ABCDEF';
-        return HCHARS.indexOf( c.toUpperCase() );
-    },
-    /**
-     * Convert a hexa string to decimal
-     * @param {String} hex
-     * @return {Integer}
-    */
-    hexToDec: (hex) => {
-        const s = hex.split('');
-        return (ColorUtils.getHCharPos(s[0]) * 16 ) + (s.length === 2 ? ColorUtils.getHCharPos(s[1]) : 0);
-    },
-    /**
-     * Convert a hexa string to RGB color format
-     * hex can also contain #
-     * @param {String} hex
-     * @return {Array}
-	*/
-    hexToRgb: (hex) => {
-        let hexSymbol = 0;
-        if (hex[0] === "#") {
-            hexSymbol = 1;
-        }
-        if (hex.length <= 4) {
-            // shorhand format #CB2
-            return [ ColorUtils.hexToDec(hex.substr(0 + hexSymbol, 1)), ColorUtils.hexToDec(hex.substr(1 + hexSymbol, 1)), ColorUtils.hexToDec(hex.substr(2 + hexSymbol, 1)) ];
-        }
-        // long format #CCBB22
-        return [ ColorUtils.hexToDec(hex.substr(0 + hexSymbol, 2)), ColorUtils.hexToDec(hex.substr(2 + hexSymbol, 2)), ColorUtils.hexToDec(hex.substr(4 + hexSymbol, 2)) ];
-    },
-    /**
-    * Convert a hex string to RGB color format
-    * hex containing of #
-    * @param {String} hex
-    * @return {Object}
-    */
-    hexToRgbObj: (hex) => {
-        const rgb = ColorUtils.hexToRgb(hex);
-        return {
-            r: rgb[0],
-            g: rgb[1],
-            b: rgb[2]
-        };
-    },
-    /**
     * convert any valid css color to rgba str
     * @param {string} color any valid css color
     * @param {number} opacity 0 - 1 alpha value
