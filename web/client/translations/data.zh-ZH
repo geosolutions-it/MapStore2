@@ -1016,7 +1016,6 @@
                     "configureChartOptions": "Configure chart options",
                     "configureWidgetOptions": "Configure widget options",
                     "updateWidget": "Update the widget",
-                    "saveTheWidget":
                     "addTheWidget": "Add the widget"
                 },
                 "errors": {
