@@ -95,8 +95,7 @@ describe('SideCard component', () => {
         };
         const spyMouseEnter = expect.spyOn(actions, 'onMouseEnter');
         const spyMouseLeave = expect.spyOn(actions, 'onMouseLeave');
-        // {...actions}
-        ReactDOM.render(<SideCard selected onMouseEnter={actions.onMouseEnter} onMouseLeave={actions.onMouseLeave} />, document.getElementById("container"));
+        ReactDOM.render(<SideCard selected {...actions} />, document.getElementById("container"));
         const container = document.getElementById('container');
         let card = container.querySelector('.mapstore-side-card');
         expect(card).toExist();
