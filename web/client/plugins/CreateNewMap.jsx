@@ -18,7 +18,7 @@ const {mapTypeSelector} = require('../selectors/maptype');
 class CreateNewMap extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
-        dashboardsAvailable: PropTypes.bool,
+        showNewDashboard: PropTypes.bool,
         colProps: PropTypes.object,
         isLoggedIn: PropTypes.bool,
         allowedRoles: PropTypes.array,
@@ -32,7 +32,7 @@ class CreateNewMap extends React.Component {
 
     static defaultProps = {
         mapType: "leaflet",
-        dashboardsAvailable: false,
+        showNewDashboard: false,
         isLoggedIn: false,
         allowedRoles: ["ADMIN", "USER"],
         colProps: {
@@ -52,7 +52,7 @@ class CreateNewMap extends React.Component {
             <Button tooltipId="newMap" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/viewer/" + this.props.mapType + "/new"); }}>
                 <Glyphicon glyph="add-map" />
             </Button>
-            {this.props.dashboardsAvailable ?
+            {this.props.showNewDashboard ?
                 <Button tooltipId="resources.dashboards.newDashboard" className="square-button" bsStyle="primary" onClick={() => { this.context.router.history.push("/dashboard/"); }}>
                     <Glyphicon glyph="add-dashboard" />
                 </Button>
@@ -63,10 +63,17 @@ class CreateNewMap extends React.Component {
     }
     isAllowed = () => this.props.isLoggedIn && this.props.allowedRoles.indexOf(this.props.user && this.props.user.role) >= 0;
 }
-const {areDashboardsAvailable} = require('../selectors/dashboards');
+
+/**
+ * Button bar to create a new map or dashboard.
+ * @memberof plugins
+ * @class CreateNewMap
+ * @static
+ * @prop {boolean} cfg.showNewDashboard show/hide th create new dashboard button.
+ * @prop {string[]} cfg.allowedRoles array of users roles allowed to create maps and/or dashboards. default: `["ADMIN", "USER"]`. Users that don't have these roles will never see the buttons.
+ */
 module.exports = {
     CreateNewMapPlugin: connect((state) => ({
-        dashboardsAvailable: areDashboardsAvailable(state),
         mapType: mapTypeSelector(state),
         isLoggedIn: state && state.security && state.security.user && state.security.user.enabled && !(state.browser && state.browser.mobile) && true || false,
         user: state && state.security && state.security.user
