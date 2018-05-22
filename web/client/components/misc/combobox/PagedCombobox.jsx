@@ -50,7 +50,9 @@ class PagedCombobox extends React.Component {
         tooltip: PropTypes.object,
         valueField: PropTypes.string,
         placeholder: PropTypes.string,
-        stopPropagation: PropTypes.bool
+        stopPropagation: PropTypes.bool,
+        clearable: PropTypes.bool,
+        onReset: PropTypes.func
     };
 
     static contextTypes = {
@@ -77,6 +79,7 @@ class PagedCombobox extends React.Component {
         onToggle: () => {},
         onChange: () => {},
         onSelect: () => {},
+        onReset: () => {},
         textField: "label",
         tooltip: {
             customizedTooltip: undefined,
@@ -86,7 +89,8 @@ class PagedCombobox extends React.Component {
             overlayTriggerKey: "",
             placement: "top"
         },
-        valueField: "value"
+        valueField: "value",
+        clearable: false
     };
 
     renderWithTooltip = (field) => {
@@ -159,17 +163,25 @@ class PagedCombobox extends React.Component {
             textField={this.props.textField}
             valueField={this.props.valueField}
             value={this.props.selectedValue}
-            />);
+            />
+            );
         return this.props.tooltip && this.props.tooltip.enabled ? this.renderWithTooltip(field) : field;
     }
     render() {
-        let label = this.props.label ? (<label>{this.props.label}</label>) : (<span/>); // TODO change "the else case" value with null ?
+        const {selectedValue: v, disabled, onReset, label: l, clearable} = this.props;
+        let label = l ? (<label>{l}</label>) : (<span/>); // TODO change "the else case" value with null ?
         return (
             <div className="autocompleteField">
                 {label}
-                {this.renderField()}
+                {clearable ? (
+                    <div className={`rw-combo-clearable ${disabled && 'disabled' || ''}`}>
+                        {this.renderField()}
+                        <span className={`rw-combo-clear ${!v && 'hidden' || ''}`} onClick={onReset}>x</span>
+                    </div>) : this.renderField()
+                }
             </div>);
     }
 }
+
 
 module.exports = PagedCombobox;

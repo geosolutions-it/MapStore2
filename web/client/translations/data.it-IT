@@ -60,6 +60,7 @@
             "deleteLayerMessage": "Sei sicuro di voler eliminare questo livello?",
             "confirmDelete": "Sei sicuro?",
             "featureTypeError": "Impossibile caricare gli attributi del layer",
+            "featureTypeErrorInvalidJSON": "Impossibile caricare gli attributi del layer. La risposta non è valida",
             "elevation": "Elevazione",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
@@ -383,6 +384,7 @@
             "refreshConfirm": "Aggiorna",
             "refreshMessage": "Ricarica la configurazione dei layer WMS dai rispettivi server",
             "refreshError": "Errore di aggiornamento sui layer: ",
+            "epsgNotSupported": "CRS {epsg} non supportato per zoom al layer",
             "refreshOptions": {
                 "bbox": "Aggiorna area di zoom",
                 "search": "Aggiorna opzioni di ricerca",
@@ -708,7 +710,8 @@
                     "box": "Rettangolo",
                     "buffer": "Buffer",
                     "circle": "Cerchio",
-                    "poly": "Poligono"
+                    "poly": "Poligono",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "Intersezione",
@@ -906,6 +909,7 @@
             "type": "Tipo",
             "serviceTitle": "Titolo",
             "serviceTitlePlaceholder": "inserisci un titolo",
+            "missingReference": "Metadati di riferimento OGC mancanti",
             "notification": {
                 "warningAddCatalogService": "Inserisci un url e titolo validi.",
                 "addCatalogService": "Servizio aggiunto corretamente.",
@@ -1128,6 +1132,10 @@
                     "title": "Mappa",
                     "caption": "aggiungi una mappa"
                 },
+                "legend": {
+                    "title": "Legenda",
+                    "caption": "aggiungi una legenda"
+                },
                 "chart": {
                     "title": "Grafico",
                     "caption": "aggiungi un grafico"
@@ -1164,6 +1172,8 @@
             "errors": {
                 "notext": "Nessun testo disponibile",
                 "nodata": "Nessun dato disponibile per il livello/filtro selezionati",
+                "noLegend": "Nessuna legenda da mostrare",
+                "noLegendDescription": "La mappa connessa non ha legende da mostrare",
                 "nodatainviewport": "Nessun dato per la vista selezionata",
                 "timeoutExpired": "Il servizio ha impiegato troppo tempo a rispondere. La query potrebbe essere troppo complicata o il server troppo occupato",
                 "genericError": "C'è stato un errore durante la generazione del grafico"
@@ -1173,11 +1183,12 @@
                     "title": "Widget"
                 },
                 "wizard": {
-                    "backToTypeSelection": "Torna alla selezione del tipo",
+                    "backToTypeSelection": "Torna alla selezione del tipo di grafico",
                     "backToWidgetTypeSelection": "Torna alla selezione del tipo di widget",
                     "backToFeatureGrid": "Torna alla tabella degli attributi",
                     "backToLayerSelection": "Torna alla selezione del livello",
                     "backToMapSelection": "Torna alla selezione della mappa",
+                    "backToPreview": "Torna all'anteprima",
                     "backToChartOptions": "Torna alle opzioni del grafico",
                     "selectALayer": "Seleziona un livello",
                     "selectAMap": "Seleziona una mappa",
@@ -1187,7 +1198,7 @@
                     "configureTableOptions": "Configura le opzioni della tabella",
                     "resetColumnsSizes": "Reimposta larghezza automatica delle colonne",
                     "updateWidget": "Aggiorna il widget",
-                    "addToTheMap": "Aggiungi il widget alla mappa",
+                    "addTheWidget": "Aggiungi il widget",
                     "titlePlaceholder": "Inserisci il titolo...",
                     "textPlaceholder": "Inserisci il testo...",
                     "useThisMap": "Usa questa mappa",
@@ -1205,7 +1216,9 @@
                     "noAttributesDescription": "Il layer selezonato non ha atrributi da mostrare. Selezionare un altro layer o un altro tipo di widget.",
                     "noWidgetsAvailableTitle": "Impossibile creare il widget per il livello selezionato",
                     "noWidgetsAvailableDescription": "<p><strong> Prova a selezionare un altro livello o tipo di widget </strong> </p><p>Il server non fornisce i servizi necessari per il livello e il tipo di widget selezionato </p> <p> Le possibili cause sono: <ul> <li> Il livello selezionato è un livello raster </li> <li> Il servizio WFS non è disponibile </li><li> Il processo WPS <code>gs:aggregate</code> non è disponibile </li> </ul></p>",
-                    "checkAtLeastOneAttribute": "seleziona almeno un attributo"
+                    "checkAtLeastOneAttribute": "seleziona almeno un attributo",
+                    "noMapAvailableForLegend": "Nessuna mappa disponibile",
+                    "noMapAvailableForLegendDescription": "C'è bisogno almeno di una mappa per creare una lagenda"
                 },
                 "setupFilter": "Configura un filtro per il livello selezionato"
             },
@@ -1362,10 +1375,12 @@
             "layerlabel": "Layer"
             },
         "rulesmanager": {
+            "apply": "Applica",
+            "remove": "Elimina la geometia",
             "resetconstraints": "Resetta Vincoli",
             "constraintsmsg": "Cambinado grant, workspace o layer, i dettagli saranno eliminati. Sei sicuro di volerlo fare?",
             "defstyle": "Stile Predefinito",
-            "avstyle": "Stili Disponibile",
+            "avstyle": "Stili Disponibili",
             "clearbtn": "Rimuovi Tutti",
             "selectbtn": "Seleziona Tutti",
             "placeholders": {
@@ -1397,7 +1412,7 @@
                 "style": "Stile",
                 "filter": "Filtri",
                 "attribute": "Attributi"
-            }, 
+            },
             "rule": "Regola",
             "cachetitle": "Pulisci Cache",
             "cachemsg": "Sei sicuro di voler rimuovere la cache di Geofance?",
@@ -1423,7 +1438,10 @@
             "close": "Chiudi",
             "previous": "precedente",
             "next": "prossima",
+            "cacheCleaned": "Cache eliminata",
             "errorTitle": "Geofence",
+            "errorCQL": "Geometria non valida!",
+            "errorCleaningCache": "Errore durante la pulizia della cache.",
             "errorLoadingRoles": "Errore durante il caricamento dei ruoli",
             "errorLoadingUsers": "Errore durante il caricamento  degli utenti.",
             "errorLoadingWorkspaces": "Errore durante il caricamento dei workspaces.",
@@ -1441,7 +1459,8 @@
             "cancelButton": "Annulla",
             "cqlRead": "Filtro CQL lettura",
             "cqlWrite": "Filtero CQL scrittura",
-            "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!"
+            "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!",
+            "selectworkspace": "È necessario selezionare lo spazio di lavoro per abilitare le opzioni avanzate."
         },
             "tutorial": {
                 "title": "Tutorial",

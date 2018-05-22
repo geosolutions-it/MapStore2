@@ -27,12 +27,20 @@ describe('autoComplete enhancer', () => {
         setTimeout(done);
     });
     it('it calls load function', (done) => {
+        let counter = 0;
         const Sink = autoComplete(createSink( props => {
-            expect(props).toExist();
-            expect(props.onChange).toExist();
-            expect(props.onSelect).toExist();
-            expect(props.onToggle).toExist();
-            props.onChange("%");
+            switch (counter) {
+                case 0: {
+                    expect(props).toExist();
+                    expect(props.onChange).toExist();
+                    expect(props.onSelect).toExist();
+                    expect(props.onToggle).toExist();
+                    props.onChange("%");
+                    counter++;
+                    break;
+                }
+                default: return;
+            }
         }));
         const loadData = (search, page, size, parentsFilter, count) => {
             expect(search).toBe("%");
@@ -46,11 +54,19 @@ describe('autoComplete enhancer', () => {
         loadData={loadData}/>, document.getElementById("container"));
     });
     it('it emits selected val', (done) => {
+        let counter = 0;
         const Sink = autoComplete(createSink( props => {
-            expect(props).toExist();
-            expect(props.onValueSelected).toExist();
-            expect(props.onSelect).toExist();
-            props.onSelect("%");
+            switch (counter) {
+                case 0: {
+                    expect(props).toExist();
+                    expect(props.onValueSelected).toExist();
+                    expect(props.onSelect).toExist();
+                    props.onSelect("%");
+                    counter++;
+                    break;
+                }
+                default: return;
+            }
         }));
         const onValueSelected = (val) => {
             expect(val).toBe("%");
@@ -59,13 +75,118 @@ describe('autoComplete enhancer', () => {
         ReactDOM.render(<Sink onValueSelected={onValueSelected}/>, document.getElementById("container"));
     });
     it('on toggle with empty val it cleans selected', (done) => {
+        let counter = 0;
         const Sink = autoComplete(createSink( props => {
-            expect(props).toExist();
-            expect(props.selectedValue).toBe("%");
-            expect(props.onValueSelected).toExist();
-            expect(props.onSelect).toExist();
-            props.onChange("");
-            props.onToggle(false);
+            switch (counter) {
+                case 0: {
+                    expect(props).toExist();
+                    expect(props.selectedValue).toBe("%");
+                    expect(props.onValueSelected).toExist();
+                    expect(props.onSelect).toExist();
+                    props.onChange("");
+                    counter++;
+                    break;
+                }
+                case 1: {
+                    expect(props.onToggle).toExist();
+                    props.onToggle(false);
+                    counter++;
+                    break;
+                }
+                default: {
+                    return;
+                }
+            }
+        }));
+        const onValueSelected = (val) => {
+            expect(val).toNotExist();
+            done();
+        };
+        ReactDOM.render(<Sink clearable={false} selected="%" onValueSelected={onValueSelected}/>, document.getElementById("container"));
+    });
+    it('on toggle', (done) => {
+        let counter = 0;
+        const Sink = autoComplete(createSink( props => {
+            switch (counter) {
+                case 0: {
+                    expect(props).toExist();
+                    expect(props.selectedValue).toBe("%");
+                    props.onChange("TEST");
+                    counter++;
+                    break;
+                }
+                case 1: {
+                    expect(props).toExist();
+                    expect(props.selectedValue).toBe("TEST");
+                    expect(props.typing).toBeTruthy();
+                    props.onToggle(false);
+                    counter++;
+                    break;
+                }
+                case 2: {
+                    expect(props).toExist();
+                    expect(props.selectedValue).toBe("%");
+                    expect(props.typing).toBeFalsy();
+                    props.onToggle(false);
+                    counter++;
+                    done();
+                    break;
+                }
+                default:
+                    return counter++;
+            }
+        }));
+        ReactDOM.render(<Sink selected="%"/>, document.getElementById("container"));
+    });
+    it('on toggle call onLoad function', (done) => {
+        let counter = 0;
+        const Sink = autoComplete(createSink( props => {
+            switch (counter) {
+                case 0: {
+                    expect(props).toExist();
+                    props.onToggle(true);
+                    counter++;
+                    break;
+                }
+                case 1: {
+                    expect(props).toExist();
+                    expect(props.emptyReq).toBe(1);
+                    break;
+                }
+                default:
+                    return counter++;
+            }
+        }));
+        const loadData = (search, page, size, parentsFilter, count) => {
+            expect(search).toBe("%");
+            expect(page).toBe(0);
+            expect(size).toBe(5);
+            expect(count).toBe(true);
+            done();
+        };
+        ReactDOM.render(<Sink loadData={loadData} selected="%"/>, document.getElementById("container"));
+    });
+    it('on rest clean the selected value', (done) => {
+        let counter = 0;
+        const Sink = autoComplete(createSink( props => {
+            switch (counter) {
+                case 0: {
+                    expect(props).toExist();
+                    expect(props.selectedValue).toBe("%");
+                    props.onChange("TEST");
+                    counter++;
+                    break;
+                }
+                case 1: {
+                    expect(props).toExist();
+                    expect(props.selectedValue).toBe("TEST");
+                    props.onReset();
+                    counter++;
+                    break;
+                }
+                default:
+                    return {};
+            }
         }));
         const onValueSelected = (val) => {
             expect(val).toNotExist();

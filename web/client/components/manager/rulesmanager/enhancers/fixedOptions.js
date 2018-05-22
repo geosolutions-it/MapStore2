@@ -15,6 +15,7 @@ const dataStreamFactory = prop$ => {
 
 module.exports = compose(
     defaultProps({
+        clearable: true,
         stopPropagation: true,
         emitOnReset: false,
         paginated: false,
@@ -43,6 +44,14 @@ module.exports = compose(
             return {
                 val: undefined
         }; },
+        onReset: ({typing, val}, {onValueSelected, selected}) => () => {
+            if (selected) {
+                onValueSelected();
+            }
+            if (typing) {
+                return {typing: false};
+            }
+        },
         onChange: ({stopChange}, {valueField}) => (val = "") => {
 
             if (stopChange) {
@@ -51,8 +60,8 @@ module.exports = compose(
             const currentVal = isObject(val) && val[valueField] || val;
             return {val: currentVal, typing: true};
         },
-        onToggle: ({ val = ""}, {selected, onValueSelected}) => (open) => {
-            if (!open && val === "" && selected) {
+        onToggle: ({ val = ""}, {clearable, selected, onValueSelected}) => (open) => {
+            if (!clearable && !open && val === "" && selected) {
                 onValueSelected();
                 return {typing: false};
             }else if (!open && val !== selected) {

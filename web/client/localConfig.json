@@ -145,6 +145,7 @@
             }, "Home", {
                 "name": "TOC",
                 "cfg": {
+                    "activateMetedataTool": false,
                     "activateMapTitle": false,
                     "activateSortLayer": false
                 }
@@ -268,6 +269,7 @@
                 "cfg": {
                     "activateQueryTool": true,
                     "activateAddLayerButton": true,
+                    "activateMetedataTool": false,
                     "spatialOperations": [
                         {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
                         {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},
@@ -429,6 +431,7 @@
                 "cfg": {
                     "activateMapTitle": false,
                     "activateSettingsTool": false,
+                    "activateMetedataTool": false,
                     "activateRemoveLayer": false
                 }
 
@@ -504,14 +507,7 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "NavMenu", "Attribution", {
-          "name": "Home",
-          "override": {
-            "OmniBar": {
-              "position": 11
-            }
-          }
-        }, {
+        }, "ManagerMenu", "Login", "Language", "NavMenu", "Attribution", "Home", {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {
@@ -525,6 +521,10 @@
         }, {
           "name": "QueryPanel",
           "cfg": {
+            "toolsOptions": {
+              "hideCrossLayer": true,
+              "hideSpatialFilter": true
+            },
             "containerPosition": "columns"
           }
         }, "Dashboard", "Notifications"],

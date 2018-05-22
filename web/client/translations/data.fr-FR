@@ -61,6 +61,7 @@
             "deleteLayerMessage": "Voulez-vous vraiment supprimer cette couche?",
             "confirmDelete": "Êtes-vous sûr?",
             "featureTypeError": "Impossible de charger les attributs de calque",
+            "featureTypeErrorInvalidJSON": "Impossible de charger les attributs de calque. La réponse n'est pas valide",
             "elevation": "élévation",
             "titleTranslations": "Traductions du titre",
             "groupProperties": "Propriétés du groupe",
@@ -384,6 +385,7 @@
             "refreshConfirm": "Mettre à jour",
             "refreshMessage": "Rechargez la configuration des couches WMS à partir du(s) serveur(s)",
             "refreshError": "Erreur lors de la mise à jour des couches: ",
+            "epsgNotSupported": "CRS {epsg} non pris en charge pour le zoom sur la couche",
             "refreshOptions": {
                 "bbox": "Mettre à jour BBOX",
                 "search": "Mettre à jour les options de recherche",
@@ -709,7 +711,8 @@
                     "box": "Rectangle",
                     "buffer": "Zone tampon",
                     "circle": "Cercle",
-                    "poly": "Polygone"
+                    "poly": "Polygone",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "intersecte",
@@ -907,6 +910,7 @@
             "type": "Type",
             "serviceTitle": "Titre",
             "serviceTitlePlaceholder": "tapez un titre",
+            "missingReference": "Missing OGC reference metadata",
             "notification": {
                 "warningAddCatalogService": "Insérer une URL et un titre valides",
                 "addCatalogService": "Service ajouté correctement",
@@ -1129,6 +1133,10 @@
                     "title": "Carte",
                     "caption": "ajouter une carte"
                 },
+                "legend": {
+                    "title": "Légende",
+                    "caption": "ajouter une légende"
+                },
                 "chart": {
                     "title": "Graphique",
                     "caption": "ajouter un graphique"
@@ -1165,6 +1173,8 @@
             "errors": {
                 "notext": "Aucun texte disponible",
                 "nodata": "Aucune donnée disponible pour la couche / filtre sélectionné",
+                "noLegend": "Aucun élément de légende à afficher",
+                "noLegendDescription": "La carte connectée n'a aucune couche à afficher dans la légende",
                 "nodatainviewport": "Aucune donnée dans la fenêtre courante",
                 "timeoutExpired": "Le service a pris trop de temps pour répondre. Peut-être que la requête est trop complexe ou que le serveur est occupé",
                 "genericError": "Il y a une erreur lors de la récupération des données"
@@ -1179,6 +1189,7 @@
                     "backToFeatureGrid": "Retour à la grille des fonctionnalités",
                     "backToLayerSelection": "Retour à la sélection du calque",
                     "backToMapSelection": "Retour à la sélection de la carte",
+                    "backToPreview": "Retour à l'aperçu",
                     "backToChartOptions": "retour aux options de graphique",
                     "selectALayer": "Sélectionner une couche",
                     "selectAMap": "Sélectionnez une carte",
@@ -1188,7 +1199,7 @@
                     "configureTableOptions": "Configurer les options de table",
                     "resetColumnsSizes": "Réinitialiser toutes les modifications aux tailles de colonnes",
                     "updateWidget": "Mettre à jour le widget",
-                    "addToTheMap": "Ajouter le widget à la carte",
+                    "addTheWidget": "Ajouter le widget",
                     "titlePlaceholder": "Entrez le titre...",
                     "textPlaceholder": "Entrez le texte...",
                     "useThisMap": "Utiliser cette carte",
@@ -1206,7 +1217,9 @@
                     "noAttributesDescription": "La couche sélectionnée n'a aucun attribut à afficher. Veuillez sélectionner un autre type ou couche de widget",
                     "noWidgetsAvailableTitle": "Impossible de créer le widget pour le calque sélectionné",
                     "noWidgetsAvailableDescription": "<p> <strong> Veuillez essayer de sélectionner un autre type de couche ou de widget </strong> </p> <p> Le serveur ne fournit pas les services requis pour la couche et le type de widget sélectionné </p> <p> Les causes possibles sont: <ul> <li> Le calque sélectionné est une couche raster </li> <li> Le service WFS n'est pas disponible </li> <li> Le processus WPS <code> gs:aggregate </code> n'est pas disponible </li> </ul> </p> ",
-                    "checkAtLeastOneAttribute": "Vous devez sélectionner au moins une colonne"
+                    "checkAtLeastOneAttribute": "Vous devez sélectionner au moins une colonne",
+                    "noMapAvailableForLegend": "Aucune carte disponible",
+                    "noMapAvailableForLegendDescription": "Vous avez besoin d'au moins un widget de carte pour créer la légende"
                 },
                 "setupFilter": "Configurer un filtre pour les données du widget"
             },
@@ -1362,6 +1375,8 @@
             "layerlabel": "Couche"
         },
         "rulesmanager": {
+            "apply": "Appliquer",
+            "remove": "Supprimer la géométrie",
             "resetconstraints": "Réinitialise les contraintes",
             "constraintsmsg": "En changeant la subvention, l'espace de travail ou la couche, les détails seront supprimés. Êtes-vous sûr de vouloir faire ça?",
             "defstyle": "Style par Défaut",
@@ -1423,7 +1438,10 @@
             "close": "Fermer",
             "previous": "précédent",
             "next": "prochain",
+            "cacheCleaned": "Cache nettoyé avec succès",
             "errorTitle": "Geofence",
+            "errorCQL": "La géométrie n'est pas valide!",
+            "errorCleaningCache": "Erreur lors du nettoyage du cache de geofence.",
             "errorLoadingRoles": "Erreur lors du chargement des rôles.",
             "errorLoadingUsers": "Erreur lors du chargement des utilisateurs.",
             "errorLoadingWorkspaces": "Erreur lors du chargement des  workspaces.",
@@ -1441,7 +1459,8 @@
             "cancelButton": "Annuler",
             "cqlRead": "Règles de lecture du filtre CQL",
             "cqlWrite": "Règles d'écriture du filtre CQL",
-            "missingconfig": "Le gestionnaire de règles manque la configuration. Accès refusé!"
+            "missingconfig": "Le gestionnaire de règles manque la configuration. Accès refusé!",
+            "selectworkspace": "Vous devez sélectionner l'espace de travail pour activer les options avancées."
         },
         "tutorial": {
             "title": "Tutoriel",

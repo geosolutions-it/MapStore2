@@ -60,6 +60,7 @@
             "deleteLayerMessage": "Möchtest du wirklich diese Ebene löschen?",
             "confirmDelete": "Bist du sicher?",
             "featureTypeError": "Layerattribute können nicht geladen werden",
+            "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Antwort ist nicht gültig",
             "elevation": "Höhe",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
@@ -383,6 +384,7 @@
             "refreshConfirm": "Aktualisieren",
             "refreshMessage": "Laden Sie die WMS-Layer-Konfiguration von dem Server(s)",
             "refreshError": "Fehler beim Aktualisieren von Ebenen: ",
+            "epsgNotSupported": "CRS {epsg} wird für das Zoomen auf Layer nicht unterstützt",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
@@ -708,7 +710,8 @@
                     "box": "BoundingBox",
                     "buffer": "Buffer",
                     "circle": "Kreis",
-                    "poly": "Polygon"
+                    "poly": "Polygon",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "Schneidet",
@@ -906,6 +909,7 @@
             "type": "Typ",
             "serviceTitle": "Titel",
             "serviceTitlePlaceholder": "Geben Sie einen Titel ein",
+            "missingReference": "Fehlende OGC-Referenzmetadaten",
             "notification": {
                 "warningAddCatalogService": "Geben Sie eine gültige URL und einen Titel ein",
                 "addCatalogService": "Service wurde korrekt hinzugefügt",
@@ -1128,6 +1132,10 @@
                     "title": "Karte",
                     "caption": "Eine Karte hinzufügen"
                 },
+                "legend": {
+                    "title": "Legende",
+                    "caption": "füge eine Legende hinzu"
+                },
                 "chart": {
                     "title": "Grafik",
                     "caption": "füge ein Diagramm hinzu"
@@ -1164,6 +1172,8 @@
             "errors": {
                 "notext": "Kein Text verfügbar",
                 "nodata": "Keine Daten für den ausgewählten Layer / Filter verfügbar",
+                "noLegend": "Keine Legenden zu zeigen",
+                "noLegendDescription": "Die verbundene Karte hat keine Ebenen, die in der Legende angezeigt werden",
                 "nodatainviewport": "Keine Daten im aktuellen Ansichtsfenster",
                 "timeoutExpired": "Der Service hat zu lange gedauert. Vielleicht ist die Abfrage zu komplex oder der Server ist beschäftigt",
                 "genericError": "Beim Abrufen der Daten ist ein Fehler aufgetreten"
@@ -1178,6 +1188,7 @@
                     "backToFeatureGrid": "Zurück zum Feature-Raster",
                     "backToLayerSelection": "Zurück zur Ebenenauswahl",
                     "backToMapSelection": "Zurück zur Kartenauswahl",
+                    "backToPreview": "Zurück zur Vorschau",
                     "backToChartOptions": "Zurück zu den Diagrammoptionen",
                     "selectALayer": "Wähle eine Ebene",
                     "selectAMap": "Wählen Sie eine Karte",
@@ -1187,7 +1198,7 @@
                     "configureTableOptions": "Konfigurieren Sie die Tabellenoptionen",
                     "resetColumnsSizes": "Setzen Sie alle Änderungen an den Spaltengrößen zurück",
                     "updateWidget": "Aktualisieren Sie das Widget",
-                    "addToTheMap": "Hinzufügen des Widgets zur Karte",
+                    "addTheWidget": "Hinzufügen des Widget",
                     "titlePlaceholder": "Gib den Titel ein...",
                     "textPlaceholder": "Text eingeben...",
                     "useThisMap": "Benutze diese Karte",
@@ -1205,7 +1216,9 @@
                     "noAttributesDescription": "Die ausgewählte Ebene enthält keine anzuzeigenden Attribute. Bitte wählen Sie einen anderen Widget-Typ oder Layer",
                     "noWidgetsAvailableTitle": "Das Widget für die ausgewählte Ebene kann nicht erstellt werden",
                     "noWidgetsAvailableDescription": "<p><strong>Bitte wählen Sie eine andere Ebene oder einen anderen Widgets-Typ</strong></p><p>Der Server bietet nicht die erforderlichen Dienste für die Ebene und den ausgewählten Widget-Typ</p><p> Mögliche Ursachen sind: <ul> <li> Der ausgewählte Layer ist ein Raster-Layer </li> <li> Der WFS-Service ist nicht verfügbar </li> <li> Der WPS-Prozess <code>gs:aggregate</code> ist nicht verfügbar </li> </ul> </p>",
-                    "checkAtLeastOneAttribute": "Sie müssen mindestens eine Spalte auswählen"
+                    "checkAtLeastOneAttribute": "Sie müssen mindestens eine Spalte auswählen",
+                    "noMapAvailableForLegend": "Keine Karte verfügbar",
+                    "noMapAvailableForLegendDescription": "Sie benötigen mindestens ein Karten-Widget, um die Legende zu erstellen"
                 },
                 "setupFilter": "Konfigurieren Sie einen Filter für die Widgetdaten"
             },
@@ -1362,6 +1375,8 @@
             "layerlabel": "Ebene"
         },
         "rulesmanager": {
+            "apply": "Anwenden",
+            "remove": "Entfernen Sie die Geometrie",
             "resetconstraints": "Setzt Einschränkungen zurück",
             "constraintsmsg": "Wenn Sie die Berechtigung, den Arbeitsbereich oder die Ebene ändern, werden die Details gelöscht. Bist du sicher, dass du das machen willst?",
             "defstyle": "Standardstil",
@@ -1423,7 +1438,10 @@
             "close": "Schließen",
             "previous": "vorheriger",
             "next": "nächster",
+            "cacheCleaned": "Der Cache wurde erfolgreich bereinigt",
             "errorTitle": "Geofence",
+            "errorCQL": "Geometrie nicht gültig!",
+            "errorCleaningCache": "Fehler beim Reinigen des Geofence-Cache.",
             "errorLoadingRoles": "Fehler beim Laden der Rollen.",
             "errorLoadingUsers": "Fehler beim Laden der Benutzer.",
             "errorLoadingWorkspaces": "Fehler beim Laden der Workspaces.",
@@ -1441,7 +1459,8 @@
             "cancelButton": "Abbrechen",
             "cqlRead": "CQL Filter Lese Regeln",
             "cqlWrite": "CQL Filter Write Rules",
-            "missingconfig": "Der Regeln-Manager vermisst die Konfiguration. Zugriff abgelehnt!"
+            "missingconfig": "Der Regeln-Manager vermisst die Konfiguration. Zugriff abgelehnt!",
+            "selectworkspace": "Sie müssen den Arbeitsbereich auswählen, um erweiterte Optionen zu aktivieren."
         },
         "tutorial": {
             "title": "Anleitung",

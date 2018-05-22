@@ -25,7 +25,8 @@ class GeometryDetails extends React.Component {
         onShowPanel: PropTypes.func,
         onChangeDrawingStatus: PropTypes.func,
         onEndDrawing: PropTypes.func,
-        zoom: PropTypes.number
+        zoom: PropTypes.number,
+        enableGeodesic: PropTypes.bool
     };
 
     static defaultProps = {
@@ -85,20 +86,21 @@ class GeometryDetails extends React.Component {
     onUpdateCircle = (value, name) => {
         this.tempCircle[name] = parseFloat(value);
 
-        let center = !this.props.useMapProjection ?
+        let center = !this.props.useMapProjection && !isNaN(parseFloat(this.tempCircle.x)) && !isNaN(parseFloat(this.tempCircle.y)) ?
             CoordinatesUtils.reproject([this.tempCircle.x, this.tempCircle.y], 'EPSG:4326', this.props.geometry.projection) : [this.tempCircle.x, this.tempCircle.y];
 
         center = center.x === undefined ? {x: center[0], y: center[1]} : center;
+        const validateCenter = {x: !isNaN(center.x) ? center.x : 0, y: !isNaN(center.y) ? center.y : 0};
 
         let geometry = {
             type: this.props.geometry.type,
-            center: center,
-            coordinates: [center.x, center.y],
-            radius: this.tempCircle.radius,
+            center: validateCenter,
+            coordinates: [validateCenter.x, validateCenter.y],
+            radius: !isNaN(this.tempCircle.radius) ? this.tempCircle.radius : 0,
             projection: this.props.geometry.projection
         };
 
-        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry]);
+        this.props.onChangeDrawingStatus("replace", undefined, "queryform", [geometry], {geodesic: this.props.enableGeodesic});
     };
 
     onModifyGeometry = () => {

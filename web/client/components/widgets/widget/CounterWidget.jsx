@@ -36,6 +36,7 @@ module.exports = ({
     showTable,
     confirmDelete= false,
     headerStyle,
+    canEdit = true,
     toggleTableView= () => {},
     toggleDeleteConfirm= () => {},
     onEdit= () => {},
@@ -50,12 +51,12 @@ module.exports = ({
         onDelete={onDelete}
         toggleDeleteConfirm = {toggleDeleteConfirm}
         headerStyle={headerStyle}
-        topRightItems={showTable
-            ? null : <ButtonToolbar>
+        topRightItems={canEdit
+            ? (<ButtonToolbar>
             <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
                 <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>
                 <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash"/>&nbsp;<Message msgId="widgets.widget.menu.delete" /></MenuItem>
             </DropdownButton>
-        </ButtonToolbar>}>
+        </ButtonToolbar>) : null}>
         <CounterView id={id} isAnimationActive={!loading} loading={loading} data={data} series={series} iconFit {...props} />
     </WidgetContainer>);

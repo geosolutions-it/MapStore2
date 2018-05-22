@@ -60,6 +60,7 @@
             "deleteLayerMessage": "Do you really want to delete this Layer?",
             "confirmDelete": "Are you sure?",
             "featureTypeError": "Cannot load layer attributes",
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "Elevation",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
@@ -384,6 +385,7 @@
             "refreshConfirm": "Update",
             "refreshMessage": "Reload WMS layers configuration from the server(s)",
             "refreshError": "Error updating layers: ",
+            "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
             "refreshOptions": {
                 "bbox": "Update BBOX",
                 "search": "Update search options",
@@ -709,7 +711,8 @@
                     "box": "Rectangle",
                     "buffer": "Buffer",
                     "circle": "Circle",
-                    "poly": "Polygon"
+                    "poly": "Polygon",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "Intersects",
@@ -907,6 +910,7 @@
             "type": "Type",
             "serviceTitle": "Title",
             "serviceTitlePlaceholder": "type a title",
+            "missingReference": "Missing OGC reference metadata",
             "notification": {
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",
@@ -1129,6 +1133,10 @@
                     "title": "Map",
                     "caption": "add a map"
                 },
+                "legend": {
+                    "title": "Legend",
+                    "caption": "add a legend"
+                },
                 "chart": {
                     "title": "Chart",
                     "caption": "add a chart"
@@ -1165,6 +1173,8 @@
             "errors": {
                 "notext": "No text available",
                 "nodata": "No data available for the selected layer/filter",
+                "noLegend": "No legend items to show",
+                "noLegendDescription": "The connected map has no layers to show in legend",
                 "nodatainviewport": "No data in the current viewport",
                 "timeoutExpired": "The service took too much time to respond. Maybe the query is too complex or the server is busy",
                 "genericError": "There was an error during data retrival"
@@ -1174,11 +1184,12 @@
                     "title": "Widget"
                 },
                 "wizard": {
-                    "backToTypeSelection": "Back to type selection",
+                    "backToTypeSelection": "Back to chart type selection",
                     "backToWidgetTypeSelection": "Back to widget type selection",
                     "backToFeatureGrid": "Back to the feature grid",
                     "backToLayerSelection": "Back to layer selection",
                     "backToMapSelection": "Back to map selection",
+                    "backToPreview": "Back to Preview",
                     "backToChartOptions": "Back to chart options",
                     "selectALayer": "Select a layer",
                     "selectAMap": "Select a map",
@@ -1188,7 +1199,7 @@
                     "configureTableOptions": "Configure table options",
                     "resetColumnsSizes": "Reset all changes to the column sizes",
                     "updateWidget": "Update the widget",
-                    "addToTheMap": "Add the widget to the map",
+                    "addTheWidget": "Add the widget",
                     "titlePlaceholder": "Insert title...",
                     "textPlaceholder": "Insert text...",
                     "useThisMap": "Use this map",
@@ -1206,7 +1217,9 @@
                     "noAttributesDescription": "The selected layer has no attributes to show. Please select another widget type or layer",
                     "noWidgetsAvailableTitle": "Can not create the widget for the selected layer",
                     "noWidgetsAvailableDescription": "<p><strong>Please try to select another layer or widget type</strong></p><p>The server doesn't provide the needed services for the layer and the widget type selected</p><p>Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li>The WPS process <code>gs:aggregate</code> is not available</li></ul></p>",
-                    "checkAtLeastOneAttribute": "You must select at least one column"
+                    "checkAtLeastOneAttribute": "You must select at least one column",
+                    "noMapAvailableForLegend": "No map available",
+                    "noMapAvailableForLegendDescription": "You need at least one map widget to create the legend"
                 },
                 "setupFilter": "Configure a filter for the widget data"
             },
@@ -1363,6 +1376,8 @@
             "layerlabel": "Layer"
         },
         "rulesmanager": {
+            "apply": "Apply",
+            "remove": "Remove geometry",
             "resetconstraints": "Resets Constraints",
             "constraintsmsg": "Changing grant, workspace or layer, the details will be deleted. Are you sure you want to do that?",
             "defstyle": "Default Style",
@@ -1425,7 +1440,10 @@
             "close": "Close",
             "previous": "previous",
             "next": "next",
+            "cacheCleaned": "Cache successfully cleaned",
             "errorTitle": "Geofence",
+            "errorCQL": "Geometry not valid!",
+            "errorCleaningCache": "Error cleaning geofence cache.",
             "errorLoadingRoles": "Error loading roles.",
             "errorLoadingUsers": "Error loading users.",
             "errorLoadingWorkspaces": "Error loading workspaces.",
@@ -1443,7 +1461,8 @@
             "cancelButton": "Cancel",
             "cqlRead": "CQL Filter Read Rules",
             "cqlWrite": "CQL Filter Write Rules",
-            "missingconfig": "Rules manager misses the configuration. Access denied!"
+            "missingconfig": "Rules manager misses the configuration. Access denied!",
+            "selectworkspace": "You need to select the workspace to enable advanced options"
         },
         "tutorial": {
             "title": "Tutorial",

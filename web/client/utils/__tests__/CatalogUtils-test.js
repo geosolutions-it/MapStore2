@@ -227,4 +227,36 @@ describe('Test the CatalogUtils', () => {
         }, {});
         expect(records.length).toBe(1);
     });
+
+    it('csw with DC references with only OGC:WMS in URI, GeoNetwork', () => {
+        const records = CatalogUtils.getCatalogRecords('csw', {
+            records: [{
+                dc: {
+                    URI: [
+                        {
+                            TYPE_NAME: 'DC_1_1.URI',
+                            protocol: 'OGC:WMS',
+                            name: 'wms-name',
+                            description: 'wms-desc',
+                            value: 'wms-url'
+                        },
+                        {
+                            TYPE_NAME: 'DC_1_1.URI',
+                            protocol: 'WWW:LINK-1.0-http--related',
+                            name: 'link-name',
+                            description: 'link-desc',
+                            value: 'link-url'
+                        },
+                        {
+                            TYPE_NAME: 'DC_1_1.URI',
+                            protocol: 'image/png',
+                            name: 'thumbnail',
+                            value: 'path-to-thumbnail'
+                        }
+                    ]
+                }
+            }]
+        }, {});
+        expect(records.length).toBe(1);
+    });
 });

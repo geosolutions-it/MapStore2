@@ -207,6 +207,7 @@ class MapPlugin extends React.Component {
                             key={feature.id}
                             crs={projection}
                             type={feature.type}
+                            style={feature.style || null }
                             geometry={feature.geometry}/>);
                     })}
                 </plugins.Layer>);
@@ -270,12 +271,14 @@ class MapPlugin extends React.Component {
 
     render() {
         if (this.props.map) {
+            const {mapOptions = {}} = this.props.map;
+
             return (
                 <plugins.Map id="map"
                     {...this.props.options}
-                    mapOptions={this.getMapOptions()}
                     projectionDefs={this.props.projectionDefs}
                     {...this.props.map}
+                    mapOptions={assign({}, mapOptions, this.getMapOptions())}
                     zoomControl={this.props.zoomControl}>
                     {this.renderLayers()}
                     {this.renderSupportTools()}
@@ -316,7 +319,7 @@ class MapPlugin extends React.Component {
 const {mapSelector, projectionDefsSelector} = require('../selectors/map');
 const { mapTypeSelector } = require('../selectors/maptype');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
-const {selectedFeatures} = require('../selectors/highlight');
+const {highlighedFeatures} = require('../selectors/highlight');
 const {securityTokenSelector} = require('../selectors/security');
 
 const selector = createSelector(
@@ -325,7 +328,7 @@ const selector = createSelector(
         mapSelector,
         mapTypeSelector,
         layerSelectorWithMarkers,
-        selectedFeatures,
+        highlighedFeatures,
         (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data,
         securityTokenSelector,
         (state) => state.mousePosition && state.mousePosition.enabled

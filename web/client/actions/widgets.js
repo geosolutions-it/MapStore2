@@ -187,7 +187,8 @@ const loadDependencies = (dependencies) => ({
 /**
  * Action triggered to start the connection flow. Typically starts the connection flow
  * @param {array} availableDependencies Array of available dependency keys
- * @param {object} options a map of connections to apply when the dependencies has been resolved
+ * @param {object} the map of available dependencies where to choose.
+ * @param {object} options a map of connections to apply when the dependencies has been resolved. E.g. mappings for dependenciesMap
  * @param {string} target target of the connection. If not present we assume is the current editing widget (not yet supported)
  */
 const toggleConnection = (active, availableDependencies, options, target) => ({

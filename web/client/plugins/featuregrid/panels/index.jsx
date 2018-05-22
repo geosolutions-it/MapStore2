@@ -16,11 +16,12 @@ const {getTitleSelector, modeSelector, selectedFeaturesCount, hasChangesSelector
 const {userRoleSelector} = require('../../../selectors/security');
 const {isCesium} = require('../../../selectors/maptype');
 const {mapLayoutValuesSelector} = require('../../../selectors/maplayout');
-const {chartDisabledSelector, showAgainSelector, showPopoverSyncSelector} = require('../../../selectors/featuregrid');
+const {chartDisabledSelector, showAgainSelector, showPopoverSyncSelector, selectedLayerNameSelector} = require('../../../selectors/featuregrid');
 const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirmed, closeFeatureGrid} = require('../../../actions/featuregrid');
 const {toolbarEvents, pageEvents} = require('../index');
 const {getAttributeFields} = require('../../../utils/FeatureGridUtils');
 const {getFilterRenderer} = require('../../../components/data/featuregrid/filterRenderers');
+const {isDescribeLoaded} = require('../../../selectors/query');
 
 const filterEditingAllowedUser = (role, editingAllowedRoles = ["ADMIN"]) => {
     return editingAllowedRoles.indexOf(role) !== -1;
@@ -45,7 +46,7 @@ const Toolbar = connect(
         showChartButton: state => !chartDisabledSelector(state) && widgetBuilderAvailable(state),
         isSimpleGeom: isSimpleGeomSelector,
         selectedCount: selectedFeaturesCount,
-        disableToolbar: state => state && state.featuregrid && state.featuregrid.disableToolbar,
+        disableToolbar: state => state && state.featuregrid && state.featuregrid.disableToolbar || !isDescribeLoaded(state, selectedLayerNameSelector(state)),
         displayDownload: wfsDownloadAvailable,
         disableDownload: state => (resultsSelector(state) || []).length === 0,
         isDownloadOpen: state => state && state.controls && state.controls.wfsdownload && state.controls.wfsdownload.enabled,

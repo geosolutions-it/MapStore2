@@ -9,13 +9,18 @@ const {compose, withStateHandlers} = require("recompose");
 
 
 module.exports = compose(
-    withStateHandlers(() => ({
-        expanded: false
-    }),
+    withStateHandlers(({initExpanded}) => {
+        return {
+            expanded: !!initExpanded
+    }; },
     {
-        onSwitch: () => (expanded) => ({
-            expanded
-        })
-
+        onSwitch: (state, {reset}) => (expanded) => {
+            if (!expanded) {
+                reset();
+            }
+            return {
+                expanded
+            };
+        }
     })
 );

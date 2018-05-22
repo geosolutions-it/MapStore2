@@ -38,6 +38,7 @@ const {
     MAP_ERROR, mapError, updatePermissions,
     MAP_METADATA_UPDATED, mapMetadataUpdated,
     METADATA_CHANGED, metadataChanged,
+    setShowMapDetails, SHOW_DETAILS,
     updateAttribute, saveAll
 } = require('../maps');
 
@@ -283,6 +284,13 @@ describe('Test correctness of the maps actions', () => {
         const a = toggleDetailsSheet(detailsSheetReadOnly);
         expect(a.type).toBe(TOGGLE_DETAILS_SHEET);
         expect(a.detailsSheetReadOnly).toBeTruthy();
+
+    });
+    it('setShowMapDetails', () => {
+        const showMapDetails = true;
+        const action = setShowMapDetails(showMapDetails);
+        expect(action.type).toBe(SHOW_DETAILS);
+        expect(action.showMapDetails).toBe(showMapDetails);
 
     });
     it('toggleGroupProperties', () => {

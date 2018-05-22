@@ -11,8 +11,8 @@ const RulesEditorUtils = {
     isSaveDisabled: (currentRule, initRule) => {
         return RulesEditorUtils.isRulePristine(currentRule, initRule) && initRule.hasOwnProperty("id");
     },
-    areDetailsActive: ({layer, grant} = {}) => {
-        return !!layer && grant === "ALLOW";
+    areDetailsActive: (layer, {grant} = {}) => {
+        return !!layer && grant !== "DENY";
     },
     isRulePristine: (currentRule, initRule) => {
         return isEqual(currentRule, initRule);
@@ -24,7 +24,7 @@ const RulesEditorUtils = {
         return true;
     },
     askConfirm: ({constraints = {}} = {}, key, value) => {
-        return !isEmpty(constraints) && (key === "workspace" || key === "layer" || (key === "grant" && value === "DENY"));
+        return !isEmpty(constraints) && (key === "workspace" || key === "layer" || (key === "grant" && value !== "ALLOW"));
     },
     checkIp
 };

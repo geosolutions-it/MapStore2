@@ -8,6 +8,7 @@
 
 const React = require('react');
 const ReactDOM = require('react-dom');
+const ReactTestUtils = require('react-dom/test-utils');
 
 const expect = require('expect');
 const SideCard = require('../SideCard');
@@ -86,5 +87,22 @@ describe('SideCard component', () => {
         body = container.querySelector('.ms-body');
         expect(body).toExist();
         body.innerHTML = 'body';
+    });
+    it('SideCard test mouse events', () => {
+        const actions = {
+            onMouseEnter: () => {},
+            onMouseLeave: () => {}
+        };
+        const spyMouseEnter = expect.spyOn(actions, 'onMouseEnter');
+        const spyMouseLeave = expect.spyOn(actions, 'onMouseLeave');
+        ReactDOM.render(<SideCard selected {...actions} />, document.getElementById("container"));
+        const container = document.getElementById('container');
+        let card = container.querySelector('.mapstore-side-card');
+        expect(card).toExist();
+
+        ReactTestUtils.Simulate.mouseEnter(card);
+        expect(spyMouseEnter).toHaveBeenCalled();
+        ReactTestUtils.Simulate.mouseLeave(card);
+        expect(spyMouseLeave).toHaveBeenCalled();
     });
 });

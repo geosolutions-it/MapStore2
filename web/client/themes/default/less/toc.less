@@ -273,7 +273,8 @@
     }
 
     .toc-group-children {
-        margin-left: 15px;
+        margin-left: 8px;
+        margin-right: 8px;
     }
 
     &.visibility {
@@ -327,7 +328,7 @@
         -webkit-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
     	-moz-box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
         box-shadow: 0 3px 6px rgba(0, 0, 0, 0.06), 0 4px 8px rgba(0, 0, 0, 0.12), 2px -2px 6px rgba(0, 0, 0, 0.06);
-        
+
         .noUi-target {
             background-color: @ms2-color-primary;
             &.noUi-horizontal {
@@ -341,8 +342,8 @@
                             left: -5px;
                             top: -8px;
                         }
-                    } 
-                } 
+                    }
+                }
             }
         }
 
@@ -581,7 +582,69 @@
     }
 }
 
+.compact-legend-grid {
+    margin: 15px;
+    background-color: @ms2-color-background;
+    width: ~"calc(100% - 30px)";
+    position: relative;
+    .mapstore-side-card {
+        &:hover {
+            transform: unset;
+            cursor: default;
+            .shadow-soft;
+        }
+        .ms-head {
+            display: flex;
+            .mapstore-side-preview {
+                width: auto;
+                padding: 8px;
+                overflow: visible;
+                > span {
+                    font-size: @icon-size-md;
+                    cursor: pointer;
+                }
+            }
+            .mapstore-side-card-info {
+                flex: 1;
+                display: flex;
+                flex-direction: column;
+                padding: 8px 16px 8px 8px;
+                .mapstore-side-card-title {
+                    flex: 1;
+                    font-size: @font-size-small;
+                }
+            }
+        }
 
+        .ms-legend-container {
+            > div {
+                padding: 8px 0 8px 24px;
+                span {
+                    font-size: @font-size-small * 0.85;
+                    font-style: italic;
+                }
+            }
+        }
+
+    }
+    .noUi-target {
+        background-color: @ms2-color-primary;
+        &.noUi-horizontal {
+            margin: 0;
+            .noUi-base {
+                .noUi-origin {
+                    .noUi-handle {
+                        border-top: 1px solid @ms2-color-background;
+                        width: 10px;
+                        height: 15px;
+                        left: -5px;
+                        top: -8px;
+                    }
+                }
+            }
+        }
+    }
+}
 .ms-legend-action {
     .shadow-far;
     position: absolute;
@@ -647,68 +710,7 @@
         .panel-body {
             padding: 0;
             .msSideGrid {
-                margin: 15px;
-                background-color: @ms2-color-background;
-                width: ~"calc(100% - 30px)";
-                position: relative;
-                .mapstore-side-card {
-                    &:hover {
-                        transform: unset;
-                        cursor: default;
-                        .shadow-soft;
-                    }
-                    .ms-head {
-                        display: flex;
-                        .mapstore-side-preview {
-                            width: auto;
-                            padding: 8px;
-                            overflow: visible;
-                            > span {
-                                font-size: @icon-size-md;
-                                cursor: pointer;
-                            }
-                        }
-                        .mapstore-side-card-info {
-                            flex: 1;
-                            display: flex;
-                            flex-direction: column;
-                            padding: 8px 16px 8px 8px;
-                            .mapstore-side-card-title {
-                                flex: 1;
-                                font-size: @font-size-small;
-                            }
-                        }
-                    }
-
-                    .ms-legend-container {
-                        > div {
-                            padding: 8px 0 8px 24px;
-                            span {
-                                font-size: @font-size-small * 0.85;
-                                font-style: italic;
-                            }
-                        }
-                    }
-                    
-                }
-            }
-
-            .noUi-target {
-                background-color: @ms2-color-primary;
-                &.noUi-horizontal {
-                    margin: 0;
-                    .noUi-base {
-                        .noUi-origin {
-                            .noUi-handle {
-                                border-top: 1px solid @ms2-color-background;
-                                width: 10px;
-                                height: 15px;
-                                left: -5px;
-                                top: -8px;
-                            }
-                        } 
-                    } 
-                }
+                .compact-legend-grid
             }
         }
     }

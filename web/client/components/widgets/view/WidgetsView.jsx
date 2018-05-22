@@ -40,6 +40,7 @@ module.exports = pure(({
     width,
     showGroupColor,
     groups = [],
+    canEdit = true,
     getWidgetClass = () => { },
     onWidgetClick = () => { },
     updateWidgetProperty = () => { },
@@ -49,16 +50,18 @@ module.exports = pure(({
     ...actions
 } = {}) =>
     (<ResponsiveReactGridLayout
-        key={id}
+        key={id || "widgets-view"}
         useDefaultWidthProvider={useDefaultWidthProvider}
         measureBeforeMount={measureBeforeMount}
         width={!useDefaultWidthProvider ? width : undefined}
+        isResizable={canEdit}
+        isDraggable={canEdit}
         draggableHandle={".draggableHandle"}
         onLayoutChange={onLayoutChange}
         preventCollision
         layouts={layouts ? JSON.parse(JSON.stringify(layouts)) : undefined}
         style={style}
-        className={`widget-container ${className}`}
+        className={`widget-container ${className} ${canEdit ? '' : 'no-drag'}`}
         rowHeight={rowHeight}
         autoSize
         verticalCompact={verticalCompact}
@@ -72,6 +75,7 @@ module.exports = pure(({
                 groups={getWidgetGroups(groups, w)}
                 showGroupColor={showGroupColor}
                 dependencies={dependencies}
+                canEdit={canEdit}
                 updateProperty={(...args) => updateWidgetProperty(w.id, ...args)}
                 onDelete={() => deleteWidget(w)}
                 onEdit={() => editWidget(w)} /></div>))

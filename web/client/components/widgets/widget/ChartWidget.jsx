@@ -36,6 +36,7 @@ module.exports = ({
     series = [],
     loading,
     showTable,
+    canEdit = true,
     confirmDelete= false,
     toggleTableView= () => {},
     toggleDeleteConfirm= () => {},
@@ -56,8 +57,11 @@ module.exports = ({
             ? null : <ButtonToolbar>
             <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
                 <MenuItem onClick={() => toggleTableView()} eventKey="1"><Glyphicon glyph="features-grid"/>&nbsp;<Message msgId="widgets.widget.menu.showChartData" /></MenuItem>
-                <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>
-                <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash"/>&nbsp;<Message msgId="widgets.widget.menu.delete" /></MenuItem>
+                {canEdit
+                    ? [
+                        <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>,
+                        <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash"/>&nbsp;<Message msgId="widgets.widget.menu.delete" /></MenuItem>]
+                    : null}
                 <MenuItem onClick={() => exportCSV({data, title})} eventKey="4"><Glyphicon className="exportCSV" glyph="download"/>&nbsp;<Message msgId="widgets.widget.menu.downloadData" /></MenuItem>
                 <MenuItem onClick={() => exportImage({widgetDivId: `widget-chart-${id}`, title})} eventKey="4"><Glyphicon className="exportImage" glyph="download"/>&nbsp;<Message msgId="widgets.widget.menu.exportImage" /></MenuItem>
             </DropdownButton>
