@@ -170,7 +170,7 @@ const styleFunction = function(feature, options) {
     const type = feature.getGeometry().getType();
     return defaultStyles[type](options && options.style && options.style[type] && {style: {...options.style[type]}} || options || {});*/
     const type = feature.getGeometry().getType();
-    return defaultStyles[type](options && options.style && options.style[type] && {style: {...options.style[type]}} || options || {});
+    return defaultOLStyles[type](options && options.style && options.style[type] && {style: {...options.style[type]}} || options || {});
 };
 
 function getMarkerStyle(options) {

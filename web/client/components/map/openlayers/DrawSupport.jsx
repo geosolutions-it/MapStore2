@@ -911,13 +911,15 @@ class DrawSupport extends React.Component {
             case "MultiPoint": case "Text": { geometry = new ol.geom.MultiPoint(coordinates ? coordinates : []); break; }
             case "MultiLineString": { geometry = new ol.geom.MultiLineString(coordinates ? coordinates : []); break; }
             case "MultiPolygon": { geometry = new ol.geom.MultiPolygon(coordinates ? coordinates : []); break; }
+            /*
+            TODO check if this is not needed anymore
             case "Circle": {
                 if (radius && center) {
                     geometry = ol.geom.Polygon.fromCircle(new ol.geom.Circle([center.x, center.y], radius), 100); break;
                 } else {
-                    geometry = new ol.geom.Polygon(coordinates ? coordinates : []);
+                    geometry = new ol.geom.Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
                 }
-            }
+            }*/
             // default is Polygon
             default: { geometry = projection
                 && !isNaN(parseFloat(radius))
