@@ -14,11 +14,9 @@ const {
     mapMetadataSelector,
     isMapsLastPageSelector,
     mapDescriptionSelector,
-<<<<<<< HEAD
     hasMapAccessLoadingError,
-=======
     showMapDetailsSelector,
->>>>>>> master
+
     mapDetailsUriFromIdSelector,
     mapPermissionsFromIdSelector,
     mapThumbnailsUriFromIdSelector
