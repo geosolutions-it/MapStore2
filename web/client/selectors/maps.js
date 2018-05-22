@@ -24,6 +24,7 @@ const mapDescriptionSelector = (state, id) => mapFromIdSelector(state, id) && ma
 const mapDetailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id) && mapFromIdSelector(state, id).details || "";
 const mapPermissionsFromIdSelector = (state, id) => mapFromIdSelector(state, id) && mapFromIdSelector(state, id).permissions || "";
 const mapThumbnailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id) && mapFromIdSelector(state, id).thumbnail || "";
+const hasMapAccessLoadingError = (state) => get(state, state.maps && "maps.loadingError");
 
 module.exports = {
     mapNameSelector,
@@ -33,6 +34,7 @@ module.exports = {
     mapMetadataSelector,
     isMapsLastPageSelector,
     mapDescriptionSelector,
+    hasMapAccessLoadingError,
     mapDetailsUriFromIdSelector,
     mapPermissionsFromIdSelector,
     mapThumbnailsUriFromIdSelector
