@@ -158,8 +158,25 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
     devServer: {
         proxy: {
             '/rest/geostore': {
-                target: "https://dev.mapstore2.geo-solutions.it/mapstore",
-                secure: false
+                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                secure: false,
+                headers: {
+                    host: "dev.mapstore.geo-solutions.it"
+                }
+            },
+            '/pdf': {
+                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                secure: false,
+                headers: {
+                    host: "dev.mapstore.geo-solutions.it"
+                }
+            },
+            '/mapstore/pdf': {
+                target: "https://dev.mapstore.geo-solutions.it",
+                secure: false,
+                headers: {
+                    host: "dev.mapstore.geo-solutions.it"
+                }
             },
             '/pdf': {
                 target: "https://dev.mapstore2.geo-solutions.it/mapstore",
@@ -170,8 +187,11 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
                 secure: false
             },
             '/proxy': {
-                target: "https://dev.mapstore2.geo-solutions.it/mapstore",
-                secure: false
+                target: "https://dev.mapstore.geo-solutions.it/mapstore",
+                secure: false,
+                headers: {
+                    host: "dev.mapstore.geo-solutions.it"
+                }
             },
             '/docs': {
                 target: "http://localhost:8081",

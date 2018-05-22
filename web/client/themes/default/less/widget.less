@@ -5,6 +5,9 @@
     cursor: -ms-grab;
     cursor: grab;
 }
+.no-drag .draggableHandle {
+    cursor: inherit;
+}
 .widget-container {
     &.react-grid-layout.on-map {
         pointer-events: none;
@@ -27,7 +30,11 @@
             }
         }
     }
-
+    &.no-drag .mapstore-widget-card {
+         -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.2);
+        -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
     .mapstore-widget-card {
         background: @ms2-color-background;
         margin: 20px 0;
@@ -36,9 +43,7 @@
         height: 100%;
         width: 100%;
         margin: 0;
-        -webkit-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-        -moz-box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
-        box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
+        .shadow-far;
         .mapstore-widget-layer {
             text-align: center;
             margin: 10px 5%;

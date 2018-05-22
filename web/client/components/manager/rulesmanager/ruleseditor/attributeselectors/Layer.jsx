@@ -44,8 +44,7 @@ module.exports = compose(
     }),
     withPropsOnChange(["workspace"], ({workspace}) => {
         return {
-            parentsFilter: {workspace},
-            disabled: !workspace
+            parentsFilter: {workspace}
     }; }),
     withHandlers({
         onValueSelected: ({setOption = () => {}}) => filterTerm => {

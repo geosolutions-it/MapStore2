@@ -29,7 +29,7 @@ const getSaveTooltipId = (step, {id} = {}) => {
     if (id) {
         return "widgets.builder.wizard.updateWidget";
     }
-    return "widgets.builder.wizard.addToTheMap";
+    return "widgets.builder.wizard.addTheWidget";
 };
 module.exports = ({ openFilterEditor = () => { }, step = 0, stepButtons = [], editorData = {}, setPage = () => {}, onFinish = () => {}} = {}) => (<Toolbar btnDefaultProps={{
         bsStyle: "primary",

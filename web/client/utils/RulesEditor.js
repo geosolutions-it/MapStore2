@@ -11,8 +11,8 @@ const RulesEditorUtils = {
     isSaveDisabled: (currentRule, initRule) => {
         return RulesEditorUtils.isRulePristine(currentRule, initRule) && initRule.hasOwnProperty("id");
     },
-    areDetailsActive: ({layer} = {}) => {
-        return !!layer;
+    areDetailsActive: (layer, {grant} = {}) => {
+        return !!layer && grant !== "DENY";
     },
     isRulePristine: (currentRule, initRule) => {
         return isEqual(currentRule, initRule);

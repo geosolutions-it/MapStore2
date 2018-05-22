@@ -166,10 +166,11 @@ const defaultOLStyles = {
 };
 
 const styleFunction = function(feature, options) {
-    return defaultOLStyles[feature.getGeometry().getType()](options);
 /*const styleFunction = function(feature, options) {
     const type = feature.getGeometry().getType();
     return defaultStyles[type](options && options.style && options.style[type] && {style: {...options.style[type]}} || options || {});*/
+    const type = feature.getGeometry().getType();
+    return defaultOLStyles[type](options && options.style && options.style[type] && {style: {...options.style[type]}} || options || {});
 };
 
 function getMarkerStyle(options) {

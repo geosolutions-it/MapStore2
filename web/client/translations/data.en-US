@@ -61,6 +61,7 @@
             "deleteLayerMessage": "Do you really want to delete this Layer?",
             "confirmDelete": "Are you sure?",
             "featureTypeError": "Cannot load layer attributes",
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "Elevation",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
@@ -385,6 +386,7 @@
             "refreshConfirm": "Update",
             "refreshMessage": "Reload WMS layers configuration from the server(s)",
             "refreshError": "Error updating layers: ",
+            "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
             "refreshOptions": {
                 "bbox": "Update BBOX",
                 "search": "Update search options",
@@ -939,6 +941,7 @@
             "type": "Type",
             "serviceTitle": "Title",
             "serviceTitlePlaceholder": "type a title",
+            "missingReference": "Missing OGC reference metadata",
             "notification": {
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",
@@ -1212,7 +1215,7 @@
                     "title": "Widget"
                 },
                 "wizard": {
-                    "backToTypeSelection": "Back to type selection",
+                    "backToTypeSelection": "Back to chart type selection",
                     "backToWidgetTypeSelection": "Back to widget type selection",
                     "backToFeatureGrid": "Back to the feature grid",
                     "backToLayerSelection": "Back to layer selection",
@@ -1227,7 +1230,7 @@
                     "configureTableOptions": "Configure table options",
                     "resetColumnsSizes": "Reset all changes to the column sizes",
                     "updateWidget": "Update the widget",
-                    "addToTheMap": "Add the widget to the map",
+                    "addTheWidget": "Add the widget",
                     "titlePlaceholder": "Insert title...",
                     "textPlaceholder": "Insert text...",
                     "useThisMap": "Use this map",
@@ -1489,7 +1492,8 @@
             "cancelButton": "Cancel",
             "cqlRead": "CQL Filter Read Rules",
             "cqlWrite": "CQL Filter Write Rules",
-            "missingconfig": "Rules manager misses the configuration. Access denied!"
+            "missingconfig": "Rules manager misses the configuration. Access denied!",
+            "selectworkspace": "You need to select the workspace to enable advanced options"
         },
         "tutorial": {
             "title": "Tutorial",

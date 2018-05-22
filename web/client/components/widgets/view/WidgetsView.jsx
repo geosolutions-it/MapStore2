@@ -61,7 +61,7 @@ module.exports = pure(({
         preventCollision
         layouts={layouts ? JSON.parse(JSON.stringify(layouts)) : undefined}
         style={style}
-        className={`widget-container ${className}`}
+        className={`widget-container ${className} ${canEdit ? '' : 'no-drag'}`}
         rowHeight={rowHeight}
         autoSize
         verticalCompact={verticalCompact}

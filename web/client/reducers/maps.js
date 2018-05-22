@@ -10,7 +10,7 @@ const {
     MAPS_LIST_LOADED, MAPS_LIST_LOADING, MAPS_LIST_LOAD_ERROR, MAP_CREATED, MAP_UPDATING,
     MAP_METADATA_UPDATED, MAP_DELETING, MAP_DELETED, ATTRIBUTE_UPDATED, PERMISSIONS_LIST_LOADING,
     PERMISSIONS_LIST_LOADED, SAVE_MAP, PERMISSIONS_UPDATED, THUMBNAIL_ERROR, RESET_UPDATING,
-    MAPS_SEARCH_TEXT_CHANGED, METADATA_CHANGED} = require('../actions/maps');
+    MAPS_SEARCH_TEXT_CHANGED, METADATA_CHANGED, SHOW_DETAILS} = require('../actions/maps');
 const {
     EDIT_MAP, RESET_CURRENT_MAP} = require('../actions/currentMap');
 const assign = require('object-assign');
@@ -62,6 +62,7 @@ const {isArray, isNil} = require('lodash');
  */
 function maps(state = {
     enabled: false,
+    showMapDetails: true,
     errors: [],
     searchText: ""}, action) {
     switch (action.type) {
@@ -74,6 +75,9 @@ function maps(state = {
         return assign({}, state, {
             metadata: assign({}, state.metadata, {[action.prop]: action.value })
         });
+    }
+    case SHOW_DETAILS: {
+        return assign({}, state, {showMapDetails: action.showMapDetails});
     }
     case EDIT_MAP: {
         return assign({}, state, {

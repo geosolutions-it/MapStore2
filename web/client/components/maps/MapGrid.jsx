@@ -18,6 +18,7 @@ class MapGrid extends React.Component {
         panelProps: PropTypes.object,
         bottom: PropTypes.node,
         loading: PropTypes.bool,
+        showMapDetails: PropTypes.bool,
         maps: PropTypes.array,
         currentMap: PropTypes.object,
         fluid: PropTypes.bool,
@@ -98,6 +99,7 @@ class MapGrid extends React.Component {
                     <MapCard viewerUrl={viewerUrl} mapType={mapType}
                         map={map}
                         onEdit={this.props.editMap}
+                        showMapDetails={this.props.showMapDetails}
                         detailsSheetActions={this.props.detailsSheetActions}
                         onMapDelete={this.props.deleteMap}
                         onUpdateAttribute={this.props.onUpdateAttribute}/>

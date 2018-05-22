@@ -136,7 +136,7 @@ module.exports = ({events = {}, syncPopover = {showPopoverSync: true, dockSize: 
             onClick={events.sync}
             glyph="map-filter"
             renderPopover={syncPopover.showPopoverSync}
-            popoverOptions={{
+            popoverOptions={!disableToolbar && {
                 placement: "top",
                 content: (<span>
                     <p><Message msgId="featuregrid.toolbar.synchPopoverText"/></p>
