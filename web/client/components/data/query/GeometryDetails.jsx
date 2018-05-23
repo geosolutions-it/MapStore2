@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -7,7 +6,7 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-
+const PropTypes = require('prop-types');
 const {Row, Col, FormControl} = require('react-bootstrap');
 const SwitchPanel = require('../../misc/switch/SwitchPanel');
 const I18N = require('../../I18N/I18N');
@@ -24,7 +23,6 @@ class GeometryDetails extends React.Component {
         type: PropTypes.string,
         onShowPanel: PropTypes.func,
         onChangeDrawingStatus: PropTypes.func,
-        onEndDrawing: PropTypes.func,
         zoom: PropTypes.number,
         enableGeodesic: PropTypes.bool
     };
@@ -34,8 +32,7 @@ class GeometryDetails extends React.Component {
         geometry: null,
         type: null,
         onShowPanel: () => {},
-        onChangeDrawingStatus: () => {},
-        onEndDrawing: () => {}
+        onChangeDrawingStatus: () => {}
     };
 
     componentDidMount() {
