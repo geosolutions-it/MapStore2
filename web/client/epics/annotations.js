@@ -19,8 +19,9 @@ const {error} = require('../actions/notifications');
 
 const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAdd, showTextArea,
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
-    TOGGLE_ADD, SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, STOP_DRAWING,
-    CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS } = require('../actions/annotations');
+    TOGGLE_ADD, SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, /*STOP_DRAWING,*/
+    CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS,
+    ADD_NEW_FEATURE} = require('../actions/annotations');
 const {CLICK_ON_MAP} = require('../actions/map');
 
 const {GEOMETRY_CHANGED} = require('../actions/draw');
@@ -71,6 +72,8 @@ const mergeGeometry = (features) => {
 
 const toggleDrawOrEdit = (state, featureType) => {
     const feature = state.annotations.editing;
+    const selected = state.annotations.selected;
+    const drawing = state.annotations.drawing;
     const type = featureType || state.annotations.featureType;
     const multiGeom = state.annotations.config.multiGeometry;
     const drawOptions = {
@@ -80,7 +83,7 @@ const toggleDrawOrEdit = (state, featureType) => {
         drawEnabled: false,
         transformToFeatureCollection: true
     };
-    return changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, feature.style/* || {[type]: DEFAULT_ANNOTATIONS_STYLES[type]}*/);
+    return changeDrawingStatus("drawOrEdit", type, "annotations", [drawing ? selected : feature], drawOptions, feature.style/* || {[type]: DEFAULT_ANNOTATIONS_STYLES[type]}*/);
 };
 
 const createNewFeature = (action) => {
@@ -105,11 +108,23 @@ module.exports = (viewer) => ({
             return Rx.Observable.empty();
         }),
     editAnnotationEpic: (action$, store) =>
-        action$.ofType(EDIT_ANNOTATION)
+        action$.ofType(EDIT_ANNOTATION, ADD_NEW_FEATURE)
         .switchMap(() => {
+            const state = store.getState();
+            const feature = state.annotations.editing;
+            const type = state.annotations.featureType;
+            const multiGeom = state.annotations.config.multiGeometry;
+            const drawOptions = {
+                featureProjection: "EPSG:4326",
+                stopAfterDrawing: !multiGeom,
+                editEnabled: false,
+                selectEnabled: true,
+                drawEnabled: false,
+                transformToFeatureCollection: true
+            };
             return Rx.Observable.from([
                 changeLayerProperties('annotations', {visibility: false}),
-                toggleDrawOrEdit(store.getState()),
+                changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, feature.style),
                 hideMapinfoMarker()
             ]);
         }),
@@ -171,6 +186,7 @@ module.exports = (viewer) => ({
         .switchMap( (a) => {
             const state = store.getState();
             const feature = state.annotations.editing;
+            const selected = state.annotations.selected;
             const type = a.featureType || state.annotations.featureType;
             const multiGeom = state.annotations.config.multiGeometry;
             const drawOptions = {
@@ -180,7 +196,7 @@ module.exports = (viewer) => ({
                 drawEnabled: false,
                 transformToFeatureCollection: true
             };
-            return Rx.Observable.of(changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, feature.style));
+            return Rx.Observable.of(changeDrawingStatus("drawOrEdit", type, "annotations", [selected], drawOptions, feature.style));
         }),
     /*stopDrawingMultiGeomEpic: (action$, store) => action$.ofType(STOP_DRAWING)
         .filter(() => store.getState().annotations.editing.features && !!store.getState().annotations.editing.features.length)

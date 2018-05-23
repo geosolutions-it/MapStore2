@@ -658,6 +658,10 @@ class DrawSupport extends React.Component {
             this.addFeatures(newProps);
         }
     };
+    addSingleClickListener = (singleclickCallback) => {
+        let evtKey = this.props.map.on('singleclick', singleclickCallback);
+        return evtKey;
+    };
 
     addDrawOrEditInteractions = (newProps) => {
         const singleClickCallback = (e) => {
@@ -694,7 +698,11 @@ class DrawSupport extends React.Component {
             }
         };
         this.clean();
-        this.props.map.removeEventListener('singleclick');
+        if (this.state && this.state.key) {
+            ol.Observable.unByKey(this.state.key);
+        }
+
+        // this.props.map.un('singleclick', singleClickCallback, this);
         /*
         const newFeature = reprojectGeoJson(mockFeatureCollection, newProps.options.featureProjection, this.props.map.getView().getProjection().getCode());
         const props = assign({}, newProps, {features: newFeature.features.length ? newFeature.features : [], newFeature});
@@ -719,11 +727,11 @@ class DrawSupport extends React.Component {
             this.addModifyInteraction();
             // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
             this.addTranslateInteraction();
-            if (newProps.options && newProps.options.selected) {
-                this.addSelectInteraction(newProps.options && newProps.options.selected, newProps);
-            }
-            this.props.map.on('singleclick', singleClickCallback);
-
+            this.setState({key: this.addSingleClickListener(singleClickCallback)});
+            // this.props.map.on('singleclick', singleClickCallback);
+        }
+        if (newProps.options.selectEnabled) { // TODO fix all call to this which are missing "selectEnabled" flag
+            this.addSelectInteraction(newProps.options && newProps.options.selected, newProps);
         }
 
         if (newProps.options.drawEnabled) {
@@ -1004,9 +1012,6 @@ class DrawSupport extends React.Component {
     };
 
     addModifyInteraction = () => {
-        this.props.map.un('singleclick', () => {
-            console.log("remove listener");
-        });
         if (this.modifyInteraction) {
             this.props.map.removeInteraction(this.modifyInteraction);
         }
@@ -1041,7 +1046,7 @@ class DrawSupport extends React.Component {
                 return reprojectGeoJson(geojsonFormat.writeFeatureObject(newFt), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
             });
             if (this.props.options.transformToFeatureCollection) {
-                this.props.onGeometryChanged([{type: "FeatureCollection", features}], this.props.drawOwner, false, "editing", "editing"); // TODO FIX THIS
+                // this.props.onGeometryChanged([{type: "FeatureCollection", features}], this.props.drawOwner, false, "editing", "editing"); // TODO CHECK IF THIS IS NEEDED
                 this.props.onDrawingFeatures(features);
             } else {
                 this.props.onGeometryChanged(features, this.props.drawOwner, false, "editing", "editing"); // TODO FIX THIS

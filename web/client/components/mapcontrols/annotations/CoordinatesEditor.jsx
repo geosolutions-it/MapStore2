@@ -126,10 +126,10 @@ class CoordinateEditor extends React.Component {
                 visible: this.props.completeGeometry,
                 onClick: () => {
                     if (validationCompleteButton) {
-                        this.props.onComplete(actualComponents);
-                        this.setState({
+                        this.props.onComplete(actualComponents); // TODO implement this
+                        /*this.setState({
                             components: []
-                        });
+                        });*/
                     }
                 }
             },

@@ -221,7 +221,7 @@ class AnnotationsEditor extends React.Component {
                                 visible: true,
                                 multiGeometry: this.props.config.multiGeometry,
                                 onClick: () => {this.props.onEdit(this.props.id); },
-                                disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.features,
+                                disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.features && this.props.editing.features.length,
                                 bsStyle: this.props.drawing ? "success" : "primary"
                             }, {
                                 glyph: 'trash',
@@ -285,12 +285,12 @@ class AnnotationsEditor extends React.Component {
                             }, {
                                 glyph: 'polygon-trash',
                                 tooltipId: "annotations.deleteGeometry",
-                                visible: this.props.editing && !!this.props.editing.features,
+                                visible: this.props.editing && this.props.editing.features && this.props.editing.features.length,
                                 onClick: this.props.onDeleteGeometry
                             }, {
                                 glyph: 'dropper',
                                 tooltipId: "annotations.styleGeometry",
-                                visible: this.props.editing && !!this.props.editing.features,
+                                visible: this.props.editing && this.props.editing.features && this.props.editing.features.length,
                                 onClick: this.props.onStyleGeometry
                             }, {
                                 glyph: 'floppy-disk',
@@ -321,7 +321,7 @@ class AnnotationsEditor extends React.Component {
                             glyph: 'floppy-disk',
                             tooltipId: "annotations.save",
                             visible: true,
-                            disabled: this.props.selected && this.props.selected.properties && !this.props.selected.properties.allValidPoints,
+                            disabled: this.props.selected && this.props.selected.properties && !this.props.selected.properties.isValidFeature,
                             onClick: () => {
                                 if (this.props.selected) {
                                     this.props.onAddNewFeature(this.props.selected);
@@ -444,7 +444,7 @@ class AnnotationsEditor extends React.Component {
 
     renderStyler = () => {
         const {editing, onCancelStyle, onSaveStyle, stylerType, onSetUnsavedStyle, onToggleUnsavedStyleModal} = this.props;
-        const stylerTabs = editing.features ? getAvailableStyler(convertGeoJSONToInternalModel(editing)) : [];
+        const stylerTabs = editing.features && editing.features.length ? getAvailableStyler(convertGeoJSONToInternalModel(editing)) : [];
         return (<div className="mapstore-annotations-info-viewer-styler">
             <Grid className="mapstore-annotations-info-viewer-styler-buttons" fluid style={{width: '100%', boxShadow: 'none'}}>
                 <Row className="noTopMargin">
@@ -661,7 +661,7 @@ class AnnotationsEditor extends React.Component {
                 });
             }
             return previous;
-        }, {}), this.props.editing.features ? {} : {
+        }, {}), this.props.editing.features && this.props.editing.features.length ? {} : {
             geometry: 'annotations.emptygeometry'
         });
 

@@ -7,7 +7,7 @@
 */
 const uuidv1 = require('uuid/v1');
 const LocaleUtils = require('./LocaleUtils');
-const {values, slice} = require('lodash');
+const {values, slice, head} = require('lodash');
 const assign = require('object-assign');
 const uuid = require('uuid');
 
@@ -241,8 +241,49 @@ const AnnotationsUtils = {
             return assign({}, f, { properties: assign({}, f.properties, {id: uuid.v1()})});
         });
     },
+    COMPONENTS_VALIDATION: {
+        "Point": {min: 1, add: false, remove: false, validation: "validateCoordinates", notValid: "Add a valid coordinate to complete the Point"},
+        "Polygon": {min: 3, add: true, remove: true, validation: "validateCoordinates", notValid: "Add 3 valid coordinates to complete the Polygon"},
+        "LineString": {min: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "Add 2 valid coordinates to complete the Polyline"},
+        "Circle": {add: false, remove: false, validation: "validateCircle", notValid: "Add a valid coordinate and a radius (m) to complete the Circle"},
+        "Text": {add: false, remove: false, validation: "validateText", notValid: "Add a valid coordinate and a value to complete the Text"}
+    },
     validateCoords: ({lat, lon}) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
-    validateCoordsArray: ([lon, lat]) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon))
+    validateCoordsArray: ([lon, lat]) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
+    validateCoordinates: ({components = [], remove = false, type, isArray = false }) => {
+        if (components && components.length) {
+            const validComponents = components.filter(AnnotationsUtils[isArray ? "validateCoordsArray" : "validateCoords"]);
+
+            if (remove) {
+                return validComponents.length > AnnotationsUtils.COMPONENTS_VALIDATION[type].min && validComponents.length === components.length;
+            }
+            return validComponents.length >= AnnotationsUtils.COMPONENTS_VALIDATION[type].min && validComponents.length === components.length;
+        }
+        return false;
+    },
+    validateCircle: ({components = [], properties = {radius: 0}, isArray = false}) => {
+        if (components && components.length) {
+            const cmp = head(components);
+            return !isNaN(parseFloat(properties.radius)) && (isArray ? AnnotationsUtils.validateCoordsArray(cmp) : AnnotationsUtils.validateCoords(cmp));
+        }
+        return false;
+    },
+    validateText: ({components = [], properties = {valueText: ""}, isArray = false}) => {
+        if (components && components.length) {
+            const cmp = head(components);
+            return properties && !!properties.valueText && (isArray ? AnnotationsUtils.validateCoordsArray(cmp) : AnnotationsUtils.validateCoords(cmp));
+        }
+        return false;
+    },
+    validateFeature: ({components = [], type, remove = false, properties = {}, isArray = false}) => {
+        if (type === "Text") {
+            return AnnotationsUtils.validateText({components, properties, isArray});
+        }
+        if (type === "Circle") {
+            return AnnotationsUtils.validateCircle({components, properties, isArray});
+        }
+        return AnnotationsUtils.validateCoordinates({components, remove, type, isArray});
+    }
 };
 
 module.exports = AnnotationsUtils;

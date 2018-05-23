@@ -20,7 +20,8 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
     ADD_TEXT, CANCEL_CLOSE_TEXT, SHOW_TEXT_AREA, SAVE_TEXT, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS, CHANGE_TEXT,
     ADD_NEW_FEATURE} = require('../actions/annotations');
 
-const {getAvailableStyler, DEFAULT_ANNOTATIONS_STYLES, convertGeoJSONToInternalModel, addIds, validateCoordsArray} = require('../utils/AnnotationsUtils');
+const {getAvailableStyler, DEFAULT_ANNOTATIONS_STYLES, convertGeoJSONToInternalModel, addIds, validateFeature} = require('../utils/AnnotationsUtils');
+const {set} = require('../utils/ImmutableUtils');
 const {head, includes, slice, findIndex, isNil} = require('lodash');
 
 const uuid = require('uuid');
@@ -53,7 +54,7 @@ const updateFeatures = (state, geom) => {
     }, properties: state.selected.properties} : assign({}, state.editing.features[ftChangedIndex]);*/
     let ftChanged = ftChangedIndex === -1 ? {type: "Feature", geometry: {
         type: state.selected.geometry.type
-    }, properties: {...state.selected.properties, allValidPoints: coordinates.filter(validateCoordsArray).length === coordinates.length}} : assign({}, state.editing.features[ftChangedIndex]);
+    }, properties: {...state.selected.properties}} : assign({}, state.editing.features[ftChangedIndex]);
 
     if (!isNil(coordinates)) {
 
@@ -77,6 +78,12 @@ const updateFeatures = (state, geom) => {
         }
     }
     let selected = assign({}, ftChanged);
+    selected = set("properties.isValidFeature", validateFeature({
+        properties: selected.properties,
+        components: selected.geometry.coordinates,
+        type: selected.geometry.type,
+        isArray: true
+    }), selected);
     let features;
     if (selected.properties.isCircle) {
         let center = !isNil(coordinates) ? validCoordinates[0] : state.selected.properties.center;
@@ -120,7 +127,7 @@ function annotations(state = { validationErrors: {} }, action) {
         }
         case FEATURES_SELECTED: {
             let selected = head(action.features) || null;
-            if (selected && selected.properties && (selected.properties.isCircle)) {
+            if (selected && selected.properties && selected.properties.isCircle) {
                 selected = {...selected, geometry: {coordinates: selected.properties.center, type: "Circle"}, type: "Feature"};
             }
             if (selected && selected.properties && selected.properties.isText) {
@@ -132,12 +139,19 @@ function annotations(state = { validationErrors: {} }, action) {
         }
         case DRAWING_FEATURE: {
             let selected = head(action.features) || null;
-            if (selected && selected.properties && (selected.properties.isCircle)) {
+            if (selected && selected.properties && selected.properties.isCircle) {
                 selected = {...selected, geometry: {coordinates: selected.properties.center, type: "Circle"}, type: "Feature"};
-            }
-            if (selected && selected.properties && selected.properties.isText) {
+            } else if (selected && selected.properties && selected.properties.isText) {
                 selected = {...selected, geometry: {coordinates: selected.geometry.coordinates, type: "Text"}, type: "Feature"};
             }
+
+            selected = set("properties.isValidFeature", validateFeature({
+                properties: selected.properties,
+                components: selected.geometry.coordinates,
+                type: selected.geometry.type,
+                isArray: true
+            }), selected);
+
             return assign({}, state, { selected});
         }
         case REMOVE_ANNOTATION:
@@ -171,15 +185,14 @@ function annotations(state = { validationErrors: {} }, action) {
             });
 
         }
-        case ADD_NEW_FEATURE:
-            return assign({}, state, {
-                editing: assign({}, state.editing, {
-                    features: state.editing.features.concat(action.feature)
-                }),
+        case ADD_NEW_FEATURE: {
+            const newState = set("editing.features", state.editing.features.concat(action.feature), state);
+            return assign({}, newState, {
                 coordinateEditorEnabled: false,
                 drawing: false,
                 selected: null
             });
+        }
         case CHANGE_STYLER:
             return assign({}, state, {
                 stylerType: action.stylerType
