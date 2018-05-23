@@ -43,7 +43,9 @@ const refreshTokenEpic = (action$, store) =>
 const reloadMapConfig = (action$, store) =>
     action$.ofType(LOGIN_SUCCESS, LOGOUT)
     .filter(() => pathnameSelector(store.getState()).indexOf("viewer") !== -1)
-    .filter(() => hasMapAccessLoadingError(store.getState))
+    .filter((data) => {
+        return data.type !== "LOGOUT" ? hasMapAccessLoadingError(store.getState) : true;
+    })
     .switchMap(() => {
         const urlQuery = url.parse(window.location.href, true).query;
         let mapId = mapIdSelector(store.getState());
