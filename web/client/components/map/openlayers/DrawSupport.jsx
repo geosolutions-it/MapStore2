@@ -8,7 +8,7 @@
 
 const React = require('react');
 const ol = require('openlayers');
-const {concat, head, isArray} = require('lodash');
+const {concat, head, isArray, isNil} = require('lodash');
 const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const uuid = require('uuid');
@@ -74,6 +74,7 @@ class DrawSupport extends React.Component {
  * replace allows to replace all the features drawn by Drawsupport with new ones
  * clean it cleans the drawn features and stop the drawsupport
  * cleanAndContinueDrawing it cleares the drawn features and allows to continue drawing features
+ * endDrawing as for 'replace' action allows to replace all the features in addition triggers end drawing action to store data in state
 */
     componentWillReceiveProps(newProps) {
         if (this.drawLayer) {
@@ -130,7 +131,8 @@ class DrawSupport extends React.Component {
             this.addInteractions(newProps);
         }
 
-        this.addFeatures(newProps);
+        const feature = this.addFeatures(newProps);
+        return feature;
     };
 
     addFeatures = ({features, drawMethod, options}) => {
@@ -158,7 +160,7 @@ class DrawSupport extends React.Component {
     replaceFeatures = (newProps) => {
         let feature;
         if (!this.drawLayer) {
-            this.addLayer(newProps, newProps.options && newProps.options.drawEnabled || false);
+            feature = this.addLayer(newProps, newProps.options && newProps.options.drawEnabled || false);
         } else {
             this.drawSource.clear();
             feature = this.addFeatures(newProps);
@@ -171,8 +173,10 @@ class DrawSupport extends React.Component {
 
     endDrawing = (newProps) => {
         const olFeature = this.replaceFeatures(newProps);
-        const feature = this.fromOLFeature(olFeature);
-        this.props.onEndDrawing(feature, newProps.drawOwner);
+        if (olFeature) {
+            const feature = this.fromOLFeature(olFeature);
+            this.props.onEndDrawing(feature, newProps.drawOwner);
+        }
     }
 
     addDrawInteraction = (drawMethod, startingPoint, maxPoints, newProps) => {
@@ -710,18 +714,22 @@ class DrawSupport extends React.Component {
             case "MultiLineString": { geometry = new ol.geom.MultiLineString(coordinates ? coordinates : []); break; }
             case "MultiPolygon": { geometry = new ol.geom.MultiPolygon(coordinates ? coordinates : []); break; }
             // defaults is Polygon
-            default: { geometry = projection
-                && !isNaN(parseFloat(radius))
-                && center
-                && !isNaN(parseFloat(center.x))
-                && !isNaN(parseFloat(center.y)) ?
+            default: {
+                const isCircle = projection
+                    && !isNaN(parseFloat(radius))
+                    && center
+                    && !isNil(center.x)
+                    && !isNil(center.y)
+                    && !isNaN(parseFloat(center.x))
+                    && !isNaN(parseFloat(center.y));
+                geometry = isCircle ?
                 options.geodesic ?
                 ol.geom.Polygon.circular(wgs84Sphere, this.reprojectCoordinatesToWGS84([center.x, center.y], projection), radius, 100).clone().transform('EPSG:4326', projection)
                 : ol.geom.Polygon.fromCircle(new ol.geom.Circle([center.x, center.y], radius), 100)
                     : new ol.geom.Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
 
                 // store geodesic center
-                if (geometry && options.geodesic) {
+                if (geometry && isCircle && options.geodesic) {
                     geometry.setProperties({geodesicCenter: [center.x, center.y]}, true);
                 }
             }
