@@ -14,12 +14,14 @@ const {
     mapIdSelector,
     projectionDefsSelector,
     mapNameSelector,
+    hasMapAccessLoadingError,
     mapInfoDetailsUriFromIdSelector
 } = require('../map');
 const center = {x: 1, y: 1};
 let state = {
         map: {center: center},
         mapInitialConfig: {
+            loadingError: {},
             mapId: 123
         }
     };
@@ -100,5 +102,9 @@ describe('Test map selectors', () => {
     it('test mapNameSelector no state', () => {
         const props = mapNameSelector({});
         expect(props).toBe('');
+    });
+    it('test hasMapAccessLoadingError', () => {
+        const props = hasMapAccessLoadingError(state);
+        expect(props).toEqual({});
     });
 });

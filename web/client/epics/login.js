@@ -7,8 +7,7 @@
  */
 const {refreshAccessToken, sessionValid, logout, LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
 const {loadMapConfig, configureError} = require('../actions/config');
-const {mapIdSelector} = require('../selectors/map');
-const {hasMapAccessLoadingError} = require('../selectors/maps');
+const {mapIdSelector, hasMapAccessLoadingError} = require('../selectors/map');
 const {initCatalog} = require('../actions/catalog');
 const {pathnameSelector} = require('../selectors/routing');
 const ConfigUtils = require('../utils/ConfigUtils');
@@ -44,7 +43,7 @@ const reloadMapConfig = (action$, store) =>
     action$.ofType(LOGIN_SUCCESS, LOGOUT)
     .filter(() => pathnameSelector(store.getState()).indexOf("viewer") !== -1)
     .filter((data) => {
-        return data.type !== "LOGOUT" ? hasMapAccessLoadingError(store.getState) : true;
+        return data.type !== "LOGOUT" ? hasMapAccessLoadingError(store.getState()) : true;
     })
     .switchMap(() => {
         const urlQuery = url.parse(window.location.href, true).query;

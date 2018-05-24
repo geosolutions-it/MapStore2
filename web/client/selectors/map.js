@@ -67,9 +67,19 @@ const mapVersionSelector = (state) => state.map && state.map.present && state.ma
  * @return {string} name/title of the map
  */
 const mapNameSelector = (state) => state.map && state.map.present && state.map.present.info && state.map.present.info.name || '';
+/**
+ * Checks for an error when a map is accessed
+ * @function
+ * @memberof selectors.map
+ * @param  {object} state the state
+ * @return {object} error object
+ */
+const hasMapAccessLoadingError = (state) => get(state, "mapInitialConfig.loadingError");
+
 
 module.exports = {
     mapInfoDetailsUriFromIdSelector,
+    hasMapAccessLoadingError,
     mapSelector,
     scalesSelector,
     projectionSelector,

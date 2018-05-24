@@ -14,9 +14,7 @@ const {
     mapMetadataSelector,
     isMapsLastPageSelector,
     mapDescriptionSelector,
-    hasMapAccessLoadingError,
     showMapDetailsSelector,
-
     mapDetailsUriFromIdSelector,
     mapPermissionsFromIdSelector,
     mapThumbnailsUriFromIdSelector
@@ -31,7 +29,6 @@ const mapId = 1;
 const creation = '2017-12-01 10:58:46.337';
 const mapsState = {
     maps: {
-        loadingError: {},
         showMapDetails: true,
         metadata: {
             name,
@@ -102,8 +99,5 @@ describe('Test maps selectors', () => {
         const props = mapThumbnailsUriFromIdSelector(mapsState, mapId);
         expect(props).toBe(thumbnail);
     });
-    it('test hasMapAccessLoadingError', () => {
-        const props = hasMapAccessLoadingError(mapsState);
-        expect(props).toEqual({});
-    });
+
 });
