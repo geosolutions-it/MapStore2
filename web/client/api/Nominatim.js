@@ -23,7 +23,7 @@ const Api = {
     geocode: function(text, options) {
         var params = assign({q: text}, defaultOptions, options || {});
         var url = urlUtil.format({
-            protocol: window.location.protocol,
+            protocol: "https",
             host: DEFAULT_URL,
             query: params
         });
@@ -32,7 +32,7 @@ const Api = {
     reverseGeocode: function(coords, options) {
         const params = assign({lat: coords.lat, lon: coords.lng}, options || {}, defaultOptions);
         const url = urlUtil.format({
-            protocol: window.location.protocol,
+            protocol: "https",
             host: DEFAULT_REVERSE_URL,
             query: params
         });
