@@ -7,7 +7,8 @@
  */
 const {refreshAccessToken, sessionValid, logout, LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
 const {loadMapConfig, configureError} = require('../actions/config');
-const {mapIdSelector, hasMapAccessLoadingError} = require('../selectors/map');
+const {mapIdSelector} = require('../selectors/map');
+const {hasMapAccessLoadingError} = require('../selectors/mapInitialConfig');
 const {initCatalog} = require('../actions/catalog');
 const {pathnameSelector} = require('../selectors/routing');
 const ConfigUtils = require('../utils/ConfigUtils');
