@@ -9,7 +9,7 @@ const {get} = require('lodash');
 /**
  * Checks for an error when a map is accessed
  * @function
- * @memberof selectors.map
+ * @memberof selectors.mapInitialConfig
  * @param  {object} state the state
  * @return {object} error object
  */

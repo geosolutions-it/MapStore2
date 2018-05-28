@@ -24,7 +24,6 @@ const mapDescriptionSelector = (state, id) => mapFromIdSelector(state, id) && ma
 const mapDetailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id) && mapFromIdSelector(state, id).details || "";
 const mapPermissionsFromIdSelector = (state, id) => mapFromIdSelector(state, id) && mapFromIdSelector(state, id).permissions || "";
 const mapThumbnailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id) && mapFromIdSelector(state, id).thumbnail || "";
-
 /**
  * Get flag for enable/disable of the map card details
  * @function

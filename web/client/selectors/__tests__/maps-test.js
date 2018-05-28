@@ -99,5 +99,4 @@ describe('Test maps selectors', () => {
         const props = mapThumbnailsUriFromIdSelector(mapsState, mapId);
         expect(props).toBe(thumbnail);
     });
-
 });
