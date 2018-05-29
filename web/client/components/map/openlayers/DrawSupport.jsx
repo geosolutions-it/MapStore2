@@ -490,7 +490,7 @@ class DrawSupport extends React.Component {
                         return geom;
                     };
                 } else {
-                    roiProps.geometryFunction = roiProps.type = geometryType;
+                    roiProps.type = geometryType;
                 }
                 break;
             }

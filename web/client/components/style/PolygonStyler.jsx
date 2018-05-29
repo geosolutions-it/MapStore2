@@ -16,8 +16,9 @@ const Slider = require('react-nouislider');
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();
 require('react-widgets/lib/less/react-widgets.less');
-const {hexToRgbObj, rgbToHex} = require('../../utils/ColorUtils');
 const Message = require('../I18N/Message');
+const {isNil} = require('lodash');
+const tinycolor = require("tinycolor2");
 
 class StylePolygon extends React.Component {
     static propTypes = {
@@ -45,8 +46,8 @@ class StylePolygon extends React.Component {
                             <div className="ms-marker-preview" style={{display: 'flex', width: '100%', height: 104}}>
                                 <StyleCanvas style={{ padding: 0, margin: "auto", display: "block"}}
                                     shapeStyle={assign({}, style, {
-                                        color: this.addOpacityToColor(hexToRgbObj(style.color), style.opacity),
-                                        fill: this.addOpacityToColor(hexToRgbObj(style.fillColor), style.fillOpacity)
+                                        color: this.addOpacityToColor(tinycolor(style.color).toRgb(), style.opacity),
+                                        fill: this.addOpacityToColor(tinycolor(style.fillColor).toRgb(), style.fillOpacity)
                                     })}
                                     geomType="Polygon"
                                 />
@@ -58,14 +59,16 @@ class StylePolygon extends React.Component {
                             <Message msgId="draw.fill"/>
                         </Col>
                         <Col xs={6} style={{position: 'static'}}>
-                            <ColorSelector key="poly-fill" color={this.addOpacityToColor(hexToRgbObj(style.fillColor), style.fillOpacity)} width={this.props.width} onChangeColor={c => {
-                                const fillColor = rgbToHex(c.r, c.g, c.b);
-                                const fillOpacity = c.a;
-                                const newStyle = assign({}, this.props.shapeStyle, {
-                                    [styleType]: assign({}, style, {fillColor, fillOpacity}),
-                                    [otherStyleType]: assign({}, style, {fillColor, fillOpacity})
-                                });
-                                this.props.setStyleParameter(newStyle);
+                            <ColorSelector key="poly-fill" color={this.addOpacityToColor(tinycolor(style.fillColor).toRgb(), style.fillOpacity)} width={this.props.width} onChangeColor={c => {
+                                if (!isNil(c)) {
+                                    const fillColor = tinycolor(c).toHexString();
+                                    const fillOpacity = c.a;
+                                    const newStyle = assign({}, this.props.shapeStyle, {
+                                        [styleType]: assign({}, style, {fillColor, fillOpacity}),
+                                        [otherStyleType]: assign({}, style, {fillColor, fillOpacity})
+                                    });
+                                    this.props.setStyleParameter(newStyle);
+                                }
                             }}/>
                         </Col>
                     </Row>
@@ -74,14 +77,16 @@ class StylePolygon extends React.Component {
                             <Message msgId="draw.stroke"/>
                         </Col>
                         <Col xs={6} style={{position: 'static'}}>
-                            <ColorSelector color={this.addOpacityToColor(hexToRgbObj(style.color), style.opacity)} width={this.props.width} onChangeColor={c => {
-                                const color = rgbToHex(c.r, c.g, c.b);
-                                const opacity = c.a;
-                                const newStyle = assign({}, this.props.shapeStyle, {
-                                    [styleType]: assign({}, style, {color, opacity}),
-                                    [otherStyleType]: assign({}, style, {color, opacity})
-                                });
-                                this.props.setStyleParameter(newStyle);
+                            <ColorSelector color={this.addOpacityToColor(tinycolor(style.color).toRgb(), style.opacity)} width={this.props.width} onChangeColor={c => {
+                                if (!isNil(c)) {
+                                    const color = tinycolor(c).toHexString();
+                                    const opacity = c.a;
+                                    const newStyle = assign({}, this.props.shapeStyle, {
+                                        [styleType]: assign({}, style, {color, opacity}),
+                                        [otherStyleType]: assign({}, style, {color, opacity})
+                                    });
+                                    this.props.setStyleParameter(newStyle);
+                                }
                             }}/>
                         </Col>
                     </Row>
