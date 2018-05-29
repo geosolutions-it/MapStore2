@@ -16,10 +16,10 @@ const StyleCanvas = require('./StyleCanvas');
 const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
 numberLocalizer();
 require('react-widgets/lib/less/react-widgets.less');
-const {hexToRgbObj, rgbToHex} = require('../../utils/ColorUtils');
 const LocaleUtils = require('../../utils/LocaleUtils');
 const {createFont} = require('../../utils/AnnotationsUtils');
 const Message = require('../I18N/Message');
+const tinycolor = require("tinycolor2");
 
 class TextStyler extends React.Component {
     static propTypes = {
@@ -67,7 +67,7 @@ class TextStyler extends React.Component {
                             <div className="ms-marker-preview" style={{display: 'flex', width: '100%', height: 104}}>
                                 {<StyleCanvas style={{ padding: 0, margin: "auto", display: "block"}}
                                     shapeStyle={assign({}, style, {
-                                        color: this.addOpacityToColor(hexToRgbObj(style.color), style.opacity)
+                                        color: this.addOpacityToColor(tinycolor(style.color).toRgb(), style.opacity)
                                     })}
                                     geomType="Polyline"
                                     height={40}
@@ -80,10 +80,10 @@ class TextStyler extends React.Component {
                             <Message msgId="draw.font.textColor"/>
                         </Col>
                         <Col xs={6} style={{position: 'static'}}>
-                            <ColorSelector color={this.addOpacityToColor(hexToRgbObj(style.color), style.opacity)}
+                            <ColorSelector color={this.addOpacityToColor(tinycolor(style.color).toRgb(), style.opacity)}
                                 width={this.props.width}
                                 onChangeColor={c => {
-                                    const color = rgbToHex(c.r, c.g, c.b);
+                                    const color = tinycolor(c).toHexString();
                                     const opacity = c.a;
                                     const newStyle = assign({}, shapeStyle, {
                                         [styleType]: assign({}, style, {color, opacity})
