@@ -18,8 +18,19 @@ const Select = require('react-select');
 const GeometricOperationSelector = require('./GeometricOperationSelector');
 const GroupField = require('./GroupField');
 
+const isSameUrl = (originalUrl, otherUrl) => {
 
-const isSameOGCServiceRoot = (origSearchUrl, {search, url} = {}) => origSearchUrl === url || origSearchUrl === (search && search.url);
+    if (originalUrl !== otherUrl) {
+        let originalUrlArray = originalUrl.match(/([^:]*:)\/\/([^:]*:?[^@]*@)?([^:\/\?]*):?([^\/\?]*)/);
+        let otherUrlArray = otherUrl.match(/([^:]*:)\/\/([^:]*:?[^@]*@)?([^:\/\?]*):?([^\/\?]*)/);
+        let isSameProtocol = originalUrlArray[1] === otherUrlArray[1];
+        let isSameDomain = originalUrlArray[3] === otherUrlArray[3];
+        let isSamePath = originalUrl.slice(originalUrlArray[0].length) === otherUrl.slice(otherUrlArray[0].length);
+        return isSameDomain && isSameProtocol && isSamePath;
+    }
+    return originalUrl === otherUrl;
+};
+const isSameOGCServiceRoot = (origSearchUrl, {search, url} = {}) => isSameUrl(origSearchUrl, url) || isSameUrl(origSearchUrl, (search && search.url));
 
 // bbox make not sense with cross layer filter
 const getAllowedSpatialOperations = (spatialOperations) => (spatialOperations || []).filter( ({id} = {}) => id !== "BBOX");
