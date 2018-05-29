@@ -18,6 +18,7 @@ numberLocalizer();
 require('react-widgets/lib/less/react-widgets.less');
 const {hexToRgbObj, rgbToHex} = require('../../utils/ColorUtils');
 const Message = require('../I18N/Message');
+const {isNil} = require('lodash');
 
 class StylePolygon extends React.Component {
     static propTypes = {
@@ -59,13 +60,15 @@ class StylePolygon extends React.Component {
                         </Col>
                         <Col xs={6} style={{position: 'static'}}>
                             <ColorSelector key="poly-fill" color={this.addOpacityToColor(hexToRgbObj(style.fillColor), style.fillOpacity)} width={this.props.width} onChangeColor={c => {
-                                const fillColor = rgbToHex(c.r, c.g, c.b);
-                                const fillOpacity = c.a;
-                                const newStyle = assign({}, this.props.shapeStyle, {
-                                    [styleType]: assign({}, style, {fillColor, fillOpacity}),
-                                    [otherStyleType]: assign({}, style, {fillColor, fillOpacity})
-                                });
-                                this.props.setStyleParameter(newStyle);
+                                if (!isNil(c)) {
+                                    const fillColor = rgbToHex(c.r, c.g, c.b);
+                                    const fillOpacity = c.a;
+                                    const newStyle = assign({}, this.props.shapeStyle, {
+                                        [styleType]: assign({}, style, {fillColor, fillOpacity}),
+                                        [otherStyleType]: assign({}, style, {fillColor, fillOpacity})
+                                    });
+                                    this.props.setStyleParameter(newStyle);
+                                }
                             }}/>
                         </Col>
                     </Row>
@@ -75,13 +78,15 @@ class StylePolygon extends React.Component {
                         </Col>
                         <Col xs={6} style={{position: 'static'}}>
                             <ColorSelector color={this.addOpacityToColor(hexToRgbObj(style.color), style.opacity)} width={this.props.width} onChangeColor={c => {
-                                const color = rgbToHex(c.r, c.g, c.b);
-                                const opacity = c.a;
-                                const newStyle = assign({}, this.props.shapeStyle, {
-                                    [styleType]: assign({}, style, {color, opacity}),
-                                    [otherStyleType]: assign({}, style, {color, opacity})
-                                });
-                                this.props.setStyleParameter(newStyle);
+                                if (!isNil(c)) {
+                                    const color = rgbToHex(c.r, c.g, c.b);
+                                    const opacity = c.a;
+                                    const newStyle = assign({}, this.props.shapeStyle, {
+                                        [styleType]: assign({}, style, {color, opacity}),
+                                        [otherStyleType]: assign({}, style, {color, opacity})
+                                    });
+                                    this.props.setStyleParameter(newStyle);
+                            }
                             }}/>
                         </Col>
                     </Row>

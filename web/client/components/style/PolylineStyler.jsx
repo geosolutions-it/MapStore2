@@ -18,6 +18,7 @@ numberLocalizer();
 require('react-widgets/lib/less/react-widgets.less');
 const {hexToRgbObj, rgbToHex} = require('../../utils/ColorUtils');
 const Message = require('../I18N/Message');
+const {isNil} = require('lodash');
 
 class StylePolyline extends React.Component {
     static propTypes = {
@@ -61,13 +62,15 @@ class StylePolyline extends React.Component {
                             <ColorSelector color={this.addOpacityToColor(hexToRgbObj(style.color), style.opacity)}
                                 width={this.props.width}
                                 onChangeColor={c => {
-                                    const color = rgbToHex(c.r, c.g, c.b);
-                                    const opacity = c.a;
-                                    const newStyle = assign({}, this.props.shapeStyle, {
-                                        [styleType]: assign({}, style, {color, opacity}),
-                                        [otherStyleType]: assign({}, style, {color, opacity})
-                                    });
-                                    this.props.setStyleParameter(newStyle);
+                                    if (!isNil(c)) {
+                                        const color = rgbToHex(c.r, c.g, c.b);
+                                        const opacity = c.a;
+                                        const newStyle = assign({}, this.props.shapeStyle, {
+                                            [styleType]: assign({}, style, {color, opacity}),
+                                            [otherStyleType]: assign({}, style, {color, opacity})
+                                        });
+                                        this.props.setStyleParameter(newStyle);
+                                    }
                                 }}/>
                         </Col>
                     </Row>
