@@ -10,6 +10,10 @@
  * Utils used in DrawSupport for leaflet and openlayers
 */
 
+const ol = require('openlayers');
+const {reproject} = require('./CoordinatesUtils');
+
+
 /**
  * Transforms a leaflet bounds object into an array.
  * @prop {object} the bounds
@@ -42,8 +46,33 @@ const fromLeafletFeatureToQueryform = (layer) => {
         projection
     };
 };
+const calculateRadius = (center, coordinates) => {
+    return Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
+};
+
+const transformPolygonToCircle = (feature, mapCrs) => {
+    if (feature.getGeometry().getType() !== "Polygon") {
+        return feature;
+    }
+    if (feature.getProperties() && feature.getProperties().isCircle) {
+        const extent = feature.getGeometry().getExtent();
+        let center;
+        if (feature.getProperties().center) {
+            center = reproject(feature.getProperties().center, "EPSG:4326", mapCrs);
+            center = [center.x, center.y];
+        } else {
+            center = ol.extent.getCenter(extent);
+        }
+        const radius = feature.getProperties().radius || calculateRadius(center, feature.getGeometry().getCoordinates());
+        feature.setGeometry(new ol.geom.Circle(center, radius));
+        return feature;
+    }
+    return feature;
+};
+
 
 module.exports = {
+    transformPolygonToCircle,
     boundsToOLExtent,
     fromLeafletFeatureToQueryform
 };

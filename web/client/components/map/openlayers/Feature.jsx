@@ -11,6 +11,7 @@ var React = require('react');
 var ol = require('openlayers');
 const {isEqual} = require('lodash');
 const {getStyle} = require('./VectorStyle');
+const {transformPolygonToCircle} = require('../../../utils/DrawSupportUtils');
 
 class Feature extends React.Component {
     static propTypes = {
@@ -83,7 +84,16 @@ class Feature extends React.Component {
                     geometry: props.geometry,
                     id: this.props.msId});
             }
-            this._feature.forEach((f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
+            this._feature.
+                map(f => {
+                    let newF = f;
+                    if (f.getProperties().isCircle) {
+                        newF = transformPolygonToCircle(f, props.crs || 'EPSG:3857');
+                        newF.setGeometry(newF.getGeometry().transform(props.crs || 'EPSG:3857', props.featuresCrs));
+                    }
+                    return newF;
+                })
+                .forEach((f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
             /*if (props.properties && props.properties.textValues && props.properties.textGeometriesIndexes) {
                 this._feature.forEach((f) => {
                     f.set("textValues", props.properties.textValues);

@@ -121,6 +121,7 @@ class AnnotationsEditor extends React.Component {
         onChangeRadius: PropTypes.func,
         onChangeText: PropTypes.func,
         onCancelClose: PropTypes.func,
+        onSetInvalidSelected: PropTypes.func,
         onDeleteGeometry: PropTypes.func,
         onAddNewFeature: PropTypes.func,
         onStyleGeometry: PropTypes.func,
@@ -141,6 +142,7 @@ class AnnotationsEditor extends React.Component {
         closing: PropTypes.bool,
         errors: PropTypes.object,
         stylerType: PropTypes.string,
+        featureType: PropTypes.string,
         showBack: PropTypes.bool,
         showUnsavedChangesModal: PropTypes.bool,
         showUnsavedStyleModal: PropTypes.bool,
@@ -507,9 +509,11 @@ class AnnotationsEditor extends React.Component {
                             <GeometryEditor
                                 drawing={this.props.drawing}
                                 selected={this.props.selected}
+                                featureType={this.props.featureType}
                                 completeGeometry={this.props.drawing}
                                 onChange={this.props.onChangeSelected}
                                 onChangeRadius={this.props.onChangeRadius}
+                                onSetInvalidSelected={this.props.onSetInvalidSelected}
                                 onChangeText={this.props.onChangeText}
                             />
                         </Col>

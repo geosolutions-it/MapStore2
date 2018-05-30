@@ -7,7 +7,7 @@
 */
 const uuidv1 = require('uuid/v1');
 const LocaleUtils = require('./LocaleUtils');
-const {values, slice, head} = require('lodash');
+const {values, slice, head, last} = require('lodash');
 const assign = require('object-assign');
 const uuid = require('uuid');
 
@@ -226,9 +226,15 @@ const AnnotationsUtils = {
     formatCoordinates: (coords) => {
         return coords.map(c => ({lat: c[1], lon: c[0]}));
     },
+    isCompletePolygon: (coords) => {
+        return coords[0].length > 3 && head(coords[0])[0] === last(coords[0])[0] && head(coords[0])[1] === last(coords[0])[1];
+    },
     getComponents: ({type, coordinates}) => {
         switch (type) {
-            case "Polygon": return AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1));
+            case "Polygon": {
+                let validCoords = coordinates[0].filter(AnnotationsUtils.validateCoordsArray);
+                return AnnotationsUtils.isCompletePolygon([validCoords]) ? AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1)) : AnnotationsUtils.formatCoordinates(coordinates[0]);
+            }
             case "LineString": return AnnotationsUtils.formatCoordinates(coordinates);
             default: return AnnotationsUtils.formatCoordinates([coordinates]);
         }
@@ -246,10 +252,11 @@ const AnnotationsUtils = {
         "Polygon": {min: 3, add: true, remove: true, validation: "validateCoordinates", notValid: "Add 3 valid coordinates to complete the Polygon"},
         "LineString": {min: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "Add 2 valid coordinates to complete the Polyline"},
         "Circle": {add: false, remove: false, validation: "validateCircle", notValid: "Add a valid coordinate and a radius (m) to complete the Circle"},
-        "Text": {add: false, remove: false, validation: "validateText", notValid: "Add a valid coordinate and a value to complete the Text"}
+        "Text": {add: false, remove: false, validation: "validateText", notValid: "Add a valid coordinate and a Text value"}
     },
     validateCoords: ({lat, lon}) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
     validateCoordsArray: ([lon, lat]) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
+    validateCoord: (c) => !isNaN(parseFloat(c)),
     validateCoordinates: ({components = [], remove = false, type, isArray = false }) => {
         if (components && components.length) {
             const validComponents = components.filter(AnnotationsUtils[isArray ? "validateCoordsArray" : "validateCoords"]);
@@ -275,7 +282,7 @@ const AnnotationsUtils = {
         }
         return false;
     },
-    validateFeature: ({components = [], type, remove = false, properties = {}, isArray = false}) => {
+    validateFeature: ({components = [[]], type, remove = false, properties = {}, isArray = false}) => {
         if (type === "Text") {
             return AnnotationsUtils.validateText({components, properties, isArray});
         }
@@ -283,6 +290,12 @@ const AnnotationsUtils = {
             return AnnotationsUtils.validateCircle({components, properties, isArray});
         }
         return AnnotationsUtils.validateCoordinates({components, remove, type, isArray});
+    },
+    getBaseCoord: (type) => {
+        switch (type) {
+            case "Polygon": case "LineString": return [];
+            default: return [[]];
+        }
     }
 };
 

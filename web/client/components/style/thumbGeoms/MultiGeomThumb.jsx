@@ -28,23 +28,34 @@ class MultiGeomThumb extends React.Component {
         strokeWidth: 3,
         styleMultiGeom: {},
         geometry: {
-            geometries: []
+            features: []
         },
         properties: {}
     };
 
+    getGeoms() {
+        return this.props.geometry && this.props.geometry.features.reduce((p, c) => {
+            if (c.properties && c.properties.isCircle) {
+                return {...p, "Circle": true};
+            }
+            if (c.properties && c.properties.isText) {
+                return {...p, "Text": true};
+            }
+            return {...p, [c.geometry.type]: true};
+        }, {"Circle": false, "Text": false});
+    }
     render() {
-
+        let geoms = this.getGeoms();
         let styleCircle = this.props.styleMultiGeom.Circle;
         let styleLine = this.props.styleMultiGeom.MultiLineString || this.props.styleMultiGeom.LineString;
         let stylePolygon = this.props.styleMultiGeom.MultiPolygon || this.props.styleMultiGeom.Polygon;
-        let textPresent = this.props.properties && this.props.properties.textValues && !!this.props.properties.textValues.length;
-        let circlePresent = this.props.properties && this.props.properties.circles && !!this.props.properties.circles.length;
+        let textPresent = geoms.Text;
+        let circlePresent = geoms.Circle;
         let styleText = textPresent ? this.props.styleMultiGeom.Text : {};
         let types;
-        if (this.props.geometry.geometries && this.props.geometry.geometries.length) {
+        /*if (this.props.geometry.geometries && this.props.geometry.geometries.length) {
             types = (this.props.geometry.geometries).map(g => g.type);
-        }
+        }*/
         if (this.props.geometry.features && this.props.geometry.features.length) {
             types = (this.props.geometry.features).map(g => g.geometry.type);
         }

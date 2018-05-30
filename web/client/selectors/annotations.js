@@ -22,6 +22,7 @@ const showUnsavedChangesModalSelector = (state) => get(state, "annotations.showU
 const showUnsavedStyleModalSelector = (state) => get(state, "annotations.showUnsavedStyleModal", false);
 const closingSelector = (state) => !!get(state, "annotations.closing");
 const editingSelector = (state) => get(state, "annotations.editing");
+const featureTypeSelector = (state) => get(state, "annotations.featureType");
 const coordinateEditorEnabledSelector = (state) => get(state, "annotations.coordinateEditorEnabled");
 const drawingSelector = (state) => !!get(state, "annotations.drawing");
 const stylerTypeSelector = (state) => get(state, "annotations.stylerType");
@@ -47,6 +48,7 @@ const annotationsInfoSelector = (state) => (assign({}, {
     editedFields: editedFieldsSelector(state),
     mode: modeSelector(state),
     selected: selectedSelector(state),
+    featureType: featureTypeSelector(state),
     removing: removingSelector(state),
     showUnsavedChangesModal: showUnsavedChangesModalSelector(state),
     showUnsavedStyleModal: showUnsavedStyleModalSelector(state),

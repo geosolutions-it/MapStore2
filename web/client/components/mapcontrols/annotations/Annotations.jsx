@@ -12,6 +12,7 @@ const ConfirmDialog = require('../../misc/ConfirmDialog');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const LineThumb = require('../../../components/style/thumbGeoms/LineThumb.jsx');
+const CircleThumb = require('../../../components/style/thumbGeoms/CircleThumb.jsx');
 const MultiGeomThumb = require('../../../components/style/thumbGeoms/MultiGeomThumb.jsx');
 const PolygonThumb = require('../../../components/style/thumbGeoms/PolygonThumb.jsx');
 const {head} = require('lodash');
@@ -158,6 +159,11 @@ class Annotations extends React.Component {
         if (featureType === "Polygon" || featureType === "MultiPolygon" ) {
             return (<span className={"mapstore-annotations-panel-card"}>
             <PolygonThumb styleRect={style[featureType]}/>
+        </span>);
+        }
+        if (featureType === "Circle") {
+            return (<span className={"mapstore-annotations-panel-card"}>
+            <CircleThumb styleRect={style[featureType]}/>
         </span>);
         }
         if (featureType === "GeometryCollection" || featureType === "FeatureCollection") {

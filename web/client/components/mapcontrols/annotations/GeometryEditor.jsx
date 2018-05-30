@@ -13,9 +13,11 @@ class GeometryEditor extends React.Component {
         transitionProps: PropTypes.object,
         selected: PropTypes.object,
         isDraggable: PropTypes.bool,
+        featureType: PropTypes.string,
         drawing: PropTypes.bool,
         onComplete: PropTypes.func,
         onChangeRadius: PropTypes.func,
+        onSetInvalidSelected: PropTypes.func,
         onChangeText: PropTypes.func,
         completeGeometry: PropTypes.bool
     };
@@ -29,6 +31,7 @@ class GeometryEditor extends React.Component {
         onChange: () => {},
         onComplete: () => {},
         onChangeRadius: () => {},
+        onSetInvalidSelected: () => {},
         onChangeText: () => {},
         transitionProps: {
             transitionName: "switch-panel-transition",
@@ -48,16 +51,17 @@ class GeometryEditor extends React.Component {
         return (<CoordinatesEditor
             items={[]}
             isDraggable={!this.props.drawing}
-            type={this.props.selected && this.props.selected.geometry && this.props.selected.geometry.type}
+            type={this.props.featureType}
             completeGeometry={this.props.completeGeometry}
-            components={this.props.selected ? getComponents(this.props.selected.geometry) : []}
+            components={this.props.selected && this.props.selected.geometry && this.props.selected.geometry.coordinates && this.props.selected.geometry.coordinates.length ? getComponents(this.props.selected.geometry) : []}
             properties={this.props.selected && this.props.selected.properties || {}}
             onComplete={() => {}}
             onChangeRadius={this.props.onChangeRadius}
+            onSetInvalidSelected={this.props.onSetInvalidSelected}
             onChangeText={this.props.onChangeText}
-            onChange={(components) => {
+            onChange={(components, radius, text) => {
                 let coords = components.map(c => [c.lon, c.lat]);
-                this.props.onChange(coords);
+                this.props.onChange(coords, radius, text);
             }}/>);
     }
 

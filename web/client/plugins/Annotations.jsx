@@ -21,8 +21,8 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     highlight, cleanHighlight, showAnnotation, cancelShowAnnotation, filterAnnotations, closeAnnotations,
     cancelCloseAnnotations, confirmCloseAnnotations, stopDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal, changedProperties,
     setUnsavedStyle, toggleUnsavedStyleModal, addText, cancelText, saveText, download, loadAnnotations, changeSelected, resetCoordEditor, changeRadius, changeText,
-    addNewFeature} =
-    require('../actions/annotations');
+    addNewFeature, setInvalidSelected
+} = require('../actions/annotations');
 
 const { zoomToExtent } = require('../actions/map');
 
@@ -56,6 +56,7 @@ const commonEditorActions = {
     onDeleteGeometry: removeAnnotationGeometry,
     onZoom: zoomToExtent,
     onChangeRadius: changeRadius,
+    onSetInvalidSelected: setInvalidSelected,
     onChangeText: changeText,
     onDownload: download
 };

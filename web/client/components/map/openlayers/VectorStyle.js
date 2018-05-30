@@ -258,7 +258,6 @@ function getStyle(options, isDrawing = false, textValues = []) {
     let radius = 0;
     let geomType = (options.style && options.style.type) || (options.features && options.features[0] && options.features[0].geometry ? options.features[0].geometry.type : undefined);
     if (geomType === "FeatureCollection" || options.features && options.features[0] && options.features[0].type === "FeatureCollection") {
-        geomType = "FeatureCollection";
         return function(f) {
             var feature = this || f;
             type = feature.getGeometry().getType();
@@ -374,9 +373,7 @@ function getStyle(options, isDrawing = false, textValues = []) {
         if (geomType === "Circle") {
             radius = options.features && options.features.length && options.features[0].properties && options.features[0].properties.radius || 10;
         }
-        if (geomType === "Circle") {
-            radius = options.features && options.features.length && options.features[0].properties && options.features[0].properties.radius || 10;
-        }
+
         return getValidStyle(geomType, options, isDrawing, textValues, style, radius);
     }
     // *************************************************************************

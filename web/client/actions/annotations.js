@@ -21,6 +21,7 @@ const TOGGLE_STYLE = 'ANNOTATIONS:TOGGLE_STYLE';
 const SET_STYLE = 'ANNOTATIONS:SET_STYLE';
 const RESTORE_STYLE = 'ANNOTATIONS:RESTORE_STYLE';
 const UPDATE_ANNOTATION_GEOMETRY = 'ANNOTATIONS:UPDATE_GEOMETRY';
+const SET_INVALID_SELECTED = 'ANNOTATIONS:SET_INVALID_SELECTED';
 const VALIDATION_ERROR = 'ANNOTATIONS:VALIDATION_ERROR';
 const HIGHLIGHT = 'ANNOTATIONS:HIGHLIGHT';
 const CLEAN_HIGHLIGHT = 'ANNOTATIONS:CLEAN_HIGHLIGHT';
@@ -98,6 +99,13 @@ function changeSelected(coordinates, radius, text) {
 function showTextArea() {
     return {
         type: SHOW_TEXT_AREA
+    };
+}
+function setInvalidSelected(errorFrom, coordinates) {
+    return {
+        type: SET_INVALID_SELECTED,
+        errorFrom,
+        coordinates
     };
 }
 function addText() {
@@ -278,10 +286,11 @@ function saveText(value) {
         value
     };
 }
-function changeRadius(radius) {
+function changeRadius(radius, components) {
     return {
         type: CHANGE_RADIUS,
-        radius
+        radius,
+        components
     };
 }
 function changeStyler(stylerType) {
@@ -290,10 +299,11 @@ function changeStyler(stylerType) {
         stylerType
     };
 }
-function changeText(text) {
+function changeText(text, components) {
     return {
         type: CHANGE_TEXT,
-        text
+        text,
+        components
     };
 }
 module.exports = {
@@ -358,5 +368,6 @@ module.exports = {
     RESET_COORD_EDITOR, resetCoordEditor,
     CHANGE_TEXT, changeText,
     CHANGE_RADIUS, changeRadius,
+    SET_INVALID_SELECTED, setInvalidSelected,
     CHANGED_SELECTED, changeSelected
 };

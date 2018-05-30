@@ -198,9 +198,14 @@
             "cfg": {
               "mapOptions": {
                 "openlayers": {
+                  "interactions": {
+                    "altShiftDragRotate": false,
+                    "pinchRotate": false
+                  },
                   "attribution": {
                     "container": "#mapstore-map-footer-container"
-                  }
+                  },
+                  "defaultTextAnnotation": "custom text"
                 },
                 "leaflet": {
                   "attribution": {
