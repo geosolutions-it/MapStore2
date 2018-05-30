@@ -79,7 +79,7 @@ const createLayer = options => {
     urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
     const queryParametersString = urlParser.format({ query: {...queryParameters}});
 
-    const maxResolution	= resolutions[0]; // exclusive
+    const maxResolution = resolutions[0]; // exclusive
     const minResolution = resolutions[resolutions.length - 1]; // inclusive
 
     return new ol.layer.Tile({
