@@ -190,13 +190,13 @@ class CoordinateEditor extends React.Component {
                 {this.props.type === "Text" && this.renderText()}
                 <Row style={{flex: 1, overflowY: 'auto'}}>
                     {/* CUSTOMIZATION for CIRCLE and TEXT adding radius and text value*/ }
-                    <Col xs={5} xsOffset={this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]() ? 1 : 0}>
+                    <Col xs={5} xsOffset={/*this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]() ? 1 : 0*/1}>
                         Latitude
                     </Col>
                     <Col xs={5}>
                         Longitude
                     </Col>
-                    <Col xs={this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]() ? 1 : 2}/>
+                    <Col xs={/*this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]() ? 1 : 2*/1}/>
                 </Row>
                 <Row style={{flex: 1, overflowY: 'auto'}}>
                     {this.state.components.map((component, idx) => <CoordinatesRow

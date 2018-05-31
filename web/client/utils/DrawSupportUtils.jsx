@@ -11,6 +11,7 @@
 */
 
 const ol = require('openlayers');
+const {isArray} = require('lodash');
 const {reproject} = require('./CoordinatesUtils');
 
 
@@ -47,11 +48,12 @@ const fromLeafletFeatureToQueryform = (layer) => {
     };
 };
 const calculateRadius = (center, coordinates) => {
-    return Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
+    return isArray(coordinates) && isArray(coordinates[0]) && isArray(coordinates[0][0]) ? Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2)) : 100;
 };
 
 const transformPolygonToCircle = (feature, mapCrs) => {
-    if (feature.getGeometry().getType() !== "Polygon") {
+
+    if (!feature.getGeometry() || feature.getGeometry().getType() !== "Polygon") {
         return feature;
     }
     if (feature.getProperties() && feature.getProperties().isCircle) {

@@ -529,7 +529,7 @@ class DrawSupport extends React.Component {
         */
 
         let drawBaseProps = {
-            source,
+            source: this.drawSource || source,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
             style: new ol.style.Style({
                 fill: new ol.style.Fill({
@@ -681,12 +681,17 @@ class DrawSupport extends React.Component {
     };
 
     addDrawOrEditInteractions = (newProps) => {
-
+        if (this.state && this.state.keySingleClickCallback) {
+            ol.Observable.unByKey(this.state.keySingleClickCallback);
+        }
         const singleClickCallback = (e) => {
-            if (this.drawSource && this.props.options /*&& newProps.drawMethod === "Polygon" || newProps.drawMethod === "LineString"*/) {
-
-                const previousFt = this.drawSource.getFeatures() && this.drawSource.getFeatures().length && this.drawSource.getFeatures()[0];
-                const previousCoords = this.drawSource.getFeatures() && this.drawSource.getFeatures().length && this.drawSource.getFeatures()[0].getGeometry().getCoordinates() || [];
+            if (this.drawSource && this.props.options) {
+                let previousFeatures = this.drawSource.getFeatures();
+                let previousFtIndex = 0;
+                const previousFt = previousFeatures && previousFeatures.length && previousFeatures.filter((f, i) => {
+                    previousFtIndex = i; return f.getProperties().canEdit;
+                })[0];
+                const previousCoords = previousFt.getGeometry() && previousFt.getGeometry().getCoordinates() || [];
                 let actualCoords = [];
                 let olFt;
                 let newDrawMethod = newProps.drawMethod;
@@ -707,11 +712,13 @@ class DrawSupport extends React.Component {
                             actualCoords = [[e.coordinate]];
                         }
                         olFt = this.getNewFeature(newDrawMethod, actualCoords);
+                        olFt.setProperties(omit(previousFt.getProperties(), "geometry"));
                         break;
                     }
                     case "LineString": {
                         actualCoords = previousCoords.length ? [...previousCoords, e.coordinate] : [e.coordinate];
                         olFt = this.getNewFeature(newDrawMethod, actualCoords);
+                        olFt.setProperties(omit(previousFt.getProperties(), "geometry"));
                     }
                      break;
                     case "Circle": {
@@ -722,18 +729,25 @@ class DrawSupport extends React.Component {
                         olFt = this.getNewFeature(newDrawMethod, coords);
                         // TODO verify center is projected in 4326 and is an array
                         center = reproject(center, this.getMapCrs(), "EPSG:4326", false);
+                        olFt.setProperties(omit(previousFt.getProperties(), "geometry"));
                         olFt.setProperties({isCircle: true, radius, center: [center.x, center.y]});
                         break;
                     }
                     case "Text": {
                         newDrawMethod = "Point";
                         olFt = this.getNewFeature(newDrawMethod, e.coordinate);
+                        olFt.setProperties(omit(previousFt.getProperties(), "geometry"));
                         olFt.setProperties({isText: true, valueText: previousFt.getProperties() && previousFt.getProperties().valueText || this.props.map.getProperties() && this.props.map.getProperties().defaultTextAnnotation || "New" });
-
+                        break;
                     }
                     // point
-                    default: actualCoords = e.coordinate;
+                    default: {
+                        actualCoords = e.coordinate;
+                        olFt = this.getNewFeature(newDrawMethod, actualCoords);
+                        olFt.setProperties(omit(previousFt.getProperties(), "geometry"));
+                    }
                 }
+
                 let drawnFtWGS84 = reprojectGeoJson(geojsonFormat.writeFeaturesObject([olFt.clone()]), this.getMapCrs(), "EPSG:4326");
                 const coordinates = [...drawnFtWGS84.features[0].geometry.coordinates];
 
@@ -744,26 +758,25 @@ class DrawSupport extends React.Component {
                         type: newDrawMethod
                     },
                     properties: {
-                        id: uuid.v1(),
                         ...omit(olFt.getProperties(), "geometry")
                     }
                 };
 
                 this.props.onDrawingFeatures([ft]);
-                // this.props.onChangeDrawingStatus("drawOrEdit", newProps.drawMethod, newProps.owner, [drawnFt3857], newProps.options, newProps.style);
 
                 olFt = transformPolygonToCircle(olFt, this.getMapCrs());
+                if (previousFeatures && previousFeatures.length) {
+                    previousFeatures[previousFtIndex] = olFt;
+                }
                 this.drawSource = new ol.source.Vector({
-                    features: [olFt]
+                    features: previousFeatures
                 });
                 this.drawLayer.setSource(this.drawSource);
                 this.addModifyInteraction();
             }
         };
         this.clean();
-        if (this.state && this.state.keySingleClickCallback) {
-            ol.Observable.unByKey(this.state.keySingleClickCallback);
-        }
+
 
         // this.props.map.un('singleclick', singleClickCallback, this);
         /*
@@ -792,9 +805,8 @@ class DrawSupport extends React.Component {
             // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
             this.addTranslateInteraction();
             this.setState({keySingleClickCallback: this.addSingleClickListener(singleClickCallback)});
-            // this.props.map.on('singleclick', singleClickCallback);
         }
-        if (newProps.options.selectEnabled) { // TODO fix all call to this which are missing "selectEnabled" flag
+        if (newProps.options && newProps.options.selectEnabled && newProps.drawMethod !== "Point") { // TODO fix all call to this which are missing "selectEnabled" flag
             this.addSelectInteraction(newProps.options && newProps.options.selected, newProps);
         }
 
@@ -1078,13 +1090,17 @@ class DrawSupport extends React.Component {
         if (this.modifyInteraction) {
             this.props.map.removeInteraction(this.modifyInteraction);
         }
-        this.modifyFeature = new ol.Collection(this.drawLayer.getSource().getFeatures());
+        /*
+            filter features to be edited
+        */
+
+        this.modifyFeatureColl = new ol.Collection(this.drawLayer.getSource().getFeatures().filter((f => f.getProperties().canEdit)));
         this.modifyInteraction = new ol.interaction.Modify({
-                features: this.modifyFeature,
-                condition: (e) => {
-                    return ol.events.condition.primaryAction(e) && !ol.events.condition.altKeyOnly(e);
-                }
-            });
+            features: this.modifyFeatureColl,
+            condition: (e) => {
+                return ol.events.condition.primaryAction(e) && !ol.events.condition.altKeyOnly(e);
+            }
+        });
 
 
         this.modifyInteraction.on('modifyend', (e) => {
@@ -1112,6 +1128,7 @@ class DrawSupport extends React.Component {
             if (this.props.options.transformToFeatureCollection) {
                 // this.props.onGeometryChanged([{type: "FeatureCollection", features}], this.props.drawOwner, false, "editing", "editing"); // TODO CHECK IF THIS IS NEEDED
                 this.props.onDrawingFeatures(features);
+                // this.addModifyInteraction();
             } else {
                 this.props.onGeometryChanged(features, this.props.drawOwner, false, "editing", "editing"); // TODO FIX THIS
             }
@@ -1213,7 +1230,7 @@ class DrawSupport extends React.Component {
         }
     }
     calculateRadius = (center, coordinates) => {
-        return Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2));
+        return isArray(coordinates) && isArray(coordinates[0]) && isArray(coordinates[0][0]) ? Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2)) : 100;
     }
     /**
      * @param {number[]} center in 3857 [lon, lat]

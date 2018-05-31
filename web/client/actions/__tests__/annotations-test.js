@@ -39,7 +39,7 @@ const {
     changeStyler, CHANGE_STYLER,
     saveText, SAVE_TEXT,
     toggleUnsavedStyleModal, TOGGLE_STYLE_MODAL,
-    stopDrawing, STOP_DRAWING,
+    startDrawing, STOP_DRAWING,
     toggleUnsavedChangesModal, TOGGLE_CHANGES_MODAL,
     setUnsavedStyle, UNSAVED_STYLE,
     setUnsavedChanges, UNSAVED_CHANGES,
@@ -146,8 +146,8 @@ describe('Test correctness of the annotations actions', () => {
         const result = cancelEditAnnotation();
         expect(result.type).toEqual(CANCEL_EDIT_ANNOTATION);
     });
-    it('stopDrawing', () => {
-        const result = stopDrawing();
+    it('startDrawing', () => {
+        const result = startDrawing();
         expect(result.type).toEqual(STOP_DRAWING);
     });
     it('toggleUnsavedChangesModal', () => {

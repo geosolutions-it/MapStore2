@@ -29,7 +29,7 @@ const FILTER_ANNOTATIONS = 'ANNOTATIONS:FILTER';
 const CLOSE_ANNOTATIONS = 'ANNOTATIONS:CLOSE';
 const CONFIRM_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CONFIRM_CLOSE';
 const CANCEL_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CANCEL_CLOSE';
-const STOP_DRAWING = 'ANNOTATIONS:STOP_DRAWING';
+const START_DRAWING = 'ANNOTATIONS:START_DRAWING';
 const CHANGE_STYLER = 'ANNOTATIONS:CHANGE_STYLER';
 const UNSAVED_CHANGES = 'ANNOTATIONS:UNSAVED_CHANGES';
 const TOGGLE_CHANGES_MODAL = 'ANNOTATIONS:TOGGLE_CHANGES_MODAL';
@@ -260,9 +260,9 @@ function cancelCloseAnnotations() {
         type: CANCEL_CLOSE_ANNOTATIONS
     };
 }
-function stopDrawing() {
+function startDrawing() {
     return {
-        type: STOP_DRAWING
+        type: START_DRAWING
     };
 }
 function toggleUnsavedChangesModal() {
@@ -329,7 +329,7 @@ module.exports = {
     CLOSE_ANNOTATIONS,
     CONFIRM_CLOSE_ANNOTATIONS,
     CANCEL_CLOSE_ANNOTATIONS,
-    STOP_DRAWING, stopDrawing,
+    START_DRAWING, startDrawing,
     CHANGE_STYLER, changeStyler,
     UNSAVED_CHANGES, setUnsavedChanges,
     UNSAVED_STYLE, setUnsavedStyle,

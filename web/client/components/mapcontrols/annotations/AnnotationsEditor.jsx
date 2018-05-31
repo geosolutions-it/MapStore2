@@ -69,7 +69,7 @@ const bbox = require('@turf/bbox');
  * @prop {function} onCancelClose triggered when the user cancels closing
  * @prop {function} onConfirmClose triggered when the user confirms closing
  * @prop {function} onChangeStyler triggered when the user switches between the stylers
- * @prop {function} onStopDrawing triggered when the user exits drawing process
+ * @prop {function} onStartDrawing triggered when the user exits drawing process
  * @prop {object} editedFields fields of the annotation
  * @prop {object} drawingText it contains info of the text annotation, 'drawing' if being added or 'show' used to show the modal to add the relative value
  * @prop {boolean} unsavedChanges flag used to trigger changes of showUnsavedChangesModal
@@ -128,7 +128,7 @@ class AnnotationsEditor extends React.Component {
         onResetCoordEditor: PropTypes.func,
         onSetStyle: PropTypes.func,
         onChangeStyler: PropTypes.func,
-        onStopDrawing: PropTypes.func,
+        onStartDrawing: PropTypes.func,
         onZoom: PropTypes.func,
         editing: PropTypes.object,
         editedFields: PropTypes.object,
@@ -273,7 +273,7 @@ class AnnotationsEditor extends React.Component {
                             onAddText: this.props.onAddText,
                             onSetStyle: this.props.onSetStyle,
                             style: this.props.editing.style,
-                            onStopDrawing: this.props.onStopDrawing,
+                            onStartDrawing: this.props.onStartDrawing,
                             disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.features && this.props.editing.features.length,
                             drawing: this.props.drawing,
                             titles: {

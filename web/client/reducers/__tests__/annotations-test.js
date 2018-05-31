@@ -17,7 +17,7 @@ const {
     UPDATE_ANNOTATION_GEOMETRY, VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY,
     TOGGLE_STYLE, SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION,
     FILTER_ANNOTATIONS, CLOSE_ANNOTATIONS, CONFIRM_CLOSE_ANNOTATIONS, CANCEL_CLOSE_ANNOTATIONS,
-    changeStyler, stopDrawing, addText, saveText, cancelText, showTextArea, setUnsavedChanges,
+    changeStyler, startDrawing, addText, saveText, cancelText, showTextArea, setUnsavedChanges,
     setUnsavedStyle, toggleUnsavedChangesModal, toggleUnsavedStyleModal, changedProperties
  } = require('../../actions/annotations');
 
@@ -49,7 +49,7 @@ describe('Test the annotations reducer', () => {
         expect(state.stylerType).toBe("marker");
     });
     it('stop drawing', () => {
-        const state = annotations({}, stopDrawing());
+        const state = annotations({}, startDrawing());
         expect(state.drawing).toBe(false);
     });
     it('add Text annotation', () => {

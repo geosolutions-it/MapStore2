@@ -50,7 +50,7 @@ class GeometryEditor extends React.Component {
         // const {coordinates, type} = this.props.selected && this.props.selected.geometry || {coordinates: [[]] /*[[[-9, 42], [-7, 44]]]*/};
         return (<CoordinatesEditor
             items={[]}
-            isDraggable={!this.props.drawing}
+            isDraggable={this.props.selected && this.props.selected.properties && this.props.selected.properties.isValidFeature}
             type={this.props.featureType}
             completeGeometry={this.props.completeGeometry}
             components={this.props.selected && this.props.selected.geometry && this.props.selected.geometry.coordinates && this.props.selected.geometry.coordinates.length ? getComponents(this.props.selected.geometry) : []}

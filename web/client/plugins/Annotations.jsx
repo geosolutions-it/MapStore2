@@ -19,7 +19,7 @@ const {createSelector} = require('reselect');
 const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnotation, removeAnnotation, cancelEditAnnotation,
     saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
     highlight, cleanHighlight, showAnnotation, cancelShowAnnotation, filterAnnotations, closeAnnotations,
-    cancelCloseAnnotations, confirmCloseAnnotations, stopDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal, changedProperties,
+    cancelCloseAnnotations, confirmCloseAnnotations, startDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal, changedProperties,
     setUnsavedStyle, toggleUnsavedStyleModal, addText, cancelText, saveText, download, loadAnnotations, changeSelected, resetCoordEditor, changeRadius, changeText,
     addNewFeature, setInvalidSelected
 } = require('../actions/annotations');
@@ -52,7 +52,7 @@ const commonEditorActions = {
     onChangeSelected: changeSelected,
     onSaveStyle: toggleStyle,
     onSetStyle: setStyle,
-    onStopDrawing: stopDrawing,
+    onStartDrawing: startDrawing,
     onDeleteGeometry: removeAnnotationGeometry,
     onZoom: zoomToExtent,
     onChangeRadius: changeRadius,

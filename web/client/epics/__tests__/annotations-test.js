@@ -16,17 +16,17 @@ const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS} = require('../../actions/mapI
 const {configureMap
 } = require('../../actions/config');
 const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation, setStyle, highlight, cleanHighlight,
-    toggleAdd, UPDATE_ANNOTATION_GEOMETRY, SHOW_TEXT_AREA, cancelText, stopDrawing, download, loadAnnotations
+    toggleAdd, UPDATE_ANNOTATION_GEOMETRY, SHOW_TEXT_AREA, cancelText/*, startDrawing*/, download, loadAnnotations
 } = require('../../actions/annotations');
 const {clickOnMap
 } = require('../../actions/map');
 const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
     cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawGeomEpic, setStyleEpic, restoreStyleEpic, highlighAnnotationEpic,
-    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, stopDrawingMultiGeomEpic, downloadAnnotations, onLoadAnnotations
+    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, startDrawingMultiGeomEpic, downloadAnnotations, onLoadAnnotations
 } = require('../annotations')({});
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
     setStyleEpic, cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawGeomEpic, restoreStyleEpic, highlighAnnotationEpic,
-    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, stopDrawingMultiGeomEpic, onLoadAnnotations);
+    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, startDrawingMultiGeomEpic, onLoadAnnotations);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
@@ -93,7 +93,7 @@ describe('annotations Epics', () => {
 
         store.dispatch(action);
     });
-    it('stop drawing when dropdownfeature type is opened', (done) => {
+    /*it('stop drawing when dropdownfeature type is opened', (done) => {
 
         store.subscribe(() => {
             const actions = store.getActions();
@@ -102,9 +102,9 @@ describe('annotations Epics', () => {
                 done();
             }
         });
-        let action = stopDrawing();
+        let action = startDrawing();
         store.dispatch(action);
-    });
+    });*/
 
     it('update annotations layer', (done) => {
         let action = configureMap({});

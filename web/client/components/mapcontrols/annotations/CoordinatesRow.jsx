@@ -51,17 +51,18 @@ class CoordinatesRowComponent extends React.Component {
         const {idx} = this.props;
         return (
             <Row style={{marginLeft: 0, marginRight: 0}}>
-                {this.props.isDraggable && <Col xs={1}>
+                <Col xs={1}>
                     <Toolbar
                         btnDefaultProps={{ className: 'square-button-md no-border'}}
                         buttons={
                         [
                             {
+                                style: {pointerEvents: !this.props.isDraggable ? "none" : "auto"},
                                 glyph: 'menu-hamburger'
                             }
                         ]
                     }/>
-                </Col>}
+                </Col>
                 <Col xs={5}>
                     <FormGroup
                         validationState={this.getValidationStateLat(this.state.lat)}>
@@ -108,7 +109,7 @@ class CoordinatesRowComponent extends React.Component {
                         type="number"/>
                 </FormGroup>
                 </Col>
-                <Col xs={this.props.isDraggable ? 1 : 2}>
+                <Col xs={1}>
                     <Toolbar
                         btnGroupProps={{ className: 'pull-right' }}
                         btnDefaultProps={{ className: 'square-button-md no-border'}}
