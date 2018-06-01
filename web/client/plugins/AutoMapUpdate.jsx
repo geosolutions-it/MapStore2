@@ -12,7 +12,6 @@ const {connect} = require('react-redux');
 const {manageAutoMapUpdate} = require('../epics/automapupdate');
 const {autoMapUpdateSelector} = require('../selectors/automapupdate');
 const {setControlProperty} = require('../actions/controls');
-const {refresh} = require('../epics/layers');
 
 const OverlayProgressBar = require('../components/misc/progressbars/OverlayProgressBar/OverlayProgressBar');
 
@@ -78,5 +77,5 @@ const AutoMapUpdatePlugin = connect(autoMapUpdateSelector, {
 module.exports = {
     AutoMapUpdatePlugin,
     reducers: {},
-    epics: {manageAutoMapUpdate, refresh}
+    epics: {manageAutoMapUpdate}
 };

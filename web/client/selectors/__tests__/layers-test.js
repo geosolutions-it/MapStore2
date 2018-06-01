@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 const {layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
-    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector, centerToMarkerSelector} = require('../layers');
+    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector, centerToMarkerSelector, getLayersWithDimension} = require('../layers');
 
 describe('Test layers selectors', () => {
     it('test layersSelector from config', () => {
@@ -404,6 +404,33 @@ describe('Test layers selectors', () => {
             }
         });
         expect(props).toEqual(true);
+    });
+    it('test getLayerWidDimension', () => {
+        const state = {
+            layers: {
+                flat: [{
+                    group: 'test',
+                    id: 'layer001',
+                    visibility: true,
+                    dimensions: [{
+                        name: 'time'
+                    }]
+                },
+                {
+                    group: 'test',
+                    id: 'layer002',
+                    visibility: true,
+                    dimensions: [{
+                        name: 'time'
+                    }, {
+                        name: 'elevation'
+                    }]
+                }]
+            }
+        };
+        expect(getLayersWithDimension(state, 'time').length).toBe(2);
+        expect(getLayersWithDimension(state, 'elevation').length).toBe(1);
+        expect(getLayersWithDimension(state, 'reference').length).toBe(0);
     });
 
 });
