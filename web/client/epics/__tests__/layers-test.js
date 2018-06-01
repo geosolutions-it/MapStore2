@@ -10,9 +10,15 @@ var expect = require('expect');
 
 const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
-const {refreshLayers, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, UPDATE_NODE} = require('../../actions/layers');
+const {
+    refreshLayers, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, UPDATE_NODE,
+    updateLayerDimension, CHANGE_LAYER_PARAMS
+} = require('../../actions/layers');
+const {
+    testEpic
+} = require('./epicTestUtils');
 
-const {refresh } = require('../layers');
+const { refresh, updateDimension } = require('../layers');
 const rootEpic = combineEpics(refresh);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -76,5 +82,48 @@ describe('layers Epics', () => {
                 done();
             }
         });
+    });
+    it('test update dimension', done => {
+        const state = {
+            layers: {
+                flat: [{
+                    group: 'test',
+                    id: 'layer001',
+                    visibility: true,
+                    dimensions: [{
+                        name: 'time'
+                    }]
+                },
+                {
+                    group: 'test',
+                    id: 'layer002',
+                    visibility: true,
+                    dimensions: [{
+                        name: 'time'
+                    }, {
+                        name: 'elevation'
+                    }]
+                }]
+            }
+        };
+        testEpic(
+            updateDimension,
+            1,
+            updateLayerDimension('time', "2016-02-24T03:00:00.000Z"),
+            actions => {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    switch (action.type) {
+                        case CHANGE_LAYER_PARAMS:
+                            expect(action.layer.length).toBe(2);
+                            expect(action.params.time).toBe("2016-02-24T03:00:00.000Z");
+                            break;
+                        default:
+                            expect(true).toBe(false);
+
+                    }
+                });
+                done();
+            }, state);
     });
 });

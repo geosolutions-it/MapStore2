@@ -7,6 +7,8 @@
  */
 var expect = require('expect');
 var layers = require('../layers');
+const { changeLayerParams } = require('../../actions/layers');
+
 
 describe('Test the layers reducer', () => {
 
@@ -178,7 +180,44 @@ describe('Test the layers reducer', () => {
         expect(state.flat[0].visibility).toBe(false);
         expect(state.flat[1].visibility).toBe(true);
     });
+    it('changeLayerParams', () => {
+        const state = {
+            flat: [{
+                "type": "osm",
+                "title": "Open Street Map",
+                "name": "mapnik",
+                "id": "mapnik",
+                "group": "background",
+                "visibility": true
+            }, {
+                "type": "wms",
+                "url": "/reflector/open/service",
+                "visibility": false,
+                "title": "e-Geos Ortofoto RealVista 1.0",
+                "name": "rv1",
+                "id": "rv1",
+                "group": "background",
+                "format": "image/png"
+            }, {
+                "type": "wms",
+                "url": "/reflector/open/service",
+                "visibility": false,
+                "title": "e-Geos Ortofoto RealVista 1.0",
+                "name": "rv2",
+                "id": "rv2",
+                "group": "background",
+                "format": "image/png"
+            }]
+        };
+        const state1 = layers(state, changeLayerParams("rv1", {elevation: 200}));
+        expect(state1.flat[1].params).toExist();
+        expect(state1.flat[1].params.elevation).toBe(200);
+        expect(state1.flat[2].params).toNotExist();
+        const state2 = layers(state, changeLayerParams(["rv1", "rv2"], { elevation: 200 }));
+        expect(state2.flat[1].params.elevation).toBe(200);
+        expect(state2.flat[2].params.elevation).toBe(200);
 
+    });
     it('a layer is loading, loading flag is updated', () => {
         const action1 = {
             type: 'LAYER_LOADING',

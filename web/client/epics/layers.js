@@ -8,8 +8,11 @@
 
 const Rx = require('rxjs');
 const Api = require('../api/WMS');
-const {REFRESH_LAYERS, layersRefreshed, updateNode, layersRefreshError} = require('../actions/layers');
+const { REFRESH_LAYERS, UPDATE_LAYERS_DIMENSION, layersRefreshed, updateNode, layersRefreshError, changeLayerParams} = require('../actions/layers');
+const {getLayersWithDimension} = require('../selectors/layers');
+
 const LayersUtils = require('../utils/LayersUtils');
+
 
 const assign = require('object-assign');
 const {isArray, head} = require('lodash');
@@ -86,7 +89,26 @@ const refresh = action$ =>
             .mergeAll();
         });
 
-
+/**
+ * Update dimension to all layers that have that dimension set, or for the layers indicated in the action.
+ * @memberof epics.layers
+ * @param {external:Observable} action$ manages `UPDATE_LAYERS_DIMENSION`
+ * @return {external:Observable}
+ */
+const updateDimension = (action$, {getState = () => {}} = {}) =>
+    action$.ofType(UPDATE_LAYERS_DIMENSION)
+        .map(({ layers, dimension, ...other }) => ({ ...other, dimension, layers: layers || getLayersWithDimension(getState(), dimension)}))
+        .switchMap(({layers, dimension, value}) =>
+            Rx.Observable.of(
+                changeLayerParams(
+                    layers.map(l => l.id),
+                    {
+                        [dimension]: value
+                    }
+                )
+            )
+        );
 module.exports = {
-    refresh
+    refresh,
+    updateDimension
 };
