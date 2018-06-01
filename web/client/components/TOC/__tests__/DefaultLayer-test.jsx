@@ -256,4 +256,21 @@ describe('test DefaultLayer module component', () => {
 
     });
 
+    it('test wmts', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            storeIndex: 9,
+            type: 'wmts',
+            opacity: 0.5
+        };
+        const comp = ReactDOM.render(<Layer showFullTitleOnExpand={false} node={l} />,
+        document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const title = domNode.getElementsByClassName("chevron-left");
+        expect(title.length).toBe(0);
+    });
+
 });
