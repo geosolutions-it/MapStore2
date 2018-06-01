@@ -56,7 +56,6 @@ class SpatialFilter extends React.Component {
             onChangeDrawingStatus: () => {},
             onRemoveSpatialSelection: () => {},
             onShowSpatialSelectionDetails: () => {},
-            onEndDrawing: () => {},
             onSelectViewportSpatialMethod: () => {},
             onChangeRegion: () => {},
             onChangeDwithinValue: () => {},
@@ -278,7 +277,6 @@ class SpatialFilter extends React.Component {
                 type={this.props.spatialField.method}
                 onShowPanel={this.props.actions.onShowSpatialSelectionDetails}
                 onChangeDrawingStatus={this.changeDrawingStatus}
-                onEndDrawing={this.props.actions.onEndDrawing}
                 zoom={this.props.zoom}/>)
          :
             <span/>

@@ -72,10 +72,7 @@ const {
 
 const {initQueryPanel} = require('../actions/wfsquery');
 
-const {
-    changeDrawingStatus,
-    endDrawing
-} = require('../actions/draw');
+const {changeDrawingStatus} = require('../actions/draw');
 const onReset = reset.bind(null, "query");
 // connecting a Dumb component to the store
 // makes it a smart component
@@ -138,7 +135,6 @@ const SmartQueryForm = connect((state) => {
             onChangeDrawingStatus: changeDrawingStatus,
             onRemoveSpatialSelection: removeSpatialSelection,
             onShowSpatialSelectionDetails: showSpatialSelectionDetails,
-            onEndDrawing: endDrawing,
             onChangeDwithinValue: changeDwithinValue,
             zoneFilter: zoneGetValues,
             zoneSearch,
