@@ -127,7 +127,8 @@ class DefaultLayer extends React.Component {
     }
 
     renderNode = (grab, hide, selected, error, warning, other) => {
-        const isEmpty = !this.props.activateLegendTool && !this.props.showFullTitleOnExpand;
+        const isEmpty = this.props.node.type === 'wms' && !this.props.activateLegendTool && !this.props.showFullTitleOnExpand
+        || this.props.node.type !== 'wms' && !this.props.showFullTitleOnExpand;
         return (
             <Node className={'toc-default-layer' + hide + selected + error + warning} sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
                 <div className="toc-default-layer-head">
