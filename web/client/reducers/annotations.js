@@ -307,7 +307,7 @@ function annotations(state = { validationErrors: {} }, action) {
         }
         case ADD_NEW_FEATURE: {
             let selected = action.feature;
-            let newState;
+            let newState = state;
             if (action.feature.properties && action.feature.properties.isCircle ) {
                 // verify this condition
                 selected = set("geometry", action.feature.properties.polygonGeom, selected);
@@ -315,11 +315,12 @@ function annotations(state = { validationErrors: {} }, action) {
             if (action.feature.properties && action.feature.properties.isText) {
                 selected = set("geometry.type", "Point", selected);
             }
+            selected = set("properties.canEdit", false, selected);
 
             let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === state.selected.properties.id);
-            newState = set(`editing.features`, state.editing.features.map(f => {
+            /*newState = set(`editing.features`, state.editing.features.map(f => {
                 return set("properties.canEdit", false, f);
-            }), state);
+            }), state);*/
             if (ftChangedIndex === -1) {
                 newState = set("editing.features", newState.editing.features.concat([selected]), newState);
             } else {
@@ -506,6 +507,7 @@ function annotations(state = { validationErrors: {} }, action) {
         case SAVE_ANNOTATION:
             return assign({}, state, {
                 editing: null,
+                current: null,
                 drawing: false,
                 styling: false,
                 originalStyle: null,

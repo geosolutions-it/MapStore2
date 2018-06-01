@@ -52,15 +52,9 @@ class MultiGeomThumb extends React.Component {
         let textPresent = geoms.Text;
         let circlePresent = geoms.Circle;
         let styleText = textPresent ? this.props.styleMultiGeom.Text : {};
-        let types;
-        /*if (this.props.geometry.geometries && this.props.geometry.geometries.length) {
-            types = (this.props.geometry.geometries).map(g => g.type);
-        }*/
-        if (this.props.geometry.features && this.props.geometry.features.length) {
-            types = (this.props.geometry.features).map(g => g.geometry.type);
-        }
-        let polygonPresent = types.indexOf("Polygon") !== -1 || types.indexOf("MultiPolygon") !== -1;
-        let lineStringPresent = types.indexOf("LineString") !== -1 || types.indexOf("MultiLineString") !== -1;
+
+        let polygonPresent = geoms.Polygon || geoms.MultiPolygon;
+        let lineStringPresent = geoms.LineString || geoms.MultiLineString;
         return (
             <div className="ms-thumb-geom">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox={"0 0 100 100"}>

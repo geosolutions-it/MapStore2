@@ -133,10 +133,10 @@ class DrawSupport extends React.Component {
         let layerStyle = null;
         const styleType = this.convertGeometryTypeToStyleType(newProps.drawMethod);
         if (newProps.style) {
-            layerStyle = newProps.style.type ? VectorStyle.getStyle(newProps, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.valueText && [newProps.features[0].properties.valueText] || [] ) : this.toOlStyle(newProps.style, null, newProps.features[0] && newProps.features[0].type);
+            layerStyle = newProps.style.type ? VectorStyle.getStyle({ ...newProps, style: {...newProps.style, type: styleType, useSelectedStyle: newProps.options.useSelectedStyle }}, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.valueText && [newProps.features[0].properties.valueText] || [] ) : this.toOlStyle(newProps.style, null, newProps.features[0] && newProps.features[0].type);
         } else {
             const style = VectorStyle.defaultStyles[styleType] || VectorStyle.defaultStyles;
-            layerStyle = VectorStyle.getStyle({ ...newProps, style: {...style, type: styleType }}, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.valueText && [newProps.features[0].properties.valueText] || [] );
+            layerStyle = VectorStyle.getStyle({ ...newProps, style: {...style, type: styleType, useSelectedStyle: newProps.options.useSelectedStyle }}, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.valueText && [newProps.features[0].properties.valueText] || [] );
         }
         this.geojson = new ol.format.GeoJSON();
         this.drawSource = new ol.source.Vector();
@@ -688,8 +688,12 @@ class DrawSupport extends React.Component {
             if (this.drawSource && this.props.options) {
                 let previousFeatures = this.drawSource.getFeatures();
                 let previousFtIndex = 0;
+
                 const previousFt = previousFeatures && previousFeatures.length && previousFeatures.filter((f, i) => {
-                    previousFtIndex = i; return f.getProperties().canEdit;
+                    if (f.getProperties().canEdit) {
+                        previousFtIndex = i;
+                    }
+                    return f.getProperties().canEdit;
                 })[0];
                 const previousCoords = previousFt.getGeometry() && previousFt.getGeometry().getCoordinates() || [];
                 let actualCoords = [];
@@ -806,8 +810,9 @@ class DrawSupport extends React.Component {
             this.addTranslateInteraction();
             this.setState({keySingleClickCallback: this.addSingleClickListener(singleClickCallback)});
         }
-        if (newProps.options && newProps.options.selectEnabled && newProps.drawMethod !== "Point") { // TODO fix all call to this which are missing "selectEnabled" flag
+        if (newProps.options && newProps.options.selectEnabled/* && (newProps.drawMethod !== "Point" && newProps.drawMethod !== "Text")*/) { // TODO fix all call to this which are missing "selectEnabled" flag
             this.addSelectInteraction(newProps.options && newProps.options.selected, newProps);
+
         }
 
         if (newProps.options.drawEnabled) {
@@ -815,7 +820,7 @@ class DrawSupport extends React.Component {
         }
     };
 
-    addSelectInteraction = (selectedFeature/*, props*/) => {
+    addSelectInteraction = (selectedFeature, props) => {
         if (this.selectInteraction) {
             this.props.map.removeInteraction(this.selectInteraction);
         }
@@ -829,19 +834,21 @@ class DrawSupport extends React.Component {
         let layerStyle = null;
         const styleType = this.convertGeometryTypeToStyleType(props.drawMethod);
         if (selectedFeature && selectedFeature.style) {
-            layerStyle = selectedFeature.style.type ? VectorStyle.getStyle(props, false, props.features[0] && props.features[0].properties && props.features[0].properties.textValues || [] ) : this.toOlStyle(props.style, null, props.features[0] && props.features[0].type);
+            layerStyle = selectedFeature.style.type ? VectorStyle.getStyle(props, false, props.features[0] && props.features[0].properties && props.features[0].properties.valueText && [props.features[0].properties.valueText] || [] ) : this.toOlStyle(props.style, null, props.features[0] && props.features[0].type);
         } else if (props.style) {
-            layerStyle = props.style.type ? VectorStyle.getStyle(props, false, props.features[0] && props.features[0].properties && props.features[0].properties.textValues || [] ) : this.toOlStyle(props.style, null, props.features[0] && props.features[0].type);
+            layerStyle = props.style.type ? VectorStyle.getStyle({ ...props, style: {...props.style, type: styleType, highlight: true, selected: true }}, false, props.features[0] && props.features[0].properties && props.features[0].properties.valueText && [props.features[0].properties.valueText] || [] ) : this.toOlStyle(props.style, null, props.features[0] && props.features[0].type);
         } else {
             const style = VectorStyle.defaultStyles[styleType] || VectorStyle.defaultStyles;
-            layerStyle = VectorStyle.getStyle({ ...props, style: {...style, type: styleType }}, false, props.features[0] && props.features[0].properties && props.features[0].properties.textValues || [] );
+            layerStyle = VectorStyle.getStyle({ ...props, style: {...style, type: styleType, highlight: true }}, false, props.features[0] && props.features[0].properties && props.features[0].properties.valueText && [props.features[0].properties.valueText] || [] );
         }*/
         this.selectInteraction = new ol.interaction.Select({
             layers: [this.drawLayer],
-            features: new ol.Collection(selectedFeature && olFt ? [olFt] : null)/*,
-            style: layerStyle*/
+            features: new ol.Collection(selectedFeature && olFt ? [olFt] : null)
         });
-
+        if (olFt) {
+            const styleType = this.convertGeometryTypeToStyleType(props.drawMethod);
+            olFt.setStyle(VectorStyle.getStyle({ ...props, style: {...props.style, type: styleType, highlight: true, useSelectedStyle: props.options.useSelectedStyle }}, false, props.features[0] && props.features[0].properties && props.features[0].properties.valueText && [props.features[0].properties.valueText] || [] ));
+        }
         this.selectInteraction.on('select', (evt) => {
 
             let selectedFeatures = this.selectInteraction.getFeatures().getArray();
@@ -913,7 +920,7 @@ class DrawSupport extends React.Component {
 
         if (this.selectInteraction) {
             this.props.map.enableEventListener('singleclick');
-            this.props.map.removeInteraction(this.drawInteraction);
+            this.props.map.removeInteraction(this.selectInteraction);
         }
 
         if (this.modifyInteraction) {

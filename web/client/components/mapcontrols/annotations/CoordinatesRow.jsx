@@ -54,14 +54,13 @@ class CoordinatesRowComponent extends React.Component {
                 <Col xs={1}>
                     <Toolbar
                         btnDefaultProps={{ className: 'square-button-md no-border'}}
-                        buttons={
-                        [
+                        buttons={[
                             {
+                                disabled: !this.props.isDraggable,
                                 style: {pointerEvents: !this.props.isDraggable ? "none" : "auto"},
                                 glyph: 'menu-hamburger'
                             }
-                        ]
-                    }/>
+                        ]}/>
                 </Col>
                 <Col xs={5}>
                     <FormGroup
