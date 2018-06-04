@@ -470,7 +470,7 @@ class LayerTree extends React.Component {
  *  }
  * ```
  * Another layerOptionS entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
- * For the moment only indiators of type `dimension` are supported.
+ * For the moment only indicators of type `dimension` are supported.
  * example :
  * ```
  *  "indicators: [{
