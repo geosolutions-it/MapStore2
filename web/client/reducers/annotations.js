@@ -15,10 +15,9 @@ const {TOGGLE_CONTROL} = require('../actions/controls');
 const {FEATURES_SELECTED, DRAWING_FEATURE} = require('../actions/draw');
 const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, CLOSE_ANNOTATIONS,
     CONFIRM_CLOSE_ANNOTATIONS, CANCEL_CLOSE_ANNOTATIONS,
-    EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
-    /*UPDATE_ANNOTATION_GEOMETRY,*/ VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY, TOGGLE_STYLE,
-    SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION, FILTER_ANNOTATIONS, STOP_DRAWING,
-    CHANGE_STYLER, UNSAVED_CHANGES, TOGGLE_CHANGES_MODAL, CHANGED_PROPERTIES, TOGGLE_STYLE_MODAL, UNSAVED_STYLE,
+    EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD, VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY,
+    TOGGLE_STYLE, SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION, FILTER_ANNOTATIONS, STOP_DRAWING,
+    CHANGE_STYLER, UNSAVED_CHANGES, TOGGLE_GEOMETRY_MODAL, TOGGLE_CHANGES_MODAL, CHANGED_PROPERTIES, TOGGLE_STYLE_MODAL, UNSAVED_STYLE,
     ADD_TEXT, CANCEL_CLOSE_TEXT, SHOW_TEXT_AREA, SAVE_TEXT, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS, CHANGE_TEXT,
     ADD_NEW_FEATURE, SET_INVALID_SELECTED} = require('../actions/annotations');
 
@@ -42,12 +41,6 @@ const updateFeatures = (state, geom) => {
     let {coordinates, radius, text} = geom;
     let validCoordinates;
     let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === state.selected.properties.id);
-    /*if (ftChangedIndex === -1) {
-        return state;
-    }*/
-    /*let ftChanged = ftChangedIndex === -1 ? {type: "Feature", geometry: {
-        type: state.selected.geometry.type
-    }, properties: state.selected.properties} : assign({}, state.editing.features[ftChangedIndex]);*/
     let ftChanged = ftChangedIndex === -1 ? {type: "Feature", geometry: {
         type: state.selected.geometry.type
     }, properties: {...state.selected.properties}} : assign({}, state.editing.features[ftChangedIndex]);
@@ -123,26 +116,9 @@ const updateFeatures = (state, geom) => {
         components: getComponents(selected.geometry),
         type: selected.geometry.type
     }), selected);
-
-
-    // let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === selected.properties.id);
-    /*if (ftChangedIndex === -1) {
-        newState = set("editing.features", state.editing.features.concat([selected]), state);
-    } else {
-        let selectedGeoJSON = selected;
-        if (selected && selected.properties && selected.properties.isCircle) {
-            selectedGeoJSON = set("geometry", selected.properties.polygonGeom, selectedGeoJSON);
-        } else if (selected && selected.properties && selected.properties.isText) {
-            selectedGeoJSON = set("geometry.type", "Point", selectedGeoJSON);
-        }
-        newState = set(`editing.features`, state.editing.features.map(f => {
-            return set("properties.canEdit", false, f);
-        }), state);
-
-        newState = set(`editing.features[${ftChangedIndex}]`, selectedGeoJSON, newState);
-    }*/
-    return assign({}, state, {
-        editing: {...state.editing, features},
+    let newState = set(`unsavedGeometry`, true, state);
+    return assign({}, newState, {
+        editing: {...newState.editing, features},
         selected
     });
 };
@@ -150,8 +126,6 @@ const updateFeatures = (state, geom) => {
 function annotations(state = { validationErrors: {} }, action) {
     switch (action.type) {
         case CHANGED_SELECTED: {
-
-            // TODO MANAGE ALSO CHANGE OF RADIUS AND TEXT VALUE
             return updateFeatures(state, action);
         }
         case FEATURES_SELECTED: {
@@ -185,7 +159,7 @@ function annotations(state = { validationErrors: {} }, action) {
             } else {
                 newState = set(`editing.features[${ftChangedIndex}]`, selectedGeoJSON, newState);
             }
-
+            newState = set(`unsavedGeometry`, true, newState);
             return assign({}, newState, {
                 selected,
                 coordinateEditorEnabled: !!selected,
@@ -219,6 +193,7 @@ function annotations(state = { validationErrors: {} }, action) {
             newState = set(`editing.features`, state.editing.features.map(f => {
                 return set("properties.canEdit", false, f);
             }), state);
+            newState = set(`unsavedGeometry`, true, newState);
             if (ftChangedIndex === -1) {
                 newState = set("editing.features", newState.editing.features.concat([selectedGeoJSON]), newState);
             } else {
@@ -241,7 +216,8 @@ function annotations(state = { validationErrors: {} }, action) {
             selected = set("geometry.coordinates", action.components[0], selected);
             let center = reproject(selected.properties.center, "EPSG:4326", "EPSG:3857");
 
-            // need to change the polygon coords after radius changes, but this implementation is ugly. is using ol to do that, maybe we need to refactor this
+            // need to change the polygon coords after radius changes
+            // but this implementation is ugly. is using openlayers to do that and maybe we need to refactor this
             let coordinates = ol.geom.Polygon.fromCircle(new ol.geom.Circle([center.x, center.y], action.radius), 100).getCoordinates();
             let feature = {
                 type: "Feature",
@@ -258,6 +234,7 @@ function annotations(state = { validationErrors: {} }, action) {
             newState = set(`editing.features`, state.editing.features.map(f => {
                 return set("properties.canEdit", false, f);
             }), state);
+            newState = set(`unsavedGeometry`, true, newState);
             if (ftChangedIndex === -1) {
                 newState = set("editing.features", newState.editing.features.concat([selectedGeoJSON]), newState);
             } else {
@@ -281,6 +258,7 @@ function annotations(state = { validationErrors: {} }, action) {
             newState = set(`editing.features`, state.editing.features.map(f => {
                 return set("properties.canEdit", false, f);
             }), state);
+            newState = set(`unsavedGeometry`, true, newState);
             if (ftChangedIndex === -1) {
                 newState = set("editing.features", newState.editing.features.concat([selectedGeoJSON]), newState);
             } else {
@@ -301,7 +279,8 @@ function annotations(state = { validationErrors: {} }, action) {
                 },
                 drawing: false,
                 coordinateEditorEnabled: false,
-                selected: null
+                selected: null,
+                showUnsavedGeometryModal: false
             });
         }
         case ADD_NEW_FEATURE: {
@@ -484,6 +463,10 @@ function annotations(state = { validationErrors: {} }, action) {
             return assign({}, state, {
                 showUnsavedChangesModal: !state.showUnsavedChangesModal
             });
+        case TOGGLE_GEOMETRY_MODAL:
+            return assign({}, state, {
+                showUnsavedGeometryModal: !state.showUnsavedGeometryModal
+            });
         case TOGGLE_STYLE_MODAL:
             return assign({}, state, {
                 showUnsavedStyleModal: !state.showUnsavedStyleModal
@@ -504,6 +487,7 @@ function annotations(state = { validationErrors: {} }, action) {
                 editedFields: {},
                 unsavedChanges: false
             });
+
         case SAVE_ANNOTATION:
             return assign({}, state, {
                 editing: null,

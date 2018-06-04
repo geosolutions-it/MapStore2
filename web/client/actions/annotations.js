@@ -33,6 +33,7 @@ const START_DRAWING = 'ANNOTATIONS:START_DRAWING';
 const CHANGE_STYLER = 'ANNOTATIONS:CHANGE_STYLER';
 const UNSAVED_CHANGES = 'ANNOTATIONS:UNSAVED_CHANGES';
 const TOGGLE_CHANGES_MODAL = 'ANNOTATIONS:TOGGLE_CHANGES_MODAL';
+const TOGGLE_GEOMETRY_MODAL = 'ANNOTATIONS:TOGGLE_GEOMETRY_MODAL';
 const CHANGED_PROPERTIES = 'ANNOTATIONS:CHANGED_PROPERTIES';
 const UNSAVED_STYLE = 'ANNOTATIONS:UNSAVED_STYLE';
 const TOGGLE_STYLE_MODAL = 'ANNOTATIONS:TOGGLE_STYLE_MODAL';
@@ -270,6 +271,11 @@ function toggleUnsavedChangesModal() {
         type: TOGGLE_CHANGES_MODAL
     };
 }
+function toggleUnsavedGeometryModal() {
+    return {
+        type: TOGGLE_GEOMETRY_MODAL
+    };
+}
 function toggleUnsavedStyleModal() {
     return {
         type: TOGGLE_STYLE_MODAL
@@ -368,6 +374,7 @@ module.exports = {
     RESET_COORD_EDITOR, resetCoordEditor,
     CHANGE_TEXT, changeText,
     CHANGE_RADIUS, changeRadius,
+    TOGGLE_GEOMETRY_MODAL, toggleUnsavedGeometryModal,
     SET_INVALID_SELECTED, setInvalidSelected,
     CHANGED_SELECTED, changeSelected
 };

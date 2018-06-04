@@ -19,9 +19,9 @@ const {createSelector} = require('reselect');
 const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnotation, removeAnnotation, cancelEditAnnotation,
     saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
     highlight, cleanHighlight, showAnnotation, cancelShowAnnotation, filterAnnotations, closeAnnotations,
-    cancelCloseAnnotations, confirmCloseAnnotations, startDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal, changedProperties,
-    setUnsavedStyle, toggleUnsavedStyleModal, addText, cancelText, saveText, download, loadAnnotations, changeSelected, resetCoordEditor, changeRadius, changeText,
-    addNewFeature, setInvalidSelected
+    cancelCloseAnnotations, confirmCloseAnnotations, startDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal,
+    changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, cancelText, saveText, download, loadAnnotations,
+    changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected
 } = require('../actions/annotations');
 
 const { zoomToExtent } = require('../actions/map');
@@ -44,6 +44,7 @@ const commonEditorActions = {
     onSetUnsavedStyle: setUnsavedStyle,
     onChangeProperties: changedProperties,
     onToggleUnsavedChangesModal: toggleUnsavedChangesModal,
+    onToggleUnsavedGeometryModal: toggleUnsavedGeometryModal,
     onToggleUnsavedStyleModal: toggleUnsavedStyleModal,
     onAddNewFeature: addNewFeature,
     onResetCoordEditor: resetCoordEditor,
@@ -87,6 +88,7 @@ const Annotations = connect(panelSelector, {
     onCancelEdit: cancelEditAnnotation,
     onToggleUnsavedChangesModal: toggleUnsavedChangesModal,
     onToggleUnsavedStyleModal: toggleUnsavedStyleModal,
+    onToggleUnsavedGeometryModal: toggleUnsavedGeometryModal,
     onConfirmRemove: confirmRemoveAnnotation,
     onCancelClose: cancelCloseAnnotations,
     onConfirmClose: confirmCloseAnnotations,

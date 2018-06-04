@@ -62,6 +62,7 @@ const bbox = require('@turf/bbox');
  * @prop {function} onSaveText triggered when the user saves the value inserted for the Text annotation
  * @prop {function} onToggleUnsavedChangesModal toggles the view of the UnsavedChangesModal
  * @prop {function} onToggleUnsavedStyleModal toggles the view of the UnsavedStyleModal
+ * @prop {function} onToggleUnsavedGeometryModal toggles the view of the UnsavedGeometryModal
  * @prop {function} onSetUnsavedChanges triggered when the user changes the value of any field, it sets a flag used to trigger the view of the UnsavedChangesModal
  * @prop {function} onAddNewFeature triggered when user click on save icon of the coordinate editor, this will add the feature being drawn to the list of features of the ft coll of the annotation
  * @prop {function} onChangeProperties triggered when the user changes the value of any field
@@ -81,6 +82,7 @@ const bbox = require('@turf/bbox');
  * @prop {string} stylerType selected styler to be shown as body
  * @prop {boolean} showUnsavedStyleModal flag used to show the UnsavedChangesModal
  * @prop {boolean} showUnsavedChangesModal flag used to show the UnsavedStyleModal
+ * @prop {boolean} showUnsavedGeometryModal
  * @prop {string} mode current mode of operation (list, editing, detail)
  * @prop {function} onRemove triggered when the user clicks on the remove button
  * @prop {function} onSave triggered when the user clicks on the save button
@@ -123,6 +125,7 @@ class AnnotationsEditor extends React.Component {
         onAddGeometry: PropTypes.func,
         onSaveText: PropTypes.func,
         onToggleUnsavedChangesModal: PropTypes.func,
+        onToggleUnsavedGeometryModal: PropTypes.func,
         onToggleUnsavedStyleModal: PropTypes.func,
         onSetUnsavedChanges: PropTypes.func,
         onSetUnsavedStyle: PropTypes.func,
@@ -159,6 +162,7 @@ class AnnotationsEditor extends React.Component {
         showBack: PropTypes.bool,
         showUnsavedChangesModal: PropTypes.bool,
         showUnsavedStyleModal: PropTypes.bool,
+        showUnsavedGeometryModal: PropTypes.bool,
         config: PropTypes.object,
         feature: PropTypes.object,
         selected: PropTypes.object,
@@ -329,8 +333,7 @@ class AnnotationsEditor extends React.Component {
                             tooltipId: "annotations.back",
                             visible: true,
                             onClick: () => {
-                                // TODO back should return to editing form
-                                this.props.onResetCoordEditor();
+                                this.props.onToggleUnsavedGeometryModal();
                             }
                         }, {
                             glyph: 'floppy-disk',
@@ -564,6 +567,18 @@ class AnnotationsEditor extends React.Component {
                     confirmButtonContent={<Message msgId="annotations.confirm" />}
                     closeText={<Message msgId="annotations.cancel" />}>
                     <Message msgId="annotations.undo"/>
+                </ConfirmDialog></Portal>);
+        } else if (this.props.showUnsavedGeometryModal) {
+            return (<Portal><ConfirmDialog
+                    show
+                    modal
+                    onClose={this.props.onToggleUnsavedGeometryModal}
+                    onConfirm={() => { this.props.onResetCoordEditor(); }}
+                    confirmButtonBSStyle="default"
+                    closeGlyph="1-close"
+                    confirmButtonContent={<Message msgId="annotations.confirm" />}
+                    closeText={<Message msgId="annotations.cancel" />}>
+                    <Message msgId="annotations.undo"/> "...Geometry..."
                 </ConfirmDialog></Portal>);
         } else if (this.props.showUnsavedStyleModal) {
             return (<Portal><ConfirmDialog
