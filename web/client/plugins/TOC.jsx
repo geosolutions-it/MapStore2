@@ -479,13 +479,13 @@ class LayerTree extends React.Component {
  *      "glyph": "calendar", // glyph to use
  *      "props": { // props to pass to the indicator
  *          "style": {
- *          "color": "#dddddd",
- *          "float": "right"
+ *               "color": "#dddddd",
+ *               "float": "right"
  *          },
  *          "tooltip": "dateFilter.supportedDateFilter", // tooltip (can be also a localized msgId)
  *          "placement": "bottom" // tooltip position
  *      },
- *      "condition": { // condition (lodash style) to satifsfy ( for type dimension, the condition is to match at least one of the "dimensions" )
+ *      "condition": { // condition (lodash style) to satisfy ( for type dimension, the condition is to match at least one of the "dimensions" )
  *          "name": "time"
  *      }
  *  }]
