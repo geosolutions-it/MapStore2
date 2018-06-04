@@ -695,35 +695,6 @@
                 }
             }
         },
-        "user":{
-            "login": "Login",
-            "logout": "Logout",
-            "info": " Account Info",
-            "details": " Nutzer Details",
-            "noAttributesMessage": "Es gibt keine Information bezüglich deines Accounts",
-            "changePwd": "Passwort ändern",
-            "newPwd": "Neues Passwort",
-            "retypePwd": "Passwort wiederholen",
-            "passwordMinlenght": "Dein Passwort muss aus mindestens {minSize} Zeichen bestehen",
-            "passwordCheckFail": "Passwörter sind nicht identisch!",
-            "passwordInvalid": "Ungültiges Passwort",
-            "username": "Benutzername",
-            "password": "Passwort",
-            "passwordChanged": "Passwort geändert",
-            "passwordError": "Fehler beim Ändern des Passworts",
-            "signIn":"Anmelden",
-            "loginFail":"Anmeldung gescheitert",
-            "loginFailedStatusMessages": {
-                "usernamePwdInsert": "Bitte gib Benutzernamen und Password ein",
-                "usernamePwdIncorrect":"Benutzername oder Passwort inkorrekt"
-            },
-            "detailsName": "Name",
-            "detailsRole": "Rolle",
-            "detailsGroups": "Gruppen",
-            "detailsEmail": "E-mail",
-            "detailsCompany": "Unternehmen",
-            "detailsNotes": "Anmerkungen"
-        },
         "annotations": {
             "edit": "Bearbeiten",
             "remove": "Löschen",
@@ -763,7 +734,49 @@
                 "polygon": " Polygon",
                 "text": " Text",
                 "circle": " Kreis"
+            },
+            "editor": {
+                "title": "Geometrie-Editor:",
+                "add": "Fügen Sie neue Koordinaten hinzu",
+                "valid": "Geometrie ist gültig",
+                "radius": "Radius",
+                "text": "Text",
+                "lat": "Breite",
+                "lon": "Längengrad",
+                "notValidMarker": "Fügen Sie eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "Alle Koordinaten müssen gültig sein (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Fügen Sie einen Textwert und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Geben Sie einen Radius (m) und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)"
             }
+        },
+        "user":{
+            "login": "Login",
+            "logout": "Logout",
+            "info": " Account Info",
+            "details": " Nutzer Details",
+            "noAttributesMessage": "Es gibt keine Information bezüglich deines Accounts",
+            "changePwd": "Passwort ändern",
+            "newPwd": "Neues Passwort",
+            "retypePwd": "Passwort wiederholen",
+            "passwordMinlenght": "Dein Passwort muss aus mindestens {minSize} Zeichen bestehen",
+            "passwordCheckFail": "Passwörter sind nicht identisch!",
+            "passwordInvalid": "Ungültiges Passwort",
+            "username": "Benutzername",
+            "password": "Passwort",
+            "passwordChanged": "Passwort geändert",
+            "passwordError": "Fehler beim Ändern des Passworts",
+            "signIn":"Anmelden",
+            "loginFail":"Anmeldung gescheitert",
+            "loginFailedStatusMessages": {
+                "usernamePwdInsert": "Bitte gib Benutzernamen und Password ein",
+                "usernamePwdIncorrect":"Benutzername oder Passwort inkorrekt"
+            },
+            "detailsName": "Name",
+            "detailsRole": "Rolle",
+            "detailsGroups": "Gruppen",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Unternehmen",
+            "detailsNotes": "Anmerkungen"
         },
         "users": {
             "title": "Accounts verwalten",

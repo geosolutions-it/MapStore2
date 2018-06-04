@@ -52,7 +52,7 @@ const getTextStyle = (tempStyle, valueText, highlight = false) => {
 
     return new ol.style.Style({
         text: new ol.style.Text({
-            offsetY: -( 4 * Math.sqrt(tempStyle.fontSize)),
+            offsetY: -( 4 * Math.sqrt(tempStyle.fontSize)), // TODO improve this for high font values > 100px
             textAlign: tempStyle.textAlign || "center",
             text: valueText || "",
             font: tempStyle.font,

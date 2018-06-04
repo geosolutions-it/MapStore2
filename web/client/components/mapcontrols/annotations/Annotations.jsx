@@ -328,7 +328,7 @@ class Annotations extends React.Component {
                     text={<Message msgId="annotations.selectfiletext"/>}
                     onFileChoosen={this.props.onLoadAnnotations}
                     show={this.state.selectFile}
-                    diableOvveride={!(this.props.annotations && this.props.annotations.length > 0)}
+                    disableOvveride={!(this.props.annotations && this.props.annotations.length > 0)}
                     onClose={() => this.setState(() => ({selectFile: false}))}
                     />);
 

@@ -8,7 +8,7 @@
 
 const React = require('react');
 const ol = require('openlayers');
-const {concat, head, find, slice, omit, isArray} = require('lodash');
+const {concat, head, find, slice, omit, isArray, last} = require('lodash');
 const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const uuid = require('uuid');
@@ -352,9 +352,9 @@ class DrawSupport extends React.Component {
                     }
                 }
                 // drawnFeatures is array of ol.Feature
-                // const previousFeatures = drawnFeatures.length >= 1 ? [...this.replaceCirclesWithPolygonsInFeatureColl(drawnFeatures)] : [];
+                const previousFeatures = drawnFeatures.length >= 1 ? [...this.replaceCirclesWithPolygonsInFeatureColl(drawnFeatures)] : [];
                 newFeature.setProperties({id: uuid.v1()});
-                const newFeatures = [/*...previousFeatures,*/ newFeature];
+                const newFeatures = [...previousFeatures, newFeature];
                 // create FeatureCollection externalize as function
                 let newFeatureColl = geojsonFormat.writeFeaturesObject(newFeatures);
                 const vectorSource = new ol.source.Vector({
@@ -364,7 +364,7 @@ class DrawSupport extends React.Component {
                 let feature = reprojectGeoJson(newFeatureColl, this.getMapCrs(), "EPSG:4326");
                 this.props.onGeometryChanged([feature], this.props.drawOwner, this.props.options && this.props.options.stopAfterDrawing ? "enterEditMode" : "", drawMethod === "Text", drawMethod === "Circle");
                 this.props.onEndDrawing(feature, this.props.drawOwner);
-                this.props.onDrawingFeatures([feature.features[0]]);
+                this.props.onDrawingFeatures([last(feature.features)]);
 
             } else {
                 if (drawMethod === "Circle") {

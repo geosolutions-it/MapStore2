@@ -18,8 +18,7 @@ class GeometryEditor extends React.Component {
         onComplete: PropTypes.func,
         onChangeRadius: PropTypes.func,
         onSetInvalidSelected: PropTypes.func,
-        onChangeText: PropTypes.func,
-        completeGeometry: PropTypes.bool
+        onChangeText: PropTypes.func
     };
 
     static defaultProps = {
@@ -37,9 +36,7 @@ class GeometryEditor extends React.Component {
             transitionName: "switch-panel-transition",
             transitionEnterTimeout: 300,
             transitionLeaveTimeout: 300
-        },
-        isDraggable: false,
-        completeGeometry: false
+        }
     };
 
     state = {
@@ -47,12 +44,10 @@ class GeometryEditor extends React.Component {
     }
 
     render() {
-        // const {coordinates, type} = this.props.selected && this.props.selected.geometry || {coordinates: [[]] /*[[[-9, 42], [-7, 44]]]*/};
         return (<CoordinatesEditor
             items={[]}
             isDraggable={this.props.selected && this.props.selected.properties && this.props.selected.properties.isValidFeature}
             type={this.props.featureType}
-            completeGeometry={this.props.completeGeometry}
             components={this.props.selected && this.props.selected.geometry && this.props.selected.geometry.coordinates && this.props.selected.geometry.coordinates.length ? getComponents(this.props.selected.geometry) : []}
             properties={this.props.selected && this.props.selected.properties || {}}
             onComplete={() => {}}

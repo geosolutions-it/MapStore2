@@ -696,35 +696,6 @@
                 }
             }
         },
-        "user":{
-            "login": "Login",
-            "logout": "Logout",
-            "info": " Account Info",
-            "details": " User Details",
-            "noAttributesMessage": "There is no information related to your account",
-            "changePwd": "Change Password",
-            "newPwd": "New Password",
-            "retypePwd": "Retype Password",
-            "passwordMinlenght": "Your password must be at least {minSize} character",
-            "passwordCheckFail": "Passwords do not match!",
-            "passwordInvalid": "Invalid password",
-            "username": "Username",
-            "password": "Password",
-            "passwordChanged": "Password changed",
-            "passwordError": "Error changing password",
-            "signIn":"Sign-in",
-            "loginFail":"Login Fail",
-            "loginFailedStatusMessages": {
-                "usernamePwdInsert": "Please insert username and password",
-                "usernamePwdIncorrect":"Username or password incorrect"
-            },
-            "detailsName": "Name",
-            "detailsRole": "Role",
-            "detailsGroups": "Groups",
-            "detailsEmail": "E-mail",
-            "detailsCompany": "Company",
-            "detailsNotes": "Notes"
-        },
         "annotations": {
             "edit": "Edit",
             "remove": "Delete",
@@ -764,7 +735,49 @@
                 "polygon": " Polygon",
                 "text": " Text",
                 "circle": " Circle"
+            },
+            "editor": {
+                "title": "Geometry Editor:",
+                "add": "Add new coordinates",
+                "valid": "Geometry is valid",
+                "radius": "Radius",
+                "text": "Text",
+                "lat": "Latitude",
+                "lon": "Longitude",
+                "notValidMarker": "Insert a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "All coordinate must be valid (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insert a text value and a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Insert a radius value (m) and a valid coordinate (+|- 90° lat, +|-180° lon)"
             }
+        },
+        "user":{
+            "login": "Login",
+            "logout": "Logout",
+            "info": " Account Info",
+            "details": " User Details",
+            "noAttributesMessage": "There is no information related to your account",
+            "changePwd": "Change Password",
+            "newPwd": "New Password",
+            "retypePwd": "Retype Password",
+            "passwordMinlenght": "Your password must be at least {minSize} character",
+            "passwordCheckFail": "Passwords do not match!",
+            "passwordInvalid": "Invalid password",
+            "username": "Username",
+            "password": "Password",
+            "passwordChanged": "Password changed",
+            "passwordError": "Error changing password",
+            "signIn":"Sign-in",
+            "loginFail":"Login Fail",
+            "loginFailedStatusMessages": {
+                "usernamePwdInsert": "Please insert username and password",
+                "usernamePwdIncorrect":"Username or password incorrect"
+            },
+            "detailsName": "Name",
+            "detailsRole": "Role",
+            "detailsGroups": "Groups",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Company",
+            "detailsNotes": "Notes"
         },
         "users": {
             "title": "Manage Accounts",

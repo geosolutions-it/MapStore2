@@ -695,35 +695,6 @@
                 }
             }
         },
-        "user":{
-            "login": "Login",
-            "logout": "Logout",
-            "info": "Información sobre la cuenta",
-            "details": "Detalles del usuario",
-            "noAttributesMessage": "No hay información sobre la cuenta",
-            "changePwd": "Cambiar la contraseña",
-            "newPwd": "Nueva contraseña",
-            "retypePwd": "Confirme la contraseña",
-            "passwordMinlenght": "La clave ha de ser de  almenos {minSize} carácteres",
-            "passwordCheckFail": "!Las claves no se corresponden!",
-            "passwordInvalid": "Clave incorrecta",
-            "username": "Nombre de usuario",
-            "password": "Clave",
-            "passwordChanged": "Clave cambiada",
-            "passwordError": "Error en el cambio de clave",
-            "signIn":"Login",
-            "loginFail":"Error de autenticación",
-            "loginFailedStatusMessages": {
-                "usernamePwdInsert": "Por favor, intoduzca su clave y contraseña",
-                "usernamePwdIncorrect":"Ususario o clave incorrectos"
-            },
-            "detailsName": "Nombre",
-            "detailsRole": "Rol",
-            "detailsGroups": "Grupos",
-            "detailsEmail": "E-mail",
-            "detailsCompany": "Empresa",
-            "detailsNotes": "Notas"
-        },
         "annotations": {
             "edit": "Editar",
             "remove": "Borrar",
@@ -763,7 +734,49 @@
                 "polygon": " Polígono",
                 "text": " Texto",
                 "circle": " Circulo"
+            },
+            "editor": {
+                "title": "Editor de geometría:",
+                "add": "Agregar nuevas coordenadas",
+                "valid": "La geometría es válida",
+                "radius": "Radio",
+                "text": "Texto",
+                "lat": "Latitud",
+                "lon": "Longitud",
+                "notValidMarker": "Insertar una coordenada válida (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "Todas las coordenadas deben ser válidas (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insertar un valor de texto y una coordenada válida (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Ingrese un radio (m) y una coordenada válida (+|- 90° lat, +|-180° lon)"
             }
+        },
+        "user":{
+            "login": "Login",
+            "logout": "Logout",
+            "info": "Información sobre la cuenta",
+            "details": "Detalles del usuario",
+            "noAttributesMessage": "No hay información sobre la cuenta",
+            "changePwd": "Cambiar la contraseña",
+            "newPwd": "Nueva contraseña",
+            "retypePwd": "Confirme la contraseña",
+            "passwordMinlenght": "La clave ha de ser de  almenos {minSize} carácteres",
+            "passwordCheckFail": "!Las claves no se corresponden!",
+            "passwordInvalid": "Clave incorrecta",
+            "username": "Nombre de usuario",
+            "password": "Clave",
+            "passwordChanged": "Clave cambiada",
+            "passwordError": "Error en el cambio de clave",
+            "signIn":"Login",
+            "loginFail":"Error de autenticación",
+            "loginFailedStatusMessages": {
+                "usernamePwdInsert": "Por favor, intoduzca su clave y contraseña",
+                "usernamePwdIncorrect":"Ususario o clave incorrectos"
+            },
+            "detailsName": "Nombre",
+            "detailsRole": "Rol",
+            "detailsGroups": "Grupos",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Empresa",
+            "detailsNotes": "Notas"
         },
         "users": {
             "title": "Administrador de cuentas de usuario",

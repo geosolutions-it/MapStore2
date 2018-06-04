@@ -591,6 +591,60 @@
                 }
             }
         },
+        "annotations": {
+            "edit": "Edit",
+            "remove": "Delete",
+            "save": "Save",
+            "cancel": "Cancel",
+            "back": "Back",
+            "addMarker": "Add a new geometry",
+            "styleGeometry": "Change style",
+            "deleteGeometry": "Remove existing geometry",
+            "removeannotation": "Do you want to remove the annotation?",
+            "removegeometry": "Do you want to remove all annotation features?",
+            "confirm": "Confirm",
+            "mandatory": "Mandatory field",
+            "emptygeometry": "Geometry cannot be empty",
+            "add": "New",
+            "filter": "Filter annotations...",
+            "undo": "Are you sure you want to abandon the annotation editing session?",
+            "title": "Annotations",
+            "zoomTo": "Zoom",
+            "insertText": "Please insert the text annotation",
+            "downloadtooltip": "Download annotations",
+            "downloadcurrenttooltip": "Download current annotation",
+            "downloadError": "Export error",
+            "loadtooltip": "Import annotations",
+            "loadtitle": "Import Annotations",
+            "selectfiletext": "Drop your file here or click to select the Annotation File to import. (supported files: JSON)",
+            "loadoverride": "Replace annotations",
+            "loaderror": "Select one or more annotations files. (supported files: json)",
+            "defaulttitle": "Edit default title",
+            "field": {
+                "title": "Title",
+                "description": "Description"
+            },
+            "titles": {
+                "marker": " Marker",
+                "line": " Line",
+                "polygon": " Polygon",
+                "text": " Text",
+                "circle": " Circle"
+            },
+            "editor": {
+                "title": "Coordinates Editor:",
+                "add": "Add new coordinates",
+                "valid": "Geometry is valid",
+                "radius": "Radius",
+                "text": "Text",
+                "lat": "Latitude",
+                "lon": "Longitude",
+                "notValidMarker": "Insert a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "All coordinate must be valid (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insert a text value and a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Insert a radius value (m) and a valid coordinate (+|- 90° lat, +|-180° lon)"
+            }
+        },
         "user":{
             "login": "Login",
             "logout": "Logout",
@@ -612,29 +666,6 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Please insert username and password",
                 "usernamePwdIncorrect":"Username or password incorrect"
-            }
-        },
-        "annotations": {
-            "edit": "Edit",
-            "remove": "Delete",
-            "save": "Save",
-            "cancel": "Cancel",
-            "back": "Back",
-            "addMarker": "Add a new point on the map",
-            "styleGeometry": "Choose a different style for points",
-            "deleteGeometry": "Remove existing points",
-            "removeannotation": "Do you want to remove the annotation?",
-            "removegeometry": "Do you want to remove all annotation points?",
-            "confirm": "Confirm",
-            "mandatory": "Mandatory field",
-            "emptygeometry": "Geometry cannot be empty",
-            "add": "New",
-            "filter": "Filter annotations...",
-            "undo": "Are you sure you want to abandon the annotation editing session?",
-            "title": "Annotations",
-            "field": {
-                "title": "Title",
-                "description": "Description"
             }
         },
         "users": {

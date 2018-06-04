@@ -7,8 +7,9 @@
 */
 const uuidv1 = require('uuid/v1');
 const LocaleUtils = require('./LocaleUtils');
+const {set} = require('./ImmutableUtils');
 const {values, slice, head, last} = require('lodash');
-const assign = require('object-assign');
+
 const uuid = require('uuid');
 
 const STYLE_CIRCLE = {
@@ -66,13 +67,13 @@ const DEFAULT_ANNOTATIONS_STYLES = {
     "MultiPolygon": STYLE_POLYGON
 };
 
-const getStylesObject = ({type = "Point", geometries = []} = {}) => {
-    return type === "GeometryCollection" ? geometries.reduce((p, {type: t}) => {
+const getStylesObject = ({type = "Point", features = []} = {}) => {
+    return type === "FeatureCollection" ? features.reduce((p, {type: t}) => {
         p[t] = DEFAULT_ANNOTATIONS_STYLES[t];
         return p;
-    }, {type: "GeometryCollection"}) : {...DEFAULT_ANNOTATIONS_STYLES[type]};
+    }, {type: "FeatureCollection"}) : {...DEFAULT_ANNOTATIONS_STYLES[type]};
 };
-const getPropreties = (props = {}, messages = {}) => ({title: LocaleUtils.getMessageById(messages, "annotations.defaulttitle") || "Default title", id: uuidv1(), ...props});
+const getProperties = (props = {}, messages = {}) => ({title: LocaleUtils.getMessageById(messages, "annotations.defaulttitle") || "Default title", id: uuidv1(), ...props});
 
 const AnnotationsUtils = {
     /**
@@ -213,29 +214,32 @@ const AnnotationsUtils = {
     STYLE_POLYGON,
     /**
     * it converts any geoJSONObject to an annotation
-    * Mandatory elemets: MUST be a geoJSON type Feature => properties with an ID and a title
+    * Mandatory elements: MUST be a geoJSON type Feature => properties with an ID and a title
     * annotation style.
     */
-    normalizeAnnotation: (ann, messages) => {
+    normalizeAnnotation: (ann = {}, messages = {}) => {
         const annotation = ann.type !== "Feature" && {type: "Feature", geometry: ann} || {...ann};
         const style = getStylesObject(annotation.geometry);
-        const properties = getPropreties(annotation.properties, messages);
+        const properties = getProperties(annotation.properties, messages);
         return {style, properties, ...annotation};
     },
     removeDuplicate: (annotations) => values(annotations.reduce((p, c) => ({...p, [c.properties.id]: c}), {})),
-    formatCoordinates: (coords) => {
-        return coords.map(c => ({lat: c[1], lon: c[0]}));
+    formatCoordinates: (coords = [[]]) => {
+        return coords.map(c => ({lat: c && c[1], lon: c && c[0]}));
     },
-    isCompletePolygon: (coords) => {
-        return coords[0].length > 3 && head(coords[0])[0] === last(coords[0])[0] && head(coords[0])[1] === last(coords[0])[1];
+    isCompletePolygon: (coords = [[[]]]) => {
+        const validCoords = coords[0].filter(AnnotationsUtils.validateCoordsArray);
+        return validCoords.length > 3 && head(validCoords)[0] === last(validCoords)[0] && head(validCoords)[1] === last(validCoords)[1];
     },
     getComponents: ({type, coordinates}) => {
         switch (type) {
             case "Polygon": {
-                let validCoords = coordinates[0].filter(AnnotationsUtils.validateCoordsArray);
-                return AnnotationsUtils.isCompletePolygon([validCoords]) ? AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1)) : AnnotationsUtils.formatCoordinates(coordinates[0]);
+                return AnnotationsUtils.isCompletePolygon(coordinates) ? AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1)) : AnnotationsUtils.formatCoordinates(coordinates[0]);
             }
-            case "LineString": return AnnotationsUtils.formatCoordinates(coordinates);
+            case "LineString": {
+                // let validCoords = coordinates.filter(AnnotationsUtils.validateCoordsArray);
+                return AnnotationsUtils.formatCoordinates(coordinates);
+            }
             default: return AnnotationsUtils.formatCoordinates([coordinates]);
         }
     },
@@ -244,7 +248,7 @@ const AnnotationsUtils = {
             if (f.properties && f.properties.id) {
                 return f;
             }
-            return assign({}, f, { properties: assign({}, f.properties, {id: uuid.v1()})});
+            return set("properties.id", uuid.v1(), f);
         });
     },
     COMPONENTS_VALIDATION: {
@@ -254,8 +258,8 @@ const AnnotationsUtils = {
         "Circle": {add: false, remove: false, validation: "validateCircle", notValid: "Add a valid coordinate and a radius (m) to complete the Circle"},
         "Text": {add: false, remove: false, validation: "validateText", notValid: "Add a valid coordinate and a Text value"}
     },
-    validateCoords: ({lat, lon}) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
-    validateCoordsArray: ([lon, lat]) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
+    validateCoords: ({lat, lon} = {}) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
+    validateCoordsArray: ([lon, lat] = []) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
     validateCoord: (c) => !isNaN(parseFloat(c)),
     validateCoordinates: ({components = [], remove = false, type, isArray = false }) => {
         if (components && components.length) {

@@ -1,9 +1,10 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {Grid, Row, Col, FormGroup, ControlLabel, FormControl} = require('react-bootstrap');
-const {/*isEqual,*/ head, isNaN} = require('lodash');
+const {head, isNaN} = require('lodash');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const draggableContainer = require('../../misc/enhancers/draggableContainer');
+const Message = require('../../I18N/Message');
 const {validateCoords} = require('../../../utils/AnnotationsUtils');
 const CoordinatesRow = require('./CoordinatesRow');
 let cnt = 0;
@@ -23,8 +24,7 @@ class CoordinateEditor extends React.Component {
         transitionProps: PropTypes.object,
         properties: PropTypes.object,
         type: PropTypes.string,
-        isDraggable: PropTypes.bool,
-        completeGeometry: PropTypes.bool
+        isDraggable: PropTypes.bool
     };
 
     static defaultProps = {
@@ -38,19 +38,18 @@ class CoordinateEditor extends React.Component {
         onChangeText: () => {},
         onChange: () => {},
         componentsValidation: {
-            "Polygon": {min: 3, add: true, remove: true, validation: "validateCoordinates", notValid: "Add 3 valid coordinates to complete the Polygon"},
-            "LineString": {min: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "Add 2 valid coordinates to complete the Polyline"},
-            "Point": {min: 1, add: false, remove: false, validation: "validateCoordinates", notValid: "Add a valid coordinate to complete the Point"},
-            "Circle": {add: false, remove: false, validation: "validateCircle", notValid: "Add a valid coordinate and a radius (m) to complete the Circle"},
-            "Text": {add: false, remove: false, validation: "validateText", notValid: "Add a valid coordinate and a value to complete the Text"}
+            "Polygon": {min: 3, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
+            "LineString": {min: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
+            "Point": {min: 1, add: false, remove: false, validation: "validateCoordinates", notValid: "annotations.editor.notValidMarker"},
+            "Circle": {add: false, remove: false, validation: "validateCircle", notValid: "annotations.editor.notValidCircle"},
+            "Text": {add: false, remove: false, validation: "validateText", notValid: "annotations.editor.notValidText"}
         },
         transitionProps: {
             transitionName: "switch-panel-transition",
             transitionEnterTimeout: 300,
             transitionLeaveTimeout: 300
         },
-        isDraggable: false,
-        completeGeometry: false
+        isDraggable: false
     };
 
     state = {
@@ -61,22 +60,21 @@ class CoordinateEditor extends React.Component {
 
     componentWillMount() {
         this.cnt = 0;
-        this.setState( {
+        /*this.setState({
             components: this.props.components || [],
             valueText: this.props.properties.valueText,
             radius: this.props.properties.radius
-        });
+        });*/
     }
 
     componentWillReceiveProps(newProps) {
-        if (newProps.components !== this.props.components) {
-            this.setState( {
-                components: newProps.components,
-                valueText: newProps.properties.valueText,
-                radius: newProps.properties.radius
+    /*    if (newProps.components.length !== this.props.components.length) {
+            this.setState({
+                components: newProps.components
             });
-        }
-        this.setState( {
+        }*/
+        this.setState({
+            components: newProps.components,
             valueText: newProps.properties.valueText,
             radius: newProps.properties.radius
         });
@@ -100,7 +98,7 @@ class CoordinateEditor extends React.Component {
         return (<Row style={{flex: 1, overflowY: 'auto'}}>
             <Col xs={12}>
                 <FormGroup validationState={this.getValidationStateRadius(this.state.radius)}>
-                    <ControlLabel>Radius</ControlLabel>
+                    <ControlLabel><Message msgId="annotations.editor.radius"/></ControlLabel>
                     <FormControl
                         value={this.state.radius}
                         placeholder="radius"
@@ -112,7 +110,7 @@ class CoordinateEditor extends React.Component {
                             if (this.isValid(this.state.components, radius )) {
                                 this.props.onChangeRadius(parseFloat(radius), this.state.components.map(c => [c.lon, c.lat]));
                             } else if (this.props.properties.isValidFeature) {
-                                this.props.onSetInvalidSelected("radius");
+                                this.props.onSetInvalidSelected("radius", this.state.components.map(c => [c.lon, c.lat]));
                             }
                         }}
                         step={1}
@@ -125,7 +123,7 @@ class CoordinateEditor extends React.Component {
         return (<Row style={{flex: 1, overflowY: 'auto'}}>
             <Col xs={12}>
                 <FormGroup validationState={this.getValidationStateText(this.state.valueText)}>
-                    <ControlLabel>Text value</ControlLabel>
+                    <ControlLabel><Message msgId="annotations.editor.text"/></ControlLabel>
                     <FormControl
                         value={this.state.valueText}
                         placeholder="text value"
@@ -137,7 +135,7 @@ class CoordinateEditor extends React.Component {
                             if (this.isValid(this.state.components, valueText )) {
                                 this.props.onChangeText(valueText, this.state.components.map(c => [c.lon, c.lat]));
                             } else if (this.props.properties.isValidFeature) {
-                                this.props.onSetInvalidSelected("text");
+                                this.props.onSetInvalidSelected("text", this.state.components.map(c => [c.lon, c.lat]));
                             }
                         }}
                         type="text"/>
@@ -154,13 +152,12 @@ class CoordinateEditor extends React.Component {
         const buttons = [
             {
                 glyph: validationCompleteButton ? 'ok' : 'exclamation-mark text-danger',
-                tooltip: validationCompleteButton ? 'Complete current geometry' : componentsValidation[type].notValid,
-                visible: this.props.completeGeometry,
-                style: {"pointerEvents": "none"}
+                tooltipId: validationCompleteButton ? 'annotations.editor.valid' : componentsValidation[type].notValid,
+                visible: true
             },
             {
                 glyph: 'plus',
-                tooltip: 'Add new coordinates',
+                tooltipId: 'annotations.editor.add',
                 visible: componentsValidation[type].add,
                 onClick: () => {
                     this.setState({
@@ -177,7 +174,7 @@ class CoordinateEditor extends React.Component {
             <Grid fluid style={{display: 'flex', flexDirection: 'column', flex: 1}}>
                 <Row>
                     <Col xs={toolbarVisible ? 6 : 12}>
-                        Coordinates Editor:
+                        <Message msgId="annotations.editor.title"/>
                     </Col>
                     <Col xs={6}>
                         <Toolbar
@@ -189,14 +186,13 @@ class CoordinateEditor extends React.Component {
                 {this.props.type === "Circle" && this.renderCircle()}
                 {this.props.type === "Text" && this.renderText()}
                 <Row style={{flex: 1, overflowY: 'auto'}}>
-                    {/* CUSTOMIZATION for CIRCLE and TEXT adding radius and text value*/ }
-                    <Col xs={5} xsOffset={/*this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]() ? 1 : 0*/1}>
-                        Latitude
+                    <Col xs={5} xsOffset={1}>
+                        <Message msgId="annotations.editor.lat"/>
                     </Col>
                     <Col xs={5}>
-                        Longitude
+                        <Message msgId="annotations.editor.lon"/>
                     </Col>
-                    <Col xs={/*this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]() ? 1 : 2*/1}/>
+                    <Col xs={1}/>
                 </Row>
                 <Row style={{flex: 1, overflowY: 'auto'}}>
                     {this.state.components.map((component, idx) => <CoordinatesRow
@@ -225,7 +221,7 @@ class CoordinateEditor extends React.Component {
                                 const validComponents = this.normalizeCoordinates(components.filter(validateCoords));
                                 this.props.onChange(validComponents);
                             } else if (this.props.properties.isValidFeature) {
-                                this.props.onSetInvalidSelected("coords");
+                                this.props.onSetInvalidSelected("coords", this.state.components.map(c => [c.lon, c.lat]));
                             }
                         }}
                         idx={idx}
@@ -237,7 +233,7 @@ class CoordinateEditor extends React.Component {
                                 const validComponents = this.normalizeCoordinates(components.filter(validateCoords));
                                 this.props.onChange(validComponents);
                             } else if (this.props.properties.isValidFeature) {
-                                this.props.onSetInvalidSelected("coords");
+                                this.props.onSetInvalidSelected("coords", this.state.components.map(c => [c.lon, c.lat]));
                             }
                         }}/>)}
                 </Row>

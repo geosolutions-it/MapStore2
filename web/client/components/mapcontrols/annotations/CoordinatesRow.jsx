@@ -14,24 +14,7 @@ class CoordinatesRowComponent extends React.Component {
         isDraggable: PropTypes.bool,
         removeEnabled: PropTypes.bool
     };
-    state = {
-        lon: null,
-        lat: null
-    };
-    componentDidMount = () => {
-        this.setState({
-            lon: this.props.component.lon,
-            lat: this.props.component.lat
-        });
-    }
-    componentWillReceiveProps = (newProps) => {
-        if (newProps.component !== this.props.component) {
-            this.setState({
-                lon: newProps.component.lon,
-                lat: newProps.component.lat
-            });
-        }
-    }
+
     getValidationStateLon = (longitude) => {
         const lon = parseFloat(longitude);
         if (isNaN(lon) || lon < -180 || lon > 180 ) {
@@ -64,15 +47,11 @@ class CoordinatesRowComponent extends React.Component {
                 </Col>
                 <Col xs={5}>
                     <FormGroup
-                        validationState={this.getValidationStateLat(this.state.lat)}>
+                        validationState={this.getValidationStateLat(this.props.component.lat)}>
                         <FormControl
-                            value={this.state.lat}
+                            value={this.props.component.lat}
                             placeholder="Lat"
                             onChange={e => {
-                                this.setState({
-                                    lon: this.state.lon,
-                                    lat: e.target.value
-                                });
                                 if (e.target.value === "") {
                                     this.props.onChange(idx, 'lat', undefined);
                                 }
@@ -80,6 +59,7 @@ class CoordinatesRowComponent extends React.Component {
                                     this.props.onChange(idx, 'lat', e.target.value);
                                 }
                             }}
+                            step={1}
                             max={90}
                             min={-90}
                             type="number"/>
@@ -87,15 +67,11 @@ class CoordinatesRowComponent extends React.Component {
                 </Col>
                 <Col xs={5}>
                 <FormGroup
-                     validationState={this.getValidationStateLon(this.state.lon)}>
+                     validationState={this.getValidationStateLon(this.props.component.lon)}>
                     <FormControl
-                        value={this.state.lon}
+                        value={this.props.component.lon}
                         placeholder="Lon"
                         onChange={e => {
-                            this.setState({
-                                lon: e.target.value,
-                                lat: this.state.lat
-                            });
                             if (e.target.value === "") {
                                 this.props.onChange(idx, 'lon', undefined);
                             }
@@ -103,6 +79,7 @@ class CoordinatesRowComponent extends React.Component {
                                 this.props.onChange(idx, 'lon', e.target.value);
                             }
                         }}
+                        step={1}
                         max={180}
                         min={-180}
                         type="number"/>

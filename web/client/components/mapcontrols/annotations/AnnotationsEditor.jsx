@@ -51,17 +51,19 @@ const bbox = require('@turf/bbox');
  * @prop {boolean} styling flag to state status of styling during editing
  * @prop {object} errors key/value set of validation errors (field_name: error_id)
  * @prop {object} feature object with the annotation properties
- * @prop {bool} showBack shows / hides the back button
+ * @prop {bool} showBack shows / hides the back button in the view mode
  * @prop {function} onEdit triggered when the user clicks on the edit button
  * @prop {function} onCancelEdit triggered when the user cancels current editing session
+ * @prop {function} onCancelStyle triggered when the user cancels style selection
+ * @prop {function} onCancelText triggered when the user cancels the addition of the last Text annotation
+ * @prop {function} onCancel triggered when the user cancels the addition/changes made to the annotation
  * @prop {function} onCleanHighlight triggered when the user exit 'details' mode
  * @prop {function} onAddText triggered when the user adds new Text geometry to the feature
  * @prop {function} onSaveText triggered when the user saves the value inserted for the Text annotation
- * @prop {function} onCancelText triggered when the user cancels the addition of the last Text annotation
  * @prop {function} onToggleUnsavedChangesModal toggles the view of the UnsavedChangesModal
  * @prop {function} onToggleUnsavedStyleModal toggles the view of the UnsavedStyleModal
  * @prop {function} onSetUnsavedChanges triggered when the user changes the value of any field, it sets a flag used to trigger the view of the UnsavedChangesModal
- * @prop {function} onAddNewFeature
+ * @prop {function} onAddNewFeature triggered when user click on save icon of the coordinate editor, this will add the feature being drawn to the list of features of the ft coll of the annotation
  * @prop {function} onChangeProperties triggered when the user changes the value of any field
  * @prop {function} onSetUnsavedStyle triggered when the user changes the style , it sets a flag used to trigger the view of the UnsavedStyleModal
  * @prop {function} onConfirmRemove triggered when the user confirms removal
@@ -69,7 +71,7 @@ const bbox = require('@turf/bbox');
  * @prop {function} onCancelClose triggered when the user cancels closing
  * @prop {function} onConfirmClose triggered when the user confirms closing
  * @prop {function} onChangeStyler triggered when the user switches between the stylers
- * @prop {function} onStartDrawing triggered when the user exits drawing process
+ * @prop {function} onStartDrawing triggered before the user starts the drawing process
  * @prop {object} editedFields fields of the annotation
  * @prop {object} drawingText it contains info of the text annotation, 'drawing' if being added or 'show' used to show the modal to add the relative value
  * @prop {boolean} unsavedChanges flag used to trigger changes of showUnsavedChangesModal
@@ -80,14 +82,25 @@ const bbox = require('@turf/bbox');
  * @prop {boolean} showUnsavedStyleModal flag used to show the UnsavedChangesModal
  * @prop {boolean} showUnsavedChangesModal flag used to show the UnsavedStyleModal
  * @prop {string} mode current mode of operation (list, editing, detail)
- * @prop {function} onCancelStyle triggered when the user cancels style selection
  * @prop {function} onRemove triggered when the user clicks on the remove button
  * @prop {function} onSave triggered when the user clicks on the save button
+ * @prop {function} onSaveStyle triggered when the user saves changes to the style
  * @prop {function} onError triggered when a validation error occurs
  * @prop {function} onAddGeometry triggered when the user clicks on the add point button TODO FIX THIS
  * @prop {function} onDeleteGeometry triggered when the user clicks on the remove points button
  * @prop {function} onStyleGeometry triggered when the user clicks on the style button
  * @prop {function} onSetStyle triggered when the user changes a style property
+ * @prop {function} onChangeSelected triggered when the user changes a value(lat or lon) of a coordinate in the coordinate editor
+ * @prop {function} onChangeRadius triggered when the user changes the radius of the Circle in its coordinate editor
+ * @prop {function} onChangeText triggered when the user changes the text of the Text Annotation in its coordinate editor
+ * @prop {function} onSetInvalidSelected triggered when the user insert an invalid coordinate or remove a valid one i.e. ""
+ * @prop {function} onResetCoordEditor triggered when the user goes back from the coordinate editor, it will open a dialog for unsaved changes
+ * @prop {function} onZoom triggered when the user zooms to an annotation
+ * @prop {function} onDownload triggered when the user exports
+ * @prop {boolean} coordinateEditorEnabled triggered when the user zooms to an annotation
+ * @prop {object} selected Feature containing the geometry and the properties used for the coordinated editor
+ * @prop {number} maxZoom max zoome the for annotation (default 18)
+ * @prop {number} width of the annotation panel
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
  */
@@ -99,16 +112,16 @@ class AnnotationsEditor extends React.Component {
         onEdit: PropTypes.func,
         onCancelEdit: PropTypes.func,
         onCancelStyle: PropTypes.func,
+        onCancelText: PropTypes.func,
         onCleanHighlight: PropTypes.func,
+        onAddText: PropTypes.func,
         onCancel: PropTypes.func,
         onRemove: PropTypes.func,
         onSave: PropTypes.func,
         onSaveStyle: PropTypes.func,
         onError: PropTypes.func,
         onAddGeometry: PropTypes.func,
-        onAddText: PropTypes.func,
         onSaveText: PropTypes.func,
-        onCancelText: PropTypes.func,
         onToggleUnsavedChangesModal: PropTypes.func,
         onToggleUnsavedStyleModal: PropTypes.func,
         onSetUnsavedChanges: PropTypes.func,
@@ -231,10 +244,10 @@ class AnnotationsEditor extends React.Component {
                                 visible: true,
                                 onClick: () => {this.props.onRemove(this.props.id); }
                             }, {
-                                    glyph: 'download',
-                                    tooltip: <Message msgId="annotations.downloadcurrenttooltip"/>,
-                                    visible: true,
-                                    onClick: () => { this.props.onDownload(this.props.feature); }
+                                glyph: 'download',
+                                tooltip: <Message msgId="annotations.downloadcurrenttooltip"/>,
+                                visible: true,
+                                onClick: () => { this.props.onDownload(this.props.feature); }
                             }
                         ]}/>
                     </Col>
@@ -510,7 +523,6 @@ class AnnotationsEditor extends React.Component {
                                 drawing={this.props.drawing}
                                 selected={this.props.selected}
                                 featureType={this.props.featureType}
-                                completeGeometry={this.props.drawing}
                                 onChange={this.props.onChangeSelected}
                                 onChangeRadius={this.props.onChangeRadius}
                                 onSetInvalidSelected={this.props.onSetInvalidSelected}

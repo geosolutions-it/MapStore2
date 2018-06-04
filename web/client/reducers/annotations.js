@@ -290,14 +290,13 @@ function annotations(state = { validationErrors: {} }, action) {
         }
         case RESET_COORD_EDITOR: {
             let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === state.selected.properties.id);
-            const features = state.editing.features.map(f => {
-                return assign({}, f, {
-                    properties: {...f.properties, selected: false}
-                });
-            }).filter((f, i) => i !== ftChangedIndex);
-            return assign({}, state, {
+            let newState = set(`editing.features`, state.editing.features.map(f => {
+                return set("properties.canEdit", false, f);
+            }), state);
+            const features = newState.editing.features.filter((f, i) => !newState.drawing ? true : i !== ftChangedIndex);
+            return assign({}, newState, {
                 editing: {
-                    ...state.editing,
+                    ...newState.editing,
                     features
                 },
                 drawing: false,
@@ -393,10 +392,11 @@ function annotations(state = { validationErrors: {} }, action) {
             });
         case SET_INVALID_SELECTED: {
             let selected = set("properties.isValidFeature", false, state.selected);
+            // let coordinates = selected.geometry.type === "LineString" ? [action.coordinates] : selected.geometry.type === "Polygon" ? [[action.coordinates]] : action.coordinates;
             switch (action.errorFrom) {
                 case "text": selected = set("properties.valueText", undefined, selected); break;
                 case "radius": selected = set("properties.radius", undefined, selected); break;
-                case "coords": selected = set("geometry.coordinates", fixCoordinates(action.coordinates), selected); break;
+                case "coords": selected = set("geometry.coordinates", fixCoordinates(action.coordinates, selected.geometry.type), selected); break;
                 default: break;
             }
             return assign({}, state, {selected});
