@@ -255,5 +255,36 @@ describe('test DefaultLayer module component', () => {
         expect(title.length).toBe(0);
 
     });
+    it('support for indicators', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            storeIndex: 9,
+            type: 'wms',
+            opacity: 0.5,
+            expanded: true,
+            dimensions: [{
+                name: "time"
+            }]
+        };
+        const indicators = [{
+            "type": "dimension",
+            "key": "calendar",
+            "glyph": "calendar",
+            "props": {
+                className: "TIME_INDICATOR"
+            },
+            "condition": {
+                "name": "time"
+            }
+        }];
+        const comp = ReactDOM.render(<Layer indicators={indicators} node={l} />,
+            document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const title = domNode.getElementsByClassName("TIME_INDICATOR");
+        expect(title.length).toBe(1);
+    });
 
 });
