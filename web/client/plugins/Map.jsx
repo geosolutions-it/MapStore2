@@ -140,7 +140,6 @@ class MapPlugin extends React.Component {
         mapType: PropTypes.string,
         map: PropTypes.object,
         layers: PropTypes.array,
-        showLogin: PropTypes.func,
         additionalLayers: PropTypes.array,
         zoomControl: PropTypes.bool,
         mapLoadingMessage: PropTypes.string,
