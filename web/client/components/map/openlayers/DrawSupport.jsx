@@ -695,7 +695,7 @@ class DrawSupport extends React.Component {
                     }
                     return f.getProperties().canEdit;
                 })[0];
-                const previousCoords = previousFt.getGeometry() && previousFt.getGeometry().getCoordinates() || [];
+                const previousCoords = previousFt.getGeometry() && previousFt.getGeometry().getCoordinates && previousFt.getGeometry().getCoordinates() || [];
                 let actualCoords = [];
                 let olFt;
                 let newDrawMethod = newProps.drawMethod;

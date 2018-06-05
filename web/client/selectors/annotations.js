@@ -34,6 +34,7 @@ const editedFieldsSelector = (state) => get(state, "annotations.editedFields", {
 const stylingSelector = (state) => !!get(state, "annotations.styling");
 const selectedSelector = (state) => get(state, "annotations.selected", null);
 const unsavedChangesSelector = (state) => get(state, "annotations.unsavedChanges", false);
+const unsavedGeometrySelector = (state) => get(state, "annotations.unsavedGeometry", false);
 const unsavedStyleSelector = (state) => get(state, "annotations.unsavedStyle", false);
 const errorsSelector = (state) => get(state, "annotations.validationErrors", {});
 const configSelector = (state) => get(state, "annotations.config", {});
@@ -57,6 +58,7 @@ const annotationsInfoSelector = (state) => (assign({}, {
     stylerType: stylerTypeSelector(state),
     styling: stylingSelector(state),
     unsavedChanges: unsavedChangesSelector(state),
+    unsavedGeometry: unsavedGeometrySelector(state),
     unsavedStyle: unsavedStyleSelector(state)
     }) );
 

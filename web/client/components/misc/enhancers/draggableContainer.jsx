@@ -7,7 +7,7 @@ const {compose, branch} = require('recompose');
 module.exports = compose(
     dragDropContext(html5Backend),
     branch(
-        ({isDraggable}) => isDraggable,
+        ({isDraggable = true}) => isDraggable,
         Component => ({onSort, isDraggable, items, ...props}) => {
             const draggableItems = items.map((item, sortId) => ({...item, onSort, isDraggable, sortId, key: sortId}));
             return <Component {...{...props, isDraggable}} items={draggableItems}/>;

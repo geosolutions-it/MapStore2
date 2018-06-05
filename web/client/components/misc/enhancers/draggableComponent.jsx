@@ -1,6 +1,6 @@
 
 const React = require('react');
-const {compose, branch} = require('recompose');
+const {compose} = require('recompose');
 const {DragSource: dragSource} = require('react-dnd');
 const {DropTarget: dropTarget} = require('react-dnd');
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
@@ -30,10 +30,8 @@ const targetCollect = (connect, monitor) => ({
 });
 
 module.exports = compose(
-    dragSource('row', itemSource, sourceCollect),
-    dropTarget('row', itemTarget, targetCollect),
-    branch(
-        ({isDraggable}) => isDraggable,
+        dragSource('row', itemSource, sourceCollect),
+        dropTarget('row', itemTarget, targetCollect),
         Component => ({connectDragSource, connectDropTarget, isDragging, isOver, ...props}) => {
             const pos = props.draggingItem && props.draggingItem.sortId < props.sortId;
             return connectDragSource(connectDropTarget(
@@ -49,5 +47,4 @@ module.exports = compose(
                 </div>)
             );
         }
-    )
 );

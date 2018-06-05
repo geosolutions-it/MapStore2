@@ -29,7 +29,7 @@ describe("test the Annotations Panel", () => {
         const annotations = ReactDOM.render(<Annotations/>, document.getElementById("container"));
         expect(annotations).toExist();
         const annotationsNode = ReactDOM.findDOMNode(annotations);
-        expect(annotationsNode).toNotExist();
+        expect(annotationsNode).toExist();
     });
 
     it('test removing annotations', () => {
@@ -85,74 +85,6 @@ describe("test the Annotations Panel", () => {
 
         expect(spyConfirm.calls.length).toEqual(0);
         expect(spyCancel.calls.length).toEqual(1);
-    });
-
-    it('test rendering list mode', () => {
-        const annotationsList = [{
-            properties: {
-                title: 'a',
-                description: 'b'
-            },
-            geometry: {
-                type: "MultiPoint"
-            },
-            style: {
-                iconShape: 'square',
-                iconColor: 'blue',
-                iconGlyph: 'comment'
-            }
-        }, {
-            properties: {
-                title: 'a',
-                description: 'b'
-            },
-            geometry: {
-                type: "MultiPoint"
-            },
-            style: {
-                iconShape: 'square',
-                iconColor: 'blue',
-                iconGlyph: 'comment'
-            }
-        }];
-
-        const annotations = ReactDOM.render(<Annotations mode="list" annotations={annotationsList}/>, document.getElementById("container"));
-        expect(annotations).toExist();
-        expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card").length).toBe(2);
-    });
-
-    it('test rendering list mode with filter', () => {
-        const annotationsList = [{
-            properties: {
-                title: 'a',
-                description: 'b'
-            },
-            geometry: {
-                type: "MultiPoint"
-            },
-            style: {
-                iconShape: 'square',
-                iconColor: 'blue',
-                iconGlyph: 'comment'
-            }
-        }, {
-            properties: {
-                title: 'c',
-                description: 'd'
-            },
-            geometry: {
-                type: "MultiPoint"
-            },
-            style: {
-                iconShape: 'square',
-                iconColor: 'blue',
-                iconGlyph: 'comment'
-            }
-        }];
-
-        const annotations = ReactDOM.render(<Annotations mode="list" filter="b" annotations={annotationsList}/>, document.getElementById("container"));
-        expect(annotations).toExist();
-        expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card").length).toBe(1);
     });
 
     it('test rendering detail mode', () => {
@@ -252,9 +184,6 @@ describe("test the Annotations Panel", () => {
         const annotations = ReactDOM.render(<Annotations mode="list" classNameSelector={classNameSelector} annotations={annotationsList} />, document.getElementById("container"));
 
         expect(annotations).toExist();
-
-        const cards = TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card");
-        expect(cards.length).toBe(2);
 
         /*
         TODO verify the external properties

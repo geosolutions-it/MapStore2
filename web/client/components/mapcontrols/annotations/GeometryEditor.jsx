@@ -5,16 +5,12 @@ const {getComponents} = require('../../../utils/AnnotationsUtils');
 
 class GeometryEditor extends React.Component {
     static propTypes = {
-        id: PropTypes.number,
         components: PropTypes.array,
         onRemove: PropTypes.func,
-        onlyRows: PropTypes.bool,
         onChange: PropTypes.func,
         transitionProps: PropTypes.object,
         selected: PropTypes.object,
-        isDraggable: PropTypes.bool,
         featureType: PropTypes.string,
-        drawing: PropTypes.bool,
         onComplete: PropTypes.func,
         onChangeRadius: PropTypes.func,
         onSetInvalidSelected: PropTypes.func,
@@ -22,11 +18,9 @@ class GeometryEditor extends React.Component {
     };
 
     static defaultProps = {
-        id: 0,
         selected: {},
         components: [],
         onRemove: null,
-        onlyRows: false,
         onChange: () => {},
         onComplete: () => {},
         onChangeRadius: () => {},
@@ -39,14 +33,10 @@ class GeometryEditor extends React.Component {
         }
     };
 
-    state = {
-        components: []
-    }
-
     render() {
         return (<CoordinatesEditor
             items={[]}
-            isDraggable={this.props.selected && this.props.selected.properties && this.props.selected.properties.isValidFeature}
+            isDraggable
             type={this.props.featureType}
             components={this.props.selected && this.props.selected.geometry && this.props.selected.geometry.coordinates && this.props.selected.geometry.coordinates.length ? getComponents(this.props.selected.geometry) : []}
             properties={this.props.selected && this.props.selected.properties || {}}

@@ -4,6 +4,10 @@ const {Row, Col, FormGroup, FormControl} = require('react-bootstrap');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const draggableComponent = require('../../misc/enhancers/draggableComponent');
 
+
+/**
+
+*/
 class CoordinatesRowComponent extends React.Component {
 
     static propTypes = {
@@ -12,6 +16,7 @@ class CoordinatesRowComponent extends React.Component {
         onRemove: PropTypes.func,
         onChange: PropTypes.func,
         isDraggable: PropTypes.bool,
+        removeVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool
     };
 
@@ -49,11 +54,12 @@ class CoordinatesRowComponent extends React.Component {
                     <FormGroup
                         validationState={this.getValidationStateLat(this.props.component.lat)}>
                         <FormControl
+                            key={"lat"}
                             value={this.props.component.lat}
                             placeholder="Lat"
                             onChange={e => {
                                 if (e.target.value === "") {
-                                    this.props.onChange(idx, 'lat', undefined);
+                                    this.props.onChange(idx, 'lat', "");
                                 }
                                 if (this.getValidationStateLat(e.target.value) === null) {
                                     this.props.onChange(idx, 'lat', e.target.value);
@@ -69,11 +75,12 @@ class CoordinatesRowComponent extends React.Component {
                 <FormGroup
                      validationState={this.getValidationStateLon(this.props.component.lon)}>
                     <FormControl
+                        key={"lon"}
                         value={this.props.component.lon}
                         placeholder="Lon"
                         onChange={e => {
                             if (e.target.value === "") {
-                                this.props.onChange(idx, 'lon', undefined);
+                                this.props.onChange(idx, 'lon', "");
                             }
                             if (this.getValidationStateLon(e.target.value) === null) {
                                 this.props.onChange(idx, 'lon', e.target.value);
@@ -92,7 +99,8 @@ class CoordinatesRowComponent extends React.Component {
                         buttons={
                         [
                             {
-                                visible: this.props.removeEnabled,
+                                visible: this.props.removeVisible,
+                                disabled: !this.props.removeEnabled,
                                 glyph: 'trash',
                                 onClick: () => {
                                     this.props.onRemove(idx);

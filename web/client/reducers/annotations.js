@@ -38,6 +38,7 @@ const fixCoordinates = (coords, type) => {
 const {getBaseCoord} = require('../utils/AnnotationsUtils');
 
 const updateFeatures = (state, geom) => {
+    let newState = set(`unsavedGeometry`, true, state);
     let {coordinates, radius, text} = geom;
     let validCoordinates;
     let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === state.selected.properties.id);
@@ -116,7 +117,6 @@ const updateFeatures = (state, geom) => {
         components: getComponents(selected.geometry),
         type: selected.geometry.type
     }), selected);
-    let newState = set(`unsavedGeometry`, true, state);
     return assign({}, newState, {
         editing: {...newState.editing, features},
         selected
@@ -154,12 +154,12 @@ function annotations(state = { validationErrors: {} }, action) {
             newState = set(`editing.features`, state.editing.features.map(f => {
                 return set("properties.canEdit", false, f);
             }), state);
+            newState = set(`editing.tempFeatures`, newState.editing.features, newState);
             if (ftChangedIndex === -1) {
                 newState = set("editing.features", newState.editing.features.concat([selectedGeoJSON]), newState);
             } else {
                 newState = set(`editing.features[${ftChangedIndex}]`, selectedGeoJSON, newState);
             }
-            newState = set(`unsavedGeometry`, true, newState);
             return assign({}, newState, {
                 selected,
                 coordinateEditorEnabled: !!selected,
@@ -181,6 +181,9 @@ function annotations(state = { validationErrors: {} }, action) {
                 type: selected.geometry.type
             }), selected);
             selected = set("properties.canEdit", true, selected);
+            newState = set(`editing.features`, state.editing.features.map(f => {
+                return set("properties.canEdit", false, f);
+            }), state);
 
             let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === selected.properties.id);
             let selectedGeoJSON = selected;
@@ -190,9 +193,6 @@ function annotations(state = { validationErrors: {} }, action) {
                 selectedGeoJSON = set("geometry.type", "Point", selectedGeoJSON);
             }
 
-            newState = set(`editing.features`, state.editing.features.map(f => {
-                return set("properties.canEdit", false, f);
-            }), state);
             newState = set(`unsavedGeometry`, true, newState);
             if (ftChangedIndex === -1) {
                 newState = set("editing.features", newState.editing.features.concat([selectedGeoJSON]), newState);
@@ -234,6 +234,7 @@ function annotations(state = { validationErrors: {} }, action) {
             newState = set(`editing.features`, state.editing.features.map(f => {
                 return set("properties.canEdit", false, f);
             }), state);
+
             newState = set(`unsavedGeometry`, true, newState);
             if (ftChangedIndex === -1) {
                 newState = set("editing.features", newState.editing.features.concat([selectedGeoJSON]), newState);
@@ -258,6 +259,7 @@ function annotations(state = { validationErrors: {} }, action) {
             newState = set(`editing.features`, state.editing.features.map(f => {
                 return set("properties.canEdit", false, f);
             }), state);
+
             newState = set(`unsavedGeometry`, true, newState);
             if (ftChangedIndex === -1) {
                 newState = set("editing.features", newState.editing.features.concat([selectedGeoJSON]), newState);
@@ -267,11 +269,11 @@ function annotations(state = { validationErrors: {} }, action) {
             return assign({}, newState, {selected});
         }
         case RESET_COORD_EDITOR: {
-            let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === state.selected.properties.id);
+            // let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === state.selected.properties.id);
             let newState = set(`editing.features`, state.editing.features.map(f => {
                 return set("properties.canEdit", false, f);
             }), state);
-            const features = newState.editing.features.filter((f, i) => !newState.drawing ? true : i !== ftChangedIndex);
+            const features = state.unsavedGeometry ? state.editing.tempFeatures : newState.editing.features;// .filter((f, i) => !newState.drawing ? true : i !== ftChangedIndex);
             return assign({}, newState, {
                 editing: {
                     ...newState.editing,
@@ -304,6 +306,9 @@ function annotations(state = { validationErrors: {} }, action) {
             } else {
                 newState = set(`editing.features[${ftChangedIndex}]`, selected, newState);
             }
+            newState = set(`editing.tempFeatures`, newState.editing.features, newState);
+
+            newState = set(`unsavedGeometry`, false, newState);
 
             return assign({}, newState, {
                 coordinateEditorEnabled: false,
@@ -433,7 +438,6 @@ function annotations(state = { validationErrors: {} }, action) {
                 editing: state.editing ? assign({}, state.editing, {
                     features: [],
                     style: {
-                        [state.featureType]: {...state.editing.style[state.featureType]},
                         type: state.featureType
                     }
                 }) : null
@@ -465,7 +469,7 @@ function annotations(state = { validationErrors: {} }, action) {
             });
         case TOGGLE_GEOMETRY_MODAL:
             return assign({}, state, {
-                showUnsavedGeometryModal: !state.showUnsavedGeometryModal
+                showUnsavedGeometryModal: state.unsavedGeometry && !state.showUnsavedGeometryModal
             });
         case TOGGLE_STYLE_MODAL:
             return assign({}, state, {
@@ -555,21 +559,22 @@ function annotations(state = { validationErrors: {} }, action) {
             let geojsonFt = set("geometry.type", type === "Text" ? "Point" : type === "Circle" ? "Polygon" : type, selected);
             geojsonFt = set("geometry.coordinates", type === "Circle" ? [[]] : [], geojsonFt);
             geojsonFt = set("geometry", type === "Point" || type === "Text" ? null : geojsonFt.geometry, geojsonFt);
+            let newState = set(`editing.tempFeatures`, state.editing.features, state);
             return assign({}, state, {
-                drawing: !state.drawing,
+                drawing: !newState.drawing,
                 featureType: type,
                 drawingText: {
                     show: false,
                     drawing: false
                 },
                 coordinateEditorEnabled: true,
-                editing: assign({}, state.editing, {
-                        features: type === "Circle" ? state.editing.features : state.editing.features.map(f => {
+                editing: assign({}, newState.editing, {
+                        features: type === "Circle" ? newState.editing.features : newState.editing.features.map(f => {
                             return set("properties.canEdit", false, f);
                         }).concat([geojsonFt]),
-                        style: assign({}, state.editing.style, {
+                        style: assign({}, newState.editing.style, {
                             type: newtype,
-                            [type]: state.editing.style && state.editing.style[type] || DEFAULT_ANNOTATIONS_STYLES[type]
+                            [type]: newState.editing.style && newState.editing.style[type] || DEFAULT_ANNOTATIONS_STYLES[type]
                         })
                 }),
                 selected

@@ -21,7 +21,7 @@ const CircleStyler = require('../../style/CircleStyler');
 const TextStyler = require('../../style/TextStyler');
 const PolylineStyler = require('../../style/PolylineStyler');
 const Message = require('../../I18N/Message');
-const {FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon, FormGroup, InputGroup} = require('react-bootstrap');
+const {FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon/*, FormGroup, InputGroup*/} = require('react-bootstrap');
 const DropdownFeatureType = require('./DropdownFeatureType');
 const ReactQuill = require('react-quill');
 require('react-quill/dist/quill.snow.css');
@@ -30,14 +30,10 @@ const NavItemT = tooltip(NavItem);
 const {getAvailableStyler, convertGeoJSONToInternalModel} = require('../../../utils/AnnotationsUtils');
 const {isFunction} = require('lodash');
 const ConfirmDialog = require('../../misc/ConfirmDialog');
-
 const assign = require('object-assign');
-
 const Select = require('react-select');
-
 const PluginsUtils = require('../../../utils/PluginsUtils');
 const defaultConfig = require('./AnnotationsConfig');
-
 const bbox = require('@turf/bbox');
 
 /**
@@ -83,6 +79,7 @@ const bbox = require('@turf/bbox');
  * @prop {boolean} showUnsavedStyleModal flag used to show the UnsavedChangesModal
  * @prop {boolean} showUnsavedChangesModal flag used to show the UnsavedStyleModal
  * @prop {boolean} showUnsavedGeometryModal
+ * @prop {boolean} unsavedGeometry
  * @prop {string} mode current mode of operation (list, editing, detail)
  * @prop {function} onRemove triggered when the user clicks on the remove button
  * @prop {function} onSave triggered when the user clicks on the save button
@@ -151,6 +148,7 @@ class AnnotationsEditor extends React.Component {
         drawingText: PropTypes.object,
         drawing: PropTypes.bool,
         unsavedChanges: PropTypes.bool,
+        unsavedGeometry: PropTypes.bool,
         unsavedStyle: PropTypes.bool,
         coordinateEditorEnabled: PropTypes.bool,
         styling: PropTypes.bool,
@@ -333,7 +331,11 @@ class AnnotationsEditor extends React.Component {
                             tooltipId: "annotations.back",
                             visible: true,
                             onClick: () => {
-                                this.props.onToggleUnsavedGeometryModal();
+                                if (this.props.unsavedGeometry) {
+                                    this.props.onToggleUnsavedGeometryModal();
+                                } else {
+                                    this.props.onResetCoordEditor();
+                                }
                             }
                         }, {
                             glyph: 'floppy-disk',
@@ -543,7 +545,7 @@ class AnnotationsEditor extends React.Component {
             .filter(field => this.getConfig().fields.filter(f => f.name === field).length === 0).map(field => this.renderErrorOn(field))) : null;
     };
 
-    render() {
+    renderModals = () => {
         if (this.props.closing ) {
             return (<Portal><ConfirmDialog
                     show
@@ -576,9 +578,10 @@ class AnnotationsEditor extends React.Component {
                     onConfirm={() => { this.props.onResetCoordEditor(); }}
                     confirmButtonBSStyle="default"
                     closeGlyph="1-close"
-                    confirmButtonContent={<Message msgId="annotations.confirm" />}
-                    closeText={<Message msgId="annotations.cancel" />}>
-                    <Message msgId="annotations.undo"/> "...Geometry..."
+                    title={<Message msgId="annotations.titleUndoGeom" />}
+                    confirmButtonContent={<Message msgId="annotations.confirmGeom" />}
+                    closeText={<Message msgId="annotations.cancelModalGeom" />}>
+                    <Message msgId="annotations.undoGeom"/>
                 </ConfirmDialog></Portal>);
         } else if (this.props.showUnsavedStyleModal) {
             return (<Portal><ConfirmDialog
@@ -605,6 +608,9 @@ class AnnotationsEditor extends React.Component {
                 <Message msgId={this.props.mode === 'editing' ? "annotations.removegeometry" : "annotations.removeannotation"}/>
                 </ConfirmDialog></Portal>);
         }
+    }
+
+    render() {
         if (this.props.styling) {
             return this.renderStyler();
         }
@@ -612,29 +618,8 @@ class AnnotationsEditor extends React.Component {
         return (
             <div className="mapstore-annotations-info-viewer">
                 {this.renderButtons(editing, this.props.coordinateEditorEnabled)}
-                {this.props.drawingText && this.props.drawingText.show &&
-                    (<Portal><ConfirmDialog
-                        show
-                        modal
-                        title={<Message msgId="annotations.insertText" />}
-                        confirmButtonDisabled={this.state.textValue === ""}
-                        confirmButtonBSStyle="default"
-                        onClose={this.props.onCancelText}
-                        onConfirm={() => this.props.onSaveText(this.state.textValue)}
-                        closeGlyph="1-close"
-                        confirmButtonContent={<Message msgId="annotations.save" />}
-                        closeText={<Message msgId="annotations.cancel" />}>
-                        <Message msgId="Text"/>
-                            <FormGroup className="mapstore-filter">
-                                <InputGroup>
-                                    <FormControl
-                                        placeholder=""
-                                        onChange={(evt) => {this.setState({textValue: evt.target.value}); }}
-                                        type="text"/>
-                                </InputGroup>
-                            </FormGroup>
-                    </ConfirmDialog></Portal>)}
                 {this.renderError(editing)}
+                {this.renderModals()}
                 {this.renderBody(editing)}
             </div>
         );

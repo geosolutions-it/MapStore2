@@ -8,7 +8,7 @@
 const uuidv1 = require('uuid/v1');
 const LocaleUtils = require('./LocaleUtils');
 const {set} = require('./ImmutableUtils');
-const {values, slice, head, last} = require('lodash');
+const {values, isNil, slice, head, last} = require('lodash');
 
 const uuid = require('uuid');
 
@@ -237,7 +237,6 @@ const AnnotationsUtils = {
                 return AnnotationsUtils.isCompletePolygon(coordinates) ? AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1)) : AnnotationsUtils.formatCoordinates(coordinates[0]);
             }
             case "LineString": {
-                // let validCoords = coordinates.filter(AnnotationsUtils.validateCoordsArray);
                 return AnnotationsUtils.formatCoordinates(coordinates);
             }
             default: return AnnotationsUtils.formatCoordinates([coordinates]);
@@ -261,7 +260,8 @@ const AnnotationsUtils = {
     validateCoords: ({lat, lon} = {}) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
     validateCoordsArray: ([lon, lat] = []) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
     validateCoord: (c) => !isNaN(parseFloat(c)),
-    validateCoordinates: ({components = [], remove = false, type, isArray = false }) => {
+    coordToArray: (c = {}) => [c.lon, c.lat],
+    validateCoordinates: ({components = [], remove = false, type, isArray = false } = {}) => {
         if (components && components.length) {
             const validComponents = components.filter(AnnotationsUtils[isArray ? "validateCoordsArray" : "validateCoords"]);
 
@@ -272,21 +272,24 @@ const AnnotationsUtils = {
         }
         return false;
     },
-    validateCircle: ({components = [], properties = {radius: 0}, isArray = false}) => {
+    validateCircle: ({components = [], properties = {radius: 0}, isArray = false} = {}) => {
         if (components && components.length) {
             const cmp = head(components);
             return !isNaN(parseFloat(properties.radius)) && (isArray ? AnnotationsUtils.validateCoordsArray(cmp) : AnnotationsUtils.validateCoords(cmp));
         }
         return false;
     },
-    validateText: ({components = [], properties = {valueText: ""}, isArray = false}) => {
+    validateText: ({components = [], properties = {valueText: ""}, isArray = false} = {}) => {
         if (components && components.length) {
             const cmp = head(components);
             return properties && !!properties.valueText && (isArray ? AnnotationsUtils.validateCoordsArray(cmp) : AnnotationsUtils.validateCoords(cmp));
         }
         return false;
     },
-    validateFeature: ({components = [[]], type, remove = false, properties = {}, isArray = false}) => {
+    validateFeature: ({components = [[]], type, remove = false, properties = {}, isArray = false} = {}) => {
+        if (isNil(type)) {
+            return false;
+        }
         if (type === "Text") {
             return AnnotationsUtils.validateText({components, properties, isArray});
         }

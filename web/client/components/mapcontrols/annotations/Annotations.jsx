@@ -202,7 +202,7 @@ class Annotations extends React.Component {
     renderCards = () => {
         if (this.props.mode === 'list') {
             return (
-            <SideGrid items={this.props.annotations.filter(this.applyFilter).map(a => this.renderItems(a))}/>
+            <SideGrid items={this.props.annotations && this.props.annotations.filter(this.applyFilter).map(a => this.renderItems(a))}/>
             );
         }
         const annotation = this.props.annotations && head(this.props.annotations.filter(a => a.properties.id === this.props.current));

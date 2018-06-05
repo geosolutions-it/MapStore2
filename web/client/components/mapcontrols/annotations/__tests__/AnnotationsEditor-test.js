@@ -228,11 +228,13 @@ describe("test the AnnotationsEditor Panel", () => {
         const spySave = expect.spyOn(testHandlers, 'onSaveHandler');
         const spyCancel = expect.spyOn(testHandlers, 'onCancelHandler');
 
-        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions} editing={{
-            properties: feature,
-            geometry: {}
-        }} onSave={testHandlers.onSaveHandler}
-           onCancelEdit={testHandlers.onCancelHandler}/>, document.getElementById("container"));
+        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions}
+            editing={{
+                properties: feature,
+                features: [{}]
+            }}
+            onSave={testHandlers.onSaveHandler}
+            onCancelEdit={testHandlers.onCancelHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
 
         let saveButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[4]);
@@ -292,7 +294,7 @@ describe("test the AnnotationsEditor Panel", () => {
 
         const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions} editing={{
             properties: feature,
-            geometry: {}
+            features: [{}]
         }} onSave={testHandlers.onSaveHandler}
            onError={testHandlers.onErrorHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
@@ -323,7 +325,8 @@ describe("test the AnnotationsEditor Panel", () => {
         const spyError = expect.spyOn(testHandlers, 'onErrorHandler');
 
         const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions} editing={{
-            properties: feature
+            properties: feature,
+            features: null
         }} onSave={testHandlers.onSaveHandler}
            onError={testHandlers.onErrorHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();

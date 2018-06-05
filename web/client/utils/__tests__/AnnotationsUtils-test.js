@@ -9,7 +9,8 @@ const expect = require('expect');
 
 const {getAvailableStyler, getRelativeStyler, convertGeoJSONToInternalModel, DEFAULT_ANNOTATIONS_STYLES, createFont,
     normalizeAnnotation, removeDuplicate, formatCoordinates, isCompletePolygon, getComponents, addIds, validateCoords,
-    validateCoordsArray, validateCoord, getBaseCoord, validateText
+    validateCoordsArray, validateCoord, getBaseCoord, validateText, validateCircle, validateCoordinates,
+    coordToArray, validateFeature
 } = require('../AnnotationsUtils');
 
 describe('Test the AnnotationsUtils', () => {
@@ -201,24 +202,15 @@ describe('Test the AnnotationsUtils', () => {
         expect(createFont({fontStyle: "italic"})).toBe("italic normal 14px FontAwesome");
         expect(createFont({fontWeight: "bold"})).toBe("normal bold 14px FontAwesome");
     });
-
     it('test normalizeAnnotation defaults', () => {
         let annotation = normalizeAnnotation();
         expect(annotation.geometry.coordinates).toBe(undefined);
         expect(annotation.geometry.type).toBe(undefined);
         expect(annotation.properties.title).toBe("Default title");
     });
-/*
     it('test normalizeAnnotation with Annotation', () => {
-        const ann = {
-            type: "Feature",
-            geometry
-        }
-        let annotationNormalized = normalizeAnnotation();
-        expect(annotationNormalized.geometry.coordinates).toBe(undefined);
-        expect(annotationNormalized.geometry.type).toBe(undefined);
-        expect(annotationNormalized.properties.title).toBe("Default title");
-    });*/
+        // TODO fix this after import/export fix
+    });
     it('test removeDuplicate', () => {
         const annotations = [{properties: {id: "id1"}}, {properties: {id: "id2"}}, {properties: {id: "id2"}}];
         expect(removeDuplicate(annotations).length).toBe(2);
@@ -279,7 +271,6 @@ describe('Test the AnnotationsUtils', () => {
         expect(getComponents(point)[0].lon).toBe(1);
         expect(getComponents(point)[0].lat).toBe(1);
     });
-
     it('test addIds defaults', () => {
         const features = [{properties: {id: "some id"}}, {properties: {}}];
         expect(addIds(features).length).toBe(2);
@@ -296,6 +287,14 @@ describe('Test the AnnotationsUtils', () => {
     it('test validateCoord', () => {
         expect(validateCoord(undefined)).toBe(false);
         expect(validateCoord(2)).toBe(true);
+    });
+    it('test coordToArray', () => {
+        expect(coordToArray()[0]).toBe(undefined);
+        expect(coordToArray()[1]).toBe(undefined);
+        expect(coordToArray({lon: 2})[0]).toBe(2);
+        expect(coordToArray({lon: 2})[1]).toBe(undefined);
+        expect(coordToArray({lon: 2, lat: 1})[0]).toBe(2);
+        expect(coordToArray({lon: 2, lat: 1})[1]).toBe(1);
     });
     it('test getBaseCoord defaults', () => {
         expect(getBaseCoord().length).toBe(1);
@@ -328,7 +327,61 @@ describe('Test the AnnotationsUtils', () => {
         textAnnot.components = [undefined, 4];
         expect(validateText(textAnnot)).toBe(false);
     });
-    /*it('test normalizeAnnotation defaults', () => {
-        expect(annotation.properties.title).toBe("Default Title");
-    });*/
+    it('test validateCircle defaults', () => {
+        let components = [[1, 2]];
+        let textAnnot = {
+            components,
+            isArray: true,
+            properties: {
+                radius: 5
+            }
+        };
+        expect(validateCircle({})).toBe(false);
+        expect(validateCircle(textAnnot)).toBe(true);
+
+        textAnnot.properties.radius = "";
+        expect(validateCircle(textAnnot)).toBe(false);
+
+        textAnnot.properties.radius = 50;
+        textAnnot.components = [undefined, 4];
+        expect(validateCircle(textAnnot)).toBe(false);
+
+        textAnnot.isArray = false;
+        textAnnot.components = [{lat: 4, lon: 4}];
+        expect(validateCircle(textAnnot)).toBe(true);
+
+        textAnnot.components = [undefined, 4];
+        expect(validateCircle(textAnnot)).toBe(false);
+    });
+    it('test validateCoordinates defaults', () => {
+        let components = [[1, 2]];
+        let textAnnot = {
+            components,
+            isArray: true,
+            type: "Point"
+        };
+        expect(validateCoordinates({})).toBe(false);
+        expect(validateCoordinates(textAnnot)).toBe(true);
+
+        textAnnot.components = [[undefined, 4]];
+        expect(validateCoordinates(textAnnot)).toBe(false);
+
+        textAnnot.isArray = false;
+        textAnnot.components = [{lat: 4, lon: 4}];
+        expect(validateCoordinates(textAnnot)).toBe(true);
+
+        textAnnot.components = [[undefined, 4]];
+        expect(validateCoordinates(textAnnot)).toBe(false);
+    });
+    it('test validateFeature defaults', () => {
+        let components = [[1, 2]];
+        let textAnnot = {
+            components,
+            isArray: true,
+            type: "Point"
+        };
+        expect(validateFeature({})).toBe(false);
+        expect(validateFeature(textAnnot)).toBe(true);
+
+    });
 });
