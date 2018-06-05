@@ -6,10 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {refreshAccessToken, sessionValid, logout, LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
-const {loadMapConfig, configureError} = require('../actions/config');
+const {loadMapConfig, configureError, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
 const {mapIdSelector} = require('../selectors/map');
 const {initCatalog} = require('../actions/catalog');
+const {setControlProperty} = require('../actions/controls');
 const {pathnameSelector} = require('../selectors/routing');
+const {isLoggedIn} = require('../selectors/security');
 const ConfigUtils = require('../utils/ConfigUtils');
 const AuthenticationAPI = require('../api/GeoStoreDAO');
 const Rx = require('rxjs');
@@ -52,6 +54,13 @@ const reloadMapConfig = (action$, store) =>
         return Rx.Observable.of(configureError(e));
     });
 
+const promtLoginOnMapError = (actions$, store) =>
+    actions$.ofType(MAP_CONFIG_LOAD_ERROR)
+    .filter( (action) => action.error && action.error.status === 403 && !isLoggedIn(store.getState()))
+    .switchMap(() => {
+        return Rx.Observable.of(setControlProperty('LoginForm', 'enabled', true, true));
+    });
+
 const initCatalogOnLoginOutEpic = (action$) =>
     action$.ofType(LOGIN_SUCCESS, LOGOUT)
     .switchMap(() => {
@@ -66,5 +75,6 @@ const initCatalogOnLoginOutEpic = (action$) =>
 module.exports = {
     refreshTokenEpic,
     reloadMapConfig,
+    promtLoginOnMapError,
     initCatalogOnLoginOutEpic
 };
