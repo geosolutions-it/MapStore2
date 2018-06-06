@@ -108,4 +108,11 @@ describe("test IdentifyContainer", () => {
         expect(spyClearWarning).toHaveBeenCalled();
 
     });
+
+    it('test component with z index', () => {
+        ReactDOM.render(<IdentifyContainer enabled requests={[{}]} zIndex={7777}/>, document.getElementById("container"));
+        const sidePanel = document.getElementsByClassName('ms-side-panel');
+        expect(sidePanel.length).toBe(1);
+        expect(sidePanel[0].children[0].style.zIndex).toBe('7777');
+    });
 });
