@@ -11,7 +11,7 @@ const expect = require('expect');
 const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
 const {ADD_LAYER, UPDATE_NODE, CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
-const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
+const {CHANGE_DRAWING_STATUS, drawingFeatures} = require('../../actions/draw');
 const {set} = require('../../utils/ImmutableUtils');
 const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {configureMap
@@ -33,7 +33,6 @@ const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, remov
     editSelectedFeatureEpic, editCircleFeatureEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
-
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
 
 describe('annotations Epics', () => {
@@ -376,6 +375,35 @@ describe('annotations Epics', () => {
             }
         });
         const action = resetCoordEditor({});
+        store.dispatch(action);
+
+    });
+    it('clicked on map adding a point to Circle ', (done) => {
+        store = mockStore(
+            set("annotations.styling", false, defaultState)
+        );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        const polygonGeom = {
+            type: "Polygon",
+            coordinates: [[1, 2]]
+        };
+        const feature = {
+            type: "Feature",
+            geometry: polygonGeom,
+            properties: {
+                canEdit: true,
+                isCircle: true,
+                polygonGeom
+            }
+        };
+        const action = drawingFeatures([feature]);
         store.dispatch(action);
 
     });
