@@ -37,10 +37,7 @@ const TOGGLE_GEOMETRY_MODAL = 'ANNOTATIONS:TOGGLE_GEOMETRY_MODAL';
 const CHANGED_PROPERTIES = 'ANNOTATIONS:CHANGED_PROPERTIES';
 const UNSAVED_STYLE = 'ANNOTATIONS:UNSAVED_STYLE';
 const TOGGLE_STYLE_MODAL = 'ANNOTATIONS:TOGGLE_STYLE_MODAL';
-const SHOW_TEXT_AREA = 'ANNOTATIONS:SHOW_TEXT_AREA';
 const ADD_TEXT = 'ANNOTATIONS:ADD_TEXT';
-const CANCEL_CLOSE_TEXT = 'ANNOTATIONS:CANCEL_CLOSE_TEXT';
-const SAVE_TEXT = 'ANNOTATIONS:SAVE_TEXT';
 const DOWNLOAD = 'ANNOTATIONS:DOWNLOAD';
 const LOAD_ANNOTATIONS = 'ANNOTATIONS:LOAD_ANNOTATIONS';
 const CHANGED_SELECTED = 'ANNOTATIONS:CHANGED_SELECTED';
@@ -97,11 +94,6 @@ function changeSelected(coordinates, radius, text) {
         text
     };
 }
-function showTextArea() {
-    return {
-        type: SHOW_TEXT_AREA
-    };
-}
 function setInvalidSelected(errorFrom, coordinates) {
     return {
         type: SET_INVALID_SELECTED,
@@ -112,11 +104,6 @@ function setInvalidSelected(errorFrom, coordinates) {
 function addText() {
     return {
         type: ADD_TEXT
-    };
-}
-function cancelText() {
-    return {
-        type: CANCEL_CLOSE_TEXT
     };
 }
 function changedProperties(field, value) {
@@ -250,10 +237,9 @@ function setUnsavedStyle(unsavedStyle) {
         unsavedStyle
     };
 }
-function addNewFeature(feature) {
+function addNewFeature() {
     return {
-        type: ADD_NEW_FEATURE,
-        feature
+        type: ADD_NEW_FEATURE
     };
 }
 function cancelCloseAnnotations() {
@@ -284,12 +270,6 @@ function toggleUnsavedStyleModal() {
 function resetCoordEditor() {
     return {
         type: RESET_COORD_EDITOR
-    };
-}
-function saveText(value) {
-    return {
-        type: SAVE_TEXT,
-        value
     };
 }
 function changeRadius(radius, components) {
@@ -342,10 +322,7 @@ module.exports = {
     TOGGLE_CHANGES_MODAL, toggleUnsavedChangesModal,
     TOGGLE_STYLE_MODAL, toggleUnsavedStyleModal,
     CHANGED_PROPERTIES, changedProperties,
-    SHOW_TEXT_AREA, showTextArea,
     ADD_TEXT, addText,
-    CANCEL_CLOSE_TEXT, cancelText,
-    SAVE_TEXT, saveText,
     editAnnotation,
     newAnnotation,
     removeAnnotation,

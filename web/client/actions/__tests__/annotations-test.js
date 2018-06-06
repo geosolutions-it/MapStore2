@@ -32,12 +32,9 @@ const {
     HIGHLIGHT,
     CLEAN_HIGHLIGHT,
     FILTER_ANNOTATIONS,
-    showTextArea, SHOW_TEXT_AREA,
     addText, ADD_TEXT,
-    cancelText, CANCEL_CLOSE_TEXT,
     changedProperties, CHANGED_PROPERTIES,
     changeStyler, CHANGE_STYLER,
-    saveText, SAVE_TEXT,
     toggleUnsavedStyleModal, TOGGLE_STYLE_MODAL,
     startDrawing, START_DRAWING,
     toggleUnsavedChangesModal, TOGGLE_CHANGES_MODAL,
@@ -111,10 +108,8 @@ describe('Test correctness of the annotations actions', () => {
         expect(result.id).toEqual('1');
     });
     it('addNewFeature', () => {
-        const id = "fake_id";
-        const result = addNewFeature({properties: {id}});
+        const result = addNewFeature();
         expect(result.type).toEqual(ADD_NEW_FEATURE);
-        expect(result.feature.properties.id).toEqual(id);
     });
     it('changeSelected', () => {
         const coordinates = [1, 2];
@@ -134,17 +129,9 @@ describe('Test correctness of the annotations actions', () => {
         expect(result.errorFrom).toEqual(errorFrom);
         expect(result.coordinates).toEqual(coordinates);
     });
-    it('showTextArea', () => {
-        const result = showTextArea();
-        expect(result.type).toEqual(SHOW_TEXT_AREA);
-    });
     it('addText', () => {
         const result = addText();
         expect(result.type).toEqual(ADD_TEXT);
-    });
-    it('cancelText', () => {
-        const result = cancelText();
-        expect(result.type).toEqual(CANCEL_CLOSE_TEXT);
     });
     it('confirm remove annotation', () => {
         const result = confirmRemoveAnnotation('1');
@@ -188,12 +175,6 @@ describe('Test correctness of the annotations actions', () => {
     it('toggleUnsavedStyleModal', () => {
         const result = toggleUnsavedStyleModal();
         expect(result.type).toEqual(TOGGLE_STYLE_MODAL);
-    });
-    it('saveText', () => {
-        const text = "asdfasf!";
-        const result = saveText(text);
-        expect(result.type).toEqual(SAVE_TEXT);
-        expect(result.value).toEqual(text);
     });
     it('changeStyler', () => {
         const stylerType = "marker";

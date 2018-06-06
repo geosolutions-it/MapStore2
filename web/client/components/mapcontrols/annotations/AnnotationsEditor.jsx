@@ -51,11 +51,9 @@ const bbox = require('@turf/bbox');
  * @prop {function} onEdit triggered when the user clicks on the edit button
  * @prop {function} onCancelEdit triggered when the user cancels current editing session
  * @prop {function} onCancelStyle triggered when the user cancels style selection
- * @prop {function} onCancelText triggered when the user cancels the addition of the last Text annotation
  * @prop {function} onCancel triggered when the user cancels the addition/changes made to the annotation
  * @prop {function} onCleanHighlight triggered when the user exit 'details' mode
  * @prop {function} onAddText triggered when the user adds new Text geometry to the feature
- * @prop {function} onSaveText triggered when the user saves the value inserted for the Text annotation
  * @prop {function} onToggleUnsavedChangesModal toggles the view of the UnsavedChangesModal
  * @prop {function} onToggleUnsavedStyleModal toggles the view of the UnsavedStyleModal
  * @prop {function} onToggleUnsavedGeometryModal toggles the view of the UnsavedGeometryModal
@@ -111,7 +109,6 @@ class AnnotationsEditor extends React.Component {
         onEdit: PropTypes.func,
         onCancelEdit: PropTypes.func,
         onCancelStyle: PropTypes.func,
-        onCancelText: PropTypes.func,
         onCleanHighlight: PropTypes.func,
         onAddText: PropTypes.func,
         onCancel: PropTypes.func,
@@ -120,7 +117,6 @@ class AnnotationsEditor extends React.Component {
         onSaveStyle: PropTypes.func,
         onError: PropTypes.func,
         onAddGeometry: PropTypes.func,
-        onSaveText: PropTypes.func,
         onToggleUnsavedChangesModal: PropTypes.func,
         onToggleUnsavedGeometryModal: PropTypes.func,
         onToggleUnsavedStyleModal: PropTypes.func,
@@ -344,7 +340,7 @@ class AnnotationsEditor extends React.Component {
                             disabled: this.props.selected && this.props.selected.properties && !this.props.selected.properties.isValidFeature,
                             onClick: () => {
                                 if (this.props.selected) {
-                                    this.props.onAddNewFeature(this.props.selected);
+                                    this.props.onAddNewFeature();
                                 }
                             }
                         }

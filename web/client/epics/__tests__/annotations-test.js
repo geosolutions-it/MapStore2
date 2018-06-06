@@ -11,22 +11,26 @@ const expect = require('expect');
 const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
 const {ADD_LAYER, UPDATE_NODE, CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
-const {CHANGE_DRAWING_STATUS, geometryChanged, GEOMETRY_CHANGED} = require('../../actions/draw');
+const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
+const {set} = require('../../utils/ImmutableUtils');
 const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {configureMap
 } = require('../../actions/config');
-const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation, setStyle, highlight, cleanHighlight,
-    toggleAdd, UPDATE_ANNOTATION_GEOMETRY, SHOW_TEXT_AREA, cancelText/*, startDrawing*/, download, loadAnnotations
+const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation,
+    setStyle, highlight, cleanHighlight, download, loadAnnotations, SET_STYLE, toggleStyle,
+    resetCoordEditor
 } = require('../../actions/annotations');
-const {clickOnMap
-} = require('../../actions/map');
-const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
-    cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawGeomEpic, setStyleEpic, restoreStyleEpic, highlighAnnotationEpic,
-    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, startDrawingMultiGeomEpic, downloadAnnotations, onLoadAnnotations
+const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
+    disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
+    setStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
+    downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusTextEpic,
+    editSelectedFeatureEpic, editCircleFeatureEpic
 } = require('../annotations')({});
-const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
-    setStyleEpic, cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawGeomEpic, restoreStyleEpic, highlighAnnotationEpic,
-    cleanHighlightAnnotationEpic, addTextEpic, cancelTextAnnotationsEpic, endDrawTextEpic, startDrawingMultiGeomEpic, onLoadAnnotations);
+const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
+    disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
+    setStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
+    downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusTextEpic,
+    editSelectedFeatureEpic, editCircleFeatureEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
@@ -34,40 +38,63 @@ const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
 
 describe('annotations Epics', () => {
     let store;
-    beforeEach(() => {
-        store = mockStore({
-            annotations: {
-                config: {multiGeometry: false},
-                editing: {
-                    style: {},
+    const defaultState = {
+        annotations: {
+            config: {multiGeometry: false},
+            editing: {
+                style: {},
+                features: [{
+                    type: "Feature",
                     geometry: {
-                        type: "Point"
+                        type: "Point",
+                        coordinates: [1, 1]
                     }
-                },
-                drawingText: {
-                    drawing: true
-                },
-                originalStyle: {}
+                }],
+                type: "FeatureCollection"
             },
-            layers: {
-                flat: [{
-                    id: 'annotations',
-                    features: [{
-                        properties: {
-                            id: '1'
-                        },
-                        geometry: {
-                            type: "Point"
-                        }
-                    }]
+            drawingText: {
+                drawing: true
+            },
+            featureType: "Point",
+            originalStyle: {}
+        },
+        layers: {
+            flat: [{
+                id: 'annotations',
+                features: [{
+                    properties: {
+                        id: '1'
+                    },
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [1, 1]
+                    }
                 }]
-            }
-        });
+            }]
+        }
+    };
+    beforeEach(() => {
+        store = mockStore(defaultState);
     });
 
     afterEach(() => {
         epicMiddleware.replaceEpic(rootEpic);
     });
+
+    it('set style', (done) => {
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[0].type).toBe(SET_STYLE);
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        const action = setStyle({});
+        store.dispatch(action);
+    });
+
 
     it('add annotations layer on first save', (done) => {
         store = mockStore({
@@ -186,7 +213,7 @@ describe('annotations Epics', () => {
         store.dispatch(action);
     });
 
-    it('start drawing marker', (done) => {
+    /*it('start drawing marker', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
             if (actions.length >= 2) {
@@ -196,54 +223,7 @@ describe('annotations Epics', () => {
         });
         const action = toggleAdd();
         store.dispatch(action);
-    });
-
-    it('end drawing geom', (done) => {
-        store.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 2) {
-                expect(actions[1].type).toBe(UPDATE_ANNOTATION_GEOMETRY);
-                done();
-            }
-        });
-        const action = geometryChanged([], 'annotations', false);
-        store.dispatch(action);
-    });
-    it('saving text annotation', (done) => {
-        store.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 2) {
-                expect(actions[0].type).toBe(GEOMETRY_CHANGED);
-                expect(actions[1].type).toBe(UPDATE_ANNOTATION_GEOMETRY);
-                done();
-            }
-        });
-        const action = geometryChanged([], 'annotations', false, true);
-        store.dispatch(action);
-    });
-    it('cancel text annotation', (done) => {
-        store.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 2) {
-                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
-                done();
-            }
-        });
-        const action = cancelText();
-        store.dispatch(action);
-    });
-
-    it('set style', (done) => {
-        store.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 2) {
-                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
-                done();
-            }
-        });
-        const action = setStyle({});
-        store.dispatch(action);
-    });
+    });*/
 
     it('highlight', (done) => {
         store.subscribe(() => {
@@ -257,17 +237,7 @@ describe('annotations Epics', () => {
         store.dispatch(action);
     });
 
-    it('add text epic', (done) => {
-        store.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 2) {
-                expect(actions[1].type).toBe(SHOW_TEXT_AREA);
-                done();
-            }
-        });
-        const action = clickOnMap({});
-        store.dispatch(action);
-    });
+
     it('clean highlight', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
@@ -359,7 +329,54 @@ describe('annotations Epics', () => {
         });
         const action = loadAnnotations([]);
         store.dispatch(action);
-
     });
 
+    it('when the styler is opened, clicks on the map doest not add new points to the feature, styling=true', (done) => {
+        store = mockStore(
+            set("annotations.styling", true, defaultState)
+        );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        const action = toggleStyle({});
+        store.dispatch(action);
+
+    });
+    it('when the styler is opened, clicks on the map doest not add new points to the feature, styling=false', (done) => {
+        store = mockStore(
+            set("annotations.styling", false, defaultState)
+        );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        const action = toggleStyle({});
+        store.dispatch(action);
+
+    });
+    it('clicked on back from coord editor, should enabled only select ', (done) => {
+        store = mockStore(
+            set("annotations.styling", false, defaultState)
+        );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        const action = resetCoordEditor({});
+        store.dispatch(action);
+
+    });
 });

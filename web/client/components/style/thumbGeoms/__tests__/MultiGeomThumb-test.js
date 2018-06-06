@@ -21,9 +21,9 @@ describe("Test the MultiGeomThumb component", () => {
         const cmp = ReactDOM.render(<MultiGeomThumb />, document.getElementById("container"));
         expect(cmp).toExist();
     });
-    it('create component with only MultiPolygon', () => {
+    it('create component with only Polygon', () => {
         const style = DEFAULT_ANNOTATIONS_STYLES;
-        const cmp = ReactDOM.render(<MultiGeomThumb styleMultiGeom={style} geometry={{geometries: [{type: "MultiPolygon"}]}}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<MultiGeomThumb styleMultiGeom={style} geometry={{features: [{geometry: {type: "Polygon"}}]}}/>, document.getElementById("container"));
         expect(cmp).toExist();
         const rect = TestUtils.findRenderedDOMComponentWithTag(cmp, 'rect');
         const svg = TestUtils.findRenderedDOMComponentWithTag(cmp, 'svg');
@@ -41,7 +41,7 @@ describe("Test the MultiGeomThumb component", () => {
     });
     it('create component with only MultiPolygon LineString', () => {
         const style = DEFAULT_ANNOTATIONS_STYLES;
-        const cmp = ReactDOM.render(<MultiGeomThumb styleMultiGeom={style} geometry={{geometries: [{type: "MultiPolygon"}, {type: "LineString"}]}}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<MultiGeomThumb styleMultiGeom={style} geometry={{features: [{geometry: {type: "Polygon"}}, {geometry: {type: "LineString"}} ]}}/>, document.getElementById("container"));
         expect(cmp).toExist();
         const rect = TestUtils.findRenderedDOMComponentWithTag(cmp, 'rect');
 
@@ -58,7 +58,7 @@ describe("Test the MultiGeomThumb component", () => {
     });
     it('create component with only Circle', () => {
         const style = DEFAULT_ANNOTATIONS_STYLES;
-        const cmp = ReactDOM.render(<MultiGeomThumb styleMultiGeom={style} geometry={{geometries: [{type: "Polygon"}]}} properties={{circles: [0]}}/>, document.getElementById("container"));
+        const cmp = ReactDOM.render(<MultiGeomThumb styleMultiGeom={style} geometry={{features: [{geometry: {type: "Circle"}}]}} properties={{circles: [0]}}/>, document.getElementById("container"));
         expect(cmp).toExist();
         const circle = TestUtils.findRenderedDOMComponentWithTag(cmp, 'circle');
 

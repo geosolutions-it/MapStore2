@@ -81,6 +81,7 @@ class CoordinateEditor extends React.Component {
                     <FormControl
                         value={this.props.properties.radius}
                         placeholder="radius"
+                        name="radius"
                         onChange={e => {
                             const radius = e.target.value;
                             if (this.isValid(this.props.components, radius )) {
@@ -102,6 +103,7 @@ class CoordinateEditor extends React.Component {
                     <ControlLabel><Message msgId="annotations.editor.text"/></ControlLabel>
                     <FormControl
                         value={this.props.properties.valueText}
+                        name="text"
                         placeholder="text value"
                         onChange={e => {
                             const valueText = e.target.value;

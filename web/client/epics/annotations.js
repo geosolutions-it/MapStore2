@@ -278,8 +278,7 @@ module.exports = (viewer) => ({
             const {style, ...feature} = store.getState().annotations.editing;
             let projectedFeature = reprojectGeoJson(feature, "EPSG:4326", "EPSG:3857");
             return Rx.Observable.from([
-                changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [projectedFeature], {}, assign({}, style, {highlight: false}))/*,
-                toggleDrawOrEdit(store.getState(), false)*/
+                changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [projectedFeature], {}, assign({}, style, {highlight: false}))
             ]
             );
         }),
@@ -420,7 +419,6 @@ module.exports = (viewer) => ({
                 transformToFeatureCollection: true
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
-            // return Rx.Observable.empty();
         }),
     redrawOnChangeRadiusTextEpic: (action$, {getState}) => action$.ofType( CHANGE_RADIUS, CHANGE_TEXT )
         .switchMap((a) => {

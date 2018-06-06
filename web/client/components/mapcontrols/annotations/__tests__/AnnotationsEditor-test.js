@@ -508,4 +508,44 @@ describe("test the AnnotationsEditor Panel", () => {
 
         expect(spyZoom.calls.length).toEqual(1);
     });
+
+    it('test rendering Circle Editor', () => {
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+        const circleGeom = {geometry: {type: "Circle", coordinates: [[1, 1]]}, type: "Feature"};
+        const viewer = ReactDOM.render(<AnnotationsEditor featureType={"Circle"} coordinateEditorEnabled {...feature} {...actions}
+            editing={{
+                properties: feature,
+                features: [circleGeom]
+            }}
+            selected={circleGeom}/>, document.getElementById("container"));
+        expect(viewer).toExist();
+        const inputs = TestUtils.scryRenderedDOMComponentsWithTag(viewer, "input");
+        expect(inputs[0]).toExist();
+        expect(inputs[0].name).toBe("radius");
+
+    });
+
+    it('test rendering text Editor', () => {
+        const feature = {
+            id: "1",
+            title: 'mytitle',
+            description: '<span><i>desc</i></span>'
+        };
+        const circleGeom = {geometry: {type: "Text", coordinates: [1, 1]}, type: "Feature"};
+        const viewer = ReactDOM.render(<AnnotationsEditor featureType={"Text"} coordinateEditorEnabled {...feature} {...actions}
+            editing={{
+                properties: feature,
+                features: [circleGeom]
+            }}
+            selected={circleGeom}/>, document.getElementById("container"));
+        expect(viewer).toExist();
+        const inputs = TestUtils.scryRenderedDOMComponentsWithTag(viewer, "input");
+        expect(inputs[0]).toExist();
+        expect(inputs[0].name).toBe("text");
+
+    });
 });

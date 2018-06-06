@@ -111,6 +111,8 @@ module.exports = {
     editedFieldsSelector,
     stylingSelector,
     unsavedChangesSelector,
+    showUnsavedGeometryModalSelector,
+    unsavedGeometrySelector,
     unsavedStyleSelector,
     errorsSelector,
     configSelector

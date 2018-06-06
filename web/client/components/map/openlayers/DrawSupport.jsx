@@ -29,10 +29,13 @@ const geojsonFormat = new ol.format.GeoJSON();
  * @prop {string} drawMethod the method used to draw different geometries. can be Circle,BBOX, or a geomType from Point to MultiPolygons
  * @prop {object} options it contains the params used to enable the interactions or simply stop the DrawSupport after a ft is drawn
  * @prop {object[]} features an array of geojson features used as a starting point for drawing new shapes or edit them
- * @prop {func} onChangeDrawingStatus method use to change the status of the DrawSupport
- * @prop {func} onGeometryChanged when a features is edited or drawn this methos is fired
- * @prop {func} onDrawStopped action fired if the DrawSupport stops
- * @prop {func} onEndDrawing action fired when a shape is drawn
+ * @prop {function} onChangeDrawingStatus method use to change the status of the DrawSupport
+ * @prop {function} onGeometryChanged when a features is edited or drawn this methos is fired
+ * @prop {function} onDrawStopped action fired if the DrawSupport stops
+ * @prop {function} onDrawingFeatures triggered when user clicks on a map in order to draw something
+ * @prop {function} onSelectFeatures triggered when select interaction is enabled and user click on map in order to draw something, without using drawinteraction
+ * @prop {function} onEndDrawing action fired when a shape is drawn
+ * @prop {object} style
 */
 
 // TODO FIX doc
@@ -46,11 +49,10 @@ class DrawSupport extends React.Component {
         features: PropTypes.array,
         onChangeDrawingStatus: PropTypes.func,
         onGeometryChanged: PropTypes.func,
+        onDrawStopped: PropTypes.func,
         onDrawingFeatures: PropTypes.func,
         onSelectFeatures: PropTypes.func,
-        onDrawStopped: PropTypes.func,
         onEndDrawing: PropTypes.func,
-        onTextChanged: PropTypes.func,
         style: PropTypes.object
     };
 
@@ -68,8 +70,7 @@ class DrawSupport extends React.Component {
         onDrawStopped: () => {},
         onDrawingFeatures: () => {},
         onSelectFeatures: () => {},
-        onEndDrawing: () => {},
-        onTextChanged: () => {}
+        onEndDrawing: () => {}
     };
 
 /** Inside this lyfecycle method the status is checked to manipulate the behaviour of the DrawSupport.
