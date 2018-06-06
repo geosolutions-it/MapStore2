@@ -19,6 +19,8 @@ module.exports = {
         ToolbarPlugin: require('../plugins/Toolbar'),
         DrawerMenuPlugin: require('../plugins/DrawerMenu'),
         ShapeFilePlugin: require('../plugins/ShapeFile'),
+        ExportMapPlugin: require('../plugins/ExportMap'),
+        ImportPlugin: require('../plugins/Import'),
         SnapshotPlugin: require('../plugins/Snapshot'),
         SettingsPlugin: require('../plugins/Settings'),
         ExpanderPlugin: require('../plugins/Expander'),
