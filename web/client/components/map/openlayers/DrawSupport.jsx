@@ -107,9 +107,9 @@ class DrawSupport extends React.Component {
         }
 
     }
-    getNewFeature = (newDrawMethod, coordinates, radius, center, realCircle) => {
+    getNewFeature = (newDrawMethod, coordinates, radius, center) => {
         return new ol.Feature({
-            geometry: this.createOLGeometry({type: newDrawMethod, coordinates, radius, center, realCircle})
+            geometry: this.createOLGeometry({type: newDrawMethod, coordinates, radius, center})
         });
     }
     getMapCrs = () => {
@@ -180,11 +180,11 @@ class DrawSupport extends React.Component {
                         center = geometry.properties && geometry.properties.center ? reproject(geometry.properties.center, "EPSG:4326", mapCrs) : geometry.center;
                         center = [center.x, center.y];
                         feature = new ol.Feature({
-                            geometry: this.createOLGeometry({type: "Circle", realCircle: true, center, projection: "EPSG:3857", radius: geometry.properties && geometry.properties.radius || geometry.radius})
+                            geometry: this.createOLGeometry({type: "Circle", center, projection: "EPSG:3857", radius: geometry.properties && geometry.properties.radius || geometry.radius})
                         });
                     } else {
                         feature = new ol.Feature({
-                            geometry: this.createOLGeometry(geometry.geometry ? geometry.geometry : {...geometry, ...geometry.properties, center, realCircle: true })
+                            geometry: this.createOLGeometry(geometry.geometry ? geometry.geometry : {...geometry, ...geometry.properties, center })
                         });
                     }
                     feature.setProperties(f.properties);
@@ -1191,14 +1191,14 @@ class DrawSupport extends React.Component {
         this.props.map.addInteraction(this.translateInteraction);
     }
 
-    createOLGeometry = ({type, coordinates, radius, center, geometries, projection, options = {}, realCircle}) => {
+    createOLGeometry = ({type, coordinates, radius, center, geometries, projection, options = {}}) => {
         if (type === "GeometryCollection") {
             return geometries && geometries.length ? new ol.geom.GeometryCollection(geometries.map(g => this.olGeomFromType({type: g.type}))) : new ol.geom.GeometryCollection([]);
         }
-        return this.olGeomFromType({type, coordinates, radius, center, projection, options, realCircle});
+        return this.olGeomFromType({type, coordinates, radius, center, projection, options});
     };
 
-    olGeomFromType = ({type, coordinates, radius, center, projection, options/*, realCircle*/}) => {
+    olGeomFromType = ({type, coordinates, radius, center, projection, options}) => {
 
         let geometry;
         switch (type) {

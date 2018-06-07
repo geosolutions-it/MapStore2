@@ -471,6 +471,7 @@ module.exports = (viewer) => ({
         }),
     editCircleFeatureEpic: (action$, {getState}) => action$.ofType(DRAWING_FEATURE)
         .filter(a => a.features[0].properties && a.features[0].properties.isCircle)
+        .delay(300)
         .switchMap(() => {
             const state = getState();
             const feature = state.annotations.editing;
