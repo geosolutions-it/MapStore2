@@ -24,7 +24,7 @@ const createLayer = options => {
     const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
     const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
     const tilMatrixSetName = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
-    const tileMatrixSet = options.tileMatrixSet && head(options.tileMatrixSet.filter(tM => tM['ows:Identifier'] === tilMatrixSetName));
+    const tileMatrixSet = head(options.tileMatrixSet.filter(tM => tM['ows:Identifier'] === tilMatrixSetName));
     const scales = tileMatrixSet && tileMatrixSet.TileMatrix.map(t => t.ScaleDenominator);
     const mapResolutions = options.resolutions || mapUtils.getResolutions();
     const matrixResolutions = options.resolutions || scales && mapUtils.getResolutionsForScales(scales, srs, 96) || [];
