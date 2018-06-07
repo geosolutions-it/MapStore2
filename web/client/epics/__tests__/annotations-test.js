@@ -11,14 +11,14 @@ const expect = require('expect');
 const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
 const {ADD_LAYER, UPDATE_NODE, CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
-const {CHANGE_DRAWING_STATUS, drawingFeatures} = require('../../actions/draw');
+const {CHANGE_DRAWING_STATUS, drawingFeatures, DRAWING_FEATURE, selectFeatures} = require('../../actions/draw');
 const {set} = require('../../utils/ImmutableUtils');
 const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
-const {configureMap
-} = require('../../actions/config');
+const {configureMap} = require('../../actions/config');
+// const {TOGGLE_CONTROL} = require('../../actions/controls');
 const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation,
     setStyle, highlight, cleanHighlight, download, loadAnnotations, SET_STYLE, toggleStyle,
-    resetCoordEditor
+    resetCoordEditor, changeRadius, changeText, changeSelected
 } = require('../../actions/annotations');
 const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
@@ -34,7 +34,16 @@ const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, remov
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
-
+const ft = {
+    type: "Feature",
+    geometry: {
+        type: "Point",
+        coordinates: [1, 1]
+    },
+    properties: {
+        id: "is a point"
+    }
+};
 describe('annotations Epics', () => {
     let store;
     const defaultState = {
@@ -42,20 +51,15 @@ describe('annotations Epics', () => {
             config: {multiGeometry: false},
             editing: {
                 style: {},
-                features: [{
-                    type: "Feature",
-                    geometry: {
-                        type: "Point",
-                        coordinates: [1, 1]
-                    }
-                }],
+                features: [ft],
                 type: "FeatureCollection"
             },
             drawingText: {
                 drawing: true
             },
             featureType: "Point",
-            originalStyle: {}
+            originalStyle: {},
+            selected: ft
         },
         layers: {
             flat: [{
@@ -71,7 +75,8 @@ describe('annotations Epics', () => {
                     }
                 }]
             }]
-        }
+        },
+        controls: {annotations: {enabled: true}}
     };
     beforeEach(() => {
         store = mockStore(defaultState);
@@ -93,8 +98,6 @@ describe('annotations Epics', () => {
         const action = setStyle({});
         store.dispatch(action);
     });
-
-
     it('add annotations layer on first save', (done) => {
         store = mockStore({
             annotations: {
@@ -119,19 +122,6 @@ describe('annotations Epics', () => {
 
         store.dispatch(action);
     });
-    /*it('stop drawing when dropdownfeature type is opened', (done) => {
-
-        store.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 2) {
-                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
-                done();
-            }
-        });
-        let action = startDrawing();
-        store.dispatch(action);
-    });*/
-
     it('update annotations layer', (done) => {
         let action = configureMap({});
 
@@ -145,7 +135,6 @@ describe('annotations Epics', () => {
 
         store.dispatch(action);
     });
-
     it('edit annotation', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
@@ -172,7 +161,6 @@ describe('annotations Epics', () => {
         const action = confirmRemoveAnnotation('1');
         store.dispatch(action);
     });
-
     it('remove annotation geometry', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
@@ -184,7 +172,6 @@ describe('annotations Epics', () => {
         const action = confirmRemoveAnnotation('geometry');
         store.dispatch(action);
     });
-
     it('save annotation', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
@@ -198,7 +185,6 @@ describe('annotations Epics', () => {
         const action = saveAnnotation('1', {}, {});
         store.dispatch(action);
     });
-
     it('cancel edit annotation', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
@@ -211,7 +197,6 @@ describe('annotations Epics', () => {
         const action = cancelEditAnnotation();
         store.dispatch(action);
     });
-
     /*it('start drawing marker', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
@@ -223,7 +208,6 @@ describe('annotations Epics', () => {
         const action = toggleAdd();
         store.dispatch(action);
     });*/
-
     it('highlight', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
@@ -235,8 +219,6 @@ describe('annotations Epics', () => {
         const action = highlight('1');
         store.dispatch(action);
     });
-
-
     it('clean highlight', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
@@ -248,7 +230,6 @@ describe('annotations Epics', () => {
         const action = cleanHighlight('1');
         store.dispatch(action);
     });
-
     it('clean highlight without layer', (done) => {
         const state = {
             annotations: {
@@ -274,7 +255,6 @@ describe('annotations Epics', () => {
             done();
         }, state);
     });
-
     it('export annotations fail', (done) => {
         const state = {
             layers: {
@@ -294,7 +274,6 @@ describe('annotations Epics', () => {
             done();
         }, state);
     });
-
     it('load annotations', done => {
 
         store.subscribe(() => {
@@ -329,8 +308,7 @@ describe('annotations Epics', () => {
         const action = loadAnnotations([]);
         store.dispatch(action);
     });
-
-    it('when the styler is opened, clicks on the map doest not add new points to the feature, styling=true', (done) => {
+    it('when the styler is opened, clicks on the map does not add new points to the feature, styling=true', (done) => {
         store = mockStore(
             set("annotations.styling", true, defaultState)
         );
@@ -346,7 +324,7 @@ describe('annotations Epics', () => {
         store.dispatch(action);
 
     });
-    it('when the styler is opened, clicks on the map doest not add new points to the feature, styling=false', (done) => {
+    it('when the styler is opened, clicks on the map does not add new points to the feature, styling=false', (done) => {
         store = mockStore(
             set("annotations.styling", false, defaultState)
         );
@@ -371,6 +349,9 @@ describe('annotations Epics', () => {
             const actions = store.getActions();
             if (actions.length >= 2) {
                 expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[1].options.selectEnabled).toBe(true);
+                expect(actions[1].options.drawEnabled).toBe(false);
+                expect(actions[1].options.editEnabled).toBe(false);
                 done();
             }
         });
@@ -379,9 +360,7 @@ describe('annotations Epics', () => {
 
     });
     it('clicked on map adding a point to Circle ', (done) => {
-        store = mockStore(
-            set("annotations.styling", false, defaultState)
-        );
+        store = mockStore( defaultState );
 
         store.subscribe(() => {
             const actions = store.getActions();
@@ -392,7 +371,7 @@ describe('annotations Epics', () => {
         });
         const polygonGeom = {
             type: "Polygon",
-            coordinates: [[1, 2]]
+            coordinates: [[[1, 2]]]
         };
         const feature = {
             type: "Feature",
@@ -400,11 +379,152 @@ describe('annotations Epics', () => {
             properties: {
                 canEdit: true,
                 isCircle: true,
-                polygonGeom
+                polygonGeom,
+                id: "Sdfaf"
             }
         };
         const action = drawingFeatures([feature]);
         store.dispatch(action);
 
     });
+    it('clicked on map adding a point to LineString ', (done) => {
+        store = mockStore( defaultState );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            expect(actions[0].type).toBe(DRAWING_FEATURE);
+            if (actions.length >= 0) {
+                done();
+            }
+        });
+        const lineGeom = {
+            type: "LineString",
+            coordinates: [[1, 2]]
+        };
+        const feature = {
+            type: "Feature",
+            geometry: lineGeom,
+            properties: {
+                canEdit: true,
+                id: "Sdfaf"
+            }
+        };
+        const action = drawingFeatures([feature]);
+        store.dispatch(action);
+
+    });
+    it('clicked on map selecting a feature LineString ', (done) => {
+        store = mockStore( defaultState );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 3) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[2].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        const action = selectFeatures([ft]);
+        store.dispatch(action);
+
+    });
+    it('changed the radius from the coordinate editor ', (done) => {
+        store = mockStore( defaultState );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        const action = changeRadius(500, [[1, 1]]);
+        store.dispatch(action);
+
+    });
+    it('changed the text from the coordinate editor form', (done) => {
+        store = mockStore( defaultState );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+        const action = changeText("500", [[1, 1]]);
+        store.dispatch(action);
+    });
+    it('changed the coordinate value of a Polygon with an invalid coord', (done) => {
+        let selected = ft;
+        const polygonCoords = [[[1, 2], [1, 3], [1, undefined], [1, 5], [1, 2]]];
+        selected = set("geometry", {
+            type: "Polygon",
+            coordinates: polygonCoords
+        }, selected);
+        selected = set("properties", { id: "Polygon1"}, selected);
+        store = mockStore(
+            set("annotations.selected", selected, set("annotations.editing.features", defaultState.annotations.editing.features.concat(selected), defaultState))
+        );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[1].features[0].features[1].geometry.coordinates[0].length).toBe(4);
+                done();
+            }
+        });
+        const action = changeSelected(polygonCoords, undefined, undefined);
+        store.dispatch(action);
+    });
+    it('changed the coordinate value of a Text with a valid coord', (done) => {
+        let selected = ft;
+        const textCoords = [1, 3];
+        selected = set("geometry", {
+            type: "Text",
+            coordinates: textCoords
+        }, selected);
+        selected = set("properties", { id: "text1", isText: true, valueText: "text"}, selected);
+        store = mockStore(
+            set("annotations.selected", selected, set("annotations.editing.features", defaultState.annotations.editing.features.concat(selected), defaultState))
+        );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[1].features[0].features[1].properties.valueText).toBe("text");
+                done();
+            }
+        });
+        const action = changeSelected(textCoords, undefined, "text");
+        store.dispatch(action);
+    });
+    it('changed the coordinate value of a Circle with a valid coord', (done) => {
+        let selected = ft;
+        const polygonCoords = [[[1, 2], [1, 3], [1, 5], [1, 2]]];
+        const polygonGeom = {
+            type: "Polygon",
+            coordinates: polygonCoords
+        };
+        selected = set("geometry", polygonGeom, selected);
+        selected = set("properties", { id: "text1", radius: 200, center: [2, 2], isCircle: true, polygonGeom}, selected);
+        store = mockStore(
+            set("annotations.selected", selected, set("annotations.editing.features", defaultState.annotations.editing.features.concat(selected), defaultState))
+        );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[1].features[0].features[1].properties.radius).toBe(200);
+                expect(actions[1].features[0].features[1].geometry.type).toBe("Polygon");
+                done();
+            }
+        });
+        const action = changeSelected(polygonCoords, 200, undefined);
+        store.dispatch(action);
+    });
+
 });

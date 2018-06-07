@@ -333,7 +333,10 @@ module.exports = (viewer) => ({
         }),
     confirmCloseAnnotationsEpic: (action$, store) => action$.ofType(CONFIRM_CLOSE_ANNOTATIONS)
         .switchMap(() => {
-            return Rx.Observable.from((store.getState().controls.annotations && store.getState().controls.annotations.enabled ? [toggleControl('annotations')] : []).concat([purgeMapInfoResults()]));
+            return Rx.Observable.from((
+                store.getState().controls.annotations && store.getState().controls.annotations.enabled ?
+                [toggleControl('annotations')] : [])
+                .concat([purgeMapInfoResults()]));
         }),
     downloadAnnotations: (action$, {getState}) => action$.ofType(DOWNLOAD)
         .switchMap(({annotation}) => {
