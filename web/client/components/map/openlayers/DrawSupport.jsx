@@ -8,7 +8,7 @@
 
 const React = require('react');
 const ol = require('openlayers');
-const {concat, head, find, slice, omit, isArray, last} = require('lodash');
+const {concat, head, find, slice, omit, isArray, last, filter} = require('lodash');
 const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const uuid = require('uuid');
@@ -176,11 +176,11 @@ class DrawSupport extends React.Component {
                 }
                 if (geometry.type !== "GeometryCollection") {
                     let feature;
-                    if (drawMethod === "Circle" && geometry && geometry.properties && geometry.properties.center) {
-                        center = reproject(geometry.properties.center, "EPSG:4326", mapCrs);
+                    if (drawMethod === "Circle" && geometry && (geometry.properties && geometry.properties.center || geometry.center)) {
+                        center = geometry.properties && geometry.properties.center ? reproject(geometry.properties.center, "EPSG:4326", mapCrs) : geometry.center;
                         center = [center.x, center.y];
                         feature = new ol.Feature({
-                            geometry: this.createOLGeometry({type: "Circle", realCircle: true, center, radius: geometry.properties.radius})
+                            geometry: this.createOLGeometry({type: "Circle", realCircle: true, center, projection: "EPSG:3857", radius: geometry.properties && geometry.properties.radius || geometry.radius})
                         });
                     } else {
                         feature = new ol.Feature({
@@ -687,7 +687,7 @@ class DrawSupport extends React.Component {
             ol.Observable.unByKey(this.state.keySingleClickCallback);
         }
         const singleClickCallback = (e) => {
-            if (this.drawSource && this.props.options) {
+            if (this.drawSource && newProps.options) {
                 let previousFeatures = this.drawSource.getFeatures();
                 let previousFtIndex = 0;
 
@@ -778,7 +778,7 @@ class DrawSupport extends React.Component {
                     features: previousFeatures
                 });
                 this.drawLayer.setSource(this.drawSource);
-                this.addModifyInteraction();
+                this.addModifyInteraction(newProps);
             }
         };
         this.clean();
@@ -800,7 +800,7 @@ class DrawSupport extends React.Component {
         }
         if (newProps.options.editEnabled) {
 
-            this.addModifyInteraction();
+            this.addModifyInteraction(newProps);
             // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
             this.addTranslateInteraction();
             this.setState({keySingleClickCallback: this.addSingleClickListener(singleClickCallback)});
@@ -1100,15 +1100,15 @@ class DrawSupport extends React.Component {
         return "#" + this.componentToHex(rgb[0]) + this.componentToHex(rgb[1]) + this.componentToHex(rgb[2]);
     };
 
-    addModifyInteraction = () => {
+    addModifyInteraction = (props) => {
         if (this.modifyInteraction) {
             this.props.map.removeInteraction(this.modifyInteraction);
         }
         /*
             filter features to be edited
         */
-
-        this.modifyFeatureColl = new ol.Collection(this.drawLayer.getSource().getFeatures().filter((f => f.getProperties().canEdit)));
+        const editFilter = props && props.options && props.options.editFilter;
+        this.modifyFeatureColl = new ol.Collection(filter(this.drawLayer.getSource().getFeatures(), editFilter));
         this.modifyInteraction = new ol.interaction.Modify({
             features: this.modifyFeatureColl,
             condition: (e) => {
@@ -1198,7 +1198,7 @@ class DrawSupport extends React.Component {
         return this.olGeomFromType({type, coordinates, radius, center, projection, options, realCircle});
     };
 
-    olGeomFromType = ({type, coordinates, radius, center, projection, options}) => {
+    olGeomFromType = ({type, coordinates, radius, center, projection, options/*, realCircle*/}) => {
 
         let geometry;
         switch (type) {
@@ -1207,8 +1207,8 @@ class DrawSupport extends React.Component {
             case "MultiPoint": /*case "Text":*/ { geometry = new ol.geom.MultiPoint(coordinates ? coordinates : []); break; } // TODO move text on "Point"
             case "MultiLineString": { geometry = new ol.geom.MultiLineString(coordinates ? coordinates : []); break; }
             case "MultiPolygon": { geometry = new ol.geom.MultiPolygon(coordinates ? coordinates : []); break; }
-            /*
-            TODO check if this is not needed anymore
+/*
+            // TODO check if this is not needed anymore
             case "Circle": {
                 if (radius && center) {
                     let correctCenter = isArray(center) ? {x: center[0], y: center[1]} : center;
@@ -1216,19 +1216,21 @@ class DrawSupport extends React.Component {
                     let circle = new ol.geom.Circle([correctCenter.x, correctCenter.y], radius);
                     geometry = realCircle ? circle : ol.geom.Polygon.fromCircle(circle, 100); break;
                 } else {
-                    geometry = new ol.geom.Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
+                    geometry = new ol.geom.Polygon(coordinates && isArray(coordinates[0]) ? [coordinates] : []);
                 }
             }*/
             // default is Polygon
-            default: { geometry = projection
+            default: {
+                let correctCenter = isArray(center) ? {x: center[0], y: center[1]} : center;
+                geometry = projection
                 && !isNaN(parseFloat(radius))
-                && center
-                && !isNaN(parseFloat(center.x))
-                && !isNaN(parseFloat(center.y)) ?
+                && correctCenter
+                && !isNaN(parseFloat(correctCenter.x))
+                && !isNaN(parseFloat(correctCenter.y)) ?
                 options.geodesic ?
-                ol.geom.Polygon.circular(wgs84Sphere, this.reprojectCoordinatesToWGS84([center.x, center.y], projection), radius, 100).clone().transform('EPSG:4326', projection)
-                : ol.geom.Polygon.fromCircle(new ol.geom.Circle([center.x, center.y], radius), 100)
-                    : new ol.geom.Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
+                ol.geom.Polygon.circular(wgs84Sphere, this.reprojectCoordinatesToWGS84([correctCenter.x, correctCenter.y], projection), radius, 100).clone().transform('EPSG:4326', projection)
+                : ol.geom.Polygon.fromCircle(new ol.geom.Circle([correctCenter.x, correctCenter.y], radius), 100)
+                    : new ol.geom.Polygon(coordinates && isArray(coordinates[0]) ? [coordinates] : []);
             }
         }
         return geometry;

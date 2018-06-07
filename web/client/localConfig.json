@@ -308,7 +308,7 @@
               "showIn": ["BurgerMenu"]
             },
             "TOCItemsSettings"
-            , "MapFooter", {
+            , {
               "name": "MousePosition",
               "cfg": {
                 "editCRS": true,

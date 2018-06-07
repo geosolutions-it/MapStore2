@@ -400,6 +400,7 @@ module.exports = (viewer) => ({
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,
+                editFilter: (f) => f.getProperties().canEdit,
                 useSelectedStyle: true,
                 drawEnabled: false,
                 transformToFeatureCollection: true
@@ -435,6 +436,7 @@ module.exports = (viewer) => ({
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,
+                editFilter: (f) => f.getProperties().canEdit,
                 drawEnabled: false,
                 useSelectedStyle: true,
                 transformToFeatureCollection: true
@@ -460,6 +462,7 @@ module.exports = (viewer) => ({
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,
+                editFilter: (f) => f.getProperties().canEdit,
                 drawEnabled: false,
                 useSelectedStyle: true,
                 transformToFeatureCollection: true
@@ -468,7 +471,6 @@ module.exports = (viewer) => ({
         }),
     editCircleFeatureEpic: (action$, {getState}) => action$.ofType(DRAWING_FEATURE)
         .filter(a => a.features[0].properties && a.features[0].properties.isCircle)
-        .delay(300)
         .switchMap(() => {
             const state = getState();
             const feature = state.annotations.editing;
@@ -479,6 +481,7 @@ module.exports = (viewer) => ({
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,
+                editFilter: (f) => f.getProperties().canEdit,
                 drawEnabled: false,
                 useSelectedStyle: true,
                 transformToFeatureCollection: true
