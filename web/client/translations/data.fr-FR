@@ -763,6 +763,10 @@
             "emptygeometry": "La géométrie ne peut pas être vide",
             "add": "Nouvelle",
             "filter": "Filtrer les annotations...",
+            "titleUndoGeom": "La géométrie a changé",
+            "undoGeom": "Abandonner la session de modification de la géométrie? (Vous perdrez tous les changements)",
+            "confirmGeom": "Abandonner",
+            "cancelModalGeom": "Continuer l'édition",
             "undo": "Êtes-vous sûr de vouloir abandonner la session d'édition d'annotation?",
             "zoomTo": "Zoom",
             "insertText": "Veuillez insérer l'annotation de texte",
@@ -785,6 +789,19 @@
                 "polygon": " Polygone",
                 "text": " Texte",
                 "circle": " Cercle"
+            },
+            "editor": {
+                "title": "Éditeur de géométrie:",
+                "add": "Ajouter de nouvelles coordonnées",
+                "valid": "La géométrie est valide",
+                "radius": "Rayon",
+                "text": "Texte",
+                "lat": "Latitude",
+                "lon": "Longitude",
+                "notValidMarker": "Insérer une coordonnée valide (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "Toutes les coordonnées doivent être valides (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insérer une valeur de texte et une coordonnée valide (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Entrez un rayon (m) et une coordonnée valide (+|- 90° lat, +|-180° lon)"
             }
         },
         "user":{

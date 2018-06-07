@@ -1,10 +1,10 @@
 #mapstore-annotations-info-viewer-edit-buttons {
     float: right;
 }
-
+/*
 .mapstore-annotations-info-viewer .col-xs-7, .mapstore-annotations-info-viewer .col-xs-5, .mapstore-annotations-info-viewer .row {
     padding: 0;
-}
+}*/
 
 .mapstore-annotations-info-viewer .ql-snow .ql-stroke {
     stroke: @ms2-color-text;
@@ -85,6 +85,7 @@
 }
 
 .mapstore-annotations-panel .mapstore-annotations-info-viewer-items {
+    margin-top: 10px;
     height: ~'calc(100% - 60px)';
     margin-bottom: 10px;
     overflow: auto;
@@ -219,6 +220,55 @@
                 margin-top: 0px;
             }
         }
+        /*display: flex;
+        flex-direction: column;
+        span {
+            flex: 1 1 0%;
+            display: flex;
+            .mapstore-annotations-info-viewer {
+                width: 100%;
+                .mapstore-annotations-info-viewer-items {
+                    display: flex;
+                    .container-fluid {
+                        flex: 1;
+                        display: flex;
+                        flex-direction: column;
+                        .row {
+                            flex: 1;
+                            display: flex;
+                            flex-direction: column;
+                            &:first-child {
+                                flex: 1;
+                                display: flex;
+                                flex-direction: column;
+                                &:first-child {
+                                    margin-bottom: 15px;
+                                }
+                                span:nth-child(2){
+                                    flex: 1;
+                                    display: flex;
+                                    flex-direction: column;
+                                    div:nth-child(2){
+                                        flex: 1;
+                                        display: flex;
+                                        .quill{
+                                            flex: 1;
+                                            display: flex;
+                                            flex-direction: column;
+                                            .ql-container {
+                                                flex: 1;
+                                                display: flex;
+                                                flex-direction: column;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }*/
 
 
         .msSideGrid {
@@ -360,4 +410,12 @@
     }
     width: @square-btn-size;
     height: @square-btn-size;
+}
+
+
+.mapstore-annotations-info-viewer-items .col-xs-6 .btn-group {
+    span button:first-child {
+        background-color: transparent;
+        cursor: auto;
+    }
 }

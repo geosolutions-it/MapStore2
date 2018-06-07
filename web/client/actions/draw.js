@@ -11,6 +11,8 @@ const END_DRAWING = 'DRAW:END_DRAWING';
 const SET_CURRENT_STYLE = 'DRAW:SET_CURRENT_STYLE';
 const GEOMETRY_CHANGED = 'DRAW:GEOMETRY_CHANGED';
 const DRAW_SUPPORT_STOPPED = 'DRAW:DRAW_SUPPORT_STOPPED';
+const FEATURES_SELECTED = 'DRAW:FEATURES_SELECTED';
+const DRAWING_FEATURE = 'DRAW:DRAWING_FEATURES';
 
 function geometryChanged(features, owner, enableEdit, textChanged, circleChanged) {
     return {
@@ -20,6 +22,21 @@ function geometryChanged(features, owner, enableEdit, textChanged, circleChanged
         enableEdit,
         textChanged,
         circleChanged
+    };
+}
+/** used to manage the selected features
+ * @param {object[]} features geojson
+*/
+function selectFeatures(features = []) {
+    return {
+        type: FEATURES_SELECTED,
+        features
+    };
+}
+function drawingFeatures(features = []) {
+    return {
+        type: DRAWING_FEATURE,
+        features
     };
 }
 function drawStopped() {
@@ -62,6 +79,8 @@ module.exports = {
     CHANGE_DRAWING_STATUS, changeDrawingStatus, drawSupportReset,
     END_DRAWING, endDrawing,
     SET_CURRENT_STYLE, setCurrentStyle,
+    FEATURES_SELECTED, selectFeatures,
+    DRAWING_FEATURE, drawingFeatures,
     DRAW_SUPPORT_STOPPED, drawStopped,
     GEOMETRY_CHANGED, geometryChanged
 };

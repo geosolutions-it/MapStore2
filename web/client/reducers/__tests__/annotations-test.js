@@ -14,43 +14,36 @@ const {isEmpty} = require('lodash');
 const {
     REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION,
     EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
-    UPDATE_ANNOTATION_GEOMETRY, VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY,
+    VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY,
     TOGGLE_STYLE, SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION,
-    FILTER_ANNOTATIONS, CLOSE_ANNOTATIONS, CONFIRM_CLOSE_ANNOTATIONS, CANCEL_CLOSE_ANNOTATIONS,
-    changeStyler, stopDrawing, addText, saveText, cancelText, showTextArea, setUnsavedChanges,
-    setUnsavedStyle, toggleUnsavedChangesModal, toggleUnsavedStyleModal, changedProperties
+    FILTER_ANNOTATIONS, CLOSE_ANNOTATIONS, CONFIRM_CLOSE_ANNOTATIONS,
+    changeStyler, addText, setUnsavedChanges, setUnsavedStyle,
+    toggleUnsavedChangesModal, toggleUnsavedGeometryModal, toggleUnsavedStyleModal, changedProperties,
+    setInvalidSelected, addNewFeature, resetCoordEditor, changeText, changeRadius, changeSelected
  } = require('../../actions/annotations');
+const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
+const {drawingFeatures, selectFeatures} = require('../../actions/draw');
 
+const {toggleControl} = require('../../actions/controls');
 
-let cancelState = {
-    config: {multiGeometry: true},
-    editing: {
-        properties: {
-            textValues: [""],
-            textGeometriesIndexes: [1]
-        },
-        geometry: {
-            geometries: [{type: "Polygon"}, {type: "MultiPoint"}]
+const testAllProperty = (state, checkState) => {
+    Object.keys(state).forEach( s => {
+        if (isEmpty(state[s])) {
+            expect(isEmpty(checkState[s])).toBe(true);
+        } else {
+            expect(state[s]).toBe(checkState[s]);
         }
-    },
-    drawingText: {
-        show: true,
-        drawing: true
-    }
+    });
 };
+
 describe('Test the annotations reducer', () => {
     it('default states annotations', () => {
         const state = annotations(undefined, {type: 'default'});
         expect(state.validationErrors).toExist();
     });
-
     it('change styler', () => {
         const state = annotations({}, changeStyler("marker"));
         expect(state.stylerType).toBe("marker");
-    });
-    it('stop drawing', () => {
-        const state = annotations({}, stopDrawing());
-        expect(state.drawing).toBe(false);
     });
     it('add Text annotation', () => {
         const state = annotations({drawingText: {
@@ -71,6 +64,21 @@ describe('Test the annotations reducer', () => {
         const state = annotations({}, toggleUnsavedChangesModal());
         expect(state.showUnsavedChangesModal).toBe(true);
     });
+    it('toggleUnsavedGeometryModal', () => {
+        let state = annotations({}, toggleUnsavedGeometryModal());
+        expect(state.showUnsavedGeometryModal).toBe(false);
+
+        state = annotations({
+            unsavedGeometry: true
+        }, toggleUnsavedGeometryModal());
+        expect(state.showUnsavedGeometryModal).toBe(true);
+
+        state = annotations({
+            unsavedGeometry: true,
+            showUnsavedGeometryModal: true
+        }, toggleUnsavedGeometryModal());
+        expect(state.showUnsavedGeometryModal).toBe(false);
+    });
     it('toggleUnsavedStyleModal', () => {
         const state = annotations({}, toggleUnsavedStyleModal());
         expect(state.showUnsavedStyleModal).toBe(true);
@@ -84,108 +92,6 @@ describe('Test the annotations reducer', () => {
         expect(state.editedFields[prop]).toBe(val);
         expect(state.editedFields.title).toBe("title");
     });
-    it('save text annotation in empty geom coll', () => {
-        const state = annotations({
-            editing: {
-                properties: {
-                    textValues: [""],
-                    textGeometriesIndexes: [0]
-                }
-            },
-            drawingText: {
-                show: true,
-                drawing: true
-            }
-        }, saveText("my text annotation"));
-        expect(state.editing.properties.textValues[0]).toBe("my text annotation");
-        expect(state.drawingText.drawing).toBe(false);
-        expect(state.drawingText.show).toBe(false);
-    });
-    it('save text annotation in geom coll with 1 MultiPolygon and 1 MultiLineString', () => {
-        const state = annotations({
-            editing: {
-                properties: {
-                    textValues: [""],
-                    textGeometriesIndexes: [2]
-                },
-                geometry: {
-                    geometries: [{type: "Polygon"}, {type: "MultiLineString"}, {type: "MultiPoint"}]
-                }
-            },
-            drawingText: {
-                show: true,
-                drawing: true
-            }
-        }, saveText("my text annotation"));
-        expect(state.editing.properties.textValues[0]).toBe("my text annotation");
-        expect(state.editing.properties.textGeometriesIndexes[0]).toBe(2);
-        expect(state.drawingText.drawing).toBe(false);
-        expect(state.drawingText.show).toBe(false);
-    });
-    it('save text annotation in geom coll with 1 MultiPolygon and 2 Text annotations', () => {
-        const state = annotations({
-            editing: {
-                properties: {
-                    textValues: ["previous text annot value", ""],
-                    textGeometriesIndexes: [0, 2]
-                },
-                geometry: {
-                    geometries: [{type: "MultiPoint"}, {type: "Polygon"}, {type: "MultiPoint"}]
-                }
-            },
-            drawingText: {
-                show: true,
-                drawing: true
-            }
-        }, saveText("my text annotation"));
-        expect(state.editing.properties.textValues[0]).toBe("previous text annot value");
-        expect(state.editing.properties.textValues[1]).toBe("my text annotation");
-        expect(state.editing.properties.textGeometriesIndexes[0]).toBe(0);
-        expect(state.editing.properties.textGeometriesIndexes[1]).toBe(2);
-        expect(state.drawingText.drawing).toBe(false);
-        expect(state.drawingText.show).toBe(false);
-    });
-    it('cancel annotations multigeom, removing last Text index property from geom coll (MultiPolygon, MultiPoint)', () => {
-        const state = annotations(cancelState, cancelText());
-        expect(state.editing.properties.textValues.length).toBe(0);
-        expect(state.editing.properties.textGeometriesIndexes.length).toBe(0);
-        expect(state.editing.geometry.geometries.length).toBe(1);
-        expect(state.drawingText.drawing).toBe(true);
-        expect(state.drawingText.show).toBe(false);
-    });
-    it('cancel annotations multigeom, removing last Text index property from geom coll (MultiPolygon, MultiPoint, MultiPoint)', () => {
-        let cancelState2 = {
-            config: {multiGeometry: true},
-            editing: {
-                properties: {
-                    textValues: ["aa", ""],
-                    textGeometriesIndexes: [1, 2]
-                },
-                geometry: {
-                    geometries: [{type: "Polygon"}, {type: "MultiPoint"}, {type: "MultiPoint"}]
-                }
-            },
-            drawingText: {
-                show: true,
-                drawing: true
-            }
-        };
-        const state = annotations(cancelState2, cancelText());
-        expect(state.editing.properties.textValues.length).toBe(1);
-        expect(state.editing.properties.textGeometriesIndexes.length).toBe(1);
-        expect(state.editing.geometry.geometries.length).toBe(2);
-        expect(state.drawingText.drawing).toBe(true);
-        expect(state.drawingText.show).toBe(false);
-    });
-    it('cancel annotations single geom, removing Text index property)', () => {
-        cancelState.config.multiGeometry = false;
-        const state = annotations(cancelState, cancelText());
-        expect(state.editing.properties.textValues.length).toBe(0);
-        expect(state.editing.properties.textGeometriesIndexes.length).toBe(0);
-        expect(state.editing.geometry).toBe(null);
-        expect(state.drawingText.drawing).toBe(true);
-        expect(state.drawingText.show).toBe(false);
-    });
     it('remove annotation', () => {
         const state = annotations({}, {
             type: REMOVE_ANNOTATION,
@@ -193,15 +99,6 @@ describe('Test the annotations reducer', () => {
         });
         expect(state.removing).toBe('1');
     });
-    it('show Text Area modal', () => {
-        const state = annotations({drawingText: {
-            show: false,
-            drawing: true
-        }}, showTextArea());
-        expect(state.drawingText.drawing).toBe(true);
-        expect(state.drawingText.show).toBe(true);
-    });
-
     it('confirm remove annotation', () => {
         const state = annotations({removing: '1'}, {
             type: CONFIRM_REMOVE_ANNOTATION,
@@ -211,7 +108,6 @@ describe('Test the annotations reducer', () => {
         expect(state.stylerType).toBe("");
 
     });
-
     it('confirm remove annotation geometry', () => {
         const state = annotations({
             removing: '1',
@@ -220,8 +116,7 @@ describe('Test the annotations reducer', () => {
                     "Circle": {
                         imgGliph: "comment"
                     }
-                },
-                geometry: {}
+                }
             },
             featureType: "Circle"
         }, {
@@ -230,35 +125,42 @@ describe('Test the annotations reducer', () => {
         });
         expect(state.removing).toNotExist();
         expect(state.editing).toExist();
-        expect(state.editing.geometry).toNotExist();
-        expect(state.editing.properties.textValues.length).toBe(0);
-        expect(state.editing.properties.textGeometriesIndexes.length).toBe(0);
+        expect(state.editing.features.length).toBe(0);
     });
-
     it('cancel remove annotation', () => {
         const state = annotations({removing: '1'}, {
             type: CANCEL_REMOVE_ANNOTATION
         });
         expect(state.removing).toNotExist();
     });
-
     it('edit annotation', () => {
+        const feature = {
+            properties: {
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 2]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [feature],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
         const state = annotations({}, {
             type: EDIT_ANNOTATION,
-            feature: {
-                properties: {
-                    id: '1'
-                },
-                geometry: {
-                    type: "MultiPolygon"
-                }
-            }
+            feature: featureColl
         });
         expect(state.editing).toExist();
-        expect(state.editing.properties.id).toBe('1');
-        expect(state.stylerType).toBe("polygon");
+        expect(state.editing.features[0].properties.id).toBe('1');
+        expect(state.editing.properties.id).toBe('1asdfads');
+        expect(state.stylerType).toBe("marker");
+        expect(state.featureType).toBe("Point");
     });
-
     it('cancel edit annotation', () => {
         const state = annotations({editing: {
             properties: {
@@ -272,7 +174,6 @@ describe('Test the annotations reducer', () => {
         expect(isEmpty(state.editedFields)).toBe(true);
         expect(state.unsavedChanges).toBe(false);
     });
-
     it('save annotation', () => {
         const state = annotations({editing: {
             properties: {
@@ -287,38 +188,28 @@ describe('Test the annotations reducer', () => {
         expect(isEmpty(state.editedFields)).toBe(true);
         expect(state.unsavedChanges).toBe(false);
     });
-
     it('toggle add', () => {
         let state = annotations({
             drawing: false,
             editing: {
-                style: {...DEFAULT_ANNOTATIONS_STYLES, type: "MultiPolygon"}
+                features: [{
+                style: {...DEFAULT_ANNOTATIONS_STYLES, type: "Polygon"}
+            }]
             }}, {
                 type: TOGGLE_ADD,
                 featureType: "MultiPolygon"
             });
+        expect(state.coordinateEditorEnabled).toBe(true);
         expect(state.drawing).toBe(true);
         state = annotations({drawing: true, editing: {
-            style: {...DEFAULT_ANNOTATIONS_STYLES, type: "MultiPolygon"}
+            features: [{
+            style: {...DEFAULT_ANNOTATIONS_STYLES, type: "Polygon"}
+        }]
         }}, {
             type: TOGGLE_ADD
         });
         expect(state.drawing).toBe(false);
     });
-
-    it('update annotation geometry', () => {
-        const state = annotations({editing: {
-            properties: {
-                id: '1'
-            },
-            geometry: null
-        }}, {
-            type: UPDATE_ANNOTATION_GEOMETRY,
-            geometry: {}
-        });
-        expect(state.editing.geometry).toExist();
-    });
-
     it('validate error', () => {
         const state = annotations({validationErrors: {}}, {
             type: VALIDATION_ERROR,
@@ -328,7 +219,6 @@ describe('Test the annotations reducer', () => {
         });
         expect(state.validationErrors.title).toBe('myerror');
     });
-
     it('remove annotation geometry', () => {
         const state = annotations({removing: null}, {
             type: REMOVE_ANNOTATION_GEOMETRY
@@ -336,21 +226,18 @@ describe('Test the annotations reducer', () => {
         expect(state.removing).toBe('geometry');
         expect(state.unsavedChanges).toBe(true);
     });
-
     it('toggle style off ', () => {
         const state = annotations({styling: true}, {
             type: TOGGLE_STYLE
         });
         expect(state.styling).toBe(false);
     });
-
     it('toggle style on ', () => {
         const state = annotations({styling: false, editing: {}}, {
             type: TOGGLE_STYLE
         });
         expect(state.styling).toBe(true);
     });
-
     it('set style ', () => {
         const state = annotations({styling: false, editing: { style: { type: "MultiPolygon"}}}, {
             type: SET_STYLE,
@@ -358,16 +245,15 @@ describe('Test the annotations reducer', () => {
         });
         expect(state.editing.style).toExist();
     });
-
     it('new annotation', () => {
         const state = annotations({editing: null}, {
             type: NEW_ANNOTATION
         });
         expect(state.editing).toExist();
         expect(state.editing.geometry).toBe(null);
+        expect(state.editing.features.length).toBe(0);
         expect(state.originalStyle).toBe(null);
     });
-
     it('show annotation', () => {
         const state = annotations({}, {
             type: SHOW_ANNOTATION,
@@ -375,14 +261,12 @@ describe('Test the annotations reducer', () => {
         });
         expect(state.current).toBe('1');
     });
-
     it('cancel show annotation', () => {
         const state = annotations({}, {
             type: CANCEL_SHOW_ANNOTATION
         });
         expect(state.current).toNotExist();
     });
-
     it('filter annotations', () => {
         const state = annotations({}, {
             type: FILTER_ANNOTATIONS,
@@ -390,25 +274,984 @@ describe('Test the annotations reducer', () => {
         });
         expect(state.filter).toBe('1');
     });
-
     it('close annotations', () => {
         const state = annotations({}, {
             type: CLOSE_ANNOTATIONS
         });
         expect(state.closing).toBe(true);
     });
-
     it('confirm close annotations', () => {
         const state = annotations({}, {
             type: CONFIRM_CLOSE_ANNOTATIONS
         });
         expect(state.closing).toBe(false);
     });
+    it('toggle control for annotations', () => {
+        const afterToggleState = {
+            current: null,
+            editing: null,
+            removing: null,
+            validationErrors: {},
+            styling: false,
+            drawing: false,
+            filter: null,
+            editedFields: {},
+            originalStyle: null,
+            selected: null
+        };
+        const state = annotations({}, toggleControl("annotations"));
+        testAllProperty(state, afterToggleState);
 
-    it('cancel close annotations', () => {
-        const state = annotations({}, {
-            type: CANCEL_CLOSE_ANNOTATIONS
+    });
+    it('toggle add Circle', () => {
+        let state = annotations({
+            drawing: false,
+            editing: {
+                features: [{
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [0, 2]
+                    },
+                    properties: {
+                        canEdit: false,
+                        id: "sadga"
+                    }
+                }]
+            }}, {
+                type: TOGGLE_ADD,
+                featureType: "Circle"
+            });
+        expect(state.coordinateEditorEnabled).toBe(true);
+        expect(state.selected.properties.isCircle).toBe(true);
+        expect(state.selected.properties.isValidFeature).toBe(false);
+        expect(state.selected.properties.canEdit).toBe(true);
+        expect(state.editing.style.type).toBe("Circle");
+        expect(state.editing.features.length).toBe(1); // circle is not added to editing features
+        expect(state.featureType).toBe("Circle");
+        expect(state.drawing).toBe(true);
+    });
+
+    it('toggle add Text', () => {
+        let state = annotations({
+            drawing: false,
+            editing: {
+                features: [{
+                    type: "Feature",
+                    geometry: {
+                        type: "Point",
+                        coordinates: [0, 2]
+                    },
+                    properties: {
+                        canEdit: false,
+                        id: "sadga"
+                    }
+                }]
+            }}, {
+                type: TOGGLE_ADD,
+                featureType: "Text"
+            });
+        expect(state.coordinateEditorEnabled).toBe(true);
+        expect(state.selected.properties.isText).toBe(true);
+        expect(state.selected.properties.isValidFeature).toBe(false);
+        expect(state.selected.properties.canEdit).toBe(true);
+        expect(state.editing.style.type).toBe("FeatureCollection");
+        expect(state.editing.features.length).toBe(2); // text is added to editing features
+        expect(state.editing.features[1].properties.isText).toBe(true);
+        expect(state.featureType).toBe("Text");
+        expect(state.drawing).toBe(true);
+    });
+    it('purge map info results', () => {
+        const afterToggleState = {
+            editing: null,
+            removing: null,
+            validationErrors: {},
+            styling: false,
+            drawing: false,
+            selected: null,
+            originalStyle: null,
+            filter: null,
+            unsavedChanges: false
+        };
+        const state = annotations({
+            drawing: false
+        }, {
+            type: PURGE_MAPINFO_RESULTS
         });
-        expect(state.closing).toBe(false);
+        testAllProperty(state, afterToggleState);
+    });
+
+    it('edit Text annotation', () => {
+        const feature = {
+            properties: {
+                id: '1',
+                isText: true
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 2]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [feature],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({}, {
+            type: EDIT_ANNOTATION,
+            feature: featureColl
+        });
+        expect(state.editing).toExist();
+        expect(state.editing.features[0].properties.id).toBe('1');
+        expect(state.editing.properties.id).toBe('1asdfads');
+        expect(state.stylerType).toBe("text");
+        expect(state.featureType).toBe("Text");
+    });
+
+    it('edit Circle annotation', () => {
+        const feature = {
+            properties: {
+                id: '1',
+                isCircle: true
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 2]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [feature],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({}, {
+            type: EDIT_ANNOTATION,
+            feature: featureColl
+        });
+        expect(state.editing).toExist();
+        expect(state.editing.features[0].properties.id).toBe('1');
+        expect(state.editing.properties.id).toBe('1asdfads');
+        expect(state.stylerType).toBe("circle");
+        expect(state.featureType).toBe("Circle");
+    });
+    it('setInvalidSelected Circle annotation', () => {
+        const feature = {
+            properties: {
+                id: '1',
+                isCircle: true
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 2]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [feature],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const errorFrom = "radius";
+        const coordinates = [1, 1];
+        const state = annotations({
+            editing: featureColl
+        }, setInvalidSelected(errorFrom, coordinates));
+        expect(state.selected.properties.isValidFeature).toBe(false);
+        expect(state.selected.properties.radius).toBe(undefined);
+    });
+
+    it('setInvalidSelected Text annotation', () => {
+        const feature = {
+            properties: {
+                id: '1',
+                isText: true
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 2]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [feature],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const errorFrom = "text";
+        const coordinates = [1, 1];
+        const state = annotations({
+                editing: featureColl
+        }, setInvalidSelected(errorFrom, coordinates));
+        expect(state.selected.properties.isValidFeature).toBe(false);
+        expect(state.selected.properties.valueText).toBe(undefined);
+    });
+
+    it('setInvalidSelected coords annotation', () => {
+        const feature = {
+            properties: {
+                id: '1',
+                isText: true
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 2]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [feature],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const errorFrom = "coords";
+        const coordinates = [[undefined, 1]];
+        const state = annotations({
+            editing: featureColl,
+            selected: feature
+        }, setInvalidSelected(errorFrom, coordinates));
+        expect(state.selected.properties.isValidFeature).toBe(false);
+        expect(state.selected.geometry.coordinates[0]).toBe(undefined);
+        expect(state.selected.geometry.coordinates[1]).toBe(1);
+    });
+    it('addNewFeature Text feature, new addition', () => {
+        const feature = {
+            properties: {
+                id: '1',
+                isText: true
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 2]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected: feature
+        }, addNewFeature(feature));
+        expect(state.editing.features[0].properties.isText).toBe(true);
+        expect(state.editing.features[0].geometry.coordinates[0]).toBe(1);
+        expect(state.editing.features[0].geometry.coordinates[1]).toBe(2);
+        expect(state.selected).toBe(null);
+    });
+
+    it('addNewFeature Text feature, updating', () => {
+        const feature = {
+            properties: {
+                id: '1',
+                isText: true,
+                valueText: "new pork"
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+
+        const featureUpdated = {
+            properties: {
+                id: '1',
+                isText: true,
+                valueText: "new porkss"
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [3, 3]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [feature],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected: featureUpdated
+        }, addNewFeature(featureUpdated));
+        expect(state.editing.features[0].properties.isText).toBe(true);
+        expect(state.editing.features[0].properties.canEdit).toBe(false);
+        expect(state.editing.features[0].properties.valueText).toBe("new porkss");
+        expect(state.editing.features[0].geometry.coordinates[0]).toBe(3);
+        expect(state.editing.features[0].geometry.coordinates[1]).toBe(3);
+        expect(state.selected).toBe(null);
+    });
+
+    it('addNewFeature Circle feature, new addition', () => {
+        const feature = {
+            properties: {
+                id: '1',
+                isCircle: true,
+                radius: 100,
+                polygonGeom: {
+                    type: "Polygon",
+                    coordinates: [[[1, 2], [3, 2], [4, 2], [1, 2]]] // this should contain 100 points
+                }
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [[1, 2]]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected: feature
+        }, addNewFeature(feature));
+        expect(state.editing.features[0].properties.isCircle).toBe(true);
+        expect(state.editing.features[0].properties.canEdit).toBe(false);
+        expect(state.editing.features[0].geometry.type).toBe("Polygon");
+        expect(state.editing.features[0].geometry.coordinates[0].length).toBe(4);
+        expect(state.selected).toBe(null);
+    });
+
+    it('addNewFeature Circle feature, updating', () => {
+        const feature = {
+            properties: {
+                id: '1',
+                isCircle: true,
+                radius: 100,
+                center: [1, 1],
+                polygonGeom: {
+                    type: "Polygon",
+                    coordinates: [[[1, 2], [3, 2], [4, 2], [1, 2]]] // this should contain 100 points
+                }
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+
+        const featureUpdated = {
+            properties: {
+                id: '1',
+                isCircle: true,
+                radius: 5000,
+                center: [3, 3],
+                polygonGeom: {
+                    type: "Polygon",
+                    coordinates: [[[1, 2], [3, 2], [4, 2], [1, 2]]] // this should contain 100 points
+                }
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [3, 3]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [feature],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected: featureUpdated
+        }, addNewFeature(featureUpdated));
+        expect(state.editing.tempFeatures[0].properties.isCircle).toBe(true);
+        expect(state.editing.tempFeatures[0].properties.radius).toBe(5000); // this because tempFeatures === editing.featuers
+        expect(state.editing.features[0].properties.isCircle).toBe(true);
+        expect(state.editing.features[0].properties.radius).toBe(5000);
+        expect(state.editing.features[0].properties.center[0]).toBe(3);
+        expect(state.editing.features[0].properties.center[1]).toBe(3);
+        expect(state.editing.features[0].geometry.type).toBe("Polygon");
+        expect(state.editing.features[0].geometry.coordinates[0].length).toBe(4);
+        expect(state.selected).toBe(null);
+        expect(state.unsavedGeometry).toBe(false);
+        expect(state.drawing).toBe(false);
+    });
+
+    it('resetCoordEditor in creation mode of a Point ', () => {
+        const feature = {
+            properties: {
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected: feature,
+            unsavedGeometry: false
+        }, resetCoordEditor());
+        expect(state.unsavedGeometry).toBe(false);
+        expect(state.selected).toBe(null);
+        expect(state.drawing).toBe(false);
+        expect(state.showUnsavedGeometryModal).toBe(false);
+        expect(state.editing.features.length).toBe(0);
+
+    });
+
+    it('resetCoordEditor in edit mode of a Point, with no Changes ', () => {
+        const feature = {
+            properties: {
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+        const featureChanged = {
+            properties: {
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [10, 1]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [feature],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected: featureChanged,
+            unsavedGeometry: false
+        }, resetCoordEditor());
+        expect(state.unsavedGeometry).toBe(false);
+        expect(state.selected).toBe(null);
+        expect(state.drawing).toBe(false);
+        expect(state.showUnsavedGeometryModal).toBe(false);
+        expect(state.editing.features.length).toBe(1);
+        expect(state.editing.features[0].geometry.coordinates[0]).toBe(1);
+
+    });
+
+    it('resetCoordEditor in edit mode of a Point, with Changes ', () => {
+        const feature = {
+            properties: {
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+        const featureChanged = {
+            properties: {
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [10, 1]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [featureChanged],
+            tempFeatures: [feature],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected: featureChanged,
+            unsavedGeometry: true
+        }, resetCoordEditor());
+        expect(state.unsavedGeometry).toBe(true);
+        expect(state.selected).toBe(null);
+        expect(state.drawing).toBe(false);
+        expect(state.showUnsavedGeometryModal).toBe(false);
+        expect(state.editing.features.length).toBe(1);
+        expect(state.editing.features[0].geometry.coordinates[0]).toBe(1);
+
+    });
+
+
+    it('changeText of an existing feature of type Text', () => {
+        const feature = {
+            properties: {
+                isText: true,
+                valueText: "oldTExt",
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+        const featureChanged = {
+            properties: {
+                isText: true,
+                canEdit: true,
+                id: '1',
+                valueText: "oldText"
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [10, 1]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [featureChanged],
+            tempFeatures: [feature],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const text = "rest in piece";
+        const components = [[1, 0]];
+        const state = annotations({
+            editing: featureColl,
+            selected: featureChanged,
+            unsavedGeometry: true
+        }, changeText(text, components));
+        expect(state.editing.features[0].properties.valueText).toBe(text);
+        expect(state.selected.properties.valueText).toBe(text);
+        expect(state.selected.properties.canEdit).toBe(true);
+        expect(state.selected.geometry.coordinates[0]).toBe(1);
+        expect(state.selected.geometry.coordinates[1]).toBe(0);
+        expect(state.unsavedGeometry).toBe(true);
+    });
+
+    it('changeText of a new feature of type Text', () => {
+        const valueText = "rest in piece";
+        const feature = {
+            properties: {
+                canEdit: true,
+                isText: true,
+                valueText,
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [],
+            tempFeatures: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const components = [[1, 0]];
+        const state = annotations({
+            editing: featureColl,
+            selected: feature,
+            unsavedGeometry: true
+        }, changeText(valueText, components));
+        expect(state.editing.features[0].properties.valueText).toBe(valueText);
+        expect(state.selected.properties.valueText).toBe(valueText);
+        expect(state.selected.properties.canEdit).toBe(true);
+        expect(state.selected.geometry.coordinates[0]).toBe(1);
+        expect(state.selected.geometry.coordinates[1]).toBe(0);
+        expect(state.unsavedGeometry).toBe(true);
+    });
+
+    it('changeRadius of an existing feature of type Circle', () => {
+        const feature = {
+            properties: {
+                isCircle: true,
+                radius: 100,
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+        const featureChanged = {
+            properties: {
+                isCircle: true,
+                canEdit: true,
+                id: '1',
+                radius: 500
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [10, 1]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [featureChanged],
+            tempFeatures: [feature],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const radius = 500;
+        const components = [[1, 0]];
+        const state = annotations({
+            editing: featureColl,
+            selected: featureChanged,
+            unsavedGeometry: true
+        }, changeRadius(radius, components));
+        expect(state.editing.features[0].properties.radius).toBe(radius);
+        expect(state.selected.properties.radius).toBe(radius);
+        expect(state.selected.properties.canEdit).toBe(true);
+        expect(state.selected.geometry.coordinates[0]).toBe(1);
+        expect(state.selected.geometry.coordinates[1]).toBe(0);
+        expect(state.editing.features[0].geometry.type).toBe("Polygon");
+        expect(state.unsavedGeometry).toBe(true);
+    });
+
+    it('changeText of a new feature of type Circle', () => {
+        const radius = 500;
+        const feature = {
+            properties: {
+                canEdit: true,
+                isCircle: true,
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [],
+            tempFeatures: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const components = [[1, 0]];
+        const state = annotations({
+            editing: featureColl,
+            selected: feature,
+            unsavedGeometry: true
+        }, changeRadius(radius, components));
+        expect(state.editing.features[0].properties.radius).toBe(radius);
+        expect(state.selected.properties.radius).toBe(radius);
+        expect(state.selected.properties.canEdit).toBe(true);
+        expect(state.selected.geometry.coordinates[0]).toBe(1);
+        expect(state.selected.geometry.coordinates[1]).toBe(0);
+        expect(state.editing.features[0].geometry.type).toBe("Polygon");
+        expect(state.unsavedGeometry).toBe(true);
+    });
+    it('drawingFeatures of a new Point (marker)', () => {
+        const feature = {
+            properties: {
+                canEdit: true,
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+        const feature2 = {
+            properties: {
+                canEdit: false,
+                id: 'feature2'
+            },
+            geometry: {
+                type: "LineString",
+                coordinates: [[1, 1], [1, 2]]
+            }
+        };
+
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [feature2],
+            tempFeatures: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected: feature,
+            unsavedGeometry: true
+        }, drawingFeatures([feature]));
+        expect(state.selected.properties.canEdit).toBe(true);
+        expect(state.selected.properties.isValidFeature).toBe(true);
+        expect(state.editing.features[0].properties.canEdit).toBe(false);
+        expect(state.editing.features[1].properties.canEdit).toBe(true);
+        expect(state.selected.geometry.coordinates[0]).toBe(1);
+    });
+
+    it('drawingFeatures of an existing Point (marker)', () => {
+        const feature = {
+            properties: {
+                canEdit: true,
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+        const feature2 = {
+            properties: {
+                canEdit: true,
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [3, 3]
+            }
+        };
+
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [feature],
+            tempFeatures: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected: feature,
+            unsavedGeometry: true
+        }, drawingFeatures([feature2]));
+        expect(state.selected.properties.canEdit).toBe(true);
+        expect(state.selected.properties.isValidFeature).toBe(true);
+        expect(state.editing.features[0].properties.canEdit).toBe(true);
+        expect(state.editing.features[0].geometry.coordinates[0]).toBe(3);
+        expect(state.editing.features[0].geometry.coordinates[1]).toBe(3);
+        expect(state.selected.geometry.coordinates[0]).toBe(3);
+        expect(state.selected.geometry.coordinates[1]).toBe(3);
+    });
+
+    it('drawingFeatures of an existing Circle', () => {
+        const feature = {
+            properties: {
+                isCircle: true,
+                canEdit: true,
+                center: [1, 1],
+                radius: 100,
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+        const feature2 = {
+            properties: {
+                isCircle: true,
+                canEdit: true,
+                center: [4, 4],
+                radius: 100,
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [4, 4]
+            }
+        };
+
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [feature],
+            tempFeatures: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected: feature,
+            unsavedGeometry: true
+        }, drawingFeatures([feature2]));
+        expect(state.selected.properties.canEdit).toBe(true);
+        expect(state.selected.properties.isValidFeature).toBe(true);
+        expect(state.editing.features[0].properties.canEdit).toBe(true);
+        expect(state.editing.features[0].geometry.coordinates[0]).toBe(4);
+        expect(state.editing.features[0].geometry.coordinates[1]).toBe(4);
+        expect(state.selected.properties.center[0]).toBe(4);
+        expect(state.selected.properties.center[1]).toBe(4);
+        expect(state.selected.geometry.coordinates[0]).toBe(4);
+        expect(state.selected.geometry.coordinates[1]).toBe(4);
+        expect(state.unsavedGeometry).toBe(true);
+    });
+
+    it('drawingFeatures of an existing Text', () => {
+        const selected = {
+            properties: {
+                isText: true,
+                canEdit: true,
+                valueText: "text",
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+        const feature2 = {
+            properties: {
+                isText: true,
+                canEdit: true,
+                valueText: "text",
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [4, 4]
+            }
+        };
+
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [selected],
+            tempFeatures: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected,
+            unsavedGeometry: true
+        }, drawingFeatures([feature2]));
+        expect(state.selected.properties.canEdit).toBe(true);
+        expect(state.selected.properties.isValidFeature).toBe(true);
+        expect(state.editing.features[0].properties.canEdit).toBe(true);
+        expect(state.editing.features[0].geometry.coordinates[0]).toBe(4);
+        expect(state.editing.features[0].geometry.coordinates[1]).toBe(4);
+        expect(state.selected.geometry.coordinates[0]).toBe(4);
+        expect(state.selected.geometry.coordinates[1]).toBe(4);
+        expect(state.selected.geometry.type).toBe("Text");
+        expect(state.unsavedGeometry).toBe(true);
+    });
+    it('selectFeatures of a Text Feature', () => {
+        const selected = {
+            properties: {
+                isText: true,
+                canEdit: true,
+                valueText: "text",
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+        const feature2 = {
+            properties: {
+                isText: true,
+                canEdit: true,
+                valueText: "text",
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [4, 4]
+            }
+        };
+
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [selected],
+            tempFeatures: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected,
+            unsavedGeometry: true
+        }, selectFeatures([feature2]));
+        expect(state.selected.properties.canEdit).toBe(true);
+        expect(state.editing.features[0].properties.canEdit).toBe(true);
+        expect(state.editing.features[0].geometry.coordinates[0]).toBe(4);
+        expect(state.editing.features[0].geometry.coordinates[1]).toBe(4);
+        expect(state.selected.geometry.coordinates[0]).toBe(4);
+        expect(state.selected.geometry.coordinates[1]).toBe(4);
+        expect(state.selected.geometry.type).toBe("Text");
+        expect(state.unsavedGeometry).toBe(true);
+        expect(state.coordinateEditorEnabled).toBe(true);
+    });
+    it('changeSelected, changing coords of a Text Feature', () => {
+        const selected = {
+            properties: {
+                isText: true,
+                canEdit: true,
+                valueText: "text",
+                id: '1'
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [1, 1]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [selected],
+            tempFeatures: [],
+            properties: {
+                id: '1asdfads'
+            },
+            style: {}
+        };
+        const coordinates = [[1, 1]];
+        const state = annotations({
+            editing: featureColl,
+            selected,
+            featureType: "Text",
+            unsavedGeometry: true
+        }, changeSelected(coordinates, null, "text"));
+        expect(state.selected.geometry.type).toBe("Point");
+        expect(state.featureType).toBe("Text");
+        expect(state.selected.geometry.coordinates[0]).toBe(1);
+        expect(state.selected.geometry.coordinates[1]).toBe(1);
+
     });
 });

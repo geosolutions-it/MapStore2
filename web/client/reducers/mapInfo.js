@@ -157,6 +157,7 @@ function mapInfo(state = initState, action) {
                     (feature) => {
                         try {
                             // TODO: instead of create a fixed buffer, we should check the feature style to create the proper buffer.
+                            // TODO: it does not work if feature is a feature collection with more than 1 feature
                             return intersect(bufferedPoint, resolution && action.metadata.buffer && unit ? buffer(feature, 1, "meters") : feature);
                         } catch (e) {
                             return false;

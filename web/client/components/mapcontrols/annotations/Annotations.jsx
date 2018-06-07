@@ -12,6 +12,7 @@ const ConfirmDialog = require('../../misc/ConfirmDialog');
 const Message = require('../../I18N/Message');
 const LocaleUtils = require('../../../utils/LocaleUtils');
 const LineThumb = require('../../../components/style/thumbGeoms/LineThumb.jsx');
+const CircleThumb = require('../../../components/style/thumbGeoms/CircleThumb.jsx');
 const MultiGeomThumb = require('../../../components/style/thumbGeoms/MultiGeomThumb.jsx');
 const PolygonThumb = require('../../../components/style/thumbGeoms/PolygonThumb.jsx');
 const {head} = require('lodash');
@@ -160,9 +161,14 @@ class Annotations extends React.Component {
             <PolygonThumb styleRect={style[featureType]}/>
         </span>);
         }
-        if (featureType === "GeometryCollection") {
+        if (featureType === "Circle") {
             return (<span className={"mapstore-annotations-panel-card"}>
-            {(!!geometry.geometries.filter(f => f.type !== "MultiPoint").length || (properties.textValues && properties.textValues.length)) && (<MultiGeomThumb styleMultiGeom={style} geometry={geometry} properties={properties}/>)}
+            <CircleThumb styleRect={style[featureType]}/>
+        </span>);
+        }
+        if (featureType === "GeometryCollection" || featureType === "FeatureCollection") {
+            return (<span className={"mapstore-annotations-panel-card"}>
+            {(!!(geometry.geometries || geometry.features).filter(f => f.type !== "MultiPoint").length || (properties.textValues && properties.textValues.length)) && (<MultiGeomThumb styleMultiGeom={style} geometry={geometry} properties={properties}/>)}
             {markerStyle ? (<span className={"mapstore-annotations-panel-card"}>
                 <div className={"mapstore-annotations-panel-card-thumbnail-" + marker.name} style={{...marker.thumbnailStyle, margin: 'auto', textAlign: 'center', color: '#ffffff', marginLeft: 7}}>
                     <span className={"mapstore-annotations-panel-card-thumbnail " + this.getConfig().getGlyphClassName(markerStyle)} style={{marginTop: 0, marginLeft: -7}}/>
@@ -188,7 +194,7 @@ class Annotations extends React.Component {
             ...this.getConfig().fields.reduce( (p, c)=> {
                 return assign({}, p, {[c.name]: this.renderField(c, annotation)});
             }, {}),
-            preview: this.renderThumbnail({style: annotation.style, featureType: annotation.geometry.type, geometry: annotation.geometry, properties: annotation.properties }),
+            preview: this.renderThumbnail({style: annotation.style, featureType: "FeatureCollection", geometry: {features: annotation.features}, properties: annotation.properties }),
             ...cardActions
         };
     };
@@ -196,7 +202,7 @@ class Annotations extends React.Component {
     renderCards = () => {
         if (this.props.mode === 'list') {
             return (
-            <SideGrid items={this.props.annotations.filter(this.applyFilter).map(a => this.renderItems(a))}/>
+            <SideGrid items={this.props.annotations && this.props.annotations.filter(this.applyFilter).map(a => this.renderItems(a))}/>
             );
         }
         const annotation = this.props.annotations && head(this.props.annotations.filter(a => a.properties.id === this.props.current));
@@ -322,7 +328,7 @@ class Annotations extends React.Component {
                     text={<Message msgId="annotations.selectfiletext"/>}
                     onFileChoosen={this.props.onLoadAnnotations}
                     show={this.state.selectFile}
-                    diableOvveride={!(this.props.annotations && this.props.annotations.length > 0)}
+                    disableOvveride={!(this.props.annotations && this.props.annotations.length > 0)}
                     onClose={() => this.setState(() => ({selectFile: false}))}
                     />);
 

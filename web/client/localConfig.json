@@ -216,7 +216,8 @@
                   },
                   "attribution": {
                     "container": "#mapstore-map-footer-container"
-                  }
+                  },
+                  "defaultTextAnnotation": "custom text"
                 },
                 "leaflet": {
                   "attribution": {
@@ -290,7 +291,6 @@
                     ]
                 }
             },
-            "TOCItemsSettings",
             "Tutorial", "MapFooter", {
                 "name": "Measure"
             }, "Print", "ShapeFile", {
@@ -306,7 +306,9 @@
             }, {
               "name": "About",
               "showIn": ["BurgerMenu"]
-            }, {
+            },
+            "TOCItemsSettings"
+            , "MapFooter", {
               "name": "MousePosition",
               "cfg": {
                 "editCRS": true,

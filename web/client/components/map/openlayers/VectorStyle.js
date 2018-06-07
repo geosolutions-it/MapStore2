@@ -1,18 +1,82 @@
 var markerIcon = require('./img/marker-icon.png');
 var markerShadow = require('./img/marker-shadow.png');
 var ol = require('openlayers');
-// const {reprojectGeoJson} = require('../../../utils/CoordinatesUtils');
+const {last, head} = require('lodash');
 
 const assign = require('object-assign');
 const {trim, isString} = require('lodash');
-
 const {colorToRgbaStr} = require('../../../utils/ColorUtils');
+const {set} = require('../../../utils/ImmutableUtils');
+const selectedStyleConfiguration = {
+    white: [255, 255, 255, 1],
+    blue: [0, 153, 255, 1],
+    width: 3
+};
 
 const image = new ol.style.Circle({
   radius: 5,
   fill: null,
   stroke: new ol.style.Stroke({color: 'red', width: 1})
 });
+
+const lastPointOfPolylineStyle = (radius = 5, useSelectedStyle = false) => new ol.style.Style({
+    image: useSelectedStyle ? new ol.style.Circle({
+        radius,
+        fill: new ol.style.Fill({
+            color: 'red'
+        })
+    }) : null,
+    geometry: function(feature) {
+        const geom = feature.getGeometry();
+        const type = geom.getType();
+        let coordinates = type === "Polygon" ? geom.getCoordinates()[0] : geom.getCoordinates();
+        return new ol.geom.Point(coordinates.length > 3 ? coordinates[coordinates.length - (type === "Polygon" ? 2 : 1)] : last(coordinates));
+    }
+});
+
+const firstPointOfPolylineStyle = (radius = 5, useSelectedStyle = false) =>new ol.style.Style({
+    image: useSelectedStyle ? new ol.style.Circle({
+        radius,
+        fill: new ol.style.Fill({
+            color: 'green'
+        })
+    }) : null,
+    geometry: function(feature) {
+        const geom = feature.getGeometry();
+        const type = geom.getType();
+        let coordinates = type === "Polygon" ? geom.getCoordinates()[0] : geom.getCoordinates();
+        return coordinates.length > 1 ? new ol.geom.Point(head(coordinates)) : null;
+    }
+});
+
+const getTextStyle = (tempStyle, valueText, highlight = false) => {
+
+    return new ol.style.Style({
+        text: new ol.style.Text({
+            offsetY: -( 4 * Math.sqrt(tempStyle.fontSize)), // TODO improve this for high font values > 100px
+            textAlign: tempStyle.textAlign || "center",
+            text: valueText || "",
+            font: tempStyle.font,
+            fill: new ol.style.Fill({
+                color: colorToRgbaStr(tempStyle.stroke || tempStyle.color || '#000000', tempStyle.opacity || 1)
+            }),
+            // halo
+            stroke: highlight ? new ol.style.Stroke({
+                color: [255, 255, 255, 1],
+                width: 2
+            }) : null
+        }),
+        image: highlight ?
+            new ol.style.Circle({
+                radius: 5,
+                fill: null,
+                stroke: new ol.style.Stroke({
+                    color: colorToRgbaStr(tempStyle.color || "#0000FF", tempStyle.opacity || 1),
+                    width: tempStyle.weight || 1
+                })
+            }) : null
+    });
+};
 
 const Icons = require('../../../utils/openlayers/Icons');
 
@@ -184,86 +248,98 @@ function getMarkerStyle(options) {
     return null;
 }
 
-const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, textValues, fallbackStyle ) => {
-    let style;
+const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, textValues, fallbackStyle, radius = 0 ) => {
     let tempStyle = options.style[geomType] || options.style;
     if (geomType === "MultiLineString" || geomType === "LineString") {
-        style = tempStyle ? {
-            stroke: new ol.style.Stroke( tempStyle && tempStyle.stroke ? tempStyle.stroke : {
-                color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
-                lineDash: options.style.highlight ? [10] : [0],
-                width: tempStyle.weight || 1
+        return [
+            new ol.style.Style({
+                stroke: options.style.useSelectedStyle ? new ol.style.Stroke({
+                    color: [255, 255, 255, 1],
+                    width: tempStyle.weight + 2
+                }) : null
             }),
-            image: isDrawing ? image : null
+            lastPointOfPolylineStyle(tempStyle.weight, options.style.useSelectedStyle),
+            firstPointOfPolylineStyle(tempStyle.weight, options.style.useSelectedStyle),
+            new ol.style.Style(tempStyle ? {
+                stroke: new ol.style.Stroke( tempStyle && tempStyle.stroke ? tempStyle.stroke : {
+                    color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
+                    lineDash: options.style.highlight ? [10] : [0],
+                    width: tempStyle.weight || 1
+                }),
+                image: isDrawing ? image : null
             } : {
                 stroke: new ol.style.Stroke(defaultStyles[geomType] && defaultStyles[geomType].stroke ? defaultStyles[geomType].stroke : {
                     color: colorToRgbaStr(options.style && defaultStyles[geomType].color || "#0000FF", defaultStyles[geomType].opacity || 1),
                     lineDash: options.style.highlight ? [10] : [0],
                     width: defaultStyles[geomType].weight || 1
-                }) };
-        return new ol.style.Style(style);
+                })
+            })
+        ];
+
     }
 
     if ((geomType === "MultiPoint" || geomType === "Point") && (tempStyle.iconUrl || tempStyle.iconGlyph) ) {
         return isDrawing ? new ol.style.Style({
             image: image
-        }) : getMarkerStyle({style: {...tempStyle, highlight: options.style.highlight}});
+        }) : getMarkerStyle({style: {...tempStyle, highlight: options.style.highlight || options.style.useSelectedStyle}});
 
     }
-    if ((geomType === "Circle") && tempStyle.radius ) {
-        return new ol.style.Style({
-            stroke: new ol.style.Stroke( tempStyle && tempStyle.stroke ? tempStyle.stroke : {
-                color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
-                lineDash: options.style.highlight ? [10] : [0],
-                width: tempStyle.weight || 1
+    if (geomType === "Circle" && radius ) {
+        let styles = [
+            new ol.style.Style({
+                    stroke: options.style.useSelectedStyle ? new ol.style.Stroke({
+                        color: [255, 255, 255, 1],
+                        width: tempStyle.weight + 4
+                }) : null
             }),
-            fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
-                color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 0.2)
-            }),
-            image: new ol.style.Circle({
-                radius: tempStyle.radius || 10,
+            new ol.style.Style({
+                stroke: new ol.style.Stroke( tempStyle && tempStyle.stroke ? tempStyle.stroke : {
+                    color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
+                    lineDash: options.style.highlight ? [10] : [0],
+                    width: tempStyle.weight || 1
+                }),
                 fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
                     color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 0.2)
                 }),
-                stroke: new ol.style.Stroke({
-                  color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
-                  lineDash: options.style.highlight ? [10] : [0],
-                  width: tempStyle.weight || 1
+                image: new ol.style.Circle({
+                    radius: radius || 10,
+                    fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
+                        color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 0.2)
+                    }),
+                    stroke: new ol.style.Stroke({
+                      color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
+                      lineDash: options.style.highlight ? [10] : [0],
+                      width: tempStyle.weight || 1
+                    })
                 })
-            })
-        });
+            })];
+        return styles;
     }
     if (geomType === "Text" && tempStyle.font) {
-        return isDrawing ? new ol.style.Style({
-            image: image
-        }) : new ol.style.Style({
-            text: new ol.style.Text({
-                textAlign: tempStyle.textAlign || "center",
-                text: textValues[0] || "",
-                font: tempStyle.font,
-                fill: new ol.style.Fill({
-                    color: colorToRgbaStr(tempStyle.stroke || tempStyle.color || '#000000', tempStyle.opacity || 1)
-                }),
-                stroke: options.style.highlight ? new ol.style.Stroke({
-                    color: colorToRgbaStr(tempStyle.stroke || tempStyle.color || '#000000', tempStyle.opacity || 1),
-                    width: 1
-                }) : null
-            })
-        });
+        return [getTextStyle(tempStyle, textValues[0], options.style.useSelectedStyle)];
     }
     if (geomType === "MultiPolygon" || geomType === "Polygon") {
-        style = {
-            stroke: new ol.style.Stroke( tempStyle.stroke ? tempStyle.stroke : {
-                color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
-                lineDash: options.style.highlight ? [10] : [0],
-                width: tempStyle.weight || 1
-            }),
-            image: isDrawing ? image : null,
-            fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
-                color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 1)
-            })
-        };
-        return new ol.style.Style(style);
+        return [
+               new ol.style.Style({
+                   stroke: options.style.useSelectedStyle ? new ol.style.Stroke({
+                       color: [255, 255, 255, 1],
+                       width: tempStyle.weight + 2
+                   }) : null
+               }),
+               lastPointOfPolylineStyle(tempStyle.weight, options.style.useSelectedStyle),
+               firstPointOfPolylineStyle(tempStyle.weight, options.style.useSelectedStyle),
+               new ol.style.Style({
+                   stroke: new ol.style.Stroke( tempStyle.stroke ? tempStyle.stroke : {
+                       color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
+                       lineDash: options.style.highlight ? [10] : [0],
+                       width: tempStyle.weight || 1
+                   }),
+                   image: isDrawing ? image : null,
+                   fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
+                       color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 1)
+                   })
+               })
+            ];
     }
     return fallbackStyle;
 };
@@ -271,7 +347,37 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
 function getStyle(options, isDrawing = false, textValues = []) {
 
     let style = options.nativeStyle;
-    const geomType = (options.style && options.style.type) || (options.features && options.features[0] ? options.features[0].geometry.type : undefined);
+    let type;
+    let textStrings = textValues;
+    let radius = 0;
+    let geomType = (options.style && options.style.type) || (options.features && options.features[0] && options.features[0].geometry ? options.features[0].geometry.type : undefined);
+    if (geomType === "FeatureCollection" || options.features && options.features[0] && options.features[0].type === "FeatureCollection") {
+        return function(f) {
+            var feature = this || f;
+            type = feature.getGeometry() && feature.getGeometry().getType();
+            const properties = feature && feature.getProperties();
+            if (properties && properties.isCircle ) {
+                type = "Circle";
+                radius = properties.radius;
+            }
+            if (properties && properties.isText ) {
+                type = "Text";
+                textStrings = [properties.valueText];
+            }
+            const optionsChanged = set("style.useSelectedStyle", properties.canEdit, options);
+            return getValidStyle(type, optionsChanged, isDrawing, textStrings, null, radius);
+        };
+    }
+    if (options && options.properties && options.properties.isText) {
+        type = "Text";
+        textStrings = [options.properties.valueText];
+        return getValidStyle(type, options, isDrawing, textStrings, null, radius);
+    }
+    if (options && options.properties && options.properties.isCircle ) {
+        type = "Circle";
+        radius = options.properties.radius;
+        return getValidStyle(type, options, isDrawing, textStrings, null, radius);
+    }
     if (!style && options.style) {
         style = {
             stroke: new ol.style.Stroke( options.style.stroke ? options.style.stroke : {
@@ -294,7 +400,7 @@ function getStyle(options, isDrawing = false, textValues = []) {
 
             style = function(f) {
                 var feature = this || f;
-                const type = feature.getGeometry().getType();
+                type = feature.getGeometry().getType();
                 switch (type) {
                     case "Point":
                     case "MultiPoint":
@@ -315,7 +421,7 @@ function getStyle(options, isDrawing = false, textValues = []) {
             style = function(f) {
                 var feature = this || f;
                 let markerStyles;
-                let type = feature.getGeometry().getType();
+                type = feature.getGeometry().getType();
                 let textIndexes = feature.get("textGeometriesIndexes") || [];
                 let circles = feature.get("circles") || [];
                 let textValue = feature.get("textValues");// || [""];
@@ -349,8 +455,8 @@ function getStyle(options, isDrawing = false, textValues = []) {
                 if (type === "Point" || type === "MultiPoint") {
                     markerStyles = getMarkerStyle({style: {...options.style[type], highlight: options.style.highlight}});
                     return isDrawing ? new ol.style.Style({
-                      image: image,
-                      geometry: feature.getGeometry()
+                        image: image,
+                        geometry: feature.getGeometry()
                     }) : markerStyles.map(m => {
                         m.setGeometry(feature.getGeometry());
                         return m;
@@ -360,13 +466,17 @@ function getStyle(options, isDrawing = false, textValues = []) {
             };
             return style;
         }
-        return getValidStyle(geomType, options, isDrawing, textValues, style);
+        if (geomType === "Circle") {
+            radius = options.features && options.features.length && options.features[0].properties && options.features[0].properties.radius || 10;
+        }
+
+        return getValidStyle(geomType, options, isDrawing, textValues, style, radius);
     }
     // *************************************************************************
 
     return (options.styleName && !options.overrideOLStyle) ? (feature) => {
         if (options.styleName === "marker") {
-            const type = feature.getGeometry().getType();
+            type = feature.getGeometry().getType();
             switch (type) {
                 case "Point":
                 case "MultiPoint":
@@ -381,6 +491,7 @@ function getStyle(options, isDrawing = false, textValues = []) {
 
 
 module.exports = {
+    selectedStyleConfiguration,
     getStyle,
     getMarkerStyle,
     styleFunction,

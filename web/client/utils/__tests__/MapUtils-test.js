@@ -1260,11 +1260,11 @@ describe('Test the MapUtils', () => {
         expect(isSimpleGeomType(POINT)).toBeTruthy();
         expect(isSimpleGeomType(LINE_STRING)).toBeTruthy();
         expect(isSimpleGeomType(POLYGON)).toBeTruthy();
+        expect(isSimpleGeomType(CIRCLE)).toBe(true);
         expect(isSimpleGeomType(GEOMETRY_COLLECTION)).toBe(false);
         expect(isSimpleGeomType(MULTI_POINT)).toBe(false);
         expect(isSimpleGeomType(MULTI_LINE_STRING)).toBe(false);
         expect(isSimpleGeomType(MULTI_POLYGON)).toBe(false);
-        expect(isSimpleGeomType(CIRCLE)).toBeFalsy();
     });
 
     it('getSimpleGeomType default Point', () => {
