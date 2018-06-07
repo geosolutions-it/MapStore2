@@ -189,11 +189,6 @@ class DrawSupport extends React.Component {
                         });
                     }
                     feature.setProperties(f.properties);
-                    /*
-                        feature.set("textGeometriesIndexes", f.properties && f.properties.textGeometriesIndexes);
-                        feature.set("textValues", f.properties && f.properties.textValues);
-                        feature.set("circles", f.properties && f.properties.circles);
-                    */
                     this.drawSource.addFeature(feature);
                 }
             }
@@ -249,10 +244,6 @@ class DrawSupport extends React.Component {
             this.drawSource.clear();
             this.addFeatures(newProps);
             if (newProps.style) {
-                /*let layerStyle = null;
-                if (newProps.style) {
-                    layerStyle = newProps.style.type ? VectorStyle.getStyle(newProps) : this.toOlStyle(newProps.style, null, newProps.features[0] && newProps.features[0].type);
-                }*/
                 this.drawLayer.setStyle(VectorStyle.getStyle(newProps, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.valueText && [newProps.features[0].properties.valueText] || [] ));
             }
         }
@@ -500,22 +491,7 @@ class DrawSupport extends React.Component {
                     this.selectInteraction.setActive(true);
                 }
             }
-/*
-            if (this.props.options && drawMethod === "Polygon" || drawMethod === "LineString") {
-                let ft = reprojectGeoJson(geojsonFormat.writeFeaturesObject([this.sketchFeature.clone()]), this.getMapCrs(), "EPSG:4326");
-                let coords = ft.features[0].geometry.coordinates;
-                let drawingFt = head(this.props.features);
-                if (drawingFt.geometry === null) {
-                    drawingFt = set('geometry', {}, drawingFt);
-                    drawingFt = set('geometry.type', drawMethod, drawingFt);
-                }
-                drawingFt = set('type', "Feature", drawingFt);
-                // TODO CHECK TYPE, LINESTRING OR POLYGON, OTHERS HAS NO NEED TO MERGE DATA
-                drawingFt = set('geometry.coordinates', coords, drawingFt);
-                setTimeout(() => {
-                    this.props.onDrawingFeatures([drawingFt]);
-                }, 300);
-            }*/
+
         }, this);
 
         this.props.map.addInteraction(this.drawInteraction);
@@ -523,12 +499,6 @@ class DrawSupport extends React.Component {
     };
 
     drawPropertiesForGeometryType = (geometryType, maxPoints, source) => {
-        /*
-            let features = (new ol.format.GeoJSON()).readFeatures({
-                type: "FeatureCollection", features: startingFeature !== null ? [startingFeature] : []
-            });
-        */
-
         let drawBaseProps = {
             source: this.drawSource || source,
             type: /** @type {ol.geom.GeometryType} */ geometryType,
@@ -782,14 +752,7 @@ class DrawSupport extends React.Component {
         };
         this.clean();
 
-
-        // this.props.map.un('singleclick', singleClickCallback, this);
-        /*
-        const newFeature = reprojectGeoJson(mockFeatureCollection, newProps.options.featureProjection, this.getMapCrs());
-        const props = assign({}, newProps, {features: newFeature.features.length ? newFeature.features : [], newFeature});
-        */
         let newFeature = reprojectGeoJson(head(newProps.features), newProps.options.featureProjection, this.getMapCrs());
-        // if(newFeature)
         let props;
         if (newFeature.features && newFeature.features.length) {
             props = assign({}, newProps, {features: [newFeature]});
@@ -831,17 +794,7 @@ class DrawSupport extends React.Component {
             if (olFt) {
                 this.selectFeature(olFt);
             }
-        }/*
-        let layerStyle = null;
-        const styleType = this.convertGeometryTypeToStyleType(props.drawMethod);
-        if (selectedFeature && selectedFeature.style) {
-            layerStyle = selectedFeature.style.type ? VectorStyle.getStyle(props, false, props.features[0] && props.features[0].properties && props.features[0].properties.valueText && [props.features[0].properties.valueText] || [] ) : this.toOlStyle(props.style, null, props.features[0] && props.features[0].type);
-        } else if (props.style) {
-            layerStyle = props.style.type ? VectorStyle.getStyle({ ...props, style: {...props.style, type: styleType, highlight: true, selected: true }}, false, props.features[0] && props.features[0].properties && props.features[0].properties.valueText && [props.features[0].properties.valueText] || [] ) : this.toOlStyle(props.style, null, props.features[0] && props.features[0].type);
-        } else {
-            const style = VectorStyle.defaultStyles[styleType] || VectorStyle.defaultStyles;
-            layerStyle = VectorStyle.getStyle({ ...props, style: {...style, type: styleType, highlight: true }}, false, props.features[0] && props.features[0].properties && props.features[0].properties.valueText && [props.features[0].properties.valueText] || [] );
-        }*/
+        }
         this.selectInteraction = new ol.interaction.Select({
             layers: [this.drawLayer],
             features: new ol.Collection(selectedFeature && olFt ? [olFt] : null)

@@ -190,7 +190,7 @@ class CoordinateEditor extends React.Component {
                             }, []).filter(val => val);
 
                             if (this.isValid(components)) {
-                                const validComponents = components.filter(validateCoords);
+                                const validComponents = this.addCoordPolygon(components);
                                 this.props.onChange(validComponents);
                             } else if (this.props.properties.isValidFeature) {
                                 this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
@@ -201,7 +201,7 @@ class CoordinateEditor extends React.Component {
                         onRemove={() => {
                             const components = this.props.components.filter((cmp, i) => i !== idx);
                             if (this.isValid(components)) {
-                                const validComponents = components.filter(validateCoords);
+                                const validComponents = this.addCoordPolygon(components);
                                 this.props.onChange(validComponents);
                             } else if (this.props.properties.isValidFeature) {
                                 this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));
