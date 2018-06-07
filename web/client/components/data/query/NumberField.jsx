@@ -141,7 +141,7 @@ class NumberField extends React.Component {
                 this.props.onUpdateExceptionField(this.props.fieldRowId, null);
             }
         }
-        this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value, this.props.attType);
+        this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, isNaN(value) ? null : value, this.props.attType);
     };
 }
 
