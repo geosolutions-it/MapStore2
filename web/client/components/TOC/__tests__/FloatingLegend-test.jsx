@@ -223,4 +223,23 @@ describe('tests FloatingLegend component', () => {
                 ]}
                 onResize={onResize}/>, document.getElementById("container"));
     });
+
+    it('open panel ', () => {
+
+        ReactDOM.render(
+            <FloatingLegend
+                layers={[
+                    {
+                        name: 'layer:00',
+                        title: 'Layer',
+                        visibility: true,
+                        type: 'wms'
+                    }
+                ]}/>, document.getElementById("container"));
+
+        const toggleButtonContainer = document.getElementById('ms-legend-action');
+        const bool = toggleButtonContainer.getAttribute('aria-hidden');
+        expect(toggleButtonContainer).toExist();
+        expect(bool).toBe("false");
+    });
 });
