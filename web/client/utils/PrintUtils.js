@@ -21,7 +21,8 @@ const assign = require('object-assign');
 
 // Non è detto che sia uniforme!!
 const getGeomType = function(layer) {
-    return layer.features && layer.features[0] ? layer.features[0].geometry.type : undefined;
+    return layer.features && layer.features[0] && layer.features[0].geometry ? layer.features[0].geometry.type :
+        layer.features[0].features && layer.features[0].style && layer.features[0].style.type ? layer.features[0].style.type : undefined;
 };
 /**
  * Utilities for Print
