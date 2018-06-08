@@ -9,8 +9,18 @@
 const React = require('react');
 const { Glyphicon } = require('react-bootstrap');
 const DropText = require('./DropText');
+const Message = require('../../I18N/Message');
+const errorMessages = {
+    "FILE_NOT_SUPPORTED": <Message msgId="import.errors.fileNotSupported" />
+};
+const toErrorMessage = error =>
+        error
+            ? errorMessages[error.message]
+            || errorMessages[error]
+            || <span><Message msgId="import.errors.unknownError" />:{error.message}</span>
+        : <Message msgId="import.errors.unknownError" />;
 
-module.exports = ({ error }) => (<div style={{
+module.exports = ({ error, ...props }) => (<div style={{
         margin: 'auto',
         maxWidth: 550
     }}>
@@ -22,12 +32,12 @@ module.exports = ({ error }) => (<div style={{
                 }}/>
         </div>
         <h5>
-            {error} not valid
+            {toErrorMessage(error)}
         </h5>
-        <h4 className="text-danger" style={{backgroundColor: 'rgba(255, 255, 255, 0.7)', padding: 12}}>
+        {/*<h4 className="text-danger" style={{backgroundColor: 'rgba(255, 255, 255, 0.7)', padding: 12}}>
             !!Mockup Message -
             Here additional message eg. error on shapefile parsing
             - Mockup Message!!
-        </h4>
-        <DropText />
+            </h4>*/}
+        <DropText {...props}/>
         </div>);

@@ -6,13 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-module.exports = () => (<div><h4>
-    Drop your configuration or vector files here.</h4>
-    <small>
-        Supported configuration files: MapStore2 legacy format or JSON OWS context format<br />
-        Supported vector layer files: shapefiles must be contained in zip archives, KML/KMZ or GPX
-        </small>
+const {Button} = require('react-bootstrap');
+const Message = require('../../I18N/Message');
+const HTML = require('../../I18N/HTML');
+
+module.exports = ({
+    openFileDialog
+}) => (<div>
+    <HTML msgId="import.dropZone.heading" />
+    {openFileDialog
+        ? <Button bsStyle="primary" onClick={openFileDialog}><Message msgId="import.dropZone.selectFiles" /></Button>
+        : null
+    }
+    <br />
+    <br />
+    <HTML msgId="import.dropZone.infoSupported" />
     <hr />
-    <small><i>
-        current map will be overridden in case of configuration files
-        </i></small></div>);
+    <HTML msgId="import.dropZone.note" />
+    </div>);

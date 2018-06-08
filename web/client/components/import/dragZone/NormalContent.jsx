@@ -10,7 +10,7 @@ const { Glyphicon } = require('react-bootstrap');
 const DropText = require('./DropText');
 
 
-module.exports = () => (<div>
+module.exports = (props) => (<div>
     <div>
         <Glyphicon
             glyph="upload"
@@ -18,5 +18,5 @@ module.exports = () => (<div>
                 fontSize: 80
             }} />
     </div>
-    <DropText />
+    <DropText {...props} />
 </div>);

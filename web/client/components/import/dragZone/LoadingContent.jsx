@@ -9,10 +9,9 @@
 const React = require('react');
 
 const Loader = require('../../misc/Loader');
+const Message = require('../../I18N/Message');
 
-module.exports = ({
-    type = "files"
-}) => (<div style={{
+module.exports = () => (<div style={{
         margin: 'auto',
         maxWidth: 550
     }}>
@@ -23,6 +22,6 @@ module.exports = ({
             margin: 'auto'
         }}/>
         <h4>
-            Loading {type}...
+            <Message msgId="loading" />
         </h4>
     </div>);

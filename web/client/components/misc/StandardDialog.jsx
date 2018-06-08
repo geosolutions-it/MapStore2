@@ -24,6 +24,7 @@ module.exports = ({
     show,
     style = {},
     modal,
+    draggable = false,
     closeGlyph = "1-close",
     closable = true,
     onClose = () => {},
@@ -32,7 +33,7 @@ module.exports = ({
     footer,
     children,
     ...props
-}) => show ? (<Dialog modal={modal} onClickOut={(closable && modal) ? () => onClose() : null} style={{ ...style, display: show ? "block" : "none" }} {...props}>
+}) => show ? (<Dialog modal={modal} onClickOut={(closable && modal) ? () => onClose() : null} style={{ ...style, display: show ? "block" : "none" }} draggable={draggable} {...props}>
     <span role="header">
         {title ? title : header || <span>&nbsp;</span>}
         {closable ? <button onClick={() => onClose()} className="settings-panel-close close"><Glyphicon glyph={closeGlyph} /></button> : null}

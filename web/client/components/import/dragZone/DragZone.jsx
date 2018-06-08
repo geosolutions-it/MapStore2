@@ -14,12 +14,14 @@ const Button = tooltip(RButton);
 module.exports = ({
     accept,
     children,
+    onRef = () => {},
     onClose = () => {},
     onDrop = () => {},
     onDragEnter = () => {},
     onDragLeave = () => {}
 }) => (<Dropzone
                 disableClick
+                ref={onRef}
                 id={"DROP_ZONE"}
                 style={{ position: "relative", height: '100%' }}
                 accept={accept}
@@ -58,7 +60,6 @@ module.exports = ({
                         }}>
                         {children}
                         </div>
-                    </div>)
-                }
+                    </div>
             </Dropzone>);
 

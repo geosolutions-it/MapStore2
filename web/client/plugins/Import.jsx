@@ -22,11 +22,11 @@ const {Glyphicon} = require('react-bootstrap');
 module.exports = {
     ImportPlugin: assign({loadPlugin: (resolve) => {
         require.ensure(['./import/Import'], () => {
-            const ShapeFile = require('./import/Import');
+            const Import = require('./import/Import');
 
-            const ShapeFilePlugin = connect((state) => (
+            const ImportPlugin = connect((state) => (
                 {
-                    visible: state.controls && state.controls.shapefile && state.controls.shapefile.enabled,
+                    enabled: state.controls && state.controls.import && state.controls.import.enabled,
                     layers: state.shapefile && state.shapefile.layers || null,
                     selected: state.shapefile && state.shapefile.selected || null,
                     bbox: state.shapefile && state.shapefile.bbox || null,
@@ -44,19 +44,19 @@ module.exports = {
                 onZoomSelected: zoomToExtent,
                 updateShapeBBox: updateShapeBBox,
                 shapeLoading: shapeLoading,
-                toggleControl: toggleControl.bind(null, 'shapefile', null)
-            })(ShapeFile);
+                onClose: toggleControl.bind(null, 'import', null)
+                })(Import);
 
-            resolve(ShapeFilePlugin);
+            resolve(ImportPlugin);
         });
-    }, enabler: (state) => state.shapefile && state.shapefile.enabled || state.toolbar && state.toolbar.active === 'shapefile'}, {
+    }, enabler: (state) => state.import && state.import.enabled || state.toolbar && state.toolbar.active === 'import'}, {
         disablePluginIf: "{state('mapType') === 'cesium'}",
         BurgerMenu: {
-            name: 'shapefile',
+            name: 'import',
             position: 4,
             text: <Message msgId="shapefile.title"/>,
             icon: <Glyphicon glyph="upload"/>,
-            action: toggleControl.bind(null, 'shapefile', null),
+            action: toggleControl.bind(null, 'import', null),
             priority: 2,
             doNotHide: true
         }

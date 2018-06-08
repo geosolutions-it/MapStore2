@@ -6,14 +6,25 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { compose, branch, renderComponent} = require('recompose');
+const { compose, branch, renderComponent, renderNothing } = require('recompose');
 const DragZone = require('../../components/import/ImportDragZone');
-
+const { connect } = require('react-redux');
 const StyleDialog = require('./StyleDialog');
+const { configureMap} = require('../../actions/config');
 
 module.exports = compose(
     branch(
-        ({ hasData }) => !hasData,
-        renderComponent(DragZone)
+        ({ enabled }) => !enabled,
+        renderNothing
+    ),
+    branch(
+        ({ layers }) => !layers || layers.length === 0,
+        compose(
+            connect(() => ({}), {
+                loadMap: configureMap
+            }),
+            renderComponent(DragZone)
+        )
+
     )
 )(StyleDialog);

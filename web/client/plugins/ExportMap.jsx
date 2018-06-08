@@ -54,6 +54,7 @@ const ExportMap = enhanceExport(
         onClose = () => { }
     }) => <Dialog
         modal
+        draggable={false}
         style={{ width: 450 }}
         footer={<Button onClick={() => onExport(format)}>Export</Button>}
         show={enabled} onClose={onClose} >

@@ -9,15 +9,22 @@ const React = require('react');
 const DragZone = require('./dragZone/DragZone.jsx');
 const Content = require('./dragZone/Content');
 const processFiles = require('./dragZone/enhancers/processFiles');
+const dropZoneHandlers = require('./dragZone/enhancers/dropZoneHandlers');
 
-module.exports = processFiles(
+const {compose} = require('recompose');
+module.exports = compose(
+    processFiles,
+    dropZoneHandlers
+)(
     ({
     onClose = () => {},
     onDrop = () => {},
+    onRef = () => {},
     ...props
 }) => <DragZone
     onClose={onClose}
     onDrop={onDrop}
+    onRef={onRef}
     >
     <Content {...props} />
 </DragZone>);
