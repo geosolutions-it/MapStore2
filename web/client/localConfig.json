@@ -285,7 +285,7 @@
             "TOCItemsSettings",
             "Tutorial", "MapFooter", {
                 "name": "Measure"
-            }, "Print", "ShapeFile", {
+            }, "Print", "ShapeFile", "Timeline", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
