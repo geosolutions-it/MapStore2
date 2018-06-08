@@ -15,8 +15,7 @@ const uuid = require('uuid');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
 const {reprojectGeoJson, calculateDistance, reproject} = require('../../../utils/CoordinatesUtils');
 const wgs84Sphere = new ol.Sphere(6378137);
-const {transformPolygonToCircle} = require('../../../utils/DrawSupportUtils');
-const {isCompletePolygon} = require('../../../utils/AnnotationsUtils');
+const {transformPolygonToCircle, isCompletePolygon} = require('../../../utils/DrawSupportUtils');
 const VectorStyle = require('./VectorStyle');
 const geojsonFormat = new ol.format.GeoJSON();
 
@@ -599,7 +598,7 @@ class DrawSupport extends React.Component {
                 roiProps.geometryFunction = (coordinates, geometry) => {
                     let geom = geometry;
                     if (!geom) {
-                        geom = this.createOLGeometry({type: geometryType, coordinates: null, options: newProps.options});
+                        geom = this.createOLGeometry({type: geomType, coordinates: null, options: newProps.options});
                     }
                     geom.setCoordinates(coordinates);
                     return geom;
@@ -743,7 +742,7 @@ class DrawSupport extends React.Component {
                         newDrawMethod = "Point";
                         olFt = this.getNewFeature(newDrawMethod, e.coordinate);
                         olFt.setProperties(omit(previousFt.getProperties(), "geometry"));
-                        olFt.setProperties({isText: true, valueText: previousFt.getProperties() && previousFt.getProperties().valueText || this.props.map.getProperties() && this.props.map.getProperties().defaultTextAnnotation || "New" });
+                        olFt.setProperties({isText: true, valueText: previousFt.getProperties() && previousFt.getProperties().valueText || newProps.options.defaultTextAnnotation || "New" });
                         break;
                     }
                     // point
@@ -1230,7 +1229,7 @@ class DrawSupport extends React.Component {
                 options.geodesic ?
                 ol.geom.Polygon.circular(wgs84Sphere, this.reprojectCoordinatesToWGS84([correctCenter.x, correctCenter.y], projection), radius, 100).clone().transform('EPSG:4326', projection)
                 : ol.geom.Polygon.fromCircle(new ol.geom.Circle([correctCenter.x, correctCenter.y], radius), 100)
-                    : new ol.geom.Polygon(coordinates && isArray(coordinates[0]) ? [coordinates] : []);
+                    : new ol.geom.Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
             }
         }
         return geometry;

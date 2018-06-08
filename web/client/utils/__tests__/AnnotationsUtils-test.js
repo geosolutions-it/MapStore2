@@ -8,10 +8,11 @@
 const expect = require('expect');
 
 const feature = require("json-loader!../../test-resources/Annotation.json");
-const {getAvailableStyler, getRelativeStyler, convertGeoJSONToInternalModel, DEFAULT_ANNOTATIONS_STYLES,
-    createFont, circlesToMultiPolygon, textToPoint, flattenGeometryCollection, normalizeAnnotation,
-    removeDuplicate, formatCoordinates, isCompletePolygon, getComponents, addIds, validateCoords,
-    validateCoordsArray, validateCoord, getBaseCoord, validateText, validateCircle, validateCoordinates,
+const {getAvailableStyler, getRelativeStyler, convertGeoJSONToInternalModel,
+    DEFAULT_ANNOTATIONS_STYLES, createFont, circlesToMultiPolygon, textToPoint,
+    flattenGeometryCollection, normalizeAnnotation, removeDuplicate,
+    formatCoordinates, getComponents, addIds, validateCoords, validateCoordsArray,
+    validateCoord, getBaseCoord, validateText, validateCircle, validateCoordinates,
     coordToArray, validateFeature
 } = require('../AnnotationsUtils');
 
@@ -273,17 +274,7 @@ describe('Test the AnnotationsUtils', () => {
         expect(formatCoordinates(coords2)[0].lon).toBe(1);
         expect(formatCoordinates(coords2)[0].lat).toBe(undefined);
     });
-    it('test isCompletePolygon defaults', () => {
-        const polygonCoords1 = [[[1, 1], [2, 2]]];
-        const polygonCoords2 = [[[1, 1], [2, 2], [1, 1]]];
-        const polygonCoords3 = [[[1, 1], [2, 2], [3, 3], [1, 1]]];
-        const polygonCoords4 = [[[1, 1], [2, undefined], [3, 3], [1, 1]]];
-        expect(isCompletePolygon()).toBe(false);
-        expect(isCompletePolygon(polygonCoords1)).toBe(false);
-        expect(isCompletePolygon(polygonCoords2)).toBe(false);
-        expect(isCompletePolygon(polygonCoords3)).toBe(true);
-        expect(isCompletePolygon(polygonCoords4)).toBe(false);
-    });
+
     it('test getComponents defaults', () => {
         const polygonCoords3 = [[[1, 1], [2, 2], [3, 3], [1, 1]]];
 

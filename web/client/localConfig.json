@@ -37,7 +37,8 @@
           "config": {
             "multiGeometry": true,
             "validationErrors": {}
-          }
+          },
+          "defaultTextAnnotation": "New"
         },
         "maptype": {
             "mapType": "{context.mode === 'desktop' ? 'openlayers' : 'leaflet'}"
@@ -216,8 +217,7 @@
                   },
                   "attribution": {
                     "container": "#mapstore-map-footer-container"
-                  },
-                  "defaultTextAnnotation": "custom text"
+                  }
                 },
                 "leaflet": {
                   "attribution": {

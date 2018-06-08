@@ -9,8 +9,9 @@
 const uuidv1 = require('uuid/v1');
 const LocaleUtils = require('./LocaleUtils');
 const {extraMarkers} = require('./MarkerUtils');
+const {isCompletePolygon} = require('./DrawSupportUtils');
 const {set} = require('./ImmutableUtils');
-const {values, isNil, slice, head, last} = require('lodash');
+const {values, isNil, slice, head} = require('lodash');
 const uuid = require('uuid');
 
 
@@ -351,14 +352,10 @@ const AnnotationsUtils = {
     formatCoordinates: (coords = [[]]) => {
         return coords.map(c => ({lat: c && c[1], lon: c && c[0]}));
     },
-    isCompletePolygon: (coords = [[[]]]) => {
-        const validCoords = coords[0].filter(AnnotationsUtils.validateCoordsArray);
-        return validCoords.length > 3 && head(validCoords)[0] === last(validCoords)[0] && head(validCoords)[1] === last(validCoords)[1];
-    },
     getComponents: ({type, coordinates}) => {
         switch (type) {
             case "Polygon": {
-                return AnnotationsUtils.isCompletePolygon(coordinates) ? AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1)) : AnnotationsUtils.formatCoordinates(coordinates[0]);
+                return isCompletePolygon(coordinates) ? AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1)) : AnnotationsUtils.formatCoordinates(coordinates[0]);
             }
             case "LineString": {
                 return AnnotationsUtils.formatCoordinates(coordinates);

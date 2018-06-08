@@ -159,8 +159,6 @@ class OpenlayersMap extends React.Component {
         if (this.props.registerHooks) {
             this.registerHooks();
         }
-        // setting default text for "Text" annotations
-        this.map.setProperties({defaultTextAnnotation: this.props.mapOptions && this.props.mapOptions.defaultTextAnnotation || "New"});
 
     }
 

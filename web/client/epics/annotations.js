@@ -230,6 +230,7 @@ module.exports = (viewer) => ({
             const state = store.getState();
             const feature = state.annotations.editing;
             const type = state.annotations.featureType;
+            const defaultTextAnnotation = state.annotations.defaultTextAnnotation;
             const multiGeom = state.annotations.config.multiGeometry;
             const drawOptions = {
                 featureProjection: "EPSG:4326",
@@ -237,6 +238,8 @@ module.exports = (viewer) => ({
                 editEnabled: type !== "Circle",
                 drawEnabled: type === "Circle",
                 useSelectedStyle: true,
+                editFilter: (f) => f.getProperties().canEdit,
+                defaultTextAnnotation,
                 transformToFeatureCollection: true
             };
             return Rx.Observable.of(changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false})));
