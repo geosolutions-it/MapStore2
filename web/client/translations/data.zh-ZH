@@ -610,6 +610,64 @@
                 }
             }
         },
+        "annotations": {
+            "edit": "编辑",
+            "remove": "删除",
+            "save": "保存",
+            "cancel": "取消",
+            "back": "返回",
+            "addMarker": "在地图上添加一个新点",
+            "styleGeometry": "为点选择不同的风格",
+            "deleteGeometry": "删除现有的点",
+            "removeannotation": "你想删除标注?",
+            "removegeometry": "你想删除所有标注点吗？?",
+            "confirm": "确认",
+            "mandatory": "必填项",
+            "emptygeometry": "几何不能为空",
+            "add": "新加",
+            "filter": "过滤标注...",
+            "titleUndoGeom": "The geometry has changed",
+            "undoGeom": "Abandon the geometry editing session? (You will lose any changes)",
+            "confirmGeom": "Abandon",
+            "cancelModalGeom": "Continue editing",
+            "undo": "你确定要放弃注释编辑会话吗？",
+            "title": "标注",
+            "zoomTo": "Zoom",
+            "insertText": "Please insert the text annotation",
+            "downloadtooltip": "Download annotations",
+            "downloadcurrenttooltip": "Download current annotation",
+            "downloadError": "Export error",
+            "loadtooltip": "Import annotations",
+            "loadtitle": "Import Annotations",
+            "selectfiletext": "Drop your file here or click to select the Annotation File to import. (supported files: JSON)",
+            "loadoverride": "Replace annotations",
+            "loaderror": "Select one or more annotations files. (supported files: json)",
+            "defaulttitle": "Edit default title",
+            "field": {
+                "title": "标题",
+                "description": "描述"
+            },
+            "titles": {
+                "marker": " Marker",
+                "line": " Line",
+                "polygon": " Polygon",
+                "text": " Text",
+                "circle": " Circle"
+            },
+            "editor": {
+                "title": "Coordinates Editor:",
+                "add": "Add new coordinates",
+                "valid": "Geometry is valid",
+                "radius": "Radius",
+                "text": "Text",
+                "lat": "Latitude",
+                "lon": "Longitude",
+                "notValidMarker": "Insert a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "All coordinate must be valid (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insert a text value and a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Insert a radius value (m) and a valid coordinate (+|- 90° lat, +|-180° lon)"
+            }
+        },
         "user":{
             "login": "登录",
             "logout": "登出",
@@ -631,29 +689,6 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "请插入用户名和密码",
                 "usernamePwdIncorrect":"用户名或密码不正确"
-            }
-        },
-        "annotations": {
-            "edit": "编辑",
-            "remove": "删除",
-            "save": "保存",
-            "cancel": "取消",
-            "back": "返回",
-            "addMarker": "在地图上添加一个新点",
-            "styleGeometry": "为点选择不同的风格",
-            "deleteGeometry": "删除现有的点",
-            "removeannotation": "你想删除标注?",
-            "removegeometry": "你想删除所有标注点吗？?",
-            "confirm": "确认",
-            "mandatory": "必填项",
-            "emptygeometry": "几何不能为空",
-            "add": "新加",
-            "filter": "过滤标注...",
-            "undo": "你确定要放弃注释编辑会话吗？",
-            "title": "标注",
-            "field": {
-                "title": "标题",
-                "description": "描述"
             }
         },
         "users": {

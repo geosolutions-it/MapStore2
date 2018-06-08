@@ -21,6 +21,7 @@ const TOGGLE_STYLE = 'ANNOTATIONS:TOGGLE_STYLE';
 const SET_STYLE = 'ANNOTATIONS:SET_STYLE';
 const RESTORE_STYLE = 'ANNOTATIONS:RESTORE_STYLE';
 const UPDATE_ANNOTATION_GEOMETRY = 'ANNOTATIONS:UPDATE_GEOMETRY';
+const SET_INVALID_SELECTED = 'ANNOTATIONS:SET_INVALID_SELECTED';
 const VALIDATION_ERROR = 'ANNOTATIONS:VALIDATION_ERROR';
 const HIGHLIGHT = 'ANNOTATIONS:HIGHLIGHT';
 const CLEAN_HIGHLIGHT = 'ANNOTATIONS:CLEAN_HIGHLIGHT';
@@ -28,19 +29,22 @@ const FILTER_ANNOTATIONS = 'ANNOTATIONS:FILTER';
 const CLOSE_ANNOTATIONS = 'ANNOTATIONS:CLOSE';
 const CONFIRM_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CONFIRM_CLOSE';
 const CANCEL_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CANCEL_CLOSE';
-const STOP_DRAWING = 'ANNOTATIONS:STOP_DRAWING';
+const START_DRAWING = 'ANNOTATIONS:START_DRAWING';
 const CHANGE_STYLER = 'ANNOTATIONS:CHANGE_STYLER';
 const UNSAVED_CHANGES = 'ANNOTATIONS:UNSAVED_CHANGES';
 const TOGGLE_CHANGES_MODAL = 'ANNOTATIONS:TOGGLE_CHANGES_MODAL';
+const TOGGLE_GEOMETRY_MODAL = 'ANNOTATIONS:TOGGLE_GEOMETRY_MODAL';
 const CHANGED_PROPERTIES = 'ANNOTATIONS:CHANGED_PROPERTIES';
 const UNSAVED_STYLE = 'ANNOTATIONS:UNSAVED_STYLE';
 const TOGGLE_STYLE_MODAL = 'ANNOTATIONS:TOGGLE_STYLE_MODAL';
-const SHOW_TEXT_AREA = 'ANNOTATIONS:SHOW_TEXT_AREA';
 const ADD_TEXT = 'ANNOTATIONS:ADD_TEXT';
-const CANCEL_CLOSE_TEXT = 'ANNOTATIONS:CANCEL_CLOSE_TEXT';
-const SAVE_TEXT = 'ANNOTATIONS:SAVE_TEXT';
 const DOWNLOAD = 'ANNOTATIONS:DOWNLOAD';
 const LOAD_ANNOTATIONS = 'ANNOTATIONS:LOAD_ANNOTATIONS';
+const CHANGED_SELECTED = 'ANNOTATIONS:CHANGED_SELECTED';
+const RESET_COORD_EDITOR = 'ANNOTATIONS:RESET_COORD_EDITOR';
+const CHANGE_RADIUS = 'ANNOTATIONS:CHANGE_RADIUS';
+const CHANGE_TEXT = 'ANNOTATIONS:CHANGE_TEXT';
+const ADD_NEW_FEATURE = 'ANNOTATIONS:ADD_NEW_FEATURE';
 
 function loadAnnotations(features, override = false) {
     return {
@@ -62,11 +66,19 @@ const {head} = require('lodash');
 function editAnnotation(id) {
     return (dispatch, getState) => {
         const feature = head(head(getState().layers.flat.filter(l => l.id === 'annotations')).features.filter(f => f.properties.id === id));
-        dispatch({
-            type: EDIT_ANNOTATION,
-            feature,
-            featureType: feature.geometry.type
-        });
+        if (feature.type === "FeatureCollection") {
+            dispatch({
+                type: EDIT_ANNOTATION,
+                feature,
+                featureType: feature.type
+            });
+        } else {
+            dispatch({
+                type: EDIT_ANNOTATION,
+                feature,
+                featureType: feature.geometry.type
+            });
+        }
     };
 }
 function newAnnotation() {
@@ -74,19 +86,24 @@ function newAnnotation() {
         type: NEW_ANNOTATION
     };
 }
-function showTextArea() {
+function changeSelected(coordinates, radius, text) {
     return {
-        type: SHOW_TEXT_AREA
+        type: CHANGED_SELECTED,
+        coordinates,
+        radius,
+        text
+    };
+}
+function setInvalidSelected(errorFrom, coordinates) {
+    return {
+        type: SET_INVALID_SELECTED,
+        errorFrom,
+        coordinates
     };
 }
 function addText() {
     return {
         type: ADD_TEXT
-    };
-}
-function cancelText() {
-    return {
-        type: CANCEL_CLOSE_TEXT
     };
 }
 function changedProperties(field, value) {
@@ -220,14 +237,19 @@ function setUnsavedStyle(unsavedStyle) {
         unsavedStyle
     };
 }
+function addNewFeature() {
+    return {
+        type: ADD_NEW_FEATURE
+    };
+}
 function cancelCloseAnnotations() {
     return {
         type: CANCEL_CLOSE_ANNOTATIONS
     };
 }
-function stopDrawing() {
+function startDrawing() {
     return {
-        type: STOP_DRAWING
+        type: START_DRAWING
     };
 }
 function toggleUnsavedChangesModal() {
@@ -235,21 +257,39 @@ function toggleUnsavedChangesModal() {
         type: TOGGLE_CHANGES_MODAL
     };
 }
+function toggleUnsavedGeometryModal() {
+    return {
+        type: TOGGLE_GEOMETRY_MODAL
+    };
+}
 function toggleUnsavedStyleModal() {
     return {
         type: TOGGLE_STYLE_MODAL
     };
 }
-function saveText(value) {
+function resetCoordEditor() {
     return {
-        type: SAVE_TEXT,
-        value
+        type: RESET_COORD_EDITOR
+    };
+}
+function changeRadius(radius, components) {
+    return {
+        type: CHANGE_RADIUS,
+        radius,
+        components
     };
 }
 function changeStyler(stylerType) {
     return {
         type: CHANGE_STYLER,
         stylerType
+    };
+}
+function changeText(text, components) {
+    return {
+        type: CHANGE_TEXT,
+        text,
+        components
     };
 }
 module.exports = {
@@ -275,17 +315,14 @@ module.exports = {
     CLOSE_ANNOTATIONS,
     CONFIRM_CLOSE_ANNOTATIONS,
     CANCEL_CLOSE_ANNOTATIONS,
-    STOP_DRAWING, stopDrawing,
+    START_DRAWING, startDrawing,
     CHANGE_STYLER, changeStyler,
     UNSAVED_CHANGES, setUnsavedChanges,
     UNSAVED_STYLE, setUnsavedStyle,
     TOGGLE_CHANGES_MODAL, toggleUnsavedChangesModal,
     TOGGLE_STYLE_MODAL, toggleUnsavedStyleModal,
     CHANGED_PROPERTIES, changedProperties,
-    SHOW_TEXT_AREA, showTextArea,
     ADD_TEXT, addText,
-    CANCEL_CLOSE_TEXT, cancelText,
-    SAVE_TEXT, saveText,
     editAnnotation,
     newAnnotation,
     removeAnnotation,
@@ -309,5 +346,12 @@ module.exports = {
     confirmCloseAnnotations,
     cancelCloseAnnotations,
     DOWNLOAD, download,
-    LOAD_ANNOTATIONS, loadAnnotations
+    ADD_NEW_FEATURE, addNewFeature,
+    LOAD_ANNOTATIONS, loadAnnotations,
+    RESET_COORD_EDITOR, resetCoordEditor,
+    CHANGE_TEXT, changeText,
+    CHANGE_RADIUS, changeRadius,
+    TOGGLE_GEOMETRY_MODAL, toggleUnsavedGeometryModal,
+    SET_INVALID_SELECTED, setInvalidSelected,
+    CHANGED_SELECTED, changeSelected
 };

@@ -19,9 +19,10 @@ const {createSelector} = require('reselect');
 const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnotation, removeAnnotation, cancelEditAnnotation,
     saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
     highlight, cleanHighlight, showAnnotation, cancelShowAnnotation, filterAnnotations, closeAnnotations,
-    cancelCloseAnnotations, confirmCloseAnnotations, stopDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal, changedProperties,
-    setUnsavedStyle, toggleUnsavedStyleModal, addText, cancelText, saveText, download, loadAnnotations} =
-    require('../actions/annotations');
+    cancelCloseAnnotations, confirmCloseAnnotations, startDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal,
+    changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, download, loadAnnotations,
+    changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected
+} = require('../actions/annotations');
 
 const { zoomToExtent } = require('../actions/map');
 
@@ -36,21 +37,26 @@ const commonEditorActions = {
     onSave: saveAnnotation,
     onRemove: removeAnnotation,
     onAddGeometry: toggleAdd,
-    onCancelText: cancelText,
     onAddText: addText,
-    onSaveText: saveText,
     onSetUnsavedChanges: setUnsavedChanges,
     onSetUnsavedStyle: setUnsavedStyle,
     onChangeProperties: changedProperties,
     onToggleUnsavedChangesModal: toggleUnsavedChangesModal,
+    onToggleUnsavedGeometryModal: toggleUnsavedGeometryModal,
     onToggleUnsavedStyleModal: toggleUnsavedStyleModal,
+    onAddNewFeature: addNewFeature,
+    onResetCoordEditor: resetCoordEditor,
     onStyleGeometry: toggleStyle,
     onCancelStyle: restoreStyle,
+    onChangeSelected: changeSelected,
     onSaveStyle: toggleStyle,
     onSetStyle: setStyle,
-    onStopDrawing: stopDrawing,
+    onStartDrawing: startDrawing,
     onDeleteGeometry: removeAnnotationGeometry,
     onZoom: zoomToExtent,
+    onChangeRadius: changeRadius,
+    onSetInvalidSelected: setInvalidSelected,
+    onChangeText: changeText,
     onDownload: download
 };
 const AnnotationsEditor = connect(annotationsInfoSelector,
@@ -80,6 +86,7 @@ const Annotations = connect(panelSelector, {
     onCancelEdit: cancelEditAnnotation,
     onToggleUnsavedChangesModal: toggleUnsavedChangesModal,
     onToggleUnsavedStyleModal: toggleUnsavedStyleModal,
+    onToggleUnsavedGeometryModal: toggleUnsavedGeometryModal,
     onConfirmRemove: confirmRemoveAnnotation,
     onCancelClose: cancelCloseAnnotations,
     onConfirmClose: confirmCloseAnnotations,

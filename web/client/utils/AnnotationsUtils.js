@@ -9,7 +9,10 @@
 const uuidv1 = require('uuid/v1');
 const LocaleUtils = require('./LocaleUtils');
 const {extraMarkers} = require('./MarkerUtils');
-const {values} = require('lodash');
+const {isCompletePolygon} = require('./DrawSupportUtils');
+const {set} = require('./ImmutableUtils');
+const {values, isNil, slice, head} = require('lodash');
+const uuid = require('uuid');
 
 
 const STYLE_CIRCLE = {
@@ -67,20 +70,20 @@ const DEFAULT_ANNOTATIONS_STYLES = {
     "MultiPolygon": STYLE_POLYGON
 };
 
+
 const rgbaTorgb = (rgba = "") => {
     return rgba.indexOf("rgba") !== -1 ? `rgb${rgba.slice(rgba.indexOf("("), rgba.lastIndexOf(","))})` : rgba;
 };
 
 const textAlignTolabelAlign = (a) => (a === "start" && "lm") || (a === "end" && "rm") || "cm";
 
-const getStylesObject = ({type = "Point", geometries = []} = {}) => {
-    return type === "GeometryCollection" ? geometries.reduce((p, {type: t}) => {
+const getStylesObject = ({type = "Point", features = []} = {}) => {
+    return type === "FeatureCollection" ? features.reduce((p, {type: t}) => {
         p[t] = DEFAULT_ANNOTATIONS_STYLES[t];
         return p;
-    }, {type: "GeometryCollection"}) : {...DEFAULT_ANNOTATIONS_STYLES[type]};
+    }, {type: "FeatureCollection"}) : {...DEFAULT_ANNOTATIONS_STYLES[type]};
 };
-
-const getPropreties = (props = {}, messages = {}) => ({title: LocaleUtils.getMessageById(messages, "annotations.defaulttitle") || "Default title", id: uuidv1(), ...props});
+const getProperties = (props = {}, messages = {}) => ({title: LocaleUtils.getMessageById(messages, "annotations.defaulttitle") || "Default title", id: uuidv1(), ...props});
 
 const annStyleToOlStyle = (type, style, label = "") => {
     const s = style[type] || style;
@@ -152,7 +155,7 @@ const AnnotationsUtils = {
      * otherwise it will return the original geometry type.
      * @return {object} a transformed geojson with only geometry types
     */
-    convertGeoJSONToInternalModel: ({type = "Point", geometries = []}, textValues = [], circles = []) => {
+    convertGeoJSONToInternalModel: ({type = "Point", geometries = [], features = []}, textValues = [], circles = []) => {
         switch (type) {
             case "Point": case "MultiPoint": {
                 return {type: textValues.length === 1 ? "Text" : type};
@@ -193,6 +196,18 @@ const AnnotationsUtils = {
                     return {type: g.type};
                 })};
             }
+            case "FeatureCollection" : {
+                const featuresTypes = features.map(f => {
+                    if (f.properties && f.properties.isCircle) {
+                        return {type: "Circle"};
+                    }
+                    if (f.properties && f.properties.isText) {
+                        return {type: "Text"};
+                    }
+                    return {type: f.geometry.type};
+                });
+                return {type: "FeatureCollection", features: featuresTypes};
+            }
             default: return {type};
         }
     },
@@ -200,7 +215,7 @@ const AnnotationsUtils = {
      * Retrieves a non duplicated list of stylers
      * @return {string[]} it returns the array of available styler from geometry of a feature
     */
-    getAvailableStyler: ({type = "Point", geometries = []} = {}) => {
+    getAvailableStyler: ({type = "Point", geometries = [], features = []} = {}) => {
         switch (type) {
             case "Point": case "MultiPoint": {
                 return [AnnotationsUtils.getRelativeStyler(type)];
@@ -219,6 +234,11 @@ const AnnotationsUtils = {
             }
             case "GeometryCollection": {
                 return geometries.reduce((p, c) => {
+                    return (p.indexOf(AnnotationsUtils.getRelativeStyler(c.type)) !== -1) ? p : p.concat(AnnotationsUtils.getAvailableStyler(c));
+                }, []);
+            }
+            case "FeatureCollection": {
+                return features.reduce((p, c) => {
                     return (p.indexOf(AnnotationsUtils.getRelativeStyler(c.type)) !== -1) ? p : p.concat(AnnotationsUtils.getAvailableStyler(c));
                 }, []);
             }
@@ -267,13 +287,13 @@ const AnnotationsUtils = {
     STYLE_POLYGON,
     /**
     * it converts any geoJSONObject to an annotation
-    * Mandatory elemets: MUST be a geoJSON type Feature => properties with an ID and a title
+    * Mandatory elements: MUST be a geoJSON type Feature => properties with an ID and a title
     * annotation style.
     */
-    normalizeAnnotation: (ann, messages) => {
+    normalizeAnnotation: (ann = {}, messages = {}) => {
         const annotation = ann.type !== "Feature" && {type: "Feature", geometry: ann} || {...ann};
         const style = getStylesObject(annotation.geometry);
-        const properties = getPropreties(annotation.properties, messages);
+        const properties = getProperties(annotation.properties, messages);
         return {style, properties, ...annotation};
     },
     removeDuplicate: (annotations) => values(annotations.reduce((p, c) => ({...p, [c.properties.id]: c}), {})),
@@ -328,6 +348,82 @@ const AnnotationsUtils = {
         return features.reduce((coll, f) => {
             return f.geometry.type === "GeometryCollection" && coll.concat(AnnotationsUtils.flattenGeometryCollection(f)) || coll.concat({type: "Feature", geometry: f.geometry, properties: {...f.properties, ms_style: annStyleToOlStyle(f.geometry.type, f.style)}});
         }, []);
+    },
+    formatCoordinates: (coords = [[]]) => {
+        return coords.map(c => ({lat: c && c[1], lon: c && c[0]}));
+    },
+    getComponents: ({type, coordinates}) => {
+        switch (type) {
+            case "Polygon": {
+                return isCompletePolygon(coordinates) ? AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1)) : AnnotationsUtils.formatCoordinates(coordinates[0]);
+            }
+            case "LineString": {
+                return AnnotationsUtils.formatCoordinates(coordinates);
+            }
+            default: return AnnotationsUtils.formatCoordinates([coordinates]);
+        }
+    },
+    addIds: (features) => {
+        return features.map(f => {
+            if (f.properties && f.properties.id) {
+                return f;
+            }
+            return set("properties.id", uuid.v1(), f);
+        });
+    },
+    COMPONENTS_VALIDATION: {
+        "Point": {min: 1, add: false, remove: false, validation: "validateCoordinates", notValid: "Add a valid coordinate to complete the Point"},
+        "Polygon": {min: 3, add: true, remove: true, validation: "validateCoordinates", notValid: "Add 3 valid coordinates to complete the Polygon"},
+        "LineString": {min: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "Add 2 valid coordinates to complete the Polyline"},
+        "Circle": {add: false, remove: false, validation: "validateCircle", notValid: "Add a valid coordinate and a radius (m) to complete the Circle"},
+        "Text": {add: false, remove: false, validation: "validateText", notValid: "Add a valid coordinate and a Text value"}
+    },
+    validateCoords: ({lat, lon} = {}) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
+    validateCoordsArray: ([lon, lat] = []) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
+    validateCoord: (c) => !isNaN(parseFloat(c)),
+    coordToArray: (c = {}) => [c.lon, c.lat],
+    validateCoordinates: ({components = [], remove = false, type, isArray = false } = {}) => {
+        if (components && components.length) {
+            const validComponents = components.filter(AnnotationsUtils[isArray ? "validateCoordsArray" : "validateCoords"]);
+
+            if (remove) {
+                return validComponents.length > AnnotationsUtils.COMPONENTS_VALIDATION[type].min && validComponents.length === components.length;
+            }
+            return validComponents.length >= AnnotationsUtils.COMPONENTS_VALIDATION[type].min && validComponents.length === components.length;
+        }
+        return false;
+    },
+    validateCircle: ({components = [], properties = {radius: 0}, isArray = false} = {}) => {
+        if (components && components.length) {
+            const cmp = head(components);
+            return !isNaN(parseFloat(properties.radius)) && (isArray ? AnnotationsUtils.validateCoordsArray(cmp) : AnnotationsUtils.validateCoords(cmp));
+        }
+        return false;
+    },
+    validateText: ({components = [], properties = {valueText: ""}, isArray = false} = {}) => {
+        if (components && components.length) {
+            const cmp = head(components);
+            return properties && !!properties.valueText && (isArray ? AnnotationsUtils.validateCoordsArray(cmp) : AnnotationsUtils.validateCoords(cmp));
+        }
+        return false;
+    },
+    validateFeature: ({components = [[]], type, remove = false, properties = {}, isArray = false} = {}) => {
+        if (isNil(type)) {
+            return false;
+        }
+        if (type === "Text") {
+            return AnnotationsUtils.validateText({components, properties, isArray});
+        }
+        if (type === "Circle") {
+            return AnnotationsUtils.validateCircle({components, properties, isArray});
+        }
+        return AnnotationsUtils.validateCoordinates({components, remove, type, isArray});
+    },
+    getBaseCoord: (type) => {
+        switch (type) {
+            case "Polygon": case "LineString": return [];
+            default: return [[]];
+        }
     }
 };
 

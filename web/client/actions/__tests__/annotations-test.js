@@ -32,14 +32,11 @@ const {
     HIGHLIGHT,
     CLEAN_HIGHLIGHT,
     FILTER_ANNOTATIONS,
-    showTextArea, SHOW_TEXT_AREA,
     addText, ADD_TEXT,
-    cancelText, CANCEL_CLOSE_TEXT,
     changedProperties, CHANGED_PROPERTIES,
     changeStyler, CHANGE_STYLER,
-    saveText, SAVE_TEXT,
     toggleUnsavedStyleModal, TOGGLE_STYLE_MODAL,
-    stopDrawing, STOP_DRAWING,
+    startDrawing, START_DRAWING,
     toggleUnsavedChangesModal, TOGGLE_CHANGES_MODAL,
     setUnsavedStyle, UNSAVED_STYLE,
     setUnsavedChanges, UNSAVED_CHANGES,
@@ -66,6 +63,13 @@ const {
     confirmCloseAnnotations,
     cancelCloseAnnotations,
     DOWNLOAD, download,
+    CHANGED_SELECTED, changeSelected,
+    SET_INVALID_SELECTED, setInvalidSelected,
+    TOGGLE_GEOMETRY_MODAL, toggleUnsavedGeometryModal,
+    resetCoordEditor, RESET_COORD_EDITOR,
+    changeRadius, CHANGE_RADIUS,
+    changeText, CHANGE_TEXT,
+    ADD_NEW_FEATURE, addNewFeature,
     LOAD_ANNOTATIONS, loadAnnotations
 } = require('../annotations');
 
@@ -103,17 +107,31 @@ describe('Test correctness of the annotations actions', () => {
         expect(result.type).toEqual(REMOVE_ANNOTATION);
         expect(result.id).toEqual('1');
     });
-    it('showTextArea', () => {
-        const result = showTextArea();
-        expect(result.type).toEqual(SHOW_TEXT_AREA);
+    it('addNewFeature', () => {
+        const result = addNewFeature();
+        expect(result.type).toEqual(ADD_NEW_FEATURE);
+    });
+    it('changeSelected', () => {
+        const coordinates = [1, 2];
+        const radius = 0;
+        const text = "text";
+        const result = changeSelected(coordinates, radius, text);
+        expect(result.type).toEqual(CHANGED_SELECTED);
+        expect(result.coordinates).toEqual(coordinates);
+        expect(result.radius).toEqual(radius);
+        expect(result.text).toEqual(text);
+    });
+    it('setInvalidSelected', () => {
+        const errorFrom = "text";
+        const coordinates = [1, 2];
+        const result = setInvalidSelected(errorFrom, coordinates);
+        expect(result.type).toEqual(SET_INVALID_SELECTED);
+        expect(result.errorFrom).toEqual(errorFrom);
+        expect(result.coordinates).toEqual(coordinates);
     });
     it('addText', () => {
         const result = addText();
         expect(result.type).toEqual(ADD_TEXT);
-    });
-    it('cancelText', () => {
-        const result = cancelText();
-        expect(result.type).toEqual(CANCEL_CLOSE_TEXT);
     });
     it('confirm remove annotation', () => {
         const result = confirmRemoveAnnotation('1');
@@ -146,9 +164,9 @@ describe('Test correctness of the annotations actions', () => {
         const result = cancelEditAnnotation();
         expect(result.type).toEqual(CANCEL_EDIT_ANNOTATION);
     });
-    it('stopDrawing', () => {
-        const result = stopDrawing();
-        expect(result.type).toEqual(STOP_DRAWING);
+    it('startDrawing', () => {
+        const result = startDrawing();
+        expect(result.type).toEqual(START_DRAWING);
     });
     it('toggleUnsavedChangesModal', () => {
         const result = toggleUnsavedChangesModal();
@@ -157,12 +175,6 @@ describe('Test correctness of the annotations actions', () => {
     it('toggleUnsavedStyleModal', () => {
         const result = toggleUnsavedStyleModal();
         expect(result.type).toEqual(TOGGLE_STYLE_MODAL);
-    });
-    it('saveText', () => {
-        const text = "asdfasf!";
-        const result = saveText(text);
-        expect(result.type).toEqual(SAVE_TEXT);
-        expect(result.value).toEqual(text);
     });
     it('changeStyler', () => {
         const stylerType = "marker";
@@ -263,6 +275,32 @@ describe('Test correctness of the annotations actions', () => {
     it('confirm close annotations', () => {
         const result = confirmCloseAnnotations();
         expect(result.type).toEqual(CONFIRM_CLOSE_ANNOTATIONS);
+    });
+
+    it('changeRadius', () => {
+        const radius = "";
+        const components = "";
+        const result = changeRadius(radius, components);
+        expect(result.components).toEqual(components);
+        expect(result.radius).toEqual(radius);
+        expect(result.type).toEqual(CHANGE_RADIUS);
+    });
+    it('changeText', () => {
+        const text = "";
+        const components = "";
+        const result = changeText(text, components);
+        expect(result.type).toEqual(CHANGE_TEXT);
+        expect(result.text).toEqual(text);
+        expect(result.components).toEqual(components);
+    });
+
+    it('toggleUnsavedGeometryModal', () => {
+        const result = toggleUnsavedGeometryModal();
+        expect(result.type).toEqual(TOGGLE_GEOMETRY_MODAL);
+    });
+    it('resetCoordEditor', () => {
+        const result = resetCoordEditor();
+        expect(result.type).toEqual(RESET_COORD_EDITOR);
     });
 
     it('cancel close annotations', () => {

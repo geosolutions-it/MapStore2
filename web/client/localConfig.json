@@ -37,7 +37,8 @@
           "config": {
             "multiGeometry": true,
             "validationErrors": {}
-          }
+          },
+          "defaultTextAnnotation": "New"
         },
         "maptype": {
             "mapType": "{context.mode === 'desktop' ? 'openlayers' : 'leaflet'}"
@@ -290,7 +291,6 @@
                     ]
                 }
             },
-            "TOCItemsSettings",
             "Tutorial", "MapFooter", {
                 "name": "Measure"
             }, "Print", "ShapeFile", {
@@ -306,7 +306,9 @@
             }, {
               "name": "About",
               "showIn": ["BurgerMenu"]
-            }, {
+            },
+            "TOCItemsSettings"
+            , {
               "name": "MousePosition",
               "cfg": {
                 "editCRS": true,

@@ -159,6 +159,7 @@ class OpenlayersMap extends React.Component {
         if (this.props.registerHooks) {
             this.registerHooks();
         }
+
     }
 
     componentWillReceiveProps(newProps) {

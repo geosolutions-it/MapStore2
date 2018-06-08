@@ -13,6 +13,7 @@ const {
     removingSelector,
     showUnsavedChangesModalSelector,
     showUnsavedStyleModalSelector,
+    showUnsavedGeometryModalSelector,
     closingSelector,
     editingSelector,
     drawingSelector,
@@ -24,6 +25,7 @@ const {
     stylingSelector,
     unsavedChangesSelector,
     unsavedStyleSelector,
+    unsavedGeometrySelector,
     errorsSelector,
     configSelector,
     annotationsInfoSelector,
@@ -436,6 +438,13 @@ describe('Test annotations selectors', () => {
         const retVal = showUnsavedStyleModalSelector(state);
         expect(retVal).toBe(false);
     });
+    it('test showUnsavedGeometryModalSelector', () => {
+        let retVal = showUnsavedGeometryModalSelector(state);
+        expect(retVal).toBe(false);
+
+        retVal = showUnsavedGeometryModalSelector({annotations: {showUnsavedGeometryModal: true}});
+        expect(retVal).toBe(true);
+    });
     it('test closingSelector', () => {
         const retVal = closingSelector(state);
         expect(retVal).toBe(false);
@@ -481,6 +490,12 @@ describe('Test annotations selectors', () => {
         const retVal = unsavedStyleSelector(state);
         expect(retVal).toBe(false);
     });
+    it('test unsavedGeometrySelector', () => {
+        let retVal = unsavedGeometrySelector(state);
+        expect(retVal).toBe(false);
+        retVal = unsavedGeometrySelector({annotations: {unsavedGeometry: true}});
+        expect(retVal).toBe(true);
+    });
     it('test errorsSelector', () => {
         const retVal = errorsSelector(state);
         expect(isEmpty(retVal)).toBe(true);
@@ -503,8 +518,8 @@ describe('Test annotations selectors', () => {
     });
     it('test annotationsInfoSelector', () => {
         const retVal = annotationsInfoSelector(state);
-        expect(Object.keys(retVal).length).toBe(15);
-        const params = ["closing", "config", "drawing", "drawingText", "errors", "editing", "editedFields", "mode", "removing", "showUnsavedChangesModal", "showUnsavedStyleModal", "stylerType", "styling", "unsavedChanges", "unsavedStyle" ];
+        expect(Object.keys(retVal).length).toBe(20);
+        const params = ["closing", "config", "drawing", "drawingText", "errors", "editing", "coordinateEditorEnabled", "editedFields", "mode", "removing", "selected", "featureType", "showUnsavedChangesModal", "showUnsavedStyleModal", "showUnsavedGeometryModal", "stylerType", "styling", "unsavedChanges", "unsavedStyle", "unsavedGeometry" ];
         Object.keys(retVal).forEach(r => {
             expect(params.indexOf(r) !== -1).toBe(true);
         });

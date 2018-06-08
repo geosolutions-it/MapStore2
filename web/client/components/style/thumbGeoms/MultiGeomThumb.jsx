@@ -28,22 +28,33 @@ class MultiGeomThumb extends React.Component {
         strokeWidth: 3,
         styleMultiGeom: {},
         geometry: {
-            geometries: []
+            features: []
         },
         properties: {}
     };
 
+    getGeoms() {
+        return this.props.geometry && this.props.geometry.features.reduce((p, c) => {
+            if (c.properties && c.properties.isCircle) {
+                return {...p, "Circle": true};
+            }
+            if (c.properties && c.properties.isText) {
+                return {...p, "Text": true};
+            }
+            return {...p, [c.geometry.type]: true};
+        }, {"Circle": false, "Text": false});
+    }
     render() {
-
+        let geoms = this.getGeoms();
         let styleCircle = this.props.styleMultiGeom.Circle;
         let styleLine = this.props.styleMultiGeom.MultiLineString || this.props.styleMultiGeom.LineString;
         let stylePolygon = this.props.styleMultiGeom.MultiPolygon || this.props.styleMultiGeom.Polygon;
-        let textPresent = this.props.properties && this.props.properties.textValues && !!this.props.properties.textValues.length;
-        let circlePresent = this.props.properties && this.props.properties.circles && !!this.props.properties.circles.length;
+        let textPresent = geoms.Text;
+        let circlePresent = geoms.Circle;
         let styleText = textPresent ? this.props.styleMultiGeom.Text : {};
-        let types = this.props.geometry.geometries.map(g => g.type);
-        let polygonPresent = types.indexOf("Polygon") !== -1 || types.indexOf("MultiPolygon") !== -1;
-        let lineStringPresent = types.indexOf("LineString") !== -1 || types.indexOf("MultiLineString") !== -1;
+
+        let polygonPresent = geoms.Polygon || geoms.MultiPolygon;
+        let lineStringPresent = geoms.LineString || geoms.MultiLineString;
         return (
             <div className="ms-thumb-geom">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox={"0 0 100 100"}>
