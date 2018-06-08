@@ -164,10 +164,10 @@ const defaultOLStyles = {
         image: image
     })],
     'LineString': options => [new ol.style.Style(assign({},
-        strokeStyle(options, {color: 'green', width: 1})
+        strokeStyle(options, {color: 'blue', width: 3})
     ))],
     'MultiLineString': options => [new ol.style.Style(assign({},
-        strokeStyle(options, {color: 'green', width: 1})
+        strokeStyle(options, {color: 'blue', width: 3})
     ))],
     'MultiPoint': () => [new ol.style.Style({
         image: image
