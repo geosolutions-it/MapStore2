@@ -302,9 +302,8 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
                 })
             })
         ];
-
-        return options.style.useSelectedStyle ? styles.concat(startEndPolylineStyle({radius: tempStyle.weight, applyToPolygon: true}, {radius: tempStyle.weight, applyToPolygon: true})) : styles;
-
+        let startEndPointStyles = options.style.useSelectedStyle ? startEndPolylineStyle({radius: tempStyle.weight, applyToPolygon: true}, {radius: tempStyle.weight, applyToPolygon: true}) : [];
+        return [...styles, ...startEndPointStyles];
     }
 
     if ((geomType === "MultiPoint" || geomType === "Point") && (tempStyle.iconUrl || tempStyle.iconGlyph) ) {
@@ -367,7 +366,8 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
                 })
             })
         ];
-        return options.style.useSelectedStyle ? styles.concat(startEndPolylineStyle({radius: tempStyle.weight, applyToPolygon: true}, {radius: tempStyle.weight, applyToPolygon: true})) : styles;
+        let startEndPointStyles = options.style.useSelectedStyle ? startEndPolylineStyle({radius: tempStyle.weight, applyToPolygon: true}, {radius: tempStyle.weight, applyToPolygon: true}) : [];
+        return [...styles, ...startEndPointStyles];
     }
     return fallbackStyle;
 };

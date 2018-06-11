@@ -21,7 +21,6 @@ const defaultState = {
     areaMeasureEnabled: false,
     bearingMeasureEnabled: false,
     customStartEndPoint: {
-        useCustomStyle: true,
         startPointOptions: {
             radius: 3,
             fillColor: "green"

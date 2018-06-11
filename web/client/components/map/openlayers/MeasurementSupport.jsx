@@ -8,7 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {round, isNil} = require('lodash');
+const {round} = require('lodash');
 const assign = require('object-assign');
 const ol = require('openlayers');
 const wgs84Sphere = new ol.Sphere(6378137);
@@ -16,11 +16,10 @@ const {reprojectGeoJson, reproject, calculateAzimuth, calculateDistance, transfo
 const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
 const {startEndPolylineStyle} = require('./VectorStyle');
 const {getMessageById} = require('../../../utils/LocaleUtils');
-const {set} = require('../../../utils/ImmutableUtils');
 
 class MeasurementSupport extends React.Component {
     static propTypes = {
-        customStartEndPoint: PropTypes.object,
+        startEndPoint: PropTypes.object,
         map: PropTypes.object,
         projection: PropTypes.string,
         measurement: PropTypes.object,
@@ -35,8 +34,7 @@ class MeasurementSupport extends React.Component {
     };
 
     static defaultProps = {
-        customStartEndPoint: {
-            useCustomStyle: true,
+        startEndPoint: {
             startPointOptions: {
                 radius: 3,
                 fillColor: "green"
@@ -98,16 +96,7 @@ class MeasurementSupport extends React.Component {
         var vector;
         var draw;
         var geometryType;
-        let {customStartEndPoint} = newProps.measurement;
-        if (isNil(customStartEndPoint && customStartEndPoint.useCustomStyle)) {
-            customStartEndPoint = set("useCustomStyle", newProps.customStartEndPoint.useCustomStyle, customStartEndPoint);
-        }
-        if (isNil(customStartEndPoint && customStartEndPoint.startPointOptions)) {
-            customStartEndPoint = set("startPointOptions", newProps.customStartEndPoint.startPointOptions, customStartEndPoint);
-        }
-        if (isNil(customStartEndPoint && customStartEndPoint.endPointOptions)) {
-            customStartEndPoint = set("endPointOptions", newProps.customStartEndPoint.endPointOptions, customStartEndPoint);
-        }
+        let {startEndPoint} = newProps.measurement;
         this.continueLineMsg = getMessageById(this.context.messages, "measureSupport.continueLine");
         this.continuePolygonMsg = getMessageById(this.context.messages, "measureSupport.continuePolygon");
 
@@ -133,11 +122,18 @@ class MeasurementSupport extends React.Component {
                 })
             })
         })];
+        let startEndPointStyles = [];
+        let applyStartEndPointStyle = startEndPoint || startEndPoint === true;
+        if (applyStartEndPointStyle || startEndPoint === undefined ) {
+            // if startPointOptions or endPointOptions is undefined it will use the default values set in VectorStyle for that point
+            let options = applyStartEndPointStyle ? startEndPoint === undefined ? {} : startEndPoint : newProps.startEndPoint;
+            startEndPointStyles = startEndPolylineStyle(options.startPointOptions, options.endPointOptions);
+        }
 
         vector = new ol.layer.Vector({
             source: this.source,
             zIndex: 1000000,
-            style: customStartEndPoint.useCustomStyle ? styles.concat(startEndPolylineStyle(customStartEndPoint.startPointOptions, customStartEndPoint.endPointOptions)) : styles
+            style: [...styles, ...startEndPointStyles]
         });
 
         this.props.map.addLayer(vector);
