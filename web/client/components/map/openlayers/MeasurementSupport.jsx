@@ -99,13 +99,13 @@ class MeasurementSupport extends React.Component {
         var draw;
         var geometryType;
         let {customStartEndPoint} = newProps.measurement;
-        if (isNil(customStartEndPoint.useCustomStyle)) {
+        if (isNil(customStartEndPoint && customStartEndPoint.useCustomStyle)) {
             customStartEndPoint = set("useCustomStyle", newProps.customStartEndPoint.useCustomStyle, customStartEndPoint);
         }
-        if (!customStartEndPoint.startPointOptions) {
+        if (isNil(customStartEndPoint && customStartEndPoint.startPointOptions)) {
             customStartEndPoint = set("startPointOptions", newProps.customStartEndPoint.startPointOptions, customStartEndPoint);
         }
-        if (!customStartEndPoint.endPointOptions) {
+        if (isNil(customStartEndPoint && customStartEndPoint.endPointOptions)) {
             customStartEndPoint = set("endPointOptions", newProps.customStartEndPoint.endPointOptions, customStartEndPoint);
         }
         this.continueLineMsg = getMessageById(this.context.messages, "measureSupport.continueLine");
