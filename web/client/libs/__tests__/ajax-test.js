@@ -70,6 +70,10 @@ const authenticationRules = [
     {
       "urlPattern": ".*imtokenized.*",
       "method": "bearer"
+    },
+    {
+      "urlPattern": ".*useBrowserCredentials.*",
+      "method": "browserWithCredentials"
     }
 ];
 
@@ -352,5 +356,34 @@ describe('Tests ajax library', () => {
         }).catch(() => {
             done();
         });
+    });
+
+    it('does set withCredentials on the request', (done)=> {
+      expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
+      expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+
+      axios.get('http://www.useBrowserCredentials.com/useBrowserCredentials?parameter1=value1&parameter2=value2').then(() => {
+        done();
+      }).catch( (exception) => {
+        console.log(exception.config);
+        expect(exception.config).toExist();
+        expect(exception.config.withCredentials).toExist();
+        expect(exception.config.withCredentials).toBeTruthy();
+        done();
+      });
+    });
+
+    it('does not set withCredentials on the request', (done)=> {
+      expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
+      expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+
+      axios.get('http://www.skipBrowserCredentials.com/geoserver?parameter1=value1&parameter2=value2').then(() => {
+        done();
+      }).catch( (exception) => {
+        console.log(exception.config);
+        expect(exception.config).toExist();
+        expect(exception.config.withCredentials).toNotExist();
+        done();
+      });
     });
 });

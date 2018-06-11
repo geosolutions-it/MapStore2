@@ -23,6 +23,9 @@
       }
     },
     "authenticationRules": [{
+        "urlPattern": "https://someendpoint.*",
+        "method": "browserWithCredentials"
+    },{
         "urlPattern": ".*geostore.*",
         "method": "bearer"
     }],

@@ -42,6 +42,11 @@ function addAuthenticationToAxios(axiosConfig) {
     const rule = SecurityUtils.getAuthenticationRule(axiosConfig.url);
 
     switch (rule && rule.method) {
+        case 'browserWithCredentials':
+        {
+            axiosConfig.withCredentials=true;
+            return axiosConfig;
+        }
         case 'authkey':
         {
             const token = SecurityUtils.getToken();
