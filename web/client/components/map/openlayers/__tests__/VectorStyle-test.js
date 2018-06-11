@@ -72,8 +72,8 @@ describe('Test VectorStyle', () => {
         let olStyle = VectorStyle.styleFunction(lineString);
         let olStroke = olStyle[0].getStroke();
 
-        expect(olStroke.getColor()).toBe('green');
-        expect(olStroke.getWidth()).toBe(1);
+        expect(olStroke.getColor()).toBe('blue');
+        expect(olStroke.getWidth()).toBe(3);
 
         const options = {
             style: {
@@ -119,8 +119,8 @@ describe('Test VectorStyle', () => {
         let olStyle = VectorStyle.styleFunction(multiLineString);
         let olStroke = olStyle[0].getStroke();
 
-        expect(olStroke.getColor()).toBe('green');
-        expect(olStroke.getWidth()).toBe(1);
+        expect(olStroke.getColor()).toBe('blue');
+        expect(olStroke.getWidth()).toBe(3);
 
         const options = {
             style: {
