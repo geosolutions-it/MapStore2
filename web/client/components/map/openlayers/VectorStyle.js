@@ -27,7 +27,7 @@ const image = new ol.style.Circle({
  * @param {boolean} options.applyToPolygon tells if this style can be applied to a polygon
  * @return {ol.style.Style} style of the point
 */
-const firstPointOfPolylineStyle = ({radius = 5, fillColor = 'green', applyToPolygon = false}) => new ol.style.Style({
+const firstPointOfPolylineStyle = ({radius = 5, fillColor = 'green', applyToPolygon = false} = {}) => new ol.style.Style({
     image: new ol.style.Circle({
         radius,
         fill: new ol.style.Fill({
@@ -53,7 +53,7 @@ const firstPointOfPolylineStyle = ({radius = 5, fillColor = 'green', applyToPoly
  * @param {boolean} options.applyToPolygon tells if this style can be applied to a polygon
  * @return {ol.style.Style} style of the point
 */
-const lastPointOfPolylineStyle = ({radius = 5, fillColor = 'red', applyToPolygon = false}) => new ol.style.Style({
+const lastPointOfPolylineStyle = ({radius = 5, fillColor = 'red', applyToPolygon = false} = {}) => new ol.style.Style({
     image: new ol.style.Circle({
         radius,
         fill: new ol.style.Fill({
@@ -74,7 +74,7 @@ const lastPointOfPolylineStyle = ({radius = 5, fillColor = 'red', applyToPolygon
 /**
     creates styles to highlight/customize start and end point of a polylin
 */
-const startEndPolylineStyle = (startPointOptions, endPointOptions) => {
+const startEndPolylineStyle = (startPointOptions = {}, endPointOptions = {}) => {
     return [firstPointOfPolylineStyle(startPointOptions), lastPointOfPolylineStyle(endPointOptions)];
 };
 
