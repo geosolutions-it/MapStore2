@@ -309,14 +309,24 @@ const AnnotationsUtils = {
         return {type: "Feature", geometry: {type: "MultiPolygon", coordinates}, properties: {id: uuidv1(), ms_style: annStyleToOlStyle("Circle", style)}};
     },
     /**
-    * Compress circle in a single Polygon feature with style
+    * Transform circle in a single Polygon feature with style
     * @param {object} geometry
     * @param {object} properties
     * @param {object} style
     * @return {object} feature
     */
     fromCircleToPolygon: (geometry, properties, style = STYLE_CIRCLE) => {
-        return {type: "Feature", geometry: properties.polygonGeom, properties: {id: properties.id || uuidv1(), ms_style: annStyleToOlStyle("Circle", style)}};
+        return {type: "Feature", geometry: properties.polygonGeom || geometry, properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle("Circle", style)}};
+    },
+    /**
+    * Transform text point to single point with style
+    * @param {object} geometry
+    * @param {object} properties
+    * @param {object} style
+    * @return {object} feature
+    */
+    fromTextToPoint: (geometry, properties, style = STYLE_TEXT) => {
+        return {type: "Feature", geometry, properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle("Text", style, properties.valueText)}};
     },
     /**
     * Flatten text point to single point with style
@@ -353,7 +363,7 @@ const AnnotationsUtils = {
     * @param {object} feature coming from a ftcoll
     * @return {object} a transformed feature
     */
-    fromAnnotationToGeoJson: ({geometry, properties, style = DEFAULT_ANNOTATIONS_STYLES} = {}) => {
+    fromAnnotationToGeoJson: ({geometry, properties = {}, style = DEFAULT_ANNOTATIONS_STYLES} = {}) => {
         if (properties.isCircle) {
             return AnnotationsUtils.fromCircleToPolygon(geometry, properties, style.Circle);
         }
@@ -363,7 +373,7 @@ const AnnotationsUtils = {
         return {
             type: "Feature",
             geometry,
-            properties: {id: properties.id || uuidv1(), ms_style: annStyleToOlStyle(geometry.type, style[geometry.type])}
+            properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle(geometry.type, style[geometry.type])}
         };
     },
     /**

@@ -20,17 +20,19 @@ const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnota
     setStyle, highlight, cleanHighlight, download, loadAnnotations, SET_STYLE, toggleStyle,
     resetCoordEditor, changeRadius, changeText, changeSelected
 } = require('../../actions/annotations');
+const {TOGGLE_CONTROL, toggleControl} = require('../../actions/controls');
 const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
     setStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic
+    editSelectedFeatureEpic, editCircleFeatureEpic, closeMeasureToolEpic
 } = require('../annotations')({});
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
     setStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic);
+    editSelectedFeatureEpic, editCircleFeatureEpic, closeMeasureToolEpic
+);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
@@ -524,6 +526,29 @@ describe('annotations Epics', () => {
             }
         });
         const action = changeSelected(polygonCoords, 200, undefined);
+        store.dispatch(action);
+    });
+    it('opening annotations closing measure tool', (done) => {
+        store = mockStore({
+            controls: {
+                annotations: {
+                    enabled: true
+                },
+                measure: {
+                    enabled: true
+                }
+            }
+        });
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(TOGGLE_CONTROL);
+                expect(actions[1].control).toBe("measure");
+                done();
+            }
+        });
+        const action = toggleControl("annotations");
         store.dispatch(action);
     });
 

@@ -20,6 +20,17 @@ const defaultState = {
     lineMeasureEnabled: false,
     areaMeasureEnabled: false,
     bearingMeasureEnabled: false,
+    customStartEndPoint: {
+        useCustomStyle: true,
+        startPointOptions: {
+            radius: 3,
+            fillColor: "green"
+        },
+        endPointOptions: {
+            radius: 3,
+            fillColor: "red"
+        }
+    },
     uom: {
         length: {unit: 'm', label: 'm'},
         area: {unit: 'sqm', label: 'm²'}

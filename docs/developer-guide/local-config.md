@@ -155,7 +155,13 @@ Inside defaultState you can set lengthFormula, showLabel, uom:
  - unit length values : ft, m, km, mi, nm standing for feets, meters, kilometers, miles, nautical miles
  - unit area values : sqft, sqm, sqkm, sqmi, sqnm standing for square feets, square meters, square kilometers, square miles, square nautical miles
 
-example:<br>
+- Customize the style for the start/endPoint for the measure features:
+ - You can remove this customization by setting *useCustomStyle* to false
+ - You can customize the starting or ending point by placing *startPointOptions* and/or *endPointOptions*
+ - You can either change the radius or set the fillColor or decide to apply this customization to the first and second-last point for polygons<br>
+For lineString endPointOptions refers to the last point of the polyline
+
+Example:<br>
 ```
 "measurement": {
   "lengthFormula": "vincenty",
@@ -163,6 +169,19 @@ example:<br>
   "uom": {
     "length": {"unit": "m", "label": "m"},
     "area": {"unit": "sqm", "label": "m²"}
+  },
+  "customStartEndPoint": {
+    "useCustomStyle": false,
+    "startPointOptions": {
+        "radius": 3,
+        "fillColor": "green",
+        "applyToPolygon": false
+    },
+    "endPointOptions": {
+        "radius": 3,
+        "fillColor": "red",
+        "applyToPolygon": false
+    }
   }
 }
 ```

@@ -19,35 +19,64 @@ const image = new ol.style.Circle({
   stroke: new ol.style.Stroke({color: 'red', width: 1})
 });
 
-const lastPointOfPolylineStyle = (radius = 5, useSelectedStyle = false) => new ol.style.Style({
-    image: useSelectedStyle ? new ol.style.Circle({
+/**
+ * it creates a custom style for the first point of a polyline
+ * @param {object} options possible configuration of start point
+ * @param {number} options.radius radius of the circle
+ * @param {string} options.fillColor ol color for the circle fill style
+ * @param {boolean} options.applyToPolygon tells if this style can be applied to a polygon
+ * @return {ol.style.Style} style of the point
+*/
+const firstPointOfPolylineStyle = ({radius = 5, fillColor = 'green', applyToPolygon = false}) => new ol.style.Style({
+    image: new ol.style.Circle({
         radius,
         fill: new ol.style.Fill({
-            color: 'red'
+            color: fillColor
         })
-    }) : null,
+    }),
     geometry: function(feature) {
         const geom = feature.getGeometry();
         const type = geom.getType();
+        if (!applyToPolygon && type === "Polygon") {
+            return null;
+        }
+        let coordinates = type === "Polygon" ? geom.getCoordinates()[0] : geom.getCoordinates();
+        return coordinates.length > 1 ? new ol.geom.Point(head(coordinates)) : null;
+    }
+});
+
+/**
+ * it creates a custom style for the last point of a polyline
+ * @param {object} options possible configuration of start point
+ * @param {number} options.radius radius of the circle
+ * @param {string} options.fillColor ol color for the circle fill style
+ * @param {boolean} options.applyToPolygon tells if this style can be applied to a polygon
+ * @return {ol.style.Style} style of the point
+*/
+const lastPointOfPolylineStyle = ({radius = 5, fillColor = 'red', applyToPolygon = false}) => new ol.style.Style({
+    image: new ol.style.Circle({
+        radius,
+        fill: new ol.style.Fill({
+            color: fillColor
+        })
+    }),
+    geometry: function(feature) {
+        const geom = feature.getGeometry();
+        const type = geom.getType();
+        if (!applyToPolygon && type === "Polygon") {
+            return null;
+        }
         let coordinates = type === "Polygon" ? geom.getCoordinates()[0] : geom.getCoordinates();
         return new ol.geom.Point(coordinates.length > 3 ? coordinates[coordinates.length - (type === "Polygon" ? 2 : 1)] : last(coordinates));
     }
 });
 
-const firstPointOfPolylineStyle = (radius = 5, useSelectedStyle = false) =>new ol.style.Style({
-    image: useSelectedStyle ? new ol.style.Circle({
-        radius,
-        fill: new ol.style.Fill({
-            color: 'green'
-        })
-    }) : null,
-    geometry: function(feature) {
-        const geom = feature.getGeometry();
-        const type = geom.getType();
-        let coordinates = type === "Polygon" ? geom.getCoordinates()[0] : geom.getCoordinates();
-        return coordinates.length > 1 ? new ol.geom.Point(head(coordinates)) : null;
-    }
-});
+/**
+    creates styles to highlight/customize start and end point of a polylin
+*/
+const startEndPolylineStyle = (startPointOptions, endPointOptions) => {
+    return [firstPointOfPolylineStyle(startPointOptions), lastPointOfPolylineStyle(endPointOptions)];
+};
 
 const getTextStyle = (tempStyle, valueText, highlight = false) => {
 
@@ -251,15 +280,13 @@ function getMarkerStyle(options) {
 const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, textValues, fallbackStyle, radius = 0 ) => {
     let tempStyle = options.style[geomType] || options.style;
     if (geomType === "MultiLineString" || geomType === "LineString") {
-        return [
+        let styles = [
             new ol.style.Style({
                 stroke: options.style.useSelectedStyle ? new ol.style.Stroke({
                     color: [255, 255, 255, 1],
                     width: tempStyle.weight + 2
                 }) : null
             }),
-            lastPointOfPolylineStyle(tempStyle.weight, options.style.useSelectedStyle),
-            firstPointOfPolylineStyle(tempStyle.weight, options.style.useSelectedStyle),
             new ol.style.Style(tempStyle ? {
                 stroke: new ol.style.Stroke( tempStyle && tempStyle.stroke ? tempStyle.stroke : {
                     color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
@@ -275,6 +302,8 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
                 })
             })
         ];
+
+        return options.style.useSelectedStyle ? styles.concat(startEndPolylineStyle({radius: tempStyle.weight, applyToPolygon: true}, {radius: tempStyle.weight, applyToPolygon: true})) : styles;
 
     }
 
@@ -319,27 +348,26 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
         return [getTextStyle(tempStyle, textValues[0], options.style.useSelectedStyle)];
     }
     if (geomType === "MultiPolygon" || geomType === "Polygon") {
-        return [
-               new ol.style.Style({
-                   stroke: options.style.useSelectedStyle ? new ol.style.Stroke({
-                       color: [255, 255, 255, 1],
-                       width: tempStyle.weight + 2
-                   }) : null
-               }),
-               lastPointOfPolylineStyle(tempStyle.weight, options.style.useSelectedStyle),
-               firstPointOfPolylineStyle(tempStyle.weight, options.style.useSelectedStyle),
-               new ol.style.Style({
-                   stroke: new ol.style.Stroke( tempStyle.stroke ? tempStyle.stroke : {
-                       color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
-                       lineDash: options.style.highlight ? [10] : [0],
-                       width: tempStyle.weight || 1
-                   }),
-                   image: isDrawing ? image : null,
-                   fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
-                       color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 1)
-                   })
-               })
-            ];
+        let styles = [
+            new ol.style.Style({
+                stroke: options.style.useSelectedStyle ? new ol.style.Stroke({
+                    color: [255, 255, 255, 1],
+                    width: tempStyle.weight + 2
+                }) : null
+            }),
+            new ol.style.Style({
+                stroke: new ol.style.Stroke( tempStyle.stroke ? tempStyle.stroke : {
+                    color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
+                    lineDash: options.style.highlight ? [10] : [0],
+                    width: tempStyle.weight || 1
+                }),
+                image: isDrawing ? image : null,
+                fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
+                    color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 1)
+                })
+            })
+        ];
+        return options.style.useSelectedStyle ? styles.concat(startEndPolylineStyle({radius: tempStyle.weight, applyToPolygon: true}, {radius: tempStyle.weight, applyToPolygon: true})) : styles;
     }
     return fallbackStyle;
 };
@@ -491,6 +519,9 @@ function getStyle(options, isDrawing = false, textValues = []) {
 
 
 module.exports = {
+    startEndPolylineStyle,
+    lastPointOfPolylineStyle,
+    firstPointOfPolylineStyle,
     selectedStyleConfiguration,
     getStyle,
     getMarkerStyle,

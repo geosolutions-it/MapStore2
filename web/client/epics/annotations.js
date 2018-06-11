@@ -325,6 +325,15 @@ module.exports = (viewer) => ({
             }
             return Rx.Observable.empty();
         }),
+        /**
+        this epic closes the measure tool becasue can conflict with the draw interaction in others
+        */
+    closeMeasureToolEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
+        .filter((action) => action.control === 'annotations' && store.getState().controls.annotations.enabled)
+        .switchMap(() => {
+            const state = store.getState();
+            return state.controls.measure.enabled ? Rx.Observable.from([toggleControl("measure")]) : Rx.Observable.empty();
+        }),
     closeAnnotationsEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
         .filter((action) => action.control === 'annotations' && !store.getState().controls.annotations.enabled)
         .switchMap(() => {
