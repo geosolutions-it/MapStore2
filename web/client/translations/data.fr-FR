@@ -1550,6 +1550,46 @@
             "cesiumNavigation": {
                 "title": "Navigation",
                 "text": "Vous trouverez ici les boutons de zoom in et zoom out"
+            },
+            "dashboardIntro": {
+                "title": "Didacticiel du tableau de bord",
+                "text": "Vue d'ensemble des fonctionnalités du tableau de bord"
+            },
+            "dashboardNav": {
+                "title": "Barre de navigation",
+                "text": "Ici vous pouvez trouver le sélecteur de langue, le login, le lien de page d'accueil et le menu d'options"
+            },
+            "dashboardContainer": {
+                "title": "Tableau de bord",
+                "text": "Vous pouvez modifier, redimensionner, commander et déplacer des cartes de tableau de bord à l'intérieur de cette zone"
+            },
+            "dashboardAddWidget": {
+                "title": "Ajouter un widget",
+                "text": "Ouvrir la liste des widgets en cliquant sur le bouton Ajouter"
+            },
+            "dashboardBuilder": {
+                "text": "Cliquez sur les cartes pour ajouter le widget associé au tableau de bord",
+                "title": "Widget Builder"
+            },
+            "dashboardAddChart": {
+                "title": "Ajouter un graphique",
+                "text": "<p> Ajoutez de nouveaux graphiques au tableau de bord en choisissant entre les types barre, tarte et ligne. </p> <p> Étapes: </p> <p> <ul> <li> Sélectionner une couche vectorielle </li> <li> Sélectionner un type de graphique </li> <li> Configurer des données de graphique </li> <li> Enregistrer et ajouter au tableau de bord </li> </ul> </p>"
+            },
+            "dashboardAddText": {
+                "title": "Ajouter du texte",
+                "text": "<p> Ajouter de nouveaux textes au tableau de bord. </p> <p> Étapes: </p> <p> <ul> <li> Modifier le texte dans l'éditeur </li> <li> Enregistrer et ajouter au tableau de bord </li> </ul> </p>"
+            },
+            "dashboardAddTable": {
+                "title": "Ajouter une table",
+                "text": "<p> Ajouter de nouveaux tableaux de caractéristiques au tableau de bord. </p> <p> Étapes: </p> <p> <ul> <li> Sélectionner une couche vectorielle </li> <li> Configurer les données de table </li> <li> Enregistrer et ajouter au tableau de bord </li> </ul> </p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Ajouter un compteur",
+                "text": "<p> Ajoutez de nouveaux compteurs au tableau de bord. Le compteur affichera une valeur basée sur les données sélectionnées. </p> <p> Étapes: </p> <p> <ul> <li> Sélectionnez une couche vectorielle </li> <li> Configurez les données du compteur </li> <li> Enregistrer et ajouter au tableau de bord </li> </ul> </p>"
+            },
+            "dashboardAddMap": {
+                "title": "Ajouter une carte",
+                "text": "<p> Ajoutez une nouvelle carte interactive au tableau de bord. Après avoir sauvegardé la carte du début, le widget légende sera ajouté à la liste. </p> <p> Étapes: </p> <p> <ul> <li> Sélectionnez une carte </li> <li> Améliorer la carte en ajoutant de nouvelles couches </li> <li> Enregistrer et ajouter au tableau de bord </li> </ul> </p>"
             }
         }
     }

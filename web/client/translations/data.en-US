@@ -1552,6 +1552,46 @@
             "cesiumNavigation": {
                 "title": "Navigation",
                 "text": "Here you can find the zoom in and zoom out buttons"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Overview of dashboard functionalities"
+            },
+            "dashboardNav": {
+                "title": "Navigation Bar",
+                "text": "Here you can find language selector, login, homepage link and options menu"
+            },
+            "dashboardContainer": {
+                "title": "Dashboard Container",
+                "text": "You can edit, resize, order and move dashboard cards inside of this area"
+            },
+            "dashboardAddWidget": {
+                "title": "Add Widget",
+                "text": "Open widget list by clicking on add button"
+            },
+            "dashboardBuilder": {
+                "title": "Widget Builder",
+                "text": "Click on cards to add the related widget to dashboard"
+            },
+            "dashboardAddChart": {
+                "title": "Add Chart",
+                "text": "<p>Add new charts to dashboard by choosing between bar, pie and line types.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Select chart type</li><li>Configure chart data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddText": {
+                "title": "Add Text",
+                "text": "<p>Add new texts to dashboard.</p><p>Steps:</p><p><ul><li>Edit text in editor</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddTable": {
+                "title": "Add Table",
+                "text": "<p>Add new tables of features to dashboard.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure table data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Add Counter",
+                "text": "<p>Add new counters to dashboard. Counter will show a value based on selected data.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure counter data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddMap": {
+                "title": "Add Map",
+                "text": "<p>Add a new interactive map to dashboard. After saving the firt map, the legend widget will be added to the list.</p><p>Steps:</p><p><ul><li>Select a map</li><li>Improve map by adding new layers</li><li>Save and add to dashboard</li></ul></p>"
             }
         }
     }

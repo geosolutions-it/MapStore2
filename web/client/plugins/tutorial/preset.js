@@ -11,5 +11,6 @@ module.exports = {
     default_mobile_tutorial: require('./preset/default_mobile_tutorial'),
     home_tutorial: require('./preset/home_tutorial'),
     cesium_tutorial: require('./preset/cesium_tutorial'),
-    cesium_mobile_tutorial: require('./preset/cesium_mobile_tutorial')
+    cesium_mobile_tutorial: require('./preset/cesium_mobile_tutorial'),
+    dashboard_tutorial: require('./preset/dashboard_tutorial')
 };

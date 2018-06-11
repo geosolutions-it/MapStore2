@@ -1550,6 +1550,46 @@
             "cesiumNavigation": {
                 "title": "Navigation",
                 "text": "Hier finden Sie die Schaltflächen zum Vergrößern und Verkleinern"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Überblick über die Funktionen des Dashboards"
+            },
+            "dashboardNav": {
+                "title": "Navigationsleiste",
+                "text": "Hier finden Sie Sprachauswahl, Login, Homepage-Link und Optionsmenü"
+            },
+            "dashboardContainer": {
+                "title": "Dashboard-Container",
+                "text": "Sie können Dashboard-Karten in diesem Bereich bearbeiten, in der Größe verändern, bestellen und verschieben"
+            },
+            "dashboardAddWidget": {
+                "title": "Widget hinzufügen",
+                "text": "Öffnen Sie die Widgetliste, indem Sie auf Hinzufügen klicken"
+            },
+            "dashboardBuilder": {
+                "title": "Widget Builder",
+                "text": "Klicken Sie auf Karten, um das zugehörige Widget zum Dashboard hinzuzufügen"
+            },
+            "dashboardAddChart": {
+                "title": "Diagramm hinzufügen",
+                "text": "<p> Fügen Sie dem Dashboard neue Diagramme hinzu, indem Sie zwischen balkendiagramm, kuchendiagramm und liniendiagramm typen wählen. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Vektorebene </li> <li> Wählen Sie den Diagrammtyp </li> <li> Konfigurieren Sie die Diagrammdaten </li> <li> Speichern und zum Dashboard hinzufügen </li > </ul> </p>" 
+            },
+            "dashboardAddText": {
+                "title": "Text hinzufügen",
+                "text": "<p> Fügen Sie dem Dashboard neue Texte hinzu. </p> <p> Schritte: </p> <p> <ul> <li> Bearbeiten Sie Text im Editor </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddTable": {
+                "title": "Tabelle hinzufügen",
+                "text": "<p> Fügen Sie dem Dashboard neue Funktionstabellen hinzu. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Vektorebene aus </li> <li> Tabellendaten konfigurieren </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Zähler hinzufügen",
+                "text": "<p> Fügen Sie neue Zähler zum Dashboard hinzu. Counter zeigt basierend auf ausgewählten Daten einen Wert an. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Vektorebene aus </li> <li> Zählerdaten konfigurieren </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddMap": {
+                "title": "Karte hinzufügen",
+                "text": "<p> Fügen Sie eine neue interaktive Karte zum Dashboard hinzu. Nach dem Speichern der ersten Karte wird das Legenden-Widget zur Liste hinzugefügt. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Karte </ li> <li> Karte verbessern durch Hinzufügen neuer Ebenen </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
             }
         }
     }

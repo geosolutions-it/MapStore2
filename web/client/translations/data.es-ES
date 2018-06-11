@@ -1550,6 +1550,46 @@
             "cesiumNavigation": {
                 "title": "Navegación",
                 "text": "Aquí puede encontrar los botones de zoom y zoom out"
+            },
+            "dashboardIntro": {
+                "title": "Tutorial del tablero",
+                "text": "Descripción general de las funciones del panel"
+            },
+            "dashboardNav": {
+                "title": "Barra de navegación",
+                "text": "Aquí puede encontrar el selector de idioma, el inicio de sesión, el enlace de la página de inicio y el menú de opciones"
+            },
+            "dashboardContainer": {
+                "title": "Contenedor del Tablero",
+                "text": "Puede editar, cambiar el tamaño, ordenar y mover tarjetas de panel dentro de esta área"
+            },
+            "dashboardAddWidget": {
+                "title": "Agregar Widget",
+                "text": "Abra la lista de widgets haciendo clic en el botón Agregar"
+            },
+            "dashboardBuilder": {
+                "title": "Constructor de widgets",
+                "text": "Haga clic en las tarjetas para agregar el widget relacionado al tablero"
+            },
+            "dashboardAddChart": {
+                "title": "Agregar gráfico",
+                "text": "<p> Agregue gráficos nuevos al panel eligiendo entre los tipos barra, pie y línea. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione una capa vectorial </li> <li> Seleccione el tipo de gráfico </li> <li> Configure los datos del gráfico </li> <li> Guarde y agregue al tablero </li> </ul> </p>"
+            },
+            "dashboardAddText": {
+                "title": "Añadir texto",
+                "text": "<p> Agregue nuevos textos al tablero. </p> <p> Pasos: </p> <p> <ul> <li> Edite el texto en el editor </li> <li> Guárdelo y agréguelo al tablero </li> </ul> </p>"
+            },
+            "dashboardAddTable": {
+                "title": "Agregar tabla",
+                "text": "<p> Agregue nuevas tablas de características al tablero. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione una capa vectorial </li> <li> Configure los datos de la tabla </li> <li> Guardar y agregar al tablero </li> </ul> </p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Añadir contador",
+                "text": "<p> Agregue nuevos contadores al tablero. El contador mostrará un valor basado en los datos seleccionados. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione una capa vectorial </li> <li> Configure los datos del contador </li> <li> Guardar y agregar al tablero </li> </ul> </p>"
+            },
+            "dashboardAddMap": {
+                "title": "Añadir mapa",
+                "text": "<p> Agregue un nuevo mapa interactivo al tablero. Después de guardar el último mapa, el widget de la leyenda se agregará a la lista. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione un mapa </li> <li> Mejorar el mapa agregando nuevas capas </li> <li> Guardar y agregar al tablero </li> </ul> </p>"
             }
         }
     }

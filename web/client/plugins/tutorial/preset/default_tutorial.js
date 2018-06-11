@@ -9,7 +9,7 @@
 module.exports = [
     {
         translationHTML: 'drawerMenu',
-        selector: '#drawer-menu-button'
+        selector: '.ms-drawer-menu-button'
     },
     {
         translation: 'searchBar',

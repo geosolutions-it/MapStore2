@@ -1550,6 +1550,46 @@
                 "cesiumNavigation": {
                     "title": "Navigazione",
                     "text": "Qui puoi trovare i pulsanti per lo zoom in e out"
+                },
+                "dashboardIntro": {
+                    "title": "Dashboard Tutorial",
+                    "text": "Panoramica delle funzionalità del dashboard"
+                },
+                "dashboardNav": {
+                    "title": "Barra di navigazione",
+                    "text": "Qui puoi trovare il selettore della lingua, il login, il link della homepage e il menu delle opzioni"
+                },
+                "dashboardContainer": {
+                    "title": "Contenitore Dashboard",
+                    "text": "Puoi modificare, ridimensionare, ordinare e spostare le card della dashboard all'interno di quest'area"
+                },
+                "dashboardAddWidget": {
+                    "title": "Aggiungi widget",
+                    "text": "Apri l'elenco dei widget facendo clic sul pulsante aggiungi"
+                },
+                "dashboardBuilder": {
+                    "title": "Widget Builder",
+                    "text": "Fare clic sulle cards per aggiungere il relativo widget alla dashboard"
+                },
+                "dashboardAddChart": {
+                    "title": "Aggiungi grafico",
+                    "text": "<p>Aggiungi nuovi grafici alla dashboard scegliendo tra istogramma, tortae linea.</p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Seleziona il tipo di grafico </li> <li> Configura i dati del grafico </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+                },
+                "dashboardAddText": {
+                    "title": "Aggiungi testo",
+                    "text": "<p> Aggiungi nuovi testi alla dashboard. </p> <p> Passaggi: </p> <p> <ul> <li> Modifica il testo nell'editor </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+                },
+                "dashboardAddTable": {
+                    "title": "Aggiungi tabella",
+                    "text": "<p> Aggiungi nuove tabelle alla dashboard. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un layer vettoriale </li> <li> Configura i dati della tabella </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+                },
+                "dashboardAddCounter": {
+                    "title": "Aggiungi contatore",
+                    "text": "<p> Aggiungi nuovi contatori alla dashboard. Il contatore mostrerà un valore basato sui dati selezionati. </p> <p> Passi: </p> <p> <ul> <li> Seleziona un layer vettoriale </li> <li> Configura i dati del contatori </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+                },
+                "dashboardAddMap": {
+                    "title": "Aggiungi mappa",
+                    "text": "<p> Aggiungi una nuova mappa interattiva alla dashboard. Dopo aver salvato la prima mappa, il widget legenda verrà aggiunto all'elenco. </ P> <p> Passaggi: </ p> <p> <ul> <li> Seleziona una mappa </ li> <li> Migliora la mappa aggiungendo nuovi layer </ li> <li> Salva e aggiungi alla dashboard </ li> </ ul> </ p>"
                 }
             }
     }
