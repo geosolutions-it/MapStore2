@@ -200,6 +200,8 @@ const AnnotationsPlugin = connect(annotationsSelector, {
 
 module.exports = {
     AnnotationsPlugin: assign(AnnotationsPlugin, {
+            disablePluginIf: "{state('mapType') === 'cesium'}"
+        }, {
         BurgerMenu: {
             name: 'annotations',
             position: 2000,

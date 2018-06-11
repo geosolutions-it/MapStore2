@@ -13,9 +13,63 @@ const {getAvailableStyler, getRelativeStyler, convertGeoJSONToInternalModel,
     flattenGeometryCollection, normalizeAnnotation, removeDuplicate,
     formatCoordinates, getComponents, addIds, validateCoords, validateCoordsArray,
     validateCoord, getBaseCoord, validateText, validateCircle, validateCoordinates,
-    coordToArray, validateFeature
+    coordToArray, validateFeature, fromTextToPoint, fromCircleToPolygon,
+    fromAnnotationToGeoJson, annotationsToPrint
 } = require('../AnnotationsUtils');
 
+const featureCollection = {
+    features: [{
+        type: "Feature",
+        geometry: {
+            type: "Point",
+            coordinates: [1, 1]
+        }
+    },
+    {
+        type: "Feature",
+        geometry: {
+            type: "LineString",
+            coordinates: [1, 1]
+        }
+    }],
+    type: "FeatureCollection"
+};
+const circle1 = {
+    type: "Feature",
+    geometry: {
+        type: "Polygon",
+        coordinates: [[[1, 1], [2, 2], [3, 3], [1, 1]]]
+    },
+    properties: {
+        isCircle: true,
+        radius: 200,
+        id: "circle1"
+    }
+};
+const circle2 = {
+    type: "Feature",
+    geometry: {
+        type: "Point",
+        coordinates: [1, 1]
+    },
+    properties: {
+        polygonGeom: {
+            type: "Polygon",
+            coordinates: [[[1, 1], [2, 2], [3, 3], [1, 1]]]
+        },
+        isCircle: true,
+        radius: 200,
+        id: "circle1"
+    }
+};
+const textFeature = {
+    geometry: {
+        type: "Point",
+        coordinates: [1, 2]
+    },
+    type: "Feature",
+    properties: {isText: true, valueText: "pino"}
+};
 describe('Test the AnnotationsUtils', () => {
     it('getAvailableStyler for point or MultiPoint', () => {
         let stylers = getAvailableStyler({type: "Point"});
@@ -212,10 +266,26 @@ describe('Test the AnnotationsUtils', () => {
         expect(f).toExist();
         expect(f.type).toBe("Feature");
         expect(f.geometry.type).toBe("MultiPolygon");
+        expect(f.properties).toExist();
         expect(f.properties.ms_style).toExist();
         expect(f.properties.ms_style.strokeColor).toBe(style.Circle.color);
-        expect(f.properties).toExist();
 
+    });
+    it('fromCircleToPolygon', () => {
+        const {geometry, properties} = circle1;
+        const {style} = feature;
+        const ft = fromCircleToPolygon(geometry, properties, style.Circle);
+        expect(ft).toExist();
+        expect(ft.type).toBe("Feature");
+        expect(ft.geometry.type).toBe("Polygon");
+        expect(ft.properties).toExist();
+        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties.isCircle).toBe(true);
+        const {geometry: geometry2, properties: properties2} = circle2;
+
+        const ft2 = fromCircleToPolygon(geometry2, properties2, style.Circle);
+        expect(ft2.geometry.type).toBe("Polygon");
+        expect(ft2.properties.isCircle).toBe(true);
     });
     it('textToPoint', () => {
         const {geometry, properties, style} = feature;
@@ -224,12 +294,46 @@ describe('Test the AnnotationsUtils', () => {
         expect(fts.length).toBe(2);
         expect(fts[0].type).toBe("Feature");
         expect(fts[0].geometry.type).toBe("MultiPoint");
+        expect(fts[0].properties).toExist();
         expect(fts[0].properties.ms_style).toExist();
         expect(fts[0].properties.ms_style.label).toBe("pino");
-        expect(fts[0].properties).toExist();
 
     });
+    it('fromTextToPoint', () => {
+        const {geometry, properties} = textFeature;
+        const {style} = feature;
+        const ft = fromTextToPoint(geometry, properties, style.Text);
+        expect(ft).toExist();
+        expect(ft.type).toBe("Feature");
+        expect(ft.geometry.type).toBe("Point");
+        expect(ft.properties).toExist();
+        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties.ms_style.label).toBe("pino");
 
+    });
+    it('fromAnnotationToGeoJson with a circle', () => {
+        const ft = fromAnnotationToGeoJson(circle1);
+        expect(ft.type).toBe("Feature");
+        expect(ft.geometry.type).toBe("Polygon");
+        expect(ft.properties).toExist();
+        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties.isCircle).toBe(true);
+    });
+    it('fromAnnotationToGeoJson with a text', () => {
+        const ft = fromAnnotationToGeoJson(textFeature);
+        expect(ft.type).toBe("Feature");
+        expect(ft.geometry.type).toBe("Point");
+        expect(ft.properties).toExist();
+        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties.isText).toBe(true);
+    });
+    it('fromAnnotationToGeoJson with a point', () => {
+        const ft = fromAnnotationToGeoJson(featureCollection.features[0]);
+        expect(ft.type).toBe("Feature");
+        expect(ft.geometry.type).toBe("Point");
+        expect(ft.properties).toExist();
+        expect(ft.properties.ms_style).toExist();
+    });
     it('flattenGeometryCollection', () => {
         const fts = flattenGeometryCollection(feature);
         expect(fts).toExist();
@@ -253,7 +357,11 @@ describe('Test the AnnotationsUtils', () => {
         expect(annotation.properties.title).toBe("Default title");
     });
     it('test normalizeAnnotation with Annotation', () => {
-        // TODO fix this after import/export fix
+        let annotation = normalizeAnnotation(featureCollection);
+        expect(annotation.type).toBe("FeatureCollection");
+        expect(annotation.features[0].geometry.type).toBe("Point");
+        expect(annotation.features[1].geometry.type).toBe("LineString");
+
     });
     it('test removeDuplicate', () => {
         const annotations = [{properties: {id: "id1"}}, {properties: {id: "id2"}}, {properties: {id: "id2"}}];
@@ -417,5 +525,27 @@ describe('Test the AnnotationsUtils', () => {
         expect(validateFeature({})).toBe(false);
         expect(validateFeature(textAnnot)).toBe(true);
 
+    });
+    it('test annotationsToPrint from featureCollection', () => {
+        let fts = annotationsToPrint([featureCollection]);
+        expect(fts).toExist();
+        expect(fts.length).toBe(2);
+        expect(fts[0].geometry.type).toBe("Point");
+        expect(fts[1].geometry.type).toBe("LineString");
+
+    });
+    it('test annotationsToPrint from array of geometryCollection', () => {
+        let fts = annotationsToPrint([feature]);
+        expect(fts).toExist();
+        expect(fts.length).toBe(9);
+        expect(fts[0].geometry.type).toBe("MultiPolygon");
+        expect(fts[1].geometry.type).toBe("MultiLineString");
+        expect(fts[2].geometry.type).toBe("MultiPoint");
+        expect(fts[3].geometry.type).toBe("MultiPoint");
+        expect(fts[4].geometry.type).toBe("MultiPoint");
+        expect(fts[5].geometry.type).toBe("MultiPoint");
+        expect(fts[6].geometry.type).toBe("MultiPolygon");
+        expect(fts[7].geometry.type).toBe("MultiPoint");
+        expect(fts[8].geometry.type).toBe("MultiPoint");
     });
 });

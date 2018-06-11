@@ -78,8 +78,8 @@ const rgbaTorgb = (rgba = "") => {
 const textAlignTolabelAlign = (a) => (a === "start" && "lm") || (a === "end" && "rm") || "cm";
 
 const getStylesObject = ({type = "Point", features = []} = {}) => {
-    return type === "FeatureCollection" ? features.reduce((p, {type: t}) => {
-        p[t] = DEFAULT_ANNOTATIONS_STYLES[t];
+    return type === "FeatureCollection" ? features.reduce((p, c) => {
+        p[c.geometry.type] = DEFAULT_ANNOTATIONS_STYLES[c.geometry.type];
         return p;
     }, {type: "FeatureCollection"}) : {...DEFAULT_ANNOTATIONS_STYLES[type]};
 };
@@ -291,29 +291,49 @@ const AnnotationsUtils = {
     * annotation style.
     */
     normalizeAnnotation: (ann = {}, messages = {}) => {
-        const annotation = ann.type !== "Feature" && {type: "Feature", geometry: ann} || {...ann};
-        const style = getStylesObject(annotation.geometry);
+        const annotation = ann.type === "FeatureCollection" ? {...ann} : {type: "Feature", geometry: ann};
+        const style = getStylesObject(annotation);
         const properties = getProperties(annotation.properties, messages);
         return {style, properties, ...annotation};
     },
     removeDuplicate: (annotations) => values(annotations.reduce((p, c) => ({...p, [c.properties.id]: c}), {})),
     /**
-    * Compress circle in a single MultyPolygon feature with style
-    * @param (Object) geometry
-    * @param (Object) properties
-    * @param (Object) style
-    * @return (OBject) feature
+    * Compress circle in a single MultiPolygon feature with style
+    * @param {object} geometry
+    * @param {object} properties
+    * @param {object} style
+    * @return {object} feature
     */
     circlesToMultiPolygon: ({geometries}, {circles}, style = STYLE_CIRCLE) => {
         const coordinates = circles.reduce((coords, cIdx) => coords.concat([geometries[cIdx].coordinates]), []);
         return {type: "Feature", geometry: {type: "MultiPolygon", coordinates}, properties: {id: uuidv1(), ms_style: annStyleToOlStyle("Circle", style)}};
     },
     /**
+    * Transform circle in a single Polygon feature with style
+    * @param {object} geometry
+    * @param {object} properties
+    * @param {object} style
+    * @return {object} feature
+    */
+    fromCircleToPolygon: (geometry, properties, style = STYLE_CIRCLE) => {
+        return {type: "Feature", geometry: properties.polygonGeom || geometry, properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle("Circle", style)}};
+    },
+    /**
+    * Transform text point to single point with style
+    * @param {object} geometry
+    * @param {object} properties
+    * @param {object} style
+    * @return {object} feature
+    */
+    fromTextToPoint: (geometry, properties, style = STYLE_TEXT) => {
+        return {type: "Feature", geometry, properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle("Text", style, properties.valueText)}};
+    },
+    /**
     * Flatten text point to single point with style
-    * @param (Object) geometry
-    * @param (Object) properties
-    * @param (Object) style
-    * @return (array) features
+    * @param {object} geometry
+    * @param {object} properties
+    * @param {object} style
+    * @return {object[]} features
     */
     textToPoint: ({geometries}, {textGeometriesIndexes, textValues}, style = STYLE_TEXT) => {
         return textGeometriesIndexes.map((tIdx, cIdx) => {
@@ -323,8 +343,8 @@ const AnnotationsUtils = {
     },
     /**
     * Flatten geometry collection
-    * @param (Object) GeometryCollection An annotation of type geometrycollection
-    * @return (array) an array of features
+    * @param {object} GeometryCollection An annotation of type geometrycollection
+    * @return {object[]} an array of features
     */
     flattenGeometryCollection: ({geometry, properties, style}) => {
         const circles = properties.circles && AnnotationsUtils.circlesToMultiPolygon(geometry, properties, style.Circle) || [];
@@ -339,14 +359,37 @@ const AnnotationsUtils = {
         return features.concat(circles, texts);
     },
     /**
+    * transform an annotation Feature into a simple geojson feature
+    * @param {object} feature coming from a ftcoll
+    * @return {object} a transformed feature
+    */
+    fromAnnotationToGeoJson: ({geometry, properties = {}, style = DEFAULT_ANNOTATIONS_STYLES} = {}) => {
+        if (properties.isCircle) {
+            return AnnotationsUtils.fromCircleToPolygon(geometry, properties, style.Circle);
+        }
+        if (properties.isText) {
+            return AnnotationsUtils.fromTextToPoint(geometry, properties, style.Text);
+        }
+        return {
+            type: "Feature",
+            geometry,
+            properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle(geometry.type, style[geometry.type])}
+        };
+    },
+    /**
     * Adapt annotation features to print pdf
-    * @param (Array) features
-    * @param (Object) style
-    * @return (Array) features
+    * @param {object[]} features
+    * @param {object} style
+    * @return {object[]} features
     */
     annotationsToPrint: (features = []) => {
         return features.reduce((coll, f) => {
-            return f.geometry.type === "GeometryCollection" && coll.concat(AnnotationsUtils.flattenGeometryCollection(f)) || coll.concat({type: "Feature", geometry: f.geometry, properties: {...f.properties, ms_style: annStyleToOlStyle(f.geometry.type, f.style)}});
+            if (f.type === "FeatureCollection") {
+                // takes the style from the feature coll if it is missing from the feature
+                return coll.concat(f.features.map(ft => AnnotationsUtils.fromAnnotationToGeoJson({...ft, style: ft.style || f.style})));
+            }
+            return f.geometry && f.geometry.type === "GeometryCollection" ? coll.concat(AnnotationsUtils.flattenGeometryCollection(f))
+                : coll.concat({type: "Feature", geometry: f.geometry, properties: {...f.properties, ms_style: annStyleToOlStyle(f.geometry.type, f.style)}});
         }, []);
     },
     formatCoordinates: (coords = [[]]) => {
