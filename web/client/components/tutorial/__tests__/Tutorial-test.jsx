@@ -93,7 +93,8 @@ describe("Test the Tutorial component", () => {
         expect(intro).toExist();
         expect(intro.length).toBe(1);
 
-        cmp.componentWillUpdate({}, {});
+        ReactDOM.render(<Tutorial introStyle={{}} defaultStep={{}} showCheckbox={false} actions={actions}/>, document.getElementById("container"));
+
         expect(spyClose).toNotHaveBeenCalled();
         expect(spyStart).toNotHaveBeenCalled();
 
@@ -126,17 +127,17 @@ describe("Test the Tutorial component", () => {
         expect(intro).toExist();
         expect(intro.length).toBe(1);
 
-        cmp.componentWillUpdate({toggle: true}, {});
+        ReactDOM.render(<Tutorial toggle introStyle={{}} error={{}} steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
         expect(spyStart).toHaveBeenCalled();
 
-        cmp.componentWillUpdate({status: 'close'}, {});
+        ReactDOM.render(<Tutorial status={'close'} introStyle={{}} error={{}} steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
         expect(spyClose).toHaveBeenCalled();
 
         cmp.onTour({type: 'step:before'});
         expect(spyUpdate).toHaveBeenCalled();
         expect(spyUpdate).toHaveBeenCalledWith({type: 'step:before'}, presetList.test);
 
-        cmp.componentWillUnmount();
+        ReactDOM.render(<span/>, document.getElementById("container"));
         expect(spyReset).toHaveBeenCalled();
 
         const next = cmp.checkFirstValidStep(0, 'next');
@@ -166,7 +167,7 @@ describe("Test the Tutorial component", () => {
         const cmp = ReactDOM.render(<Tutorial steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
         expect(cmp).toExist();
 
-        cmp.componentWillUpdate({}, {});
+        ReactDOM.render(<Tutorial steps={presetList.test} preset={'test'} presetList={presetList} defaultStep={{}} showCheckbox actions={actions}/>, document.getElementById("container"));
 
         expect(spyStart).toNotHaveBeenCalled();
         expect(spyClose).toNotHaveBeenCalled();
