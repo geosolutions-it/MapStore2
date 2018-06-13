@@ -11,7 +11,7 @@ const React = require('react');
 const {creationError, changeMapView, clickOnMap} = require('../../actions/map');
 const {layerLoading, layerLoad, layerError} = require('../../actions/layers');
 const {changeMousePosition} = require('../../actions/mousePosition');
-const {changeMeasurementState, changeGeometry} = require('../../actions/measurement');
+const {changeMeasurementState, changeGeometry, resetGeometry} = require('../../actions/measurement');
 const {changeSelectionState} = require('../../actions/selection');
 const {changeLocateState, onLocateError} = require('../../actions/locate');
 const {changeDrawingStatus, endDrawing, setCurrentStyle, geometryChanged, drawStopped, selectFeatures, drawingFeatures} = require('../../actions/draw');
@@ -53,6 +53,7 @@ module.exports = (mapType, actions) => {
         }
     }), {
         changeMeasurementState,
+        resetGeometry,
         changeGeometry
     })(components.MeasurementSupport || Empty);
 

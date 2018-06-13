@@ -17,6 +17,7 @@ const {
     VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY,
     TOGGLE_STYLE, SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION,
     FILTER_ANNOTATIONS, CLOSE_ANNOTATIONS, CONFIRM_CLOSE_ANNOTATIONS,
+    toggleDeleteFtModal, confirmDeleteFeature,
     changeStyler, addText, setUnsavedChanges, setUnsavedStyle,
     toggleUnsavedChangesModal, toggleUnsavedGeometryModal, toggleUnsavedStyleModal, changedProperties,
     setInvalidSelected, addNewFeature, resetCoordEditor, changeText, changeRadius, changeSelected
@@ -40,6 +41,30 @@ describe('Test the annotations reducer', () => {
     it('default states annotations', () => {
         const state = annotations(undefined, {type: 'default'});
         expect(state.validationErrors).toExist();
+    });
+    it('toggleDeleteFtModal', () => {
+        // toggleDeleteFtModal, confirmDeleteFeature,
+        let state = annotations({}, toggleDeleteFtModal());
+        expect(state.showDeleteFeatureModal).toBe(true);
+        state = annotations(state, toggleDeleteFtModal());
+        expect(state.showDeleteFeatureModal).toBe(false);
+    });
+    it('confirmDeleteFeature', () => {
+        const state = annotations({
+            selected: {
+                properties: {
+                    id: "1"
+                }
+            },
+            editing: {
+                features: [{
+                    properties: {
+                        id: "1"
+                    }
+                }]
+            }
+        }, confirmDeleteFeature());
+        expect(state.editing.features.length).toBe(0);
     });
     it('change styler', () => {
         const state = annotations({}, changeStyler("marker"));

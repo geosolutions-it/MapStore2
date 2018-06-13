@@ -801,7 +801,9 @@ class DrawSupport extends React.Component {
 
             this.addModifyInteraction(newProps);
             // removed for polygon because of the issue https://github.com/geosolutions-it/MapStore2/issues/2378
-            this.addTranslateInteraction();
+            if (newProps.options.translateEnabled !== false) {
+                this.addTranslateInteraction();
+            }
             this.setState({keySingleClickCallback: this.addSingleClickListener(singleClickCallback)});
         }
         if (newProps.options && newProps.options.selectEnabled/* && (newProps.drawMethod !== "Point" && newProps.drawMethod !== "Text")*/) { // TODO fix all call to this which are missing "selectEnabled" flag
@@ -1158,8 +1160,6 @@ class DrawSupport extends React.Component {
             });
         this.translateInteraction.setActive(false);
         this.translateInteraction.on('translateend', (e) => {
-
-
             let features = e.features.getArray().map(f => {
                 // transform back circles in polygons
                 let newFt = f.clone();

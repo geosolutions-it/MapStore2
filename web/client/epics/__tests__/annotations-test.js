@@ -18,7 +18,7 @@ const {configureMap} = require('../../actions/config');
 // const {TOGGLE_CONTROL} = require('../../actions/controls');
 const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation,
     setStyle, highlight, cleanHighlight, download, loadAnnotations, SET_STYLE, toggleStyle,
-    resetCoordEditor, changeRadius, changeText, changeSelected
+    resetCoordEditor, changeRadius, changeText, changeSelected, confirmDeleteFeature
 } = require('../../actions/annotations');
 const {TOGGLE_CONTROL, toggleControl} = require('../../actions/controls');
 const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
@@ -358,6 +358,25 @@ describe('annotations Epics', () => {
             }
         });
         const action = resetCoordEditor({});
+        store.dispatch(action);
+
+    });
+    it('clicked on confirm delete of a feature ', (done) => {
+        store = mockStore(
+            set("annotations.styling", false, defaultState)
+        );
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                expect(actions[1].options.selectEnabled).toBe(true);
+                expect(actions[1].options.drawEnabled).toBe(false);
+                expect(actions[1].options.editEnabled).toBe(false);
+                done();
+            }
+        });
+        const action = confirmDeleteFeature();
         store.dispatch(action);
 
     });

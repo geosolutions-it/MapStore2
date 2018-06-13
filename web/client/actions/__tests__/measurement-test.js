@@ -10,6 +10,7 @@ const expect = require('expect');
 const {
     toggleMeasurement, CHANGE_MEASUREMENT_TOOL,
     changeMeasurementState, CHANGE_MEASUREMENT_STATE,
+    resetGeometry, RESET_GEOMETRY,
     changeUom, CHANGE_UOM,
     changeGeometry, CHANGED_GEOMETRY
 } = require('../measurement');
@@ -29,6 +30,11 @@ describe('Test correctness of measurement actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_MEASUREMENT_TOOL);
         expect(retval.lengthFormula).toBe("vincenty");
+    });
+    it('Test resetGeometry action creator', () => {
+        const retval = resetGeometry(measureState);
+        expect(retval).toExist();
+        expect(retval.type).toBe(RESET_GEOMETRY);
     });
 
 

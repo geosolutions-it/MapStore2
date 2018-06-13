@@ -344,7 +344,7 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
         return styles;
     }
     if (geomType === "Text" && tempStyle.font) {
-        return [getTextStyle(tempStyle, textValues[0], options.style.useSelectedStyle)];
+        return [getTextStyle(tempStyle, textValues[0], options.style.useSelectedStyle || options.style.highlight)];
     }
     if (geomType === "MultiPolygon" || geomType === "Polygon") {
         let styles = [

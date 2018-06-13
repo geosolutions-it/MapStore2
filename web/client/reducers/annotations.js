@@ -19,7 +19,7 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
     TOGGLE_STYLE, SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION, FILTER_ANNOTATIONS,
     CHANGE_STYLER, UNSAVED_CHANGES, TOGGLE_GEOMETRY_MODAL, TOGGLE_CHANGES_MODAL, CHANGED_PROPERTIES, TOGGLE_STYLE_MODAL, UNSAVED_STYLE,
     ADD_TEXT, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS, CHANGE_TEXT,
-    ADD_NEW_FEATURE, SET_INVALID_SELECTED} = require('../actions/annotations');
+    ADD_NEW_FEATURE, SET_INVALID_SELECTED, TOGGLE_DELETE_FT_MODAL, CONFIRM_DELETE_FEATURE} = require('../actions/annotations');
 
 const {getAvailableStyler, DEFAULT_ANNOTATIONS_STYLES, convertGeoJSONToInternalModel, addIds, validateFeature, getComponents} = require('../utils/AnnotationsUtils');
 const {set} = require('../utils/ImmutableUtils');
@@ -121,7 +121,8 @@ function annotations(state = { validationErrors: {} }, action) {
             }), selected);
             return assign({}, newState, {
                 editing: {...newState.editing, features},
-                selected
+                selected,
+                unsavedChanges: true
             });
         }
         case FEATURES_SELECTED: {
@@ -198,6 +199,7 @@ function annotations(state = { validationErrors: {} }, action) {
 
             return assign({}, newState, {
                 selected,
+                unsavedChanges: true,
                 stylerType: head(getAvailableStyler(convertGeoJSONToInternalModel(selected.geometry)))
             });
         }
@@ -237,7 +239,10 @@ function annotations(state = { validationErrors: {} }, action) {
             } else {
                 newState = set(`editing.features[${ftChangedIndex}]`, selectedGeoJSON, newState);
             }
-            return assign({}, newState, {selected});
+            return assign({}, newState, {
+                selected,
+                unsavedChanges: true
+            });
         }
         case CHANGE_TEXT: {
             let newState;
@@ -262,7 +267,10 @@ function annotations(state = { validationErrors: {} }, action) {
             } else {
                 newState = set(`editing.features[${ftChangedIndex}]`, selectedGeoJSON, newState);
             }
-            return assign({}, newState, {selected});
+            return assign({}, newState, {
+                selected,
+                unsavedChanges: true
+            });
         }
         case RESET_COORD_EDITOR: {
             let newState = set(`editing.features`, state.editing.features.map(f => {
@@ -306,6 +314,17 @@ function annotations(state = { validationErrors: {} }, action) {
                 unsavedGeometry: false,
                 selected: null
             });
+        }
+        case TOGGLE_DELETE_FT_MODAL: {
+            let newState = set("showDeleteFeatureModal", !state.showDeleteFeatureModal, state);
+            return newState;
+        }
+        case CONFIRM_DELETE_FEATURE: {
+            let newState = set("editing.features", state.editing.features.filter(f => f.properties.id !== state.selected.properties.id), state);
+            newState = set("unsavedChanges", true, newState);
+            newState = set("drawing", false, newState);
+            newState = set("coordinateEditorEnabled", false, newState);
+            return newState;
         }
         case CHANGE_STYLER:
             return assign({}, state, {
@@ -533,6 +552,7 @@ function annotations(state = { validationErrors: {} }, action) {
                     validationErrors: {},
                     styling: false,
                     drawing: false,
+                    coordinateEditorEnabled: false,
                     filter: null,
                     editedFields: {},
                     originalStyle: null,

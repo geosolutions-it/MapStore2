@@ -12,6 +12,7 @@ class GeometryEditor extends React.Component {
         selected: PropTypes.object,
         featureType: PropTypes.string,
         onComplete: PropTypes.func,
+        onHighlightPoint: PropTypes.func,
         onChangeRadius: PropTypes.func,
         onSetInvalidSelected: PropTypes.func,
         onChangeText: PropTypes.func
@@ -24,6 +25,7 @@ class GeometryEditor extends React.Component {
         onChange: () => {},
         onComplete: () => {},
         onChangeRadius: () => {},
+        onHighlightPoint: () => {},
         onSetInvalidSelected: () => {},
         onChangeText: () => {},
         transitionProps: {
@@ -42,6 +44,7 @@ class GeometryEditor extends React.Component {
             properties={this.props.selected && this.props.selected.properties || {}}
             onComplete={() => {}}
             onChangeRadius={this.props.onChangeRadius}
+            onHighlightPoint={this.props.onHighlightPoint}
             onSetInvalidSelected={this.props.onSetInvalidSelected}
             onChangeText={this.props.onChangeText}
             onChange={(components, radius, text) => {

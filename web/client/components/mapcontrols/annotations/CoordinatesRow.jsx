@@ -15,6 +15,8 @@ class CoordinatesRowComponent extends React.Component {
         component: PropTypes.object,
         onRemove: PropTypes.func,
         onChange: PropTypes.func,
+        onMouseEnter: PropTypes.func,
+        onMouseLeave: PropTypes.func,
         isDraggable: PropTypes.bool,
         removeVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool
@@ -38,7 +40,9 @@ class CoordinatesRowComponent extends React.Component {
     render() {
         const {idx} = this.props;
         return (
-            <Row style={{marginLeft: 0, marginRight: 0}}>
+            <Row style={{marginLeft: 0, marginRight: 0}} onMouseEnter={() => {
+                this.props.onMouseEnter(this.props.component);
+            }} onMouseLeave={this.props.onMouseLeave}>
                 <Col xs={1}>
                     <Toolbar
                         btnDefaultProps={{ className: 'square-button-md no-border'}}

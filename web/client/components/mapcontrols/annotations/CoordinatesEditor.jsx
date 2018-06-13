@@ -12,11 +12,12 @@ const CoordinatesRow = require('./CoordinatesRow');
  * Geometry editor for annotation Features.
  * @memberof components.annotations
  * @class
- * @prop {object[]} components the data used as value in the CoordinateRow
+ * @prop {object[]} components the data used as value in the CoordinatesRow
  * @prop {function} onSetInvalidSelected if the form becomes invalid, this will be triggered
  * @prop {function} onChange triggered on every coordinate change
- * @prop {function} onChangeRadius triggered every radius change
  * @prop {function} onChangeText triggered every text change
+ * @prop {function} onHighlightPoint triggered on mouse enter and leave and if polygons or linestring editor is opened
+ * @prop {function} onChangeRadius triggered every radius change
  * @prop {object} componentsValidation it contains parameters for validation of the form based on the types
  * @prop {object} transitionProps properties of the transition for drag component
  * @prop {object} properties of the GeoJSON feature being edited
@@ -30,6 +31,7 @@ class CoordinateEditor extends React.Component {
         onSetInvalidSelected: PropTypes.func,
         onChange: PropTypes.func,
         onChangeRadius: PropTypes.func,
+        onHighlightPoint: PropTypes.func,
         onChangeText: PropTypes.func,
         componentsValidation: PropTypes.object,
         transitionProps: PropTypes.object,
@@ -42,6 +44,7 @@ class CoordinateEditor extends React.Component {
         components: [],
         onChange: () => {},
         onChangeRadius: () => {},
+        onHighlightPoint: () => {},
         onChangeText: () => {},
         onSetInvalidSelected: () => {},
         componentsValidation: {
@@ -174,7 +177,16 @@ class CoordinateEditor extends React.Component {
                         removeVisible={componentsValidation[type].remove}
                         removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove)}
                         onChange={this.change}
-
+                        onMouseEnter={(val) => {
+                            if (this.props.type === "LineString" || this.props.type === "Polygon") {
+                                this.props.onHighlightPoint(val);
+                            }
+                        }}
+                        onMouseLeave={() => {
+                            if (this.props.type === "LineString" || this.props.type === "Polygon") {
+                                this.props.onHighlightPoint(null);
+                            }
+                        }}
                         onSort={(targetId, currentId) => {
                             const components = this.props.components.reduce((allCmp, cmp, id) => {
                                 if (targetId === id) {
@@ -253,6 +265,10 @@ class CoordinateEditor extends React.Component {
         this.props.onChange(validComponents, this.props.properties.radius, this.props.properties.valueText);
         if (!this.isValid(tempComps)) {
             this.props.onSetInvalidSelected("coords", tempComps.map(coordToArray));
+        } else {
+            if (this.props.type === "LineString" || this.props.type === "Polygon") {
+                this.props.onHighlightPoint(tempComps[id]);
+            }
         }
     }
 }

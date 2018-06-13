@@ -69,6 +69,8 @@ const {
     resetCoordEditor, RESET_COORD_EDITOR,
     changeRadius, CHANGE_RADIUS,
     changeText, CHANGE_TEXT,
+    CONFIRM_DELETE_FEATURE, confirmDeleteFeature,
+    TOGGLE_DELETE_FT_MODAL, toggleDeleteFtModal,
     ADD_NEW_FEATURE, addNewFeature,
     LOAD_ANNOTATIONS, loadAnnotations
 } = require('../annotations');
@@ -110,6 +112,14 @@ describe('Test correctness of the annotations actions', () => {
     it('addNewFeature', () => {
         const result = addNewFeature();
         expect(result.type).toEqual(ADD_NEW_FEATURE);
+    });
+    it('confirmDeleteFeature', () => {
+        const result = confirmDeleteFeature();
+        expect(result.type).toEqual(CONFIRM_DELETE_FEATURE);
+    });
+    it('toggleDeleteFtModal', () => {
+        const result = toggleDeleteFtModal();
+        expect(result.type).toEqual(TOGGLE_DELETE_FT_MODAL);
     });
     it('changeSelected', () => {
         const coordinates = [1, 2];
