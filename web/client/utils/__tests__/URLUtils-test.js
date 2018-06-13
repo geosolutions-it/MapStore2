@@ -23,6 +23,10 @@ describe('URLUtils', () => {
         const data = urlParts(url1);
         expect(data).toEqual(urlPartsResult1);
     });
+    it('test urlParts undefined url', () => {
+        const data = urlParts();
+        expect(data).toEqual({});
+    });
     it('test isSameUrl', () => {
         const data = isSameUrl(url1, url2);
         expect(data).toBeTruthy();
