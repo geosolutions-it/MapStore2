@@ -84,7 +84,8 @@ class FloatingLegend extends React.Component {
         toggleButton: <Glyphicon glyph="1-map" style={{margin: '0 8px'}}/>,
         minHeight: 150,
         maxHeight: 9999,
-        deltaHeight: 110
+        deltaHeight: 110,
+        expandedOnMount: true
     };
 
     state = {};
