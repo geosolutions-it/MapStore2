@@ -7,6 +7,7 @@
 */
 
 const urlParts = (url) => {
+    if (!url) return {};
     let isRelativeUrl = !(url.indexOf("http") === 0);
     let urlPartsArray = isRelativeUrl ? [] : url.match(/([^:]*:)\/\/([^:]*:?[^@]*@)?([^:\/\?]*):?([^\/\?]*)/);
     if (isRelativeUrl) {
