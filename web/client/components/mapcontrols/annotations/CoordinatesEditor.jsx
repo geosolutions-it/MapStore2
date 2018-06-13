@@ -264,6 +264,9 @@ class CoordinateEditor extends React.Component {
         let validComponents = this.addCoordPolygon(tempComps);
         this.props.onChange(validComponents, this.props.properties.radius, this.props.properties.valueText);
         if (!this.isValid(tempComps)) {
+            if (this.props.type === "LineString" || this.props.type === "Polygon") {
+                this.props.onHighlightPoint(null);
+            }
             this.props.onSetInvalidSelected("coords", tempComps.map(coordToArray));
         } else {
             if (this.props.type === "LineString" || this.props.type === "Polygon") {
