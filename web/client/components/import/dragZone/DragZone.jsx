@@ -22,7 +22,7 @@ module.exports = ({
 }) => (<Dropzone
                 disableClick
                 ref={onRef}
-                id={"DROP_ZONE"}
+                id="DRAGDROP_IMPORT_ZONE"
                 style={{ position: "relative", height: '100%' }}
                 accept={accept}
                 onDrop={onDrop}

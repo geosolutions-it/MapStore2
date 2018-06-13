@@ -11,23 +11,21 @@ const React = require('react');
 
 const Message = require('../locale/Message');
 
-const {ShapeFileUploadAndStyle, StylePolygon, StylePolyline, StylePoint} = require('../shapefile/index');
-
-const {Glyphicon, Panel} = require('react-bootstrap');
+const {StylePolygon, StylePolyline, StylePoint} = require('../shapefile/index');
+const StylePanel = require('../../components/import/style/StylePanel');
 
 const Dialog = require('../../components/misc/StandardDialog');
 
-class Import extends React.Component {
+class StyleDialog extends React.Component {
     static propTypes = {
         id: PropTypes.string,
         layers: PropTypes.array,
         selected: PropTypes.object,
         style: PropTypes.object,
         shapeStyle: PropTypes.object,
-        onShapeError: PropTypes.func,
-        onShapeChoosen: PropTypes.func,
+        onError: PropTypes.func,
+        setLayers: PropTypes.func,
         addShapeLayer: PropTypes.func,
-        shapeLoading: PropTypes.func,
         onSelectLayer: PropTypes.func,
         onLayerAdded: PropTypes.func,
         error: PropTypes.string,
@@ -37,7 +35,7 @@ class Import extends React.Component {
         panelStyle: PropTypes.object,
         panelClassName: PropTypes.string,
         visible: PropTypes.bool,
-        toggleControl: PropTypes.func,
+        onClose: PropTypes.func,
         closeGlyph: PropTypes.string,
         buttonSize: PropTypes.string
     };
@@ -56,7 +54,7 @@ class Import extends React.Component {
         },
         panelClassName: "toolbar-panel",
         visible: false,
-        toggleControl: () => {},
+        onClose: () => {},
         closeGlyph: "1-close",
         buttonSize: "small"
     };
@@ -71,23 +69,25 @@ class Import extends React.Component {
             MultiPoint: <StylePoint/>,
             Point: <StylePoint/>
         };
-        const panel = (<ShapeFileUploadAndStyle {...this.props} stylers={stylers}
+        const panel = (<StylePanel
+            {...this.props}
+            setLayers={this.props.setLayers} stylers={stylers}
             uploadMessage={<Message msgId="shapefile.placeholder"/>}
             cancelMessage={<Message msgId="shapefile.cancel"/>}
             addMessage={<Message msgId="shapefile.add"/>}
             />);
 
 
-        if (this.props.styleData) {
-            return (<Dialog show={this.props.visible} id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
-                <span role="header">
-                    <span className="shapefile-panel-title"><Message msgId="shapefile.title"/></span>
-                    <button onClick={this.props.toggleControl} className="shapefile-panel-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>�</span>}</button>
-                </span>
+        if (this.props.layers) {
+            return (<Dialog
+                id="import-style-dialog"
+                onClose={this.props.onClose}
+                modal show header={<Message msgId="shapefile.title" />}>
+                {panel}
             </Dialog>);
         }
         return panel;
     }
 }
 
-module.exports = Import;
+module.exports = StyleDialog;

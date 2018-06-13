@@ -36,15 +36,16 @@ const enhanceExport = compose(
     ),
     defaultProps({
         formatOptions: [
-            { value: 'mapstore2', label: <Message msgId="Legacy MapStore2" /> },
-            { value: 'owscontext', label: <Message msgId="JSON OWS Context" /> }
+            { value: 'mapstore2', label: <Message msgId="mapExport.formats.legacyMapStore2" /> },
+            { value: 'OWSContext', label: <Message msgId="mapExport.formats.OWSContext" /> }
         ]
     }),
     withState('format', 'setFormat', 'mapstore2'),
 
 );
 
-const ExportMap = enhanceExport(
+// TODO: add when more formats are supported
+const MapExport = enhanceExport(
     ({
         enabled,
         format,
@@ -68,14 +69,15 @@ const ExportMap = enhanceExport(
 );
 
 module.exports = {
-    ExportMapPlugin: assign(ExportMap, {
+    MapExportPlugin: assign(MapExport, {
         disablePluginIf: "{state('mapType') === 'cesium'}",
         BurgerMenu: {
             name: 'export',
             position: 4,
-            text: <Message msgId="export.title" />,
+            text: <Message msgId="mapExport.title" />,
             icon: <Glyphicon glyph="download" />,
-            action: toggleControl.bind(null, 'export', null),
+            // action: toggleControl.bind(null, 'export', null),
+            action: () => exportMap(),
             priority: 2,
             doNotHide: true
         }

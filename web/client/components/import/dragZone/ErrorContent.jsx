@@ -7,18 +7,18 @@
  */
 
 const React = require('react');
-const { Glyphicon } = require('react-bootstrap');
+const { Glyphicon, Alert } = require('react-bootstrap');
 const DropText = require('./DropText');
 const Message = require('../../I18N/Message');
 const errorMessages = {
-    "FILE_NOT_SUPPORTED": <Message msgId="import.errors.fileNotSupported" />
+    "FILE_NOT_SUPPORTED": <Message msgId="mapImport.errors.fileNotSupported" />
 };
 const toErrorMessage = error =>
         error
             ? errorMessages[error.message]
             || errorMessages[error]
-            || <span><Message msgId="import.errors.unknownError" />:{error.message}</span>
-        : <Message msgId="import.errors.unknownError" />;
+        || <span><Message msgId="mapImport.errors.unknownError" />:<Alert bsStyle="warning">{error.message}</Alert></span>
+        : <Message msgId="mapImport.errors.unknownError" />;
 
 module.exports = ({ error, ...props }) => (<div style={{
         margin: 'auto',

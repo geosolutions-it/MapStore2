@@ -293,7 +293,7 @@
             "TOCItemsSettings",
             "Tutorial", "MapFooter", {
                 "name": "Measure"
-            }, "Print", "ExportMap", "Import", {
+            }, "Print", "MapExport", "MapImport", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true

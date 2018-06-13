@@ -9,5 +9,5 @@ const EXPORT_MAP = "EXPORT::EXPORT_MAP";
 
 module.exports = {
     EXPORT_MAP,
-    exportMap: format => ({ type: EXPORT_MAP, format})
+    exportMap: (format = "mapstore2") => ({ type: EXPORT_MAP, format})
 };

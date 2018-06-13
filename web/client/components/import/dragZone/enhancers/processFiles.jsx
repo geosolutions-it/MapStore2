@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const Rx = require('rxjs');
-const { compose, withHandlers, mapPropsStream, createEventHandler} = require('recompose');
+const { compose, mapPropsStream, createEventHandler} = require('recompose');
 const FileUtils = require('../../../../utils/FileUtils');
 const LayersUtils = require('../../../../utils/LayersUtils');
 
@@ -18,6 +18,10 @@ const tryUnzip = (file) => {
         return zip.loadAsync(buffer);
     });
 };
+
+/**
+ * Checks if the file is allowed. Returns a promise that does this check.
+ */
 const checkFileType = (file) => {
     return new Promise((resolve, reject) => {
         const ext = FileUtils.recognizeExt(file.name);
@@ -30,6 +34,8 @@ const checkFileType = (file) => {
             || type === 'application/json') {
             resolve(file);
         } else {
+            // Drag and drop of compressed folders doesn't correctly send the zip mime type (windows, also conflicts with installations of WinRar)
+            // so the application must try to unzip the file to find out the effective file type.
             tryUnzip(file).then(() => resolve(file)).catch(() => reject(new Error("FILE_NOT_SUPPORTED")));
         }
     });
@@ -48,7 +54,7 @@ const readFile = (onWarnings) => (file) => {
     }
     if (type === 'application/gpx+xml') {
         return FileUtils.readKml(file).then((xml) => {
-            return FileUtils.gpxToGeoJSON(xml);
+            return FileUtils.gpxToGeoJSON(xml, file.name);
         });
     }
     if (type === 'application/vnd.google-earth.kmz') {
@@ -61,37 +67,26 @@ const readFile = (onWarnings) => (file) => {
         return FileUtils.readZip(file).then((buffer) => {
             return FileUtils.checkShapePrj(buffer).then((warnings) => {
                 if (warnings.length > 0) {
-                    onWarnings('shapefile.error.missingPrj');
+                    onWarnings({type: 'warning', filename: file.name, message: 'shapefile.error.missingPrj'});
                 }
-                return FileUtils.shpToGeoJSON(buffer);
+                return FileUtils.shpToGeoJSON(buffer).map(json => ({ ...json, filename: file.name }));
             });
         });
     }
     if (type === 'application/json') {
-        return FileUtils.readJson(file).then(f => [f]);
+        return FileUtils.readJson(file).then(f => [{...f, "fileName": file.name}]);
     }
 };
 
 const isGeoJSON = json => json && json.features && json.features.length !== 0;
 const isMap = json => json && json.version && json.map;
+
+/**
+ * Enhancers a component to process files on drop event.
+ * Recognizes map files (JSON format) or vector data in various formats.
+ * They are converted in JSON as a "files" property.
+ */
 module.exports = compose(
-    withHandlers({
-        useFiles: ({ loadMap = () => { }, onClose = () => {}, setLayers = () => { }}) =>
-            ({layers = [], maps = []}, warnings) => {
-                const map = maps[0]; // only 1 map is allowed
-                if (map) {
-                    loadMap(map);
-                }
-                if (layers.length > 0) {
-                    setLayers(layers, warnings); // TODO: warnings
-                } else {
-                    // close if loaded only the map
-                    if (map) {
-                        onClose();
-                    }
-                }
-            }
-    }),
     mapPropsStream(
         props$ => {
             const { handler: onDrop, stream: drop$ } = createEventHandler();
@@ -99,13 +94,13 @@ module.exports = compose(
             return props$.combineLatest(
                     drop$.switchMap(
                         files => Rx.Observable.from(files)
-                            .switchMap(checkFileType) // check file types are allowed
-                            .switchMap(readFile(onWarnings)) // read files to convert to json
+                            .flatMap(checkFileType) // check file types are allowed
+                            .flatMap(readFile(onWarnings)) // read files to convert to json
                             .reduce((result, jsonObjects) => ({ // divide files by type
                                 layers: (result.layers || [])
                                     .concat(
                                         jsonObjects.filter(json => isGeoJSON(json))
-                                            .map(json => LayersUtils.geoJSONToLayer(json))
+                                            .map(json => ({...LayersUtils.geoJSONToLayer(json), filename: json.filename}))
                                     ),
                                 maps: (result.maps || [])
                                     .concat(
@@ -128,20 +123,13 @@ module.exports = compose(
                 })
             ).combineLatest(
                 warnings$
-                    .scan((warnings = [], warning) => ({ warnings: [...warnings, warning] }))
-                    .startWith({}),
-                (p1, p2) => ({
+                    .scan((warnings = [], warning) => ([...warnings, warning]), [])
+                    .startWith(undefined),
+                (p1, warnings) => ({
                     ...p1,
-                    ...p2
+                    warnings
                 })
             );
         }
-    ),
-    mapPropsStream(props$ => props$.merge(
-        props$
-            .distinctUntilKeyChanged('files')
-            .filter(({files}) => files)
-            .do(({ files, useFiles = () => { }, warnings = []}) => useFiles(files, warnings))
-            .ignoreElements()
-    ))
+    )
 );

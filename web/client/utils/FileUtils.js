@@ -36,7 +36,8 @@ const FileUtils = {
         'kmz': 'application/vnd.google-earth.kmz',
         'kml': 'application/vnd.google-earth.kml+xml',
         'zip': 'application/zip',
-        'json': 'application/json'
+        'json': 'application/json',
+        'geojson': 'application/json'
     },
     recognizeExt: function(fileName) {
         return fileName.split('.').slice(-1)[0];
@@ -57,8 +58,9 @@ const FileUtils = {
         const geoJSON = [].concat(tj.kml(pureKml)).map(item => assign({}, item, {fileName: pureKml.getElementsByTagName('name')[0].innerHTML}));
         return geoJSON;
     },
-    gpxToGeoJSON: function(xml) {
-        const geoJSON = [].concat(tj.gpx(xml)).map(item => assign({}, item, {fileName: xml.getElementsByTagName('name')[0].innerHTML}));
+    gpxToGeoJSON: function(xml, fileName) {
+        const geoJSON = [].concat(tj.gpx(xml)).map(item => assign({}, item, {
+            fileName: xml.getElementsByTagName('name')[0] && xml.getElementsByTagName('name')[0].innerHTML || fileName }));
         return geoJSON;
     },
     readZip: function(file) {

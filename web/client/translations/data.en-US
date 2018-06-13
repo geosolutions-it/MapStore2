@@ -909,7 +909,8 @@
             "cancel": "Cancel",
             "success": " correctly imported"
         },
-        "import": {
+        "mapImport": {
+            "title": "Import Data",
             "dropZone": {
                 "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
                 "selectFiles": "Select Files...",
@@ -920,6 +921,9 @@
                 "fileNotSupported": "File not supported",
                 "unknownError": "there was an unknown error during import"
             }
+        },
+        "mapExport": {
+            "title": "Export Data"
         },
         "catalog": {
             "title": "Catalog",

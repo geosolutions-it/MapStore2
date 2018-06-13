@@ -13,14 +13,14 @@ const HTML = require('../../I18N/HTML');
 module.exports = ({
     openFileDialog
 }) => (<div>
-    <HTML msgId="import.dropZone.heading" />
+    <HTML msgId="mapImport.dropZone.heading" />
     {openFileDialog
-        ? <Button bsStyle="primary" onClick={openFileDialog}><Message msgId="import.dropZone.selectFiles" /></Button>
+            ? <Button bsStyle="primary" onClick={openFileDialog}><Message msgId="mapImport.dropZone.selectFiles" /></Button>
         : null
     }
     <br />
     <br />
-    <HTML msgId="import.dropZone.infoSupported" />
+        <HTML msgId="mapImport.dropZone.infoSupported" />
     <hr />
-    <HTML msgId="import.dropZone.note" />
+        <HTML msgId="mapImport.dropZone.note" />
     </div>);
