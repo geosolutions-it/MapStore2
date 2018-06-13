@@ -13,7 +13,7 @@ const { createStructuredSelector } = require('reselect');
 const Message = require('./locale/Message');
 
 const { toggleControl } = require('../actions/controls');
-const { exportMap } = require('../actions/export');
+const { exportMap } = require('../actions/mapexport');
 
 
 const { createControlEnabledSelector } = require('../selectors/controls');
@@ -82,5 +82,5 @@ module.exports = {
             doNotHide: true
         }
     }),
-    epics: require('../epics/export')
+    epics: require('../epics/mapexport')
 };

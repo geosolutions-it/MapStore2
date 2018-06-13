@@ -8,7 +8,7 @@
 const Rx = require('rxjs');
 const MapUtils = require('../utils/MapUtils');
 const {download} = require('../utils/FileUtils');
-const {EXPORT_MAP} = require('../actions/export');
+const {EXPORT_MAP} = require('../actions/mapexport');
 const { setControlProperty } = require('../actions/controls');
 
 const { mapSelector } = require('../selectors/map');
