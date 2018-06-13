@@ -8,6 +8,7 @@
 
 const expect = require('expect');
 const mapInfo = require('../mapInfo');
+const {highlightPoint} = require('../../actions/annotations');
 const assign = require('object-assign');
 
 require('babel-polyfill');
@@ -1423,5 +1424,20 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[0].layerMetadata.fields.length).toBe(2);
         expect(state.responses[0].layerMetadata.title).toBe("Annotations");
         expect(state.responses[0].layerMetadata.buffer).toBe(2);
+    });
+
+    it('test activating / deactivating highlight point', () => {
+        let point = {lat: 3, lon: 4};
+        let state = mapInfo({}, highlightPoint(point));
+        expect(state).toExist();
+        expect(state.clickPoint.latlng.lat).toBe(point.lat);
+        expect(state.clickPoint.latlng.lng).toBe(point.lon);
+        expect(state.showMarker).toBe(true);
+        expect(state.clickLayer).toBe(null);
+
+        state = mapInfo({}, highlightPoint());
+        expect(state).toExist();
+        expect(state.clickPoint).toBe(null);
+        expect(state.clickLayer).toBe(null);
     });
 });

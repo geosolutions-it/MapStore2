@@ -52,7 +52,8 @@ const bbox = require('@turf/bbox');
  * @prop {function} onCancelEdit triggered when the user cancels current editing session
  * @prop {function} onCancelStyle triggered when the user cancels style selection
  * @prop {function} onCancel triggered when the user cancels the addition/changes made to the annotation
- * @prop {function} onCleanHighlight triggered when the user exit 'details' mode
+ * @prop {function} onCleanHighlight triggered when the user exits 'details' mode
+ * @prop {function} onConfirmDeleteFeature triggered when the user confirms deletion of a feature
  * @prop {function} onAddText triggered when the user adds new Text geometry to the feature
  * @prop {function} onToggleUnsavedChangesModal toggles the view of the UnsavedChangesModal
  * @prop {function} onToggleUnsavedStyleModal toggles the view of the UnsavedStyleModal
@@ -76,8 +77,9 @@ const bbox = require('@turf/bbox');
  * @prop {string} stylerType selected styler to be shown as body
  * @prop {boolean} showUnsavedStyleModal flag used to show the UnsavedChangesModal
  * @prop {boolean} showUnsavedChangesModal flag used to show the UnsavedStyleModal
- * @prop {boolean} showUnsavedGeometryModal
- * @prop {boolean} unsavedGeometry
+ * @prop {boolean} showUnsavedGeometryModal flag used to display the modal after user clicks on back and has changed something in the coord editor
+ * @prop {boolean} showDeleteFeatureModal flag used to display the modal after deleting a feature for confirmation
+ * @prop {boolean} unsavedGeometry flag used to say if something has changed when coord editor is open
  * @prop {string} mode current mode of operation (list, editing, detail)
  * @prop {function} onRemove triggered when the user clicks on the remove button
  * @prop {function} onSave triggered when the user clicks on the save button
@@ -91,12 +93,14 @@ const bbox = require('@turf/bbox');
  * @prop {function} onChangeRadius triggered when the user changes the radius of the Circle in its coordinate editor
  * @prop {function} onChangeText triggered when the user changes the text of the Text Annotation in its coordinate editor
  * @prop {function} onSetInvalidSelected triggered when the user insert an invalid coordinate or remove a valid one i.e. ""
+ * @prop {function} onHighlightPoint triggered when mouse goes over/off a CoordinatesRow
  * @prop {function} onResetCoordEditor triggered when the user goes back from the coordinate editor, it will open a dialog for unsaved changes
  * @prop {function} onZoom triggered when the user zooms to an annotation
  * @prop {function} onDownload triggered when the user exports
  * @prop {boolean} coordinateEditorEnabled triggered when the user zooms to an annotation
  * @prop {object} selected Feature containing the geometry and the properties used for the coordinated editor
  * @prop {number} maxZoom max zoome the for annotation (default 18)
+ * @prop {function} onDeleteFeature triggered when user click on trash icon of the coordinate editor
  * @prop {number} width of the annotation panel
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
@@ -112,6 +116,7 @@ class AnnotationsEditor extends React.Component {
         onCleanHighlight: PropTypes.func,
         onAddText: PropTypes.func,
         onCancel: PropTypes.func,
+        onConfirmDeleteFeature: PropTypes.func,
         onRemove: PropTypes.func,
         onSave: PropTypes.func,
         onSaveStyle: PropTypes.func,
@@ -120,6 +125,7 @@ class AnnotationsEditor extends React.Component {
         onToggleUnsavedChangesModal: PropTypes.func,
         onToggleUnsavedGeometryModal: PropTypes.func,
         onToggleUnsavedStyleModal: PropTypes.func,
+        onToggleDeleteFtModal: PropTypes.func,
         onSetUnsavedChanges: PropTypes.func,
         onSetUnsavedStyle: PropTypes.func,
         onChangeProperties: PropTypes.func,
@@ -135,6 +141,7 @@ class AnnotationsEditor extends React.Component {
         onAddNewFeature: PropTypes.func,
         onStyleGeometry: PropTypes.func,
         onResetCoordEditor: PropTypes.func,
+        onHighlightPoint: PropTypes.func,
         onSetStyle: PropTypes.func,
         onChangeStyler: PropTypes.func,
         onStartDrawing: PropTypes.func,
@@ -156,6 +163,7 @@ class AnnotationsEditor extends React.Component {
         showBack: PropTypes.bool,
         showUnsavedChangesModal: PropTypes.bool,
         showUnsavedStyleModal: PropTypes.bool,
+        showDeleteFeatureModal: PropTypes.bool,
         showUnsavedGeometryModal: PropTypes.bool,
         config: PropTypes.object,
         feature: PropTypes.object,
@@ -163,7 +171,8 @@ class AnnotationsEditor extends React.Component {
         mode: PropTypes.string,
         maxZoom: PropTypes.number,
         width: PropTypes.number,
-        onDownload: PropTypes.func
+        onDownload: PropTypes.func,
+        onDeleteFeature: PropTypes.func
     };
 
     static defaultProps = {
@@ -333,6 +342,11 @@ class AnnotationsEditor extends React.Component {
                                     this.props.onResetCoordEditor();
                                 }
                             }
+                        }, {
+                            glyph: 'trash',
+                            tooltipId: "annotations.deleteFeature",
+                            visible: true,
+                            onClick: this.props.onToggleDeleteFtModal
                         }, {
                             glyph: 'floppy-disk',
                             tooltipId: "annotations.save",
@@ -526,6 +540,7 @@ class AnnotationsEditor extends React.Component {
                                 featureType={this.props.featureType}
                                 onChange={this.props.onChangeSelected}
                                 onChangeRadius={this.props.onChangeRadius}
+                                onHighlightPoint={this.props.onHighlightPoint}
                                 onSetInvalidSelected={this.props.onSetInvalidSelected}
                                 onChangeText={this.props.onChangeText}
                             />
@@ -590,6 +605,18 @@ class AnnotationsEditor extends React.Component {
                     confirmButtonContent={<Message msgId="annotations.confirm" />}
                     closeText={<Message msgId="annotations.cancel" />}>
                     <Message msgId="annotations.undo"/>
+                </ConfirmDialog></Portal>);
+        } else if (this.props.showDeleteFeatureModal) {
+            return (<Portal><ConfirmDialog
+                    show
+                    modal
+                    onClose={this.props.onToggleDeleteFtModal}
+                    onConfirm={() => { this.props.onConfirmDeleteFeature(); this.props.onToggleDeleteFtModal(); }}
+                    confirmButtonBSStyle="default"
+                    closeGlyph="1-close"
+                    confirmButtonContent={<Message msgId="annotations.confirm" />}
+                    closeText={<Message msgId="annotations.cancel" />}>
+                    <Message msgId="annotations.undoDeleteFeature"/>
                 </ConfirmDialog></Portal>);
         } else if (this.props.removing) {
             return (<Portal><ConfirmDialog

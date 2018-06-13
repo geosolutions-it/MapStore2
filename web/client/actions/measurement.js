@@ -9,6 +9,7 @@ const CHANGE_MEASUREMENT_TOOL = 'CHANGE_MEASUREMENT_TOOL';
 const CHANGE_MEASUREMENT_STATE = 'CHANGE_MEASUREMENT_STATE';
 const CHANGE_UOM = 'MEASUREMENT:CHANGE_UOM';
 const CHANGED_GEOMETRY = 'MEASUREMENT:CHANGED_GEOMETRY';
+const RESET_GEOMETRY = 'MEASUREMENT:RESET_GEOMETRY';
 
 // TODO: the measurement control should use the "controls" state
 function toggleMeasurement(measurement) {
@@ -44,6 +45,11 @@ function changeGeometry(feature) {
         feature
     };
 }
+function resetGeometry() {
+    return {
+        type: RESET_GEOMETRY
+    };
+}
 function changeMeasurementState(measureState) {
     return {
         type: CHANGE_MEASUREMENT_STATE,
@@ -67,6 +73,7 @@ module.exports = {
     CHANGE_MEASUREMENT_STATE,
     changeUom, CHANGE_UOM,
     changeGeometry, CHANGED_GEOMETRY,
+    resetGeometry, RESET_GEOMETRY,
     changeMeasurement,
     toggleMeasurement,
     changeMeasurementState

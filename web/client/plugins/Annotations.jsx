@@ -21,18 +21,21 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     highlight, cleanHighlight, showAnnotation, cancelShowAnnotation, filterAnnotations, closeAnnotations,
     cancelCloseAnnotations, confirmCloseAnnotations, startDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal,
     changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, download, loadAnnotations,
-    changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected
+    changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected,
+    highlightPoint, confirmDeleteFeature, toggleDeleteFtModal // TODO FIX MEASUREMENT
 } = require('../actions/annotations');
 
 const { zoomToExtent } = require('../actions/map');
 
 const { annotationsInfoSelector, annotationsListSelector } = require('../selectors/annotations');
-const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+const { mapLayoutValuesSelector } = require('../selectors/maplayout');
 const commonEditorActions = {
     onEdit: editAnnotation,
     onCancelEdit: cancelEditAnnotation,
     onChangeStyler: changeStyler,
+    onConfirmDeleteFeature: confirmDeleteFeature,
     onCleanHighlight: cleanHighlight,
+    onHighlightPoint: highlightPoint,
     onError: validationError,
     onSave: saveAnnotation,
     onRemove: removeAnnotation,
@@ -41,6 +44,7 @@ const commonEditorActions = {
     onSetUnsavedChanges: setUnsavedChanges,
     onSetUnsavedStyle: setUnsavedStyle,
     onChangeProperties: changedProperties,
+    onToggleDeleteFtModal: toggleDeleteFtModal,
     onToggleUnsavedChangesModal: toggleUnsavedChangesModal,
     onToggleUnsavedGeometryModal: toggleUnsavedGeometryModal,
     onToggleUnsavedStyleModal: toggleUnsavedStyleModal,

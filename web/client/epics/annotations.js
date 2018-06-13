@@ -21,7 +21,7 @@ const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAd
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
     SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, START_DRAWING,
     CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS,
-    ADD_NEW_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE} = require('../actions/annotations');
+    ADD_NEW_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE} = require('../actions/annotations');
 
 const {FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE} = require('../actions/draw');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
@@ -236,6 +236,7 @@ module.exports = (viewer) => ({
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeom,
                 editEnabled: type !== "Circle",
+                translateEnabled: false,
                 drawEnabled: type === "Circle",
                 useSelectedStyle: true,
                 editFilter: (f) => f.getProperties().canEdit,
@@ -332,7 +333,7 @@ module.exports = (viewer) => ({
         .filter((action) => action.control === 'annotations' && store.getState().controls.annotations.enabled)
         .switchMap(() => {
             const state = store.getState();
-            return state.controls.measure.enabled ? Rx.Observable.from([toggleControl("measure")]) : Rx.Observable.empty();
+            return state.controls.measure && state.controls.measure.enabled ? Rx.Observable.from([toggleControl("measure")]) : Rx.Observable.empty();
         }),
     closeAnnotationsEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
         .filter((action) => action.control === 'annotations' && !store.getState().controls.annotations.enabled)
@@ -412,6 +413,7 @@ module.exports = (viewer) => ({
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,
+                translateEnabled: false,
                 editFilter: (f) => f.getProperties().canEdit,
                 useSelectedStyle: true,
                 drawEnabled: false,
@@ -419,7 +421,7 @@ module.exports = (viewer) => ({
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
-    onBackToEditingFeatureEpic: (action$, {getState}) => action$.ofType( RESET_COORD_EDITOR )
+    onBackToEditingFeatureEpic: (action$, {getState}) => action$.ofType( RESET_COORD_EDITOR, CONFIRM_DELETE_FEATURE )
         .switchMap(({}) => {
             const state = getState();
             const feature = state.annotations.editing;
@@ -448,6 +450,7 @@ module.exports = (viewer) => ({
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,
+                translateEnabled: false,
                 editFilter: (f) => f.getProperties().canEdit,
                 drawEnabled: false,
                 useSelectedStyle: true,
@@ -474,6 +477,7 @@ module.exports = (viewer) => ({
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,
+                translateEnabled: false,
                 editFilter: (f) => f.getProperties().canEdit,
                 drawEnabled: false,
                 useSelectedStyle: true,
@@ -494,6 +498,7 @@ module.exports = (viewer) => ({
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,
+                translateEnabled: false,
                 editFilter: (f) => f.getProperties().canEdit,
                 drawEnabled: false,
                 useSelectedStyle: true,

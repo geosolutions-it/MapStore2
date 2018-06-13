@@ -36,6 +36,7 @@ class OpenlayersMap extends React.Component {
         resize: PropTypes.number,
         measurement: PropTypes.object,
         changeMeasurementState: PropTypes.func,
+        resetGeometry: PropTypes.func,
         registerHooks: PropTypes.bool,
         interactive: PropTypes.bool,
         onCreationError: PropTypes.func,

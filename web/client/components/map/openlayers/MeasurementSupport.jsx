@@ -25,6 +25,7 @@ class MeasurementSupport extends React.Component {
         measurement: PropTypes.object,
         uom: PropTypes.object,
         changeMeasurementState: PropTypes.func,
+        resetGeometry: PropTypes.func,
         changeGeometry: PropTypes.func,
         updateOnMouseMove: PropTypes.bool
     };
@@ -206,6 +207,7 @@ class MeasurementSupport extends React.Component {
                     this.measureTooltip.setPosition(this.tooltipCoord);
                 }
             }, this);
+            this.props.resetGeometry();
         }, this);
         draw.on('drawend', function(evt) {
             this.drawing = false;
