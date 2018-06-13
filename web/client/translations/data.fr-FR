@@ -914,7 +914,7 @@
             "dropZone": {
                 "heading": "<p> <h4> Déposez votre configuration ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
                 "selectFiles": "Sélectionnez les fichiers...",
-                "infoSupported": "<p> <small> Fichiers de configuration pris en charge: format hérité MapStore2 ou format de contexte OWS JSON <br /> Fichiers vectoriels pris en charge: les fichiers shape doivent être contenus dans des archives zip, KML / KMZ, GPX ou GeoJSON </small> </p>",
+                "infoSupported": "<p> <small> Fichiers de configuration pris en charge: format hérité MapStore2<br /> Fichiers vectoriels pris en charge: shapefile (doivent être contenus dans des archives zip), KML / KMZ, GPX ou GeoJSON </small> </p>",
                 "note": "<p> <small> <i> <strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de configuration </i> </small> </p>"
             },
             "errors": {
