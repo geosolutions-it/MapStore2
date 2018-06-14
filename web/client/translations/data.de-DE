@@ -877,6 +877,22 @@
             "cancel": "Abbrechen",
             "success": " erfolgreich importiert"
         },
+        "mapImport": {
+                "title": "Daten importieren",
+                "dropZone": {
+                    "heading": "<p> <h4> Legen Sie hier Ihre Konfigurations- oder Vektordateien ab </h4> <small> oder </small> </p>",
+                    "selectFiles": "Dateien auswählen...",
+                    "infoSupported": "<p> <small> Unterstützte Konfigurationsdateien: MapStore2 Legacy-Format. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX oder GeoJSON </small> </p> enthalten sein",
+                    "note": "<p> <small> <i> <strong> Hinweis </strong>: Die aktuelle Map wird bei Konfigurationsdateien überschrieben </i> </small> </p>"
+                },
+                "errors": {
+                    "fileNotSupported": "Datei wird nicht unterstützt",
+                    "unknownError": "Beim Import ist ein unbekannter Fehler aufgetreten"
+                }
+            },
+        "mapExport": {
+            "title": "Daten exportieren"
+        },
         "catalog": {
             "title": "Katalog",
             "autoload": "Suche nach Serviceauswahl",

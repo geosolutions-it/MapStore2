@@ -877,6 +877,22 @@
             "cancel": "Cancelar",
             "success": " Importación correcta"
         },
+        "mapImport": {
+            "title": "Datos de importacion",
+            "dropZone": {
+                "heading": "<p> <h4> Elimine aquí sus archivos de configuración o vector </h4> <small> o </small> </p>",
+                "selectFiles": "Selecciona archivos...",
+                "infoSupported": "<p> <small> Archivos de configuración admitidos: formato heredado MapStore2<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "note": "<p> <small> <i> <strong> nota </strong>: el mapa actual se anulará en el caso de los archivos de configuración </i> </small> </p>"
+            },
+            "errors": {
+                "fileNotSupported": "Archivo no compatible",
+                "unknownError": "hubo un error desconocido durante la importación"
+            }
+        },
+        "mapExport": {
+            "title": "Exportar datos"
+        },
         "catalog": {
             "title": "Catálogo",
             "autoload": "Buscar en la selección de servicios",
