@@ -3,10 +3,10 @@ const {compose, withHandlers, withProps} = require('recompose');
 
 const convertDDToDMS = (D, lng) => {
     return {
-        degrees: 0 | D,
+        degrees: Math.abs(0 | D),
         direction: D < 0 ? lng ? 'W' : 'S' : lng ? 'E' : 'N',
-        minutes: 0 | D % 1 * 60,
-        seconds: (0 | D * 60 % 1 * 6000) / 100
+        minutes: Math.abs(0 | D % 1 * 60),
+        seconds: Math.abs((0 | D * 60 % 1 * 6000) / 100)
     };
 };
 
@@ -20,7 +20,7 @@ module.exports = compose(
         };
     }),
     withHandlers({
-        onChangePart: props => ({degrees, minutes, seconds, direction}) => {
+        onChange: props => ({degrees, minutes, seconds, direction}) => {
             // conversion dmsToDD
             let dd = degrees + minutes / 60 + seconds / (60 * 60);
             if (direction === 'S' || direction === 'W') {
