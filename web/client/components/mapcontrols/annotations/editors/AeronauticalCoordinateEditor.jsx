@@ -7,7 +7,7 @@ const {FormGroup, FormControl} = require('react-bootstrap');
  * This component renders a coordiante inpout for aetronautical degrees
 */
 
-const {decimalToAeronautical} = require('../enhancers/decimalToAeronautical');
+const decimalToAeronautical = require('../enhancers/decimalToAeronautical');
 class CoordinateEntry extends React.Component {
 
     static propTypes = {
@@ -31,8 +31,9 @@ class CoordinateEntry extends React.Component {
             <FormGroup>
                 <FormControl
                     key={this.props.coordinate + "degree"}
+                    value={this.props.degrees}
                     placeholder="d"
-                    onChange={(/*e*/) => /*onChangePart('degree', dms) */{}}
+                    onChange={(/*e*/) => /*onChangePart('degree', e.target.value) */{}}
                     step={1}
                     style={{width: 60}}
                     type="number"
@@ -44,6 +45,7 @@ class CoordinateEntry extends React.Component {
                     onChange={() => {
 
                     }}
+                    value={this.props.minutes}
                     max={60  /*this can change if degree is at the max value or min if South / East*/}
                     min={0}
                     style={{width: 60}}
@@ -53,6 +55,7 @@ class CoordinateEntry extends React.Component {
                 {"'"}
                 <FormControl
                     key={this.props.coordinate + "seconds"}
+                    value={this.props.seconds}
                     placeholder="s"
                     onChange={() => {}}
                     step={1}
@@ -61,7 +64,9 @@ class CoordinateEntry extends React.Component {
                     />
                 {"''"}
                 <FormControl componentClass="select" placeholder="select"
-                    style={{width: 50}}>
+                    style={{width: 50}}
+                    value={this.props.direction}
+                    >
                     <option value="N">N</option>
                     <option value="S">S</option>
                 </FormControl>
@@ -70,4 +75,4 @@ class CoordinateEntry extends React.Component {
     }
 }
 
-module.exports = CoordinateEntry;
+module.exports = decimalToAeronautical(CoordinateEntry);

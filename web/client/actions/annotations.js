@@ -48,6 +48,7 @@ const ADD_NEW_FEATURE = 'ANNOTATIONS:ADD_NEW_FEATURE';
 const HIGHLIGHT_POINT = 'ANNOTATIONS:HIGHLIGHT_POINT';
 const TOGGLE_DELETE_FT_MODAL = 'ANNOTATIONS:TOGGLE_DELETE_FT_MODAL';
 const CONFIRM_DELETE_FEATURE = 'ANNOTATIONS:CONFIRM_DELETE_FEATURE';
+const CHANGE_FORMAT = 'ANNOTATIONS:CHANGE_FORMAT';
 
 function loadAnnotations(features, override = false) {
     return {
@@ -59,6 +60,12 @@ function loadAnnotations(features, override = false) {
 function confirmDeleteFeature() {
     return {
         type: CONFIRM_DELETE_FEATURE
+    };
+}
+function changeFormat(format) {
+    return {
+        type: CHANGE_FORMAT,
+        format
     };
 }
 function toggleDeleteFtModal() {
@@ -375,5 +382,6 @@ module.exports = {
     CHANGE_RADIUS, changeRadius,
     TOGGLE_GEOMETRY_MODAL, toggleUnsavedGeometryModal,
     SET_INVALID_SELECTED, setInvalidSelected,
+    CHANGE_FORMAT, changeFormat,
     CHANGED_SELECTED, changeSelected
 };

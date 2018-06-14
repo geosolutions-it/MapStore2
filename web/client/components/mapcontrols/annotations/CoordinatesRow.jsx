@@ -16,6 +16,7 @@ class CoordinatesRowComponent extends React.Component {
         onRemove: PropTypes.func,
         onChange: PropTypes.func,
         onMouseEnter: PropTypes.func,
+        format: PropTypes.string,
         onMouseLeave: PropTypes.func,
         isDraggable: PropTypes.bool,
         removeVisible: PropTypes.bool,
@@ -41,11 +42,11 @@ class CoordinatesRowComponent extends React.Component {
                 </Col>
                 <Col xs={5}>
                     <CoordinateEntry
-                        format="decimal"
+                        format={this.props.format}
                         coordinate="lat"
                         idx={idx}
                         value={this.props.component.lat}
-                        onChange={this.props.onChange}
+                        onChange={(dd) => this.props.onChange(idx, "lat", dd)}
                         constraints={{
                             decimal: {
                                 lat: {
@@ -94,11 +95,11 @@ class CoordinatesRowComponent extends React.Component {
                 </Col>
                 <Col xs={5}>
                     <CoordinateEntry
-                        format="aeronautical"
+                        format={this.props.format}
                         coordinate="lon"
                         idx={idx}
                         value={this.props.component.lon}
-                        onChange={this.props.onChange}
+                        onChange={(dd) => this.props.onChange(idx, "lon", dd)}
                         constraints={{
                             decimal: {
                                 lat: {

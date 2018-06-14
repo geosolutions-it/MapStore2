@@ -18,6 +18,8 @@ const CoordinatesRow = require('./CoordinatesRow');
  * @prop {function} onChangeText triggered every text change
  * @prop {function} onHighlightPoint triggered on mouse enter and leave and if polygons or linestring editor is opened
  * @prop {function} onChangeRadius triggered every radius change
+ * @prop {function} onChangeFormat triggered every format change
+ * @prop {string} format decimal or aeronautical degree for coordinates
  * @prop {object} componentsValidation it contains parameters for validation of the form based on the types
  * @prop {object} transitionProps properties of the transition for drag component
  * @prop {object} properties of the GeoJSON feature being edited
@@ -33,6 +35,8 @@ class CoordinateEditor extends React.Component {
         onChangeRadius: PropTypes.func,
         onHighlightPoint: PropTypes.func,
         onChangeText: PropTypes.func,
+        onChangeFormat: PropTypes.func,
+        format: PropTypes.string,
         componentsValidation: PropTypes.object,
         transitionProps: PropTypes.object,
         properties: PropTypes.object,
@@ -45,6 +49,7 @@ class CoordinateEditor extends React.Component {
         onChange: () => {},
         onChangeRadius: () => {},
         onHighlightPoint: () => {},
+        onChangeFormat: () => {},
         onChangeText: () => {},
         onSetInvalidSelected: () => {},
         componentsValidation: {
@@ -129,6 +134,26 @@ class CoordinateEditor extends React.Component {
         const validationCompleteButton = this[componentsValidation[type].validation]() && allValidComponents;
         const buttons = [
             {
+                visible: true,
+                el: () =>
+                (
+                    <FormGroup
+                         style={{
+                        display: "inline-flex",
+                        alignItems: "baseline"}}>
+                        <ControlLabel style={{marginRight: 5}}>Format</ControlLabel>{  }
+                        <FormControl componentClass="select" placeholder="select"
+                            value={this.props.format}
+                            selected={this.props.format}
+                        onChange={(e) => {
+                            this.props.onChangeFormat(e.target.value);
+                        }}>
+                            <option value="decimal">Decimal</option>
+                            <option value="aeronautical">Aeronautical</option>
+                        </FormControl>
+                </FormGroup>)
+            },
+            {
                 glyph: validationCompleteButton ? 'ok' : 'exclamation-mark text-danger',
                 tooltipId: validationCompleteButton ? 'annotations.editor.valid' : componentsValidation[type].notValid,
                 visible: true
@@ -171,6 +196,7 @@ class CoordinateEditor extends React.Component {
                 </Row>
                 <Row style={{flex: 1, overflowY: 'auto'}}>
                     {this.props.components.map((component, idx) => <CoordinatesRow
+                        format={this.props.format}
                         sortId={idx}
                         key={idx + " key"}
                         isDraggable={this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]()}

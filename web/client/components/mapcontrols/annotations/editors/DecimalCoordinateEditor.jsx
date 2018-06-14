@@ -6,7 +6,7 @@ const {capitalize} = require('lodash');
 /**
  This component renders a coordiante inpout for decimal degrees
 */
-class CoordinateEntry extends React.Component {
+class DecimalCoordinateEditor extends React.Component {
 
     static propTypes = {
         idx: PropTypes.number,
@@ -67,7 +67,7 @@ class CoordinateEntry extends React.Component {
 
 
     render() {
-        const {idx, coordinate, value, onChange} = this.props;
+        const {coordinate, value, onChange} = this.props;
         const validateNameFunc = "validateDecimal" + capitalize(coordinate);
         return (
             <FormGroup
@@ -78,10 +78,10 @@ class CoordinateEntry extends React.Component {
                     placeholder={coordinate}
                     onChange={e => {
                         if (e.target.value === "") {
-                            onChange(idx, coordinate, "");
+                            onChange("");
                         }
                         if (this[validateNameFunc](e.target.value) === null) {
-                            onChange(idx, coordinate, e.target.value);
+                            onChange(e.target.value);
                         }
                     }}
                     step={1}
@@ -111,4 +111,4 @@ class CoordinateEntry extends React.Component {
     }
 }
 
-module.exports = CoordinateEntry;
+module.exports = DecimalCoordinateEditor;
