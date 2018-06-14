@@ -21,7 +21,7 @@ const {
     changeStyler, addText, setUnsavedChanges, setUnsavedStyle,
     toggleUnsavedChangesModal, toggleUnsavedGeometryModal, toggleUnsavedStyleModal, changedProperties,
     setInvalidSelected, addNewFeature, resetCoordEditor, changeText, changeRadius, changeSelected,
-    highlightPoint
+    highlightPoint, changeFormat
  } = require('../../actions/annotations');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {drawingFeatures, selectFeatures} = require('../../actions/draw');
@@ -49,6 +49,11 @@ describe('Test the annotations reducer', () => {
         expect(state.showDeleteFeatureModal).toBe(true);
         state = annotations(state, toggleDeleteFtModal());
         expect(state.showDeleteFeatureModal).toBe(false);
+    });
+    it('changeFormat', () => {
+        const format = "aeronautical";
+        let state = annotations({}, changeFormat(format));
+        expect(state.format).toBe(format);
     });
 
     it('test activating / deactivating highlight point', () => {

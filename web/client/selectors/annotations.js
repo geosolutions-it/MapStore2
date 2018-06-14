@@ -120,6 +120,7 @@ module.exports = {
     showUnsavedGeometryModalSelector,
     unsavedGeometrySelector,
     unsavedStyleSelector,
+    formatSelector,
     errorsSelector,
     configSelector
 };

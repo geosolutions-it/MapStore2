@@ -33,6 +33,7 @@ const {
     CLEAN_HIGHLIGHT,
     FILTER_ANNOTATIONS,
     addText, ADD_TEXT,
+    CHANGE_FORMAT, changeFormat,
     changedProperties, CHANGED_PROPERTIES,
     changeStyler, CHANGE_STYLER,
     toggleUnsavedStyleModal, TOGGLE_STYLE_MODAL,
@@ -142,6 +143,12 @@ describe('Test correctness of the annotations actions', () => {
     it('addText', () => {
         const result = addText();
         expect(result.type).toEqual(ADD_TEXT);
+    });
+    it('changeFormat', () => {
+        const format = "decimal";
+        const result = changeFormat(format);
+        expect(result.type).toEqual(CHANGE_FORMAT);
+        expect(result.format).toEqual(format);
     });
     it('confirm remove annotation', () => {
         const result = confirmRemoveAnnotation('1');
