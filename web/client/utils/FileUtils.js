@@ -61,6 +61,11 @@ const FileUtils = {
         const geoJSON = [].concat(tj.gpx(xml)).map(item => assign({}, item, {fileName: xml.getElementsByTagName('name')[0].innerHTML}));
         return geoJSON;
     },
+    jsonToJson: function(file) {
+        return [].concat(FileUtils.readJson(file).then(item => {
+            return item;
+        }));
+    },
     readZip: function(file) {
         return new Promise((resolve, reject) => {
             let reader = new FileReader();
