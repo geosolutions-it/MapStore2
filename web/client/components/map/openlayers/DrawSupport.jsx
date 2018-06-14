@@ -1135,9 +1135,6 @@ class DrawSupport extends React.Component {
                     f.setProperties({center: [center.x, center.y], radius});
                     newFt = this.replaceCircleWithPolygon(newFt.clone());
                 }
-                if (newFt.getProperties().selected) {
-                    this.props.onSelectFeatures([reprojectGeoJson(geojsonFormat.writeFeatureObject(newFt), this.getMapCrs(), "EPSG:4326")]);
-                }
                 return reprojectGeoJson(geojsonFormat.writeFeatureObject(newFt), this.getMapCrs(), "EPSG:4326");
             });
             if (this.props.options.transformToFeatureCollection) {

@@ -19,7 +19,7 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
     TOGGLE_STYLE, SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION, FILTER_ANNOTATIONS,
     CHANGE_STYLER, UNSAVED_CHANGES, TOGGLE_GEOMETRY_MODAL, TOGGLE_CHANGES_MODAL, CHANGED_PROPERTIES, TOGGLE_STYLE_MODAL, UNSAVED_STYLE,
     ADD_TEXT, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS, CHANGE_TEXT,
-    ADD_NEW_FEATURE, SET_INVALID_SELECTED, TOGGLE_DELETE_FT_MODAL, CONFIRM_DELETE_FEATURE} = require('../actions/annotations');
+    ADD_NEW_FEATURE, SET_INVALID_SELECTED, TOGGLE_DELETE_FT_MODAL, CONFIRM_DELETE_FEATURE, HIGHLIGHT_POINT} = require('../actions/annotations');
 
 const {getAvailableStyler, DEFAULT_ANNOTATIONS_STYLES, convertGeoJSONToInternalModel, addIds, validateFeature, getComponents} = require('../utils/AnnotationsUtils');
 const {set} = require('../utils/ImmutableUtils');
@@ -560,6 +560,14 @@ function annotations(state = { validationErrors: {} }, action) {
                 });
             }
             return state;
+        case HIGHLIGHT_POINT: {
+            return !action.point ?
+                {...state, clickPoint: null, showMarker: false} :
+                assign({}, state, {
+                    clickPoint: {latlng: {lat: action.point.lat, lng: action.point.lon }},
+                    showMarker: true
+                });
+        }
         case FILTER_ANNOTATIONS:
             return assign({}, state, {
                 filter: action.filter

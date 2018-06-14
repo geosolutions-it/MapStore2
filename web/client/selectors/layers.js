@@ -18,6 +18,7 @@ const currentBackgroundLayerSelector = state => head(layersSelector(state).filte
 const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
 const allBackgroundLayerSelector = state => layersSelector(state).filter(l => l.group === "background");
 const markerSelector = state => state.mapInfo && state.mapInfo.showMarker && state.mapInfo.clickPoint;
+const highlightPointSelector = state => state.annotations && state.annotations.showMarker && state.annotations.clickPoint;
 const geoColderSelector = state => state.search && state.search;
 
 // TODO currently loading flag causes a re-creation of the selector on any pan
@@ -34,12 +35,16 @@ const defaultIconStyle = {
 };
 
 const layerSelectorWithMarkers = createSelector(
-    [layersSelector, markerSelector, geoColderSelector, centerToMarkerSelector],
-    (layers = [], markerPosition, geocoder, centerToMarker) => {
+    [layersSelector, markerSelector, geoColderSelector, centerToMarkerSelector, highlightPointSelector],
+    (layers = [], markerPosition, geocoder, centerToMarker, highlightPoint) => {
         let newLayers = [...layers];
         if ( markerPosition ) {
             const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
             newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", coords));
+        }
+        if ( highlightPoint ) {
+            const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(highlightPoint.latlng) : highlightPoint.latlng;
+            newLayers.push(MapInfoUtils.getMarkerLayer("Annotations", coords));
         }
         if (geocoder && geocoder.markerPosition) {
             newLayers.push(MapInfoUtils.getMarkerLayer("GeoCoder", geocoder.markerPosition, "marker",
