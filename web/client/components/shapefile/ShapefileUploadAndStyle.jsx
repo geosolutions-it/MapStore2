@@ -149,14 +149,14 @@ class ShapeFileUploadAndStyle extends React.Component {
 
     renderError = () => {
         return (<Row>
-                   <div style={{textAlign: "center"}} className="alert alert-danger"><Message msgId={this.props.error}/></div>
-                </Row>);
+                <div style={{textAlign: "center"}} className="alert alert-danger"><Message msgId={this.props.error}/></div>
+            </Row>);
     };
 
     renderSuccess = () => {
         return (<Row>
-                   <div style={{textAlign: "center", overflowWrap: "break-word"}} className="alert alert-success">{this.props.success}</div>
-                </Row>);
+                <div style={{textAlign: "center", overflowWrap: "break-word"}} className="alert alert-success">{this.props.success}</div>
+            </Row>);
     };
 
     renderStyle = () => {
@@ -180,7 +180,7 @@ class ShapeFileUploadAndStyle extends React.Component {
                     <label><Message msgId="shapefile.zoom"/></label>
                 </Col>
             </Row>
-         : null;
+            : null;
     };
 
     render() {
@@ -190,9 +190,9 @@ class ShapeFileUploadAndStyle extends React.Component {
                 {this.props.success ? this.renderSuccess() : null}
             <Row style={{textAlign: "center"}}>
                 {
-            this.props.selected ?
-                <Combobox data={this.props.layers} value={this.props.selected} onSelect={(value)=> this.props.onSelectLayer(value)} valueField={"id"} textField={"name"} /> :
-                <SelectShape {...this.props.uploadOptions} errorMessage="shapefile.error.select" text={this.props.uploadMessage} onShapeChoosen={this.addShape} onShapeError={this.props.onShapeError}/>
+            this.props.selected
+                ? <Combobox data={this.props.layers} value={this.props.selected} onSelect={(value)=> this.props.onSelectLayer(value)} valueField={"id"} textField={"name"} />
+                : <SelectShape {...this.props.uploadOptions} errorMessage="shapefile.error.select" text={this.props.uploadMessage} onShapeChoosen={this.addShape} onShapeError={this.props.onShapeError}/>
             }
             </Row>
             <Row style={{marginBottom: 10}}>
@@ -205,7 +205,7 @@ class ShapeFileUploadAndStyle extends React.Component {
                     <Col xsOffset={6} xs={3}> <Button bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={() => {this.props.onShapeChoosen(null); }}>{this.props.cancelMessage}</Button></Col>
                     <Col xs={3}> <Button bsStyle="primary" bsSize={this.props.buttonSize} disabled={!this.props.selected} onClick={this.addToMap}>{this.props.addMessage}</Button></Col>
                 </Row>
-                     : null }
+                    : null }
             </Grid>
         );
     }

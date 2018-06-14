@@ -159,7 +159,7 @@
         },
         "home":{
             "open": "Ouvrir",
-            "shortDescription": "Modern webmapping avec OL3, Leaflet et React<br/><small>consultez la page <a href=\"/mapstore/docs/\"> documentation </a> </ small>",
+            "shortDescription": "Modern webmapping avec OL3, Leaflet et React<br/><small>consultez la page <a href=\"/mapstore/docs/\"> documentation </a> </small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore est développé pour créer, sauvegarder et partager de façon simple et intuitive cartes et assemblages créés à partir du contenu de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce.<br/>Visitez notre <a href=\"/mapstore/docs/\">page d'accueil</a> pour plus de détails.",
             "Applications": "Applications",
@@ -927,6 +927,22 @@
             "add": "Ajouter",
             "cancel": "Annuler",
             "success": " Import correct"
+        },
+        "mapImport": {
+            "title": "Importer des données",
+            "dropZone": {
+                "heading": "<p> <h4> Déposez votre configuration ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
+                "selectFiles": "Sélectionnez les fichiers...",
+                "infoSupported": "<p> <small> Fichiers de configuration pris en charge: format hérité MapStore2<br /> Fichiers vectoriels pris en charge: shapefile (doivent être contenus dans des archives zip), KML / KMZ, GPX ou GeoJSON </small> </p>",
+                "note": "<p> <small> <i> <strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de configuration </i> </small> </p>"
+            },
+            "errors": {
+                "fileNotSupported": "Fichier non pris en charge",
+                "unknownError": "il y avait une erreur inconnue lors de l'importation"
+            }
+        },
+        "mapExport": {
+            "title": "Exporter des données"
         },
         "catalog": {
             "title": "Catalogue",

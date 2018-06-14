@@ -293,7 +293,7 @@
             },
             "Tutorial", "MapFooter", {
                 "name": "Measure"
-            }, "Print", "ShapeFile", {
+            }, "Print", "MapExport", "MapImport", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
