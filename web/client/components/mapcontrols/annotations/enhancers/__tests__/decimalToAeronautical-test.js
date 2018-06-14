@@ -32,21 +32,13 @@ describe("test the Annotations enahncers", () => {
             expect(props.degrees).toBe(1);
             expect(props.minutes).toBe(30);
             expect(props.seconds).toBe(0);
+            done();
         }));
         ReactDOM.render((<Sink
             value = {1.5}
             coordinate="lon"
             />), document.getElementById("container"));
 
-        const Sink2 = decimalToAeronautical(createSink( props => {
-            expect(props).toExist();
-            expect(props.degrees).toBe(1);
-            expect(props.minutes).toBe(33);
-            expect(props.seconds).toBe(0);
-            done();
-        }));
-        ReactDOM.render((<Sink2
-            value = {1.55}
-            />), document.getElementById("container"));
     });
+
 });

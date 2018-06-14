@@ -3,6 +3,7 @@ const PropTypes = require('prop-types');
 // const {FormGroup, FormControl} = require('react-bootstrap');
 const DecimalCoordinateEditor = require('./editors/DecimalCoordinateEditor');
 const AeronauticalCoordinateEditor = require('./editors/AeronauticalCoordinateEditor');
+const {isNil} = require('lodash');
 
 /**
  This component can render an input field in two different formats: 'decimal' or 'aeronautical'
@@ -23,7 +24,7 @@ class CoordinateEntry extends React.Component {
 
     render() {
         const {format} = this.props;
-        return format === "decimal" ? <DecimalCoordinateEditor {...this.props}/> : <AeronauticalCoordinateEditor {...this.props}/>;
+        return format === "decimal" || isNil(format) ? <DecimalCoordinateEditor {...this.props}/> : <AeronauticalCoordinateEditor {...this.props}/>;
     }
 }
 
