@@ -103,7 +103,7 @@ class CoordinateEntry extends React.Component {
                     step={1}
                     max={this.props.maxDegrees}
                     min={-1}
-                    style={{ width: 65, ...inputStyle, ...degreesInvalidStyle }}
+                    style={{ width: 60, ...inputStyle, ...degreesInvalidStyle }}
                     type="number"
                 />
                 <span style={labelStyle}>&deg;</span>
@@ -127,7 +127,7 @@ class CoordinateEntry extends React.Component {
                     step={1}
                     max={60}
                     min={-1}
-                    style={{ width: 90, ...inputStyle, ...secondsInvalidStyle}}
+                    style={{ width: 65, ...inputStyle, ...secondsInvalidStyle}}
                     type="number"
                 />
             <span style={labelStyle}>&Prime;</span>

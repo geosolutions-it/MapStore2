@@ -54,7 +54,7 @@ const getSelectDrawStatus = (state) => {
         drawEnabled: false,
         transformToFeatureCollection: true
     };
-    return changeDrawingStatus("drawOrEdit", feature.type, "annotations", [feature], drawOptions, feature.style);
+    return changeDrawingStatus("drawOrEdit", feature.type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}));
 };
 const getReadOnlyDrawStatus = (state) => {
     const feature = state.annotations.editing;
@@ -116,7 +116,7 @@ const createNewFeature = (action) => {
         type: "FeatureCollection",
         properties: assign({}, action.fields, {id: action.id}, action.properties ),
         features: action.geometry,
-        style: action.style
+        style: assign({}, action.style, {highlight: false})
     };
 };
 
@@ -147,7 +147,9 @@ module.exports = (viewer) => ({
             };
             return Rx.Observable.from([
                 changeLayerProperties('annotations', {visibility: false}),
-                changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, feature.style),
+                changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {
+                    highlight: false
+                })),
                 hideMapinfoMarker()
             ]);
         }),
@@ -414,7 +416,12 @@ module.exports = (viewer) => ({
             // TODO update selected feature in editing features
 
             let selectedIndex = findIndex(feature.features, (f) => f.properties.id === selected.properties.id);
-            feature = set(`features[${selectedIndex}]`, selected, feature);
+            if (selectedIndex === -1) {
+                feature = set(`features`, feature.features.concat([selected]), feature);
+
+            } else {
+                feature = set(`features[${selectedIndex}]`, selected, feature);
+            }
             const multiGeometry = state.annotations.config.multiGeometry;
             const style = feature.style;
             const action = changeDrawingStatus("drawOrEdit", method, "annotations", [feature], {
@@ -449,10 +456,19 @@ module.exports = (viewer) => ({
     redrawOnChangeRadiusTextEpic: (action$, {getState}) => action$.ofType( CHANGE_RADIUS, CHANGE_TEXT )
         .switchMap((a) => {
             const state = getState();
-            const feature = state.annotations.editing;
+            let feature = state.annotations.editing;
+            let selected = state.annotations.selected;
             const multiGeometry = state.annotations.config.multiGeometry;
             const style = feature.style;
 
+            selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0] || [], selected);
+            selected = set("geometry.type", "Point", selected);
+            let selectedIndex = findIndex(feature.features, (f) => f.properties.id === selected.properties.id);
+            if (selectedIndex === -1) {
+                feature = set(`features`, feature.features.concat([selected]), feature);
+            } else {
+                feature = set(`features[${selectedIndex}]`, selected, feature);
+            }
             // this should run only if the feature has a valid geom
             const action = changeDrawingStatus("drawOrEdit", a.type === CHANGE_TEXT ? "Text" : "Circle", "annotations", [feature], {
                 featureProjection: "EPSG:4326",

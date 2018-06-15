@@ -219,6 +219,12 @@ function annotations(state = { validationErrors: {} }, action) {
         case CHANGE_RADIUS: {
             let newState;
             let selected = set("properties.radius", action.radius, state.selected);
+            if (action.components.length === 0) {
+                return assign({}, state, {
+                    selected,
+                    unsavedChanges: true
+                });
+            }
             selected = set("properties.center", action.components[0], selected);
             selected = set("geometry.coordinates", action.components[0], selected);
             let center = reproject(selected.properties.center, "EPSG:4326", "EPSG:3857");
@@ -258,11 +264,11 @@ function annotations(state = { validationErrors: {} }, action) {
             let selected = set("properties.valueText", action.text, state.selected);
             selected = set("properties.isValidFeature", validateFeature({
                 properties: selected.properties,
-                components: getComponents({coordinates: action.components[0], type: "Text"}),
+                components: getComponents({coordinates: action.components[0] || [], type: "Text"}),
                 type: selected.geometry.type
             }), selected);
             selected = set("properties.isText", true, selected);
-            selected = set("geometry.coordinates", action.components[0], selected);
+            selected = set("geometry.coordinates", action.components[0] || [[]], selected);
 
             let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === state.selected.properties.id);
             const selectedGeoJSON = set("geometry.type", "Point", selected);
@@ -512,6 +518,7 @@ function annotations(state = { validationErrors: {} }, action) {
                     show: false,
                     drawing: false
                 },
+                validationErrors: {},
                 coordinateEditorEnabled: true,
                 editing: assign({}, newState.editing, {
                         features: type === "Circle" ? newState.editing.features : newState.editing.features.map(f => {

@@ -94,6 +94,8 @@ class CoordinateEditor extends React.Component {
                             const radius = e.target.value;
                             if (this.isValid(this.props.components, radius )) {
                                 this.props.onChangeRadius(parseFloat(radius), this.props.components.map(coordToArray));
+                            } else if (radius !== "") {
+                                this.props.onChangeRadius(parseFloat(radius), []);
                             } else if (this.props.properties.isValidFeature) {
                                 this.props.onSetInvalidSelected("radius", this.props.components.map(coordToArray));
                             }
@@ -116,6 +118,8 @@ class CoordinateEditor extends React.Component {
                         onChange={e => {
                             const valueText = e.target.value;
                             if (this.isValid(this.props.components, valueText )) {
+                                this.props.onChangeText(valueText, this.props.components.map(coordToArray));
+                            } else if (valueText !== "") {
                                 this.props.onChangeText(valueText, this.props.components.map(coordToArray));
                             } else if (this.props.properties.isValidFeature) {
                                 this.props.onSetInvalidSelected("text", this.props.components.map(coordToArray));
