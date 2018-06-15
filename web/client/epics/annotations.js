@@ -403,7 +403,7 @@ module.exports = (viewer) => ({
                 }
                 // point
                 default: {
-                    selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0], selected);
+                    selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0] || [], selected);
                 }
             }
             if (selected.properties && selected.properties.isCircle) {

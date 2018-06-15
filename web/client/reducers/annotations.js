@@ -49,7 +49,9 @@ function annotations(state = { validationErrors: {} }, action) {
             let ftChanged = ftChangedIndex === -1 ? {type: "Feature", geometry: {
                 type: state.selected.geometry.type
             }, properties: {...state.selected.properties}} : assign({}, state.editing.features[ftChangedIndex]);
-
+            if (ftChanged.geometry && !ftChanged.geometry.type || !ftChanged.geometry) {
+                ftChanged = set("geometry.type", state.selected.geometry.type, ftChanged);
+            }
             if (!isNil(coordinates)) {
 
                 validCoordinates = coordinates;// .filter(validateCoordsArray);
@@ -90,6 +92,8 @@ function annotations(state = { validationErrors: {} }, action) {
                 if ([selected.properties.center].filter(validateCoordsArray).length) {
                     centerOL = reproject(selected.properties.center, "EPSG:4326", "EPSG:3857");
                     c = ol.geom.Polygon.fromCircle(new ol.geom.Circle([centerOL.x, centerOL.y], radius), 100).getCoordinates();
+                } else {
+                    selected = set("properties.center", [], selected);
                 }
 
                 // need to change the polygon coords after radius changes, but this implementation is ugly. is using ol to do that, maybe we need to refactor this
