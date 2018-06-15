@@ -24,7 +24,7 @@ class CoordinateEntry extends React.Component {
 
     render() {
         const {format} = this.props;
-        return format === "decimal" || isNil(format) ? <DecimalCoordinateEditor {...this.props}/> : <AeronauticalCoordinateEditor {...this.props}/>;
+        return format === "decimal" || isNil(format) ? <DecimalCoordinateEditor {...this.props} format={this.props.format || "decimal"}/> : <AeronauticalCoordinateEditor {...this.props}/>;
     }
 }
 

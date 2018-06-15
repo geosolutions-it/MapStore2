@@ -792,7 +792,15 @@
                 "circle": " Circulo"
             },
             "editor": {
-                "title": "Editor de geometría:",
+                "decimal": "Decimal",
+                "aeronautical": "Aeronáutico",
+                "title": {
+                    "Polygon": "Editor de polígonos",
+                    "LineString": "Editor LineString",
+                    "Circle": "Editor de círculos",
+                    "Point": "Editor de marcadores",
+                    "Text": "Editor de texto"
+                },
                 "add": "Agregar nuevas coordenadas",
                 "valid": "La geometría es válida",
                 "radius": "Radio",

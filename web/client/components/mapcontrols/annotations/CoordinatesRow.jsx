@@ -17,6 +17,7 @@ class CoordinatesRowComponent extends React.Component {
         onChange: PropTypes.func,
         onMouseEnter: PropTypes.func,
         format: PropTypes.string,
+        type: PropTypes.string,
         onMouseLeave: PropTypes.func,
         isDraggable: PropTypes.bool,
         removeVisible: PropTypes.bool,

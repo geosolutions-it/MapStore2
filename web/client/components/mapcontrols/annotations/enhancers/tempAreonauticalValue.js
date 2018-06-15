@@ -1,13 +1,25 @@
-const {withStateHandlers} = require('recompose');
+const {compose, withHandlers, withState, withProps} = require('recompose');
+// const {isNil} = require('lodash');
 
-module.exports = withStateHandlers( ({directions = ["N", "S"]}) => ({
-    degrees: 0,
-    minutes: 0,
-    seconds: 0,
-    direction: directions[0]
-}), {
-    onChange: () => (old) => (newP) => ({
-        ...old,
-        ...newP
+module.exports = compose(
+    withProps(({ value }) => ({
+        isValid: value !== ""
+    })),
+
+    withState('initial', 'setInitial', {}),
+    withProps(({isValid, initial}) => {
+        return isValid ? {} : initial;
+    }),
+    withHandlers( {
+        onChange: (props) => ({degrees, minutes, seconds, direction}) => {
+            if (isNaN(degrees) || isNaN(minutes) || isNaN(seconds)) {
+                props.setInitial({degrees, minutes, seconds, direction});
+                props.onChange(undefined);
+
+            } else {
+                props.onChange({degrees, minutes, seconds, direction});
+            }
+        }
     })
-});
+
+);

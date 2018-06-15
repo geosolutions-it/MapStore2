@@ -340,7 +340,21 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
                       width: tempStyle.weight || 1
                     })
                 })
-            })];
+            }), new ol.style.Style({
+                image: options.style.useSelectedStyle || options.style.highlight ? new ol.style.Circle({
+                    radius: 5,
+                    fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
+                        color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 0.2)
+                    })
+              }) : null,
+              geometry: function(feature) {
+                  const geom = feature.getGeometry();
+                  if (geom.getType() === "Circle") {
+                      let coordinates = geom.getCenter();
+                      return new ol.geom.Point(coordinates);
+                  }
+              }
+          })];
         return styles;
     }
     if (geomType === "Text" && tempStyle.font) {

@@ -392,11 +392,19 @@ module.exports = (viewer) => ({
             const state = getState();
             let feature = state.annotations.editing;
             let selected = state.annotations.selected;
-            if (selected.geometry.type === "LineString") {
-                selected = set("geometry.coordinates", selected.geometry.coordinates.filter(validateCoordsArray), selected);
-            }
-            if (selected.geometry.type === "Polygon") {
-                selected = set("geometry.coordinates", [selected.geometry.coordinates[0].filter(validateCoordsArray)], selected);
+            switch (selected.geometry.type) {
+                case "Polygon": {
+                    selected = set("geometry.coordinates", [selected.geometry.coordinates[0].filter(validateCoordsArray)], selected);
+                    break;
+                }
+                case "LineString": {
+                    selected = set("geometry.coordinates", selected.geometry.coordinates.filter(validateCoordsArray), selected);
+                    break;
+                }
+                // point
+                default: {
+                    selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0], selected);
+                }
             }
             if (selected.properties && selected.properties.isCircle) {
                 selected = set("geometry", selected.properties.polygonGeom, selected);

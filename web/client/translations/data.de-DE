@@ -792,7 +792,15 @@
                 "circle": " Kreis"
             },
             "editor": {
-                "title": "Geometrie-Editor:",
+                "decimal": "Dezimal",
+                "aeronautical": "Luftfahrt",
+                "title": {
+                    "Polygon": "Polygon-Editor",
+                    "LineString": "LineString-Editor",
+                    "Circle": "Kreis-Editor",
+                    "Point": "Marker-Editor",
+                    "Text": "Text-Editor"
+                },
                 "add": "Fügen Sie neue Koordinaten hinzu",
                 "valid": "Geometrie ist gültig",
                 "radius": "Radius",

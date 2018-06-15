@@ -23,7 +23,7 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
     CHANGE_FORMAT
 } = require('../actions/annotations');
 
-const {getAvailableStyler, DEFAULT_ANNOTATIONS_STYLES, convertGeoJSONToInternalModel, addIds, validateFeature, getComponents} = require('../utils/AnnotationsUtils');
+const {validateCoordsArray, getAvailableStyler, DEFAULT_ANNOTATIONS_STYLES, convertGeoJSONToInternalModel, addIds, validateFeature, getComponents} = require('../utils/AnnotationsUtils');
 const {set} = require('../utils/ImmutableUtils');
 const {head, includes, findIndex, isNil} = require('lodash');
 
@@ -84,12 +84,15 @@ function annotations(state = { validationErrors: {} }, action) {
                     return f.properties.id === state.selected.properties.id ? selected : f;
                 });
                 selected = {...selected, geometry: {coordinates: center, type: "Circle"}};
-
+                let centerOL;
+                let c = [[[]]];
                 // polygonGeom setting
-                let centerOL = reproject(selected.properties.center, "EPSG:4326", "EPSG:3857");
+                if ([selected.properties.center].filter(validateCoordsArray).length) {
+                    centerOL = reproject(selected.properties.center, "EPSG:4326", "EPSG:3857");
+                    c = ol.geom.Polygon.fromCircle(new ol.geom.Circle([centerOL.x, centerOL.y], radius), 100).getCoordinates();
+                }
 
                 // need to change the polygon coords after radius changes, but this implementation is ugly. is using ol to do that, maybe we need to refactor this
-                let c = ol.geom.Polygon.fromCircle(new ol.geom.Circle([centerOL.x, centerOL.y], radius), 100).getCoordinates();
                 let feature = {
                     type: "Feature",
                     geometry: {

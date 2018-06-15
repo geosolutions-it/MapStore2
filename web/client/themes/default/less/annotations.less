@@ -80,15 +80,15 @@
     max-height: 500px;
 }
 
-.mapstore-annotations-panel .mapstore-annotations-info-viewer {
+#mapstore-annotations-panel .mapstore-annotations-info-viewer {
+    height: 100%;
+}
+#mapstore-annotations-panel .ms2-border-layout-body {
     height: 100%;
 }
 
-.mapstore-annotations-panel .mapstore-annotations-info-viewer-items {
-    margin-top: 10px;
-    height: ~'calc(100% - 60px)';
-    margin-bottom: 10px;
-    overflow: auto;
+#mapstore-annotations-panel .ms2-border-layout-body {
+    overflow: hidden !important;
 }
 
 .mapstore-annotations-info-viewer-marker-group {
@@ -426,9 +426,10 @@
     .row:hover{
         cursor: pointer;
 
-        input {
+        input, select, .col-xs-5 span {
             color: @ms2-color-primary;
         }
+
     }
     .row .col-xs-5 .form-group {
         display: flex;

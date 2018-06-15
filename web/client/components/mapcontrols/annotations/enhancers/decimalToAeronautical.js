@@ -20,7 +20,10 @@ module.exports = compose(
         };
     }),
     withHandlers({
-        onChange: props => ({degrees, minutes, seconds, direction}) => {
+        onChange: props => ({degrees, minutes, seconds, direction} = {}) => {
+            if (degrees === undefined || minutes === undefined || seconds === undefined) {
+                props.onChange(undefined);
+            }
             // conversion dmsToDD
             let dd = degrees + minutes / 60 + seconds / (60 * 60);
             if (direction === 'S' || direction === 'W') {
