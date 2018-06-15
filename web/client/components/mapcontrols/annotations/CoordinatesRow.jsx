@@ -58,38 +58,6 @@ class CoordinatesRowComponent extends React.Component {
                                     min: -180,
                                     max: 180
                                 }
-                            },
-                            aeronautical: {
-                                lat: {
-                                    degree: {
-                                        min: 0,
-                                        max: 60
-                                    },
-                                    minutes: {
-                                        min: 0,
-                                        max: 60
-                                    },
-                                    seconds: {
-                                        min: 0,
-                                        max: 60,
-                                        precision: 3
-                                    }
-                                },
-                                lon: {
-                                    degree: {
-                                        min: 0,
-                                        max: 180
-                                    },
-                                    minutes: {
-                                        min: 0,
-                                        max: 60
-                                    },
-                                    seconds: {
-                                        min: 0,
-                                        max: 60,
-                                        precision: 3
-                                    }
-                                }
                             }
                         }}
                     />
@@ -110,38 +78,6 @@ class CoordinatesRowComponent extends React.Component {
                                 lon: {
                                     min: -180,
                                     max: 180
-                                }
-                            },
-                            aeronautical: {
-                                lat: {
-                                    degree: {
-                                        min: 0,
-                                        max: 60
-                                    },
-                                    minutes: {
-                                        min: 0,
-                                        max: 60
-                                    },
-                                    seconds: {
-                                        min: 0,
-                                        max: 60,
-                                        precision: 3
-                                    }
-                                },
-                                lon: {
-                                    degree: {
-                                        min: 0,
-                                        max: 180
-                                    },
-                                    minutes: {
-                                        min: 0,
-                                        max: 60
-                                    },
-                                    seconds: {
-                                        min: 0,
-                                        max: 60,
-                                        precision: 3
-                                    }
                                 }
                             }
                         }}

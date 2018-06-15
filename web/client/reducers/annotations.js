@@ -89,7 +89,7 @@ function annotations(state = { validationErrors: {} }, action) {
                 let centerOL;
                 let c = [[[]]];
                 // polygonGeom setting
-                if ([selected.properties.center].filter(validateCoordsArray).length) {
+                if (validateCoordsArray(selected.properties.center)) {
                     centerOL = reproject(selected.properties.center, "EPSG:4326", "EPSG:3857");
                     c = ol.geom.Polygon.fromCircle(new ol.geom.Circle([centerOL.x, centerOL.y], radius), 100).getCoordinates();
                 } else {
