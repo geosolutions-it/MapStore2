@@ -328,17 +328,6 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
                 }),
                 fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
                     color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 0.2)
-                }),
-                image: new ol.style.Circle({
-                    radius: radius || 10,
-                    fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
-                        color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 0.2)
-                    }),
-                    stroke: new ol.style.Stroke({
-                      color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
-                      lineDash: options.style.highlight ? [10] : [0],
-                      width: tempStyle.weight || 1
-                    })
                 })
             }), new ol.style.Style({
                 image: options.style.useSelectedStyle || options.style.highlight ? new ol.style.Circle({
