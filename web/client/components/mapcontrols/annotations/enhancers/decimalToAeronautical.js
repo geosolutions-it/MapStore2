@@ -5,8 +5,8 @@ const convertDDToDMS = (D, lng) => {
     return {
         degrees: Math.abs(0 | D),
         direction: D < 0 ? lng ? 'W' : 'S' : lng ? 'E' : 'N',
-        minutes: Math.abs(0 | D % 1 * 60),
-        seconds: Math.abs((0 | D * 60 % 1 * 6000) / 100)
+        minutes: Math.floor(Math.abs(0 | D % 1 * 60)),
+        seconds: Math.round(Math.abs((0 | D * 60 % 1 * 6000) / 100))
     };
 };
 
@@ -30,7 +30,7 @@ module.exports = compose(
                 dd = dd * -1;
             } // Don't do anything for N or E
 
-            props.onChange(dd);
+            props.onChange(dd.toPrecision(12));
         }
     })
 );

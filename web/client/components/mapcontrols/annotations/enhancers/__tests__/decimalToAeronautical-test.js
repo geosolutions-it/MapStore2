@@ -10,7 +10,7 @@ const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const decimalToAeronautical = require('../decimalToAeronautical');
-const {createSink} = require('recompose');
+const {compose, withState, createSink} = require('recompose');
 
 // const TestUtils = require('react-dom/test-utils');
 
@@ -25,7 +25,6 @@ describe("test the Annotations enahncers", () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-
     it('decimalToAeronautical conversion', (done) => {
         const Sink = decimalToAeronautical(createSink( props => {
             expect(props).toExist();
@@ -35,10 +34,27 @@ describe("test the Annotations enahncers", () => {
             done();
         }));
         ReactDOM.render((<Sink
-            value = {1.5}
+            value = {1.50}
             coordinate="lon"
             />), document.getElementById("container"));
-
+    });
+    it('convert from/to preserve precision', (done) => {
+        const enhancer = compose(
+            withState('value', 'onChange', 1.5),
+            decimalToAeronautical
+        );
+        const Sink = enhancer(createSink(props => {
+            expect(props).toExist();
+            if (props.seconds === 0) {
+                props.onChange({ "degrees": 47, "minutes": 45, "seconds": 1, "direction": "N" });
+            }
+            if (props.seconds === 1) {
+                done();
+            }
+        }));
+        ReactDOM.render((<Sink
+            coordinate="lon"
+        />), document.getElementById("container"));
     });
 
 });
