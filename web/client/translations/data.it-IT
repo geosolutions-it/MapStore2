@@ -792,8 +792,16 @@
                 "circle": " Cerchio"
             },
             "editor": {
-                "title": "Editor geometria:",
-                "add": "Add new coordinates",
+                "decimal": "Decimali",
+                "aeronautical": "Aeronautiche",
+                "title": {
+                    "Polygon": "Editor del poligono",
+                    "LineString": "Editor della linea",
+                    "Circle": "Editor del cerchio",
+                    "Point": "Editor del marker",
+                    "Text": "Editor del testo"
+                },
+                "add": "Aggiungi una nuova coordinata",
                 "valid": "La geometria è valida",
                 "radius": "Raggio",
                 "text": "Testo",

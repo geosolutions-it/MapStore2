@@ -18,6 +18,7 @@ const annotationsLayerSelector = createSelector([
 
 
 const removingSelector = (state) => get(state, "annotations.removing");
+const formatSelector = (state) => get(state, "annotations.format");
 const showUnsavedChangesModalSelector = (state) => get(state, "annotations.showUnsavedChangesModal", false);
 const showUnsavedStyleModalSelector = (state) => get(state, "annotations.showUnsavedStyleModal", false);
 const showUnsavedGeometryModalSelector = (state) => get(state, "annotations.showUnsavedGeometryModal", false);
@@ -42,6 +43,7 @@ const configSelector = (state) => get(state, "annotations.config", {});
 
 const annotationsInfoSelector = (state) => (assign({}, {
     closing: closingSelector(state),
+    format: formatSelector(state),
     config: configSelector(state),
     drawing: drawingSelector(state),
     drawingText: drawingTextSelector(state),
@@ -73,6 +75,7 @@ const annotationsListSelector = createSelector([
     annotationsSelector,
     annotationsLayerSelector
 ], (info, annotations, layer) => (assign({}, {
+    format: annotations.format,
     removing: annotations.removing,
     showUnsavedChangesModal: annotations.showUnsavedChangesModal,
     showUnsavedGeometryModal: annotations.showUnsavedGeometryModal,
@@ -117,6 +120,7 @@ module.exports = {
     showUnsavedGeometryModalSelector,
     unsavedGeometrySelector,
     unsavedStyleSelector,
+    formatSelector,
     errorsSelector,
     configSelector
 };

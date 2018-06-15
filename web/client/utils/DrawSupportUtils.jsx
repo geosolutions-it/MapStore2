@@ -53,7 +53,7 @@ const calculateRadius = (center, coordinates) => {
 
 const transformPolygonToCircle = (feature, mapCrs) => {
 
-    if (!feature.getGeometry() || feature.getGeometry().getType() !== "Polygon") {
+    if (!feature.getGeometry() || feature.getGeometry().getType() !== "Polygon" || feature.getProperties().center && feature.getProperties().center.length === 0) {
         return feature;
     }
     if (feature.getProperties() && feature.getProperties().isCircle) {

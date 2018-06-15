@@ -22,7 +22,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     cancelCloseAnnotations, confirmCloseAnnotations, startDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal,
     changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, download, loadAnnotations,
     changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected,
-    highlightPoint, confirmDeleteFeature, toggleDeleteFtModal // TODO FIX MEASUREMENT
+    highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat
 } = require('../actions/annotations');
 
 const { zoomToExtent } = require('../actions/map');
@@ -33,6 +33,7 @@ const commonEditorActions = {
     onEdit: editAnnotation,
     onCancelEdit: cancelEditAnnotation,
     onChangeStyler: changeStyler,
+    onChangeFormat: changeFormat,
     onConfirmDeleteFeature: confirmDeleteFeature,
     onCleanHighlight: cleanHighlight,
     onHighlightPoint: highlightPoint,

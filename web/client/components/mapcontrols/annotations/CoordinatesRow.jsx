@@ -1,9 +1,9 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Row, Col, FormGroup, FormControl} = require('react-bootstrap');
+const {Row, Col} = require('react-bootstrap');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const draggableComponent = require('../../misc/enhancers/draggableComponent');
-
+const CoordinateEntry = require('./CoordinateEntry');
 
 /**
 
@@ -16,26 +16,13 @@ class CoordinatesRowComponent extends React.Component {
         onRemove: PropTypes.func,
         onChange: PropTypes.func,
         onMouseEnter: PropTypes.func,
+        format: PropTypes.string,
+        type: PropTypes.string,
         onMouseLeave: PropTypes.func,
         isDraggable: PropTypes.bool,
         removeVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool
     };
-
-    getValidationStateLon = (longitude) => {
-        const lon = parseFloat(longitude);
-        if (isNaN(lon) || lon < -180 || lon > 180 ) {
-            return "error";
-        }
-        return null; // "success"
-    }
-    getValidationStateLat = (latitude) => {
-        const lat = parseFloat(latitude);
-        if (isNaN(lat) || lat < -90 || lat > 90 ) {
-            return "error";
-        }
-        return null; // "success"
-    }
 
     render() {
         const {idx} = this.props;
@@ -55,46 +42,46 @@ class CoordinatesRowComponent extends React.Component {
                         ]}/>
                 </Col>
                 <Col xs={5}>
-                    <FormGroup
-                        validationState={this.getValidationStateLat(this.props.component.lat)}>
-                        <FormControl
-                            key={"lat"}
-                            value={this.props.component.lat}
-                            placeholder="Lat"
-                            onChange={e => {
-                                if (e.target.value === "") {
-                                    this.props.onChange(idx, 'lat', "");
+                    <CoordinateEntry
+                        format={this.props.format}
+                        coordinate="lat"
+                        idx={idx}
+                        value={this.props.component.lat}
+                        onChange={(dd) => this.props.onChange(idx, "lat", dd)}
+                        constraints={{
+                            decimal: {
+                                lat: {
+                                    min: -90,
+                                    max: 90
+                                },
+                                lon: {
+                                    min: -180,
+                                    max: 180
                                 }
-                                if (this.getValidationStateLat(e.target.value) === null) {
-                                    this.props.onChange(idx, 'lat', e.target.value);
-                                }
-                            }}
-                            step={1}
-                            max={90}
-                            min={-90}
-                            type="number"/>
-                    </FormGroup>
-                </Col>
-                <Col xs={5}>
-                <FormGroup
-                     validationState={this.getValidationStateLon(this.props.component.lon)}>
-                    <FormControl
-                        key={"lon"}
-                        value={this.props.component.lon}
-                        placeholder="Lon"
-                        onChange={e => {
-                            if (e.target.value === "") {
-                                this.props.onChange(idx, 'lon', "");
-                            }
-                            if (this.getValidationStateLon(e.target.value) === null) {
-                                this.props.onChange(idx, 'lon', e.target.value);
                             }
                         }}
-                        step={1}
-                        max={180}
-                        min={-180}
-                        type="number"/>
-                </FormGroup>
+                    />
+                </Col>
+                <Col xs={5}>
+                    <CoordinateEntry
+                        format={this.props.format}
+                        coordinate="lon"
+                        idx={idx}
+                        value={this.props.component.lon}
+                        onChange={(dd) => this.props.onChange(idx, "lon", dd)}
+                        constraints={{
+                            decimal: {
+                                lat: {
+                                    min: -90,
+                                    max: 90
+                                },
+                                lon: {
+                                    min: -180,
+                                    max: 180
+                                }
+                            }
+                        }}
+                    />
                 </Col>
                 <Col xs={1}>
                     <Toolbar

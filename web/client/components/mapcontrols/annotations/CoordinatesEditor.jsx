@@ -18,6 +18,8 @@ const CoordinatesRow = require('./CoordinatesRow');
  * @prop {function} onChangeText triggered every text change
  * @prop {function} onHighlightPoint triggered on mouse enter and leave and if polygons or linestring editor is opened
  * @prop {function} onChangeRadius triggered every radius change
+ * @prop {function} onChangeFormat triggered every format change
+ * @prop {string} format decimal or aeronautical degree for coordinates
  * @prop {object} componentsValidation it contains parameters for validation of the form based on the types
  * @prop {object} transitionProps properties of the transition for drag component
  * @prop {object} properties of the GeoJSON feature being edited
@@ -33,6 +35,8 @@ class CoordinateEditor extends React.Component {
         onChangeRadius: PropTypes.func,
         onHighlightPoint: PropTypes.func,
         onChangeText: PropTypes.func,
+        onChangeFormat: PropTypes.func,
+        format: PropTypes.string,
         componentsValidation: PropTypes.object,
         transitionProps: PropTypes.object,
         properties: PropTypes.object,
@@ -45,6 +49,7 @@ class CoordinateEditor extends React.Component {
         onChange: () => {},
         onChangeRadius: () => {},
         onHighlightPoint: () => {},
+        onChangeFormat: () => {},
         onChangeText: () => {},
         onSetInvalidSelected: () => {},
         componentsValidation: {
@@ -89,6 +94,8 @@ class CoordinateEditor extends React.Component {
                             const radius = e.target.value;
                             if (this.isValid(this.props.components, radius )) {
                                 this.props.onChangeRadius(parseFloat(radius), this.props.components.map(coordToArray));
+                            } else if (radius !== "") {
+                                this.props.onChangeRadius(parseFloat(radius), []);
                             } else if (this.props.properties.isValidFeature) {
                                 this.props.onSetInvalidSelected("radius", this.props.components.map(coordToArray));
                             }
@@ -112,6 +119,8 @@ class CoordinateEditor extends React.Component {
                             const valueText = e.target.value;
                             if (this.isValid(this.props.components, valueText )) {
                                 this.props.onChangeText(valueText, this.props.components.map(coordToArray));
+                            } else if (valueText !== "") {
+                                this.props.onChangeText(valueText, this.props.components.map(coordToArray));
                             } else if (this.props.properties.isValidFeature) {
                                 this.props.onSetInvalidSelected("text", this.props.components.map(coordToArray));
                             }
@@ -128,6 +137,26 @@ class CoordinateEditor extends React.Component {
         const allValidComponents = actualValidComponents.length === actualComponents.length;
         const validationCompleteButton = this[componentsValidation[type].validation]() && allValidComponents;
         const buttons = [
+            {
+                visible: true,
+                el: () =>
+                (
+                    <FormGroup
+                         style={{
+                        display: "inline-flex",
+                        alignItems: "baseline"}}>
+                        <ControlLabel style={{marginRight: 5}}>Format</ControlLabel>{  }
+                        <FormControl componentClass="select" placeholder="select"
+                            value={this.props.format}
+                            selected={this.props.format}
+                        onChange={(e) => {
+                            this.props.onChangeFormat(e.target.value);
+                        }}>
+                            <option value="decimal"><Message msgId="annotations.editor.decimal"/></option>
+                            <option value="aeronautical"><Message msgId="annotations.editor.aeronautical"/></option>
+                        </FormControl>
+                </FormGroup>)
+            },
             {
                 glyph: validationCompleteButton ? 'ok' : 'exclamation-mark text-danger',
                 tooltipId: validationCompleteButton ? 'annotations.editor.valid' : componentsValidation[type].notValid,
@@ -149,7 +178,7 @@ class CoordinateEditor extends React.Component {
             <Grid fluid style={{display: 'flex', flexDirection: 'column', flex: 1}}>
                 <Row>
                     <Col xs={toolbarVisible ? 6 : 12}>
-                        <Message msgId="annotations.editor.title"/>
+                        <Message msgId={"annotations.editor.title." + this.props.type}/>
                     </Col>
                     <Col xs={6}>
                         <Toolbar
@@ -161,6 +190,13 @@ class CoordinateEditor extends React.Component {
                 {this.props.type === "Circle" && this.renderCircle()}
                 {this.props.type === "Text" && this.renderText()}
                 <Row style={{flex: 1, overflowY: 'auto'}}>
+                    <Col xs={12}>
+                        {
+                            this.props.type === "Circle" && <ControlLabel>Center</ControlLabel>
+                        }
+                    </Col>
+                </Row>
+                <Row style={{flex: 1, overflowY: 'auto'}}>
                     <Col xs={5} xsOffset={1}>
                         <Message msgId="annotations.editor.lat"/>
                     </Col>
@@ -171,6 +207,7 @@ class CoordinateEditor extends React.Component {
                 </Row>
                 <Row style={{flex: 1, overflowY: 'auto'}}>
                     {this.props.components.map((component, idx) => <CoordinatesRow
+                        format={this.props.format}
                         sortId={idx}
                         key={idx + " key"}
                         isDraggable={this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]()}
@@ -214,6 +251,9 @@ class CoordinateEditor extends React.Component {
                             const components = this.props.components.filter((cmp, i) => i !== idx);
                             if (this.isValid(components)) {
                                 const validComponents = this.addCoordPolygon(components);
+                                if (this.props.type === "LineString" || this.props.type === "Polygon" && idx !== components.length) {
+                                    this.props.onHighlightPoint(components[idx]);
+                                }
                                 this.props.onChange(validComponents);
                             } else if (this.props.properties.isValidFeature) {
                                 this.props.onSetInvalidSelected("coords", this.props.components.map(coordToArray));

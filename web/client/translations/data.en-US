@@ -793,7 +793,15 @@
                 "circle": " Circle"
             },
             "editor": {
-                "title": "Geometry Editor:",
+                "decimal": "Decimal",
+                "aeronautical": "Aeronautical",
+                "title": {
+                    "Polygon": "Polygon editor",
+                    "LineString": "LineString editor",
+                    "Circle": "Circle editor",
+                    "Point": "Marker editor",
+                    "Text": "Text editor"
+                },
                 "add": "Add new coordinates",
                 "valid": "Geometry is valid",
                 "radius": "Radius",

@@ -19,9 +19,11 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
     TOGGLE_STYLE, SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION, FILTER_ANNOTATIONS,
     CHANGE_STYLER, UNSAVED_CHANGES, TOGGLE_GEOMETRY_MODAL, TOGGLE_CHANGES_MODAL, CHANGED_PROPERTIES, TOGGLE_STYLE_MODAL, UNSAVED_STYLE,
     ADD_TEXT, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS, CHANGE_TEXT,
-    ADD_NEW_FEATURE, SET_INVALID_SELECTED, TOGGLE_DELETE_FT_MODAL, CONFIRM_DELETE_FEATURE} = require('../actions/annotations');
+    ADD_NEW_FEATURE, SET_INVALID_SELECTED, TOGGLE_DELETE_FT_MODAL, CONFIRM_DELETE_FEATURE, HIGHLIGHT_POINT,
+    CHANGE_FORMAT
+} = require('../actions/annotations');
 
-const {getAvailableStyler, DEFAULT_ANNOTATIONS_STYLES, convertGeoJSONToInternalModel, addIds, validateFeature, getComponents} = require('../utils/AnnotationsUtils');
+const {validateCoordsArray, getAvailableStyler, DEFAULT_ANNOTATIONS_STYLES, convertGeoJSONToInternalModel, addIds, validateFeature, getComponents} = require('../utils/AnnotationsUtils');
 const {set} = require('../utils/ImmutableUtils');
 const {head, includes, findIndex, isNil} = require('lodash');
 
@@ -47,7 +49,9 @@ function annotations(state = { validationErrors: {} }, action) {
             let ftChanged = ftChangedIndex === -1 ? {type: "Feature", geometry: {
                 type: state.selected.geometry.type
             }, properties: {...state.selected.properties}} : assign({}, state.editing.features[ftChangedIndex]);
-
+            if (ftChanged.geometry && !ftChanged.geometry.type || !ftChanged.geometry) {
+                ftChanged = set("geometry.type", state.selected.geometry.type, ftChanged);
+            }
             if (!isNil(coordinates)) {
 
                 validCoordinates = coordinates;// .filter(validateCoordsArray);
@@ -82,12 +86,17 @@ function annotations(state = { validationErrors: {} }, action) {
                     return f.properties.id === state.selected.properties.id ? selected : f;
                 });
                 selected = {...selected, geometry: {coordinates: center, type: "Circle"}};
-
+                let centerOL;
+                let c = [[[]]];
                 // polygonGeom setting
-                let centerOL = reproject(selected.properties.center, "EPSG:4326", "EPSG:3857");
+                if (validateCoordsArray(selected.properties.center)) {
+                    centerOL = reproject(selected.properties.center, "EPSG:4326", "EPSG:3857");
+                    c = ol.geom.Polygon.fromCircle(new ol.geom.Circle([centerOL.x, centerOL.y], radius), 100).getCoordinates();
+                } else {
+                    selected = set("properties.center", [], selected);
+                }
 
                 // need to change the polygon coords after radius changes, but this implementation is ugly. is using ol to do that, maybe we need to refactor this
-                let c = ol.geom.Polygon.fromCircle(new ol.geom.Circle([centerOL.x, centerOL.y], radius), 100).getCoordinates();
                 let feature = {
                     type: "Feature",
                     geometry: {
@@ -210,6 +219,12 @@ function annotations(state = { validationErrors: {} }, action) {
         case CHANGE_RADIUS: {
             let newState;
             let selected = set("properties.radius", action.radius, state.selected);
+            if (action.components.length === 0) {
+                return assign({}, state, {
+                    selected,
+                    unsavedChanges: true
+                });
+            }
             selected = set("properties.center", action.components[0], selected);
             selected = set("geometry.coordinates", action.components[0], selected);
             let center = reproject(selected.properties.center, "EPSG:4326", "EPSG:3857");
@@ -249,11 +264,11 @@ function annotations(state = { validationErrors: {} }, action) {
             let selected = set("properties.valueText", action.text, state.selected);
             selected = set("properties.isValidFeature", validateFeature({
                 properties: selected.properties,
-                components: getComponents({coordinates: action.components[0], type: "Text"}),
+                components: getComponents({coordinates: action.components[0] || [], type: "Text"}),
                 type: selected.geometry.type
             }), selected);
             selected = set("properties.isText", true, selected);
-            selected = set("geometry.coordinates", action.components[0], selected);
+            selected = set("geometry.coordinates", action.components[0] || [[]], selected);
 
             let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === state.selected.properties.id);
             const selectedGeoJSON = set("geometry.type", "Point", selected);
@@ -503,6 +518,7 @@ function annotations(state = { validationErrors: {} }, action) {
                     show: false,
                     drawing: false
                 },
+                validationErrors: {},
                 coordinateEditorEnabled: true,
                 editing: assign({}, newState.editing, {
                         features: type === "Circle" ? newState.editing.features : newState.editing.features.map(f => {
@@ -560,6 +576,17 @@ function annotations(state = { validationErrors: {} }, action) {
                 });
             }
             return state;
+        case HIGHLIGHT_POINT: {
+            return !action.point ?
+                {...state, clickPoint: null, showMarker: false} :
+                assign({}, state, {
+                    clickPoint: {latlng: {lat: action.point.lat, lng: action.point.lon }},
+                    showMarker: true
+                });
+        }
+        case CHANGE_FORMAT: {
+            return {...state, format: action.format};
+        }
         case FILTER_ANNOTATIONS:
             return assign({}, state, {
                 filter: action.filter

@@ -41,6 +41,8 @@ const bbox = require('@turf/bbox');
  * @memberof components.mapControls.annotations
  * @class
  * @prop {string} id identifier of the current annotation feature
+ * @prop {function} onChangeFormat triggered every format change
+ * @prop {string} format decimal or aeronautical degree for coordinates
  * @prop {object} config configuration object, where overridable stuff is stored (fields config for annotations, marker library, etc.) {@link #components.mapControls.annotations.AnnotationsConfig}
  * @prop {object} editing feature object of the feature under editing (when editing mode is enabled, null otherwise)
  * @prop {boolean} drawing flag to state status of drawing during editing
@@ -172,6 +174,8 @@ class AnnotationsEditor extends React.Component {
         maxZoom: PropTypes.number,
         width: PropTypes.number,
         onDownload: PropTypes.func,
+        onChangeFormat: PropTypes.func,
+        format: PropTypes.string,
         onDeleteFeature: PropTypes.func
     };
 
@@ -538,8 +542,10 @@ class AnnotationsEditor extends React.Component {
                                 drawing={this.props.drawing}
                                 selected={this.props.selected}
                                 featureType={this.props.featureType}
+                                format={this.props.format}
                                 onChange={this.props.onChangeSelected}
                                 onChangeRadius={this.props.onChangeRadius}
+                                onChangeFormat={this.props.onChangeFormat}
                                 onHighlightPoint={this.props.onHighlightPoint}
                                 onSetInvalidSelected={this.props.onSetInvalidSelected}
                                 onChangeText={this.props.onChangeText}

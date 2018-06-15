@@ -15,6 +15,7 @@ const {
     showUnsavedStyleModalSelector,
     showUnsavedGeometryModalSelector,
     closingSelector,
+    formatSelector,
     editingSelector,
     drawingSelector,
     stylerTypeSelector,
@@ -329,6 +330,7 @@ const state = {
         ]
     },
     annotations: {
+        format: "decimal",
         config: {
           multiGeometry: true
         },
@@ -434,6 +436,10 @@ describe('Test annotations selectors', () => {
         const retVal = showUnsavedChangesModalSelector(state);
         expect(retVal).toBe(false);
     });
+    it('test formatSelector', () => {
+        const retVal = formatSelector(state);
+        expect(retVal).toBe("decimal");
+    });
     it('test showUnsavedStyleModalSelector', () => {
         const retVal = showUnsavedStyleModalSelector(state);
         expect(retVal).toBe(false);
@@ -518,8 +524,14 @@ describe('Test annotations selectors', () => {
     });
     it('test annotationsInfoSelector', () => {
         const retVal = annotationsInfoSelector(state);
-        expect(Object.keys(retVal).length).toBe(21);
-        const params = ["closing", "config", "drawing", "drawingText", "errors", "editing", "coordinateEditorEnabled", "editedFields", "mode", "removing", "selected", "featureType", "showUnsavedChangesModal", "showUnsavedStyleModal", "showUnsavedGeometryModal", "showDeleteFeatureModal", "stylerType", "styling", "unsavedChanges", "unsavedStyle", "unsavedGeometry" ];
+        expect(Object.keys(retVal).length).toBe(22);
+        const params = ["closing", "config", "drawing", "drawingText",
+        "errors", "editing", "coordinateEditorEnabled", "editedFields",
+        "mode", "removing", "selected", "featureType",
+        "showUnsavedChangesModal", "showUnsavedStyleModal",
+        "showUnsavedGeometryModal", "showDeleteFeatureModal",
+        "stylerType", "styling", "unsavedChanges", "unsavedStyle",
+        "unsavedGeometry", "format" ];
         Object.keys(retVal).forEach(r => {
             expect(params.indexOf(r) !== -1).toBe(true);
         });

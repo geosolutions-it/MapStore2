@@ -25,7 +25,6 @@ const {
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER
 } = require('../actions/mapInfo');
-const { HIGHLIGHT_POINT } = require('../actions/annotations');
 const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
@@ -91,15 +90,6 @@ function mapInfo(state = initState, action) {
             clickPoint: action.point,
             clickLayer: action.layer || null
         });
-    }
-    case HIGHLIGHT_POINT: {
-        return !action.point ?
-            {...state, clickLayer: null, clickPoint: null} :
-            assign({}, state, {
-                clickPoint: {latlng: {lat: action.point.lat, lng: action.point.lon }},
-                clickLayer: null,
-                showMarker: true
-            });
     }
     case CHANGE_MAPINFO_FORMAT: {
         return assign({}, state, {

@@ -38,6 +38,7 @@
             "multiGeometry": true,
             "validationErrors": {}
           },
+          "format": "aeronautical",
           "defaultTextAnnotation": "New"
         },
         "maptype": {

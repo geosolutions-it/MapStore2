@@ -20,7 +20,8 @@ const {
     toggleDeleteFtModal, confirmDeleteFeature,
     changeStyler, addText, setUnsavedChanges, setUnsavedStyle,
     toggleUnsavedChangesModal, toggleUnsavedGeometryModal, toggleUnsavedStyleModal, changedProperties,
-    setInvalidSelected, addNewFeature, resetCoordEditor, changeText, changeRadius, changeSelected
+    setInvalidSelected, addNewFeature, resetCoordEditor, changeText, changeRadius, changeSelected,
+    highlightPoint, changeFormat
  } = require('../../actions/annotations');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {drawingFeatures, selectFeatures} = require('../../actions/draw');
@@ -48,6 +49,25 @@ describe('Test the annotations reducer', () => {
         expect(state.showDeleteFeatureModal).toBe(true);
         state = annotations(state, toggleDeleteFtModal());
         expect(state.showDeleteFeatureModal).toBe(false);
+    });
+    it('changeFormat', () => {
+        const format = "aeronautical";
+        let state = annotations({}, changeFormat(format));
+        expect(state.format).toBe(format);
+    });
+
+    it('test activating / deactivating highlight point', () => {
+        let point = {lat: 3, lon: 4};
+        let state = annotations({}, highlightPoint(point));
+        expect(state).toExist();
+        expect(state.clickPoint.latlng.lat).toBe(point.lat);
+        expect(state.clickPoint.latlng.lng).toBe(point.lon);
+        expect(state.showMarker).toBe(true);
+
+        state = annotations({}, highlightPoint());
+        expect(state).toExist();
+        expect(state.clickPoint).toBe(null);
+        expect(state.showMarker).toBe(false);
     });
     it('confirmDeleteFeature', () => {
         const state = annotations({
