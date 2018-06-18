@@ -911,6 +911,8 @@
             "serviceTitle": "Title",
             "serviceTitlePlaceholder": "type a title",
             "missingReference": "Missing OGC reference metadata",
+            "showDescription": "Show full description",
+            "hideDescription": "Hide full description",
             "notification": {
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",
