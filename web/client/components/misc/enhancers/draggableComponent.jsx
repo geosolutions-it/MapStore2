@@ -3,7 +3,6 @@ const React = require('react');
 const {compose} = require('recompose');
 const {DragSource: dragSource} = require('react-dnd');
 const {DropTarget: dropTarget} = require('react-dnd');
-// const {ConnectDragPreview: connectDragPreview} = require('react-dnd');
 
 
 const itemSource = {
