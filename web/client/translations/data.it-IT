@@ -803,7 +803,7 @@
                 },
                 "add": "Aggiungi una nuova coordinata",
                 "valid": "La geometria è valida",
-                "radius": "Raggio",
+                "radius": "Raggio (m)",
                 "text": "Testo",
                 "lat": "Latitudine",
                 "lon": "Longitudine",

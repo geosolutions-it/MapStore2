@@ -94,7 +94,7 @@ class CoordinateEntry extends React.Component {
             height: 0
         };
         return (
-            <FormGroup>
+            <FormGroup style={{display: "inline-flex"}}>
                 <FormControl
                     key={this.props.coordinate + "degree"}
                     value={this.props.degrees}

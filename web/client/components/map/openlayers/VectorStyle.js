@@ -2,7 +2,7 @@ var markerIcon = require('./img/marker-icon.png');
 var markerShadow = require('./img/marker-shadow.png');
 var ol = require('openlayers');
 const {last, head} = require('lodash');
-
+const blue = [0, 153, 255, 1];
 const assign = require('object-assign');
 const {trim, isString} = require('lodash');
 const {colorToRgbaStr} = require('../../../utils/ColorUtils');
@@ -289,7 +289,7 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
             }),
             new ol.style.Style(tempStyle ? {
                 stroke: new ol.style.Stroke( tempStyle && tempStyle.stroke ? tempStyle.stroke : {
-                    color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
+                    color: options.style.useSelectedStyle ? blue : colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
                     lineDash: options.style.highlight ? [10] : [0],
                     width: tempStyle.weight || 1
                 }),
@@ -322,7 +322,7 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
             }),
             new ol.style.Style({
                 stroke: new ol.style.Stroke( tempStyle && tempStyle.stroke ? tempStyle.stroke : {
-                    color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
+                    color: options.style.useSelectedStyle ? blue : colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
                     lineDash: options.style.highlight ? [10] : [0],
                     width: tempStyle.weight || 1
                 }),
@@ -330,10 +330,10 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
                     color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 0.2)
                 })
             }), new ol.style.Style({
-                image: options.style.useSelectedStyle || options.style.highlight ? new ol.style.Circle({
+                image: options.style.useSelectedStyle ? new ol.style.Circle({
                     radius: 3,
                     fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
-                        color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 0.2)
+                        color: blue
                     })
               }) : null,
               geometry: function(feature) {
@@ -361,7 +361,7 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
             }),
             new ol.style.Style({
                 stroke: new ol.style.Stroke( tempStyle.stroke ? tempStyle.stroke : {
-                    color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
+                    color: options.style.useSelectedStyle ? blue : colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
                     lineDash: options.style.highlight ? [10] : [0],
                     width: tempStyle.weight || 1
                 }),

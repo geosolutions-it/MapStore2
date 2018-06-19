@@ -655,7 +655,7 @@
                 },
                 "add": "Add new coordinates",
                 "valid": "Geometry is valid",
-                "radius": "Radius",
+                "radius": "Radius (m)",
                 "text": "Text",
                 "lat": "Latitude",
                 "lon": "Longitude",
