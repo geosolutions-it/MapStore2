@@ -26,7 +26,7 @@ module.exports = {
     {
         BurgerMenu: {
             name: 'about',
-            position: 10000,
+            position: 1500,
             text: <Message msgId="about_title"/>,
         icon: <Glyphicon glyph="info-sign"/>,
             action: toggleControl.bind(null, 'about', null),
