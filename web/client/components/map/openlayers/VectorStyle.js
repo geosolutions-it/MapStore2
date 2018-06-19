@@ -330,7 +330,7 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
                     color: colorToRgbaStr(options.style && tempStyle.fillColor || "#0000FF", tempStyle.fillOpacity || 0.2)
                 })
             }), new ol.style.Style({
-                image: options.style.useSelectedStyle || options.style.highlight ? new ol.style.Circle({
+                image: options.style.useSelectedStyle ? new ol.style.Circle({
                     radius: 3,
                     fill: new ol.style.Fill(tempStyle.fill ? tempStyle.fill : {
                         color: blue
