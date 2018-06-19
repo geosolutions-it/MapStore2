@@ -14,6 +14,7 @@ const PropTypes = require('prop-types');
 
 const { isDashboardEditing } = require('../selectors/dashboard');
 const { isLoggedIn } = require('../selectors/security');
+const {pathnameSelector} = require('../selectors/routing');
 const { dashboardHasWidgets, getWidgetsDependenciesGroups } = require('../selectors/widgets');
 const { showConnectionsSelector, dashboardResource, isDashboardLoading } = require('../selectors/dashboard');
 const { dashboardSelector } = require('./widgetbuilder/commons');
@@ -41,11 +42,12 @@ const Toolbar = compose(
             dashboardResource,
             dashboardHasWidgets,
             getWidgetsDependenciesGroups,
-            (showConnections, logged, resource, hasWidgets, groups = []) => ({
+            pathnameSelector,
+            (showConnections, logged, resource, hasWidgets, groups, path = []) => ({
                 showConnections,
                 hasConnections: groups.length > 0,
                 hasWidgets,
-                canEdit: (resource ? resource.canEdit : true),
+                canEdit: (resource ? resource.canEdit : (isNaN(path.substr(-4))) ? true : false),
                 canSave: logged && hasWidgets && (resource ? resource.canEdit : true)
             })
         ),
