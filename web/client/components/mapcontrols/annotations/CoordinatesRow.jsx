@@ -1,6 +1,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Row, Col} = require('react-bootstrap');
+const {Row, Col, Glyphicon} = require('react-bootstrap');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const draggableComponent = require('../../misc/enhancers/draggableComponent');
 const CoordinateEntry = require('./CoordinateEntry');
@@ -19,6 +19,7 @@ class CoordinatesRowComponent extends React.Component {
         format: PropTypes.string,
         type: PropTypes.string,
         onMouseLeave: PropTypes.func,
+        connectDragSource: PropTypes.func,
         isDraggable: PropTypes.bool,
         removeVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool
@@ -31,15 +32,15 @@ class CoordinatesRowComponent extends React.Component {
                 this.props.onMouseEnter(this.props.component);
             }} onMouseLeave={this.props.onMouseLeave}>
                 <Col xs={1}>
-                    <Toolbar
-                        btnDefaultProps={{ className: 'square-button-md no-border'}}
-                        buttons={[
-                            {
-                                disabled: !this.props.isDraggable,
-                                style: {pointerEvents: !this.props.isDraggable ? "none" : "auto"},
-                                glyph: 'menu-hamburger'
-                            }
-                        ]}/>
+                    {this.props.connectDragSource(<div
+                        className="square-button-md no-border btn btn-default"
+                        style={{display: "flex" /*workaround for firefox*/}}
+                        >
+                        <Glyphicon
+                        glyph="menu-hamburger"
+                        disabled={!this.props.isDraggable}
+                        style={{pointerEvents: !this.props.isDraggable ? "none" : "auto"}}
+                    /></div>)}
                 </Col>
                 <Col xs={5}>
                     <CoordinateEntry

@@ -415,13 +415,13 @@
 
 
 .mapstore-annotations-info-viewer-items .col-xs-6 .btn-group {
-    span button:first-child {
+    span button:nth-child(2) {
         background-color: transparent;
         cursor: auto;
     }
 }
 
-.mapstore-annotations-info-viewer .ms-dragg.ms-below, .mapstore-annotations-info-viewer .ms-dragg.ms-above {
+.mapstore-annotations-info-viewer .container-fluid .container-fluid .row {
 
     .row:hover{
         cursor: pointer;
@@ -431,7 +431,19 @@
         }
 
     }
-    .row .col-xs-5 .form-group {
-        display: inline-flex;
+}
+
+.mapstore-annotations-info-viewer .ms-dragg.ms-below, .mapstore-annotations-info-viewer .ms-dragg.ms-above {
+
+    .row{
+        background-color: @ms2-color-background
+    }
+    .row:hover{
+        cursor: pointer;
+
+        input, select, .col-xs-5 span {
+            color: @ms2-color-primary;
+        }
+
     }
 }

@@ -803,7 +803,7 @@
                 },
                 "add": "Agregar nuevas coordenadas",
                 "valid": "La geometría es válida",
-                "radius": "Radio",
+                "radius": "Radio (m)",
                 "text": "Texto",
                 "lat": "Latitud",
                 "lon": "Longitud",
