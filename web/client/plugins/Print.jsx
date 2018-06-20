@@ -52,7 +52,7 @@ require('./print/print.css');
  *   "name": "Print",
  *   "cfg": {
  *       "overrideOptions": {
- *          "gedetic": true
+ *          "gedetic": false
  *       }
  *    }
  * }
