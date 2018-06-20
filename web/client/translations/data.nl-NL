@@ -953,7 +953,7 @@
                     "configureChartOptions": "Configurer les options de graphique",
                     "configureWidgetOptions": "Configurer les options du widget",
                     "updateWidget": "Mettre à jour le widget",
-                    "addToTheMap": "Ajouter le widget à la carte"
+                    "addTheWidget": "Ajouter le widget"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Aucun widget disponible",

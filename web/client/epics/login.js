@@ -8,6 +8,7 @@
 const {refreshAccessToken, sessionValid, logout, LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
 const {loadMapConfig, configureError, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
 const {mapIdSelector} = require('../selectors/map');
+const {hasMapAccessLoadingError} = require('../selectors/mapInitialConfig');
 const {initCatalog} = require('../actions/catalog');
 const {setControlProperty} = require('../actions/controls');
 const {pathnameSelector} = require('../selectors/routing');
@@ -44,6 +45,7 @@ const refreshTokenEpic = (action$, store) =>
 const reloadMapConfig = (action$, store) =>
     action$.ofType(LOGIN_SUCCESS, LOGOUT)
     .filter(() => pathnameSelector(store.getState()).indexOf("viewer") !== -1)
+    .filter((data) => data.type !== "LOGOUT" ? hasMapAccessLoadingError(store.getState()) : true)
     .switchMap(() => {
         const urlQuery = url.parse(window.location.href, true).query;
         let mapId = mapIdSelector(store.getState());

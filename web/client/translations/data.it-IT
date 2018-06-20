@@ -1183,7 +1183,7 @@
                     "title": "Widget"
                 },
                 "wizard": {
-                    "backToTypeSelection": "Torna alla selezione del tipo",
+                    "backToTypeSelection": "Torna alla selezione del tipo di grafico",
                     "backToWidgetTypeSelection": "Torna alla selezione del tipo di widget",
                     "backToFeatureGrid": "Torna alla tabella degli attributi",
                     "backToLayerSelection": "Torna alla selezione del livello",
@@ -1198,7 +1198,7 @@
                     "configureTableOptions": "Configura le opzioni della tabella",
                     "resetColumnsSizes": "Reimposta larghezza automatica delle colonne",
                     "updateWidget": "Aggiorna il widget",
-                    "addToTheMap": "Aggiungi il widget alla mappa",
+                    "addTheWidget": "Aggiungi il widget",
                     "titlePlaceholder": "Inserisci il titolo...",
                     "textPlaceholder": "Inserisci il testo...",
                     "useThisMap": "Usa questa mappa",
@@ -1380,7 +1380,7 @@
             "resetconstraints": "Resetta Vincoli",
             "constraintsmsg": "Cambinado grant, workspace o layer, i dettagli saranno eliminati. Sei sicuro di volerlo fare?",
             "defstyle": "Stile Predefinito",
-            "avstyle": "Stili Disponibile",
+            "avstyle": "Stili Disponibili",
             "clearbtn": "Rimuovi Tutti",
             "selectbtn": "Seleziona Tutti",
             "placeholders": {
@@ -1459,7 +1459,8 @@
             "cancelButton": "Annulla",
             "cqlRead": "Filtro CQL lettura",
             "cqlWrite": "Filtero CQL scrittura",
-            "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!"
+            "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!",
+            "selectworkspace": "È necessario selezionare lo spazio di lavoro per abilitare le opzioni avanzate."
         },
             "tutorial": {
                 "title": "Tutorial",

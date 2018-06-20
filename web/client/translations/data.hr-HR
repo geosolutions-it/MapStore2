@@ -1144,7 +1144,7 @@
                     "configureTableOptions": "Prilagodi postavke tabele",
                     "resetColumnsSizes": "Poništo sve promjene širine kolona",
                     "updateWidget": "Ažuriraj widget",
-                    "addToTheMap": "Dodaj widget na kartu",
+                    "addTheWidget": "Dodaj widget",
                     "titlePlaceholder": "Umetni naslov...",
                     "textPlaceholder": "Umetni tekst...",
                     "useThisMap": "Koristi ovu kartu",

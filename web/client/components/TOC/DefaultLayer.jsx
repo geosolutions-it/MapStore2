@@ -9,13 +9,17 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Node = require('./Node');
-const {isObject, isArray} = require('lodash');
-const {Grid, Row, Col} = require('react-bootstrap');
+const { isObject, isArray, castArray, find} = require('lodash');
+const { Grid, Row, Col, Glyphicon} = require('react-bootstrap');
 const VisibilityCheck = require('./fragments/VisibilityCheck');
 const Title = require('./fragments/Title');
 const WMSLegend = require('./fragments/WMSLegend');
 const LayersTool = require('./fragments/LayersTool');
 const Slider = require('../misc/Slider');
+const withTooltip = require('../data/featuregrid/enhancers/withTooltip');
+const localizedProps = require('../misc/enhancers/localizedProps');
+
+const GlyphIndicator = localizedProps('tooltip')(withTooltip(Glyphicon));
 
 class DefaultLayer extends React.Component {
     static propTypes = {
@@ -28,6 +32,7 @@ class DefaultLayer extends React.Component {
         sortableStyle: PropTypes.object,
         activateLegendTool: PropTypes.bool,
         activateOpacityTool: PropTypes.bool,
+        indicators: PropTypes.array,
         visibilityCheckType: PropTypes.string,
         currentZoomLvl: PropTypes.number,
         scales: PropTypes.array,
@@ -51,6 +56,7 @@ class DefaultLayer extends React.Component {
         onSelect: () => {},
         activateLegendTool: false,
         activateOpacityTool: true,
+        indicators: [],
         visibilityCheckType: "glyph",
         additionalTools: [],
         currentLocale: 'en-US',
@@ -125,9 +131,16 @@ class DefaultLayer extends React.Component {
                 glyph="chevron-left"
                 onClick={(node) => this.props.onToggle(node.id, node.expanded)} />);
     }
-
+    renderIndicators = () => {
+        /** initial support to render icons in TOC nodes (now only type = "dimension" supported) */
+        return castArray(this.props.indicators).map( indicator =>
+            (indicator.type === "dimension" ? find(this.props.node && this.props.node.dimensions || [], indicator.condition) : false)
+                ? indicator.glyph && <GlyphIndicator key={indicator.key} glyph={indicator.glyph} {...indicator.props} />
+                : null);
+    }
     renderNode = (grab, hide, selected, error, warning, other) => {
-        const isEmpty = !this.props.activateLegendTool && !this.props.showFullTitleOnExpand;
+        const isEmpty = this.props.node.type === 'wms' && !this.props.activateLegendTool && !this.props.showFullTitleOnExpand
+        || this.props.node.type !== 'wms' && !this.props.showFullTitleOnExpand;
         return (
             <Node className={'toc-default-layer' + hide + selected + error + warning} sortableStyle={this.props.sortableStyle} style={this.props.style} type="layer" {...other}>
                 <div className="toc-default-layer-head">
@@ -135,6 +148,7 @@ class DefaultLayer extends React.Component {
                     {this.renderVisibility()}
                     <Title tooltip={this.props.titleTooltip} filterText={this.props.filterText} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onSelect} onContextMenu={this.props.onContextMenu} />
                     {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
+                    {this.props.indicators ? this.renderIndicators() : null}
                 </div>
                 {!this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider()}
                 {isEmpty ? null : this.renderCollapsible()}

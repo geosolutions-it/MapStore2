@@ -22,6 +22,7 @@ var {
     HIDE_SETTINGS,
     UPDATE_SETTINGS,
     REFRESH_LAYERS,
+    UPDATE_LAYERS_DIMENSION,
     LAYERS_REFRESHED,
     LAYERS_REFRESH_ERROR,
     BROWSE_DATA,
@@ -44,6 +45,7 @@ var {
     hideSettings,
     updateSettings,
     refreshLayers,
+    updateLayerDimension,
     layersRefreshed,
     layersRefreshError,
     browseData,
@@ -111,6 +113,14 @@ describe('Test correctness of the layers actions', () => {
         expect(retval.error).toBe('err');
     });
 
+    it('updateLayerDimension', () => {
+        const retval = updateLayerDimension( "time", "2016-02-24T03:00:00.000Z", null, "A");
+        expect(retval).toExist();
+        expect(retval.type).toBe(UPDATE_LAYERS_DIMENSION);
+        expect(retval.layers).toBe("A");
+        expect(retval.dimension).toBe("time");
+        expect(retval.value).toBe("2016-02-24T03:00:00.000Z");
+    });
     it('toggleNode', () => {
         var retval = toggleNode('sample', 'groups', true);
 

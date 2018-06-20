@@ -60,7 +60,7 @@
             "deleteLayerMessage": "Möchtest du wirklich diese Ebene löschen?",
             "confirmDelete": "Bist du sicher?",
             "featureTypeError": "Layerattribute können nicht geladen werden",
-            "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Antwort ist nicht gültig", 
+            "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Antwort ist nicht gültig",
             "elevation": "Höhe",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
@@ -1198,7 +1198,7 @@
                     "configureTableOptions": "Konfigurieren Sie die Tabellenoptionen",
                     "resetColumnsSizes": "Setzen Sie alle Änderungen an den Spaltengrößen zurück",
                     "updateWidget": "Aktualisieren Sie das Widget",
-                    "addToTheMap": "Hinzufügen des Widgets zur Karte",
+                    "addTheWidget": "Hinzufügen des Widget",
                     "titlePlaceholder": "Gib den Titel ein...",
                     "textPlaceholder": "Text eingeben...",
                     "useThisMap": "Benutze diese Karte",
@@ -1459,7 +1459,8 @@
             "cancelButton": "Abbrechen",
             "cqlRead": "CQL Filter Lese Regeln",
             "cqlWrite": "CQL Filter Write Rules",
-            "missingconfig": "Der Regeln-Manager vermisst die Konfiguration. Zugriff abgelehnt!"
+            "missingconfig": "Der Regeln-Manager vermisst die Konfiguration. Zugriff abgelehnt!",
+            "selectworkspace": "Sie müssen den Arbeitsbereich auswählen, um erweiterte Optionen zu aktivieren."
         },
         "tutorial": {
             "title": "Anleitung",

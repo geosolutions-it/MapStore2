@@ -223,4 +223,24 @@ describe('tests FloatingLegend component', () => {
                 ]}
                 onResize={onResize}/>, document.getElementById("container"));
     });
+
+    it('expand on mount', () => {
+        const actions = {
+            onExpand: () => {}
+        };
+
+        const spyChange = expect.spyOn(actions, 'onExpand');
+        ReactDOM.render(
+            <FloatingLegend
+            onExpand= {actions.onExpand}
+                layers={[
+                    {
+                        name: 'layer:00',
+                        title: 'Layer',
+                        visibility: true,
+                        type: 'wms'
+                    }
+                ]}/>, document.getElementById("container"));
+        expect(spyChange).toHaveBeenCalledWith(true);
+    });
 });

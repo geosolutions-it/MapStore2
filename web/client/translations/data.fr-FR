@@ -1199,7 +1199,7 @@
                     "configureTableOptions": "Configurer les options de table",
                     "resetColumnsSizes": "Réinitialiser toutes les modifications aux tailles de colonnes",
                     "updateWidget": "Mettre à jour le widget",
-                    "addToTheMap": "Ajouter le widget à la carte",
+                    "addTheWidget": "Ajouter le widget",
                     "titlePlaceholder": "Entrez le titre...",
                     "textPlaceholder": "Entrez le texte...",
                     "useThisMap": "Utiliser cette carte",
@@ -1459,7 +1459,8 @@
             "cancelButton": "Annuler",
             "cqlRead": "Règles de lecture du filtre CQL",
             "cqlWrite": "Règles d'écriture du filtre CQL",
-            "missingconfig": "Le gestionnaire de règles manque la configuration. Accès refusé!"
+            "missingconfig": "Le gestionnaire de règles manque la configuration. Accès refusé!",
+            "selectworkspace": "Vous devez sélectionner l'espace de travail pour activer les options avancées."
         },
         "tutorial": {
             "title": "Tutoriel",

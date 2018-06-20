@@ -358,4 +358,69 @@ describe('Leaflet DrawSupport', () => {
 
     });
 
+    it('test endDrawing action', () => {
+        const map = L.map("map", {
+            center: [51.505, -0.09],
+            zoom: 13
+        });
+
+        const actions = {
+            onEndDrawing: () => {}
+        };
+
+        const spyonEndDrawing = expect.spyOn(actions, "onEndDrawing");
+
+        ReactDOM.render(<DrawSupport
+            drawMethod="Circle"
+            drawOwner="me"
+            map={map}
+            features={[]}
+            onEndDrawing={actions.onEndDrawing}/>, msNode);
+
+        ReactDOM.render(<DrawSupport
+            drawMethod="Circle"
+            drawOwner="me"
+            map={map}
+            features={[{
+                center: {x: -11271098, y: 7748880},
+                coordinates: [-11271098, 7748880],
+                projection: 'EPSG:3857',
+                radius: 2000000,
+                type: 'Polygon'
+            }]}
+            drawStatus="endDrawing"
+            onEndDrawing={actions.onEndDrawing}/>, msNode);
+
+        expect(spyonEndDrawing).toHaveBeenCalled();
+    });
+
+    it('test endDrawing action without features', () => {
+        const map = L.map("map", {
+            center: [51.505, -0.09],
+            zoom: 13
+        });
+        const actions = {
+            onEndDrawing: () => {}
+        };
+
+        const spyonEndDrawing = expect.spyOn(actions, "onEndDrawing");
+
+        ReactDOM.render(<DrawSupport
+            drawMethod="Circle"
+            map={map}
+            features={[]}
+            onEndDrawing={actions.onEndDrawing}
+            options={{geodesic: true}}/>, msNode);
+
+        ReactDOM.render(<DrawSupport
+            drawMethod="Circle"
+            map={map}
+            features={[]}
+            drawStatus="endDrawing"
+            onEndDrawing={actions.onEndDrawing}
+            options={{geodesic: true}}/>, msNode);
+
+        expect(spyonEndDrawing).toNotHaveBeenCalled();
+    });
+
 });

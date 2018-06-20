@@ -62,7 +62,7 @@ describe('Rules Editor Main Editor component', () => {
         expect(rows.length).toBe(8);
         const disabledRows = el.querySelectorAll('.ms-disabled.row');
         expect(disabledRows).toExist();
-        expect(disabledRows.length).toBe(2);
+        expect(disabledRows.length).toBe(1);
     });
     it('render priority selector', () => {
         store = mockStore({
@@ -75,8 +75,5 @@ describe('Rules Editor Main Editor component', () => {
         const rows = el.querySelectorAll('.row');
         expect(rows).toExist();
         expect(rows.length).toBe(9);
-        const disabledRows = el.querySelectorAll('.ms-disabled.row');
-        expect(disabledRows).toExist();
-        expect(disabledRows.length).toBe(2);
     });
 });
