@@ -8,8 +8,11 @@
 
 const expect = require('expect');
 const {INIT_CATALOG} = require('../../actions/catalog');
-const {loginSuccess, logout, logoutWithReload} = require('../../actions/security');
-const {initCatalogOnLoginOutEpic, reloadMapConfig} = require('../login');
+const {SET_CONTROL_PROPERTY} = require('../../actions/controls');
+const { loginSuccess, logout, logoutWithReload} = require('../../actions/security');
+const { initCatalogOnLoginOutEpic, promtLoginOnMapError, reloadMapConfig} = require('../login');
+const {configureError} = require('../../actions/config');
+
 
 const {testEpic} = require('./epicTestUtils');
 
@@ -46,5 +49,18 @@ describe('login Epics', () => {
             done();
         };
         testEpic(initCatalogOnLoginOutEpic, 1, logout(), epicResult, {});
+    });
+
+    it('it prompts login on accessing  non-public map', (done) => {
+        const e = {
+                status: 403
+            };
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            const action = actions[0];
+            expect(action.type).toBe(SET_CONTROL_PROPERTY);
+            done();
+        };
+        testEpic(promtLoginOnMapError, 1, configureError(e, 123), epicResult, {});
     });
 });

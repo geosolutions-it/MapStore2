@@ -74,4 +74,19 @@ describe('NumberField', () => {
         cmp.changeNumber(10);
 
     });
+
+    it('create number field with null  if value is NaN', () => {
+        const actions = {
+            onUpdateField: () => {}
+        };
+
+        const spyOnUpdateField = expect.spyOn(actions, 'onUpdateField');
+        const cmp = ReactDOM.render(
+        <NumberField
+        onUpdateField={actions.onUpdateField}
+            />, document.getElementById("container"));
+        expect(cmp).toExist();
+        cmp.changeNumber('a');
+        expect(spyOnUpdateField).toHaveBeenCalledWith(null, null, null, 'number');
+    });
 });
