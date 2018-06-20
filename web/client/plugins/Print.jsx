@@ -36,6 +36,28 @@ const Message = require('../components/I18N/Message');
 
 require('./print/print.css');
 
+/**
+ * Print plugin. This plugin allows to print current map view.
+ *
+ * @class Print
+ * @memberof plugins
+ * @static
+ *
+ * @prop {object} cfg.overrideOptions overrides print options, this will override options created from current state of map
+ * @prop {bool} cfg.overrideOptions.gedetic print in geodetic mode
+ * @prop {string} cfg.overrideOptions.outputFilename name of output file
+ *
+ * @example
+ * {
+ *   "name": "Print",
+ *   "cfg": {
+ *       "overrideOptions": {
+ *          "gedetic": true
+ *       }
+ *    }
+ * }
+ */
+
 module.exports = {
     PrintPlugin: assign({
         loadPlugin: (resolve) => {
@@ -99,7 +121,8 @@ module.exports = {
                         closeGlyph: PropTypes.string,
                         submitConfig: PropTypes.object,
                         previewOptions: PropTypes.object,
-                        currentLocale: PropTypes.string
+                        currentLocale: PropTypes.string,
+                        overrideOptions: PropTypes.object
                     };
 
                     static contextTypes = {
@@ -159,7 +182,8 @@ module.exports = {
                             buttonStyle: "primary"
                         },
                         style: {},
-                        currentLocale: 'en-US'
+                        currentLocale: 'en-US',
+                        overrideOptions: {}
                     };
 
                     componentWillMount() {
@@ -347,7 +371,7 @@ module.exports = {
                         const spec = this.props.getPrintSpecification(this.props.printSpec);
                         this.props.setPage(0);
                         this.props.onBeforePrint();
-                        this.props.onPrint(this.props.capabilities.createURL, spec);
+                        this.props.onPrint(this.props.capabilities.createURL, {...spec, ...this.props.overrideOptions});
                     };
                 }
 
