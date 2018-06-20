@@ -22,6 +22,7 @@ const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../ac
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {setControlProperty} = require('../actions/controls');
+const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER} = require('../actions/mapInfo');
 const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
@@ -322,11 +323,11 @@ module.exports = {
                         wfsURL(store.getState())
                     ).map(() => saveSuccess())
                     .catch((e) => Rx.Observable.of(saveError(), error({
-                        title: "featuregrid.errorSaving",
-                        message: e.message || "Unknown Exception",
-                        uid: "saveError",
-                        autoDismiss: 5
-                      })))
+                            title: "featuregrid.errorSaving",
+                            message: e.message || "Unknown Exception",
+                            uid: "saveError",
+                            autoDismiss: 5
+                        })))
                 )
 
 
@@ -349,10 +350,10 @@ module.exports = {
                         title: "featuregrid.errorSaving",
                         message: e.message || "Unknown Exception",
                         uid: "saveError"
-                      }))).concat(Rx.Observable.of(
-                          toggleTool("deleteConfirm"),
-                          clearSelection()
-                      ))
+                        }))).concat(Rx.Observable.of(
+                            toggleTool("deleteConfirm"),
+                            clearSelection()
+                        ))
                 )
         ),
     /**
@@ -537,12 +538,30 @@ module.exports = {
             return Rx.Observable.of(setControlProperty("drawer", "enabled", false), toggleTool("featureCloseConfirm", false));
         }),
     removeWmsFilterOnGridClose: (action$, store) =>
-        action$.ofType(OPEN_ADVANCED_SEARCH, CLOSE_FEATURE_GRID)
-           .filter(() => isSyncWmsActive(store.getState()))
-           .scan((acc, cur) => {
-               return cur.type === CLOSE_FEATURE_GRID && acc.type !== OPEN_ADVANCED_SEARCH ? removeFilterFromWMSLayer(store.getState()) : cur;
-           }, {type: ''})
-           .filter((a) => a.type === 'CHANGE_LAYER_PROPERTIES'),
+        action$.ofType(OPEN_FEATURE_GRID)
+            .exhaustMap( () =>
+                Rx.Observable.race(
+                    action$.ofType(CLOSE_FEATURE_GRID).take(1),
+                    action$.ofType(OPEN_ADVANCED_SEARCH, FEATURE_INFO_CLICK).take(1)
+                ).takeUntil(LOCATION_CHANGE)
+            )
+            .filter((action) => action.type === CLOSE_FEATURE_GRID && isSyncWmsActive(store.getState()))
+            .switchMap(() => Rx.Observable.of(removeFilterFromWMSLayer(store.getState()))),
+
+    autoReopenFeatureGridOnFeatureInfoClose: (action$) =>
+        action$.ofType(OPEN_FEATURE_GRID)
+            .exhaustMap(() =>
+                Rx.Observable.race(
+                    action$.ofType(FEATURE_INFO_CLICK).take(1),
+                    action$.ofType(CLOSE_FEATURE_GRID).take(1)
+                ).exhaustMap((action) => action.type === CLOSE_FEATURE_GRID
+                    ? Rx.Observable.empty()
+                    : action$
+                        .ofType(HIDE_MAPINFO_MARKER)
+                        .switchMap(() => Rx.Observable.of(openFeatureGrid()))
+
+                ).takeUntil(action$.ofType(LOCATION_CHANGE))
+            ),
     onOpenAdvancedSearch: (action$, store) =>
         action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
             return Rx.Observable.of(
