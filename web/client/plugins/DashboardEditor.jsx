@@ -40,9 +40,9 @@ const Toolbar = compose(
             isLoggedIn,
             dashboardResource,
             dashboardHasWidgets,
-            getWidgetsDependenciesGroups,
             buttonCanEdit,
-            (showConnections, logged, resource, hasWidgets, groups, edit = []) => ({
+            getWidgetsDependenciesGroups,
+            (showConnections, logged, resource, hasWidgets, edit, groups = []) => ({
                 showConnections,
                 hasConnections: groups.length > 0,
                 hasWidgets,
@@ -83,7 +83,7 @@ const Toolbar = compose(
             glyph: showConnections ? 'bulb-on' : 'bulb-off',
             tooltipId: showConnections ? 'dashboard.editor.hideConnections' : 'dashboard.editor.showConnections',
             bsStyle: showConnections ? 'success' : 'primary',
-            visible: !!hasWidgets && !!hasConnections,
+            visible: !!hasWidgets && !!hasConnections || !canEdit,
             onClick: () => onShowConnections(!showConnections)
         }]
     }))
