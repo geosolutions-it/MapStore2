@@ -115,7 +115,6 @@ class QueryBuilder extends React.Component {
             onRemoveSpatialSelection: () => {},
             onShowSpatialSelectionDetails: () => {},
             onSelectViewportSpatialMethod: () => {},
-            onEndDrawing: () => {},
             onChangeDwithinValue: () => {}
         },
         crossLayerFilterOptions: {
