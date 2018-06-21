@@ -540,14 +540,11 @@ module.exports = {
     removeWmsFilterOnGridClose: (action$, store) =>
         action$.ofType(OPEN_FEATURE_GRID)
             .exhaustMap( () =>
-                Rx.Observable.race(
-                    action$.ofType(CLOSE_FEATURE_GRID).take(1),
-                    action$.ofType(OPEN_ADVANCED_SEARCH, FEATURE_INFO_CLICK).take(1)
-                ).takeUntil(LOCATION_CHANGE)
-            )
-            .filter((action) => action.type === CLOSE_FEATURE_GRID && isSyncWmsActive(store.getState()))
-            .switchMap(() => Rx.Observable.of(removeFilterFromWMSLayer(store.getState()))),
-
+                action$.ofType(CLOSE_FEATURE_GRID).delay(50)
+                    .filter(() => isSyncWmsActive(store.getState()))
+                    .switchMap(() => Rx.Observable.of(removeFilterFromWMSLayer(store.getState())))
+                    .takeUntil(action$.ofType(LOCATION_CHANGE, FEATURE_INFO_CLICK, OPEN_ADVANCED_SEARCH))
+            ),
     autoReopenFeatureGridOnFeatureInfoClose: (action$) =>
         action$.ofType(OPEN_FEATURE_GRID)
             .exhaustMap(() =>
@@ -613,7 +610,7 @@ module.exports = {
      * if this info is missing and sync is active we need to perform a getCapabilites
      * to the single layer in order to fetch this data. see #2210 issue.
      */
-     startSyncWmsFilter: (action$, store) =>
+    startSyncWmsFilter: (action$, store) =>
         action$.ofType(TOGGLE_SYNC_WMS)
         .filter( () => isSyncWmsActive(store.getState()))
         .switchMap(() => {
@@ -723,7 +720,7 @@ module.exports = {
                     }).take(1).takeUntil(action$.ofType(QUERY_ERROR))
                 ).merge(
                     action$.ofType(FEATURE_LOADING).filter(() => nPs.length > 0)
-                     // When loading we store the load more features request, on loading end we emit the last
+                    // When loading we store the load more features request, on loading end we emit the last
                     .filter(a => !a.isLoading)
                     .withLatestFrom(action$.ofType(LOAD_MORE_FEATURES))
                     .map((p) => p[1])

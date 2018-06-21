@@ -207,6 +207,13 @@ function updateCenterToMarker(status) {
         status
     };
 }
+function featureInfoClick(point, layer) {
+    return {
+        type: FEATURE_INFO_CLICK,
+        point,
+        layer
+    };
+}
 
 module.exports = {
     ERROR_FEATURE_INFO,
@@ -242,5 +249,6 @@ module.exports = {
     errorFeatureInfo,
     loadFeatureInfo,
     toggleMapInfoState,
-    updateCenterToMarker
+    updateCenterToMarker,
+    featureInfoClick
 };
