@@ -78,7 +78,7 @@ class NumberField extends React.Component {
                             <NumberPicker
                                 style={style}
                                 value={this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : null}
-                                onChange={(value) => this.changeNumber({lowBound: value, upBound: this.props.fieldValue && (this.props.fieldValue.upBound !== null && this.props.fieldValue.upBound !== undefined ) ? this.props.fieldValue.upBound : null})}
+                                onChange={(value) => !isNaN(value) && this.changeNumber({lowBound: value, upBound: this.props.fieldValue && (this.props.fieldValue.upBound !== null && this.props.fieldValue.upBound !== undefined ) ? this.props.fieldValue.upBound : null})}
                                 {...this.props.options}
                             />
                         </Col>
@@ -87,7 +87,7 @@ class NumberField extends React.Component {
                             <NumberPicker
                                 style={style}
                                 value={this.props.fieldValue && (this.props.fieldValue.upBound !== null && this.props.fieldValue.upBound !== undefined ) ? this.props.fieldValue.upBound : null}
-                                onChange={(value) => this.changeNumber({upBound: value, lowBound: this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : null})}
+                                onChange={(value) => !isNaN(value) && this.changeNumber({upBound: value, lowBound: this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : null})}
                                 {...this.props.options}
                             />
                         </Col>
@@ -100,7 +100,7 @@ class NumberField extends React.Component {
                         <NumberPicker
                         style={style}
                         value={this.props.fieldValue && (this.props.fieldValue.lowBound !== null && this.props.fieldValue.lowBound !== undefined) ? this.props.fieldValue.lowBound : this.props.fieldValue}
-                        onChange={this.changeNumber}
+                        onChange={(value) => !isNaN(value) && this.changeNumber(value)}
                         {...this.props.options}
                         />
                     </Col>
@@ -141,7 +141,8 @@ class NumberField extends React.Component {
                 this.props.onUpdateExceptionField(this.props.fieldRowId, null);
             }
         }
-        this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, isNaN(value) ? null : value, this.props.attType);
+
+        this.props.onUpdateField(this.props.fieldRowId, this.props.fieldName, value, this.props.attType);
     };
 }
 
