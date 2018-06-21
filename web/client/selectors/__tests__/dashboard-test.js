@@ -14,7 +14,8 @@ const {
     isShowSaveOpen,
     dashboardResource,
     isDashboardLoading,
-    getDashboardSaveErrors
+    getDashboardSaveErrors,
+    buttonCanEdit
 } = require('../dashboard');
 describe('dashboard selectors', () => {
     it('test isDashboardAvailable selector', () => {
@@ -59,5 +60,23 @@ describe('dashboard selectors', () => {
                 saveErrors: [{}]
             }
         }).length).toBe(1);
+    });
+    it('test buttonCanEdit with a new dashboared', () => {
+        expect(buttonCanEdit({
+            routing: {
+                location: {
+                    pathname: '/dashboard/'
+                }
+            }
+        })).toBe(true);
+    });
+    it('test buttonCanEdit when load a dashboared', () => {
+        expect(buttonCanEdit({
+            routing: {
+                location: {
+                    pathname: '/dashboard/0000'
+                }
+            }
+        })).toBe(false);
     });
 });
