@@ -198,7 +198,8 @@ class LayerTree extends React.Component {
         hideLayerMetadata: PropTypes.func,
         activateAddLayerButton: PropTypes.bool,
         catalogActive: PropTypes.bool,
-        refreshLayerVersion: PropTypes.func
+        refreshLayerVersion: PropTypes.func,
+        hideOpacityTooltip: PropTypes.bool
     };
 
     static contextTypes = {
@@ -312,6 +313,7 @@ class LayerTree extends React.Component {
                 selectedNodes={this.props.selectedNodes}
                 filterText={this.props.filterText}
                 onUpdateNode={this.props.updateNode}
+                hideOpacityTooltip={this.props.hideOpacityTooltip}
                 />);
     }
 
@@ -454,6 +456,7 @@ class LayerTree extends React.Component {
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
  * @prop {object} cfg.layerOptions: options to pass to the layer.
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
+ * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
  * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
  * For instance you can pass some styling props to the legend.
  * this example is to make the legend scrollable horizontally

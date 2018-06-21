@@ -9,13 +9,14 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Node = require('./Node');
-const { isObject, isArray, castArray, find} = require('lodash');
+const {isObject} = require('lodash');
+const {castArray, find} = require('lodash');
 const { Grid, Row, Col, Glyphicon} = require('react-bootstrap');
 const VisibilityCheck = require('./fragments/VisibilityCheck');
 const Title = require('./fragments/Title');
 const WMSLegend = require('./fragments/WMSLegend');
 const LayersTool = require('./fragments/LayersTool');
-const Slider = require('../misc/Slider');
+const OpacitySlider = require('./fragments/OpacitySlider');
 const withTooltip = require('../data/featuregrid/enhancers/withTooltip');
 const localizedProps = require('../misc/enhancers/localizedProps');
 
@@ -44,7 +45,8 @@ class DefaultLayer extends React.Component {
         onUpdateNode: PropTypes.func,
         titleTooltip: PropTypes.bool,
         filter: PropTypes.func,
-        showFullTitleOnExpand: PropTypes.bool
+        showFullTitleOnExpand: PropTypes.bool,
+        hideOpacityTooltip: PropTypes.bool
     };
 
     static defaultProps = {
@@ -65,7 +67,8 @@ class DefaultLayer extends React.Component {
         onUpdateNode: () => {},
         filter: () => true,
         titleTooltip: false,
-        showFullTitleOnExpand: false
+        showFullTitleOnExpand: false,
+        hideOpacityTooltip: false
     };
 
     getTitle = (layer) => {
@@ -73,19 +76,14 @@ class DefaultLayer extends React.Component {
         return translation || layer.name;
     };
 
-    renderOpacitySlider = () => {
-        const layerOpacity = this.props.node.opacity !== undefined ? Math.round(this.props.node.opacity * 100) : 100;
-        return this.props.activateOpacityTool ?
-            <Slider
+    renderOpacitySlider = (hideOpacityTooltip) => {
+        return this.props.activateOpacityTool ? (
+            <OpacitySlider
+                opacity={this.props.node.opacity}
                 disabled={!this.props.node.visibility}
-                start={[layerOpacity]}
-                range={{min: 0, max: 100}}
-                onChange={(opacity) => {
-                    if (isArray(opacity) && opacity[0]) {
-                        this.props.onUpdateNode(this.props.node.id, 'layers', { opacity: parseFloat(opacity[0].replace(' %', '')) / 100 });
-                    }
-                }}/>
-        : null;
+                hideTooltip={hideOpacityTooltip}
+                onChange={opacity => this.props.onUpdateNode(this.props.node.id, 'layers', {opacity})}/>
+        ) : null;
     }
 
     renderCollapsible = () => {
@@ -100,7 +98,7 @@ class DefaultLayer extends React.Component {
                             </Col>
                         </Row> : null}
                 </Grid>
-                {this.renderOpacitySlider()}
+                {this.renderOpacitySlider(this.props.hideOpacityTooltip)}
             </div>);
     };
 
@@ -150,7 +148,7 @@ class DefaultLayer extends React.Component {
                     {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
                     {this.props.indicators ? this.renderIndicators() : null}
                 </div>
-                {!this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider()}
+                {!this.props.activateOpacityTool || this.props.node.expanded || !this.props.node.visibility || this.props.node.loadingError === 'Error' ? null : this.renderOpacitySlider(this.props.hideOpacityTooltip)}
                 {isEmpty ? null : this.renderCollapsible()}
             </Node>
         );
