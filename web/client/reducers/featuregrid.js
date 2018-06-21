@@ -68,7 +68,7 @@ const emptyResultsState = {
     changes: [],
     pagination: {
         page: 0,
-        size: 20
+        size: 15
     },
     select: [],
     multiselect: false,
