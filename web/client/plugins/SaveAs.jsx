@@ -180,7 +180,7 @@ module.exports = {
         })(assign(SaveAs, {
             BurgerMenu: {
                 name: 'saveAs',
-                position: 900,
+                position: 31,
                 text: <Message msgId="saveAs"/>,
                 icon: <Glyphicon glyph="floppy-open"/>,
             action: editMap.bind(null, {}, true),
