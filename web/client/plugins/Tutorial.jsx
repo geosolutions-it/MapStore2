@@ -124,7 +124,7 @@ module.exports = {
     TutorialPlugin: assign(Tutorial, {
         BurgerMenu: {
             name: 'tutorial',
-            position: 1000,
+            position: 1200,
             text: <I18N.Message msgId="tutorial.title"/>,
             icon: <Glyphicon glyph="book"/>,
             action: toggleTutorial,
