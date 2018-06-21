@@ -24,13 +24,13 @@ const {TOGGLE_CONTROL, toggleControl} = require('../../actions/controls');
 const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
     setStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
-    downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusTextEpic,
+    downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
     editSelectedFeatureEpic, editCircleFeatureEpic, closeMeasureToolEpic
 } = require('../annotations')({});
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
     setStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
-    downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusTextEpic,
+    downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
     editSelectedFeatureEpic, editCircleFeatureEpic, closeMeasureToolEpic
 );
 const epicMiddleware = createEpicMiddleware(rootEpic);
@@ -485,7 +485,7 @@ describe('annotations Epics', () => {
         }, selected);
         selected = set("properties", { id: "Polygon1"}, selected);
         store = mockStore(
-            set("annotations.selected", selected, set("annotations.editing.features", defaultState.annotations.editing.features.concat(selected), defaultState))
+            set("annotations.selected", selected, set("annotations.editing.features", defaultState.annotations.editing.features.concat([selected]), defaultState))
         );
 
         store.subscribe(() => {
@@ -506,9 +506,9 @@ describe('annotations Epics', () => {
             type: "Text",
             coordinates: textCoords
         }, selected);
-        selected = set("properties", { id: "text1", isText: true, valueText: "text"}, selected);
+        selected = set("properties", { id: "text1", isText: true, isValidFeature: true, valueText: "text"}, selected);
         store = mockStore(
-            set("annotations.selected", selected, set("annotations.editing.features", defaultState.annotations.editing.features.concat(selected), defaultState))
+            set("annotations.selected", selected, set("annotations.editing.features", defaultState.annotations.editing.features.concat([selected]), defaultState))
         );
 
         store.subscribe(() => {
@@ -532,7 +532,7 @@ describe('annotations Epics', () => {
         selected = set("geometry", polygonGeom, selected);
         selected = set("properties", { id: "text1", radius: 200, center: [2, 2], isCircle: true, polygonGeom}, selected);
         store = mockStore(
-            set("annotations.selected", selected, set("annotations.editing.features", defaultState.annotations.editing.features.concat(selected), defaultState))
+            set("annotations.selected", selected, set("annotations.editing.features", defaultState.annotations.editing.features.concat([selected]), defaultState))
         );
 
         store.subscribe(() => {

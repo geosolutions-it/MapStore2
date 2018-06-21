@@ -804,8 +804,41 @@ describe('Test the annotations reducer', () => {
         expect(state.selected).toBe(null);
         expect(state.drawing).toBe(false);
         expect(state.showUnsavedGeometryModal).toBe(false);
-        expect(state.editing.features.length).toBe(1);
-        expect(state.editing.features[0].geometry.coordinates[0]).toBe(1);
+        expect(state.editing.features.length).toBe(0);
+
+    });
+
+    it('resetCoordEditor in edit mode of a Circle, with no Changes ', () => {
+
+        const featureChanged = {
+            properties: {
+                id: '1',
+                isCircle: true
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [10, 1]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [],
+            properties: {
+                id: '1asdfads'
+            },
+            featureType: "Circle",
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected: featureChanged,
+            unsavedGeometry: false
+        }, resetCoordEditor());
+        expect(state.unsavedGeometry).toBe(false);
+        expect(state.selected).toBe(null);
+        expect(state.drawing).toBe(false);
+        expect(state.showUnsavedGeometryModal).toBe(false);
+        expect(state.editing.features.length).toBe(0);
 
     });
 
