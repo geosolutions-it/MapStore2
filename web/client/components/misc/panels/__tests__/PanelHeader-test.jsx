@@ -63,8 +63,10 @@ describe("test PanelHeader", () => {
         expect(domComp).toExist();
         const styleClass = document.getElementsByClassName('ms-primary')[0];
         expect(styleClass).toExist();
+        const icon = document.getElementsByClassName('bg-primary');
+        expect(icon.length).toBe(1);
         const buttons = document.getElementsByClassName('btn-primary');
-        expect(buttons.length).toBe(2);
+        expect(buttons.length).toBe(1);
     });
 
     it('test fullscreen glyphs', () => {
@@ -96,5 +98,14 @@ describe("test PanelHeader", () => {
         ReactDOM.render(<PanelHeader position="top" showFullscreen fullscreen/>, document.getElementById("container"));
         fullscreenGlyph = document.getElementsByClassName('glyphicon-chevron-up')[0];
         expect(fullscreenGlyph).toExist();
+    });
+
+    it('test icon not button', () => {
+        ReactDOM.render(<PanelHeader bsStyle="primary"/>, document.getElementById("container"));
+        const domComp = document.getElementsByClassName('ms-header')[0];
+        expect(domComp).toExist();
+        const icon = document.getElementsByClassName('bg-primary');
+        expect(icon.length).toBe(1);
+        expect(icon[0].tagName.toLowerCase()).toBe('div');
     });
 });
