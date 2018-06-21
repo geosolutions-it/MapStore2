@@ -150,6 +150,75 @@
                     </configuration>
                 </execution>
                 <execution>
+                <id>only index.html</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/../dist</directory>
+                                <includes>
+                                    <include>index.html</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>MapStore2/*</exclude>
+                                    <exclude>MapStore2/**/*</exclude>
+                                </excludes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>only embedded.html</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/../dist</directory>
+                                <includes>
+                                    <include>embedded.html</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>MapStore2/*</exclude>
+                                    <exclude>MapStore2/**/*</exclude>
+                                </excludes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
+                    <id>only api.html</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/../dist</directory>
+                                <includes>
+                                    <include>api.html</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>MapStore2/*</exclude>
+                                    <exclude>MapStore2/**/*</exclude>
+                                </excludes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
                     <id>html, configuration files and images</id>
                     <phase>process-classes</phase>
                     <goals>
@@ -317,6 +386,11 @@
             <artifactId>maven-war-plugin</artifactId>
             <version>2.1.1</version>
             <configuration>
+                <packagingExcludes>WEB-INF/lib/commons-codec-1.2.jar,
+                WEB-INF/lib/commons-io-1.1.jar,
+                WEB-INF/lib/commons-logging-1.0.4.jar,
+                WEB-INF/lib/commons-pool-1.3.jar
+                </packagingExcludes>
                 <overlays>
                     <overlay>
                         <groupId>it.geosolutions.geostore</groupId>
