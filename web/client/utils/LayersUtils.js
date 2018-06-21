@@ -400,6 +400,7 @@ const LayersUtils = {
             useForElevation: layer.useForElevation || false,
             hidden: layer.hidden || false,
             origin: layer.origin,
+            thematic: layer.thematic,
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },

@@ -404,6 +404,37 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Fehler bei der Metadatensuche"
                 }
+            },
+            "thematic": {
+                "classification_field": "Klassifizierungsfeld:",
+                "classification_method": "Klassifizierungsmethode:",
+                "classification_aggregate": "Aggregatfunktion:",
+                "classification_colors": "Farbrampe:",
+                "classification_intervals": "Intervalle:",
+                "preview": "Vorschau",
+                "remove_thematic": "Zurück zum einfachen Stil",
+                "values": {
+                    "equalInterval": "Gleiche Intervalle",
+                    "quantile": "Quantil",
+                    "jenks": "Natürliche Pausen",
+                    "sum": "Summe",
+                    "avg": "Durchschnittlich",
+                    "count": "Anzahl",
+                    "min": "Mindest",
+                    "max": "Max"
+                },
+                "configuration": "Aufbau",
+                "apply": "Sich bewerben",
+                "restore": "Wiederherstellen",
+                "go_to_cfg": "Zurück zur Konfiguration",
+                "go_to_thema": "Zurück zum Thema",
+                "cfgError": "Fehler in der Konfigurations-JSON",
+                "classify": "Klassifizieren",
+                "remove": "Klassifizierung entfernen",
+                "data_panel": "Daten",
+                "classification_stroke": "Brett",
+                "classification_error": "Fehler beim Aufruf des Klassifizierungsdienstes: {message}",
+                "fields_error": "Fehler beim Laden der Felderliste: {message}"
             }
         },
         "print":{

@@ -49,6 +49,14 @@ class PluginsContainer extends React.Component {
         store: PropTypes.object
     };
 
+    static childContextTypes = {
+        locale: PropTypes.string,
+        messages: PropTypes.object,
+        plugins: PropTypes.object,
+        pluginsConfig: PropTypes.object,
+        loadedPlugins: PropTypes.object
+    };
+
     static defaultProps = {
         mode: 'desktop',
         defaultMode: 'desktop',
@@ -66,6 +74,14 @@ class PluginsContainer extends React.Component {
     state = {
         loadedPlugins: {}
     };
+
+    getChildContext() {
+        return {
+            plugins: this.props.plugins,
+            pluginsConfig: this.props.pluginsConfig && this.props.pluginsConfig[this.props.mode],
+            loadedPlugins: this.state.loadedPlugins
+        };
+    }
 
     componentWillMount() {
         this.loadPlugins(this.props.pluginsState);

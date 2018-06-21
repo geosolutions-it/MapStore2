@@ -404,6 +404,37 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Error en la búsqueda de metadatos"
                 }
+            },
+            "thematic": {
+                "classification_field": "Campo de clasificación:",
+                "classification_method": "Método de clasificación:",
+                "classification_aggregate": "Función agregada:",
+                "classification_colors": "Rampa de color:",
+                "classification_intervals": "Intervalos:",
+                "preview": "Avance",
+                "remove_thematic": "Volver al estilo simple",
+                "values": {
+                    "equalInterval": "Intervalos iguales",
+                    "quantile": "Quantile",
+                    "jenks": "Escapadas naturales",
+                    "sum": "Suma",
+                    "avg": "Promedio",
+                    "count": "Contar",
+                    "min": "Min.",
+                    "max": "Max"
+                },
+                "configuration": "Configuración",
+                "apply": "Aplicar",
+                "restore": "Restaurar",
+                "go_to_cfg": "Volver a la configuración",
+                "go_to_thema": "De vuelta a thema",
+                "cfgError": "Error en la configuración JSON",
+                "classify": "Clasificar",
+                "remove": "Eliminar clasificación",
+                "data_panel": "Datos",
+                "classification_stroke": "tablero",
+                "classification_error": "Error al llamar al servicio de clasificación: {message}",
+                "fields_error": "Error al cargar la lista de campos: {message}"
             }
         },
         "print":{

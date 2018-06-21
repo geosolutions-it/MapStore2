@@ -83,7 +83,6 @@
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
             "templatePreview": "Template preview"
-
         },
         "notification": {
             "update": "Update",
@@ -405,6 +404,37 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Error in metadata search"
                 }
+            },
+            "thematic": {
+                "classification_field": "Classification Field:",
+                "classification_method": "Classification Method:",
+                "classification_aggregate": "Aggregate Function:",
+                "classification_colors": "Color Ramp:",
+                "classification_intervals": "Intervals:",
+                "preview": "Preview",
+                "remove_thematic": "Back to Simple Style",
+                "values": {
+                    "equalInterval": "Equal Intervals",
+                    "quantile": "Quantile",
+                    "jenks": "Natural Breaks",
+                    "sum": "Sum",
+                    "avg": "Average",
+                    "count": "Count",
+                    "min": "Min",
+                    "max": "Max"
+                },
+                "configuration": "Configuration",
+                "apply": "Apply",
+                "restore": "Restore",
+                "go_to_cfg": "Back to configuration",
+                "go_to_thema": "Back to thema",
+                "cfgError": "Error in configuration JSON",
+                "classify": "Classify",
+                "remove": "Remove classification",
+                "data_panel": "Data",
+                "classification_stroke": "Stroke",
+                "classification_error": "Error calling the classification service: {message}",
+                "fields_error": "Error loading fields list: {message}"
             }
         },
         "print":{
