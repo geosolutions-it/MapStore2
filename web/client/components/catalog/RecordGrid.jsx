@@ -28,7 +28,10 @@ class RecordGrid extends React.Component {
         showGetCapLinks: PropTypes.bool,
         addAuthentication: PropTypes.bool,
         column: PropTypes.object,
-        currentLocale: PropTypes.string
+        currentLocale: PropTypes.string,
+        hideThumbnail: PropTypes.bool,
+        hideIdentifier: PropTypes.bool,
+        hideExpand: PropTypes.bool
     };
 
     static defaultProps = {
@@ -48,6 +51,9 @@ class RecordGrid extends React.Component {
                     onLayerAdd={this.props.onLayerAdd}
                     onZoomToExtent={this.props.onZoomToExtent}
                     zoomToLayer={this.props.zoomToLayer}
+                    hideThumbnail={this.props.hideThumbnail}
+                    hideIdentifier={this.props.hideIdentifier}
+                    hideExpand={this.props.hideExpand}
                     onError={this.props.onError}
                     catalogURL={this.props.catalogURL}
                     catalogType={this.props.catalogType}

@@ -910,6 +910,8 @@
             "serviceTitle": "Titolo",
             "serviceTitlePlaceholder": "inserisci un titolo",
             "missingReference": "Metadati di riferimento OGC mancanti",
+            "showDescription": "Mostra descrizione completa",
+            "hideDescription": "Nascondi descrizione completa",
             "notification": {
                 "warningAddCatalogService": "Inserisci un url e titolo validi.",
                 "addCatalogService": "Servizio aggiunto corretamente.",
