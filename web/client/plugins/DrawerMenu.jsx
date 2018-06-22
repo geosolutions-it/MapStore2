@@ -57,7 +57,7 @@ const DrawerButton = connect(state => ({
     id = '',
     menuButtonStyle = {},
     buttonStyle = 'primary',
-    buttonClassName = 'square-button',
+    buttonClassName = 'square-button ms-drawer-menu-button',
     toggleMenu = () => {},
     disabled = false,
     glyph = '1-layer',
@@ -122,7 +122,7 @@ class DrawerMenu extends React.Component {
         buttonStyle: "primary",
         menuOptions: {},
         singleSection: true,
-        buttonClassName: "square-button",
+        buttonClassName: "square-button ms-drawer-menu-button",
         disabled: false
     };
 

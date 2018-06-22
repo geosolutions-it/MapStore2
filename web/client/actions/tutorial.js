@@ -33,14 +33,15 @@ function initTutorial(id, steps, style, checkbox, defaultStep, presetList) {
     };
 }
 
-function setupTutorial(id, steps, style, checkbox, defaultStep) {
+function setupTutorial(id, steps, style, checkbox, defaultStep, stop) {
     return {
         type: SETUP_TUTORIAL,
         id,
         steps,
         style,
         checkbox,
-        defaultStep
+        defaultStep,
+        stop
     };
 }
 
