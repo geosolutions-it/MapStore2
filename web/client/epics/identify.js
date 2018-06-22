@@ -7,7 +7,7 @@
 */
 const Rx = require('rxjs');
 
-const {LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, updateCenterToMarker} = require('../actions/mapInfo');
+const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, featureInfoClick, updateCenterToMarker} = require('../actions/mapInfo');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint} = require('../actions/map');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
@@ -39,7 +39,7 @@ module.exports = {
             const {disableAlwaysOn = false} = (store.getState()).mapInfo;
             return disableAlwaysOn || !stopGetFeatureInfoSelector(store.getState() || {});
         })
-        .map(({point, layer}) => ({type: FEATURE_INFO_CLICK, point, layer})),
+        .map(({point, layer}) => featureInfoClick(point, layer)),
     /**
      * Centers marker on visible map if it's hidden by layout
      * @param {external:Observable} action$ manages `FEATURE_INFO_CLICK` and `LOAD_FEATURE_INFO`.
