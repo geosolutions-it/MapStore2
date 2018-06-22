@@ -1553,6 +1553,46 @@
             "cesiumNavigation": {
                 "title": "Navigation",
                 "text": "Vous trouverez ici les boutons de zoom in et zoom out"
+            },
+            "dashboardIntro": {
+                "title": "Didacticiel du tableau de bord",
+                "text": "Vue d'ensemble des fonctionnalités du tableau de bord"
+            },
+            "dashboardNav": {
+                "title": "Barre de navigation",
+                "text": "Ici vous pouvez trouver le sélecteur de langue, le login, le lien de page d'accueil et le menu d'options"
+            },
+            "dashboardContainer": {
+                "title": "Tableau de bord",
+                "text": "<p> Un tableau de bord dans MapStore2 fournit un ensemble d'informations collectées de manière appropriée pour afficher des données agrégées dans une vue en une vue. Les données géospatiales affichées dans une carte peuvent être placées côte à côte avec des tableaux d'attributs, des graphiques et autres, dans le but de connecter différents types d'informations, de montrer des détails statistiques et des descriptions textuelles relatives à un contexte spécifique. </p> <p> Tous les utilisateurs peuvent visualiser et interagir avec les tableaux de bord publiés, mais seuls les utilisateurs autorisés à modifier peuvent ajouter, organiser, redimensionner ou supprimer tous les widgets dans un tableau de bord. </p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Ajouter un widget",
+                "text": "Pour ajouter un widget au tableau de bord, vous pouvez cliquer sur le bouton +"
+            },
+            "dashboardBuilder": {
+                "title": "Créer un nouveau widget",
+                "text": "Vous pouvez sélectionner le type de widget que vous souhaitez, puis l'ajouter au tableau de bord en sélectionnant l'un des éléments de la liste"
+            },
+            "dashboardAddChart": {
+                "title": "Widget graphique",
+                "text": "<p> C'est un widget qui affiche et agrège les données dans des graphiques à secteurs, à lignes ou à barres. </p> <p> Étapes: </p> <p> <ul> <li> Sélectionnez une couche vectorielle </li> <li> Sélectionner un type de graphique </li> <li> Configurer des données de graphique </li> <li> Enregistrer et ajouter au tableau de bord </li> </ul> </p>"
+            },
+            "dashboardAddText": {
+                "title": "Widget de texte",
+                "text": "<p> Ajoutez votre propre texte au tableau de bord. </p> <p> Étapes: </p> <p> <ul> <li> Modifier le texte dans l'éditeur </li> <li> Enregistrer et ajouter au tableau de bord </li> </ul> </p>"
+            },
+            "dashboardAddTable": {
+                "title": "Widget de table",
+                "text": "<p> Ajoutez une table attributaire au tableau de bord contenant les données d'une couche vectorielle sélectionnée. Vous pouvez également filtrer les données pour personnaliser votre table. </p> <p> Étapes: </p> <p> <ul> <li> Sélectionnez une couche vectorielle </li> <li> Configurer les données de table </li> <li> Enregistrer et ajouter au tableau de bord </li> </ul> </p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Compteur Widget",
+                "text": "<p> Ajoutez un nouveau compteur au tableau de bord. Counter affiche les données d'agrégation de valeurs numériques d'une couche vectorielle sélectionnée. </p> <p> Étapes: </p> <p> <ul> <li> Sélectionnez une couche vectorielle </li> <li> Configurez les données du compteur </li> <li> Enregistrer et ajouter au tableau de bord </li> </ul> </p>"
+            },
+            "dashboardAddMap": {
+                "title": "Widget Carte",
+                "text": "<p> Ajoutez une nouvelle carte interactive au tableau de bord. Vous pouvez ajouter plusieurs cartes avec la possibilité de leur connecter d'autres widgets. Après avoir enregistré la première carte, le widget légende sera ajouté à la liste. Legend Widget affichera une légende liée à la carte connectée. </p> <p> Étapes: </p> <p> <ul> <li> Sélectionnez une carte </li> <li> Améliorer la carte en ajoutant de nouveaux calques </li> <li> Enregistrer et ajouter au tableau de bord </li> </ul> </p>"
             }
         }
     }

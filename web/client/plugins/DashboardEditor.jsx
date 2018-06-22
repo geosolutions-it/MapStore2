@@ -71,6 +71,7 @@ const Toolbar = compose(
             tooltipId: 'dashboard.editor.addACardToTheDashboard',
             bsStyle: 'primary',
             visible: canEdit,
+            id: 'ms-add-card-dashboard',
             onClick: () => onAddWidget()
         }, {
             glyph: 'floppy-disk',

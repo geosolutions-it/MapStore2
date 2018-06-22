@@ -1553,6 +1553,46 @@
             "cesiumNavigation": {
                 "title": "Navegación",
                 "text": "Aquí puede encontrar los botones de zoom y zoom out"
+            },
+            "dashboardIntro": {
+                "title": "Tutorial del tablero",
+                "text": "Descripción general de las funciones del panel"
+            },
+            "dashboardNav": {
+                "title": "Barra de navegación",
+                "text": "Aquí puede encontrar el selector de idioma, el inicio de sesión, el enlace de la página de inicio y el menú de opciones"
+            },
+            "dashboardContainer": {
+                "title": "Tablero",
+                "text": "<p> Un Tablero en MapStore2 proporciona un conjunto de información recopilada adecuadamente para mostrar datos agregados en una vista de un solo disparo. Los datos geoespaciales mostrados en un mapa se pueden colocar uno al lado del otro en tablas de atributos relacionados, cuadros y otros, con el objetivo de conectar diferentes tipos de información, mostrar detalles estadísticos y descripciones textuales relacionadas con un contexto específico. </p> <p> Todos los usuarios pueden visualizar e interactuar con los paneles publicados, pero solo los usuarios a los que se les permite editar pueden agregar, organizar, cambiar el tamaño o eliminar todos los widgets dentro de un panel </p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Agregar Widget",
+                "text": "Para agregar un widget al tablero, puede hacer clic en el botón +"
+            },
+            "dashboardBuilder": {
+                "title": "Crea un nuevo widget",
+                "text": "Puede seleccionar el tipo de widget que desea y luego agregarlo al panel seleccionando uno de los elementos de la lista"
+            },
+            "dashboardAddChart": {
+                "title": "Widget de carta",
+                "text": "<p> Es un widget que muestra y agrega datos en gráficos circulares, de pie o de barras. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione una capa vectorial </li> <li> Seleccione el tipo de gráfico </li> <li> Configure los datos del gráfico </li> <li> Guarde y agregue al tablero </li> </ul> </p>"
+            },
+            "dashboardAddText": {
+                "title": "Widget de texto",
+                "text": "<p> Agregue su propio texto al tablero. </p> <p> Pasos: </p> <p> <ul> <li> Edite texto en el editor </li> <li> Guárdelo y agréguelo al tablero </li> </ul> </p>"
+            },
+            "dashboardAddTable": {
+                "title": "Widget de mesa",
+                "text": "<p> Agregue una tabla de atributos al tablero que contenga datos de una capa vectorial seleccionada. También puede filtrar datos para personalizar su tabla. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione una capa vectorial </li> <li> Configure table data </​​li> <li> Guardar y agregar al tablero </li> </ul> </p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Contador Widget",
+                "text": "<p> Agregue un nuevo contador al tablero. El contador mostrará los datos de agregación de valores numéricos de una capa vectorial seleccionada. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione una capa vectorial </li> <li> Configure los datos del contador </li> <li> Guardar y agregar al tablero </li> </ul> </p>"
+            },
+            "dashboardAddMap": {
+                "title": "Widget del mapa",
+                "text": "<p> Agregue un nuevo mapa interactivo al tablero. Puede agregar más de un mapa con la capacidad de conectar otros widgets a ellos. Después de guardar el primer mapa, el widget de leyenda se agregará a la lista. El widget de leyenda mostrará una leyenda relacionada con el mapa conectado. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione un mapa </li> <li> Mejore el mapa agregando nuevas capas </li> <li> Guarde y agregue al tablero </li> </ul> </p>"
             }
         }
     }
