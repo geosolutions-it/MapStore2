@@ -14,12 +14,10 @@ const {createSelector} = require('reselect');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
-const {on} = require('../actions/controls');
 
-const {getFeatureInfo, getVectorInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState} = require('../actions/mapInfo');
-const {closeAnnotations} = require('../actions/annotations');
+const {getFeatureInfo, getVectorInfo, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState} = require('../actions/mapInfo');
 const {changeMousePointer} = require('../actions/map');
-const {changeMapInfoFormat, updateCenterToMarker} = require('../actions/mapInfo');
+const {changeMapInfoFormat, updateCenterToMarker, closeIdentify} = require('../actions/mapInfo');
 const {currentLocaleSelector} = require('../selectors/locale');
 
 const {compose, defaultProps} = require('recompose');
@@ -54,9 +52,6 @@ const selector = createSelector([
 }));
 // result panel
 
-const conditionalToggle = on.bind(null, purgeMapInfoResults(), (state) =>
-    !(state.annotations && state.annotations.editing)
-, closeAnnotations);
 
 const DefaultViewer = compose(
     switchControlledDefaultViewer,
@@ -170,7 +165,7 @@ const IdentifyPlugin = compose(
     connect(selector, {
         sendRequest: getFeatureInfo,
         localRequest: getVectorInfo,
-        purgeResults: conditionalToggle,
+        purgeResults: closeIdentify,
         changeMousePointer,
         showMarker: showMapinfoMarker,
         noQueryableLayers,
