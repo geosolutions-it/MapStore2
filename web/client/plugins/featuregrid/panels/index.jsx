@@ -21,7 +21,7 @@ const {deleteFeatures, toggleTool, clearChangeConfirmed, closeFeatureGridConfirm
 const {toolbarEvents, pageEvents} = require('../index');
 const {getAttributeFields} = require('../../../utils/FeatureGridUtils');
 const {getFilterRenderer} = require('../../../components/data/featuregrid/filterRenderers');
-const {isDescribeLoaded} = require('../../../selectors/query');
+const {isDescribeLoaded, isFilterActive} = require('../../../selectors/query');
 
 const filterEditingAllowedUser = (role, editingAllowedRoles = ["ADMIN"]) => {
     return editingAllowedRoles.indexOf(role) !== -1;
@@ -55,7 +55,8 @@ const Toolbar = connect(
         disableZoomAll: (state) => state && state.featuregrid.virtualScroll || featureCollectionResultSelector(state).features.length === 0,
         isSearchAllowed: (state) => !isCesium(state),
         isEditingAllowed: (state) => (filterEditingAllowedUser(userRoleSelector(state), editingAllowedRolesSelector(state)) || canEditSelector(state)) && !isCesium(state),
-        hasSupportedGeometry
+        hasSupportedGeometry,
+        isFilterActive
     }),
     (dispatch) => ({events: bindActionCreators(toolbarEvents, dispatch)})
 )(require('../../../components/data/featuregrid/toolbars/Toolbar'));
