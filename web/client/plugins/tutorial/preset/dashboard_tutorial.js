@@ -12,18 +12,7 @@ module.exports = [
         selector: '#intro-tutorial'
     },
     {
-        translation: 'dashboardNav',
-        selector: '#mapstore-navbar',
-        position: 'bottom',
-        action: {
-            start: {
-                type: 'DASHBOARD:SET_EDITING',
-                editing: false
-            }
-        }
-    },
-    {
-        translation: 'dashboardContainer',
+        translationHTML: 'dashboardContainer',
         selector: '.ms2-border-layout-content'
     },
     {
@@ -32,6 +21,10 @@ module.exports = [
         position: 'right',
         action: {
             back: {
+                type: 'DASHBOARD:SET_EDITING',
+                editing: false
+            },
+            next: {
                 type: 'DASHBOARD:SET_EDITING',
                 editing: false
             }
@@ -71,5 +64,10 @@ module.exports = [
         translationHTML: 'dashboardAddMap',
         selector: '.ms-widget-selector-map',
         position: 'right'
+    },
+    {
+        translation: 'dashboardNav',
+        selector: '#mapstore-navbar',
+        position: 'bottom'
     }
 ];
