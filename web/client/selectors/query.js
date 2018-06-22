@@ -1,4 +1,12 @@
 const {isNil, get, head} = require('lodash');
+
+/**
+ * selects query state
+ * @name query
+ * @memberof selectors
+ * @static
+ */
+
 module.exports = {
     wfsURL: state => state && state.query && state.query.searchUrl,
     wfsURLSelector: state => state && state.query && state.query.url,
@@ -33,5 +41,19 @@ module.exports = {
     describeSelector: (state) => get(state, `query.featureTypes.${get(state, "query.filterObj.featureTypeName")}.original`),
     layerDescribeSelector: (state, featureTypeName) =>get(state, `query.featureTypes.[${featureTypeName}].original`),
     featureLoadingSelector: (state) => get(state, "query.featureLoading"),
-    isSyncWmsActive: (state) => get(state, "query.syncWmsFilter", false)
+    isSyncWmsActive: (state) => get(state, "query.syncWmsFilter", false),
+    /**
+     * return true if a filter is applied to query
+     * @memberof selectors.query
+     * @param  {object} state the state
+     * @return {boolean}
+     */
+    isFilterActive: state => {
+        const crossLayerFilter = get(state, 'query.filterObj.crossLayerFilter');
+        const spatialField = get(state, 'query.filterObj.spatialField');
+        const filterFields = get(state, 'query.filterObj.filterFields');
+        return !!(filterFields && head(filterFields)
+        || spatialField && spatialField.method && spatialField.operation && spatialField.geometry
+        || crossLayerFilter && crossLayerFilter.collectGeometries && crossLayerFilter.operation);
+    }
 };

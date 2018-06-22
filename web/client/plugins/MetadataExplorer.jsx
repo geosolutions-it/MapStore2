@@ -182,7 +182,16 @@ const API = {
     wms: require('../api/WMS'),
     wmts: require('../api/WMTS')
 };
-
+/**
+ * MetadataExplorer plugin. Shows the catalogs results (CSW, WMS and WMTS).
+ * @class
+ * @name MetadataExplorer
+ * @memberof plugins
+ * @prop {string} cfg.hideThumbnail shows/hides thumbnail
+ * @prop {object} cfg.hideIdentifier shows/hides identifier
+ * @prop {boolean} cfg.hideExpand shows/hides full description button
+ * @prop {number} cfg.zoomToLayer enable/disable zoom to layer when added
+ */
 module.exports = {
     MetadataExplorerPlugin: assign(MetadataExplorerPlugin, {
         Toolbar: {

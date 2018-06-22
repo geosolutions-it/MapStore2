@@ -180,7 +180,7 @@ module.exports = {
     AnnotationsPlugin: assign(AnnotationsPlugin, {
         BurgerMenu: {
             name: 'annotations',
-            position: 2000,
+            position: 40,
             text: <Message msgId="annotationsbutton"/>,
             icon: <Glyphicon glyph="comment"/>,
             action: conditionalToggle,

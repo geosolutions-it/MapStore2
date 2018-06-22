@@ -60,16 +60,21 @@ module.exports = ({
             <Glyphicon glyph="1-close"/>
         </Button>
     );
-    const glyphButton = (
+    const glyphButton = showFullscreen ? (
         <Button
-            key="ms-header-glyph"
-            className="square-button"
-            style={{pointerEvents: showFullscreen ? 'auto' : 'none'}}
-            bsStyle={bsStyle}
-            onClick={showFullscreen ? () => onFullscreen(!fullscreen) : () => {}}>
-            <Glyphicon glyph={showFullscreen ? fullscreenGlyph[position] && fullscreenGlyph[position][fullscreen] || 'resize-full' : glyph}/>
-        </Button>
-    );
+           key="ms-header-glyph"
+           className="square-button"
+           bsStyle={bsStyle}
+           onClick={() => onFullscreen(!fullscreen)}>
+           <Glyphicon glyph={fullscreenGlyph[position] && fullscreenGlyph[position][fullscreen] || 'resize-full'}/>
+       </Button>) :
+       (<div
+           key="ms-header-glyph"
+           className={`square-button ${'bg-' + bsStyle}`}
+           style={{display: 'flex'}}>
+           <Glyphicon glyph={glyph} className={`${bsStyle === 'default' ? 'text-primary' : '' }`}/>
+       </div>
+   );
     const buttons = position === 'left' ? [closeButton, glyphButton] : [glyphButton, closeButton];
     return (
         <Grid fluid style={{width: '100%'}} className={'ms-header ms-' + bsStyle}>

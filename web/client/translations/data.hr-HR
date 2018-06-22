@@ -881,6 +881,8 @@
             "serviceTitle": "Naslov",
             "serviceTitlePlaceholder": "unesi naslov",
             "missingReference": "Missing OGC reference metadata",
+            "showDescription": "Show full description",
+            "hideDescription": "Hide full description",
             "notification": {
                 "warningAddCatalogService": "Unesi ispravni url i naslov",
                 "addCatalogService": "Servis je dodan ispravno",
