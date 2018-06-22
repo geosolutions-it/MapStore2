@@ -525,7 +525,7 @@ module.exports = {
                 .takeUntil(action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE))
         ),
     askChangesConfirmOnFeatureGridClose: (action$, store) => action$.ofType(CLOSE_FEATURE_GRID_CONFIRM).switchMap( () => {
-        const stat e = store.getState();
+        const state = store.getState();
         if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
             return Rx.Observable.of(toggleTool("featureCloseConfirm", true));
         }
