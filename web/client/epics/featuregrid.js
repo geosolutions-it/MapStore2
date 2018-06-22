@@ -525,7 +525,7 @@ module.exports = {
                 .takeUntil(action$.ofType(CLOSE_FEATURE_GRID, LOCATION_CHANGE))
         ),
     askChangesConfirmOnFeatureGridClose: (action$, store) => action$.ofType(CLOSE_FEATURE_GRID_CONFIRM).switchMap( () => {
-        const state = store.getState();
+        const stat e = store.getState();
         if (hasChangesSelector(state) || hasNewFeaturesSelector(state)) {
             return Rx.Observable.of(toggleTool("featureCloseConfirm", true));
         }
@@ -537,23 +537,41 @@ module.exports = {
         .switchMap( () => {
             return Rx.Observable.of(setControlProperty("drawer", "enabled", false), toggleTool("featureCloseConfirm", false));
         }),
+    /**
+     * Removes the WMSFilter from the layer when the feature grid is closed.
+     *
+     */
     removeWmsFilterOnGridClose: (action$, store) =>
         action$.ofType(OPEN_FEATURE_GRID)
+            // always finish internal flow before listening another OPEN_EVENT
             .exhaustMap( () =>
+                // when close is performed.A delay is needed to avoid close event
+                // to start the flow before OPEN_ADVANCED_SEARCH
                 action$.ofType(CLOSE_FEATURE_GRID).delay(50)
+                    // and WMS filter is active
                     .filter(() => isSyncWmsActive(store.getState()))
+                    // remove the WMS Filter
                     .switchMap(() => Rx.Observable.of(removeFilterFromWMSLayer(store.getState())))
+                    // but stop listening for close event if feature info, open search or location
+                    // change are performed before it
                     .takeUntil(action$.ofType(LOCATION_CHANGE, FEATURE_INFO_CLICK, OPEN_ADVANCED_SEARCH))
             ),
+    /**
+     * re-opens the feature grid after it was closed by feature info click
+     */
     autoReopenFeatureGridOnFeatureInfoClose: (action$) =>
         action$.ofType(OPEN_FEATURE_GRID)
+            // need to finalize the flow before listen the next open event to avoid
+            // to catch open feature info triggered by this flow or advanced search
             .exhaustMap(() =>
                 Rx.Observable.race(
                     action$.ofType(FEATURE_INFO_CLICK).take(1),
                     action$.ofType(CLOSE_FEATURE_GRID).take(1)
                 ).exhaustMap((action) => action.type === CLOSE_FEATURE_GRID
+                    // a close event stops the flow living it free to listen the next event
                     ? Rx.Observable.empty()
                     : action$
+                        // if feature info was clicked, wait for a feature info close to reopen the feature grid
                         .ofType(HIDE_MAPINFO_MARKER)
                         .switchMap(() => Rx.Observable.of(openFeatureGrid()))
 
