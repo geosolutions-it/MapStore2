@@ -1302,6 +1302,11 @@
                 "pie": "Mostrar leyenda",
                 "bar": "Mostrar leyenda",
                 "gauge": "Mostrar etiquetas"
+            },
+            "displayCartesian": {
+                "line": "Hide Grid",
+                "bar": "Hide Grid"
+
             }
 
         },

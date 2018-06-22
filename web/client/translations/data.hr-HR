@@ -1239,6 +1239,11 @@
                 "pie": "Prikaži legendu",
                 "bar": "Prikaži legendu",
                 "gauge": "Prikaži oznake"
+            },
+            "displayCartesian": {
+                "line": "Hide Grid",
+                "bar": "Hide Grid"
+
             }
 
         },

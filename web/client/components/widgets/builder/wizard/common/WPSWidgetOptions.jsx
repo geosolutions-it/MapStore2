@@ -55,7 +55,8 @@ module.exports = ({
             showGroupBy: true,
             showUom: false,
             showColorRampSelector: true,
-            showLegend: true
+            showLegend: true,
+            showCartesian: true
         },
         aggregationOptions = [],
         sampleChart}) => (<Row>
@@ -141,6 +142,19 @@ module.exports = ({
                   checked={data.legend}
                   onChange={(val) => {
                       onChange("legend", val);
+                  }}
+                  />
+          </Col>
+        </FormGroup> : null}
+        {formOptions.showCartesian && data.type === "bar" || data.type === "line" ? <FormGroup controlId="displayCartesian">
+            <Col componentClass={ControlLabel} sm={6}>
+                <Message msgId={getLabelMessageId("displayCartesian", data)} />
+            </Col>
+          <Col sm={6}>
+              <SwitchButton
+                  checked={!data.cartesian}
+                  onChange={(val) => {
+                      onChange("cartesian", !val);
                   }}
                   />
           </Col>

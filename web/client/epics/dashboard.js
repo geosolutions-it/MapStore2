@@ -88,6 +88,7 @@ module.exports = {
         .switchMap((w) => Rx.Observable.of(editNewWidget({
             legend: false,
             mapSync: false,
+            cartesian:true,
             ...w,
             // override action's type
             type: undefined

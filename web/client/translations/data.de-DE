@@ -1302,6 +1302,11 @@
                 "pie": "Legende anzeigen",
                 "bar": "Legende anzeigen",
                 "gauge": "Legende anzeigen"
+            },
+            "displayCartesian": {
+                "line": "Hide Grid",
+                "bar": "Hide Grid"
+
             }
 
         },

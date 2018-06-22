@@ -1303,6 +1303,11 @@
                 "pie": "Légende d'affichage",
                 "bar": "Légende d'affichage",
                 "gauge": "Afficher les étiquettes"
+            },
+            "displayCartesian": {
+                "line": "Hide Grid",
+                "bar": "Hide Grid"
+
             }
         },
         "dashboard": {

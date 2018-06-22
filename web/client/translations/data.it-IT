@@ -1302,6 +1302,11 @@
                 "pie": "Mostra legenda",
                 "bar": "Mostra legenda",
                 "gauge": "Mostra etichette"
+            },
+            "displayCartesian": {
+                "line": "Hide Grid",
+                "bar": "Hide Grid"
+
             }
 
         },

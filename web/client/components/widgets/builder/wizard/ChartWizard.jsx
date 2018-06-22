@@ -57,6 +57,7 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         {...sampleProps}
         type={data.type}
         legend={data.legend}
+        cartesian={data.cartesian}
         layer={data.layer || layer}
         filter={data.filter}
         geomProp={data.geomProp}
@@ -70,7 +71,8 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         {...sampleProps}
         type={data.type}
         autoColorOptions={data.autoColorOptions}
-        legend={data.legend} />);
+        legend={data.legend}
+        cartesian={data.cartesian} />);
 
 const enhanceWizard = compose(lifecycle({
     componentWillReceiveProps: ({ data = {}, valid, setValid = () => { } } = {}) => {

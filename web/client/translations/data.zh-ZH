@@ -1088,6 +1088,11 @@
                 "pie": "Display Legend",
                 "bar": "Display Legend",
                 "gauge": "Display labels"
+            },
+            "displayCartesian": {
+                "line": "Hide Grid",
+                "bar": "Hide Grid"
+
             }
 
         },
