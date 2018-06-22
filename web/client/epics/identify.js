@@ -6,10 +6,12 @@
  * LICENSE file in the root directory of this source tree.
 */
 const Rx = require('rxjs');
+const {get} = require('lodash');
 
-const {LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, updateCenterToMarker} = require('../actions/mapInfo');
+const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, updateCenterToMarker, purgeMapInfoResults} = require('../actions/mapInfo');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint} = require('../actions/map');
+const { closeAnnotations } = require('../actions/annotations');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {stopGetFeatureInfoSelector} = require('../selectors/mapinfo');
 const {centerToMarkerSelector} = require('../selectors/layers');
@@ -30,6 +32,17 @@ module.exports = {
         .switchMap(() => {
             return Rx.Observable.of(closeFeatureGrid());
         }),
+    /**
+     * Check if something is editing in feature info.
+     * If so, as to the proper tool to close (annotations)
+     * Otherwise it closes by itself.
+     */
+    closeFeatureInfoOnEdit: (action$, {getState = () => {}} = {}) =>
+        action$.ofType(CLOSE_IDENTIFY).switchMap( () =>
+            get(getState(), "annotations.editing")
+                ? Rx.Observable.of(closeAnnotations())
+                : Rx.Observable.of(purgeMapInfoResults())
+            ),
     changeMapPointer: (action$, store) =>
         action$.ofType(CHANGE_MOUSE_POINTER)
         .filter(() => !(store.getState()).map)

@@ -9,8 +9,9 @@
 const expect = require('expect');
 
 const {ZOOM_TO_POINT} = require('../../actions/map');
-const {FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, loadFeatureInfo} = require('../../actions/mapInfo');
-const {zoomToVisibleAreaEpic} = require('../identify');
+const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, loadFeatureInfo, closeIdentify} = require('../../actions/mapInfo');
+const { zoomToVisibleAreaEpic, closeFeatureInfoOnEdit} = require('../identify');
+const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
 const {testEpic} = require('./epicTestUtils');
 const {registerHook} = require('../../utils/MapUtils');
 
@@ -129,6 +130,44 @@ describe('identify Epics', () => {
         };
 
         testEpic(zoomToVisibleAreaEpic, 1, sentActions, expectedAction, state);
+    });
+    it('closeFeatureInfoOnEdit', (done) => {
+
+        const sentActions = closeIdentify();
+
+        const expectedAction = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case CLOSE_ANNOTATIONS:
+                        done();
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+        };
+
+        testEpic(closeFeatureInfoOnEdit, 1, sentActions, expectedAction, { annotations: { editing: true } });
+    });
+    it('closeFeatureInfoOnEdit', (done) => {
+
+        const sentActions = closeIdentify();
+
+        const expectedAction = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case PURGE_MAPINFO_RESULTS:
+                        done();
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+        };
+
+        testEpic(closeFeatureInfoOnEdit, 1, sentActions, expectedAction);
     });
 
 });
