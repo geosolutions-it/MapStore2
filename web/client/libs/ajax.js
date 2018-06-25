@@ -44,7 +44,7 @@ function addAuthenticationToAxios(axiosConfig) {
     switch (rule && rule.method) {
         case 'browserWithCredentials':
         {
-            axiosConfig.withCredentials=true;
+            axiosConfig.withCredentials = true;
             return axiosConfig;
         }
         case 'authkey':
