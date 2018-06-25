@@ -291,7 +291,7 @@ function queryform(state = initialState, action) {
             return assign({}, state, {toolbarEnabled: true, spatialField: assign({}, state.spatialField, {
                 value: action.value,
                 collectGeometries: action.collectGeometries,
-                geometry: action.geometry
+                geometry: action.srsName ? {...action.geometry, projection: action.srsName} : action.geometry
             })});
         }
         case END_DRAWING: {
