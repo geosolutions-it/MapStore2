@@ -4,6 +4,7 @@ const PropTypes = require('prop-types');
 const DecimalCoordinateEditor = require('./editors/DecimalCoordinateEditor');
 const AeronauticalCoordinateEditor = require('./editors/AeronauticalCoordinateEditor');
 const {isNil} = require('lodash');
+const no90Lat = require('./enhancers/no90Lat');
 
 /**
  This component can render an input field in two different formats: 'decimal' or 'aeronautical'
@@ -28,4 +29,4 @@ class CoordinateEntry extends React.Component {
     }
 }
 
-module.exports = CoordinateEntry;
+module.exports = no90Lat(CoordinateEntry); // TODO: remove no90Lat this when issue with coordinate 90 is fixed in annotations
