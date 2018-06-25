@@ -38,6 +38,20 @@ describe("test the Annotations enahncers", () => {
             coordinate="lon"
             />), document.getElementById("container"));
     });
+    it('decimalToAeronautical conversion correctly step on minutes and seconds', (done) => {
+        // 13.3333333333 should be 13 degrees, 20 minutes
+        const Sink = decimalToAeronautical(createSink(props => {
+            expect(props).toExist();
+            expect(props.degrees).toBe(13);
+            expect(props.minutes).toBe(20);
+            expect(props.seconds).toBe(0);
+            done();
+        }));
+        ReactDOM.render((<Sink
+            value={13.3333333333}
+            coordinate="lon"
+        />), document.getElementById("container"));
+    });
     it('convert from/to preserve precision', (done) => {
         const enhancer = compose(
             withState('value', 'onChange', 1.5),

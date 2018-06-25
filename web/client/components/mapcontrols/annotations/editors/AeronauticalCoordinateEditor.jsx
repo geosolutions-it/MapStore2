@@ -10,7 +10,7 @@ const {isNil} = require('lodash');
 
 const decimalToAeronautical = require('../enhancers/decimalToAeronautical');
 const coordinateTypePreset = require('../enhancers/coordinateTypePreset');
-const tempAreonauticalValue = require('../enhancers/tempAreonauticalValue');
+const tempAeronauticalValue = require('../enhancers/tempAeronauticalValue');
 
 class CoordinateEntry extends React.Component {
 
@@ -42,7 +42,7 @@ class CoordinateEntry extends React.Component {
                 minutes: this.props.minutes,
                 seconds: this.props.seconds,
                 direction: this.props.direction,
-                [part]: newValue
+                [part]: part === "degrees" ? Math.min(newValue, this.props.maxDegrees) : newValue
             };
             let seconds = newValues.seconds;
             let minutes = newValues.minutes + this.getSexagesimalStep(seconds);
@@ -160,7 +160,7 @@ class CoordinateEntry extends React.Component {
 }
 
 module.exports = compose(
+    coordinateTypePreset,
     decimalToAeronautical,
-    tempAreonauticalValue,
-    coordinateTypePreset
+    tempAeronauticalValue
 )(CoordinateEntry);
