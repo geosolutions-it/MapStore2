@@ -42,6 +42,10 @@
 #mapstore-annotations-panel {
     margin-bottom: 0;
 }
+#mapstore-annotations-panel .items-list.row {
+    margin-left: 0px;
+    margin-right: 0px;
+}
 
 
 .mapstore-side-card:hover {
@@ -273,6 +277,8 @@
 
 
         .msSideGrid {
+            height: ~'calc(100% - 161px)';
+            overflow: auto;
             margin: 0 30px;
             .mapstore-side-preview {
                 display: flex;

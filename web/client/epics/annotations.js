@@ -479,6 +479,10 @@ module.exports = (viewer) => ({
                 } else {
                     feature = set(`features[${selectedIndex}]`, selected, feature);
                 }
+            } else {
+                if (selectedIndex !== -1) {
+                    feature = set(`features`, feature.features.filter((f, i) => i !== selectedIndex ), feature);
+                }
             }
             const action = changeDrawingStatus("drawOrEdit", "Text", "annotations", [feature], {
                 featureProjection: "EPSG:4326",

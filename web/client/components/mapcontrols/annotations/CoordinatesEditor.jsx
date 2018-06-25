@@ -207,7 +207,7 @@ class CoordinateEditor extends React.Component {
                     </Col>
                     <Col xs={1}/>
                 </Row>
-                <Row style={{flex: 1, overflowY: 'auto'}}>
+                <Row style={{flex: 1, overflowY: 'auto', overflowX: 'hidden'}}>
                     {this.props.components.map((component, idx) => <CoordinatesRow
                         format={this.props.format}
                         sortId={idx}
