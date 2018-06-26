@@ -6,6 +6,7 @@ const {getComponents} = require('../../../utils/AnnotationsUtils');
 class GeometryEditor extends React.Component {
     static propTypes = {
         components: PropTypes.array,
+        options: PropTypes.object,
         onRemove: PropTypes.func,
         onChange: PropTypes.func,
         transitionProps: PropTypes.object,
@@ -22,6 +23,7 @@ class GeometryEditor extends React.Component {
 
     static defaultProps = {
         selected: {},
+        options: {},
         components: [],
         onRemove: null,
         onChange: () => {},
@@ -40,6 +42,7 @@ class GeometryEditor extends React.Component {
 
     render() {
         return (<CoordinatesEditor
+            {...this.props.options}
             items={[]}
             isDraggable
             type={this.props.featureType}

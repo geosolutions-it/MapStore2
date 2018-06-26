@@ -805,14 +805,14 @@
                 },
                 "add": "Ajouter de nouvelles coordonnées",
                 "valid": "La géométrie est valide",
-                "radius": "Rayon (m)",
+                "radius": "Rayon",
                 "text": "Texte",
                 "lat": "Latitude",
                 "lon": "Longitude",
                 "notValidMarker": "Insérer une coordonnée valide (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Toutes les coordonnées doivent être valides (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Insérer une valeur de texte et une coordonnée valide (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Entrez un rayon (m) et une coordonnée valide (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Entrez un rayon et une coordonnée valide (+|- 90° lat, +|-180° lon)"
             }
         },
         "user":{

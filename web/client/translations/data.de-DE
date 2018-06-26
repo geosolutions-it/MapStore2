@@ -804,14 +804,14 @@
                 },
                 "add": "Fügen Sie neue Koordinaten hinzu",
                 "valid": "Geometrie ist gültig",
-                "radius": "Radius (m)",
+                "radius": "Radius",
                 "text": "Text",
                 "lat": "Breite",
                 "lon": "Längengrad",
                 "notValidMarker": "Fügen Sie eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Alle Koordinaten müssen gültig sein (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Fügen Sie einen Textwert und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Geben Sie einen Radius (m) und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Geben Sie einen Radius und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)"
             }
         },
         "user":{
