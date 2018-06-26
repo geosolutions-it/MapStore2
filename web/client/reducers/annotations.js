@@ -440,7 +440,12 @@ function annotations(state = { validationErrors: {} }, action) {
             return assign({}, state, {
                 unsavedStyle: action.unsavedStyle
             });
-        case CONFIRM_CLOSE_ANNOTATIONS:
+        case CONFIRM_CLOSE_ANNOTATIONS: {
+            return assign({}, state, {
+                closing: false,
+                coordinateEditorEnabled: false
+            });
+        }
         case CANCEL_CLOSE_ANNOTATIONS:
             return assign({}, state, {
                 closing: false
@@ -538,6 +543,7 @@ function annotations(state = { validationErrors: {} }, action) {
                             [type]: newState.editing.style && newState.editing.style[type] || DEFAULT_ANNOTATIONS_STYLES[type]
                         })
                 }),
+                stylerType: head(getAvailableStyler(convertGeoJSONToInternalModel(selected.geometry))),
                 selected
             });
         }
