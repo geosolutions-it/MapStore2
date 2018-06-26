@@ -25,7 +25,7 @@ const {REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION, C
 
 const {validateCoordsArray, getAvailableStyler, DEFAULT_ANNOTATIONS_STYLES, convertGeoJSONToInternalModel, addIds, validateFeature, getComponents} = require('../utils/AnnotationsUtils');
 const {set} = require('../utils/ImmutableUtils');
-const {head, includes, findIndex, isNil} = require('lodash');
+const {head, includes, findIndex, isNil, slice} = require('lodash');
 
 const uuid = require('uuid');
 
@@ -219,12 +219,18 @@ function annotations(state = { validationErrors: {} }, action) {
         case CHANGE_RADIUS: {
             let newState;
             let selected = set("properties.radius", action.radius, state.selected);
-            if (action.components.length === 0) {
+            if (action.components.length === 0 || action.radius === null) {
+                selected = set("properties.isValidFeature", false, selected);
                 return assign({}, state, {
                     selected,
                     unsavedChanges: true
                 });
             }
+            selected = set("properties.isValidFeature", validateFeature({
+                properties: selected.properties,
+                components: getComponents({coordinates: action.components[0] || [], type: "Circle"}),
+                type: selected.geometry.type
+            }), selected);
             selected = set("properties.center", action.components[0], selected);
             selected = set("geometry.coordinates", action.components[0], selected);
             let center = reproject(selected.properties.center, "EPSG:4326", "EPSG:3857");
@@ -291,7 +297,10 @@ function annotations(state = { validationErrors: {} }, action) {
             let newState = set(`editing.features`, state.editing.features.map(f => {
                 return set("properties.canEdit", false, f);
             }), state);
-            const features = state.unsavedGeometry ? state.editing.tempFeatures : newState.editing.features;
+            const oldfeatures = newState.editing.features;
+            // only for the circles the feature is not being added
+            const features = state.unsavedGeometry ? state.editing.tempFeatures :
+                (newState.featureType !== "Circle" ? slice(oldfeatures, 0, oldfeatures.length - 1) : oldfeatures);
             return assign({}, newState, {
                 editing: {
                     ...newState.editing,
@@ -431,7 +440,12 @@ function annotations(state = { validationErrors: {} }, action) {
             return assign({}, state, {
                 unsavedStyle: action.unsavedStyle
             });
-        case CONFIRM_CLOSE_ANNOTATIONS:
+        case CONFIRM_CLOSE_ANNOTATIONS: {
+            return assign({}, state, {
+                closing: false,
+                coordinateEditorEnabled: false
+            });
+        }
         case CANCEL_CLOSE_ANNOTATIONS:
             return assign({}, state, {
                 closing: false
@@ -529,6 +543,7 @@ function annotations(state = { validationErrors: {} }, action) {
                             [type]: newState.editing.style && newState.editing.style[type] || DEFAULT_ANNOTATIONS_STYLES[type]
                         })
                 }),
+                stylerType: head(getAvailableStyler(convertGeoJSONToInternalModel(selected.geometry))),
                 selected
             });
         }

@@ -96,7 +96,8 @@ class CoordinateEditor extends React.Component {
                                 this.props.onChangeRadius(parseFloat(radius), this.props.components.map(coordToArray));
                             } else if (radius !== "") {
                                 this.props.onChangeRadius(parseFloat(radius), []);
-                            } else if (this.props.properties.isValidFeature) {
+                            } else {
+                                this.props.onChangeRadius(null, this.props.components.map(coordToArray));
                                 this.props.onSetInvalidSelected("radius", this.props.components.map(coordToArray));
                             }
                         }}
@@ -121,7 +122,8 @@ class CoordinateEditor extends React.Component {
                                 this.props.onChangeText(valueText, this.props.components.map(coordToArray));
                             } else if (valueText !== "") {
                                 this.props.onChangeText(valueText, this.props.components.map(coordToArray));
-                            } else if (this.props.properties.isValidFeature) {
+                            } else {
+                                this.props.onChangeText("", this.props.components.map(coordToArray));
                                 this.props.onSetInvalidSelected("text", this.props.components.map(coordToArray));
                             }
                         }}
@@ -205,7 +207,7 @@ class CoordinateEditor extends React.Component {
                     </Col>
                     <Col xs={1}/>
                 </Row>
-                <Row style={{flex: 1, overflowY: 'auto'}}>
+                <Row style={{flex: 1, overflowY: 'auto', overflowX: 'hidden'}}>
                     {this.props.components.map((component, idx) => <CoordinatesRow
                         format={this.props.format}
                         sortId={idx}

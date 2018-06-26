@@ -408,20 +408,29 @@ module.exports = (viewer) => ({
                     selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0] || [], selected);
                 }
             }
+            let method = selected.properties.isCircle ? "Circle" : selected.geometry.type;
+
             if (selected.properties && selected.properties.isCircle) {
                 selected = set("geometry", selected.properties.polygonGeom, selected);
             }
-            let method = selected.properties.isCircle ? "Circle" : selected.geometry.type;
 
             // TODO update selected feature in editing features
 
             let selectedIndex = findIndex(feature.features, (f) => f.properties.id === selected.properties.id);
-            if (selectedIndex === -1) {
-                feature = set(`features`, feature.features.concat([selected]), feature);
-
-            } else {
-                feature = set(`features[${selectedIndex}]`, selected, feature);
+            if (selected.properties.isValidFeature || selected.geometry.type === "LineString" || selected.geometry.type === "Polygon") {
+                if (selectedIndex === -1) {
+                    feature = set(`features`, feature.features.concat([selected]), feature);
+                } else {
+                    feature = set(`features[${selectedIndex}]`, selected, feature);
+                }
             }
+            if (selectedIndex !== -1 && !selected.properties.isValidFeature && (selected.geometry.type !== "LineString" && selected.geometry.type !== "Polygon")) {
+                feature = set(`features`, feature.features.filter((f, i) => i !== selectedIndex ), feature);
+            }
+
+            /*if (!selected.properties.isValidFeature) {
+                feature = feature.features.filter((f, i) => selectedIndex !== i);
+            }*/
             const multiGeometry = state.annotations.config.multiGeometry;
             const style = feature.style;
             const action = changeDrawingStatus("drawOrEdit", method, "annotations", [feature], {
@@ -453,8 +462,8 @@ module.exports = (viewer) => ({
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
-    redrawOnChangeRadiusTextEpic: (action$, {getState}) => action$.ofType( CHANGE_RADIUS, CHANGE_TEXT )
-        .switchMap((a) => {
+    redrawOnChangeTextEpic: (action$, {getState}) => action$.ofType( CHANGE_TEXT )
+        .switchMap(() => {
             const state = getState();
             let feature = state.annotations.editing;
             let selected = state.annotations.selected;
@@ -464,13 +473,55 @@ module.exports = (viewer) => ({
             selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0] || [], selected);
             selected = set("geometry.type", "Point", selected);
             let selectedIndex = findIndex(feature.features, (f) => f.properties.id === selected.properties.id);
+            if (selected.properties.isValidFeature) {
+                if (selectedIndex === -1) {
+                    feature = set(`features`, feature.features.concat([selected]), feature);
+                } else {
+                    feature = set(`features[${selectedIndex}]`, selected, feature);
+                }
+            } else {
+                if (selectedIndex !== -1) {
+                    feature = set(`features`, feature.features.filter((f, i) => i !== selectedIndex ), feature);
+                }
+            }
+            const action = changeDrawingStatus("drawOrEdit", "Text", "annotations", [feature], {
+                featureProjection: "EPSG:4326",
+                stopAfterDrawing: !multiGeometry,
+                editEnabled: true,
+                translateEnabled: false,
+                editFilter: (f) => f.getProperties().canEdit,
+                drawEnabled: false,
+                useSelectedStyle: true,
+                transformToFeatureCollection: true
+            }, assign({}, style, {highlight: false}));
+            return Rx.Observable.of(action);
+        }),
+    redrawOnChangeRadiusEpic: (action$, {getState}) => action$.ofType( CHANGE_RADIUS )
+        .switchMap(() => {
+            const state = getState();
+            let feature = state.annotations.editing;
+            let selected = state.annotations.selected;
+            const multiGeometry = state.annotations.config.multiGeometry;
+            const style = feature.style;
+
+            // selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0] || [], selected);
+            // selected = set("geometry.type", "Polygon", selected);
+            let selectedIndex = findIndex(feature.features, (f) => f.properties.id === selected.properties.id);
+            if (!selected.properties.isValidFeature) {
+                selected = set("geometry", {
+                    type: "Polygon",
+                    coordinates: [[]]
+                }, selected);
+            } else {
+                selected = set("geometry", selected.properties.polygonGeom, selected);
+            }
             if (selectedIndex === -1) {
                 feature = set(`features`, feature.features.concat([selected]), feature);
             } else {
                 feature = set(`features[${selectedIndex}]`, selected, feature);
             }
             // this should run only if the feature has a valid geom
-            const action = changeDrawingStatus("drawOrEdit", a.type === CHANGE_TEXT ? "Text" : "Circle", "annotations", [feature], {
+            const action = changeDrawingStatus("drawOrEdit", "Circle", "annotations", [feature], {
                 featureProjection: "EPSG:4326",
                 stopAfterDrawing: !multiGeometry,
                 editEnabled: true,

@@ -486,7 +486,7 @@ class AnnotationsEditor extends React.Component {
                         <Toolbar
                             btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}}
                             buttons={[ {
-                                glyph: 'back',
+                                glyph: 'arrow-left',
                                 tooltipId: "annotations.back",
                                 visible: true,
                                 onClick: () => {

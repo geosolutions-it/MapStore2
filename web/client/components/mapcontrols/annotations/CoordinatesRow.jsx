@@ -27,8 +27,9 @@ class CoordinatesRowComponent extends React.Component {
 
     render() {
         const {idx} = this.props;
+        const rowStyle =/* this.props.type === "LineString" || "Polygon" ? { marginLeft: -5, marginRight: -5} :*/ {marginLeft: -5, marginRight: -5};
         return (
-            <Row style={{marginLeft: 0, marginRight: 0}} onMouseEnter={() => {
+            <Row className="coordinateRow" style={rowStyle} onMouseEnter={() => {
                 this.props.onMouseEnter(this.props.component);
             }} onMouseLeave={this.props.onMouseLeave}>
                 <Col xs={1}>

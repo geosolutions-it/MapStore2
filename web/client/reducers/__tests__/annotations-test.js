@@ -16,7 +16,7 @@ const {
     EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
     VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY,
     TOGGLE_STYLE, SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION,
-    FILTER_ANNOTATIONS, CLOSE_ANNOTATIONS, CONFIRM_CLOSE_ANNOTATIONS,
+    FILTER_ANNOTATIONS, CLOSE_ANNOTATIONS, CONFIRM_CLOSE_ANNOTATIONS, CANCEL_CLOSE_ANNOTATIONS,
     toggleDeleteFtModal, confirmDeleteFeature,
     changeStyler, addText, setUnsavedChanges, setUnsavedStyle,
     toggleUnsavedChangesModal, toggleUnsavedGeometryModal, toggleUnsavedStyleModal, changedProperties,
@@ -242,9 +242,11 @@ describe('Test the annotations reducer', () => {
             }]
             }}, {
                 type: TOGGLE_ADD,
-                featureType: "MultiPolygon"
+                featureType: "Polygon"
             });
         expect(state.coordinateEditorEnabled).toBe(true);
+        expect(state.stylerType).toBe("polygon");
+        expect(state.featureType).toBe("Polygon");
         expect(state.drawing).toBe(true);
         state = annotations({drawing: true, editing: {
             features: [{
@@ -254,6 +256,23 @@ describe('Test the annotations reducer', () => {
             type: TOGGLE_ADD
         });
         expect(state.drawing).toBe(false);
+    });
+    it('toggle add text', () => {
+        let state = annotations({
+            drawing: false,
+            editing: {
+                features: [{
+                style: {"Polygon": DEFAULT_ANNOTATIONS_STYLES.Polygon, type: "Polygon"}
+            }]
+            }}, {
+                type: TOGGLE_ADD,
+                featureType: "Text"
+            });
+        expect(state.coordinateEditorEnabled).toBe(true);
+        expect(state.stylerType).toBe("text");
+        expect(state.editing.style.type).toBe("FeatureCollection");
+        expect(state.featureType).toBe("Text");
+        expect(state.drawing).toBe(true);
     });
     it('validate error', () => {
         const state = annotations({validationErrors: {}}, {
@@ -328,6 +347,13 @@ describe('Test the annotations reducer', () => {
     it('confirm close annotations', () => {
         const state = annotations({}, {
             type: CONFIRM_CLOSE_ANNOTATIONS
+        });
+        expect(state.closing).toBe(false);
+        expect(state.coordinateEditorEnabled).toBe(false);
+    });
+    it('cancel close annotations', () => {
+        const state = annotations({}, {
+            type: CANCEL_CLOSE_ANNOTATIONS
         });
         expect(state.closing).toBe(false);
     });
@@ -804,8 +830,41 @@ describe('Test the annotations reducer', () => {
         expect(state.selected).toBe(null);
         expect(state.drawing).toBe(false);
         expect(state.showUnsavedGeometryModal).toBe(false);
-        expect(state.editing.features.length).toBe(1);
-        expect(state.editing.features[0].geometry.coordinates[0]).toBe(1);
+        expect(state.editing.features.length).toBe(0);
+
+    });
+
+    it('resetCoordEditor in edit mode of a Circle, with no Changes ', () => {
+
+        const featureChanged = {
+            properties: {
+                id: '1',
+                isCircle: true
+            },
+            geometry: {
+                type: "Point",
+                coordinates: [10, 1]
+            }
+        };
+        const featureColl = {
+            type: "FeatureCollection",
+            features: [],
+            properties: {
+                id: '1asdfads'
+            },
+            featureType: "Circle",
+            style: {}
+        };
+        const state = annotations({
+            editing: featureColl,
+            selected: featureChanged,
+            unsavedGeometry: false
+        }, resetCoordEditor());
+        expect(state.unsavedGeometry).toBe(false);
+        expect(state.selected).toBe(null);
+        expect(state.drawing).toBe(false);
+        expect(state.showUnsavedGeometryModal).toBe(false);
+        expect(state.editing.features.length).toBe(0);
 
     });
 
