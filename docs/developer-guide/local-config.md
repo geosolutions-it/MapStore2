@@ -31,11 +31,11 @@ This is the main structure:
   "translationsPath",
   // if true, every ajax and mapping request will be authenticated with the configurations if match a rule
   "useAuthenticationRules": true
-  // the athentication rules to match
+  // the authentication rules to match
   "authenticationRules": [
   { // every rule has a `urlPattern` regex to match
     "urlPattern": ".*geostore.*",
-    // and a authentication `method` to use (basic, authkey)
+    // and a authentication `method` to use (basic, authkey, browserWithCredentials)
     "method": "basic"
   }, {
     "urlPattern": "\\/geoserver.*",
