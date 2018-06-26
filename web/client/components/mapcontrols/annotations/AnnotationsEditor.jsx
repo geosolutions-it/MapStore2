@@ -21,14 +21,14 @@ const CircleStyler = require('../../style/CircleStyler');
 const TextStyler = require('../../style/TextStyler');
 const PolylineStyler = require('../../style/PolylineStyler');
 const Message = require('../../I18N/Message');
-const {FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon/*, FormGroup, InputGroup*/} = require('react-bootstrap');
+const { FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon/*, FormGroup, InputGroup*/ } = require('react-bootstrap');
 const DropdownFeatureType = require('./DropdownFeatureType');
 const ReactQuill = require('react-quill');
 require('react-quill/dist/quill.snow.css');
 const tooltip = require('../../misc/enhancers/tooltip');
 const NavItemT = tooltip(NavItem);
-const {getAvailableStyler, convertGeoJSONToInternalModel} = require('../../../utils/AnnotationsUtils');
-const {isFunction} = require('lodash');
+const { getAvailableStyler, convertGeoJSONToInternalModel } = require('../../../utils/AnnotationsUtils');
+const { isFunction } = require('lodash');
 const ConfirmDialog = require('../../misc/ConfirmDialog');
 const assign = require('object-assign');
 const Select = require('react-select');
@@ -208,7 +208,7 @@ class AnnotationsEditor extends React.Component {
                 const additionalCls = isError ? 'field-error' : '';
                 return (
                     <span key={field.name}><div key={field.name} className={"mapstore-annotations-info-viewer-item mapstore-annotations-info-viewer-" + field.name + ' ' + additionalCls}>
-                        {field.showLabel ? <label><Message msgId={"annotations.field." + field.name}/></label> : null}
+                        {field.showLabel ? <label><Message msgId={"annotations.field." + field.name} /></label> : null}
                         {isError ? this.renderErrorOn(field.name) : ''}
                         {this.renderProperty(field, this.props[field.name] || field.value, editing)}
                     </div>
@@ -226,41 +226,41 @@ class AnnotationsEditor extends React.Component {
 
     renderViewButtons = () => {
         return (
-            <Grid fluid style={this.props.styling ? { width: '100%', boxShadow: 'none'} : { width: '100%' }}>
+            <Grid fluid style={this.props.styling ? { width: '100%', boxShadow: 'none' } : { width: '100%' }}>
                 <Row className="noTopMargin">
                     <Col xs={12} className="text-center">
                         <Toolbar
-                            btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}}
-                            buttons={[ {
+                            btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary' }}
+                            buttons={[{
                                 glyph: 'arrow-left',
                                 tooltipId: "annotations.back",
                                 visible: this.props.showBack,
-                                onClick: () => {this.props.onCancel(); this.props.onCleanHighlight(); }
+                                onClick: () => { this.props.onCancel(); this.props.onCleanHighlight(); }
                             }, {
                                 glyph: 'zoom-to',
                                 tooltipId: "annotations.zoomTo",
                                 visible: true,
-                                onClick: () => {this.zoom(); }
+                                onClick: () => { this.zoom(); }
                             }, {
                                 glyph: "pencil",
                                 tooltipId: "annotations.edit",
                                 visible: true,
                                 multiGeometry: this.props.config.multiGeometry,
-                                onClick: () => {this.props.onEdit(this.props.id); },
+                                onClick: () => { this.props.onEdit(this.props.id); },
                                 disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.features && this.props.editing.features.length,
                                 bsStyle: this.props.drawing ? "success" : "primary"
                             }, {
                                 glyph: 'trash',
                                 tooltipId: "annotations.remove",
                                 visible: true,
-                                onClick: () => {this.props.onRemove(this.props.id); }
+                                onClick: () => { this.props.onRemove(this.props.id); }
                             }, {
                                 glyph: 'download',
-                                tooltip: <Message msgId="annotations.downloadcurrenttooltip"/>,
+                                tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
                                 visible: true,
                                 onClick: () => { this.props.onDownload(this.props.feature); }
                             }
-                        ]}/>
+                            ]} />
                     </Col>
                 </Row>
             </Grid>);
@@ -271,8 +271,8 @@ class AnnotationsEditor extends React.Component {
             <Row className="text-center noTopMargin">
                 <Col xs={12}>
                     <Toolbar
-                        btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}}
-                        buttons={[ {
+                        btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary' }}
+                        buttons={[{
                             glyph: 'arrow-left',
                             tooltipId: "annotations.back",
                             visible: true,
@@ -301,30 +301,30 @@ class AnnotationsEditor extends React.Component {
                             disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.features && this.props.editing.features.length,
                             drawing: this.props.drawing,
                             titles: {
-                                marker: <Message msgId="annotations.titles.marker"/>,
-                                line: <Message msgId="annotations.titles.line"/>,
-                                polygon: <Message msgId="annotations.titles.polygon"/>,
-                                circle: <Message msgId="annotations.titles.circle"/>,
-                                text: <Message msgId="annotations.titles.text"/>
+                                marker: <Message msgId="annotations.titles.marker" />,
+                                line: <Message msgId="annotations.titles.line" />,
+                                polygon: <Message msgId="annotations.titles.polygon" />,
+                                circle: <Message msgId="annotations.titles.circle" />,
+                                text: <Message msgId="annotations.titles.text" />
                             },
-                                bsStyle: this.props.drawing ? "success" : "primary"
-                            }, {
-                                glyph: 'polygon-trash',
-                                tooltipId: "annotations.deleteGeometry",
-                                visible: this.props.editing && this.props.editing.features && this.props.editing.features.length,
-                                onClick: this.props.onDeleteGeometry
-                            }, {
-                                glyph: 'dropper',
-                                tooltipId: "annotations.styleGeometry",
-                                visible: this.props.editing && this.props.editing.features && this.props.editing.features.length,
-                                onClick: this.props.onStyleGeometry
-                            }, {
-                                glyph: 'floppy-disk',
-                                tooltipId: "annotations.save",
-                                visible: true,
-                                onClick: this.save
-                            }
-                        ]}/>
+                            bsStyle: this.props.drawing ? "success" : "primary"
+                        }, {
+                            glyph: 'polygon-trash',
+                            tooltipId: "annotations.deleteGeometry",
+                            visible: this.props.editing && this.props.editing.features && this.props.editing.features.length,
+                            onClick: this.props.onDeleteGeometry
+                        }, {
+                            glyph: 'dropper',
+                            tooltipId: "annotations.styleGeometry",
+                            visible: this.props.editing && this.props.editing.features && this.props.editing.features.length,
+                            onClick: this.props.onStyleGeometry
+                        }, {
+                            glyph: 'floppy-disk',
+                            tooltipId: "annotations.save",
+                            visible: true,
+                            onClick: this.save
+                        }
+                        ]} />
                 </Col>
             </Row>
         </Grid>);
@@ -334,8 +334,8 @@ class AnnotationsEditor extends React.Component {
             <Row className="text-center noTopMargin">
                 <Col xs={12}>
                     <Toolbar
-                        btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}}
-                        buttons={[ {
+                        btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary' }}
+                        buttons={[{
                             glyph: 'arrow-left',
                             tooltipId: "annotations.back",
                             visible: true,
@@ -362,7 +362,7 @@ class AnnotationsEditor extends React.Component {
                                 }
                             }
                         }
-                        ]}/>
+                        ]} />
                 </Col>
             </Row>
         </Grid>);
@@ -380,18 +380,18 @@ class AnnotationsEditor extends React.Component {
         if (editing) {
             switch (field.type) {
                 case 'html':
-                    return <ReactQuill value={fieldValue || ''} onChange={(val) => {this.change(field.name, val); if (!this.props.unsavedChanges) {this.props.onSetUnsavedChanges(true); } }}/>;
+                    return <ReactQuill value={fieldValue || ''} onChange={(val) => { this.change(field.name, val); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
                 case 'component':
                     const Component = fieldValue;
-                    return <prop editing value={<Component annotation={this.props.feature} />} onChange={(e) => {this.change(field.name, e.target.value); if (!this.props.unsavedChanges) {this.props.onSetUnsavedChanges(true); } }} />;
+                    return <prop editing value={<Component annotation={this.props.feature} />} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
                 default:
-                    return <FormControl value={fieldValue || ''} onChange={(e) => {this.change(field.name, e.target.value); if (!this.props.unsavedChanges) {this.props.onSetUnsavedChanges(true); } }}/>;
+                    return <FormControl value={fieldValue || ''} onChange={(e) => { this.change(field.name, e.target.value); if (!this.props.unsavedChanges) { this.props.onSetUnsavedChanges(true); } }} />;
             }
 
         }
         switch (field.type) {
             case 'html':
-                return <span dangerouslySetInnerHTML={{__html: fieldValue} }/>;
+                return <span dangerouslySetInnerHTML={{ __html: fieldValue }} />;
             case 'component':
                 const Component = fieldValue;
                 return <Component annotation={this.props.feature} />;
@@ -401,7 +401,7 @@ class AnnotationsEditor extends React.Component {
     };
 
     renderErrorOn = (field) => {
-        return <div className="annotations-edit-error"><Message msgId={this.props.errors[field]}/></div>;
+        return <div className="annotations-edit-error"><Message msgId={this.props.errors[field]} /></div>;
     };
 
     renderMarkers = (markers, prefix = '') => {
@@ -414,7 +414,7 @@ class AnnotationsEditor extends React.Component {
             return (
                 <div onClick={() => this.selectStyle(marker)}
                     className={"mapstore-annotations-info-viewer-marker mapstore-annotations-info-viewer-marker-" + prefix + marker.name +
-                        (this.isCurrentStyle(marker) ? " mapstore-annotations-info-viewer-marker-selected" : "")} style={marker.thumbnailStyle}/>);
+                        (this.isCurrentStyle(marker) ? " mapstore-annotations-info-viewer-marker-selected" : "")} style={marker.thumbnailStyle} />);
         });
     };
 
@@ -425,27 +425,27 @@ class AnnotationsEditor extends React.Component {
                     if (this.props.stylerType !== MARKER) {
                         this.props.onChangeStyler(MARKER);
                     }
-                }}><Glyphicon glyph="point"/></NavItemT>);
+                }}><Glyphicon glyph="point" /></NavItemT>);
                 case CIRCLE: return (<NavItemT eventKey={CIRCLE} onClick={() => {
                     if (this.props.stylerType !== CIRCLE) {
                         this.props.onChangeStyler(CIRCLE);
                     }
-                }}><Glyphicon glyph="1-circle"/></NavItemT>);
+                }}><Glyphicon glyph="1-circle" /></NavItemT>);
                 case LINE: return (<NavItemT eventKey={LINE} onClick={() => {
                     if (this.props.stylerType !== LINE) {
                         this.props.onChangeStyler(LINE);
                     }
-                }}><Glyphicon glyph="line"/></NavItemT>);
+                }}><Glyphicon glyph="line" /></NavItemT>);
                 case TEXT: return (<NavItemT eventKey={TEXT} onClick={() => {
                     if (this.props.stylerType !== TEXT) {
                         this.props.onChangeStyler(TEXT);
                     }
-                }}><Glyphicon glyph="text-colour"/></NavItemT>);
+                }}><Glyphicon glyph="text-colour" /></NavItemT>);
                 case POLYGON: return (<NavItemT eventKey={POLYGON} onClick={() => {
                     if (this.props.stylerType !== POLYGON) {
                         this.props.onChangeStyler(POLYGON);
                     }
-                }}><Glyphicon glyph="polygon"/></NavItemT>);
+                }}><Glyphicon glyph="polygon" /></NavItemT>);
                 default: return null;
             }
         });
@@ -454,7 +454,7 @@ class AnnotationsEditor extends React.Component {
     renderStylerBody = (stylerType = "marker") => {
         switch (stylerType) {
             case "marker": {
-                const glyphRenderer = (option) => (<div><span className={"fa fa-" + option.value}/><span> {option.label}</span></div>);
+                const glyphRenderer = (option) => (<div><span className={"fa fa-" + option.value} /><span> {option.label}</span></div>);
                 return (<div className="mapstore-annotations-info-viewer-markers">
                     {this.renderMarkers(this.getConfig().markers)}
                     <Select
@@ -465,27 +465,27 @@ class AnnotationsEditor extends React.Component {
                         optionRenderer={glyphRenderer}
                         valueRenderer={glyphRenderer}
                         value={this.props.editing.style.MultiPoint.iconGlyph || this.props.editing.style.Point.iconGlyph}
-                        onChange={(option) => {this.selectGlyph(option); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }}/>
+                        onChange={(option) => { this.selectGlyph(option); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }} />
                 </div>);
             }
-            case "lineString": return <PolylineStyler setStyleParameter={(style) => {this.props.onSetStyle(style); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }} shapeStyle={this.props.editing.style} width={this.props.width} />;
-            case "text": return <TextStyler setStyleParameter={(style) => {this.props.onSetStyle(style); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }} shapeStyle={this.props.editing.style} width={this.props.width} />;
-            case "polygon": return <PolygonStyler setStyleParameter={(style) => {this.props.onSetStyle(style); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }} shapeStyle={this.props.editing.style} width={this.props.width}/>;
-            case "circle": return <CircleStyler setStyleParameter={(style) => {this.props.onSetStyle(style); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }} shapeStyle={this.props.editing.style} width={this.props.width}/>;
+            case "lineString": return <PolylineStyler setStyleParameter={(style) => { this.props.onSetStyle(style); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }} shapeStyle={this.props.editing.style} width={this.props.width} />;
+            case "text": return <TextStyler setStyleParameter={(style) => { this.props.onSetStyle(style); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }} shapeStyle={this.props.editing.style} width={this.props.width} />;
+            case "polygon": return <PolygonStyler setStyleParameter={(style) => { this.props.onSetStyle(style); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }} shapeStyle={this.props.editing.style} width={this.props.width} />;
+            case "circle": return <CircleStyler setStyleParameter={(style) => { this.props.onSetStyle(style); this.props.onSetUnsavedStyle(true); this.props.onSetUnsavedChanges(true); }} shapeStyle={this.props.editing.style} width={this.props.width} />;
             default: return null;
         }
     };
 
     renderStyler = () => {
-        const {editing, onCancelStyle, onSaveStyle, stylerType, onSetUnsavedStyle, onToggleUnsavedStyleModal} = this.props;
+        const { editing, onCancelStyle, onSaveStyle, stylerType, onSetUnsavedStyle, onToggleUnsavedStyleModal } = this.props;
         const stylerTabs = editing.features && editing.features.length ? getAvailableStyler(convertGeoJSONToInternalModel(editing)) : [];
         return (<div className="mapstore-annotations-info-viewer-styler">
-            <Grid className="mapstore-annotations-info-viewer-styler-buttons" fluid style={{width: '100%', boxShadow: 'none'}}>
+            <Grid className="mapstore-annotations-info-viewer-styler-buttons" fluid style={{ width: '100%', boxShadow: 'none' }}>
                 <Row className="noTopMargin">
                     <Col xs={12} className="text-center">
                         <Toolbar
-                            btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary'}}
-                            buttons={[ {
+                            btnDefaultProps={{ className: 'square-button-md', bsStyle: 'primary' }}
+                            buttons={[{
                                 glyph: 'arrow-left',
                                 tooltipId: "annotations.back",
                                 visible: true,
@@ -494,16 +494,18 @@ class AnnotationsEditor extends React.Component {
                                         onToggleUnsavedStyleModal();
                                     } else {
                                         onCancelStyle();
-                                    }}
-                                },
-                                {
-                                    glyph: 'floppy-disk',
-                                    tooltipId: "annotations.save",
-                                    visible: true,
-                                    onClick: () => {
-                                        onSaveStyle();
-                                        onSetUnsavedStyle(false);
-                                    }}
+                                    }
+                                }
+                            },
+                            {
+                                glyph: 'floppy-disk',
+                                tooltipId: "annotations.save",
+                                visible: true,
+                                onClick: () => {
+                                    onSaveStyle();
+                                    onSetUnsavedStyle(false);
+                                }
+                            }
                             ]}
                         />
                     </Col>
@@ -518,7 +520,7 @@ class AnnotationsEditor extends React.Component {
                         {this.renderStylerBody(stylerType)}
                     </Col>
                 </Row>
-                </Grid>
+            </Grid>
         </div>);
     };
 
@@ -539,6 +541,7 @@ class AnnotationsEditor extends React.Component {
                     {this.props.coordinateEditorEnabled && <Row>
                         <Col xs={12}>
                             <GeometryEditor
+                                options={this.props.config && this.props.config.geometryEditorOptions}
                                 drawing={this.props.drawing}
                                 selected={this.props.selected}
                                 featureType={this.props.featureType}
@@ -563,67 +566,67 @@ class AnnotationsEditor extends React.Component {
     };
 
     renderModals = () => {
-        if (this.props.closing ) {
+        if (this.props.closing) {
             return (<Portal><ConfirmDialog
-                    show
-                    modal
-                    onClose={this.props.onCancelClose}
-                    onConfirm={this.props.onConfirmClose}
-                    confirmButtonBSStyle="default"
-                    closeGlyph="1-close"
-                    confirmButtonContent={<Message msgId="annotations.confirm" />}
-                    closeText={<Message msgId="annotations.cancel" />}>
-                    <Message msgId="annotations.undo"/>
-                </ConfirmDialog></Portal>);
+                show
+                modal
+                onClose={this.props.onCancelClose}
+                onConfirm={this.props.onConfirmClose}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                confirmButtonContent={<Message msgId="annotations.confirm" />}
+                closeText={<Message msgId="annotations.cancel" />}>
+                <Message msgId="annotations.undo" />
+            </ConfirmDialog></Portal>);
         } else if (this.props.showUnsavedChangesModal) {
             return (<Portal><ConfirmDialog
-                    show
-                    modal
-                    onClose={this.props.onToggleUnsavedChangesModal}
-                    onConfirm={() => { this.props.onCancelEdit(); this.props.onToggleUnsavedChangesModal(); }}
-                    confirmButtonBSStyle="default"
-                    closeGlyph="1-close"
-                    confirmButtonContent={<Message msgId="annotations.confirm" />}
-                    closeText={<Message msgId="annotations.cancel" />}>
-                    <Message msgId="annotations.undo"/>
-                </ConfirmDialog></Portal>);
+                show
+                modal
+                onClose={this.props.onToggleUnsavedChangesModal}
+                onConfirm={() => { this.props.onCancelEdit(); this.props.onToggleUnsavedChangesModal(); }}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                confirmButtonContent={<Message msgId="annotations.confirm" />}
+                closeText={<Message msgId="annotations.cancel" />}>
+                <Message msgId="annotations.undo" />
+            </ConfirmDialog></Portal>);
         } else if (this.props.showUnsavedGeometryModal) {
             return (<Portal><ConfirmDialog
-                    show
-                    modal
-                    onClose={this.props.onToggleUnsavedGeometryModal}
-                    onConfirm={() => { this.props.onResetCoordEditor(); }}
-                    confirmButtonBSStyle="default"
-                    closeGlyph="1-close"
-                    title={<Message msgId="annotations.titleUndoGeom" />}
-                    confirmButtonContent={<Message msgId="annotations.confirmGeom" />}
-                    closeText={<Message msgId="annotations.cancelModalGeom" />}>
-                    <Message msgId="annotations.undoGeom"/>
-                </ConfirmDialog></Portal>);
+                show
+                modal
+                onClose={this.props.onToggleUnsavedGeometryModal}
+                onConfirm={() => { this.props.onResetCoordEditor(); }}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                title={<Message msgId="annotations.titleUndoGeom" />}
+                confirmButtonContent={<Message msgId="annotations.confirmGeom" />}
+                closeText={<Message msgId="annotations.cancelModalGeom" />}>
+                <Message msgId="annotations.undoGeom" />
+            </ConfirmDialog></Portal>);
         } else if (this.props.showUnsavedStyleModal) {
             return (<Portal><ConfirmDialog
-                    show
-                    modal
-                    onClose={this.props.onToggleUnsavedStyleModal}
-                    onConfirm={() => { this.props.onCancelStyle(); this.props.onToggleUnsavedStyleModal(); }}
-                    confirmButtonBSStyle="default"
-                    closeGlyph="1-close"
-                    confirmButtonContent={<Message msgId="annotations.confirm" />}
-                    closeText={<Message msgId="annotations.cancel" />}>
-                    <Message msgId="annotations.undo"/>
-                </ConfirmDialog></Portal>);
+                show
+                modal
+                onClose={this.props.onToggleUnsavedStyleModal}
+                onConfirm={() => { this.props.onCancelStyle(); this.props.onToggleUnsavedStyleModal(); }}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                confirmButtonContent={<Message msgId="annotations.confirm" />}
+                closeText={<Message msgId="annotations.cancel" />}>
+                <Message msgId="annotations.undo" />
+            </ConfirmDialog></Portal>);
         } else if (this.props.showDeleteFeatureModal) {
             return (<Portal><ConfirmDialog
-                    show
-                    modal
-                    onClose={this.props.onToggleDeleteFtModal}
-                    onConfirm={() => { this.props.onConfirmDeleteFeature(); this.props.onToggleDeleteFtModal(); }}
-                    confirmButtonBSStyle="default"
-                    closeGlyph="1-close"
-                    confirmButtonContent={<Message msgId="annotations.confirm" />}
-                    closeText={<Message msgId="annotations.cancel" />}>
-                    <Message msgId="annotations.undoDeleteFeature"/>
-                </ConfirmDialog></Portal>);
+                show
+                modal
+                onClose={this.props.onToggleDeleteFtModal}
+                onConfirm={() => { this.props.onConfirmDeleteFeature(); this.props.onToggleDeleteFtModal(); }}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                confirmButtonContent={<Message msgId="annotations.confirm" />}
+                closeText={<Message msgId="annotations.cancel" />}>
+                <Message msgId="annotations.undoDeleteFeature" />
+            </ConfirmDialog></Portal>);
         } else if (this.props.removing) {
             return (<Portal><ConfirmDialog
                 show
@@ -634,8 +637,8 @@ class AnnotationsEditor extends React.Component {
                 closeGlyph="1-close"
                 confirmButtonContent={<Message msgId="annotations.confirm" />}
                 closeText={<Message msgId="annotations.cancel" />}>
-                <Message msgId={this.props.mode === 'editing' ? "annotations.removegeometry" : "annotations.removeannotation"}/>
-                </ConfirmDialog></Portal>);
+                <Message msgId={this.props.mode === 'editing' ? "annotations.removegeometry" : "annotations.removeannotation"} />
+            </ConfirmDialog></Portal>);
         }
     }
 

@@ -804,14 +804,14 @@
                 },
                 "add": "Agregar nuevas coordenadas",
                 "valid": "La geometría es válida",
-                "radius": "Radio (m)",
+                "radius": "Radio",
                 "text": "Texto",
                 "lat": "Latitud",
                 "lon": "Longitud",
                 "notValidMarker": "Insertar una coordenada válida (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Todas las coordenadas deben ser válidas (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Insertar un valor de texto y una coordenada válida (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Ingrese un radio (m) y una coordenada válida (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Ingrese un radio y una coordenada válida (+|- 90° lat, +|-180° lon)"
             }
         },
         "user":{

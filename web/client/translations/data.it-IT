@@ -804,14 +804,14 @@
                 },
                 "add": "Aggiungi una nuova coordinata",
                 "valid": "La geometria è valida",
-                "radius": "Raggio (m)",
+                "radius": "Raggio",
                 "text": "Testo",
                 "lat": "Latitudine",
                 "lon": "Longitudine",
                 "notValidMarker": "Inserisci una coordinata valida (+|- 90° lat, +|-180° lon)",
                 "notValidPolyline": "Tutte le coordinate devono essere valide (+|- 90° lat, +|-180° lon)",
                 "notValidText": "Inserisci un testo ed una coordinata valida (+|- 90° lat, +|-180° lon)",
-                "notValidCircle": "Inserisci un raggio (m) ed una coordinata valida (+|- 90° lat, +|-180° lon)"
+                "notValidCircle": "Inserisci un raggio ed una coordinata valida (+|- 90° lat, +|-180° lon)"
             }
         },
         "user":{

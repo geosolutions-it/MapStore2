@@ -7,12 +7,14 @@ const draggableContainer = require('../../misc/enhancers/draggableContainer');
 const Message = require('../../I18N/Message');
 const {validateCoords, coordToArray} = require('../../../utils/AnnotationsUtils');
 const CoordinatesRow = require('./CoordinatesRow');
+const MeasureEditor = require('./MeasureEditor');
 
 /**
  * Geometry editor for annotation Features.
  * @memberof components.annotations
  * @class
  * @prop {object[]} components the data used as value in the CoordinatesRow
+ * @prop {object} measureOptions options for the measure input
  * @prop {function} onSetInvalidSelected if the form becomes invalid, this will be triggered
  * @prop {function} onChange triggered on every coordinate change
  * @prop {function} onChangeText triggered every text change
@@ -30,6 +32,7 @@ const CoordinatesRow = require('./CoordinatesRow');
 class CoordinateEditor extends React.Component {
     static propTypes = {
         components: PropTypes.array,
+        measureOptions: PropTypes.object,
         onSetInvalidSelected: PropTypes.func,
         onChange: PropTypes.func,
         onChangeRadius: PropTypes.func,
@@ -46,6 +49,7 @@ class CoordinateEditor extends React.Component {
 
     static defaultProps = {
         components: [],
+        measureOptions: {},
         onChange: () => {},
         onChangeRadius: () => {},
         onHighlightPoint: () => {},
@@ -86,12 +90,12 @@ class CoordinateEditor extends React.Component {
             <Col xs={12}>
                 <FormGroup validationState={this.getValidationStateRadius(this.props.properties.radius)}>
                     <ControlLabel><Message msgId="annotations.editor.radius"/></ControlLabel>
-                    <FormControl
-                        value={this.props.properties.radius}
+                    <MeasureEditor
                         placeholder="radius"
+                        {...this.props.measureOptions}
+                        value={this.props.properties.radius}
                         name="radius"
-                        onChange={e => {
-                            const radius = e.target.value;
+                        onChange={radius => {
                             if (this.isValid(this.props.components, radius )) {
                                 this.props.onChangeRadius(parseFloat(radius), this.props.components.map(coordToArray));
                             } else if (radius !== "") {
