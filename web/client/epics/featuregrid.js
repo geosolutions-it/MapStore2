@@ -575,7 +575,31 @@ module.exports = {
                         .ofType(HIDE_MAPINFO_MARKER)
                         .switchMap(() => Rx.Observable.of(openFeatureGrid()))
 
-                ).takeUntil(action$.ofType(LOCATION_CHANGE))
+                    ).takeUntil(
+                        action$.ofType(LOCATION_CHANGE)
+                            .merge(
+                                action$
+                                    // a close feature grid event not between feature info click and hide mapinfo marker
+                                    .ofType(CLOSE_FEATURE_GRID)
+                                    .withLatestFrom(
+                                        action$
+                                            .ofType(FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER)
+                                            .scan((acc, { type }) => {
+                                                switch (type) {
+                                                    case FEATURE_INFO_CLICK:
+                                                        return false;
+                                                    case HIDE_MAPINFO_MARKER:
+                                                        return true;
+                                                    default:
+                                                        return false;
+                                                }
+                                            }, true)
+                                            .startWith(true),
+                                        (a, b) => b
+                                    ).filter(e => e)
+
+                            )
+                    )
             ),
     onOpenAdvancedSearch: (action$, store) =>
         action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
