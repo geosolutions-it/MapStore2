@@ -1586,4 +1586,20 @@ describe('featuregrid Epics', () => {
         };
         testEpic(autoReopenFeatureGridOnFeatureInfoClose, 1, [openFeatureGrid(), featureInfoClick(), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
     });
+    it('autoReopenFeatureGridOnFeatureInfoClose: feature info doesn\'t reopen feature grid after close', done => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(OPEN_FEATURE_GRID);
+            expect(actions[1].type).toBe(TEST_TIMEOUT);
+            done();
+        };
+        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose, 20), 2, [
+            openFeatureGrid(),
+            featureInfoClick(),
+            hideMapinfoMarker(),
+            closeFeatureGrid(),
+            featureInfoClick(),
+            hideMapinfoMarker()],
+        epicResult);
+    });
 });
