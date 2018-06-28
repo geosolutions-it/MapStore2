@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const { get, findIndex, isNil, fill, isArray} = require('lodash');
+const { get, findIndex, isNil, fill, isArray, remove} = require('lodash');
 
 const {getFeatureTypeProperties, isGeometryType, isValid, isValidValueForPropertyName, findGeometryProperty, getPropertyDesciptor} = require('./ogc/WFS/base');
 const getGeometryName = (describe) => get(findGeometryProperty(describe), "name");
@@ -162,19 +162,44 @@ module.exports = {
     applyAllChanges: (orig, changes = {}) => applyChanges(orig, changes[orig.id] || {}),
     applyChanges,
     gridUpdateToQueryUpdate: ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
+        const andGroup = {
+            id: 3355046933748244,
+            logic: "AND",
+            index: 0
+        };
+
+        let mergeFilters = oldFilterObj.groupFields ? (oldFilterObj.groupFields.filter(obj => obj.id === 1 ).length > 0 && oldFilterObj.filterFields.length > 0 ? true
+         : oldFilterObj.filterFields.length - 1 > 0 || ( oldFilterObj.filterFields[0] && oldFilterObj.filterFields[0].hasOwnProperty('loading'))) : false;
+        if ( mergeFilters ) {
+            let {filterFields: oldFilterFileds, groupFields: oldGroupFields } = oldFilterObj;
+            let mapedFilterFields = oldFilterFileds.map(obj => obj.groupId === 1 ? {...obj, groupId: andGroup.id} : obj);
+            let slicedFilterFields = mapedFilterFields.slice(0, 1);
+            let checkeGroupFields = remove(oldGroupFields, obj => obj.groupId === 1);
+            let newfilterFileds = !isNil(value)
+            ? upsertFilterField((oldFilterObj.filterFields.slice(-1) || []), {attribute: attribute}, {
+                attribute,
+                rowId: Date.now(),
+                type,
+                groupId: andGroup.id,
+                operator,
+                value
+            })
+            : (oldFilterObj.filterFields || []).filter(field => field.attribute !== (attribute));
+            return {
+                ...oldFilterObj,
+                groupFields: [...checkeGroupFields, andGroup],
+                filterFields: [...slicedFilterFields, ...newfilterFileds]
+            };
+        }
         return {
             ...oldFilterObj,
-            groupFields: [{
-                id: 1,
-                logic: "AND",
-                index: 0
-            }],
+            groupFields: [andGroup],
             filterFields: !isNil(value)
                 ? upsertFilterField((oldFilterObj.filterFields || []), {attribute: attribute}, {
                     attribute,
                     rowId: Date.now(),
                     type,
-                    groupId: 1,
+                    groupId: andGroup.id,
                     operator,
                     value
 
