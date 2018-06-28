@@ -39,7 +39,7 @@ module.exports = {
      * If so, as to the proper tool to close (annotations)
      * Otherwise it closes by itself.
      */
-    closeFeatureInfoOnEdit: (action$, {getState = () => {}} = {}) =>
+    closeFeatureInfoOrAnnotations: (action$, {getState = () => {}} = {}) =>
         action$.ofType(CLOSE_IDENTIFY).switchMap( () =>
             get(getState(), "annotations.editing")
                 ? Rx.Observable.of(closeAnnotations())
