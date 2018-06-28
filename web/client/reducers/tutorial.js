@@ -93,7 +93,7 @@ function tutorial(state = initialState, action) {
             setup.start = true;
             setup.status = 'run';
 
-            if (isDisabled === 'true' || !hasIntro) {
+            if (isDisabled === 'true' || !hasIntro || action.stop) {
                 setup.steps = setup.steps.filter((step) => {
                     return step.selector !== '#intro-tutorial';
                 }).map((step, index) => {

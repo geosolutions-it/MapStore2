@@ -1568,6 +1568,46 @@
             "cesiumNavigation": {
                 "title": "Navigation",
                 "text": "Hier finden Sie die Schaltflächen zum Vergrößern und Verkleinern"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Überblick über die Funktionen des Dashboards"
+            },
+            "dashboardNav": {
+                "title": "Navigationsleiste",
+                "text": "Hier finden Sie Sprachauswahl, Login, Homepage-Link und Optionsmenü"
+            },
+            "dashboardContainer": {
+                "title": "Instrumententafel",
+                "text": "<p> Ein Dashboard in MapStore2 bietet eine Reihe von Informationen, die passend gesammelt werden, um aggregierte Daten in der One-Shot-Ansicht anzuzeigen. Geodaten, die in einer Karte angezeigt werden, können Seite an Seite mit verwandten Attributtabellen, Diagrammen und anderen platziert werden, mit dem Ziel, verschiedene Arten von Informationen zu verbinden, statistische Details und textuelle Beschreibungen zu einem bestimmten Kontext anzuzeigen. </p> <p> Alle Benutzer können veröffentlichte Dashboards visualisieren und mit ihnen interagieren, aber nur Benutzer, die sie bearbeiten dürfen, können alle Widgets in einem Dashboard hinzufügen, anordnen, ihre Größe ändern oder löschen </ p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Widget hinzufügen",
+                "text": "Um ein Widget zum Dashboard hinzuzufügen, können Sie auf die Schaltfläche + klicken"
+            },
+            "dashboardBuilder": {
+                "title": "Erstelle ein neues Widget",
+                "text": "Sie können auswählen, welche Art von Widget Sie möchten und dann zum Dashboard hinzufügen, indem Sie eines der Elemente in der Liste auswählen"
+            },
+            "dashboardAddChart": {
+                "title": "Diagramm Widget",
+                "text": "<p> Es ist ein Widget, das Daten in Kreis-, Linien- oder Balkendiagrammen anzeigt und aggregiert. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Vektorebene </li> <li> Diagrammtyp auswählen </li> <li> Diagrammdaten konfigurieren </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddText": {
+                "title": "Text Widget",
+                "text": "<p> Fügen Sie Ihrem Dashboard Ihren eigenen Text hinzu. </p> <p> Schritte: </p> <p> <ul> <li> Bearbeiten Sie Text im Editor </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddTable": {
+                "title": "Tabellen Widget",
+                "text": "<p> Fügen Sie dem Dashboard, das Daten von einer ausgewählten Vektorebene enthält, eine Attributtabelle hinzu. Sie können auch Daten filtern, um Ihre Tabelle anzupassen. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Vektorebene aus </li> <li> Tabellendaten konfigurieren </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Gegen Widget",
+                "text": "<p> Fügen Sie dem Dashboard einen neuen Zähler hinzu. Counter zeigt numerische Werte an, die Daten einer ausgewählten Vektorebene aggregieren. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Vektorschicht </li> <li> Zählerdaten konfigurieren </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddMap": {
+                "title": "Karten Widget",
+                "text": "<p> Fügen Sie eine neue interaktive Karte zum Dashboard hinzu. Sie können mehr als eine Karte mit der Möglichkeit hinzufügen, andere Widgets mit ihnen zu verbinden. Nach dem Speichern der ersten Karte wird das Legenden-Widget zur Liste hinzugefügt. Das Legenden-Widget zeigt eine Legende zur verbundenen Karte. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Karte </li> <li> Verbessern Sie die Karte, indem Sie neue Ebenen hinzufügen </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
             }
         }
     }

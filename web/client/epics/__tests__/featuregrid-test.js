@@ -11,7 +11,9 @@ const assign = require('object-assign');
 const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
-const {toggleEditMode, toggleViewMode, openFeatureGrid, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid, GEOMETRY_CHANGED, openAdvancedSearch, moreFeatures, GRID_QUERY_RESULT} = require('../../actions/featuregrid');
+const { hideMapinfoMarker, featureInfoClick} = require('../../actions/mapInfo');
+
+const { toggleEditMode, toggleViewMode, openFeatureGrid, OPEN_FEATURE_GRID, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid, GEOMETRY_CHANGED, openAdvancedSearch, moreFeatures, GRID_QUERY_RESULT } = require('../../actions/featuregrid');
 const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
@@ -25,7 +27,7 @@ const {geometryChanged} = require('../../actions/draw');
 const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
 
 
-const {setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeRightPanelOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing, syncMapWmsFilter, onOpenAdvancedSearch, virtualScrollLoadFeatures} = require('../featuregrid');
+const { setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeRightPanelOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing, syncMapWmsFilter, onOpenAdvancedSearch, virtualScrollLoadFeatures, removeWmsFilterOnGridClose, autoReopenFeatureGridOnFeatureInfoClose} = require('../featuregrid');
 
 
 const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
@@ -517,7 +519,6 @@ const stateWithGmlGeometry = {
 };
 
 describe('featuregrid Epics', () => {
-
     it('test startSyncWmsFilter with nativeCrs absent in layer props, but no definition registered in proj4 defs', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
@@ -691,17 +692,17 @@ describe('featuregrid Epics', () => {
 
         const newState = assign({}, stateWithGmlGeometry, stateFeaturegrid);
 
-        testEpic(addTimeoutEpic(triggerDrawSupportOnSelectionChange), 1, toggleEditMode(), actions => {
+        testEpic(addTimeoutEpic(triggerDrawSupportOnSelectionChange, 50), 1, toggleEditMode(), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
                     case TEST_TIMEOUT:
+                        done();
                         break;
                     default:
                         expect(false).toBe(true);
                 }
             });
-            done();
         }, newState);
     });
 
@@ -1530,4 +1531,75 @@ describe('featuregrid Epics', () => {
         }, newState);
     });
 
+    it('removeWmsFilterOnGridClose', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                if (action.type === CHANGE_LAYER_PROPERTIES) {
+                    expect(action.layer).toBe("TEST");
+                    done();
+                }
+            });
+        };
+
+        testEpic(addTimeoutEpic(removeWmsFilterOnGridClose), 1, [openFeatureGrid(), closeFeatureGrid()], epicResult, {
+            query: { syncWmsFilter: true},
+            featuregrid: { selectedLayer: "TEST"}
+        });
+    });
+    it('removeWmsFilterOnGridClose does not remove filter on featureinfo open', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                if (action.type === TEST_TIMEOUT) {
+                    done();
+                }
+            });
+        };
+        testEpic(addTimeoutEpic(removeWmsFilterOnGridClose, 60), 1, [openFeatureGrid(), featureInfoClick(), closeFeatureGrid()], epicResult, {
+            query: { syncWmsFilter: true },
+            featuregrid: { selectedLayer: "TEST" }
+        });
+    });
+    it('removeWmsFilterOnGridClose does not remove filter on advanced search open', (done) => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                if (action.type === TEST_TIMEOUT) {
+                    done();
+                }
+            });
+        };
+        testEpic(addTimeoutEpic(removeWmsFilterOnGridClose, 60), 1, [openFeatureGrid(), openAdvancedSearch(), closeFeatureGrid()], epicResult, {
+            query: { syncWmsFilter: true },
+            featuregrid: { selectedLayer: "TEST" }
+        });
+    });
+    it('autoReopenFeatureGridOnFeatureInfoClose', done => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                if (action.type === OPEN_FEATURE_GRID) {
+                    done();
+                }
+            });
+        };
+        testEpic(autoReopenFeatureGridOnFeatureInfoClose, 1, [openFeatureGrid(), featureInfoClick(), hideMapinfoMarker(), closeFeatureGrid()], epicResult );
+    });
+    it('autoReopenFeatureGridOnFeatureInfoClose: feature info doesn\'t reopen feature grid after close', done => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(2);
+            expect(actions[0].type).toBe(OPEN_FEATURE_GRID);
+            expect(actions[1].type).toBe(TEST_TIMEOUT);
+            done();
+        };
+        testEpic(addTimeoutEpic(autoReopenFeatureGridOnFeatureInfoClose, 20), 2, [
+            openFeatureGrid(),
+            featureInfoClick(),
+            hideMapinfoMarker(),
+            closeFeatureGrid(),
+            featureInfoClick(),
+            hideMapinfoMarker()],
+        epicResult);
+    });
 });
