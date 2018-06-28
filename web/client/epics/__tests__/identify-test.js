@@ -10,7 +10,7 @@ const expect = require('expect');
 
 const {ZOOM_TO_POINT, clickOnMap} = require('../../actions/map');
 const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, loadFeatureInfo, featureInfoClick, closeIdentify} = require('../../actions/mapInfo');
-const { zoomToVisibleAreaEpic, onMapClick, closeFeatureInfoOnEdit} = require('../identify');
+const { zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing} = require('../identify');
 const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
 const {testEpic, TEST_TIMEOUT, addTimeoutEpic} = require('./epicTestUtils');
 const {registerHook} = require('../../utils/MapUtils');
@@ -154,7 +154,7 @@ describe('identify Epics', () => {
                 }
             });
     });
-    it('closeFeatureInfoOnEdit', (done) => {
+    it('closeFeatureAndAnnotationEditing closes annotations', (done) => {
 
         const sentActions = closeIdentify();
 
@@ -171,9 +171,9 @@ describe('identify Epics', () => {
             });
         };
 
-        testEpic(closeFeatureInfoOnEdit, 1, sentActions, expectedAction, { annotations: { editing: true } });
+        testEpic(closeFeatureAndAnnotationEditing, 1, sentActions, expectedAction, { annotations: { editing: true } });
     });
-    it('closeFeatureInfoOnEdit', (done) => {
+    it('closeFeatureAndAnnotationEditing purges mapinfo results', (done) => {
 
         const sentActions = closeIdentify();
 
@@ -190,7 +190,7 @@ describe('identify Epics', () => {
             });
         };
 
-        testEpic(closeFeatureInfoOnEdit, 1, sentActions, expectedAction);
+        testEpic(closeFeatureAndAnnotationEditing, 1, sentActions, expectedAction);
     });
 
 });
