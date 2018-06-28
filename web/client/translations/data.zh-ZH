@@ -1095,6 +1095,18 @@
                 "line": "Hide Grid",
                 "bar": "Hide Grid"
 
+            },
+            "yAxis":{
+                "line": "Hide Y axis",
+                "bar": "Hide Y axis"
+            },
+            "yAxisLabel":{
+                "line": "Y axis Label",
+                "bar": "Y axis Label"
+            },
+            "advancedOptions":{
+                "line": "Advanced Options",
+                "bar": "Advanced Options"
             }
 
         },

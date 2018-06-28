@@ -64,6 +64,8 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         mapSync={data.mapSync}
         autoColorOptions={data.autoColorOptions}
         options={data.options}
+        yAxis={data.yAxis}
+        yAxisLabel={data.yAxisLabel}
     />)
     : (<SampleChart
         key="sample-chart"
@@ -72,7 +74,9 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         type={data.type}
         autoColorOptions={data.autoColorOptions}
         legend={data.legend}
-        cartesian={data.cartesian} />);
+        cartesian={data.cartesian}
+        yAxis={data.yAxis}
+        />);
 
 const enhanceWizard = compose(lifecycle({
     componentWillReceiveProps: ({ data = {}, valid, setValid = () => { } } = {}) => {

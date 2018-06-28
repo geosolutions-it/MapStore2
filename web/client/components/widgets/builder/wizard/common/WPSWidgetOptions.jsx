@@ -7,11 +7,12 @@
   */
 const React = require('react');
 const { head, get} = require('lodash');
-const { Row, Col, Form, FormGroup, FormControl, ControlLabel} = require('react-bootstrap');
+const { Row, Col, Form, FormGroup, FormControl, ControlLabel, Panel, Glyphicon} = require('react-bootstrap');
 const Message = require('../../../../I18N/Message');
 const Select = require('react-select');
 const ColorRangeSelector = require('../../../../style/ColorRangeSelector');
 const StepHeader = require('../../../../misc/wizard/StepHeader');
+const SwitchPanel = require('../../../../misc/switch/SwitchPanel');
 const SwitchButton = require('../../../../misc/switch/SwitchButton');
 const COLORS = [{
     name: 'global.colors.random',
@@ -47,6 +48,19 @@ const getColorRangeItems = (type) => {
     return COLORS;
 };
 const getLabelMessageId = (field, data = {}) => `widgets.${field}.${data.type || data.widgetType || "default"}`;
+const renderHeader = (data) => {
+    const panelHeader = <Message msgId={getLabelMessageId("advancedOptions", data)} />;
+
+    return (
+        <span>
+            <span style={{cursor: "pointer"}}>{panelHeader}</span>
+            <button className="close">
+                {data.panel ? <Glyphicon glyph="glyphicon glyphicon-collapse-down"/> : <Glyphicon glyph="glyphicon glyphicon-expand"/>}
+            </button>
+        </span>
+    );
+};
+
 module.exports = ({
         data = { options: {} },
         onChange = () => { },
@@ -56,7 +70,7 @@ module.exports = ({
             showUom: false,
             showColorRampSelector: true,
             showLegend: true,
-            showCartesian: true
+            advancedOptions: true
         },
         aggregationOptions = [],
         sampleChart}) => (<Row>
@@ -146,21 +160,61 @@ module.exports = ({
                   />
           </Col>
         </FormGroup> : null}
-        {formOptions.showCartesian && data.type === "bar" || data.type === "line" ? <FormGroup controlId="displayCartesian">
-            <Col componentClass={ControlLabel} sm={6}>
-                <Message msgId={getLabelMessageId("displayCartesian", data)} />
-            </Col>
-          <Col sm={6}>
-              <SwitchButton
-                  checked={!data.cartesian}
-                  onChange={(val) => {
-                      onChange("cartesian", !val);
-                  }}
-                  />
-          </Col>
-        </FormGroup> : null}
-      </Form>
 
+{formOptions.advancedOptions && data.type === "bar" || data.type === "line" ?
+
+
+<SwitchPanel id="displayCartesian"
+             header={renderHeader(data)}
+             collapsible
+             expanded={data.panel}
+             onSwitch={(val) => {
+                 onChange("panel", val);
+             }}
+             >
+<Panel>
+<FormGroup controlId="AdvancedOptions">
+<Col componentClass={ControlLabel} sm={6}>
+    <Message msgId={getLabelMessageId("displayCartesian", data)} />
+</Col>
+<Col sm={6}>
+  <SwitchButton
+      checked={!data.cartesian}
+      onChange={(val) => {
+          onChange("cartesian", !val);
+      }}
+      />
+</Col>
+<Col componentClass={ControlLabel} sm={6}>
+    <Message msgId={getLabelMessageId("yAxis", data)} />
+</Col>
+<Col sm={6}>
+  <SwitchButton
+      checked={data.options && data.options.label }
+      onChange={(val) => {
+          onChange("yAxis", !val);
+          onChange("options.label", val && !val.value);
+      }}
+      />
+</Col>
+</FormGroup>
+
+<FormGroup controlId="yAxisLabel">
+    <Col componentClass={ControlLabel} sm={6}>
+      <Message msgId={getLabelMessageId("yAxisLabel", data)} />
+    </Col>
+  <Col sm={6}>
+      <FormControl placeholder="enter label" type="text" onChange={ e => onChange("yAxisLabel", e.target.value)} />
+  </Col>
+
+</FormGroup>
+</Panel>
+</SwitchPanel>
+
+: null}
+
+</Form>
 
   </Col>
-</Row>);
+</Row>
+);

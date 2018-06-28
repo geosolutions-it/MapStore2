@@ -9,9 +9,10 @@
 
 const React = require('react');
 const { XAxis, YAxis, CartesianGrid} = require('recharts');
+const AxisLabel = require('./AxisLabel');
 
-const renderCartesianTools = ({xAxis, yAxis, cartesian}) => ([
+const renderCartesianTools = ({xAxis, yAxis, cartesian, ...props}) => ([
     xAxis && xAxis.show !== false ? <XAxis key="xaxis" {...xAxis}/> : null,
-    yAxis && yAxis.show !== false ? <YAxis key="yaxis" {...yAxis}/> : null,
+    yAxis ? <YAxis key="yaxis" label={<AxisLabel axisType="yAxis" x={50} y={125} width={0} height={0} children={props.yAxisLabel}/>}/> : null,
     cartesian !== false ? <CartesianGrid key="cartesiangrid" {...cartesian}/> : null]);
 module.exports = {renderCartesianTools};
