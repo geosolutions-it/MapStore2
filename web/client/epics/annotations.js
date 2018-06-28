@@ -9,7 +9,7 @@
 const Rx = require('rxjs');
 const {saveAs} = require('file-saver');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
-const {TOGGLE_CONTROL, toggleControl} = require('../actions/controls');
+const {TOGGLE_CONTROL, toggleControl, setControlProperty} = require('../actions/controls');
 const {addLayer, updateNode, changeLayerProperties, removeLayer} = require('../actions/layers');
 const {hideMapinfoMarker, purgeMapInfoResults} = require('../actions/mapInfo');
 const {set} = require('../utils/ImmutableUtils');
@@ -18,10 +18,13 @@ const {reprojectGeoJson} = require('../utils/CoordinatesUtils');
 const {error} = require('../actions/notifications');
 
 const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAdd,
+    showAnnotation, editAnnotation,
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
     SET_STYLE, RESTORE_STYLE, HIGHLIGHT, CLEAN_HIGHLIGHT, CONFIRM_CLOSE_ANNOTATIONS, START_DRAWING,
     CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS,
-    ADD_NEW_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE} = require('../actions/annotations');
+    ADD_NEW_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR
+} = require('../actions/annotations');
+const {closeIdentify} = require('../actions/mapInfo');
 
 const {FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE} = require('../actions/draw');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
@@ -181,7 +184,7 @@ module.exports = (viewer) => ({
                 return Rx.Observable.from([
                     changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [store.getState().annotations.editing], {}),
                     toggleDrawOrEdit(store.getState())
-            ]);
+                ]);
             }
             const newFeatures = annotationsLayerSelector(store.getState()).features.filter(f => f.properties.id !== action.id);
             return Rx.Observable.from([
@@ -191,6 +194,15 @@ module.exports = (viewer) => ({
                 hideMapinfoMarker(),
                 purgeMapInfoResults()
             ].concat(newFeatures.length === 0 ? [removeLayer('annotations')] : []));
+        }),
+    openEditorEpic: action$ => action$.ofType(OPEN_EDITOR)
+        .switchMap((action) => {
+            return Rx.Observable.from([
+                closeIdentify(),
+                setControlProperty("annotations", "enabled", true),
+                showAnnotation(action.id),
+                editAnnotation(action.id)
+            ]);
         }),
     saveAnnotationEpic: (action$, store) => action$.ofType(SAVE_ANNOTATION)
         .switchMap((action) => {
@@ -219,11 +231,17 @@ module.exports = (viewer) => ({
                 changeLayerProperties('annotations', {visibility: true})
             ]));
         }),
-    cancelEditAnnotationEpic: (action$, store) => action$.ofType(CANCEL_EDIT_ANNOTATION, PURGE_MAPINFO_RESULTS)
+    cancelEditAnnotationEpic: (action$, store) => action$.ofType(CANCEL_EDIT_ANNOTATION)
         .switchMap(() => {
             return Rx.Observable.from([
                 changeDrawingStatus("clean", store.getState().annotations.featureType || '', "annotations", [], {}),
                 changeLayerProperties('annotations', {visibility: true})
+            ]);
+        }),
+    purgeMapInfoEpic: (action$, store) => action$.ofType( PURGE_MAPINFO_RESULTS)
+        .switchMap(() => {
+            return Rx.Observable.from([
+                changeDrawingStatus("clean", store.getState().annotations.featureType || '', "annotations", [], {})
             ]);
         }),
     startDrawingMultiGeomEpic: (action$, store) => action$.ofType(START_DRAWING)

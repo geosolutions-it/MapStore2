@@ -354,8 +354,8 @@ describe('OpenlayersMap', () => {
                 originalEvent: {}
             });
             expect(spy.calls.length).toEqual(1);
-            expect(spy.calls[0].arguments[0].latlng.lat).toBe(43.9);
-            expect(spy.calls[0].arguments[0].latlng.lng).toBe(10.3);
+            expect(spy.calls[0].arguments[0].latlng.lat).toBe(0.5);
+            expect(spy.calls[0].arguments[0].latlng.lng).toBe(0.5);
             done();
         }, 500);
     });

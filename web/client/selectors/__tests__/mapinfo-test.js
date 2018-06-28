@@ -8,7 +8,7 @@
 
 
 const expect = require('expect');
-const {mapInfoRequestsSelector, generalInfoFormatSelector, stopGetFeatureInfoSelector} = require('../mapinfo');
+const {mapInfoRequestsSelector, generalInfoFormatSelector, stopGetFeatureInfoSelector, isMapInfoOpen} = require('../mapinfo');
 
 describe('Test mapinfo selectors', () => {
     it('test generalInfoFormatSelector default value', () => {
@@ -36,6 +36,18 @@ describe('Test mapinfo selectors', () => {
             }
         });
         expect(props).toEqual(['request']);
+    });
+    it('test isMapInfoOpen no state', () => {
+        const props = isMapInfoOpen({});
+        expect(props).toEqual(false);
+    });
+    it('test isMapInfoOpen', () => {
+        const props = isMapInfoOpen({
+            mapInfo: {
+                requests: ['request']
+            }
+        });
+        expect(props).toEqual(true);
     });
     it('test stopGetFeatureInfoSelector', () => {
         const props = stopGetFeatureInfoSelector({

@@ -8,6 +8,7 @@
 
 const {createSelector} = require('reselect');
 const {layersSelector} = require('./layers');
+const {isMapInfoOpen} = require('./mapinfo');
 const {head, get} = require('lodash');
 const assign = require('object-assign');
 
@@ -42,6 +43,7 @@ const errorsSelector = (state) => get(state, "annotations.validationErrors", {})
 const configSelector = (state) => get(state, "annotations.config", {});
 
 const annotationsInfoSelector = (state) => (assign({}, {
+    mouseHoverEvents: isMapInfoOpen(state),
     closing: closingSelector(state),
     format: formatSelector(state),
     config: configSelector(state),

@@ -7,6 +7,7 @@
  */
 
 const EDIT_ANNOTATION = 'ANNOTATIONS:EDIT';
+const OPEN_EDITOR = 'ANNOTATIONS:OPEN_EDITOR';
 const SHOW_ANNOTATION = 'ANNOTATIONS:SHOW';
 const NEW_ANNOTATION = 'ANNOTATIONS:NEW';
 const REMOVE_ANNOTATION = 'ANNOTATIONS:REMOVE';
@@ -60,6 +61,12 @@ function loadAnnotations(features, override = false) {
 function confirmDeleteFeature() {
     return {
         type: CONFIRM_DELETE_FEATURE
+    };
+}
+function openEditor(id) {
+    return {
+        type: OPEN_EDITOR,
+        id
     };
 }
 function changeFormat(format) {
@@ -372,6 +379,7 @@ module.exports = {
     confirmCloseAnnotations,
     cancelCloseAnnotations,
     DOWNLOAD, download,
+    OPEN_EDITOR, openEditor,
     CONFIRM_DELETE_FEATURE, confirmDeleteFeature,
     TOGGLE_DELETE_FT_MODAL, toggleDeleteFtModal,
     HIGHLIGHT_POINT, highlightPoint,

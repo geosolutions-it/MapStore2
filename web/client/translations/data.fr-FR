@@ -756,7 +756,7 @@
             "addMarker": "Ajouter une géométrie",
             "styleGeometry": "Changer le style",
             "deleteGeometry": "Supprimer toutes les géométries d'annotations",
-            "removeannotation": "Voulez-vous supprimer l'annotation?",
+            "removeannotation": "Voulez-vous supprimer l'annotation avec titre: {title}?",
             "removegeometry": "Voulez-vous supprimer tous les points d'annotation?",
             "confirm": "Confirmer",
             "title": "Annotations",

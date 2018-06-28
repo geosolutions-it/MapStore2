@@ -22,7 +22,7 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     cancelCloseAnnotations, confirmCloseAnnotations, startDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal,
     changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, download, loadAnnotations,
     changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected,
-    highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat
+    highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat, openEditor
 } = require('../actions/annotations');
 
 const { zoomToExtent } = require('../actions/map');
@@ -37,6 +37,7 @@ const commonEditorActions = {
     onConfirmDeleteFeature: confirmDeleteFeature,
     onCleanHighlight: cleanHighlight,
     onHighlightPoint: highlightPoint,
+    onHighlight: highlight,
     onError: validationError,
     onSave: saveAnnotation,
     onRemove: removeAnnotation,
@@ -62,6 +63,10 @@ const commonEditorActions = {
     onChangeRadius: changeRadius,
     onSetInvalidSelected: setInvalidSelected,
     onChangeText: changeText,
+    onCancelRemove: cancelRemoveAnnotation,
+    onCancelClose: cancelCloseAnnotations,
+    onConfirmClose: confirmCloseAnnotations,
+    onConfirmRemove: confirmRemoveAnnotation,
     onDownload: download
 };
 const AnnotationsEditor = connect(annotationsInfoSelector,
@@ -72,12 +77,8 @@ const AnnotationsEditor = connect(annotationsInfoSelector,
 
 const AnnotationsInfoViewer = connect(annotationsInfoSelector,
 {
-    onCancelRemove: cancelRemoveAnnotation,
-    onCancelEdit: cancelEditAnnotation,
-    onCancelClose: cancelCloseAnnotations,
-    onConfirmClose: confirmCloseAnnotations,
-    onConfirmRemove: confirmRemoveAnnotation,
-    ...commonEditorActions
+    ...commonEditorActions,
+    onEdit: openEditor
 })(require('../components/mapcontrols/annotations/AnnotationsEditor'));
 
 const panelSelector = createSelector([annotationsListSelector], (list) => ({

@@ -71,6 +71,7 @@ const {
     changeRadius, CHANGE_RADIUS,
     changeText, CHANGE_TEXT,
     CONFIRM_DELETE_FEATURE, confirmDeleteFeature,
+    OPEN_EDITOR, openEditor,
     TOGGLE_DELETE_FT_MODAL, toggleDeleteFtModal,
     ADD_NEW_FEATURE, addNewFeature,
     LOAD_ANNOTATIONS, loadAnnotations
@@ -108,6 +109,11 @@ describe('Test correctness of the annotations actions', () => {
     it('remove annotation', () => {
         const result = removeAnnotation('1');
         expect(result.type).toEqual(REMOVE_ANNOTATION);
+        expect(result.id).toEqual('1');
+    });
+    it('openEditor annotation', () => {
+        const result = openEditor('1');
+        expect(result.type).toEqual(OPEN_EDITOR);
         expect(result.id).toEqual('1');
     });
     it('addNewFeature', () => {

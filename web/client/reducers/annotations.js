@@ -297,10 +297,13 @@ function annotations(state = { validationErrors: {} }, action) {
             let newState = set(`editing.features`, state.editing.features.map(f => {
                 return set("properties.canEdit", false, f);
             }), state);
-            const oldfeatures = newState.editing.features;
+            const newfeatures = newState.editing.features;
             // only for the circles the feature is not being added
-            const features = state.unsavedGeometry ? state.editing.tempFeatures :
-                (newState.featureType !== "Circle" ? slice(oldfeatures, 0, oldfeatures.length - 1) : oldfeatures);
+
+            let features = newState.editing.tempFeatures;
+            if (state.featureType !== "Circle" && state.drawing) {
+                features = slice(newfeatures, 0, newfeatures.length - 1);
+            }
             return assign({}, newState, {
                 editing: {
                     ...newState.editing,
@@ -308,6 +311,7 @@ function annotations(state = { validationErrors: {} }, action) {
                 },
                 drawing: false,
                 coordinateEditorEnabled: false,
+                unsavedGeometry: false,
                 selected: null,
                 showUnsavedGeometryModal: false
             });

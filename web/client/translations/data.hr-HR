@@ -740,7 +740,7 @@
             "addMarker": "Dodaj novu točku na karti",
             "styleGeometry": "Odaberi različiti stil za točke",
             "deleteGeometry": "Ukloni geometrije napomena",
-            "removeannotation": "Želite li ukloniti pribilješku?",
+            "removeannotation": "Do you want to remove the annotation with title: {title}?",
             "removegeometry": "Želite li ukloniti sve pribilješke?",
             "confirm": "Potvrdi",
             "undoGeom": "Are you sure to exit without saving? (You will lose any changes)",

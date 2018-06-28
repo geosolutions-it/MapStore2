@@ -619,7 +619,7 @@
             "addMarker": "在地图上添加一个新点",
             "styleGeometry": "为点选择不同的风格",
             "deleteGeometry": "Remove all annotation geometries",
-            "removeannotation": "你想删除标注?",
+            "removeannotation": "Do you want to remove the annotation with title: {title}?",
             "removegeometry": "你想删除所有标注点吗？?",
             "confirm": "确认",
             "mandatory": "必填项",

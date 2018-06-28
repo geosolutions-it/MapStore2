@@ -323,9 +323,10 @@ class Annotations extends React.Component {
                 closeGlyph="1-close"
                 confirmButtonContent={<Message msgId="annotations.confirm" />}
                 closeText={<Message msgId="annotations.cancel" />}>
-                <Message msgId={this.props.mode === 'editing' ? "annotations.removegeometry" : "annotations.removeannotation"}/>
+                 {this.props.mode === 'editing' ? <Message msgId="annotations.removegeometry"/> :
+                     <Message msgId="annotations.removeannotation" msgParams={{title: this.props.editing && this.props.editing.properties && this.props.editing.properties.title}}/>}
                 </ConfirmDialog>);
-        }else if (this.state.selectFile) {
+        } else if (this.state.selectFile) {
             body = (
                 <SelecAnnotationsFile
                     text={<Message msgId="annotations.selectfiletext"/>}

@@ -755,7 +755,7 @@
             "addMarker": "Aggiungi una geometria",
             "styleGeometry": "Cambia stile",
             "deleteGeometry": "Rimuovi tutte le feature",
-            "removeannotation": "Vuoi rimuovere l'annotazione?",
+            "removeannotation": "Vuoi rimuovere l'annotazione con titolo: {title}?",
             "removegeometry": "Vuoi rimuovere tutti i punti dell'annotazione?",
             "confirm": "Conferma",
             "mandatory": "Campo obbligatorio",
