@@ -13,25 +13,26 @@ const { createEpicMiddleware, combineEpics } = require('redux-observable');
 const {ADD_LAYER, UPDATE_NODE, CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
 const {CHANGE_DRAWING_STATUS, drawingFeatures, DRAWING_FEATURE, selectFeatures} = require('../../actions/draw');
 const {set} = require('../../utils/ImmutableUtils');
-const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
+const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS, purgeMapInfoResults} = require('../../actions/mapInfo');
 const {configureMap} = require('../../actions/config');
+const {CLOSE_IDENTIFY} = require('../../actions/mapInfo');
 // const {TOGGLE_CONTROL} = require('../../actions/controls');
 const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation,
     setStyle, highlight, cleanHighlight, download, loadAnnotations, SET_STYLE, toggleStyle,
-    resetCoordEditor, changeRadius, changeText, changeSelected, confirmDeleteFeature
+    resetCoordEditor, changeRadius, changeText, changeSelected, confirmDeleteFeature, openEditor, SHOW_ANNOTATION
 } = require('../../actions/annotations');
-const {TOGGLE_CONTROL, toggleControl} = require('../../actions/controls');
+const {TOGGLE_CONTROL, toggleControl, SET_CONTROL_PROPERTY} = require('../../actions/controls');
 const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
     setStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic, closeMeasureToolEpic
+    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic
 } = require('../annotations')({});
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic, newAnnotationEpic, addAnnotationEpic,
     disableInteractionsEpic, cancelEditAnnotationEpic, startDrawingMultiGeomEpic, endDrawGeomEpic, endDrawTextEpic, cancelTextAnnotationsEpic,
     setStyleEpic, restoreStyleEpic, highlighAnnotationEpic, cleanHighlightAnnotationEpic, closeAnnotationsEpic, confirmCloseAnnotationsEpic,
     downloadAnnotations, onLoadAnnotations, onChangedSelectedFeatureEpic, onBackToEditingFeatureEpic, redrawOnChangeRadiusEpic, redrawOnChangeTextEpic,
-    editSelectedFeatureEpic, editCircleFeatureEpic, closeMeasureToolEpic
+    editSelectedFeatureEpic, editCircleFeatureEpic, purgeMapInfoEpic, closeMeasureToolEpic, openEditorEpic
 );
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -153,10 +154,10 @@ describe('annotations Epics', () => {
     it('remove annotation', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
-            if (actions.length >= 8) {
-                expect(actions[5].type).toBe(UPDATE_NODE);
-                expect(actions[6].type).toBe(HIDE_MAPINFO_MARKER);
-                expect(actions[7].type).toBe(PURGE_MAPINFO_RESULTS);
+            if (actions.length >= 6) {
+                expect(actions[3].type).toBe(UPDATE_NODE);
+                expect(actions[4].type).toBe(HIDE_MAPINFO_MARKER);
+                expect(actions[5].type).toBe(PURGE_MAPINFO_RESULTS);
                 done();
             }
         });
@@ -571,4 +572,32 @@ describe('annotations Epics', () => {
         store.dispatch(action);
     });
 
+    it('purgeMapInfoEpic', (done) => {
+        let action = purgeMapInfoResults();
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 2) {
+                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
+                done();
+            }
+        });
+
+        store.dispatch(action);
+    });
+    it('openEditorEpic', (done) => {
+        let action = openEditor("1");
+
+        store.subscribe(() => {
+            const actions = store.getActions();
+            if (actions.length >= 4) {
+                expect(actions[1].type).toBe(CLOSE_IDENTIFY);
+                expect(actions[2].type).toBe(SET_CONTROL_PROPERTY);
+                expect(actions[3].type).toBe(SHOW_ANNOTATION);
+                done();
+            }
+        });
+
+        store.dispatch(action);
+    });
 });

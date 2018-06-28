@@ -11,6 +11,21 @@ const annotations = require('../annotations');
 const {DEFAULT_ANNOTATIONS_STYLES} = require('../../utils/AnnotationsUtils');
 const {isEmpty} = require('lodash');
 
+const testFeatures = {
+    point1: {
+        properties: { id: '1' },
+        geometry: { type: "Point", coordinates: [1, 1] }
+    },
+    point1Changed: {
+        properties: {id: '1'},
+        geometry: { type: "Point", coordinates: [10, 1]}
+    },
+    lineString1: {
+        properties: { id: 'line1' },
+        geometry: { type: "LineString", coordinates: [[1, 1], [3, 3]] }
+    }
+};
+
 const {
     REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION,
     EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
@@ -764,73 +779,50 @@ describe('Test the annotations reducer', () => {
     });
 
     it('resetCoordEditor in creation mode of a Point ', () => {
-        const feature = {
-            properties: {
-                id: '1'
-            },
-            geometry: {
-                type: "Point",
-                coordinates: [1, 1]
-            }
-        };
+        const {point1, lineString1} = testFeatures;
         const featureColl = {
             type: "FeatureCollection",
-            features: [],
-            properties: {
-                id: '1asdfads'
-            },
+            features: [lineString1],
+            tempFeatures: [lineString1],
+            properties: { id: '1asdfads' },
             style: {}
         };
         const state = annotations({
             editing: featureColl,
-            selected: feature,
+            selected: point1,
+            drawing: true,
             unsavedGeometry: false
         }, resetCoordEditor());
         expect(state.unsavedGeometry).toBe(false);
         expect(state.selected).toBe(null);
         expect(state.drawing).toBe(false);
         expect(state.showUnsavedGeometryModal).toBe(false);
-        expect(state.editing.features.length).toBe(0);
+        expect(state.editing.features.length).toBe(1);
+        expect(state.editing.features[0].geometry.type).toBe("LineString");
 
     });
 
     it('resetCoordEditor in edit mode of a Point, with no Changes ', () => {
-        const feature = {
-            properties: {
-                id: '1'
-            },
-            geometry: {
-                type: "Point",
-                coordinates: [1, 1]
-            }
-        };
-        const featureChanged = {
-            properties: {
-                id: '1'
-            },
-            geometry: {
-                type: "Point",
-                coordinates: [10, 1]
-            }
-        };
+        const {point1, point1Changed} = testFeatures;
+
         const featureColl = {
             type: "FeatureCollection",
-            features: [feature],
-            properties: {
-                id: '1asdfads'
-            },
+            features: [point1],
+            tempFeatures: [point1],
+            properties: { id: '1asdfads' },
             style: {}
         };
         const state = annotations({
             editing: featureColl,
-            selected: featureChanged,
+            selected: point1Changed,
+            drawing: false,
             unsavedGeometry: false
         }, resetCoordEditor());
         expect(state.unsavedGeometry).toBe(false);
         expect(state.selected).toBe(null);
         expect(state.drawing).toBe(false);
         expect(state.showUnsavedGeometryModal).toBe(false);
-        expect(state.editing.features.length).toBe(0);
+        expect(state.editing.features.length).toBe(1);
 
     });
 
@@ -849,6 +841,7 @@ describe('Test the annotations reducer', () => {
         const featureColl = {
             type: "FeatureCollection",
             features: [],
+            tempFeatures: [],
             properties: {
                 id: '1asdfads'
             },
@@ -869,39 +862,21 @@ describe('Test the annotations reducer', () => {
     });
 
     it('resetCoordEditor in edit mode of a Point, with Changes ', () => {
-        const feature = {
-            properties: {
-                id: '1'
-            },
-            geometry: {
-                type: "Point",
-                coordinates: [1, 1]
-            }
-        };
-        const featureChanged = {
-            properties: {
-                id: '1'
-            },
-            geometry: {
-                type: "Point",
-                coordinates: [10, 1]
-            }
-        };
+        const {point1, point1Changed} = testFeatures;
+
         const featureColl = {
             type: "FeatureCollection",
-            features: [featureChanged],
-            tempFeatures: [feature],
-            properties: {
-                id: '1asdfads'
-            },
+            features: [point1Changed],
+            tempFeatures: [point1],
+            properties: { id: '1asdfads' },
             style: {}
         };
         const state = annotations({
             editing: featureColl,
-            selected: featureChanged,
+            selected: point1Changed,
             unsavedGeometry: true
         }, resetCoordEditor());
-        expect(state.unsavedGeometry).toBe(true);
+        expect(state.unsavedGeometry).toBe(false);
         expect(state.selected).toBe(null);
         expect(state.drawing).toBe(false);
         expect(state.showUnsavedGeometryModal).toBe(false);

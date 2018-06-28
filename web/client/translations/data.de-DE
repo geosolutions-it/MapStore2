@@ -755,7 +755,7 @@
             "addMarker": "Fügen Sie eine Geometrie hinzu",
             "styleGeometry": "Stil ändern",
             "deleteGeometry": "Entfernen Sie alle Anmerkungsgeometrien",
-            "removeannotation": "Möchten Sie die Annotation entfernen?",
+            "removeannotation": "Möchten Sie die Anmerkung mit Titel entfernen: {title}?",
             "removegeometry": "Möchten Sie alle Annotationspunkte entfernen?",
             "confirm": "Bestätigen",
             "title": "Anmerkungen",

@@ -524,14 +524,14 @@ describe('Test annotations selectors', () => {
     });
     it('test annotationsInfoSelector', () => {
         const retVal = annotationsInfoSelector(state);
-        expect(Object.keys(retVal).length).toBe(22);
+        expect(Object.keys(retVal).length).toBe(23);
         const params = ["closing", "config", "drawing", "drawingText",
         "errors", "editing", "coordinateEditorEnabled", "editedFields",
         "mode", "removing", "selected", "featureType",
         "showUnsavedChangesModal", "showUnsavedStyleModal",
         "showUnsavedGeometryModal", "showDeleteFeatureModal",
         "stylerType", "styling", "unsavedChanges", "unsavedStyle",
-        "unsavedGeometry", "format" ];
+        "unsavedGeometry", "format", "mouseHoverEvents" ];
         Object.keys(retVal).forEach(r => {
             expect(params.indexOf(r) !== -1).toBe(true);
         });

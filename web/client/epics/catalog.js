@@ -12,6 +12,7 @@ const {showLayerMetadata} = require('../actions/layers');
 const {error, success} = require('../actions/notifications');
 const {SET_CONTROL_PROPERTY} = require('../actions/controls');
 const {closeFeatureGrid} = require('../actions/featuregrid');
+const {purgeMapInfoResults, hideMapinfoMarker} = require('../actions/mapInfo');
 const {newServiceSelector, selectedServiceSelector, servicesSelector} = require('../selectors/catalog');
 const {getSelectedLayer} = require('../selectors/layers');
 const axios = require('../libs/ajax');
@@ -116,11 +117,16 @@ module.exports = (API) => ({
                 let deleteServiceAction = deleteCatalogService(selectedService);
                 return services[selectedService] ? Rx.Observable.of(notification, deleteServiceAction) : Rx.Observable.of(notification);
             }),
-        closeFeatureGridEpic: (action$) =>
+            /**
+            catalog opening must close other panels like:
+            - GFI
+            - FeatureGrid
+            */
+        openCatalogEpic: (action$) =>
             action$.ofType(SET_CONTROL_PROPERTY)
             .filter((action) => action.control === "metadataexplorer" && action.value)
             .switchMap(() => {
-                return Rx.Observable.of(closeFeatureGrid());
+                return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
             }),
         getMetadataRecordById: (action$, store) =>
             action$.ofType(GET_METADATA_RECORD_BY_ID)

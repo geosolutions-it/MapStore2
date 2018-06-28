@@ -27,6 +27,7 @@ const {queryPanelSelector} = require('./controls');
   * @return {object} the mapinfo requests
   */
 const mapInfoRequestsSelector = state => get(state, "mapInfo.requests") || [];
+const isMapInfoOpen = state => !!mapInfoRequestsSelector(state) && mapInfoRequestsSelector(state).length > 0;
 
 /**
  * selects generalInfoFormat from state
@@ -56,6 +57,7 @@ const stopGetFeatureInfoSelector = createSelector(mapInfoDisabledSelector, measu
     (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isGridEditing, isAnnotationsEditing, isQueryPanelActive) => isMapInfoDisabled || !!isMeasureActive || isDrawSupportActive || isGridEditing || !!isAnnotationsEditing || !!isQueryPanelActive);
 
 module.exports = {
+    isMapInfoOpen,
     generalInfoFormatSelector,
     mapInfoRequestsSelector,
     stopGetFeatureInfoSelector

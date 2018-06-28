@@ -453,3 +453,22 @@
 
     }
 }
+
+.mapstore-identify-viewer {
+    .mapstore-annotations-info-viewer {
+        .mapstore-annotations-info-viewer-buttons {
+            -webkit-box-shadow: none;
+            box-shadow: none;
+        }
+    }
+    .mapstore-annotations-info-viewer.hover-background:hover {
+        background: @ms2-color-shade-super-lighter;
+    }
+    .mapstore-annotations-info-viewer+.mapstore-annotations-info-viewer {
+        .mapstore-annotations-info-viewer-buttons {
+            border-top: 1px solid @ms2-color-shade-lighter;
+            padding-top: 5px;
+            margin-top: 5px;
+        }
+    }
+}

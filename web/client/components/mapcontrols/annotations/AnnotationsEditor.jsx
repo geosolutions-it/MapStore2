@@ -55,6 +55,7 @@ const bbox = require('@turf/bbox');
  * @prop {function} onCancelStyle triggered when the user cancels style selection
  * @prop {function} onCancel triggered when the user cancels the addition/changes made to the annotation
  * @prop {function} onCleanHighlight triggered when the user exits 'details' mode
+ * @prop {function} onHighlight triggered when the user hover the infoviewer card
  * @prop {function} onConfirmDeleteFeature triggered when the user confirms deletion of a feature
  * @prop {function} onAddText triggered when the user adds new Text geometry to the feature
  * @prop {function} onToggleUnsavedChangesModal toggles the view of the UnsavedChangesModal
@@ -74,7 +75,6 @@ const bbox = require('@turf/bbox');
  * @prop {object} drawingText it contains info of the text annotation, 'drawing' if being added or 'show' used to show the modal to add the relative value
  * @prop {boolean} unsavedChanges flag used to trigger changes of showUnsavedChangesModal
  * @prop {boolean} unsavedStyle flag used to trigger changes of showUnsavedChangesModal
- * @prop {object} removing object to remove, it is also a flag that means we are currently asking for removing an annotation / geometry. Toggles visibility of the confirm dialog
  * @prop {boolean} closing user asked for closing panel when editing
  * @prop {string} stylerType selected styler to be shown as body
  * @prop {boolean} showUnsavedStyleModal flag used to show the UnsavedChangesModal
@@ -116,6 +116,7 @@ class AnnotationsEditor extends React.Component {
         onCancelEdit: PropTypes.func,
         onCancelStyle: PropTypes.func,
         onCleanHighlight: PropTypes.func,
+        onHighlight: PropTypes.func,
         onAddText: PropTypes.func,
         onCancel: PropTypes.func,
         onConfirmDeleteFeature: PropTypes.func,
@@ -155,9 +156,9 @@ class AnnotationsEditor extends React.Component {
         unsavedChanges: PropTypes.bool,
         unsavedGeometry: PropTypes.bool,
         unsavedStyle: PropTypes.bool,
+        mouseHoverEvents: PropTypes.bool,
         coordinateEditorEnabled: PropTypes.bool,
         styling: PropTypes.bool,
-        removing: PropTypes.object,
         closing: PropTypes.bool,
         errors: PropTypes.object,
         stylerType: PropTypes.string,
@@ -190,9 +191,12 @@ class AnnotationsEditor extends React.Component {
         maxZoom: 18,
         stylerType: "marker"
     };
-
+    /**
+    @prop {object} removing object to remove, it is also a flag that means we are currently asking for removing an annotation / geometry. Toggles visibility of the confirm dialog
+    */
     state = {
         editedFields: {},
+        removing: null,
         textValue: ""
     };
 
@@ -253,7 +257,10 @@ class AnnotationsEditor extends React.Component {
                                 glyph: 'trash',
                                 tooltipId: "annotations.remove",
                                 visible: true,
-                                onClick: () => { this.props.onRemove(this.props.id); }
+                                onClick: () => {
+                                    this.setState({removing: this.props.id});
+                                    // this.props.onRemove(this.props.id);
+                                }
                             }, {
                                 glyph: 'download',
                                 tooltip: <Message msgId="annotations.downloadcurrenttooltip" />,
@@ -627,17 +634,24 @@ class AnnotationsEditor extends React.Component {
                 closeText={<Message msgId="annotations.cancel" />}>
                 <Message msgId="annotations.undoDeleteFeature" />
             </ConfirmDialog></Portal>);
-        } else if (this.props.removing) {
+        } else if (this.state.removing) {
             return (<Portal><ConfirmDialog
                 show
                 modal
-                onClose={this.props.onCancelRemove}
-                onConfirm={() => this.props.onConfirmRemove(this.props.removing)}
+                onClose={() => {
+                    this.setState({removing: null});
+                    this.props.onCancelRemove();
+                }}
+                onConfirm={() => {
+                    this.setState({removing: null});
+                    this.props.onConfirmRemove(this.state.removing);
+                }}
                 confirmButtonBSStyle="default"
                 closeGlyph="1-close"
                 confirmButtonContent={<Message msgId="annotations.confirm" />}
                 closeText={<Message msgId="annotations.cancel" />}>
-                <Message msgId={this.props.mode === 'editing' ? "annotations.removegeometry" : "annotations.removeannotation"} />
+                {this.props.mode === 'editing' ? <Message msgId="annotations.removegeometry"/> :
+                    <Message msgId="annotations.removeannotation" msgParams={{title: this.props.feature && this.props.feature.properties && this.props.feature.properties.title}}/>}
             </ConfirmDialog></Portal>);
         }
     }
@@ -647,8 +661,17 @@ class AnnotationsEditor extends React.Component {
             return this.renderStyler();
         }
         const editing = this.props.editing && (this.props.editing.properties.id === this.props.id);
+        let mouseHoverEvents = this.props.mouseHoverEvents ? {
+            onMouseEnter: () => {
+                this.props.onHighlight(this.props.id);
+            },
+            onMouseLeave: () => {
+                this.props.onCleanHighlight();
+            }
+        } : {};
         return (
-            <div className="mapstore-annotations-info-viewer">
+            <div className={"mapstore-annotations-info-viewer" + (this.props.mouseHoverEvents ? " hover-background" : "")} {...mouseHoverEvents}
+            >
                 {this.renderButtons(editing, this.props.coordinateEditorEnabled)}
                 {this.renderError(editing)}
                 {this.renderModals()}

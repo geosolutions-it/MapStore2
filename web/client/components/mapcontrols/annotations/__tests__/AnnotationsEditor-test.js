@@ -121,33 +121,6 @@ describe("test the AnnotationsEditor Panel", () => {
         expect(spyEdit.calls.length).toEqual(1);
         expect(spyRemove.calls.length).toEqual(0);
     });
-    it('test click remove annotation', () => {
-        const feature = {
-            id: "1",
-            title: 'mytitle',
-            description: '<span><i>desc</i></span>'
-        };
-
-        const testHandlers = {
-            onEditHandler: (id) => { return id; },
-            onRemoveHandler: (id) => { return id; }
-        };
-
-        const spyEdit = expect.spyOn(testHandlers, 'onEditHandler');
-        const spyRemove = expect.spyOn(testHandlers, 'onRemoveHandler');
-
-        const viewer = ReactDOM.render(<AnnotationsEditor {...feature} onEdit={testHandlers.onEditHandler}
-            onRemove={testHandlers.onRemoveHandler}/>, document.getElementById("container"));
-        expect(viewer).toExist();
-
-        let removeButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[2]);
-
-        expect(removeButton).toExist();
-        TestUtils.Simulate.click(removeButton);
-
-        expect(spyEdit.calls.length).toEqual(0);
-        expect(spyRemove.calls.length).toEqual(1);
-    });
 
     it('test click remove geometry', () => {
         const feature = {

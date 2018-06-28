@@ -12,7 +12,7 @@ const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID} = require('../actions/featuregrid');
 const {PURGE_MAPINFO_RESULTS, ERROR_FEATURE_INFO} = require('../actions/mapInfo');
 const {SHOW_SETTINGS, HIDE_SETTINGS} = require('../actions/layers');
-const {mapInfoRequestsSelector} = require('../selectors/mapinfo');
+const {isMapInfoOpen} = require('../selectors/mapinfo');
 
 /**
  * Epìcs for feature grid
@@ -36,7 +36,7 @@ const updateMapLayoutEpic = (action$, store) =>
         .switchMap(() => {
 
             if (get(store.getState(), "browser.mobile")) {
-                const bottom = mapInfoRequestsSelector(store.getState()).length > 0 ? {bottom: '50%'} : {bottom: undefined};
+                const bottom = isMapInfoOpen(store.getState()) ? {bottom: '50%'} : {bottom: undefined};
                 const boundingMapRect = {
                     ...bottom
                 };
@@ -49,7 +49,7 @@ const updateMapLayoutEpic = (action$, store) =>
 
             if (get(store.getState(), "mode") === 'embedded') {
                 const height = {height: 'calc(100% - ' + mapLayout.bottom.sm + 'px)'};
-                const bottom = mapInfoRequestsSelector(store.getState()).length > 0 ? {bottom: '50%'} : {bottom: undefined};
+                const bottom = isMapInfoOpen(store.getState()) ? {bottom: '50%'} : {bottom: undefined};
                 const boundingMapRect = {
                     ...bottom
                 };
@@ -70,7 +70,7 @@ const updateMapLayoutEpic = (action$, store) =>
                 get(store.getState(), "controls.details.enabled") && {right: mapLayout.right.md} || null,
                 get(store.getState(), "controls.annotations.enabled") && {right: mapLayout.right.md} || null,
                 get(store.getState(), "controls.metadataexplorer.enabled") && {right: mapLayout.right.md} || null,
-                mapInfoRequestsSelector(store.getState()).length > 0 && {right: mapLayout.right.md} || null
+                isMapInfoOpen(store.getState()) && {right: mapLayout.right.md} || null
             ].filter(panel => panel)) || {right: 0};
 
             const dockSize = getDockSize(store.getState()) * 100;
