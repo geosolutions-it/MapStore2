@@ -28,6 +28,7 @@ const CLEAR_WARNING = 'CLEAR_WARNING';
 const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
 const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
+const CLOSE_IDENTIFY = 'IDENTIFY:CLOSE_IDENTIFY';
 
 /**
  * Private
@@ -207,6 +208,7 @@ function updateCenterToMarker(status) {
         status
     };
 }
+
 function featureInfoClick(point, layer) {
     return {
         type: FEATURE_INFO_CLICK,
@@ -214,6 +216,10 @@ function featureInfoClick(point, layer) {
         layer
     };
 }
+
+const closeIdentify = () => ({
+    type: CLOSE_IDENTIFY
+});
 
 module.exports = {
     ERROR_FEATURE_INFO,
@@ -233,6 +239,8 @@ module.exports = {
     FEATURE_INFO_CLICK,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
+    CLOSE_IDENTIFY,
+    closeIdentify,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
