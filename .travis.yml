@@ -10,6 +10,7 @@ before_install:
     - node -v
     - npm -v
 branches:
+install: travis_wait npm install
   only:
     - master
     - /^[cC]\d{3}[\w-]*/
