@@ -782,12 +782,13 @@ describe('Test the annotations reducer', () => {
         const {point1, lineString1} = testFeatures;
         const featureColl = {
             type: "FeatureCollection",
-            features: [lineString1],
+            features: [lineString1, point1],
             tempFeatures: [lineString1],
             properties: { id: '1asdfads' },
             style: {}
         };
         const state = annotations({
+            featureType: "Point",
             editing: featureColl,
             selected: point1,
             drawing: true,

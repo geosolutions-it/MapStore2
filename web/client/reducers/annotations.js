@@ -298,11 +298,12 @@ function annotations(state = { validationErrors: {} }, action) {
                 return set("properties.canEdit", false, f);
             }), state);
             const newfeatures = newState.editing.features;
-            const tempFeatures = newState.editing.tempFeatures;
             // only for the circles the feature is not being added
 
-            const features = !state.unsavedGeometry ? state.editing.tempFeatures :
-                (newState.featureType !== "Circle" ? state.drawing ? slice(newfeatures, 0, newfeatures.length - 1) : tempFeatures : tempFeatures);
+            let features = newState.editing.tempFeatures;
+            if (state.featureType !== "Circle" && state.drawing) {
+                features = slice(newfeatures, 0, newfeatures.length - 1);
+            }
             return assign({}, newState, {
                 editing: {
                     ...newState.editing,

@@ -8,7 +8,7 @@
 
 const {createSelector} = require('reselect');
 const {layersSelector} = require('./layers');
-const {isMapInfoOpen} = require('./mapInfo');
+const {isMapInfoOpen} = require('./mapinfo');
 const {head, get} = require('lodash');
 const assign = require('object-assign');
 

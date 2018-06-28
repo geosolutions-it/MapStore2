@@ -259,7 +259,6 @@ class AnnotationsEditor extends React.Component {
                                 visible: true,
                                 onClick: () => {
                                     this.setState({removing: this.props.id});
-                                    // this.props.onRemove(this.props.id);
                                 }
                             }, {
                                 glyph: 'download',
