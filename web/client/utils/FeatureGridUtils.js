@@ -163,7 +163,7 @@ module.exports = {
     applyChanges,
     gridUpdateToQueryUpdate: ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
         const andGroup = {
-            id: 3355046933748244,
+            id: 9999, // dammy number representing group id
             logic: "AND",
             index: 0
         };
