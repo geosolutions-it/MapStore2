@@ -414,12 +414,12 @@ function permissionsLoaded(permissions, mapId) {
  * @return {thunk}                  dispatches mapsLoading, mapsLoaded or loadError
  */
 function loadMaps(geoStoreUrl, searchText = "*", params = {start: 0, limit: 12}) {
-    let modifiedSerachText = searchText.replace(/\/+/g, '');
+    let modifiedSearchText = searchText.replace(/\/+/g, '');
     return (dispatch) => {
         let opts = assign({}, {params}, geoStoreUrl ? {baseURL: geoStoreUrl} : {});
-        dispatch(mapsLoading(modifiedSerachText, params));
-        GeoStoreApi.getResourcesByCategory("MAP", modifiedSerachText, opts).then((response) => {
-            dispatch(mapsLoaded(response, params, modifiedSerachText));
+        dispatch(mapsLoading(modifiedSearchText, params));
+        GeoStoreApi.getResourcesByCategory("MAP", modifiedSearchText, opts).then((response) => {
+            dispatch(mapsLoaded(response, params, modifiedSearchText));
         }).catch((e) => {
             dispatch(loadError(e));
         });
