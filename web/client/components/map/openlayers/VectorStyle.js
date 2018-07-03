@@ -64,22 +64,17 @@ const defaultStyles = {
         strokeStyle(options),
         fillStyle(options)
     ))],
-    'GeometryCollection': () => [new ol.style.Style({
-      stroke: new ol.style.Stroke({
-        color: 'magenta',
-        width: 2
-      }),
-      fill: new ol.style.Fill({
-        color: 'magenta'
-      }),
-      image: new ol.style.Circle({
+    'GeometryCollection': options => [new ol.style.Style(assign({},
+        strokeStyle(options),
+        fillStyle(options),
+      {image: new ol.style.Circle({
         radius: 10,
         fill: null,
         stroke: new ol.style.Stroke({
           color: 'magenta'
         })
       })
-    })],
+    }))],
   'Circle': () => [new ol.style.Style({
     stroke: new ol.style.Stroke({
       color: 'red',
