@@ -8,18 +8,19 @@
 
 const Rx = require('rxjs');
 const uuidv1 = require('uuid/v1');
+const assign = require('object-assign');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
 const { MAP_INFO_LOADED } = require('../actions/config');
 const {isNil, find} = require('lodash');
 const {
-    SAVE_DETAILS, SAVE_RESOURCE_DETAILS,
-    DELETE_MAP, OPEN_DETAILS_PANEL,
+    SAVE_DETAILS, SAVE_RESOURCE_DETAILS, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
+    DELETE_MAP, OPEN_DETAILS_PANEL, MAPS_LOAD_MAP,
     CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE,
-    setDetailsChanged, updateDetails,
-    mapDeleting, toggleDetailsEditability, mapDeleted, loadMaps,
+    setDetailsChanged, updateDetails, mapsLoading, mapsLoaded,
+    mapDeleting, toggleDetailsEditability, mapDeleted, loadMaps, loadError,
     doNothing, detailsLoaded, detailsSaving, onDisplayMetadataEdit,
-    RESET_UPDATING, resetUpdating, toggleDetailsSheet
+    RESET_UPDATING, resetUpdating, toggleDetailsSheet, getMapResourcesByCategory
 } = require('../actions/maps');
 const {
     resetCurrentMap, EDIT_MAP
@@ -166,7 +167,30 @@ const fetchDetailsFromResourceEpic = (action$, store) =>
                     toggleDetailsEditability(mapId));
             });
     });
+const loadMapsEpic = (action$) =>
+    action$.ofType(MAPS_LOAD_MAP)
+    .switchMap((action) => {
+        let {params, searchText, geoStoreUrl} = action;
+        let modifiedSearchText = searchText.replace(/[/?:;@=&]+/g, '');
+        let opts = assign({}, {params}, geoStoreUrl ? {baseURL: geoStoreUrl} : {});
+        return Rx.Observable.of(
+            mapsLoading(modifiedSearchText, params),
+            getMapResourcesByCategory("MAP", modifiedSearchText, opts)
+        );
 
+    });
+
+const getMapsResourcesByCategoryEpic = (action$) =>
+    action$.ofType(MAPS_GET_MAP_RESOURCES_BY_CATEGORY)
+    .switchMap((action) => {
+        let {map, searchText, opts } = action;
+        return Rx.Observable.fromPromise(GeoStoreApi.getResourcesByCategory(map, searchText, opts)
+    .then(data => data))
+    .switchMap((response) => Rx.Observable.of(
+        mapsLoaded(response, opts.params, searchText)
+    ))
+    .catch((e) => loadError(e));
+    });
 const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
     action$.ofType(DELETE_MAP)
     .switchMap((action) => {
@@ -270,11 +294,13 @@ const storeDetailsInfoEpic = (action$, store) =>
 
 
 module.exports = {
+    loadMapsEpic,
     resetCurrentMapEpic,
     storeDetailsInfoEpic,
     closeDetailsPanelEpic,
     fetchDataForDetailsPanel,
     deleteMapAndAssociatedResourcesEpic,
+    getMapsResourcesByCategoryEpic,
     setDetailsChangedEpic,
     fetchDetailsFromResourceEpic,
     saveResourceDetailsEpic

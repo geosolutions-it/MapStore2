@@ -21,6 +21,8 @@ const {findIndex, isNil} = require('lodash');
 const MAPS_LIST_LOADED = 'MAPS_LIST_LOADED';
 const MAPS_LIST_LOADING = 'MAPS_LIST_LOADING';
 const MAPS_LIST_LOAD_ERROR = 'MAPS_LIST_LOAD_ERROR';
+const MAPS_GET_MAP_RESOURCES_BY_CATEGORY = 'MAPS_GET_MAP_RESOURCES_BY_CATEGORY';
+const MAPS_LOAD_MAP = 'MAPS_LOAD_MAP';
 const MAP_UPDATING = 'MAP_UPDATING';
 const MAP_METADATA_UPDATED = 'MAP_METADATA_UPDATED';
 const MAP_UPDATED = 'MAP_UPDATED';
@@ -87,6 +89,15 @@ function mapsLoading(searchText, params) {
         type: MAPS_LIST_LOADING,
         searchText,
         params
+    };
+}
+
+function getMapResourcesByCategory(map, searchText, opts) {
+    return {
+        type: MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
+        map,
+        searchText,
+        opts
     };
 }
 
@@ -414,15 +425,12 @@ function permissionsLoaded(permissions, mapId) {
  * @return {thunk}                  dispatches mapsLoading, mapsLoaded or loadError
  */
 function loadMaps(geoStoreUrl, searchText = "*", params = {start: 0, limit: 12}) {
-    let modifiedSearchText = searchText.replace(/\/+/g, '');
-    return (dispatch) => {
-        let opts = assign({}, {params}, geoStoreUrl ? {baseURL: geoStoreUrl} : {});
-        dispatch(mapsLoading(modifiedSearchText, params));
-        GeoStoreApi.getResourcesByCategory("MAP", modifiedSearchText, opts).then((response) => {
-            dispatch(mapsLoaded(response, params, modifiedSearchText));
-        }).catch((e) => {
-            dispatch(loadError(e));
-        });
+
+    return {
+        type: MAPS_LOAD_MAP,
+        geoStoreUrl,
+        searchText,
+        params
     };
 }
 
@@ -969,7 +977,8 @@ module.exports = {
     setFeaturedMapsEnabled, FEATURED_MAPS_SET_ENABLED,
     setShowMapDetails, SHOW_DETAILS,
     metadataChanged,
-    loadMaps,
+    loadMaps, MAPS_LOAD_MAP,
+    getMapResourcesByCategory, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     mapsLoading,
     mapsLoaded,
     mapCreated,
