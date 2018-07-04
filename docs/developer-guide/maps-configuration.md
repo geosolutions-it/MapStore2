@@ -221,8 +221,6 @@ example:
 TileProvider is a shortcut to easily configure many different layer sources.
 It's enough to add `provider` property and 'tileprovider' as type property to the layer configuration object. `provider` should be in the form of `ProviderName.VariantName`.
 
-List of available layer [here](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/utils/ConfigProvider.js)
-
 i.e.
 
 ``` javascript
@@ -238,4 +236,120 @@ i.e.
 
 Options passed in configuration object, if already configured by TileProvider,  will be overridden.
 
-Openlayers' TileProvider at the moment doesn't support `minZoom` configuration property and hi resolution map
+Openlayers' TileProvider at the moment doesn't support `minZoom` configuration property and high resolution map.
+
+##### Providers and variants
+
+This is a *not maintained* list of providers and variants. For the most updated list check the code [here](https://github.com/geosolutions-it/MapStore2/blob/master/web/client/utils/ConfigProvider.js)
+
+Some of them may need some additional configuration or API keys.
+
+```text
+OpenStreetMap.Mapnik
+OpenStreetMap.BlackAndWhite
+OpenStreetMap.DE
+OpenStreetMap.France
+OpenStreetMap.HOT
+Thunderforest.OpenCycleMap
+Thunderforest.Transport
+Thunderforest.TransportDark
+Thunderforest.Landscape
+Thunderforest.Outdoors
+OpenMapSurfer.Roads
+OpenMapSurfer.AdminBounds
+OpenMapSurfer.Grayscale
+Hydda.Full
+Hydda.Base
+Hydda.RoadsAndLabels
+MapQuestOpen.OSM
+MapQuestOpen.Aerial
+MapQuestOpen.HybridOverlay
+Stamen.Toner
+Stamen.TonerBackground
+Stamen.TonerHybrid
+Stamen.TonerLines
+Stamen.TonerLabels
+Stamen.TonerLite
+Stamen.Watercolor
+Stamen.Terrain
+Stamen.TerrainBackground
+Stamen.TopOSMRelief
+Stamen.TopOSMFeatures
+Esri.WorldStreetMap
+Esri.DeLorme
+Esri.WorldTopoMap
+Esri.WorldImagery
+Esri.WorldTerrain
+Esri.WorldShadedRelief
+Esri.WorldPhysical
+Esri.OceanBasemap
+Esri.NatGeoWorldMap
+Esri.WorldGrayCanvas
+OpenWeatherMap.Clouds
+OpenWeatherMap.CloudsClassic
+OpenWeatherMap.Precipitation
+OpenWeatherMap.PrecipitationClassic
+OpenWeatherMap.Rain
+OpenWeatherMap.RainClassic
+OpenWeatherMap.Pressure
+OpenWeatherMap.PressureContour
+OpenWeatherMap.Wind
+OpenWeatherMap.Temperature
+OpenWeatherMap.Snow
+HERE.normalDay
+HERE.normalDayCustom
+HERE.normalDayGrey
+HERE.normalDayMobile
+HERE.normalDayGreyMobile
+HERE.normalDayTransit
+HERE.normalDayTransitMobile
+HERE.normalNight
+HERE.normalNightMobile
+HERE.normalNightGrey
+HERE.normalNightGreyMobile
+HERE.carnavDayGrey
+HERE.hybridDay
+HERE.hybridDayMobile
+HERE.pedestrianDay
+HERE.pedestrianNight
+HERE.satelliteDay
+HERE.terrainDay
+HERE.terrainDayMobile
+Acetate.basemap
+Acetate.terrain
+Acetate.all
+Acetate.foreground
+Acetate.roads
+Acetate.labels
+Acetate.hillshading
+CartoDB.Positron
+CartoDB.PositronNoLabels
+CartoDB.PositronOnlyLabels
+CartoDB.DarkMatter
+CartoDB.DarkMatterNoLabels
+CartoDB.DarkMatterOnlyLabels
+HikeBike.HikeBike
+HikeBike.HillShading
+BasemapAT.basemap
+BasemapAT.grau
+BasemapAT.overlay
+BasemapAT.highdpi
+BasemapAT.orthofoto
+NASAGIBS.ModisTerraTrueColorCR
+NASAGIBS.ModisTerraBands367CR
+NASAGIBS.ViirsEarthAtNight2012
+NASAGIBS.ModisTerraLSTDay
+NASAGIBS.ModisTerraSnowCover
+NASAGIBS.ModisTerraAOD
+NASAGIBS.ModisTerraChlorophyll
+NLS.OS_1900
+NLS.OS_1920
+NLS.OS_opendata
+NLS.OS_6inch_1st
+NLS.OS_6inch
+NLS.OS_25k
+NLS.OS_npe
+NLS.OS_7th
+NLS.OS_London
+NLS.GSGS_Ireland
+```
