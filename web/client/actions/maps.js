@@ -92,6 +92,33 @@ function mapsLoading(searchText, params) {
     };
 }
 
+/**
+ * loadMaps action, type `MAPS_LOAD_MAP`
+ * @memberof actions.maps
+ * @param  {string} geoStoreUrl      the url of geostore
+ * @param  {String} [searchText="*"] text to search
+ * @param  {Object} [params={start:  0. limit: 12}] params for the request
+ * @return {action} type `MAPS_LOAD_MAP` with geoStoreUrl, searchText and params
+ */
+function loadMaps(geoStoreUrl, searchText = "*", params = {start: 0, limit: 12}) {
+
+    return {
+        type: MAPS_LOAD_MAP,
+        geoStoreUrl,
+        searchText,
+        params
+    };
+}
+
+
+/**
+ * getMapResourcesByCategory action, type `MAPS_GET_MAP_RESOURCES_BY_CATEGORY`
+ * @memberof actions.maps
+ * @param  {string} searchText text to search
+ * @param  {string} map     MAP
+ * @param {Object} opts options
+ * @return {action}    type `MAPS_GET_MAP_RESOURCES_BY_CATEGORY` with searchText, map and opts
+ */
 function getMapResourcesByCategory(map, searchText, opts) {
     return {
         type: MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
@@ -416,23 +443,6 @@ function permissionsLoaded(permissions, mapId) {
     };
 }
 
-/**
- * Perform the maps load
- * @memberof actions.maps
- * @param  {string} geoStoreUrl      the url of geostore
- * @param  {String} [searchText="*"] text to search
- * @param  {Object} [params={start:  0. limit: 12}] params for the request
- * @return {thunk}                  dispatches mapsLoading, mapsLoaded or loadError
- */
-function loadMaps(geoStoreUrl, searchText = "*", params = {start: 0, limit: 12}) {
-
-    return {
-        type: MAPS_LOAD_MAP,
-        geoStoreUrl,
-        searchText,
-        params
-    };
-}
 
 /**
  * perform permission load for a mapId

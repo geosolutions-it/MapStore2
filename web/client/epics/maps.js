@@ -167,6 +167,10 @@ const fetchDetailsFromResourceEpic = (action$, store) =>
                     toggleDetailsEditability(mapId));
             });
     });
+
+    /**
+         Epics used to load Maps
+     */
 const loadMapsEpic = (action$) =>
     action$.ofType(MAPS_LOAD_MAP)
     .switchMap((action) => {
