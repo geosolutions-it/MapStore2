@@ -104,6 +104,7 @@
     "src": [
         {
           "framework": [
+            "web/client/api/SLDService.js",
             "web/client/components/index.jsdoc",
             "web/client/components/buttons/FullScreenButton.jsx",
             "web/client/components/buttons/GlobeViewSwitcherButton.jsx",
@@ -137,6 +138,7 @@
             "web/client/components/TOC/TOCItemsSettings.jsx",
             "web/client/components/TOC/fragments/settings/FeatureInfo.jsx",
             "web/client/components/TOC/fragments/settings/FeatureInfoEditor.jsx",
+            "web/client/components/TOC/fragments/settings/ThematicLayer.jsx",
 
             "web/client/actions/index.jsdoc",
             "web/client/actions/controls.js",
@@ -223,6 +225,7 @@
                 "web/client/plugins/Search.jsx",
                 "web/client/plugins/SearchServicesConfig.jsx",
                 "web/client/plugins/TOC.jsx",
+                "web/client/plugins/ThematicLayer.jsx",
                 "web/client/plugins/WFSDownload.jsx",
                 "web/client/plugins/ZoomIn.jsx",
                 "web/client/plugins/ZoomOut.jsx"

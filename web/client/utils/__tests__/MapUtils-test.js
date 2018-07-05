@@ -282,7 +282,8 @@ describe('Test the MapUtils', () => {
                     catalogURL: "url",
                     hidden: false,
                     useForElevation: false,
-                    origin: undefined
+                    origin: undefined,
+                    thematic: undefined
                 },
                 {
                     allowedSRS: {},
@@ -323,7 +324,8 @@ describe('Test the MapUtils', () => {
                     catalogURL: "url",
                     hidden: false,
                     useForElevation: false,
-                    origin: undefined
+                    origin: undefined,
+                    thematic: undefined
                 },
                 {
                     allowedSRS: {},
@@ -364,7 +366,8 @@ describe('Test the MapUtils', () => {
                     catalogURL: "url",
                     hidden: false,
                     useForElevation: false,
-                    origin: undefined
+                    origin: undefined,
+                    thematic: undefined
                 },
                 {
                     allowedSRS: {},
@@ -405,7 +408,8 @@ describe('Test the MapUtils', () => {
                     catalogURL: "url",
                     hidden: false,
                     useForElevation: false,
-                    origin: [100000, 100000]
+                    origin: [100000, 100000],
+                    thematic: undefined
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
@@ -568,7 +572,8 @@ describe('Test the MapUtils', () => {
                     catalogURL: "url",
                     hidden: false,
                     useForElevation: false,
-                    origin: undefined
+                    origin: undefined,
+                    thematic: undefined
                 },
                 {
                     allowedSRS: {},
@@ -609,7 +614,8 @@ describe('Test the MapUtils', () => {
                     catalogURL: "url",
                     hidden: false,
                     useForElevation: false,
-                    origin: undefined
+                    origin: undefined,
+                    thematic: undefined
                 },
                 {
                     allowedSRS: {},
@@ -650,7 +656,8 @@ describe('Test the MapUtils', () => {
                     catalogURL: "url",
                     hidden: false,
                     useForElevation: false,
-                    origin: undefined
+                    origin: undefined,
+                    thematic: undefined
                 }],
                 mapOptions: {
                     view: {
@@ -831,7 +838,8 @@ describe('Test the MapUtils', () => {
                     catalogURL: "url",
                     hidden: false,
                     useForElevation: false,
-                    origin: undefined
+                    origin: undefined,
+                    thematic: undefined
                 },
                 {
                     allowedSRS: {},
@@ -872,7 +880,8 @@ describe('Test the MapUtils', () => {
                     catalogURL: "url",
                     hidden: false,
                     useForElevation: false,
-                    origin: undefined
+                    origin: undefined,
+                    thematic: undefined
                 },
                 {
                     allowedSRS: {},
@@ -913,7 +922,8 @@ describe('Test the MapUtils', () => {
                     catalogURL: "url",
                     hidden: false,
                     useForElevation: false,
-                    origin: undefined
+                    origin: undefined,
+                    thematic: undefined
                 }],
                 mapOptions: {},
                 maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],

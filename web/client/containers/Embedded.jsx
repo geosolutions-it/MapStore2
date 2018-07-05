@@ -9,6 +9,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 
 const {connect} = require('react-redux');
+const assign = require('object-assign');
 
 const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
@@ -17,7 +18,9 @@ const ConfigUtils = require('../utils/ConfigUtils');
 
 const PluginsContainer = connect((state) => ({
     mode: urlQuery.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
-    pluginsState: state && state.controls || {},
+    pluginsState: assign({}, state && state.controls, state && state.layers && state.layers.settings && {
+        layerSettings: state.layers.settings
+    }),
     monitoredState: PluginsUtils.getMonitoredState(state, ConfigUtils.getConfigProp('monitorState'))
 }))(require('../components/plugins/PluginsContainer'));
 
