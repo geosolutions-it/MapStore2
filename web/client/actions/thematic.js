@@ -15,6 +15,8 @@ const LOAD_CLASSIFICATION = 'THEMATIC:LOAD_CLASSIFICATION';
 
 const CHANGE_CONFIGURATION = 'THEMATIC:CHANGE_CONFIGURATION';
 
+const CHANGE_DIRTY = 'THEMATIC:CHANGE_DIRTY';
+
 function fieldsLoaded(layer, fields) {
     return {
         type: FIELDS_LOADED,
@@ -72,6 +74,20 @@ function changeConfiguration(layer, editEnabled, current, error) {
     };
 }
 
+function setDirty() {
+    return {
+        type: CHANGE_DIRTY,
+        dirty: true
+    };
+}
+
+function cancelDirty() {
+    return {
+        type: CHANGE_DIRTY,
+        dirty: false
+    };
+}
+
 module.exports = {
     FIELDS_LOADED,
     FIELDS_ERROR,
@@ -80,11 +96,14 @@ module.exports = {
     CLASSIFICATION_ERROR,
     LOAD_CLASSIFICATION,
     CHANGE_CONFIGURATION,
+    CHANGE_DIRTY,
     fieldsLoaded,
     loadFields,
     fieldsError,
     loadClassification,
     classificationLoaded,
     classificationError,
-    changeConfiguration
+    changeConfiguration,
+    setDirty,
+    cancelDirty
 };

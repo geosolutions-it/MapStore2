@@ -51,8 +51,10 @@ const internalProperties = { current: undefined, unconfigured: undefined, applie
  * @memberof components.TOC
  * @name ThematicLayer
  * @class
+ * @prop {boolean} enableRemoveStyle, enables the remove style button (disabled by default)
  * @prop {object} layer, current selected layer the UI acts upon
  * @prop {boolean} canEditThematic the user can change the thematic base configuration (admins functionality) for the layer
+ * @prop {boolean} applyEnabled enables the apply button
  * @prop {array} colors list of base color palettes the user can choose to create the style (they can be extended via
  *    layer configuration)
  * @prop {array} methods list of classification methods the user can choose to create the style
@@ -70,7 +72,9 @@ const internalProperties = { current: undefined, unconfigured: undefined, applie
  * @prop {function} onChange action called for every style parameter change
  * @prop {function} onChangeConfiguration action called for every thematic configuration change
  * @prop {function} onSwitchLayer action called when the selected layer changes
- * @prop {function} onClassify action called to apply the style to the selected layer
+ * @prop {function} onClassify action called to update classify criterias and recalculate classification
+ * @prop {function} onApplyStyle action called to apply the style to the selected layer
+ * @prop {function} onDirtyStyle action called when the user changes style parameters (before applying them)
  * @prop {function} getStyleParameters external service that returns layer additional parameters to build the thema, receiving
  *     the layer node and the current style parameters fetched from the UI
  * @prop {function} getThematicParameters returns a list of by layer parameters that are added to the UI (filters, etc.)
@@ -85,7 +89,9 @@ class ThematicLayer extends React.Component {
         onChange: PropTypes.func,
         onChangeConfiguration: PropTypes.func,
         onSwitchLayer: PropTypes.func,
+        onApplyStyle: PropTypes.func,
         onClassify: PropTypes.func,
+        onDirtyStyle: PropTypes.func,
         getStyleParameters: PropTypes.func,
         getThematicParameters: PropTypes.func,
         getMetadataParameters: PropTypes.func,
@@ -103,7 +109,9 @@ class ThematicLayer extends React.Component {
         colorSamples: PropTypes.number,
         maxClasses: PropTypes.number,
         loaderSize: PropTypes.number,
-        adminCfg: PropTypes.object
+        adminCfg: PropTypes.object,
+        enableRemoveStyle: PropTypes.bool,
+        applyEnabled: PropTypes.bool
     };
 
     static contextTypes = {
@@ -121,6 +129,8 @@ class ThematicLayer extends React.Component {
         getColors: (colors) => colors,
         onSwitchLayer: () => { },
         onClassify: () => { },
+        onApplyStyle: () => { },
+        onDirtyStyle: () => { },
         canEditThematic: false,
         fieldsLoading: {
             status: false,
@@ -138,7 +148,9 @@ class ThematicLayer extends React.Component {
             open: false,
             current: null,
             error: null
-        }
+        },
+        enableRemoveStyle: false,
+        applyEnabled: false
     };
 
     componentWillMount() {
@@ -152,6 +164,7 @@ class ThematicLayer extends React.Component {
             if (this.hasConfiguration()) {
                 this.switchLayer(this.props.layer);
             }
+            this.checkInitialStyle(this.props);
         }
     }
 
@@ -161,8 +174,9 @@ class ThematicLayer extends React.Component {
         }
         if (newProps.fields && newProps.fields.length && !isEqual(newProps.fields, this.props.fields)) {
             // set first field in field combobox on fields loading
-            this.updateStyle('field', newProps.fields[0].name);
+            this.updateStyle('field', newProps.fields[0].name, true);
         }
+        this.checkInitialStyle(newProps);
     }
 
     getCurrentThema = (thematic) => {
@@ -247,16 +261,17 @@ class ThematicLayer extends React.Component {
                             glyph: 'trash',
                             tooltip: this.localizedItem("toc.thematic.remove", ""),
                             onClick: this.removeStyle,
-                            visible: this.props.hasThematicStyle(this.props.layer)
+                            visible: this.props.enableRemoveStyle && this.props.hasThematicStyle(this.props.layer)
                         }, {
                             glyph: 'undo',
                             tooltip: this.localizedItem("toc.thematic.restore", ""),
                             onClick: this.restoreStyle,
                             visible: this.hasCustomClassification()
                         }, {
-                            glyph: 'refresh',
+                            glyph: 'ok',
+                            disabled: !this.props.applyEnabled,
                             tooltip: this.localizedItem("toc.thematic.apply", ""),
-                            onClick: this.applyStyle
+                            onClick: () => this.applyStyle(this.props.layer)
                         }]}
                     >
                         <Grid fluid><Row>
@@ -288,10 +303,12 @@ class ThematicLayer extends React.Component {
                             <FormGroup>
                                 <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_stroke" /></ControlLabel></Col>
                                 <Col xs={3}><ColorPicker key="strokeColor"
+                                    disabled={this.hasCustomClassification()}
                                     text={thema.strokeColor} value={{ ...tinycolor(thema.strokeColor).toRgb(), a: 100 }}
                                     onChangeColor={this.updateStrokeColor}
                                 /></Col>
                                 <Col xs={3}><NumberPicker key="strokeWeight"
+                                    disabled={this.hasCustomClassification()}
                                     format="- ###.###"
                                     value={thema.strokeWeight}
                                     onChange={this.updateStrokeWeight}
@@ -384,6 +401,15 @@ class ThematicLayer extends React.Component {
         </Grid>);
     }
 
+    checkInitialStyle = (props) => {
+        const thematic = props.layer.thematic;
+        if (!props.hasThematicStyle(props.layer) && thematic &&
+                !thematic.unconfigured && thematic.current && thematic.current.field && props.classification
+                && props.classification.length) {
+            this.applyStyle(props.layer);
+        }
+    };
+
     hasConfiguration = () => {
         return this.props.layer.thematic && !this.props.layer.thematic.unconfigured;
     };
@@ -417,6 +443,7 @@ class ThematicLayer extends React.Component {
                 classification
             })
         }));
+        this.props.onDirtyStyle();
     };
 
     createRamp = (item) => item.colors;
@@ -470,11 +497,18 @@ class ThematicLayer extends React.Component {
     };
 
     restoreStyle = () => {
-        this.updateStyle('classification', null);
+        const layer = assign({}, this.props.layer, {
+            thematic: assign({}, this.props.layer.thematic, {
+                current: assign({}, this.props.layer.thematic.current, {
+                    classification: null
+                })
+            })
+        });
+        this.updateStyle('classification', null, true);
+        this.applyStyle(layer);
     };
 
-    applyStyle = () => {
-        const layer = this.props.layer;
+    applyStyle = (layer) => {
         const newParams = assign({}, layer.params, this.props.getStyleParameters(layer, layer.thematic.current));
         this.props.onChange({
             params: newParams,
@@ -482,9 +516,10 @@ class ThematicLayer extends React.Component {
                 applied: assign({}, layer.thematic.current)
             })
         });
+        this.props.onApplyStyle();
     };
 
-    updateStyle = (key, value) => {
+    updateStyle = (key, value, quiet) => {
         const layer = this.props.layer;
         const currentStyle = assign({}, layer.thematic.current, {
             [key]: value
@@ -497,6 +532,9 @@ class ThematicLayer extends React.Component {
         this.props.onClassify(assign({}, layer, {
             thematic: newThema
         }), newParams);
+        if (!quiet) {
+            this.props.onDirtyStyle();
+        }
     };
 }
 

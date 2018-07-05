@@ -498,7 +498,7 @@ describe('test ThematicLayer module component', () => {
         const spyChange = expect.spyOn(actions, 'onChange');
         const spyRemove = expect.spyOn(actions, 'removeThematicStyle');
 
-        const comp = ReactDOM.render(<ThematicLayer hasThematicStyle={() => true} removeThematicStyle={actions.removeThematicStyle}
+        const comp = ReactDOM.render(<ThematicLayer enableRemoveStyle hasThematicStyle={() => true} removeThematicStyle={actions.removeThematicStyle}
             onChange={actions.onChange}
             layer={layerWithConfiguredThematicAndParams} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
 
@@ -548,7 +548,7 @@ describe('test ThematicLayer module component', () => {
         expect(domNode).toExist();
         expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
         expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
-        const refreshButton = domNode.querySelector('.glyphicon-refresh');
+        const refreshButton = domNode.querySelector('.glyphicon-ok');
         TestUtils.Simulate.click(refreshButton);
         expect(spyChange).toHaveBeenCalled();
     });

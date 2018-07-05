@@ -9,7 +9,7 @@ const {connect} = require('../utils/PluginsUtils');
 const assign = require('object-assign');
 
 const { changeLayerParams } = require('../actions/layers');
-const { loadFields, loadClassification, changeConfiguration } = require('../actions/thematic');
+const { loadFields, loadClassification, changeConfiguration, cancelDirty, setDirty } = require('../actions/thematic');
 const { getSelectedLayer } = require('../selectors/layers');
 
 const API = require('../api/SLDService');
@@ -28,6 +28,7 @@ const { isAdminUserSelector } = require('../selectors/security');
  * @memberof plugins
  * @name ThematicLayer
  * @class
+ * @prop {boolean} enableRemoveStyle, enables the remove style button (disabled by default)
  * @prop {array} cfg.colors list of base color palettes the user can choose to create the style (they can be extended via
  *    layer configuration)
  * @prop {number} cfg.colorSamples number of samples to show in the color palette list
@@ -106,13 +107,16 @@ module.exports = {
                         } : {}),
                         methods: API.methods,
                         colors: customColors,
-                        adminCfg: state && state.thematic && state.thematic.adminCfg
+                        adminCfg: state && state.thematic && state.thematic.adminCfg,
+                        applyEnabled: state && state.thematic && state.thematic.dirty || false
                     }, API);
                 }, {
                         onChangeConfiguration: changeConfiguration,
                         onChangeLayerParams: changeLayerParams,
                         onSwitchLayer: loadFields,
-                        onClassify: loadClassification
+                        onClassify: loadClassification,
+                        onApplyStyle: cancelDirty,
+                        onDirtyStyle: setDirty
                     })(require('../components/TOC/fragments/settings/ThematicLayer'));
                 resolve(ThematicLayer);
             });

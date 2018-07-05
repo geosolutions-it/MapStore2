@@ -6,8 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { LOAD_FIELDS, FIELDS_LOADED, FIELDS_ERROR, LOAD_CLASSIFICATION, CLASSIFICATION_LOADED, CLASSIFICATION_ERROR,
-    CHANGE_CONFIGURATION} = require('../actions/thematic');
+const { LOAD_FIELDS, FIELDS_LOADED, FIELDS_ERROR, LOAD_CLASSIFICATION,
+    CLASSIFICATION_LOADED, CLASSIFICATION_ERROR,
+    CHANGE_CONFIGURATION, CHANGE_DIRTY} = require('../actions/thematic');
 const { HIDE_SETTINGS } = require('../actions/layers');
 const assign = require('object-assign');
 
@@ -17,6 +18,7 @@ const initialState = {
     loadingClassification: false,
     errorClassification: null,
     customClassification: false,
+    dirty: false,
     adminCfg: {
         open: false,
         current: null,
@@ -73,6 +75,10 @@ function thematic(state = initialState, action) {
                     current: action.current,
                     error: action.error
                 }
+            });
+        case CHANGE_DIRTY:
+            return assign({}, state, {
+                dirty: action.dirty
             });
         default:
             return state;

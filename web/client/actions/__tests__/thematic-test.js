@@ -16,13 +16,16 @@ const {
     CLASSIFICATION_ERROR,
     LOAD_CLASSIFICATION,
     CHANGE_CONFIGURATION,
+    CHANGE_DIRTY,
     fieldsLoaded,
     loadFields,
     fieldsError,
     loadClassification,
     classificationLoaded,
     classificationError,
-    changeConfiguration
+    changeConfiguration,
+    setDirty,
+    cancelDirty
 } = require('../thematic');
 
 const layer = {
@@ -119,5 +122,19 @@ describe('Test correctness of the themtic actions', () => {
         expect(retval.current).toBe('myconfig');
         expect(retval.error).toExist();
         expect(retval.error.message).toBe('myerror');
+    });
+
+    it('setDirty', () => {
+        const retval = setDirty();
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_DIRTY);
+        expect(retval.dirty).toBe(true);
+    });
+
+    it('cancelDirty', () => {
+        const retval = cancelDirty();
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_DIRTY);
+        expect(retval.dirty).toBe(false);
     });
 });

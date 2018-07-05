@@ -13,7 +13,9 @@ const {
     loadClassification,
     classificationLoaded,
     classificationError,
-    changeConfiguration
+    changeConfiguration,
+    setDirty,
+    cancelDirty
  } = require('../../actions/thematic');
 const thematic = require('../thematic');
 
@@ -95,5 +97,15 @@ describe('Test the thematic reducer', () => {
         expect(state.adminCfg.open).toBe(true);
         expect(state.adminCfg.current).toBe("{}");
         expect(state.adminCfg.error).toExist();
+    });
+
+    it('setDirty action', () => {
+        const state = thematic({}, setDirty());
+        expect(state.dirty).toBe(true);
+    });
+
+    it('cancelDirty action', () => {
+        const state = thematic({}, cancelDirty());
+        expect(state.dirty).toBe(false);
     });
 });
