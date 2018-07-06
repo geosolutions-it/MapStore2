@@ -173,8 +173,10 @@ class ThematicLayer extends React.Component {
             this.switchLayer(newProps.layer);
         }
         if (newProps.fields && newProps.fields.length && !isEqual(newProps.fields, this.props.fields)) {
-            // set first field in field combobox on fields loading
-            this.updateStyle('field', newProps.fields[0].name, true);
+            // set actual field value or first field in combobox on fields loading
+            const fieldValue = newProps.layer.thematic.applied && newProps.layer.thematic.applied.field ||
+                newProps.fields[0].name;
+            this.updateStyle('field', fieldValue, true);
         }
         this.checkInitialStyle(newProps);
     }
