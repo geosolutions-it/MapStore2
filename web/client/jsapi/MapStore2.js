@@ -188,7 +188,7 @@ const MapStore2 = {
         }, {
             jsAPIEpic: actionTrigger.epic
         });
-        const initialActions = [...getInitialActions(options), loadVersion(options.versionURL)];
+        const initialActions = [...getInitialActions(options), loadVersion.bind(null, options.versionURL)];
         const appConfig = {
             storeOpts: assign({}, storeOpts, {notify: true}),
             appStore,
