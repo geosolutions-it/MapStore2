@@ -7,7 +7,7 @@
  */
 
 const {castArray} = require('lodash');
-const applyTemplate = ({featureType, aggregationAttribute, groupByAttributes = [], aggregateFunction, filter=""}) => `<?xml version="1.0" encoding="UTF-8"?>
+const applyTemplate = ({featureType, aggregationAttribute, groupByAttributes = [], aggregateFunction, viewParams, filter=""}) => `<?xml version="1.0" encoding="UTF-8"?>
 <wps:Execute service="WPS"   version="1.0.0"
     xmlns="http://www.opengis.net/wps/1.0.0"
     xmlns:gml="http://www.opengis.net/gml"
@@ -24,7 +24,7 @@ const applyTemplate = ({featureType, aggregationAttribute, groupByAttributes = [
             <ows:Identifier>features</ows:Identifier>
             <wps:Reference method="POST" mimeType="text/xml" xlink:href="http://geoserver/wfs">
                 <wps:Body>
-                    <wfs:GetFeature outputFormat="GML2" service="WFS" version="1.0.0">
+                    <wfs:GetFeature ${viewParams ? `viewParams="${viewParams}"` : ""} outputFormat="GML2" service="WFS" version="1.0.0">
                         <wfs:Query typeName="${featureType}">
                         ${filter}
                         </wfs:Query>
