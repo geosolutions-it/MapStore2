@@ -46,7 +46,26 @@ const layerWithConfiguredThematic = {
             intervals: 3,
             ramp: "red",
             strokeColor: "#FF0000",
-            strokeWeight: 1
+            strokeWeight: 1,
+            strokeOn: true
+        }
+    }
+};
+
+const layerWithConfiguredThematicAndNoStroke = {
+    name: 'layer00',
+    title: 'Layer',
+    visibility: true,
+    storeIndex: 9,
+    type: 'wms',
+    url: 'fakeurl',
+    thematic: {
+        current: {
+            intervals: 3,
+            ramp: "red",
+            strokeColor: "#FF0000",
+            strokeWeight: 1,
+            strokeOn: false
         }
     }
 };
@@ -400,6 +419,47 @@ describe('test ThematicLayer module component', () => {
         expect(spyClassify.calls[0].arguments[0].thematic.current.ramp).toBe('blue');
     });
 
+    it('tests ThematicLayer component with configured thematic thema style stroke off', () => {
+        const comp = ReactDOM.render(<ThematicLayer colors={colors}
+            layer={layerWithConfiguredThematicAndNoStroke} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
+
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
+        expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
+        const strokeToggle = domNode.querySelectorAll('input[type="checkbox"]')[0];
+        expect(strokeToggle).toExist();
+        const colorPicker = domNode.querySelector('.cp-disabled');
+        expect(colorPicker).toExist();
+        const weightPicker = domNode.querySelectorAll('.rw-numberpicker')[1];
+        expect(weightPicker.className.indexOf('rw-state-disabled') !== -1).toBe(true);
+    });
+
+    it('tests ThematicLayer component with configured thematic thema style strokeOn', () => {
+        const actions = {
+            onChange: () => { },
+            onClassify: () => { }
+        };
+        const spyChange = expect.spyOn(actions, 'onChange');
+        const spyClassify = expect.spyOn(actions, 'onClassify');
+
+        const comp = ReactDOM.render(<ThematicLayer colors={colors} onChange={actions.onChange} onClassify={actions.onClassify}
+            layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
+
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
+        expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
+        const strokeToggle = domNode.querySelectorAll('input[type="checkbox"]')[0];
+        expect(strokeToggle).toExist();
+        TestUtils.Simulate.change(strokeToggle, { "target": { "checked": false } });
+        expect(spyChange).toHaveBeenCalled();
+        expect(spyChange.calls[1].arguments[0]).toBe('thematic');
+        expect(spyChange.calls[1].arguments[1].current.strokeOn).toBe(false);
+        expect(spyClassify).toHaveBeenCalled();
+        expect(spyClassify.calls[0].arguments[0].thematic.current.strokeOn).toBe(false);
+    });
+
     it('tests ThematicLayer component with configured thematic thema style strokeWeight', () => {
         const actions = {
             onChange: () => { },
@@ -551,5 +611,44 @@ describe('test ThematicLayer module component', () => {
         const refreshButton = domNode.querySelector('.glyphicon-ok');
         TestUtils.Simulate.click(refreshButton);
         expect(spyChange).toHaveBeenCalled();
+    });
+
+    it('tests ThematicLayer component with configured thematic thema style invalid input', () => {
+        const comp = ReactDOM.render(<ThematicLayer colors={colors}
+            layer={layerWithConfiguredThematic}
+            invalidInputs={{
+                intervals: {
+                    message: 'myerror',
+                    params: {}
+                }
+            }}
+            adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
+
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
+        expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
+        const error = domNode.querySelectorAll('.alert-danger')[0];
+        expect(error).toExist();
+        expect(error.innerText.indexOf('myerror') !== -1).toBe(true);
+    });
+
+    it('tests ThematicLayer component with configured thematic thema style invalid intervals', () => {
+        const actions = {
+            onInvalidInput: () => { }
+        };
+        const spyInvalid = expect.spyOn(actions, 'onInvalidInput');
+
+        const comp = ReactDOM.render(<ThematicLayer
+            onInvalidInput={actions.onInvalidInput}
+            maxClasses={3}
+            layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
+
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const intervalsPicker = domNode.querySelectorAll('.rw-numberpicker')[0];
+        expect(intervalsPicker).toExist();
+        TestUtils.Simulate.mouseDown(intervalsPicker.querySelector('.rw-btn'));
+        expect(spyInvalid).toHaveBeenCalled();
     });
 });

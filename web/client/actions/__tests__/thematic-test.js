@@ -17,6 +17,7 @@ const {
     LOAD_CLASSIFICATION,
     CHANGE_CONFIGURATION,
     CHANGE_DIRTY,
+    CHANGE_INPUT_VALIDITY,
     fieldsLoaded,
     loadFields,
     fieldsError,
@@ -25,7 +26,9 @@ const {
     classificationError,
     changeConfiguration,
     setDirty,
-    cancelDirty
+    cancelDirty,
+    setInvalidInput,
+    resetInvalidInput
 } = require('../thematic');
 
 const layer = {
@@ -136,5 +139,23 @@ describe('Test correctness of the themtic actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_DIRTY);
         expect(retval.dirty).toBe(false);
+    });
+
+    it('setInvalidInput', () => {
+        const retval = setInvalidInput('intervals', 'error', 'params');
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_INPUT_VALIDITY);
+        expect(retval.valid).toBe(false);
+        expect(retval.message).toBe('error');
+        expect(retval.params).toBe('params');
+    });
+
+    it('resetInvalidInput', () => {
+        const retval = resetInvalidInput('intervals');
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_INPUT_VALIDITY);
+        expect(retval.valid).toBe(true);
+        expect(retval.message).toNotExist();
+        expect(retval.params).toNotExist();
     });
 });

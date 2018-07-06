@@ -8,7 +8,7 @@
 
 const PropTypes = require('prop-types');
 const React = require('react');
-const {ControlLabel, FormGroup, Row, Col, Grid, Alert} = require('react-bootstrap');
+const { ControlLabel, FormGroup, Row, Col, Grid, Alert, Checkbox} = require('react-bootstrap');
 const { isObject, isEqual} = require('lodash');
 const Combobox = require('react-widgets').Combobox;
 const assign = require('object-assign');
@@ -65,6 +65,7 @@ const internalProperties = { current: undefined, unconfigured: undefined, applie
  * @prop {number} colorSamples number of samples to show in the color palette list
  * @prop {number} maxClasses number of classes (range + color) the user can choose for the style
  * @prop {object} initialParams object with initial/default values for the style parameters in the UI
+ * @prop {object} invalidInputs current validation errors on user input, key is input and value is {error_message, params}
  * @prop {object} adminCfg current thema configuration object, contains:
  *  - open: true / false, status of the admin configuration panel
  *  - current: string version of the current configuration, as edited by the admin user
@@ -75,6 +76,8 @@ const internalProperties = { current: undefined, unconfigured: undefined, applie
  * @prop {function} onClassify action called to update classify criterias and recalculate classification
  * @prop {function} onApplyStyle action called to apply the style to the selected layer
  * @prop {function} onDirtyStyle action called when the user changes style parameters (before applying them)
+ * @prop {function} onInvalidInput action called when the user enters an invalid input
+ * @prop {function} onValidInput action called when the user enters a valid input
  * @prop {function} getStyleParameters external service that returns layer additional parameters to build the thema, receiving
  *     the layer node and the current style parameters fetched from the UI
  * @prop {function} getThematicParameters returns a list of by layer parameters that are added to the UI (filters, etc.)
@@ -92,6 +95,8 @@ class ThematicLayer extends React.Component {
         onApplyStyle: PropTypes.func,
         onClassify: PropTypes.func,
         onDirtyStyle: PropTypes.func,
+        onInvalidInput: PropTypes.func,
+        onValidInput: PropTypes.func,
         getStyleParameters: PropTypes.func,
         getThematicParameters: PropTypes.func,
         getMetadataParameters: PropTypes.func,
@@ -111,7 +116,8 @@ class ThematicLayer extends React.Component {
         loaderSize: PropTypes.number,
         adminCfg: PropTypes.object,
         enableRemoveStyle: PropTypes.bool,
-        applyEnabled: PropTypes.bool
+        applyEnabled: PropTypes.bool,
+        invalidInputs: PropTypes.object
     };
 
     static contextTypes = {
@@ -121,6 +127,8 @@ class ThematicLayer extends React.Component {
     static defaultProps = {
         onChange: () => { },
         onChangeConfiguration: () => { },
+        onInvalidInput: () => { },
+        onValidInput: () => { },
         getStyleParameters: () => { },
         getThematicParameters: (params) => params,
         getMetadataParameters: () => { },
@@ -150,7 +158,8 @@ class ThematicLayer extends React.Component {
             error: null
         },
         enableRemoveStyle: false,
-        applyEnabled: false
+        applyEnabled: false,
+        invalidInputs: {}
     };
 
     componentWillMount() {
@@ -158,11 +167,13 @@ class ThematicLayer extends React.Component {
             // configure cfg editor
             this.props.onChangeConfiguration(
                 this.props.layer,
-                !this.hasConfiguration(),
+                false,
                 JSON.stringify(assign({}, this.props.layer.thematic, internalProperties), null, 4)
             );
             if (this.hasConfiguration()) {
                 this.switchLayer(this.props.layer);
+            } else {
+                this.applyCfg('{}');
             }
             this.checkInitialStyle(this.props);
         }
@@ -213,6 +224,13 @@ class ThematicLayer extends React.Component {
                 message: error.message
             }}/>
         </Alert>);
+    };
+
+    renderInputError = (input) => {
+        const error = this.props.invalidInputs[input];
+        return error ? (<Alert bsStyle="danger">
+            <Message msgId={error.message} msgParams={error.params || {}} />
+        </Alert>) : null;
     };
 
     renderThemaPanel = (thema) => {
@@ -271,7 +289,7 @@ class ThematicLayer extends React.Component {
                             visible: this.hasCustomClassification()
                         }, {
                             glyph: 'ok',
-                            disabled: !this.props.applyEnabled,
+                            disabled: !this.props.applyEnabled || Object.keys(this.props.invalidInputs).length > 0,
                             tooltip: this.localizedItem("toc.thematic.apply", ""),
                             onClick: () => this.applyStyle(this.props.layer)
                         }]}
@@ -294,23 +312,27 @@ class ThematicLayer extends React.Component {
                                 <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_intervals" /></ControlLabel></Col>
                                 <Col xs={6}><NumberPicker
                                     disabled={this.hasCustomClassification()}
-                                    min="2"
-                                    max={this.props.maxClasses}
                                     value={thema.intervals}
-                                    onChange={(value) => { this.updateStyle("intervals", this.getValue(value)); }}
+                                    onChange={(value) => { this.updateStyle("intervals", this.constrainIntervals(this.getValue(value))); }}
                                 /></Col>
                             </FormGroup>
+                            {this.renderInputError('intervals')}
                         </Col>
                         <Col xs={12}>
                             <FormGroup>
                                 <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_stroke" /></ControlLabel></Col>
-                                <Col xs={3}><ColorPicker key="strokeColor"
-                                    disabled={this.hasCustomClassification()}
+                                <Col xs={1}>
+                                    <Checkbox checked={thema.strokeOn}
+                                        onChange={(evt) => this.updateStyle('strokeOn', evt.target.checked)}/>
+                                </Col>
+                                <Col xs={2}><ColorPicker key="strokeColor"
+                                    pickerProps={{disableAlpha: true}}
+                                    disabled={this.hasCustomClassification() || !thema.strokeOn}
                                     text={thema.strokeColor} value={{ ...tinycolor(thema.strokeColor).toRgb(), a: 100 }}
                                     onChangeColor={this.updateStrokeColor}
                                 /></Col>
                                 <Col xs={3}><NumberPicker key="strokeWeight"
-                                    disabled={this.hasCustomClassification()}
+                                    disabled={this.hasCustomClassification() || !thema.strokeOn}
                                     format="- ###.###"
                                     value={thema.strokeWeight}
                                     onChange={this.updateStrokeWeight}
@@ -334,7 +356,8 @@ class ThematicLayer extends React.Component {
                         </Col>
                         </Row>
                         <Row><Col xs={12}>
-                        {this.props.classificationLoading.status ? <LoadingView width={this.props.loaderSize} height={this.props.loaderSize}/> : <ThemaClassesEditor classification={this.getClassification()} onUpdateClasses={this.updateClassification}/>}
+                        {this.props.classificationLoading.status ? <LoadingView width={this.props.loaderSize} height={this.props.loaderSize}/> : null}
+                        <ThemaClassesEditor className={this.props.classificationLoading.status ? "loading" : ""} classification={this.getClassification()} onUpdateClasses={this.updateClassification}/>
                         {this.props.classificationLoading.error ? this.renderError(this.props.classificationLoading.error, 'classification_error') : null}
                         </Col></Row>
                         </Grid>
@@ -355,7 +378,7 @@ class ThematicLayer extends React.Component {
                         buttons={[{
                             glyph: 'arrow-right',
                             tooltip: this.localizedItem("toc.thematic.go_to_thema", ""),
-                            onClick: this.applyCfg,
+                            onClick: () => this.applyCfg(this.props.adminCfg.current),
                             visible: isValid
                         }, {
                                 glyph: 'exclamation-mark',
@@ -402,6 +425,15 @@ class ThematicLayer extends React.Component {
             {this.hasConfiguration() && !this.props.adminCfg.open && thema ? this.renderThemaPanel(thema) : null}
         </Grid>);
     }
+
+    constrainIntervals = (intervals) => {
+        if (isNaN(intervals) || intervals < 2 || intervals > this.props.maxClasses) {
+            this.props.onInvalidInput('intervals', 'toc.thematic.interval_limit', {min: 2, max: this.props.maxClasses});
+        } else {
+            this.props.onValidInput('intervals');
+        }
+        return intervals;
+    };
 
     checkInitialStyle = (props) => {
         const thematic = props.layer.thematic;
@@ -459,9 +491,9 @@ class ThematicLayer extends React.Component {
         }
     };
 
-    applyCfg = () => {
+    applyCfg = (cfg) => {
         try {
-            const thematic = JSON.parse(this.props.adminCfg.current);
+            const thematic = JSON.parse(cfg);
             const newThema = assign({}, thematic, {
                 current: this.getCurrentThema(thematic),
                 unconfigured: false
@@ -470,9 +502,9 @@ class ThematicLayer extends React.Component {
             this.props.onSwitchLayer(assign({}, this.props.layer, {
                 thematic: newThema
             }));
-            this.props.onChangeConfiguration(this.props.layer, false, this.props.adminCfg.current);
+            this.props.onChangeConfiguration(this.props.layer, false, cfg);
         } catch (e) {
-            this.props.onChangeConfiguration(this.props.layer, true, this.props.adminCfg.current, e.message);
+            this.props.onChangeConfiguration(this.props.layer, true, cfg, e.message);
         }
     };
 

@@ -434,7 +434,8 @@
                 "data_panel": "Data",
                 "classification_stroke": "Stroke",
                 "classification_error": "Error calling the classification service: {message}",
-                "fields_error": "Error loading fields list: {message}"
+                "fields_error": "Error loading fields list: {message}",
+                "interval_limit": "Intervals should be a number between {min} and {max}"
             }
         },
         "print":{

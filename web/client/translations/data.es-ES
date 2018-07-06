@@ -434,7 +434,8 @@
                 "data_panel": "Datos",
                 "classification_stroke": "tablero",
                 "classification_error": "Error al llamar al servicio de clasificación: {message}",
-                "fields_error": "Error al cargar la lista de campos: {message}"
+                "fields_error": "Error al cargar la lista de campos: {message}",
+                "interval_limit": "Los intervalos deben ser un número entre {min} y {max}"
             }
         },
         "print":{

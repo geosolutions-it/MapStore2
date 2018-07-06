@@ -16,6 +16,7 @@ const LOAD_CLASSIFICATION = 'THEMATIC:LOAD_CLASSIFICATION';
 const CHANGE_CONFIGURATION = 'THEMATIC:CHANGE_CONFIGURATION';
 
 const CHANGE_DIRTY = 'THEMATIC:CHANGE_DIRTY';
+const CHANGE_INPUT_VALIDITY = 'THEMATIC:CHANGE_INPUT_VALIDITY';
 
 function fieldsLoaded(layer, fields) {
     return {
@@ -88,6 +89,24 @@ function cancelDirty() {
     };
 }
 
+function setInvalidInput(input, message, params) {
+    return {
+        type: CHANGE_INPUT_VALIDITY,
+        valid: false,
+        input,
+        message,
+        params
+    };
+}
+
+function resetInvalidInput(input) {
+    return {
+        type: CHANGE_INPUT_VALIDITY,
+        valid: true,
+        input
+    };
+}
+
 module.exports = {
     FIELDS_LOADED,
     FIELDS_ERROR,
@@ -97,6 +116,7 @@ module.exports = {
     LOAD_CLASSIFICATION,
     CHANGE_CONFIGURATION,
     CHANGE_DIRTY,
+    CHANGE_INPUT_VALIDITY,
     fieldsLoaded,
     loadFields,
     fieldsError,
@@ -105,5 +125,7 @@ module.exports = {
     classificationError,
     changeConfiguration,
     setDirty,
-    cancelDirty
+    cancelDirty,
+    setInvalidInput,
+    resetInvalidInput
 };

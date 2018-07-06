@@ -93,6 +93,14 @@ const mapParams = (layer, params) => {
         if (key === 'field' && layer.thematic && !layer.thematic.fieldAsParam) {
             return previous;
         }
+        if (key === 'strokeWeight' && !params.strokeOn) {
+            return assign(previous, {
+                [key]: -1
+            });
+        }
+        if (key === 'strokeOn') {
+            return previous;
+        }
         return assign(previous, {
             [key]: params[key]
         });
@@ -340,7 +348,8 @@ const API = {
         field: "",
         open: false,
         strokeWeight: 0.2,
-        strokeColor: '#ff0000'
+        strokeColor: '#ff0000',
+        strokeOn: false
     }
 };
 
