@@ -307,7 +307,7 @@ const FilterUtils = {
         const nsplaceholder = versionOGC === "2.0" ? "fes" : "ogc";
 
 
-        let ogcFilter = this.getGetFeatureBase(versionOGC, objFilter.pagination, hits, format);
+        let ogcFilter = this.getGetFeatureBase(versionOGC, objFilter.pagination, hits, format, json && json.options);
 
         let filters = this.toOGCFilterParts(objFilter, versionOGC, nsplaceholder);
         let filter = "";
@@ -463,13 +463,13 @@ const FilterUtils = {
 
         return ogcSpatialOperators[objFilter.spatialField.operation](nsplaceholder, ogc);
     },
-    getGetFeatureBase: function(version, pagination, hits, format) {
+    getGetFeatureBase: function(version, pagination, hits, format, options) {
         let ver = normalizeVersion(version);
 
         let getFeature = '<wfs:GetFeature ';
         getFeature += format ? 'outputFormat="' + format + '" ' : '';
         getFeature += pagination && (pagination.startIndex || pagination.startIndex === 0) ? 'startIndex="' + pagination.startIndex + '" ' : "";
-
+        getFeature += options.viewParams ? ` viewParams="${options.viewParams}" ` : "";
         switch (ver) {
         case "1.0.0":
             getFeature += pagination && pagination.maxFeatures ? 'maxFeatures="' + pagination.maxFeatures + '" ' : "";
@@ -893,13 +893,13 @@ const FilterUtils = {
     ogcListField,
     ogcBooleanField,
     ogcStringField,
-    getWFSFilterData: (filterObj) => {
+    getWFSFilterData: (filterObj, options) => {
         let data;
         if (typeof filterObj === 'string') {
             data = filterObj;
         } else {
             data = filterObj.filterType === "OGC"
-                ? FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits)
+                ? FilterUtils.toOGCFilter(filterObj.featureTypeName, {...filterObj, options}, filterObj.ogcVersion, filterObj.sortOptions, filterObj.hits)
                 : FilterUtils.toCQLFilter(filterObj);
         }
         return data;

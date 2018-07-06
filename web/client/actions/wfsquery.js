@@ -132,11 +132,12 @@ function createQuery(searchUrl, filterObj) {
     };
 }
 
-function query(searchUrl, filterObj) {
+function query(searchUrl, filterObj, queryOptions) {
     return {
         type: QUERY,
         searchUrl,
-        filterObj
+        filterObj,
+        queryOptions
     };
 }
 

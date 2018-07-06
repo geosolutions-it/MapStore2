@@ -43,7 +43,7 @@ const {setHighlightFeaturesPath} = require('../actions/highlight');
 
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
-    isFeatureGridOpen, hasSupportedGeometry} = require('../selectors/featuregrid');
+    isFeatureGridOpen, hasSupportedGeometry, queryOptionsSelector} = require('../selectors/featuregrid');
 const {queryPanelSelector} = require('../selectors/controls');
 
 const {error, warning} = require('../actions/notifications');
@@ -156,7 +156,6 @@ const createDeleteFlow = (features, describeFeatureType, url) => save(
     url,
     createDeleteTransaction(features, requestBuilder(describeFeatureType))
 );
-
 const createLoadPageFlow = (store) => ({page, size} = {}) => {
     const state = store.getState();
     return Rx.Observable.of( query(
@@ -165,7 +164,8 @@ const createLoadPageFlow = (store) => ({page, size} = {}) => {
                     ...(wfsFilter(state))
                 },
                 getPagination(state, {page, size})
-            )
+            ),
+            queryOptionsSelector(state)
     ));
 };
 
@@ -250,7 +250,8 @@ module.exports = {
                             sortOptions: {sortBy, sortOrder}
                         },
                         getPagination(store.getState())
-                    )
+                ),
+                queryOptionsSelector(store.getState())
             ))
             .merge(action$.ofType(QUERY_RESULT)
                     .map((ra) => fatureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
@@ -296,7 +297,8 @@ module.exports = {
                             ...wfsFilter(store.getState())
                         },
                         getPagination(store.getState(), {page: page, size})
-                    )
+                    ),
+                    queryOptionsSelector(store.getState())
                 ),
                 refreshLayerVersion(selectedLayerIdSelector(store.getState()))
             )
@@ -688,7 +690,8 @@ module.exports = {
                                 ...(wfsFilter(state))
                                 },
                                 {startIndex: nPs[0] * size, maxFeatures: needPages * size }
-                            )
+                    ),
+                    queryOptionsSelector(state)
                     )).filter(() => nPs.length > 0)
                 .merge( action$.ofType(QUERY_RESULT)
                     .filter(() => nPs.length > 0)

@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const {head, get, isObject} = require('lodash');
+const { head, get, pick, isObject} = require('lodash');
 const {layersSelector} = require('./layers');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {currentLocaleSelector} = require('../selectors/locale');
@@ -63,7 +63,7 @@ const hasSupportedGeometry = state => head(notSupportedGeometries.filter(g => ge
 const hasChangesSelector = state => changesSelector(state) && changesSelector(state).length > 0;
 const hasNewFeaturesSelector = state => newFeaturesSelector(state) && newFeaturesSelector(state).length > 0;
 const getAttributeFilters = state => state && state.featuregrid && state.featuregrid.filters;
-
+const selectedLayerParamsSelector = state => get(getLayerById(state, selectedLayerIdSelector(state)), "params");
 /**
  * selects featuregrid state
  * @name featuregrid
@@ -141,5 +141,27 @@ module.exports = {
      * @return {boolean}       true if the geometry is supported, false otherwise
      */
     hasSupportedGeometry,
-    getDockSize: state => state.featuregrid && state.featuregrid.dockSize
+    getDockSize: state => state.featuregrid && state.featuregrid.dockSize,
+    /**
+     * get selected layer name
+     * @function
+     * @memberof selectors.featuregrid
+     * @param  {object}  state applications state
+     * @return {string}       name of selected layer
+     */
+    selectedLayerNameSelector: state => {
+        const layer = getLayerById(state, selectedLayerIdSelector(state));
+        return layer && layer.name || '';
+    },
+    queryOptionsSelector: state => {
+        const params = selectedLayerParamsSelector(state);
+        const viewParams = params && (params.VIEWPARAMS || params.viewParams || params.viewparams);
+        if (viewParams) {
+            return {
+                viewParams
+            };
+        }
+        return {};
+
+    }
 };
