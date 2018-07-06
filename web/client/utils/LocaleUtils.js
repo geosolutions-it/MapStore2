@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const url = require('url');
-
+const {isObject} = require('lodash');
 const {addLocaleData} = require('react-intl');
 
 const en = require('react-intl/locale-data/en');
@@ -129,7 +129,7 @@ const LocaleUtils = {
         msgId.split('.').forEach(part => {
             message = message ? message[part] : null;
         });
-        return message;
+        return message || msgId;
     },
     /**
      * Registre a parser to translate error services
@@ -151,7 +151,14 @@ const LocaleUtils = {
             title: 'errorTitleDefault',
             message: 'errorDefault'
         };
-    }
+    },
+    /**
+     * Retrieve localized string from object of translations
+     * @param {string} locale code of locale, eg. en-US
+     * @param {string|object} prop source of translation
+     * @returns {string} localized string
+     */
+    getLocalizedProp: (locale, prop) => isObject(prop) ? prop[locale] || prop.default : prop || ''
 };
 
 module.exports = LocaleUtils;

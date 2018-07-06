@@ -24,10 +24,19 @@ const mapDescriptionSelector = (state, id) => mapFromIdSelector(state, id) && ma
 const mapDetailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id) && mapFromIdSelector(state, id).details || "";
 const mapPermissionsFromIdSelector = (state, id) => mapFromIdSelector(state, id) && mapFromIdSelector(state, id).permissions || "";
 const mapThumbnailsUriFromIdSelector = (state, id) => mapFromIdSelector(state, id) && mapFromIdSelector(state, id).thumbnail || "";
+/**
+ * Get flag for enable/disable of the map card details
+ * @function
+ * @memberof selectors.map
+ * @param  {object} state the state
+ * @return {boolean} showMapDetails flag for the map card details
+ */
+const showMapDetailsSelector = (state) => get(state, "maps.showMapDetails");
 
 module.exports = {
     mapNameSelector,
     mapFromIdSelector,
+    showMapDetailsSelector,
     mapsResultsSelector,
     totalCountSelector,
     mapMetadataSelector,

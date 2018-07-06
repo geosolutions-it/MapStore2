@@ -14,12 +14,10 @@ const {createSelector} = require('reselect');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
-const {on} = require('../actions/controls');
 
-const {getFeatureInfo, getVectorInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState} = require('../actions/mapInfo');
-const {closeAnnotations} = require('../actions/annotations');
+const {getFeatureInfo, getVectorInfo, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState} = require('../actions/mapInfo');
 const {changeMousePointer} = require('../actions/map');
-const {changeMapInfoFormat, updateCenterToMarker} = require('../actions/mapInfo');
+const {changeMapInfoFormat, updateCenterToMarker, closeIdentify} = require('../actions/mapInfo');
 const {currentLocaleSelector} = require('../selectors/locale');
 
 const {compose, defaultProps} = require('recompose');
@@ -54,9 +52,6 @@ const selector = createSelector([
 }));
 // result panel
 
-const conditionalToggle = on.bind(null, purgeMapInfoResults(), (state) =>
-    !(state.annotations && state.annotations.editing)
-, closeAnnotations);
 
 const DefaultViewer = compose(
     switchControlledDefaultViewer,
@@ -124,7 +119,8 @@ const identifyDefaultProps = defaultProps({
     size: 660,
     getButtons: defaultIdentifyButtons,
     showFullscreen: false,
-    validator: MapInfoUtils.getValidator
+    validator: MapInfoUtils.getValidator,
+    zIndex: 1050
 });
 
 /**
@@ -148,6 +144,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
  * @prop cfg.viewerOptions.header {expression} the geader of the viewer, expression from the context{expression}
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
+ * @prop cfg.zIndex {number} component z index order
  *
  * @example
  * {
@@ -168,7 +165,7 @@ const IdentifyPlugin = compose(
     connect(selector, {
         sendRequest: getFeatureInfo,
         localRequest: getVectorInfo,
-        purgeResults: conditionalToggle,
+        purgeResults: closeIdentify,
         changeMousePointer,
         showMarker: showMapinfoMarker,
         noQueryableLayers,

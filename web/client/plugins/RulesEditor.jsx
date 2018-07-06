@@ -12,7 +12,7 @@ const {createSelector} = require('reselect');
 const {connect} = require('react-redux');
 const PropTypes = require('prop-types');
 
-const { isEditorActive} = require('../selectors/rulesmanager');
+const { isEditorActive, isLoading} = require('../selectors/rulesmanager');
 
 const Editor = require('./manager/RulesEditor');
 const Toolbar = require('./manager/RulesToolbar');
@@ -38,7 +38,8 @@ class RulesEditorComponent extends React.Component {
          setEditing: PropTypes.func,
          dimMode: PropTypes.string,
          src: PropTypes.string,
-         style: PropTypes.object
+         style: PropTypes.object,
+         loading: PropTypes.bool
      };
      static defaultProps = {
          id: "rules-editor",
@@ -49,36 +50,25 @@ class RulesEditorComponent extends React.Component {
          fluid: false,
          dimMode: "none",
          position: "left",
-         onMount: () => {},
-         onUnmount: () => {},
          setEditing: () => {}
      };
-    componentDidMount() {
-        this.props.onMount();
-    }
-
-    componentWillUnmount() {
-        this.props.onUnmount();
-    }
     render() {
 
 
         return this.props.editing
-                ? <div className="dashboard-editor de-builder"><Editor enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog}/></div>
+                ? <div className="rulesmanager-editor"><Editor loading={this.props.loading} enabled={this.props.editing} onClose={() => this.props.setEditing(false)} catalog={this.props.catalog}/></div>
                 : (<div className="ms-vertical-toolbar rules-editor re-toolbar" id={this.props.id}>
-                    <Toolbar transitionProps={false} btnGroupProps={{vertical: true}} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary'}} />
+                    <Toolbar loading={this.props.loading} transitionProps={false} btnGroupProps={{vertical: true}} btnDefaultProps={{ tooltipPosition: 'right', className: 'square-button-md', bsStyle: 'primary'}} />
                     </div>);
     }
 }
 
 const Plugin = connect(
     createSelector(
-        isEditorActive,
-        editing => ({editing})
+        [isEditorActive,
+        isLoading],
+        (editing, loading) => ({editing, loading})
     ), {
-        // setEditing,
-        // onMount: () => setEditorAvailable(true),
-        // onUnmount: () => setEditorAvailable(false)
     }
 )(RulesEditorComponent);
 module.exports = {

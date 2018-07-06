@@ -149,8 +149,6 @@ describe('test DefaultLayer module component', () => {
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        const opacity = domNode.getElementsByClassName("noUi-tooltip")[0];
-        expect(opacity.innerHTML).toBe('100 %');
         const tool = domNode.getElementsByClassName("noUi-target")[0];
         expect(tool).toExist();
         expect(tool.getAttribute('disabled')).toBe(null);
@@ -171,8 +169,6 @@ describe('test DefaultLayer module component', () => {
         expect(comp).toExist();
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        const opacity = domNode.getElementsByClassName("noUi-tooltip")[0];
-        expect(opacity.innerHTML).toBe('50 %');
         const tool = domNode.getElementsByClassName("noUi-target")[0];
         expect(tool).toExist();
         expect(tool.getAttribute('disabled')).toBe('true');
@@ -221,30 +217,126 @@ describe('test DefaultLayer module component', () => {
         const slider = domNode.getElementsByClassName("mapstore-slider");
         expect(slider.length).toBe(0);
     });
-    it('show full title', () => {
+    it('show full title enabled', () => {
         const l = {
             name: 'layer00',
             title: 'Layer',
             visibility: false,
             storeIndex: 9,
             type: 'wms',
-            opacity: 0.5
+            opacity: 0.5,
+            expanded: true
         };
 
-        let comp = ReactDOM.render(<Layer showFullTitleOnExpand visibilityCheckType="checkbox" node={l} />,
+        const comp = ReactDOM.render(<Layer showFullTitleOnExpand node={l} />,
             document.getElementById("container"));
         expect(comp).toExist();
-        let domNode = ReactDOM.findDOMNode(comp);
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        let title = domNode.getElementsByClassName("toc-full-title");
+        const title = domNode.getElementsByClassName("toc-full-title");
         expect(title.length).toBe(1);
-        comp = ReactDOM.render(<Layer visibilityCheckType="checkbox" node={l} />,
-            document.getElementById("container"));
-        domNode = ReactDOM.findDOMNode(comp);
+    });
+    it('show full title disabled', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            storeIndex: 9,
+            type: 'wms',
+            opacity: 0.5,
+            expanded: true
+        };
+
+        const comp = ReactDOM.render(<Layer showFullTitleOnExpand={false} node={l} />,
+        document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
-        title = domNode.getElementsByClassName("toc-full-title");
+        const title = domNode.getElementsByClassName("toc-full-title");
         expect(title.length).toBe(0);
 
+    });
+    it('support for indicators', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            storeIndex: 9,
+            type: 'wms',
+            opacity: 0.5,
+            expanded: true,
+            dimensions: [{
+                name: "time"
+            }]
+        };
+        const indicators = [{
+            "type": "dimension",
+            "key": "calendar",
+            "glyph": "calendar",
+            "props": {
+                className: "TIME_INDICATOR"
+            },
+            "condition": {
+                "name": "time"
+            }
+        }];
+        const comp = ReactDOM.render(<Layer indicators={indicators} node={l} />,
+            document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const title = domNode.getElementsByClassName("TIME_INDICATOR");
+        expect(title.length).toBe(1);
+    });
+
+    it('test wmts', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: false,
+            storeIndex: 9,
+            type: 'wmts',
+            opacity: 0.5
+        };
+        const comp = ReactDOM.render(<Layer showFullTitleOnExpand={false} node={l} />,
+        document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const title = domNode.getElementsByClassName("chevron-left");
+        expect(title.length).toBe(0);
+    });
+
+    it('show tooltip', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            opacity: 0.5
+        };
+        const comp = ReactDOM.render(<Layer node={l}/>,
+        document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const tooltips = domNode.getElementsByClassName('noUi-tooltip');
+        expect(tooltips.length).toBe(1);
+        expect(tooltips[0].innerHTML).toBe('50 %');
+    });
+
+    it('hide tooltip', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            opacity: 0.5
+        };
+        const comp = ReactDOM.render(<Layer hideOpacityTooltip node={l}/>,
+        document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const tooltips = domNode.getElementsByClassName('noUi-tooltip');
+        expect(tooltips.length).toBe(0);
     });
 
 });

@@ -12,17 +12,19 @@ const {connect} = require('react-redux');
 const {createSelector} = require("reselect");
 const {compose} = require('recompose');
 const enhancer = require("./EditorEnhancer");
-const {cleanEditing, saveRule} = require("../../actions/rulesmanager");
-const {activeRuleSelector} = require("../../selectors/rulesmanager");
+const {cleanEditing, saveRule, setLoading} = require("../../actions/rulesmanager");
+const {activeRuleSelector, geometryStateSel} = require("../../selectors/rulesmanager");
 
-const {isEqual} = require("lodash");
-
+const {isSaveDisabled, isRulePristine, isRuleValid, askConfirm} = require("../../utils/RulesEditor");
 const Message = require('../../components/I18N/Message');
 const BorderLayout = require("../../components/layout/BorderLayout");
 const Header = require("../../components/manager/rulesmanager/ruleseditor/Header");
 const MainEditor = require("../../components/manager/rulesmanager/ruleseditor/EditMain");
+const StylesEditor = require("../../components/manager/rulesmanager/ruleseditor/StylesEditor");
+const FiltersEditor = require("../../components/manager/rulesmanager/ruleseditor/FiltersEditor");
+const AttributesEditor = require("../../components/manager/rulesmanager/ruleseditor/AttributesEditor");
 const ModalDialog = require("./ModalDialog");
-const {isRuleValid} = require("../../utils/RulesGridUtils");
+
 
 class RuleEditor extends React.Component {
     static propTypes = {
@@ -31,9 +33,16 @@ class RuleEditor extends React.Component {
         activeEditor: PropTypes.string,
         onNavChange: PropTypes.func,
         setOption: PropTypes.func,
+        setConstraintsOption: PropTypes.func,
         onExit: PropTypes.func,
         onSave: PropTypes.func,
-        onDelete: PropTypes.func
+        onDelete: PropTypes.func,
+        styles: PropTypes.array,
+        type: PropTypes.string,
+        properties: PropTypes.array,
+        loading: PropTypes.bool,
+        cleanConstraints: PropTypes.func,
+        layer: PropTypes.object
     }
     static defaultProps = {
         activeEditor: "1",
@@ -41,22 +50,36 @@ class RuleEditor extends React.Component {
         setOption: () => {},
         onExit: () => {},
         onSave: () => {},
-        onDelete: () => {}
+        onDelete: () => {},
+        type: ""
     }
     render() {
-        const {activeRule, activeEditor, onNavChange, setOption, initRule} = this.props;
+        const {loading, activeRule, layer, activeEditor, onNavChange, initRule, styles = [], setConstraintsOption, type, properties} = this.props;
         const {modalProps} = this.state || {};
         return (
             <BorderLayout
                 className="bg-body"
-                header={<Header onSave={this.save} onExit={this.cancelEditing} activeTab={activeEditor} disableSave={isEqual(activeRule, initRule)} detailsActive={activeRule && activeRule.layer} onNavChange={onNavChange}/>}>
-                <MainEditor key="main-editor" rule={activeRule} setOption={setOption} active={activeEditor === "1"}/>
+                header={<Header
+                                layer={layer}
+                                loading={loading}
+                                type={type}
+                                onSave={this.save}
+                                onExit={this.cancelEditing}
+                                activeTab={activeEditor}
+                                disableSave={isSaveDisabled(activeRule, initRule)}
+                                rule={activeRule}
+                                onNavChange={onNavChange}/>}
+            >
+                <MainEditor key="main-editor" rule={activeRule} setOption={this.setOption} active={activeEditor === "1"}/>
+                <StylesEditor styles={styles} key="styles-editor" constraints={activeRule.constraints} setOption={setConstraintsOption} active={activeEditor === "2"}/>
+                <FiltersEditor layer={layer} key="filters-editor" setOption={setConstraintsOption} constraints={activeRule.constraints} active={activeEditor === "3"}/>
+                <AttributesEditor key="attributes-editor" active={activeEditor === "4"} attributes={properties} constraints={activeRule.constraints} setOption={setConstraintsOption}/>
                 <ModalDialog {...modalProps}/>
             </BorderLayout>);
     }
     cancelEditing = () => {
         const {activeRule, initRule, onExit} = this.props;
-        if (!isEqual(activeRule, initRule)) {
+        if (!isRulePristine(activeRule, initRule)) {
             this.setState( () => ({modalProps: {title: "featuregrid.toolbar.saveChanges",
                 showDialog: true, buttons: [{
                         text: <Message msgId="no"/>,
@@ -91,11 +114,36 @@ class RuleEditor extends React.Component {
                     ], closeAction: this.cancel, msg: "rulesmanager.invalidForm"}}));
         }
     }
+    setOption = ({key, value}) => {
+        if (askConfirm(this.props.activeRule, key, value)) {
+            this.setState( () => ({modalProps: {title: "rulesmanager.resetconstraints",
+            showDialog: true, buttons: [{
+                    text: <Message msgId="no"/>,
+                    bsStyle: 'primary',
+                    onClick: this.cancel
+                },
+                {
+                    text: <Message msgId="yes"/>,
+                    bsStyle: 'primary',
+                    onClick: () => {
+                        this.cancel();
+                        this.props.setOption({key, value});
+                        this.props.cleanConstraints(key === 'grant');
+                    }
+                }
+            ], closeAction: this.cancel, msg: "rulesmanager.constraintsmsg"}}));
+
+        }else {
+            this.props.setOption({key, value});
+        }
+
+    }
 }
 
 module.exports = compose(
-    connect(createSelector(activeRuleSelector, activeRule => ({activeRule})), {
+    connect(createSelector([activeRuleSelector, geometryStateSel], (activeRule, geometryState) => ({activeRule, geometryState})), {
         onExit: cleanEditing,
-        onSave: saveRule
+        onSave: saveRule,
+        setLoading
     }),
     enhancer)(RuleEditor);

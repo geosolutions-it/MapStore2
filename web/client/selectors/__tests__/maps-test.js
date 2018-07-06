@@ -14,6 +14,7 @@ const {
     mapMetadataSelector,
     isMapsLastPageSelector,
     mapDescriptionSelector,
+    showMapDetailsSelector,
     mapDetailsUriFromIdSelector,
     mapPermissionsFromIdSelector,
     mapThumbnailsUriFromIdSelector
@@ -28,6 +29,7 @@ const mapId = 1;
 const creation = '2017-12-01 10:58:46.337';
 const mapsState = {
     maps: {
+        showMapDetails: true,
         metadata: {
             name,
             description
@@ -63,6 +65,10 @@ describe('Test maps selectors', () => {
     it('test mapFromIdSelector no state', () => {
         const props = mapFromIdSelector(mapsState, mapId);
         expect(props.creation).toBe(creation);
+    });
+    it('test showMapDetailsSelector no state', () => {
+        const props = showMapDetailsSelector(mapsState);
+        expect(props).toBe(mapsState.maps.showMapDetails);
     });
     it('test mapNameSelector no state', () => {
         const props = mapNameSelector(mapsState, mapId);

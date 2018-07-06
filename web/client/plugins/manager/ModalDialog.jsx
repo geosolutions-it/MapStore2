@@ -21,7 +21,7 @@ module.exports = ({title = "", showDialog = false, buttons = [], closeAction = (
                 onClose={closeAction}
                 buttons={buttons}>
                     <div className="ms-alert">
-                        <div className="ms-alert-center">
+                        <div className="ms-alert-center rm-alert-padded">
                             <Message msgId={msg}/>
                         </div>
                     </div>

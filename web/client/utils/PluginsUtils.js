@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const React = require('react');
 const assign = require('object-assign');
 const {omit, isObject, head, isArray, isString, memoize, get} = require('lodash');
 const {combineReducers} = require('redux');
@@ -131,7 +132,7 @@ const parsePluginConfig = (state, requires, cfg) => {
     return parseExpression(state, requires, cfg);
 };
 
-const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins) => {
+const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins, filter) => {
     return Object.keys(plugins)
             .filter((plugin) => plugins[plugin][name])
             .filter((plugin) => {
@@ -144,7 +145,9 @@ const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, load
                 const pluginImpl = includeLoadedItem(pluginName, loadedPlugins, plugins[plugin]);
                 const pluginCfg = isPluginConfigured(pluginsConfig, plugin);
                 const item = pluginImpl[name].impl || pluginImpl[name];
-                return assign({},
+                return assign({
+                        name: pluginName
+                    },
                     item,
                     pluginCfg.override && pluginCfg.override[name] || {},
                     {
@@ -154,7 +157,7 @@ const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, load
                         plugin: pluginImpl,
                         items: getPluginItems(state, plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
                     });
-            }).filter( (item) => filterDisabledPlugins(item, state, plugins) );
+            }).filter((item) => filterDisabledPlugins(item, state, plugins) && (!filter || filter(item)));
 };
 
 const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
@@ -273,6 +276,17 @@ const PluginsUtils = {
             cfg: assign({}, impl.cfg || {}, isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {}),
             items: getPluginItems(state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
         };
+    },
+    getPluginItems,
+    getConfiguredPlugin: (pluginDef, loadedPlugins) => {
+        if (pluginDef) {
+            const Plugin = loadedPlugins && loadedPlugins[pluginDef.name] || pluginDef.plugin;
+            return (props) => {
+                return (<Plugin key={pluginDef.id}
+                    {...props} {...pluginDef.cfg} pluginCfg={pluginDef.cfg}/>);
+            };
+        }
+        return pluginDef;
     },
     /**
      * Custom react-redux connect function that can override state property with plugin config.

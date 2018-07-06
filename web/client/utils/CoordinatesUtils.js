@@ -14,7 +14,7 @@ const assign = require('object-assign');
 const {isArray, flattenDeep, chunk, cloneDeep} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
 const polygonToLinestring = require('@turf/polygon-to-linestring');
-const {head, isString, trim, isNumber} = require('lodash');
+const {head} = require('lodash');
 const greatCircle = require('@turf/great-circle').default;
 const toPoint = require('turf-point');
 
@@ -208,19 +208,6 @@ const getExtentFromNormalized = (bounds, projection) => {
             normalizedXExtent[3]
         ], projection, isIDL),
         isIDL};
-};
-
-/**
- * Return parsed number from layout value
- * @param value {number|string} number or percentage value string
- * @param size {number} only in case of percentage
- * @return {number}
- */
-const parseLayoutValue = (value, size = 0) => {
-    if (isString(value) && value.indexOf('%') !== -1) {
-        return parseFloat(trim(value)) * size / 100;
-    }
-    return isNumber(value) ? value : 0;
 };
 
 /**
@@ -722,10 +709,11 @@ const CoordinatesUtils = {
         const bbox = CoordinatesUtils.reprojectBbox(map.bbox.bounds, map.bbox.crs, map.projection);
 
         const layoutBounds = {
-            left: parseLayoutValue(layout.left, map.size.width),
-            bottom: parseLayoutValue(layout.bottom, map.size.height),
-            right: parseLayoutValue(layout.right, map.size.width),
-            top: parseLayoutValue(layout.top, map.size.height)
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            ...layout
         };
 
         const visibleExtent = {
@@ -759,10 +747,11 @@ const CoordinatesUtils = {
         const reprojectedCoords = reproject([normalizedCoords.lng, normalizedCoords.lat], 'EPSG:4326', map.projection);
 
         const layoutBounds = {
-            left: parseLayoutValue(layout.left, map.size.width),
-            bottom: parseLayoutValue(layout.bottom, map.size.height),
-            right: parseLayoutValue(layout.right, map.size.width),
-            top: parseLayoutValue(layout.top, map.size.height)
+            left: 0,
+            right: 0,
+            top: 0,
+            bottom: 0,
+            ...layout
         };
 
         const visibleSize = {

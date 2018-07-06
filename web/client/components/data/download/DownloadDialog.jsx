@@ -47,7 +47,7 @@ class DownloadDialog extends React.Component {
             {name: "native", label: "Native"},
             {name: "EPSG:4326", label: "WGS84"}
         ],
-        virtualScroll: false
+        virtualScroll: true
     };
 
     componentDidMount() {

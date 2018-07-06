@@ -40,7 +40,8 @@ const {
     SIZE_CHANGE,
     STORE_ADVANCED_SEARCH_FILTER,
     GRID_QUERY_RESULT,
-    LOAD_MORE_FEATURES
+    LOAD_MORE_FEATURES,
+    SET_SHOW_CURRENT_FILTER
 } = require('../actions/featuregrid');
 const{
     FEATURE_TYPE_LOADED,
@@ -57,6 +58,7 @@ const emptyResultsState = {
     filters: {},
     editingAllowedRoles: ["ADMIN"],
     enableColumnFilters: true,
+    showFilteredObject: true,
     open: false,
     canEdit: false,
     focusOnEdit: true,
@@ -178,6 +180,9 @@ function featuregrid(state = emptyResultsState, action) {
             });
     case SET_SELECTION_OPTIONS: {
         return assign({}, state, {multiselect: action.multiselect});
+    }
+    case SET_SHOW_CURRENT_FILTER: {
+        return assign({}, state, { showFilteredObject: action.showFilteredObject});
     }
     case CLEAR_SELECTION:
         return assign({}, state, {select: [], changes: []});

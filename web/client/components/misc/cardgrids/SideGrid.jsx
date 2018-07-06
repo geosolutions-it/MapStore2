@@ -8,6 +8,7 @@
 
 const React = require('react');
 const SideCard = require('./SideCard');
+const PropTypes = require('prop-types');
 const {Row, Col} = require('react-bootstrap');
 /**
  * Component for rendering a list of SideCard.
@@ -20,19 +21,42 @@ const {Row, Col} = require('react-bootstrap');
  * @prop {element} cardComponent custom component for card in list
  * @prop {object} colProps props for react-bootstrap col component
  */
-module.exports = ({cardComponent, items = [], colProps = {xs: 12}, onItemClick = () => {}, size = ''} = {}) => {
-    const Card = cardComponent || SideCard;
-    return (<div className="msSideGrid">
-        <Row className="items-list">
-            {items.map((item, i) =>
-                (<Col key={item.id || i} {...colProps}>
-                    <Card
-                        onClick={() => onItemClick(item)}
-                        size={size}
-                        {...item}
-                    />
-                </Col>)
-            )}
-        </Row>
-    </div>);
-};
+class SideGrid extends React.Component {
+    /* React class needed to retrive ref of current component */
+    static propTypes = {
+        size: PropTypes.string,
+        onItemClick: PropTypes.func,
+        colProps: PropTypes.object,
+        items: PropTypes.array,
+        cardComponent: PropTypes.element,
+        className: PropTypes.string
+    };
+
+    static defaultProps = {
+        size: '',
+        onItemClick: () => {},
+        colProps: {xs: 12},
+        className: "",
+        items: []
+    };
+
+    render() {
+        const {cardComponent, items, colProps, onItemClick, size} = this.props;
+        const Card = cardComponent || SideCard;
+        return (<div className={"msSideGrid" + (this.props.className ? " " + this.props.className : "")}>
+            <Row className="items-list">
+                {items.map((item, i) =>
+                    (<Col key={item.id || i} {...colProps}>
+                        <Card
+                            onClick={() => onItemClick(item)}
+                            size={size}
+                            {...item}
+                        />
+                    </Col>)
+                )}
+            </Row>
+        </div>);
+    }
+}
+
+module.exports = SideGrid;

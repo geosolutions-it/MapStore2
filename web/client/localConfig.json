@@ -1,7 +1,7 @@
 {
     "proxyUrl": {
         "url": "proxy/?url=",
-        "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver"]
+        "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver", "https://nominatim.openstreetmap.org"]
     },
     "geoStoreUrl": "rest/geostore/",
     "printUrl": "pdf/info.json",
@@ -145,6 +145,7 @@
             }, "Home", {
                 "name": "TOC",
                 "cfg": {
+                    "activateMetedataTool": false,
                     "activateMapTitle": false,
                     "activateSortLayer": false
                 }
@@ -268,6 +269,7 @@
                 "cfg": {
                     "activateQueryTool": true,
                     "activateAddLayerButton": true,
+                    "activateMetedataTool": false,
                     "spatialOperations": [
                         {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
                         {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},
@@ -354,7 +356,8 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets"
+            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets",
+            "FloatingLegend"
         ],
         "embedded": [{
                 "name": "Map",
@@ -428,6 +431,7 @@
                 "cfg": {
                     "activateMapTitle": false,
                     "activateSettingsTool": false,
+                    "activateMetedataTool": false,
                     "activateRemoveLayer": false
                 }
 
@@ -503,14 +507,7 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "NavMenu", "Attribution", {
-          "name": "Home",
-          "override": {
-            "OmniBar": {
-              "position": 11
-            }
-          }
-        }, {
+        }, "Login", "Language", "NavMenu", "Attribution", "Home", {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {
@@ -524,9 +521,20 @@
         }, {
           "name": "QueryPanel",
           "cfg": {
+            "toolsOptions": {
+              "hideCrossLayer": true,
+              "hideSpatialFilter": true
+            },
             "containerPosition": "columns"
           }
-        }, "Dashboard", "Notifications"],
+        }, "BurgerMenu", "Dashboard", "Notifications", {
+            "name": "Tutorial",
+            "cfg": {
+                "allowClicksThruHole": false,
+                "containerPosition": "header",
+                "preset": "dashboard_tutorial"
+            }
+        }],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }

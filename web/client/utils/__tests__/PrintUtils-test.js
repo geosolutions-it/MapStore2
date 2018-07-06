@@ -143,10 +143,18 @@ describe('PrintUtils', () => {
         expect(specs.length).toBe(1);
         expect(specs[0].geoJson.features[0].geometry.coordinates[0], mapFishVectorLayer).toBe(mapFishVectorLayer.geoJson.features[0].geometry.coordinates[0]);
     });
-    it('vector layer generation for legend', () => {
+    it('wms layer generation for legend', () => {
         const specs = PrintUtils.getMapfishLayersSpecification([layer], {projection: "EPSG:3857"}, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
+    });
+    it('wms layer generation for legend includes scale', () => {
+        const specs = PrintUtils.getMapfishLayersSpecification([layer], testSpec, 'legend');
+        expect(specs).toExist();
+        expect(specs.length).toBe(1);
+        expect(specs[0].classes.length).toBe(1);
+        expect(specs[0].classes[0].icons.length).toBe(1);
+        expect(specs[0].classes[0].icons[0].indexOf('SCALE=50000') !== -1).toBe(true);
     });
     it('vector layer default point style', () => {
         const style = PrintUtils.getOlDefaultStyle({features: [{geometry: {type: "Point"}}]});
@@ -189,6 +197,7 @@ describe('PrintUtils', () => {
         expect(printSpec).toExist();
         expect(printSpec.dpi).toBe(96);
         expect(printSpec.layers.length).toBe(1);
+        expect(printSpec.geodetic).toBe(true);
     });
     it('from rgba to rgb', () => {
         const rgb = PrintUtils.rgbaTorgb("rgba(255, 255, 255, 0.1)");

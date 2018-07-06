@@ -21,8 +21,15 @@ describe('MapWidget component', () => {
         setTimeout(done);
     });
     it('MapWidget rendering with defaults', () => {
-        ReactDOM.render(<Provider store={{subscribe: () => {}, getState: () => ({maptype: {mapType: 'openlayers'}})}} ><MapWidget /></Provider>, document.getElementById("container"));
-        const el = document.querySelector('div');
-        expect(el).toExist();
+        ReactDOM.render(<Provider store={{subscribe: () => {}, getState: () => ({maptype: {mapType: 'openlayers'}})}} ><MapWidget map={{layers: []}}/></Provider>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container.querySelector('.glyphicon-pencil')).toExist();
+        expect(container.querySelector('.glyphicon-trash')).toExist();
+    });
+    it('view only mode', () => {
+        ReactDOM.render(<Provider store={{ subscribe: () => { }, getState: () => ({ maptype: { mapType: 'openlayers' } }) }} ><MapWidget map={{ layers: [] }} canEdit={false}/></Provider>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        expect(container.querySelector('.glyphicon-pencil')).toNotExist();
+        expect(container.querySelector('.glyphicon-trash')).toNotExist();
     });
 });

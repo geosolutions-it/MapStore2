@@ -282,7 +282,7 @@ const FilterUtils = {
 
             filters.push(spatialFilter);
         }
-        if (objFilter.crossLayerFilter) {
+        if (objFilter.crossLayerFilter && objFilter.crossLayerFilter.operation) {
             let crossLayerFilter = {
                 ...objFilter.crossLayerFilter,
                 attribute: objFilter.crossLayerFilter.attribute // || (objFilter.spatialField && objFilter.spatialField.attribute)

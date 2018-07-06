@@ -26,7 +26,7 @@ const getIdxFarthestEl = (avgIdx, pages = [], firstIdx, lastIdx) => {
     return pages.map(val => firstIdx <= val && val <= lastIdx ? 0 : Math.abs(val - avgIdx)).map((distance, idx) => ({idx: pages[idx], distance})).sort((a, b) => a.distance - b.distance).reverse().map(({idx}) => idx);
 };
 
-const checkIp = /^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)(\.)){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?(\/)(?:3[0-2]|[1-2]?[0-9]))\b/g;
+
 module.exports = {
     getPageIdx,
     getRow,
@@ -67,13 +67,6 @@ module.exports = {
         return { pages: {...tempPages, ...newPages}};
     },
     flattenPages: (pages = {}) => Object.keys(pages).reduce((rows, key) => rows.concat((pages[key] || [])), []),
-    checkIp,
-    isRuleValid: (rule = {}) => {
-        if (rule.ipaddress && rule.ipaddress.length > 0 ) {
-            return !!rule.ipaddress.match(checkIp);
-        }
-        return true;
-    },
     getOffsetFromTop: (row, rows) => rows.indexOf(row),
     getClosestRows: (row, rows) => {
         const idx = rows.indexOf(row);

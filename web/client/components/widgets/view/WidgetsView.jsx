@@ -7,14 +7,18 @@
  */
 const React = require('react');
 
-const { pure } = require('recompose');
+const { pure, branch } = require('recompose');
 const { find } = require('lodash');
 /*
 react-grid-layout-resize-prevent-collision is a fork of react-grid-layout deployed on npmjs.org to fix https://github.com/STRML/react-grid-layout/issues/655
 You can install and use react-grid-layout again when the issue is fixed
 */
 const { Responsive, WidthProvider: widthProvider } = require('react-grid-layout-resize-prevent-collision');
-const ResponsiveReactGridLayout = widthProvider(Responsive);
+const ResponsiveReactGridLayout =
+    branch(
+        ({ useDefaultWidthProvider = true }) => useDefaultWidthProvider,
+        widthProvider
+    )(Responsive);
 const withGroupColor = require('../enhancers/withGroupColor');
 const DefaultWidget = withGroupColor(require('../widget/DefaultWidget'));
 const getWidgetGroups = (groups = [], w) => groups.filter(g => find(g.widgets, id => id === w.id));
@@ -30,8 +34,13 @@ module.exports = pure(({
     widgets = [],
     layouts,
     dependencies,
+    verticalCompact = false,
+    useDefaultWidthProvider = true,
+    measureBeforeMount,
+    width,
     showGroupColor,
     groups = [],
+    canEdit = true,
     getWidgetClass = () => { },
     onWidgetClick = () => { },
     updateWidgetProperty = () => { },
@@ -41,16 +50,21 @@ module.exports = pure(({
     ...actions
 } = {}) =>
     (<ResponsiveReactGridLayout
-        key={id}
+        key={id || "widgets-view"}
+        useDefaultWidthProvider={useDefaultWidthProvider}
+        measureBeforeMount={measureBeforeMount}
+        width={!useDefaultWidthProvider ? width : undefined}
+        isResizable={canEdit}
+        isDraggable={canEdit}
         draggableHandle={".draggableHandle"}
         onLayoutChange={onLayoutChange}
         preventCollision
         layouts={layouts ? JSON.parse(JSON.stringify(layouts)) : undefined}
         style={style}
-        className={`widget-container ${className}`}
+        className={`widget-container ${className} ${canEdit ? '' : 'no-drag'}`}
         rowHeight={rowHeight}
         autoSize
-        verticalCompact={false}
+        verticalCompact={verticalCompact}
         breakpoints={breakpoints}
         cols={cols}>
         {
@@ -61,6 +75,7 @@ module.exports = pure(({
                 groups={getWidgetGroups(groups, w)}
                 showGroupColor={showGroupColor}
                 dependencies={dependencies}
+                canEdit={canEdit}
                 updateProperty={(...args) => updateWidgetProperty(w.id, ...args)}
                 onDelete={() => deleteWidget(w)}
                 onEdit={() => editWidget(w)} /></div>))

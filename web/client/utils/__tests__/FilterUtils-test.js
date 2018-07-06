@@ -173,6 +173,52 @@ describe('FilterUtils', () => {
         expect(filter.indexOf('maxFeatures="20"') !== -1).toBe(true);
         expect(filter.indexOf('startIndex="1"') !== -1).toBe(true);
     });
+
+    it('Check  for no oparation', () => {
+        const versionOGC = "1.1.0";
+        const nsplaceholder = "ogc";
+        const objFilter = {
+            featureTypeName: "topp:states",
+            groupFields: [{
+                id: 1,
+                logic: "OR",
+                index: 0
+            }],
+            filterFields: [],
+            spatialField: {
+                method: null,
+                operation: "INTERSECTS",
+                geometry: null,
+                attribute: "the_geom"
+            },
+            pagination: {
+                startIndex: 0,
+                maxFeatures: 20
+            },
+            filterType: "OGC",
+            ogcVersion: "1.1.0",
+            sortOptions: null,
+            crossLayerFilter: {
+                attribute: "the_geom",
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "topp:states",
+                        filterFields: [],
+                        geometryName: "the_geom",
+                        groupFields: [{
+                            id: 1,
+                            index: 0,
+                            logic: "OR"
+                        }]
+                    }
+            }
+            },
+            hits: false
+        };
+
+        let filterParts = FilterUtils.toOGCFilterParts(objFilter, versionOGC, nsplaceholder);
+        expect(filterParts).toEqual([]);
+    });
     it('Check for pagination wfs 2.0', () => {
         let filterObj = {
             pagination: {

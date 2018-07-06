@@ -13,7 +13,7 @@ const FilterUtils = require('../../../../utils/FilterUtils');
 const WMSUtils = require('../../../../utils/leaflet/WMSUtils');
 const L = require('leaflet');
 const objectAssign = require('object-assign');
-const {isArray, isEqual} = require('lodash');
+const {isArray} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const ElevationUtils = require('../../../../utils/ElevationUtils');
 require('leaflet.nontiledlayer');
@@ -205,8 +205,8 @@ Layers.registerType('wms', {
             return newLayer;
         }
         // find the options that make a parameter change
-        let oldqueryParameters = WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(oldOptions));
-        let newQueryParameters = WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(newOptions));
+        let oldqueryParameters = objectAssign({}, WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(oldOptions)), oldOptions.params);
+        let newQueryParameters = objectAssign({}, WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(newOptions)), newOptions.params);
         let newParameters = Object.keys(newQueryParameters).filter((key) => {return newQueryParameters[key] !== oldqueryParameters[key]; });
         let removeParams = Object.keys(oldqueryParameters).filter((key) => { return oldqueryParameters[key] !== newQueryParameters[key]; });
         let newParams = {};
@@ -219,9 +219,9 @@ Layers.registerType('wms', {
             }, newParams);
             // set new options as parameters, merged with params
             layer.setParams(objectAssign(newParams, newParams.params, newOptions.params));
-        } else if (!isEqual(newOptions.params, oldOptions.params)) {
+        }/* else if (!isEqual(newOptions.params, oldOptions.params)) {
             layer.setParams(newOptions.params);
-        }
+        }*/
         return null;
     }
 });

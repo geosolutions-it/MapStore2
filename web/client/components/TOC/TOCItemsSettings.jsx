@@ -7,6 +7,7 @@
  */
 
 const React = require('react');
+const PropTypes = require('prop-types');
 const {Row, Col, Nav, NavItem, Glyphicon} = require('react-bootstrap');
 const DockablePanel = require('../misc/panels/DockablePanel');
 const Toolbar = require('../misc/toolbar/Toolbar');
@@ -28,7 +29,7 @@ const Message = require('../I18N/Message');
  * @prop {string} className additional calss name
  */
 
-module.exports = props => {
+const TOCItemSettings = (props, context) => {
     const {
         className = '',
         activeTab = 'general',
@@ -54,7 +55,7 @@ module.exports = props => {
         position = 'left'
     } = props;
 
-    const tabs = getTabs(props);
+    const tabs = getTabs(props, context);
 
     return (
         <div>
@@ -110,7 +111,7 @@ module.exports = props => {
                     nodeType={settings.nodeType}
                     settings={settings}
                     retrieveLayerData={onRetrieveLayerData}
-                    onChange={(key, value) => onUpdateParams({[key]: value}, realtimeUpdate)}/>
+                        onChange={(key, value) => isObject(key) ? onUpdateParams(key, realtimeUpdate) : onUpdateParams({[key]: value}, realtimeUpdate)}/>
             ))}
             </DockablePanel>
             <Portal>
@@ -142,3 +143,10 @@ module.exports = props => {
         </div>
     );
 };
+TOCItemSettings.contextTypes = {
+    plugins: PropTypes.object,
+    pluginsConfig: PropTypes.object,
+    loadedPlugins: PropTypes.object
+};
+
+module.exports = TOCItemSettings;

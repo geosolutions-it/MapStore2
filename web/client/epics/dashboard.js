@@ -37,7 +37,8 @@ const {
     QUERY_FORM_SEARCH
 } = require('../actions/queryform');
 const {
-    LOGIN_SUCCESS
+    LOGIN_SUCCESS,
+    LOGOUT
 } = require('../actions/security');
 const {
     isDashboardEditing,
@@ -153,12 +154,7 @@ module.exports = {
                             return Rx.Observable.of(error({
                                 title: "dashboard.errors.loading.title",
                                 message: "dashboard.errors.loading.pleaseLogin"
-                            }))
-                            .merge(action$
-                                .ofType(LOGIN_SUCCESS)
-                                .switchMap( () => Rx.Observable.of(loadDashboard(id)).delay(1000))
-                                .filter(() => isDashboardAvailable(getState()))
-                                .takeUntil(action$.ofType(LOCATION_CHANGE)));
+                            }));
                         } if (e.status === 404) {
                             return Rx.Observable.of(error({
                                 title: "dashboard.errors.loading.title",
@@ -171,6 +167,13 @@ module.exports = {
                         }));
                     }
                 ))
+        ),
+    reloadDashboardOnLoginLogout: (action$) =>
+        action$.ofType(LOAD_DASHBOARD).switchMap(
+            ({ id }) => action$
+                .ofType(LOGIN_SUCCESS, LOGOUT)
+                .switchMap(() => Rx.Observable.of(loadDashboard(id)).delay(1000))
+                .takeUntil(action$.ofType(LOCATION_CHANGE))
         ),
     // saving dashboard flow (both creation and update)
     saveDashboard: action$ => action$

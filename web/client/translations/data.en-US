@@ -4,15 +4,15 @@
         "Language": "Language",
         "msgId0": "{name} took {numPhotos, plural, =0 {no photos} =1 {one photo} other {# photos}} on {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
-        "about_title": "About this app...",
+        "about_title": "About",
         "aboutLbl": "About",
-        "about_p0-0": "MapStore 2 is a framework to build web mapping applications using standard mapping libraries, such as",
+        "about_p0-0": "MapStore is a framework to build web mapping applications using standard mapping libraries, such as",
         "about_p0-1": "and",
-        "about_p1": "MapStore 2 has several example applications:",
+        "about_p1": "MapStore has several example applications:",
         "about_ul0_li0": "MapViewer is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore)",
         "about_ul0_li1": "MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on. For more information check the",
         "about_h20": "License",
-        "about_p3": "MapStore 2 is Free and Open Source software, it is based on OpenLayers 3, Leaflet and ReactJS, and is licensed under the Simplified BSD License.",
+        "about_p3": "MapStore is Free and Open Source software, it is based on OpenLayers 3, Leaflet and ReactJS, and is licensed under the Simplified BSD License.",
         "about_p5-0": "For more information check",
         "about_a0": "this",
         "about_p5-1": "page.",
@@ -60,6 +60,7 @@
             "deleteLayerMessage": "Do you really want to delete this Layer?",
             "confirmDelete": "Are you sure?",
             "featureTypeError": "Cannot load layer attributes",
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "Elevation",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
@@ -82,7 +83,6 @@
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
             "templatePreview": "Template preview"
-
         },
         "notification": {
             "update": "Update",
@@ -124,6 +124,7 @@
         "options": "Options",
         "settings": "Settings",
         "help": "Help",
+        "docs": "Docs",
         "gohome": "Go home",
         "back": "Back to the Importer",
         "printbutton": "Print",
@@ -159,7 +160,7 @@
             "open": "Open",
             "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore 2 has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.<br/>Visit the <a href=\"/mapstore/docs/\">home page</a> for more details.",
+            "description": "MapStore has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents coming from well-known sources like Google Maps and OpenStreetMap or from services provided by organizations using open protocols like OGC WMS, WFS, WMTS or TMS and so on.<br/>Visit the <a href=\"/mapstore/docs/\">home page</a> for more details.",
             "Applications": "Applications",
             "Examples": "Examples",
             "LinkedinGroup": "Mapstore Linkedin Group",
@@ -255,7 +256,7 @@
                 "errorWhenDeleting": "An error occurred during deleting process",
                 "errorSizeExceeded": "Please, reduce the size of the details or the quality of the images"
             },
-			"search": "search for maps..."
+			"search": "search..."
 		},
         "resources": {
             "deleteConfirmTitle": "Are you sure",
@@ -343,6 +344,11 @@
                 "fieldsChanged": "Some fields has been changed"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Show layers",
+            "showLegend": "Show legend",
+            "hideLegend": "Hide legend"
+        },
         "toc": {
             "toggleLayerVisibility": "Toggle layer visibility",
             "displayLegendAndTools": "Display legend and tools",
@@ -379,6 +385,7 @@
             "refreshConfirm": "Update",
             "refreshMessage": "Reload WMS layers configuration from the server(s)",
             "refreshError": "Error updating layers: ",
+            "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
             "refreshOptions": {
                 "bbox": "Update BBOX",
                 "search": "Update search options",
@@ -397,6 +404,37 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Error in metadata search"
                 }
+            },
+            "thematic": {
+                "classification_field": "Classification Field:",
+                "classification_method": "Classification Method:",
+                "classification_aggregate": "Aggregate Function:",
+                "classification_colors": "Color Ramp:",
+                "classification_intervals": "Intervals:",
+                "preview": "Preview",
+                "remove_thematic": "Back to Simple Style",
+                "values": {
+                    "equalInterval": "Equal Intervals",
+                    "quantile": "Quantile",
+                    "jenks": "Natural Breaks",
+                    "sum": "Sum",
+                    "avg": "Average",
+                    "count": "Count",
+                    "min": "Min",
+                    "max": "Max"
+                },
+                "configuration": "Configuration",
+                "apply": "Apply classification",
+                "restore": "Reset customizations",
+                "go_to_cfg": "Configure...",
+                "go_to_thema": "Use this configuration",
+                "cfgError": "Error in configuration JSON",
+                "classify": "Classify",
+                "remove": "Remove classification",
+                "data_panel": "Data",
+                "classification_stroke": "Stroke",
+                "classification_error": "Error calling the classification service: {message}",
+                "fields_error": "Error loading fields list: {message}"
             }
         },
         "print":{
@@ -704,7 +742,8 @@
                     "box": "Rectangle",
                     "buffer": "Buffer",
                     "circle": "Circle",
-                    "poly": "Polygon"
+                    "poly": "Polygon",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "Intersects",
@@ -902,6 +941,9 @@
             "type": "Type",
             "serviceTitle": "Title",
             "serviceTitlePlaceholder": "type a title",
+            "missingReference": "Missing OGC reference metadata",
+            "showDescription": "Show full description",
+            "hideDescription": "Hide full description",
             "notification": {
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",
@@ -1124,6 +1166,10 @@
                     "title": "Map",
                     "caption": "add a map"
                 },
+                "legend": {
+                    "title": "Legend",
+                    "caption": "add a legend"
+                },
                 "chart": {
                     "title": "Chart",
                     "caption": "add a chart"
@@ -1158,7 +1204,10 @@
             "title": "Title",
             "description": "Description",
             "errors": {
+                "notext": "No text available",
                 "nodata": "No data available for the selected layer/filter",
+                "noLegend": "No legend items to show",
+                "noLegendDescription": "The connected map has no layers to show in legend",
                 "nodatainviewport": "No data in the current viewport",
                 "timeoutExpired": "The service took too much time to respond. Maybe the query is too complex or the server is busy",
                 "genericError": "There was an error during data retrival"
@@ -1168,11 +1217,12 @@
                     "title": "Widget"
                 },
                 "wizard": {
-                    "backToTypeSelection": "Back to type selection",
+                    "backToTypeSelection": "Back to chart type selection",
                     "backToWidgetTypeSelection": "Back to widget type selection",
                     "backToFeatureGrid": "Back to the feature grid",
                     "backToLayerSelection": "Back to layer selection",
                     "backToMapSelection": "Back to map selection",
+                    "backToPreview": "Back to Preview",
                     "backToChartOptions": "Back to chart options",
                     "selectALayer": "Select a layer",
                     "selectAMap": "Select a map",
@@ -1182,7 +1232,7 @@
                     "configureTableOptions": "Configure table options",
                     "resetColumnsSizes": "Reset all changes to the column sizes",
                     "updateWidget": "Update the widget",
-                    "addToTheMap": "Add the widget to the map",
+                    "addTheWidget": "Add the widget",
                     "titlePlaceholder": "Insert title...",
                     "textPlaceholder": "Insert text...",
                     "useThisMap": "Use this map",
@@ -1200,7 +1250,9 @@
                     "noAttributesDescription": "The selected layer has no attributes to show. Please select another widget type or layer",
                     "noWidgetsAvailableTitle": "Can not create the widget for the selected layer",
                     "noWidgetsAvailableDescription": "<p><strong>Please try to select another layer or widget type</strong></p><p>The server doesn't provide the needed services for the layer and the widget type selected</p><p>Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li>The WPS process <code>gs:aggregate</code> is not available</li></ul></p>",
-                    "checkAtLeastOneAttribute": "You must select at least one column"
+                    "checkAtLeastOneAttribute": "You must select at least one column",
+                    "noMapAvailableForLegend": "No map available",
+                    "noMapAvailableForLegendDescription": "You need at least one map widget to create the legend"
                 },
                 "setupFilter": "Configure a filter for the widget data"
             },
@@ -1357,6 +1409,14 @@
             "layerlabel": "Layer"
         },
         "rulesmanager": {
+            "apply": "Apply",
+            "remove": "Remove geometry",
+            "resetconstraints": "Resets Constraints",
+            "constraintsmsg": "Changing grant, workspace or layer, the details will be deleted. Are you sure you want to do that?",
+            "defstyle": "Default Style",
+            "avstyle": "Available Styles",
+            "clearbtn": "Clear All",
+            "selectbtn": "Select All",
             "placeholders": {
                 "filter": "Search...",
                 "role": "Type to search Roles",
@@ -1368,7 +1428,8 @@
                 "layer": "Type to search Layers",
                 "access": "Type to search Access",
                 "ip": "###.###.###.###/##",
-                "priority": "Select Priority"
+                "priority": "Select Priority",
+                "filter": "Filter styles..."
             },
             "menutitle": "Manage GeoFence Rules",
             "tooltip": {
@@ -1387,6 +1448,7 @@
                 "filter": "Filters",
                 "attribute": "Attributes Rule"
             },
+            "rule": "Rule",
             "cachetitle": "Clear Cache",
             "cachemsg": "Are you sure to clear the GeoFence cache?",
             "deltitle": "Delete Rule",
@@ -1411,7 +1473,10 @@
             "close": "Close",
             "previous": "previous",
             "next": "next",
+            "cacheCleaned": "Cache successfully cleaned",
             "errorTitle": "Geofence",
+            "errorCQL": "Geometry not valid!",
+            "errorCleaningCache": "Error cleaning geofence cache.",
             "errorLoadingRoles": "Error loading roles.",
             "errorLoadingUsers": "Error loading users.",
             "errorLoadingWorkspaces": "Error loading workspaces.",
@@ -1420,11 +1485,17 @@
             "errorMovingRules": "Error moving rules.",
             "errorDeletingRules": "Error deleting rules.",
             "errorAddingRule": "Error adding rule.",
-            "errorUpdatingRule": "Error updating rule.",
+            "errorUpdatingRule": "Error saving rule.",
+            "errorDuplicateRule": "Duplicated rule.",
+            "errorLoading": "Error loading",
             "deleteModal": "Delete Rules",
             "selectedRulesDelete": "Delete selected rules ?",
             "deleteButton": "Delete",
-            "cancelButton": "Cancel"
+            "cancelButton": "Cancel",
+            "cqlRead": "CQL Filter Read Rules",
+            "cqlWrite": "CQL Filter Write Rules",
+            "missingconfig": "Rules manager misses the configuration. Access denied!",
+            "selectworkspace": "You need to select the workspace to enable advanced options"
         },
         "tutorial": {
             "title": "Tutorial",
@@ -1514,6 +1585,46 @@
             "cesiumNavigation": {
                 "title": "Navigation",
                 "text": "Here you can find the zoom in and zoom out buttons"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Overview of dashboard functionalities"
+            },
+            "dashboardNav": {
+                "title": "Navigation Bar",
+                "text": "Here you can find language selector, login, homepage link and options menu"
+            },
+            "dashboardContainer": {
+                "title": "Dashboard",
+                "text": "<p>A Dashboard in MapStore2 provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Add Widget",
+                "text": "To add a widget to the dashboard, you can click on the + button"
+            },
+            "dashboardBuilder": {
+                "title": "Create a new widget",
+                "text": "You can select which type of widget you want and then add to the dashboard selecting one of the items in the list"
+            },
+            "dashboardAddChart": {
+                "title": "Chart Widget",
+                "text": "<p>It's a widget that show and aggregate data into pie, line or bar charts.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Select chart type</li><li>Configure chart data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddText": {
+                "title": "Text Widget",
+                "text": "<p>Add your own text to the dashboard.</p><p>Steps:</p><p><ul><li>Edit text in editor</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddTable": {
+                "title": "Table Widget",
+                "text": "<p>Add an attribute table to the dashboard that contains data from a selected vector layer. You can also filter data to customize your table.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure table data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Counter Widget",
+                "text": "<p>Add a new counter to the dashboard. Counter will show numeric value aggregationg data from a selected vector layer.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure counter data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddMap": {
+                "title": "Map Widget",
+                "text": "<p>Add a new interactive map to the dashboard. You can add more than one map with the ability to connect other widgets to them. After saving the first map, the legend widget will be added to the list. Legend Widget will show a legend related to the connected map.</p><p>Steps:</p><p><ul><li>Select a map</li><li>Improve map by adding new layers</li><li>Save and add to dashboard</li></ul></p>"
             }
         }
     }

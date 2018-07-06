@@ -48,6 +48,7 @@ const UPDATE_DETAILS = 'MAPS:UPDATE_DETAILS';
 const SAVE_DETAILS = 'MAPS:SAVE_DETAILS';
 const DELETE_DETAILS = 'MAPS:DELETE_DETAILS';
 const SET_DETAILS_CHANGED = 'MAPS:SET_DETAILS_CHANGED';
+const SHOW_DETAILS = 'MAPS:SHOW_DETAILS';
 const SAVE_RESOURCE_DETAILS = 'MAPS:SAVE_RESOURCE_DETAILS';
 const DO_NOTHING = 'MAPS:DO_NOTHING';
 const DELETE_MAP = 'MAPS:DELETE_MAP';
@@ -121,6 +122,19 @@ function mapsLoaded(maps, params, searchText) {
         params,
         maps,
         searchText
+    };
+}
+
+/**
+ * shows or hides map details, type `MAPS:SHOW_DETAILS`
+ * @memberof actions.maps
+ * @prop {boolean} showMapDetails flag used to trigger the showing/hiding of the map details
+ * @return {action}        type `MAPS:SHOW_DETAILS`
+*/
+function setShowMapDetails(showMapDetails) {
+    return {
+        type: SHOW_DETAILS,
+        showMapDetails
     };
 }
 
@@ -952,6 +966,7 @@ module.exports = {
     detailsSaving, DETAILS_SAVING,
     toggleDetailsEditability, TOGGLE_DETAILS_EDITABILITY,
     setFeaturedMapsEnabled, FEATURED_MAPS_SET_ENABLED,
+    setShowMapDetails, SHOW_DETAILS,
     metadataChanged,
     loadMaps,
     mapsLoading,

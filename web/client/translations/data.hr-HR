@@ -6,13 +6,13 @@
         "htmlTest": "{name} {surname}",
         "about_title": "O aplikaciji...",
         "aboutLbl": "O",
-        "about_p0-0": "MapStore 2 je framework za izgradnju web mapping aplikacija koristeći standardne mapping biblioteke kao što su",
+        "about_p0-0": "MapStore je framework za izgradnju web mapping aplikacija koristeći standardne mapping biblioteke kao što su",
         "about_p0-1": "i",
-        "about_p1": "MapStore 2 ima nekoliko oglednih aplikacija:",
+        "about_p1": "MapStore ima nekoliko oglednih aplikacija:",
         "about_ul0_li0": "MapViewer je jednostavni preglednik predefiniranih karata (po izboru pohranjenih u bazi koristeći GeoStore)",
         "about_ul0_li1": "MapPublisher je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd. Za više informacija provjerite",
         "about_h20": "Licenca",
-        "about_p3": "MapStore 2 je slobodan softver otvorenoga koda, baziran je na OpenLayers 3, Leaflet i ReactJS bibiliotekama i licenciran je pod Simplified BSD License.",
+        "about_p3": "MapStore je slobodan softver otvorenoga koda, baziran je na OpenLayers 3, Leaflet i ReactJS bibiliotekama i licenciran je pod Simplified BSD License.",
         "about_p5-0": "Za više informacija posjetite",
         "about_a0": "ovu",
         "about_p5-1": "stranicu.",
@@ -60,6 +60,7 @@
             "deleteLayerMessage": "Želite li zaista izbrisati ovaj sloj?",
             "confirmDelete": "Jeste li sigurni?",
             "featureTypeError": "Nije moguće učitavanje atributa sloja",
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "Nadmorska visina",
             "titleTranslations": "Prijevodi naslova",
             "groupProperties": "Svojstva grupe",
@@ -159,7 +160,7 @@
             "open": "Otvori",
             "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore 2 je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd.<br/>Posjetite <a href=\"/mapstore/docs/\">početnu stranicu</a> za više informacija.",
+            "description": "MapStore je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd.<br/>Posjetite <a href=\"/mapstore/docs/\">početnu stranicu</a> za više informacija.",
             "Applications": "Aplikacije",
             "Examples": "Primjeri",
             "LinkedinGroup": "Mapstore Linkedin grupa",
@@ -314,6 +315,11 @@
                 "fieldsChanged": "Neka polja su izmijenjena"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Show layers",
+            "showLegend": "Show legend",
+            "hideLegend": "Hide legend"
+        },
         "toc": {
             "toggleLayerVisibility": "Izmijeni vidljivost sloja",
             "displayLegendAndTools": "Prikaži kazalo i alate",
@@ -350,6 +356,7 @@
             "refreshConfirm": "Ažuriraj",
             "refreshMessage": "Ponovno učitaj konfiguraciju WMS slojeva sa servera",
             "refreshError": "Greška prilikom ažuriranja slojeva: ",
+            "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
             "refreshOptions": {
                 "bbox": "Ažuriraj granični okvir",
                 "search": "Ažuriraj postavke pretraživanja",
@@ -873,6 +880,9 @@
             "type": "Tip",
             "serviceTitle": "Naslov",
             "serviceTitlePlaceholder": "unesi naslov",
+            "missingReference": "Missing OGC reference metadata",
+            "showDescription": "Show full description",
+            "hideDescription": "Hide full description",
             "notification": {
                 "warningAddCatalogService": "Unesi ispravni url i naslov",
                 "addCatalogService": "Servis je dodan ispravno",
@@ -1136,7 +1146,7 @@
                     "configureTableOptions": "Prilagodi postavke tabele",
                     "resetColumnsSizes": "Poništo sve promjene širine kolona",
                     "updateWidget": "Ažuriraj widget",
-                    "addToTheMap": "Dodaj widget na kartu",
+                    "addTheWidget": "Dodaj widget",
                     "titlePlaceholder": "Umetni naslov...",
                     "textPlaceholder": "Umetni tekst...",
                     "useThisMap": "Koristi ovu kartu",
@@ -1403,6 +1413,46 @@
             "cesiumNavigation": {
                 "title": "Navigacija",
                 "text": "Ovdje možete naći dugmad za približavanje i udaljavanje sadržaja karte"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Overview of dashboard functionalities"
+            },
+            "dashboardNav": {
+                "title": "Navigation Bar",
+                "text": "Here you can find language selector, login, homepage link and options menu"
+            },
+            "dashboardContainer": {
+                "title": "Dashboard",
+                "text": "<p>A Dashboard in MapStore2 provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Add Widget",
+                "text": "To add a widget to the dashboard, you can click on the + button"
+            },
+            "dashboardBuilder": {
+                "title": "Create a new widget",
+                "text": "You can select which type of widget you want and then add to the dashboard selecting one of the items in the list"
+            },
+            "dashboardAddChart": {
+                "title": "Chart Widget",
+                "text": "<p>It's a widget that show and aggregate data into pie, line or bar charts.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Select chart type</li><li>Configure chart data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddText": {
+                "title": "Text Widget",
+                "text": "<p>Add your own text to the dashboard.</p><p>Steps:</p><p><ul><li>Edit text in editor</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddTable": {
+                "title": "Table Widget",
+                "text": "<p>Add an attribute table to the dashboard that contains data from a selected vector layer. You can also filter data to customize your table.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure table data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Counter Widget",
+                "text": "<p>Add a new counter to the dashboard. Counter will show numeric value aggregationg data from a selected vector layer.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure counter data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddMap": {
+                "title": "Map Widget",
+                "text": "<p>Add a new interactive map to the dashboard. You can add more than one map with the ability to connect other widgets to them. After saving the first map, the legend widget will be added to the list. Legend Widget will show a legend related to the connected map.</p><p>Steps:</p><p><ul><li>Select a map</li><li>Improve map by adding new layers</li><li>Save and add to dashboard</li></ul></p>"
             }
         }
     }

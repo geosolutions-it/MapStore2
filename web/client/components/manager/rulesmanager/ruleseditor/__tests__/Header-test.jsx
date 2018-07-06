@@ -37,7 +37,7 @@ describe('Rules Editor Header component', () => {
 
     });
     it('render navigation items with details active', () => {
-        ReactDOM.render(<Header detailsActive />, document.getElementById("container"));
+        ReactDOM.render(<Header layer={{}} rule={{layer: "test", grant: "ALLOW"}} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-panel-header-container');
         expect(el).toExist();

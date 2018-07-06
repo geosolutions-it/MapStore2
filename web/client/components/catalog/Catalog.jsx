@@ -59,7 +59,10 @@ class Catalog extends React.Component {
         services: PropTypes.object,
         showGetCapLinks: PropTypes.bool,
         wrapOptions: PropTypes.bool,
-        zoomToLayer: PropTypes.bool
+        zoomToLayer: PropTypes.bool,
+        hideThumbnail: PropTypes.bool,
+        hideIdentifier: PropTypes.bool,
+        hideExpand: PropTypes.bool
     };
 
     static contextTypes = {
@@ -206,7 +209,7 @@ class Catalog extends React.Component {
                     records={this.props.records}
                     authkeyParamNames={this.props.authkeyParamNames}
                     catalogURL={this.isValidServiceSelected() && this.props.services[this.props.selectedService].url || ""}
-                    catalogType={this.props.services[this.props.selectedService].type}
+                    catalogType={this.props.services[this.props.selectedService] && this.props.services[this.props.selectedService].type}
                     onLayerAdd={this.props.onLayerAdd}
                     onZoomToExtent={this.props.onZoomToExtent}
                     zoomToLayer={this.props.zoomToLayer}
@@ -215,6 +218,9 @@ class Catalog extends React.Component {
                     addAuthentication={this.props.addAuthentication}
                     currentLocale={this.props.currentLocale}
                     recordItem={this.props.recordItem}
+                    hideThumbnail={this.props.hideThumbnail}
+                    hideIdentifier={this.props.hideIdentifier}
+                    hideExpand={this.props.hideExpand}
                 />
         </div>);
     };

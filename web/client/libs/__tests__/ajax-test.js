@@ -70,6 +70,10 @@ const authenticationRules = [
     {
       "urlPattern": ".*imtokenized.*",
       "method": "bearer"
+    },
+    {
+      "urlPattern": ".*useBrowserCredentials.*",
+      "method": "browserWithCredentials"
     }
 ];
 
@@ -208,12 +212,13 @@ describe('Tests ajax library', () => {
         expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
         // authkey authentication with user
         expect.spyOn(SecurityUtils, 'getSecurityInfo').andReturn(securityInfoB);
-        axios.get('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2').then(() => {
+        axios.get('http://www.some-site.com/geoserver?parameter1=value1&parameter2=value2&authkey=TEST_AUTHKEY').then(() => {
             done();
         }).catch((exception) => {
             expect(exception.config).toExist();
             expect(exception.config.url).toExist();
             expect(exception.config.url.indexOf('authkey')).toBeGreaterThan(-1);
+            expect(exception.config.url.indexOf("TEST_AUTHKEY")).toBeLessThan(0);
             done();
         });
     });
@@ -349,6 +354,33 @@ describe('Tests ajax library', () => {
         axios.get().then(() => {
             done("Axios actually reached the fake url");
         }).catch(() => {
+            done();
+        });
+    });
+
+    it('does set withCredentials on the request', (done)=> {
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+
+        axios.get('http://www.useBrowserCredentials.com/useBrowserCredentials?parameter1=value1&parameter2=value2').then(() => {
+            done();
+        }).catch( (exception) => {
+            expect(exception.config).toExist();
+            expect(exception.config.withCredentials).toExist();
+            expect(exception.config.withCredentials).toBeTruthy();
+            done();
+        });
+    });
+
+    it('does not set withCredentials on the request', (done)=> {
+        expect.spyOn(SecurityUtils, 'isAuthenticationActivated').andReturn(true);
+        expect.spyOn(SecurityUtils, 'getAuthenticationRules').andReturn(authenticationRules);
+
+        axios.get('http://www.skipBrowserCredentials.com/geoserver?parameter1=value1&parameter2=value2').then(() => {
+            done();
+        }).catch( (exception) => {
+            expect(exception.config).toExist();
+            expect(exception.config.withCredentials).toNotExist();
             done();
         });
     });

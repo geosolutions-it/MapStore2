@@ -61,9 +61,11 @@ const rulesEditorToolbarSelector = createSelector(selectedRules, targetPositionS
         showCache: sel.length === 0
     };
 });
+const isRulesManagerConfigured = state => state.localConfig && state.localConfig.plugins && !!state.localConfig.plugins.rulesmanager;
 const isEditorActive = state => state.rulesmanager && !!state.rulesmanager.activeRule;
 const triggerLoadSel = state => state.rulesmanager && state.rulesmanager.triggerLoad;
-
+const isLoading = state => state.rulesmanager && state.rulesmanager.loading;
+const geometryStateSel = state => state.rulesmanager && state.rulesmanager.geometryState;
 module.exports = {
     rulesSelector,
     optionsSelector,
@@ -74,5 +76,8 @@ module.exports = {
     isEditorActive,
     activeRuleSelector,
     servicesConfigSel,
-    triggerLoadSel
+    triggerLoadSel,
+    isLoading,
+    isRulesManagerConfigured,
+    geometryStateSel
 };

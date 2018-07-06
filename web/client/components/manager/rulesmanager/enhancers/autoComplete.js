@@ -1,5 +1,5 @@
 const Rx = require("rxjs");
-const { compose, withStateHandlers, defaultProps, createEventHandler, renameProp} = require('recompose');
+const { compose, withStateHandlers, defaultProps, createEventHandler, withProps} = require('recompose');
 const propsStreamFactory = require('../../../misc/enhancers/propsStreamFactory');
 const {isObject} = require("lodash");
 const stop = stream$ => stream$.filter(() => false);
@@ -94,6 +94,7 @@ const dataStreamFactory = prop$ => {
 
 module.exports = compose(
     defaultProps({
+        clearable: true,
         emptySearch: "%",
         stopPropagation: true,
         paginated: true,
@@ -111,7 +112,9 @@ module.exports = compose(
     }),
     withStateHandlers(({paginated, selected, initialData = []}) => ({
         val: selected,
+        typing: false,
         page: 0,
+        stopChange: false,
         data: initialData,
         emptyReq: 0,
         pagination: {
@@ -121,12 +124,11 @@ module.exports = compose(
             loadPrevPage: () => {},
             loadNextPage: () => {}
         }}), {
-        resetCombo: ({onValueSelected}, { initialData = []}) => () => {
+        resetCombo: (state, { initialData = []}) => () => {
             return {
             data: initialData,
             page: 0,
-            val: undefined,
-            select: undefined
+            val: undefined
         }; },
         setData: ({count: oldCount}) => ({pagination, data, page = 0, count = oldCount} = {}) => ({
             pagination,
@@ -134,15 +136,30 @@ module.exports = compose(
             page,
             count
         }),
-        onChange: (state, {initialData = [], valueField}) => (val = "") => {
-            const currentVal = isObject(val) && val[valueField] || val;
-            return currentVal.length === 0 && {val: currentVal, data: initialData} || {val: currentVal};
-        },
-        onToggle: ({ val = "", data, emptyReq}, {selected, onValueSelected, initialData = []}) => (open) => {
-            if (!open && val === "" && selected) {
+        onReset: ({typing, val}, {onValueSelected, selected}) => () => {
+            if (selected) {
                 onValueSelected();
+            }
+            if (typing) {
+                return {typing: false};
+            }
+        },
+        onChange: ({stopChange, val: oldVal, emptyReq}, {initialData = [], valueField}) => (val = "") => {
+            if (stopChange) {
+                return {stopChange: false};
+            }
+            const currentVal = isObject(val) && val[valueField] || val;
+            const newReq = oldVal && oldVal.length > 0 && currentVal.length === 0 ? emptyReq + 1 : emptyReq;
+            return currentVal.length === 0 && {typing: true, val: currentVal, data: initialData, emptyReq: newReq} || {typing: true, val: currentVal};
+        },
+        onToggle: ({ val = "", data, emptyReq}, {clearable, selected, onValueSelected, initialData = []}) => (open) => {
+            if (!clearable && !open && val === "" && selected) {
+                onValueSelected();
+                return {typing: false};
             }else if (!open && val !== selected) {
-                return {val: selected, data: initialData};
+                return {val: selected, data: initialData, typing: false};
+            }else if (!open) {
+                return {typing: false};
             }else if (open && val.length === 0 && data.length === 0) {
                 return {emptyReq: emptyReq + 1};
             }
@@ -152,8 +169,11 @@ module.exports = compose(
             if (selectedVal !== selected) {
                 onValueSelected(selectedVal);
             }
+            return {stopChange: true};
         }
     }),
     propsStreamFactory,
-    renameProp("val", "selectedValue")
+    withProps(({val = "", selected = "", typing}) => {
+        return {selectedValue: typing ? val : selected};
+    })
 );

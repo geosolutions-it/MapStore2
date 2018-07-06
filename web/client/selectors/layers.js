@@ -11,7 +11,7 @@ const {createSelector} = require('reselect');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
 const {getNormalizedLatLon} = require('../utils/CoordinatesUtils');
-const {get, head, isEmpty, find, isObject} = require('lodash');
+const {get, head, isEmpty, find, isObject, castArray} = require('lodash');
 
 const layersSelector = state => state.layers && state.layers.flat || state.layers || state.config && state.config.layers || [];
 const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
@@ -81,7 +81,12 @@ const tempBackgroundSelector = (state) => {
     const layers = allBackgroundLayerSelector(state) || [];
     return controls.tempLayer && !isEmpty(controls.tempLayer) ? controls.tempLayer : head(layers.filter((l) => l.visibility)) || {};
 };
-
+const getLayersWithDimension = (state, dimension) =>
+    (layersSelector(state) || [])
+        .filter(l =>
+            l
+            && l.dimensions
+            && find(castArray(l.dimensions), {name: dimension}));
 module.exports = {
     layersSelector,
     layerSelectorWithMarkers,
@@ -89,6 +94,7 @@ module.exports = {
     currentBackgroundLayerSelector,
     allBackgroundLayerSelector,
     getLayerFromId,
+    getLayersWithDimension,
     selectedNodesSelector,
     getSelectedLayer,
     getSelectedLayers,

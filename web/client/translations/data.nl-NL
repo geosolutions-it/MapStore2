@@ -6,13 +6,13 @@
         "htmlTest": "{name} {surname}",
         "about_title": "Info over deze app...",
         "aboutLbl": "Meer info",
-        "about_p0-0": "MapStore 2 is een framework dat het mogelijk maakt cartografische webtoepassingen te ontwikkelen met behulp van de standaard libraries zoals",
+        "about_p0-0": "MapStore is een framework dat het mogelijk maakt cartografische webtoepassingen te ontwikkelen met behulp van de standaard libraries zoals",
         "about_p0-1": "en",
-        "about_p1": "MapStore 2 heeft meerdere toepassingsvoorbeelden:",
+        "about_p1": "MapStore heeft meerdere toepassingsvoorbeelden:",
         "about_ul0_li0": "MapViewer is een eenvoudige viewer van gepreconfigureerde kaarten (optioneel opgeslagen in een GeoStore database)",
         "about_ul0_li1": "MapPublisher is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. Voor meer informatie: ",
         "about_h20": "Licentie",
-        "about_p3": "MapStore 2 is open source software, gebaseerd op OpenLayers 3, Leaflet and ReactJS, en is beschikbaar onder Simplified BSD License.",
+        "about_p3": "MapStore is open source software, gebaseerd op OpenLayers 3, Leaflet and ReactJS, en is beschikbaar onder Simplified BSD License.",
         "about_p5-0": "Voor meer informatie, zie",
         "about_a0": "deze",
         "about_p5-1": "bladzijde.",
@@ -54,6 +54,7 @@
             "deleteLayerMessage": "Weet u zeker dat u deze laag wilt verwijderen?",
             "confirmDelete": "Bent u zeker?",
             "featureTypeError": "De atributen van de laag kunnen niet geladen worden",
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "hoogte",
             "titleTranslations": "Title translations",
             "groupProperties": "Groep properties",
@@ -133,7 +134,7 @@
             "open": "Openen",
             "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore 2 is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. <br/>Bezoek onze <a href=\"/mapstore/docs/\">homepage</a> voor meer detail.",
+            "description": "MapStore is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. <br/>Bezoek onze <a href=\"/mapstore/docs/\">homepage</a> voor meer detail.",
             "Applications": "Toepassingen",
             "Examples": "Voorbeelden",
             "LinkedinGroup": "Mapstore Linkedin groep",
@@ -244,6 +245,11 @@
                 "title": "geautoriseerde groepen"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Show layers",
+            "showLegend": "Show legend",
+            "hideLegend": "Hide legend"
+        },
         "toc": {
             "toggleLayerVisibility": "Zet de zichtbaarheid van de laag aan / uit",
             "displayLegendAndTools": "Toon de legende en de tools",
@@ -262,6 +268,7 @@
             "refreshConfirm": "Bijwerken",
             "refreshMessage": "Laad de configuratie van de WMS-lagen opnieuw vanaf de server(s)",
             "refreshError": "Fout bij het bijwerken van de lagen: ",
+            "epsgNotSupported": "CRS {epsg} not supported for zoom to layer",
             "refreshOptions": {
                 "bbox": "BBOX bijwerken",
                 "search": "De zoekopties bijwerken",
@@ -718,7 +725,10 @@
             "search": "Zoek",
             "reset": "Verwijder",
             "options": "Opties",
-            "srs_not_allowed": "Deze service ondersteunt het geografische coördinatensysteem van de kaart niet"
+            "srs_not_allowed": "Deze service ondersteunt het geografische coördinatensysteem van de kaart niet",
+            "missingReference": "Missing OGC reference metadata",
+            "showDescription": "Show full description",
+            "hideDescription": "Hide full description"
         },
         "uploader": {
             "filename": "File Name",
@@ -945,7 +955,7 @@
                     "configureChartOptions": "Configurer les options de graphique",
                     "configureWidgetOptions": "Configurer les options du widget",
                     "updateWidget": "Mettre à jour le widget",
-                    "addToTheMap": "Ajouter le widget à la carte"
+                    "addTheWidget": "Ajouter le widget"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "Aucun widget disponible",
@@ -1183,6 +1193,46 @@
             "cesiumNavigation": {
                 "title": "Navigatie",
                 "text": "Hier kunt u de knoppen voor in- en uitzoomen vinden"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Overview of dashboard functionalities"
+            },
+            "dashboardNav": {
+                "title": "Navigation Bar",
+                "text": "Here you can find language selector, login, homepage link and options menu"
+            },
+            "dashboardContainer": {
+                "title": "Dashboard",
+                "text": "<p>A Dashboard in MapStore2 provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Add Widget",
+                "text": "To add a widget to the dashboard, you can click on the + button"
+            },
+            "dashboardBuilder": {
+                "title": "Create a new widget",
+                "text": "You can select which type of widget you want and then add to the dashboard selecting one of the items in the list"
+            },
+            "dashboardAddChart": {
+                "title": "Chart Widget",
+                "text": "<p>It's a widget that show and aggregate data into pie, line or bar charts.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Select chart type</li><li>Configure chart data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddText": {
+                "title": "Text Widget",
+                "text": "<p>Add your own text to the dashboard.</p><p>Steps:</p><p><ul><li>Edit text in editor</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddTable": {
+                "title": "Table Widget",
+                "text": "<p>Add an attribute table to the dashboard that contains data from a selected vector layer. You can also filter data to customize your table.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure table data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Counter Widget",
+                "text": "<p>Add a new counter to the dashboard. Counter will show numeric value aggregationg data from a selected vector layer.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure counter data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddMap": {
+                "title": "Map Widget",
+                "text": "<p>Add a new interactive map to the dashboard. You can add more than one map with the ability to connect other widgets to them. After saving the first map, the legend widget will be added to the list. Legend Widget will show a legend related to the connected map.</p><p>Steps:</p><p><ul><li>Select a map</li><li>Improve map by adding new layers</li><li>Save and add to dashboard</li></ul></p>"
             }
         }
       }

@@ -8,10 +8,9 @@
 
 
 const PropTypes = require('prop-types');
-const { castArray, isObject } = require('lodash');
+const {castArray} = require('lodash');
 const {getContext, mapProps, compose} = require('recompose');
-
-const getLocalizedProp = (locale, prop) => isObject(prop) ? prop[locale] || prop.default : prop;
+const {getLocalizedProp} = require('../../../utils/LocaleUtils');
 
 const accumulate = (props, locale) => (acc = {}, propName) => ({
             ...acc,

@@ -4,15 +4,15 @@
         "Language": "Sprache",
         "msgId0": "{name} machte {numPhotos, plural, =0 {keine Fotos} =1 {ein Foto} other {# Fotos}} am {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
-        "about_title": "Über diese App...",
+        "about_title": "Über",
         "aboutLbl": "Über",
-        "about_p0-0": "MapStore 2 ist ein Framework zur Erstellung von webbasierten Karten-Anwendungen mit Standard-Karten-Bibliotheken wie",
+        "about_p0-0": "MapStore ist ein Framework zur Erstellung von webbasierten Karten-Anwendungen mit Standard-Karten-Bibliotheken wie",
         "about_p0-1": "und",
-        "about_p1": "Für MapStore 2 gibt es verschiedene Beispiel Anwendungen :",
+        "about_p1": "Für MapStore gibt es verschiedene Beispiel Anwendungen :",
         "about_ul0_li0": "MapViewer ist ein einfache Anwendung zur Ansicht von vorkonfigurierten Karten (die optional in einer Datenbank mittels GeoStore gespeichert wurden)",
         "about_ul0_li1": "MapPublisher wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen, die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren. Für mehr Informationen siehe die",
         "about_h20": "Lizenz",
-        "about_p3": "MapStore 2 ist kostenlos und Open Source, basierend auf OpenLayers 3, Leaflet und ReactJS und ist unter der vereinfachten BSD Lizenz lizenziert.",
+        "about_p3": "MapStore ist kostenlos und Open Source, basierend auf OpenLayers 3, Leaflet und ReactJS und ist unter der vereinfachten BSD Lizenz lizenziert.",
         "about_p5-0": "Für mehr Informationen siehe",
         "about_a0": "diese",
         "about_p5-1": "Seite.",
@@ -60,6 +60,7 @@
             "deleteLayerMessage": "Möchtest du wirklich diese Ebene löschen?",
             "confirmDelete": "Bist du sicher?",
             "featureTypeError": "Layerattribute können nicht geladen werden",
+            "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Antwort ist nicht gültig",
             "elevation": "Höhe",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
@@ -123,6 +124,7 @@
         "options": "Optionen",
         "settings": "Einstellungen",
         "help": "Hilfe",
+        "docs": "Dokumentation",
         "gohome": "Gehe zur Startseite",
         "back": "Zurück zum Import",
         "printbutton": "Drucken",
@@ -158,7 +160,7 @@
             "open": "Öffnen",
             "shortDescription": "Modern webmapping mit OL3, Leaflet und React<br/><small>besuchen sie die <a href=\"/mapstore/docs/\">dokumentationsseite</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore 2 wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren.<br/>Besuche die <a href=\"/mapstore/docs/\">Homepage</a> für mehr Details.",
+            "description": "MapStore wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren.<br/>Besuche die <a href=\"/mapstore/docs/\">Homepage</a> für mehr Details.",
             "Applications": "Anwendungen",
             "Examples": "Beispiele",
             "LinkedinGroup": "Mapstore Linkedin Gruppe",
@@ -254,7 +256,7 @@
                 "errorWhenDeleting": "Beim Löschen ist ein Fehler aufgetreten",
                 "errorSizeExceeded": "Bitte verkleinern Sie die Größe der Details oder die Qualität der Bilder"
             },
-            "search": "Suche nach Karten..."
+            "search": "Suche..."
         },
         "resources": {
             "deleteConfirmTitle": "Bist du sicher",
@@ -342,6 +344,11 @@
                 "fieldsChanged": "Einige Felder wurden geändert"
             }
         },
+        "floatinglegend": {
+            "showTOC": "Ebenen anzeigen",
+            "showLegend": "Legende anzeigen",
+            "hideLegend": "Legende ausblenden"
+        },
         "toc": {
             "toggleLayerVisibility": "Ändere die Ebenen Sichtbarkeit",
             "displayLegendAndTools": "Legende und Werkzeuge zeigen",
@@ -378,6 +385,7 @@
             "refreshConfirm": "Aktualisieren",
             "refreshMessage": "Laden Sie die WMS-Layer-Konfiguration von dem Server(s)",
             "refreshError": "Fehler beim Aktualisieren von Ebenen: ",
+            "epsgNotSupported": "CRS {epsg} wird für das Zoomen auf Layer nicht unterstützt",
             "refreshOptions": {
                 "bbox": "BBOX aktualisieren",
                 "search": "Suchoptionen aktualisieren",
@@ -396,6 +404,37 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Fehler bei der Metadatensuche"
                 }
+            },
+            "thematic": {
+                "classification_field": "Klassifizierungsfeld:",
+                "classification_method": "Klassifizierungsmethode:",
+                "classification_aggregate": "Aggregatfunktion:",
+                "classification_colors": "Farbrampe:",
+                "classification_intervals": "Intervalle:",
+                "preview": "Vorschau",
+                "remove_thematic": "Zurück zum einfachen Stil",
+                "values": {
+                    "equalInterval": "Gleiche Intervalle",
+                    "quantile": "Quantil",
+                    "jenks": "Natürliche Pausen",
+                    "sum": "Summe",
+                    "avg": "Durchschnittlich",
+                    "count": "Anzahl",
+                    "min": "Mindest",
+                    "max": "Max"
+                },
+                "configuration": "Aufbau",
+                "apply": "Klassifizierung anwenden",
+                "restore": "Anpassungen zurücksetzen",
+                "go_to_cfg": "Konfigurieren...",
+                "go_to_thema": "Verwenden Sie diese Konfiguration",
+                "cfgError": "Fehler in der Konfigurations-JSON",
+                "classify": "Klassifizieren",
+                "remove": "Klassifizierung entfernen",
+                "data_panel": "Daten",
+                "classification_stroke": "Brett",
+                "classification_error": "Fehler beim Aufruf des Klassifizierungsdienstes: {message}",
+                "fields_error": "Fehler beim Laden der Felderliste: {message}"
             }
         },
         "print":{
@@ -703,7 +742,8 @@
                     "box": "BoundingBox",
                     "buffer": "Buffer",
                     "circle": "Kreis",
-                    "poly": "Polygon"
+                    "poly": "Polygon",
+                    "cql":   "CQL"
                 },
                 "operations": {
                     "intersects": "Schneidet",
@@ -901,6 +941,9 @@
             "type": "Typ",
             "serviceTitle": "Titel",
             "serviceTitlePlaceholder": "Geben Sie einen Titel ein",
+            "missingReference": "Fehlende OGC-Referenzmetadaten",
+            "showDescription": "Vollständige Beschreibung anzeigen",
+            "hideDescription": "Vollständige Beschreibung ausblenden",
             "notification": {
                 "warningAddCatalogService": "Geben Sie eine gültige URL und einen Titel ein",
                 "addCatalogService": "Service wurde korrekt hinzugefügt",
@@ -1123,6 +1166,10 @@
                     "title": "Karte",
                     "caption": "Eine Karte hinzufügen"
                 },
+                "legend": {
+                    "title": "Legende",
+                    "caption": "füge eine Legende hinzu"
+                },
                 "chart": {
                     "title": "Grafik",
                     "caption": "füge ein Diagramm hinzu"
@@ -1157,7 +1204,10 @@
             "title": "Titel",
             "description": "Beschreibung",
             "errors": {
+                "notext": "Kein Text verfügbar",
                 "nodata": "Keine Daten für den ausgewählten Layer / Filter verfügbar",
+                "noLegend": "Keine Legenden zu zeigen",
+                "noLegendDescription": "Die verbundene Karte hat keine Ebenen, die in der Legende angezeigt werden",
                 "nodatainviewport": "Keine Daten im aktuellen Ansichtsfenster",
                 "timeoutExpired": "Der Service hat zu lange gedauert. Vielleicht ist die Abfrage zu komplex oder der Server ist beschäftigt",
                 "genericError": "Beim Abrufen der Daten ist ein Fehler aufgetreten"
@@ -1172,6 +1222,7 @@
                     "backToFeatureGrid": "Zurück zum Feature-Raster",
                     "backToLayerSelection": "Zurück zur Ebenenauswahl",
                     "backToMapSelection": "Zurück zur Kartenauswahl",
+                    "backToPreview": "Zurück zur Vorschau",
                     "backToChartOptions": "Zurück zu den Diagrammoptionen",
                     "selectALayer": "Wähle eine Ebene",
                     "selectAMap": "Wählen Sie eine Karte",
@@ -1181,7 +1232,7 @@
                     "configureTableOptions": "Konfigurieren Sie die Tabellenoptionen",
                     "resetColumnsSizes": "Setzen Sie alle Änderungen an den Spaltengrößen zurück",
                     "updateWidget": "Aktualisieren Sie das Widget",
-                    "addToTheMap": "Hinzufügen des Widgets zur Karte",
+                    "addTheWidget": "Hinzufügen des Widget",
                     "titlePlaceholder": "Gib den Titel ein...",
                     "textPlaceholder": "Text eingeben...",
                     "useThisMap": "Benutze diese Karte",
@@ -1199,7 +1250,9 @@
                     "noAttributesDescription": "Die ausgewählte Ebene enthält keine anzuzeigenden Attribute. Bitte wählen Sie einen anderen Widget-Typ oder Layer",
                     "noWidgetsAvailableTitle": "Das Widget für die ausgewählte Ebene kann nicht erstellt werden",
                     "noWidgetsAvailableDescription": "<p><strong>Bitte wählen Sie eine andere Ebene oder einen anderen Widgets-Typ</strong></p><p>Der Server bietet nicht die erforderlichen Dienste für die Ebene und den ausgewählten Widget-Typ</p><p> Mögliche Ursachen sind: <ul> <li> Der ausgewählte Layer ist ein Raster-Layer </li> <li> Der WFS-Service ist nicht verfügbar </li> <li> Der WPS-Prozess <code>gs:aggregate</code> ist nicht verfügbar </li> </ul> </p>",
-                    "checkAtLeastOneAttribute": "Sie müssen mindestens eine Spalte auswählen"
+                    "checkAtLeastOneAttribute": "Sie müssen mindestens eine Spalte auswählen",
+                    "noMapAvailableForLegend": "Keine Karte verfügbar",
+                    "noMapAvailableForLegendDescription": "Sie benötigen mindestens ein Karten-Widget, um die Legende zu erstellen"
                 },
                 "setupFilter": "Konfigurieren Sie einen Filter für die Widgetdaten"
             },
@@ -1356,6 +1409,14 @@
             "layerlabel": "Ebene"
         },
         "rulesmanager": {
+            "apply": "Anwenden",
+            "remove": "Entfernen Sie die Geometrie",
+            "resetconstraints": "Setzt Einschränkungen zurück",
+            "constraintsmsg": "Wenn Sie die Berechtigung, den Arbeitsbereich oder die Ebene ändern, werden die Details gelöscht. Bist du sicher, dass du das machen willst?",
+            "defstyle": "Standardstil",
+            "avstyle": "Verfügbare Stile",
+            "clearbtn": "Alles Löschen",
+            "selectbtn": "Wählen Sie Alle",
             "placeholders": {
                 "filter": "Suche...",
                 "role": "Nach Rollen suchen",
@@ -1386,6 +1447,7 @@
                 "filter": "Filter",
                 "attribute": "Attribute Regel"
             },
+            "rule": "Regle",
             "cachetitle": "Cache leeren",
             "cachemsg": "Möchten Sie den GeoFence-Cache wirklich löschen?",
             "deltitle": "Regel Löschen",
@@ -1410,7 +1472,10 @@
             "close": "Schließen",
             "previous": "vorheriger",
             "next": "nächster",
+            "cacheCleaned": "Der Cache wurde erfolgreich bereinigt",
             "errorTitle": "Geofence",
+            "errorCQL": "Geometrie nicht gültig!",
+            "errorCleaningCache": "Fehler beim Reinigen des Geofence-Cache.",
             "errorLoadingRoles": "Fehler beim Laden der Rollen.",
             "errorLoadingUsers": "Fehler beim Laden der Benutzer.",
             "errorLoadingWorkspaces": "Fehler beim Laden der Workspaces.",
@@ -1420,10 +1485,16 @@
             "errorDeletingRules": "Fehler beim Löschen der Regeln.",
             "errorAddingRule": "Fehler beim Hinzufügen der Regel.",
             "errorUpdatingRule": "Fehler beim Ändern der Regel.",
+            "errorDuplicateRule": "Duplizierte Regel",
+            "errorLoading": "Ladefehler",
             "deleteModal": "Regeln löschen",
             "selectedRulesDelete": "Ausgewählte Regeln löschen ?",
             "deleteButton": "Löschen",
-            "cancelButton": "Abbrechen"
+            "cancelButton": "Abbrechen",
+            "cqlRead": "CQL Filter Lese Regeln",
+            "cqlWrite": "CQL Filter Write Rules",
+            "missingconfig": "Der Regeln-Manager vermisst die Konfiguration. Zugriff abgelehnt!",
+            "selectworkspace": "Sie müssen den Arbeitsbereich auswählen, um erweiterte Optionen zu aktivieren."
         },
         "tutorial": {
             "title": "Anleitung",
@@ -1513,6 +1584,46 @@
             "cesiumNavigation": {
                 "title": "Navigation",
                 "text": "Hier finden Sie die Schaltflächen zum Vergrößern und Verkleinern"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Überblick über die Funktionen des Dashboards"
+            },
+            "dashboardNav": {
+                "title": "Navigationsleiste",
+                "text": "Hier finden Sie Sprachauswahl, Login, Homepage-Link und Optionsmenü"
+            },
+            "dashboardContainer": {
+                "title": "Instrumententafel",
+                "text": "<p> Ein Dashboard in MapStore2 bietet eine Reihe von Informationen, die passend gesammelt werden, um aggregierte Daten in der One-Shot-Ansicht anzuzeigen. Geodaten, die in einer Karte angezeigt werden, können Seite an Seite mit verwandten Attributtabellen, Diagrammen und anderen platziert werden, mit dem Ziel, verschiedene Arten von Informationen zu verbinden, statistische Details und textuelle Beschreibungen zu einem bestimmten Kontext anzuzeigen. </p> <p> Alle Benutzer können veröffentlichte Dashboards visualisieren und mit ihnen interagieren, aber nur Benutzer, die sie bearbeiten dürfen, können alle Widgets in einem Dashboard hinzufügen, anordnen, ihre Größe ändern oder löschen </ p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Widget hinzufügen",
+                "text": "Um ein Widget zum Dashboard hinzuzufügen, können Sie auf die Schaltfläche + klicken"
+            },
+            "dashboardBuilder": {
+                "title": "Erstelle ein neues Widget",
+                "text": "Sie können auswählen, welche Art von Widget Sie möchten und dann zum Dashboard hinzufügen, indem Sie eines der Elemente in der Liste auswählen"
+            },
+            "dashboardAddChart": {
+                "title": "Diagramm Widget",
+                "text": "<p> Es ist ein Widget, das Daten in Kreis-, Linien- oder Balkendiagrammen anzeigt und aggregiert. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Vektorebene </li> <li> Diagrammtyp auswählen </li> <li> Diagrammdaten konfigurieren </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddText": {
+                "title": "Text Widget",
+                "text": "<p> Fügen Sie Ihrem Dashboard Ihren eigenen Text hinzu. </p> <p> Schritte: </p> <p> <ul> <li> Bearbeiten Sie Text im Editor </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddTable": {
+                "title": "Tabellen Widget",
+                "text": "<p> Fügen Sie dem Dashboard, das Daten von einer ausgewählten Vektorebene enthält, eine Attributtabelle hinzu. Sie können auch Daten filtern, um Ihre Tabelle anzupassen. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Vektorebene aus </li> <li> Tabellendaten konfigurieren </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Gegen Widget",
+                "text": "<p> Fügen Sie dem Dashboard einen neuen Zähler hinzu. Counter zeigt numerische Werte an, die Daten einer ausgewählten Vektorebene aggregieren. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Vektorschicht </li> <li> Zählerdaten konfigurieren </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddMap": {
+                "title": "Karten Widget",
+                "text": "<p> Fügen Sie eine neue interaktive Karte zum Dashboard hinzu. Sie können mehr als eine Karte mit der Möglichkeit hinzufügen, andere Widgets mit ihnen zu verbinden. Nach dem Speichern der ersten Karte wird das Legenden-Widget zur Liste hinzugefügt. Das Legenden-Widget zeigt eine Legende zur verbundenen Karte. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Karte </li> <li> Verbessern Sie die Karte, indem Sie neue Ebenen hinzufügen </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
             }
         }
     }

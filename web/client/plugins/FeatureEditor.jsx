@@ -11,7 +11,12 @@ const {createSelector, createStructuredSelector} = require('reselect');
 const {bindActionCreators} = require('redux');
 const {get} = require('lodash');
 
-const Grid = require('../components/data/featuregrid/FeatureGrid');
+const {lifecycle} = require('recompose');
+const Grid = lifecycle({
+    componentDidMount() {
+        this.props.onMount(this.props.showFilteredObject);
+    }
+})(require('../components/data/featuregrid/FeatureGrid'));
 const {paginationInfo, describeSelector, wfsURLSelector, typeNameSelector} = require('../selectors/query');
 const {modeSelector, changesSelector, newFeaturesSelector, hasChangesSelector, selectedFeaturesSelector, getDockSize} = require('../selectors/featuregrid');
 const { toChangesMap} = require('../utils/FeatureGridUtils');
@@ -20,7 +25,7 @@ const BorderLayout = require('../components/layout/BorderLayout');
 const EMPTY_ARR = [];
 const EMPTY_OBJ = {};
 const {gridTools, gridEvents, pageEvents, toolbarEvents} = require('./featuregrid/index');
-const {initPlugin, sizeChange} = require('../actions/featuregrid');
+const {initPlugin, sizeChange, setShowCurrentFilter} = require('../actions/featuregrid');
 const ContainerDimensions = require('react-container-dimensions').default;
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const Dock = connect(createSelector(
@@ -42,6 +47,7 @@ const Dock = connect(createSelector(
   * @prop {number} cfg.maxStoredPages default 5. In virtual Scroll mode determines the size of the loaded pages cache
   * @prop {number} cfg.vsOverScan default 20. Number of rows to load above/below the visible slice of the grid
   * @prop {number} cfg.scrollDebounce default 50. milliseconds of debounce interval between two scroll event
+  * @prop {boolean} cfg.showFilteredObject default false. Displays spatial filter selection area when true
   * @classdesc
   * FeatureEditor Plugin Provides functionalities to browse/edit data via WFS. The grid can be configured to use paging or
   * <br/>virtual scroll mechanisms. By defualt virtual scroll is enabled. When on virtual scroll mode, the maxStoredPages param
@@ -139,6 +145,8 @@ const FeatureDock = (props = {
             footer={getFooter(props)}>
             {getDialogs(props.tools)}
             <Grid
+                onMount={props.onMount}
+                showFilteredObject={props.showFilteredObject}
                 editingAllowedRoles={props.editingAllowedRoles}
                 initPlugin={props.initPlugin}
                 customEditorsOptions={props.customEditorsOptions}
@@ -217,6 +225,7 @@ const selector = createSelector(
 );
 const EditorPlugin = connect(selector,
     (dispatch) => ({
+        onMount: bindActionCreators(setShowCurrentFilter, dispatch),
         gridEvents: bindActionCreators(gridEvents, dispatch),
         pageEvents: bindActionCreators(pageEvents, dispatch),
         initPlugin: bindActionCreators((options) => initPlugin(options), dispatch),

@@ -29,8 +29,7 @@ const LayerSelector = (props) => (
 module.exports = compose(
     connect(() => ({}), {onError: error}),
     defaultProps({
-        paginated: false,
-        emitOnReset: true,
+        paginated: true,
         size: 5,
         textField: "name",
         valueField: "name",
@@ -45,8 +44,7 @@ module.exports = compose(
     }),
     withPropsOnChange(["workspace"], ({workspace}) => {
         return {
-            parentsFilter: {workspace},
-            disabled: !workspace
+            parentsFilter: {workspace}
     }; }),
     withHandlers({
         onValueSelected: ({setOption = () => {}}) => filterTerm => {

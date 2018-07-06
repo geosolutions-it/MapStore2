@@ -82,7 +82,8 @@ module.exports = {
             ...deps,
             [m === "map" ? "viewport" : `${m}.viewport`]: `${m}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].viewport": "widgets[ID_W].bbox"}
             [m === "map" ? "center" : `${m}.center`]: `${m}.center`, // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
-            [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`
+            [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`,
+            [m === "map" ? "layers" : `${m}.layers`]: `${m}.layers`
         }), {}))
     ),
     /**
@@ -91,7 +92,7 @@ module.exports = {
      */
     toggleWidgetConnectFlow: (action$, {getState = () => {}} = {}) =>
         action$.ofType(TOGGLE_CONNECTION).switchMap(({ active, availableDependencies = [], options}) =>
-            active
+            (active && availableDependencies.length > 0)
                 // activate flow
                 ? availableDependencies.length === 1
                     // case singleMap

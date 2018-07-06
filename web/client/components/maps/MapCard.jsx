@@ -21,6 +21,7 @@ class MapCard extends React.Component {
         // props
         style: PropTypes.object,
         map: PropTypes.object,
+        showMapDetails: PropTypes.bool,
         detailsSheetActions: PropTypes.object,
         // CALLBACKS
         viewerUrl: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
@@ -37,6 +38,7 @@ class MapCard extends React.Component {
     };
 
     static defaultProps = {
+        showMapDetails: true,
         style: {
             backgroundImage: 'url(' + thumbUrl + ')',
             backgroundSize: "cover",
@@ -82,7 +84,7 @@ class MapCard extends React.Component {
     getCardStyle = () => {
         if (this.props.map.thumbnail) {
             return assign({}, this.props.style, {
-                background: 'linear-gradient(rgba(0, 0, 0, ' + this.props.backgroundOpacityStart + '), rgba(0, 0, 0, ' + this.props.backgroundOpacityEnd + ') ), url(' + (this.props.map.thumbnail === null || this.props.map.thumbnail === "NODATA" ? thumbUrl : decodeURIComponent(this.props.map.thumbnail)) + ')'
+                backgroundImage: 'linear-gradient(rgba(0, 0, 0, ' + this.props.backgroundOpacityStart + '), rgba(0, 0, 0, ' + this.props.backgroundOpacityEnd + ') ), url(' + (this.props.map.thumbnail === null || this.props.map.thumbnail === "NODATA" ? thumbUrl : decodeURIComponent(this.props.map.thumbnail)) + ')'
             });
         }
         return this.props.style;
@@ -115,7 +117,7 @@ class MapCard extends React.Component {
                 }
             },
             {
-                visible: !!(this.props.map.details && this.props.map.details !== 'NODATA'),
+                visible: !!(this.props.showMapDetails && this.props.map.details && this.props.map.details !== 'NODATA'),
                 glyph: 'sheet',
                 tooltipId: this.props.tooltips.showDetails,
                 onClick: evt => {
