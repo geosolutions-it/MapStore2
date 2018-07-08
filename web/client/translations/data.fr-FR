@@ -1308,21 +1308,16 @@
                 "gauge": "Afficher les étiquettes"
             },
             "displayCartesian": {
-                "line": "Hide Grid",
-                "bar": "Hide Grid"
-
-            },
-            "yAxis":{
-                "line": "Hide Y axis",
-                "bar": "Hide Y axis"
+                "line": "Masquer la grille",
+                "bar": "Masquer la grille"
             },
             "yAxisLabel":{
-                "line": "Y axis Label",
-                "bar": "Y axis Label"
+                "line": "Label de l'axe Y",
+                "bar": "Label de l'axe Y"
             },
             "advancedOptions":{
-                "line": "Advanced Options",
-                "bar": "Advanced Options"
+                "line": "Options avancées",
+                "bar": "Options avancées"
             }
         },
         "dashboard": {

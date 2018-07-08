@@ -32,7 +32,6 @@ const sameOptions = (o1 = {}, o2 = {}) =>
     o1.aggregateFunction === o2.aggregateFunction
     && o1.aggregationAttribute === o2.aggregationAttribute
     && o1.groupByAttributes === o2.groupByAttributes
-    && o1.label === o2.label;
 
 const getLayerUrl = l => l && l.wpsUrl || (l.search && l.search.url) || l.url;
 const dataStreamFactory = ($props) =>

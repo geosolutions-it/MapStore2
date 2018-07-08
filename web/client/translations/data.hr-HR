@@ -1245,11 +1245,6 @@
             "displayCartesian": {
                 "line": "Hide Grid",
                 "bar": "Hide Grid"
-
-            },
-            "yAxis":{
-                "line": "Hide Y axis",
-                "bar": "Hide Y axis"
             },
             "yAxisLabel":{
                 "line": "Y axis Label",
@@ -1259,7 +1254,6 @@
                 "line": "Advanced Options",
                 "bar": "Advanced Options"
             }
-
         },
         "dashboard": {
             "editor": {

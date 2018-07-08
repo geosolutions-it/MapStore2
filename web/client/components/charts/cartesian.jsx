@@ -13,6 +13,6 @@ const AxisLabel = require('./AxisLabel');
 
 const renderCartesianTools = ({xAxis, yAxis, cartesian, ...props}) => ([
     xAxis && xAxis.show !== false ? <XAxis key="xaxis" {...xAxis}/> : null,
-    yAxis ? <YAxis key="yaxis" label={<AxisLabel axisType="yAxis" x={50} y={125} width={0} height={0} children={props.yAxisLabel}/>}/> : null,
+    yAxis ? <YAxis key="yaxis" label={<AxisLabel axisType="yAxis" x={50} y={125} width={0} height={0} children={props.yAxisLabel}/>} axisLine={false} tick={false} tickLine={false}/> : null,
     cartesian !== false ? <CartesianGrid key="cartesiangrid" {...cartesian}/> : null]);
 module.exports = {renderCartesianTools};

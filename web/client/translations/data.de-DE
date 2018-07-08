@@ -1307,20 +1307,16 @@
                 "gauge": "Legende anzeigen"
             },
             "displayCartesian": {
-                "line": "Hide Grid",
-                "bar": "Hide Grid"
-            },
-            "yAxis": {
-                "line": "Hide Y axis",
-                "bar": "Hide Y axis"
+                "line": "Raster ausblenden",
+                "bar": "Raster ausblenden"
             },
             "yAxisLabel":{
-                "line": "Y axis Label",
-                "bar": "Y axis Label"
+                "line": "Y-Achsenbeschriftung",
+                "bar": "Y-Achsenbeschriftung"
             },
             "advancedOptions":{
-                "line": "Advanced Options",
-                "bar": "Advanced Options"
+                "line": "Erweiterte Optione",
+                "bar": "Erweiterte Optione"
             }
         },
         "dashboard": {

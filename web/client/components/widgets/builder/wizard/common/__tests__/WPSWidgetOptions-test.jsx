@@ -35,7 +35,7 @@ describe('WPSWidgetOptions component', () => {
             onChange: () => {}
         };
         const spyonChange = expect.spyOn(actions, 'onChange');
-        ReactDOM.render(<WPSWidgetOptions featureTypeProperties={get(describeStates, "featureTypes[0].properties") } onChange={actions.onChange} dependencies={{viewport: {}}}/>, document.getElementById("container"));
+        ReactDOM.render(<WPSWidgetOptions featureTypeProperties={get(describeStates, "featureTypes[0].properties") } data={{type:'bar'}} onChange={actions.onChange} dependencies={{viewport: {}}}/>, document.getElementById("container"));
         const inputs = document.querySelectorAll('input');
         // simulate change with tab (for react-select)
         ReactTestUtils.Simulate.change(inputs[0], { target: { value: 'STATE_NAME' } });
@@ -57,6 +57,15 @@ describe('WPSWidgetOptions component', () => {
         ReactTestUtils.Simulate.change(inputs[3]);
         expect(spyonChange.calls[3].arguments[0]).toBe("legend");
         expect(spyonChange.calls[3].arguments[1]).toBe(true);
+
+        ReactTestUtils.Simulate.change(inputs[5]);
+        expect(spyonChange.calls[4].arguments[0]).toBe("cartesian");
+        expect(spyonChange.calls[4].arguments[1]).toBe(true);
+
+        ReactTestUtils.Simulate.change(inputs[6], { target: { value: 'Y axis label' } });
+        expect(spyonChange.calls[5].arguments[0]).toBe("yAxisLabel");
+        expect(spyonChange.calls[5].arguments[1]).toBe("Y axis label");
+
     });
     it('Test WPSWidgetOptions onChange for counter context', () => {
         const actions = {
@@ -67,7 +76,8 @@ describe('WPSWidgetOptions component', () => {
             showColorRamp: false,
             showUom: true,
             showGroupBy: false,
-            showLegend: false
+            showLegend: false,
+            advancedOptions: false
         }}
         featureTypeProperties={get(describeStates, "featureTypes[0].properties")}
         onChange={actions.onChange} dependencies={{ viewport: {} }} />, document.getElementById("container"));
