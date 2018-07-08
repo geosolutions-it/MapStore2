@@ -17,7 +17,7 @@ module.exports = ({data = [], ...props} = {}) => {
      <Table striped>
          <thead>
              <tr>
-                 {cols.map( (k, i) => <th>{ i+1 === cols.length && props.yAxisLabel ? props.yAxisLabel: i > 0 ? `${k}` : k}</th>)}
+                 {cols.map( (k, i) => <th>{ i + 1 === cols.length && props.yAxisLabel ? props.yAxisLabel : i > 0 ? `${k}` : k}</th>)}
              </tr>
          </thead>
          <tbody>

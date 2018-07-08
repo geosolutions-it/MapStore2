@@ -35,7 +35,7 @@ describe('WPSWidgetOptions component', () => {
             onChange: () => {}
         };
         const spyonChange = expect.spyOn(actions, 'onChange');
-        ReactDOM.render(<WPSWidgetOptions featureTypeProperties={get(describeStates, "featureTypes[0].properties") } data={{type:'bar'}} onChange={actions.onChange} dependencies={{viewport: {}}}/>, document.getElementById("container"));
+        ReactDOM.render(<WPSWidgetOptions featureTypeProperties={get(describeStates, "featureTypes[0].properties") } data={{type: 'bar'}} onChange={actions.onChange} dependencies={{viewport: {}}}/>, document.getElementById("container"));
         const inputs = document.querySelectorAll('input');
         // simulate change with tab (for react-select)
         ReactTestUtils.Simulate.change(inputs[0], { target: { value: 'STATE_NAME' } });
