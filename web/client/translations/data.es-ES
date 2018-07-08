@@ -1307,23 +1307,17 @@
                 "gauge": "Mostrar etiquetas"
             },
             "displayCartesian": {
-                "line": "Hide Grid",
-                "bar": "Hide Grid"
-
-            },
-            "yAxis":{
-                "line": "Hide Y axis",
-                "bar": "Hide Y axis"
+                "line": "Ocultar cuadrícula",
+                "bar": "Ocultar cuadrícula"
             },
             "yAxisLabel":{
-                "line": "Y axis Label",
-                "bar": "Y axis Label"
+                "line": "Etiqueta del eje Y",
+                "bar": "Etiqueta del eje Y"
             },
             "advancedOptions":{
-                "line": "Advanced Options",
-                "bar": "Advanced Options"
+                "line": "Opciones avanzadas",
+                "bar": "Opciones avanzadas"
             }
-
         },
         "dashboard": {
             "saveDialog": {

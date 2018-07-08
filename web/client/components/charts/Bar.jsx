@@ -16,6 +16,7 @@ module.exports = ({width = 600, height = 300, data, series =[], colorGenerator, 
     const key = (COLORS || ["linechart"]).join("");
     return (<BarChart key={key} autoColorOptions={autoColorOptions} width={width} height={height} data={data}>
        {seriesArray.map(({color, ...serie} = {}, i) => <Bar key={`bar-${i}`} fill={COLORS[i]} {...serie}/>)}
+       {seriesArray.map((seri)=> !props.yAxisLabel ? props.yAxisLabel = seri.dataKey : props.yAxisLabel = props.yAxisLabel)}
        {renderCartesianTools(props)}
        {props.children}
     </BarChart>);
