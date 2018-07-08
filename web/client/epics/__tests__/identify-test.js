@@ -8,10 +8,11 @@
 
 const expect = require('expect');
 
-const { ZOOM_TO_POINT, clickOnMap} = require('../../actions/map');
-const { UPDATE_CENTER_TO_MARKER, FEATURE_INFO_CLICK, loadFeatureInfo, featureInfoClick} = require('../../actions/mapInfo');
-const {zoomToVisibleAreaEpic, onMapClick} = require('../identify');
-const {testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
+const {ZOOM_TO_POINT, clickOnMap} = require('../../actions/map');
+const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, loadFeatureInfo, featureInfoClick, closeIdentify} = require('../../actions/mapInfo');
+const { zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing} = require('../identify');
+const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
+const {testEpic, TEST_TIMEOUT, addTimeoutEpic} = require('./epicTestUtils');
 const {registerHook} = require('../../utils/MapUtils');
 
 describe('identify Epics', () => {
@@ -152,6 +153,44 @@ describe('identify Epics', () => {
                     disableAlwaysOn: false
                 }
             });
+    });
+    it('closeFeatureAndAnnotationEditing closes annotations', (done) => {
+
+        const sentActions = closeIdentify();
+
+        const expectedAction = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case CLOSE_ANNOTATIONS:
+                        done();
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+        };
+
+        testEpic(closeFeatureAndAnnotationEditing, 1, sentActions, expectedAction, { annotations: { editing: true } });
+    });
+    it('closeFeatureAndAnnotationEditing purges mapinfo results', (done) => {
+
+        const sentActions = closeIdentify();
+
+        const expectedAction = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case PURGE_MAPINFO_RESULTS:
+                        done();
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+        };
+
+        testEpic(closeFeatureAndAnnotationEditing, 1, sentActions, expectedAction);
     });
 
 });

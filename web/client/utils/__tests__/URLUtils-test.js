@@ -16,7 +16,8 @@ const urlPartsResult1 = {
     protocol: "https:",
     domain: "demo.geo-solutions.it",
     port: "443",
-    rootPath: "/geoserver/wfs"
+    rootPath: "/geoserver/wfs",
+    applicationRootPath: 'geoserver'
 };
 describe('URLUtils', () => {
     it('test urlParts', () => {

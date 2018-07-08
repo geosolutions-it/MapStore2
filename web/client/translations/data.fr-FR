@@ -405,6 +405,37 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Erreur dans la recherche de métadonnées"
                 }
+            },
+            "thematic": {
+                "classification_field": "Champ de classification:",
+                "classification_method": "Méthode de classification:",
+                "classification_aggregate": "Fonction d'agrégat:",
+                "classification_colors": "Rampe de couleur:",
+                "classification_intervals": "Intervalles",
+                "preview": "Aperçu",
+                "remove_thematic": "Retour au style simple",
+                "values": {
+                    "equalInterval": "Intervalles égaux",
+                    "quantile": "Quantile",
+                    "jenks": "Pauses naturelles",
+                    "sum": "Somme",
+                    "avg": "Moyenne",
+                    "count": "Compter",
+                    "min": "Min",
+                    "max": "Max"
+                },
+                "configuration": "Configuration",
+                "apply": "Appliquer la classification",
+                "restore": "Réinitialiser les personnalisations",
+                "go_to_cfg": "Configurer ...",
+                "go_to_thema": "Utilisez cette configuration",
+                "cfgError": "Erreur dans la configuration JSON",
+                "classify": "Classer",
+                "remove": "Supprimer la classification",
+                "data_panel": "Les données",
+                "classification_stroke": "bord",
+                "classification_error": "Erreur lors de l'appel du service de classification: {message}",
+                "fields_error": "Erreur lors du chargement de la liste des champs: {message}"
             }
         },
         "print":{
