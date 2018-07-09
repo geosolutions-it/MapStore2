@@ -342,7 +342,10 @@ const API = {
      */
     removeThematicStyle: (params) => {
         const {SLD, viewparams, ...other} = params;
-        return other;
+        return assign({}, other, {
+            SLD: null,
+            viewparams: null
+        });
     },
 
     defaultParams: {
