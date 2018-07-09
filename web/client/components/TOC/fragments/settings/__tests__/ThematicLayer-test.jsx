@@ -456,8 +456,7 @@ describe('test ThematicLayer module component', () => {
         expect(spyChange).toHaveBeenCalled();
         expect(spyChange.calls[1].arguments[0]).toBe('thematic');
         expect(spyChange.calls[1].arguments[1].current.strokeOn).toBe(false);
-        expect(spyClassify).toHaveBeenCalled();
-        expect(spyClassify.calls[0].arguments[0].thematic.current.strokeOn).toBe(false);
+        expect(spyClassify).toNotHaveBeenCalled();
     });
 
     it('tests ThematicLayer component with configured thematic thema style strokeWeight', () => {
@@ -481,8 +480,7 @@ describe('test ThematicLayer module component', () => {
         expect(spyChange).toHaveBeenCalled();
         expect(spyChange.calls[1].arguments[0]).toBe('thematic');
         expect(spyChange.calls[1].arguments[1].current.strokeWeight).toBe(2);
-        expect(spyClassify).toHaveBeenCalled();
-        expect(spyClassify.calls[0].arguments[0].thematic.current.strokeWeight).toBe(2);
+        expect(spyClassify).toNotHaveBeenCalled();
     });
 
     it('tests ThematicLayer component with configured thematic thema style strokeColor', () => {
@@ -509,8 +507,7 @@ describe('test ThematicLayer module component', () => {
         expect(spyChange).toHaveBeenCalled();
         expect(spyChange.calls[1].arguments[0]).toBe('thematic');
         expect(spyChange.calls[1].arguments[1].current.strokeColor.toUpperCase()).toBe('#D0021B');
-        expect(spyClassify).toHaveBeenCalled();
-        expect(spyClassify.calls[0].arguments[0].thematic.current.strokeColor.toUpperCase()).toBe('#D0021B');
+        expect(spyClassify).toNotHaveBeenCalled();
     });
 
     it('tests ThematicLayer component with configured thematic thema style params', () => {
