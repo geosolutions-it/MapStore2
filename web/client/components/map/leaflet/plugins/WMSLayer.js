@@ -152,7 +152,7 @@ function wmsToLeafletOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
     const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
     // NOTE: can we use opacity to manage visibility?
-    return objectAssign({}, options.baseParams, {
+    const result = objectAssign({}, options.baseParams, {
         layers: options.name,
         styles: options.style || "",
         format: options.format || 'image/png',
@@ -171,6 +171,7 @@ function wmsToLeafletOptions(options) {
         (options._v_ ? {_v_: options._v_} : {}),
         (options.params || {})
     ));
+    return SecurityUtils.addAuthenticationToSLD(result, options);
 }
 
 function getWMSURLs( urls ) {
@@ -205,8 +206,10 @@ Layers.registerType('wms', {
             return newLayer;
         }
         // find the options that make a parameter change
-        let oldqueryParameters = objectAssign({}, WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(oldOptions)), oldOptions.params);
-        let newQueryParameters = objectAssign({}, WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(newOptions)), newOptions.params);
+        let oldqueryParameters = objectAssign({}, WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(oldOptions)),
+            SecurityUtils.addAuthenticationToSLD(oldOptions.params || {}, oldOptions));
+        let newQueryParameters = objectAssign({}, WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(newOptions)),
+            SecurityUtils.addAuthenticationToSLD(newOptions.params || {}, newOptions));
         let newParameters = Object.keys(newQueryParameters).filter((key) => {return newQueryParameters[key] !== oldqueryParameters[key]; });
         let removeParams = Object.keys(oldqueryParameters).filter((key) => { return oldqueryParameters[key] !== newQueryParameters[key]; });
         let newParams = {};
@@ -218,7 +221,7 @@ Layers.registerType('wms', {
                 return objectAssign({}, accumulator, {[currentValue]: newQueryParameters[currentValue] });
             }, newParams);
             // set new options as parameters, merged with params
-            layer.setParams(objectAssign(newParams, newParams.params, newOptions.params));
+            layer.setParams(objectAssign(newParams, newParams.params, SecurityUtils.addAuthenticationToSLD(newOptions.params || {}, newOptions)));
         }/* else if (!isEqual(newOptions.params, oldOptions.params)) {
             layer.setParams(newOptions.params);
         }*/

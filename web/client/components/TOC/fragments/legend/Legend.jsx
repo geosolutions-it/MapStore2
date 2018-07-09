@@ -58,7 +58,7 @@ class Legend extends React.Component {
                 SLD_VERSION: "1.1.0",
                 LEGEND_OPTIONS: props.legendOptions
             }, layer.legendParams || {},
-            layer.params || {},
+            SecurityUtils.addAuthenticationToSLD(layer.params || {}, props.layer),
             layer.params && layer.params.SLD_BODY ? {SLD_BODY: layer.params.SLD_BODY} : {},
             props.scales && props.currentZoomLvl ? {SCALE: Math.round(props.scales[props.currentZoomLvl])} : {});
             SecurityUtils.addAuthenticationParameter(url, query);

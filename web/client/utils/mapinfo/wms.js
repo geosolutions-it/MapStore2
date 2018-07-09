@@ -10,6 +10,7 @@ const MapUtils = require('../MapUtils');
 const CoordinatesUtils = require('../CoordinatesUtils');
 const {isArray, isObject, head} = require('lodash');
 const FilterUtils = require('../FilterUtils');
+const SecurityUtils = require('../SecurityUtils');
 const assign = require('object-assign');
 
 module.exports = {
@@ -38,7 +39,7 @@ module.exports = {
         const ENV = locale ? 'locale:' + locale : '';
         const CQL_FILTER = FilterUtils.isFilterValid(layer.filterObj) && FilterUtils.toCQLFilter(layer.filterObj);
         return {
-            request: {
+            request: SecurityUtils.addAuthenticationToSLD({
                 service: 'WMS',
                 version: '1.1.1',
                 request: 'GetFeatureInfo',
@@ -60,7 +61,7 @@ module.exports = {
                 info_format: infoFormat,
                 ENV,
                 ...assign({}, (CQL_FILTER ? {CQL_FILTER} : {}), layer.baseParams, layer.params, props.params)
-            },
+            }, layer),
             metadata: {
                 title: isObject(layer.title) ? layer.title[props.currentLocale] || layer.title.default : layer.title,
                 regex: layer.featureInfoRegex,
