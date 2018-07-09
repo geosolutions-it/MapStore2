@@ -7,7 +7,6 @@
  */
 
 const { urlParts } = require('../utils/URLUtils');
-const SecurityUtils = require('../utils/SecurityUtils');
 const url = require('url');
 const { isArray, sortBy, head, castArray, isNumber } = require('lodash');
 const assign = require('object-assign');
@@ -145,7 +144,7 @@ const API = {
         const parts = urlParts(isArray(layer.url) ? layer.url[0] : layer.url);
         return url.format(assign(getUrl(parts), {
             pathname: parts.applicationRootPath + "/rest/sldservice/" + layer.name + "/classify.xml",
-            query: assign({}, SecurityUtils.addAuthenticationParameter(layer.url, mapParams(layer, params)), { fullSLD: true })
+            query: assign({}, layer.url, mapParams(layer, params), { fullSLD: true })
         }));
     },
     /**

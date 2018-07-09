@@ -592,6 +592,53 @@ describe('Leaflet layer', () => {
 
     });
 
+    it('test wms security token on SLD param', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms",
+            params: {
+                SLD: "http://sample.server/geoserver/rest/sld?test1=aaa"
+            }
+        };
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        ConfigUtils.setConfigProp('authenticationRules', [
+            {
+                urlPattern: '.*geostore.*',
+                method: 'bearer'
+            }, {
+                urlPattern: '\\/geoserver.*',
+                authkeyParamName: 'ms2-authkey',
+                method: 'authkey'
+            }
+        ]);
+
+        SecurityUtils.setStore({
+            getState: () => ({
+                security: {
+                    token: "########-####-####-####-###########"
+                }
+            })
+        });
+        let layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={options}
+            map={map}
+            securityToken="########-####-####-####-###########" />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        let lcount = 0;
+        map.eachLayer(function() { lcount++; });
+        expect(lcount).toBe(1);
+
+        expect(layer.layer.wmsParams['ms2-authkey']).toBe("########-####-####-####-###########");
+        expect(layer.layer.wmsParams.SLD).toBe("http://sample.server/geoserver/rest/sld?test1=aaa&ms2-authkey=" + encodeURIComponent("########-####-####-####-###########"));
+    });
+
     it('test wms security token', () => {
         const options = {
             type: "wms",
