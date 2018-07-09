@@ -188,14 +188,14 @@ const MapStore2 = {
         }, {
             jsAPIEpic: actionTrigger.epic
         });
-        const initialActions = [...getInitialActions(options), loadVersion];
+        const initialActions = [...getInitialActions(options), loadVersion.bind(null, options.versionURL)];
         const appConfig = {
             storeOpts: assign({}, storeOpts, {notify: true}),
             appStore,
             pluginsDef,
             initialActions,
             appComponent: StandardRouter,
-            printingEnabled: false
+            printingEnabled: options.printingEnabled || false
         };
         if (options.style) {
             let dom = document.getElementById('custom_theme');
