@@ -27,6 +27,7 @@ const WMSStyle = require('../../components/TOC/fragments/settings/WMSStyle');
 
 const Elevation = require('../../components/TOC/fragments/settings/Elevation');
 const FeatureInfoEditor = require('../../components/TOC/fragments/settings/FeatureInfoEditor');
+const LoadingView = require('../../components/misc/LoadingView');
 
 const responses = {
     html: require('raw-loader!./featureInfoPreviews/responseHTML.txt'),
@@ -105,12 +106,12 @@ const FeatureInfo = defaultProps({
 let settingsPlugins = null;
 const configuredPlugins = {};
 
-const getConfiguredPlugin = (plugin, loaded) => {
+const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
     if (plugin) {
         let configured = configuredPlugins[plugin.name];
         if (!configured) {
-            configured = PluginsUtils.getConfiguredPlugin(plugin, loaded);
-            if (configured) {
+            configured = PluginsUtils.getConfiguredPlugin(plugin, loaded, loadingComp);
+            if (configured && configured.loaded) {
                 configuredPlugins[plugin.name] = configured;
             }
         }
@@ -148,7 +149,7 @@ module.exports = ({showFeatureInfoTab = true, ...props}, {plugins, pluginsConfig
             tooltipId: 'layerProperties.style',
             glyph: 'dropper',
             visible: props.settings.nodeType === 'layers' && props.element.type === "wms",
-            Component: props.activeTab === 'style' && props.element.thematic && settingsPlugins.ThematicLayer && getConfiguredPlugin(settingsPlugins.ThematicLayer, loadedPlugins) || WMSStyle,
+            Component: props.activeTab === 'style' && props.element.thematic && settingsPlugins.ThematicLayer && getConfiguredPlugin(settingsPlugins.ThematicLayer, loadedPlugins, <LoadingView width={100} height={100} />) || WMSStyle,
             toolbar: [
                 {
                     glyph: 'list',

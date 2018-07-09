@@ -187,7 +187,7 @@ Layers.registerType('wms', {
                 });
             }
             if (changed) {
-                const params = objectAssign(newParams, SecurityUtils.addAuthenticationToSLD(newOptions.params, newOptions));
+                const params = objectAssign(newParams, SecurityUtils.addAuthenticationToSLD(newOptions.params || {}, newOptions));
                 layer.getSource().updateParams(objectAssign(params, Object.keys(oldOptions.params || {}).reduce((previous, key) => {
                     return params[key] ? previous : objectAssign(previous, {
                         [key]: undefined

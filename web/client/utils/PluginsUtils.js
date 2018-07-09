@@ -278,13 +278,15 @@ const PluginsUtils = {
         };
     },
     getPluginItems,
-    getConfiguredPlugin: (pluginDef, loadedPlugins) => {
+    getConfiguredPlugin: (pluginDef, loadedPlugins, loaderComponent) => {
         if (pluginDef) {
-            const Plugin = loadedPlugins && loadedPlugins[pluginDef.name] || pluginDef.plugin;
-            return (props) => {
-                return (<Plugin key={pluginDef.id}
-                    {...props} {...pluginDef.cfg} pluginCfg={pluginDef.cfg}/>);
+            const Plugin = loadedPlugins && loadedPlugins[pluginDef.name] || (pluginDef.plugin && !pluginDef.plugin.loadPlugin && pluginDef.plugin);
+            const result = (props) => {
+                return Plugin ? (<Plugin key={pluginDef.id}
+                    {...props} {...pluginDef.cfg} pluginCfg={pluginDef.cfg} />) : loaderComponent;
             };
+            result.loaded = !!Plugin;
+            return result;
         }
         return pluginDef;
     },
