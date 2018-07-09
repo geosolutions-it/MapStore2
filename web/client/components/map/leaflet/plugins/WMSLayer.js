@@ -16,6 +16,7 @@ const objectAssign = require('object-assign');
 const {isArray} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const ElevationUtils = require('../../../../utils/ElevationUtils');
+const urlUtils = require('url');
 require('leaflet.nontiledlayer');
 
 L.NonTiledLayer.WMSCustom = L.NonTiledLayer.WMS.extend({
@@ -152,7 +153,7 @@ function wmsToLeafletOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
     const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
     // NOTE: can we use opacity to manage visibility?
-    return objectAssign({}, options.baseParams, {
+    const result = objectAssign({}, options.baseParams, {
         layers: options.name,
         styles: options.style || "",
         format: options.format || 'image/png',
@@ -171,6 +172,7 @@ function wmsToLeafletOptions(options) {
         (options._v_ ? {_v_: options._v_} : {}),
         (options.params || {})
     ));
+    return SecurityUtils.addAuthenticationToSLD(result, options);
 }
 
 function getWMSURLs( urls ) {

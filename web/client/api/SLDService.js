@@ -145,7 +145,7 @@ const API = {
         const parts = urlParts(isArray(layer.url) ? layer.url[0] : layer.url);
         return url.format(assign(getUrl(parts), {
             pathname: parts.applicationRootPath + "/rest/sldservice/" + layer.name + "/classify.xml",
-            query: assign({}, SecurityUtils.addAuthenticationParameter(layer.url, mapParams(layer, params)), { fullSLD: true })
+            query: assign({}, layer.url, mapParams(layer, params), { fullSLD: true })
         }));
     },
     /**

@@ -29,7 +29,7 @@ const { isAdminUserSelector } = require('../selectors/security');
  * @memberof plugins
  * @name ThematicLayer
  * @class
- * @prop {boolean} enableRemoveStyle, enables the remove style button (disabled by default)
+ * @prop {boolean} enableRemoveStyle enables the remove style button (disabled by default)
  * @prop {array} cfg.colors list of base color palettes the user can choose to create the style (they can be extended via
  *    layer configuration)
  * @prop {number} cfg.colorSamples number of samples to show in the color palette list

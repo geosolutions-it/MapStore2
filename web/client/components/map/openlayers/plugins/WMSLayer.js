@@ -26,7 +26,7 @@ const ElevationUtils = require('../../../../utils/ElevationUtils');
 function wmsToOpenlayersOptions(options) {
     const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
     // NOTE: can we use opacity to manage visibility?
-    return objectAssign({}, options.baseParams, {
+    const result = objectAssign({}, options.baseParams, {
         LAYERS: options.name,
         STYLES: options.style || "",
         FORMAT: options.format || 'image/png',
@@ -41,6 +41,7 @@ function wmsToOpenlayersOptions(options) {
         (options._v_ ? {_v_: options._v_} : {}),
         (options.params || {})
     ));
+    return SecurityUtils.addAuthenticationToSLD(result, options);
 }
 
 function getWMSURLs( urls ) {
