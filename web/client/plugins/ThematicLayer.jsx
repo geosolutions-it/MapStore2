@@ -9,7 +9,8 @@ const {connect} = require('../utils/PluginsUtils');
 const assign = require('object-assign');
 
 const { changeLayerParams } = require('../actions/layers');
-const { loadFields, loadClassification, changeConfiguration, cancelDirty, setDirty } = require('../actions/thematic');
+const { loadFields, loadClassification, changeConfiguration, cancelDirty, setDirty,
+    setInvalidInput, resetInvalidInput } = require('../actions/thematic');
 const { getSelectedLayer } = require('../selectors/layers');
 
 const API = require('../api/SLDService');
@@ -108,7 +109,8 @@ module.exports = {
                         methods: API.methods,
                         colors: customColors,
                         adminCfg: state && state.thematic && state.thematic.adminCfg,
-                        applyEnabled: state && state.thematic && state.thematic.dirty || false
+                        applyEnabled: state && state.thematic && state.thematic.dirty || false,
+                        invalidInputs: state && state.thematic && state.thematic.invalidInputs || {}
                     }, API);
                 }, {
                         onChangeConfiguration: changeConfiguration,
@@ -116,7 +118,9 @@ module.exports = {
                         onSwitchLayer: loadFields,
                         onClassify: loadClassification,
                         onApplyStyle: cancelDirty,
-                        onDirtyStyle: setDirty
+                        onDirtyStyle: setDirty,
+                        onInvalidInput: setInvalidInput,
+                        onValidInput: resetInvalidInput
                     })(require('../components/TOC/fragments/settings/ThematicLayer'));
                 resolve(ThematicLayer);
             });

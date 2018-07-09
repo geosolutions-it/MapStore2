@@ -9,7 +9,7 @@
 const { urlParts } = require('../utils/URLUtils');
 const SecurityUtils = require('../utils/SecurityUtils');
 const url = require('url');
-const { isArray, sortBy, head, castArray } = require('lodash');
+const { isArray, sortBy, head, castArray, isNumber } = require('lodash');
 const assign = require('object-assign');
 const chroma = require('chroma-js');
 
@@ -93,6 +93,14 @@ const mapParams = (layer, params) => {
         if (key === 'field' && layer.thematic && !layer.thematic.fieldAsParam) {
             return previous;
         }
+        if (key === 'strokeWeight' && !params.strokeOn) {
+            return assign(previous, {
+                [key]: -1
+            });
+        }
+        if (key === 'strokeOn') {
+            return previous;
+        }
         return assign(previous, {
             [key]: params[key]
         });
@@ -106,6 +114,12 @@ const getUrl = (parts) => {
     }, parts.port ? {
         port: parts.port
     } : {});
+};
+
+const getNumber = (candidates) => {
+    return candidates.reduce((previous, current) => {
+        return isNumber(current) ? current : previous;
+    }, null);
 };
 
 /**
@@ -236,8 +250,8 @@ const API = {
     readClassification: (classificationObj) => {
         return classificationObj && classificationObj.Rules && classificationObj.Rules.Rule && castArray(classificationObj.Rules.Rule || []).map((rule) => ({
             color: rule.PolygonSymbolizer && rule.PolygonSymbolizer.Fill && rule.PolygonSymbolizer.Fill.CssParameter.$ || '#808080', // OGC default color
-            min: (rule.Filter.And && (rule.Filter.And.PropertyIsGreaterThanOrEqualTo || rule.Filter.And.PropertyIsGreaterThan).Literal) || (rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal),
-            max: (rule.Filter.And && (rule.Filter.And.PropertyIsLessThanOrEqualTo || rule.Filter.And.PropertyIsLessThan).Literal) || (rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal)
+            min: getNumber([rule.Filter.And && (rule.Filter.And.PropertyIsGreaterThanOrEqualTo || rule.Filter.And.PropertyIsGreaterThan).Literal, rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal]),
+            max: getNumber([rule.Filter.And && (rule.Filter.And.PropertyIsLessThanOrEqualTo || rule.Filter.And.PropertyIsLessThan).Literal, rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal])
         })) || [];
     },
     /**
@@ -340,7 +354,8 @@ const API = {
         field: "",
         open: false,
         strokeWeight: 0.2,
-        strokeColor: '#ff0000'
+        strokeColor: '#ff0000',
+        strokeOn: false
     }
 };
 

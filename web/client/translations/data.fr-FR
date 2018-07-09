@@ -435,7 +435,8 @@
                 "data_panel": "Les données",
                 "classification_stroke": "bord",
                 "classification_error": "Erreur lors de l'appel du service de classification: {message}",
-                "fields_error": "Erreur lors du chargement de la liste des champs: {message}"
+                "fields_error": "Erreur lors du chargement de la liste des champs: {message}",
+                "interval_limit": "Les intervalles doivent être compris entre {min} et {max}"
             }
         },
         "print":{

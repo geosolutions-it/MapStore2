@@ -434,7 +434,8 @@
                 "data_panel": "Dati",
                 "classification_stroke": "Bordo",
                 "classification_error": "Errore durante la chiamata al servizio di classificazione: {message}",
-                "fields_error": "Errore durante il caricamento dell'elenco dei campi: {message}"
+                "fields_error": "Errore durante il caricamento dell'elenco dei campi: {message}",
+                "interval_limit": "Inserisci un valore tra {min} e {max}"
             }
         },
         "print":{

@@ -434,7 +434,8 @@
                 "data_panel": "Daten",
                 "classification_stroke": "Brett",
                 "classification_error": "Fehler beim Aufruf des Klassifizierungsdienstes: {message}",
-                "fields_error": "Fehler beim Laden der Felderliste: {message}"
+                "fields_error": "Fehler beim Laden der Felderliste: {message}",
+                "interval_limit": "Intervalle sollten eine Zahl zwischen {min} und {max} sein"
             }
         },
         "print":{

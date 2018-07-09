@@ -106,6 +106,30 @@ const classification = {
     }
 };
 
+const classificationWithZeros = {
+    Rules: {
+        Rule: [{
+            PolygonSymbolizer: {
+                Fill: {
+                    CssParameter: {
+                        "$": "#FF0000"
+                    }
+                }
+            },
+            Filter: {
+                And: {
+                    PropertyIsGreaterThan: {
+                        Literal: 0
+                    },
+                    PropertyIsLessThan: {
+                        Literal: 10
+                    }
+                }
+            }
+        }]
+    }
+};
+
 const paramsDef = [{
     type: "aggregate",
     name: "aggregate"
@@ -159,6 +183,13 @@ describe('Test correctness of the SLDService APIs', () => {
         expect(result.length).toBe(1);
         expect(result[0].color).toBe('#FF0000');
         expect(result[0].min).toBe(1);
+        expect(result[0].max).toBe(10);
+    });
+    it('check readClassification with zeros', () => {
+        const result = API.readClassification(classificationWithZeros);
+        expect(result.length).toBe(1);
+        expect(result[0].color).toBe('#FF0000');
+        expect(result[0].min).toBe(0);
         expect(result[0].max).toBe(10);
     });
     it('check getThematicParameters', () => {
