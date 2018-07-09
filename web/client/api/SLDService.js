@@ -7,7 +7,6 @@
  */
 
 const { urlParts } = require('../utils/URLUtils');
-const SecurityUtils = require('../utils/SecurityUtils');
 const url = require('url');
 const { isArray, sortBy, head, castArray, isNumber } = require('lodash');
 const assign = require('object-assign');

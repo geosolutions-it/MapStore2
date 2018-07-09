@@ -16,7 +16,6 @@ const objectAssign = require('object-assign');
 const {isArray} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const ElevationUtils = require('../../../../utils/ElevationUtils');
-const urlUtils = require('url');
 require('leaflet.nontiledlayer');
 
 L.NonTiledLayer.WMSCustom = L.NonTiledLayer.WMS.extend({
