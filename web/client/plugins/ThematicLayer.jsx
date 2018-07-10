@@ -29,7 +29,7 @@ const { isAdminUserSelector } = require('../selectors/security');
  * @memberof plugins
  * @name ThematicLayer
  * @class
- * @prop {boolean} enableRemoveStyle, enables the remove style button (disabled by default)
+ * @prop {boolean} enableRemoveStyle enables the remove style button (disabled by default)
  * @prop {array} cfg.colors list of base color palettes the user can choose to create the style (they can be extended via
  *    layer configuration)
  * @prop {number} cfg.colorSamples number of samples to show in the color palette list
@@ -110,7 +110,9 @@ module.exports = {
                         colors: customColors,
                         adminCfg: state && state.thematic && state.thematic.adminCfg,
                         applyEnabled: state && state.thematic && state.thematic.dirty || false,
-                        invalidInputs: state && state.thematic && state.thematic.invalidInputs || {}
+                        invalidInputs: state && state.thematic && state.thematic.invalidInputs || {},
+                        geometryType: state && state.thematic && state.thematic.classification
+                            && state.thematic.classification.length && state.thematic.classification[0].type || 'Polygon'
                     }, API);
                 }, {
                         onChangeConfiguration: changeConfiguration,

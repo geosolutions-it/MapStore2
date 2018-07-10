@@ -117,7 +117,8 @@ class ThematicLayer extends React.Component {
         adminCfg: PropTypes.object,
         enableRemoveStyle: PropTypes.bool,
         applyEnabled: PropTypes.bool,
-        invalidInputs: PropTypes.object
+        invalidInputs: PropTypes.object,
+        geometryType: PropTypes.string
     };
 
     static contextTypes = {
@@ -159,7 +160,8 @@ class ThematicLayer extends React.Component {
         },
         enableRemoveStyle: false,
         applyEnabled: false,
-        invalidInputs: {}
+        invalidInputs: {},
+        geometryType: 'Polygon'
     };
 
     componentWillMount() {
@@ -320,27 +322,6 @@ class ThematicLayer extends React.Component {
                         </Col>
                         <Col xs={12}>
                             <FormGroup>
-                                <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_stroke" /></ControlLabel></Col>
-                                <Col xs={1}>
-                                    <Checkbox checked={thema.strokeOn}
-                                        onChange={(evt) => this.updateStyle('strokeOn', evt.target.checked)}/>
-                                </Col>
-                                <Col xs={2}><ColorPicker key="strokeColor"
-                                    pickerProps={{disableAlpha: true}}
-                                    disabled={this.hasCustomClassification() || !thema.strokeOn}
-                                    text={thema.strokeColor} value={{ ...tinycolor(thema.strokeColor).toRgb(), a: 100 }}
-                                    onChangeColor={this.updateStrokeColor}
-                                /></Col>
-                                <Col xs={3}><NumberPicker key="strokeWeight"
-                                    disabled={this.hasCustomClassification() || !thema.strokeOn}
-                                    format="- ###.###"
-                                    value={thema.strokeWeight}
-                                    onChange={this.updateStrokeWeight}
-                                /></Col>
-                            </FormGroup>
-                        </Col>
-                        <Col xs={12}>
-                            <FormGroup>
                                 <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_colors" /></ControlLabel></Col>
                                 <Col xs={6}>
                                     <ColorRangeSelector items={this.getColors()} rampFunction={this.createRamp} value={{
@@ -354,6 +335,27 @@ class ThematicLayer extends React.Component {
                                 </Col>
                             </FormGroup>
                         </Col>
+                        {this.props.geometryType !== 'LineString' ? <Col xs={12}>
+                            <FormGroup>
+                                <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_stroke" /></ControlLabel></Col>
+                                <Col xs={1}>
+                                    <Checkbox checked={thema.strokeOn}
+                                        onChange={(evt) => this.updateStyle('strokeOn', evt.target.checked)} />
+                                </Col>
+                                <Col xs={2}><ColorPicker key="strokeColor"
+                                    pickerProps={{ disableAlpha: true }}
+                                    disabled={!thema.strokeOn}
+                                    text={thema.strokeColor} value={{ ...tinycolor(thema.strokeColor).toRgb(), a: 100 }}
+                                    onChangeColor={this.updateStrokeColor}
+                                /></Col>
+                                <Col xs={3}><NumberPicker key="strokeWeight"
+                                    disabled={!thema.strokeOn}
+                                    format="- ###.###"
+                                    value={thema.strokeWeight}
+                                    onChange={this.updateStrokeWeight}
+                                /></Col>
+                            </FormGroup>
+                        </Col> : null}
                         </Row>
                         <Row><Col xs={12}>
                         {this.props.classificationLoading.status ? <LoadingView width={this.props.loaderSize} height={this.props.loaderSize}/> : null}
@@ -405,7 +407,6 @@ class ThematicLayer extends React.Component {
                     <FormGroup>
                         <Col xs={6}><ControlLabel>{this.localizedItem(param.title, "")}</ControlLabel></Col>
                         <Col xs={6}><Combobox
-                            disabled={this.hasCustomClassification()}
                             data={param.values}
                                 textField={(item) => this.localizedItem(item.name, "")}
                                 valueField="value"
@@ -449,7 +450,9 @@ class ThematicLayer extends React.Component {
     };
 
     updateStrokeColor = (color) => {
-        this.updateStyle('strokeColor', tinycolor(color).toHexString());
+        if (color) {
+            this.updateStyle('strokeColor', tinycolor(color).toHexString());
+        }
     };
 
     updateStrokeWeight = (weight) => {
@@ -552,7 +555,10 @@ class ThematicLayer extends React.Component {
         });
         this.props.onApplyStyle();
     };
-
+    needsToUpdateClassification = (key) => {
+        return (!this.hasCustomClassification() && ['strokeOn', 'strokeColor', 'strokeWeight'].indexOf(key) === -1) ||
+        (key === 'classification');
+    };
     updateStyle = (key, value, quiet) => {
         const layer = this.props.layer;
         const currentStyle = assign({}, layer.thematic.current, {
@@ -562,10 +568,12 @@ class ThematicLayer extends React.Component {
             current: currentStyle
         });
         this.props.onChange('thematic', newThema);
-        const newParams = assign({}, this.props.getMetadataParameters(layer, currentStyle));
-        this.props.onClassify(assign({}, layer, {
-            thematic: newThema
-        }), newParams);
+        if (this.needsToUpdateClassification(key)) {
+            const newParams = assign({}, this.props.getMetadataParameters(layer, currentStyle));
+            this.props.onClassify(assign({}, layer, {
+                thematic: newThema
+            }), newParams);
+        }
         if (!quiet) {
             this.props.onDirtyStyle();
         }

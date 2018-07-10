@@ -66,12 +66,14 @@ class ThemaClassesEditor extends React.Component {
     }
 
     updateColor = (classIndex, color) => {
-        const newClassification = this.props.classification.map((classItem, index) => {
-            return index === classIndex ? assign({}, classItem, {
-                color: tinycolor(color).toHexString()
-            }) : classItem;
-        });
-        this.props.onUpdateClasses(newClassification);
+        if (color) {
+            const newClassification = this.props.classification.map((classItem, index) => {
+                return index === classIndex ? assign({}, classItem, {
+                    color: tinycolor(color).toHexString()
+                }) : classItem;
+            });
+            this.props.onUpdateClasses(newClassification);
+        }
     };
 
     updateMin = (classIndex, min) => {

@@ -436,7 +436,9 @@
                 "classification_stroke": "bord",
                 "classification_error": "Erreur lors de l'appel du service de classification: {message}",
                 "fields_error": "Erreur lors du chargement de la liste des champs: {message}",
-                "interval_limit": "Les intervalles doivent être compris entre {min} et {max}"
+                "interval_limit": "Les intervalles doivent être compris entre {min} et {max}",
+                "invalid_object": "Réponse au service non valide",
+                "invalid_geometry": "Le type de géométrie n'est pas valide, pas un point, une ligne ou un polygone"
             }
         },
         "print":{

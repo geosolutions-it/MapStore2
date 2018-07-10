@@ -416,7 +416,7 @@
                 "values": {
                     "equalInterval": "Intervalli uguali",
                     "quantile": "Quantile",
-                    "jenks": "Jenks",
+                    "jenks": "Interruzioni naturali",
                     "sum": "Somma",
                     "avg": "Media",
                     "count": "Totale",
@@ -435,7 +435,9 @@
                 "classification_stroke": "Bordo",
                 "classification_error": "Errore durante la chiamata al servizio di classificazione: {message}",
                 "fields_error": "Errore durante il caricamento dell'elenco dei campi: {message}",
-                "interval_limit": "Inserisci un valore tra {min} e {max}"
+                "interval_limit": "Inserisci un valore tra {min} e {max}",
+                "invalid_object": "Risposta del servizio non valida",
+                "invalid_geometry": "Il tipo di geometria non è valido, deve essere un punto, una linea o un poligono"
             }
         },
         "print":{
