@@ -163,18 +163,20 @@ module.exports = {
     applyChanges,
     gridUpdateToQueryUpdate: ({attribute, operator, value, type} = {}, oldFilterObj = {}) => {
         const andGroup = {
-            id: 9999, // dammy number representing group id
+            id: 9999, // dummy number representing group id
             logic: "AND",
             index: 0
         };
 
-        let mergeFilters = oldFilterObj.groupFields ? (oldFilterObj.groupFields.filter(obj => obj.id === 1 ).length > 0 && oldFilterObj.filterFields.length > 0 ? true
+        let mergeFilters = oldFilterObj.groupFields ? (oldFilterObj.groupFields.filter(obj => obj.id === 1 ).length > 0 && oldFilterObj.filterFields.length > 0 ? true // checks if query panel filter is active
          : oldFilterObj.filterFields.length - 1 > 0 || ( oldFilterObj.filterFields[0] && oldFilterObj.filterFields[0].hasOwnProperty('loading'))) : false;
         if ( mergeFilters ) {
+            let multipleFields = oldFilterObj.filterFields.length > 2; // checks for multiple fields in query panel filter
+
             let {filterFields: oldFilterFileds, groupFields: oldGroupFields } = oldFilterObj;
-            let mapedFilterFields = oldFilterFileds.map(obj => obj.groupId === 1 ? {...obj, groupId: andGroup.id} : obj);
-            let slicedFilterFields = mapedFilterFields.slice(0, 1);
-            let checkeGroupFields = remove(oldGroupFields, obj => obj.groupId === 1);
+            let mapedFilterFields = oldFilterFileds.map(obj => obj.groupId === 1 && !multipleFields ? {...obj, groupId: andGroup.id} : obj);
+            let slicedFilterFields = mapedFilterFields.filter(obj => obj.hasOwnProperty('loading'));
+            let checkeGroupFields = multipleFields ? oldGroupFields.map( ({id, logic, index }) => { if (id !== andGroup.id) return {id, logic, groupId: andGroup.id, index: 1}; return {id, logic, index }; } ) : remove(oldGroupFields, obj => obj.groupId === 1);
             let newfilterFileds = !isNil(value)
             ? upsertFilterField((oldFilterObj.filterFields.slice(-1) || []), {attribute: attribute}, {
                 attribute,
@@ -187,7 +189,7 @@ module.exports = {
             : (oldFilterObj.filterFields || []).filter(field => field.attribute !== (attribute));
             return {
                 ...oldFilterObj,
-                groupFields: [...checkeGroupFields, andGroup],
+                groupFields: newfilterFileds.length === 0 && multipleFields ? [checkeGroupFields[1]] : [andGroup, ...checkeGroupFields],
                 filterFields: [...slicedFilterFields, ...newfilterFileds]
             };
         }

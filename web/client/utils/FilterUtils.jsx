@@ -625,11 +625,10 @@ const FilterUtils = {
     },
     processCQLFilterGroup: function(root, objFilter) {
         let cql = this.processCQLFilterFields(root, objFilter);
-
         let subGroups = this.findSubGroups(root, objFilter.groupFields);
         if (subGroups.length > 0) {
             subGroups.forEach((subGroup) => {
-                cql += " " + root.logic + " (" + this.processFilterGroup(subGroup) + ")";
+                cql += " " + root.logic + " (" + FilterUtils.processCQLFilterGroup(subGroup, {groupFields: [], filterFields: objFilter.filterFields}) + ")";
             });
         }
 
