@@ -223,7 +223,7 @@ class ThematicLayer extends React.Component {
     renderError = (error, type) => {
         return (<Alert bsStyle="danger">
             <Message msgId={'toc.thematic.' + type} msgParams={{
-                message: error.message
+                message: this.localizedItem(error.message, '')
             }}/>
         </Alert>);
     };
