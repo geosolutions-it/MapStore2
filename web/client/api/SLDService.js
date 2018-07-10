@@ -121,6 +121,47 @@ const getNumber = (candidates) => {
     }, null);
 };
 
+const getGeometryType = (rule) => {
+    if (rule.PolygonSymbolizer) {
+        return 'Polygon';
+    }
+    if (rule.LineSymbolizer) {
+        return 'LineString';
+    }
+    if (rule.PointSymbolizer) {
+        return 'Point';
+    }
+};
+
+const getRuleColor = (rule) => {
+    if (rule.PolygonSymbolizer) {
+        return rule.PolygonSymbolizer.Fill && rule.PolygonSymbolizer.Fill.CssParameter
+            && rule.PolygonSymbolizer.Fill.CssParameter.$ || '#808080'; // OGC default color
+    }
+    if (rule.LineSymbolizer) {
+        return rule.LineSymbolizer.Stroke && rule.LineSymbolizer.Stroke.CssParameter
+            && rule.LineSymbolizer.Stroke.CssParameter.$ || '#808080'; // OGC default color
+    }
+    if (rule.PointSymbolizer) {
+        return rule.PointSymbolizer.Graphic && rule.PointSymbolizer.Graphic.Mark && rule.PointSymbolizer.Graphic.Mark.Fill
+            && rule.PointSymbolizer.Graphic.Mark.Fill.CssParameter
+            && rule.PointSymbolizer.Graphic.Mark.Fill.CssParameter.$ || '#808080'; // OGC default color
+    }
+    return '#808080';
+};
+
+const validateClassification = (classificationObj) => {
+    if (!classificationObj || !classificationObj.Rules || !classificationObj.Rules.Rule) {
+        throw new Error("toc.thematic.invalid_object");
+    }
+    const rules = castArray(classificationObj.Rules.Rule);
+    rules.forEach(rule => {
+        if (!rule.PolygonSymbolizer && !rule.LineSymbolizer && !rule.PointSymbolizer) {
+            throw new Error("toc.thematic.invalid_geometry");
+        }
+    });
+};
+
 /**
  * API for GeoServer SLDService {@link http://docs.geoserver.org/stable/en/user/community/sldservice/index.html}.
  *
@@ -247,8 +288,10 @@ const API = {
      * @returns {array} simplified classification classes list
      */
     readClassification: (classificationObj) => {
-        return classificationObj && classificationObj.Rules && classificationObj.Rules.Rule && castArray(classificationObj.Rules.Rule || []).map((rule) => ({
-            color: rule.PolygonSymbolizer && rule.PolygonSymbolizer.Fill && rule.PolygonSymbolizer.Fill.CssParameter.$ || '#808080', // OGC default color
+        validateClassification(classificationObj);
+        return castArray(classificationObj.Rules.Rule || []).map((rule) => ({
+            color: getRuleColor(rule),
+            type: getGeometryType(rule),
             min: getNumber([rule.Filter.And && (rule.Filter.And.PropertyIsGreaterThanOrEqualTo || rule.Filter.And.PropertyIsGreaterThan).Literal, rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal]),
             max: getNumber([rule.Filter.And && (rule.Filter.And.PropertyIsLessThanOrEqualTo || rule.Filter.And.PropertyIsLessThan).Literal, rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal])
         })) || [];

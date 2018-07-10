@@ -106,6 +106,75 @@ const classification = {
     }
 };
 
+const lineClassification = {
+    Rules: {
+        Rule: [{
+            LineSymbolizer: {
+                Stroke: {
+                    CssParameter: {
+                        "$": "#FF0000"
+                    }
+                }
+            },
+            Filter: {
+                And: {
+                    PropertyIsGreaterThan: {
+                        Literal: 1
+                    },
+                    PropertyIsLessThan: {
+                        Literal: 10
+                    }
+                }
+            }
+        }]
+    }
+};
+
+const pointClassification = {
+    Rules: {
+        Rule: [{
+            PointSymbolizer: {
+                Graphic: {
+                    Mark: {
+                        Fill: {
+                            CssParameter: {
+                                "$": "#FF0000"
+                            }
+                        }
+                    }
+                }
+            },
+            Filter: {
+                And: {
+                    PropertyIsGreaterThan: {
+                        Literal: 1
+                    },
+                    PropertyIsLessThan: {
+                        Literal: 10
+                    }
+                }
+            }
+        }]
+    }
+};
+
+const invalidClassification = {
+    Rules: {
+        Rule: [{
+            Filter: {
+                And: {
+                    PropertyIsGreaterThan: {
+                        Literal: 1
+                    },
+                    PropertyIsLessThan: {
+                        Literal: 10
+                    }
+                }
+            }
+        }]
+    }
+};
+
 const classificationWithZeros = {
     Rules: {
         Rule: [{
@@ -178,12 +247,38 @@ describe('Test correctness of the SLDService APIs', () => {
         expect(result.length).toBe(2);
         expect(result[0].name).toBe('aaa');
     });
-    it('check readClassification', () => {
+    it('check readClassification polygon', () => {
         const result = API.readClassification(classification);
         expect(result.length).toBe(1);
         expect(result[0].color).toBe('#FF0000');
+        expect(result[0].type).toBe('Polygon');
         expect(result[0].min).toBe(1);
         expect(result[0].max).toBe(10);
+    });
+    it('check readClassification line', () => {
+        const result = API.readClassification(lineClassification);
+        expect(result.length).toBe(1);
+        expect(result[0].color).toBe('#FF0000');
+        expect(result[0].type).toBe('LineString');
+        expect(result[0].min).toBe(1);
+        expect(result[0].max).toBe(10);
+    });
+    it('check readClassification point', () => {
+        const result = API.readClassification(pointClassification);
+        expect(result.length).toBe(1);
+        expect(result[0].color).toBe('#FF0000');
+        expect(result[0].type).toBe('Point');
+        expect(result[0].min).toBe(1);
+        expect(result[0].max).toBe(10);
+    });
+    it('check readClassification invalid', () => {
+        let error = false;
+        try {
+            API.readClassification(invalidClassification);
+        } catch(e) {
+            error = true;
+        }
+        expect(error).toBe(true);
     });
     it('check readClassification with zeros', () => {
         const result = API.readClassification(classificationWithZeros);

@@ -117,7 +117,8 @@ class ThematicLayer extends React.Component {
         adminCfg: PropTypes.object,
         enableRemoveStyle: PropTypes.bool,
         applyEnabled: PropTypes.bool,
-        invalidInputs: PropTypes.object
+        invalidInputs: PropTypes.object,
+        geometryType: PropTypes.string
     };
 
     static contextTypes = {
@@ -159,7 +160,8 @@ class ThematicLayer extends React.Component {
         },
         enableRemoveStyle: false,
         applyEnabled: false,
-        invalidInputs: {}
+        invalidInputs: {},
+        geometryType: 'Polygon'
     };
 
     componentWillMount() {
@@ -333,7 +335,7 @@ class ThematicLayer extends React.Component {
                                 </Col>
                             </FormGroup>
                         </Col>
-                        <Col xs={12}>
+                        {this.props.geometryType !== 'LineString' ? <Col xs={12}>
                             <FormGroup>
                                 <Col xs={6}><ControlLabel><Message msgId="toc.thematic.classification_stroke" /></ControlLabel></Col>
                                 <Col xs={1}>
@@ -353,7 +355,7 @@ class ThematicLayer extends React.Component {
                                     onChange={this.updateStrokeWeight}
                                 /></Col>
                             </FormGroup>
-                        </Col>
+                        </Col> : null}
                         </Row>
                         <Row><Col xs={12}>
                         {this.props.classificationLoading.status ? <LoadingView width={this.props.loaderSize} height={this.props.loaderSize}/> : null}
@@ -448,7 +450,9 @@ class ThematicLayer extends React.Component {
     };
 
     updateStrokeColor = (color) => {
-        this.updateStyle('strokeColor', tinycolor(color).toHexString());
+        if (color) {
+            this.updateStyle('strokeColor', tinycolor(color).toHexString());
+        }
     };
 
     updateStrokeWeight = (weight) => {

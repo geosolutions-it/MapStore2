@@ -193,6 +193,9 @@ Layers.registerType('wms', {
                         [key]: undefined
                     });
                 }, {})));
+                if (layer.getSource().refresh) {
+                    layer.getSource().refresh();
+                }
             }
             if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken || oldOptions.ratio !== newOptions.ratio) {
                 const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);

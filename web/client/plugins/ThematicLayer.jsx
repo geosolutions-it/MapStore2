@@ -110,7 +110,9 @@ module.exports = {
                         colors: customColors,
                         adminCfg: state && state.thematic && state.thematic.adminCfg,
                         applyEnabled: state && state.thematic && state.thematic.dirty || false,
-                        invalidInputs: state && state.thematic && state.thematic.invalidInputs || {}
+                        invalidInputs: state && state.thematic && state.thematic.invalidInputs || {},
+                        geometryType: state && state.thematic && state.thematic.classification
+                            && state.thematic.classification.length && state.thematic.classification[0].type || 'Polygon'
                     }, API);
                 }, {
                         onChangeConfiguration: changeConfiguration,

@@ -339,6 +339,22 @@ describe('test ThematicLayer module component', () => {
         expect(fieldsOptions.length).toBe(2);
     });
 
+    it('tests ThematicLayer component with configured thematic geometry linestring', () => {
+        const comp = ReactDOM.render(<ThematicLayer geometryType="LineString"
+            layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
+
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
+        expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
+        const strokeToggle = domNode.querySelectorAll('input[type="checkbox"]')[0];
+        expect(strokeToggle).toNotExist();
+        const colorPicker = domNode.querySelector('.cp-swatch');
+        expect(colorPicker).toNotExist();
+        const weightPicker = domNode.querySelectorAll('.rw-numberpicker')[1];
+        expect(weightPicker).toNotExist();
+    });
+
     it('tests ThematicLayer component with configured thematic thema style choose method', () => {
         const actions = {
             onChange: () => { },
@@ -505,9 +521,30 @@ describe('test ThematicLayer module component', () => {
         TestUtils.Simulate.click(sampleColor);
         TestUtils.Simulate.click(domNode.querySelector('.cp-cover'));
         expect(spyChange).toHaveBeenCalled();
+        expect(spyChange.calls.length).toBe(2);
         expect(spyChange.calls[1].arguments[0]).toBe('thematic');
         expect(spyChange.calls[1].arguments[1].current.strokeColor.toUpperCase()).toBe('#D0021B');
         expect(spyClassify).toNotHaveBeenCalled();
+    });
+
+    it('tests ThematicLayer component with configured thematic thema style strokeColor not chosen', () => {
+        const actions = {
+            onChange: () => { }
+        };
+        const spyChange = expect.spyOn(actions, 'onChange');
+
+        const comp = ReactDOM.render(<ThematicLayer colors={colors} onChange={actions.onChange}
+            layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} />, document.getElementById("container"));
+
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        expect(document.getElementsByClassName('thematic_layer').length).toBe(1);
+        expect(document.getElementsByClassName('thematic_layer')[0].childNodes.length).toBe(1);
+        const colorPicker = domNode.querySelector('.cp-swatch');
+        expect(colorPicker).toExist();
+        TestUtils.Simulate.click(colorPicker);
+        TestUtils.Simulate.click(domNode.querySelector('.cp-cover'));
+        expect(spyChange.calls.length).toBe(1);
     });
 
     it('tests ThematicLayer component with configured thematic thema style params', () => {

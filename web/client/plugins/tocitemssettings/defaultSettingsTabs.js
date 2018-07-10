@@ -154,7 +154,7 @@ module.exports = ({showFeatureInfoTab = true, ...props}, {plugins, pluginsConfig
                 {
                     glyph: 'list',
                     tooltipId: 'toc.thematic.classify',
-                    visible: settingsPlugins.ThematicLayer && props.isAdmin && !props.element.thematic || false,
+                    visible: settingsPlugins.ThematicLayer && props.isAdmin && !props.element.thematic && props.element.search || false,
                     onClick: () => props.onUpdateParams && props.onUpdateParams({
                         thematic: {
                             unconfigured: true

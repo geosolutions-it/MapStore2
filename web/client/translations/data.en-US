@@ -435,7 +435,9 @@
                 "classification_stroke": "Stroke",
                 "classification_error": "Error calling the classification service: {message}",
                 "fields_error": "Error loading fields list: {message}",
-                "interval_limit": "Intervals should be a number between {min} and {max}"
+                "interval_limit": "Intervals should be a number between {min} and {max}",
+                "invalid_object": "Invalid service response",
+                "invalid_geometry": "Geometry type is not valid, not a point, line or polygon"
             }
         },
         "print":{
