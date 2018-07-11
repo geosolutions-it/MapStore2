@@ -378,50 +378,52 @@ const PrintUtils = {
      */
     getOlDefaultStyle(layer) {
         switch (getGeomType(layer)) {
-        case 'Polygon':
-        case 'MultiPolygon': {
-            return {
-                "fillColor": "#0000FF",
-                "fillOpacity": 0.1,
-                "strokeColor": "#0000FF",
-                "strokeOpacity": 1,
-                "strokeWidth": 3
-            };
-        }
-        case 'MultiLineString':
-        case 'LineString':
-            return {
-                "strokeColor": "#0000FF",
-                "strokeOpacity": 1,
-                "strokeWidth": 3
-            };
-        case 'Point':
-        case 'MultiPoint': {
-            return layer.styleName === "marker" ? {
-                "externalGraphic": "http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images/marker-icon.png",
-                "graphicWidth": 25,
-                "graphicHeight": 41,
-                "graphicXOffset": -12, // different offset
-                "graphicYOffset": -41
-            } : {
-                "fillColor": "#FF0000",
-                "fillOpacity": 0,
-                "strokeColor": "#FF0000",
-                "pointRadius": 5,
-                "strokeOpacity": 1,
-                "strokeWidth": 1
-            };
-        }
-        default: {
-            return {
-                "fillColor": "#0000FF",
-                "fillOpacity": 0.1,
-                "strokeColor": "#0000FF",
-                "pointRadius": 5,
-                "strokeOpacity": 1,
-                "strokeWidth": 1
-            };
-        }
+            case 'Polygon':
+            case 'MultiPolygon': {
+                return {
+                    "fillColor": "#0000FF",
+                    "fillOpacity": 0.1,
+                    "strokeColor": "#0000FF",
+                    "strokeOpacity": 1,
+                    "strokeWidth": 3,
+                    "strokeDashstyle": "dash",
+                    "strokeLinecap": "round"
+                };
+            }
+            case 'MultiLineString':
+            case 'LineString':
+                return {
+                    "strokeColor": "#0000FF",
+                    "strokeOpacity": 1,
+                    "strokeWidth": 3
+                };
+            case 'Point':
+            case 'MultiPoint': {
+                return layer.styleName === "marker" ? {
+                    "externalGraphic": "http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/images/marker-icon.png",
+                    "graphicWidth": 25,
+                    "graphicHeight": 41,
+                    "graphicXOffset": -12, // different offset
+                    "graphicYOffset": -41
+                } : {
+                    "fillColor": "#FF0000",
+                    "fillOpacity": 0,
+                    "strokeColor": "#FF0000",
+                    "pointRadius": 5,
+                    "strokeOpacity": 1,
+                    "strokeWidth": 1
+                };
+            }
+            default: {
+                return {
+                    "fillColor": "#0000FF",
+                    "fillOpacity": 0.1,
+                    "strokeColor": "#0000FF",
+                    "pointRadius": 5,
+                    "strokeOpacity": 1,
+                    "strokeWidth": 1
+                };
+            }
         }
     }
 };
