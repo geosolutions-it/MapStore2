@@ -161,7 +161,7 @@ const defaultStyles = {
     "MultiPolygon": STYLE_POLYGON
 };
 
-const strokeStyle = (options, defaultsStyle = {color: 'blue', width: 3, lineDash: [4]}) => ({
+const strokeStyle = (options, defaultsStyle = {color: 'blue', width: 3, lineDash: [6]}) => ({
     stroke: new ol.style.Stroke(
         options.style ?
         options.style.stroke || {
