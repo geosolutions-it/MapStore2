@@ -294,7 +294,7 @@ describe("test updateSettingsLifecycle", () => {
 
         const testUpdateParams = document.getElementById('test-update-params');
         TestUtils.Simulate.click(testUpdateParams);
-        expect(spyOnUpdateOriginalSettings).toHaveBeenCalled();
+        expect(spyOnUpdateOriginalSettings.calls.length).toBe(1);
         expect(spyOnUpdateSettings).toHaveBeenCalled();
         expect(spyOnUpdateNode).toHaveBeenCalled();
     });
@@ -321,7 +321,7 @@ describe("test updateSettingsLifecycle", () => {
 
         const testUpdateParams = document.getElementById('test-update-params');
         TestUtils.Simulate.click(testUpdateParams);
-        expect(spyOnUpdateOriginalSettings).toHaveBeenCalled();
+        expect(spyOnUpdateOriginalSettings.calls.length).toBe(1);
         expect(spyOnUpdateSettings).toHaveBeenCalled();
         expect(spyOnUpdateNode).toNotHaveBeenCalled();
     });

@@ -43,7 +43,6 @@ const settingsLifecycle = compose(
             settings = {},
             initialSettings = {},
             originalSettings: orig,
-            onUpdateOriginalSettings = () => {},
             onUpdateSettings = () => {},
             onUpdateNode = () => {}
         }) => (newParams, update = true) => {
@@ -52,7 +51,6 @@ const settingsLifecycle = compose(
             Object.keys(newParams).forEach((key) => {
                 originalSettings[key] = initialSettings && initialSettings[key];
             });
-            onUpdateOriginalSettings(originalSettings);
             onUpdateSettings(newParams);
             if (update) {
                 onUpdateNode(
