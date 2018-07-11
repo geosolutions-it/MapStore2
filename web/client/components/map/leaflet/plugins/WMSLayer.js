@@ -192,7 +192,7 @@ Layers.registerType('wms', {
         return L.tileLayer.multipleUrlWMS(urls, queryParameters);
     },
     update: function(layer, newOptions, oldOptions) {
-        if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken) {
+        if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken && newOptions.visibility) {
             let newLayer;
             const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
             const queryParameters = wmsToLeafletOptions(newOptions) || {};
