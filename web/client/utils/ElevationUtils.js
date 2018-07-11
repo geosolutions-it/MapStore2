@@ -9,8 +9,8 @@
 const axios = require('../libs/ajax');
 const LRUCache = require('lrucache');
 const {Promise} = require('es6-promise');
-
-let elevationTiles = new LRUCache(100);
+const DEFAULT_SIZE = 100;
+let elevationTiles = new LRUCache(DEFAULT_SIZE);
 
 const addElevationTile = (data, coords, key) => {
     elevationTiles.set(key, {
@@ -104,6 +104,6 @@ module.exports = {
         };
     },
     reset: (options = {}) => {
-        elevationTiles = new LRUCache(options.max || 1000);
+        elevationTiles = new LRUCache(options.max || DEFAULT_SIZE);
     }
 };
