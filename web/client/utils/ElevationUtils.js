@@ -7,14 +7,10 @@
  */
 
 const axios = require('../libs/ajax');
-const lru = require('lru-cache');
+const LRUCache = require('lrucache');
 const {Promise} = require('es6-promise');
 
-const defaultOptions = {
-    max: 1000
-};
-
-let elevationTiles = lru(defaultOptions);
+let elevationTiles = new LRUCache(1000);
 
 const addElevationTile = (data, coords, key) => {
     elevationTiles.set(key, {
@@ -108,6 +104,6 @@ module.exports = {
         };
     },
     reset: (options) => {
-        elevationTiles = lru(options || defaultOptions);
+        elevationTiles = new LRUCache(options.max);
     }
 };
