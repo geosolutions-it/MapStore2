@@ -15,8 +15,7 @@ module.exports = ({width = 600, height = 300, data, series =[], colorGenerator, 
     // WORKAROUND: rechart do not rerender line and bar charts when change colors.
     const key = (COLORS || ["linechart"]).join("");
     return (<BarChart key={key} autoColorOptions={autoColorOptions} width={width} height={height} data={data}>
-       {seriesArray.map(({color, ...serie} = {}, i) => <Bar key={`bar-${i}`} fill={COLORS[i]} {...serie}/>)}
-       {seriesArray.map((seri)=> !props.yAxisLabel ? props.yAxisLabel = seri.dataKey : props.yAxisLabel = props.yAxisLabel)}
+       {seriesArray.map(({color, ...serie} = {}, i) => <Bar key={`bar-${i}`} name={props.yAxisLabel ? props.yAxisLabel : null} fill={COLORS[i]} {...serie}/>)}
        {renderCartesianTools(props)}
        {props.children}
     </BarChart>);

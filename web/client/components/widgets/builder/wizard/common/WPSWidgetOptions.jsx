@@ -185,6 +185,19 @@ module.exports = ({
       }}
       />
 </Col>
+<Col componentClass={ControlLabel} sm={6}>
+    <Message msgId={getLabelMessageId("yAxis", data)} />
+</Col>
+<Col sm={6}>
+  <SwitchButton
+      checked={data.options && data.options.label }
+      onChange={(val) => {
+          onChange("yAxis", !val);
+          onChange("options.label", val && !val.value);
+      }}
+      />
+</Col>
+
 </FormGroup>
 
 <FormGroup controlId="yAxisLabel">

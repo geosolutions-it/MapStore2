@@ -1340,10 +1340,13 @@
             "displayCartesian": {
                 "line": "Ocultar cuadrícula",
                 "bar": "Ocultar cuadrícula"
+            },"yAxis":{
+                "line": "Ocultar el eje Y",
+                "bar": "Ocultar el eje Y"
             },
             "yAxisLabel":{
-                "line": "Etiqueta del eje Y",
-                "bar": "Etiqueta del eje Y"
+                "line": "Etiqueta leyenda",
+                "bar": "Etiqueta leyenda"
             },
             "advancedOptions":{
                 "line": "Opciones avanzadas",

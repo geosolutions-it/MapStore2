@@ -53,7 +53,6 @@ describe('WPSWidgetOptions component', () => {
         expect(spyonChange.calls[2].arguments[0]).toBe("options.aggregateFunction");
         expect(spyonChange.calls[2].arguments[1]).toBe("Count");
 
-
         ReactTestUtils.Simulate.change(inputs[3]);
         expect(spyonChange.calls[3].arguments[0]).toBe("legend");
         expect(spyonChange.calls[3].arguments[1]).toBe(true);
@@ -62,9 +61,13 @@ describe('WPSWidgetOptions component', () => {
         expect(spyonChange.calls[4].arguments[0]).toBe("cartesian");
         expect(spyonChange.calls[4].arguments[1]).toBe(true);
 
-        ReactTestUtils.Simulate.change(inputs[6], { target: { value: 'Y axis label' } });
-        expect(spyonChange.calls[5].arguments[0]).toBe("yAxisLabel");
-        expect(spyonChange.calls[5].arguments[1]).toBe("Y axis label");
+        ReactTestUtils.Simulate.change(inputs[6]);
+        expect(spyonChange.calls[5].arguments[0]).toBe("yAxis");
+        expect(spyonChange.calls[5].arguments[1]).toBe(false);
+
+        ReactTestUtils.Simulate.change(inputs[7], { target: { value: 'Y axis label' } });
+        expect(spyonChange.calls[7].arguments[0]).toBe("yAxisLabel");
+        expect(spyonChange.calls[7].arguments[1]).toBe("Y axis label");
 
     });
     it('Test WPSWidgetOptions onChange for counter context', () => {

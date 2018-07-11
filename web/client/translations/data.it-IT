@@ -1340,10 +1340,13 @@
             "displayCartesian": {
                 "line": "Nascondi griglia",
                 "bar": "Nascondi griglia"
+            },"yAxis":{
+                "line": "Nascondi l'asse Y",
+                "bar": "Nascondi l'asse Y"
             },
             "yAxisLabel":{
-                "line": "Etichetta dell'asse Y",
-                "bar": "Etichetta dell'asse Y"
+                "line": "Etichetta leggenda",
+                "bar": "Etichetta leggenda"
             },
             "advancedOptions":{
                 "line": "Opzioni avanzate",

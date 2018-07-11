@@ -1341,10 +1341,13 @@
             "displayCartesian": {
                 "line": "Masquer la grille",
                 "bar": "Masquer la grille"
+            },"yAxis":{
+                "line": "Masquer l'axe Y",
+                "bar": "Masquer l'axe Y"
             },
             "yAxisLabel":{
-                "line": "Label de l'axe Y",
-                "bar": "Label de l'axe Y"
+                "line": "Étiquette de légende",
+                "bar": "Étiquette de légende"
             },
             "advancedOptions":{
                 "line": "Options avancées",

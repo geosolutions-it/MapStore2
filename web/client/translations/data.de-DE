@@ -1340,10 +1340,13 @@
             "displayCartesian": {
                 "line": "Raster ausblenden",
                 "bar": "Raster ausblenden"
+            },"yAxis":{
+                "line": "Y-Achse ausblenden",
+                "bar": "Y-Achse ausblenden"
             },
             "yAxisLabel":{
-                "line": "Y-Achsenbeschriftung",
-                "bar": "Y-Achsenbeschriftung"
+                "line": "Legenden-Label",
+                "bar": "Legenden-Label"
             },
             "advancedOptions":{
                 "line": "Erweiterte Optione",
