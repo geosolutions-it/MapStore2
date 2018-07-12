@@ -142,6 +142,7 @@ module.exports = {
      */
     hasSupportedGeometry,
     getDockSize: state => state.featuregrid && state.featuregrid.dockSize,
+    pagesSelector: state => state.featuregrid && state.featuregrid.pages,
     /**
      * get selected layer name
      * @function

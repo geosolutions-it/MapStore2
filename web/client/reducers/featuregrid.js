@@ -68,7 +68,7 @@ const emptyResultsState = {
     changes: [],
     pagination: {
         page: 0,
-        size: 20
+        size: 10
     },
     select: [],
     multiselect: false,
@@ -127,7 +127,7 @@ const applyNewChanges = (features, changedFeatures, updates, updatesGeom) =>
  *     changes: [],
  *     pagination: {
  *         page: 0,
- *         size: 20
+ *         size: 10
  *     },
  *     select: [],
  *     multiselect: false,
