@@ -12,7 +12,7 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 
 const assign = require('object-assign');
 
-const {get} = require('lodash');
+const {get, isEqual} = require('lodash');
 const {componentFromProp} = require('recompose');
 const Component = componentFromProp('component');
 
@@ -89,6 +89,19 @@ class PluginsContainer extends React.Component {
 
     componentWillReceiveProps(newProps) {
         this.loadPlugins(newProps.pluginsState, newProps);
+    }
+
+    shouldComponentUpdate(nextProps, nextState) {
+        return nextProps.pluginsConfig !== this.props.pluginsConfig
+            || nextProps.plugins !== this.props.plugins
+            || nextProps.params !== this.props.params
+            || nextProps.mode !== this.props.mode
+            || nextProps.monitoredState !== this.props.monitoredState
+            || nextProps.className !== this.props.className
+            || nextProps.style !== this.props.style
+            || nextProps.defaultMode !== this.props.defaultMode
+            || !isEqual(nextProps.pluginsState, this.props.pluginsState)
+            || !isEqual(nextState.loadedPlugins, this.state.loadedPlugins);
     }
 
     getState = (path, newProps) => {
