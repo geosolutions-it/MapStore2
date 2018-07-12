@@ -7,7 +7,7 @@
  */
 
 const expect = require('expect');
-const { testEpic ,TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
+const { testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
 
 const {
     FIELDS_LOADED, FIELDS_ERROR, CLASSIFICATION_LOADED, CLASSIFICATION_ERROR, loadFields, loadClassification
