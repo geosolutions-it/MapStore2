@@ -437,7 +437,8 @@
                 "fields_error": "Error al cargar la lista de campos: {message}",
                 "interval_limit": "Los intervalos deben ser un número entre {min} y {max}",
                 "invalid_object": "Respuesta de servicio inválida",
-                "invalid_geometry": "El tipo de geometría no es válido, no es un punto, línea o polígono"
+                "invalid_geometry": "El tipo de geometría no es válido, no es un punto, línea o polígono",
+                "invalid_classes": "Max debe ser mayor que min en todas las clases"
             }
         },
         "print":{

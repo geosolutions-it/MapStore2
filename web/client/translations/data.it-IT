@@ -437,7 +437,8 @@
                 "fields_error": "Errore durante il caricamento dell'elenco dei campi: {message}",
                 "interval_limit": "Inserisci un valore tra {min} e {max}",
                 "invalid_object": "Risposta del servizio non valida",
-                "invalid_geometry": "Il tipo di geometria non è valido, deve essere un punto, una linea o un poligono"
+                "invalid_geometry": "Il tipo di geometria non è valido, deve essere un punto, una linea o un poligono",
+                "invalid_classes": "Il valore massimo di ogni classe deve essere maggiore del relativo minimo"
             }
         },
         "print":{

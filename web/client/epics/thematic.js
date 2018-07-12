@@ -36,7 +36,7 @@ module.exports = (config) => ({
         action$.ofType(UPDATE_NODE)
             .switchMap((action) => {
                 const layer = head(store.getState().layers.flat.filter(l => l.id === action.node));
-                if (layer && !action.options.thematic && config.hasThematicStyle(layer)) {
+                if (layer && action.options.thematic === null && config.hasThematicStyle(layer)) {
                     const newParams = config.removeThematicStyle(layer.params);
                     return Rx.Observable.of(changeLayerParams(action.node, newParams));
                 }

@@ -359,6 +359,7 @@ class ThematicLayer extends React.Component {
                         </Row>
                         <Row><Col xs={12}>
                         {this.props.classificationLoading.status ? <LoadingView width={this.props.loaderSize} height={this.props.loaderSize}/> : null}
+                        {this.renderInputError('classification')}
                         <ThemaClassesEditor className={this.props.classificationLoading.status ? "loading" : ""} classification={this.getClassification()} onUpdateClasses={this.updateClassification}/>
                         {this.props.classificationLoading.error ? this.renderError(this.props.classificationLoading.error, 'classification_error') : null}
                         </Col></Row>
@@ -480,7 +481,18 @@ class ThematicLayer extends React.Component {
                 classification
             })
         }));
+        if (!this.validClassification(classification)) {
+            this.props.onInvalidInput('classification', 'toc.thematic.invalid_classes');
+        } else {
+            this.props.onValidInput('classification');
+        }
         this.props.onDirtyStyle();
+    };
+
+    validClassification = (classification = []) => {
+        return !classification.reduce((previous, current) => {
+            return previous || (current.max < current.min);
+        }, false);
     };
 
     createRamp = (item) => item.colors;
