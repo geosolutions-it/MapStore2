@@ -68,7 +68,6 @@ class DateFilter extends AttributeFilter {
         const val = this.props.value && this.props.value.startDate || this.props.value;
         const dateValue = this.props.value ? this.getDateValue(val) : null;
         return (<DateTimePicker
-            inputProps={{className: "form-control input-sm"}}
             key={inputKey}
             disabled={this.props.disabled}
             format={this.getFormat()}
