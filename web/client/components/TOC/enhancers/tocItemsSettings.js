@@ -43,6 +43,7 @@ const settingsLifecycle = compose(
             settings = {},
             initialSettings = {},
             originalSettings: orig,
+            onUpdateOriginalSettings = () => {},
             onUpdateSettings = () => {},
             onUpdateNode = () => {}
         }) => (newParams, update = true) => {
@@ -51,6 +52,7 @@ const settingsLifecycle = compose(
             Object.keys(newParams).forEach((key) => {
                 originalSettings[key] = initialSettings && initialSettings[key];
             });
+            onUpdateOriginalSettings(originalSettings);
             onUpdateSettings(newParams);
             if (update) {
                 onUpdateNode(
@@ -60,7 +62,7 @@ const settingsLifecycle = compose(
                 );
             }
         },
-        onClose: ({ onUpdateNode, originalSettings, settings, onHideSettings, onShowAlertModal }) => forceClose => {
+        onClose: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onUpdateNode, originalSettings, settings, onHideSettings, onShowAlertModal }) => forceClose => {
             const originalOptions = Object.keys(settings.options).reduce((options, key) => ({ ...options, [key]: key === 'opacity' && !originalSettings[key] && 1.0 || originalSettings[key] }), {});
             if (!isEqual(originalOptions, settings.options) && !forceClose) {
                 onShowAlertModal(true);
@@ -72,11 +74,17 @@ const settingsLifecycle = compose(
                 );
                 onHideSettings();
                 onShowAlertModal(false);
+                // clean up internal settings state
+                onUpdateOriginalSettings({});
+                onUpdateInitialSettings({});
             }
         },
-        onSave: ({ onHideSettings = () => { }, onShowAlertModal = () => { } }) => () => {
+        onSave: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onHideSettings = () => { }, onShowAlertModal = () => { } }) => () => {
             onHideSettings();
             onShowAlertModal(false);
+            // clean up internal settings state
+            onUpdateOriginalSettings({});
+            onUpdateInitialSettings({});
         }
     }),
     lifecycle({
