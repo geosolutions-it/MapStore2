@@ -74,9 +74,14 @@ class Legend extends React.Component {
     }
     render() {
         if (!this.state.error && this.props.layer && this.props.layer.type === "wms" && this.props.layer.url) {
-            return <img onError={this.onImgError} src={this.getUrl(this.props)} style={this.props.style}/>;
+            return <img onError={this.onImgError} onLoad={(e) => this.validateImg(e.target)} src={this.getUrl(this.props)} style={this.props.style}/>;
         }
         return <Message msgId="layerProperties.legenderror" />;
+    }
+    validateImg = (img) => {
+        if (img.height <= 1 && img.width <= 2) {
+            this.onImgError();
+        }
     }
 }
 
