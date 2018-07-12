@@ -1119,6 +1119,7 @@
                 "placeholders": {
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "date": "Geben Sie das zu filternde Datum ein...",
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein..."
                 },
                 "tooltips": {

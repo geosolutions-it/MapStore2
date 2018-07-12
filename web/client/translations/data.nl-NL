@@ -891,6 +891,7 @@
                     "placeholders": {
                         "default": "Search...",
                         "string": "Type text to filter...",
+                        "date": "Type date to filter...",
                         "number": "Type number or expression..."
                     },
                     "tooltips": {

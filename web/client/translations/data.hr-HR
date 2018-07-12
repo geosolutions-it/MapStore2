@@ -1055,6 +1055,7 @@
                 "placeholders": {
                     "default": "Traži...",
                     "string": "Unesi tekst za filter...",
+                    "date": "Type date to filter...",
                     "number": "Unesi vrijednost ili izraz..."
                 },
                 "tooltips": {

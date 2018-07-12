@@ -1119,6 +1119,7 @@
                 "placeholders": {
                     "default": "Buscar...",
                     "string": "Escribe texto para filtrar...",
+                    "date": "Escriba la fecha para filtrar...",
                     "number": "Escriba el número o la expresión..."
                 },
                 "tooltips": {
