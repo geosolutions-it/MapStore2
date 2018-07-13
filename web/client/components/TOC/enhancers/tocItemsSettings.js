@@ -52,7 +52,9 @@ const settingsLifecycle = compose(
             Object.keys(newParams).forEach((key) => {
                 originalSettings[key] = initialSettings && initialSettings[key];
             });
+            // update changed keys to verify only modified values (internal state)
             onUpdateOriginalSettings(originalSettings);
+
             onUpdateSettings(newParams);
             if (update) {
                 onUpdateNode(
@@ -95,7 +97,9 @@ const settingsLifecycle = compose(
                 onUpdateInitialSettings = () => { }
             } = this.props;
 
+            // store changed keys
             onUpdateOriginalSettings({ ...element });
+            // store initial settings (internal state)
             onUpdateInitialSettings({ ...element });
         },
         componentWillReceiveProps(newProps) {
