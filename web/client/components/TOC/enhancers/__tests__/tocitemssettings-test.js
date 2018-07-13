@@ -148,22 +148,31 @@ describe("test updateSettingsLifecycle", () => {
     it('test component on save', () => {
         const testHandlers = {
             onHideSettings: () => {},
-            onShowAlertModal: () => {}
+            onShowAlertModal: () => {},
+            onUpdateOriginalSettings: () => {},
+            onUpdateInitialSettings: () => {}
         };
 
         const spyOnHideSettings = expect.spyOn(testHandlers, 'onHideSettings');
         const spyOnShowAlertModal = expect.spyOn(testHandlers, 'onShowAlertModal');
+        const spyOnUpdateOriginalSettings = expect.spyOn(testHandlers, 'onUpdateOriginalSettings');
+        const spyOnUpdateInitialSettings = expect.spyOn(testHandlers, 'onUpdateInitialSettings');
 
         const Component = settingsLifecycle(({onSave}) => <div id="test-save" onClick={onSave}></div>);
         ReactDOM.render(<Component
             onHideSettings={testHandlers.onHideSettings}
-            onShowAlertModal={testHandlers.onShowAlertModal} />, document.getElementById("container"));
+            onShowAlertModal={testHandlers.onShowAlertModal}
+            onUpdateOriginalSettings={testHandlers.onUpdateOriginalSettings}
+            onUpdateInitialSettings={testHandlers.onUpdateInitialSettings} />, document.getElementById("container"));
 
         const testSave = document.getElementById('test-save');
         TestUtils.Simulate.click(testSave);
         expect(spyOnHideSettings).toHaveBeenCalled();
         expect(spyOnShowAlertModal).toHaveBeenCalled();
         expect(spyOnShowAlertModal).toHaveBeenCalledWith(false);
+
+        expect(spyOnUpdateOriginalSettings).toHaveBeenCalled();
+        expect(spyOnUpdateInitialSettings).toHaveBeenCalled();
     });
 
     it('test component on close equal options', () => {
@@ -250,9 +259,14 @@ describe("test updateSettingsLifecycle", () => {
         const testHandlers = {
             onUpdateNode: () => {},
             onHideSettings: () => {},
-            onShowAlertModal: () => {}
+            onShowAlertModal: () => {},
+            onUpdateOriginalSettings: () => {},
+            onUpdateInitialSettings: () => {}
         };
         const spyOnUpdateNode = expect.spyOn(testHandlers, 'onUpdateNode');
+        const spyOnUpdateOriginalSettings = expect.spyOn(testHandlers, 'onUpdateOriginalSettings');
+        const spyOnUpdateInitialSettings = expect.spyOn(testHandlers, 'onUpdateInitialSettings');
+
         const spyOnHideSettings = expect.spyOn(testHandlers, 'onHideSettings');
         const spyOnShowAlertModal = expect.spyOn(testHandlers, 'onShowAlertModal');
 
@@ -262,7 +276,9 @@ describe("test updateSettingsLifecycle", () => {
             originalSettings={{}}
             settings={{node: '0', nodeType: 'layer', options: { style: 'new-style' }}}
             onHideSettings={testHandlers.onHideSettings}
-            onShowAlertModal={testHandlers.onShowAlertModal} />, document.getElementById("container"));
+            onShowAlertModal={testHandlers.onShowAlertModal}
+            onUpdateOriginalSettings={testHandlers.onUpdateOriginalSettings}
+            onUpdateInitialSettings={testHandlers.onUpdateInitialSettings} />, document.getElementById("container"));
 
         const testClose = document.getElementById('test-close');
         TestUtils.Simulate.click(testClose);
@@ -270,6 +286,9 @@ describe("test updateSettingsLifecycle", () => {
         expect(spyOnUpdateNode).toHaveBeenCalled();
         expect(spyOnHideSettings).toHaveBeenCalled();
         expect(spyOnShowAlertModal).toHaveBeenCalled();
+
+        expect(spyOnUpdateOriginalSettings).toHaveBeenCalled();
+        expect(spyOnUpdateInitialSettings).toHaveBeenCalled();
     });
 
     it('test component on update params', () => {
@@ -294,7 +313,7 @@ describe("test updateSettingsLifecycle", () => {
 
         const testUpdateParams = document.getElementById('test-update-params');
         TestUtils.Simulate.click(testUpdateParams);
-        expect(spyOnUpdateOriginalSettings.calls.length).toBe(1);
+        expect(spyOnUpdateOriginalSettings.calls.length).toBe(2);
         expect(spyOnUpdateSettings).toHaveBeenCalled();
         expect(spyOnUpdateNode).toHaveBeenCalled();
     });
@@ -321,7 +340,7 @@ describe("test updateSettingsLifecycle", () => {
 
         const testUpdateParams = document.getElementById('test-update-params');
         TestUtils.Simulate.click(testUpdateParams);
-        expect(spyOnUpdateOriginalSettings.calls.length).toBe(1);
+        expect(spyOnUpdateOriginalSettings.calls.length).toBe(2);
         expect(spyOnUpdateSettings).toHaveBeenCalled();
         expect(spyOnUpdateNode).toNotHaveBeenCalled();
     });
