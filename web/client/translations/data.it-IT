@@ -1120,6 +1120,7 @@
                 "placeholders": {
                     "default": "Cerca...",
                     "string": "Digita testo da cercare...",
+                    "date": "Digita data da cercare...",
                     "number": "Digita numero o espressione..."
                 },
                 "tooltips": {
