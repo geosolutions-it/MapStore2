@@ -79,6 +79,8 @@ class Legend extends React.Component {
         return <Message msgId="layerProperties.legenderror" />;
     }
     validateImg = (img) => {
+        // GeoServer response is a 1x2 px size when legend is not available.
+        // In this case we need to show the "Legend Not available" message
         if (img.height <= 1 && img.width <= 2) {
             this.onImgError();
         }
