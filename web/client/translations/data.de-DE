@@ -437,7 +437,8 @@
                 "fields_error": "Fehler beim Laden der Felderliste: {message}",
                 "interval_limit": "Intervalle sollten eine Zahl zwischen {min} und {max} sein",
                 "invalid_object": "Ungültige Serviceantwort",
-                "invalid_geometry": "Der Geometrietyp ist nicht gültig, kein Punkt, Linie oder Polygon"
+                "invalid_geometry": "Der Geometrietyp ist nicht gültig, kein Punkt, Linie oder Polygon",
+                "invalid_classes": "Max muss in jeder Klasse größer als min sein"
             }
         },
         "print":{

@@ -7,7 +7,7 @@
  */
 
 const expect = require('expect');
-const { testEpic } = require('./epicTestUtils');
+const { testEpic, TEST_TIMEOUT, addTimeoutEpic } = require('./epicTestUtils');
 
 const {
     FIELDS_LOADED, FIELDS_ERROR, CLASSIFICATION_LOADED, CLASSIFICATION_ERROR, loadFields, loadClassification
@@ -148,6 +148,44 @@ describe('thematic epic', () => {
                         expect(action.params).toExist();
                         expect(action.params.SLD).toNotExist();
                         expect(action.params.viewparams).toNotExist();
+                        done();
+                        break;
+                    default:
+                        done(new Error("Action not recognized"));
+                }
+            });
+            done();
+        }, BASE_STATE);
+    });
+
+    it('removeStyleEpic', (done) => {
+        const startActions = [updateNode('mylayer', 'layer', { thematic: null })];
+        testEpic(removeThematicEpic, 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            actions.forEach((action) => {
+                switch (action.type) {
+                    case CHANGE_LAYER_PARAMS:
+                        expect(action.layer).toExist();
+                        expect(action.params).toExist();
+                        expect(action.params.SLD).toNotExist();
+                        expect(action.params.viewparams).toNotExist();
+                        done();
+                        break;
+                    default:
+                        done(new Error("Action not recognized"));
+                }
+            });
+            done();
+        }, BASE_STATE);
+    });
+
+    it('removeStyleEpic not run', (done) => {
+        const startActions = [updateNode('mylayer', 'layer', { })];
+        testEpic(addTimeoutEpic(removeThematicEpic), 1, startActions, actions => {
+            expect(actions.length).toBe(1);
+            actions.forEach((action) => {
+                switch (action.type) {
+                    case TEST_TIMEOUT:
                         done();
                         break;
                     default:

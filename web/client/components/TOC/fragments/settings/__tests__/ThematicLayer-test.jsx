@@ -685,4 +685,22 @@ describe('test ThematicLayer module component', () => {
         TestUtils.Simulate.mouseDown(intervalsPicker.querySelector('.rw-btn'));
         expect(spyInvalid).toHaveBeenCalled();
     });
+
+    it('tests ThematicLayer component with configured thematic thema style invalid classification', () => {
+        const actions = {
+            onInvalidInput: () => { }
+        };
+        const spyInvalid = expect.spyOn(actions, 'onInvalidInput');
+
+        const comp = ReactDOM.render(<ThematicLayer
+            onInvalidInput={actions.onInvalidInput}
+            maxClasses={3}
+            layer={layerWithConfiguredThematic} adminCfg={{ open: false, current: "{}" }} classification={classification} />, document.getElementById("container"));
+
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        const input = domNode.querySelectorAll('input.rw-input')[7];
+        TestUtils.Simulate.change(input, { "target": { "value": "5" } });
+        expect(spyInvalid).toHaveBeenCalled();
+    });
 });

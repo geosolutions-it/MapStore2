@@ -13,7 +13,7 @@ const FilterUtils = require('../../../../utils/FilterUtils');
 const WMSUtils = require('../../../../utils/leaflet/WMSUtils');
 const L = require('leaflet');
 const objectAssign = require('object-assign');
-const {isArray} = require('lodash');
+const {isArray, isNil} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const ElevationUtils = require('../../../../utils/ElevationUtils');
 require('leaflet.nontiledlayer');
@@ -147,6 +147,14 @@ L.tileLayer.elevationWMS = function(urls, options, nodata) {
     return new L.TileLayer.ElevationWMS(urls, options, nodata);
 };
 
+const removeNulls = (obj = {}) => {
+    return Object.keys(obj).reduce((previous, key) => {
+        return isNil(obj[key]) ? previous : objectAssign(previous, {
+            [key]: obj[key]
+        });
+    }, {});
+};
+
 
 function wmsToLeafletOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
@@ -181,7 +189,7 @@ function getWMSURLs( urls ) {
 Layers.registerType('wms', {
     create: (options) => {
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
-        const queryParameters = wmsToLeafletOptions(options) || {};
+        const queryParameters = removeNulls(wmsToLeafletOptions(options) || {});
         urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
         if (options.useForElevation) {
             return L.tileLayer.elevationWMS(urls, queryParameters, options.nodata || -9999);
@@ -221,7 +229,7 @@ Layers.registerType('wms', {
                 return objectAssign({}, accumulator, {[currentValue]: newQueryParameters[currentValue] });
             }, newParams);
             // set new options as parameters, merged with params
-            layer.setParams(objectAssign(newParams, newParams.params, SecurityUtils.addAuthenticationToSLD(newOptions.params || {}, newOptions)));
+            layer.setParams(removeNulls(objectAssign(newParams, newParams.params, SecurityUtils.addAuthenticationToSLD(newOptions.params || {}, newOptions))));
         }/* else if (!isEqual(newOptions.params, oldOptions.params)) {
             layer.setParams(newOptions.params);
         }*/

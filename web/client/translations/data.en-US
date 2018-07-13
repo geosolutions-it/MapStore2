@@ -437,7 +437,8 @@
                 "fields_error": "Error loading fields list: {message}",
                 "interval_limit": "Intervals should be a number between {min} and {max}",
                 "invalid_object": "Invalid service response",
-                "invalid_geometry": "Geometry type is not valid, not a point, line or polygon"
+                "invalid_geometry": "Geometry type is not valid, not a point, line or polygon",
+                "invalid_classes": "Max must be greater than min in every class"
             }
         },
         "print":{
