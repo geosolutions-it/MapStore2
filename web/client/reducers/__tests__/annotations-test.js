@@ -929,6 +929,7 @@ describe('Test the annotations reducer', () => {
         }, changeText(text, components));
         expect(state.editing.features[0].properties.valueText).toBe(text);
         expect(state.selected.properties.valueText).toBe(text);
+        expect(state.selected.properties.isValidFeature).toBe(true);
         expect(state.selected.properties.canEdit).toBe(true);
         expect(state.selected.geometry.coordinates[0]).toBe(1);
         expect(state.selected.geometry.coordinates[1]).toBe(0);
@@ -1014,6 +1015,7 @@ describe('Test the annotations reducer', () => {
         }, changeRadius(radius, components));
         expect(state.editing.features[0].properties.radius).toBe(radius);
         expect(state.selected.properties.radius).toBe(radius);
+        expect(state.selected.properties.isValidFeature).toBe(true);
         expect(state.selected.properties.canEdit).toBe(true);
         expect(state.selected.geometry.coordinates[0]).toBe(1);
         expect(state.selected.geometry.coordinates[1]).toBe(0);

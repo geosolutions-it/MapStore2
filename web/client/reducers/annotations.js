@@ -229,7 +229,7 @@ function annotations(state = { validationErrors: {} }, action) {
             selected = set("properties.isValidFeature", validateFeature({
                 properties: selected.properties,
                 components: getComponents({coordinates: action.components[0] || [], type: "Circle"}),
-                type: selected.geometry.type
+                type: "Circle"
             }), selected);
             selected = set("properties.center", action.components[0], selected);
             selected = set("geometry.coordinates", action.components[0], selected);
@@ -271,7 +271,7 @@ function annotations(state = { validationErrors: {} }, action) {
             selected = set("properties.isValidFeature", validateFeature({
                 properties: selected.properties,
                 components: getComponents({coordinates: action.components[0] || [], type: "Text"}),
-                type: selected.geometry.type
+                type: "Text"
             }), selected);
             selected = set("properties.isText", true, selected);
             selected = set("geometry.coordinates", action.components[0] || [[]], selected);

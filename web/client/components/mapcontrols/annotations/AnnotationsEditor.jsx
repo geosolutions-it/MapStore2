@@ -101,6 +101,7 @@ const bbox = require('@turf/bbox');
  * @prop {function} onDownload triggered when the user exports
  * @prop {boolean} coordinateEditorEnabled triggered when the user zooms to an annotation
  * @prop {object} selected Feature containing the geometry and the properties used for the coordinated editor
+ * @prop {object} aeronauticalOptions options for aeronautical format (seconds decimals and step)
  * @prop {number} maxZoom max zoome the for annotation (default 18)
  * @prop {function} onDeleteFeature triggered when user click on trash icon of the coordinate editor
  * @prop {number} width of the annotation panel
@@ -177,6 +178,7 @@ class AnnotationsEditor extends React.Component {
         onDownload: PropTypes.func,
         onChangeFormat: PropTypes.func,
         format: PropTypes.string,
+        aeronauticalOptions: PropTypes.object,
         onDeleteFeature: PropTypes.func
     };
 
@@ -549,6 +551,7 @@ class AnnotationsEditor extends React.Component {
                             <GeometryEditor
                                 options={this.props.config && this.props.config.geometryEditorOptions}
                                 drawing={this.props.drawing}
+                                aeronauticalOptions={this.props.aeronauticalOptions}
                                 selected={this.props.selected}
                                 featureType={this.props.featureType}
                                 format={this.props.format}

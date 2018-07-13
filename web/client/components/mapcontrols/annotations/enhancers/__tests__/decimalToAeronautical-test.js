@@ -38,6 +38,22 @@ describe("test the Annotations enahncers", () => {
             coordinate="lon"
             />), document.getElementById("container"));
     });
+    it('decimalToAeronautical conversion to 4 decimals as seconds', (done) => {
+        const Sink = decimalToAeronautical(createSink( props => {
+            expect(props).toExist();
+            expect(props.degrees).toBe(1);
+            expect(props.minutes).toBe(33);
+            expect(props.seconds).toBe(18.9193);
+            done();
+        }));
+        ReactDOM.render((<Sink
+            value = {1.55525535}
+            aeronauticalOptions={{seconds: {
+                decimals: 4
+            }}}
+            coordinate="lon"
+            />), document.getElementById("container"));
+    });
     it('decimalToAeronautical conversion correctly step on minutes and seconds', (done) => {
         // 13.3333333333 should be 13 degrees, 20 minutes
         const Sink = decimalToAeronautical(createSink(props => {

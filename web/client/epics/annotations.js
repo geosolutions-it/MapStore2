@@ -498,8 +498,11 @@ module.exports = (viewer) => ({
                     feature = set(`features[${selectedIndex}]`, selected, feature);
                 }
             } else {
+                selected = set("geometry", null, selected);
                 if (selectedIndex !== -1) {
-                    feature = set(`features`, feature.features.filter((f, i) => i !== selectedIndex ), feature);
+                    feature = set(`features[${selectedIndex}]`, selected, feature);
+                } else {
+                    feature = set(`features`, feature.features.concat([selected]), feature);
                 }
             }
             const action = changeDrawingStatus("drawOrEdit", "Text", "annotations", [feature], {

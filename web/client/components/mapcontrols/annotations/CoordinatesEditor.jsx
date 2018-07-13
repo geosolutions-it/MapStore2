@@ -40,6 +40,7 @@ class CoordinateEditor extends React.Component {
         onChangeText: PropTypes.func,
         onChangeFormat: PropTypes.func,
         format: PropTypes.string,
+        aeronauticalOptions: PropTypes.object,
         componentsValidation: PropTypes.object,
         transitionProps: PropTypes.object,
         properties: PropTypes.object,
@@ -214,6 +215,7 @@ class CoordinateEditor extends React.Component {
                 <Row style={{flex: 1, overflowY: 'auto', overflowX: 'hidden'}}>
                     {this.props.components.map((component, idx) => <CoordinatesRow
                         format={this.props.format}
+                        aeronauticalOptions={this.props.aeronauticalOptions}
                         sortId={idx}
                         key={idx + " key"}
                         isDraggable={this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]()}

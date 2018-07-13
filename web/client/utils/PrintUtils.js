@@ -239,11 +239,16 @@ const PrintUtils = {
                     "opacity": layer.opacity || 1.0,
                     styleProperty: "ms_style",
                     styles: {
-                        1: PrintUtils.toOpenLayers2Style(layer, layer.style)
+                        1: PrintUtils.toOpenLayers2Style(layer, layer.style),
+                        "Polygon": PrintUtils.toOpenLayers2Style(layer, layer.style, "Polygon"),
+                        "LineString": PrintUtils.toOpenLayers2Style(layer, layer.style, "LineString"),
+                        "Point": PrintUtils.toOpenLayers2Style(layer, layer.style, "Point"),
+                        "FeatureCollection": PrintUtils.toOpenLayers2Style(layer, layer.style, "FeatureCollection")
                     },
                     geoJson: CoordinatesUtils.reprojectGeoJson({
                         type: "FeatureCollection",
-                        features: layer.id === "annotations" && AnnotationsUtils.annotationsToPrint(layer.features) || layer.features.map( f => ({...f, properties: {...f.properties, ms_style: 1}}))
+                        features: layer.id === "annotations" && AnnotationsUtils.annotationsToPrint(layer.features) ||
+                                    layer.features.map( f => ({...f, properties: {...f.properties, ms_style: f && f.geometry && f.geometry.type && f.geometry.type.replace("Multi", "") || 1}}))
                     },
                     "EPSG:4326",
                     spec.projection)
@@ -339,9 +344,9 @@ const PrintUtils = {
      * Useful for print (Or generic Openlayers 2 conversion style)
      * http://dev.openlayers.org/docs/files/OpenLayers/Feature/Vector-js.html#OpenLayers.Feature.Vector.OpenLayers.Feature.Vector.style
      */
-    toOpenLayers2Style: function(layer, style) {
+    toOpenLayers2Style: function(layer, style, styleType) {
         if (!style) {
-            return PrintUtils.getOlDefaultStyle(layer);
+            return PrintUtils.getOlDefaultStyle(layer, styleType);
         }
         // commented the available options.
         return {
@@ -376,8 +381,8 @@ const PrintUtils = {
      * Provides the default style for
      * each vector type.
      */
-    getOlDefaultStyle(layer) {
-        switch (getGeomType(layer)) {
+    getOlDefaultStyle(layer, styleType) {
+        switch (styleType || getGeomType(layer)) {
             case 'Polygon':
             case 'MultiPolygon': {
                 return {

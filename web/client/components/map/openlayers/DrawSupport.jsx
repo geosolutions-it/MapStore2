@@ -695,8 +695,8 @@ class DrawSupport extends React.Component {
                         previousFtIndex = i;
                     }
                     return f.getProperties().canEdit;
-                })[0];
-                const previousCoords = previousFt.getGeometry() && previousFt.getGeometry().getCoordinates && previousFt.getGeometry().getCoordinates() || [];
+                })[0] || null;
+                const previousCoords = previousFt && previousFt.getGeometry() && previousFt.getGeometry().getCoordinates && previousFt.getGeometry().getCoordinates() || [];
                 let actualCoords = [];
                 let olFt;
                 let newDrawMethod = newProps.drawMethod;
@@ -717,39 +717,39 @@ class DrawSupport extends React.Component {
                             actualCoords = [[e.coordinate]];
                         }
                         olFt = this.getNewFeature(newDrawMethod, actualCoords);
-                        olFt.setProperties(omit(previousFt.getProperties(), "geometry"));
+                        olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
                         break;
                     }
                     case "LineString": {
                         actualCoords = previousCoords.length ? [...previousCoords, e.coordinate] : [e.coordinate];
                         olFt = this.getNewFeature(newDrawMethod, actualCoords);
-                        olFt.setProperties(omit(previousFt.getProperties(), "geometry"));
+                        olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
                     }
                      break;
                     case "Circle": {
                         newDrawMethod = "Polygon";
-                        const radius = previousFt.getProperties() && previousFt.getProperties().radius || 10000;
-                        let center = e.coordinate; // || previousFt.getProperties() && previousFt.getProperties().center;
+                        const radius = previousFt && previousFt.getProperties() && previousFt.getProperties().radius || 10000;
+                        let center = e.coordinate;
                         const coords = this.polygonCoordsFromCircle(center, 100);
                         olFt = this.getNewFeature(newDrawMethod, coords);
                         // TODO verify center is projected in 4326 and is an array
                         center = reproject(center, this.getMapCrs(), "EPSG:4326", false);
-                        olFt.setProperties(omit(previousFt.getProperties(), "geometry"));
+                        olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
                         olFt.setProperties({isCircle: true, radius, center: [center.x, center.y]});
                         break;
                     }
                     case "Text": {
                         newDrawMethod = "Point";
                         olFt = this.getNewFeature(newDrawMethod, e.coordinate);
-                        olFt.setProperties(omit(previousFt.getProperties(), "geometry"));
-                        olFt.setProperties({isText: true, valueText: previousFt.getProperties() && previousFt.getProperties().valueText || newProps.options.defaultTextAnnotation || "New" });
+                        olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
+                        olFt.setProperties({isText: true, valueText: previousFt && previousFt.getProperties() && previousFt.getProperties().valueText || newProps.options.defaultTextAnnotation || "New" });
                         break;
                     }
                     // point
                     default: {
                         actualCoords = e.coordinate;
                         olFt = this.getNewFeature(newDrawMethod, actualCoords);
-                        olFt.setProperties(omit(previousFt.getProperties(), "geometry"));
+                        olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
                     }
                 }
 
@@ -770,9 +770,7 @@ class DrawSupport extends React.Component {
                 this.props.onDrawingFeatures([ft]);
 
                 olFt = transformPolygonToCircle(olFt, this.getMapCrs());
-                if (previousFeatures && previousFeatures.length) {
-                    previousFeatures[previousFtIndex] = olFt;
-                }
+                previousFeatures[previousFtIndex] = olFt;
                 this.drawSource = new ol.source.Vector({
                     features: previousFeatures
                 });

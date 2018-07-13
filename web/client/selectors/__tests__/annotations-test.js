@@ -30,6 +30,7 @@ const {
     errorsSelector,
     configSelector,
     annotationsInfoSelector,
+    aeronauticalOptionsSelector,
     annotationSelector,
     annotationsListSelector
 } = require("../annotations");
@@ -522,16 +523,26 @@ describe('Test annotations selectors', () => {
         expect(retVal.filter).toBe('');
 
     });
+    it('test annotationsListSelector', () => {
+        const retVal = aeronauticalOptionsSelector(state);
+        expect(retVal).toBe(undefined);
+
+    });
+    it('test annotationsListSelector with true value', () => {
+        const retVal = aeronauticalOptionsSelector({...state, aeronauticalOptions: true});
+        expect(retVal).toBe(true);
+
+    });
     it('test annotationsInfoSelector', () => {
         const retVal = annotationsInfoSelector(state);
-        expect(Object.keys(retVal).length).toBe(23);
+        expect(Object.keys(retVal).length).toBe(24);
         const params = ["closing", "config", "drawing", "drawingText",
         "errors", "editing", "coordinateEditorEnabled", "editedFields",
         "mode", "removing", "selected", "featureType",
         "showUnsavedChangesModal", "showUnsavedStyleModal",
         "showUnsavedGeometryModal", "showDeleteFeatureModal",
         "stylerType", "styling", "unsavedChanges", "unsavedStyle",
-        "unsavedGeometry", "format", "mouseHoverEvents" ];
+        "unsavedGeometry", "format", "mouseHoverEvents", "aeronauticalOptions" ];
         Object.keys(retVal).forEach(r => {
             expect(params.indexOf(r) !== -1).toBe(true);
         });
