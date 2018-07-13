@@ -100,4 +100,26 @@ describe("test the Layer legend", () => {
             done();
         });
     });
+    it('test legend with small 1px x 2px img error reload', (done) => {
+        let layer = {
+            "type": "wms",
+            "url": "base/web/client/test-resources/img/geoserver-GetLegendGraphic.image",
+            "visibility": true,
+            "title": "test layer 3 (no group)",
+            "name": "layer3",
+            "format": "image/png"
+        };
+        var tb = ReactDOM.render(<Legend layer={layer} />, document.getElementById("container"));
+        const sub = Rx.Observable.interval(100)
+        .filter(() => tb && tb.state.error)
+        .subscribe(() => {
+            let thumbs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "img");
+            let spans = TestUtils.scryRenderedDOMComponentsWithTag(tb, "span");
+
+            expect(spans[0].innerText).toBe("layerProperties.legenderror");
+            expect(thumbs.length).toBe(0);
+            sub.unsubscribe();
+            done();
+        });
+    });
 });
