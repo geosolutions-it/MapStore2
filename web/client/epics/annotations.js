@@ -491,13 +491,16 @@ module.exports = (viewer) => ({
             selected = set("geometry.coordinates", [selected.geometry.coordinates].filter(validateCoordsArray)[0] || [], selected);
             selected = set("geometry.type", "Point", selected);
             let selectedIndex = findIndex(feature.features, (f) => f.properties.id === selected.properties.id);
-            if (selected.properties.isValidFeature) {
+            if (validateCoordsArray(selected.geometry.coordinates) ) {
+                // if it has at least the coords valid draw the small circle for the text,
+                // text will be drawn if present
                 if (selectedIndex === -1) {
                     feature = set(`features`, feature.features.concat([selected]), feature);
                 } else {
                     feature = set(`features[${selectedIndex}]`, selected, feature);
                 }
             } else {
+                // if coords ar not valid do not draw anything
                 selected = set("geometry", null, selected);
                 if (selectedIndex !== -1) {
                     feature = set(`features[${selectedIndex}]`, selected, feature);
