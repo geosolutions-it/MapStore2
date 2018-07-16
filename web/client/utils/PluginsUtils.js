@@ -235,7 +235,7 @@ const PluginsUtils = {
             };
         }, {}),
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
-                                .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
+                                .reduce((previous, current) => assign({}, previous, omit(current, 'reducers', 'epics')), {}),
     /**
      * provide the pluginDescriptor for a given plugin, with a state and a configuration
      * @param {object} state the state. This is required to laod plugins that depend from the state itself

@@ -35,7 +35,7 @@ class mycomponent extends React.Component {
     }
 }
 
-describe('StandardApp', () => {
+describe('StandardRouter', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         ConfigUtils.setLocalConfigurationFile('base/web/client/test-resources/localConfig.json');

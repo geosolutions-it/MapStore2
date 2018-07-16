@@ -53,7 +53,7 @@ class PluginsContainer extends React.Component {
         locale: PropTypes.string,
         messages: PropTypes.object,
         plugins: PropTypes.object,
-        pluginsConfig: PropTypes.object,
+        pluginsConfig: PropTypes.array,
         loadedPlugins: PropTypes.object
     };
 

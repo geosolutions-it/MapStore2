@@ -25,7 +25,8 @@ class LeafletLayer extends React.Component {
     };
 
     static defaultProps = {
-        onCreationError: () => {}
+        onCreationError: () => {},
+        options: {}
     };
 
     componentDidMount() {
