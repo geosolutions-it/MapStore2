@@ -12,7 +12,7 @@ const decimalToAeronautical = require('../enhancers/decimalToAeronautical');
 const coordinateTypePreset = require('../enhancers/coordinateTypePreset');
 const tempAeronauticalValue = require('../enhancers/tempAeronauticalValue');
 
-class CoordinateEntry extends React.Component {
+class AeronauticalCoordinateEditor extends React.Component {
 
     static propTypes = {
         idx: PropTypes.number,
@@ -22,13 +22,20 @@ class CoordinateEntry extends React.Component {
         seconds: PropTypes.number,
         directions: PropTypes.array,
         direction: PropTypes.string,
+        aeronauticalOptions: PropTypes.object,
         coordinate: PropTypes.string,
         onChange: PropTypes.func
     };
     static defaultProps = {
         coordinate: "lat",
         maxDegrees: 90,
-        directions: ["N", "S"]
+        directions: ["N", "S"],
+        aeronauticalOptions: {
+            seconds: {
+                decimals: 4,
+                step: 0.0001
+            }
+        }
     }
 
     onChange = (part, newValue) => {
@@ -93,6 +100,7 @@ class CoordinateEntry extends React.Component {
             width: 0,
             height: 0
         };
+        const {step: stepSeconds} = this.props.aeronauticalOptions.seconds;
         return (
             <FormGroup style={{display: "inline-flex"}}>
                 <FormControl
@@ -124,10 +132,10 @@ class CoordinateEntry extends React.Component {
                     value={this.props.seconds}
                     placeholder="s"
                     onChange={e => this.onChange("seconds", parseFloat(e.target.value))}
-                    step={1}
+                    step={stepSeconds}
                     max={60}
                     min={-1}
-                    style={{ width: 65, ...inputStyle, ...secondsInvalidStyle}}
+                    style={{ width: 80, ...inputStyle, ...secondsInvalidStyle}}
                     type="number"
                 />
             <span style={labelStyle}>&Prime;</span>
@@ -137,7 +145,6 @@ class CoordinateEntry extends React.Component {
                     onChange={e => this.onChange("direction", e.target.value)}
                     style={{ width: 65 }}>
                     {this.props.directions.map((d) => <option key={d} value={d}>{d}</option>)}
-
                 </FormControl>
             </FormGroup>
         );
@@ -163,4 +170,4 @@ module.exports = compose(
     coordinateTypePreset,
     decimalToAeronautical,
     tempAeronauticalValue
-)(CoordinateEntry);
+)(AeronauticalCoordinateEditor);

@@ -1,6 +1,5 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-// const {FormGroup, FormControl} = require('react-bootstrap');
 const DecimalCoordinateEditor = require('./editors/DecimalCoordinateEditor');
 const AeronauticalCoordinateEditor = require('./editors/AeronauticalCoordinateEditor');
 const {isNil} = require('lodash');
@@ -16,13 +15,13 @@ class CoordinateEntry extends React.Component {
         value: PropTypes.number,
         constraints: PropTypes.object,
         format: PropTypes.string,
+        aeronauticalOptions: PropTypes.object,
         coordinate: PropTypes.string,
         onChange: PropTypes.func
     };
     defaultProps = {
         format: "decimal"
     }
-
     render() {
         const {format} = this.props;
         return format === "decimal" || isNil(format) ? <DecimalCoordinateEditor {...this.props} format={this.props.format || "decimal"}/> : <AeronauticalCoordinateEditor {...this.props}/>;

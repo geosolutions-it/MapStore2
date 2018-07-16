@@ -14,7 +14,20 @@ const layer = {
     type: "wms",
     params: {myparam: "myvalue"}
 };
-
+const featurePoint = {
+    "type": "Feature",
+    "geometry": {
+        "type": "Point",
+        "coordinates": [
+            -112.50042920000001,
+            42.22829164089942
+        ]
+    },
+    "properties": {
+        "serial_num": "12C324776"
+    },
+    "id": 0
+};
 const vectorLayer = {
     "type": "vector",
     "visibility": true,
@@ -22,22 +35,7 @@ const vectorLayer = {
     "id": "web2014all_mv__14",
     "name": "web2014all_mv",
     "hideLoading": true,
-    "features": [
-        {
-            "type": "Feature",
-            "geometry": {
-                "type": "Point",
-                "coordinates": [
-                    -112.50042920000001,
-                    42.22829164089942
-                ]
-            },
-            "properties": {
-                "serial_num": "12C324776"
-            },
-            "id": 0
-        }
-    ],
+    "features": [ featurePoint ],
     "style": {
         "weight": 3,
         "radius": 10,
@@ -47,6 +45,13 @@ const vectorLayer = {
         "fillColor": "rgb(0, 0, 255)"
     }
 };
+let vector2 = {...vectorLayer};
+delete vector2.style;
+let vectorWithFtCollInside = {...vectorLayer, features: [{
+    type: "FeatureCollection",
+    features: [featurePoint]
+}]};
+
 const mapFishVectorLayer = {
     "type": "Vector",
     "name": "web2014all_mv",
@@ -147,6 +152,35 @@ describe('PrintUtils', () => {
         const specs = PrintUtils.getMapfishLayersSpecification([layer], {projection: "EPSG:3857"}, 'legend');
         expect(specs).toExist();
         expect(specs.length).toBe(1);
+    });
+    it('toOpenLayers2Style for vector layer wich contains a FeatureCollection using the default style', () => {
+        const style = PrintUtils.toOpenLayers2Style(vectorWithFtCollInside, null, "FeatureCollection");
+        expect(style).toExist();
+
+        expect(style.strokeColor).toBe("#0000FF");
+        expect(style.strokeOpacity).toBe(1);
+        expect(style.strokeWidth).toBe(1);
+        expect(style.pointRadius).toBe(5);
+        expect(style.fillColor).toBe("#0000FF");
+        expect(style.fillOpacity).toBe(0.1);
+    });
+    it('toOpenLayers2Style for vector layer using a default LineString style', () => {
+        const style = PrintUtils.toOpenLayers2Style(vector2, null, "LineString");
+        expect(style).toExist();
+        expect(style.strokeColor).toBe("#0000FF");
+        expect(style.strokeOpacity).toBe(1);
+        expect(style.strokeWidth).toBe(3);
+    });
+    it('toOpenLayers2Style for vector layer using a default MultiPolygon style', () => {
+        const style = PrintUtils.toOpenLayers2Style(vector2, null, "MultiPolygon");
+        expect(style).toExist();
+        expect(style.strokeColor).toBe("#0000FF");
+        expect(style.fillColor).toBe("#0000FF");
+        expect(style.fillOpacity).toBe(0.1);
+        expect(style.strokeOpacity).toBe(1);
+        expect(style.strokeLinecap).toBe("round");
+        expect(style.strokeDashstyle).toBe("dash");
+        expect(style.strokeWidth).toBe(3);
     });
     it('wms layer generation for legend includes scale', () => {
         const specs = PrintUtils.getMapfishLayersSpecification([layer], testSpec, 'legend');

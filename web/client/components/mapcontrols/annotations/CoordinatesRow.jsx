@@ -20,11 +20,11 @@ class CoordinatesRowComponent extends React.Component {
         type: PropTypes.string,
         onMouseLeave: PropTypes.func,
         connectDragSource: PropTypes.func,
+        aeronauticalOptions: PropTypes.object,
         isDraggable: PropTypes.bool,
         removeVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool
     };
-
     render() {
         const {idx} = this.props;
         const rowStyle =/* this.props.type === "LineString" || "Polygon" ? { marginLeft: -5, marginRight: -5} :*/ {marginLeft: -5, marginRight: -5};
@@ -46,6 +46,7 @@ class CoordinatesRowComponent extends React.Component {
                 <Col xs={5}>
                     <CoordinateEntry
                         format={this.props.format}
+                        aeronauticalOptions={this.props.aeronauticalOptions}
                         coordinate="lat"
                         idx={idx}
                         value={this.props.component.lat}
@@ -67,6 +68,7 @@ class CoordinatesRowComponent extends React.Component {
                 <Col xs={5}>
                     <CoordinateEntry
                         format={this.props.format}
+                        aeronauticalOptions={this.props.aeronauticalOptions}
                         coordinate="lon"
                         idx={idx}
                         value={this.props.component.lon}

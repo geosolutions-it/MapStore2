@@ -123,9 +123,9 @@ const STYLE_TEXT = {
     fontStyle: 'normal',
     fontSize: '14',
     fontSizeUom: 'px',
-    fontFamily: 'FontAwesome',
+    fontFamily: 'Arial',
     fontWeight: 'normal',
-    font: "14px FontAwesome",
+    font: "14px Arial",
     textAlign: 'center',
     color: '#000000',
     opacity: 1

@@ -32,9 +32,9 @@ const STYLE_TEXT = {
     fontStyle: 'normal',
     fontSize: '14',
     fontSizeUom: 'px',
-    fontFamily: 'FontAwesome',
+    fontFamily: 'Arial',
     fontWeight: 'normal',
-    font: "14px FontAwesome",
+    font: "14px Arial",
     textAlign: 'center',
     color: '#000000',
     opacity: 1
@@ -273,7 +273,7 @@ const AnnotationsUtils = {
      * it converts some props of a CSS-font into a shorhand form
      * @return {string} a CSS-font
     */
-    createFont: ({fontSize = "14", fontSizeUom = "px", fontFamily = "FontAwesome", fontStyle = "normal", fontWeight = "normal"} = {}) => {
+    createFont: ({fontSize = "14", fontSizeUom = "px", fontFamily = "Arial", fontStyle = "normal", fontWeight = "normal"} = {}) => {
         return `${fontStyle} ${fontWeight} ${fontSize}${fontSizeUom} ${fontFamily}`;
     },
     /**

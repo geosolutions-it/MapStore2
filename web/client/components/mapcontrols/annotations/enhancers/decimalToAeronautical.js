@@ -1,12 +1,13 @@
 
 const {compose, withHandlers, withProps} = require('recompose');
+const {round} = require('lodash');
 
-const convertDDToDMS = (D, lng) => {
+const convertDDToDMS = (D, lng, {seconds} = {seconds: {decimals: 4}}) => {
     let d = parseInt(D, 10);
     let minFloat = Math.abs((D - d) * 60);
     let m = Math.floor(minFloat);
     let secFloat = (minFloat - m) * 60;
-    let s = Math.round(secFloat);
+    let s = round(secFloat, seconds.decimals);
     d = Math.abs(d);
 
     if (s === 60) {
@@ -29,10 +30,11 @@ const convertDDToDMS = (D, lng) => {
 module.exports = compose(
     withProps(({
         value,
-        coordinate
+        coordinate,
+        aeronauticalOptions
     }) => {
         return {
-            ...convertDDToDMS(value, coordinate === "lon")
+            ...convertDDToDMS(value, coordinate === "lon", aeronauticalOptions)
         };
     }),
     withHandlers({
@@ -42,7 +44,9 @@ module.exports = compose(
             }
             // conversion dmsToDD
             let dd = degrees + minutes / 60 + seconds / (60 * 60);
-            if (direction === 'S' || direction === 'W') {
+
+            // this change is needed you have 0 as degrees and a negative minutes or seconds i.e direction swapping side is caused by minutes or seconds being negative
+            if (dd > 0 && (direction === 'S' || direction === 'W') || dd < 0 && (direction === 'N' || direction === 'E')) {
                 dd = dd * -1;
             } // Don't do anything for N or E
 
