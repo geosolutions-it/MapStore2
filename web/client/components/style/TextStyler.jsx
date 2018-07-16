@@ -44,13 +44,13 @@ class TextStyler extends React.Component {
         fontWeightValues: [{value: "normal"}, {value: "bold"}],
         alignValues: [{value: "start", label: "left"}, {value: "center", label: "center"}, {value: "end", label: "right"}],
         fontStyleValues: [{value: "normal"}, {value: "italic"}],
-        fontFamilyValues: [{value: "Arial"}, {value: "FontAwesome"}, {value: "Courier"}],
+        fontFamilyValues: [{value: "Arial"}, {value: "Helvetica"}, {value: "sans-serif"}, {value: "Courier"}],
         shapeStyle: {},
         setStyleParameter: () => {}
     };
 
     state = {
-        fontFamily: "FontAwesome"
+        fontFamily: "Arial"
     };
 
     render() {
@@ -98,7 +98,7 @@ class TextStyler extends React.Component {
                         </Col>
                         <Col xs={6} style={{position: 'static'}}>
                             <Combobox
-                                value={this.state.fontFamily || "FontAwesome"}
+                                value={this.state.fontFamily || "Arial"}
                                 textField="value"
                                 valueField="value"
                                 messages={messages}
@@ -106,7 +106,7 @@ class TextStyler extends React.Component {
                                 onChange={(e) => {
                                     let fontFamily = e.value ? e.value : e;
                                     if (fontFamily === "") {
-                                        fontFamily = "FontAwesome";
+                                        fontFamily = "Arial";
                                     }
                                     this.setState({fontFamily});
                                     const font = createFont({...style, fontFamily});

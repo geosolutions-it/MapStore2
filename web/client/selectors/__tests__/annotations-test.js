@@ -245,7 +245,7 @@ const state = {
                     }
                   },
                   Text: {
-                    font: '14px FontAwesome',
+                    font: '14px Arial',
                     color: '#1726E6',
                     weight: 1,
                     opacity: 1
@@ -285,9 +285,9 @@ const state = {
                     fontStyle: 'normal',
                     fontSize: '21',
                     fontSizeUom: 'px',
-                    fontFamily: 'FontAwesome',
+                    fontFamily: 'Arial',
                     fontWeight: 'normal',
-                    font: 'normal normal 21px FontAwesome',
+                    font: 'normal normal 21px Arial',
                     textAlign: 'center',
                     color: '#A424C0',
                     opacity: 1
@@ -381,9 +381,9 @@ const state = {
               fontStyle: 'normal',
               fontSize: '21',
               fontSizeUom: 'px',
-              fontFamily: 'FontAwesome',
+              fontFamily: 'Arial',
               fontWeight: 'normal',
-              font: 'normal normal 21px FontAwesome',
+              font: 'normal normal 21px Arial',
               textAlign: 'center',
               color: '#A424C0',
               opacity: 1
@@ -402,9 +402,9 @@ const state = {
             fontStyle: 'normal',
             fontSize: '21',
             fontSizeUom: 'px',
-            fontFamily: 'FontAwesome',
+            fontFamily: 'Arial',
             fontWeight: 'normal',
-            font: 'normal normal 21px FontAwesome',
+            font: 'normal normal 21px Arial',
             textAlign: 'center',
             color: '#A424C0',
             opacity: 1
@@ -523,13 +523,13 @@ describe('Test annotations selectors', () => {
         expect(retVal.filter).toBe('');
 
     });
-    it('test annotationsListSelector', () => {
+    it('test aeronauticalOptionsSelector', () => {
         const retVal = aeronauticalOptionsSelector(state);
         expect(retVal).toBe(undefined);
 
     });
-    it('test annotationsListSelector with true value', () => {
-        const retVal = aeronauticalOptionsSelector({...state, aeronauticalOptions: true});
+    it('test aeronauticalOptionsSelector with true value', () => {
+        const retVal = aeronauticalOptionsSelector({annotations: {aeronauticalOptions: true}});
         expect(retVal).toBe(true);
 
     });

@@ -2311,8 +2311,8 @@
         },
         "Text": {
             "color": "#000000",
-            "font": "14px FontAwesome",
-            "fontFamily": "FontAwesome",
+            "font": "14px Arial",
+            "fontFamily": "Arial",
             "fontSize": "14",
             "fontSizeUom": "px",
             "fontStyle": "normal",

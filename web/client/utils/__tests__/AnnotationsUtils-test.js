@@ -139,12 +139,12 @@ describe('Test the AnnotationsUtils', () => {
         expect(textParams.length).toBe(9);
 
         const {font, color, opacity, fontStyle, fontSize, fontSizeUom, textAlign, fontFamily, fontWeight} = DEFAULT_ANNOTATIONS_STYLES.Text;
-        expect(font).toBe("14px FontAwesome");
+        expect(font).toBe("14px Arial");
         expect(color).toBe("#000000");
         expect(fontStyle).toBe("normal");
         expect(fontWeight).toBe("normal");
         expect(fontSize).toBe("14");
-        expect(fontFamily).toBe("FontAwesome");
+        expect(fontFamily).toBe("Arial");
         expect(fontSizeUom).toBe("px");
         expect(textAlign).toBe("center");
         expect(opacity).toBe(1);
@@ -250,16 +250,14 @@ describe('Test the AnnotationsUtils', () => {
     });
     it('create font with values', () => {
         // with defaults
-        expect(createFont({})).toBe("normal normal 14px FontAwesome");
-
+        expect(createFont({})).toBe("normal normal 14px Arial");
         // with values
         expect(createFont({fontFamily: "Courier"})).toBe("normal normal 14px Courier");
-        expect(createFont({fontSize: "30"})).toBe("normal normal 30px FontAwesome");
-        expect(createFont({fontSizeUom: "em"})).toBe("normal normal 14em FontAwesome");
-        expect(createFont({fontStyle: "italic"})).toBe("italic normal 14px FontAwesome");
-        expect(createFont({fontWeight: "bold"})).toBe("normal bold 14px FontAwesome");
+        expect(createFont({fontSize: "30"})).toBe("normal normal 30px Arial");
+        expect(createFont({fontSizeUom: "em"})).toBe("normal normal 14em Arial");
+        expect(createFont({fontStyle: "italic"})).toBe("italic normal 14px Arial");
+        expect(createFont({fontWeight: "bold"})).toBe("normal bold 14px Arial");
     });
-
     it('circlesToMultiPolygon', () => {
         const {geometry, properties, style} = feature;
         const f = circlesToMultiPolygon(geometry, properties, style.Circle);
@@ -269,7 +267,6 @@ describe('Test the AnnotationsUtils', () => {
         expect(f.properties).toExist();
         expect(f.properties.ms_style).toExist();
         expect(f.properties.ms_style.strokeColor).toBe(style.Circle.color);
-
     });
     it('fromCircleToPolygon', () => {
         const {geometry, properties} = circle1;

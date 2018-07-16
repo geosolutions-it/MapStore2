@@ -106,6 +106,7 @@ const annotationSelector = createSelector([annotationsListSelector], (annotation
 module.exports = {
     annotationsLayerSelector,
     annotationsInfoSelector,
+    aeronauticalOptionsSelector,
     annotationsSelector,
     annotationsListSelector,
     annotationSelector,
