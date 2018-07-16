@@ -9,6 +9,7 @@ before_install:
     - sh -e /etc/init.d/xvfb start
     - node -v
     - npm -v
+install: travis_wait npm install
 branches:
   only:
     - master
