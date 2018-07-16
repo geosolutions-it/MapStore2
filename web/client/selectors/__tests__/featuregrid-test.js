@@ -31,6 +31,7 @@ const {
     showPopoverSyncSelector,
     hasSupportedGeometry,
     getDockSize,
+    pagesSelector,
     selectedLayerNameSelector
 } = require('../featuregrid');
 
@@ -317,6 +318,7 @@ describe('Test featuregrid selectors', () => {
                 drawing: true,
                 mode: modeEdit,
                 select: [feature1, feature2],
+                pages: [0],
                 changes: [{id: feature2.id, updated: {geometry: null}}],
                 attributes: {
                 name: {
@@ -491,5 +493,8 @@ describe('Test featuregrid selectors', () => {
         expect(selectedLayerNameSelector(state)).toBe('editing:polygons');
         expect(selectedLayerNameSelector({})).toBe('');
     });
-
+    it('test pagesSelector', () => {
+        expect(pagesSelector(initialState).length).toBe(1);
+        expect(pagesSelector(initialState)[0]).toBe(0);
+    });
 });

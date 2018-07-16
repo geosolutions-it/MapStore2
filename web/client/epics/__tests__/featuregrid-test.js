@@ -13,21 +13,21 @@ const proj4 = Proj4js;
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const { hideMapinfoMarker, featureInfoClick} = require('../../actions/mapInfo');
 
-const { toggleEditMode, toggleViewMode, openFeatureGrid, OPEN_FEATURE_GRID, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid, GEOMETRY_CHANGED, openAdvancedSearch, moreFeatures, GRID_QUERY_RESULT } = require('../../actions/featuregrid');
+const { toggleEditMode, toggleViewMode, openFeatureGrid, OPEN_FEATURE_GRID, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid, GEOMETRY_CHANGED, openAdvancedSearch, moreFeatures, GRID_QUERY_RESULT, LOAD_MORE_FEATURES} = require('../../actions/featuregrid');
 const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
 const {ZOOM_TO_EXTENT} = require('../../actions/map');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
-const {toggleSyncWms, QUERY, querySearchResponse} = require('../../actions/wfsquery');
+const {toggleSyncWms, QUERY, querySearchResponse, featureLoading} = require('../../actions/wfsquery');
 const {CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
 
 const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
 
 
-const { setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeRightPanelOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing, syncMapWmsFilter, onOpenAdvancedSearch, virtualScrollLoadFeatures, removeWmsFilterOnGridClose, autoReopenFeatureGridOnFeatureInfoClose} = require('../featuregrid');
+const { setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeRightPanelOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing, syncMapWmsFilter, onOpenAdvancedSearch, virtualScrollLoadFeatures, removeWmsFilterOnGridClose, autoReopenFeatureGridOnFeatureInfoClose, loadMoreFeatureGridFeatures} = require('../featuregrid');
 
 
 const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
@@ -1601,5 +1601,25 @@ describe('featuregrid Epics', () => {
             featureInfoClick(),
             hideMapinfoMarker()],
         epicResult);
+    });
+    it('it loads missing features when featuregrid is opened', done => {
+        testEpic(loadMoreFeatureGridFeatures, 1, featureLoading(false), (actions) => {
+            actions.map((action) => {
+                switch (action.type) {
+                    case LOAD_MORE_FEATURES:
+                        expect(action.pages).toEqual({startPage: 0, endPage: 10});
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+        }, {
+            featuregrid: {
+                pages: [0],
+                dockSize: 0.6,
+                pagination: {page: 0, size: 10}
+            }
+        });
+        done();
     });
 });

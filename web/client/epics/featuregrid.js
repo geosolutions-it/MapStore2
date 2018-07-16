@@ -32,7 +32,7 @@ const {purgeMapInfoResults} = require('../actions/mapInfo');
 const {getCapabilities, parseLayerCapabilities} = require('../api/WMS');
 
 const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
-    saveSuccess, saveError, clearChanges, setLayer, clearSelection, toggleViewMode, toggleTool,
+    saveSuccess, saveError, clearChanges, setLayer, clearSelection, toggleViewMode, toggleTool, moreFeatures,
     CLEAR_CHANGES, START_EDITING_FEATURE, TOGGLE_MODE, MODES, geometryChanged, DELETE_GEOMETRY, deleteGeometryFeature,
     SELECT_FEATURES, DESELECT_FEATURES, START_DRAWING_FEATURE, CREATE_NEW_FEATURE,
     CLEAR_CHANGES_CONFIRMED, FEATURE_GRID_CLOSE_CONFIRMED,
@@ -44,7 +44,7 @@ const {setHighlightFeaturesPath} = require('../actions/highlight');
 
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
-    isFeatureGridOpen, hasSupportedGeometry} = require('../selectors/featuregrid');
+    isFeatureGridOpen, hasSupportedGeometry, getDockSize, pagesSelector} = require('../selectors/featuregrid');
 const {queryPanelSelector} = require('../selectors/controls');
 
 const {error, warning} = require('../actions/notifications');
@@ -422,6 +422,17 @@ module.exports = {
                     [setControlProperty('metadataexplorer', 'enabled', false),
                     setControlProperty('annotations', 'enabled', false),
                     setControlProperty('details', 'enabled', false)]);
+            }),
+    loadMoreFeatureGridFeatures: (actions$, store) =>
+            actions$.ofType(FEATURE_LOADING)
+            .filter(a => {
+                const pages = pagesSelector(store.getState());
+                const defaultDockSize = 0.35; // default dockSize as defined in featuregrid reducer
+                return a.isLoading === false && pages.length === 1 && getDockSize(store.getState()) > defaultDockSize;
+            })
+            .switchMap(() => {
+                const pagination = getPagination(store.getState());
+                return Rx.Observable.of(moreFeatures({startPage: pagination.startIndex, endPage: pagination.maxFeatures}));
             }),
     /**
      * intercept geometry changed events in draw support to update current
