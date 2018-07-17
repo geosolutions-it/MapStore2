@@ -117,7 +117,7 @@ const wfsQueryEpic = (action$, store) =>
                         sortOptions,
                         ...queryOptions
                     })
-                    .map(data => querySearchResponse(data, action.searchUrl, action.filterObj))
+                    .map(data => querySearchResponse(data, action.searchUrl, action.filterObj, action.queryOptions))
                     .catch(error => Rx.Observable.of(queryError(error)))
                     .startWith(featureLoading(true))
                     .concat(Rx.Observable.of(featureLoading(false)))
