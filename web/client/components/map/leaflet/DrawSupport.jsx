@@ -7,7 +7,7 @@
 */
 const PropTypes = require('prop-types');
 const React = require('react');
-const {head} = require('lodash');
+const {head, last: _last, isNil} = require('lodash');
 const L = require('leaflet');
 
 require('leaflet-draw');
@@ -172,6 +172,7 @@ class DrawSupport extends React.Component {
      * stop allows to stop drawing features<br>
      * replace allows to replace all the features drawn by Drawsupport with new ones<br>
      * clean it cleans the drawn features and stop the drawsupport
+     * endDrawing as for 'replace' action allows to replace all the features in addition triggers end drawing action to store data in state
      * @memberof components.map.DrawSupport
      * @function componentWillReceiveProps
     */
@@ -190,6 +191,7 @@ class DrawSupport extends React.Component {
             } break;
             case "replace": this.replaceFeatures(newProps); break;
             case "clean": this.cleanAndStop(); break;
+            case "endDrawing": this.endDrawing(newProps); break;
             default :
                 return;
             }
@@ -327,6 +329,16 @@ class DrawSupport extends React.Component {
                 };
             }
             this.drawLayer.addData(this.convertFeaturesPolygonToPoint(newProps.features, this.props.drawMethod));
+        }
+    };
+
+    endDrawing = (newProps) => {
+        this.replaceFeatures(newProps);
+        const geometry = _last(newProps.features);
+        if (this.props.drawMethod === "Circle" && geometry && !isNil(geometry.center) && !isNil(geometry.radius)) {
+            this.props.onEndDrawing({...geometry, coordinates: CoordinatesUtils.calculateCircleCoordinates(geometry.center, geometry.radius, 100)}, this.props.drawOwner);
+        } else if (geometry) {
+            this.props.onEndDrawing(geometry, this.props.drawOwner);
         }
     };
 

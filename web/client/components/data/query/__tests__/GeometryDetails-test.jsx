@@ -68,38 +68,43 @@ describe('GeometryDetails', () => {
 
         expect(pb.childNodes.length).toBe(1);
     });
-    it('Test GeometryDetails onEndDrawing', () => {
-        const actions = {
-            onEndDrawing: () => {}
-        };
+    it('Test GeometryDetails endDrawing with 900913', (done) => {
+
         let geometry = {
             center: {
                 srs: "EPSG:900913",
-                x: -1761074.344349588,
-                y: 5852757.632510748
+                x: -1761074.34,
+                y: 5852757.63
             },
             projection: "EPSG:900913",
-            radius: 836584.05,
+            radius: 836584,
             type: "Polygon"
+        };
+
+        // Moved logic of drawing to drawsupport
+        const actions = {
+            onChangeDrawingStatus: (drawStatus, notDef, owner, geom) => {
+                expect(drawStatus).toBe('endDrawing');
+                expect(geom).toEqual([{
+                    type: 'Polygon',
+                    center: { x: -1761074.34, y: 5852757.63 },
+                    coordinates: [ -1761074.34, 5852757.63],
+                    radius: 836584,
+                    projection: 'EPSG:900913'
+                }]);
+                done();
+            }
         };
 
         let type = "Circle";
 
-        const spyonEndDrawing = expect.spyOn(actions, 'onEndDrawing');
-        const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} type={type} onEndDrawing={actions.onEndDrawing} />, document.getElementById("container"));
+        const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} type={type} onChangeDrawingStatus={actions.onChangeDrawingStatus} />, document.getElementById("container"));
         expect(cmp).toExist();
         ReactTestUtils.Simulate.click(document.getElementsByClassName('glyphicon-ok')[0]); // <-- trigger event callback
-        expect(spyonEndDrawing).toHaveBeenCalled();
-        expect(spyonEndDrawing.calls[0].arguments.length).toBe(2);
-        const geom = spyonEndDrawing.calls[0].arguments[0];
-        expect(geom).toExist();
-
     });
 
-    it('Test GeometryDetails onEndDrawing with 4326 (leaflet)', () => {
-        const actions = {
-            onEndDrawing: () => {}
-        };
+    it('Test GeometryDetails endDrawing with 4326', (done) => {
+
         let geometry = {
             center: {
                 srs: "EPSG:4326",
@@ -111,21 +116,26 @@ describe('GeometryDetails', () => {
             type: "Polygon"
         };
 
-        let type = "Circle";
+        // Moved logic of drawing to drawsupport
+        const actions = {
+            onChangeDrawingStatus: (drawStatus, notDef, owner, geom) => {
+                expect(drawStatus).toBe('endDrawing');
+                expect(geom).toEqual([{
+                    type: 'Polygon',
+                    center: { x: 0, y: 0 },
+                    coordinates: [ 0, 0 ],
+                    radius: 1,
+                    projection: 'EPSG:4326'
+                }]);
+                done();
+            }
+        };
 
-        const spyonEndDrawing = expect.spyOn(actions, 'onEndDrawing');
-        const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} type={type} onEndDrawing={actions.onEndDrawing} />, document.getElementById("container"));
+        const type = "Circle";
+
+        const cmp = ReactDOM.render(<GeometryDetails geometry={geometry} type={type} onChangeDrawingStatus={actions.onChangeDrawingStatus} />, document.getElementById("container"));
         expect(cmp).toExist();
         ReactTestUtils.Simulate.click(document.getElementsByClassName('glyphicon-ok')[0]); // <-- trigger event callback
-        expect(spyonEndDrawing).toHaveBeenCalled();
-        const geom = spyonEndDrawing.calls[0].arguments[0];
-        const coords = geom.coordinates[0];
-        // verify that the geometry is not bigger than radious
-        for (let i = 0; i < coords.length; i++) {
-            expect(Math.abs(coords[i][0]) <= 1).toBe(true);
-            expect(Math.abs(coords[i][1]) <= 1).toBe(true);
-        }
-
     });
 
     it('creates the GeometryDetails component with BBOX selection', () => {

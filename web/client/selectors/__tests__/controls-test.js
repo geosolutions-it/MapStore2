@@ -55,6 +55,10 @@ describe('Test controls selectors', () => {
         expect(retVal).toExist();
         expect(retVal).toBe(true);
     });
+    it('test widgetBuilderAvailable no widgetBuilder in state', () => {
+        const retVal = widgetBuilderAvailable({});
+        expect(retVal).toBe(false);
+    });
     it('test widgetBuilderSelector', () => {
         const retVal = widgetBuilderSelector(state);
         expect(retVal).toExist();

@@ -44,7 +44,9 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(0);
+        expect(inputs.length).toBe(1);
+        expect(inputs[0].getAttribute('type')).toBe('number');
+        expect(inputs[0].value).toBe('100');
     });
     it('tests Display component for wms', () => {
         const l = {
@@ -56,7 +58,7 @@ describe('test Layer Properties Display module component', () => {
             url: 'fakeurl'
         };
         const settings = {
-            options: {opacity: 1}
+            options: {opacity: 0.7}
         };
         const handlers = {
             onChange() {}
@@ -68,8 +70,10 @@ describe('test Layer Properties Display module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(3);
-        inputs[0].click();
+        expect(inputs.length).toBe(4);
+        expect(inputs[0].getAttribute('type')).toBe('number');
+        expect(inputs[0].value).toBe('70');
+        inputs[1].click();
         expect(spy.calls.length).toBe(1);
     });
 
