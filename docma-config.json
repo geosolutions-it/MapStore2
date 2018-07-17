@@ -216,6 +216,7 @@
                 "web/client/plugins/Login.jsx",
                 "web/client/plugins/MousePosition.jsx",
                 "web/client/plugins/Notifications.jsx",
+                "web/client/plugins/Print.jsx",
                 "web/client/plugins/QueryPanel.jsx",
                 "web/client/plugins/ScaleBox.jsx",
                 "web/client/plugins/ScrollTop.jsx",

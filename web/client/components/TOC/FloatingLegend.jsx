@@ -9,7 +9,7 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
-const {isNil, isEqual, delay} = require('lodash');
+const {isEqual, delay} = require('lodash');
 
 const {Glyphicon, Panel, Grid, Row, Col, Button: ButtonB} = require('react-bootstrap');
 const {Resizable} = require('react-resizable');
@@ -17,7 +17,7 @@ const ContainerDimensions = require('react-container-dimensions').default;
 const tooltip = require('../misc/enhancers/tooltip');
 const Button = tooltip(ButtonB);
 const SideGrid = require('../misc/cardgrids/SideGrid');
-const Slider = require('../misc/Slider');
+const OpacitySlider = require('./fragments/OpacitySlider');
 const WMSLegend = require('./fragments/WMSLegend');
 
 /**
@@ -44,6 +44,7 @@ const WMSLegend = require('./fragments/WMSLegend');
  * @prop {array} scales array of supported scales
  * @prop {bool} disableOpacitySlider disable and hide opacity slider
  * @prop {bool} expandedOnMount show expanded legend when component did mount
+ * @prop {bool} hideOpacityTooltip hide toolip on opacity sliders
  */
 
 class FloatingLegend extends React.Component {
@@ -66,7 +67,8 @@ class FloatingLegend extends React.Component {
         scales: PropTypes.array,
         disableOpacitySlider: PropTypes.bool,
         deltaHeight: PropTypes.number,
-        expandedOnMount: PropTypes.bool
+        expandedOnMount: PropTypes.bool,
+        hideOpacityTooltip: PropTypes.bool
     };
 
     static defaultProps = {
@@ -200,13 +202,13 @@ class FloatingLegend extends React.Component {
                                                             </Col>
                                                         </Row>
                                                     </Grid>
-                                                    {!this.props.disableOpacitySlider && <div className="mapstore-slider" onClick={(e) => { e.stopPropagation(); }}>
-                                                        <Slider
+                                                    {!this.props.disableOpacitySlider &&
+                                                        <OpacitySlider
+                                                            opacity={layer.opacity}
                                                             disabled={!layer.visibility}
-                                                            start={[isNil(layer.opacity) ? 100 : Math.round(layer.opacity * 100) ]}
-                                                            range={{min: 0, max: 100}}
-                                                            onChange={(value) => this.props.onChange(layer.id, 'layers', {opacity: parseFloat((value[0] / 100).toFixed(2))}) }/>
-                                                    </div>}
+                                                            hideTooltip={this.props.hideOpacityTooltip}
+                                                            onChange={opacity => this.props.onChange(layer.id, 'layers', {opacity})}/>
+                                                    }
                                                 </div>
                                             )
                                     })

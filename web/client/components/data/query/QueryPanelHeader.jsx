@@ -9,5 +9,5 @@ module.exports = ({onToggleQuery = () => {}} = {}) => (<div className="mapstore-
         onClick={() => onToggleQuery()}>
             <Glyphicon glyph="arrow-left"/>
         </Button>
-        <Button className="square-button pull-right no-border"><Glyphicon glyph="filter"/></Button>
+        <div className="square-button pull-right no-border" style={{display: 'flex'}}><Glyphicon glyph="filter" className="text-primary"/></div>
 </div>);
