@@ -21,8 +21,8 @@ module.exports = {
     }, {
         BurgerMenu: {
             name: 'helplink',
-            position: 1000,
-            text: <Message msgId="help"/>,
+            position: 1100,
+            text: <Message msgId="docs"/>,
             icon: <Glyphicon glyph="question-sign"/>,
             action: () => ({type: ''}),
             selector: () => ({href: 'docs', target: 'blank'}),
