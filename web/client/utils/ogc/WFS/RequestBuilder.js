@@ -73,6 +73,7 @@ module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS="wf
         gmlV = "3.1.1";
     }
     const requestAttributes = ({
+        viewParams,
         resultType,
         outputFormat,
         startIndex,
@@ -83,7 +84,8 @@ module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS="wf
             + (resultType ? ` resultType="${resultType}"` : "")
             + (outputFormat ? ` outputFormat="${outputFormat}"` : ``)
             + ((startIndex || startIndex === 0) ? ` startIndex="${startIndex}"` : "")
-            + ((maxFeatures || maxFeatures === 0) ? ` ${getMaxFeatures(maxFeatures)}` : "");
+            + ((maxFeatures || maxFeatures === 0) ? ` ${getMaxFeatures(maxFeatures)}` : "")
+            + (viewParams ? ` viewParams="${viewParams}"` : "");
     };
     const propertyName = (property) =>
         castArray(property)

@@ -62,9 +62,28 @@ describe('wfsquery Epics', () => {
             done();
         }, {});
     });
+    it('wfsQueryEpic passes query options', (done) => {
+        const expectedResult = require('json-loader!../../test-resources/wfs/museam.json');
+        testEpic(wfsQueryEpic, 2, query("base/web/client/test-resources/wfs/museam.json", { pagination: {} }, {viewParams: "a:b"}), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                    case QUERY_RESULT:
+                        expect(action.result).toEqual(expectedResult);
+                        expect(action.queryOptions.viewParams).toEqual("a:b");
+                        break;
+                    case FEATURE_LOADING:
+                        break;
+                    default:
+                        expect(false).toBe(true);
+                }
+            });
+            done();
+        }, {});
+    });
     // this avoids race condition of state changes when update query is performed
     it('wfsQueryEpic stop on update query', (done) => {
-        testEpic(addTimeoutEpic(wfsQueryEpic), 2, [
+        testEpic(addTimeoutEpic(wfsQueryEpic, 50), 2, [
             query("base/web/client/test-resources/wfs/museam.json", {pagination: {} }),
             updateQuery()
             ], actions => {
