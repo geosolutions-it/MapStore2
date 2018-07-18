@@ -6,18 +6,30 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {compose, withPropsOnChange} = require('recompose');
-
+const {get, find} = require('lodash');
 /**
- * Merges filter object and dependencies map into an ogc filter
+ * Merges options and original layer's data to get the final options (with viewParams added)
  */
 module.exports = compose(
     withPropsOnChange(
         ['dependencies', 'options'],
-        ({dependencies = {}, options} = {}) => {
+        ({ dependencies = {}, options, layer = {}} = {}) => {
+            const params =
+                layer
+                    && layer.id
+                    && get(
+                        find(dependencies.layers || [], {
+                            id: layer.id
+                        }),
+                        "params",
+                        {}
+                    );
+            const viewParamsKey = find(Object.keys(params || {}), (k = "") => k.toLowerCase() === "viewparams");
+            const viewParams = params && viewParamsKey && params[viewParamsKey];
             return {
-                options: dependencies.viewParams ? {
+                options: viewParams ? {
                     ...options,
-                    viewParams: dependencies.viewParams
+                    viewParams
                 } : options
             };
         }
