@@ -12,8 +12,7 @@ const {compose, withPropsOnChange} = require('recompose');
  */
 module.exports = compose(
     withPropsOnChange(
-        ({dependencies = {}} = {}, nextProps = {}) =>
-            dependencies.viewParams !== (nextProps.dependencies && nextProps.dependencies.viewParams),
+        ['dependencies', 'options'],
         ({dependencies = {}, options} = {}) => {
             return {
                 options: dependencies.viewParams ? {
