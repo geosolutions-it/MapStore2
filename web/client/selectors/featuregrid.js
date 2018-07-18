@@ -6,7 +6,7 @@
   * LICENSE file in the root directory of this source tree.
   */
 
-const { head, get, pick, isObject} = require('lodash');
+const { head, get, isObject} = require('lodash');
 const {layersSelector} = require('./layers');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {currentLocaleSelector} = require('../selectors/locale');
@@ -77,8 +77,8 @@ module.exports = {
    * @param  {object}  state applications state
    * @return {Boolean}       true if the featuregrid is open, false otherwise
    */
-  isFeatureGridOpen: state => state && state.featuregrid && state.featuregrid.open,
-  getAttributeFilters,
+    isFeatureGridOpen: state => state && state.featuregrid && state.featuregrid.open,
+    getAttributeFilters,
   /**
    * get a filter for an attribute
    * @memberof selectors.featuregrid
@@ -86,19 +86,19 @@ module.exports = {
    * @param  {string} name  The name of the attribute
    * @return {object}       The filter for the attribute
    */
-  getAttributeFilter: (state, name) => get(getAttributeFilters(state), name),
-  selectedLayerIdSelector,
-  getCustomAttributeSettings,
+    getAttributeFilter: (state, name) => get(getAttributeFilters(state), name),
+    selectedLayerIdSelector,
+    getCustomAttributeSettings,
   /**
    * Get's the title of the selected layer
    * @memberof selectors.featuregrid
    * @param  {object} state the application's state
    * @return {startDrawingFeature} the title of the current selected layer
    */
-  getTitleSelector: state => {
-      const title = getTitle(getLayerById(state, selectedLayerIdSelector(state)));
-      return isObject(title) ? title[currentLocaleSelector(state)] || title.default || '' : title;
-  },
+    getTitleSelector: state => {
+        const title = getTitle(getLayerById(state, selectedLayerIdSelector(state)));
+        return isObject(title) ? title[currentLocaleSelector(state)] || title.default || '' : title;
+    },
     getCustomizedAttributes: state => {
         return (attributesSelector(state) || []).map(att => {
             const custom = getCustomAttributeSettings(state, att);
