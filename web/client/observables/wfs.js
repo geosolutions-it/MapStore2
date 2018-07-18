@@ -90,7 +90,7 @@ const getPagination = (filterObj = {}, options = {}) =>
  * @return {Observable} a stream that emits the GeoJSON or an error.
  */
 const getJSONFeature = (searchUrl, filterObj, options = {}) => {
-    const data = FilterUtils.getWFSFilterData(filterObj);
+    const data = FilterUtils.getWFSFilterData(filterObj, options);
 
     const urlParsedObj = Url.parse(searchUrl, true);
     let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};
@@ -129,7 +129,7 @@ const getJSONFeatureWA = (searchUrl, filterObj, { sortOptions = {}, ...options }
                 return getJSONFeature(searchUrl, {
                     ...filterObj,
                     sortOptions
-                }, {options});
+                }, options);
             }
             throw error;
         });
@@ -172,9 +172,9 @@ module.exports = {
             Rx.Observable.defer( () => axios.get(toLayerCapabilitiesURL(layer)))
             .let(interceptOGCError)
             .switchMap( response => Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
-                 tagNameProcessors: [stripPrefix],
-                 explicitArray: false,
-                 mergeAttrs: true
+                tagNameProcessors: [stripPrefix],
+                explicitArray: false,
+                mergeAttrs: true
             }, callback))(response.data)
         )
 

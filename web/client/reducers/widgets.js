@@ -63,7 +63,6 @@ function widgetsReducer(state = emptyState, action) {
         case EDIT_NEW: {
             return set(`builder.editor`, action.widget,
                 set("builder.settings", action.settings || emptyState.settings, state));
-
         }
         case EDIT: {
             return set(`builder.editor`, {
@@ -80,15 +79,15 @@ function widgetsReducer(state = emptyState, action) {
             return set(`builder.editor.${action.key}`, action.value, state);
         }
         case INSERT:
-           let tempState = arrayUpsert(`containers[${action.target}].widgets`, {
-               id: action.id,
-               ...action.widget,
-               dataGrid: action.id && {y: 0, x: 0, w: 1, h: 1}
-           }, {
-               id: action.widget.id || action.id
-           }, state);
+            let tempState = arrayUpsert(`containers[${action.target}].widgets`, {
+                id: action.id,
+                ...action.widget,
+                dataGrid: action.id && {y: 0, x: 0, w: 1, h: 1}
+            }, {
+                id: action.widget.id || action.id
+            }, state);
 
-           return tempState;
+            return tempState;
         case UPDATE_PROPERTY:
             return arrayUpsert(`containers[${action.target}].widgets`,
                 // update the widget setting the value to the existing object

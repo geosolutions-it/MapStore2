@@ -344,6 +344,12 @@ describe('FilterUtils', () => {
             }
         });
     });
+    it('getGetFeatureBase gets viewParams', () => {
+        const version = "2.0";
+        const base = FilterUtils.getGetFeatureBase(version, null, false, "application/json", {viewParams: "a:b"});
+        expect(base.indexOf('viewParams="a:b"') > 0).toBeTruthy();
+        expect(FilterUtils.getGetFeatureBase(version, null, false, "application/json", { cql_filter: "a:b" }).indexOf('viewParams="a:b"') > 0).toBeFalsy();
+    });
     it('Check for undefined or null values for string and number and list in ogc filter', () => {
         let filterObj = {
             filterFields: [{
