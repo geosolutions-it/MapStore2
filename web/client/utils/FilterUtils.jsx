@@ -463,7 +463,7 @@ const FilterUtils = {
 
         return ogcSpatialOperators[objFilter.spatialField.operation](nsplaceholder, ogc);
     },
-    getGetFeatureBase: function(version, pagination, hits, format, options) {
+    getGetFeatureBase: function(version, pagination, hits, format, options = {}) {
         let ver = normalizeVersion(version);
 
         let getFeature = '<wfs:GetFeature ';
