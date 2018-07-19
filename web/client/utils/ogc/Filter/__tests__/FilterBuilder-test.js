@@ -5,7 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
- // Disable ESLint because some of the names to include are not in camel case
+// Disable ESLint because some of the names to include are not in camel case
 const expect = require('expect');
 const FilterBuilder = require('../FilterBuilder');
 const {processOGCGeometry} = require("../../GML");

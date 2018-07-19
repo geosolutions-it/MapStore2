@@ -36,6 +36,16 @@ const mergeFilterRes =
             + '<ogc:PropertyName>geometry</ogc:PropertyName><gml:Polygon srsName="EPSG:4326"><gml:exterior><gml:LinearRing><gml:posList>-1 -1 -1 1 1 1 1 -1 -1 -1</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>'
         + '</ogc:Intersects>'
     + '</ogc:And></ogc:Filter>';
+const mergeFilterCQLRes =
+    '<ogc:Filter><ogc:And>'
+    + '<ogc:PropertyIsEqualTo><ogc:PropertyName>prop</ogc:PropertyName><ogc:Literal>value</ogc:Literal></ogc:PropertyIsEqualTo>'
+    + '<ogc:Intersects>'
+    + '<ogc:PropertyName>geometry</ogc:PropertyName><gml:Polygon srsName="EPSG:4326"><gml:exterior><gml:LinearRing><gml:posList>1 1 1 2 2 2 2 1 1 1</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>'
+    + '</ogc:Intersects>'
+    + '<ogc:Intersects>'
+    + '<ogc:PropertyName>geometry</ogc:PropertyName><gml:Polygon srsName="EPSG:4326"><gml:exterior><gml:LinearRing><gml:posList>-1 -1 -1 1 1 1 1 -1 -1 -1</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon>'
+    + '</ogc:Intersects>'
+    + '</ogc:And></ogc:Filter>';
 describe('widgets dependenciesToFilter enhancer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -74,5 +84,26 @@ describe('widgets dependenciesToFilter enhancer', () => {
             dependencies={ {
             viewport: {"bounds": {"minx": "-1", "miny": "-1", "maxx": "1", "maxy": "1"}, "crs": "EPSG:4326", "rotation": 0}
         } } filter={filterObj}/>, document.getElementById("container"));
+    });
+    it('dependenciesToFilter with mapsync, spatial filter and cql_filter', (done) => {
+        const Sink = dependenciesToFilter(createSink(props => {
+            expect(props).toExist();
+            expect(props.filter).toBe(mergeFilterCQLRes);
+            done();
+        }));
+        ReactDOM.render(<Sink
+            mapSync
+            geomProp={"geometry"}
+            layer={{
+                name:"test",
+                id: "test"
+            }}
+            dependencies={{
+                layers: [{id: "test", params: {
+                    cql_filter: "prop = 'value'"
+                }}],
+                viewport: { "bounds": { "minx": "-1", "miny": "-1", "maxx": "1", "maxy": "1" }, "crs": "EPSG:4326", "rotation": 0 }
+            }} filter={filterObj} />, document.getElementById("container"));
+
     });
 });
