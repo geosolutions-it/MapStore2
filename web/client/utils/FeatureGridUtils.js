@@ -168,16 +168,20 @@ module.exports = {
             index: 0
         };
 
-        let mergeFilters = oldFilterObj.groupFields ? (oldFilterObj.groupFields.filter(obj => obj.id === 1 ).length > 0 && oldFilterObj.filterFields.length > 0 ? true // checks if query panel filter is active
-         : oldFilterObj.filterFields.length - 1 > 0 || ( oldFilterObj.filterFields[0] && oldFilterObj.filterFields[0].hasOwnProperty('loading'))) : false;
+        let mergeFilters = oldFilterObj.groupFields 
+            ? (oldFilterObj.groupFields.filter(obj => obj.id === 1 ).length > 0 && oldFilterObj.filterFields.length > 0 
+               ? true // checks if query panel filter is active
+                : oldFilterObj.filterFields.length - 1 > 0 
+                    || ( oldFilterObj.filterFields[0] && oldFilterObj.filterFields[0].hasOwnProperty('loading'))) 
+            : false;
         if ( mergeFilters ) {
             let multipleFields = oldFilterObj.filterFields.length > 2; // checks for multiple fields in query panel filter
 
-            let {filterFields: oldFilterFileds, groupFields: oldGroupFields } = oldFilterObj;
-            let mapedFilterFields = oldFilterFileds.map(obj => obj.groupId === 1 && !multipleFields ? {...obj, groupId: andGroup.id} : obj);
-            let slicedFilterFields = mapedFilterFields.filter(obj => obj.hasOwnProperty('loading'));
-            let checkeGroupFields = multipleFields ? oldGroupFields.map( ({id, logic, index }) => { if (id !== andGroup.id) return {id, logic, groupId: andGroup.id, index: 1}; return {id, logic, index }; } ) : remove(oldGroupFields, obj => obj.groupId === 1);
-            let newfilterFileds = !isNil(value)
+            let {filterFields: oldFilterFields, groupFields: oldGroupFields } = oldFilterObj;
+            let mappedFilterFields = oldFilterFields.map(obj => obj.groupId === 1 && !multipleFields ? {...obj, groupId: andGroup.id} : obj);
+            let slicedFilterFields = mappedFilterFields.filter(obj => obj.hasOwnProperty('loading'));
+            let checkGroupFields = multipleFields ? oldGroupFields.map( ({id, logic, index }) => { if (id !== andGroup.id) return {id, logic, groupId: andGroup.id, index: 1}; return {id, logic, index }; } ) : remove(oldGroupFields, obj => obj.groupId === 1);
+            let newFilterFields = !isNil(value)
             ? upsertFilterField((oldFilterObj.filterFields.slice(-1) || []), {attribute: attribute}, {
                 attribute,
                 rowId: Date.now(),
@@ -189,8 +193,8 @@ module.exports = {
             : (oldFilterObj.filterFields || []).filter(field => field.attribute !== (attribute));
             return {
                 ...oldFilterObj,
-                groupFields: newfilterFileds.length === 0 && multipleFields ? [checkeGroupFields[1]] : [andGroup, ...checkeGroupFields],
-                filterFields: [...slicedFilterFields, ...newfilterFileds]
+                groupFields: newFilterFields.length === 0 && multipleFields ? [checkGroupFields[1]] : [andGroup, ...checkGroupFields],
+                filterFields: [...slicedFilterFields, ...newFilterFields]
             };
         }
         return {
