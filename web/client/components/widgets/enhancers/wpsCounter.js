@@ -17,9 +17,17 @@ const wpsAggregateToCounterData = ({AggregationResults = [], GroupByAttributes =
 const sameFilter = (f1, f2) => f1 === f2;
 const sameOptions = (o1 = {}, o2 = {}) =>
     o1.aggregateFunction === o2.aggregateFunction
-    && o1.aggregationAttribute === o2.aggregationAttribute;
+    && o1.aggregationAttribute === o2.aggregationAttribute
+    && o1.viewParams === o2.viewParams;
 
 const getLayerUrl = l => l && l.wpsUrl || (l.search && l.search.url) || l.url;
+
+/**
+ * Stream of props -> props to retrieve data from WPS aggregate process on params changes.
+ * Can be used with widgets and charts to auto-update data on property changes.
+ * When new data is retrieved, calls also onLoad handler, or onLoadError if something went wrong.
+ *
+ */
 const dataStreamFactory = ($props) =>
     $props
         .filter(({layer = {}, options}) => layer.name && getLayerUrl(layer) && options && options.aggregateFunction && options.aggregationAttribute)

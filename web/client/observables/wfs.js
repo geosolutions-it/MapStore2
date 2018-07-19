@@ -159,7 +159,26 @@ const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {sortOptio
                         ...(filter ? castArray(filter) : [])
                     ]),
                 options), // options contains startIndex, maxFeatures and it can be passed as it is
-    options);
+    options)
+        // retry using 1st propertyNames property, if present, to workaround primary-key issues
+        .catch(error => {
+            if (error.name === "OGCError" && error.code === 'NoApplicableCode' && !sortOptions && pn && pn[0]) {
+                return getJSONFeature(search.url || url,
+                    filter && typeof filter === 'object' ? {
+                        ...filter,
+                        typeName: name || filter.typeName
+                    } : getFeature(
+                        query(name,
+                            [
+                                sortBy(pn[0]),
+                                ...(pn ? [propertyName(pn)] : []),
+                                ...(filter ? castArray(filter) : [])
+                            ]),
+                        options), // options contains startIndex, maxFeatures and it can be passed as it is
+                options);
+            }
+            throw error;
+        });
 
 module.exports = {
     getJSONFeature,
