@@ -330,7 +330,26 @@ const buildAst = (tokens) => {
 module.exports = {
     /**
      * Parse a CQL filter. returns an object representation of the filter.
-     * For the moment this parser doesn't support WKT parsing
+     * For the moment this parser doesn't support WKT parsing.
+     * Example:
+     * ```
+     * const cqlFilter = "property1 = 'value1' AND property2 = 'value2'";
+     * const obj = read(cqlFilter);
+     * console.log(obj);
+     * // obj looks like this
+     * {
+     *   type: "and",
+     *   filters: [{
+     *      type: "=",
+     *      property: "property1",
+     *      value: "value1"
+     *   },{
+     *      type: "=",
+     *      property: "property1",
+     *      value: "value2"
+     *   }]
+     * }
+     * ```
      * @memberof utils.ogc.Filter.CQL.parser
      * @name read
      * @param cqlFilter the cql_filter o parse
