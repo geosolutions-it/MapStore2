@@ -65,7 +65,7 @@ If you want to use your own local test back-end you have to:
   - `admin` password `admin`
   - `user` with password `user`
 
-2. Setup client to use the local back-end, apply this changes to webpack.config.js (at the devServer configuration)
+2. Setup client to use the local back-end, apply this changes to `buildConfig.js` (at the devServer configuration)
 ```Javascript
 devServer: {
     proxy: {
