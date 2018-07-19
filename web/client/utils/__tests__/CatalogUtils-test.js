@@ -6,9 +6,38 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
+const {map, clone} = require('lodash');
 
 const CatalogUtils = require('../CatalogUtils');
+const wmsRecords = [{
+    references: [{
+        type: "OGC:WMS",
+        SRS: ['EPSG:4326', 'EPSG:3857'],
+        params: {
+            name: "record.Name"
+        }
+    }]
+}];
+const url = "http://some.url";
+const cswRecords = [{
+    dc: {
+        references: [{
+            name: "thumbnail",
+            scheme: "WWW:LINK-1.0-http--image-thumbnail",
+            value: "http://thumb"
+        }, {
+            name: "wms",
+            scheme: "OGC:WMS-1.1.1-http-get-map",
+            value: "http://geoserver"
+        }],
+        URI: [{
+            name: "thumbnail",
+            scheme: "WWW:LINK-1.0-http--image-thumbnail",
+            value: "/thumb"
+        }]
+    }
 
+}];
 describe('Test the CatalogUtils', () => {
     it('wms dimensions without values', () => {
         const records = CatalogUtils.getCatalogRecords('wms', {
@@ -258,5 +287,86 @@ describe('Test the CatalogUtils', () => {
             }]
         }, {});
         expect(records.length).toBe(1);
+    });
+
+    it('wms check for reference url', () => {
+        const records = CatalogUtils.getCatalogRecords('wms', {
+            records: [{
+                references: [{
+                    type: "OGC:WMS",
+                    // url: options && options.url,
+                    SRS: ['EPSG:4326', 'EPSG:3857'],
+                    params: {
+                        name: "record.Name"
+                    }
+                }]
+            }]
+        }, {});
+        expect(records[0].references.length).toBe(1);
+        expect(records[0].references[0].url).toBe(undefined);
+    });
+
+    it('wms check for reference url, no options', () => {
+        const records = CatalogUtils.getCatalogRecords('wms', {records: wmsRecords });
+        expect(records[0].references.length).toBe(1);
+        expect(records[0].references[0].url).toBe(undefined);
+    });
+
+    it('wms check for reference url, options with no url', () => {
+        const records = CatalogUtils.getCatalogRecords('wms', { records: wmsRecords }, {});
+        expect(records[0].references.length).toBe(1);
+        expect(records[0].references[0].url).toBe(undefined);
+    });
+
+    it('wms check for reference url, no options', () => {
+        const records = CatalogUtils.getCatalogRecords('wms', {records: wmsRecords }, {url});
+        expect(records[0].references.length).toBe(1);
+        expect(records[0].references[0].url).toBe(url);
+    });
+
+    it('csw with DC references, no url, no options, with uri', () => {
+        const records = CatalogUtils.getCatalogRecords('csw', { records: cswRecords });
+        expect(records.length).toBe(1);
+        expect(records[0].thumbnail).toBe("/thumb");
+    });
+
+    it('csw with DC references, no url, with thumbnail, with uri', () => {
+        const records = CatalogUtils.getCatalogRecords('csw', { records: cswRecords }, {});
+        expect(records.length).toBe(1);
+        expect(records[0].thumbnail).toBe("/thumb");
+    });
+
+    it('csw with DC references, with url, with options, with uri', () => {
+        const records = CatalogUtils.getCatalogRecords('csw', { records: cswRecords }, {url});
+        expect(records.length).toBe(1);
+        expect(records[0].thumbnail).toBe(url + cswRecords[0].dc.URI[0].value);
+    });
+
+    it('csw with DC references, with url, with options, no uri', () => {
+        const cswData = map(cswRecords, clone);
+        delete cswData[0].dc.URI;
+        const records = CatalogUtils.getCatalogRecords('csw', { records: cswData }, {url});
+        expect(records.length).toBe(1);
+        expect(records[0].thumbnail).toBe(cswRecords[0].dc.references[0].value);
+    });
+
+    it('wmts, with url, with options', () => {
+        const wmtsRecords = [{}];
+        const records = CatalogUtils.getCatalogRecords('wmts', { records: wmtsRecords }, {url});
+        expect(records.length).toBe(1);
+        expect(records[0].references[0].url).toBe(url);
+    });
+
+    it('wmts, NO url, with options', () => {
+        const wmtsRecords = [{}];
+        const records = CatalogUtils.getCatalogRecords('wmts', { records: wmtsRecords }, {});
+        expect(records.length).toBe(1);
+        expect(records[0].references[0].url).toBe(undefined);
+    });
+    it('wmts, NO url, no options', () => {
+        const wmtsRecords = [{}];
+        const records = CatalogUtils.getCatalogRecords('wmts', { records: wmtsRecords });
+        expect(records.length).toBe(1);
+        expect(records[0].references[0].url).toBe(undefined);
     });
 });
