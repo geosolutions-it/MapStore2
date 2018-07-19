@@ -404,6 +404,41 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Fehler bei der Metadatensuche"
                 }
+            },
+            "thematic": {
+                "classification_field": "Klassifizierungsfeld:",
+                "classification_method": "Klassifizierungsmethode:",
+                "classification_aggregate": "Aggregatfunktion:",
+                "classification_colors": "Farbrampe:",
+                "classification_intervals": "Intervalle:",
+                "preview": "Vorschau",
+                "remove_thematic": "Zurück zum einfachen Stil",
+                "values": {
+                    "equalInterval": "Gleiche Intervalle",
+                    "quantile": "Quantil",
+                    "jenks": "Natürliche Pausen",
+                    "sum": "Summe",
+                    "avg": "Durchschnittlich",
+                    "count": "Anzahl",
+                    "min": "Mindest",
+                    "max": "Max"
+                },
+                "configuration": "Aufbau",
+                "apply": "Klassifizierung anwenden",
+                "restore": "Anpassungen zurücksetzen",
+                "go_to_cfg": "Konfigurieren...",
+                "go_to_thema": "Verwenden Sie diese Konfiguration",
+                "cfgError": "Fehler in der Konfigurations-JSON",
+                "classify": "Klassifizieren",
+                "remove": "Klassifizierung entfernen",
+                "data_panel": "Daten",
+                "classification_stroke": "Brett",
+                "classification_error": "Fehler beim Aufruf des Klassifizierungsdienstes: {message}",
+                "fields_error": "Fehler beim Laden der Felderliste: {message}",
+                "interval_limit": "Intervalle sollten eine Zahl zwischen {min} und {max} sein",
+                "invalid_object": "Ungültige Serviceantwort",
+                "invalid_geometry": "Der Geometrietyp ist nicht gültig, kein Punkt, Linie oder Polygon",
+                "invalid_classes": "Max muss in jeder Klasse größer als min sein"
             }
         },
         "print":{
@@ -1085,6 +1120,7 @@
                 "placeholders": {
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "date": "Geben Sie das zu filternde Datum ein...",
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein..."
                 },
                 "tooltips": {

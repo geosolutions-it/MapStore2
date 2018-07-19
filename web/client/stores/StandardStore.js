@@ -37,7 +37,7 @@ const standardEpics = {
     ...controlsEpics
 };
 
-module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, appEpics = {}, plugins, storeOpts = {}) => {
+module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, appEpics = {}, plugins = {}, storeOpts = {}) => {
     const allReducers = combineReducers(plugins, {
         ...appReducers,
         localConfig: require('../reducers/localConfig'),

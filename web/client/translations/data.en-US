@@ -83,7 +83,6 @@
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
             "templatePreview": "Template preview"
-
         },
         "notification": {
             "update": "Update",
@@ -405,6 +404,41 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Error in metadata search"
                 }
+            },
+            "thematic": {
+                "classification_field": "Classification Field:",
+                "classification_method": "Classification Method:",
+                "classification_aggregate": "Aggregate Function:",
+                "classification_colors": "Color Ramp:",
+                "classification_intervals": "Intervals:",
+                "preview": "Preview",
+                "remove_thematic": "Back to Simple Style",
+                "values": {
+                    "equalInterval": "Equal Intervals",
+                    "quantile": "Quantile",
+                    "jenks": "Natural Breaks",
+                    "sum": "Sum",
+                    "avg": "Average",
+                    "count": "Count",
+                    "min": "Min",
+                    "max": "Max"
+                },
+                "configuration": "Configuration",
+                "apply": "Apply classification",
+                "restore": "Reset customizations",
+                "go_to_cfg": "Configure...",
+                "go_to_thema": "Use this configuration",
+                "cfgError": "Error in configuration JSON",
+                "classify": "Classify",
+                "remove": "Remove classification",
+                "data_panel": "Data",
+                "classification_stroke": "Stroke",
+                "classification_error": "Error calling the classification service: {message}",
+                "fields_error": "Error loading fields list: {message}",
+                "interval_limit": "Intervals should be a number between {min} and {max}",
+                "invalid_object": "Invalid service response",
+                "invalid_geometry": "Geometry type is not valid, not a point, line or polygon",
+                "invalid_classes": "Max must be greater than min in every class"
             }
         },
         "print":{
@@ -1086,6 +1120,7 @@
                 "placeholders": {
                     "default": "Search...",
                     "string": "Type text to filter...",
+                    "date": "Type date to filter...",
                     "number": "Type number or expression..."
                 },
                 "tooltips": {

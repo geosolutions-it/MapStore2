@@ -404,6 +404,41 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Error en la búsqueda de metadatos"
                 }
+            },
+            "thematic": {
+                "classification_field": "Campo de clasificación:",
+                "classification_method": "Método de clasificación:",
+                "classification_aggregate": "Función agregada:",
+                "classification_colors": "Rampa de color:",
+                "classification_intervals": "Intervalos:",
+                "preview": "Avance",
+                "remove_thematic": "Volver al estilo simple",
+                "values": {
+                    "equalInterval": "Intervalos iguales",
+                    "quantile": "Quantile",
+                    "jenks": "Escapadas naturales",
+                    "sum": "Suma",
+                    "avg": "Promedio",
+                    "count": "Contar",
+                    "min": "Min.",
+                    "max": "Max"
+                },
+                "configuration": "Configuración",
+                "apply": "Aplicar clasificación",
+                "restore": "Restablecer personalizaciones",
+                "go_to_cfg": "Configurar ...",
+                "go_to_thema": "Usa esta configuración",
+                "cfgError": "Error en la configuración JSON",
+                "classify": "Clasificar",
+                "remove": "Eliminar clasificación",
+                "data_panel": "Datos",
+                "classification_stroke": "tablero",
+                "classification_error": "Error al llamar al servicio de clasificación: {message}",
+                "fields_error": "Error al cargar la lista de campos: {message}",
+                "interval_limit": "Los intervalos deben ser un número entre {min} y {max}",
+                "invalid_object": "Respuesta de servicio inválida",
+                "invalid_geometry": "El tipo de geometría no es válido, no es un punto, línea o polígono",
+                "invalid_classes": "Max debe ser mayor que min en todas las clases"
             }
         },
         "print":{
@@ -1085,6 +1120,7 @@
                 "placeholders": {
                     "default": "Buscar...",
                     "string": "Escribe texto para filtrar...",
+                    "date": "Escriba la fecha para filtrar...",
                     "number": "Escriba el número o la expresión..."
                 },
                 "tooltips": {

@@ -13,7 +13,36 @@ const proj4 = Proj4js;
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const { hideMapinfoMarker, featureInfoClick} = require('../../actions/mapInfo');
 
-const { toggleEditMode, toggleViewMode, openFeatureGrid, OPEN_FEATURE_GRID, SET_LAYER, DELETE_GEOMETRY_FEATURE, deleteGeometry, createNewFeatures, CLOSE_FEATURE_GRID, TOGGLE_MODE, MODES, closeFeatureGridConfirm, clearChangeConfirmed, CLEAR_CHANGES, TOGGLE_TOOL, closeFeatureGridConfirmed, zoomAll, START_SYNC_WMS, STOP_SYNC_WMS, startDrawingFeature, startEditingFeature, closeFeatureGrid, GEOMETRY_CHANGED, openAdvancedSearch, moreFeatures, GRID_QUERY_RESULT } = require('../../actions/featuregrid');
+const {
+    toggleEditMode,
+    toggleViewMode,
+    openFeatureGrid,
+    OPEN_FEATURE_GRID,
+    SET_LAYER,
+    DELETE_GEOMETRY_FEATURE,
+    deleteGeometry,
+    createNewFeatures,
+    CLOSE_FEATURE_GRID,
+    TOGGLE_MODE,
+    MODES,
+    closeFeatureGridConfirm,
+    clearChangeConfirmed,
+    CLEAR_CHANGES,
+    TOGGLE_TOOL,
+    closeFeatureGridConfirmed,
+    zoomAll,
+    START_SYNC_WMS,
+    STOP_SYNC_WMS,
+    startDrawingFeature,
+    startEditingFeature,
+    closeFeatureGrid,
+    GEOMETRY_CHANGED,
+    openAdvancedSearch,
+    moreFeatures,
+    GRID_QUERY_RESULT,
+    changePage,
+    sort
+} = require('../../actions/featuregrid');
 const {SET_HIGHLIGHT_FEATURES_PATH} = require('../../actions/highlight');
 const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
@@ -27,7 +56,37 @@ const {geometryChanged} = require('../../actions/draw');
 const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
 
 
-const { setHighlightFeaturesPath, triggerDrawSupportOnSelectionChange, featureGridLayerSelectionInitialization, closeRightPanelOnFeatureGridOpen, deleteGeometryFeature, onFeatureGridCreateNewFeature, resetGridOnLocationChange, resetQueryPanel, autoCloseFeatureGridEpicOnDrowerOpen, askChangesConfirmOnFeatureGridClose, onClearChangeConfirmedFeatureGrid, onCloseFeatureGridConfirmed, onFeatureGridZoomAll, resetControlsOnEnterInEditMode, closeIdentifyEpic, startSyncWmsFilter, stopSyncWmsFilter, handleDrawFeature, handleEditFeature, resetEditingOnFeatureGridClose, onFeatureGridGeometryEditing, syncMapWmsFilter, onOpenAdvancedSearch, virtualScrollLoadFeatures, removeWmsFilterOnGridClose, autoReopenFeatureGridOnFeatureInfoClose} = require('../featuregrid');
+const {
+    setHighlightFeaturesPath,
+    triggerDrawSupportOnSelectionChange,
+    featureGridLayerSelectionInitialization,
+    closeRightPanelOnFeatureGridOpen,
+    deleteGeometryFeature,
+    onFeatureGridCreateNewFeature,
+    resetGridOnLocationChange,
+    resetQueryPanel,
+    autoCloseFeatureGridEpicOnDrowerOpen,
+    askChangesConfirmOnFeatureGridClose,
+    onClearChangeConfirmedFeatureGrid,
+    onCloseFeatureGridConfirmed,
+    onFeatureGridZoomAll,
+    resetControlsOnEnterInEditMode,
+    closeIdentifyEpic,
+    startSyncWmsFilter,
+    stopSyncWmsFilter,
+    handleDrawFeature,
+    handleEditFeature,
+    resetEditingOnFeatureGridClose,
+    onFeatureGridGeometryEditing,
+    syncMapWmsFilter,
+    onOpenAdvancedSearch,
+    virtualScrollLoadFeatures,
+    removeWmsFilterOnGridClose,
+    autoReopenFeatureGridOnFeatureInfoClose,
+    featureGridChangePage,
+    featureGridSort
+}
+    = require('../featuregrid');
 
 
 const {TEST_TIMEOUT, testEpic, addTimeoutEpic} = require('./epicTestUtils');
@@ -519,6 +578,7 @@ const stateWithGmlGeometry = {
 };
 
 describe('featuregrid Epics', () => {
+
     it('test startSyncWmsFilter with nativeCrs absent in layer props, but no definition registered in proj4 defs', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
@@ -1458,6 +1518,7 @@ describe('featuregrid Epics', () => {
             done();
         }, newState);
     });
+
     it('test virtualScrollLoadFeatures to dispatch query action', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
@@ -1483,6 +1544,50 @@ describe('featuregrid Epics', () => {
                     case QUERY:
                         expect(action.filterObj.pagination.startIndex).toBe(0);
                         expect(action.filterObj.pagination.maxFeatures).toBe(30);
+                        break;
+                    default:
+                        expect(true).toBe(true);
+                }
+            });
+            done();
+        }, newState);
+    });
+    it('test virtualScrollLoadFeatures to dispatch also viewparams', (done) => {
+        const stateFeaturegrid = {
+            layers: {
+                flat: [{
+                    id: "TEST__6",
+                    title: "Test Layer",
+                    name: 'editing:polygons',
+                    params: {
+                        viewParams: "a:b"
+                    }
+                }]
+            },
+            featuregrid: {
+                open: true,
+                selectedLayer: "TEST__6",
+                mode: 'EDIT',
+                select: [{ id: 'polygons.1', _new: 'polygons._new' }],
+                changes: [],
+                pages: [],
+                pagination: {
+                    size: 10
+                },
+                features: []
+            }
+        };
+
+        const newState = assign({}, state, stateFeaturegrid);
+        testEpic(virtualScrollLoadFeatures, 1, [moreFeatures({ startPage: 0, endPage: 2 })], actions => {
+
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case QUERY:
+                        expect(action.filterObj.pagination.startIndex).toBe(0);
+                        expect(action.filterObj.pagination.maxFeatures).toBe(30);
+                        expect(action.queryOptions.viewParams).toBe("a:b");
                         break;
                     default:
                         expect(true).toBe(true);
@@ -1602,4 +1707,95 @@ describe('featuregrid Epics', () => {
             hideMapinfoMarker()],
         epicResult);
     });
+
+    it('featureGridChangePage', done => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                if (action.type === QUERY) {
+                    done();
+                }
+            });
+        };
+        testEpic(featureGridChangePage, 1, [changePage(0, 10)], epicResult);
+    });
+    it('featureGridChangePage manages queryOptions viewparams', done => {
+
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                if (action.type === QUERY) {
+                    expect(action.queryOptions.viewParams).toBe("a:b");
+                    done();
+                }
+            });
+        };
+        testEpic(featureGridChangePage, 1, [changePage(0, 10)], epicResult, () => ({
+            layers: {
+                flat: [{
+                    id: "TEST_LAYER",
+                    title: "Test Layer",
+                    name: 'editing:polygons',
+                    params: {
+                        viewParams: "a:b"
+                    }
+                }]
+            }, featuregrid: {
+                open: true,
+                    selectedLayer: "TEST_LAYER",
+                        changes: []
+            }
+        }));
+    });
+
+    it('featureGridSort', done => {
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                if (action.type === QUERY) {
+                    done();
+                }
+            });
+        };
+        testEpic(featureGridSort, 1, [sort("ATTR", "ASC")], epicResult, {
+            featuregrid: {
+                pagination: {
+                    size: 10
+                }
+            }
+        });
+    });
+
+    it('featureGridSort manages queryOptions viewparams', done => {
+
+        const epicResult = actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                if (action.type === QUERY) {
+                    expect(action.queryOptions.viewParams).toBe("a:b");
+                    done();
+                }
+            });
+        };
+        testEpic(featureGridSort, 1, [sort("ATTR", "ASC")], epicResult, () => ({
+            layers: {
+                flat: [{
+                    id: "TEST_LAYER",
+                    title: "Test Layer",
+                    name: 'editing:polygons',
+                    params: {
+                        viewParams: "a:b"
+                    }
+                }]
+            }, featuregrid: {
+                pagination: {
+                    size: 10
+                },
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                changes: []
+            }
+        }));
+    });
+
 });

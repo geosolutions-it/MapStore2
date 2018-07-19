@@ -151,7 +151,7 @@ const CONFIGPROVIDER = {
             attribution:
                     'Tiles Courtesy of <a href="http://www.mapquest.com/">MapQuest</a> &mdash; ' +
                     'Map data {attribution.OpenStreetMap}',
-            subdomains: '1234'
+            subdomains: ['1', '2', '3', '4']
         },
         variants: {
             OSM: {},
@@ -179,14 +179,14 @@ const CONFIGPROVIDER = {
             attribution:
                     'Imagery from <a href="http://mapbox.com/about/maps/">MapBox</a> &mdash; ' +
                     'Map data {attribution.OpenStreetMap}',
-            subdomains: 'abcd'
+            subdomains: ['a', 'b', 'c', 'd']
         }
     },
     MapBoxStyle: {
         url: 'https://api.mapbox.com/styles/v1/mapbox/{source}/tiles/{z}/{x}/{y}?access_token={accessToken}',
         options: {
             attribution: 'Imagery from <a href="http://mapbox.com/about/maps/">MapBox</a>',
-            subdomains: 'abcd'
+            subdomains: ['a', 'b', 'c', 'd']
         }
     },
     Stamen: {
@@ -199,7 +199,7 @@ const CONFIGPROVIDER = {
             credits: {
                 text: 'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under CC BY SA'
             },
-            subdomains: 'abcd',
+            subdomains: ['a', 'b', 'c', 'd'],
             minZoom: 0,
             maxZoom: 20,
             maxNativeZoom: 20,
@@ -386,7 +386,7 @@ const CONFIGPROVIDER = {
         options: {
             attribution:
                     'Map &copy; 1987-2014 <a href="http://developer.here.com">HERE</a>',
-            subdomains: '1234',
+            subdomains: ['1', '2', '3', '4'],
             mapID: 'newest',
             'app_id': '<insert your app_id here>',
             'app_code': '<insert your app_code here>',
@@ -448,7 +448,7 @@ const CONFIGPROVIDER = {
         options: {
             attribution:
                     '&copy;2012 Esri & Stamen, Data from OSM and Natural Earth',
-            subdomains: '0123',
+            subdomains: ['0', '1', '2', '3'],
             minZoom: 2,
             maxZoom: 18,
             maxNativeZoom: 18,
@@ -470,7 +470,7 @@ const CONFIGPROVIDER = {
             minZoom: 8,
             maxZoom: 16,
             maxNativeZoom: 16,
-            subdomains: '1234',
+            subdomains: ['1', '2', '3', '4'],
             bounds: [[47.204642, 15.996093], [49.830896, 22.576904]],
             attribution:
                     '{attribution.OpenStreetMap}, vizualization CC-By-SA 2.0 <a href="http://freemap.sk">Freemap.sk</a>'
@@ -488,7 +488,7 @@ const CONFIGPROVIDER = {
         url: 'http://{s}.basemaps.cartocdn.com/{variant}/{z}/{x}/{y}.png',
         options: {
             attribution: '{attribution.OpenStreetMap} &copy; <a href="http://cartodb.com/attributions">CartoDB</a>',
-            subdomains: 'abcd',
+            subdomains: ['a', 'b', 'c', 'd'],
             maxZoom: 19,
             maxNativeZoom: 19,
             variant: 'light_all'
@@ -629,7 +629,7 @@ const CONFIGPROVIDER = {
             minZoom: 1,
             maxZoom: 18,
             maxNativeZoom: 18,
-            subdomains: '0123'
+            subdomains: ['0', '1', '2', '3']
         },
         variants: {
                 // OS 1:1m to 1:10K, 1900s

@@ -129,7 +129,7 @@ const LocaleUtils = {
         msgId.split('.').forEach(part => {
             message = message ? message[part] : null;
         });
-        return message;
+        return message || msgId;
     },
     /**
      * Registre a parser to translate error services

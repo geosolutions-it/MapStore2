@@ -10,7 +10,8 @@ class ColorPicker extends React.Component {
         onChangeColor: PropTypes.func,
         text: PropTypes.string,
         line: PropTypes.bool,
-        disabled: PropTypes.bool
+        disabled: PropTypes.bool,
+        pickerProps: PropTypes.object
     };
 
     static defaultProps = {
@@ -23,7 +24,8 @@ class ColorPicker extends React.Component {
             b: 0,
             a: 1
         },
-        onChangeColor: () => {}
+        onChangeColor: () => {},
+        pickerProps: {}
     };
 
     state = {
@@ -52,7 +54,7 @@ class ColorPicker extends React.Component {
         </div>
         { this.state.displayColorPicker ? <div className="cp-popover">
           <div className="cp-cover" onClick={ () => { this.setState({ displayColorPicker: false, color: undefined}); this.props.onChangeColor(this.state.color); }}/>
-          <SketchPicker color={ this.state.color || this.props.value} onChange={ (color) => { this.setState({ color: color.rgb }); }} />
+          <SketchPicker {...this.props.pickerProps} color={ this.state.color || this.props.value} onChange={ (color) => { this.setState({ color: color.rgb }); }} />
         </div> : null }
 
       </div>

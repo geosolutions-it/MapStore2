@@ -29,6 +29,7 @@ class DateFilter extends AttributeFilter {
         onChange: PropTypes.func
     };
     static contextTypes = {
+        messages: PropTypes.object,
         locale: PropTypes.string
     };
     getDateValue = (val) => {

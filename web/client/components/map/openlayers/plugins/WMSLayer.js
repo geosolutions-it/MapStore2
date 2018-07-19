@@ -26,7 +26,7 @@ const ElevationUtils = require('../../../../utils/ElevationUtils');
 function wmsToOpenlayersOptions(options) {
     const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
     // NOTE: can we use opacity to manage visibility?
-    return objectAssign({}, options.baseParams, {
+    const result = objectAssign({}, options.baseParams, {
         LAYERS: options.name,
         STYLES: options.style || "",
         FORMAT: options.format || 'image/png',
@@ -41,6 +41,7 @@ function wmsToOpenlayersOptions(options) {
         (options._v_ ? {_v_: options._v_} : {}),
         (options.params || {})
     ));
+    return SecurityUtils.addAuthenticationToSLD(result, options);
 }
 
 function getWMSURLs( urls ) {
@@ -165,12 +166,12 @@ Layers.registerType('wms', {
                     }
                     return found;
                 }, false);
-            } else if (!oldOptions.params && newOptions.params) {
+            } else if ((!oldOptions.params && newOptions.params) || (oldOptions.params && !newOptions.params)) {
                 changed = true;
             }
             let oldParams = wmsToOpenlayersOptions(oldOptions);
             let newParams = wmsToOpenlayersOptions(newOptions);
-            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER"].reduce((found, param) => {
+            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS"].reduce((found, param) => {
                 if (oldParams[param] !== newParams[param]) {
                     return true;
                 }
@@ -186,7 +187,15 @@ Layers.registerType('wms', {
                 });
             }
             if (changed) {
-                layer.getSource().updateParams(objectAssign(newParams, newOptions.params));
+                const params = objectAssign(newParams, SecurityUtils.addAuthenticationToSLD(newOptions.params || {}, newOptions));
+                layer.getSource().updateParams(objectAssign(params, Object.keys(oldOptions.params || {}).reduce((previous, key) => {
+                    return params[key] ? previous : objectAssign(previous, {
+                        [key]: undefined
+                    });
+                }, {})));
+                if (layer.getSource().refresh) {
+                    layer.getSource().refresh();
+                }
             }
             if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken || oldOptions.ratio !== newOptions.ratio) {
                 const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
