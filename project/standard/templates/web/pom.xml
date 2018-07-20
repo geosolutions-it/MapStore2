@@ -39,7 +39,7 @@
       <artifactId>print-lib</artifactId>
       <version>geosolutions-2.0-SNAPSHOT</version>
     </dependency>
-    
+
     <dependency>
       <groupId>org.geotools</groupId>
       <artifactId>gt-epsg-hsql</artifactId>
@@ -150,6 +150,36 @@
                     </configuration>
                 </execution>
                 <execution>
+                    <id>html, configuration files and images</id>
+                    <phase>process-classes</phase>
+                    <goals>
+                        <goal>copy-resources</goal>
+                    </goals>
+                    <configuration>
+                        <outputDirectory>${basedir}/target/__PROJECTNAME__</outputDirectory>
+                        <encoding>UTF-8</encoding>
+                        <resources>
+                            <resource>
+                                <directory>${basedir}/..</directory>
+                                <includes>
+                                    <include>**/*.html</include>
+                                    <include>**/*.json</include>
+                                    <include>**/img/*</include>
+                                    <include>**/*.less</include>
+                                </includes>
+                                <excludes>
+                                    <exclude>node_modules/*</exclude>
+                                    <exclude>node_modules/**/*</exclude>
+                                    <exclude>MapStore2/*</exclude>
+                                    <exclude>MapStore2/**/*</exclude>
+                                    <exclude>**/libs/Cesium/**/*</exclude>
+                                    <exclude>**/test-resources/*</exclude>
+                                </excludes>
+                            </resource>
+                        </resources>
+                    </configuration>
+                </execution>
+                <execution>
                 <id>only index.html</id>
                     <phase>process-classes</phase>
                     <goals>
@@ -213,36 +243,6 @@
                                 <excludes>
                                     <exclude>MapStore2/*</exclude>
                                     <exclude>MapStore2/**/*</exclude>
-                                </excludes>
-                            </resource>
-                        </resources>
-                    </configuration>
-                </execution>
-                <execution>
-                    <id>html, configuration files and images</id>
-                    <phase>process-classes</phase>
-                    <goals>
-                        <goal>copy-resources</goal>
-                    </goals>
-                    <configuration>
-                        <outputDirectory>${basedir}/target/__PROJECTNAME__</outputDirectory>
-                        <encoding>UTF-8</encoding>
-                        <resources>
-                            <resource>
-                                <directory>${basedir}/..</directory>
-                                <includes>
-                                    <include>**/*.html</include>
-                                    <include>**/*.json</include>
-                                    <include>**/img/*</include>
-                                    <include>**/*.less</include>
-                                </includes>
-                                <excludes>
-                                    <exclude>node_modules/*</exclude>
-                                    <exclude>node_modules/**/*</exclude>
-                                    <exclude>MapStore2/*</exclude>
-                                    <exclude>MapStore2/**/*</exclude>
-                                    <exclude>**/libs/Cesium/**/*</exclude>
-                                    <exclude>**/test-resources/*</exclude>
                                 </excludes>
                             </resource>
                         </resources>
