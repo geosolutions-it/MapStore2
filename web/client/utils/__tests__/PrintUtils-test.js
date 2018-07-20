@@ -170,7 +170,12 @@ describe('PrintUtils', () => {
         const style = PrintUtils.getOlDefaultStyle({features: [{geometry: {type: "Polygon"}}]});
         expect(style).toExist();
         expect(style.strokeWidth).toBe(3);
-
+        expect(style.strokeDashstyle).toBe("dash");
+        expect(style.strokeLinecap).toBe("round");
+        expect(style.strokeColor).toBe("#0000FF");
+        expect(style.fillColor).toBe("#0000FF");
+        expect(style.fillOpacity).toBe(0.1);
+        expect(style.strokeOpacity).toBe(1);
     });
     it('vector layer default line style', () => {
         const style = PrintUtils.getOlDefaultStyle({features: [{geometry: {type: "LineString"}}]});
