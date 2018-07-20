@@ -369,4 +369,30 @@ describe('Test the CatalogUtils', () => {
         expect(records.length).toBe(1);
         expect(records[0].references[0].url).toBe(undefined);
     });
+    it('csw correctly retrive layer name and thumb from pycsw', () => {
+        const records = CatalogUtils.getCatalogRecords('csw', {
+            records: [{
+                dc: {
+                    references: [{
+                        scheme: "WWW:DOWNLOAD-1.0-http--download",
+                        value: "http://localhost:8000/uploaded/thumbs/layer-09d4e114-74a0-11e8-9c12-20c9d079dc21-thumb.png"
+                    }, {
+                        scheme: "OGC:WMS",
+                        value: "http://geoserver"
+                    }],
+                    alternative: "layer.name",
+                    identifier: "09d4e114-74a0-11e8-9c12-20c9d079dc21"
+
+                }
+            }]
+        }, {});
+        expect(records.length).toBe(1);
+        const r = records[0];
+        expect(r.thumbnail).toExist();
+        expect(r.references.length).toBe(1);
+        const ref = r.references[0];
+        expect(ref.type).toBe("OGC:WMS");
+        expect(ref.params.name).toBe("layer.name");
+    });
+
 });
