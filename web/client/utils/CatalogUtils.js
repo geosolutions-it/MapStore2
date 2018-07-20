@@ -86,7 +86,7 @@ const converters = {
                     }).forEach((reference) => {
                         // a get capabilities reference should be absolute and filter by the layer name
                         let referenceUrl = reference.value.indexOf("http") === 0 ? reference.value
-                            : options.catalogURL + "/" + reference.value;
+                            : (options && options.catalogURL || "") + "/" + reference.value;
                         // add the references to the final list
                         references.push({
                             type: reference.scheme,
@@ -98,7 +98,7 @@ const converters = {
                 if (wms && wms.name) {
                     let absolute = (wms.value.indexOf("http") === 0);
                     if (!absolute) {
-                        assign({}, wms, {value: options.catalogURL + "/" + wms.value} );
+                        assign({}, wms, {value: (options && options.catalogURL || "") + "/" + wms.value} );
                     }
                     let wmsReference = {
                         type: wms.protocol || wms.scheme,
@@ -113,7 +113,7 @@ const converters = {
                 if (thumbURL) {
                     let absolute = (thumbURL.indexOf("http") === 0);
                     if (!absolute) {
-                        thumbURL = (getBaseCatalogUrl(options.url) || "") + thumbURL;
+                        thumbURL = (getBaseCatalogUrl(options && options.url) || "") + thumbURL;
                     }
                 }
                 // create the references array (now only wms is supported)
@@ -131,7 +131,7 @@ const converters = {
             });
         }
     },
-    wms: (records, options) => {
+    wms: (records, options = {}) => {
         if (records && records.records) {
             return records.records.map((record) => {
                 return {
@@ -147,7 +147,7 @@ const converters = {
                 }, dim.$ || {})),
                 references: [{
                     type: "OGC:WMS",
-                    url: options.url,
+                    url: options && options.url,
                     SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
                     params: {
                         name: record.Name
@@ -204,7 +204,7 @@ const converters = {
                 },
                 references: [{
                     type: "OGC:WMTS",
-                    url: record.GetTileUrl || options.url,
+                    url: record.GetTileUrl || (options && options.url),
                     SRS: filterOnMatrix(record.SRS || [], matrixIds),
                     params: {
                         name: record["ows:Identifier"]
