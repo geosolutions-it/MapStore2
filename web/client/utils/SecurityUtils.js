@@ -183,6 +183,19 @@ const SecurityUtils = {
             return parameters;
         }
     },
+    addAuthenticationToSLD: function(layerOptions, options) {
+        if (layerOptions.SLD) {
+            const parsed = URL.parse(layerOptions.SLD, true);
+            const params = SecurityUtils.addAuthenticationParameter(layerOptions.SLD, parsed.query, options.securityToken);
+            return assign({}, layerOptions, {
+                SLD: URL.format(assign({}, parsed, {
+                    query: params,
+                    search: undefined
+                }))
+            });
+        }
+        return layerOptions;
+    },
     getAuthKeyParameter: function(url) {
         const foundRule = this.getAuthenticationRule(url);
         return foundRule && foundRule.authkeyParamName ? foundRule.authkeyParamName : 'authkey';

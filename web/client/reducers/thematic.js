@@ -8,7 +8,8 @@
 
 const { LOAD_FIELDS, FIELDS_LOADED, FIELDS_ERROR, LOAD_CLASSIFICATION,
     CLASSIFICATION_LOADED, CLASSIFICATION_ERROR,
-    CHANGE_CONFIGURATION, CHANGE_DIRTY} = require('../actions/thematic');
+    CHANGE_CONFIGURATION, CHANGE_DIRTY,
+    CHANGE_INPUT_VALIDITY} = require('../actions/thematic');
 const { HIDE_SETTINGS } = require('../actions/layers');
 const assign = require('object-assign');
 
@@ -23,7 +24,8 @@ const initialState = {
         open: false,
         current: null,
         error: null
-    }
+    },
+    invalidInputs: {}
 };
 
 function thematic(state = initialState, action) {
@@ -50,7 +52,6 @@ function thematic(state = initialState, action) {
             });
         case LOAD_CLASSIFICATION:
             return assign({}, state, {
-                classification: null,
                 loadingClassification: true,
                 errorClassification: null
             });
@@ -79,6 +80,22 @@ function thematic(state = initialState, action) {
         case CHANGE_DIRTY:
             return assign({}, state, {
                 dirty: action.dirty
+            });
+        case CHANGE_INPUT_VALIDITY:
+            if (action.valid) {
+                return assign({}, state, {
+                    invalidInputs: Object.keys(state.invalidInputs).reduce((previous, current) => {
+                        return current === action.input ? previous : [...previous, current];
+                    }, {})
+                });
+            }
+            return assign({}, state, {
+                invalidInputs: assign({}, state.invalidInputs, {
+                    [action.input]: {
+                        message: action.message,
+                        params: action.params || {}
+                    }
+                })
             });
         default:
             return state;

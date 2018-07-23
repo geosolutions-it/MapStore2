@@ -21,12 +21,14 @@ const sampleData = require('../../enhancers/sampleChartData');
 const wpsChart = require('../../enhancers/wpsChart');
 const dependenciesToWidget = require('../../enhancers/dependenciesToWidget');
 const dependenciesToFilter = require('../../enhancers/dependenciesToFilter');
+const dependenciesToOptions = require('../../enhancers/dependenciesToOptions');
 const emptyChartState = require('../../enhancers/emptyChartState');
 const errorChartState = require('../../enhancers/errorChartState');
 const { compose, lifecycle } = require('recompose');
 const enhancePreview = compose(
     dependenciesToWidget,
     dependenciesToFilter,
+    dependenciesToOptions,
     wpsChart,
     loadingState,
     errorChartState,

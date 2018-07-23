@@ -20,7 +20,7 @@ module.exports = (config, pluginsDef) => {
         const {loadAfterThemeSelector} = require('../selectors/config');
         const StandardApp = require('../components/app/StandardApp');
 
-        const {pages, initialState, storeOpts, appEpics = {}} = config;
+        const {pages, initialState, storeOpts, appEpics = {}, themeCfg} = config;
 
         const StandardRouter = connect((state) => ({
             locale: state.locale || {},
@@ -35,7 +35,8 @@ module.exports = (config, pluginsDef) => {
         const appStore = require('../stores/StandardStore').bind(null, initialState, {
             maptype: require('../reducers/maptype'),
             maps: require('../reducers/maps'),
-            maplayout: require('../reducers/maplayout')
+            maplayout: require('../reducers/maplayout'),
+            version: require('../reducers/version')
         }, {...appEpics, updateMapLayoutEpic, setSupportedLocales});
 
         const initialActions = [
@@ -50,7 +51,8 @@ module.exports = (config, pluginsDef) => {
             pluginsDef,
             initialActions,
             appComponent: StandardRouter,
-            printingEnabled: true
+            printingEnabled: true,
+            themeCfg
         };
 
         ReactDOM.render(

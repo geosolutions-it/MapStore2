@@ -13,7 +13,11 @@ const isShallowEqual = (el1, el2) => {
     }
     return el1 === el2;
 };
-
+/**
+ * Custom version of createSelector with custom compare function.
+ * The previous compare function checks if values are arrays, then compares each element of the array.
+ * This allows to avoid re-render when dependencies if the dependency keys do not change
+ */
 const createShallowSelector = createSelectorCreator(
   defaultMemoize,
   (a, b) => isEqualWith(a, b, isShallowEqual)
@@ -80,7 +84,7 @@ module.exports = {
     dashBoardDependenciesSelector: () => ({}), // TODO dashboard dependencies
     /**
      * transforms dependencies in the form `{ k1: "path1", k1, "path2" }` into
-     * a map like `{k1: v1, k2: v2}` where `v1 = get("path1, state)`.
+     * a map like `{k1: v1, k2: v2}` where `v1 = get("path1", state)`.
      * Dependencies paths map comes from getDependenciesMap.
      * map.... is a special path that brings to the map of mapstore.
      */

@@ -90,7 +90,7 @@ const getPagination = (filterObj = {}, options = {}) =>
  * @return {Observable} a stream that emits the GeoJSON or an error.
  */
 const getJSONFeature = (searchUrl, filterObj, options = {}) => {
-    const data = FilterUtils.getWFSFilterData(filterObj);
+    const data = FilterUtils.getWFSFilterData(filterObj, options);
 
     const urlParsedObj = Url.parse(searchUrl, true);
     let params = isObject(urlParsedObj.query) ? urlParsedObj.query : {};
@@ -129,7 +129,7 @@ const getJSONFeatureWA = (searchUrl, filterObj, { sortOptions = {}, ...options }
                 return getJSONFeature(searchUrl, {
                     ...filterObj,
                     sortOptions
-                }, {options});
+                }, options);
             }
             throw error;
         });
@@ -159,7 +159,26 @@ const getLayerJSONFeature = ({ search = {}, url, name } = {}, filter, {sortOptio
                         ...(filter ? castArray(filter) : [])
                     ]),
                 options), // options contains startIndex, maxFeatures and it can be passed as it is
-    options);
+    options)
+        // retry using 1st propertyNames property, if present, to workaround primary-key issues
+        .catch(error => {
+            if (error.name === "OGCError" && error.code === 'NoApplicableCode' && !sortOptions && pn && pn[0]) {
+                return getJSONFeature(search.url || url,
+                    filter && typeof filter === 'object' ? {
+                        ...filter,
+                        typeName: name || filter.typeName
+                    } : getFeature(
+                        query(name,
+                            [
+                                sortBy(pn[0]),
+                                ...(pn ? [propertyName(pn)] : []),
+                                ...(filter ? castArray(filter) : [])
+                            ]),
+                        options), // options contains startIndex, maxFeatures and it can be passed as it is
+                options);
+            }
+            throw error;
+        });
 
 module.exports = {
     getJSONFeature,
@@ -172,9 +191,9 @@ module.exports = {
             Rx.Observable.defer( () => axios.get(toLayerCapabilitiesURL(layer)))
             .let(interceptOGCError)
             .switchMap( response => Rx.Observable.bindNodeCallback( (data, callback) => parseString(data, {
-                 tagNameProcessors: [stripPrefix],
-                 explicitArray: false,
-                 mergeAttrs: true
+                tagNameProcessors: [stripPrefix],
+                explicitArray: false,
+                mergeAttrs: true
             }, callback))(response.data)
         )
 

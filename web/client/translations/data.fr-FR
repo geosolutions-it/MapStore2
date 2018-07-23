@@ -435,7 +435,11 @@
                 "data_panel": "Les données",
                 "classification_stroke": "bord",
                 "classification_error": "Erreur lors de l'appel du service de classification: {message}",
-                "fields_error": "Erreur lors du chargement de la liste des champs: {message}"
+                "fields_error": "Erreur lors du chargement de la liste des champs: {message}",
+                "interval_limit": "Les intervalles doivent être compris entre {min} et {max}",
+                "invalid_object": "Réponse au service non valide",
+                "invalid_geometry": "Le type de géométrie n'est pas valide, pas un point, une ligne ou un polygone",
+                "invalid_classes": "Max doit être supérieur à min dans chaque classe"
             }
         },
         "print":{
@@ -1117,6 +1121,7 @@
                 "placeholders": {
                     "default": "Recherche...",
                     "string": "Tapez le texte à filtrer...",
+                    "date": "Tapez la date pour filtrer...",
                     "number": "Tapez un nombre ou une expression..."
                 },
                 "tooltips": {

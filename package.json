@@ -122,7 +122,7 @@
     "leaflet.locatecontrol": "0.62.0",
     "leaflet.nontiledlayer": "1.0.7",
     "lodash": "4.16.6",
-    "lru-cache": "4.1.2",
+    "lrucache": "1.0.3",
     "moment": "2.21.0",
     "node-geo-distance": "1.2.0",
     "object-assign": "4.1.1",

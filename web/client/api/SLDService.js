@@ -7,9 +7,8 @@
  */
 
 const { urlParts } = require('../utils/URLUtils');
-const SecurityUtils = require('../utils/SecurityUtils');
 const url = require('url');
-const { isArray, sortBy, head, castArray } = require('lodash');
+const { isArray, sortBy, head, castArray, isNumber } = require('lodash');
 const assign = require('object-assign');
 const chroma = require('chroma-js');
 
@@ -93,6 +92,14 @@ const mapParams = (layer, params) => {
         if (key === 'field' && layer.thematic && !layer.thematic.fieldAsParam) {
             return previous;
         }
+        if (key === 'strokeWeight' && !params.strokeOn) {
+            return assign(previous, {
+                [key]: -1
+            });
+        }
+        if (key === 'strokeOn') {
+            return previous;
+        }
         return assign(previous, {
             [key]: params[key]
         });
@@ -106,6 +113,53 @@ const getUrl = (parts) => {
     }, parts.port ? {
         port: parts.port
     } : {});
+};
+
+const getNumber = (candidates) => {
+    return candidates.reduce((previous, current) => {
+        return isNumber(current) ? current : previous;
+    }, null);
+};
+
+const getGeometryType = (rule) => {
+    if (rule.PolygonSymbolizer) {
+        return 'Polygon';
+    }
+    if (rule.LineSymbolizer) {
+        return 'LineString';
+    }
+    if (rule.PointSymbolizer) {
+        return 'Point';
+    }
+};
+
+const getRuleColor = (rule) => {
+    if (rule.PolygonSymbolizer) {
+        return rule.PolygonSymbolizer.Fill && rule.PolygonSymbolizer.Fill.CssParameter
+            && rule.PolygonSymbolizer.Fill.CssParameter.$ || '#808080'; // OGC default color
+    }
+    if (rule.LineSymbolizer) {
+        return rule.LineSymbolizer.Stroke && rule.LineSymbolizer.Stroke.CssParameter
+            && rule.LineSymbolizer.Stroke.CssParameter.$ || '#808080'; // OGC default color
+    }
+    if (rule.PointSymbolizer) {
+        return rule.PointSymbolizer.Graphic && rule.PointSymbolizer.Graphic.Mark && rule.PointSymbolizer.Graphic.Mark.Fill
+            && rule.PointSymbolizer.Graphic.Mark.Fill.CssParameter
+            && rule.PointSymbolizer.Graphic.Mark.Fill.CssParameter.$ || '#808080'; // OGC default color
+    }
+    return '#808080';
+};
+
+const validateClassification = (classificationObj) => {
+    if (!classificationObj || !classificationObj.Rules || !classificationObj.Rules.Rule) {
+        throw new Error("toc.thematic.invalid_object");
+    }
+    const rules = castArray(classificationObj.Rules.Rule);
+    rules.forEach(rule => {
+        if (!rule.PolygonSymbolizer && !rule.LineSymbolizer && !rule.PointSymbolizer) {
+            throw new Error("toc.thematic.invalid_geometry");
+        }
+    });
 };
 
 /**
@@ -131,7 +185,7 @@ const API = {
         const parts = urlParts(isArray(layer.url) ? layer.url[0] : layer.url);
         return url.format(assign(getUrl(parts), {
             pathname: parts.applicationRootPath + "/rest/sldservice/" + layer.name + "/classify.xml",
-            query: assign({}, SecurityUtils.addAuthenticationParameter(layer.url, mapParams(layer, params)), { fullSLD: true })
+            query: assign({}, mapParams(layer, params), { fullSLD: true })
         }));
     },
     /**
@@ -234,10 +288,12 @@ const API = {
      * @returns {array} simplified classification classes list
      */
     readClassification: (classificationObj) => {
-        return classificationObj && classificationObj.Rules && classificationObj.Rules.Rule && castArray(classificationObj.Rules.Rule || []).map((rule) => ({
-            color: rule.PolygonSymbolizer && rule.PolygonSymbolizer.Fill && rule.PolygonSymbolizer.Fill.CssParameter.$ || '#808080', // OGC default color
-            min: (rule.Filter.And && (rule.Filter.And.PropertyIsGreaterThanOrEqualTo || rule.Filter.And.PropertyIsGreaterThan).Literal) || (rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal),
-            max: (rule.Filter.And && (rule.Filter.And.PropertyIsLessThanOrEqualTo || rule.Filter.And.PropertyIsLessThan).Literal) || (rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal)
+        validateClassification(classificationObj);
+        return castArray(classificationObj.Rules.Rule || []).map((rule) => ({
+            color: getRuleColor(rule),
+            type: getGeometryType(rule),
+            min: getNumber([rule.Filter.And && (rule.Filter.And.PropertyIsGreaterThanOrEqualTo || rule.Filter.And.PropertyIsGreaterThan).Literal, rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal]),
+            max: getNumber([rule.Filter.And && (rule.Filter.And.PropertyIsLessThanOrEqualTo || rule.Filter.And.PropertyIsLessThan).Literal, rule.Filter.PropertyIsEqualTo && rule.Filter.PropertyIsEqualTo.Literal])
         })) || [];
     },
     /**
@@ -329,7 +385,10 @@ const API = {
      */
     removeThematicStyle: (params) => {
         const {SLD, viewparams, ...other} = params;
-        return other;
+        return assign({}, other, {
+            SLD: null,
+            viewparams: null
+        });
     },
 
     defaultParams: {
@@ -340,7 +399,8 @@ const API = {
         field: "",
         open: false,
         strokeWeight: 0.2,
-        strokeColor: '#ff0000'
+        strokeColor: '#ff0000',
+        strokeOn: false
     }
 };
 

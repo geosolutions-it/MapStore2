@@ -20,142 +20,143 @@ var endEvent = isTouchSupported ? 'touchend' : 'mouseup';
 
 Layers.registerType('google', {
     create: (options, map, mapId) => {
-        let google = window.google;
-        if (!layersMap) {
-            layersMap = {
-                'HYBRID': google.maps.MapTypeId.HYBRID,
-                'SATELLITE': google.maps.MapTypeId.SATELLITE,
-                'ROADMAP': google.maps.MapTypeId.ROADMAP,
-                'TERRAIN': google.maps.MapTypeId.TERRAIN
+        if (document.getElementById(mapId + 'gmaps')) {
+            let google = window.google;
+            if (!layersMap) {
+                layersMap = {
+                    'HYBRID': google.maps.MapTypeId.HYBRID,
+                    'SATELLITE': google.maps.MapTypeId.SATELLITE,
+                    'ROADMAP': google.maps.MapTypeId.ROADMAP,
+                    'TERRAIN': google.maps.MapTypeId.TERRAIN
+                };
+            }
+            if (!gmaps[mapId]) {
+                gmaps[mapId] = new google.maps.Map(document.getElementById(mapId + 'gmaps'), {
+                    disableDefaultUI: true,
+                    keyboardShortcuts: false,
+                    draggable: false,
+                    disableDoubleClickZoom: true,
+                    scrollwheel: false,
+                    streetViewControl: false
+                });
+            }
+            gmaps[mapId].setMapTypeId(layersMap[options.name]);
+            let mapContainer = document.getElementById(mapId + 'gmaps');
+            let setCenter = function() {
+                if (mapContainer.style.visibility !== 'hidden') {
+                    const center = ol.proj.transform(map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
+                    gmaps[mapId].setCenter(new google.maps.LatLng(center[1], center[0]));
+                }
             };
-        }
-        if (!gmaps[mapId]) {
-            gmaps[mapId] = new google.maps.Map(document.getElementById(mapId + 'gmaps'), {
-                disableDefaultUI: true,
-                keyboardShortcuts: false,
-                draggable: false,
-                disableDoubleClickZoom: true,
-                scrollwheel: false,
-                streetViewControl: false
+            let setZoom = function() {
+                if (mapContainer.style.visibility !== 'hidden') {
+                    gmaps[mapId].setZoom(map.getView().getZoom());
+                }
+            };
+
+            /**
+             * @param point {array}: [x, y]
+             * @param alpha {number}: rotation in degrees
+             */
+            let rotatePoint = function(point, alpha) {
+                const radAlpha = alpha * Math.PI / 180;
+                const x = point[0];
+                const y = point[1];
+
+                let rx = x * Math.cos(radAlpha) - y * Math.sin(radAlpha);
+                let ry = x * Math.sin(radAlpha) + y * Math.cos(radAlpha);
+
+                return [rx, ry];
+            };
+
+            /**
+             * @param rotation {number}: rotation in degrees
+             * @param size {array}: map size [w, h]
+             */
+            let calculateRotatedSize = function(rotation, size) {
+                let w = size[0];
+                let h = size[1];
+
+                let vertices = [
+                    //  [   x  ,   y  ]
+                    [w / 2, h / 2],
+                    [-w / 2, h / 2],
+                    [-w / 2, -h / 2],
+                    [w / 2, -h / 2]
+                ];
+
+                let rVertices = vertices.map(function(p) { return rotatePoint(p, rotation); });
+
+                let Xs = rVertices.map(function(p) { return p[0]; });
+                let Ys = rVertices.map(function(p) { return p[1]; });
+
+                let maxX = Math.max.apply(null, Xs);
+                let minX = Math.min.apply(null, Xs);
+                let maxY = Math.max.apply(null, Ys);
+                let minY = Math.min.apply(null, Ys);
+
+                let H = Math.abs(maxY) + Math.abs(minY);
+                let W = Math.abs(maxX) + Math.abs(minX);
+
+                return { width: W, height: H };
+            };
+
+            let setRotation = function() {
+                if (mapContainer.style.visibility !== 'hidden') {
+                    const rotation = map.getView().getRotation() * 180 / Math.PI;
+
+                    mapContainer.style.transform = "rotate(" + rotation + "deg)";
+                    google.maps.event.trigger(gmaps[mapId], "resize");
+                }
+            };
+
+            let setViewEventListeners = function() {
+                let view = map.getView();
+                view.on('change:center', setCenter);
+                view.on('change:resolution', setZoom);
+                view.on('change:rotation', setRotation);
+            };
+            map.on('change:view', setViewEventListeners);
+
+            setViewEventListeners();
+            setCenter();
+            setZoom();
+
+            let viewport = map.getViewport();
+            let oldTrans = document.getElementById(mapId + 'gmaps').style.transform;
+
+            let mousedown = false;
+            let mousemove = false;
+
+            let resizeGoogleLayerIfRotated = function() {
+                let degrees = /[\+\-]?\d+\.?\d*/i;
+                let newTrans = document.getElementById(mapId + 'gmaps').style.transform;
+                if (newTrans !== oldTrans && newTrans.indexOf('rotate') !== -1) {
+                    let rotation = parseFloat(newTrans.match(degrees)[0]);
+                    let size = calculateRotatedSize(-rotation, map.getSize());
+                    mapContainer.style.width = size.width + 'px';
+                    mapContainer.style.height = size.height + 'px';
+                    mapContainer.style.left = Math.round((map.getSize()[0] - size.width) / 2.0) + 'px';
+                    mapContainer.style.top = Math.round((map.getSize()[1] - size.height) / 2.0) + 'px';
+                    google.maps.event.trigger(gmaps[mapId], "resize");
+                    setCenter();
+                }
+            };
+
+            viewport.addEventListener(startEvent, () => {
+                mousedown = true;
+            });
+            viewport.addEventListener(endEvent, () => {
+                if (mousemove && mousedown) {
+                    resizeGoogleLayerIfRotated();
+                }
+                oldTrans = document.getElementById(mapId + 'gmaps').style.transform;
+                mousedown = false;
+            });
+            viewport.addEventListener(moveEvent, () => {
+                mousemove = mousedown;
             });
         }
-        gmaps[mapId].setMapTypeId(layersMap[options.name]);
-        let mapContainer = document.getElementById(mapId + 'gmaps');
-        let setCenter = function() {
-            if (mapContainer.style.visibility !== 'hidden') {
-                const center = ol.proj.transform(map.getView().getCenter(), 'EPSG:3857', 'EPSG:4326');
-                gmaps[mapId].setCenter(new google.maps.LatLng(center[1], center[0]));
-            }
-        };
-        let setZoom = function() {
-            if (mapContainer.style.visibility !== 'hidden') {
-                gmaps[mapId].setZoom(map.getView().getZoom());
-            }
-        };
-
-        /**
-         * @param point {array}: [x, y]
-         * @param alpha {number}: rotation in degrees
-         */
-        let rotatePoint = function(point, alpha) {
-            const radAlpha = alpha * Math.PI / 180;
-            const x = point[0];
-            const y = point[1];
-
-            let rx = x * Math.cos(radAlpha) - y * Math.sin(radAlpha);
-            let ry = x * Math.sin(radAlpha) + y * Math.cos(radAlpha);
-
-            return [rx, ry];
-        };
-
-        /**
-         * @param rotation {number}: rotation in degrees
-         * @param size {array}: map size [w, h]
-         */
-        let calculateRotatedSize = function(rotation, size) {
-            let w = size[0];
-            let h = size[1];
-
-            let vertices = [
-            //  [   x  ,   y  ]
-                [ w / 2, h / 2],
-                [-w / 2, h / 2],
-                [-w / 2, -h / 2],
-                [ w / 2, -h / 2]
-            ];
-
-            let rVertices = vertices.map(function(p) {return rotatePoint(p, rotation); });
-
-            let Xs = rVertices.map(function(p) {return p[0]; });
-            let Ys = rVertices.map(function(p) {return p[1]; });
-
-            let maxX = Math.max.apply(null, Xs);
-            let minX = Math.min.apply(null, Xs);
-            let maxY = Math.max.apply(null, Ys);
-            let minY = Math.min.apply(null, Ys);
-
-            let H = Math.abs(maxY) + Math.abs(minY);
-            let W = Math.abs(maxX) + Math.abs(minX);
-
-            return {width: W, height: H};
-        };
-
-        let setRotation = function() {
-            if (mapContainer.style.visibility !== 'hidden') {
-                const rotation = map.getView().getRotation() * 180 / Math.PI;
-
-                mapContainer.style.transform = "rotate(" + rotation + "deg)";
-                google.maps.event.trigger(gmaps[mapId], "resize");
-            }
-        };
-
-        let setViewEventListeners = function() {
-            let view = map.getView();
-            view.on('change:center', setCenter);
-            view.on('change:resolution', setZoom);
-            view.on('change:rotation', setRotation);
-        };
-        map.on('change:view', setViewEventListeners);
-
-        setViewEventListeners();
-        setCenter();
-        setZoom();
-
-        let viewport = map.getViewport();
-        let oldTrans = document.getElementById(mapId + 'gmaps').style.transform;
-
-        let mousedown = false;
-        let mousemove = false;
-
-        let resizeGoogleLayerIfRotated = function() {
-            let degrees = /[\+\-]?\d+\.?\d*/i;
-            let newTrans = document.getElementById(mapId + 'gmaps').style.transform;
-            if (newTrans !== oldTrans && newTrans.indexOf('rotate') !== -1) {
-                let rotation = parseFloat(newTrans.match(degrees)[0]);
-                let size = calculateRotatedSize(-rotation, map.getSize());
-                mapContainer.style.width = size.width + 'px';
-                mapContainer.style.height = size.height + 'px';
-                mapContainer.style.left = Math.round((map.getSize()[0] - size.width) / 2.0) + 'px';
-                mapContainer.style.top = Math.round((map.getSize()[1] - size.height) / 2.0) + 'px';
-                google.maps.event.trigger(gmaps[mapId], "resize");
-                setCenter();
-            }
-        };
-
-        viewport.addEventListener(startEvent, () => {
-            mousedown = true;
-        });
-        viewport.addEventListener(endEvent, () => {
-            if (mousemove && mousedown) {
-                resizeGoogleLayerIfRotated();
-            }
-            oldTrans = document.getElementById(mapId + 'gmaps').style.transform;
-            mousedown = false;
-        });
-        viewport.addEventListener(moveEvent, () => {
-            mousemove = mousedown;
-        });
-
         return null;
     },
     render(options, map, mapId) {
