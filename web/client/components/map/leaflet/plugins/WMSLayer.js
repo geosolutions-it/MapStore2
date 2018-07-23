@@ -9,7 +9,8 @@ const React = require('react');
 const Message = require('../../../../components/I18N/Message');
 const Layers = require('../../../../utils/leaflet/Layers');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
-const FilterUtils = require('../../../../utils/FilterUtils');
+const { optionsToVendorParams } = require('../../../../utils/VendorParamsUtils');
+
 const WMSUtils = require('../../../../utils/leaflet/WMSUtils');
 const L = require('leaflet');
 const objectAssign = require('object-assign');
@@ -158,7 +159,7 @@ const removeNulls = (obj = {}) => {
 
 function wmsToLeafletOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
-    const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
+    const params = optionsToVendorParams(options);
     // NOTE: can we use opacity to manage visibility?
     const result = objectAssign({}, options.baseParams, {
         layers: options.name,
@@ -175,9 +176,8 @@ function wmsToLeafletOptions(options) {
         maxZoom: options.maxZoom || 23,
         maxNativeZoom: options.maxNativeZoom || 18
     }, objectAssign(
-        (CQL_FILTER ? {CQL_FILTER} : {}),
         (options._v_ ? {_v_: options._v_} : {}),
-        (options.params || {})
+        (params || {})
     ));
     return SecurityUtils.addAuthenticationToSLD(result, options);
 }

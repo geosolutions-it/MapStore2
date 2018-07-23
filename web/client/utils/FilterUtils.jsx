@@ -9,6 +9,16 @@
 const {processOGCGeometry, pointElement, polygonElement, lineStringElement, closePolygon } = require("./ogc/GML");
 const {wfsToGmlVersion} = require('./ogc/WFS/base');
 const {ogcComparisonOperators, ogcLogicalOperators, ogcSpatialOperators} = require("./ogc/Filter/operators");
+const { read } = require('./ogc/Filter/CQL/parser');
+const fromObject = require('./ogc/Filter/fromObject');
+const filterBuilder = require('./ogc/Filter/FilterBuilder');
+
+const cqlToOgc = (cqlFilter, fOpts) => {
+    const fb = filterBuilder(fOpts);
+    const toFilter = fromObject(fb);
+    return toFilter(read(cqlFilter));
+};
+
 const {get, isNil, isUndefined, isArray} = require('lodash');
 const escapeCQLStrings = str => str && str.replace ? str.replace(/\'/g, "''") : str;
 
@@ -292,6 +302,16 @@ const FilterUtils = {
             } else {
                 filters.push(this.processOGCCrossLayerFilter(crossLayerFilter, nsplaceholder));
             }
+        }
+        // this is the additional filter from layer, that have to be merged with the one of the query
+        if (objFilter.options && objFilter.options.cqlFilter) {
+            filters.push(
+                cqlToOgc(objFilter.options.cqlFilter, ({
+                    filterNS: nsplaceholder,
+                    wfsVersion: versionOGC,
+                    gmlVersion: wfsToGmlVersion(versionOGC)
+                }))
+            );
         }
 
         return filters;

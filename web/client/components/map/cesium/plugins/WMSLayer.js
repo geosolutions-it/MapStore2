@@ -15,7 +15,7 @@ const assign = require('object-assign');
 const {isArray} = require('lodash');
 const WMSUtils = require('../../../../utils/cesium/WMSUtils');
 const {getAuthenticationParam, getURLs} = require('../../../../utils/LayersUtils');
-const FilterUtils = require('../../../../utils/FilterUtils');
+const { optionsToVendorParams } = require('../../../../utils/VendorParamsUtils');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 
 function splitUrl(originalUrl) {
@@ -54,7 +54,7 @@ function getQueryString(parameters) {
 
 function wmsToCesiumOptionsSingleTile(options) {
     const opacity = options.opacity !== undefined ? options.opacity : 1;
-    const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
+    const params = optionsToVendorParams(options);
     const parameters = assign({
         styles: options.style || "",
         format: options.format || 'image/png',
@@ -66,7 +66,7 @@ function wmsToCesiumOptionsSingleTile(options) {
         height: options.size || 2000,
         bbox: "-180.0,-90,180.0,90",
         srs: "EPSG:4326"
-    }, (CQL_FILTER ? {CQL_FILTER} : {}), options.params || {}, getAuthenticationParam(options));
+    }, params || {}, getAuthenticationParam(options));
 
     return {
         url: (isArray(options.url) ? options.url[Math.round(Math.random() * (options.url.length - 1))] : options.url) + '?service=WMS&version=1.1.0&request=GetMap&'
@@ -76,7 +76,7 @@ function wmsToCesiumOptionsSingleTile(options) {
 
 function wmsToCesiumOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
-    const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
+    const params = optionsToVendorParams(options);
     let proxyUrl = ConfigUtils.getProxyUrl({});
     let proxy;
     if (proxyUrl) {
@@ -98,9 +98,8 @@ function wmsToCesiumOptions(options) {
 
         }, assign(
             {},
-            (CQL_FILTER ? {CQL_FILTER} : {}),
             (options._v_ ? {_v_: options._v_} : {}),
-            (options.params || {}),
+            (params || {}),
             getAuthenticationParam(options)
         ))
     });

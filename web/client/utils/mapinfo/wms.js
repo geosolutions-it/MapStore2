@@ -9,7 +9,8 @@
 const MapUtils = require('../MapUtils');
 const CoordinatesUtils = require('../CoordinatesUtils');
 const {isArray, isObject, head} = require('lodash');
-const FilterUtils = require('../FilterUtils');
+const { optionsToVendorParams } = require('../VendorParamsUtils');
+
 const SecurityUtils = require('../SecurityUtils');
 const assign = require('object-assign');
 
@@ -17,7 +18,7 @@ module.exports = {
     buildRequest: (layer, props, infoFormat, viewer, featureInfo) => {
         /* In order to create a valid feature info request
          * we create a bbox of 101x101 pixel that wrap the point.
-         * center point is repojected then is built a box of 101x101pixel around it
+         * center point is re-projected then is built a box of 101x101pixel around it
          */
         const heightBBox = props && props.sizeBBox && props.sizeBBox.height || 101;
         const widthBBox = props && props.sizeBBox && props.sizeBBox.width || 101;
@@ -37,7 +38,10 @@ module.exports = {
 
         const locale = props.currentLocale ? head(props.currentLocale.split('-')) : null;
         const ENV = locale ? 'locale:' + locale : '';
-        const CQL_FILTER = FilterUtils.isFilterValid(layer.filterObj) && FilterUtils.toCQLFilter(layer.filterObj);
+        const params = optionsToVendorParams({
+            filterObj: layer.filterObj,
+            params: assign({}, layer.baseParams, layer.params, props.params)
+        });
         return {
             request: SecurityUtils.addAuthenticationToSLD({
                 service: 'WMS',
@@ -60,7 +64,7 @@ module.exports = {
                 feature_count: props.maxItems,
                 info_format: infoFormat,
                 ENV,
-                ...assign({}, (CQL_FILTER ? {CQL_FILTER} : {}), layer.baseParams, layer.params, props.params)
+                ...assign({}, params)
             }, layer),
             metadata: {
                 title: isObject(layer.title) ? layer.title[props.currentLocale] || layer.title.default : layer.title,

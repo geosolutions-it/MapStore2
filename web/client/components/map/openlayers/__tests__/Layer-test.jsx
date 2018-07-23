@@ -1304,4 +1304,106 @@ describe('Openlayers layer', () => {
 
 
     });
+    it('test cql_filter param to be passed to the layer object', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms",
+            params: {
+                CQL_FILTER: "prop = 'value'"
+            }
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("prop = 'value'");
+    });
+    it('test filterObj param to be transformed in cql_filter', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms",
+            filterObj: {
+                filterFields: [
+                    {
+                        groupId: 1,
+                        attribute: "prop2",
+                        exception: null,
+                        operator: "=",
+                        rowId: "3",
+                        type: "number",
+                        value: "value2"
+                    }],
+                groupFields: [{
+                    id: 1,
+                    index: 0,
+                    logic: "OR"
+                }]
+            }
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+
+        expect(layer).toExist();
+
+        expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("(\"prop2\" = 'value2')");
+    });
+    it('test filterObj and cql_filter combination (featuregrid active filter use this combination)', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms",
+            params: {
+                CQL_FILTER: "prop = 'value'"
+            },
+            filterObj: {
+                filterFields: [
+                    {
+                        groupId: 1,
+                        attribute: "prop2",
+                        exception: null,
+                        operator: "=",
+                        rowId: "3",
+                        type: "number",
+                        value: "value2"
+                    }],
+                groupFields: [{
+                    id: 1,
+                    index: 0,
+                    logic: "OR"
+                }]
+            }
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+
+        expect(layer).toExist();
+
+        expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("((\"prop2\" = 'value2')) AND (prop = 'value')");
+    });
 });
