@@ -40,6 +40,14 @@ const filterOnMatrix = (SRS, matrixIds) => {
     return SRS.filter(srs => WMTSUtils.getTileMatrixSet(matrixIds, srs, SRS, matrixIds, null));
 };
 
+// Try to find thumb from dc documents works both with geonode pycsw and geosolutions-csw
+const getThumb = (dc) => {
+    let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
+    return head([].filter.call( refs, (ref) => {
+        return ref.scheme === "WWW:LINK-1.0-http--image-thumbnail" || ref.scheme === "thumbnail" || (ref.scheme === "WWW:DOWNLOAD-1.0-http--download" && (ref.value || "").indexOf(`${dc.identifier || ""}-thumb`) !== -1);
+    }));
+};
+
 const converters = {
     csw: (records, options) => {
         let result = records;
@@ -62,13 +70,12 @@ const converters = {
                     wms = head([].filter.call(refs, (ref) => { return ref.scheme && (ref.scheme.match(/^OGC:WMS-(.*)-http-get-map/g) || ref.scheme === "OGC:WMS"); }));
                     if (wms) {
                         let urlObj = urlUtil.parse(wms.value, true);
-                        let layerName = urlObj.query && urlObj.query.layers;
+                        let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
                         wms = assign({}, wms, {name: layerName} );
                     }
                 }
                 if (!thumbURL && dc && dc.references) {
-                    let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
-                    let thumb = head([].filter.call( refs, (ref) => { return ref.scheme === "WWW:LINK-1.0-http--image-thumbnail" || ref.scheme === "thumbnail"; }));
+                    let thumb = getThumb(dc);
                     if (thumb) {
                         thumbURL = thumb.value;
                     }
