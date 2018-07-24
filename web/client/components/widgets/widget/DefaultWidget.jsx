@@ -13,11 +13,13 @@ const legendWidget = require('../enhancers/legendWidget');
 const wpsChart = require('../enhancers/wpsChart');
 const {compose} = require('recompose');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
+const dependenciesToOptions = require('../enhancers/dependenciesToOptions');
 const dependenciesToWidget = require('../enhancers/dependenciesToWidget');
 const dependenciesToMapProp = require('../enhancers/dependenciesToMapProp');
 const ChartWidget = compose(
     dependenciesToWidget,
     dependenciesToFilter,
+    dependenciesToOptions,
     wpsChart,
     enhanceChartWidget
 )(require('./ChartWidget'));
@@ -30,6 +32,7 @@ const MapWidget = compose(
 )(require('./MapWidget'));
 const TableWidget = compose(
     dependenciesToWidget,
+    dependenciesToOptions,
     dependenciesToFilter,
     enhanceTableWidget
 )(require('./TableWidget'));
@@ -37,6 +40,7 @@ const enhanceCounter = require('../enhancers/counterWidget');
 const CounterWidget = compose(
     dependenciesToWidget,
     dependenciesToFilter,
+    dependenciesToOptions,
     enhanceCounter
 )(require("./CounterWidget"));
 

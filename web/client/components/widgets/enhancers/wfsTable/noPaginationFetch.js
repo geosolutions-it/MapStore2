@@ -15,14 +15,14 @@ const { getLayerJSONFeature } = require('../../../../observables/wfs');
 module.exports = props$ => props$.switchMap(
     ({
         layer = {},
-        options,
+        options = {},
         filter,
         onLoad = () => { },
         onLoadError = () => { }
     }) =>
         getLayerJSONFeature(layer, filter, {
             timeout: 15000,
-            params: { propertyName: options.propertyName }
+            params: { propertyName: options.propertyName, viewParams: options.viewParams }
             // TODO totalFeatures
             // TODO sortOptions - default
         })

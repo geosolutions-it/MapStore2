@@ -85,12 +85,13 @@ function featureError(typeName, error) {
     };
 }
 
-function querySearchResponse(result, searchUrl, filterObj) {
+function querySearchResponse(result, searchUrl, filterObj, queryOptions) {
     return {
         type: QUERY_RESULT,
         searchUrl,
         filterObj,
-        result
+        result,
+        queryOptions
     };
 }
 function queryError(error) {
@@ -132,11 +133,12 @@ function createQuery(searchUrl, filterObj) {
     };
 }
 
-function query(searchUrl, filterObj) {
+function query(searchUrl, filterObj, queryOptions) {
     return {
         type: QUERY,
         searchUrl,
-        filterObj
+        filterObj,
+        queryOptions
     };
 }
 

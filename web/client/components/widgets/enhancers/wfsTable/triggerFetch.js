@@ -10,7 +10,8 @@ require('rxjs');
 const { getSearchUrl } = require('../../../../utils/LayersUtils');
 const sameFilter = (f1, f2) => f1 === f2;
 const sameOptions = (o1 = {}, o2 = {}) =>
-    o1.propertyName === o2.propertyName;
+    o1.propertyName === o2.propertyName
+    && o1.viewParams === o2.viewParams;
 const sameSortOptions = (o1 = {}, o2 = {}) =>
     o1.sortBy === o2.sortBy
     && o1.sortOrder === o2.sortOrder;

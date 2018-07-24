@@ -31,7 +31,8 @@ const {
     showPopoverSyncSelector,
     hasSupportedGeometry,
     getDockSize,
-    selectedLayerNameSelector
+    selectedLayerNameSelector,
+    queryOptionsSelector
 } = require('../featuregrid');
 
 const idFt1 = "idFt1";
@@ -482,14 +483,34 @@ describe('Test featuregrid selectors', () => {
                 name: 'editing:polygons'
             }]
         }, featuregrid: {
-          open: true,
-          selectedLayer: "TEST_LAYER",
-          mode: modeEdit,
-          select: [feature1, feature2],
-          changes: [{id: feature2.id, updated: {geometry: null}}]
+            open: true,
+            selectedLayer: "TEST_LAYER",
+            mode: modeEdit,
+            select: [feature1, feature2],
+            changes: [{id: feature2.id, updated: {geometry: null}}]
         }};
         expect(selectedLayerNameSelector(state)).toBe('editing:polygons');
         expect(selectedLayerNameSelector({})).toBe('');
     });
-
+    it('test queryOptionsSelector', () => {
+        const state = {
+            ...initialState, layers: {
+                flat: [{
+                    id: "TEST_LAYER",
+                    title: "Test Layer",
+                    name: 'editing:polygons',
+                    params: {
+                        viewParams: "a:b"
+                    }
+                }]
+            }, featuregrid: {
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                mode: modeEdit,
+                select: [feature1, feature2],
+                changes: [{ id: feature2.id, updated: { geometry: null } }]
+            }
+        };
+        expect(queryOptionsSelector(state).viewParams).toBe("a:b");
+    });
 });

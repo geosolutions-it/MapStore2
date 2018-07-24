@@ -73,6 +73,7 @@ module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS="wf
         gmlV = "3.1.1";
     }
     const requestAttributes = ({
+        viewParams,
         resultType,
         outputFormat,
         startIndex,
@@ -83,21 +84,19 @@ module.exports = function({wfsVersion = "1.1.0", gmlVersion, filterNS, wfsNS="wf
             + (resultType ? ` resultType="${resultType}"` : "")
             + (outputFormat ? ` outputFormat="${outputFormat}"` : ``)
             + ((startIndex || startIndex === 0) ? ` startIndex="${startIndex}"` : "")
-            + ((maxFeatures || maxFeatures === 0) ? ` ${getMaxFeatures(maxFeatures)}` : "");
+            + ((maxFeatures || maxFeatures === 0) ? ` ${getMaxFeatures(maxFeatures)}` : "")
+            + (viewParams ? ` viewParams="${viewParams}"` : "");
     };
     const propertyName = (property) =>
         castArray(property)
-        .map(p => `<${wfsNS}:PropertyName>${p}</${wfsNS}:PropertyName>`)
-        .join("");
+            .map(p => `<${wfsVersion === "2.0" ? "fes" : "ogc"}:PropertyName>${p}</${wfsVersion === "2.0" ? "fes" : "ogc"}:PropertyName>`)
+            .join("");
     return {
         propertyName,
         ...filterBuilder({gmlVersion: gmlV, wfsVersion, filterNS: filterNS || wfsVersion === "2.0" ? "fes" : "ogc"}),
         getFeature: (content, opts) => `<${wfsNS}:GetFeature ${requestAttributes(opts)}>${Array.isArray(content) ? content.join("") : content}</${wfsNS}:GetFeature>`,
         sortBy: (property, order = "ASC") =>
-            `<${wfsNS}:SortBy><${wfsNS}:SortProperty>` +
-            `${propertyName(property)}` +
-            `<${wfsNS}:SortOrder>${order}</${wfsNS}:SortOrder>`
-            `</${wfsNS}:SortProperty></${wfsNS}:SortBy>`,
+            `<${wfsNS}:SortBy><${wfsNS}:SortProperty>${propertyName(property)}<${wfsNS}:SortOrder>${order}</${wfsNS}:SortOrder></${wfsNS}:SortProperty></${wfsNS}:SortBy>`,
         query: (featureName, content, {srsName ="EPSG:4326"} = {}) =>
             `<${wfsNS}:Query ${wfsVersion === "2.0" ? "typeNames" : "typeName"}="${featureName}" srsName="${srsName}">`
             + `${Array.isArray(content) ? content.join("") : content}`
