@@ -492,7 +492,7 @@ describe('Test featuregrid selectors', () => {
         expect(selectedLayerNameSelector(state)).toBe('editing:polygons');
         expect(selectedLayerNameSelector({})).toBe('');
     });
-    it('test queryOptionsSelector', () => {
+    it('queryOptionsSelector gets viewParams', () => {
         const state = {
             ...initialState, layers: {
                 flat: [{
@@ -512,5 +512,26 @@ describe('Test featuregrid selectors', () => {
             }
         };
         expect(queryOptionsSelector(state).viewParams).toBe("a:b");
+    });
+    it('queryOptionsSelector gets CQL_FILTER', () => {
+        const state = {
+            ...initialState, layers: {
+                flat: [{
+                    id: "TEST_LAYER",
+                    title: "Test Layer",
+                    name: 'editing:polygons',
+                    params: {
+                        CQL_FILTER: "a:b"
+                    }
+                }]
+            }, featuregrid: {
+                open: true,
+                selectedLayer: "TEST_LAYER",
+                mode: modeEdit,
+                select: [feature1, feature2],
+                changes: [{ id: feature2.id, updated: { geometry: null } }]
+            }
+        };
+        expect(queryOptionsSelector(state).cqlFilter).toBe("a:b");
     });
 });

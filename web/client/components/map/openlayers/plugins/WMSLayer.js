@@ -14,7 +14,7 @@ const objectAssign = require('object-assign');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
 const {isArray} = require('lodash');
-const FilterUtils = require('../../../../utils/FilterUtils');
+const {optionsToVendorParams} = require('../../../../utils/VendorParamsUtils');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const mapUtils = require('../../../../utils/MapUtils');
 const ElevationUtils = require('../../../../utils/ElevationUtils');
@@ -24,7 +24,7 @@ const ElevationUtils = require('../../../../utils/ElevationUtils');
     tiled params must be tru if not defined
 */
 function wmsToOpenlayersOptions(options) {
-    const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
+    const params = optionsToVendorParams(options);
     // NOTE: can we use opacity to manage visibility?
     const result = objectAssign({}, options.baseParams, {
         LAYERS: options.name,
@@ -34,12 +34,11 @@ function wmsToOpenlayersOptions(options) {
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         TILED: !isNil(options.tiled) ? options.tiled : true,
-        VERSION: options.version || "1.3.0",
-        CQL_FILTER
+        VERSION: options.version || "1.3.0"
     }, objectAssign(
         {},
         (options._v_ ? {_v_: options._v_} : {}),
-        (options.params || {})
+        (params || {})
     ));
     return SecurityUtils.addAuthenticationToSLD(result, options);
 }
@@ -187,7 +186,7 @@ Layers.registerType('wms', {
                 });
             }
             if (changed) {
-                const params = objectAssign(newParams, SecurityUtils.addAuthenticationToSLD(newOptions.params || {}, newOptions));
+                const params = objectAssign(newParams, SecurityUtils.addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
                 layer.getSource().updateParams(objectAssign(params, Object.keys(oldOptions.params || {}).reduce((previous, key) => {
                     return params[key] ? previous : objectAssign(previous, {
                         [key]: undefined

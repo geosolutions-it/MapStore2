@@ -43,7 +43,6 @@ describe('Leaflet layer', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-
     it('missing layer', () => {
         var source = {
             "P_TYPE": "wrong ptype key"
@@ -638,7 +637,6 @@ describe('Leaflet layer', () => {
         expect(layer.layer.wmsParams['ms2-authkey']).toBe("########-####-####-####-###########");
         expect(layer.layer.wmsParams.SLD).toBe("http://sample.server/geoserver/rest/sld?test1=aaa&ms2-authkey=" + encodeURIComponent("########-####-####-####-###########"));
     });
-
     it('test wms security token', () => {
         const options = {
             type: "wms",
@@ -792,5 +790,114 @@ describe('Leaflet layer', () => {
         map.eachLayer(function() {lcount++; });
         expect(lcount).toBe(1);
         expect(layer.layer.options.maxZoom).toBe(23);
+    });
+    it('test cql_filter param to be passed to the layer object', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms",
+            params: {
+                CQL_FILTER: "prop = 'value'"
+            }
+        };
+
+        let layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={options}
+            map={map}
+            />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        let lcount = 0;
+        map.eachLayer(() => { lcount++; });
+        expect(lcount).toBe(1);
+        expect(layer.layer.wmsParams.CQL_FILTER).toBe("prop = 'value'");
+    });
+    it('test filterObj param to be transformed in cql_filter', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms",
+            filterObj: {
+                filterFields: [
+                    {
+                        groupId: 1,
+                        attribute: "prop2",
+                        exception: null,
+                        operator: "=",
+                        rowId: "3",
+                        type: "number",
+                        value: "value2"
+                    }],
+                groupFields: [{
+                    id: 1,
+                    index: 0,
+                    logic: "OR"
+                }]
+            }
+        };
+
+        let layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        let lcount = 0;
+        map.eachLayer(() => { lcount++; });
+        expect(lcount).toBe(1);
+        expect(layer.layer.wmsParams.CQL_FILTER).toBe("(\"prop2\" = 'value2')");
+    });
+    it('test filterObj and cql_filter combination (featuregrid active filter use this combination)', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms",
+            params: {
+                CQL_FILTER: "prop = 'value'"
+            },
+            filterObj: {
+                filterFields: [
+                    {
+                        groupId: 1,
+                        attribute: "prop2",
+                        exception: null,
+                        operator: "=",
+                        rowId: "3",
+                        type: "number",
+                        value: "value2"
+                    }],
+                groupFields: [{
+                    id: 1,
+                    index: 0,
+                    logic: "OR"
+                }]
+            }
+        };
+
+        let layer = ReactDOM.render(<LeafLetLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        let lcount = 0;
+        map.eachLayer(() => { lcount++; });
+        expect(lcount).toBe(1);
+        expect(layer.layer.wmsParams.CQL_FILTER).toBe("((\"prop2\" = 'value2')) AND (prop = 'value')");
     });
 });

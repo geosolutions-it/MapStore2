@@ -9,7 +9,7 @@
 const MapUtils = require('../MapUtils');
 const CoordinatesUtils = require('../CoordinatesUtils');
 const WMTSUtils = require('../WMTSUtils');
-const FilterUtils = require('../FilterUtils');
+const {optionsToVendorParams} = require('../VendorParamsUtils');
 
 const {isArray, isObject} = require('lodash');
 
@@ -43,7 +43,10 @@ module.exports = {
 
         const matrixIds = WMTSUtils.limitMatrix(layer.matrixIds && WMTSUtils.getMatrixIds(layer.matrixIds, tileMatrixSet || srs) || WMTSUtils.getDefaultMatrixId(layer), resolutions.length);
 
-        const CQL_FILTER = FilterUtils.isFilterValid(layer.filterObj) && FilterUtils.toCQLFilter(layer.filterObj);
+        const params = optionsToVendorParams({
+            filterObj: layer.filterObj,
+            params: assign({}, layer.baseParams, layer.params, props.params)
+        });
 
         return {
             request: {
@@ -52,7 +55,7 @@ module.exports = {
                 layer: layer.name,
                 infoformat: props.format,
                 style: layer.style || '',
-                ...assign({}, (CQL_FILTER ? {CQL_FILTER} : {}), layer.baseParams, layer.params, props.params),
+                ...assign({}, params),
                 tilecol: tileCol,
                 tilerow: tileRow,
                 tilematrix: matrixIds[Math.round(props.map.zoom)],

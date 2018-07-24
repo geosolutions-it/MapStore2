@@ -154,14 +154,17 @@ module.exports = {
         return layer && layer.name || '';
 
     },
+    /**
+     * Returns well known vendor params of the selected layer to be used in feature grid.
+     * returns an object that contains `viewParams` and `cqlFilter` getting them from the params object of the layer
+     */
     queryOptionsSelector: state => {
         const params = selectedLayerParamsSelector(state);
         const viewParams = params && (params.VIEWPARAMS || params.viewParams || params.viewparams);
-        if (viewParams) {
-            return {
-                viewParams
-            };
-        }
-        return {};
+        const cqlFilter = params && (params.CQL_FILTER || params.cqlFilter || params.cql_filter);
+        return {
+            viewParams,
+            cqlFilter
+        };
     }
 };
