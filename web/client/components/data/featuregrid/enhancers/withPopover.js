@@ -16,8 +16,11 @@ module.exports = (Wrapped) => class WithPopover extends React.Component {
         const {popoverOptions, keyProp, ...props} = this.props;
         return (
             <span className="mapstore-info-popover">
-                <Wrapped {...(omit(props, ["renderPopover", "tooltipId"])) } key={keyProp} ref={button => { target = button; }} />
-                <Overlay placement={popoverOptions.placement} show target={() => ReactDOM.findDOMNode(target)}>
+                <Wrapped {...(omit(props, ["renderPopover", "tooltipId"])) } key={keyProp} ref={button => {
+                    target = button;
+                }} />
+            <Overlay placement={popoverOptions.placement} shouldUpdatePosition show
+                target={() => ReactDOM.findDOMNode(target) }>
                     <Popover
                         {...popoverOptions.props}>
                         {popoverOptions.content}
