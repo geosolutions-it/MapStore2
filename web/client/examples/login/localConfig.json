@@ -1,5 +1,0 @@
-{
-	"proxyUrl": "/mapstore/proxy/?url=",
-	"geoStoreUrl": "/mapstore/rest/geostore/",
-  "printUrl": "https://demo.geo-solutions.it/geoserver/pdf/info.json"
-}
