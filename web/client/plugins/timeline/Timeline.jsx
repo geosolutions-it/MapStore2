@@ -61,7 +61,7 @@ const layerData = compose(
 );
 const enhance = compose(
     layerData,
-    currentTime,
+
     withHandlers({
         onSelect: ({ setCurrentTime = () => { } }) => e => setCurrentTime(e.items[0]),
         clickHandler: ({ setCurrentTime = () => { } }) => ({ event = {} } = {}) => setCurrentTime(event.time)
