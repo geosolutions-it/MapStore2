@@ -40,6 +40,7 @@ module.exports = {
         OmniBarPlugin: require('../plugins/OmniBar'),
         GridContainerPlugin: require('../plugins/GridContainer'),
         BurgerMenuPlugin: require('../plugins/BurgerMenu'),
+        PlaybackPlugin: require('../plugins/Playback.jsx'),
         UndoPlugin: require('../plugins/History'),
         RedoPlugin: require('../plugins/History'),
         MapsPlugin: require('../plugins/Maps'),
