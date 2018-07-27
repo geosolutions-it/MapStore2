@@ -9,7 +9,7 @@
 const Rx = require('rxjs');
 const uuid = require('uuid/v1');
 const { includes, isNil } = require('lodash');
-const GeoStoreDAO = require('../api/GeoStoreDAO');
+const GeoStoreDAO = require('../../api/GeoStoreDAO');
 
 const createLinkedResourceURL = (id, tail = "") => encodeURIComponent(encodeURIComponent(`rest/geostore/data/${id}${tail}`));
 const LINKED_RESOURCE_REGEX = /rest\/geostore\/data\/(\d+)/;

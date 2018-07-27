@@ -57,7 +57,7 @@ const {
     createResource,
     updateResource,
     getResource
-} = require('../observables/geostore');
+} = require('../observables/persistence');
 const {
     wrapStartStop
 } = require('../observables/epics');

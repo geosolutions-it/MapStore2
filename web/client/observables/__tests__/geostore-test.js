@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
-const {createResource, deleteResource} = require('../geostore');
+const {createResource, deleteResource} = require('../persistence');
 const testAndResolve = (test = () => {}, value) => (...args) => {
     test(...args);
     return new Promise(resolve => resolve(value));

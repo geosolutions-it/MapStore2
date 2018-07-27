@@ -10,7 +10,7 @@ const Rx = require('rxjs');
 const { compose, branch, withState, withHandlers, defaultProps, mapPropsStream, createEventHandler} = require('recompose');
 const handleSaveModal = require('../modals/enhancers/handleSaveModal');
 const handleResourceDownload = require('../modals/enhancers/handleResourceDownload');
-const {updateResource} = require('../../../observables/geostore');
+const {updateResource} = require('../../../observables/persistence');
 
 const handleSave = mapPropsStream(props$ => {
     const { handler: onSave, stream: saveEventStream$ } = createEventHandler();
