@@ -1071,7 +1071,8 @@
                 "line": "Y Attribute",
                 "pie": "Value",
                 "bar": "Y Attribute",
-                "gauge": "Value"
+                "gauge": "Value",
+                "counter": "Use"
             },
             "aggregateFunction": {
                 "line": "Operation",

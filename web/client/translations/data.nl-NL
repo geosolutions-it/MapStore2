@@ -1006,9 +1006,10 @@
             },
             "aggregationAttribute": {
                 "line": "Attributs Y",
-                "pie": "Valeur",
+                "pie": "Use",
                 "bar": "Attributs Y",
-                "gauge": "valeur"
+                "gauge": "valeur",
+                "counter": "Use"
             },
             "aggregateFunction": {
                 "line": "Opération",
