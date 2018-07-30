@@ -30,11 +30,14 @@ const history = routerCreateHistory();
 
 // Build the middleware for intercepting and dispatching navigation actions
 const reduxRouterMiddleware = routerMiddleware(history);
+const layersEpics = require('../epics/layers');
+const controlsEpics = require('../epics/controls');
 const standardEpics = {
-    ...require('../epics/controls')
+    ...layersEpics,
+    ...controlsEpics
 };
 
-module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, appEpics = {}, plugins, storeOpts = {}) => {
+module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, appEpics = {}, plugins = {}, storeOpts = {}) => {
     const allReducers = combineReducers(plugins, {
         ...appReducers,
         localConfig: require('../reducers/localConfig'),

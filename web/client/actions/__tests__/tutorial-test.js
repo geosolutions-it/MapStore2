@@ -59,7 +59,8 @@ describe('Test the tutorial actions', () => {
         const style = 'style';
         const checkbox = 'checkbox';
         const defaultStep = 'defaultStep';
-        const retval = setupTutorial(id, steps, style, checkbox, defaultStep);
+        const stop = true;
+        const retval = setupTutorial(id, steps, style, checkbox, defaultStep, stop);
         expect(retval).toExist();
         expect(retval.type).toBe(SETUP_TUTORIAL);
         expect(retval.id).toBe(id);
@@ -67,6 +68,7 @@ describe('Test the tutorial actions', () => {
         expect(retval.style).toBe(style);
         expect(retval.checkbox).toBe(checkbox);
         expect(retval.defaultStep).toBe(defaultStep);
+        expect(retval.stop).toBe(stop);
     });
 
     it('updateTutorial', () => {

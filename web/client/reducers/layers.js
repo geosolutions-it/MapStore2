@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var {LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
+var { LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PARAMS, CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES,
     TOGGLE_NODE, SORT_NODE, REMOVE_NODE, UPDATE_NODE, ADD_LAYER, REMOVE_LAYER,
     SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, REFRESH_LAYERS, LAYERS_REFRESH_ERROR, LAYERS_REFRESHED, CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA
     } = require('../actions/layers');
@@ -14,7 +14,7 @@ var {LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, CHANGE_LAYER_PROPERTIES, CHANGE_GRO
 const {TOGGLE_CONTROL} = require('../actions/controls');
 
 var assign = require('object-assign');
-var {isObject, isArray, head, isString} = require('lodash');
+var {isObject, isArray, head, isString, includes, castArray} = require('lodash');
 
 const LayersUtils = require('../utils/LayersUtils');
 
@@ -102,15 +102,24 @@ function layers(state = [], action) {
             });
             return assign({}, state, {refreshing: newLayers});
         }
+        case CHANGE_LAYER_PARAMS:
         case CHANGE_LAYER_PROPERTIES: {
             const flatLayers = (state.flat || []);
             let isBackground = flatLayers.reduce(
                     (background, layer) => background || (layer.id === action.layer && layer.group === 'background'),
             false);
             const newLayers = flatLayers.map((layer) => {
-                if (layer.id === action.layer) {
-                    return assign({}, layer, action.newProperties);
-                } else if (layer.group === 'background' && isBackground && action.newProperties.visibility) {
+                if ( includes(castArray(action.layer), layer.id )) {
+                    return assign(
+                        {},
+                        layer,
+                        action.newProperties,
+                        action.params
+                            ? {
+                                params: assign({}, layer.params, action.params)
+                            }
+                            : {});
+                } else if (layer.group === 'background' && isBackground && action.newProperties && action.newProperties.visibility) {
                     // TODO remove
                     return assign({}, layer, {visibility: false});
                 }

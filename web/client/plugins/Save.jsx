@@ -106,7 +106,7 @@ module.exports = {
         })(assign(Save, {
             BurgerMenu: {
                 name: 'save',
-                position: 900,
+                position: 30,
                 text: <Message msgId="save"/>,
                 icon: <Glyphicon glyph="floppy-open"/>,
                 action: toggleControl.bind(null, 'save', null),

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>__PROJECTDESCRIPTION__</title>
+        <style>
+            body {
+                margin: 0;
+            }
+            ._ms2_init_center {
+                position: fixed;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                overflow: show;
+                margin: auto;
+                display: flex;
+                align-items: center;
+            }
+            ._ms2_init_spinner {
+                height: 176px;
+                width: 176px;
+            }
+            ._ms2_init_spinner > div,
+            ._ms2_init_spinner > div:after {
+                border-radius: 50%;
+                width: 176px;
+                height: 176px;
+            }
+            ._ms2_init_spinner > div {
+                box-sizing: border-box;
+                text-indent: -9999em;
+                border: 16px solid rgba(119,119,119, 0.2);
+                border-left: 16px solid #777777;
+                -webkit-transform: translateZ(0);
+                -ms-transform: translateZ(0);
+                transform: translateZ(0);
+                -webkit-animation: _ms2_init_anim 1.1s infinite linear;
+                animation: _ms2_init_anim 1.1s infinite linear;
+            }
+            @-webkit-keyframes _ms2_init_anim {
+                0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+                }
+                100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+                }
+            }
+            @keyframes _ms2_init_anim {
+                0% {
+                -webkit-transform: rotate(0deg);
+                transform: rotate(0deg);
+                }
+                100% {
+                -webkit-transform: rotate(360deg);
+                transform: rotate(360deg);
+                }
+            }
+            ._ms2_init_text {
+                -webkit-animation: _ms2_init_text_anim 2s linear 0s infinite normal;
+                animation: _ms2_init_text_anim 2s linear 0s infinite normal;
+                color: #6F6F6f;
+                font-family: "Helvetica Neue", "Helvetica", "Arial", sans-serif;
+                font-size: 20px;
+                font-weight: bold;
+                height: 0.75em;
+                width:  6em;
+                text-align: center;
+                margin: auto;
+                z-index: 1000;
+            }
+            @keyframes _ms2_init_text_anim {
+                0%  {opacity: 0}
+                20% {opacity: 0}
+                50% {opacity: 1}
+                70% {opacity: .75}
+                100%{opacity: 0}
+            }
+        </style>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway" type='text/css'>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.css" />
+        <link rel="shortcut icon" type="image/png" href="https://cdn.jslibs.mapstore2.geo-solutions.it/leaflet/favicon.ico" />
+        <script src="https://maps.google.com/maps/api/js?v=3"></script>
+        <!--script src="https://cdnjs.cloudflare.com/ajax/libs/proj4js/2.3.10/proj4.js"></script-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/leaflet.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.2/leaflet.draw.js"></script>
+    </head>
+    <body>
+        <div id="container">
+            <div class="_ms2_init_spinner _ms2_init_center"><div></div></div>
+            <div class="_ms2_init_text _ms2_init_center">Loading MapStore</div>
+        </div>
+        <script src="dist/__PROJECTNAME__-embedded.js"></script>
+    </body>
+</html>

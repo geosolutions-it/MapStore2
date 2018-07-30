@@ -1,8 +1,7 @@
 
 #mapstore-mouseposition {
-
-    position: static !important;
-
+    width: auto !important;
+    background-color: transparent !important;
     span {
         font-size: @font-size-small;
         color: @ms2-color-text;
@@ -109,4 +108,12 @@
         text-align: center;
     }
 
+    .mouseposition-separator {
+        display: inline;
+    }
+
+}
+
+#mapstore-map-footer #mapstore-mouseposition {
+    position: static !important;
 }

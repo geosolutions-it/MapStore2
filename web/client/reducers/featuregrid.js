@@ -212,6 +212,7 @@ function featuregrid(state = emptyResultsState, action) {
         });
     case TOGGLE_MODE: {
         return assign({}, state, {
+            showPopoverSync: localStorage && localStorage.getItem("showPopoverSync") !== null ? localStorage.getItem("showPopoverSync") === "true" : action.mode !== MODES.EDIT,
             tools: action.mode === MODES.EDIT ? {} : state.tools,
             mode: action.mode,
             multiselect: action.mode === MODES.EDIT,

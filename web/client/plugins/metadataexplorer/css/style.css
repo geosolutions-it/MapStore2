@@ -11,18 +11,6 @@ div.record-grid .record-item .panel-body{
     padding: 0;
 }
 
-div.record-grid .record-item .record-item-description {
-    display: block; /* Fallback for non-webkit */
-    display: -webkit-box;
-    -webkit-line-clamp: 6;
-    font-size: 14px;
-    line-height: 1.4;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    height: 17px;
-}
-
 #mapstore-catalog-panel button.search-button {
     margin-bottom: 10px;
 }

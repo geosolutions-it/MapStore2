@@ -7,6 +7,7 @@
  */
 
 const CHANGE_LAYER_PROPERTIES = 'CHANGE_LAYER_PROPERTIES';
+const CHANGE_LAYER_PARAMS = 'LAYERS:CHANGE_LAYER_PARAMS';
 const CHANGE_GROUP_PROPERTIES = 'CHANGE_GROUP_PROPERTIES';
 const TOGGLE_NODE = 'TOGGLE_NODE';
 const CONTEXT_NODE = 'CONTEXT_NODE';
@@ -22,6 +23,7 @@ const SHOW_SETTINGS = 'SHOW_SETTINGS';
 const HIDE_SETTINGS = 'HIDE_SETTINGS';
 const UPDATE_SETTINGS = 'UPDATE_SETTINGS';
 const REFRESH_LAYERS = 'REFRESH_LAYERS';
+const UPDATE_LAYERS_DIMENSION = 'LAYERS:UPDATE_LAYERS_DIMENSION';
 const LAYERS_REFRESHED = 'LAYERS_REFRESHED';
 const LAYERS_REFRESH_ERROR = 'LAYERS_REFRESH_ERROR';
 const BROWSE_DATA = 'LAYERS:BROWSE_DATA';
@@ -60,6 +62,20 @@ function changeLayerProperties(layer, properties) {
         newProperties: properties,
         layer: layer
 
+    };
+}
+/**
+ * Change params for a layer. Useful for WMS layers, when you need to change only the params (i.e. dimension) merging with existing ones.
+ * @memberof actions.layers
+ * @function
+ * @param {string|string[]} layer id(s) of the layers to change
+ * @param {object} params the params to change
+ */
+function changeLayerParams(layer, params) {
+    return {
+        type: CHANGE_LAYER_PARAMS,
+        layer,
+        params
     };
 }
 
@@ -184,6 +200,15 @@ function layersRefreshError(layers, error) {
         error
     };
 }
+function updateLayerDimension(dimension, value, options, layers) {
+    return {
+        type: UPDATE_LAYERS_DIMENSION,
+        dimension,
+        value,
+        options,
+        layers
+    };
+}
 function browseData(layer) {
     return {
         type: BROWSE_DATA,
@@ -232,12 +257,13 @@ function hideLayerMetadata() {
     };
 }
 
-module.exports = {changeLayerProperties, changeGroupProperties, toggleNode, sortNode, removeNode, contextNode,
+module.exports = {
+    changeLayerProperties, changeLayerParams, changeGroupProperties, toggleNode, sortNode, removeNode, contextNode,
     updateNode, layerLoading, layerLoad, layerError, addLayer, removeLayer, showSettings, hideSettings, updateSettings, refreshLayers,
-    layersRefreshed, layersRefreshError, refreshLayerVersion, browseData, clearLayers, selectNode, filterLayers, showLayerMetadata,
+    layersRefreshed, layersRefreshError, refreshLayerVersion, updateLayerDimension, browseData, clearLayers, selectNode, filterLayers, showLayerMetadata,
     hideLayerMetadata, download,
-    CHANGE_LAYER_PROPERTIES, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
+    CHANGE_LAYER_PROPERTIES, CHANGE_LAYER_PARAMS, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
     REMOVE_NODE, UPDATE_NODE, LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, ADD_LAYER, REMOVE_LAYER,
-    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, CONTEXT_NODE, REFRESH_LAYERS, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, BROWSE_DATA, DOWNLOAD,
+    SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, CONTEXT_NODE, REFRESH_LAYERS, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, UPDATE_LAYERS_DIMENSION, BROWSE_DATA, DOWNLOAD,
     CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA
 };

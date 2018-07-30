@@ -11,7 +11,7 @@ var {FormattedNumber} = require('react-intl');
 
 class NumberFormat extends React.Component {
     static propTypes = {
-        value: PropTypes.oneOf(PropTypes.object, PropTypes.number),
+        value: PropTypes.oneOf([PropTypes.object, PropTypes.number]),
         numberParams: PropTypes.object
     };
 

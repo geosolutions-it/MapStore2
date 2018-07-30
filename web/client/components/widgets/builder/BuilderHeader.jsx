@@ -24,9 +24,9 @@ module.exports = ({onClose = () => {}, children} = {}) =>
                 <Glyphicon glyph="1-close"/>
             </Button>
         <span style={{padding: '50px 0 0 0', fontSize: 16}}><Message msgId="widgets.builder.header.title" /></span>
-            {<Button style={{pointerEvents: "none"}} className="square-button pull-right no-border">
-                <Glyphicon glyph="stats"/>
-            </Button>}
+            {<div style={{display: "flex"}} className="square-button pull-right no-border">
+                <Glyphicon glyph="stats" className="text-primary"/>
+            </div>}
         </Col>
         </Row>
         <Row className="text-center">

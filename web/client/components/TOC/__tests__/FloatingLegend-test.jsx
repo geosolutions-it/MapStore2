@@ -223,4 +223,91 @@ describe('tests FloatingLegend component', () => {
                 ]}
                 onResize={onResize}/>, document.getElementById("container"));
     });
+
+    it('expand on mount', () => {
+        const actions = {
+            onExpand: () => {}
+        };
+
+        const spyChange = expect.spyOn(actions, 'onExpand');
+        ReactDOM.render(
+            <FloatingLegend
+            onExpand= {actions.onExpand}
+                layers={[
+                    {
+                        name: 'layer:00',
+                        title: 'Layer',
+                        visibility: true,
+                        type: 'wms'
+                    }
+                ]}/>, document.getElementById("container"));
+        expect(spyChange).toHaveBeenCalledWith(true);
+    });
+
+    it('show tooltips', () => {
+        const cmp = ReactDOM.render(
+            <FloatingLegend
+                expanded
+                layers={[
+                    {
+                        name: 'layer:00',
+                        title: 'Layer',
+                        visibility: true,
+                        type: 'wms',
+                        opacity: 0.6
+                    },
+                    {
+                        name: 'layer:01',
+                        title: 'Layer:01',
+                        visibility: false,
+                        type: 'wms',
+                        opacity: 0.5
+                    },
+                    {
+                        name: 'layer:02',
+                        title: 'layer:02',
+                        visibility: true,
+                        type: 'wms'
+                    }
+                ]}/>, document.getElementById("container"));
+
+        expect(cmp).toExist();
+        const tooltips = document.getElementsByClassName('noUi-tooltip');
+        expect(tooltips.length).toBe(2);
+        expect(tooltips[0].innerHTML).toBe('60 %');
+        expect(tooltips[1].innerHTML).toBe('100 %');
+    });
+
+    it('hide tooltips', () => {
+        const cmp = ReactDOM.render(
+            <FloatingLegend
+                expanded
+                hideOpacityTooltip
+                layers={[
+                    {
+                        name: 'layer:00',
+                        title: 'Layer',
+                        visibility: true,
+                        type: 'wms',
+                        opacity: 0.6
+                    },
+                    {
+                        name: 'layer:01',
+                        title: 'Layer:01',
+                        visibility: false,
+                        type: 'wms',
+                        opacity: 0.5
+                    },
+                    {
+                        name: 'layer:02',
+                        title: 'layer:02',
+                        visibility: true,
+                        type: 'wms'
+                    }
+                ]}/>, document.getElementById("container"));
+
+        expect(cmp).toExist();
+        const tooltips = document.getElementsByClassName('noUi-tooltip');
+        expect(tooltips.length).toBe(0);
+    });
 });

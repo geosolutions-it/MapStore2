@@ -1,7 +1,7 @@
 {
     "proxyUrl": {
         "url": "proxy/?url=",
-        "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver"]
+        "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver", "https://nominatim.openstreetmap.org"]
     },
     "geoStoreUrl": "rest/geostore/",
     "printUrl": "pdf/info.json",
@@ -145,6 +145,7 @@
             }, "Home", {
                 "name": "TOC",
                 "cfg": {
+                    "activateMetedataTool": false,
                     "activateMapTitle": false,
                     "activateSortLayer": false
                 }
@@ -252,7 +253,6 @@
                   "activateQueryTool": true,
                   "spatialOperations": [
                       {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
-                      {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},
                       {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
                       {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"}
                   ],
@@ -268,18 +268,7 @@
                 "cfg": {
                     "activateQueryTool": true,
                     "activateAddLayerButton": true,
-                    "spatialOperations": [
-                        {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
-                        {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},
-                        {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
-                        {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"}
-                    ],
-                    "spatialMethodOptions": [
-                        {"id": "Viewport", "name": "queryform.spatialfilter.methods.viewport"},
-                        {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
-                        {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
-                        {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
-                    ]
+                    "activateMetedataTool": false
                 }
             },
             "TOCItemsSettings",
@@ -429,6 +418,7 @@
                 "cfg": {
                     "activateMapTitle": false,
                     "activateSettingsTool": false,
+                    "activateMetedataTool": false,
                     "activateRemoveLayer": false
                 }
 
@@ -504,7 +494,7 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "NavMenu", "Attribution", "Home", {
+        }, "Login", "Language", "NavMenu", "Attribution", "Home", {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {
@@ -524,7 +514,14 @@
             },
             "containerPosition": "columns"
           }
-        }, "Dashboard", "Notifications"],
+        }, "BurgerMenu", "Dashboard", "Notifications", {
+            "name": "Tutorial",
+            "cfg": {
+                "allowClicksThruHole": false,
+                "containerPosition": "header",
+                "preset": "dashboard_tutorial"
+            }
+        }],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }

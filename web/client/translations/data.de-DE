@@ -4,7 +4,7 @@
         "Language": "Sprache",
         "msgId0": "{name} machte {numPhotos, plural, =0 {keine Fotos} =1 {ein Foto} other {# Fotos}} am {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
-        "about_title": "Über diese App...",
+        "about_title": "Über",
         "aboutLbl": "Über",
         "about_p0-0": "MapStore ist ein Framework zur Erstellung von webbasierten Karten-Anwendungen mit Standard-Karten-Bibliotheken wie",
         "about_p0-1": "und",
@@ -60,7 +60,7 @@
             "deleteLayerMessage": "Möchtest du wirklich diese Ebene löschen?",
             "confirmDelete": "Bist du sicher?",
             "featureTypeError": "Layerattribute können nicht geladen werden",
-            "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Antwort ist nicht gültig", 
+            "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Antwort ist nicht gültig",
             "elevation": "Höhe",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
@@ -124,6 +124,7 @@
         "options": "Optionen",
         "settings": "Einstellungen",
         "help": "Hilfe",
+        "docs": "Dokumentation",
         "gohome": "Gehe zur Startseite",
         "back": "Zurück zum Import",
         "printbutton": "Drucken",
@@ -403,6 +404,41 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Fehler bei der Metadatensuche"
                 }
+            },
+            "thematic": {
+                "classification_field": "Klassifizierungsfeld:",
+                "classification_method": "Klassifizierungsmethode:",
+                "classification_aggregate": "Aggregatfunktion:",
+                "classification_colors": "Farbrampe:",
+                "classification_intervals": "Intervalle:",
+                "preview": "Vorschau",
+                "remove_thematic": "Zurück zum einfachen Stil",
+                "values": {
+                    "equalInterval": "Gleiche Intervalle",
+                    "quantile": "Quantil",
+                    "jenks": "Natürliche Pausen",
+                    "sum": "Summe",
+                    "avg": "Durchschnittlich",
+                    "count": "Anzahl",
+                    "min": "Mindest",
+                    "max": "Max"
+                },
+                "configuration": "Aufbau",
+                "apply": "Klassifizierung anwenden",
+                "restore": "Anpassungen zurücksetzen",
+                "go_to_cfg": "Konfigurieren...",
+                "go_to_thema": "Verwenden Sie diese Konfiguration",
+                "cfgError": "Fehler in der Konfigurations-JSON",
+                "classify": "Klassifizieren",
+                "remove": "Klassifizierung entfernen",
+                "data_panel": "Daten",
+                "classification_stroke": "Brett",
+                "classification_error": "Fehler beim Aufruf des Klassifizierungsdienstes: {message}",
+                "fields_error": "Fehler beim Laden der Felderliste: {message}",
+                "interval_limit": "Intervalle sollten eine Zahl zwischen {min} und {max} sein",
+                "invalid_object": "Ungültige Serviceantwort",
+                "invalid_geometry": "Der Geometrietyp ist nicht gültig, kein Punkt, Linie oder Polygon",
+                "invalid_classes": "Max muss in jeder Klasse größer als min sein"
             }
         },
         "print":{
@@ -910,6 +946,8 @@
             "serviceTitle": "Titel",
             "serviceTitlePlaceholder": "Geben Sie einen Titel ein",
             "missingReference": "Fehlende OGC-Referenzmetadaten",
+            "showDescription": "Vollständige Beschreibung anzeigen",
+            "hideDescription": "Vollständige Beschreibung ausblenden",
             "notification": {
                 "warningAddCatalogService": "Geben Sie eine gültige URL und einen Titel ein",
                 "addCatalogService": "Service wurde korrekt hinzugefügt",
@@ -1082,6 +1120,7 @@
                 "placeholders": {
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "date": "Geben Sie das zu filternde Datum ein...",
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein..."
                 },
                 "tooltips": {
@@ -1198,7 +1237,7 @@
                     "configureTableOptions": "Konfigurieren Sie die Tabellenoptionen",
                     "resetColumnsSizes": "Setzen Sie alle Änderungen an den Spaltengrößen zurück",
                     "updateWidget": "Aktualisieren Sie das Widget",
-                    "addToTheMap": "Hinzufügen des Widgets zur Karte",
+                    "addTheWidget": "Hinzufügen des Widget",
                     "titlePlaceholder": "Gib den Titel ein...",
                     "textPlaceholder": "Text eingeben...",
                     "useThisMap": "Benutze diese Karte",
@@ -1459,7 +1498,8 @@
             "cancelButton": "Abbrechen",
             "cqlRead": "CQL Filter Lese Regeln",
             "cqlWrite": "CQL Filter Write Rules",
-            "missingconfig": "Der Regeln-Manager vermisst die Konfiguration. Zugriff abgelehnt!"
+            "missingconfig": "Der Regeln-Manager vermisst die Konfiguration. Zugriff abgelehnt!",
+            "selectworkspace": "Sie müssen den Arbeitsbereich auswählen, um erweiterte Optionen zu aktivieren."
         },
         "tutorial": {
             "title": "Anleitung",
@@ -1549,6 +1589,46 @@
             "cesiumNavigation": {
                 "title": "Navigation",
                 "text": "Hier finden Sie die Schaltflächen zum Vergrößern und Verkleinern"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Überblick über die Funktionen des Dashboards"
+            },
+            "dashboardNav": {
+                "title": "Navigationsleiste",
+                "text": "Hier finden Sie Sprachauswahl, Login, Homepage-Link und Optionsmenü"
+            },
+            "dashboardContainer": {
+                "title": "Instrumententafel",
+                "text": "<p> Ein Dashboard in MapStore2 bietet eine Reihe von Informationen, die passend gesammelt werden, um aggregierte Daten in der One-Shot-Ansicht anzuzeigen. Geodaten, die in einer Karte angezeigt werden, können Seite an Seite mit verwandten Attributtabellen, Diagrammen und anderen platziert werden, mit dem Ziel, verschiedene Arten von Informationen zu verbinden, statistische Details und textuelle Beschreibungen zu einem bestimmten Kontext anzuzeigen. </p> <p> Alle Benutzer können veröffentlichte Dashboards visualisieren und mit ihnen interagieren, aber nur Benutzer, die sie bearbeiten dürfen, können alle Widgets in einem Dashboard hinzufügen, anordnen, ihre Größe ändern oder löschen </ p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Widget hinzufügen",
+                "text": "Um ein Widget zum Dashboard hinzuzufügen, können Sie auf die Schaltfläche + klicken"
+            },
+            "dashboardBuilder": {
+                "title": "Erstelle ein neues Widget",
+                "text": "Sie können auswählen, welche Art von Widget Sie möchten und dann zum Dashboard hinzufügen, indem Sie eines der Elemente in der Liste auswählen"
+            },
+            "dashboardAddChart": {
+                "title": "Diagramm Widget",
+                "text": "<p> Es ist ein Widget, das Daten in Kreis-, Linien- oder Balkendiagrammen anzeigt und aggregiert. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Vektorebene </li> <li> Diagrammtyp auswählen </li> <li> Diagrammdaten konfigurieren </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddText": {
+                "title": "Text Widget",
+                "text": "<p> Fügen Sie Ihrem Dashboard Ihren eigenen Text hinzu. </p> <p> Schritte: </p> <p> <ul> <li> Bearbeiten Sie Text im Editor </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddTable": {
+                "title": "Tabellen Widget",
+                "text": "<p> Fügen Sie dem Dashboard, das Daten von einer ausgewählten Vektorebene enthält, eine Attributtabelle hinzu. Sie können auch Daten filtern, um Ihre Tabelle anzupassen. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Vektorebene aus </li> <li> Tabellendaten konfigurieren </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Gegen Widget",
+                "text": "<p> Fügen Sie dem Dashboard einen neuen Zähler hinzu. Counter zeigt numerische Werte an, die Daten einer ausgewählten Vektorebene aggregieren. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Vektorschicht </li> <li> Zählerdaten konfigurieren </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
+            },
+            "dashboardAddMap": {
+                "title": "Karten Widget",
+                "text": "<p> Fügen Sie eine neue interaktive Karte zum Dashboard hinzu. Sie können mehr als eine Karte mit der Möglichkeit hinzufügen, andere Widgets mit ihnen zu verbinden. Nach dem Speichern der ersten Karte wird das Legenden-Widget zur Liste hinzugefügt. Das Legenden-Widget zeigt eine Legende zur verbundenen Karte. </p> <p> Schritte: </p> <p> <ul> <li> Wählen Sie eine Karte </li> <li> Verbessern Sie die Karte, indem Sie neue Ebenen hinzufügen </li> <li> Speichern und zum Dashboard hinzufügen </li> </ul> </p>"
             }
         }
     }

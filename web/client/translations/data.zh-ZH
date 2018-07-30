@@ -12,7 +12,7 @@
         "about_ul0_li0": "MapViewer简单展现预先配置好的地图 (optionally stored in a database using GeoStore)",
         "about_ul0_li1": "MapPublisher开发的目的是以简单直观的方式创建，保存和共享地图和混搭，从Google Maps和OpenStreetMap等着名资源中选择内容，或者使用OGC WMS，WFS，WMTS等开放协议提供的服务。 TMS等。 有关更多信息，请查看",
         "about_h20": "许可",
-        "about_p3": "MapStore是免费和开放源代码软件，基于OpenLayers 3，Leaflet和ReactJS，并获得简化BSD许可。",
+        "about_p3": "MapStore 2是免费和开放源代码软件，基于OpenLayers 3，Leaflet和ReactJS，并获得简化BSD许可。",
         "about_p5-0": "欲了解更多信息，请查",
         "about_a0": "this",
         "about_p5-1": "页.",
@@ -133,7 +133,7 @@
             "open": "打开",
             "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore的开发旨在以简单直观的方式创建，保存和共享地图和混搭，这些地图和混搭创建的内容来自知名来源，如Google Maps和OpenStreetMap，或者由使用开放协议的组织提供的服务，如OGC WMS，WFS，WMTS 或TMS等等。<br/>有关更多详细信息，请访问<a href=\"/mapstore/docs/\">主页</a>。",
+            "description": "MapStore 2的开发旨在以简单直观的方式创建，保存和共享地图和混搭，这些地图和混搭创建的内容来自知名来源，如Google Maps和OpenStreetMap，或者由使用开放协议的组织提供的服务，如OGC WMS，WFS，WMTS 或TMS等等。<br/>有关更多详细信息，请访问<a href=\"/mapstore/docs/\">主页</a>。",
             "Applications": "应用",
             "Examples": "例子",
             "LinkedinGroup": "Mapstore Linkedin Group",
@@ -500,45 +500,45 @@
             "viewLargerMap": "查看较大的地图"
         },
         "helptexts": {
-            "scaleBox": "This is the helptext for the ScaleBox",
-            "zoomToMaxExtentButton": "This is the helptext for the ZoomToMaxExtentButton",
-            "zoomIn": "This is the helptext for the ZoomIn",
-            "zoomOut": "This is the helptext for the ZoomOut",
-            "searchBar": "Write the address of a place to find. e.g.  '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20",
-            "metadataexplorer": "This is the helptext for the MetadataExplorer",
-            "settingsPanel": "This is the helptext for the SettingsPanel",
-            "gohome": "This is the helptext for Home",
-            "measureComponent": "This is the helptext for the MeasureComponent",
-            "backgroundSwitcher": "This is the helptext for the BackgroundSwitcher",
-            "layerSwitcher": "This is the helptext for the LayerSwitcher",
-            "infoButton": "This is the helptext for the InfoButton",
-            "locateBtn": "This is the helptext for the LocateBtn",
-            "snapshot": "This is the helptext for the Snapshot",
-            "print": "This is the helptext for Print",
-            "shapefile": "This is the helptext for the Shapefile",
-            "rasterstyler": "Define min value, max value, number of classes and color ramp to generate a new classification for the selected raster layer",
-            "expandToolbar": "This is the helptext for Expand / Collapse",
-            "historyundo": "Use this button to go to the previous map zoom and location",
-            "historyredo": "Use this button to go to the next map zoom and location",
-            "vectorstyler": "Add rule and generate a new styled vector layer",
-            "styler": "Add rule and generate a new styled layer"
+            "scaleBox": "比例尺框的帮助文本",
+            "zoomToMaxExtentButton": "缩放到最大范围按钮的帮助文本",
+            "zoomIn": "放大帮助文本",
+            "zoomOut": "缩小帮助文本",
+            "searchBar": "写一个地方的地址找到。 例如 '纽约第一大道'。 你甚至可以用这种格式插入坐标：43.87,10.20",
+            "metadataexplorer": "这是元数据浏览器的帮助文本",
+            "settingsPanel": "这是设置面板的帮助文本",
+            "gohome": "这是Home的帮助文字",
+            "measureComponent": "这是测量组件的帮助文本",
+            "backgroundSwitcher": "这是后台切换器的帮助文本",
+            "layerSwitcher": "这是图层切换的帮助文件",
+            "infoButton": "这是信息按钮的帮助文本",
+            "locateBtn": "这是定位按钮的帮助文字",
+            "snapshot": "这是快照的帮助文本",
+            "print": "这是打印帮助文件",
+            "shapefile": "这是Shapefile的帮助文本",
+            "rasterstyler": "定义最小值，最大值，类数和颜色渐变以为选定的栅格图层生成新的分类",
+            "expandToolbar": "这是展开/折叠的帮助文字",
+            "historyundo": "使用此按钮可以转到之前的地图缩放和位置",
+            "historyredo": "使用此按钮可以转到下一个地图缩放和位置",
+            "vectorstyler": "添加规则并生成新样式的矢量图层",
+            "styler": "添加规则并生成新的样式图层"
         },
         "queryform": {
-            "title": "Advanced Search",
-            "query": "Search",
-            "reset": "Reset",
-            "query_request_exception": "Request Error",
+            "title": "高级搜索",
+            "query": "搜索",
+            "reset": "重置",
+            "query_request_exception": "请求错误",
             "config": {
-                "load_config_exception": "Error Loading Configuration"
+                "load_config_exception": "加载配置时出错"
             },
             "comboField": {
-                "default_placeholder": "Select..."
+                "default_placeholder": "选择..."
             },
             "form": {
-                "header": "Find in the dataset",
-                "dataset_header": "Dataset"
+                "header": "在数据集中查找",
+                "dataset_header": "数据集"
             },
-            "emptyfilter": "No filter set. Searching could timeout if pagination is not supported by the server.",
+            "emptyfilter": "没有过滤器设置。 如果服务器不支持分页，搜索可能会超时。",
             "attributefilter":{
                 "add_condition": " Add Condition",
                 "add_group": " Add Group",
@@ -611,49 +611,49 @@
             }
         },
         "user":{
-            "login": "Login",
-            "logout": "Logout",
-            "info": " Account Info",
-            "details": " User Details",
-            "noAttributesMessage": "There is no information related to your account",
-            "changePwd": "Change Password",
-            "newPwd": "New Password",
-            "retypePwd": "Retype Password",
-            "passwordMinlenght": "Your password must be at least {minSize} character",
-            "passwordCheckFail": "Passwords do not match!",
-            "passwordInvalid": "Invalid password",
-            "username": "Username",
-            "password": "Password",
-            "passwordChanged": "Password changed",
-            "passwordError": "Error changing password",
-            "signIn":"Sign-in",
-            "loginFail":"Login Fail",
+            "login": "登录",
+            "logout": "登出",
+            "info": " 帐户信息",
+            "details": " 用户详情",
+            "noAttributesMessage": "没有与您的帐户相关的信息",
+            "changePwd": "更改密码",
+            "newPwd": "新密码",
+            "retypePwd": "重新输入密码",
+            "passwordMinlenght": "您的密码必须至少为{minSize}个字符",
+            "passwordCheckFail": "密码不匹配!",
+            "passwordInvalid": "无效的密码",
+            "username": "用户名",
+            "password": "密码",
+            "passwordChanged": "密码已更改",
+            "passwordError": "更改密码时出错",
+            "signIn":"签到",
+            "loginFail":"登录失败",
             "loginFailedStatusMessages": {
-                "usernamePwdInsert": "Please insert username and password",
-                "usernamePwdIncorrect":"Username or password incorrect"
+                "usernamePwdInsert": "请插入用户名和密码",
+                "usernamePwdIncorrect":"用户名或密码不正确"
             }
         },
         "annotations": {
-            "edit": "Edit",
-            "remove": "Delete",
-            "save": "Save",
-            "cancel": "Cancel",
-            "back": "Back",
-            "addMarker": "Add a new point on the map",
-            "styleGeometry": "Choose a different style for points",
-            "deleteGeometry": "Remove existing points",
-            "removeannotation": "Do you want to remove the annotation?",
-            "removegeometry": "Do you want to remove all annotation points?",
-            "confirm": "Confirm",
-            "mandatory": "Mandatory field",
-            "emptygeometry": "Geometry cannot be empty",
-            "add": "New",
-            "filter": "Filter annotations...",
-            "undo": "Are you sure you want to abandon the annotation editing session?",
-            "title": "Annotations",
+            "edit": "编辑",
+            "remove": "删除",
+            "save": "保存",
+            "cancel": "取消",
+            "back": "返回",
+            "addMarker": "在地图上添加一个新点",
+            "styleGeometry": "为点选择不同的风格",
+            "deleteGeometry": "删除现有的点",
+            "removeannotation": "你想删除标注?",
+            "removegeometry": "你想删除所有标注点吗？?",
+            "confirm": "确认",
+            "mandatory": "必填项",
+            "emptygeometry": "几何不能为空",
+            "add": "新加",
+            "filter": "过滤标注...",
+            "undo": "你确定要放弃注释编辑会话吗？",
+            "title": "标注",
             "field": {
-                "title": "Title",
-                "description": "Description"
+                "title": "标题",
+                "description": "描述"
             }
         },
         "users": {
@@ -780,6 +780,8 @@
             "serviceTitle": "Title",
             "serviceTitlePlaceholder": "type a title",
             "missingReference": "Missing OGC reference metadata",
+            "showDescription": "Show full description",
+            "hideDescription": "Hide full description",
             "notification": {
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",
@@ -951,6 +953,7 @@
                 "placeholders": {
                     "default": "Search...",
                     "string": "Type text to filter...",
+                    "date": "Type date to filter...",
                     "number": "Type number or expression..."
                 },
                 "tooltips": {
@@ -1016,7 +1019,7 @@
                     "configureChartOptions": "Configure chart options",
                     "configureWidgetOptions": "Configure widget options",
                     "updateWidget": "Update the widget",
-                    "addToTheMap": "Add the widget to the map"
+                    "addTheWidget": "Add the widget"
                 },
                 "errors": {
                     "noWidgetsAvailableTitle": "No Widgets available",
@@ -1117,76 +1120,75 @@
             "none": "None"
         },
         "markNameSelector": {
-            "circle": "Circle",
-            "square": "Square",
-            "triangle": "Triangle",
-            "star": "Star",
-            "cross": "Cross",
+            "circle": "圆",
+            "square": "正方形",
+            "triangle": "三角形",
+            "star": "星",
+            "cross": "交叉",
             "x": "X"
         },
         "styler": {
-            "tooltip": "Create and edit layer style",
-            "paneltitle": "Styler",
-            "layerlabel": "Layer"
+            "tooltip": "创建和编辑图层样式",
+            "paneltitle": "样式工具",
+            "layerlabel": "图层"
         },
         "rulesmanager": {
             "placeholders": {
                 "filter": "Search..."
             },
             "menutitle": "Manage GeoFence Rules",
-            "title": "Access Rules",
-            "role": "Role",
-            "user": "User",
-            "service": "Service",
-            "request": "Request",
-            "workspace": "Workspace",
-            "layer": "Layer",
-            "filters": "Filters",
-            "rules": "Rules",
-            "access": "Access",
-            "newModal": "New Rule",
-            "editModal": "Edit Rule",
-            "newButton": "Create",
-            "editButton": "Save",
-            "close": "Close",
-            "previous": "previous",
-            "next": "next",
-            "errorTitle": "Geofence",
-            "errorLoadingRoles": "Error loading roles.",
-            "errorLoadingUsers": "Error loading users.",
-            "errorLoadingWorkspaces": "Error loading workspaces.",
-            "errorLoadingLayers": "Error loading layers.",
-            "errorLoadingRules": "Error loading rules.",
-            "errorMovingRules": "Error moving rules.",
-            "errorDeletingRules": "Error deleting rules.",
-            "errorAddingRule": "Error adding rule.",
-            "errorUpdatingRule": "Error updating rule.",
-            "deleteModal": "Delete Rules",
-            "selectedRulesDelete": "Delete selected rules ?",
-            "deleteButton": "Delete",
-            "cancelButton": "Cancel"
+            "title": "访问规则",
+            "role": "角色",
+            "user": "用户",
+            "service": "服务",
+            "request": "请求",
+            "workspace": "工作空间",
+            "layer": "图层",
+            "filters": "过滤器",
+            "rules": "规则",
+            "access": "访问",
+            "newModal": "新规则",
+            "editModal": "编辑规则",
+            "newButton": "创建",
+            "editButton": "保存",
+            "close": "关闭",
+            "previous": "上个",
+            "next": "下一个",
+            "errorLoadingRoles": "加载角色时出错.",
+            "errorLoadingUsers": "加载用户时出错.",
+            "errorLoadingWorkspaces": "加载工作区时出错.",
+            "errorLoadingLayers": "加载图层时出错.",
+            "errorLoadingRules": "加载规则时出错.",
+            "errorMovingRules": "移动规则时出错.",
+            "errorDeletingRules": "删除规则时出错.",
+            "errorAddingRule": "添加规则时出错.",
+            "errorUpdatingRule": "更新规则时出错.",
+            "deleteModal": "删除规则",
+            "selectedRulesDelete": "删除选中的规则 ?",
+            "deleteButton": "删除",
+            "cancelButton": "取消"
         },
         "tutorial": {
-            "title": "Tutorial",
-            "back": "Back",
-            "next": "Next",
-            "close": "Close",
-            "skip": "Skip",
-            "last": "Finish",
-            "start": "Start",
-            "checkbox": "don't show this message again",
-            "error": "Error: target not found",
+            "title": "教程",
+            "back": "返回",
+            "next": "下一个",
+            "close": "关",
+            "skip": "跳跃",
+            "last": "完",
+            "start": "开始",
+            "checkbox": "不要再显示此消息",
+            "error": "错误：未找到目标",
             "intro": {
-                "title": "Welcome on MapStore2",
-                "text": "framework to build web mapping applications using standard mapping libraries, such as OpenLayers 3 and Leaflet."
+                "title": "欢迎使用MapStore2",
+                "text": "框架使用标准映射库（如OpenLayers 3和Leaflet）构建Web映射应用程序。"
             },
             "drawerMenu": {
                 "title": "主菜单",
                 "text": "你可以找到信息和工具来管理图层"
             },
             "searchBar": {
-                "title": "Search Bar",
-                "text": "Write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+                "title": "搜索栏",
+                "text": "写一个地方的地址找到。 例如 '纽约第一大道'。 你甚至可以用这种格式插入坐标：43.87,10.20"
             },
             "home": {
                 "title": "首页",
@@ -1194,7 +1196,7 @@
             },
             "searchButton": {
                 "title": "搜索",
-                "text": "Click to open the search bar, then write the address of a place to find. e.g. '1st avenue, new york'. You can even insert coordinates in this format: 43.87,10.20"
+                "text": "点击打开搜索栏，然后编写要查找的地点的地址。 例如 '纽约第一大道'。 你甚至可以用这种格式插入坐标：43.87,10.20"
             },
             "burgerMenu": {
                 "title": "选项菜单",
@@ -1213,16 +1215,16 @@
                 "text": "点击进入全屏"
             },
             "identifyButton": {
-                "title": "Info",
-                "text": "Press the button to activate the tool, then click on the map to retrieve information from layers"
+                "title": "信息",
+                "text": "按下按钮激活该工具，然后点击地图从层中检索信息"
             },
             "mapType": {
                 "title": "Library",
-                "text": "You can choose Leaflet or OpenLayers to render your maps"
+                "text": "您可以选择Leaflet或OpenLayers来渲染您的地图"
             },
             "mapsGrid": {
                 "title": "Maps",
-                "text": "Here some examples of MapStore2. Click on an image to try the demo."
+                "text": "这里有一些MapStore2的例子。 点击图片试试演示。"
             },
             "examples": {
                 "title": "Custom Application",
@@ -1254,6 +1256,46 @@
             "cesiumNavigation": {
                 "title": "Navigation",
                 "text": "Here you can find the zoom in and zoom out buttons"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Overview of dashboard functionalities"
+            },
+            "dashboardNav": {
+                "title": "Navigation Bar",
+                "text": "Here you can find language selector, login, homepage link and options menu"
+            },
+            "dashboardContainer": {
+                "title": "Dashboard",
+                "text": "<p>A Dashboard in MapStore2 provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Add Widget",
+                "text": "To add a widget to the dashboard, you can click on the + button"
+            },
+            "dashboardBuilder": {
+                "title": "Create a new widget",
+                "text": "You can select which type of widget you want and then add to the dashboard selecting one of the items in the list"
+            },
+            "dashboardAddChart": {
+                "title": "Chart Widget",
+                "text": "<p>It's a widget that show and aggregate data into pie, line or bar charts.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Select chart type</li><li>Configure chart data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddText": {
+                "title": "Text Widget",
+                "text": "<p>Add your own text to the dashboard.</p><p>Steps:</p><p><ul><li>Edit text in editor</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddTable": {
+                "title": "Table Widget",
+                "text": "<p>Add an attribute table to the dashboard that contains data from a selected vector layer. You can also filter data to customize your table.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure table data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Counter Widget",
+                "text": "<p>Add a new counter to the dashboard. Counter will show numeric value aggregationg data from a selected vector layer.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure counter data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddMap": {
+                "title": "Map Widget",
+                "text": "<p>Add a new interactive map to the dashboard. You can add more than one map with the ability to connect other widgets to them. After saving the first map, the legend widget will be added to the list. Legend Widget will show a legend related to the connected map.</p><p>Steps:</p><p><ul><li>Select a map</li><li>Improve map by adding new layers</li><li>Save and add to dashboard</li></ul></p>"
             }
         }
     }

@@ -93,7 +93,8 @@ module.exports = {
         NavMenu: require('./plugins/NavMenu'),
         RulesEditorPlugin: require('../plugins/RulesEditor'),
         FloatingLegendPlugin: require('../plugins/FloatingLegend'),
-        TimelinePlugin: require('../plugins/Timeline')
+        TimelinePlugin: require('../plugins/Timeline'),
+        ThematicLayerPlugin: require('../plugins/ThematicLayer')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

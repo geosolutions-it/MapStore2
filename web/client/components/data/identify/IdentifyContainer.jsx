@@ -50,7 +50,8 @@ module.exports = props => {
         draggable,
         setIndex,
         warning,
-        clearWarning
+        clearWarning,
+        zIndex
     } = props;
 
     const latlng = point && point.latlng || null;
@@ -86,6 +87,7 @@ module.exports = props => {
                 dock={dock}
                 style={dockStyle}
                 showFullscreen={showFullscreen}
+                zIndex={zIndex}
                 header={[
                     <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>,
                     buttons.length > 0 ? (

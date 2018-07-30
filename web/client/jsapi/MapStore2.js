@@ -93,9 +93,9 @@ let stateChangeListeners = [];
 const getInitialActions = (options) => {
     if (!options.initialState || !options.initialState.defaultState.map) {
         if (options.configUrl) {
-            return [loadMapConfig.bind(null, options.configUrl || defaultConfig)];
+            return [loadMapConfig.bind(null, options.configUrl || defaultConfig, options.mapId)];
         }
-        return [configureMap.bind(null, options.config || defaultConfig)];
+        return [configureMap.bind(null, options.config || defaultConfig, options.mapId)];
     }
     return [];
 };
@@ -188,14 +188,14 @@ const MapStore2 = {
         }, {
             jsAPIEpic: actionTrigger.epic
         });
-        const initialActions = [...getInitialActions(options), loadVersion];
+        const initialActions = [...getInitialActions(options), loadVersion.bind(null, options.versionURL)];
         const appConfig = {
             storeOpts: assign({}, storeOpts, {notify: true}),
             appStore,
             pluginsDef,
             initialActions,
             appComponent: StandardRouter,
-            printingEnabled: false
+            printingEnabled: options.printingEnabled || false
         };
         if (options.style) {
             let dom = document.getElementById('custom_theme');
@@ -213,8 +213,9 @@ const MapStore2 = {
         const themeCfg = options.theme && assign({}, defaultThemeCfg, options.theme) || defaultThemeCfg;
         const onStoreInit = (store) => {
             store.addActionListener((action) => {
-                (actionListeners[action.type] || []).concat(actionListeners['*'] || []).forEach((listener) => {
-                    listener.call(null, action);
+                const act = action.type === "PERFORM_ACTION" && action.action || action; // Needed to works also in debug
+                (actionListeners[act.type] || []).concat(actionListeners['*'] || []).forEach((listener) => {
+                    listener.call(null, act);
                 });
             });
             store.subscribe(() => {

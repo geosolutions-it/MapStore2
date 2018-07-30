@@ -12,13 +12,14 @@ const expect = require('expect');
 const assign = require('object-assign');
 
 const TestUtils = require('react-dom/test-utils');
+const SAMPLE_IMAGE = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
 const sampleRecord = {
     identifier: "test-identifier",
     title: "sample title",
     tags: ["subject1", "subject2"],
     description: "sample abstract",
-    thumbnail: "img.jpg",
+    thumbnail: SAMPLE_IMAGE,
     boundingBox: {
         extent: [10.686,
             44.931,
@@ -40,7 +41,7 @@ const sampleRecord2 = {
     title: "sample title",
     tags: ["subject1", "subject2"],
     description: "sample abstract",
-    thumbnail: "img.jpg",
+    thumbnail: SAMPLE_IMAGE,
     boundingBox: {
         extent: [10.686,
             44.931,
@@ -62,7 +63,7 @@ const sampleRecord3 = {
     title: "sample title",
     tags: ["subject1", "subject2"],
     description: "sample abstract",
-    thumbnail: "img.jpg",
+    thumbnail: SAMPLE_IMAGE,
     boundingBox: {
         extent: [10.686,
             44.931,
@@ -91,6 +92,23 @@ const getCapRecord = assign({}, sampleRecord, {references: [{
     url: "http://wfs.sample.service:80/geoserver/workspace/layername/wfs?service=wfs&version=1.0.0&request=GetCapabilities"
 }
 ]});
+
+const longDescriptioRecord = {
+    identifier: "test-identifier",
+    tags: ["subject1", "subject2"],
+    description: "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam eaque ipsa, quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt, explicabo. Nemo enim ipsam voluptatem, quia voluptas sit, aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos, qui ratione voluptatem sequi nesciunt, neque porro quisquam est, qui dolorem ipsum, quia dolor sit, amet, consectetur, adipisci velit, sed quia non numquam eius modi tempora incidunt, ut labore et dolore magnam aliquam quaerat voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit, qui in ea voluptate velit esse, quam nihil molestiae consequatur, vel illum, qui dolorem eum fugiat, quo voluptas nulla pariatur? [33] At vero eos et accusamus et iusto odio dignissimos ducimus, qui blanditiis praesentium voluptatum deleniti atque corrupti, quos dolores et quas molestias excepturi sint, obcaecati cupiditate non provident, similique sunt in culpa, qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Et harum quidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi optio, cumque nihil impedit, quo minus id, quod maxime placeat, facere possimus, omnis voluptas assumenda est, omnis dolor repellendus. Temporibus autem quibusdam et aut officiis debitis aut rerum necessitatibus saepe eveniet, ut et voluptates repudiandae sint et molestiae non recusandae. Itaque earum rerum hic tenetur a sapiente delectus, ut aut reiciendis voluptatibus maiores alias consequatur aut perferendis doloribus asperiores repellat",
+    thumbnail: SAMPLE_IMAGE,
+    boundingBox: {
+        extent: [10.686, 44.931, 46.693, 12.54],
+        crs: "EPSG:4326"
+    },
+    references: [{
+        type: "OGC:WMS",
+        url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&",
+        SRS: [],
+        params: {name: "workspace:layername"}
+    }]
+};
 
 describe('This test for RecordItem', () => {
     beforeEach((done) => {
@@ -144,7 +162,7 @@ describe('This test for RecordItem', () => {
         expect(itemDom).toExist();
         expect(itemDom.className).toBe('record-item panel panel-default');
         let button = TestUtils.findRenderedDOMComponentWithTag(
-           item, 'button'
+            item, 'button'
         );
         expect(button).toExist();
         button.click();
@@ -235,6 +253,110 @@ describe('This test for RecordItem', () => {
         expect(actionsSpy.calls.length).toBe(1);
         expect(actionsSpy.calls[0].arguments.length).toBe(1);
         expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
+    });
+    it('check auth params to be removed (WMS)', () => {
+        const recordToClean = {
+            identifier: "test-identifier",
+            title: "sample title",
+            tags: ["subject1", "subject2"],
+            description: "sample abstract",
+            thumbnail: SAMPLE_IMAGE,
+            boundingBox: {
+                extent: [10.686,
+                    44.931,
+                    46.693,
+                    12.54],
+                crs: "EPSG:4326"
+
+            },
+            references: [{
+                type: "OGC:WMS",
+                url: "http://wms.sample.service:80/geoserver/wms?SERVICE=WMS&ms2-authkey=TEST&requiredParam=REQUIRED",
+                SRS: [],
+                params: { name: "workspace:layername" }
+            }]
+        };
+        let actions = {
+            onLayerAdd: () => {
+
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        const item = ReactDOM.render(<ReactItem
+            authkeyParamNames={["ms2-authkey"]}
+            record={recordToClean}
+            onLayerAdd={actions.onLayerAdd}
+            catalogURL="fakeURL"
+            catalogType="wms"
+        />, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        expect(itemDom.className).toBe('record-item panel panel-default');
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
+        expect(actionsSpy.calls[0].arguments[0].params).toExist();
+        expect(actionsSpy.calls[0].arguments[0].params.requiredParam).toBe("REQUIRED");
+        expect(actionsSpy.calls[0].arguments[0].params["ms2-authkey"]).toNotExist("auth param is passed in params list but it shouldn't");
+    });
+    it('check auth params to be removed (WMTS)', () => {
+        const recordToClean = {
+            identifier: "test-identifier",
+            title: "sample title",
+            tags: ["subject1", "subject2"],
+            description: "sample abstract",
+            thumbnail: SAMPLE_IMAGE,
+            boundingBox: {
+                extent: [10.686,
+                    44.931,
+                    46.693,
+                    12.54],
+                crs: "EPSG:4326"
+
+            },
+            references: [{
+                type: "OGC:WMTS",
+                url: "http://wms.sample.service:80/geoserver/gwc/service/wmts?ms2-authkey=TEST&requiredParam=REQUIRED",
+                SRS: ['EPSG:4326', 'EPSG:3857'],
+                params: { name: "workspace:layername" }
+            }]
+        };
+        let actions = {
+            onLayerAdd: () => {
+
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+        const item = ReactDOM.render(<ReactItem
+            authkeyParamNames={["ms2-authkey"]}
+            record={recordToClean}
+            onLayerAdd={actions.onLayerAdd}
+            catalogURL="fakeURL"
+            catalogType="wms"
+        />, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        expect(itemDom.className).toBe('record-item panel panel-default');
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments.length).toBe(1);
+        expect(actionsSpy.calls[0].arguments[0].catalogURL).toNotExist();
+        expect(actionsSpy.calls[0].arguments[0].params).toExist();
+        expect(actionsSpy.calls[0].arguments[0].params.requiredParam).toBe("REQUIRED");
+        expect(actionsSpy.calls[0].arguments[0].params["ms2-authkey"]).toNotExist("auth param is passed in params list but it shouldn't");
     });
 
     it('test create record item with no get capabilities links', () => {
@@ -331,7 +453,7 @@ describe('This test for RecordItem', () => {
         identifier: "test-identifier",
         tags: ["subject1", "subject2"],
         description: "sample abstract",
-        thumbnail: "img.jpg",
+        thumbnail: SAMPLE_IMAGE,
         boundingBox: {
             extent: [10.686, 44.931, 46.693, 12.54],
             crs: "EPSG:4326"
@@ -394,7 +516,7 @@ describe('This test for RecordItem', () => {
             title: "sample title",
             tags: ["subject1", "subject2"],
             description: "sample abstract",
-            thumbnail: "img.jpg",
+            thumbnail: SAMPLE_IMAGE,
             boundingBox: {
                 extent: [10.686,
                     44.931,
@@ -414,4 +536,74 @@ describe('This test for RecordItem', () => {
         expect(dangerText.length).toBe(1);
     });
 
+    it('hide/show thumbnail', () => {
+
+        let item = ReactDOM.render(<ReactItem record={longDescriptioRecord} hideThumbnail/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        let itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        let image = itemDom.getElementsByTagName('img');
+        expect(image.length).toBe(0);
+
+
+        item = ReactDOM.render(<ReactItem record={longDescriptioRecord} hideThumbnail={false}/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        image = itemDom.getElementsByTagName('img');
+        expect(image.length).toBe(1);
+
+    });
+
+    it('hide/show identifier', () => {
+
+        let item = ReactDOM.render(<ReactItem record={longDescriptioRecord} hideIdentifier/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        let itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        let identifier = itemDom.getElementsByTagName('h4');
+        expect(identifier.length).toBe(1);
+
+
+        item = ReactDOM.render(<ReactItem record={longDescriptioRecord} hideIdentifier={false}/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        identifier = itemDom.getElementsByTagName('h4');
+        expect(identifier.length).toBe(2);
+
+    });
+
+    it('hide/show description button', () => {
+        let item = ReactDOM.render(<ReactItem record={longDescriptioRecord} hideExpand={false}/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        let itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        let title = itemDom.getElementsByClassName('record-item-title');
+        expect(title[0].children.length).toBe(2);
+
+        item = ReactDOM.render(<ReactItem record={longDescriptioRecord} hideExpand/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        title = itemDom.getElementsByClassName('record-item-title');
+        expect(title[0].children.length).toBe(1);
+
+    });
+
+    it('show description button but short description', () => {
+        let item = ReactDOM.render(<ReactItem record={sampleRecord} hideExpand={false}/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        let itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        let title = itemDom.getElementsByClassName('record-item-title');
+        expect(title[0].children.length).toBe(1);
+    });
 });

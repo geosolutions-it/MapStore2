@@ -16,7 +16,7 @@ const I18N = require('../components/I18N/I18N');
 const {Glyphicon} = require('react-bootstrap');
 const {createSelector} = require('reselect');
 const {tutorialSelector} = require('../selectors/tutorial');
-const {closeTutorialEpic, switchTutorialEpic} = require('../epics/tutorial');
+const {closeTutorialEpic, switchTutorialEpic, getActionsFromStepEpic} = require('../epics/tutorial');
 
 /**
  * Tutorial plugin. Enables the steps of tutorial.
@@ -86,6 +86,35 @@ const {closeTutorialEpic, switchTutorialEpic} = require('../epics/tutorial');
  *   ...
  *  }
  * ...
+ * // translation file example with actions
+ * // action param could be an object or array of objects
+ * // action type are triggered on tour actions and they could be `start`, `next` and `back`
+ * ...
+ *  "tutorial": {
+ *   ...
+ *   "myIntroTranslation": {
+ *    "title": "My intro title",
+ *    "text": "My intro description",
+ *    "action": { start: { type: 'MY_START_ACTION' }}
+ *   },
+ *    "myTranslation": {
+ *    "title": "My first step title",
+ *    "text": "My first step description",
+ *    "action": { back: { type: 'MY_BACK_ACTION' }}
+ *   },
+ *   "mySecondStepTranslation": {
+ *    "title": "My second step title",
+ *    "text": "My second step description",
+ *    "action": { next: { type: 'MY_NEXT_ACTION' }}
+ *   },
+ *   "myTranslationHTML": {
+ *    "title": "<div style="color:blue;">My html step title</div>",
+ *    "text": "<div style="color:red;">My html step description</div>",
+ *    "action": { next: [{ type: 'MY_FIRST_ACTION' }, { type: 'MY_SECOND_ACTION' }]}
+ *   }
+ *   ...
+ *  }
+ * ...
  */
 
 const tutorialPluginSelector = createSelector([tutorialSelector],
@@ -124,7 +153,7 @@ module.exports = {
     TutorialPlugin: assign(Tutorial, {
         BurgerMenu: {
             name: 'tutorial',
-            position: 1000,
+            position: 1200,
             text: <I18N.Message msgId="tutorial.title"/>,
             icon: <Glyphicon glyph="book"/>,
             action: toggleTutorial,
@@ -137,6 +166,7 @@ module.exports = {
     },
     epics: {
         closeTutorialEpic,
-        switchTutorialEpic
+        switchTutorialEpic,
+        getActionsFromStepEpic
     }
 };

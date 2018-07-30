@@ -19,20 +19,23 @@ const TOCItemsSettings = require('../components/TOC/TOCItemsSettings');
 const defaultSettingsTabs = require('./tocitemssettings/defaultSettingsTabs');
 const LayersUtils = require('../utils/LayersUtils');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+const {isAdminUserSelector} = require('../selectors/security');
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,
     layersSelector,
     groupsSelector,
     currentLocaleSelector,
-    state => mapLayoutValuesSelector(state, {height: true})
-], (settings, layers, groups, currentLocale, dockStyle) => ({
+    state => mapLayoutValuesSelector(state, {height: true}),
+    isAdminUserSelector
+], (settings, layers, groups, currentLocale, dockStyle, isAdmin) => ({
     settings,
     element: settings.nodeType === 'layers' && isArray(layers) && head(layers.filter(layer => layer.id === settings.node)) ||
     settings.nodeType === 'groups' && isArray(groups) && head(groups.filter(group => group.id === settings.node)) || {},
     groups,
     currentLocale,
-    dockStyle
+    dockStyle,
+    isAdmin
 }));
 
 /**

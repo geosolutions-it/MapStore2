@@ -4,7 +4,7 @@
         "Language": "Language",
         "msgId0": "{name} took {numPhotos, plural, =0 {no photos} =1 {one photo} other {# photos}} on {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
-        "about_title": "About this app...",
+        "about_title": "About",
         "aboutLbl": "About",
         "about_p0-0": "MapStore is a framework to build web mapping applications using standard mapping libraries, such as",
         "about_p0-1": "and",
@@ -60,7 +60,7 @@
             "deleteLayerMessage": "Do you really want to delete this Layer?",
             "confirmDelete": "Are you sure?",
             "featureTypeError": "Cannot load layer attributes",
-            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid", 
+            "featureTypeErrorInvalidJSON": "Cannot load layer attributes. Response is not valid",
             "elevation": "Elevation",
             "titleTranslations": "Title translations",
             "groupProperties": "Group properties",
@@ -83,7 +83,6 @@
             "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
             "templatePreview": "Template preview"
-
         },
         "notification": {
             "update": "Update",
@@ -125,6 +124,7 @@
         "options": "Options",
         "settings": "Settings",
         "help": "Help",
+        "docs": "Docs",
         "gohome": "Go home",
         "back": "Back to the Importer",
         "printbutton": "Print",
@@ -404,6 +404,41 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Error in metadata search"
                 }
+            },
+            "thematic": {
+                "classification_field": "Classification Field:",
+                "classification_method": "Classification Method:",
+                "classification_aggregate": "Aggregate Function:",
+                "classification_colors": "Color Ramp:",
+                "classification_intervals": "Intervals:",
+                "preview": "Preview",
+                "remove_thematic": "Back to Simple Style",
+                "values": {
+                    "equalInterval": "Equal Intervals",
+                    "quantile": "Quantile",
+                    "jenks": "Natural Breaks",
+                    "sum": "Sum",
+                    "avg": "Average",
+                    "count": "Count",
+                    "min": "Min",
+                    "max": "Max"
+                },
+                "configuration": "Configuration",
+                "apply": "Apply classification",
+                "restore": "Reset customizations",
+                "go_to_cfg": "Configure...",
+                "go_to_thema": "Use this configuration",
+                "cfgError": "Error in configuration JSON",
+                "classify": "Classify",
+                "remove": "Remove classification",
+                "data_panel": "Data",
+                "classification_stroke": "Stroke",
+                "classification_error": "Error calling the classification service: {message}",
+                "fields_error": "Error loading fields list: {message}",
+                "interval_limit": "Intervals should be a number between {min} and {max}",
+                "invalid_object": "Invalid service response",
+                "invalid_geometry": "Geometry type is not valid, not a point, line or polygon",
+                "invalid_classes": "Max must be greater than min in every class"
             }
         },
         "print":{
@@ -911,6 +946,8 @@
             "serviceTitle": "Title",
             "serviceTitlePlaceholder": "type a title",
             "missingReference": "Missing OGC reference metadata",
+            "showDescription": "Show full description",
+            "hideDescription": "Hide full description",
             "notification": {
                 "warningAddCatalogService": "Insert a valid url and title",
                 "addCatalogService": "Service added correctly",
@@ -1083,6 +1120,7 @@
                 "placeholders": {
                     "default": "Search...",
                     "string": "Type text to filter...",
+                    "date": "Type date to filter...",
                     "number": "Type number or expression..."
                 },
                 "tooltips": {
@@ -1184,7 +1222,7 @@
                     "title": "Widget"
                 },
                 "wizard": {
-                    "backToTypeSelection": "Back to type selection",
+                    "backToTypeSelection": "Back to chart type selection",
                     "backToWidgetTypeSelection": "Back to widget type selection",
                     "backToFeatureGrid": "Back to the feature grid",
                     "backToLayerSelection": "Back to layer selection",
@@ -1199,7 +1237,7 @@
                     "configureTableOptions": "Configure table options",
                     "resetColumnsSizes": "Reset all changes to the column sizes",
                     "updateWidget": "Update the widget",
-                    "addToTheMap": "Add the widget to the map",
+                    "addTheWidget": "Add the widget",
                     "titlePlaceholder": "Insert title...",
                     "textPlaceholder": "Insert text...",
                     "useThisMap": "Use this map",
@@ -1461,7 +1499,8 @@
             "cancelButton": "Cancel",
             "cqlRead": "CQL Filter Read Rules",
             "cqlWrite": "CQL Filter Write Rules",
-            "missingconfig": "Rules manager misses the configuration. Access denied!"
+            "missingconfig": "Rules manager misses the configuration. Access denied!",
+            "selectworkspace": "You need to select the workspace to enable advanced options"
         },
         "tutorial": {
             "title": "Tutorial",
@@ -1551,6 +1590,46 @@
             "cesiumNavigation": {
                 "title": "Navigation",
                 "text": "Here you can find the zoom in and zoom out buttons"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Overview of dashboard functionalities"
+            },
+            "dashboardNav": {
+                "title": "Navigation Bar",
+                "text": "Here you can find language selector, login, homepage link and options menu"
+            },
+            "dashboardContainer": {
+                "title": "Dashboard",
+                "text": "<p>A Dashboard in MapStore2 provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Add Widget",
+                "text": "To add a widget to the dashboard, you can click on the + button"
+            },
+            "dashboardBuilder": {
+                "title": "Create a new widget",
+                "text": "You can select which type of widget you want and then add to the dashboard selecting one of the items in the list"
+            },
+            "dashboardAddChart": {
+                "title": "Chart Widget",
+                "text": "<p>It's a widget that show and aggregate data into pie, line or bar charts.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Select chart type</li><li>Configure chart data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddText": {
+                "title": "Text Widget",
+                "text": "<p>Add your own text to the dashboard.</p><p>Steps:</p><p><ul><li>Edit text in editor</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddTable": {
+                "title": "Table Widget",
+                "text": "<p>Add an attribute table to the dashboard that contains data from a selected vector layer. You can also filter data to customize your table.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure table data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Counter Widget",
+                "text": "<p>Add a new counter to the dashboard. Counter will show numeric value aggregationg data from a selected vector layer.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure counter data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddMap": {
+                "title": "Map Widget",
+                "text": "<p>Add a new interactive map to the dashboard. You can add more than one map with the ability to connect other widgets to them. After saving the first map, the legend widget will be added to the list. Legend Widget will show a legend related to the connected map.</p><p>Steps:</p><p><ul><li>Select a map</li><li>Improve map by adding new layers</li><li>Save and add to dashboard</li></ul></p>"
             }
         }
     }

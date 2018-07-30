@@ -198,7 +198,8 @@ class LayerTree extends React.Component {
         hideLayerMetadata: PropTypes.func,
         activateAddLayerButton: PropTypes.bool,
         catalogActive: PropTypes.bool,
-        refreshLayerVersion: PropTypes.func
+        refreshLayerVersion: PropTypes.func,
+        hideOpacityTooltip: PropTypes.bool
     };
 
     static contextTypes = {
@@ -312,6 +313,7 @@ class LayerTree extends React.Component {
                 selectedNodes={this.props.selectedNodes}
                 filterText={this.props.filterText}
                 onUpdateNode={this.props.updateNode}
+                hideOpacityTooltip={this.props.hideOpacityTooltip}
                 />);
     }
 
@@ -454,6 +456,7 @@ class LayerTree extends React.Component {
  * @prop {boolean} cfg.activateAddLayerButton: activate a button to open the catalog, default `false`
  * @prop {object} cfg.layerOptions: options to pass to the layer.
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
+ * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
  * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
  * For instance you can pass some styling props to the legend.
  * this example is to make the legend scrollable horizontally
@@ -468,7 +471,28 @@ class LayerTree extends React.Component {
  *    }
  *   }
  *  }
-```
+ * ```
+ * Another layerOptionS entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
+ * For the moment only indicators of type `dimension` are supported.
+ * example :
+ * ```
+ *  "indicators: [{
+ *      "key": "dimension", // key: required id for the entry to render
+ *      "type": "dimension", // type: only one supported is dimension
+ *      "glyph": "calendar", // glyph to use
+ *      "props": { // props to pass to the indicator
+ *          "style": {
+ *               "color": "#dddddd",
+ *               "float": "right"
+ *          },
+ *          "tooltip": "dateFilter.supportedDateFilter", // tooltip (can be also a localized msgId)
+ *          "placement": "bottom" // tooltip position
+ *      },
+ *      "condition": { // condition (lodash style) to satisfy ( for type dimension, the condition is to match at least one of the "dimensions" )
+ *          "name": "time"
+ *      }
+ *  }]
+ * ```
  */
 const TOCPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,

@@ -4,7 +4,7 @@
         "Language": "Lingua",
         "msgId0": "{name} ha scattato {numPhotos, plural, =0 {nessuna foto} other {# foto}} il {takenDate, date, long}.",
         "htmlTest": "{name} {surname}",
-        "about_title": "Riguardo a questa app...",
+        "about_title": "About",
         "aboutLbl": "Info",
         "about_p0-0": "MapStore un framework per realizzare applicazioni di web mapping usando librerie di mapping standard, come",
         "about_p0-1": "e",
@@ -124,6 +124,7 @@
         "options": "Opzioni",
         "settings": "Impostazioni",
         "help": "Aiuto",
+        "docs": "Documentazione",
         "gohome": "Torna alla home",
         "back": "Torna all'importer",
         "printbutton": "Stampa",
@@ -403,6 +404,41 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Errore nella ricerca dei metadati"
                 }
+            },
+            "thematic": {
+                "classification_field": "Campo di classificazione:",
+                "classification_method": "Metodo di classificazione:",
+                "classification_aggregate": "Funzione aggregata:",
+                "classification_colors": "Colori:",
+                "classification_intervals": "Intervalli:",
+                "preview": "Anteprima",
+                "remove_thematic": "Stile semplice",
+                "values": {
+                    "equalInterval": "Intervalli uguali",
+                    "quantile": "Quantile",
+                    "jenks": "Interruzioni naturali",
+                    "sum": "Somma",
+                    "avg": "Media",
+                    "count": "Totale",
+                    "min": "Min",
+                    "max": "Max"
+                },
+                "configuration": "Configurazione",
+                "apply": "Applicare la classificazione",
+                "restore": "Annulla le personalizzazioni",
+                "go_to_cfg": "Configura ...",
+                "go_to_thema": "Usa questa configurazione",
+                "cfgError": "Errore nella configurazione JSON",
+                "classify": "Classificazione",
+                "remove": "Rimuovi la classificazione",
+                "data_panel": "Dati",
+                "classification_stroke": "Bordo",
+                "classification_error": "Errore durante la chiamata al servizio di classificazione: {message}",
+                "fields_error": "Errore durante il caricamento dell'elenco dei campi: {message}",
+                "interval_limit": "Inserisci un valore tra {min} e {max}",
+                "invalid_object": "Risposta del servizio non valida",
+                "invalid_geometry": "Il tipo di geometria non è valido, deve essere un punto, una linea o un poligono",
+                "invalid_classes": "Il valore massimo di ogni classe deve essere maggiore del relativo minimo"
             }
         },
         "print":{
@@ -910,6 +946,8 @@
             "serviceTitle": "Titolo",
             "serviceTitlePlaceholder": "inserisci un titolo",
             "missingReference": "Metadati di riferimento OGC mancanti",
+            "showDescription": "Mostra descrizione completa",
+            "hideDescription": "Nascondi descrizione completa",
             "notification": {
                 "warningAddCatalogService": "Inserisci un url e titolo validi.",
                 "addCatalogService": "Servizio aggiunto corretamente.",
@@ -1082,6 +1120,7 @@
                 "placeholders": {
                     "default": "Cerca...",
                     "string": "Digita testo da cercare...",
+                    "date": "Digita data da cercare...",
                     "number": "Digita numero o espressione..."
                 },
                 "tooltips": {
@@ -1183,7 +1222,7 @@
                     "title": "Widget"
                 },
                 "wizard": {
-                    "backToTypeSelection": "Torna alla selezione del tipo",
+                    "backToTypeSelection": "Torna alla selezione del tipo di grafico",
                     "backToWidgetTypeSelection": "Torna alla selezione del tipo di widget",
                     "backToFeatureGrid": "Torna alla tabella degli attributi",
                     "backToLayerSelection": "Torna alla selezione del livello",
@@ -1198,7 +1237,7 @@
                     "configureTableOptions": "Configura le opzioni della tabella",
                     "resetColumnsSizes": "Reimposta larghezza automatica delle colonne",
                     "updateWidget": "Aggiorna il widget",
-                    "addToTheMap": "Aggiungi il widget alla mappa",
+                    "addTheWidget": "Aggiungi il widget",
                     "titlePlaceholder": "Inserisci il titolo...",
                     "textPlaceholder": "Inserisci il testo...",
                     "useThisMap": "Usa questa mappa",
@@ -1380,7 +1419,7 @@
             "resetconstraints": "Resetta Vincoli",
             "constraintsmsg": "Cambinado grant, workspace o layer, i dettagli saranno eliminati. Sei sicuro di volerlo fare?",
             "defstyle": "Stile Predefinito",
-            "avstyle": "Stili Disponibile",
+            "avstyle": "Stili Disponibili",
             "clearbtn": "Rimuovi Tutti",
             "selectbtn": "Seleziona Tutti",
             "placeholders": {
@@ -1459,7 +1498,8 @@
             "cancelButton": "Annulla",
             "cqlRead": "Filtro CQL lettura",
             "cqlWrite": "Filtero CQL scrittura",
-            "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!"
+            "missingconfig": "Manca la configurazione del Rules Manager. Accesso negato!",
+            "selectworkspace": "È necessario selezionare lo spazio di lavoro per abilitare le opzioni avanzate."
         },
             "tutorial": {
                 "title": "Tutorial",
@@ -1549,6 +1589,46 @@
                 "cesiumNavigation": {
                     "title": "Navigazione",
                     "text": "Qui puoi trovare i pulsanti per lo zoom in e out"
+                },
+                "dashboardIntro": {
+                    "title": "Dashboard Tutorial",
+                    "text": "Panoramica delle funzionalità della dashboard"
+                },
+                "dashboardNav": {
+                    "title": "Barra di navigazione",
+                    "text": "Qui puoi trovare il selettore della lingua, il login, il link della homepage e il menu delle opzioni"
+                },
+                "dashboardContainer": {
+                    "title": "Cruscotto",
+                    "text": "<p> Una Dashboard in MapStore2 fornisce un insieme di informazioni raccolte in modo appropriato per mostrare i dati aggregati in un'unica visualizzazione. I dati geospaziali visualizzati in una mappa possono essere affiancati alle relative tabelle degli attributi, grafici ed altro, allo scopo di connettere diversi tipi di informazioni, mostrare dettagli statistici e descrizioni testuali relative ad un contesto specifico. </p> <p> Tutti gli utenti possono visualizzare e interagire con le dashboard pubblicate, ma solo gli utenti autorizzati a modificare possono aggiungere, organizzare, ridimensionare o eliminare tutti i widget all'interno di una dashboard </p>"
+                },
+                "dashboardAddWidget": {
+                    "title": "Aggiungi widget",
+                    "text": "Per aggiungere un widget alla dashboard, puoi cliccare sul pulsante +"
+                },
+                "dashboardBuilder": {
+                    "title": "Crea un nuovo widget",
+                    "text": "È possibile selezionare il tipo di widget desiderato e quindi aggiungerlo alla dashboard selezionando uno degli elementi nell'elenco"
+                },
+                "dashboardAddChart": {
+                    "title": "Widget Grafico",
+                    "text": "<p> È un widget che mostra e aggrega i dati in grafici a torta, linea o a istogramma. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Seleziona il tipo di grafico </li> <li> Configura i dati del grafico </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+                },
+                "dashboardAddText": {
+                    "title": "Widget Testo",
+                    "text": "<p> Aggiungi un testo alla dashboard. </p> <p> Passaggi: </p> <p> <ul> <li> Modifica il testo nell'editor </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+                },
+                "dashboardAddTable": {
+                    "title": "Widget Tabella ",
+                    "text": "<p> Aggiungi una tabella di attributi alla dashboard che contiene dati di un livello vettoriale selezionato. Puoi anche filtrare i dati per personalizzare la tabella. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Configura dati tabella </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+                },
+                "dashboardAddCounter": {
+                    "title": "Widget Contatore",
+                    "text": "<p> Aggiungi un nuovo contatore alla dashboard. Il contatore mostrerà il valore numerico aggregando i dati da un livello vettoriale selezionato. </p> <p> Passi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Configura i dati del contatore </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+                },
+                "dashboardAddMap": {
+                    "title": "Widget Mappa",
+                    "text": "<p> Aggiungi una nuova mappa interattiva alla dashboard. È possibile aggiungere più di una mappa con la possibilità di collegare ad esse altri widget. Dopo aver salvato la prima mappa, il widget legenda verrà aggiunto all'elenco. Legend Widget mostrerà una legenda relativa alla mappa connessa. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona una mappa </li> <li> Migliora la mappa aggiungendo nuovi livelli </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
                 }
             }
     }

@@ -10,31 +10,8 @@ var Layers = require('../../../../utils/openlayers/Layers');
 var ol = require('openlayers');
 var TileProvider = require('../../../../utils/TileConfigProvider');
 var CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
+const { getUrls, template } = require('../../../../utils/TileProviderUtils');
 
-
-function template(str, data) {
-
-    return str.replace(/(?!(\{?[zyx]?\}))\{*([\w_]+)*\}/g, function() {
-        let st = arguments[0];
-        let key = arguments[1] ? arguments[1] : arguments[2];
-        let value = data[key];
-
-        if (value === undefined) {
-            throw new Error('No value provided for variable ' + st);
-
-        } else if (typeof value === 'function') {
-            value = value(data);
-        }
-        return value;
-    });
-}
-function getUrls(opt) {
-    let url = opt.url;
-    if (opt.subdomains) {
-        return opt.subdomains.map( c => template(url.replace("{s}", c), opt));
-    }
-    return ['a', 'b', 'c'].map( c => template(url.replace("{s}", c), opt));
-}
 /*eslint-disable */
 function lBoundsToOlExtent(bounds, destPrj){
     var [ [ miny, minx], [ maxy, maxx ] ] = bounds;

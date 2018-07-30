@@ -31,9 +31,10 @@ const {getLocalizedProp} = require('../utils/LocaleUtils');
  * @memberof plugins
  * @name FloatingLegend
  * @class
- * @prop {bool} cfg.disableOpacitySlider disable and hide opacity slider
- * @prop {bool} expandedOnMount show expanded legend when component did mount
- * @prop {number} width width dimension of legend
+ * @prop {boolean} cfg.disableOpacitySlider disable and hide opacity slider
+ * @prop {boolean} cfg.expandedOnMount show expanded legend when component did mount
+ * @prop {number} cfg.width width dimension of legend
+ * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
  */
 
 class FloatingLegendComponent extends React.Component {

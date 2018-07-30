@@ -56,7 +56,6 @@ class SpatialFilter extends React.Component {
             onChangeDrawingStatus: () => {},
             onRemoveSpatialSelection: () => {},
             onShowSpatialSelectionDetails: () => {},
-            onEndDrawing: () => {},
             onSelectViewportSpatialMethod: () => {},
             onChangeRegion: () => {},
             onChangeDwithinValue: () => {},
@@ -269,15 +268,15 @@ class SpatialFilter extends React.Component {
                 ? (<span><div className="m-label m-caption text-center"><I18N.Message msgId={"queryform.spatialfilter.draw_start_label"}/></div></span>)
                 : null;
         }
-
+        const selectedMethod = this.getMethodFromId(this.props.spatialField.method);
         const detailsPanel = this.props.showDetailsPanel ?
             (<GeometryDetails
                 useMapProjection={this.props.useMapProjection}
+                enableGeodesic={selectedMethod && selectedMethod.geodesic}
                 geometry={this.props.spatialField.geometry}
                 type={this.props.spatialField.method}
                 onShowPanel={this.props.actions.onShowSpatialSelectionDetails}
                 onChangeDrawingStatus={this.changeDrawingStatus}
-                onEndDrawing={this.props.actions.onEndDrawing}
                 zoom={this.props.zoom}/>)
          :
             <span/>
@@ -333,6 +332,7 @@ class SpatialFilter extends React.Component {
             }
         })[0].id;
 
+        const selectedMethod = this.getMethodFromId(method);
         this.props.actions.onSelectSpatialMethod(method, name);
 
         if (this.getMethodFromId(method).type !== "wfsGeocoder") {
@@ -346,7 +346,7 @@ class SpatialFilter extends React.Component {
                     break;
                 }
                 default: {
-                    this.changeDrawingStatus('start', method, "queryform", [], {stopAfterDrawing: true});
+                    this.changeDrawingStatus('start', method, "queryform", [], {geodesic: selectedMethod && selectedMethod.geodesic, stopAfterDrawing: true});
                 }
             }
         } else {

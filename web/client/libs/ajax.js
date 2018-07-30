@@ -42,9 +42,22 @@ function addAuthenticationToAxios(axiosConfig) {
     const rule = SecurityUtils.getAuthenticationRule(axiosConfig.url);
 
     switch (rule && rule.method) {
+        case 'browserWithCredentials':
+        {
+            axiosConfig.withCredentials = true;
+            return axiosConfig;
+        }
         case 'authkey':
         {
             const token = SecurityUtils.getToken();
+            if (!token) {
+                return axiosConfig;
+            }
+            addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
+            return axiosConfig;
+        }
+        case 'test': {
+            const token = rule ? rule.token : "";
             if (!token) {
                 return axiosConfig;
             }

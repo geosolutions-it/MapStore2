@@ -37,7 +37,7 @@ const getSaveTooltipId = (step, {id} = {}) => {
     if (id) {
         return "widgets.builder.wizard.updateWidget";
     }
-    return "widgets.builder.wizard.addToTheMap";
+    return "widgets.builder.wizard.addTheWidget";
 };
 module.exports = ({
     step = 0, editorData = {}, valid, setPage = () => {}, onFinish = () => {},

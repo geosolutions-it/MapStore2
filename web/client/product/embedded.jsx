@@ -29,7 +29,8 @@ const startApp = () => {
     const appStore = require('../stores/StandardStore').bind(null, initialState, {
         mode: (state = 'embedded') => state,
         version: require('../reducers/version'),
-        maplayout: require('../reducers/maplayout')
+        maplayout: require('../reducers/maplayout'),
+        searchconfig: require('../reducers/searchconfig')
     }, {updateMapLayoutEpic});
 
     const appConfig = {
