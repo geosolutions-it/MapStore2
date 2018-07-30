@@ -1305,10 +1305,10 @@
             },
             "aggregationAttribute": {
                 "line": "Y-Attribut",
-                "pie": "Wert",
+                "pie": "Benutzen",
                 "bar": "Y-Attribut",
                 "gauge": "Wert",
-                "counter": "Wert",
+                "counter": "Benutzen",
                 "default": "Wert"
             },
             "aggregateFunction": {
