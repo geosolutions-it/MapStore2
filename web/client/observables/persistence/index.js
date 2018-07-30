@@ -11,14 +11,15 @@ const ApiProviders = {
 };
 /**
  * MapStore Persistence layer.
- * To persiste resources on other than geostore backend, just create an api provider implementation that has four methods: create, get, update and delete
- * By default persistence uses geostrore implementation. It's possible to select the api to be used by settings the persistenceApi properties in localConfig
- * or by manually setting by the setApi method. LocalConfig takes precedence.
+ * By default MapStore persists resources on geostrore. You add a persistence provider implementing the CRUD interface (createResource, getResource, updateResource and deleteResource)
+ * in an object and adding it to the API providers calling `addApi`. 
+ * Then you can select your provider by settings the  `persistenceApi` property in `localConfig.son`
+ * or by programmatically calling `setApi` method. LocalConfig takes precedence.
  */
 const Persistence = {
     api: "geostore",
     /**
-    * Add a new api implementation
+    * Add a new API implementation
     * @param {string} name the key of the added api implementation
     * @param {object} api the api implementation
     */
@@ -26,7 +27,7 @@ const Persistence = {
         ApiProviders[name] = api;
     },
     /**
-    * Add a new api implementation
+    * Set the current API
     * @param {string} name the key of the api implementation to be used
     */
     setApi: (name = "geostore") => {
