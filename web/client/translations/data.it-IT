@@ -1308,11 +1308,11 @@
             },
             "aggregationAttribute": {
                 "line": "Attributo Y",
-                "pie": "Uso",
+                "pie": "Usa",
                 "bar": "Attributo Y",
-                "gauge": "Uso",
-                "counter": "Uso",
-                "default": "Uso"
+                "gauge": "Usa",
+                "counter": "Usa",
+                "default": "Usa"
             },
             "aggregateFunction": {
                 "line": "Operazione",
