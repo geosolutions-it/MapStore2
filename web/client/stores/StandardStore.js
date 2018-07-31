@@ -32,9 +32,11 @@ const history = routerCreateHistory();
 const reduxRouterMiddleware = routerMiddleware(history);
 const layersEpics = require('../epics/layers');
 const controlsEpics = require('../epics/controls');
+const timeManagerEpics = require('../epics/timemanager');
 const standardEpics = {
     ...layersEpics,
-    ...controlsEpics
+    ...controlsEpics,
+    ...timeManagerEpics
 };
 
 module.exports = (initialState = {defaultState: {}, mobile: {}}, appReducers = {}, appEpics = {}, plugins = {}, storeOpts = {}) => {

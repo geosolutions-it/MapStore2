@@ -23,9 +23,26 @@ const getStaticTimeData = state => layersSelector(state).reduce((timeDataMap, la
     }
 }, []);
 const getLayersWithTimeData = state => layersSelector(state).filter(l => getLayerTimeData(l));
-const currentTimeSelector = state => get('timemanager.currentTime', state);
+const currentTimeSelector = state => get(state, 'timemanager.currentTime');
+const getTimeData = getStaticTimeData; // TODO: support other times types;
+const timeSequenceSelector = state => {
+    // TODO: support remote retrieval of nearest time snap.
+    const data = getTimeData(state);
+    // get times sorted by date
+    const times = Object.keys(data)
+        .reduce((acc, cur) =>
+            [
+                ...acc,
+                ...data[cur] && data[cur].values || []
+            ],
+            [])
+        .sort() || [];
+    return times;
+};
 module.exports = {
+    timeSequenceSelector,
     currentTimeSelector,
     getLayersWithTimeData,
-    getTimeData: getStaticTimeData
+    getTimeData
+
 };
