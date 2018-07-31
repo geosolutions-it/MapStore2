@@ -1196,6 +1196,9 @@
             },
             "chartOptionsTitle": "Podaci grafikona",
             "widgetOptionsTitle": "Informacije widgeta",
+            "placeHolder":{
+            "default":"Select attribute"
+            },
             "groupByAttributes": {
                 "line": "X atribut",
                 "pie": "Grupiraj po",
@@ -1208,9 +1211,9 @@
                 "line": "Y atribut",
                 "pie": "Use",
                 "bar": "Y atribut",
-                "gauge": "Vrijednost",
+                "gauge": "Use",
                 "counter": "Use",
-                "default": "Vrijednost"
+                "default": "Use"
             },
             "aggregateFunction": {
                 "line": "Operacija",

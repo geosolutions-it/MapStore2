@@ -1295,6 +1295,9 @@
             },
             "chartOptionsTitle": "Configurar Datos",
             "widgetOptionsTitle": "Configurar Información de widget",
+            "placeHolder":{
+            "default":"Seleccionar atributo"
+            },
             "groupByAttributes": {
                 "line": "Atributo X",
                 "pie": "Agrupar por",
@@ -1307,9 +1310,9 @@
                 "line": "Atributo Y",
                 "pie": "Utilizar",
                 "bar": "Atributo Y",
-                "gauge": "Valor",
+                "gauge": "Utilizar",
                 "counter": "Utilizar",
-                "default": "Valor"
+                "default": "Utilizar"
             },
             "aggregateFunction": {
                 "line": "Operación",

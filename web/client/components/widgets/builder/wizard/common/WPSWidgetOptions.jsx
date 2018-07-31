@@ -47,6 +47,8 @@ const getColorRangeItems = (type) => {
     return COLORS;
 };
 const getLabelMessageId = (field, data = {}) => `widgets.${field}.${data.type || data.widgetType || "default"}`;
+const placeHolder = <Message msgId={getLabelMessageId("placeHolder")} />;
+
 module.exports = ({
         data = { options: {} },
         onChange = () => { },
@@ -75,7 +77,7 @@ module.exports = ({
               <Select
                   value={data.options && data.options.groupByAttributes}
                   options={options}
-                  placeholder={'Select attribute'}
+                  placeholder={placeHolder}
                   onChange={(val) => {
                       onChange("options.groupByAttributes", val && val.value);
                   }}
@@ -90,7 +92,7 @@ module.exports = ({
               <Select
                   value={data.options && data.options.aggregationAttribute}
                   options={options}
-                  placeholder={'Select attribute'}
+                  placeholder={placeHolder}
                   onChange={(val) => {
                       onChange("options.aggregationAttribute", val && val.value);
                   }}
@@ -105,7 +107,7 @@ module.exports = ({
               <Select
                   value={data.options && data.options.aggregateFunction}
                   options={aggregationOptions}
-                  placeholder={'Select attribute'}
+                  placeholder={placeHolder}
                   onChange={(val) => {
                       onChange("options.aggregateFunction", val && val.value);
                   }}
