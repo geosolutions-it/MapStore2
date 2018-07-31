@@ -12,12 +12,14 @@ const projUtils = {
     */
     addProjections: function(code, extent, worldExtent) {
         const ol = window.ol;
-        ol.proj.addProjection(new ol.proj.Projection({
-            code,
-            extent,
-            worldExtent
-            })
-        );
+        if (!ol.proj.get(code)) {
+            ol.proj.addProjection(new ol.proj.Projection({
+                    code,
+                    extent,
+                    worldExtent
+                })
+            );
+        }
     }
 };
 
