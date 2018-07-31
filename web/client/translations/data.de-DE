@@ -1295,6 +1295,9 @@
             },
             "chartOptionsTitle": "Daten konfigurieren",
             "widgetOptionsTitle": "Widget-Informationen konfigurieren",
+            "placeHolder":{
+                "default":"Wählen Sie Attribut"
+            },
             "groupByAttributes": {
                 "line": "X-Attribut",
                 "pie": "Gruppiere nach",
@@ -1305,11 +1308,11 @@
             },
             "aggregationAttribute": {
                 "line": "Y-Attribut",
-                "pie": "Wert",
+                "pie": "Benutzen",
                 "bar": "Y-Attribut",
-                "gauge": "Wert",
-                "counter": "Wert",
-                "default": "Wert"
+                "gauge": "Benutzen",
+                "counter": "Benutzen",
+                "default": "Benutzen"
             },
             "aggregateFunction": {
                 "line": "Betrieb",
