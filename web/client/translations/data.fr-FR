@@ -25,7 +25,7 @@
         "errorTitleDefault": "Erreur",
         "errorDefault": "Une erreur est survenue",
         "pageInfoShowMore": "Résultats {count} de {total}",
-        "showMore": "Montre plus...",
+        "showMore": "Montrer plus...",
         "version": {
             "label": "Version"
         },
