@@ -1062,7 +1062,7 @@
             "chartOptionsTitle": "Chart",
             "widgetOptionsTitle": "Widget Info",
             "placeHolder":{
-            "default":"Select attribute"
+                "default":"Select attribute"
             },
             "groupByAttributes": {
                 "line": "X Attribute",

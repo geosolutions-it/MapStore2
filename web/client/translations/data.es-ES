@@ -1296,7 +1296,7 @@
             "chartOptionsTitle": "Configurar Datos",
             "widgetOptionsTitle": "Configurar Información de widget",
             "placeHolder":{
-            "default":"Seleccionar atributo"
+                "default":"Seleccionar atributo"
             },
             "groupByAttributes": {
                 "line": "Atributo X",

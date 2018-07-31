@@ -999,7 +999,7 @@
             "chartOptionsTitle": "Données",
             "widgetOptionsTitle": "Info sur le widget",
             "placeHolder":{
-            "default":"Select attribute"
+                "default":"Select attribute"
             },
             "groupByAttributes": {
                 "line": "Attributs X",

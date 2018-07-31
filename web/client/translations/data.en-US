@@ -1296,10 +1296,7 @@
             "chartOptionsTitle": "Configure data",
             "widgetOptionsTitle": "Configure Widget Info",
             "placeHolder":{
-            "default":"Select attribute"
-            },
-            "placeHolder":{
-            "default":"Select attribute"
+                "default":"Select attribute"
             },
             "groupByAttributes": {
                 "line": "X Attribute",

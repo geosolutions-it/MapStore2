@@ -1197,7 +1197,7 @@
             "chartOptionsTitle": "Podaci grafikona",
             "widgetOptionsTitle": "Informacije widgeta",
             "placeHolder":{
-            "default":"Select attribute"
+                "default":"Select attribute"
             },
             "groupByAttributes": {
                 "line": "X atribut",

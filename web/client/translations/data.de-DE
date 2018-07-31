@@ -1296,7 +1296,7 @@
             "chartOptionsTitle": "Daten konfigurieren",
             "widgetOptionsTitle": "Widget-Informationen konfigurieren",
             "placeHolder":{
-            "default":"Wählen Sie Attribut"
+                "default":"Wählen Sie Attribut"
             },
             "groupByAttributes": {
                 "line": "X-Attribut",
