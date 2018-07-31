@@ -697,6 +697,7 @@
             "emptyfilter": "No filter set. Searching could timeout if pagination is not supported by the server.",
             "attributefilter":{
                 "add_condition": " Add Condition",
+                "delete": " Delete",
                 "add_group": " Add Group",
                 "group_label_a": "Match",
                 "group_label_b": "of the following conditions:",
@@ -727,6 +728,7 @@
                 "geometric_operation": "Geometric Operation",
                 "combo_placeholder": "Select...",
                 "spatial_filter_header": "Region of interest",
+                "remove": "Remove",
                 "draw_start_label": "Draw the region of interest on the map",
                 "dwithin_label": "meters",
                 "details": {

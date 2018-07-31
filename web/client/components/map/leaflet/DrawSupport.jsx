@@ -423,6 +423,7 @@ class DrawSupport extends React.Component {
                     fillOpacity: 0.2,
                     dashArray: [5, 5]
                 },
+                showRadius: false,
                 repeatMode: true
             });
         } else if (newProps.drawMethod === 'Point' || newProps.drawMethod === 'MultiPoint') {

@@ -538,6 +538,7 @@
             "emptyfilter": "Geen enkele filterset. De zoekopdracht kan verstrijken als paging niet door de server wordt ondersteund",
             "attributefilter":{
                 "add_condition": " Voeg een voorwaarde toe",
+                "delete": " Delete",
                 "add_group": " Voeg een groep toe",
                 "group_label_a": "Toereikendheid",
                 "group_label_b": "de volgende condities:",
@@ -568,6 +569,7 @@
                 "geometric_operation": "Geometrische operatie",
                 "combo_placeholder": "Kies...",
                 "spatial_filter_header": "Ruimtelijke filter",
+                "remove": "Remove",
                 "draw_start_label": "Teken de regio van belang op de kaart",
                 "dwithin_label": "meter",
                 "details": {
