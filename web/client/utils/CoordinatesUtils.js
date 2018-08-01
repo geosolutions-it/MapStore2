@@ -559,8 +559,10 @@ const CoordinatesUtils = {
             const p2 = coordinates[i + 1];
             const start = toPoint(p1);
             const end = toPoint(p2);
-            const grCircle = greatCircle(start, end, options);
-            arcs = [...arcs, ...grCircle.geometry.coordinates];
+            if (!(p1[0] === p2[0] && p1[1] === p2[1])) {
+                let grCircle = greatCircle(start, end, options);
+                arcs = [...arcs, ...grCircle.geometry.coordinates];
+            }
         }
         return arcs;
     },

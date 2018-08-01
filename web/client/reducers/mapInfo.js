@@ -25,7 +25,6 @@ const {
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER
 } = require('../actions/mapInfo');
-
 const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
@@ -157,7 +156,14 @@ function mapInfo(state = initState, action) {
                     (feature) => {
                         try {
                             // TODO: instead of create a fixed buffer, we should check the feature style to create the proper buffer.
+
+                            if (feature.type === "FeatureCollection" && feature.features && feature.features.length) {
+                                return feature.features.reduce((p, c) => {
+                                    return p || intersect(bufferedPoint, resolution && action.metadata.buffer && unit ? buffer(c, 1, "meters") : c);
+                                }, false);
+                            }
                             return intersect(bufferedPoint, resolution && action.metadata.buffer && unit ? buffer(feature, 1, "meters") : feature);
+
                         } catch (e) {
                             return false;
                         }

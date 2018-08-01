@@ -14,15 +14,18 @@ const ol = require('openlayers');
 const wgs84Sphere = new ol.Sphere(6378137);
 const {reprojectGeoJson, reproject, calculateAzimuth, calculateDistance, transformLineToArcs} = require('../../../utils/CoordinatesUtils');
 const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
+const {startEndPolylineStyle} = require('./VectorStyle');
 const {getMessageById} = require('../../../utils/LocaleUtils');
 
 class MeasurementSupport extends React.Component {
     static propTypes = {
+        startEndPoint: PropTypes.object,
         map: PropTypes.object,
         projection: PropTypes.string,
         measurement: PropTypes.object,
         uom: PropTypes.object,
         changeMeasurementState: PropTypes.func,
+        resetGeometry: PropTypes.func,
         changeGeometry: PropTypes.func,
         updateOnMouseMove: PropTypes.bool
     };
@@ -32,6 +35,16 @@ class MeasurementSupport extends React.Component {
     };
 
     static defaultProps = {
+        startEndPoint: {
+            startPointOptions: {
+                radius: 3,
+                fillColor: "green"
+            },
+            endPointOptions: {
+                radius: 3,
+                fillColor: "red"
+            }
+        },
         updateOnMouseMove: false
     };
 
@@ -84,6 +97,7 @@ class MeasurementSupport extends React.Component {
         var vector;
         var draw;
         var geometryType;
+        let {startEndPoint} = newProps.measurement;
         this.continueLineMsg = getMessageById(this.context.messages, "measureSupport.continueLine");
         this.continuePolygonMsg = getMessageById(this.context.messages, "measureSupport.continuePolygon");
 
@@ -93,25 +107,34 @@ class MeasurementSupport extends React.Component {
         }
         // create a layer to draw on
         this.source = new ol.source.Vector();
+        let styles = [
+            new ol.style.Style({
+            fill: new ol.style.Fill({
+                color: 'rgba(255, 255, 255, 0.2)'
+            }),
+            stroke: new ol.style.Stroke({
+                color: '#ffcc33',
+                width: 2
+            }),
+            image: new ol.style.Circle({
+                radius: 7,
+                fill: new ol.style.Fill({
+                    color: '#ffcc33'
+                })
+            })
+        })];
+        let startEndPointStyles = [];
+        let applyStartEndPointStyle = startEndPoint || startEndPoint === true;
+        if (applyStartEndPointStyle || startEndPoint === undefined ) {
+            // if startPointOptions or endPointOptions is undefined it will use the default values set in VectorStyle for that point
+            let options = applyStartEndPointStyle ? startEndPoint === undefined ? {} : startEndPoint : newProps.startEndPoint;
+            startEndPointStyles = startEndPolylineStyle(options.startPointOptions, options.endPointOptions);
+        }
 
         vector = new ol.layer.Vector({
             source: this.source,
             zIndex: 1000000,
-            style: new ol.style.Style({
-                fill: new ol.style.Fill({
-                    color: 'rgba(255, 255, 255, 0.2)'
-                }),
-                stroke: new ol.style.Stroke({
-                    color: '#ffcc33',
-                    width: 2
-                }),
-                image: new ol.style.Circle({
-                    radius: 7,
-                    fill: new ol.style.Fill({
-                        color: '#ffcc33'
-                    })
-                })
-            })
+            style: [...styles, ...startEndPointStyles]
         });
 
         this.props.map.addLayer(vector);
@@ -184,6 +207,7 @@ class MeasurementSupport extends React.Component {
                     this.measureTooltip.setPosition(this.tooltipCoord);
                 }
             }, this);
+            this.props.resetGeometry();
         }, this);
         draw.on('drawend', function(evt) {
             this.drawing = false;
@@ -273,6 +297,13 @@ class MeasurementSupport extends React.Component {
         }
         const geojsonFormat = new ol.format.GeoJSON();
         let feature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
+        if (this.props.measurement.geomType === 'LineString') {
+            feature = assign({}, feature, {
+                geometry: assign({}, feature.geometry, {
+                    coordinates: transformLineToArcs(feature.geometry.coordinates)
+                })
+            });
+        }
 
         let newMeasureState = assign({}, this.props.measurement,
             {

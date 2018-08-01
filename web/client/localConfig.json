@@ -33,6 +33,14 @@
     "projectionDefs": [],
     "initialState": {
       "defaultState": {
+        "annotations": {
+          "config": {
+            "multiGeometry": true,
+            "validationErrors": {}
+          },
+          "format": "aeronautical",
+          "defaultTextAnnotation": "New"
+        },
         "maptype": {
             "mapType": "{context.mode === 'desktop' ? 'openlayers' : 'leaflet'}"
         },
@@ -271,10 +279,9 @@
                     "activateMetedataTool": false
                 }
             },
-            "TOCItemsSettings",
             "Tutorial", "MapFooter", {
                 "name": "Measure"
-            }, "Print", "ShapeFile", {
+            }, "Print", "MapExport", "MapImport", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true
@@ -287,7 +294,9 @@
             }, {
               "name": "About",
               "showIn": ["BurgerMenu"]
-            }, {
+            },
+            "TOCItemsSettings"
+            , {
               "name": "MousePosition",
               "cfg": {
                 "editCRS": true,

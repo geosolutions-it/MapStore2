@@ -29,7 +29,7 @@ describe("test the Annotations Panel", () => {
         const annotations = ReactDOM.render(<Annotations/>, document.getElementById("container"));
         expect(annotations).toExist();
         const annotationsNode = ReactDOM.findDOMNode(annotations);
-        expect(annotationsNode).toNotExist();
+        expect(annotationsNode).toExist();
     });
 
     it('test removing annotations', () => {
@@ -55,7 +55,7 @@ describe("test the Annotations Panel", () => {
             onCancelRemove={testHandlers.onCancelHandler}/>, document.getElementById("container"));
         expect(annotations).toExist();
 
-        let confirmButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(annotations, "button")[1]);
+        let confirmButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(annotations, "button")[6]);
 
         expect(confirmButton).toExist();
         TestUtils.Simulate.click(confirmButton);
@@ -78,7 +78,7 @@ describe("test the Annotations Panel", () => {
             onCancelRemove={testHandlers.onCancelHandler}/>, document.getElementById("container"));
         expect(annotations).toExist();
 
-        let cancelButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(annotations, "button")[2]);
+        let cancelButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(annotations, "button")[5]);
 
         expect(cancelButton).toExist();
         TestUtils.Simulate.click(cancelButton);
@@ -87,64 +87,15 @@ describe("test the Annotations Panel", () => {
         expect(spyCancel.calls.length).toEqual(1);
     });
 
-    it('test rendering list mode', () => {
-        const annotationsList = [{
-            properties: {
-                title: 'a',
-                description: 'b'
-            },
-            style: {
-                iconShape: 'square',
-                iconColor: 'blue'
-            }
-        }, {
-            properties: {
-                title: 'a',
-                description: 'b'
-            },
-            style: {
-                iconShape: 'square',
-                iconColor: 'blue'
-            }
-        }];
-
-        const annotations = ReactDOM.render(<Annotations mode="list" annotations={annotationsList}/>, document.getElementById("container"));
-        expect(annotations).toExist();
-        expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card").length).toBe(2);
-    });
-
-    it('test rendering list mode with filter', () => {
-        const annotationsList = [{
-            properties: {
-                title: 'a',
-                description: 'b'
-            },
-            style: {
-                iconShape: 'square',
-                iconColor: 'blue'
-            }
-        }, {
-            properties: {
-                title: 'c',
-                description: 'd'
-            },
-            style: {
-                iconShape: 'square',
-                iconColor: 'blue'
-            }
-        }];
-
-        const annotations = ReactDOM.render(<Annotations mode="list" filter="b" annotations={annotationsList}/>, document.getElementById("container"));
-        expect(annotations).toExist();
-        expect(TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card").length).toBe(1);
-    });
-
     it('test rendering detail mode', () => {
         const annotationsList = [{
             properties: {
                 id: '1',
                 title: 'a',
                 description: 'b'
+            },
+            geometry: {
+                type: "MultiPoint"
             },
             style: {
                 iconShape: 'square',
@@ -155,6 +106,9 @@ describe("test the Annotations Panel", () => {
                 id: '2',
                 title: 'a',
                 description: 'b'
+            },
+            geometry: {
+                type: "MultiPoint"
             },
             style: {
                 iconShape: 'square',
@@ -177,6 +131,9 @@ describe("test the Annotations Panel", () => {
                 title: 'a',
                 description: 'b'
             },
+            geometry: {
+                type: "MultiPoint"
+            },
             style: {
                 iconShape: 'square',
                 iconColor: 'blue'
@@ -193,9 +150,13 @@ describe("test the Annotations Panel", () => {
                 title: 'a',
                 description: 'b'
             },
+            geometry: {
+                type: "MultiPoint"
+            },
             style: {
                 iconShape: 'square',
-                iconColor: 'blue'
+                iconColor: 'blue',
+                iconGlyph: 'comment'
             }
         }, {
             properties: {
@@ -203,9 +164,13 @@ describe("test the Annotations Panel", () => {
                 title: 'c',
                 description: 'd'
             },
+            geometry: {
+                type: "MultiPoint"
+            },
             style: {
                 iconShape: 'square',
-                iconColor: 'blue'
+                iconColor: 'blue',
+                iconGlyph: 'comment'
             }
         }];
 
@@ -220,11 +185,10 @@ describe("test the Annotations Panel", () => {
 
         expect(annotations).toExist();
 
-        const cards = TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card");
-        expect(cards.length).toBe(2);
-
+        /*
+        TODO verify the external properties
         const cardsExternal = TestUtils.scryRenderedDOMComponentsWithClass(annotations, "mapstore-annotations-panel-card external");
-        expect(cardsExternal.length).toBe(1);
+        expect(cardsExternal.length).toBe(1);*/
     });
 
     it('test custom editor', () => {

@@ -10,8 +10,9 @@ class ColorPicker extends React.Component {
         onChangeColor: PropTypes.func,
         text: PropTypes.string,
         line: PropTypes.bool,
-        disabled: PropTypes.bool,
-        pickerProps: PropTypes.object
+        style: PropTypes.object,
+        pickerProps: PropTypes.object,
+        disabled: PropTypes.bool
     };
 
     static defaultProps = {
@@ -49,10 +50,12 @@ class ColorPicker extends React.Component {
     render() {
         return (
       <div>
-        <div className={this.props.disabled ? "cp-disabled" : "cp-swatch" }style={this.getStyle()} onClick={ () => { if (!this.props.disabled) { this.setState({ displayColorPicker: !this.state.displayColorPicker }); } } }>
+        <div className={this.props.disabled ? "cp-disabled" : "cp-swatch" } style={this.getStyle()} onClick={ () => {
+            if (!this.props.disabled) { this.setState({ displayColorPicker: !this.state.displayColorPicker }); }
+        }}>
         {this.props.text}
         </div>
-        { this.state.displayColorPicker ? <div className="cp-popover">
+        { this.state.displayColorPicker ? <div className="cp-popover" style={{width: this.props.style && this.props.style.width}}>
           <div className="cp-cover" onClick={ () => { this.setState({ displayColorPicker: false, color: undefined}); this.props.onChangeColor(this.state.color); }}/>
           <SketchPicker {...this.props.pickerProps} color={ this.state.color || this.props.value} onChange={ (color) => { this.setState({ color: color.rgb }); }} />
         </div> : null }

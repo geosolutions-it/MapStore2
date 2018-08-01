@@ -8,6 +8,7 @@
 const React = require('react');
 const { ButtonGroup} = require('react-bootstrap');
 const ToolbarButton = require('./ToolbarButton');
+const {isFunction} = require('lodash');
 
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 /**
@@ -34,7 +35,7 @@ module.exports = ({
     }} = {}) => {
         const renderButtons = () => buttons.map(
             ({ visible = true, ...props }, index) => visible
-                ? (<ToolbarButton key={props.key || index} {...btnDefaultProps} {...props} />)
+                ? (isFunction(props.el) && <props.el key={props.key || index} {...props} /> || <ToolbarButton key={props.key || index} {...btnDefaultProps} {...props} />)
                 : null
         );
         return (<ButtonGroup {...btnGroupProps}>

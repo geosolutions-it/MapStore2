@@ -26,6 +26,7 @@ require('../plugins/MapQuest');
 require('../plugins/VectorLayer');
 
 const SecurityUtils = require('../../../../utils/SecurityUtils');
+const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
 const ConfigUtils = require('../../../../utils/ConfigUtils');
 
 describe('Leaflet layer', () => {
@@ -369,6 +370,7 @@ describe('Leaflet layer', () => {
                     key={feature.id}
                     type={feature.type}
                     geometry={feature.geometry}
+                    style={{...DEFAULT_ANNOTATIONS_STYLES, highlight: false}}
                     msId={feature.id}
                     featuresCrs={ 'EPSG:4326' }
                         />)}</LeafLetLayer>, document.getElementById("container"));
@@ -380,6 +382,7 @@ describe('Leaflet layer', () => {
                     key={feature.id}
                     type={feature.type}
                     geometry={feature.geometry}
+                    style={{...DEFAULT_ANNOTATIONS_STYLES, highlight: false}}
                     msId={feature.id}
                     featuresCrs={ 'EPSG:4326' }
                         />)}</LeafLetLayer>, document.getElementById("container"));

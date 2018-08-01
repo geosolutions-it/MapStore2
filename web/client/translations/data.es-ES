@@ -39,6 +39,7 @@
         "details": {
             "title": "Información en este mapa"
         },
+        "remove": "Borrar",
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
             "title": "Título",
@@ -547,6 +548,19 @@
             "s_priority_info": "Usado para ordenar los resultados de búsqueda, de mayor a menor. Les resultados Nominatim tienen prioridad = 5",
             "serviceslistempty": "Ningún servicio personalizado definido"
         },
+        "draw": {
+            "fill": "Relleno:",
+            "stroke": "Línea:",
+            "strokeWidth": "Ancho de línea:",
+            "font": {
+                "textColor": "color del texto",
+                "family": "font-family",
+                "size": "font-size",
+                "textAlign": "alineación del texto",
+                "style": "font-style",
+                "weight": "font-weight"
+            }
+        },
         "drawLocal": {
             "draw": {
                 "toolbar": {
@@ -767,6 +781,80 @@
                 }
             }
         },
+        "annotations": {
+            "edit": "Editar",
+            "remove": "Borrar",
+            "save": "Guardar",
+            "cancel": "Cancelar",
+            "back": "Espalda",
+            "addMarker": "Agrega una geometría",
+            "styleGeometry": "Cambia estilo",
+            "deleteGeometry": "Eliminar todas las geometrías de anotación",
+            "removeannotation": "Desea eliminar la anotación con título: {title}?",
+            "removegeometry": "Desea eliminar todos los puntos de anotación?",
+            "confirm": "Confirmar",
+            "title": "Anotaciones",
+            "mandatory": "Campo obligatorio",
+            "emptygeometry": "Geometría no puede estar vacía",
+            "add": "Nueva",
+            "filter": "Filtrar las anotaciones...",
+            "titleUndoGeom": "La geometría ha cambiado",
+            "undoGeom": "Estás seguro de salir sin guardar? (Perderá los cambios)",
+            "confirmGeom": "Confirmar",
+            "cancelModalGeom": "Cancelar",
+            "deleteFeature": "Eliminar esta característica",
+            "undoDeleteFeature": "Estás seguro de eliminar esta característica?",
+            "undo": "Estás seguro de que quieres abandonar la sesión de edición de anotaciones?",
+            "zoomTo": "Zoom",
+            "insertText": "Por favor inserte la anotación de texto",
+            "downloadtooltip": "Descargar anotaciones",
+            "downloadcurrenttooltip": "Descargar la anotación actual",
+            "downloadError": "Error de exportación",
+            "loadtooltip": "Importar anotaciones",
+            "loadtitle": "Importar Anotaciones",
+            "selectfiletext": "Coloque su archivo aquí o haga clic para seleccionar el archivo de anotación para importar. (archivos compatibles: JSON)",
+            "loadoverride": "Reemplazar anotaciones",
+            "loaderror": "Seleccione uno o más archivos de anotaciones. (archivos compatibles: json)",
+            "defaulttitle": "Edita el título predeterminado",
+            "field": {
+                "title": "Título",
+                "description": "Descripción"
+            },
+            "titles": {
+                "marker": " Marcador",
+                "line": " Línea",
+                "polygon": " Polígono",
+                "text": " Texto",
+                "circle": " Circulo"
+            },
+            "editor": {
+                "format": "Formato",
+                "decimal": "Decimal",
+                "aeronautical": "Aeronáutico",
+                "title": {
+                    "Polygon": "Editor de polígonos",
+                    "LineString": "Editor LineString",
+                    "Circle": "Editor de círculos",
+                    "Point": "Editor de marcadores",
+                    "Text": "Editor de texto"
+                },
+                "placeholder": {
+                    "text": "Escriba un texto",
+                    "radius": "Escriba un radio",
+                    "select": "Seleccionar"
+                },
+                "add": "Agregar nuevas coordenadas",
+                "valid": "La geometría es válida",
+                "radius": "Radio",
+                "text": "Texto",
+                "lat": "Latitud",
+                "lon": "Longitud",
+                "notValidMarker": "Insertar una coordenada válida (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "Todas las coordenadas deben ser válidas (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insertar un valor de texto y una coordenada válida (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Ingrese un radio y una coordenada válida (+|- 90° lat, +|-180° lon)"
+            }
+        },
         "user":{
             "login": "Login",
             "logout": "Logout",
@@ -795,30 +883,6 @@
             "detailsEmail": "E-mail",
             "detailsCompany": "Empresa",
             "detailsNotes": "Notas"
-        },
-        "annotations": {
-            "edit": "Editar",
-            "remove": "Borrar",
-            "save": "Guardar",
-            "cancel": "Cancelar",
-            "back": "Espalda",
-            "addMarker": "Añadir un nuevo punto en el mapa",
-            "styleGeometry": "Elige un estilo diferente para los puntos",
-            "deleteGeometry": "Eliminar puntos existentes",
-            "removeannotation": "¿Desea eliminar la anotación?",
-            "removegeometry": "¿Desea eliminar todos los puntos de anotación?",
-            "confirm": "Confirmar",
-            "title": "Anotaciones",
-            "mandatory": "Campo obligatorio",
-            "emptygeometry": "Geometría no puede estar vacía",
-            "add": "Nueva",
-            "filter": "Filtrar las anotaciones...",
-            "undo": "¿Estás seguro de que quieres abandonar la sesión de edición de anotaciones?",
-            "zoomTo": "Zoom",
-            "field": {
-                "title": "Título",
-                "description": "Descripción"
-            }
         },
         "users": {
             "title": "Administrador de cuentas de usuario",
@@ -912,6 +976,22 @@
             "add": "Añadir",
             "cancel": "Cancelar",
             "success": " Importación correcta"
+        },
+        "mapImport": {
+            "title": "Datos de importacion",
+            "dropZone": {
+                "heading": "<p> <h4> Elimine aquí sus archivos de configuración o vector </h4> <small> o </small> </p>",
+                "selectFiles": "Selecciona archivos...",
+                "infoSupported": "<p> <small> Archivos de configuración admitidos: formato heredado MapStore2<br /> Archivos de capa vectorial soportados: shapefiles (deben estar en archivos comprimidos), KML / KMZ, GPX o GeoJSON </small> </p>",
+                "note": "<p> <small> <i> <strong> nota </strong>: el mapa actual se anulará en el caso de los archivos de configuración </i> </small> </p>"
+            },
+            "errors": {
+                "fileNotSupported": "Archivo no compatible",
+                "unknownError": "hubo un error desconocido durante la importación"
+            }
+        },
+        "mapExport": {
+            "title": "Exportar datos"
         },
         "catalog": {
             "title": "Catálogo",

@@ -151,3 +151,11 @@ button.close {
 .tooltip-inner {
     word-wrap: break-word;
 }
+
+.btn {
+    &.no-events {
+        pointer-events: none;
+        // this class removes the border from the button
+        .no-border;
+    }
+}

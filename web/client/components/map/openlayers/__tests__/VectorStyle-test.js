@@ -23,26 +23,14 @@ describe('Test VectorStyle', () => {
     it('simple point style', () => {
         const style = VectorStyle.getStyle({
             style: {
-                type: 'Point'
+                type: 'Point',
+                "Point": {
+                    iconGlyph: "comment"
+                }
             }
-        });
+        }, true);
         expect(style).toExist();
         expect(style.getImage()).toExist();
-    });
-
-    it('image point style', () => {
-        const style = VectorStyle.getStyle({
-            style: {
-                type: 'Point',
-                iconUrl: 'myurl'
-            }
-        });
-        expect(style).toExist();
-        const feature = new ol.Feature({
-              geometry: new ol.geom.Point(13.0, 43.0),
-              name: 'My Point'
-        });
-        expect(style.call(feature)[0]. getImage()).toExist();
     });
 
     it('style name', () => {
@@ -84,8 +72,8 @@ describe('Test VectorStyle', () => {
         let olStyle = VectorStyle.styleFunction(lineString);
         let olStroke = olStyle[0].getStroke();
 
-        expect(olStroke.getColor()).toBe('green');
-        expect(olStroke.getWidth()).toBe(1);
+        expect(olStroke.getColor()).toBe('blue');
+        expect(olStroke.getWidth()).toBe(3);
 
         const options = {
             style: {
@@ -131,8 +119,8 @@ describe('Test VectorStyle', () => {
         let olStyle = VectorStyle.styleFunction(multiLineString);
         let olStroke = olStyle[0].getStroke();
 
-        expect(olStroke.getColor()).toBe('green');
-        expect(olStroke.getWidth()).toBe(1);
+        expect(olStroke.getColor()).toBe('blue');
+        expect(olStroke.getWidth()).toBe(3);
 
         const options = {
             style: {
@@ -231,6 +219,7 @@ describe('Test VectorStyle', () => {
 
     it('test styleFunction with MultiPolygon', () => {
 
+
         const multiPolygon = new ol.Feature({
             geometry: new ol.geom.MultiPolygon([
                 [
@@ -296,6 +285,35 @@ describe('Test VectorStyle', () => {
         expect(olStroke.getWidth()).toBe(10);
         expect(olStroke.getLineDash()).toEqual(['10', '5']);
 
+    });
+
+    it('test firstPointOfPolylineStyle defaults', () => {
+        let olStyle = VectorStyle.firstPointOfPolylineStyle();
+        expect(olStyle.getImage().getRadius()).toBe(5);
+        expect(olStyle.getImage().getFill().getColor()).toBe("green");
+    });
+    it('test lastPointOfPolylineStyle defaults', () => {
+        let olStyle = VectorStyle.lastPointOfPolylineStyle();
+        expect(olStyle.getImage().getRadius()).toBe(5);
+        expect(olStyle.getImage().getFill().getColor()).toBe("red");
+    });
+
+    it('test firstPointOfPolylineStyle {radius: 4}', () => {
+        let olStyle = VectorStyle.firstPointOfPolylineStyle({radius: 4});
+        expect(olStyle.getImage().getRadius()).toBe(4);
+        expect(olStyle.getImage().getFill().getColor()).toBe("green");
+    });
+    it('test lastPointOfPolylineStyle {radius: 4}', () => {
+        let olStyle = VectorStyle.lastPointOfPolylineStyle({radius: 4});
+        expect(olStyle.getImage().getRadius()).toBe(4);
+        expect(olStyle.getImage().getFill().getColor()).toBe("red");
+    });
+    it('test startEndPolylineStyle defaults', () => {
+        let styles = VectorStyle.startEndPolylineStyle();
+        expect(styles[0].getImage().getRadius()).toBe(5);
+        expect(styles[0].getImage().getFill().getColor()).toBe("green");
+        expect(styles[1].getImage().getRadius()).toBe(5);
+        expect(styles[1].getImage().getFill().getColor()).toBe("red");
     });
 
 });

@@ -39,6 +39,7 @@
         "details": {
             "title": "About this map"
         },
+        "remove": "Delete",
         "layerProperties": {
             "windowTitle": "Layer Properties",
             "title": "Title",
@@ -547,6 +548,19 @@
             "s_priority_info": "Used to sort search results, higher values first. Nominatim results have priority = 5",
             "serviceslistempty": "No custom services defined"
         },
+        "draw": {
+            "fill": "Fill:",
+            "stroke": "Stroke:",
+            "strokeWidth": "Stroke Width:",
+            "font": {
+                "textColor": "text color",
+                "family": "font-family",
+                "size": "font-size",
+                "textAlign": "text align",
+                "style": "font-style",
+                "weight": "font-weight"
+            }
+        },
         "drawLocal": {
             "draw": {
                 "toolbar": {
@@ -767,6 +781,80 @@
                 }
             }
         },
+        "annotations": {
+            "edit": "Edit",
+            "remove": "Delete",
+            "save": "Save",
+            "cancel": "Cancel",
+            "back": "Back",
+            "addMarker": "Add a new geometry",
+            "styleGeometry": "Change style",
+            "deleteGeometry": "Remove all annotation geometries",
+            "removeannotation": "Do you want to remove the annotation with title: {title}?",
+            "removegeometry": "Do you want to remove all annotation features?",
+            "confirm": "Confirm",
+            "mandatory": "Mandatory field",
+            "emptygeometry": "Geometry cannot be empty",
+            "add": "New",
+            "filter": "Filter annotations...",
+            "undo": "Are you sure you want to abandon the annotation editing session?",
+            "titleUndoGeom": "The geometry has changed",
+            "undoGeom": "Are you sure to exit without saving? (You will lose any changes)",
+            "confirmGeom": "Confirm",
+            "cancelModalGeom": "Cancel",
+            "deleteFeature": "Delete this feature",
+            "undoDeleteFeature": "Are you sure to delete this feature?",
+            "title": "Annotations",
+            "zoomTo": "Zoom",
+            "insertText": "Please insert the text annotation",
+            "downloadtooltip": "Download annotations",
+            "downloadcurrenttooltip": "Download current annotation",
+            "downloadError": "Export error",
+            "loadtooltip": "Import annotations",
+            "loadtitle": "Import Annotations",
+            "selectfiletext": "Drop your file here or click to select the Annotation File to import. (supported files: JSON)",
+            "loadoverride": "Replace annotations",
+            "loaderror": "Select one or more annotations files. (supported files: json)",
+            "defaulttitle": "Edit default title",
+            "field": {
+                "title": "Title",
+                "description": "Description"
+            },
+            "titles": {
+                "marker": " Marker",
+                "line": " Line",
+                "polygon": " Polygon",
+                "text": " Text",
+                "circle": " Circle"
+            },
+            "editor": {
+                "format": "Formato",
+                "decimal": "Decimal",
+                "aeronautical": "Aeronautical",
+                "title": {
+                    "Polygon": "Polygon editor",
+                    "LineString": "LineString editor",
+                    "Circle": "Circle editor",
+                    "Point": "Marker editor",
+                    "Text": "Text editor"
+                },
+                "placeholder": {
+                    "text": "Type a text",
+                    "radius": "Type a radius",
+                    "select": "Select"
+                },
+                "add": "Add new coordinates",
+                "valid": "Geometry is valid",
+                "radius": "Radius",
+                "text": "Text",
+                "lat": "Latitude",
+                "lon": "Longitude",
+                "notValidMarker": "Insert a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "All coordinate must be valid (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insert a text value and a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)"
+            }
+        },
         "user":{
             "login": "Login",
             "logout": "Logout",
@@ -795,30 +883,6 @@
             "detailsEmail": "E-mail",
             "detailsCompany": "Company",
             "detailsNotes": "Notes"
-        },
-        "annotations": {
-            "edit": "Edit",
-            "remove": "Delete",
-            "save": "Save",
-            "cancel": "Cancel",
-            "back": "Back",
-            "addMarker": "Add a new point on the map",
-            "styleGeometry": "Choose a different style for points",
-            "deleteGeometry": "Remove existing points",
-            "removeannotation": "Do you want to remove the annotation?",
-            "removegeometry": "Do you want to remove all annotation points?",
-            "confirm": "Confirm",
-            "mandatory": "Mandatory field",
-            "emptygeometry": "Geometry cannot be empty",
-            "add": "New",
-            "filter": "Filter annotations...",
-            "undo": "Are you sure you want to abandon the annotation editing session?",
-            "title": "Annotations",
-            "zoomTo": "Zoom",
-            "field": {
-                "title": "Title",
-                "description": "Description"
-            }
         },
         "users": {
             "title": "Manage Accounts",
@@ -912,6 +976,22 @@
             "add": "Add",
             "cancel": "Cancel",
             "success": " correctly imported"
+        },
+        "mapImport": {
+            "title": "Import Data",
+            "dropZone": {
+                "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
+                "selectFiles": "Select Files...",
+                "infoSupported": "<p><small>Supported configuration files: MapStore2 legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
+                "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of configuration files</i></small></p>"
+            },
+            "errors": {
+                "fileNotSupported": "File not supported",
+                "unknownError": "there was an unknown error during import"
+            }
+        },
+        "mapExport": {
+            "title": "Export Data"
         },
         "catalog": {
             "title": "Catalog",

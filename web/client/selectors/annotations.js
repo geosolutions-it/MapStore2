@@ -8,7 +8,8 @@
 
 const {createSelector} = require('reselect');
 const {layersSelector} = require('./layers');
-const {head} = require('lodash');
+const {isMapInfoOpen} = require('./mapinfo');
+const {head, get} = require('lodash');
 const assign = require('object-assign');
 
 const annotationsLayerSelector = createSelector([
@@ -16,14 +17,56 @@ const annotationsLayerSelector = createSelector([
     ], (layers) => head(layers.filter(l => l.id === 'annotations'))
 );
 
+
+const removingSelector = (state) => get(state, "annotations.removing");
+const formatSelector = (state) => get(state, "annotations.format");
+const showUnsavedChangesModalSelector = (state) => get(state, "annotations.showUnsavedChangesModal", false);
+const showUnsavedStyleModalSelector = (state) => get(state, "annotations.showUnsavedStyleModal", false);
+const showUnsavedGeometryModalSelector = (state) => get(state, "annotations.showUnsavedGeometryModal", false);
+const showDeleteFeatureModalSelector = (state) => get(state, "annotations.showDeleteFeatureModal", false);
+const closingSelector = (state) => !!get(state, "annotations.closing");
+const editingSelector = (state) => get(state, "annotations.editing");
+const featureTypeSelector = (state) => get(state, "annotations.featureType");
+const coordinateEditorEnabledSelector = (state) => get(state, "annotations.coordinateEditorEnabled");
+const drawingSelector = (state) => !!get(state, "annotations.drawing");
+const stylerTypeSelector = (state) => get(state, "annotations.stylerType");
+const drawingTextSelector = (state) => get(state, "annotations.drawingText");
+const currentSelector = (state) => get(state, "annotations.current");
+const modeSelector = (state) => editingSelector(state) && 'editing' || currentSelector(state) && 'detail' || 'list';
+const editedFieldsSelector = (state) => get(state, "annotations.editedFields", {});
+const stylingSelector = (state) => !!get(state, "annotations.styling");
+const selectedSelector = (state) => get(state, "annotations.selected", null);
+const unsavedChangesSelector = (state) => get(state, "annotations.unsavedChanges", false);
+const unsavedGeometrySelector = (state) => get(state, "annotations.unsavedGeometry", false);
+const unsavedStyleSelector = (state) => get(state, "annotations.unsavedStyle", false);
+const errorsSelector = (state) => get(state, "annotations.validationErrors", {});
+const configSelector = (state) => get(state, "annotations.config", {});
+
 const annotationsInfoSelector = (state) => (assign({}, {
-    editing: state.annotations && state.annotations.editing,
-    drawing: state.annotations && !!state.annotations.drawing,
-    styling: state.annotations && !!state.annotations.styling,
-    errors: state.annotations.validationErrors
-}, (state.annotations && state.annotations.config) ? {
-    config: state.annotations && state.annotations.config
-} : { }));
+    mouseHoverEvents: isMapInfoOpen(state),
+    closing: closingSelector(state),
+    format: formatSelector(state),
+    config: configSelector(state),
+    drawing: drawingSelector(state),
+    drawingText: drawingTextSelector(state),
+    errors: errorsSelector(state),
+    editing: editingSelector(state),
+    coordinateEditorEnabled: coordinateEditorEnabledSelector(state),
+    editedFields: editedFieldsSelector(state),
+    mode: modeSelector(state),
+    selected: selectedSelector(state),
+    featureType: featureTypeSelector(state),
+    removing: removingSelector(state),
+    showUnsavedChangesModal: showUnsavedChangesModalSelector(state),
+    showDeleteFeatureModal: showDeleteFeatureModalSelector(state),
+    showUnsavedGeometryModal: showUnsavedGeometryModalSelector(state),
+    showUnsavedStyleModal: showUnsavedStyleModalSelector(state),
+    stylerType: stylerTypeSelector(state),
+    styling: stylingSelector(state),
+    unsavedChanges: unsavedChangesSelector(state),
+    unsavedGeometry: unsavedGeometrySelector(state),
+    unsavedStyle: unsavedStyleSelector(state)
+    }) );
 
 const annotationsSelector = (state) => ({
     ...(state.annotations || {})
@@ -34,7 +77,12 @@ const annotationsListSelector = createSelector([
     annotationsSelector,
     annotationsLayerSelector
 ], (info, annotations, layer) => (assign({}, {
+    format: annotations.format,
     removing: annotations.removing,
+    showUnsavedChangesModal: annotations.showUnsavedChangesModal,
+    showUnsavedGeometryModal: annotations.showUnsavedGeometryModal,
+    showUnsavedStyleModal: annotations.showUnsavedStyleModal,
+    showDeleteFeatureModal: annotations.showDeleteFeatureModal,
     closing: !!annotations.closing,
     mode: annotations.editing && 'editing' || annotations.current && 'detail' || 'list',
     annotations: layer && layer.features || [],
@@ -57,5 +105,24 @@ module.exports = {
     annotationsInfoSelector,
     annotationsSelector,
     annotationsListSelector,
-    annotationSelector
+    annotationSelector,
+    removingSelector,
+    showUnsavedChangesModalSelector,
+    showUnsavedStyleModalSelector,
+    closingSelector,
+    editingSelector,
+    drawingSelector,
+    stylerTypeSelector,
+    drawingTextSelector,
+    currentSelector,
+    modeSelector,
+    editedFieldsSelector,
+    stylingSelector,
+    unsavedChangesSelector,
+    showUnsavedGeometryModalSelector,
+    unsavedGeometrySelector,
+    unsavedStyleSelector,
+    formatSelector,
+    errorsSelector,
+    configSelector
 };

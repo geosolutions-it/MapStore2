@@ -11,6 +11,7 @@ const ol = require('openlayers');
 const Feature = require('../Feature.jsx');
 const expect = require('expect');
 require('../../../../utils/openlayers/Layers');
+const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
 require('../plugins/VectorLayer');
 
 describe('Test Feature', () => {
@@ -294,7 +295,7 @@ describe('Test Feature', () => {
                  container={container}
                  featuresCrs={"EPSG:4326"}
                  crs={"EPSG:4326"}
-                 style={{}}
+                 style={{type: "Polygon", "Polygon": DEFAULT_ANNOTATIONS_STYLES.Polygon}}
                  />, document.getElementById("container"));
 
         style = layer._feature[0].getStyle();

@@ -338,10 +338,10 @@ class SpatialFilter extends React.Component {
         if (this.getMethodFromId(method).type !== "wfsGeocoder") {
             switch (method) {
                 case "ZONE": {
-                    this.changeDrawingStatus('clean', null, "queryform", []); break;
+                    this.changeDrawingStatus('clean', '', "queryform", []); break;
                 }
                 case "Viewport": {
-                    this.changeDrawingStatus('clean', null, "queryform", []);
+                    this.changeDrawingStatus('clean', '', "queryform", []);
                     this.props.actions.onSelectViewportSpatialMethod();
                     break;
                 }
@@ -350,7 +350,7 @@ class SpatialFilter extends React.Component {
                 }
             }
         } else {
-            this.changeDrawingStatus('clean', null, "queryform", []);
+            this.changeDrawingStatus('clean', '', "queryform", []);
         }
 
     };
@@ -366,7 +366,7 @@ class SpatialFilter extends React.Component {
     };
 
     resetSpatialFilter = () => {
-        this.changeDrawingStatus('clean', null, "queryform", []);
+        this.changeDrawingStatus('clean', '', "queryform", []);
         this.props.actions.onRemoveSpatialSelection();
         this.props.actions.onShowSpatialSelectionDetails(false);
     };

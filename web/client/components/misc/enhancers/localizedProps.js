@@ -28,7 +28,7 @@ const accumulate = (props, messages) => (acc = {}, propName) => ({
  * @param  {string|[string]} propNames Name of the prop(s) to replace. can be an array or a single prop
  * @return {HOC}         An HOC that replaces the prop string with localized string.
  * @example
- * const Input = localizeProps('placeholder')(BootstrapInput);
+ * const Input = localizedProps('placeholder')(BootstrapInput);
  * // render
  * //...
  * <Input placeholder="path.to.placeholder.message" />

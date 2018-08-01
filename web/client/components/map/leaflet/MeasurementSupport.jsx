@@ -228,6 +228,13 @@ class MeasurementSupport extends React.Component {
         this.lastLayer = evt.layer;
 
         let feature = this.lastLayer && this.lastLayer.toGeoJSON() || {};
+        if (this.props.measurement.geomType === 'LineString') {
+            feature = assign({}, feature, {
+                geometry: assign({}, feature.geometry, {
+                    coordinates: transformLineToArcs(feature.geometry.coordinates)
+                })
+            });
+        }
         if (this.props.measurement.geomType === 'Point') {
             let pos = this.drawControl._marker.getLatLng();
             let point = {

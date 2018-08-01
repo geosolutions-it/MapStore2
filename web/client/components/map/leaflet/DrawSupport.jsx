@@ -33,7 +33,7 @@ const assign = require('object-assign');
 
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
-const VectorUtils = require('../../../utils/leaflet/Vector');
+const {pointToLayer/*, geometryToLayer*/} = require('../../../utils/leaflet/Vector');
 
 const DEG_TO_RAD = Math.PI / 180.0;
 /**
@@ -183,7 +183,8 @@ class DrawSupport extends React.Component {
         }
         if (this.props.drawStatus !== newProps.drawStatus || newProps.drawStatus === "replace" || this.props.drawMethod !== newProps.drawMethod || this.props.features !== newProps.features) {
             switch (newProps.drawStatus) {
-            case "create": this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style}); break;
+            case "create": this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326",
+            style: newProps.style && newProps.style[newProps.drawMethod] || newProps.style}); break;
             case "start": this.addDrawInteraction(newProps); break;
             case "drawOrEdit": this.addDrawOrEditInteractions(newProps); break;
             case "stop": {
@@ -275,7 +276,7 @@ class DrawSupport extends React.Component {
                 const {center, radius} = toLeafletCircle(feature.radius, latLng, feature.projection);
                 return L.circle(center, radius || 5);
             },
-            style: {
+            style: (feature) => newProps.style && newProps.style[feature.geometry.type] || {
                 color: '#ffcc33',
                 opacity: 1,
                 weight: 3,
@@ -298,15 +299,26 @@ class DrawSupport extends React.Component {
             return f.style || style;
         }, pointToLayer: (f, latLng) => {
             let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, projection, "EPSG:4326");
-            return VectorUtils.pointToLayer(L.latLng(center.y, center.x), f, style);
+            return pointToLayer(L.latLng(center.y, center.x), f, style);
         }});
+
+        /*let tempLayer = geometryToLayer({
+            type: features[0].type,
+            geometry: features[0].geometry,
+            properties: features[0].properties,
+            msId: features[0].id
+        }, {style: features[0].style});*/
+
+        // (toGeoJSON())
         this.drawLayer = geoJsonLayerGroup.addTo(this.props.map);
+        // this.drawLayer = tempLayer.addTo(this.props.map);
     };
 
 
     replaceFeatures = (newProps) => {
         if (!this.drawLayer) {
-            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
+            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326",
+            style: newProps.style && newProps.style[newProps.drawMethod] || newProps.style});
         } else {
             this.drawLayer.clearLayers();
             if (this.props.drawMethod === "Circle") {
@@ -325,7 +337,7 @@ class DrawSupport extends React.Component {
             } else {
                 this.drawLayer.options.pointToLayer = (f, latLng) => {
                     let center = CoordinatesUtils.reproject({x: latLng.lng, y: latLng.lat}, newProps.options && newProps.options.featureProjection || "EPSG:4326", "EPSG:4326");
-                    return VectorUtils.pointToLayer(L.latLng(center.y, center.x), f, newProps.style);
+                    return pointToLayer(L.latLng(center.y, center.x), f, newProps.style);
                 };
             }
             this.drawLayer.addData(this.convertFeaturesPolygonToPoint(newProps.features, this.props.drawMethod));
@@ -345,7 +357,11 @@ class DrawSupport extends React.Component {
     addDrawInteraction = (newProps) => {
         this.removeAllInteractions();
         if (newProps.drawMethod === "Point" || newProps.drawMethod === "MultiPoint") {
-            this.addGeojsonLayer({features: newProps.features, projection: newProps.options && newProps.options.featureProjection || "EPSG:4326", style: newProps.style});
+            this.addGeojsonLayer({
+                features: newProps.features,
+                projection: newProps.options && newProps.options.featureProjection || "EPSG:4326",
+                style: newProps.style && newProps.style[newProps.drawMethod] || newProps.style
+             });
         } else {
             this.addLayer(newProps);
         }
@@ -446,10 +462,25 @@ class DrawSupport extends React.Component {
 
     addDrawOrEditInteractions = (newProps) => {
         let newFeature = head(newProps.features);
-
+        let newFeatures;
         if (newFeature && newFeature.geometry && newFeature.geometry.type && !isSimpleGeomType(newFeature.geometry.type)) {
-            const newFeatures = newFeature.geometry.coordinates.map((coords, idx) => {
-                return {
+            if (newFeature.geometry.type === "GeometryCollection") {
+                newFeatures = newFeature.geometry.geometries.map(g => {
+                    return g.coordinates.map((coords, idx) => {
+                        return {
+                            type: 'Feature',
+                            properties: {...newFeature.properties},
+                            id: g.type + idx,
+                            geometry: {
+                                coordinates: coords,
+                                type: getSimpleGeomType(g.type)
+                            }
+                        };
+                    });
+                });
+            } else {
+                newFeatures = newFeature.geometry.coordinates.map((coords, idx) => {
+                    return {
                         type: 'Feature',
                         properties: {...newFeature.properties},
                         id: newFeature.geometry.type + idx,
@@ -458,8 +489,9 @@ class DrawSupport extends React.Component {
                             type: getSimpleGeomType(newFeature.geometry.type)
                         }
                     };
-            });
-            newFeature = {type: "FeatureCollection", features: newFeatures};
+                });
+                newFeature = {type: "FeatureCollection", features: newFeatures};
+            }
         }
         const props = assign({}, newProps, {features: [newFeature ? newFeature : {}]});
         if (!this.drawLayer) {
@@ -473,7 +505,8 @@ class DrawSupport extends React.Component {
                     ? newProps.features.map(f => CoordinatesUtils.reprojectGeoJson(f, newProps.options.featureProjection, "EPSG:4326") )
                     : newProps.features,
                 projection: newProps.options && newProps.options.featureProjection || "EPSG:4326",
-                style: newProps.style});
+                style: newProps.style && newProps.style[newProps.drawMethod] || newProps.style});
+
         } else {
             this.drawLayer.clearLayers();
             this.drawLayer.addData(this.convertFeaturesPolygonToPoint(props.features, props.drawMethod));
@@ -507,12 +540,23 @@ class DrawSupport extends React.Component {
         });
 
         let allLayers = this.drawLayer.getLayers();
+
         setTimeout(() => {
             allLayers.forEach(l => {
-                l.on('edit', (e) => this.onUpdateGeom(e.target, newProps));
-                l.on('moveend', (e) => this.onUpdateGeom(e.target, newProps));
-                if (l.editing) {
-                    l.editing.enable();
+                if (l.getLayers && l.getLayers() && l.getLayers().length) {
+                    l.getLayers().forEach((layer) => {
+                        layer.on('edit', (e) => this.onUpdateGeom(e.target, newProps));
+                        layer.on('moveend', (e) => this.onUpdateGeom(e.target, newProps));
+                        if (layer.editing) {
+                            layer.editing.enable();
+                        }
+                    });
+                } else {
+                    l.on('edit', (e) => this.onUpdateGeom(e.target, newProps));
+                    l.on('moveend', (e) => this.onUpdateGeom(e.target, newProps));
+                    if (l.editing) {
+                        l.editing.enable();
+                    }
                 }
             });
         }, 0);
@@ -564,10 +608,20 @@ class DrawSupport extends React.Component {
         if (this.drawLayer) {
             let allLayers = this.drawLayer.getLayers();
             allLayers.forEach(l => {
-                l.off('edit');
-                l.off('moveend');
-                if (l.editing) {
-                    l.editing.disable();
+                if (l.getLayers && l.getLayers() && l.getLayers().length) {
+                    l.getLayers().forEach((layer) => {
+                        layer.off('edit');
+                        layer.off('moveend');
+                        if (layer.editing) {
+                            layer.editing.disable();
+                        }
+                    });
+                } else {
+                    l.off('edit');
+                    l.off('moveend');
+                    if (l.editing) {
+                        l.editing.disable();
+                    }
                 }
             });
             this.editControl = null;
@@ -616,6 +670,26 @@ class DrawSupport extends React.Component {
     convertFeaturesToGeoJson = (featureEdited, props) => {
         let geom;
         if (!isSimpleGeomType(props.drawMethod)) {
+            if (props.drawMethod === "GeometryCollection") {
+                let geometries = this.drawLayer.getLayers().map(f => f.toGeoJSON());
+                return {
+                    type: "GeometryCollection",
+                    geometries: geometries.map(g => {
+                        if (g.type === "FeatureCollection") {
+                            return {
+                                type: "Multi" + g.features[0].geometry.type,
+                                coordinates: g.features.map((feat) => {
+                                    return feat.geometry.coordinates;
+                                })
+                            };
+                        }
+                        return {
+                            type: g.geometry.type,
+                            coordinates: g.geometry.coordinates
+                        };
+                    })
+                };
+            }
             let newFeatures = this.drawLayer.getLayers().map(f => f.toGeoJSON());
             geom = {
                 type: props.drawMethod,

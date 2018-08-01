@@ -40,6 +40,7 @@
         "details": {
             "title": "Info sur cette carte"
         },
+        "remove": "Effacer",
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
             "title": "Titre",
@@ -159,7 +160,7 @@
         },
         "home":{
             "open": "Ouvrir",
-            "shortDescription": "Modern webmapping avec OL3, Leaflet et React<br/><small>consultez la page <a href=\"/mapstore/docs/\"> documentation </a> </ small>",
+            "shortDescription": "Modern webmapping avec OL3, Leaflet et React<br/><small>consultez la page <a href=\"/mapstore/docs/\"> documentation </a> </small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore est développé pour créer, sauvegarder et partager de façon simple et intuitive cartes et assemblages créés à partir du contenu de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce.<br/>Visitez notre <a href=\"/mapstore/docs/\">page d'accueil</a> pour plus de détails.",
             "Applications": "Applications",
@@ -548,6 +549,19 @@
             "s_priority_info": "Utilisé pour trier les résultats de recherche, des valeurs plus élevées en premier. Les résultats Nominatim ont priorité = 5",
             "serviceslistempty": "Aucun service personnalisé n'a été défini"
         },
+        "draw": {
+            "fill": "Remplissage:",
+            "stroke": "Ligne:",
+            "strokeWidth": "Largeur de ligne:",
+            "font": {
+                "textColor": "couleur du texte",
+                "family": "font-family",
+                "size": "font-size",
+                "textAlign": "alignement du texte",
+                "style": "font-style",
+                "weight": "font-weight"
+            }
+        },
         "drawLocal": {
             "draw": {
                 "toolbar": {
@@ -774,22 +788,72 @@
             "save": "Enregistrer",
             "cancel": "Annuler",
             "back": "Arrière",
-            "addMarker": "Ajouter un nouveau point sur la carte",
-            "styleGeometry": "Choisissez un style différent pour les points",
-            "deleteGeometry": "Supprimer les points existants",
-            "removeannotation": "Voulez-vous supprimer l'annotation?",
+            "addMarker": "Ajouter une géométrie",
+            "styleGeometry": "Changer le style",
+            "deleteGeometry": "Supprimer toutes les géométries d'annotations",
+            "removeannotation": "Voulez-vous supprimer l'annotation avec titre: {title}?",
             "removegeometry": "Voulez-vous supprimer tous les points d'annotation?",
-            "confirm": "confirmer",
+            "confirm": "Confirmer",
             "title": "Annotations",
             "mandatory": "champ obligatoire",
             "emptygeometry": "La géométrie ne peut pas être vide",
             "add": "Nouvelle",
             "filter": "Filtrer les annotations...",
+            "titleUndoGeom": "La géométrie a changé",
+            "undoGeom": "Êtes-vous sûr de quitter sans enregistrer? (Vous perdrez tous les changements)",
+            "confirmGeom": "Confirmer",
+            "cancelModalGeom": "Annuler",
+            "deleteFeature": "Supprimer cette fonctionnalité",
+            "undoDeleteFeature": "Êtes-vous sûr de supprimer cette fonctionnalité?",
             "undo": "Êtes-vous sûr de vouloir abandonner la session d'édition d'annotation?",
             "zoomTo": "Zoom",
+            "insertText": "Veuillez insérer l'annotation de texte",
+            "downloadtooltip": "Télécharger les annotations",
+            "downloadcurrenttooltip": "Télécharger l'annotation en cours",
+            "downloadError": "Erreur d'exportation",
+            "loadtooltip": "Importer des annotations",
+            "loadtitle": "Importer des Annotations",
+            "selectfiletext": "Déposez votre fichier ici ou cliquez pour sélectionner le fichier d'annotation à importer. (fichiers supportés: JSON)",
+            "loadoverride": "Remplacer les annotations",
+            "loaderror": "Sélectionnez un ou plusieurs fichiers d'annotations. (fichiers supportés: json)",
+            "defaulttitle": "Modifier le titre par défaut",
             "field": {
-                "title": "titre",
+                "title": "Titre",
                 "description": "Description"
+            },
+            "titles": {
+                "marker": " Marqueur",
+                "line": " Ligne",
+                "polygon": " Polygone",
+                "text": " Texte",
+                "circle": " Cercle"
+            },
+            "editor": {
+                "format": "Format",
+                "decimal": "Décimal",
+                "aeronautical": "Aéronautique",
+                "title": {
+                    "Polygon": "Éditeur de polygone",
+                    "LineString": "Éditeur LineString",
+                    "Circle": "Éditeur de cercle",
+                    "Point": "Éditeur de marqueur",
+                    "Text": "Éditeur de texte"
+                },
+                "placeholder": {
+                    "text": "Tapez un texte",
+                    "radius": "Tapez un rayon",
+                    "select": "Sélectionner "
+                },
+                "add": "Ajouter de nouvelles coordonnées",
+                "valid": "La géométrie est valide",
+                "radius": "Rayon",
+                "text": "Texte",
+                "lat": "Latitude",
+                "lon": "Longitude",
+                "notValidMarker": "Insérer une coordonnée valide (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "Toutes les coordonnées doivent être valides (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insérer une valeur de texte et une coordonnée valide (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Entrez un rayon et une coordonnée valide (+|- 90° lat, +|-180° lon)"
             }
         },
         "user":{
@@ -913,6 +977,22 @@
             "add": "Ajouter",
             "cancel": "Annuler",
             "success": " Import correct"
+        },
+        "mapImport": {
+            "title": "Importer des données",
+            "dropZone": {
+                "heading": "<p> <h4> Déposez votre configuration ou vos fichiers vectoriels ici </h4> <small> ou </small> </p>",
+                "selectFiles": "Sélectionnez les fichiers...",
+                "infoSupported": "<p> <small> Fichiers de configuration pris en charge: format hérité MapStore2<br /> Fichiers vectoriels pris en charge: shapefile (doivent être contenus dans des archives zip), KML / KMZ, GPX ou GeoJSON </small> </p>",
+                "note": "<p> <small> <i> <strong> note </strong>: la carte actuelle sera remplacée dans le cas des fichiers de configuration </i> </small> </p>"
+            },
+            "errors": {
+                "fileNotSupported": "Fichier non pris en charge",
+                "unknownError": "il y avait une erreur inconnue lors de l'importation"
+            }
+        },
+        "mapExport": {
+            "title": "Exporter des données"
         },
         "catalog": {
             "title": "Catalogue",

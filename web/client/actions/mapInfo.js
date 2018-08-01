@@ -208,6 +208,9 @@ function updateCenterToMarker(status) {
         status
     };
 }
+const closeIdentify = () => ({
+    type: CLOSE_IDENTIFY
+});
 
 function featureInfoClick(point, layer) {
     return {
@@ -216,10 +219,6 @@ function featureInfoClick(point, layer) {
         layer
     };
 }
-
-const closeIdentify = () => ({
-    type: CLOSE_IDENTIFY
-});
 
 module.exports = {
     ERROR_FEATURE_INFO,

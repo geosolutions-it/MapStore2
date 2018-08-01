@@ -24,7 +24,7 @@ const ColorUtils = {
     },
     rgbToHex: function( r, g, b ) {
         if ( r instanceof Array ) { return ColorUtils.rgbToHex( r[0], r[1], r[2] ); }
-        return this.decToHex( r ) + ColorUtils.decToHex( g ) + ColorUtils.decToHex( b );
+        return "#" + ColorUtils.decToHex( r ) + ColorUtils.decToHex( g ) + ColorUtils.decToHex( b );
     },
     realToDec: function( n ) {
         return Math.min( 255, Math.round( n * 256 ) );
@@ -67,7 +67,7 @@ const ColorUtils = {
         const hsvToRgb = (h, s, v) => {
             let rgb = hsvToRgb(h, s, v);
             // return rgb;
-            return "#" + ColorUtils.rgbToHex(rgb);
+            return ColorUtils.rgbToHex(rgb);
         };
         for (let x = 0; x < total; x++) {
             r.push(hsvToRgb(i * x, 0.57, 0.63, x)); // you can also alternate the saturation and value for even more contrast between the colors
@@ -146,7 +146,7 @@ const ColorUtils = {
     hsvToHex: (h, s, v) => {
         let rgb = ColorUtils.hsvToRgb(h, s, v);
         // return rgb;
-        return "#" + ColorUtils.rgbToHex(rgb);
+        return ColorUtils.rgbToHex(rgb);
     },
     hexToHsv: function(h) {
         let hex = h;
@@ -170,5 +170,6 @@ const ColorUtils = {
         const c = tinycolor(color);
         return color && c.setAlpha(toNumber(alpha !== undefined ? alpha : c.getAlpha())).toRgbString() || defaultColor;
     }
+
 };
 module.exports = ColorUtils;

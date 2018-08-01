@@ -1,13 +1,13 @@
-const PropTypes = require('prop-types');
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
+
 const React = require('react');
-// const Tuscany = require('./Tuscany').split(" ");
+const PropTypes = require('prop-types');
 const defaultIcon = require('../map/openlayers/img/marker-icon.png');
 
 class StyleCanvas extends React.Component {
@@ -47,7 +47,7 @@ class StyleCanvas extends React.Component {
         ctx.beginPath();
         ctx.fillStyle = this.props.shapeStyle.fill ? `rgba(${ this.props.shapeStyle.fill.r }, ${ this.props.shapeStyle.fill.g }, ${ this.props.shapeStyle.fill.b }, ${ this.props.shapeStyle.fill.a })` : null;
         ctx.strokeStyle = this.props.shapeStyle.color ? `rgba(${ this.props.shapeStyle.color.r }, ${ this.props.shapeStyle.color.g }, ${ this.props.shapeStyle.color.b }, ${ this.props.shapeStyle.color.a })` : null;
-        ctx.lineWidth = this.props.shapeStyle.width;
+        ctx.lineWidth = this.props.shapeStyle.width || this.props.shapeStyle.weight;
         switch (this.props.geomType) {
         case 'Polygon': {
             this.paintPolygon(ctx);

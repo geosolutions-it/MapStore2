@@ -12,7 +12,7 @@
         "about_ul0_li0": "MapViewer简单展现预先配置好的地图 (optionally stored in a database using GeoStore)",
         "about_ul0_li1": "MapPublisher开发的目的是以简单直观的方式创建，保存和共享地图和混搭，从Google Maps和OpenStreetMap等着名资源中选择内容，或者使用OGC WMS，WFS，WMTS等开放协议提供的服务。 TMS等。 有关更多信息，请查看",
         "about_h20": "许可",
-        "about_p3": "MapStore 2是免费和开放源代码软件，基于OpenLayers 3，Leaflet和ReactJS，并获得简化BSD许可。",
+        "about_p3": "MapStore是免费和开放源代码软件，基于OpenLayers 3，Leaflet和ReactJS，并获得简化BSD许可。",
         "about_p5-0": "欲了解更多信息，请查",
         "about_a0": "this",
         "about_p5-1": "页.",
@@ -133,7 +133,7 @@
             "open": "打开",
             "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore 2的开发旨在以简单直观的方式创建，保存和共享地图和混搭，这些地图和混搭创建的内容来自知名来源，如Google Maps和OpenStreetMap，或者由使用开放协议的组织提供的服务，如OGC WMS，WFS，WMTS 或TMS等等。<br/>有关更多详细信息，请访问<a href=\"/mapstore/docs/\">主页</a>。",
+            "description": "MapStore的开发旨在以简单直观的方式创建，保存和共享地图和混搭，这些地图和混搭创建的内容来自知名来源，如Google Maps和OpenStreetMap，或者由使用开放协议的组织提供的服务，如OGC WMS，WFS，WMTS 或TMS等等。<br/>有关更多详细信息，请访问<a href=\"/mapstore/docs/\">主页</a>。",
             "Applications": "应用",
             "Examples": "例子",
             "LinkedinGroup": "Mapstore Linkedin Group",
@@ -610,6 +610,80 @@
                 }
             }
         },
+        "annotations": {
+            "edit": "编辑",
+            "remove": "删除",
+            "save": "保存",
+            "cancel": "取消",
+            "back": "返回",
+            "addMarker": "在地图上添加一个新点",
+            "styleGeometry": "为点选择不同的风格",
+            "deleteGeometry": "Remove all annotation geometries",
+            "removeannotation": "Do you want to remove the annotation with title: {title}?",
+            "removegeometry": "你想删除所有标注点吗？?",
+            "confirm": "确认",
+            "mandatory": "必填项",
+            "emptygeometry": "几何不能为空",
+            "add": "新加",
+            "filter": "过滤标注...",
+            "titleUndoGeom": "The geometry has changed",
+            "undoGeom": "Are you sure to exit without saving? (You will lose any changes)",
+            "confirmGeom": "Confirm",
+            "cancelModalGeom": "Cancel",
+            "deleteFeature": "Delete this feature",
+            "undoDeleteFeature": "Are you sure to delete this feature?",
+            "undo": "你确定要放弃注释编辑会话吗？",
+            "title": "标注",
+            "zoomTo": "Zoom",
+            "insertText": "Please insert the text annotation",
+            "downloadtooltip": "Download annotations",
+            "downloadcurrenttooltip": "Download current annotation",
+            "downloadError": "Export error",
+            "loadtooltip": "Import annotations",
+            "loadtitle": "Import Annotations",
+            "selectfiletext": "Drop your file here or click to select the Annotation File to import. (supported files: JSON)",
+            "loadoverride": "Replace annotations",
+            "loaderror": "Select one or more annotations files. (supported files: json)",
+            "defaulttitle": "Edit default title",
+            "field": {
+                "title": "标题",
+                "description": "描述"
+            },
+            "titles": {
+                "marker": " Marker",
+                "line": " Line",
+                "polygon": " Polygon",
+                "text": " Text",
+                "circle": " Circle"
+            },
+            "editor": {
+                "format": "Format",
+                "decimal": "Decimal",
+                "aeronautical": "Aeronautical",
+                "title": {
+                    "Polygon": "Polygon editor",
+                    "LineString": "LineString editor",
+                    "Circle": "Circle editor",
+                    "Point": "Marker editor",
+                    "Text": "Text editor"
+                },
+                "placeholder": {
+                    "text": "Type a text",
+                    "radius": "Type a radius",
+                    "select": "Select"
+                },
+                "add": "Add new coordinates",
+                "valid": "Geometry is valid",
+                "radius": "Radius",
+                "text": "Text",
+                "lat": "Latitude",
+                "lon": "Longitude",
+                "notValidMarker": "Insert a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "All coordinate must be valid (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insert a text value and a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)"
+            }
+        },
         "user":{
             "login": "登录",
             "logout": "登出",
@@ -631,29 +705,6 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "请插入用户名和密码",
                 "usernamePwdIncorrect":"用户名或密码不正确"
-            }
-        },
-        "annotations": {
-            "edit": "编辑",
-            "remove": "删除",
-            "save": "保存",
-            "cancel": "取消",
-            "back": "返回",
-            "addMarker": "在地图上添加一个新点",
-            "styleGeometry": "为点选择不同的风格",
-            "deleteGeometry": "删除现有的点",
-            "removeannotation": "你想删除标注?",
-            "removegeometry": "你想删除所有标注点吗？?",
-            "confirm": "确认",
-            "mandatory": "必填项",
-            "emptygeometry": "几何不能为空",
-            "add": "新加",
-            "filter": "过滤标注...",
-            "undo": "你确定要放弃注释编辑会话吗？",
-            "title": "标注",
-            "field": {
-                "title": "标题",
-                "description": "描述"
             }
         },
         "users": {

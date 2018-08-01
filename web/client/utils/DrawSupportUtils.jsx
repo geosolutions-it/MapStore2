@@ -10,6 +10,11 @@
  * Utils used in DrawSupport for leaflet and openlayers
 */
 
+const ol = require('openlayers');
+const {isArray, head, last} = require('lodash');
+const {reproject} = require('./CoordinatesUtils');
+
+
 /**
  * Transforms a leaflet bounds object into an array.
  * @prop {object} the bounds
@@ -42,8 +47,46 @@ const fromLeafletFeatureToQueryform = (layer) => {
         projection
     };
 };
+const calculateRadius = (center, coordinates) => {
+    return isArray(coordinates) && isArray(coordinates[0]) && isArray(coordinates[0][0]) ? Math.sqrt(Math.pow(center[0] - coordinates[0][0][0], 2) + Math.pow(center[1] - coordinates[0][0][1], 2)) : 100;
+};
+
+const transformPolygonToCircle = (feature, mapCrs) => {
+
+    if (!feature.getGeometry() || feature.getGeometry().getType() !== "Polygon" || feature.getProperties().center && feature.getProperties().center.length === 0) {
+        return feature;
+    }
+    if (feature.getProperties() && feature.getProperties().isCircle) {
+        const extent = feature.getGeometry().getExtent();
+        let center;
+        if (feature.getProperties().center) {
+            center = reproject(feature.getProperties().center, "EPSG:4326", mapCrs);
+            center = [center.x, center.y];
+        } else {
+            center = ol.extent.getCenter(extent);
+        }
+        const radius = feature.getProperties().radius || calculateRadius(center, feature.getGeometry().getCoordinates());
+        feature.setGeometry(new ol.geom.Circle(center, radius));
+        return feature;
+    }
+    return feature;
+};
+
+/**
+ * it tells if the filtered list of the coordinates is a geojson polygon,
+ * with the first point = to the last
+ * @param {number[[[]]]} coords the coordinates of the polygon
+ * @return {boolean} true if it is a valid polygon, false otherwise
+*/
+const isCompletePolygon = (coords = [[[]]]) => {
+    const {validateCoordsArray} = require('./AnnotationsUtils');
+    const validCoords = coords[0].filter(validateCoordsArray);
+    return validCoords.length > 3 && head(validCoords)[0] === last(validCoords)[0] && head(validCoords)[1] === last(validCoords)[1];
+};
 
 module.exports = {
+    transformPolygonToCircle,
     boundsToOLExtent,
+    isCompletePolygon,
     fromLeafletFeatureToQueryform
 };

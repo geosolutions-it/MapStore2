@@ -10,8 +10,10 @@ const {
     CHANGE_MEASUREMENT_TOOL,
     CHANGE_MEASUREMENT_STATE,
     CHANGE_UOM,
+    RESET_GEOMETRY,
     CHANGED_GEOMETRY
 } = require('../actions/measurement');
+const {set} = require('../utils/ImmutableUtils');
 
 const {TOGGLE_CONTROL, RESET_CONTROLS} = require('../actions/controls');
 
@@ -20,6 +22,16 @@ const defaultState = {
     lineMeasureEnabled: false,
     areaMeasureEnabled: false,
     bearingMeasureEnabled: false,
+    customStartEndPoint: {
+        startPointOptions: {
+            radius: 3,
+            fillColor: "green"
+        },
+        endPointOptions: {
+            radius: 3,
+            fillColor: "red"
+        }
+    },
     uom: {
         length: {unit: 'm', label: 'm'},
         area: {unit: 'sqm', label: 'm²'}
@@ -38,7 +50,11 @@ function measurement(state = defaultState, action) {
             len: 0,
             area: 0,
             bearing: 0,
-            feature: {}
+            feature: {
+                properties: {
+                    disabled: true
+                }
+            }
         });
     }
     case CHANGE_MEASUREMENT_STATE:
@@ -53,8 +69,11 @@ function measurement(state = defaultState, action) {
             bearing: action.bearing,
             lenUnit: action.lenUnit,
             areaUnit: action.areaUnit,
-            feature: action.feature
+            feature: set("properties.disabled", state.feature.properties.disabled, action.feature)
         });
+    case RESET_GEOMETRY: {
+        return set("feature.properties.disabled", true, state);
+    }
     case CHANGE_UOM: {
         const prop = action.uom === "length" ? "lenUnit" : "lenArea";
         const {value, label} = action.value;
@@ -69,7 +88,8 @@ function measurement(state = defaultState, action) {
         });
     }
     case CHANGED_GEOMETRY: {
-        const {feature} = action;
+        let {feature} = action;
+        feature = set("properties.disabled", false, feature);
         return assign({}, state, {
             feature
         });
@@ -86,7 +106,9 @@ function measurement(state = defaultState, action) {
                     lineMeasureEnabled: false,
                     areaMeasureEnabled: false,
                     bearingMeasureEnabled: false,
-                    feature: {},
+                    feature: { properties: {
+                        disabled: true
+                    }},
                     geomType: ""
                 };
             }
@@ -100,7 +122,9 @@ function measurement(state = defaultState, action) {
             lineMeasureEnabled: false,
             areaMeasureEnabled: false,
             bearingMeasureEnabled: false,
-            feature: {},
+            feature: { properties: {
+                disabled: true
+            }},
             geomType: ""
         };
     }

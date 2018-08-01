@@ -739,10 +739,15 @@
             "back": "Natrag",
             "addMarker": "Dodaj novu točku na karti",
             "styleGeometry": "Odaberi različiti stil za točke",
-            "deleteGeometry": "Ukloni postojeće točke",
-            "removeannotation": "Želite li ukloniti pribilješku?",
+            "deleteGeometry": "Ukloni geometrije napomena",
+            "removeannotation": "Do you want to remove the annotation with title: {title}?",
             "removegeometry": "Želite li ukloniti sve pribilješke?",
             "confirm": "Potvrdi",
+            "undoGeom": "Are you sure to exit without saving? (You will lose any changes)",
+            "confirmGeom": "Confirm",
+            "cancelModalGeom": "Cancel",
+            "deleteFeature": "Delete this feature",
+            "undoDeleteFeature": "Are you sure to delete this feature?",
             "mandatory": "Obavezno polje",
             "emptygeometry": "Geometrija ne može biti prazna",
             "add": "Nova",
@@ -753,6 +758,40 @@
             "field": {
                 "title": "Naslov",
                 "description": "Opis"
+            },
+            "titles": {
+                "marker": " Marker",
+                "line": " Line",
+                "polygon": " Polygon",
+                "text": " Text",
+                "circle": " Circle"
+            },
+            "editor": {
+                "format": "Format",
+                "decimal": "Decimal",
+                "aeronautical": "Aeronautical",
+                "title": {
+                    "Polygon": "Polygon editor",
+                    "LineString": "LineString Editor",
+                    "Circle": "Circle editor",
+                    "Point": "Marker editor",
+                    "Text": "Text editor"
+                },
+                "placeholder": {
+                    "text": "Type a text",
+                    "radius": "Type a radius",
+                    "select": "Select"
+                },
+                "add": "Add new coordinates",
+                "valid": "Geometry is valid",
+                "radius": "Radius",
+                "text": "Text",
+                "lat": "Latitude",
+                "lon": "Longitude",
+                "notValidMarker": "Insert a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "All coordinate must be valid (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Insert a text value and a valid coordinate (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Insert a radius value and a valid coordinate (+|- 90° lat, +|-180° lon)"
             }
         },
         "users": {
@@ -1147,6 +1186,7 @@
                     "configureTableOptions": "Prilagodi postavke tabele",
                     "resetColumnsSizes": "Poništo sve promjene širine kolona",
                     "updateWidget": "Ažuriraj widget",
+                    "addToTheMap": "Dodaj widget na kartu",
                     "addTheWidget": "Dodaj widget",
                     "titlePlaceholder": "Umetni naslov...",
                     "textPlaceholder": "Umetni tekst...",

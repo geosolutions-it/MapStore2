@@ -11,13 +11,20 @@ const {
     toggleMeasurement,
     changeMeasurementState,
     changeUom,
+    resetGeometry,
     changeGeometry
 } = require('../../actions/measurement');
 const {RESET_CONTROLS} = require('../../actions/controls');
-const feature = {type: "Feature", geometry: {
-    coordinates: [[2, 2], [3, 3]],
-    type: "LineString"
-}};
+const feature = {
+    type: "Feature",
+    geometry: {
+        coordinates: [[2, 2], [3, 3]],
+        type: "LineString"
+    },
+    properties: {
+        disabled: true
+    }
+};
 describe('Test the measurement reducer', () => {
 
     it('returns original state on unrecognized action', () => {
@@ -38,6 +45,11 @@ describe('Test the measurement reducer', () => {
         expect(state.lineMeasureEnabled).toBe(false);
         expect(state.areaMeasureEnabled).toBe(false);
         expect(state.bearingMeasureEnabled).toBe(false);
+    });
+    it('RESET_GEOMETRY', () => {
+        const state = measurement({feature: {}}, resetGeometry());
+        expect(state.feature.properties.disabled).toBe(true);
+
     });
     it('CHANGE_MEASUREMENT_TOOL previous geomType empty', () => {
         const state = measurement( {geomType: ""}, toggleMeasurement({
@@ -72,7 +84,7 @@ describe('Test the measurement reducer', () => {
             areaUnit: "sqm",
             feature
     });
-        let state = measurement( {}, testAction);
+        let state = measurement( {feature}, testAction);
         expect(state.lineMeasureEnabled).toBe(true);
         expect(state.areaMeasureEnabled).toBe(false);
         expect(state.bearingMeasureEnabled).toBe(false);

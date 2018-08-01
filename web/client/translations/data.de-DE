@@ -39,6 +39,7 @@
         "details": {
             "title": "Infos zu dieser Karte"
         },
+        "remove": "Löschen",
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",
             "title": "Titel",
@@ -547,6 +548,19 @@
             "s_priority_info": "Wird verwendet, um Suchergebnisse zu sortieren, höhere Werte zuerst. Nominatim Ergebnisse haben Priorität = 5",
             "serviceslistempty": "Keine benutzerdefinierten Services definiert"
         },
+        "draw": {
+            "fill": "Füllung:",
+            "stroke": "Linie:",
+            "strokeWidth": "Linienbreite:",
+            "font": {
+                "textColor": "textfarbe",
+                "family": "font-family",
+                "size": "font-size",
+                "textAlign": "ausrichtung des Textes",
+                "style": "font-style",
+                "weight": "font-weight"
+            }
+        },
         "drawLocal": {
             "draw": {
                 "toolbar": {
@@ -767,6 +781,80 @@
                 }
             }
         },
+        "annotations": {
+            "edit": "Bearbeiten",
+            "remove": "Löschen",
+            "save": "Speichern",
+            "cancel": "Abbrechen",
+            "back": "Zurück",
+            "addMarker": "Fügen Sie eine Geometrie hinzu",
+            "styleGeometry": "Stil ändern",
+            "deleteGeometry": "Entfernen Sie alle Anmerkungsgeometrien",
+            "removeannotation": "Möchten Sie die Anmerkung mit Titel entfernen: {title}?",
+            "removegeometry": "Möchten Sie alle Annotationspunkte entfernen?",
+            "confirm": "Bestätigen",
+            "title": "Anmerkungen",
+            "mandatory": "Pflichtfeld",
+            "emptygeometry": "geometrie kann nicht leer sein",
+            "add": "Neue",
+            "filter": "Filtern die annotationen...",
+            "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
+            "titleUndoGeom": "Die Geometrie hat sich geändert",
+            "undoGeom": "Sind Sie sicher, ohne zu speichern zu beenden? (Sie werden alle Änderungen verlieren)",
+            "confirmGeom": "Bestätigen",
+            "cancelModalGeom": "Abbrechen",
+            "deleteFeature": "Löschen Sie diese Funktion",
+            "undoDeleteFeature": "Möchten Sie diese Funktion wirklich löschen?",
+            "insertText": "Bitte fügen Sie die Textanmerkung ein",
+            "downloadtooltip": "Laden Sie Anmerkungen herunter",
+            "downloadcurrenttooltip": "Aktuelle Annotation herunterladen",
+            "downloadError": "Fehler beim Exportieren",
+            "loadtooltip": "Importieren Sie Anmerkungen",
+            "loadtitle": "Importieren Sie Anmerkungen",
+            "selectfiletext": "Legen Sie die Datei hier ab oder klicken Sie, um die zu importierende Anmerkungsdatei auszuwählen. (unterstützte Dateien: JSON)",
+            "loadoverride": "Ersetzen Sie Anmerkungen",
+            "loaderror": "Wählen Sie eine oder mehrere Anmerkungsdateien aus. (unterstützte Dateien: json)",
+            "defaulttitle": "Bearbeiten Sie den Standardtitel",
+            "zoomTo": "Zoom",
+            "field": {
+                "title": "Titel",
+                "description": "Beschreibung"
+            },
+            "titles": {
+                "marker": " Marker",
+                "line": " Linie",
+                "polygon": " Polygon",
+                "text": " Text",
+                "circle": " Kreis"
+            },
+            "editor": {
+                "format": "Format",
+                "decimal": "Dezimal",
+                "aeronautical": "Luftfahrt",
+                "title": {
+                    "Polygon": "Polygon-Editor",
+                    "LineString": "LineString-Editor",
+                    "Circle": "Kreis-Editor",
+                    "Point": "Marker-Editor",
+                    "Text": "Text-Editor"
+                },
+                "placeholder": {
+                    "text": "Geben Sie einen Text ein",
+                    "radius": "Geben Sie einen Radius ein",
+                    "select": "Wählen"
+                },
+                "add": "Fügen Sie neue Koordinaten hinzu",
+                "valid": "Geometrie ist gültig",
+                "radius": "Radius",
+                "text": "Text",
+                "lat": "Breite",
+                "lon": "Längengrad",
+                "notValidMarker": "Fügen Sie eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
+                "notValidPolyline": "Alle Koordinaten müssen gültig sein (+|- 90° lat, +|-180° lon)",
+                "notValidText": "Fügen Sie einen Textwert und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)",
+                "notValidCircle": "Geben Sie einen Radius und eine gültige Koordinate ein (+|- 90° lat, +|-180° lon)"
+            }
+        },
         "user":{
             "login": "Login",
             "logout": "Logout",
@@ -795,30 +883,6 @@
             "detailsEmail": "E-mail",
             "detailsCompany": "Unternehmen",
             "detailsNotes": "Anmerkungen"
-        },
-        "annotations": {
-            "edit": "Bearbeiten",
-            "remove": "Löschen",
-            "save": "Speichern",
-            "cancel": "Abbrechen",
-            "back": "Zurück",
-            "addMarker": "Einen neuen Punkt auf der Karte hinzufügen",
-            "styleGeometry": "Wählen Sie einen anderen Stil für Punkte",
-            "deleteGeometry": "Bestehende Punkte entfernen",
-            "removeannotation": "Möchten Sie die Annotation entfernen?",
-            "removegeometry": "Möchten Sie alle Annotationspunkte entfernen?",
-            "confirm": "bestätigen",
-            "title": "Anmerkungen",
-            "mandatory": "Pflichtfeld",
-            "emptygeometry": "geometrie kann nicht leer sein",
-            "add": "Neue",
-            "filter": "Filtern die annotationen...",
-            "undo": "Sind Sie sicher, dass Sie die Annotationsbearbeitungssitzung aufgeben möchten?",
-            "zoomTo": "Zoom",
-            "field": {
-                "title": "Titel",
-                "description": "Beschreibung"
-            }
         },
         "users": {
             "title": "Accounts verwalten",
@@ -912,6 +976,22 @@
             "add": "Hinzufügen",
             "cancel": "Abbrechen",
             "success": " erfolgreich importiert"
+        },
+        "mapImport": {
+                "title": "Daten importieren",
+                "dropZone": {
+                    "heading": "<p> <h4> Legen Sie hier Ihre Konfigurations- oder Vektordateien ab </h4> <small> oder </small> </p>",
+                    "selectFiles": "Dateien auswählen...",
+                    "infoSupported": "<p> <small> Unterstützte Konfigurationsdateien: MapStore2 Legacy-Format. Unterstützte Vektor-Layer-Dateien: Shapefiles müssen in Zip-Archiven, KML / KMZ, GPX oder GeoJSON </small> </p> enthalten sein",
+                    "note": "<p> <small> <i> <strong> Hinweis </strong>: Die aktuelle Map wird bei Konfigurationsdateien überschrieben </i> </small> </p>"
+                },
+                "errors": {
+                    "fileNotSupported": "Datei wird nicht unterstützt",
+                    "unknownError": "Beim Import ist ein unbekannter Fehler aufgetreten"
+                }
+            },
+        "mapExport": {
+            "title": "Daten exportieren"
         },
         "catalog": {
             "title": "Katalog",
