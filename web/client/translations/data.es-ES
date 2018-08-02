@@ -434,7 +434,11 @@
                 "data_panel": "Datos",
                 "classification_stroke": "tablero",
                 "classification_error": "Error al llamar al servicio de clasificación: {message}",
-                "fields_error": "Error al cargar la lista de campos: {message}"
+                "fields_error": "Error al cargar la lista de campos: {message}",
+                "interval_limit": "Los intervalos deben ser un número entre {min} y {max}",
+                "invalid_object": "Respuesta de servicio inválida",
+                "invalid_geometry": "El tipo de geometría no es válido, no es un punto, línea o polígono",
+                "invalid_classes": "Max debe ser mayor que min en todas las clases"
             }
         },
         "print":{
@@ -1116,6 +1120,7 @@
                 "placeholders": {
                     "default": "Buscar...",
                     "string": "Escribe texto para filtrar...",
+                    "date": "Escriba la fecha para filtrar...",
                     "number": "Escriba el número o la expresión..."
                 },
                 "tooltips": {
@@ -1290,6 +1295,9 @@
             },
             "chartOptionsTitle": "Configurar Datos",
             "widgetOptionsTitle": "Configurar Información de widget",
+            "placeHolder":{
+                "default":"Seleccionar atributo"
+            },
             "groupByAttributes": {
                 "line": "Atributo X",
                 "pie": "Agrupar por",
@@ -1300,11 +1308,11 @@
             },
             "aggregationAttribute": {
                 "line": "Atributo Y",
-                "pie": "Valor",
+                "pie": "Utilizar",
                 "bar": "Atributo Y",
-                "gauge": "Valor",
-                "counter": "Valor",
-                "default": "Valor"
+                "gauge": "Utilizar",
+                "counter": "Utilizar",
+                "default": "Utilizar"
             },
             "aggregateFunction": {
                 "line": "Operación",

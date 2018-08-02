@@ -57,6 +57,8 @@ class LeafletMap extends React.Component {
             attributionControl: false
         },
         projection: "EPSG:3857",
+        center: {x: 13, y: 45, crs: "EPSG:4326"},
+        zoom: 5,
         onLayerLoading: () => {},
         onLayerLoad: () => {},
         onLayerError: () => {},

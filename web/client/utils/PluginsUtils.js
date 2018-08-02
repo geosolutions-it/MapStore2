@@ -235,7 +235,7 @@ const PluginsUtils = {
             };
         }, {}),
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
-                                .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
+                                .reduce((previous, current) => assign({}, previous, omit(current, 'reducers', 'epics')), {}),
     /**
      * provide the pluginDescriptor for a given plugin, with a state and a configuration
      * @param {object} state the state. This is required to laod plugins that depend from the state itself
@@ -278,13 +278,15 @@ const PluginsUtils = {
         };
     },
     getPluginItems,
-    getConfiguredPlugin: (pluginDef, loadedPlugins) => {
+    getConfiguredPlugin: (pluginDef, loadedPlugins, loaderComponent) => {
         if (pluginDef) {
-            const Plugin = loadedPlugins && loadedPlugins[pluginDef.name] || pluginDef.plugin;
-            return (props) => {
-                return (<Plugin key={pluginDef.id}
-                    {...props} {...pluginDef.cfg} pluginCfg={pluginDef.cfg}/>);
+            const Plugin = loadedPlugins && loadedPlugins[pluginDef.name] || (pluginDef.plugin && !pluginDef.plugin.loadPlugin && pluginDef.plugin);
+            const result = (props) => {
+                return Plugin ? (<Plugin key={pluginDef.id}
+                    {...props} {...pluginDef.cfg} pluginCfg={pluginDef.cfg} />) : loaderComponent;
             };
+            result.loaded = !!Plugin;
+            return result;
         }
         return pluginDef;
     },

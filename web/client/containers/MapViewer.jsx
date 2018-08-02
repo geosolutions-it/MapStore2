@@ -18,7 +18,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const PluginsUtils = require('../utils/PluginsUtils');
 
 const PluginsContainer = connect((state) => ({
-    pluginsConfig: state.plugins || ConfigUtils.getConfigProp('plugins') || null,
+    statePluginsConfig: state.plugins,
     mode: urlQuery.mode || state.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
     pluginsState: assign({}, state && state.controls, state && state.layers && state.layers.settings && {
         layerSettings: state.layers.settings
@@ -29,6 +29,8 @@ const PluginsContainer = connect((state) => ({
 class MapViewer extends React.Component {
     static propTypes = {
         params: PropTypes.object,
+        statePluginsConfig: PropTypes.object,
+        pluginsConfig: PropTypes.object,
         loadMapConfig: PropTypes.func,
         plugins: PropTypes.object
     };
@@ -44,6 +46,7 @@ class MapViewer extends React.Component {
 
     render() {
         return (<PluginsContainer key="viewer" id="viewer" className="viewer"
+            pluginsConfig={this.props.pluginsConfig || this.props.statePluginsConfig || ConfigUtils.getConfigProp('plugins')}
             plugins={this.props.plugins}
             params={this.props.params}
             />);

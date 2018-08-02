@@ -48,18 +48,7 @@ const getColorRangeItems = (type) => {
     return COLORS;
 };
 const getLabelMessageId = (field, data = {}) => `widgets.${field}.${data.type || data.widgetType || "default"}`;
-const renderHeader = (data) => {
-    const panelHeader = <Message msgId={getLabelMessageId("advancedOptions", data)} />;
-
-    return (
-        <span>
-            <span style={{cursor: "pointer"}}>{panelHeader}</span>
-            <button className="close">
-                {data.panel ? <Glyphicon glyph="glyphicon glyphicon-collapse-down"/> : <Glyphicon glyph="glyphicon glyphicon-expand"/>}
-            </button>
-        </span>
-    );
-};
+const placeHolder = <Message msgId={getLabelMessageId("placeHolder")} />;
 
 module.exports = ({
         data = { options: {} },
@@ -90,7 +79,7 @@ module.exports = ({
               <Select
                   value={data.options && data.options.groupByAttributes}
                   options={options}
-                  placeholder={'Select attribute'}
+                  placeholder={placeHolder}
                   onChange={(val) => {
                       onChange("options.groupByAttributes", val && val.value);
                   }}
@@ -105,7 +94,7 @@ module.exports = ({
               <Select
                   value={data.options && data.options.aggregationAttribute}
                   options={options}
-                  placeholder={'Select attribute'}
+                  placeholder={placeHolder}
                   onChange={(val) => {
                       onChange("options.aggregationAttribute", val && val.value);
                   }}
@@ -120,7 +109,7 @@ module.exports = ({
               <Select
                   value={data.options && data.options.aggregateFunction}
                   options={aggregationOptions}
-                  placeholder={'Select attribute'}
+                  placeholder={placeHolder}
                   onChange={(val) => {
                       onChange("options.aggregateFunction", val && val.value);
                   }}

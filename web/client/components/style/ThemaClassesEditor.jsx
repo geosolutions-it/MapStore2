@@ -19,12 +19,14 @@ const assign = require('object-assign');
 class ThemaClassesEditor extends React.Component {
     static propTypes = {
         classification: PropTypes.array,
-        onUpdateClasses: PropTypes.func
+        onUpdateClasses: PropTypes.func,
+        className: PropTypes.string
     };
 
     static defaultProps = {
         classification: [],
-        onUpdateClasses: () => {}
+        onUpdateClasses: () => {},
+        className: ""
     };
 
     renderClasses = () => {
@@ -32,6 +34,7 @@ class ThemaClassesEditor extends React.Component {
             <FormGroup>
                 <Col xs="4">
                     <ColorPicker key={classItem.color}
+                        pickerProps={{ disableAlpha: true }}
                         text={classItem.color} value={{ ...tinycolor(classItem.color).toRgb(), a: 100 }}
                         onChangeColor={(color) => this.updateColor(index, color)} />
                 </Col>
@@ -55,7 +58,7 @@ class ThemaClassesEditor extends React.Component {
     };
 
     render() {
-        return (<div className="thema-classes-editor"><Grid fluid>
+        return (<div className={"thema-classes-editor " + this.props.className}><Grid fluid>
                 <Row>
                     {this.renderClasses()}
                 </Row>
@@ -63,12 +66,14 @@ class ThemaClassesEditor extends React.Component {
     }
 
     updateColor = (classIndex, color) => {
-        const newClassification = this.props.classification.map((classItem, index) => {
-            return index === classIndex ? assign({}, classItem, {
-                color: tinycolor(color).toHexString()
-            }) : classItem;
-        });
-        this.props.onUpdateClasses(newClassification);
+        if (color) {
+            const newClassification = this.props.classification.map((classItem, index) => {
+                return index === classIndex ? assign({}, classItem, {
+                    color: tinycolor(color).toHexString()
+                }) : classItem;
+            });
+            this.props.onUpdateClasses(newClassification);
+        }
     };
 
     updateMin = (classIndex, min) => {

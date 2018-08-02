@@ -891,6 +891,7 @@
                     "placeholders": {
                         "default": "Search...",
                         "string": "Type text to filter...",
+                        "date": "Type date to filter...",
                         "number": "Type number or expression..."
                     },
                     "tooltips": {
@@ -997,6 +998,9 @@
             },
             "chartOptionsTitle": "Données",
             "widgetOptionsTitle": "Info sur le widget",
+            "placeHolder":{
+                "default":"Select attribute"
+            },
             "groupByAttributes": {
                 "line": "Attributs X",
                 "pie": "Grouper par",
@@ -1005,9 +1009,11 @@
             },
             "aggregationAttribute": {
                 "line": "Attributs Y",
-                "pie": "Valeur",
+                "pie": "Use",
                 "bar": "Attributs Y",
-                "gauge": "valeur"
+                "gauge": "Use",
+                "counter": "Use",
+                "default": "Use"
             },
             "aggregateFunction": {
                 "line": "Opération",

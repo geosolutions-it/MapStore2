@@ -96,6 +96,13 @@ describe('wfsquery actions', () => {
         expect(searchUrl).toBe("searchUrl");
         expect(filterObj).toBe("filterObj");
     });
+    it('query with query options', () => {
+        let { type, searchUrl, filterObj, queryOptions } = query("searchUrl", "filterObj", "queryOptions");
+        expect(type).toBe(QUERY);
+        expect(searchUrl).toBe("searchUrl");
+        expect(filterObj).toBe("filterObj");
+        expect(queryOptions).toBe("queryOptions");
+    });
     it('resetQuery', () => {
         let {type} = resetQuery();
         expect(type).toBe(RESET_QUERY);

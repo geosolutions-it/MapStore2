@@ -58,7 +58,7 @@ class Legend extends React.Component {
                 SLD_VERSION: "1.1.0",
                 LEGEND_OPTIONS: props.legendOptions
             }, layer.legendParams || {},
-            layer.params || {},
+            SecurityUtils.addAuthenticationToSLD(layer.params || {}, props.layer),
             layer.params && layer.params.SLD_BODY ? {SLD_BODY: layer.params.SLD_BODY} : {},
             props.scales && props.currentZoomLvl ? {SCALE: Math.round(props.scales[props.currentZoomLvl])} : {});
             SecurityUtils.addAuthenticationParameter(url, query);
@@ -74,9 +74,16 @@ class Legend extends React.Component {
     }
     render() {
         if (!this.state.error && this.props.layer && this.props.layer.type === "wms" && this.props.layer.url) {
-            return <img onError={this.onImgError} src={this.getUrl(this.props)} style={this.props.style}/>;
+            return <img onError={this.onImgError} onLoad={(e) => this.validateImg(e.target)} src={this.getUrl(this.props)} style={this.props.style}/>;
         }
         return <Message msgId="layerProperties.legenderror" />;
+    }
+    validateImg = (img) => {
+        // GeoServer response is a 1x2 px size when legend is not available.
+        // In this case we need to show the "Legend Not available" message
+        if (img.height <= 1 && img.width <= 2) {
+            this.onImgError();
+        }
     }
 }
 

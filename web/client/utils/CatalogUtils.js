@@ -40,6 +40,14 @@ const filterOnMatrix = (SRS, matrixIds) => {
     return SRS.filter(srs => WMTSUtils.getTileMatrixSet(matrixIds, srs, SRS, matrixIds, null));
 };
 
+// Try to find thumb from dc documents works both with geonode pycsw and geosolutions-csw
+const getThumb = (dc) => {
+    let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
+    return head([].filter.call( refs, (ref) => {
+        return ref.scheme === "WWW:LINK-1.0-http--image-thumbnail" || ref.scheme === "thumbnail" || (ref.scheme === "WWW:DOWNLOAD-1.0-http--download" && (ref.value || "").indexOf(`${dc.identifier || ""}-thumb`) !== -1);
+    }));
+};
+
 const converters = {
     csw: (records, options) => {
         let result = records;
@@ -62,13 +70,12 @@ const converters = {
                     wms = head([].filter.call(refs, (ref) => { return ref.scheme && (ref.scheme.match(/^OGC:WMS-(.*)-http-get-map/g) || ref.scheme === "OGC:WMS"); }));
                     if (wms) {
                         let urlObj = urlUtil.parse(wms.value, true);
-                        let layerName = urlObj.query && urlObj.query.layers;
+                        let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
                         wms = assign({}, wms, {name: layerName} );
                     }
                 }
                 if (!thumbURL && dc && dc.references) {
-                    let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
-                    let thumb = head([].filter.call( refs, (ref) => { return ref.scheme === "WWW:LINK-1.0-http--image-thumbnail" || ref.scheme === "thumbnail"; }));
+                    let thumb = getThumb(dc);
                     if (thumb) {
                         thumbURL = thumb.value;
                     }
@@ -86,7 +93,7 @@ const converters = {
                     }).forEach((reference) => {
                         // a get capabilities reference should be absolute and filter by the layer name
                         let referenceUrl = reference.value.indexOf("http") === 0 ? reference.value
-                            : options.catalogURL + "/" + reference.value;
+                            : (options && options.catalogURL || "") + "/" + reference.value;
                         // add the references to the final list
                         references.push({
                             type: reference.scheme,
@@ -98,7 +105,7 @@ const converters = {
                 if (wms && wms.name) {
                     let absolute = (wms.value.indexOf("http") === 0);
                     if (!absolute) {
-                        assign({}, wms, {value: options.catalogURL + "/" + wms.value} );
+                        assign({}, wms, {value: (options && options.catalogURL || "") + "/" + wms.value} );
                     }
                     let wmsReference = {
                         type: wms.protocol || wms.scheme,
@@ -113,7 +120,7 @@ const converters = {
                 if (thumbURL) {
                     let absolute = (thumbURL.indexOf("http") === 0);
                     if (!absolute) {
-                        thumbURL = (getBaseCatalogUrl(options.url) || "") + thumbURL;
+                        thumbURL = (getBaseCatalogUrl(options && options.url) || "") + thumbURL;
                     }
                 }
                 // create the references array (now only wms is supported)
@@ -131,7 +138,7 @@ const converters = {
             });
         }
     },
-    wms: (records, options) => {
+    wms: (records, options = {}) => {
         if (records && records.records) {
             return records.records.map((record) => {
                 return {
@@ -147,7 +154,7 @@ const converters = {
                 }, dim.$ || {})),
                 references: [{
                     type: "OGC:WMS",
-                    url: options.url,
+                    url: options && options.url,
                     SRS: (record.SRS && (isArray(record.SRS) ? record.SRS : [record.SRS])) || [],
                     params: {
                         name: record.Name
@@ -204,7 +211,7 @@ const converters = {
                 },
                 references: [{
                     type: "OGC:WMTS",
-                    url: record.GetTileUrl || options.url,
+                    url: record.GetTileUrl || (options && options.url),
                     SRS: filterOnMatrix(record.SRS || [], matrixIds),
                     params: {
                         name: record["ows:Identifier"]

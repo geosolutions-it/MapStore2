@@ -434,7 +434,11 @@
                 "data_panel": "Daten",
                 "classification_stroke": "Brett",
                 "classification_error": "Fehler beim Aufruf des Klassifizierungsdienstes: {message}",
-                "fields_error": "Fehler beim Laden der Felderliste: {message}"
+                "fields_error": "Fehler beim Laden der Felderliste: {message}",
+                "interval_limit": "Intervalle sollten eine Zahl zwischen {min} und {max} sein",
+                "invalid_object": "Ungültige Serviceantwort",
+                "invalid_geometry": "Der Geometrietyp ist nicht gültig, kein Punkt, Linie oder Polygon",
+                "invalid_classes": "Max muss in jeder Klasse größer als min sein"
             }
         },
         "print":{
@@ -1116,6 +1120,7 @@
                 "placeholders": {
                     "default": "Beispiele...",
                     "string": "Geben Sie Text ein, um Ergebnisse zu filtern ...",
+                    "date": "Geben Sie das zu filternde Datum ein...",
                     "number": "Geben Sie eine Zahl oder einen Ausdruck ein..."
                 },
                 "tooltips": {
@@ -1290,6 +1295,9 @@
             },
             "chartOptionsTitle": "Daten konfigurieren",
             "widgetOptionsTitle": "Widget-Informationen konfigurieren",
+            "placeHolder":{
+                "default":"Wählen Sie Attribut"
+            },
             "groupByAttributes": {
                 "line": "X-Attribut",
                 "pie": "Gruppiere nach",
@@ -1300,11 +1308,11 @@
             },
             "aggregationAttribute": {
                 "line": "Y-Attribut",
-                "pie": "Wert",
+                "pie": "Benutzen",
                 "bar": "Y-Attribut",
-                "gauge": "Wert",
-                "counter": "Wert",
-                "default": "Wert"
+                "gauge": "Benutzen",
+                "counter": "Benutzen",
+                "default": "Benutzen"
             },
             "aggregateFunction": {
                 "line": "Betrieb",

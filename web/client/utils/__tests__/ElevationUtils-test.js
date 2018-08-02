@@ -11,8 +11,7 @@ const ElevationUtils = require('../ElevationUtils');
 describe('ElevationUtils', () => {
     beforeEach( () => {
         ElevationUtils.reset({
-            max: 1,
-            maxAge: 100
+            max: 1
         });
     });
     afterEach(() => {
@@ -35,15 +34,6 @@ describe('ElevationUtils', () => {
                 expect(elev2.available).toBe(true);
                 done();
             });
-        });
-    });
-    it('loads and stores ttl', (done) => {
-        ElevationUtils.loadTile('base/web/client/test-resources/elevation.bin', {}, 'mykey').then(() => {
-            setTimeout(() => {
-                const elev = ElevationUtils.getElevation('mykey', { x: 0, y: 0 }, 256);
-                expect(elev.available).toBe(false);
-                done();
-            }, 200);
         });
     });
 });

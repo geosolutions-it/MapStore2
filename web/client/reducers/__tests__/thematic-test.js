@@ -15,7 +15,9 @@ const {
     classificationError,
     changeConfiguration,
     setDirty,
-    cancelDirty
+    cancelDirty,
+    setInvalidInput,
+    resetInvalidInput
  } = require('../../actions/thematic');
 const thematic = require('../thematic');
 
@@ -107,5 +109,23 @@ describe('Test the thematic reducer', () => {
     it('cancelDirty action', () => {
         const state = thematic({}, cancelDirty());
         expect(state.dirty).toBe(false);
+    });
+
+    it('setInvalidInput action', () => {
+        const state = thematic({}, setInvalidInput('intervals', 'myerror', 'params'));
+        expect(state.invalidInputs).toExist();
+        expect(state.invalidInputs.intervals).toExist();
+        expect(state.invalidInputs.intervals.message).toBe('myerror');
+        expect(state.invalidInputs.intervals.params).toBe('params');
+    });
+
+    it('resetInvalidInput action', () => {
+        const state = thematic({
+            invalidInputs: {
+                intervals: {}
+            }
+        }, resetInvalidInput('intervals'));
+        expect(state.invalidInputs).toExist();
+        expect(state.invalidInputs.intervals).toNotExist();
     });
 });

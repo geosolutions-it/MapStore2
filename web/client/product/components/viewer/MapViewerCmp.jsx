@@ -19,6 +19,7 @@ class MapViewerComponent extends React.Component {
         loadMapConfig: PropTypes.func,
         onInit: PropTypes.func,
         plugins: PropTypes.object,
+        pluginsConfig: PropTypes.object,
         wrappedContainer: PropTypes.object,
         location: PropTypes.object
     };
@@ -54,6 +55,7 @@ class MapViewerComponent extends React.Component {
     render() {
         const WrappedContainer = this.props.wrappedContainer;
         return (<WrappedContainer
+            pluginsConfig={this.props.pluginsConfig}
             plugins={this.props.plugins}
             params={this.props.match.params}
             />);

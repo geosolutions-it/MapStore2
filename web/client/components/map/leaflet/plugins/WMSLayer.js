@@ -9,11 +9,12 @@ const React = require('react');
 const Message = require('../../../../components/I18N/Message');
 const Layers = require('../../../../utils/leaflet/Layers');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
-const FilterUtils = require('../../../../utils/FilterUtils');
+const { optionsToVendorParams } = require('../../../../utils/VendorParamsUtils');
+
 const WMSUtils = require('../../../../utils/leaflet/WMSUtils');
 const L = require('leaflet');
 const objectAssign = require('object-assign');
-const {isArray} = require('lodash');
+const {isArray, isNil} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const ElevationUtils = require('../../../../utils/ElevationUtils');
 require('leaflet.nontiledlayer');
@@ -147,12 +148,20 @@ L.tileLayer.elevationWMS = function(urls, options, nodata) {
     return new L.TileLayer.ElevationWMS(urls, options, nodata);
 };
 
+const removeNulls = (obj = {}) => {
+    return Object.keys(obj).reduce((previous, key) => {
+        return isNil(obj[key]) ? previous : objectAssign(previous, {
+            [key]: obj[key]
+        });
+    }, {});
+};
+
 
 function wmsToLeafletOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
-    const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
+    const params = optionsToVendorParams(options);
     // NOTE: can we use opacity to manage visibility?
-    return objectAssign({}, options.baseParams, {
+    const result = objectAssign({}, options.baseParams, {
         layers: options.name,
         styles: options.style || "",
         format: options.format || 'image/png',
@@ -167,10 +176,10 @@ function wmsToLeafletOptions(options) {
         maxZoom: options.maxZoom || 23,
         maxNativeZoom: options.maxNativeZoom || 18
     }, objectAssign(
-        (CQL_FILTER ? {CQL_FILTER} : {}),
         (options._v_ ? {_v_: options._v_} : {}),
-        (options.params || {})
+        (params || {})
     ));
+    return SecurityUtils.addAuthenticationToSLD(result, options);
 }
 
 function getWMSURLs( urls ) {
@@ -180,7 +189,7 @@ function getWMSURLs( urls ) {
 Layers.registerType('wms', {
     create: (options) => {
         const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
-        const queryParameters = wmsToLeafletOptions(options) || {};
+        const queryParameters = removeNulls(wmsToLeafletOptions(options) || {});
         urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
         if (options.useForElevation) {
             return L.tileLayer.elevationWMS(urls, queryParameters, options.nodata || -9999);
@@ -191,7 +200,7 @@ Layers.registerType('wms', {
         return L.tileLayer.multipleUrlWMS(urls, queryParameters);
     },
     update: function(layer, newOptions, oldOptions) {
-        if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken) {
+        if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken && newOptions.visibility) {
             let newLayer;
             const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
             const queryParameters = wmsToLeafletOptions(newOptions) || {};
@@ -205,8 +214,10 @@ Layers.registerType('wms', {
             return newLayer;
         }
         // find the options that make a parameter change
-        let oldqueryParameters = objectAssign({}, WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(oldOptions)), oldOptions.params);
-        let newQueryParameters = objectAssign({}, WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(newOptions)), newOptions.params);
+        let oldqueryParameters = objectAssign({}, WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(oldOptions)),
+            SecurityUtils.addAuthenticationToSLD(oldOptions.params || {}, oldOptions));
+        let newQueryParameters = objectAssign({}, WMSUtils.filterWMSParamOptions(wmsToLeafletOptions(newOptions)),
+            SecurityUtils.addAuthenticationToSLD(newOptions.params || {}, newOptions));
         let newParameters = Object.keys(newQueryParameters).filter((key) => {return newQueryParameters[key] !== oldqueryParameters[key]; });
         let removeParams = Object.keys(oldqueryParameters).filter((key) => { return oldqueryParameters[key] !== newQueryParameters[key]; });
         let newParams = {};
@@ -218,7 +229,7 @@ Layers.registerType('wms', {
                 return objectAssign({}, accumulator, {[currentValue]: newQueryParameters[currentValue] });
             }, newParams);
             // set new options as parameters, merged with params
-            layer.setParams(objectAssign(newParams, newParams.params, newOptions.params));
+            layer.setParams(removeNulls(objectAssign(newParams, newParams.params, SecurityUtils.addAuthenticationToSLD(newOptions.params || {}, newOptions))));
         }/* else if (!isEqual(newOptions.params, oldOptions.params)) {
             layer.setParams(newOptions.params);
         }*/

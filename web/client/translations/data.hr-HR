@@ -1055,6 +1055,7 @@
                 "placeholders": {
                     "default": "Traži...",
                     "string": "Unesi tekst za filter...",
+                    "date": "Type date to filter...",
                     "number": "Unesi vrijednost ili izraz..."
                 },
                 "tooltips": {
@@ -1195,6 +1196,9 @@
             },
             "chartOptionsTitle": "Podaci grafikona",
             "widgetOptionsTitle": "Informacije widgeta",
+            "placeHolder":{
+                "default":"Select attribute"
+            },
             "groupByAttributes": {
                 "line": "X atribut",
                 "pie": "Grupiraj po",
@@ -1205,11 +1209,11 @@
             },
             "aggregationAttribute": {
                 "line": "Y atribut",
-                "pie": "Vrijednost",
+                "pie": "Use",
                 "bar": "Y atribut",
-                "gauge": "Vrijednost",
-                "counter": "Vrijednost",
-                "default": "Vrijednost"
+                "gauge": "Use",
+                "counter": "Use",
+                "default": "Use"
             },
             "aggregateFunction": {
                 "line": "Operacija",
