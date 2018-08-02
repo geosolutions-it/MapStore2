@@ -171,7 +171,7 @@ class Annotations extends React.Component {
         }
         if (featureType === "GeometryCollection" || featureType === "FeatureCollection") {
             return (<span className={"mapstore-annotations-panel-card"}>
-            {(!!(geometry.geometries || geometry.features).filter(f => f.type !== "MultiPoint").length || (properties.textValues && properties.textValues.length)) && (<MultiGeomThumb styleMultiGeom={style} geometry={geometry} properties={properties}/>)}
+            {(!!(geometry.geometries || geometry.features || []).filter(f => f.type !== "MultiPoint").length || (properties.textValues && properties.textValues.length)) && (<MultiGeomThumb styleMultiGeom={style} geometry={geometry} properties={properties}/>)}
             {markerStyle ? (<span className={"mapstore-annotations-panel-card"}>
                 <div className={"mapstore-annotations-panel-card-thumbnail-" + marker.name} style={{...marker.thumbnailStyle, margin: 'auto', textAlign: 'center', color: '#ffffff', marginLeft: 7}}>
                     <span className={"mapstore-annotations-panel-card-thumbnail " + this.getConfig().getGlyphClassName(markerStyle)} style={{marginTop: 0, marginLeft: -7}}/>

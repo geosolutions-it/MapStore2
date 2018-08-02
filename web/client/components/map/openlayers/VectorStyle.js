@@ -1,7 +1,7 @@
 var markerIcon = require('./img/marker-icon.png');
 var markerShadow = require('./img/marker-shadow.png');
 var ol = require('openlayers');
-const {last, head} = require('lodash');
+const {last, head, isArray} = require('lodash');
 const blue = [0, 153, 255, 1];
 const assign = require('object-assign');
 const {trim, isString} = require('lodash');
@@ -480,8 +480,13 @@ function getStyle(options, isDrawing = false, textValues = []) {
                             }));
                         }
                         let gStyle = getValidStyle(type, options, isDrawing, textValues);
+                        if (isArray(gStyle)) {
+                            gStyle.forEach(s => {s.setGeometry(c); });
+                            return p.concat(gStyle);
+                        }
                         gStyle.setGeometry(c);
                         return p.concat([gStyle]);
+
                     }, []);
                     return styles;
                 }
