@@ -83,7 +83,7 @@ const getStylesObject = ({type = "Point", features = []} = {}) => {
         return p;
     }, {type: "FeatureCollection"}) : {...DEFAULT_ANNOTATIONS_STYLES[type]};
 };
-const getProperties = (props = {}, messages = {}) => ({title: LocaleUtils.getMessageById(messages, "annotations.defaulttitle") || "Default title", id: uuidv1(), ...props});
+const getProperties = (props = {}, messages = {}) => ({title: Object.keys({}).length ? LocaleUtils.getMessageById(messages, "annotations.defaulttitle") : "Default title", id: uuidv1(), ...props});
 
 const annStyleToOlStyle = (type, style, label = "") => {
     const s = style[type] || style;
