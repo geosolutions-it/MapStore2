@@ -19,7 +19,7 @@ const {on} = require('../actions/controls');
 const {getFeatureInfo, getVectorInfo, purgeMapInfoResults, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState} = require('../actions/mapInfo');
 const {closeAnnotations} = require('../actions/annotations');
 const {changeMousePointer} = require('../actions/map');
-const {changeMapInfoFormat, updateCenterToMarker} = require('../actions/mapInfo');
+const {changeMapInfoFormat, updateCenterToMarker, closeIdentify} = require('../actions/mapInfo');
 const {currentLocaleSelector} = require('../selectors/locale');
 
 const {compose, defaultProps} = require('recompose');
@@ -171,6 +171,7 @@ const IdentifyPlugin = compose(
         sendRequest: getFeatureInfo,
         localRequest: getVectorInfo,
         purgeResults: conditionalToggle,
+        closeIdentify,
         changeMousePointer,
         showMarker: showMapinfoMarker,
         noQueryableLayers,
