@@ -179,7 +179,7 @@ module.exports = ({
 </Col>
 <Col sm={6}>
   <SwitchButton
-      checked={!data.cartesian}
+      checked={data.cartesian || data.cartesian === false ? !data.cartesian : false}
       onChange={(val) => {
           onChange("cartesian", !val);
       }}
@@ -190,10 +190,9 @@ module.exports = ({
 </Col>
 <Col sm={6}>
   <SwitchButton
-      checked={data.options && data.options.label }
+      checked={data.yAxis || data.yAxis === false ? !data.yAxis : true}
       onChange={(val) => {
           onChange("yAxis", !val);
-          onChange("options.label", val && !val.value);
       }}
       />
 </Col>

@@ -59,15 +59,16 @@ describe('WPSWidgetOptions component', () => {
 
         ReactTestUtils.Simulate.change(inputs[5]);
         expect(spyonChange.calls[4].arguments[0]).toBe("cartesian");
-        expect(spyonChange.calls[4].arguments[1]).toBe(true);
+        expect(spyonChange.calls[4].arguments[1]).toBe(false);
 
         ReactTestUtils.Simulate.change(inputs[6]);
         expect(spyonChange.calls[5].arguments[0]).toBe("yAxis");
-        expect(spyonChange.calls[5].arguments[1]).toBe(false);
+        expect(spyonChange.calls[5].arguments[1]).toBe(true);
 
         ReactTestUtils.Simulate.change(inputs[7], { target: { value: 'Y axis label' } });
-        expect(spyonChange.calls[7].arguments[0]).toBe("yAxisLabel");
-        expect(spyonChange.calls[7].arguments[1]).toBe("Y axis label");
+        expect(spyonChange.calls[6].arguments[0]).toBe("yAxisLabel");
+        expect(spyonChange.calls[6].arguments[1]).toBe("Y axis label");
+
 
     });
     it('Test WPSWidgetOptions onChange for counter context', () => {
