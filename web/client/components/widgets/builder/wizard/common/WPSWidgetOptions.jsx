@@ -48,7 +48,20 @@ const getColorRangeItems = (type) => {
     return COLORS;
 };
 const getLabelMessageId = (field, data = {}) => `widgets.${field}.${data.type || data.widgetType || "default"}`;
+
 const placeHolder = <Message msgId={getLabelMessageId("placeHolder")} />;
+
+const renderHeader = (data) => {
+    const panelHeader = <Message msgId={getLabelMessageId("advancedOptions", data)} />;
+    return (
+        <span>
+            <span style={{cursor: "pointer"}}>{panelHeader}</span>
+            <button className="close">
+                {data.panel ? <Glyphicon glyph="glyphicon glyphicon-collapse-down"/> : <Glyphicon glyph="glyphicon glyphicon-expand"/>}
+            </button>
+        </span>
+    );
+};
 
 module.exports = ({
         data = { options: {} },
