@@ -24,9 +24,9 @@ const {head, get} = require('lodash');
 const {isFeatureGridOpen, getDockSize} = require('../selectors/featuregrid');
 
 /**
- * Gets `MAP_CONFIG_LOADED`, `SIZE_CHANGE`, `CLOSE_FEATURE_GRID`, `OPEN_FEATURE_GRID`, `PURGE_MAPINFO_RESULTS`, `TOGGLE_CONTROL`, `SET_CONTROL_PROPERTY` events.
+ * Gets `MAP_CONFIG_LOADED`, `SIZE_CHANGE`, `CLOSE_FEATURE_GRID`, `OPEN_FEATURE_GRID`, `CLOSE_IDENTIFY`, `TOGGLE_MAPINFO_STATE`, `TOGGLE_CONTROL`, `SET_CONTROL_PROPERTY` events.
  * Configures a map layout based on state of panels.
- * @param {external:Observable} action$ manages `MAP_CONFIG_LOADED`, `SIZE_CHANGE`, `CLOSE_FEATURE_GRID`, `OPEN_FEATURE_GRID`, `PURGE_MAPINFO_RESULTS`, `TOGGLE_CONTROL`, `SET_CONTROL_PROPERTY`.
+ * @param {external:Observable} action$ manages `MAP_CONFIG_LOADED`, `SIZE_CHANGE`, `CLOSE_FEATURE_GRID`, `OPEN_FEATURE_GRID`, `CLOSE_IDENTIFY`, `TOGGLE_MAPINFO_STATE`, `TOGGLE_CONTROL`, `SET_CONTROL_PROPERTY`.
  * @memberof epics.mapLayout
  * @return {external:Observable} emitting {@link #actions.map.updateMapLayout} action
  */
