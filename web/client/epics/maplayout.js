@@ -10,7 +10,7 @@ const {updateMapLayout} = require('../actions/maplayout');
 const {TOGGLE_CONTROL, SET_CONTROL_PROPERTY} = require('../actions/controls');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID} = require('../actions/featuregrid');
-const {CLOSE_IDENTIFY, ERROR_FEATURE_INFO, TOGGLE_MAPINFO_STATE, LOAD_FEATURE_INFO} = require('../actions/mapInfo');
+const {CLOSE_IDENTIFY, ERROR_FEATURE_INFO, TOGGLE_MAPINFO_STATE, LOAD_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO} = require('../actions/mapInfo');
 const {SHOW_SETTINGS, HIDE_SETTINGS} = require('../actions/layers');
 const {mapInfoRequestsSelector} = require('../selectors/mapinfo');
 
@@ -32,7 +32,7 @@ const {isFeatureGridOpen, getDockSize} = require('../selectors/featuregrid');
  */
 
 const updateMapLayoutEpic = (action$, store) =>
-    action$.ofType(MAP_CONFIG_LOADED, SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID, CLOSE_IDENTIFY, TOGGLE_MAPINFO_STATE, LOAD_FEATURE_INFO, TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SHOW_SETTINGS, HIDE_SETTINGS, ERROR_FEATURE_INFO)
+    action$.ofType(MAP_CONFIG_LOADED, SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID, CLOSE_IDENTIFY, TOGGLE_MAPINFO_STATE, LOAD_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, TOGGLE_CONTROL, SET_CONTROL_PROPERTY, SHOW_SETTINGS, HIDE_SETTINGS, ERROR_FEATURE_INFO)
         .switchMap(() => {
 
             const state = store.getState();
