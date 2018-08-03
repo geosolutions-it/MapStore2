@@ -7,85 +7,32 @@
  */
 const { connect } = require('react-redux');
 const { isString } = require('lodash');
-const { getTimeData, getLayersWithTimeData, currentTimeSelector } = require('../../selectors/timemanager');
+const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/timemanager');
 const { selectTime, onRangeChanged} = require('../../actions/timeline');
-const { rangeSelector } = require('../../selectors/timeline');
-const { createShallowSelector } = require('../../utils/ReselectUtils');
-const { timeIntervalToSequence, analyzeIntervalInRange } = require('../../utils/TimeUtils');
-
-const { compose, branch, withProps, renderNothing, withHandlers, withPropsOnChange, defaultProps } = require('recompose');
-const { createStructuredSelector } = require('reselect');
-const MAX_ITEMS = 1000;
-const timeStampToItems = (ISOString, viewRange) => {
-    const [start, end, duration] = ISOString.split("/");
-    if (duration) {
-        // prevent overflows, indicating only the count of items in the interval
-        const {count, start: dataStart, end: dataEnd } = analyzeIntervalInRange({start, end, duration}, viewRange);
-        if (count > MAX_ITEMS) {
-            return [{
-                start,
-                end,
-                duration,
-                type: "range",
-                content: `${count} items`
-            }];
-        }
-        return timeIntervalToSequence({ start: dataStart, end: dataEnd, duration}).map(t => ({
-            start: new Date(t),
-            end: new Date(t),
-            type: 'point'
-        }));
-    }
-    if (!isNaN(new Date(start).getTime())) {
-        return [{
-            start: new Date(start),
-            end: new Date( end || start),
-            type: end ? 'range' : 'point'
-        }];
-    }
-    return null;
-};
-
-/**
- * Transforms time values from layer state into items for timeline
- */
-const getTimeItems = (data = {}, range) => {
-    if (data && data.values) {
-        return (data.values || []).reduce((acc, ISOString) => [...acc, ...timeStampToItems(ISOString, range)], []).filter(v => v && v.start);
-    }
-};
+const { itemsSelector } = require('../../selectors/timeline');
+const { createStructuredSelector, createSelector } = require('reselect');
+const { compose, withProps, branch, withHandlers, withPropsOnChange, renderNothing, defaultProps} = require('recompose');
 
 /**
  * Provides time dimension data for layers
  */
 const layerData = compose(
     connect(
-        createShallowSelector(
-            getTimeData,
-            getLayersWithTimeData,
-            (data, layers) => ({data, layers})
+        createSelector(
+            itemsSelector,
+            layersWithTimeDataSelector,
+            (items, layers) => ({items, layers})
         )
     ),
-    branch(({ data = {} }) => Object.keys(data).length === 0, renderNothing),
+    branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
     withPropsOnChange(
-        ['data', 'layers', 'range'],
+        ['layers'],
         // (props = {}, nextProps = {}) => Object.keys(props.data).length !== Object.keys(nextProps.data).length,
-        ({ data = {}, layers = [], items = [], range = {} }) => ({
+        ({layers = []}) => ({
             groups: layers.map(l => ({
                 id: l.id,
                 title: isString(l.title) ? l.title : l.name
-            })),
-            items: [
-                ...items,
-                ...Object.keys(data)
-                    .map(id => getTimeItems(data[id], range)
-                        .map((item = {}) => ({
-                            content: " ",
-                            ...item,
-                            // style: "color: red; background-color: pink",
-                            group: id
-                        })))
-                    .reduce((acc, layerItems) => [...acc, ...layerItems], [])]
+            }))
         })
     )
 );
@@ -111,9 +58,7 @@ const currentTimeEnhancer = compose(
 );
 
 const rangeEnhancer = compose(
-    connect( createStructuredSelector({
-        range: rangeSelector
-    }), {
+    connect( () => ({}), {
         rangechangedHandler: onRangeChanged
     })
 );

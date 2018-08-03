@@ -75,7 +75,7 @@ const analyzeIntervalInRange = (
     const x2 = Math.floor((re - s) / d);  // index of the first item in range
     const MX = Math.floor((e - s) / d); // max index
 
-    if (x1 >= 0 && x2 >= x1 && x2 <= MX) {
+    if (x1 >= 0 && x2 <= MX) {
         // there is some data in the range
         const count = x2 - x1;
         return {
