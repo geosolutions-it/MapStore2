@@ -322,7 +322,7 @@ describe('Test VectorStyle', () => {
         expect(olFill.getColor()).toBe('rgba(0, 0, 255, 0.1)');
         expect(olStroke.getColor()).toBe('blue');
         expect(olStroke.getWidth()).toBe(3);
-        expect(olStroke.getLineDash()).toEqual([4]);
+        expect(olStroke.getLineDash()).toEqual([6]);
 
         const options = {
             style: {
