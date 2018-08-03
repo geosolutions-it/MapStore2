@@ -49,7 +49,7 @@ const getTimeItems = (data = {}, range) => {
 const itemsSelector = createShallowSelector(
     timeDataSelector,
     rangeSelector,
-    (data, range) => ([
+    (data = {}, range) => ([
             ...Object.keys(data)
                 .map(id => getTimeItems(data[id], range)
                     .map((item = {}) => ({
