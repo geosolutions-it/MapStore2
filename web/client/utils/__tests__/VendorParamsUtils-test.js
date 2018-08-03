@@ -18,7 +18,7 @@ describe('VendorParamUtils ', () => {
             }
         }).CQL_FILTER).toBe("INCLUDE");
     });
-    it('optionsToVendorParams', () => {
+    it('optionsToVendorParams do not add other params to the request (#3142)', () => {
         const params = optionsToVendorParams({ params: {viewParams: "a:1"}});
         expect(Object.keys(params).length).toBe(1);
     });
