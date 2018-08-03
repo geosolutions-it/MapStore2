@@ -213,9 +213,10 @@ function layers(state = [], action) {
                 const newLayers = state.flat.filter((layer) => layer.id !== action.node);
                 return assign({}, state, {
                     flat: newLayers,
-                    groups: newGroups
+                    groups: LayersUtils.removeEmptyGroups(newGroups)
                 });
             }
+            return state;
         }
         case ADD_LAYER: {
             let newLayers = (state.flat || []).concat();
