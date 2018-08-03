@@ -44,21 +44,22 @@ const getTimeItems = (data = {}, range) => {
     if (data && data.values) {
         return (data.values || []).reduce((acc, ISOString) => [...acc, ...timeStampToItems(ISOString, range)], []).filter(v => v && v.start);
     }
+    return [];
 };
 
 const itemsSelector = createShallowSelector(
     timeDataSelector,
     rangeSelector,
     (data = {}, range) => ([
-            ...Object.keys(data)
-                .map(id => getTimeItems(data[id], range)
-                    .map((item = {}) => ({
-                        content: " ",
-                        ...item,
-                        // style: "color: red; background-color: pink",
-                        group: id
-                    })))
-                .reduce((acc, layerItems) => [...acc, ...layerItems], [])]
+        ...Object.keys(data)
+            .map(id => getTimeItems(data[id], range)
+                .map((item = {}) => ({
+                    content: " ",
+                    ...item,
+                    // style: "color: red; background-color: pink",
+                    group: id
+                })))
+            .reduce((acc, layerItems) => [...acc, ...layerItems], [])]
     )
 );
 
