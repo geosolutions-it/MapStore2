@@ -1,9 +1,10 @@
 const { get } = require('lodash');
 const { createShallowSelector } = require('../utils/ReselectUtils');
-const { timeDataSelector } = require('../selectors/timemanager');
-const rangeSelector = state => get(state, 'timeline.range');
-const { timeIntervalToSequence, analyzeIntervalInRange } = require('../utils/TimeUtils');
+const { timeIntervalToSequence, timeIntervalToIntervalSequence, analyzeIntervalInRange } = require('../utils/TimeUtils');
 
+const { timeDataSelector } = require('../selectors/dimension');
+const rangeSelector = state => get(state, 'timeline.range');
+const rangeDataSelector = state => get(state, 'timeline.rangeData');
 
 // items
 const MAX_ITEMS = 100;
@@ -37,12 +38,32 @@ const timeStampToItems = (ISOString, viewRange) => {
     return null;
 };
 
+const valuesToItems = (values, range) => (values || []).reduce((acc, ISOString) => [...acc, ...timeStampToItems(ISOString, range)], []).filter(v => v && v.start);
+const rangeDataToItems = (rangeData = {}) => {
+    if (rangeData.histogram && rangeData.histogram.domain && rangeData.histogram.values) {
+        const [start, end, duration] = rangeData.histogram.domain.split('/');
+        const max = Math.max(
+            ...(rangeData.histogram.values)
+        );
+        return timeIntervalToIntervalSequence({start, end, duration}).map( (item, i) => ({
+            ...item,
+            type: "range",
+            itemType: "histogram",
+            count: rangeData.histogram.values[i],
+            className: "histogram-item",
+            content: `<div><div class="histogram-box" style="height: ${(100 * rangeData.histogram.values[i] / max)}%"></div> <span class="histogram-count">${rangeData.histogram.values[i]}</span></div>`
+        }));
+    }
+    return [];
+};
 /**
  * Transforms time values from layer state into items for timeline
  */
-const getTimeItems = (data = {}, range) => {
-    if (data && data.values) {
-        return (data.values || []).reduce((acc, ISOString) => [...acc, ...timeStampToItems(ISOString, range)], []).filter(v => v && v.start);
+const getTimeItems = (data = {}, range, rangeData) => {
+    if (data && data.values || data && data.domain && data.domain.indexOf("--") < 0) {
+        return valuesToItems(data.values || data.domain.split(','), range);
+    } else if (rangeData && rangeData.histogram) {
+        return rangeDataToItems(rangeData, range);
     }
     return [];
 };
@@ -50,9 +71,10 @@ const getTimeItems = (data = {}, range) => {
 const itemsSelector = createShallowSelector(
     timeDataSelector,
     rangeSelector,
-    (data = {}, range) => ([
+    rangeDataSelector,
+    (data = {}, range, rangeData = {} ) => ([
         ...Object.keys(data)
-            .map(id => getTimeItems(data[id], range)
+            .map(id => getTimeItems(data[id], range, rangeData[id])
                 .map((item = {}) => ({
                     content: " ",
                     ...item,

@@ -32,7 +32,7 @@ const history = routerCreateHistory();
 const reduxRouterMiddleware = routerMiddleware(history);
 const layersEpics = require('../epics/layers');
 const controlsEpics = require('../epics/controls');
-const timeManagerEpics = require('../epics/timemanager');
+const timeManagerEpics = require('../epics/dimension');
 const standardEpics = {
     ...layersEpics,
     ...controlsEpics,

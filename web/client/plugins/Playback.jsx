@@ -7,12 +7,9 @@
  */
 
 const React = require('react');
-const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const Playback = require('../components/playback/Playback');
 
-const { connect } = require('react-redux');
-const { createSelector } = require('reselect');
 
 class PlaybackPlugin extends React.Component {
     render() {
@@ -38,6 +35,6 @@ module.exports = {
         disablePluginIf: "{state('featuregridmode') === 'EDIT'}"
     }),
     reducers: {
-        floatinglegend: require('../reducers/timemanager')
+        dimension: require('../reducers/dimension')
     }
 };

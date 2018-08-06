@@ -53,6 +53,11 @@ const timeIntervalToSequence = ({start, end, duration}) => {
     return arr;
 };
 
+const timeIntervalToIntervalSequence = ({start, end, duration}) =>
+    timeIntervalToSequence({start, end, duration}).map(d => ({
+        start: new Date(d),
+        end: new Date(new Date(d).getTime() + moment.duration(duration).asMilliseconds())
+    }));
 // TEST WITH 2017-03-11T17:43:50.000Z/2017-07-28T17:25:52.000Z/PT1S
 const analyzeIntervalInRange = (
     {start, end, duration} = {},
@@ -96,6 +101,7 @@ const getNearestDate = (dates = [], target) => dates[getNearestDateIndex(dates, 
 module.exports = {
     timeIntervalNumber,
     timeIntervalToSequence,
+    timeIntervalToIntervalSequence,
     analyzeIntervalInRange,
     getNearestDate,
     getNearestDateIndex

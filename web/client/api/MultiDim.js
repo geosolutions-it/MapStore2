@@ -50,7 +50,7 @@ const describeDomains = (url, layer, dimensionIdentifiers = {}, {
     }))
     .let(interceptOGCError)
     .switchMap(response => parseXML(response.data));
-const getHistogram = (url, layer, dimensionIdentifiers, resolution, {
+const getHistogram = (url, layer, histogram, dimensionIdentifiers, resolution, {
     service = "WMTS",
     version="1.1.0",
     tileMatrixSet = "EPSG:4326",
@@ -60,7 +60,9 @@ const getHistogram = (url, layer, dimensionIdentifiers, resolution, {
     Observable.defer( () => ajax.get(toMultiDimURL(url), {
         params: trimUndefinedParams({
             service,
-            REQUEST: "DescribeDomains",
+            REQUEST: "GetHistogram",
+            resolution,
+            histogram,
             version,
             layer,
             tileMatrixSet,

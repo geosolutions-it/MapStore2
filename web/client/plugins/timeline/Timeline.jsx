@@ -7,7 +7,7 @@
  */
 const { connect } = require('react-redux');
 const { isString } = require('lodash');
-const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/timemanager');
+const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
 const { selectTime, onRangeChanged} = require('../../actions/timeline');
 const { itemsSelector } = require('../../selectors/timeline');
 const { createStructuredSelector, createSelector } = require('reselect');

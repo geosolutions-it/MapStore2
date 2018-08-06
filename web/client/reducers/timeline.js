@@ -1,4 +1,5 @@
 const { RANGE_CHANGED } = require('../actions/timeline');
+const { RANGE_DATA_LOADED } = require('../actions/timeline');
 const { set } = require('../utils/ImmutableUtils');
 
 module.exports = (state = {}, action) => {
@@ -9,6 +10,13 @@ module.exports = (state = {}, action) => {
                 end: action.end
             },
             state);
+        }
+        case RANGE_DATA_LOADED: {
+            return set(`rangeData[${action.layerId}]`, {
+                range: action.range,
+                histogram: action.histogram,
+                domain: action.domain
+            }, state);
         }
         default:
             return state;

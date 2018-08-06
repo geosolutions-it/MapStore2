@@ -35,7 +35,7 @@ module.exports = {
         disablePluginIf: "{state('mapType') === 'cesium'}"
     }),
     reducers: {
-        timemanager: require('../reducers/timemanager'),
+        dimension: require('../reducers/dimension'),
         timeline: require('../reducers/timeline')
     },
     epics: require('../epics/timeline')

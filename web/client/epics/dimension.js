@@ -1,9 +1,14 @@
 
 const { Observable } = require('rxjs');
 const { updateLayerDimension, changeLayerProperties, ADD_LAYER} = require('../actions/layers');
-const {SET_CURRENT_TIME} = require('../actions/timemanager');
+const { SET_CURRENT_TIME, updateLayerDimensionData} = require('../actions/dimension');
 const {describeDomains} = require('../api/MultiDim');
-const {castArray} = require('lodash');
+const {castArray, pick} = require('lodash');
+
+const DESCRIBE_DOMAIN_OPTIONS = {
+    expandLimit: 10 // TODO: increase this limit to max client allowed
+};
+
 const domainsToDimensionsObject = ({ Domains = {} } = {}, {url} = {}) => {
     const dimensions = castArray(Domains.DimensionDomain || []);
     return dimensions.map( ({Identifier: name, Domain: domain} ) => ({
@@ -17,8 +22,15 @@ const domainsToDimensionsObject = ({ Domains = {} } = {}, {url} = {}) => {
 };
 
 module.exports = {
+    /**
+     * Sync current time param of the layer with the current time element
+     */
     updateLayerDimensionOnCurrentTimeSelection: action$ =>
         action$.ofType(SET_CURRENT_TIME).switchMap(({time}) => Observable.of(updateLayerDimension('time', time))),
+
+    /**
+     * Check the presence of Multidimensional API extension, then setup layers properly.
+     */
     queryMultidimensionalAPIExtensionOnAddLayer: action$ =>
         action$
             .ofType(ADD_LAYER)
@@ -27,13 +39,15 @@ module.exports = {
             )
             // every add layer has it's own flow
             .flatMap(({ layer = {} } = {}) =>
-                describeDomains(layer.url, layer.name)
+                describeDomains(layer.url, layer.name, DESCRIBE_DOMAIN_OPTIONS)
                     .switchMap( domains => {
-                        const dimensions = domainsToDimensionsObject(domains);
+                        const dimensions = domainsToDimensionsObject(domains, layer);
                         if (dimensions && dimensions.length > 0) {
-                            return Observable.of(changeLayerProperties(layer.id, {
-                                dimensions
-                            }));
+                            return Observable.of(
+                                changeLayerProperties(layer.id, {
+                                    dimensions: dimensions.map(d => pick(d, ['source', 'name']))
+                                }),
+                                ...dimensions.map(d => updateLayerDimensionData(layer.id, d.name, d)));
                         }
                         return Observable.empty();
                     })
