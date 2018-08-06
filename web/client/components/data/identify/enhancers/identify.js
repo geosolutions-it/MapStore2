@@ -43,9 +43,10 @@ const identifyHandlers = withHandlers({
         }
         return false;
     },
-    onClose: ({hideMarker, purgeResults}) => () => {
+    onClose: ({hideMarker = () => {}, purgeResults = () => {}, closeIdentify = () => {}}) => () => {
         hideMarker();
         purgeResults();
+        closeIdentify();
     }
 });
 

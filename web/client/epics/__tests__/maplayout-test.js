@@ -10,6 +10,8 @@ const expect = require('expect');
 
 const {toggleControl} = require('../../actions/controls');
 const {UPDATE_MAP_LAYOUT} = require('../../actions/maplayout');
+const {closeIdentify} = require('../../actions/mapInfo');
+
 const {updateMapLayoutEpic} = require('../maplayout');
 const {testEpic} = require('./epicTestUtils');
 
@@ -52,5 +54,21 @@ describe('map layout epics', () => {
         };
         const state = {mode: 'embedded', controls: { drawer: {enabled: true}}};
         testEpic(updateMapLayoutEpic, 1, toggleControl("queryPanel"), epicResult, state);
+    });
+
+    it('tests on close identify', (done) => {
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    expect(action.type).toBe(UPDATE_MAP_LAYOUT);
+                });
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+        const state = {};
+        testEpic(updateMapLayoutEpic, 1, closeIdentify(), epicResult, state);
     });
 });
