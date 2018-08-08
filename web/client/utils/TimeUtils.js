@@ -1,6 +1,8 @@
 const {isString, isDate} = require('lodash');
 const moment = require('moment');
 
+const ROUND_RESOLUTION_REGEX = /PT?[\d\.]+[YMWDHMS]/;
+
 const toTime = date => {
     if (!date) {
         return undefined;
@@ -97,13 +99,50 @@ const analyzeIntervalInRange = (
 
 };
 
+/**
+ * Rounds a duration ISO string to the bigger unit.
+ * @example
+ * P23DT23H => P23D
+ * PT20H10M2S => PT20H
+ * P1W2DT10H2M2.45S => P1W
+ *
+ * @param {string} iso the duration iso string
+ */
+const roundResolution = (iso) => iso.match(ROUND_RESOLUTION_REGEX)[0];
+
+/**
+ * Returns an object that contains resolution.
+ * The resolution returned is a rounded iso duration string of the period that can be contained `max` times in the range provided.
+ *
+ * @param {object} param0 range object
+ * @param {number} max max items in range
+ */
+const roundRangeResolution = ({start, end}, max) => {
+    const sms = new Date(start);
+    const ems = new Date(end);
+    const dms = Math.floor(ems.getTime() - sms.getTime()) / max;
+    const dISO = moment.duration(dms).toISOString();
+    const resolution = roundResolution(dISO);
+    return {
+        range: { // TODO: snap range to start / end of periods (i.e 1H period should start from 13:00, not from 13:12:54)
+            start,
+            end
+        },
+        resolution // TODO: snap to human friendly values (...0.1, 0.2, 0.5, 1, 2, 5, 10 ...)
+    };
+};
+
 const getNearestDate = (dates = [], target) => dates[getNearestDateIndex(dates, target)];
+
+const isTimeDomainInterval = values => values && values.indexOf && values.indexOf("--") > 0;
 module.exports = {
     timeIntervalNumber,
     timeIntervalToSequence,
     timeIntervalToIntervalSequence,
     analyzeIntervalInRange,
     getNearestDate,
-    getNearestDateIndex
-
+    getNearestDateIndex,
+    roundResolution,
+    roundRangeResolution,
+    isTimeDomainInterval
 };

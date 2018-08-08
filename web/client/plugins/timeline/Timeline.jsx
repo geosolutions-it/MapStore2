@@ -9,7 +9,7 @@ const { connect } = require('react-redux');
 const { isString } = require('lodash');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
 const { selectTime, onRangeChanged} = require('../../actions/timeline');
-const { itemsSelector } = require('../../selectors/timeline');
+const { itemsSelector, loadingSelector } = require('../../selectors/timeline');
 const { createStructuredSelector, createSelector } = require('reselect');
 const { compose, withProps, branch, withHandlers, withPropsOnChange, renderNothing, defaultProps} = require('recompose');
 
@@ -21,17 +21,19 @@ const layerData = compose(
         createSelector(
             itemsSelector,
             layersWithTimeDataSelector,
-            (items, layers) => ({items, layers})
+            loadingSelector,
+            (items, layers, loading) => ({ items, layers, loading})
         )
     ),
     branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
     withPropsOnChange(
-        ['layers'],
+        ['layers', 'loading'],
         // (props = {}, nextProps = {}) => Object.keys(props.data).length !== Object.keys(nextProps.data).length,
-        ({layers = []}) => ({
+        ({ layers = [], loading = {}}) => ({
             groups: layers.map(l => ({
                 id: l.id,
-                title: isString(l.title) ? l.title : l.name
+                className: loading[l.id] ? "loading" : "",
+                content: isString(l.title) ? l.title : l.name // TODO: i18n for layer titles
             }))
         })
     )

@@ -26,6 +26,7 @@ const trimUndefinedParams = o =>
  * @param {string} layer the layer name
  * @param {object} dimensionIdentifiers At most one per dimension, a range described as min/max, restricting the domain of this dimension
  * @param {object} options params of the request.
+ * @returns a stream that emits the request result
  */
 const describeDomains = (url, layer, dimensionIdentifiers = {}, {
     service = "WMTS",

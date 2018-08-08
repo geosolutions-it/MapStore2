@@ -39,7 +39,7 @@ module.exports = {
             )
             // every add layer has it's own flow
             .flatMap(({ layer = {} } = {}) =>
-                describeDomains(layer.url, layer.name, DESCRIBE_DOMAIN_OPTIONS)
+                describeDomains(layer.url, layer.name, undefined, DESCRIBE_DOMAIN_OPTIONS)
                     .switchMap( domains => {
                         const dimensions = domainsToDimensionsObject(domains, layer);
                         if (dimensions && dimensions.length > 0) {

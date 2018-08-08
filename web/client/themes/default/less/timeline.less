@@ -27,3 +27,26 @@
         }
     }
 }
+@keyframes timeline-loading {
+    0% {
+    background-color: #ffffff40;
+    }
+    50% {
+        background-color: #80808040;
+    }
+    100% {
+        background-color: #ffffff40;
+    }
+}
+.vis-group {
+    &.loading {
+        //height: 4px;
+        //width: 100%;
+        //position: relative;
+        //overflow: hidden;
+        background-color: #ddd;
+        animation: timeline-loading 1s linear infinite;
+    }
+
+
+}
