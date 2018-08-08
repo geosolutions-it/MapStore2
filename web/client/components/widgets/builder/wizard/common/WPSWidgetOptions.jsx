@@ -75,147 +75,147 @@ module.exports = ({
             advancedOptions: true
         },
         aggregationOptions = [],
-        sampleChart}) => (<Row>
-        <StepHeader title={<Message msgId={`widgets.chartOptionsTitle`} />} />
-          <Col xs={12}>
-              <div style={{marginBottom: "30px"}}>
-                  {sampleChart}
-              </div>
-              </Col>
-          <Col xs={12}>
-          <Form className="chart-options-form" horizontal>
-          {formOptions.showGroupBy ? (<FormGroup controlId="groupByAttributes" className="mapstore-block-width">
-          <Col componentClass={ControlLabel} sm={6}>
-                <Message msgId={getLabelMessageId("groupByAttributes", data)} />
-          </Col>
-          <Col sm={6}>
-              <Select
-                  value={data.options && data.options.groupByAttributes}
-                  options={options}
-                  placeholder={placeHolder}
-                  onChange={(val) => {
-                      onChange("options.groupByAttributes", val && val.value);
-                  }}
-                  />
-          </Col>
-        </FormGroup>) : null}
-        <FormGroup controlId="aggregationAttribute" className="mapstore-block-width">
-            <Col componentClass={ControlLabel} sm={6}>
-                <Message msgId={getLabelMessageId("aggregationAttribute", data)} />
-            </Col>
-          <Col sm={6}>
-              <Select
-                  value={data.options && data.options.aggregationAttribute}
-                  options={options}
-                  placeholder={placeHolder}
-                  onChange={(val) => {
-                      onChange("options.aggregationAttribute", val && val.value);
-                  }}
-                  />
-          </Col>
-        </FormGroup>
-        <FormGroup controlId="aggregateFunction" className="mapstore-block-width">
-            <Col componentClass={ControlLabel} sm={6}>
-                <Message msgId={getLabelMessageId("aggregateFunction", data)} />
-            </Col>
-          <Col sm={6}>
-              <Select
-                  value={data.options && data.options.aggregateFunction}
-                  options={aggregationOptions}
-                  placeholder={placeHolder}
-                  onChange={(val) => {
-                      onChange("options.aggregateFunction", val && val.value);
-                  }}
-                  />
-          </Col>
-        </FormGroup>
-        {formOptions.showUom ? <FormGroup controlId="uom">
-            <Col componentClass={ControlLabel} sm={6}>
-                        <Message msgId={getLabelMessageId("uom", data)} />
-            </Col>
-            <Col sm={6}>
-                <FormControl value={get(data, `options.seriesOptions[0].uom`)} type="text" onChange={e => onChange("options.seriesOptions.[0].uom", e.target.value)} />
-            </Col>
-        </FormGroup> : null}
-        {formOptions.showColorRampSelector ? <FormGroup controlId="colorRamp" className="mapstore-block-width">
-            <Col componentClass={ControlLabel} sm={6}>
-                <Message msgId={getLabelMessageId("colorRamp", data)} />
-            </Col>
-          <Col sm={6}>
-              <ColorRangeSelector
-                  items={getColorRangeItems(data.type)}
-                  value={head(getColorRangeItems(data.type).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
-                  samples={data.type === "pie" ? 5 : 1}
-                  onChange={v => {onChange("autoColorOptions", {...v.options, name: v.name}); }}/>
-          </Col>
-        </FormGroup> : null}
-        {formOptions.showLegend ? <FormGroup controlId="displayLegend">
-            <Col componentClass={ControlLabel} sm={6}>
-                <Message msgId={getLabelMessageId("displayLegend", data)} />
-            </Col>
-          <Col sm={6}>
-              <SwitchButton
-                  checked={data.legend}
-                  onChange={(val) => {
-                      onChange("legend", val);
-                  }}
-                  />
-          </Col>
-        </FormGroup> : null}
+        sampleChart}) => (
+            <Row>
+                <StepHeader title={<Message msgId={`widgets.chartOptionsTitle`} />} />
+                <Col xs={12}>
+                    <div style={{marginBottom: "30px"}}>
+                        {sampleChart}
+                    </div>
+                    </Col>
+                <Col xs={12}>
+                    <Form className="chart-options-form" horizontal>
+                        {formOptions.showGroupBy ? (
+                            <FormGroup controlId="groupByAttributes" className="mapstore-block-width">
+                                <Col componentClass={ControlLabel} sm={6}>
+                                        <Message msgId={getLabelMessageId("groupByAttributes", data)} />
+                                </Col>
+                                <Col sm={6}>
+                                    <Select
+                                        value={data.options && data.options.groupByAttributes}
+                                        options={options}
+                                        placeholder={placeHolder}
+                                        onChange={(val) => {
+                                            onChange("options.groupByAttributes", val && val.value);
+                                        }}
+                                        />
+                                </Col>
+                            </FormGroup>) : null}
+                            <FormGroup controlId="aggregationAttribute" className="mapstore-block-width">
+                                <Col componentClass={ControlLabel} sm={6}>
+                                    <Message msgId={getLabelMessageId("aggregationAttribute", data)} />
+                                </Col>
+                                <Col sm={6}>
+                                    <Select
+                                        value={data.options && data.options.aggregationAttribute}
+                                        options={options}
+                                        placeholder={placeHolder}
+                                        onChange={(val) => {
+                                            onChange("options.aggregationAttribute", val && val.value);
+                                        }}
+                                        />
+                            </Col>
+                            </FormGroup>
+                            <FormGroup controlId="aggregateFunction" className="mapstore-block-width">
+                                <Col componentClass={ControlLabel} sm={6}>
+                                    <Message msgId={getLabelMessageId("aggregateFunction", data)} />
+                                </Col>
+                                <Col sm={6}>
+                                    <Select
+                                        value={data.options && data.options.aggregateFunction}
+                                        options={aggregationOptions}
+                                        placeholder={placeHolder}
+                                        onChange={(val) => {
+                                            onChange("options.aggregateFunction", val && val.value);
+                                        }}
+                                        />
+                                </Col>
+                            </FormGroup>
+                        {formOptions.showUom ?
+                            <FormGroup controlId="uom">
+                                <Col componentClass={ControlLabel} sm={6}>
+                                    <Message msgId={getLabelMessageId("uom", data)} />
+                                </Col>
+                                <Col sm={6}>
+                                    <FormControl value={get(data, `options.seriesOptions[0].uom`)} type="text" onChange={e => onChange("options.seriesOptions.[0].uom", e.target.value)} />
+                                </Col>
+                            </FormGroup> : null}
+                        {formOptions.showColorRampSelector ?
+                            <FormGroup controlId="colorRamp" className="mapstore-block-width">
+                                <Col componentClass={ControlLabel} sm={6}>
+                                    <Message msgId={getLabelMessageId("colorRamp", data)} />
+                                </Col>
+                                <Col sm={6}>
+                                    <ColorRangeSelector
+                                        items={getColorRangeItems(data.type)}
+                                        value={head(getColorRangeItems(data.type).filter(c => data.autoColorOptions && c.name === data.autoColorOptions.name ))}
+                                        samples={data.type === "pie" ? 5 : 1}
+                                        onChange={v => {onChange("autoColorOptions", {...v.options, name: v.name}); }}/>
+                                </Col>
+                            </FormGroup> : null}
+                        {formOptions.showLegend ?
+                            <FormGroup controlId="displayLegend">
+                                <Col componentClass={ControlLabel} sm={6}>
+                                    <Message msgId={getLabelMessageId("displayLegend", data)} />
+                                </Col>
+                                <Col sm={6}>
+                                    <SwitchButton
+                                        checked={data.legend}
+                                        onChange={(val) => {
+                                            onChange("legend", val);
+                                        }}
+                                        />
+                                </Col>
+                            </FormGroup> : null}
+                        {formOptions.advancedOptions && data.type === "bar" || data.type === "line" ?
+                            <SwitchPanel id="displayCartesian"
+                                        header={renderHeader(data)}
+                                        collapsible
+                                        expanded={data.panel}
+                                        onSwitch={(val) => {
+                                            onChange("panel", val);
+                                        }}
+                                        >
+                                <Panel>
+                                    <FormGroup controlId="AdvancedOptions">
+                                        <Col componentClass={ControlLabel} sm={6}>
+                                            <Message msgId={getLabelMessageId("displayCartesian", data)} />
+                                        </Col>
+                                        <Col sm={6}>
+                                            <SwitchButton
+                                                checked={data.cartesian || data.cartesian === false ? !data.cartesian : false}
+                                                onChange={(val) => {
+                                                    onChange("cartesian", !val);
+                                                }}
+                                                />
+                                        </Col>
+                                        <Col componentClass={ControlLabel} sm={6}>
+                                            <Message msgId={getLabelMessageId("yAxis", data)} />
+                                        </Col>
+                                        <Col sm={6}>
+                                            <SwitchButton
+                                                checked={data.yAxis || data.yAxis === false ? !data.yAxis : true}
+                                                onChange={(val) => {
+                                                    onChange("yAxis", !val);
+                                                }}
+                                                />
+                                        </Col>
 
-{formOptions.advancedOptions && data.type === "bar" || data.type === "line" ?
+                                    </FormGroup>
 
+                                    <FormGroup controlId="yAxisLabel">
+                                        <Col componentClass={ControlLabel} sm={6}>
+                                            <Message msgId={getLabelMessageId("yAxisLabel", data)} />
+                                        </Col>
+                                        <Col sm={6}>
+                                            <FormControl value= {data.yAxisLabel} type="text" onChange={ e => onChange("yAxisLabel", e.target.value)} />
+                                        </Col>
+                                    </FormGroup>
+                                </Panel>
+                            </SwitchPanel> : null}
 
-<SwitchPanel id="displayCartesian"
-             header={renderHeader(data)}
-             collapsible
-             expanded={data.panel}
-             onSwitch={(val) => {
-                 onChange("panel", val);
-             }}
-             >
-<Panel>
-<FormGroup controlId="AdvancedOptions">
-<Col componentClass={ControlLabel} sm={6}>
-    <Message msgId={getLabelMessageId("displayCartesian", data)} />
-</Col>
-<Col sm={6}>
-  <SwitchButton
-      checked={data.cartesian || data.cartesian === false ? !data.cartesian : false}
-      onChange={(val) => {
-          onChange("cartesian", !val);
-      }}
-      />
-</Col>
-<Col componentClass={ControlLabel} sm={6}>
-    <Message msgId={getLabelMessageId("yAxis", data)} />
-</Col>
-<Col sm={6}>
-  <SwitchButton
-      checked={data.yAxis || data.yAxis === false ? !data.yAxis : true}
-      onChange={(val) => {
-          onChange("yAxis", !val);
-      }}
-      />
-</Col>
+                    </Form>
 
-</FormGroup>
-
-<FormGroup controlId="yAxisLabel">
-    <Col componentClass={ControlLabel} sm={6}>
-      <Message msgId={getLabelMessageId("yAxisLabel", data)} />
-    </Col>
-  <Col sm={6}>
-      <FormControl value= {data.yAxisLabel} type="text" onChange={ e => onChange("yAxisLabel", e.target.value)} />
-  </Col>
-</FormGroup>
-</Panel>
-</SwitchPanel>
-
-: null}
-
-</Form>
-
-  </Col>
-</Row>
+                </Col>
+            </Row>
 );
