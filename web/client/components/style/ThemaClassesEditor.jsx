@@ -10,9 +10,8 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const { Grid, Row, Col, FormGroup} = require('react-bootstrap');
 const ColorPicker = require('./ColorPicker');
-const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
-numberLocalizer();
-const {NumberPicker} = require('react-widgets');
+const NumberPicker = require('../misc/NumberPicker');
+
 const tinycolor = require('tinycolor2');
 const assign = require('object-assign');
 
@@ -40,16 +39,13 @@ class ThemaClassesEditor extends React.Component {
                 </Col>
                 <Col xs="4">
                     <NumberPicker
-                        format="- ###.###"
                         value={classItem.min}
                         onChange={(value) => this.updateMin(index, value)}
                     />
                 </Col>
                 <Col xs="4">
                     <NumberPicker
-                        format="- ###.###"
                         value={classItem.max}
-                        precision={3}
                         onChange={(value) => this.updateMax(index, value)}
                     />
                 </Col>
