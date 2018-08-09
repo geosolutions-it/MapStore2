@@ -32,7 +32,6 @@ const mockStore = configureMockStore([epicMiddleware]);
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
-const searchText = 'tes/t';
 const params = {start: 0, limit: 12 };
 const baseUrl = "base/web/client/test-resources/geostore/";
 
@@ -479,6 +478,7 @@ describe('maps Epics', () => {
         }});
     });
     it('it test loadMapsEpic when search text is a special character', (done) => {
+        const searchText = 'tes/t\?:;@=&';
         testEpic(loadMapsEpic, 2, loadMaps(baseUrl, searchText, params), actions => {
             expect(actions.length).toBe(2);
             actions.map((action) => {
@@ -512,6 +512,7 @@ describe('Get Map Resource By Category Epic', () => {
         ConfigUtils.getDefaults = oldGetDefaults;
     });
     it('test getMapsResourcesByCategoryEpic ', done => {
+
         testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 1, getMapResourcesByCategory('MAP', 'test', {
             baseUrl,
             params: { start: 0, limit: 12 }

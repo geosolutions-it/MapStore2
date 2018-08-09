@@ -175,7 +175,7 @@ const loadMapsEpic = (action$) =>
     action$.ofType(MAPS_LOAD_MAP)
     .switchMap((action) => {
         let {params, searchText, geoStoreUrl} = action;
-        let modifiedSearchText = searchText.replace(/[/?:;@=&]+/g, '');
+        let modifiedSearchText = searchText.replace(/[/?:;@=&\\]+/g, '');
         let opts = assign({}, {params}, geoStoreUrl ? {baseURL: geoStoreUrl} : {});
         return Rx.Observable.of(
             mapsLoading(modifiedSearchText, params),
