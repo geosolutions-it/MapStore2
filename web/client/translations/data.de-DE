@@ -1344,8 +1344,22 @@
                 "pie": "Legende anzeigen",
                 "bar": "Legende anzeigen",
                 "gauge": "Legende anzeigen"
+            },
+            "displayCartesian": {
+                "line": "Raster ausblenden",
+                "bar": "Raster ausblenden"
+            },"yAxis":{
+                "line": "Y-Achse ausblenden",
+                "bar": "Y-Achse ausblenden"
+            },
+            "yAxisLabel":{
+                "line": "Legenden-Label",
+                "bar": "Legenden-Label"
+            },
+            "advancedOptions":{
+                "line": "Erweiterte Optione",
+                "bar": "Erweiterte Optione"
             }
-
         },
         "dashboard": {
             "saveDialog": {

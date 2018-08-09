@@ -59,12 +59,15 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         {...sampleProps}
         type={data.type}
         legend={data.legend}
+        cartesian={data.cartesian}
         layer={data.layer || layer}
         filter={data.filter}
         geomProp={data.geomProp}
         mapSync={data.mapSync}
         autoColorOptions={data.autoColorOptions}
         options={data.options}
+        yAxis={data.yAxis}
+        yAxisLabel={data.yAxisLabel}
     />)
     : (<SampleChart
         key="sample-chart"
@@ -72,7 +75,10 @@ const renderPreview = ({ data = {}, layer, dependencies = {}, setValid = () => {
         {...sampleProps}
         type={data.type}
         autoColorOptions={data.autoColorOptions}
-        legend={data.legend} />);
+        legend={data.legend}
+        cartesian={data.cartesian}
+        yAxis={data.yAxis}
+        />);
 
 const enhanceWizard = compose(lifecycle({
     componentWillReceiveProps: ({ data = {}, valid, setValid = () => { } } = {}) => {

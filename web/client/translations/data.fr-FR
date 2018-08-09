@@ -1345,6 +1345,21 @@
                 "pie": "Légende d'affichage",
                 "bar": "Légende d'affichage",
                 "gauge": "Afficher les étiquettes"
+            },
+            "displayCartesian": {
+                "line": "Masquer la grille",
+                "bar": "Masquer la grille"
+            },"yAxis":{
+                "line": "Masquer l'axe Y",
+                "bar": "Masquer l'axe Y"
+            },
+            "yAxisLabel":{
+                "line": "Étiquette de légende",
+                "bar": "Étiquette de légende"
+            },
+            "advancedOptions":{
+                "line": "Options avancées",
+                "bar": "Options avancées"
             }
         },
         "dashboard": {

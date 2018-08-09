@@ -1245,8 +1245,22 @@
                 "pie": "Prikaži legendu",
                 "bar": "Prikaži legendu",
                 "gauge": "Prikaži oznake"
+            },
+            "displayCartesian": {
+                "line": "Hide Grid",
+                "bar": "Hide Grid"
+            },"yAxis":{
+                "line": "Hide Y axis",
+                "bar": "Hide Y axis"
+            },
+            "yAxisLabel":{
+                "line": "Legend Label",
+                "bar": "Legend Label"
+            },
+            "advancedOptions":{
+                "line": "Advanced Options",
+                "bar": "Advanced Options"
             }
-
         },
         "dashboard": {
             "editor": {
