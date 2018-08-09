@@ -18,7 +18,7 @@ const {
     DELETE_MAP, OPEN_DETAILS_PANEL, MAPS_LOAD_MAP,
     CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE,
     setDetailsChanged, updateDetails, mapsLoading, mapsLoaded,
-    mapDeleting, toggleDetailsEditability, mapDeleted, loadMaps, loadError,
+    mapDeleting, toggleDetailsEditability, mapDeleted, loadError,
     doNothing, detailsLoaded, detailsSaving, onDisplayMetadataEdit,
     RESET_UPDATING, resetUpdating, toggleDetailsSheet, getMapResourcesByCategory
 } = require('../actions/maps');
@@ -29,7 +29,7 @@ const {closeFeatureGrid} = require('../actions/featuregrid');
 const {toggleControl} = require('../actions/controls');
 const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
-    mapDetailsUriFromIdSelector, isMapsLastPageSelector
+    mapDetailsUriFromIdSelector
 } = require('../selectors/maps');
 
 const {
@@ -43,7 +43,6 @@ const {
 
 const {userParamsSelector} = require('../selectors/security');
 const {deleteResourceById, createAssociatedResource, deleteAssociatedResource, updateAssociatedResource} = require('../utils/ObservableUtils');
-const ConfigUtils = require('../utils/ConfigUtils');
 
 const {getIdFromUri} = require('../utils/MapUtils');
 
