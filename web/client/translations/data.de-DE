@@ -697,6 +697,7 @@
             "emptyfilter": "Kein Filtersatz. Die Suche nach dem Timeout, wenn die Paginierung vom Server nicht unterstützt wird.",
             "attributefilter":{
                 "add_condition": " Füge Bedingung hinzu",
+                "delete": " Löschen",
                 "add_group": " Füge Gruppe hinzu",
                 "group_label_a": "Übereinstimmung",
                 "group_label_b": "der folgenden Bedingungen:",
@@ -726,6 +727,7 @@
                 "filterType": "Filtertyp",
                 "geometric_operation": "Geometrische Operation",
                 "spatial_filter_header": "Region von Interesse",
+                "remove": "Löschen",
                 "combo_placeholder": "Wählen...",
                 "draw_start_label": "Zeichne die Region von Interesse auf der Karte",
                 "dwithin_label": "Meter",

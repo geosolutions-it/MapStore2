@@ -633,6 +633,7 @@
             "emptyfilter": "Nije postavljen filter. Pretraga bi mogla biti prekinuta ukoliko poslužitelj ne podržava parcijalni dohvat podataka.",
             "attributefilter":{
                 "add_condition": " Dodaj uvjet",
+                "delete": " Delete",
                 "add_group": " Dodaj grupu",
                 "group_label_a": "Odgovara",
                 "group_label_b": "od slijedećih uvjeta:",
@@ -663,6 +664,7 @@
                 "geometric_operation": "Geometrijske operacije",
                 "combo_placeholder": "Odaberi...",
                 "spatial_filter_header": "Prostorni filter",
+                "remove": "Remove",
                 "draw_start_label": "Nacrtaj područje od interesa na karti",
                 "dwithin_label": "metara",
                 "details": {

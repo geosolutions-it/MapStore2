@@ -698,6 +698,7 @@
             "emptyfilter": "Aucun ensemble de filtres. La recherche pourrait expirer si la pagination n'est pas prise en charge par le serveur.",
             "attributefilter":{
                 "add_condition": " Ajouter une condition",
+                "delete": " Effacer",
                 "add_group": " Ajouter un groupe",
                 "group_label_a": "Adéquation",
                 "group_label_b": "des conditions suivantes:",
@@ -728,6 +729,7 @@
                 "geometric_operation": "Opération géométrique",
                 "combo_placeholder": "Sélectionner...",
                 "spatial_filter_header": "Région d'intérêt",
+                "remove": "Retirer",
                 "draw_start_label": "Dessiner la région d'intérêt sur la carte",
                 "dwithin_label": "mètres",
                 "details": {
