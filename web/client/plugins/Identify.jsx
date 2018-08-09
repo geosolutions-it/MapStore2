@@ -17,7 +17,7 @@ const {layersSelector} = require('../selectors/layers');
 
 const {getFeatureInfo, getVectorInfo, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState} = require('../actions/mapInfo');
 const {changeMousePointer} = require('../actions/map');
-const {changeMapInfoFormat, updateCenterToMarker, closeIdentify} = require('../actions/mapInfo');
+const {changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults} = require('../actions/mapInfo');
 const {currentLocaleSelector} = require('../selectors/locale');
 
 const {compose, defaultProps} = require('recompose');
@@ -165,7 +165,8 @@ const IdentifyPlugin = compose(
     connect(selector, {
         sendRequest: getFeatureInfo,
         localRequest: getVectorInfo,
-        purgeResults: closeIdentify,
+        purgeResults: purgeMapInfoResults,
+        closeIdentify,
         changeMousePointer,
         showMarker: showMapinfoMarker,
         noQueryableLayers,
