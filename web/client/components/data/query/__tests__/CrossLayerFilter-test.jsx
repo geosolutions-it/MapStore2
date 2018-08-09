@@ -97,6 +97,23 @@ describe('CrossLayerFilter component', () => {
         ReactTestUtils.Simulate.click(el);
         expect(spyexpandCrossLayerFilterPanel).toHaveBeenCalled();
     });
-
+    it('Test CrossLayerFilter with pre-filtered data and no "crossLayerExpanded" property ', () => {
+        const container = document.getElementById('container');
+        ReactDOM.render(<CrossLayerFilter
+            layers={[{name: "test"}]}
+            queryCollection={{
+                typeName: "test",
+                geometryName: "geometry"
+            }}
+            operation="WITHIN"
+            spatialOperations={[{
+                id: "WITHIN",
+                name: "Within"
+            }]}
+            />, document.getElementById("container"));
+        expect(container.querySelector('.geometry-operation-selector')).toExist();
+        expect(container.querySelector('.mapstore-conditions-group')).toExist();
+        expect(container.querySelector('.m-slider')).toExist();
+    });
 
 });
