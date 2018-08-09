@@ -227,9 +227,11 @@ const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
             }
             if (map.resType === "success") {
                 actions.push(mapDeleted(mapId, "success"));
-                if ( isMapsLastPageSelector(state)) {
-                    actions.push(loadMaps(false, state.maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*"));
-                }
+                // TODO: if after delete the page is empty, you should re-do the query for the previous page (if it exists)
+                // something like :
+                // if ( condition ) {
+                //    actions.push(loadMaps(false, state.maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*")); // first page
+                // }
             }
             if (map.resType === "success" && details.resType === "success" && thumbnail.resType === "success") {
                 actions.push(basicSuccess({ message: "maps.feedback.allResDeleted"}));
