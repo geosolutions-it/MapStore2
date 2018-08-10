@@ -46,6 +46,8 @@ module.exports = {
         .switchMap((w) => Rx.Observable.of(editNewWidget({
             legend: false,
             mapSync: true,
+            cartesian: true,
+            yAxis: true,
             ...w,
             // override action's type
             type: undefined
@@ -55,6 +57,8 @@ module.exports = {
         .switchMap((w) => Rx.Observable.of(closeFeatureGrid(), editNewWidget({
             legend: false,
             mapSync: true,
+            cartesian: true,
+            yAxis: true,
             widgetType: "chart",
             filter: wfsFilter(getState()),
             ...w,

@@ -538,6 +538,7 @@
             "emptyfilter": "Geen enkele filterset. De zoekopdracht kan verstrijken als paging niet door de server wordt ondersteund",
             "attributefilter":{
                 "add_condition": " Voeg een voorwaarde toe",
+                "delete": " Delete",
                 "add_group": " Voeg een groep toe",
                 "group_label_a": "Toereikendheid",
                 "group_label_b": "de volgende condities:",
@@ -568,6 +569,7 @@
                 "geometric_operation": "Geometrische operatie",
                 "combo_placeholder": "Kies...",
                 "spatial_filter_header": "Ruimtelijke filter",
+                "remove": "Remove",
                 "draw_start_label": "Teken de regio van belang op de kaart",
                 "dwithin_label": "meter",
                 "details": {
@@ -998,6 +1000,9 @@
             },
             "chartOptionsTitle": "Données",
             "widgetOptionsTitle": "Info sur le widget",
+            "placeHolder":{
+                "default":"Select attribute"
+            },
             "groupByAttributes": {
                 "line": "Attributs X",
                 "pie": "Grouper par",
@@ -1006,9 +1011,11 @@
             },
             "aggregationAttribute": {
                 "line": "Attributs Y",
-                "pie": "Valeur",
+                "pie": "Use",
                 "bar": "Attributs Y",
-                "gauge": "valeur"
+                "gauge": "Use",
+                "counter": "Use",
+                "default": "Use"
             },
             "aggregateFunction": {
                 "line": "Opération",
@@ -1028,8 +1035,22 @@
                 "pie": "Légende d'affichage",
                 "bar": "Légende d'affichage",
                 "gauge": "Afficher les étiquettes"
+            },
+            "displayCartesian": {
+                "line": "Hide Grid",
+                "bar": "Hide Grid"
+            },"yAxis":{
+                "line": "Hide Y axis",
+                "bar": "Hide Y axis"
+            },
+            "yAxisLabel":{
+                "line": "Legend Label",
+                "bar": "Legend Label"
+            },
+            "advancedOptions":{
+                "line": "Advanced Options",
+                "bar": "Advanced Options"
             }
-
         },
         "wizard": {
             "next": "Suivant",

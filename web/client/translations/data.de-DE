@@ -697,6 +697,7 @@
             "emptyfilter": "Kein Filtersatz. Die Suche nach dem Timeout, wenn die Paginierung vom Server nicht unterstützt wird.",
             "attributefilter":{
                 "add_condition": " Füge Bedingung hinzu",
+                "delete": " Löschen",
                 "add_group": " Füge Gruppe hinzu",
                 "group_label_a": "Übereinstimmung",
                 "group_label_b": "der folgenden Bedingungen:",
@@ -726,6 +727,7 @@
                 "filterType": "Filtertyp",
                 "geometric_operation": "Geometrische Operation",
                 "spatial_filter_header": "Region von Interesse",
+                "remove": "Löschen",
                 "combo_placeholder": "Wählen...",
                 "draw_start_label": "Zeichne die Region von Interesse auf der Karte",
                 "dwithin_label": "Meter",
@@ -1295,6 +1297,9 @@
             },
             "chartOptionsTitle": "Daten konfigurieren",
             "widgetOptionsTitle": "Widget-Informationen konfigurieren",
+            "placeHolder":{
+                "default":"Wählen Sie Attribut"
+            },
             "groupByAttributes": {
                 "line": "X-Attribut",
                 "pie": "Gruppiere nach",
@@ -1305,11 +1310,11 @@
             },
             "aggregationAttribute": {
                 "line": "Y-Attribut",
-                "pie": "Wert",
+                "pie": "Benutzen",
                 "bar": "Y-Attribut",
-                "gauge": "Wert",
-                "counter": "Wert",
-                "default": "Wert"
+                "gauge": "Benutzen",
+                "counter": "Benutzen",
+                "default": "Benutzen"
             },
             "aggregateFunction": {
                 "line": "Betrieb",
@@ -1341,8 +1346,22 @@
                 "pie": "Legende anzeigen",
                 "bar": "Legende anzeigen",
                 "gauge": "Legende anzeigen"
+            },
+            "displayCartesian": {
+                "line": "Raster ausblenden",
+                "bar": "Raster ausblenden"
+            },"yAxis":{
+                "line": "Y-Achse ausblenden",
+                "bar": "Y-Achse ausblenden"
+            },
+            "yAxisLabel":{
+                "line": "Legenden-Label",
+                "bar": "Legenden-Label"
+            },
+            "advancedOptions":{
+                "line": "Erweiterte Optione",
+                "bar": "Erweiterte Optione"
             }
-
         },
         "dashboard": {
             "saveDialog": {

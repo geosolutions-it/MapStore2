@@ -54,20 +54,22 @@ class Feature extends React.Component {
 
     addFeatures = (props) => {
         const format = new ol.format.GeoJSON();
-        const geometry = this.props.geometry.type === "GeometryCollection" ? this.props.geometry && this.props.geometry.geometries : this.props.geometry && this.props.geometry.coordinates;
-
-        if (props.container && geometry) {
-            this._feature = format.readFeatures({
-                type: props.type,
-                properties: props.properties,
-                geometry: props.geometry,
-                id: this.props.msId});
-            this._feature.forEach((f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
-            if (props.style && (props.style !== props.layerStyle)) {
-                this._feature.forEach((f) => { f.setStyle(getStyle({style: props.style})); });
+        if (this.props.geometry) {
+            const geometry = this.props.geometry.type === "GeometryCollection" ? this.props.geometry && this.props.geometry.geometries : this.props.geometry && this.props.geometry.coordinates;
+            if (props.container && geometry) {
+                this._feature = format.readFeatures({
+                    type: props.type,
+                    properties: props.properties,
+                    geometry: props.geometry,
+                    id: this.props.msId});
+                this._feature.forEach((f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
+                if (props.style && (props.style !== props.layerStyle)) {
+                    this._feature.forEach((f) => { f.setStyle(getStyle({style: props.style})); });
+                }
+                props.container.getSource().addFeatures(this._feature);
             }
-            props.container.getSource().addFeatures(this._feature);
         }
+
     };
 
 

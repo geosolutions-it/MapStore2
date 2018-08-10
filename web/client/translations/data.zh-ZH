@@ -541,6 +541,7 @@
             "emptyfilter": "没有过滤器设置。 如果服务器不支持分页，搜索可能会超时。",
             "attributefilter":{
                 "add_condition": " Add Condition",
+                "delete": " Delete",
                 "add_group": " Add Group",
                 "group_label_a": "Match",
                 "group_label_b": "of the following conditions:",
@@ -571,6 +572,7 @@
                 "geometric_operation": "Geometric Operation",
                 "combo_placeholder": "Select...",
                 "spatial_filter_header": "Region of interest",
+                "remove": "Remove",
                 "draw_start_label": "Draw the region of interest on the map",
                 "dwithin_label": "meters",
                 "details": {
@@ -1061,6 +1063,9 @@
             },
             "chartOptionsTitle": "Chart",
             "widgetOptionsTitle": "Widget Info",
+            "placeHolder":{
+                "default":"Select attribute"
+            },
             "groupByAttributes": {
                 "line": "X Attribute",
                 "pie": "Group By",
@@ -1071,7 +1076,9 @@
                 "line": "Y Attribute",
                 "pie": "Value",
                 "bar": "Y Attribute",
-                "gauge": "Value"
+                "gauge": "Use",
+                "counter": "Use",
+                "default": "Use"
             },
             "aggregateFunction": {
                 "line": "Operation",
@@ -1091,8 +1098,22 @@
                 "pie": "Display Legend",
                 "bar": "Display Legend",
                 "gauge": "Display labels"
+            },
+            "displayCartesian": {
+                "line": "Hide Grid",
+                "bar": "Hide Grid"
+            },"yAxis":{
+                "line": "Hide Y axis",
+                "bar": "Hide Y axis"
+            },
+            "yAxisLabel":{
+                "line": "Legend Label",
+                "bar": "Legend Label"
+            },
+            "advancedOptions":{
+                "line": "Advanced Options",
+                "bar": "Advanced Options"
             }
-
         },
         "wizard": {
             "next": "Next",

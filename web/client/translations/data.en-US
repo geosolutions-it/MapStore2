@@ -697,6 +697,7 @@
             "emptyfilter": "No filter set. Searching could timeout if pagination is not supported by the server.",
             "attributefilter":{
                 "add_condition": " Add Condition",
+                "delete": " Delete",
                 "add_group": " Add Group",
                 "group_label_a": "Match",
                 "group_label_b": "of the following conditions:",
@@ -727,6 +728,7 @@
                 "geometric_operation": "Geometric Operation",
                 "combo_placeholder": "Select...",
                 "spatial_filter_header": "Region of interest",
+                "remove": "Remove",
                 "draw_start_label": "Draw the region of interest on the map",
                 "dwithin_label": "meters",
                 "details": {
@@ -1295,6 +1297,9 @@
             },
             "chartOptionsTitle": "Configure data",
             "widgetOptionsTitle": "Configure Widget Info",
+            "placeHolder":{
+                "default":"Select attribute"
+            },
             "groupByAttributes": {
                 "line": "X Attribute",
                 "pie": "Group By",
@@ -1305,11 +1310,11 @@
             },
             "aggregationAttribute": {
                 "line": "Y Attribute",
-                "pie": "Value",
+                "pie": "Use",
                 "bar": "Y Attribute",
-                "gauge": "Value",
-                "counter": "Value",
-                "default": "Value"
+                "gauge": "Use",
+                "counter": "Use",
+                "default": "Use"
             },
             "aggregateFunction": {
                 "line": "Operation",
@@ -1341,8 +1346,23 @@
                 "pie": "Display Legend",
                 "bar": "Display Legend",
                 "gauge": "Display labels"
+            },
+            "displayCartesian": {
+                "line": "Hide Grid",
+                "bar": "Hide Grid"
+            },
+            "yAxis":{
+                "line": "Hide Y axis",
+                "bar": "Hide Y axis"
+            },
+            "yAxisLabel":{
+                "line": "Legend Label",
+                "bar": "Legend Label"
+            },
+            "advancedOptions":{
+                "line": "Advanced Options",
+                "bar": "Advanced Options"
             }
-
         },
         "dashboard": {
             "saveDialog": {
