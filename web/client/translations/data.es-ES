@@ -697,6 +697,7 @@
             "emptyfilter": "Sin filtro. La cosulta puede expirar si la páginición no está activada en el servidor.",
             "attributefilter":{
                 "add_condition": " Añadir una condición",
+                "delete": " Borrar",
                 "add_group": " Añadir un grupo",
                 "group_label_a": "Match",
                 "group_label_b": "de las siguientes condiciones:",
@@ -727,6 +728,7 @@
                 "geometric_operation": "Operación geométrica",
                 "combo_placeholder": "Select...",
                 "spatial_filter_header": "Region de interes",
+                "remove": "Retirar",
                 "draw_start_label": "Dibuje la región de interés en el mapa",
                 "dwithin_label": "metros",
                 "details": {
@@ -1344,8 +1346,22 @@
                 "pie": "Mostrar leyenda",
                 "bar": "Mostrar leyenda",
                 "gauge": "Mostrar etiquetas"
+            },
+            "displayCartesian": {
+                "line": "Ocultar cuadrícula",
+                "bar": "Ocultar cuadrícula"
+            },"yAxis":{
+                "line": "Ocultar el eje Y",
+                "bar": "Ocultar el eje Y"
+            },
+            "yAxisLabel":{
+                "line": "Etiqueta leyenda",
+                "bar": "Etiqueta leyenda"
+            },
+            "advancedOptions":{
+                "line": "Opciones avanzadas",
+                "bar": "Opciones avanzadas"
             }
-
         },
         "dashboard": {
             "saveDialog": {

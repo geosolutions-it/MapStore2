@@ -52,7 +52,7 @@ module.exports = ({
 
     return (<SwitchPanel
         loading={loadingCapabilities}
-        expanded={crossLayerExpanded && !loadingCapabilities && !errorObj}
+        expanded={operation && queryCollection.typeName ? true : crossLayerExpanded && !loadingCapabilities && !errorObj }
         error={errorObj}
         errorMsgId={"queryPanel"}
         buttons={[

@@ -697,6 +697,7 @@
             "emptyfilter": "Nessun filtro selezionato. La ricerca potrebbe andare in timeout se il server non supporta la paginazione.",
             "attributefilter":{
                 "add_condition": " Aggiungi Condizione",
+                "delete": " Elimina",
                 "add_group": " Aggiungi Gruppo",
                 "group_label_a": "Soddisfa",
                 "group_label_b": "seguenti condizioni:",
@@ -727,6 +728,7 @@
                 "geometric_operation": "Operazione Geometrica",
                 "combo_placeholder": "Seleziona...",
                 "spatial_filter_header": "Regione di interesse",
+                "remove": "Rimuovi",
                 "draw_start_label": "Disegna sulla mappa l'area di interesse",
                 "dwithin_label": "metri",
                 "details": {
@@ -1344,8 +1346,22 @@
                 "pie": "Mostra legenda",
                 "bar": "Mostra legenda",
                 "gauge": "Mostra etichette"
+            },
+            "displayCartesian": {
+                "line": "Nascondi griglia",
+                "bar": "Nascondi griglia"
+            },"yAxis":{
+                "line": "Nascondi l'asse Y",
+                "bar": "Nascondi l'asse Y"
+            },
+            "yAxisLabel":{
+                "line": "Etichetta legenda",
+                "bar": "Etichetta legenda"
+            },
+            "advancedOptions":{
+                "line": "Opzioni avanzate",
+                "bar": "Opzioni avanzate"
             }
-
         },
         "dashboard": {
             "saveDialog": {
