@@ -7,7 +7,7 @@ const rangeSelector = state => get(state, 'timeline.range');
 const rangeDataSelector = state => get(state, 'timeline.rangeData');
 
 // items
-const MAX_ITEMS = 100;
+const MAX_ITEMS = 50;
 
 /**
  * Converts the list of timestamps into timeline items.

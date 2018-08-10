@@ -117,7 +117,7 @@ const roundResolution = (iso) => iso.match(ROUND_RESOLUTION_REGEX)[0];
  * @param {object} param0 range object
  * @param {number} max max items in range
  */
-const roundRangeResolution = ({start, end}, max) => {
+const roundRangeResolution = ({start, end} = {}, max) => {
     const sms = new Date(start);
     const ems = new Date(end);
     const dms = Math.floor(ems.getTime() - sms.getTime()) / max;

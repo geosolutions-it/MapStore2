@@ -117,8 +117,13 @@ module.exports = {
     updateRangeDataOnRangeChange: (action$, { getState = () => { } } = {}) =>
         action$.ofType(RANGE_CHANGED, UPDATE_LAYER_DIMENSION_DATA).debounceTime(1000)
             .switchMap( () => {
+                // if timeline is not present, don't update range data
+                if ( !rangeSelector(getState()) ) {
+                    return Rx.Observable.empty();
+                }
                 const timeData = timeDataSelector(getState()) || {};
                 const layerIds = Object.keys(timeData).filter(id => timeData[id] && timeData[id].domain && isTimeDomainInterval(timeData[id].domain));
+                // update range data for every layer that need to sync with histogram/domain
                 return Rx.Observable.merge(
                     ...layerIds.map(id =>
                         loadRangeData(id, timeData[id], getState).map(({ range, histogram, domain }) => rangeDataLoaded(

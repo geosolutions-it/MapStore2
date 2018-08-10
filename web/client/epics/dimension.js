@@ -6,7 +6,7 @@ const {MAP_CONFIG_LOADED} = require('../actions/config');
 const { SET_CURRENT_TIME, updateLayerDimensionData} = require('../actions/dimension');
 const { layersWithTimeDataSelector } = require('../selectors/dimension');
 const {describeDomains} = require('../api/MultiDim');
-const { castArray, pick, find, matches } = require('lodash');
+const { castArray, pick, find } = require('lodash');
 
 const DESCRIBE_DOMAIN_OPTIONS = {
     expandLimit: 10 // TODO: increase this limit to max client allowed
