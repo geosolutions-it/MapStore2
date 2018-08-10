@@ -8,10 +8,10 @@
 const { connect } = require('react-redux');
 const { isString } = require('lodash');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
-const { selectTime, onRangeChanged} = require('../../actions/timeline');
+const { selectTime, onRangeChanged } = require('../../actions/timeline');
 const { itemsSelector, loadingSelector } = require('../../selectors/timeline');
 const { createStructuredSelector, createSelector } = require('reselect');
-const { compose, withProps, branch, withHandlers, withPropsOnChange, renderNothing, defaultProps} = require('recompose');
+const { compose, withProps, branch, withHandlers, withPropsOnChange, renderNothing, defaultProps } = require('recompose');
 
 /**
  * Provides time dimension data for layers
@@ -22,14 +22,14 @@ const layerData = compose(
             itemsSelector,
             layersWithTimeDataSelector,
             loadingSelector,
-            (items, layers, loading) => ({ items, layers, loading})
+            (items, layers, loading) => ({ items, layers, loading })
         )
     ),
     branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
     withPropsOnChange(
         ['layers', 'loading'],
         // (props = {}, nextProps = {}) => Object.keys(props.data).length !== Object.keys(nextProps.data).length,
-        ({ layers = [], loading = {}}) => ({
+        ({ layers = [], loading = {} }) => ({
             groups: layers.map(l => ({
                 id: l.id,
                 className: loading[l.id] ? "loading" : "",
@@ -60,7 +60,7 @@ const currentTimeEnhancer = compose(
 );
 
 const rangeEnhancer = compose(
-    connect( () => ({}), {
+    connect(() => ({}), {
         rangechangedHandler: onRangeChanged
     })
 );
@@ -69,6 +69,7 @@ const enhance = compose(
     rangeEnhancer,
     layerData,
     withProps(({ currentTime }) => ({
+        key: 'timeline',
         customTimes: [currentTime],
         options: {
             stack: false,

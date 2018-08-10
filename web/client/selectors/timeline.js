@@ -71,13 +71,14 @@ const rangeDataToItems = (rangeData = {}, range) => {
         const max = Math.max(
             ...(rangeData.histogram.values)
         );
-        return timeIntervalToIntervalSequence({start, end, duration}).map( (item, i) => ({
-            ...item,
+        const items = timeIntervalToIntervalSequence({ start, end, duration });
+        return rangeData.histogram.values.map( (value, i) => ({
+            ...items[i],
             type: "range",
             itemType: "histogram",
-            count: rangeData.histogram.values[i],
+            count: value,
             className: "histogram-item",
-            content: `<div><div class="histogram-box" style="height: ${(100 * rangeData.histogram.values[i] / max)}%"></div> <span class="histogram-count">${rangeData.histogram.values[i]}</span></div>`
+            content: `<div><div class="histogram-box" style="height: ${(100 * value / max)}%"></div> <span class="histogram-count">${value}</span></div>`
         }));
     }
     return [];
