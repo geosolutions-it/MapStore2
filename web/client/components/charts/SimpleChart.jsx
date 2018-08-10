@@ -39,11 +39,27 @@ const SimpleChart = ({type="line", tooltip = {}, legend = {}, autoColorOptions =
         const {base, range, ...opts} = colorOptions;
         return (sameToneRangeColors(base, range, total + 1, opts) || [0]).slice(1);
     };
+
+    const CustomTooltip = ({active, payload}={}) => {
+        if (active) {
+            const label = payload[0].name;
+            const percent = payload[0].percent;
+            return (
+                <div className="custom-tooltip">
+                    <p className="label">{`${label} : ${payload[0].value}`}</p>
+                    <p className="desc">{`${(percent * 100).toFixed(0)}%`}</p>
+                </div>
+            );
+        }
+        return null;
+    };
+
     return (<Component margin={{top: 5, right: 30, left: 20, bottom: 5}} colorGenerator={colorGenerator || defaultColorGenerator} autoColorOptions={autoColorOptions} {...props} {...{legend, tooltip}}>
-      {tooltip !== false ? <Tooltip {...tooltip}/> : null}
+      {tooltip !== false ? type === "pie" ? <Tooltip content={CustomTooltip}/> : <Tooltip {...tooltip}/> : null}
       {legend !== false ? <Legend {...legend}/> : null}
      </Component>
    );
 };
 
 module.exports = SimpleChart;
+
