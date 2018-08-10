@@ -46,8 +46,9 @@ const SimpleChart = ({type="line", tooltip = {}, legend = {}, autoColorOptions =
             const percent = payload[0].percent;
             return (
                 <div className="custom-tooltip">
-                    <p className="label">{`${label} : ${payload[0].value}`}</p>
-                    <p className="desc">{`${(percent * 100).toFixed(0)}%`}</p>
+                    <p className="label">{`${label} : ${payload[0].value}`}
+                        <span className="desc">&nbsp;({(percent * 100).toFixed(0)}%)</span>
+                    </p>
                 </div>
             );
         }
