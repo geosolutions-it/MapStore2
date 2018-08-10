@@ -1,9 +1,12 @@
 
 const { Observable } = require('rxjs');
 const { updateLayerDimension, changeLayerProperties, ADD_LAYER} = require('../actions/layers');
+const {MAP_CONFIG_LOADED} = require('../actions/config');
+
 const { SET_CURRENT_TIME, updateLayerDimensionData} = require('../actions/dimension');
+const { layersWithTimeDataSelector } = require('../selectors/dimension');
 const {describeDomains} = require('../api/MultiDim');
-const {castArray, pick} = require('lodash');
+const { castArray, pick, find, matches } = require('lodash');
 
 const DESCRIBE_DOMAIN_OPTIONS = {
     expandLimit: 10 // TODO: increase this limit to max client allowed
@@ -30,6 +33,7 @@ module.exports = {
 
     /**
      * Check the presence of Multidimensional API extension, then setup layers properly.
+     * Updates also current dimension state
      */
     queryMultidimensionalAPIExtensionOnAddLayer: action$ =>
         action$
@@ -52,5 +56,29 @@ module.exports = {
                         return Observable.empty();
                     })
                     // no multi-dimension support
-                    .catch(() => Observable.empty()) )
+                    .catch(() => Observable.empty()) ),
+    /**
+     * Updates dimension state for layers that has multidimensional extension.
+     */
+    updateLayerDimensionDataOnMapLoad: (action$, {getState = () => {}} = {}) =>
+            action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
+                const layers = layersWithTimeDataSelector(getState());
+                return Observable.from(
+                        // layers with dimension and multidimensional extension
+                        layers.filter(l =>
+                            l
+                            && l.dimensions
+                            && find(l.dimensions, d => d && d.source && d.source.type === "multidim-extension")
+                        )
+                    )
+                    // one flow for each dimension
+                    .flatMap(l =>
+                        describeDomains(l.url, l.name, undefined, DESCRIBE_DOMAIN_OPTIONS)
+                            .switchMap( domains =>
+                                Observable.from(domainsToDimensionsObject(domains, l)
+                                    .map(d => updateLayerDimensionData(l.id, d.name, d))
+                            )
+                        )
+                    );
+            })
 };
