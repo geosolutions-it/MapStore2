@@ -182,7 +182,7 @@ class FloatingLegend extends React.Component {
                                 ref={list => { this.list = list; }}
                                 size="sm"
                                 items={this.props.layers.map(layer => ({
-                                        title: layer.title,
+                                        title: !layer.title || layer.title === '' ? layer.name : layer.title,
                                         preview: <Glyphicon className="text-primary"
                                             glyph={layer.visibility ? 'eye-open' : 'eye-close'}
                                             onClick={() => this.props.onChange(layer.id, 'layers', {visibility: !layer.visibility})}/>,
