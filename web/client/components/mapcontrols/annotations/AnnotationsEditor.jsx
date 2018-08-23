@@ -324,7 +324,7 @@ class AnnotationsEditor extends React.Component {
 
     selectGlyph = (option) => {
         return this.props.onSetStyle(assign({}, this.props.editing.style, {
-            iconGlyph: option.value
+            iconGlyph: option && option.value || ""
         }));
     };
 
