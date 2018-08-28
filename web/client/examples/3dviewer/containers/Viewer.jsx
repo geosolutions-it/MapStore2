@@ -45,7 +45,9 @@ class Viewer extends React.Component {
     static defaultProps = {
         mapOptions: {
             terrainProvider: {
-                type: "cesium"
+                type: "ellipsoid",
+                url: "https://assets.agi.com/stk-terrain/world",
+                requestVertexNormals: true
             }
         }
     };

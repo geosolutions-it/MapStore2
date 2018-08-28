@@ -172,12 +172,16 @@ class CesiumMap extends React.Component {
         if (rawOptions.terrainProvider) {
             let {type, ...tpOptions} = rawOptions.terrainProvider;
             switch (type) {
-            case "cesium": {
-                overrides.terrainProvider = new Cesium.EllipsoidTerrainProvider();
-                break;
-            }
-            default:
-                break;
+                case "cesium": {
+                    overrides.terrainProvider = new Cesium.CesiumTerrainProvider(tpOptions);
+                    break;
+                }
+                case "ellipsoid": {
+                    overrides.terrainProvider = new Cesium.EllipsoidTerrainProvider();
+                    break;
+                }
+                default:
+                    break;
             }
         }
         return assign({}, rawOptions, overrides);
