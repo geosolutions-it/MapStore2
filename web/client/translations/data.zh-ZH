@@ -247,7 +247,7 @@
                 "loading": {
                     "notFound": "Map not found",
                     "notAccessible": "Map not accessible",
-                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <div>you don't have permission to access</div> <div>you are trying to access a map that doesn't exist</div> <div>the map has been removed</div><p>"
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li></ul><p>"
                 }
             }
         },
@@ -1116,7 +1116,7 @@
                     "title": "Error loading dashboard",
                     "dashboardNotAccessible": "You don't have permission to access this dashboard. Please contact the resource owner",
                     "pleaseLogin": "This dashboard is not public. Please try to login",
-                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist or has been removed",
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
                     "unknownError": "There was an error loading the dashboard. Please contact the administrator",
                     "notFound": "Dashboard not found",
 	                "notAccessible": "Dashboard not accessible"

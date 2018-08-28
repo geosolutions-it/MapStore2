@@ -13,7 +13,7 @@ const {branch, nest} = require('recompose');
  * @param {*} maskContent the content of the mask
  */
 const maskEnhancer = (showMask, maskContent, { maskContainerStyle, maskStyle, className }) => (A) => nest(
-    (props) => (<div className={`ms2-mask-container ${className || ''}`} style={maskContainerStyle} >
+    (props) => (<div className={`ms2-mask-container ${className || ''} ${!showMask(props) && 'ms2-mask-empty' || ''}`} style={maskContainerStyle} >
         {props.children}
         {showMask(props) ? <div className="ms2-mask" style={maskStyle} >
             {maskContent(props)}

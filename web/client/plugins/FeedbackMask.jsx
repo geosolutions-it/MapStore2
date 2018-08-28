@@ -72,7 +72,7 @@ const MaskBody = emptyState(
  * @memberof plugins
  * @name FeedbackMask
  * @class
- * @prop {boolean} cfg.loadingText change loading text
+ * @prop {string} cfg.loadingText change loading text
  */
 
 const FeedbackMaskPlugin = compose(

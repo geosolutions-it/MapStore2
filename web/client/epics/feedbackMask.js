@@ -22,7 +22,7 @@ const {LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
  * @param {Array} loadActions array of actions to control
  * @param {Function} isEnabled needs to return true or false to update the enabled state of feedbackMask
  * @param {Function} mode declare mode to display the mask (map or dashboard)
- * @memberof epics.search
+ * @memberof epics.feedbackMask
  * @return {Observable}
  */
 const updateVisibility = (action$, loadActions, isEnabled = () => {}, mode) =>
@@ -41,7 +41,7 @@ const updateVisibility = (action$, loadActions, isEnabled = () => {}, mode) =>
 /**
  * Enabled/disabled mask based on map load feedback, in case of error enable feedbackMask.
  * @param {Observable} action$ stream of actions. Manages `INIT_MAP`, `MAP_CONFIG_LOADED`, `MAP_CONFIG_LOAD_ERROR`, `LOGIN_SUCCESS`, `LOGOUT`
- * @memberof epics.search
+ * @memberof epics.feedbackMask
  * @return {Observable}
  */
 const updateMapVisibility = (action$, store) =>
@@ -63,7 +63,7 @@ const updateMapVisibility = (action$, store) =>
 /**
  * Enabled/disabled mask based on dashboard load feedback, in case of error enable feedbackMask.
  * @param {Observable} action$ stream of actions. Manages `LOAD_DASHBOARD`, `DASHBOARD_LOADED`, `DASHBOARD_LOAD_ERROR`, `LOGIN_SUCCESS`, `LOGOUT`, `LOCATION_CHANGE`
- * @memberof epics.search
+ * @memberof epics.feedbackMask
  * @return {Observable}
  */
 const updateDashboardVisibility = action$ =>

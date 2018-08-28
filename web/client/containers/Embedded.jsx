@@ -14,6 +14,7 @@ const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 const PluginsUtils = require('../utils/PluginsUtils');
 const ConfigUtils = require('../utils/ConfigUtils');
+const {initMap} = require('../actions/map');
 
 const PluginsContainer = connect((state) => ({
     mode: urlQuery.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
@@ -25,7 +26,8 @@ class Embedded extends React.Component {
     static propTypes = {
         params: PropTypes.object,
         plugins: PropTypes.object,
-        pluginsConfig: PropTypes.object
+        pluginsConfig: PropTypes.object,
+        onInit: PropTypes.func
     };
 
     static defaultProps = {
@@ -33,8 +35,13 @@ class Embedded extends React.Component {
         pluginsConfig: {
             desktop: [],
             mobile: []
-        }
+        },
+        onInit: () => {}
     };
+
+    componentWillMount() {
+        this.props.onInit();
+    }
 
     render() {
         return (<PluginsContainer key="embedded" id="mapstore2-embedded" className="mapstore2-embedded"
@@ -45,4 +52,6 @@ class Embedded extends React.Component {
     }
 }
 
-module.exports = Embedded;
+module.exports = connect(() => ({}), {
+    onInit: initMap
+})(Embedded);

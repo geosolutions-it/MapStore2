@@ -347,7 +347,7 @@
                 "loading": {
                     "notFound": "Mappa non trovata",
                     "notAccessible": "Mappa non accessibile",
-                    "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <div> non hai il permesso di accedere </div> <div> stai cercando di accedere a una mappa che non esiste </div> <div> la mappa è stata rimossa </div> <p>"
+                    "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li></ul> <p>"
                 }
             }
         },
@@ -1331,7 +1331,7 @@
                     "title": "Errore di caricamento della dashboard",
                     "dashboardNotAccessible": "Non hai i permessi per accedere a questa dashboard. Contatta il properietario",
                     "pleaseLogin": "Questa risorsa non è pubblica. Effettuare il login",
-                    "dashboardDoesNotExist": "La dashboard richiesta non esiste o è stata cancellata",
+                    "dashboardDoesNotExist": "La dashboard richiesta non esiste",
                     "unknownError": "C'è stato un errore durante il caricamento della dashboard. Contattare l'amministratore",
                     "notFound": "Dashboard non trovata",
                     "notAccessible": "Dashboard non accessibile"

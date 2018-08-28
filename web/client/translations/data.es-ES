@@ -347,7 +347,7 @@
                 "loading": {
                     "notFound": "Mapa no encontrado",
                     "notAccessible": "Mapa no accesible",
-                    "unknownError": "<p> <small> Uno de los siguientes motivos podría ser la causa: </small> <div> no tiene permiso para acceder </div> <div> está intentando acceder a un mapa que no existe </div> <div> el mapa se ha eliminado </div> <p>"
+                    "unknownError": "<p> <small> Uno de los siguientes motivos podría ser la causa: </small> <ul><li> no tiene permiso para acceder </li> <li> está intentando acceder a un mapa que no existe </li> <li> el mapa se ha eliminado </li></ul> <p>"
                 }
             }
         },
@@ -1331,7 +1331,7 @@
                     "title": "Error al cargar el tablero",
                     "dashboardNotAccessible": "No tiene permiso para acceder a este panel. Póngase en contacto con el propietario del recurso",
                     "pleaseLogin": "Este panel no es público. Intente iniciar sesión",
-                    "dashboardDoesNotExist": "El panel al que está intentando acceder no existe o se ha eliminado",
+                    "dashboardDoesNotExist": "El panel al que intenta acceder no existe",
                     "unknownError": "Hubo un error al cargar el panel. Póngase en contacto con el administrador",
                     "notFound": "Tablero no encontrado",
                     "notAccessible": "Tablero no accesible"

@@ -347,7 +347,7 @@
                 "loading": {
                     "notFound": "Karte nicht gefunden",
                     "notAccessible": "Karte nicht zugänglich",
-                    "unknownError": "<p> <small> Einer der folgenden Gründe könnte die Ursache sein: </small> <div> Sie haben keine Zugriffsberechtigung </div> <div> Sie versuchen, auf eine nicht vorhandene Map zuzugreifen </div> <div> Die Karte wurde entfernt </div> <p>"
+                    "unknownError": "<p> <small> Einer der folgenden Gründe könnte die Ursache sein: </small> <ul><li> Sie haben keine Zugriffsberechtigung </li> <li> Sie versuchen, auf eine nicht vorhandene Map zuzugreifen </li> <li> Die Karte wurde entfernt </li></ul> <p>"
                 }
             }
         },
@@ -1331,7 +1331,7 @@
                     "title": "Fehler beim Laden des Dashboards",
                     "dashboardNotAccessible": "Sie sind nicht berechtigt, auf dieses Dashboard zuzugreifen. Wenden Sie sich an den Ressourcenbesitzer",
                     "pleaseLogin": "Dieses Dashboard ist nicht öffentlich. Bitte versuchen Sie sich einzuloggen",
-                    "dashboardDoesNotExist": "Das Dashboard, auf das Sie zugreifen möchten, existiert nicht oder wurde entfernt",
+                    "dashboardDoesNotExist": "Das Dashboard, auf das Sie zugreifen möchten, existiert nicht",
                     "unknownError":  "Beim Laden des Dashboards ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Administrator.",
                     "notFound": "Dashboard nicht gefunden",
                     "notAccessible": "Dashboard nicht zugänglich"
