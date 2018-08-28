@@ -524,7 +524,12 @@
                 "preset": "dashboard_tutorial"
             }
         }, 
-        "FeedbackMask"],
+        {
+            "name": "FeedbackMask",
+            "cfg": {
+                "containerPosition": "header"
+            }
+        }],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }
