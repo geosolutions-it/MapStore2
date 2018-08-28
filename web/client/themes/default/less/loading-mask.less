@@ -1,0 +1,33 @@
+
+.ms2-loading-mask {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    padding: 8px;
+    box-sizing: border-box;
+    .ms2-mask {
+        position: fixed;
+        background-color: @ms2-color-background;
+        top: 0;
+        left: 0;
+    }
+    .empty-state-container {
+        color: @ms2-color-text;
+        display: flex;
+        flex-direction: column;
+        .empty-state-main-view {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            .empty-state-image {
+                width: 128px;
+                margin: 0 auto;
+            }
+        }
+        .empty-state-content {
+            margin-bottom: auto;
+        }
+    }
+}

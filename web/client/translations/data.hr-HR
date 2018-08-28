@@ -313,6 +313,13 @@
                 "titleUnsavedChanges": "Jeste li sigurni da želite zatvoriti bez spremanja promjena?",
                 "sureToClose": "Jeste li sigurni da želite zatvoriti bez spremanja promjena?",
                 "fieldsChanged": "Neka polja su izmijenjena"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Map not found",
+                    "notAccessible": "Map not accessible",
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <div>you don't have permission to access</div> <div>you are trying to access a map that doesn't exist</div> <div>the map has been removed</div><p>"
+                }
             }
         },
         "floatinglegend": {
@@ -1243,8 +1250,35 @@
 
         },
         "dashboard": {
+            "saveDialog": {
+                "title": "Edit dashboard properties",
+                "name": "Name",
+                "description": "Description",
+                "namePlaceholder": "Type a name...",
+                "descriptionPlaceholder": "Type a description...",
+                "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",
+                "close": "Close",
+                "cancel": "Cancel",
+                "saveSuccessTitle": "Success",
+                "saveSuccessMessage": "Dashboard saved successfully"
+            },
+            "errors":{
+                "loading": {
+                    "title": "Error loading dashboard",
+                    "dashboardNotAccessible": "You don't have permission to access this dashboard. Please contact the resource owner",
+                    "pleaseLogin": "This dashboard is not public. Please try to login",
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist or has been removed",
+                    "unknownError": "There was an error loading the dashboard. Please contact the administrator",
+                    "notFound": "Dashboard not found",
+	                "notAccessible": "Dashboard not accessible"
+                },
+                "resourceAlreadyExists": "A resource with this name already exists. try '{data}'"
+            },
             "editor": {
-                "addACardToTheDashboard": "Dodaj widget na kontronu ploču"
+                "save": "Save the dashboard",
+                "addACardToTheDashboard": "Dodaj widget na kontronu ploču",
+                "showConnections": "Show connections",
+                "hideConnections": "HideConnections"
             },
             "emptyTitle": "Ploča je prazna"
         },

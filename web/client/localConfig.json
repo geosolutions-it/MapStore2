@@ -196,7 +196,8 @@
                 "externalCookieUrl" : "",
                 "declineUrl" : "http://www.google.com"
               }
-            }
+            },
+            "FeedbackMask"
         ],
         "desktop": [ "Details",
           {
@@ -343,7 +344,8 @@
                 "declineUrl" : "http://www.google.com"
                 }
             },
-            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets"
+            "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets",
+            "FeedbackMask"
         ],
         "embedded": [{
                 "name": "Map",
@@ -452,7 +454,8 @@
                         "alwaysVisible": true
                     }
                 }
-            }
+            },
+            "FeedbackMask"
         ],
         "common": [{
             "name": "OmniBar",
@@ -520,7 +523,8 @@
                 "containerPosition": "header",
                 "preset": "dashboard_tutorial"
             }
-        }],
+        }, 
+        "FeedbackMask"],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }

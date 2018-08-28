@@ -342,6 +342,13 @@
                 "titleUnsavedChanges": "Sind Sie sicher, dass Sie schließen, ohne Ihre Änderungen zu speichern??",
                 "sureToClose": "Sind Sie sicher, dass Sie schließen, ohne Ihre Änderungen zu speichern??",
                 "fieldsChanged": "Einige Felder wurden geändert"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Karte nicht gefunden",
+                    "notAccessible": "Karte nicht zugänglich",
+                    "unknownError": "<p> <small> Einer der folgenden Gründe könnte die Ursache sein: </small> <div> Sie haben keine Zugriffsberechtigung </div> <div> Sie versuchen, auf eine nicht vorhandene Map zuzugreifen </div> <div> Die Karte wurde entfernt </div> <p>"
+                }
             }
         },
         "floatinglegend": {
@@ -1325,7 +1332,9 @@
                     "dashboardNotAccessible": "Sie sind nicht berechtigt, auf dieses Dashboard zuzugreifen. Wenden Sie sich an den Ressourcenbesitzer",
                     "pleaseLogin": "Dieses Dashboard ist nicht öffentlich. Bitte versuchen Sie sich einzuloggen",
                     "dashboardDoesNotExist": "Das Dashboard, auf das Sie zugreifen möchten, existiert nicht oder wurde entfernt",
-                    "unknownError":  "Beim Laden des Dashboards ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Administrator."
+                    "unknownError":  "Beim Laden des Dashboards ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Administrator.",
+                    "notFound": "Dashboard nicht gefunden",
+                    "notAccessible": "Dashboard nicht zugänglich"
                 },
                 "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits. Versuchen Sie '{data}'"
             },

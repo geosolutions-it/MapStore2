@@ -343,6 +343,13 @@
                 "titleUnsavedChanges": "Êtes-vous sûr de fermer sans enregistrer vos modifications?",
                 "sureToClose": "Êtes-vous sûr de fermer sans enregistrer vos modifications?",
                 "fieldsChanged": "Certains champs ont été modifiés"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Carte introuvable",
+                    "notAccessible": "Carte non accessible",
+                    "unknownError": "<p> <small> L'une des raisons suivantes pourrait être la cause: </small> <div> vous n'avez pas la permission d'accéder à </div> <div> vous essayez d'accéder à une carte qui n'existe pas </div> <div> la carte a été supprimée </div> <p>"
+                }
             }
         },
         "floatinglegend": {
@@ -1325,7 +1332,9 @@
                     "dashboardNotAccessible": "Vous n'êtes pas autorisé à accéder à ce tableau de bord. Veuillez contacter le propriétaire de la ressource",
                     "pleaseLogin": "Ce tableau de bord n'est pas public. Veuillez essayer de vous connecter",
                     "dashboardDoesNotExist": "Le tableau de bord auquel vous essayez d'accéder n'existe pas ou a été supprimé",
-                    "unknownError": "Une erreur est survenue lors du chargement du tableau de bord. Veuillez contacter l'administrateur"
+                    "unknownError": "Une erreur est survenue lors du chargement du tableau de bord. Veuillez contacter l'administrateur",
+                    "notFound": "Tableau de bord introuvable",
+                    "notAccessible": "Tableau de bord non accessible"
                 },
                 "resourceAlreadyExists": "Une ressource avec ce nom existe déjà. try '{data}'"
             },
