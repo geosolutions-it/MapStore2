@@ -47,8 +47,18 @@ const timeSequenceSelector = createSelector(
             [])
         .sort() || []);
 
+
+/**
+ * Returns the time dimension values for the selected layer, sorted
+ * @param {object} layer layer object (only id is required)
+ */
+const layerTimeSequenceSelectorCreator =
+    layer =>
+        state =>
+            [...get(layerDimensionSelectorCreator(layer, "time")(state), "values", [])].sort();
 module.exports = {
     layerDimensionDataSelectorCreator,
+    layerTimeSequenceSelectorCreator,
     timeSequenceSelector,
     currentTimeSelector,
     layersWithTimeDataSelector,

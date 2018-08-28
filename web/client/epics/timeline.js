@@ -8,14 +8,18 @@ const { getHistogram, describeDomains } = require('../api/MultiDim');
 const { rangeSelector } = require('../selectors/timeline');
 
 const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA } = require('../actions/dimension');
-const { timeSequenceSelector, timeDataSelector } = require('../selectors/dimension');
+const { layerTimeSequenceSelectorCreator, timeDataSelector } = require('../selectors/dimension');
 const { getNearestDate, roundRangeResolution, isTimeDomainInterval } = require('../utils/TimeUtils');
 const TIME_DIMENSION = "time";
 // const DEFAULT_RESOLUTION = "P1W";
 const MAX_ITEMS_PER_LAYER = 10;
 const MAX_HISTOGRAM = 20;
-const snapTime = (state, time) => {
-    return Rx.Observable.of(getNearestDate(timeSequenceSelector(state), time) || time);
+
+/**
+ * creates an observable that emit a time that snap to the current time
+ */
+const snapTime = (timeValues, time) => {
+    return Rx.Observable.of(getNearestDate(timeValues, time) || time);
 };
 const snap = true; // TODO: externalize to make this configurable.
 
@@ -94,10 +98,13 @@ const loadRangeData = (id, timeData, getState) => {
 };
 module.exports = {
     setTimelineCurrentTime: (action$, {getState = () => {}} = {}) => action$.ofType(SELECT_TIME)
-        .switchMap( ({time}) => {
+        .switchMap( ({time, group}) => {
 
-            if (snap) {
-                return snapTime(getState(), time).map( t => setCurrentTime(t));
+            if (snap && group) {
+                const state = getState();
+                return snapTime(
+                    layerTimeSequenceSelectorCreator(getLayerFromId(state, group))(state), time
+                ).map( t => setCurrentTime(t));
             }
             return Rx.Observable.of(setCurrentTime(time));
         }),

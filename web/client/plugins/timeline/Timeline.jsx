@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 const { connect } = require('react-redux');
-const { isString } = require('lodash');
+const { isString, differenceBy } = require('lodash');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
 const { selectTime, onRangeChanged } = require('../../actions/timeline');
 const { itemsSelector, loadingSelector } = require('../../selectors/timeline');
 const { createStructuredSelector, createSelector } = require('reselect');
-const { compose, withProps, branch, withHandlers, withPropsOnChange, renderNothing, defaultProps } = require('recompose');
+const { compose, branch, withHandlers, withPropsOnChange, renderNothing, defaultProps } = require('recompose');
 
 /**
  * Provides time dimension data for layers
@@ -27,7 +27,12 @@ const layerData = compose(
     ),
     branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
     withPropsOnChange(
-        ['layers', 'loading'],
+        (props, nextProps) => {
+            const {layers = [], loading} = props;
+            const { layers: nextLayers, loading: nextLoading } = nextProps;
+            return loading !== nextLoading
+                || differenceBy(layers, nextLayers || [], ({id, title, name} = {}) => id + title + name).length > 0;
+        },
         // (props = {}, nextProps = {}) => Object.keys(props.data).length !== Object.keys(nextProps.data).length,
         ({ layers = [], loading = {} }) => ({
             groups: layers.map(l => ({
@@ -52,7 +57,7 @@ const currentTimeEnhancer = compose(
     ),
     withHandlers({
         selectionChange: ({ setCurrentTime = () => { } }) => e => setCurrentTime(e.items[0]),
-        clickHandler: ({ setCurrentTime = () => { } }) => ({ time } = {}) => setCurrentTime(time)
+        clickHandler: ({ setCurrentTime = () => { } }) => ({ time, group, what} = {}) => setCurrentTime(time, group, what)
     }),
     defaultProps({
         currentTime: new Date()
@@ -68,23 +73,25 @@ const enhance = compose(
     currentTimeEnhancer,
     rangeEnhancer,
     layerData,
-    withProps(({ currentTime }) => ({
-        key: 'timeline',
-        customTimes: [currentTime],
-        options: {
-            stack: false,
-            showMajorLabels: true,
-            showCurrentTime: false,
-            zoomMin: 10,
-            zoomable: true,
-            type: 'background',
-            format: {
-                minorLabels: {
-                    minute: 'h:mma',
-                    hour: 'ha'
+    withPropsOnChange(
+        ['currentTime'],
+        ({ currentTime }) => ({
+            key: 'timeline',
+            customTimes: {currentTime},
+            options: {
+                stack: false,
+                showMajorLabels: true,
+                showCurrentTime: false,
+                zoomMin: 10,
+                zoomable: true,
+                type: 'background',
+                format: {
+                    minorLabels: {
+                        minute: 'h:mma',
+                        hour: 'ha'
+                    }
                 }
             }
-        }
     }))
 
 );

@@ -7,7 +7,7 @@
  */
 
 const expect = require('expect');
-const { describeDomains, getHistogram } = require('../MultiDim');
+const { describeDomains, getHistogram, getDomainValues } = require('../MultiDim');
 
 describe('MultiDim API', () => {
     it('describeDomains', (done) => {
@@ -40,6 +40,27 @@ describe('MultiDim API', () => {
                     expect(histogram.Identifier).toBe("time");
                     expect(histogram.Values).toBe("240,0,240,0,0,240");
                     expect(histogram.Domain).toBe("2016-02-23T00:00:00.000Z/2016-02-25T00:00:00.000Z/PT8H");
+                    done();
+                } catch (ex) {
+                    done(ex);
+                }
+            },
+            error => done(error)
+        );
+    });
+    it('getDomainValues', (done) => {
+        getDomainValues('base/web/client/test-resources/wmts/DomainValues.xml', "test:layer")
+        // getDomainValues('http://cloudsdi.geo-solutions.it:80/geoserver/gwc/service/wmts', "landsat8:B3", "time" ,{
+        //    limit: 2
+        // })
+        .subscribe(
+            result => {
+                try {
+                    const DomainValues = result.DomainValues;
+                    expect(DomainValues).toExist();
+                    expect(DomainValues.Identifier).toBe("time");
+                    expect(DomainValues.Domain.split(",").length).toBe(2);
+                    // expect(histogram.Domain).toBe("2016-02-23T00:00:00.000Z/2016-02-25T00:00:00.000Z/PT8H");
                     done();
                 } catch (ex) {
                     done(ex);

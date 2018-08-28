@@ -1,5 +1,5 @@
 const SELECT_TIME = "TIMELINE:SELECT_TIME";
-const selectTime = (time) => ({type: SELECT_TIME, time});
+const selectTime = (time, group, what, item) => ({ type: SELECT_TIME, time, group, what, item});
 const RANGE_CHANGED = "TIMELINE:RANGE_CHANGE";
 const onRangeChanged = ({start, end}) => ({type: RANGE_CHANGED, start, end});
 const RANGE_DATA_LOADED = "TIMELINE:RANGE_DATA_LOADED";

@@ -13,6 +13,10 @@ const {parseXML, interceptOGCError} = require('../utils/ObservableUtils');
 
 
 const toMultiDimURL = url => endsWith(url, "wms") ? replace(url, "wms", "gwc/service/wmts") : url;
+
+// this fixes temporary this issue
+// https://github.com/geosolutions-it/MapStore2/issues/3144
+// can be removed or replaced with identity function when the issue is fixed
 const trimUndefinedParams = o =>
     Object.keys(o).reduce( (acc, k) =>
         (o[k] !== undefined && o[k] !== null)
@@ -73,6 +77,43 @@ const getHistogram = (url, layer, histogram, dimensionIdentifiers, resolution, {
     }))
     .let(interceptOGCError)
     .switchMap(response => parseXML(response.data));
+
+// http://localhost:8080/geoserver/gwc/service/wmts?request=GetDomainValues&Version=1.0.0&Layer=sampleLayer&domain=elevation&limit=2
+
+/**
+ * Retrieves domain values for a layer. Useful for animations.
+ * @param {string} url url of the multidimensional extension
+ * @param {string} layer layer name
+ * @param {string} domain domain identifier
+ * @param {object} pagination options for pagination. Can contain `fromValue`, `sort` (`asc` or `desc`) and `limit`.
+ * @param {options} param4 other options
+ */
+const getDomainValues = (url, layer, domain, {
+    fromValue,
+    sort = "asc",
+    limit = 20
+} = {}, {
+    bbox,
+    service = "WMTS",
+    version = "1.0.0"// ,
+    // tileMatrixSet = "EPSG:4326" // this is required because this is an option of WMTS,
+
+} = {}) => Observable.defer(() => ajax.get(toMultiDimURL(url), {
+        params: trimUndefinedParams({
+            service,
+            version,
+            request: "GetDomainValues",
+            // tileMatrixSet,
+            bbox,
+            layer,
+            domain,
+            fromValue,
+            sort,
+            limit
+        })
+    }))
+    .let(interceptOGCError)
+    .switchMap(response => parseXML(response.data));
 /**
  * API for [WMTS Multidimensional](http://docs.geoserver.org/latest/en/user/community/wmts-multidimensional/index.html) that in the future
  * should be extended to WMS.
@@ -81,5 +122,6 @@ const getHistogram = (url, layer, histogram, dimensionIdentifiers, resolution, {
  */
 module.exports = {
     describeDomains,
-    getHistogram
+    getHistogram,
+    getDomainValues
 };

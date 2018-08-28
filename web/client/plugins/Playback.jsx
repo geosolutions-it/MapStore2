@@ -8,8 +8,34 @@
 
 const React = require('react');
 const assign = require('object-assign');
-const Playback = require('../components/playback/Playback');
+const { defaultProps, compose } = require('recompose');
+const {createSelector} = require('reselect');
+const { play, pause, stop, STATUS } = require('../actions/playback');
+const {currentTimeSelector} = require('../selectors/dimension');
 
+const { statusSelector, loadingSelector } = require('../selectors/playback');
+
+const { connect } = require('react-redux');
+
+const Playback = compose(
+    defaultProps({
+        statusMap: STATUS
+    }),
+    connect(
+        createSelector(
+            statusSelector,
+            currentTimeSelector,
+            loadingSelector,
+            (status, currentTime, loading) => ({
+                loading,
+                currentTime,
+                status
+            })
+        ), {
+            play, pause, stop
+        }
+    )
+)(require('../components/playback/Playback'));
 
 class PlaybackPlugin extends React.Component {
     render() {
@@ -34,7 +60,9 @@ module.exports = {
     PlaybackPlugin: assign(PlaybackPlugin, {
         disablePluginIf: "{state('featuregridmode') === 'EDIT'}"
     }),
+    epics: require('../epics/playback'),
     reducers: {
+        playback: require('../reducers/playback'),
         dimension: require('../reducers/dimension')
     }
 };
