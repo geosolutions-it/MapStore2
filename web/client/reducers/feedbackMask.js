@@ -6,21 +6,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {LOADING_MASK_LOADING, LOADING_MASK_LOADED, LOADING_MASK_ENABLED} = require('../actions/feedbackMask');
+const {FEEDBACK_MASK_LOADING, FEEDBACK_MASK_LOADED, FEEDBACK_MASK_ENABLED, DETECTED_NEW_PAGE} = require('../actions/feedbackMask');
 
 function feedbackMask(state = {}, action) {
     switch (action.type) {
-    case LOADING_MASK_LOADING:
+    case FEEDBACK_MASK_LOADING:
         return {...state, loading: true, enabled: false, status: null, errorMessage: null, mode: null};
-    case LOADING_MASK_LOADED:
+    case FEEDBACK_MASK_LOADED:
         return {...state, loading: false};
-    case LOADING_MASK_ENABLED:
+    case FEEDBACK_MASK_ENABLED:
         return {
             ...state,
             enabled: action.enabled,
             status: action.error && action.error.status,
             errorMessage: action.error && action.error.messageId,
             mode: action.mode
+        };
+    case DETECTED_NEW_PAGE:
+        return {
+            ...state,
+            currentPage: action.currentPage
         };
     default:
         return state;

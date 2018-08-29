@@ -8,12 +8,14 @@
 
 const expect = require('expect');
 const {
-    LOADING_MASK_LOADING,
-    LOADING_MASK_LOADED,
-    LOADING_MASK_ENABLED,
+    FEEDBACK_MASK_LOADING,
+    FEEDBACK_MASK_LOADED,
+    FEEDBACK_MASK_ENABLED,
+    DETECTED_NEW_PAGE,
     feedbackMaskLoading,
     feedbackMaskLoaded,
-    feedbackMaskEnabled
+    feedbackMaskEnabled,
+    detectedNewPage
 } = require('../feedbackMask');
 
 describe('Test correctness of the feedbackMask actions', () => {
@@ -21,12 +23,12 @@ describe('Test correctness of the feedbackMask actions', () => {
     it('feedbackMaskLoading', () => {
         const retval = feedbackMaskLoading();
         expect(retval).toExist();
-        expect(retval.type).toBe(LOADING_MASK_LOADING);
+        expect(retval.type).toBe(FEEDBACK_MASK_LOADING);
     });
     it('feedbackMaskLoaded', () => {
         const retval = feedbackMaskLoaded();
         expect(retval).toExist();
-        expect(retval.type).toBe(LOADING_MASK_LOADED);
+        expect(retval.type).toBe(FEEDBACK_MASK_LOADED);
     });
     it('feedbackMaskEnabled', () => {
         const enabled = true;
@@ -34,10 +36,16 @@ describe('Test correctness of the feedbackMask actions', () => {
         const mode = 'map';
         const retval = feedbackMaskEnabled(enabled, error, mode);
         expect(retval).toExist();
-        expect(retval.type).toBe(LOADING_MASK_ENABLED);
+        expect(retval.type).toBe(FEEDBACK_MASK_ENABLED);
         expect(retval.enabled).toBe(enabled);
         expect(retval.error).toBe(error);
         expect(retval.mode).toBe(mode);
+    });
+    it('detectedNewPage', () => {
+        const retval = detectedNewPage('viewer');
+        expect(retval).toExist();
+        expect(retval.type).toBe(DETECTED_NEW_PAGE);
+        expect(retval.currentPage).toBe('viewer');
     });
 
 });

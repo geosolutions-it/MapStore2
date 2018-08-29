@@ -10,7 +10,7 @@ const {connect} = require('react-redux');
 const {compose} = require('recompose');
 const {createSelector} = require('reselect');
 const {push} = require('react-router-redux');
-const {Button: ButtonRB, Glyphicon} = require('react-bootstrap');
+const {Button} = require('react-bootstrap');
 const {get} = require('lodash');
 
 const withMask = require('../components/misc/enhancers/withMask');
@@ -18,9 +18,6 @@ const emptyState = require('../components/misc/enhancers/emptyState');
 const {isLoggedIn} = require('../selectors/security');
 const Message = require('../components/I18N/Message');
 const HTML = require('../components/I18N/HTML');
-const tooltip = require('../components/misc/enhancers/tooltip');
-
-const Button = tooltip(ButtonRB);
 
 const feedbackMaskSelector = createSelector([
     state => get(state, 'feedbackMask', {}),
@@ -41,11 +38,9 @@ const HomeButton = connect(() => ({}), {
     onClick: push.bind(null, '/')
 })(
     ({onClick = () => {}}) => <Button
-        className="square-button-md"
         bsStyle="primary"
-        tooltipId="gohome"
         onClick={() => onClick()}>
-        <Glyphicon glyph="home"/>
+        <Message msgId="gohome"/>
     </Button>
 );
 
@@ -84,7 +79,9 @@ const FeedbackMaskPlugin = compose(
             <div className="_ms2_init_spinner _ms2_init_center">
                 <div/>
             </div>
-            <div className="_ms2_init_text _ms2_init_center">{props.loadingText || 'Loading MapStore'}</div>
+            <div className="_ms2_init_text _ms2_init_center">
+                {props.loadingText || 'Loading MapStore'}
+            </div>
         </span>
         :
         <MaskBody {...props} />, {

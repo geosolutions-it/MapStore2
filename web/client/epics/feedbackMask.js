@@ -8,7 +8,8 @@
 */
 
 const Rx = require('rxjs');
-const {LOADING_MASK_ENABLED, feedbackMaskLoading, feedbackMaskLoaded, feedbackMaskEnabled} = require('../actions/feedbackMask');
+const {split, get, isNil} = require('lodash');
+const {FEEDBACK_MASK_ENABLED, DETECTED_NEW_PAGE, feedbackMaskLoading, feedbackMaskLoaded, feedbackMaskEnabled, detectedNewPage} = require('../actions/feedbackMask');
 const {LOAD_DASHBOARD, DASHBOARD_LOADED, DASHBOARD_LOAD_ERROR} = require('../actions/dashboard');
 const {INIT_MAP} = require('../actions/map');
 const {MAP_CONFIG_LOADED, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
@@ -35,7 +36,7 @@ const updateVisibility = (action$, loadActions, isEnabled = () => {}, mode) =>
                     feedbackMaskEnabled(isEnabled(action), action.error, mode)
                 );
             })
-            .takeUntil(action$.ofType(LOADING_MASK_ENABLED))
+            .takeUntil(action$.ofType(FEEDBACK_MASK_ENABLED))
     );
 
 /**
@@ -57,6 +58,7 @@ const updateMapVisibility = (action$, store) =>
                         action.type === LOGIN_SUCCESS && !mapSelector(store.getState()) && updateObservable
                         || action.type === LOGOUT && updateObservable
                         || Rx.Observable.empty())
+                    .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
             );
         });
 
@@ -76,10 +78,31 @@ const updateDashboardVisibility = action$ =>
                 updateObservable,
                 action$.ofType(LOGIN_SUCCESS, LOGOUT, LOCATION_CHANGE)
                     .switchMap(() => updateObservable)
-            )
-            .takeUntil(action$.ofType(LOCATION_CHANGE));
+                    .takeUntil(action$.ofType(DETECTED_NEW_PAGE))
+            );
         });
 
+/**
+ * Detect if the page has changed, if so it will stop loading and disable feedbackMask state.
+ * It needed to stop nested stream of updateDashboardVisibility and updateMapVisibility
+ * @param {Observable} action$ stream of actions. Manages `LOCATION_CHANGE`
+ * @memberof epics.feedbackMask
+ * @return {Observable}
+ */
+const detectNewPage = (action$, store) =>
+    action$.ofType(LOCATION_CHANGE)
+    .filter(action => {
+        const pathname = action.payload && action.payload.pathname;
+        const currentPage = !isNil(pathname) && split(pathname, '/')[1];
+        const oldPage = get(store.getState(), 'feedbackMask.currentPage');
+        // verify if it's a text to avoid id number (eg. embedded)
+        return isNaN(parseFloat(currentPage)) && currentPage !== oldPage;
+    })
+    .switchMap(action => Rx.Observable.of(
+        feedbackMaskLoaded(),
+        feedbackMaskEnabled(false),
+        detectedNewPage(split(action.payload.pathname, '/')[1])
+    ));
 /**
  * Epics for feedbackMask functionality
  * @name epics.feedbackMask
@@ -87,5 +110,6 @@ const updateDashboardVisibility = action$ =>
  */
 module.exports = {
     updateMapVisibility,
-    updateDashboardVisibility
+    updateDashboardVisibility,
+    detectNewPage
 };

@@ -8,13 +8,13 @@
 
 const expect = require('expect');
 
-const {updateMapVisibility, updateDashboardVisibility} = require('../feedbackMask');
-const {LOADING_MASK_LOADING, LOADING_MASK_LOADED, LOADING_MASK_ENABLED} = require('../../actions/feedbackMask');
+const {updateMapVisibility, updateDashboardVisibility, detectNewPage} = require('../feedbackMask');
+const {FEEDBACK_MASK_LOADING, FEEDBACK_MASK_LOADED, FEEDBACK_MASK_ENABLED, DETECTED_NEW_PAGE} = require('../../actions/feedbackMask');
 const {initMap} = require('../../actions/map');
 const {configureMap, configureError} = require('../../actions/config');
 const {loadDashboard, dashboardLoaded, dashboardLoadError} = require('../../actions/dashboard');
 
-const {testEpic} = require('./epicTestUtils');
+const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
 
 describe('feedbackMask Epics', () => {
 
@@ -22,11 +22,11 @@ describe('feedbackMask Epics', () => {
         const epicResult = actions => {
             expect(actions.length).toBe(3);
             const loadingAction = actions[0];
-            expect(loadingAction.type).toBe(LOADING_MASK_LOADING);
+            expect(loadingAction.type).toBe(FEEDBACK_MASK_LOADING);
             const loadedAction = actions[1];
-            expect(loadedAction.type).toBe(LOADING_MASK_LOADED);
+            expect(loadedAction.type).toBe(FEEDBACK_MASK_LOADED);
             const enabledAction = actions[2];
-            expect(enabledAction.type).toBe(LOADING_MASK_ENABLED);
+            expect(enabledAction.type).toBe(FEEDBACK_MASK_ENABLED);
             expect(enabledAction.enabled).toBe(false);
             done();
         };
@@ -37,11 +37,11 @@ describe('feedbackMask Epics', () => {
         const epicResult = actions => {
             expect(actions.length).toBe(3);
             const loadingAction = actions[0];
-            expect(loadingAction.type).toBe(LOADING_MASK_LOADING);
+            expect(loadingAction.type).toBe(FEEDBACK_MASK_LOADING);
             const loadedAction = actions[1];
-            expect(loadedAction.type).toBe(LOADING_MASK_LOADED);
+            expect(loadedAction.type).toBe(FEEDBACK_MASK_LOADED);
             const enabledAction = actions[2];
-            expect(enabledAction.type).toBe(LOADING_MASK_ENABLED);
+            expect(enabledAction.type).toBe(FEEDBACK_MASK_ENABLED);
             expect(enabledAction.enabled).toBe(true);
             done();
         };
@@ -52,11 +52,11 @@ describe('feedbackMask Epics', () => {
         const epicResult = actions => {
             expect(actions.length).toBe(3);
             const loadingAction = actions[0];
-            expect(loadingAction.type).toBe(LOADING_MASK_LOADING);
+            expect(loadingAction.type).toBe(FEEDBACK_MASK_LOADING);
             const loadedAction = actions[1];
-            expect(loadedAction.type).toBe(LOADING_MASK_LOADED);
+            expect(loadedAction.type).toBe(FEEDBACK_MASK_LOADED);
             const enabledAction = actions[2];
-            expect(enabledAction.type).toBe(LOADING_MASK_ENABLED);
+            expect(enabledAction.type).toBe(FEEDBACK_MASK_ENABLED);
             expect(enabledAction.enabled).toBe(false);
             done();
         };
@@ -67,15 +67,85 @@ describe('feedbackMask Epics', () => {
         const epicResult = actions => {
             expect(actions.length).toBe(3);
             const loadingAction = actions[0];
-            expect(loadingAction.type).toBe(LOADING_MASK_LOADING);
+            expect(loadingAction.type).toBe(FEEDBACK_MASK_LOADING);
             const loadedAction = actions[1];
-            expect(loadedAction.type).toBe(LOADING_MASK_LOADED);
+            expect(loadedAction.type).toBe(FEEDBACK_MASK_LOADED);
             const enabledAction = actions[2];
-            expect(enabledAction.type).toBe(LOADING_MASK_ENABLED);
+            expect(enabledAction.type).toBe(FEEDBACK_MASK_ENABLED);
             expect(enabledAction.enabled).toBe(true);
             done();
         };
         testEpic(updateDashboardVisibility, 3, [loadDashboard(), dashboardLoadError()], epicResult, {});
+    });
+
+    it('test detectNewPage new page', (done) => {
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(3);
+                const loadingAction = actions[0];
+                expect(loadingAction.type).toBe(FEEDBACK_MASK_LOADED);
+                const loadedAction = actions[1];
+                expect(loadedAction.type).toBe(FEEDBACK_MASK_ENABLED);
+                const enabledAction = actions[2];
+                expect(enabledAction.type).toBe(DETECTED_NEW_PAGE);
+                expect(enabledAction.currentPage).toBe('viewer');
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+        testEpic(detectNewPage, 3, [{
+            type: '@@router/LOCATION_CHANGE',
+            payload: {
+                pathname: '/viewer'
+            }
+        }], epicResult, {});
+    });
+
+    it('test detectNewPage same page', (done) => {
+        testEpic(addTimeoutEpic(detectNewPage, 10), 1, {
+            type: '@@router/LOCATION_CHANGE',
+            payload: {
+                pathname: '/viewer'
+            }
+        }, actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case TEST_TIMEOUT:
+                        done();
+                        break;
+                    default:
+                        done(new Error("Action not recognized"));
+                }
+            });
+            done();
+        }, {
+            feedbackMask: {
+                currentPage: 'viewer'
+            }
+        });
+    });
+
+    it('test detectNewPage exclude number id path', (done) => {
+        testEpic(addTimeoutEpic(detectNewPage, 10), 1, {
+            type: '@@router/LOCATION_CHANGE',
+            payload: {
+                pathname: '/777'
+            }
+        }, actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case TEST_TIMEOUT:
+                        done();
+                        break;
+                    default:
+                        done(new Error("Action not recognized"));
+                }
+            });
+            done();
+        }, {});
     });
 
 });

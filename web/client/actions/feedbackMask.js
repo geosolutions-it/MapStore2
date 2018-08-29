@@ -6,36 +6,46 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const LOADING_MASK_LOADING = 'LOADING_MASK:LOADING_MASK_LOADING';
-const LOADING_MASK_LOADED = 'LOADING_MASK:LOADING_MASK_LOADED';
-const LOADING_MASK_ENABLED = 'LOADING_MASK:LOADING_MASK_ENABLED';
+const FEEDBACK_MASK_LOADING = 'FEEDBACK_MASK:FEEDBACK_MASK_LOADING';
+const FEEDBACK_MASK_LOADED = 'FEEDBACK_MASK:FEEDBACK_MASK_LOADED';
+const FEEDBACK_MASK_ENABLED = 'FEEDBACK_MASK:FEEDBACK_MASK_ENABLED';
+const DETECTED_NEW_PAGE = 'FEEDBACK_MASK:DETECTED_NEW_PAGE';
 
 function feedbackMaskLoading() {
     return {
-        type: LOADING_MASK_LOADING
+        type: FEEDBACK_MASK_LOADING
     };
 }
 
 function feedbackMaskLoaded() {
     return {
-        type: LOADING_MASK_LOADED
+        type: FEEDBACK_MASK_LOADED
     };
 }
 
 function feedbackMaskEnabled(enabled, error, mode) {
     return {
-        type: LOADING_MASK_ENABLED,
+        type: FEEDBACK_MASK_ENABLED,
         enabled,
         error,
         mode
     };
 }
 
+function detectedNewPage(currentPage) {
+    return {
+        type: DETECTED_NEW_PAGE,
+        currentPage
+    };
+}
+
 module.exports = {
-    LOADING_MASK_LOADING,
-    LOADING_MASK_LOADED,
-    LOADING_MASK_ENABLED,
+    FEEDBACK_MASK_LOADING,
+    FEEDBACK_MASK_LOADED,
+    FEEDBACK_MASK_ENABLED,
+    DETECTED_NEW_PAGE,
     feedbackMaskLoading,
     feedbackMaskLoaded,
-    feedbackMaskEnabled
+    feedbackMaskEnabled,
+    detectedNewPage
 };
