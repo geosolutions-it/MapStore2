@@ -10,6 +10,16 @@ const expect = require('expect');
 const ReactDOM = require('react-dom');
 const TOCItemsSettings = require('../TOCItemsSettings');
 
+const layers = [
+    {
+        name: 'layer:00',
+        title: {
+            'default': ''
+        },
+        visibility: true,
+        type: 'wms'
+    }
+];
 
 describe("test TOCItemsSettings", () => {
     beforeEach((done) => {
@@ -72,6 +82,28 @@ describe("test TOCItemsSettings", () => {
         ReactDOM.render(<TOCItemsSettings alertModal/>, document.getElementById("container"));
         const alertModal = document.getElementsByClassName('ms-resizable-modal');
         expect(alertModal.length).toBe(1);
+    });
+
+    it('test with a title ', () => {
+        ReactDOM.render(<TOCItemsSettings activeTab="general" getTabs={() => [
+            {
+                id: 'general',
+                titleId: 'layerProperties.general',
+                tooltipId: 'layerProperties.general',
+                glyph: 'wrench',
+                Component: () => <div id="test-general-body"></div>
+            },
+            {
+                id: 'display',
+                titleId: 'layerProperties.display',
+                tooltipId: 'layerProperties.display',
+                glyph: 'eye-open',
+                Component: () => <div id="test-display-body"></div>
+            }
+        ]} element={layers[0]}/>, document.getElementById("container"));
+        const baar = document.getElementsByClassName("container-fluid")[0].childNodes[0].childNodes[1].childNodes[0].textContent;
+        expect(baar).toBe(layers[0].title.default);
+
     });
 
 });
