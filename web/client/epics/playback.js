@@ -75,7 +75,7 @@ module.exports = {
                 // pause is with loss, so the count of timer is not correct.
                 // the following scan emit a for every event emitted effectively, with correct count
                 // TODO: in case of loop, we can reset to 0 on load end.
-                .map(() => setCurrentFrame((currentFrameSelector(getState()) || 0)+ 1))
+                .map(() => setCurrentFrame(currentFrameSelector(getState()) + 1))
             .concat(Rx.Observable.of(stop()))
             .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
         )
