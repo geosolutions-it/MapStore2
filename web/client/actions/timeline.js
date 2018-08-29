@@ -10,8 +10,8 @@ const SELECT_TIME = "TIMELINE:SELECT_TIME";
 /**
  * Action creator for click event on timeline.
  * @memberof actions.timeline
- * @param {Date} time current selected time
- * @param {string} group the group of the selected time (tipically the layer name)
+ * @param {string} time current selected time (ISO8601)
+ * @param {string} group the group of the selected time (typically the layer name)
  * @param {string} what clicked element. Can be 'timeline' or others
  * @param {object} item the effective clicked item, if any
  * @return object of type `TIMELINE:SELECT_TIME` with `time` group` `what` `item`
@@ -47,6 +47,18 @@ const LOADING = "TIMELINE:LOADING";
  * @param {boolean} loading loading flag
  */
 const timeDataLoading = (layerId, loading) => ({ type: LOADING, layerId, loading});
+
+
+const SELECT_LAYER = "TIMELINE:SELECT_LAYER";
+/**
+ * Triggered when a layer is selected from the timeline
+ * @param {string} layerId the id of the selected layer
+ */
+const selectLayer = layerId => ({ type: SELECT_LAYER, layerId});
+/**
+ * Actions for timeline
+ * @module actions.timeline
+ */
 module.exports = {
     RANGE_CHANGED,
     onRangeChanged,
@@ -55,5 +67,7 @@ module.exports = {
     RANGE_DATA_LOADED,
     rangeDataLoaded,
     LOADING,
-    timeDataLoading
+    timeDataLoading,
+    SELECT_LAYER,
+    selectLayer
 };

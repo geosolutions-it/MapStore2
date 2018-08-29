@@ -97,6 +97,9 @@ const loadRangeData = (id, timeData, getState) => {
     });
 };
 module.exports = {
+    /**
+     * when a time is selected from timeline, tries to snap to nearest value and set the current time
+     */
     setTimelineCurrentTime: (action$, {getState = () => {}} = {}) => action$.ofType(SELECT_TIME)
         .switchMap( ({time, group}) => {
 

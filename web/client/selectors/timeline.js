@@ -115,9 +115,10 @@ const itemsSelector = createShallowSelector(
     )
 );
 const loadingSelector = state => get(state, "timeline.loading");
-
+const selectedLayerSelector = state => get(state, "timeline.selectedLayer");
 module.exports = {
     itemsSelector,
     rangeSelector,
-    loadingSelector
+    loadingSelector,
+    selectedLayerSelector
 };

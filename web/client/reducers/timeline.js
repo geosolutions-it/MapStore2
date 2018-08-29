@@ -1,5 +1,5 @@
 const { RANGE_CHANGED } = require('../actions/timeline');
-const { RANGE_DATA_LOADED, LOADING } = require('../actions/timeline');
+const { RANGE_DATA_LOADED, LOADING, SELECT_LAYER } = require('../actions/timeline');
 const { set } = require('../utils/ImmutableUtils');
 
 
@@ -60,6 +60,9 @@ module.exports = (state = {}, action) => {
         }
         case LOADING: {
             return set(`loading[${action.layerId}]`, action.loading, state);
+        }
+        case SELECT_LAYER: {
+            return set('selectedLayer', action.layerId, state);
         }
         default:
             return state;
