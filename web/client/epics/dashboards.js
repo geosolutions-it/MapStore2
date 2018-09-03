@@ -13,7 +13,7 @@ const GeoStoreApi = require('../api/GeoStoreDAO');
 const { wrapStartStop } = require('../observables/epics');
 const {error} = require('../actions/notifications');
 
-const {deleteResource} = require('../observables/persistence');
+const {deleteResource} = require('../api/persistence');
 
 const calculateNewParams = state => {
     const totalCount = totalCountSelector(state);

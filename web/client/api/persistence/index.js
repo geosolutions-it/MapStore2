@@ -7,14 +7,14 @@
  */
 const ConfigUtils = require("../../utils/ConfigUtils");
 const ApiProviders = {
-    geostore: require("./geostore")
+    geostore: require("../../observables/geostore")
 };
 /**
  * MapStore Persistence layer.
  * By default MapStore persists resources on geostrore. You can add a persistence provider creating an object that
  * implements the CRUD interface (createResource, getResource, updateResource and deleteResource)
- * and adding it to the API providers calling `addApi`. 
- * Then you can select your provider by settings the  `persistenceApi` property in `localConfig.son`
+ * and adding it to the API providers calling `addApi`.
+ * Then you can select your provider by settings the  `persistenceApi` property in `localConfig.json`
  * or by programmatically calling `setApi` method. LocalConfig takes precedence.
  */
 const Persistence = {
@@ -45,7 +45,7 @@ const Persistence = {
     * Retrieves a resource with data with all information about user's permission on that resource, attributes and data.
     * @param {number} id the id of the resource to get
     * @param {options} param1 `includeAttributes` and `withData` flags, both true by default
-    * @return and observable that emits the resource
+    * @return an observable that emits the requested resource
     */
     getResource: (...args) => Persistence.getApi().getResource(...args),
     /**
@@ -81,12 +81,15 @@ const Persistence = {
     /**
     * Updates a resource setting up permission and linked resources
     * @param {resource} param0 the resource to update (must contain the id)
+    * @return an observable that emits the id of the updated resource
     */
     updateResource: (...args) => Persistence.getApi().updateResource(...args),
     /**
-    * Deletes a resource and the linked resources
+    * Deletes a resource and its linked attributes
     * @param {object} resource the resource with the id
-    * @param {object} options options
+    * @param {object} options properties: deleteLinkedResources default true
+    * @param {object} API the API to use
+    * @return an observable that emits axios response for the deleted resource and for each of its deleted attributes
     */
     deleteResource: (...args) => Persistence.getApi().deleteResource(...args)
 };

@@ -57,7 +57,7 @@ const {
     createResource,
     updateResource,
     getResource
-} = require('../observables/persistence');
+} = require('../api/persistence');
 const {
     wrapStartStop
 } = require('../observables/epics');
