@@ -11,9 +11,10 @@ const FEEDBACK_MASK_LOADED = 'FEEDBACK_MASK:FEEDBACK_MASK_LOADED';
 const FEEDBACK_MASK_ENABLED = 'FEEDBACK_MASK:FEEDBACK_MASK_ENABLED';
 const DETECTED_NEW_PAGE = 'FEEDBACK_MASK:DETECTED_NEW_PAGE';
 
-function feedbackMaskLoading() {
+function feedbackMaskLoading(mode) {
     return {
-        type: FEEDBACK_MASK_LOADING
+        type: FEEDBACK_MASK_LOADING,
+        mode
     };
 }
 
@@ -23,12 +24,11 @@ function feedbackMaskLoaded() {
     };
 }
 
-function feedbackMaskEnabled(enabled, error, mode) {
+function feedbackMaskEnabled(enabled, error) {
     return {
         type: FEEDBACK_MASK_ENABLED,
         enabled,
-        error,
-        mode
+        error
     };
 }
 

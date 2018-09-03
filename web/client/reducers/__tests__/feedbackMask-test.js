@@ -13,25 +13,25 @@ const feedbackMask = require('../feedbackMask');
 
 describe('Test the feedbackMask reducer', () => {
     it('test feedbackMaskLoading', () => {
-        let state = feedbackMask({}, feedbackMaskLoading());
+        const mode = 'map';
+        const state = feedbackMask({}, feedbackMaskLoading(mode));
         expect(state.loading).toEqual(true);
         expect(state.status).toEqual(null);
         expect(state.errorMessage).toEqual(null);
-        expect(state.mode).toEqual(null);
+        expect(state.mode).toEqual(mode);
     });
     it('test feedbackMaskLoaded', () => {
-        let state = feedbackMask({loading: true}, feedbackMaskLoaded());
+        const state = feedbackMask({loading: true}, feedbackMaskLoaded());
         expect(state.loading).toEqual(false);
     });
     it('test feedbackMaskLoaded', () => {
-        let state = feedbackMask({}, feedbackMaskEnabled(true, {status: 404, messageId: 'message'}, 'map'));
+        const state = feedbackMask({}, feedbackMaskEnabled(true, {status: 404, messageId: 'message'}));
         expect(state.enabled).toEqual(true);
         expect(state.status).toEqual(404);
         expect(state.errorMessage).toEqual('message');
-        expect(state.mode).toEqual('map');
     });
     it('test detectedNewPage', () => {
-        let state = feedbackMask({}, detectedNewPage('viewer'));
+        const state = feedbackMask({}, detectedNewPage('viewer'));
         expect(state.currentPage).toBe('viewer');
     });
 });

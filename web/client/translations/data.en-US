@@ -290,6 +290,7 @@
         },
         "map": {
             "loading": "Loading...",
+            "loadingSpinner": "Loading Map",
             "loadingerror": "Error during loading",
             "name": "Name",
             "description": "Description",
@@ -1315,6 +1316,7 @@
 
         },
         "dashboard": {
+            "loadingSpinner": "Loading Dashboard",
             "saveDialog": {
                 "title": "Edit dashboard properties",
                 "name": "Name",

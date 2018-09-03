@@ -289,6 +289,7 @@
         },
         "map": {
             "loading": "Cargando...",
+            "loadingSpinner": "Cargando mapa",
             "loadingerror": "Error en la carga",
             "name": "Nombre",
             "description": "Descripción",
@@ -1314,6 +1315,7 @@
 
         },
         "dashboard": {
+            "loadingSpinner": "Panel de carga",
             "saveDialog": {
                 "title": "Editar propiedades del tablero",
                 "name": "Nombre",

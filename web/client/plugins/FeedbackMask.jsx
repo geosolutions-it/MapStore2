@@ -80,7 +80,7 @@ const FeedbackMaskPlugin = compose(
                 <div/>
             </div>
             <div className="_ms2_init_text _ms2_init_center">
-                {props.loadingText || 'Loading MapStore'}
+                {props.loadingText || props.mode && <Message msgId={`${props.mode}.loadingSpinner`}/> || 'Loading MapStore'}
             </div>
         </span>
         :

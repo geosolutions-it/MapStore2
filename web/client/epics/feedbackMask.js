@@ -28,12 +28,12 @@ const {LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
  */
 const updateVisibility = (action$, loadActions, isEnabled = () => {}, mode) =>
     Rx.Observable.concat(
-        Rx.Observable.of(feedbackMaskLoading()),
+        Rx.Observable.of(feedbackMaskLoading(mode)),
         action$.ofType(...loadActions)
             .switchMap(action => {
                 return Rx.Observable.of(
                     feedbackMaskLoaded(),
-                    feedbackMaskEnabled(isEnabled(action), action.error, mode)
+                    feedbackMaskEnabled(isEnabled(action), action.error)
                 );
             })
             .takeUntil(action$.ofType(FEEDBACK_MASK_ENABLED))

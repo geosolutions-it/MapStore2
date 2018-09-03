@@ -11,7 +11,7 @@ const {FEEDBACK_MASK_LOADING, FEEDBACK_MASK_LOADED, FEEDBACK_MASK_ENABLED, DETEC
 function feedbackMask(state = {}, action) {
     switch (action.type) {
     case FEEDBACK_MASK_LOADING:
-        return {...state, loading: true, enabled: false, status: null, errorMessage: null, mode: null};
+        return {...state, loading: true, enabled: false, status: null, errorMessage: null, mode: action.mode};
     case FEEDBACK_MASK_LOADED:
         return {...state, loading: false};
     case FEEDBACK_MASK_ENABLED:
@@ -19,8 +19,7 @@ function feedbackMask(state = {}, action) {
             ...state,
             enabled: action.enabled,
             status: action.error && action.error.status,
-            errorMessage: action.error && action.error.messageId,
-            mode: action.mode
+            errorMessage: action.error && action.error.messageId
         };
     case DETECTED_NEW_PAGE:
         return {

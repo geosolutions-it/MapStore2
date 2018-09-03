@@ -209,6 +209,7 @@
 		},
         "map": {
             "loading": "加载中...",
+            "loadingSpinner": "Loading Map",
             "loadingerror": "加载时出错",
             "name": "名称",
             "description": "描述",
@@ -1099,6 +1100,7 @@
 
         },
         "dashboard": {
+            "loadingSpinner": "Loading Dashboard",
             "saveDialog": {
                 "title": "Edit dashboard properties",
                 "name": "Name",

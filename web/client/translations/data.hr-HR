@@ -260,6 +260,7 @@
 		},
         "map": {
             "loading": "Učitavanje...",
+            "loadingSpinner": "Loading Map",
             "loadingerror": "Greška prilikom učitavanja",
             "name": "Ime",
             "description": "Opis",
@@ -1250,6 +1251,7 @@
 
         },
         "dashboard": {
+            "loadingSpinner": "Loading Dashboard",
             "saveDialog": {
                 "title": "Edit dashboard properties",
                 "name": "Name",

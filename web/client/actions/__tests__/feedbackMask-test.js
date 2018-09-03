@@ -21,9 +21,11 @@ const {
 describe('Test correctness of the feedbackMask actions', () => {
 
     it('feedbackMaskLoading', () => {
-        const retval = feedbackMaskLoading();
+        const mode = 'map';
+        const retval = feedbackMaskLoading(mode);
         expect(retval).toExist();
         expect(retval.type).toBe(FEEDBACK_MASK_LOADING);
+        expect(retval.mode).toBe(mode);
     });
     it('feedbackMaskLoaded', () => {
         const retval = feedbackMaskLoaded();
@@ -33,13 +35,11 @@ describe('Test correctness of the feedbackMask actions', () => {
     it('feedbackMaskEnabled', () => {
         const enabled = true;
         const error = {status: 404};
-        const mode = 'map';
-        const retval = feedbackMaskEnabled(enabled, error, mode);
+        const retval = feedbackMaskEnabled(enabled, error);
         expect(retval).toExist();
         expect(retval.type).toBe(FEEDBACK_MASK_ENABLED);
         expect(retval.enabled).toBe(enabled);
         expect(retval.error).toBe(error);
-        expect(retval.mode).toBe(mode);
     });
     it('detectedNewPage', () => {
         const retval = detectedNewPage('viewer');

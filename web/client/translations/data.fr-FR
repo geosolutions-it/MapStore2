@@ -290,6 +290,7 @@
         },
         "map": {
             "loading": "Chargement...",
+            "loadingSpinner": "Carte de chargement",
             "loadingerror": "Erreur de chargement",
             "name": "Nom",
             "description": "Description",
@@ -1314,6 +1315,7 @@
             }
         },
         "dashboard": {
+            "loadingSpinner": "Chargement du tableau de bord",
             "saveDialog": {
                 "title": "Modifier les propriétés du tableau de bord",
                 "name": "Nom",
