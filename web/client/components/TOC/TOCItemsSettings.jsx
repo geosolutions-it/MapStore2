@@ -15,7 +15,7 @@ const tooltip = require('../misc/enhancers/tooltip');
 const NavItemT = tooltip(NavItem);
 const ResizableModal = require('../misc/ResizableModal');
 const Portal = require('../misc/Portal');
-const {head, isObject} = require('lodash');
+const {head, isObject, isString} = require('lodash');
 const Message = require('../I18N/Message');
 
 /**
@@ -62,7 +62,7 @@ const TOCItemSettings = (props, context) => {
             <DockablePanel
                 open={settings.expanded}
                 glyph="wrench"
-                title={element.title && isObject(element.title) && (element.title[currentLocale] || element.title.default) || element.title || ''}
+                title={element.title && isObject(element.title) && (element.title[currentLocale] || element.title.default) || isString(element.title) && element.title || ''}
                 className={className}
                 onClose={onClose ? () => { onClose(); } : onHideSettings}
                 size={width}
