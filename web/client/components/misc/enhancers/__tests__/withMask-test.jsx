@@ -57,4 +57,12 @@ describe('withMask enhancer', () => {
         expect(document.querySelector('.ms2-mask')).toNotExist();
         expect(document.querySelector('#mask')).toNotExist();
     });
+    it('withMask add custom className', () => {
+        const Sink = withMask(undefined, undefined, {className: 'custom-class'})(() => <div id="test">test</div>);
+        ReactDOM.render(<Sink />, document.getElementById("container"));
+        expect(document.querySelector('#test')).toExist();
+        expect(document.querySelector('.ms2-mask-container')).toExist();
+        expect(document.querySelector('.ms2-mask')).toNotExist();
+        expect(document.querySelector('.custom-class')).toExist();
+    });
 });

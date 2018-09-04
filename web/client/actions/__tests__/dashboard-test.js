@@ -18,7 +18,8 @@ const {
     loadDashboard, LOAD_DASHBOARD,
     resetDashboard, DASHBOARD_RESET,
     dashboardLoaded, DASHBOARD_LOADED,
-    dashboardLoading, DASHBOARD_LOADING
+    dashboardLoading, DASHBOARD_LOADING,
+    dashboardLoadError, DASHBOARD_LOAD_ERROR
 } = require('../dashboard');
 
 describe('Test correctness of the dashboard actions', () => {
@@ -96,5 +97,12 @@ describe('Test correctness of the dashboard actions', () => {
         expect(retval.type).toBe(DASHBOARD_LOADING);
         expect(retval.name).toBe("saving");
         expect(retval.value).toBe(true);
+    });
+    it('dashboardLoadError', () => {
+        const error = {status: 404};
+        const retval = dashboardLoadError(error);
+        expect(retval).toExist();
+        expect(retval.type).toBe(DASHBOARD_LOAD_ERROR);
+        expect(retval.error).toBe(error);
     });
 });

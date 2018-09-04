@@ -12,8 +12,8 @@ const {branch, nest} = require('recompose');
  * @param {function} showMask gets props as argument and returns true if the enhancer should be applied
  * @param {*} maskContent the content of the mask
  */
-const maskEnhancer = (showMask, maskContent, { maskContainerStyle, maskStyle }) => (A) => nest(
-    (props) => (<div className="ms2-mask-container" style={maskContainerStyle} >
+const maskEnhancer = (showMask, maskContent, { maskContainerStyle, maskStyle, className }) => (A) => nest(
+    (props) => (<div className={`ms2-mask-container ${className || ''} ${!showMask(props) && 'ms2-mask-empty' || ''}`} style={maskContainerStyle} >
         {props.children}
         {showMask(props) ? <div className="ms2-mask" style={maskStyle} >
             {maskContent(props)}
@@ -36,10 +36,11 @@ module.exports = (
         {
             alwaysWrap = true,
             maskContainerStyle = {},
-            maskStyle = {}
+            maskStyle = {},
+            className
         } = {}
     ) => alwaysWrap
-        ? maskEnhancer(showMask, maskContent, { maskContainerStyle, maskStyle })
+        ? maskEnhancer(showMask, maskContent, { maskContainerStyle, maskStyle, className })
         : branch(
             showMask,
             maskEnhancer(() => true, maskContent, { maskContainerStyle, maskStyle })
