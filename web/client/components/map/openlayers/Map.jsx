@@ -64,7 +64,7 @@ class OpenlayersMap extends React.Component {
     componentDidMount() {
         var center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
         this.props.projectionDefs.forEach(p => {
-            projUtils.addProjections(p.code, p.extent, p.worldExtent);
+            projUtils.addProjections(ol, p.code, p.extent, p.worldExtent);
         });
         let interactionsOptions = assign(this.props.interactive ? {} : {
             doubleClickZoom: false,
