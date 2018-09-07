@@ -16,11 +16,12 @@ const {isNil, find} = require('lodash');
 const {
     SAVE_DETAILS, SAVE_RESOURCE_DETAILS, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     DELETE_MAP, OPEN_DETAILS_PANEL, MAPS_LOAD_MAP,
-    CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE,
+    CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE, SAVE_MAP_RESOURCE,
     setDetailsChanged, updateDetails, mapsLoading, mapsLoaded,
     mapDeleting, toggleDetailsEditability, mapDeleted, loadError,
     doNothing, detailsLoaded, detailsSaving, onDisplayMetadataEdit,
-    RESET_UPDATING, resetUpdating, toggleDetailsSheet, getMapResourcesByCategory
+    RESET_UPDATING, resetUpdating, toggleDetailsSheet, getMapResourcesByCategory,
+    mapUpdating, savingMap, mapCreated, mapError
 } = require('../actions/maps');
 const {
     resetCurrentMap, EDIT_MAP
@@ -45,6 +46,9 @@ const {userParamsSelector} = require('../selectors/security');
 const {deleteResourceById, createAssociatedResource, deleteAssociatedResource, updateAssociatedResource} = require('../utils/ObservableUtils');
 
 const {getIdFromUri} = require('../utils/MapUtils');
+
+const {getErrorMessage} = require('../utils/LocaleUtils');
+const Persistence = require("../api/persistence");
 
 const manageMapResource = ({map = {}, attribute = "", resource = null, type = "STRING", optionsDel = {}, messages = {}} = {}) => {
     const attrVal = map[attribute];
@@ -296,8 +300,52 @@ const storeDetailsInfoEpic = (action$, store) =>
                     );
             });
     });
-
-
+// UPDATE MAP_RESOURCE FLOW
+const updateMapResource = (resource) => Persistence.updateResource(resource)
+            .switchMap(() =>
+        Rx.Observable.of(basicSuccess({
+                                    title: 'map.savedMapTitle',
+                                    message: 'map.savedMapMessage',
+                                    autoDismiss: 6,
+                                    position: 'tc'
+                                })
+                            )
+                )
+    .catch((e) => Rx.Observable.of(loadError(e), basicError({
+                ...getErrorMessage(e, 'geostore', 'mapsError'),
+                autoDismiss: 6,
+                position: 'tc'
+            })
+    ))
+    .startWith(mapUpdating(resource.metadata));
+// CREATE MAP_RESOURCE FLOW
+const createMapResource = (resource) => Persistence.createResource(resource)
+    .switchMap((rid) =>
+Rx.Observable.of(
+        mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
+        onDisplayMetadataEdit(false),
+        basicSuccess({
+                    title: 'map.savedMapTitle',
+                    message: 'map.savedMapMessage',
+                    autoDismiss: 6,
+                    position: 'tc'
+                    })
+        )
+        )
+.catch((e) => Rx.Observable.of(mapError(e), basicError({
+        ...getErrorMessage(e, 'geostore', 'mapsError'),
+        autoDismiss: 6,
+        position: 'tc'
+    })
+))
+.startWith(savingMap(resource.id, resource.data));
+/**
+ * Create or update map reosurce with persistence api
+ */
+const mapSaveMapResourceEpic = (action$) =>
+      action$.ofType(SAVE_MAP_RESOURCE)
+      .exhaustMap(({resource}) => (!resource.id ? createMapResource(resource) : updateMapResource(resource))
+    );
 module.exports = {
     loadMapsEpic,
     resetCurrentMapEpic,
@@ -308,5 +356,6 @@ module.exports = {
     getMapsResourcesByCategoryEpic,
     setDetailsChangedEpic,
     fetchDetailsFromResourceEpic,
-    saveResourceDetailsEpic
+    saveResourceDetailsEpic,
+    mapSaveMapResourceEpic
 };
