@@ -62,8 +62,8 @@
             "featureTypeError": "Imposible cargar los atributos del mapa",
             "featureTypeErrorInvalidJSON": "Imposible cargar los atributos del mapa. La respuesta no es válida",
             "elevation": "Elevación",
-            "titleTranslations": "Title translations",
-            "groupProperties": "Group properties",
+            "titleTranslations": "Traducciones de títulos",
+            "groupProperties": "Propiedades del grupo",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Indentificar el formato de respuesta",
             "legenderror": "La leyenda no está disponible",
@@ -688,7 +688,8 @@
                 "load_config_exception": "Error cargando configuración"
             },
             "comboField": {
-                "default_placeholder": "Select..."
+                "default_placeholder": "Seleccionar...",
+                 "drop_down": "Abrir el menú desplegable"
             },
             "form": {
                 "header": "Buscar en el conjunto de  datos",

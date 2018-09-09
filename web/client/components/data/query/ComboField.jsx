@@ -8,6 +8,7 @@ const PropTypes = require('prop-types');
  */
 const React = require('react');
 const assign = require('object-assign');
+const LocaleUtils = require('../../../utils/LocaleUtils');
 
 const {Tooltip} = require('react-bootstrap');
 
@@ -110,6 +111,7 @@ class ComboField extends React.Component {
                 caseSensitive={false}
                 minLength={3}
                 placeholder={this.props.placeholder}
+                messages={{open: LocaleUtils.getMessageById(this.context.messages, "queryform.comboField.drop_down")}}
                 filter={this.props.comboFilter}
                 style={style}
                 groupBy={this.props.groupBy}
@@ -128,6 +130,7 @@ class ComboField extends React.Component {
                 caseSensitive={false}
                 minLength={3}
                 placeholder={this.props.placeholder}
+                messages={{open: LocaleUtils.getMessageById(this.context.messages, "queryform.comboField.drop_down")}}
                 filter={this.props.comboFilter}
                 style={style}
                 groupBy={this.props.groupBy}

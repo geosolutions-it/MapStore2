@@ -688,7 +688,8 @@
                 "load_config_exception": "Greška učitavanja postavki"
             },
             "comboField": {
-                "default_placeholder": "Odaberi..."
+                "default_placeholder": "Odaberi...",
+                 "drop_down": "Open Dropdown"
             },
             "form": {
                 "header": "Pronađi u skupu podataka",
