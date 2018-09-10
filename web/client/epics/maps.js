@@ -302,43 +302,43 @@ const storeDetailsInfoEpic = (action$, store) =>
     });
 // UPDATE MAP_RESOURCE FLOW
 const updateMapResource = (resource) => Persistence.updateResource(resource)
-            .switchMap(() =>
-        Rx.Observable.of(basicSuccess({
-                                    title: 'map.savedMapTitle',
-                                    message: 'map.savedMapMessage',
-                                    autoDismiss: 6,
-                                    position: 'tc'
-                                })
-                            )
-                )
-    .catch((e) => Rx.Observable.of(loadError(e), basicError({
-                ...getErrorMessage(e, 'geostore', 'mapsError'),
-                autoDismiss: 6,
-                position: 'tc'
-            })
-    ))
-    .startWith(mapUpdating(resource.metadata));
-// CREATE MAP_RESOURCE FLOW
-const createMapResource = (resource) => Persistence.createResource(resource)
-    .switchMap((rid) =>
-Rx.Observable.of(
-        mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
-        onDisplayMetadataEdit(false),
-        basicSuccess({
+        .switchMap(() =>
+            Rx.Observable.of(basicSuccess({
                     title: 'map.savedMapTitle',
                     message: 'map.savedMapMessage',
                     autoDismiss: 6,
                     position: 'tc'
-                    })
+                        })
+            )
         )
+        .catch((e) => Rx.Observable.of(loadError(e), basicError({
+            ...getErrorMessage(e, 'geostore', 'mapsError'),
+            autoDismiss: 6,
+            position: 'tc'
+        })
+        ))
+        .startWith(mapUpdating(resource.metadata));
+// CREATE MAP_RESOURCE FLOW
+const createMapResource = (resource) => Persistence.createResource(resource)
+        .switchMap((rid) =>
+            Rx.Observable.of(
+                mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
+                onDisplayMetadataEdit(false),
+                basicSuccess({
+                    title: 'map.savedMapTitle',
+                    message: 'map.savedMapMessage',
+                    autoDismiss: 6,
+                    position: 'tc'
+                })
+                )
         )
-.catch((e) => Rx.Observable.of(mapError(e), basicError({
-        ...getErrorMessage(e, 'geostore', 'mapsError'),
-        autoDismiss: 6,
-        position: 'tc'
-    })
-))
-.startWith(savingMap(resource.id, resource.data));
+        .catch((e) => Rx.Observable.of(mapError(e), basicError({
+                ...getErrorMessage(e, 'geostore', 'mapsError'),
+                autoDismiss: 6,
+                position: 'tc'
+            })
+        ))
+        .startWith(savingMap(resource.id, resource.data));
 /**
  * Create or update map reosurce with persistence api
  */
