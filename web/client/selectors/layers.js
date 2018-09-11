@@ -11,9 +11,10 @@ const {createSelector} = require('reselect');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
 const {getNormalizedLatLon} = require('../utils/CoordinatesUtils');
-const {get, head, isEmpty, find, isObject} = require('lodash');
 
-const layersSelector = state => state.layers && state.layers.flat || state.layers || state.config && state.config.layers || [];
+const {get, head, isEmpty, find, isObject, isArray} = require('lodash');
+
+const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
 const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
 const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
 const allBackgroundLayerSelector = state => layersSelector(state).filter(l => l.group === "background");

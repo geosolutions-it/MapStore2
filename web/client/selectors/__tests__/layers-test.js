@@ -32,6 +32,12 @@ describe('Test layers selectors', () => {
         expect(props[0].type).toBe("osm");
     });
 
+    it('test layersSelector without layers', () => {
+        const props = layersSelector({});
+        expect(props).toExist();
+        expect(props.length).toBe(0);
+    });
+
     it('test layerSelectorWithMarkers with no markers', () => {
         const props = layerSelectorWithMarkers({config: {layers: [{type: "osm"}]}});
 
