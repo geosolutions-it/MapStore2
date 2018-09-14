@@ -40,27 +40,31 @@
         }
 
         &.endPlaybackTime {
+            background-color: lighten(@ms2-color-danger, 5%);
             &:after, &::after {
                 bottom: 24px;
                 left: -16px;
                 content: "\E074";
                 font-size: 18px;
                 font-family: "mapstore2";
+                color: lighten(@ms2-color-danger, 5%);
             }
         }
 
         &.startPlaybackTime {
+            background-color: lighten(@ms2-color-success, 10%);
             &:after, &::after {
                 bottom: 24px;
                 left: 1px;
                 content: "\E072";
                 font-family: "mapstore2";
                 font-size: 18px;
+                color: lighten(@ms2-color-success, 10%);
             }
         }
 
         &.currentTime {
-            background-color: @ms2-color-danger;
+            background-color: lighten(@ms2-color-text, 30%);
             &:before, &::before, &:after, &::after {
                 border-left: 10px solid transparent;
                 border-right: 10px solid transparent;
@@ -68,12 +72,12 @@
             &:before, &::before {
                 top: 0;
                 left: -9px;
-                border-top: 10px solid @ms2-color-danger;
+                border-top: 10px solid lighten(@ms2-color-text, 30%);
             }
             &:after, &::after {
                 bottom: 0;
                 left: -9px;
-                border-bottom: 10px solid @ms2-color-danger;
+                border-bottom: 10px solid lighten(@ms2-color-text, 30%);
             }
             
         }
@@ -86,14 +90,14 @@
                     top: 0;
                     left: 0;
                     border-bottom: 10px solid transparent;
-                    border-left: 10px solid @ms2-color-danger;
+                    border-left: 10px solid lighten(@ms2-color-text, 30%);
                     border-top: unset;
                 }
                 &:after, &::after {
                     bottom: 0;
                     left: 0;
                     border-top: 10px solid transparent;
-                    border-left: 10px solid @ms2-color-danger; 
+                    border-left: 10px solid lighten(@ms2-color-text, 30%); 
                     border-bottom: unset;
                 }
             }
