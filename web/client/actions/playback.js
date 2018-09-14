@@ -6,6 +6,7 @@ const SET_FRAMES = "PLAYBACK:SET_FRAMES";
 const APPEND_FRAMES = "PLAYBACK:APPEND_FRAMES";
 const FRAMES_LOADING = "PLAYBACK:FRAMES_LOADING";
 const SET_CURRENT_FRAME = "PLAYBACK:SET_CURRENT_FRAME";
+const SELECT_PLAYBACK_RANGE = "PLAYBACK:SELECT_PLAYBACK_RANGE";
 
 const STATUS = {
     PLAY: "PLAY",
@@ -20,6 +21,8 @@ const setFrames = (frames) => ({ type: SET_FRAMES, frames});
 const setCurrentFrame = frame => ({ type: SET_CURRENT_FRAME, frame});
 const appendFrames = (frames) => ({ type: APPEND_FRAMES, frames});
 const framesLoading = loading => ({ type: FRAMES_LOADING, loading});
+const selectPlaybackRange = range => ({ type: SELECT_PLAYBACK_RANGE, range});
+
 module.exports = {
     play,
     stop,
@@ -28,6 +31,7 @@ module.exports = {
     appendFrames,
     framesLoading,
     setCurrentFrame,
+    selectPlaybackRange,
     PLAY,
     PAUSE,
     STOP,
@@ -35,5 +39,6 @@ module.exports = {
     SET_FRAMES,
     APPEND_FRAMES,
     FRAMES_LOADING,
-    SET_CURRENT_FRAME
+    SET_CURRENT_FRAME,
+    SELECT_PLAYBACK_RANGE
 };

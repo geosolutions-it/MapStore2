@@ -7,6 +7,9 @@
  */
 
 const {get} = require('lodash');
+const { currentTimeSelector } = require('../selectors/dimension');
+const moment = require('moment');
+
 const statusSelector = state => get(state, 'playback.status');
 const framesSelector = state => get(state, 'playback.frames');
 const lastFrameSelector = state => {
@@ -16,6 +19,13 @@ const lastFrameSelector = state => {
 const loadingSelector = state => get(state, 'playback.framesLoading');
 
 const currentFrameSelector = state => get(state, 'playback.currentFrame');
+const playbackRangeSelector = state => {
+    const currentFrame = currentTimeSelector(state);
+    return get(state, 'playback.playbackRange') || {
+        startPlaybackTime: moment(currentFrame).subtract(6, 'month'),
+        endPlaybackTime: moment(currentFrame).add(6, 'month')
+    };
+};
 const currentFrameValueSelector = state => (framesSelector(state) || [])[currentFrameSelector(state)];
 module.exports = {
     statusSelector,
@@ -23,5 +33,6 @@ module.exports = {
     lastFrameSelector,
     framesSelector,
     currentFrameSelector,
-    currentFrameValueSelector
+    currentFrameValueSelector,
+    playbackRangeSelector
 };

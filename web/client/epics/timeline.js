@@ -4,8 +4,8 @@ const {isString, get, head, castArray} = require('lodash');
 const { SELECT_TIME, RANGE_CHANGED, timeDataLoading, rangeDataLoaded } = require('../actions/timeline');
 const {getLayerFromId} = require('../selectors/layers');
 const { getHistogram, describeDomains } = require('../api/MultiDim');
-
-const { rangeSelector } = require('../selectors/timeline');
+const { rangeSelector, offsetEnabledSelector, offsetTimeSelector } = require('../selectors/timeline');
+const moment = require('moment');
 
 const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA } = require('../actions/dimension');
 const { layerTimeSequenceSelectorCreator, timeDataSelector } = require('../selectors/dimension');
@@ -96,20 +96,28 @@ const loadRangeData = (id, timeData, getState) => {
         });
     });
 };
+
+const getTimestamp = (time, offsetEnabled, state) => {
+    if (!offsetEnabled) return time;
+    const offset = offsetTimeSelector(state);
+    const calculatedOffsetTime = moment(time).add(offset);
+    return time + '/' + calculatedOffsetTime.toISOString();
+};
+
 module.exports = {
     /**
      * when a time is selected from timeline, tries to snap to nearest value and set the current time
      */
     setTimelineCurrentTime: (action$, {getState = () => {}} = {}) => action$.ofType(SELECT_TIME)
         .switchMap( ({time, group}) => {
-
+            const state = getState();
+            const offsetEnabled = offsetEnabledSelector(state);
             if (snap && group) {
-                const state = getState();
                 return snapTime(
                     layerTimeSequenceSelectorCreator(getLayerFromId(state, group))(state), time
-                ).map( t => setCurrentTime(t));
+                ).map( t => setCurrentTime(getTimestamp(t, offsetEnabled, state)));
             }
-            return Rx.Observable.of(setCurrentTime(time));
+            return Rx.Observable.of(setCurrentTime(getTimestamp(time, offsetEnabled, state)));
         }),
     /**
      * Update the time data when the timeline range changes, or when the layer dimension data is

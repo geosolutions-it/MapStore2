@@ -1,4 +1,4 @@
-const { PLAY, PAUSE, STOP, STATUS, SET_FRAMES, APPEND_FRAMES, FRAMES_LOADING, SET_CURRENT_FRAME } = require('../actions/playback');
+const { PLAY, PAUSE, STOP, STATUS, SET_FRAMES, APPEND_FRAMES, FRAMES_LOADING, SET_CURRENT_FRAME, SELECT_PLAYBACK_RANGE } = require('../actions/playback');
 const { set } = require('../utils/ImmutableUtils');
 
 module.exports = (state = { status: STATUS.STOP, currentFrame: -1}, action) => {
@@ -30,6 +30,9 @@ module.exports = (state = { status: STATUS.STOP, currentFrame: -1}, action) => {
         }
         case SET_CURRENT_FRAME: {
             return set('currentFrame', action.frame, state);
+        }
+        case SELECT_PLAYBACK_RANGE: {
+            return set('playbackRange', action.range, state);
         }
         default:
             return state;

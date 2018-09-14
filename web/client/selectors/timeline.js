@@ -1,8 +1,8 @@
 const { get } = require('lodash');
 const { createShallowSelector } = require('../utils/ReselectUtils');
 const { timeIntervalToSequence, timeIntervalToIntervalSequence, analyzeIntervalInRange, isTimeDomainInterval } = require('../utils/TimeUtils');
-
-const { timeDataSelector } = require('../selectors/dimension');
+const moment = require('moment');
+const { timeDataSelector, currentTimeSelector } = require('../selectors/dimension');
 const rangeSelector = state => get(state, 'timeline.range');
 const rangeDataSelector = state => get(state, 'timeline.rangeData');
 
@@ -116,9 +116,19 @@ const itemsSelector = createShallowSelector(
 );
 const loadingSelector = state => get(state, "timeline.loading");
 const selectedLayerSelector = state => get(state, "timeline.selectedLayer");
+const calculateOffsetTimeSelector = (state) => {
+    const offset = get(state, "timeline.offsetTime");
+    const time = currentTimeSelector(state);
+    return time && offset && moment(time).add(offset) || time && moment(time).add(1, 'month');
+};
+const offsetTimeSelector = state => get(state, "timeline.offsetTime");
+const offsetEnabledSelector = state => get(state, "timeline.offsetEnabled");
 module.exports = {
     itemsSelector,
     rangeSelector,
     loadingSelector,
-    selectedLayerSelector
+    selectedLayerSelector,
+    offsetEnabledSelector,
+    calculateOffsetTimeSelector,
+    offsetTimeSelector
 };

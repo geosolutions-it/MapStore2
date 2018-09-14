@@ -10,10 +10,10 @@ const React = require('react');
 const assign = require('object-assign');
 const { defaultProps, compose } = require('recompose');
 const {createSelector} = require('reselect');
-const { play, pause, stop, STATUS } = require('../actions/playback');
+const { play, pause, stop, STATUS, selectPlaybackRange } = require('../actions/playback');
 const {currentTimeSelector} = require('../selectors/dimension');
 
-const { statusSelector, loadingSelector } = require('../selectors/playback');
+const { statusSelector, loadingSelector, playbackRangeSelector } = require('../selectors/playback');
 
 const { connect } = require('react-redux');
 
@@ -26,13 +26,18 @@ const Playback = compose(
             statusSelector,
             currentTimeSelector,
             loadingSelector,
-            (status, currentTime, loading) => ({
+            playbackRangeSelector,
+            (status, currentTime, loading, playbackRange) => ({
                 loading,
                 currentTime,
-                status
+                status,
+                playbackRange
             })
         ), {
-            play, pause, stop
+            play,
+            pause,
+            stop,
+            setPlaybackRange: selectPlaybackRange
         }
     )
 )(require('../components/playback/Playback'));
@@ -40,25 +45,21 @@ const Playback = compose(
 class PlaybackPlugin extends React.Component {
     render() {
         return (
-            <div
-                className={"playback-plugin"}
-                style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    marginBottom: 30,
-                    left: 0,
-                    zIndex: 1000
-                }}>
-                <Playback />
+            <div className={"playback-plugin"}>
+                <Playback {...this.props}/>
             </div>
         );
     }
 }
 
-
 module.exports = {
     PlaybackPlugin: assign(PlaybackPlugin, {
-        disablePluginIf: "{state('featuregridmode') === 'EDIT'}"
+        disablePluginIf: "{state('featuregridmode') === 'EDIT'}",
+        Timeline: {
+            name: 'playback',
+            position: 1,
+            priority: 1
+        }
     }),
     epics: require('../epics/playback'),
     reducers: {

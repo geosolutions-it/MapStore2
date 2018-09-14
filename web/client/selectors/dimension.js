@@ -33,7 +33,10 @@ const timeDataSelector = state => layersSelector(state).reduce((timeDataMap, lay
  * @param {object} state application state
  */
 const layersWithTimeDataSelector = state => layersSelector(state).filter(l => getLayerStaticDimension(l, "time"));
-const currentTimeSelector = state => get(state, 'dimension.currentTime');
+const currentTimeSelector = state => {
+    const currentTime = get(state, 'dimension.currentTime');
+    return currentTime && currentTime.split('/')[0];
+};
 
 // get times sorted by date
 const timeSequenceSelector = createSelector(

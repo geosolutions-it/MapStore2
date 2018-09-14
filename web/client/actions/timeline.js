@@ -55,10 +55,18 @@ const SELECT_LAYER = "TIMELINE:SELECT_LAYER";
  * @param {string} layerId the id of the selected layer
  */
 const selectLayer = layerId => ({ type: SELECT_LAYER, layerId});
+
+const SELECT_OFFSET = "TIMELINE:SELECT_OFFSET";
+const selectOffset = offset => ({ type: SELECT_OFFSET, offset});
+
+const ENABLE_OFFSET = "TIMELINE:ENABLE_OFFSET";
+const enableOffset = enabled => ({ type: ENABLE_OFFSET, enabled});
+
 /**
  * Actions for timeline
  * @module actions.timeline
  */
+
 module.exports = {
     RANGE_CHANGED,
     onRangeChanged,
@@ -69,5 +77,9 @@ module.exports = {
     LOADING,
     timeDataLoading,
     SELECT_LAYER,
-    selectLayer
+    selectLayer,
+    SELECT_OFFSET,
+    selectOffset,
+    ENABLE_OFFSET,
+    enableOffset
 };
