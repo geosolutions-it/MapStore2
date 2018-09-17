@@ -98,7 +98,7 @@ describe('Test the mapConfig reducer', () => {
         }, {type: MAP_CREATED, resourceId: 2})).toEqual({
             map: {
                 mapId: 2,
-                info: { name: undefined, description: undefined },
+                info: { name: undefined, description: undefined, canEdit: false, canCopy: false, canDelete: false},
                 version: 2
             }
         });
@@ -109,7 +109,7 @@ describe('Test the mapConfig reducer', () => {
         }, {type: MAP_CREATED, resourceId: 2})).toEqual({
             map: {
                 mapId: 2,
-                info: { name: undefined, description: undefined },
+                info: { name: undefined, description: undefined, canEdit: false, canCopy: false, canDelete: false },
                 version: 2
             }
         });

@@ -74,9 +74,9 @@ function mapConfig(state = null, action) {
     case MAP_CREATED: {
         map = state && state.map && state.map.present ? state.map.present : state && state.map;
         if (map) {
-            const {name, description} = action.metadata || {};
+            const {name, description, canDelete = false, canCopy = false, canEdit= false} = action.metadata || {};
             // version needed to avoid automapupdate to start
-            map = assign({}, map, {mapId: action.resourceId, info: {...map.info, name, description}, version: 2});
+            map = assign({}, map, {mapId: action.resourceId, info: {...map.info, name, description, canEdit, canDelete, canCopy}, version: 2});
             return assign({}, state, {map: map});
         }
     }
