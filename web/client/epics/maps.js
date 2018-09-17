@@ -338,7 +338,7 @@ const createMapResource = (resource) => Persistence.createResource(resource)
                 position: 'tc'
             })
         ))
-        .startWith(savingMap(resource.id, resource.data));
+        .startWith(savingMap(resource.metadata));
 /**
  * Create or update map reosurce with persistence api
  */
