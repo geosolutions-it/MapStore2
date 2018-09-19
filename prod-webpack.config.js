@@ -14,17 +14,14 @@ const paths = {
 
 module.exports = require('./buildConfig')(
     assign({
-            "mapstore2": path.join(__dirname, "web", "client", "product", "app"),
-            "embedded": path.join(__dirname, "web", "client", "product", "embedded"),
-            "ms2-api": path.join(__dirname, "web", "client", "product", "api")
-        },
-        require('./examples')
+            "mapstore2": path.join(__dirname, "web", "client", "product", "app")
+        }
     ),
     themeEntries,
     paths,
     extractThemesPlugin,
     true,
-    "/mapstore/dist/",
+    "/mockups/mapstore2/backgroundedit/dist/",
     undefined,
     [
         new HtmlWebpackPlugin({

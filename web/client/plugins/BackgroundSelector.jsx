@@ -32,6 +32,8 @@ const Night2012 = require('./background/assets/img/NASA_NIGHT.jpg');
 const AerialWithLabels = require('./background/assets/img/AerialWithLabels.jpg');
 const OpenTopoMap = require('./background/assets/img/OpenTopoMap.jpg');
 
+const {removeNode} = require('../actions/layers');
+
 const thumbs = {
     google: {
         HYBRID,
@@ -69,16 +71,18 @@ const backgroundSelector = createSelector([
         mapTypeSelector,
         currentBackgroundSelector,
         tempBackgroundSelector,
-        state => mapLayoutValuesSelector(state, {left: true, bottom: true})
+        state => mapLayoutValuesSelector(state, {left: true, bottom: true}),
+        state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled
     ],
-    (map, layers, controls, drawer, maptype, currentLayer, tempLayer, style) => ({
+    (map, layers, controls, drawer, maptype, currentLayer, tempLayer, style, enabledCatalog) => ({
         size: map && map.size || {width: 0, height: 0},
         layers: layers.filter((l) => l && l.group === "background").map((l) => invalidateUnsupportedLayer(l, maptype)) || [],
         tempLayer,
         currentLayer,
         start: controls.start || 0,
         enabled: controls.enabled,
-        style
+        style,
+        enabledCatalog
     }));
 
 /**
@@ -111,7 +115,9 @@ const BackgroundSelectorPlugin = connect(backgroundSelector, {
     onPropertiesChange: changeLayerProperties,
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
-    onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')
+    onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
+    onAdd: setControlProperty.bind(null, 'metadataexplorer', 'enabled', true),
+    onRemove: removeNode
 }, (stateProps, dispatchProps, ownProps) => ({
         ...stateProps,
         ...dispatchProps,

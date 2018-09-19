@@ -205,7 +205,7 @@ class Catalog extends React.Component {
 
     renderRecords = () => {
         return (<div className="catalog-results">
-                <RecordGrid {...this.props.gridOptions} key="records"
+                <RecordGrid {...this.props} {...this.props.gridOptions} key="records"
                     records={this.props.records}
                     authkeyParamNames={this.props.authkeyParamNames}
                     catalogURL={this.isValidServiceSelected() && this.props.services[this.props.selectedService].url || ""}
@@ -221,6 +221,9 @@ class Catalog extends React.Component {
                     hideThumbnail={this.props.hideThumbnail}
                     hideIdentifier={this.props.hideIdentifier}
                     hideExpand={this.props.hideExpand}
+                    onAdd={() => {
+                        this.search({services: this.props.services, selectedService: this.props.selectedService});
+                    }}
                 />
         </div>);
     };
@@ -298,7 +301,7 @@ class Catalog extends React.Component {
                                             onChange={(val) => this.props.onChangeSelectedService(val && val.value ? val.value : "")}
                                             placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.servicePlaceholder")} />
 
-                                        {this.isValidServiceSelected() ? (<InputGroup.Addon className="btn"
+                                        {this.isValidServiceSelected() && this.props.selectedService !== 'Map Backgrounds' ? (<InputGroup.Addon className="btn"
                                             onClick={() => this.props.onChangeCatalogMode("edit", false)}>
                                             <Glyphicon glyph="pencil"/>
                                         </InputGroup.Addon>) : null}

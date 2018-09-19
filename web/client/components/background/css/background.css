@@ -51,3 +51,51 @@
 .background-list-arrow-placeholder {
     height: 26px;
 }
+.background-list-container .background-preview-icon-container-horizontal,
+.background-list-container .background-preview-icon-container-vertical {
+    position: relative;
+}
+
+.background-list-container .btn-group {
+    position: absolute;
+    float: right;
+    margin: 2px;
+    bottom: 3px;
+    right: 3px;
+}
+
+.background-list-container .square-button-md {
+    opacity: 0.7;
+    width: 20px;
+    height: 20px;
+}
+
+.background-list-container .square-button-md .glyphicon {
+    font-size: 14px;
+}
+
+.background-preview-button {
+    position: relative;
+}
+.background-preview-button .btn-group {
+    position: absolute;
+    left: 0;
+    top: -28px;
+    width: 100%;
+    display: flex;
+}
+
+.background-preview-button .btn-group > span {
+    display: block;
+    margin: auto;
+}
+
+.background-preview-button .square-button-md {
+    width: 24px;
+    height: 24px;
+}
+
+.background-plugin-position .ms-resizable-modal {
+    opacity: 1.0;
+}
+

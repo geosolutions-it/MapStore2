@@ -297,7 +297,7 @@ const CatalogUtils = {
      *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
      *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
      */
-    recordToLayer: (record, type = "wms", {removeParams = [], catalogURL, url} = {}) => {
+    recordToLayer: (record, type = "wms", {removeParams = [], catalogURL, url, group, id, title} = {}) => {
         if (!record || !record.references) {
             // we don't have a valid record so no buttons to add
             return null;
@@ -309,12 +309,13 @@ const CatalogUtils = {
         const {url: originalUrl, params} = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(ogcServiceReference.url), ["request", "layer", "service", "version"].concat(removeParams));
         const allowedSRS = buildSRSMap(ogcServiceReference.SRS);
         return {
+            id,
             type: type,
             url: url || originalUrl,
             visibility: true,
             dimensions: record.dimensions || [],
             name: ogcServiceReference.params && ogcServiceReference.params.name,
-            title: record.title || ogcServiceReference.params && ogcServiceReference.params.name,
+            title: title || record.title || ogcServiceReference.params && ogcServiceReference.params.name,
             matrixIds: type === "wmts" ? record.matrixIds || [] : undefined,
             description: record.description || "",
             tileMatrixSet: type === "wmts" ? record.tileMatrixSet || [] : undefined,
@@ -330,11 +331,12 @@ const CatalogUtils = {
             links: getRecordLinks(record),
             params: params,
             allowedSRS: allowedSRS,
-            catalogURL
+            catalogURL,
+            group
         };
     },
     getCatalogRecords: (format, records, options) => {
-        return converters[format] && converters[format](records, options) || null;
+        return format === 'backgrounds' && records && records.records || converters[format] && converters[format](records, options) || null;
     }
 };
 module.exports = CatalogUtils;

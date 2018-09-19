@@ -9,7 +9,8 @@
 var API = {
     csw: require('../api/CSW'),
     wms: require('../api/WMS'),
-    wmts: require('../api/WMTS')
+    wmts: require('../api/WMTS'),
+    backgrounds: require('../api/mapBackground')
 };
 
 const {addLayer, changeLayerProperties} = require('./layers');
@@ -154,9 +155,12 @@ function initCatalog(apis = API) {
 }
 
 function getRecords(format, url, startPosition = 1, maxRecords, filter, options) {
-    return (dispatch /* , getState */) => {
+
+    return (dispatch, getState) => {
+        const state = getState();
+        const layers = state && state.layers && state.layers.flat;
         // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
-        API[format].getRecords(url, startPosition, maxRecords, filter, options).then((result) => {
+        API[format].getRecords(url, startPosition, maxRecords, filter, options, layers).then((result) => {
             if (result.error) {
                 dispatch(recordsLoadError(result));
             } else {
@@ -173,9 +177,11 @@ function getRecords(format, url, startPosition = 1, maxRecords, filter, options)
     };
 }
 function textSearch(format, url, startPosition, maxRecords, text, options) {
-    return (dispatch /* , getState */) => {
+    return (dispatch, getState) => {
+        const state = getState();
+        const layers = state && state.layers && state.layers.flat;
         // TODO auth (like) let opts = GeoStoreApi.getAuthOptionsFromState(getState(), {params: {start: 0, limit: 20}, baseURL: geoStoreUrl });
-        API[format].textSearch(url, startPosition, maxRecords, text, options).then((result) => {
+        API[format].textSearch(url, startPosition, maxRecords, text, options, layers).then((result) => {
             if (result.error) {
                 dispatch(recordsLoadError(result));
             } else {

@@ -16,54 +16,7 @@
         "source": "osm",
 				"group": "background",
         "visibility": true
-			},
-      {
-        "type": "google",
-        "title": "Google HYBRID",
-        "name": "HYBRID",
-        "source": "google",
-        "group": "background",
-        "visibility": false
-      },
-      {
-        "type": "mapquest",
-        "title": "MapQuest OSM",
-        "name": "osm",
-        "source": "mapquest",
-        "group": "background",
-        "visibility": false
-      },
-      {
-        "type": "tileprovider",
-        "title": "NASAGIBS Night 2012",
-        "provider": "NASAGIBS.ViirsEarthAtNight2012",
-        "name": "Night2012",
-        "source": "nasagibs",
-        "group": "background",
-        "visibility": false
-      },
-      {
-        "type": "tileprovider",
-        "title": "OpenTopoMap",
-        "provider": "OpenTopoMap",
-        "name": "OpenTopoMap",
-        "source": "OpenTopoMap",
-        "group": "background",
-        "visibility": false
-      },
-      {
-        "source": "ol",
-        "group": "background",
-        "title": "Empty Background",
-        "fixed": true,
-        "type": "empty",
-        "visibility": false,
-        "args": [
-          "Empty Background", {
-            "visibility": false
-          }
-        ]
-      }
+			}
 		]
 	}
 }

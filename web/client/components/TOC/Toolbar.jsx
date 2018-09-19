@@ -155,7 +155,7 @@ class Toolbar extends React.Component {
                 transitionEnterTimeout={300}
                 transitionLeaveTimeout={300}>
                 {this.props.activateTool.activateAddLayer && status === 'DESELECT' ?
-                    <Button key="addLayer" bsStyle="primary" bsSize="small" onClick={this.props.onToolsActions.onAddLayer}>
+                    <Button key="addLayer" bsStyle="primary" bsSize="small" onClick={() => {}}>
                         {this.props.text.addLayer}
                     </Button>
                 : null}

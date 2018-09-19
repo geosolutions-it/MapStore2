@@ -53,7 +53,8 @@ class Thumbnail extends React.Component {
         onDeleteThumbnail: () => {},
         // I18N
         message: <Message msgId="map.message"/>,
-        suggestion: <Message msgId="map.suggestion"/>
+        suggestion: <Message msgId="map.suggestion"/>,
+        map: {}
     };
 
     state = {};
@@ -196,7 +197,7 @@ class Thumbnail extends React.Component {
                 <div className="dropzone-thumbnail-container" style={{
                         pointerEvents: this.props.map.saving ? "none" : "auto"
                     }}>
-                    <label className="control-label"><Message msgId="map.thumbnail"/></label>
+
                     <Dropzone multiple={false} className="dropzone alert alert-info" rejectClassName="alert-danger" onDrop={this.onDrop}>
                     { this.getThumbnailUrl() ?
                         <div>

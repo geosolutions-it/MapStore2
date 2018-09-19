@@ -43,12 +43,11 @@
                 "isNew": true,
                 "autoload": false
             },
-            "selectedService": "Demo CSW Service",
+            "selectedService": "Map Backgrounds",
             "services": {
-              "Demo CSW Service": {
-                "url": "https://demo.geo-solutions.it/geoserver/csw",
-                "type": "csw",
-                "title": "Demo CSW Service",
+                "Map Backgrounds": {
+                "type": "backgrounds",
+                "title": "Map Backgrounds",
                 "autoload": true
               },
               "Demo WMS Service": {

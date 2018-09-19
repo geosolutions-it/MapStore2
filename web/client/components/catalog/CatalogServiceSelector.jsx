@@ -26,7 +26,7 @@ module.exports = ({
         value={selectedService}
         onChange={(val) => onChangeSelectedService(val && val.value ? val.value : "")}
         placeholder={"catalog.servicePlaceholder"} />
-    {isValidServiceSelected ? (<InputGroup.Addon className="btn"
+    {isValidServiceSelected && selectedService !== 'Map Backgrounds' ? (<InputGroup.Addon className="btn"
         onClick={() => onChangeCatalogMode("edit", false)}>
         <Glyphicon glyph="pencil"/>
     </InputGroup.Addon>) : null}

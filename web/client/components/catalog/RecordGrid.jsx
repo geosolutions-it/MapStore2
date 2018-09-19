@@ -48,6 +48,7 @@ class RecordGrid extends React.Component {
         return (
 			<Col {...this.props.column} key={record.identifier}>
                 <Item
+                    {...this.props}
                     onLayerAdd={this.props.onLayerAdd}
                     onZoomToExtent={this.props.onZoomToExtent}
                     zoomToLayer={this.props.zoomToLayer}

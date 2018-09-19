@@ -14,7 +14,7 @@ const {createSelector} = require("reselect");
 const {Glyphicon, Panel} = require('react-bootstrap');
 const ContainerDimensions = require('react-container-dimensions').default;
 const Dock = require('react-dock').default;
-
+const {changeLayerProperties} = require('../actions/layers');
 const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
     changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
     addLayer, addLayerError, resetCatalog, focusServicesList} = require("../actions/catalog");
@@ -64,7 +64,11 @@ const catalogClose = () => {
 const Catalog = connect(catalogSelector, {
     // add layer action to pass to the layers
     onZoomToExtent: zoomToExtent,
-    onFocusServicesList: focusServicesList
+    onFocusServicesList: focusServicesList,
+    onPropertiesChange: changeLayerProperties,
+    onToggle: toggleControl.bind(null, 'backgroundSelector', null),
+    onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
+    onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')
 })(require('../components/catalog/Catalog'));
 
 // const Dialog = require('../components/misc/Dialog');
@@ -211,7 +215,7 @@ module.exports = {
             position: 5,
             text: <Message msgId="catalog.title"/>,
             icon: <Glyphicon glyph="folder-open"/>,
-            action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
+            action: () => ({type: ""}),
             priority: 2,
             doNotHide: true
         }

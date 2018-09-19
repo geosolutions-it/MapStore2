@@ -8,6 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
+const Toolbar = require('../misc/toolbar/Toolbar');
 
 require('./css/previewbutton.css');
 
@@ -20,7 +21,13 @@ class PreviewButton extends React.Component {
         labelHeight: PropTypes.number,
         label: PropTypes.string,
         showLabel: PropTypes.bool,
-        onToggle: PropTypes.func
+        onToggle: PropTypes.func,
+        onAdd: PropTypes.func,
+        currentLayer: PropTypes.object,
+        enabledCatalog: PropTypes.bool,
+        onRemove: PropTypes.func,
+        onEdit: PropTypes.func,
+        layers: PropTypes.array
     };
 
     static defaultProps = {
@@ -31,10 +38,14 @@ class PreviewButton extends React.Component {
         labelHeight: 29,
         label: '',
         showLabel: true,
-        onToggle: () => {}
+        onToggle: () => {},
+        onAdd: () => {},
+        currentLayer: {},
+        layers: []
     };
 
     render() {
+
         return (
             <div className="background-preview-button" style={{margin: this.props.margin}}>
                 <div className="background-preview-button-container bg-body" onClick={this.props.onToggle} style={{padding: this.props.frame / 2, width: this.props.side + this.props.frame, height: this.props.side + this.props.frame}}>
@@ -43,6 +54,31 @@ class PreviewButton extends React.Component {
                         <img src={this.props.src}/>
                     </div>
                 </div>
+                {this.props.labelHeight > 0 ? <Toolbar
+                    btnDefaultProps={{
+                        className: 'square-button-md',
+                        bsStyle: 'primary'
+                    }}
+                    buttons={[
+                        {
+                            glyph: 'plus',
+                            tooltip: 'Add new background',
+                            onClick: () => this.props.onAdd(),
+                            visible: !this.props.enabledCatalog
+                        },
+                        {
+                            glyph: 'wrench',
+                            tooltip: 'Edit current background',
+                            visible: !this.props.enabledCatalog && !!( this.props.currentLayer.type === 'wms' || this.props.currentLayer.type === 'wmts'),
+                            onClick: () => this.props.onEdit(this.props.currentLayer)
+                        },
+                        {
+                            glyph: 'trash',
+                            tooltip: 'Remove current background',
+                            visible: !this.props.enabledCatalog && this.props.layers.length > 1,
+                            onClick: () => this.props.onRemove(this.props.currentLayer.id, 'layers', this.props.currentLayer)
+                        }
+                    ]}/> : null}
             </div>
         );
     }
