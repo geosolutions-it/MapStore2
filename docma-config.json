@@ -139,6 +139,7 @@
             "web/client/components/TOC/fragments/settings/FeatureInfo.jsx",
             "web/client/components/TOC/fragments/settings/FeatureInfoEditor.jsx",
             "web/client/components/TOC/fragments/settings/ThematicLayer.jsx",
+            "web/client/components/errors/ResourceUnavailable.jsx",
 
             "web/client/actions/index.jsdoc",
             "web/client/actions/controls.js",

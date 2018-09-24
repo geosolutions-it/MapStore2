@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {refreshAccessToken, sessionValid, logout, LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
+const {DASHBOARD_LOAD_ERROR} = require('../actions/dashboard');
 const {loadMapConfig, configureError, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
 const {mapIdSelector} = require('../selectors/map');
 const {hasMapAccessLoadingError} = require('../selectors/mapInitialConfig');
@@ -58,7 +59,7 @@ const reloadMapConfig = (action$, store) =>
     });
 
 const promtLoginOnMapError = (actions$, store) =>
-    actions$.ofType(MAP_CONFIG_LOAD_ERROR, 'DASHBOARD:DASHBOARD_LOAD_ERROR')
+    actions$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR)
     .filter( (action) => action.error && action.error.status === 403 && !isLoggedIn(store.getState()))
     .switchMap(() => {
         return Rx.Observable.of(setControlProperty('LoginForm', 'enabled', true))

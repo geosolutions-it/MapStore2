@@ -1,5 +1,5 @@
-/**
- * Copyright 2016, GeoSolutions Sas.
+/*
+ * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
@@ -14,13 +14,13 @@ const {Button} = require('react-bootstrap');
 const {get} = require('lodash');
 
 const withMask = require('../components/misc/enhancers/withMask');
-const emptyState = require('../components/misc/enhancers/emptyState');
 const {isLoggedIn} = require('../selectors/security');
 const Message = require('../components/I18N/Message');
-const HTML = require('../components/I18N/HTML');
+const ResourceUnavailable = require('../components/errors/ResourceUnavailable');
+const {feedbackMaskSelector} = require('../selectors/feedbackmask');
 
-const feedbackMaskSelector = createSelector([
-    state => get(state, 'feedbackMask', {}),
+const feedbackMaskPluginSelector = createSelector([
+    feedbackMaskSelector,
     isLoggedIn,
     state => !get(state, 'security')
 ], ({loading, enabled, status, mode, errorMessage}, login, alwaysVisible) => ({
@@ -44,23 +44,6 @@ const HomeButton = connect(() => ({}), {
     </Button>
 );
 
-const MaskBody = emptyState(
-    ({enabled, login, status, alwaysVisible}) => enabled && alwaysVisible || enabled && login || enabled && status !== 403,
-    ({status, mode = 'map', errorMessage, showHomeButton}) => ({
-        glyph: mode === 'map' ? '1-map' : 'dashboard',
-        title: status === 403 && <Message msgId={`${mode}.errors.loading.notAccessible`} />
-        || status === 404 && <Message msgId={`${mode}.errors.loading.notFound`} />
-        || <Message msgId={`${mode}.errors.loading.title`} />,
-        description: (
-            <div className="text-center">
-                {errorMessage && <Message msgId={errorMessage} />
-                || <HTML msgId={`${mode}.errors.loading.unknownError`} />}
-            </div>
-        ),
-        content: showHomeButton && <div className="text-center"><HomeButton/></div>
-    })
-)(() => null);
-
 /**
  * FeedbackMask plugin.
  * Create a mask on dashboard and map pages when they are not accessible or not found.
@@ -71,7 +54,7 @@ const MaskBody = emptyState(
  */
 
 const FeedbackMaskPlugin = compose(
-    connect(feedbackMaskSelector),
+    connect(feedbackMaskPluginSelector),
     withMask(
     ({loading, enabled}) => loading || enabled,
     props => props.loading ?
@@ -84,7 +67,7 @@ const FeedbackMaskPlugin = compose(
             </div>
         </span>
         :
-        <MaskBody {...props} />, {
+        <ResourceUnavailable {...props} homeButton={<HomeButton />} />, {
         className: 'ms2-loading-mask'
     })
 )(() => null);
