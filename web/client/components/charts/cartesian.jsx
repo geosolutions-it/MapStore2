@@ -41,28 +41,27 @@ const shorten = (num)=> {
 
         number = round(trimedNumber) + unit;
     }else {
-        number = round(num, 4 - number.toString().length);
+        number = round(num, Math.abs(4 - number.toString().length));
     }
 
     return number;
 };
 
 const customize = (label)=>(
-    isString(label) ? truncate(label, {'length': 5}) :
-    isNumber(label) && label.toString().length < 4 ?
+    isString(label) ? truncate(label, {'length': 7}) :
+    isNumber(label) && label.toString().length < 7 ?
     label : shorten(label)
 
 
 );
 
-const CustomizedTick = ({x, y, height, payload}) => (
-    <Text style={{fill: '#666'}} x={x} y={y + height / 2} angle ={-45} textAnchor="middle" >
+const CustomizedTick = ({x, y, height, width, payload}) => (
+    <Text style={{fill: '#666'}} x={height === 60 ? x : x - width / 3} y={height === 60 ? y + height / 2 : y} angle ={height === 60 ? -45 : 0} textAnchor="middle" >
     {customize(payload.value)}
-    </Text>
-);
+    </Text> );
 
 const renderCartesianTools = ({xAxis, yAxis, cartesian}) => ([
-    xAxis && xAxis.show !== false ? <XAxis key="xaxis" tick={<CustomizedTick/>} height={40} {...xAxis}/> : null,
-    yAxis ? <YAxis key="yaxis" {...yAxis}/> : null,
+    xAxis && xAxis.show !== false ? <XAxis key="xaxis" tick={<CustomizedTick/>} height={60} minTickGap={0}{...xAxis}/> : null,
+    yAxis ? <YAxis key="yaxis" tick={<CustomizedTick/>} {...yAxis}/> : null,
     cartesian !== false ? <CartesianGrid key="cartesiangrid" {...cartesian}/> : null]);
 module.exports = {renderCartesianTools};
