@@ -540,7 +540,8 @@
                 "load_config_exception": "加载配置时出错"
             },
             "comboField": {
-                "default_placeholder": "选择..."
+                "default_placeholder": "选择...",
+                "drop_down": "Open Dropdown"
             },
             "form": {
                 "header": "在数据集中查找",
