@@ -94,12 +94,39 @@ describe('Test the layers reducer', () => {
             nodeType: 'layers'
         };
         let initialState = {
-            groups: [{name: 'sample1', id: 'sample1'}, {name: 'sample2', id: 'sample2'}],
-            flat: [{id: 'layer1', group: 'sample1'}, {id: 'layer2', group: 'sample2'}]
+            groups: [
+                {name: 'sample1', nodes: ['layer1'], id: 'sample1'},
+                {name: 'sample2', nodes: ['layer2'], id: 'sample2'}
+            ],
+            flat: [
+                {id: 'layer1', group: 'sample1'},
+                {id: 'layer2', group: 'sample2'}
+            ]
+        };
+        let state = layers(initialState, testAction);
+        expect(state.groups.length).toBe(1);
+        expect(state.flat.length).toBe(1);
+    });
+
+    it('removeNode norGroupOrLayer', () => {
+        let testAction = {
+            type: 'REMOVE_NODE',
+            node: 'layer1',
+            nodeType: 'norGroupOrLayer'
+        };
+        let initialState = {
+            groups: [
+                {name: 'sample1', nodes: ['layer1'], id: 'sample1'},
+                {name: 'sample2', nodes: ['layer2'], id: 'sample2'}
+            ],
+            flat: [
+                {id: 'layer1', group: 'sample1'},
+                {id: 'layer2', group: 'sample2'}
+            ]
         };
         let state = layers(initialState, testAction);
         expect(state.groups.length).toBe(2);
-        expect(state.flat.length).toBe(1);
+        expect(state.flat.length).toBe(2);
     });
 
     it('removeNode nested', () => {
