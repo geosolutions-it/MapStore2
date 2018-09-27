@@ -39,7 +39,7 @@ describe('Test automapupdate selectors', () => {
 
     it('getWMSLayers works with initial state', () => {
         const emptyState = {
-        layers: reducer(undefined, { type: "TEST" })
+            layers: reducer(undefined, { type: "TEST" })
         };
         expect(getWMSLayers(emptyState).length).toBe(0);
     });
