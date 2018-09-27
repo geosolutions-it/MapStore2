@@ -17,7 +17,7 @@ const LocaleUtils = require('../../../../utils/LocaleUtils');
 const assign = require('object-assign');
 require('react-selectize/themes/index.css');
 const {Grid} = require('react-bootstrap');
-
+const {createFromSearch} = require('../../../../utils/TOCUtils');
 /**
  * General Settings form for layer
  */
@@ -121,17 +121,7 @@ class General extends React.Component {
                             this.updateEntry("group", {target: {value: value || "Default"}});
                         }}
                         theme = "bootstrap3"
-                        createFromSearch={function(options, search) {
-                            // only create an option from search if the length of the search string is > 0 and
-                            // it does no match the label property of an existing option
-                            if (search.length === 0 || (options.map(function(option) {
-                                return option.label;
-                            })).indexOf(search) > -1) {
-                                return null;
-                            }
-                            const val = search.replace(/\./g, '${dot}').replace(/\//g, '.');
-                            return {label: search, value: val};
-                        }}
+                        createFromSearch={createFromSearch}
 
                         onValueChange={function(item) {
                             // here, we add the selected item to the options array, the "new-option"
