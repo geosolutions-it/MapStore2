@@ -62,8 +62,8 @@
             "featureTypeError": "Impossibile caricare gli attributi del layer",
             "featureTypeErrorInvalidJSON": "Impossibile caricare gli attributi del layer. La risposta non è valida",
             "elevation": "Elevazione",
-            "titleTranslations": "Title translations",
-            "groupProperties": "Group properties",
+            "titleTranslations": "Traduzioni di titoli",
+            "groupProperties": "Proprietà del gruppo",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa",
             "legenderror": "Legenda non disponibile",
@@ -696,7 +696,8 @@
                 "load_config_exception": "Errore Caricamento Configurazione"
             },
             "comboField": {
-                "default_placeholder": "Seleziona..."
+                "default_placeholder": "Seleziona...",
+                 "drop_down": "Apri il menu a discesa"
             },
             "form": {
                 "header": "Cerca nel dataset",

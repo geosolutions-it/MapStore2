@@ -537,7 +537,8 @@
                 "load_config_exception": "Fout bij het laden van de configuratie"
             },
             "comboField": {
-                "default_placeholder": "Kies..."
+                "default_placeholder": "Kies...",
+                 "drop_down": "Open Dropdown"
             },
             "form": {
                 "header": "Zoek in de data",

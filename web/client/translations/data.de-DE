@@ -62,8 +62,8 @@
             "featureTypeError": "Layerattribute können nicht geladen werden",
             "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Antwort ist nicht gültig",
             "elevation": "Höhe",
-            "titleTranslations": "Title translations",
-            "groupProperties": "Group properties",
+            "titleTranslations": "Titel Übersetzungen",
+            "groupProperties": "Proprietà del gruppo",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Identifiziere das Antwortformat",
             "legenderror": "Legende ist nicht verfügbar",
@@ -696,7 +696,8 @@
                 "load_config_exception": "Fehler beim Laden der Konfiguration"
             },
             "comboField": {
-                "default_placeholder": "Wählen..."
+                "default_placeholder": "Wählen...",
+                 "drop_down": "Öffnen Sie das Dropdown-Menü"
             },
             "form": {
                 "header": "Finde im Datensatz",

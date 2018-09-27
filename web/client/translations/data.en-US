@@ -696,7 +696,8 @@
                 "load_config_exception": "Error Loading Configuration"
             },
             "comboField": {
-                "default_placeholder": "Select..."
+                "default_placeholder": "Select...",
+                "drop_down": "Open Dropdown"
             },
             "form": {
                 "header": "Find in the dataset",

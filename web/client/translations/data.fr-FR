@@ -697,7 +697,8 @@
                 "load_config_exception": "Erreur lors du chargement de la configuration"
             },
             "comboField": {
-                "default_placeholder": "Sélectionner..."
+                "default_placeholder": "Sélectionner...",
+                 "drop_down": "Ouvrir le menu déroulant"
             },
             "form": {
                 "header": "Rechercher dans les données",
