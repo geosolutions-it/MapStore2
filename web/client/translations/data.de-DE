@@ -63,7 +63,7 @@
             "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Antwort ist nicht gültig",
             "elevation": "Höhe",
             "titleTranslations": "Titel Übersetzungen",
-            "groupProperties": "Proprietà del gruppo",
+            "groupProperties": "Gruppeneigenschaften",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Identifiziere das Antwortformat",
             "legenderror": "Legende ist nicht verfügbar",
