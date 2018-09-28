@@ -10,6 +10,11 @@ var layers = require('../layers');
 
 describe('Test the layers reducer', () => {
 
+    it('confirms that the default state is an object with "flat" as a property', () => {
+        let state = layers(undefined, {type: 'UNKNOWN'});
+        expect(state.flat.length).toBe(0);
+    });
+
     it('returns original state on unrecognized action', () => {
         let state = layers(1, {type: 'UNKNOWN'});
         expect(state).toBe(1);
