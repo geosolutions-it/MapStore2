@@ -33,7 +33,10 @@ module.exports = ({files, path, testFile, singleRun}) => ({
             istanbul: { noCompact: true }
         }
     },
-
+    browserConsoleLogOptions: {
+        terminal: true,
+        level: 'DISABLE'
+    },
     webpack: {
         devtool: 'eval',
         module: {
