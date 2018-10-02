@@ -26,13 +26,15 @@ class General extends React.Component {
         onChange: PropTypes.func,
         element: PropTypes.object,
         groups: PropTypes.array,
-        nodeType: PropTypes.string
+        nodeType: PropTypes.string,
+        pluginCfg: PropTypes.object
     };
 
     static defaultProps = {
         element: {},
         onChange: () => {},
-        nodeType: 'layers'
+        nodeType: 'layers',
+        pluginCfg: {}
     };
 
     getGroups = (groups, idx = 0) => {
@@ -52,6 +54,7 @@ class General extends React.Component {
     render() {
         const locales = LocaleUtils.getSupportedLocales();
         const translations = isObject(this.props.element.title) ? assign({}, this.props.element.title) : { 'default': this.props.element.title };
+        const {hideTitleTranslations = false} = this.props.pluginCfg;
         return (
             <Grid fluid style={{paddingTop: 15, paddingBottom: 15}}>
             <form ref="settings">
@@ -63,7 +66,7 @@ class General extends React.Component {
                         type="text"
                         onChange={this.updateTranslation.bind(null, 'default')}/>
                 </FormGroup>
-                <FormGroup>
+                {hideTitleTranslations || (<FormGroup>
                     <ControlLabel><Message msgId="layerProperties.titleTranslations" /></ControlLabel>
                     {Object.keys(locales).map((a) => {
                         let flagImgSrc;
@@ -81,7 +84,7 @@ class General extends React.Component {
                                 onChange={this.updateTranslation.bind(null, locales[a].code)}/>
                     </InputGroup>) : null; }
                     )}
-                </FormGroup>
+                </FormGroup>)}
                 <FormGroup>
                     <ControlLabel><Message msgId="layerProperties.name" /></ControlLabel>
                     <FormControl
