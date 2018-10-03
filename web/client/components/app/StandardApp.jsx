@@ -25,6 +25,8 @@ const {isObject, isArray} = require('lodash');
 
 const urlQuery = url.parse(window.location.href, true).query;
 
+require('./appPolyfill');
+
 class StandardApp extends React.Component {
     static propTypes = {
         appStore: PropTypes.func,

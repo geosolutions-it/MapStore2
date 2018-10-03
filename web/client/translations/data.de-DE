@@ -62,8 +62,8 @@
             "featureTypeError": "Layerattribute können nicht geladen werden",
             "featureTypeErrorInvalidJSON": "Layerattribute können nicht geladen werden. Antwort ist nicht gültig",
             "elevation": "Höhe",
-            "titleTranslations": "Title translations",
-            "groupProperties": "Group properties",
+            "titleTranslations": "Titel Übersetzungen",
+            "groupProperties": "Gruppeneigenschaften",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Identifiziere das Antwortformat",
             "legenderror": "Legende ist nicht verfügbar",
@@ -125,7 +125,7 @@
         "settings": "Einstellungen",
         "help": "Hilfe",
         "docs": "Dokumentation",
-        "gohome": "Gehe zur Startseite",
+        "gohome": "Zurück zur Startseite",
         "back": "Zurück zum Import",
         "printbutton": "Drucken",
         "annotationsbutton": "Annotationen",
@@ -289,6 +289,7 @@
         },
         "map": {
             "loading": "Wird geladen...",
+            "loadingSpinner": "Karte wird geladen",
             "loadingerror": "Fehler während des Ladens",
             "name": "Name",
             "description": "Beschreibung",
@@ -342,6 +343,13 @@
                 "titleUnsavedChanges": "Sind Sie sicher, dass Sie schließen, ohne Ihre Änderungen zu speichern??",
                 "sureToClose": "Sind Sie sicher, dass Sie schließen, ohne Ihre Änderungen zu speichern??",
                 "fieldsChanged": "Einige Felder wurden geändert"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Karte nicht gefunden",
+                    "notAccessible": "Karte nicht zugänglich",
+                    "unknownError": "<p> <small> Einer der folgenden Gründe könnte die Ursache sein: </small> <ul><li> Sie haben keine Zugriffsberechtigung </li> <li> Sie versuchen, auf eine nicht vorhandene Map zuzugreifen </li> <li> Die Karte wurde entfernt </li></ul> <p>"
+                }
             }
         },
         "floatinglegend": {
@@ -688,7 +696,8 @@
                 "load_config_exception": "Fehler beim Laden der Konfiguration"
             },
             "comboField": {
-                "default_placeholder": "Wählen..."
+                "default_placeholder": "Wählen...",
+                 "drop_down": "Öffnen Sie das Dropdown-Menü"
             },
             "form": {
                 "header": "Finde im Datensatz",
@@ -1364,6 +1373,7 @@
             }
         },
         "dashboard": {
+            "loadingSpinner": "Dashboard wird geladen",
             "saveDialog": {
                 "title": "Dashboardeigenschaften bearbeiten",
                 "name": "Name",
@@ -1381,8 +1391,10 @@
                     "title": "Fehler beim Laden des Dashboards",
                     "dashboardNotAccessible": "Sie sind nicht berechtigt, auf dieses Dashboard zuzugreifen. Wenden Sie sich an den Ressourcenbesitzer",
                     "pleaseLogin": "Dieses Dashboard ist nicht öffentlich. Bitte versuchen Sie sich einzuloggen",
-                    "dashboardDoesNotExist": "Das Dashboard, auf das Sie zugreifen möchten, existiert nicht oder wurde entfernt",
-                    "unknownError":  "Beim Laden des Dashboards ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Administrator."
+                    "dashboardDoesNotExist": "Das Dashboard, auf das Sie zugreifen möchten, existiert nicht",
+                    "unknownError":  "Beim Laden des Dashboards ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Administrator.",
+                    "notFound": "Dashboard nicht gefunden",
+                    "notAccessible": "Dashboard nicht zugänglich"
                 },
                 "resourceAlreadyExists": "Eine Ressource mit diesem Namen existiert bereits. Versuchen Sie '{data}'"
             },

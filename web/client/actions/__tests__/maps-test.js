@@ -39,7 +39,8 @@ const {
     MAP_METADATA_UPDATED, mapMetadataUpdated,
     METADATA_CHANGED, metadataChanged,
     setShowMapDetails, SHOW_DETAILS,
-    updateAttribute, saveAll
+    updateAttribute, saveAll,
+    SAVE_MAP_RESOURCE, saveMapResource
 } = require('../maps');
 
 let GeoStoreDAO = require('../../api/GeoStoreDAO');
@@ -379,6 +380,12 @@ describe('Test correctness of the maps actions', () => {
         expect(a.type).toBe(DETAILS_LOADED);
         expect(a.detailsUri).toBe(detailsUri);
         expect(a.mapId).toBe(mapId);
+    });
+    it('saveMapResource', () => {
+        const resource = {};
+        const a = saveMapResource(resource);
+        expect(a.type).toBe(SAVE_MAP_RESOURCE);
+        expect(a.resource).toBe(resource);
     });
 
 });

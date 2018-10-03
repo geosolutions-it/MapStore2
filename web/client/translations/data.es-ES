@@ -62,8 +62,8 @@
             "featureTypeError": "Imposible cargar los atributos del mapa",
             "featureTypeErrorInvalidJSON": "Imposible cargar los atributos del mapa. La respuesta no es válida",
             "elevation": "Elevación",
-            "titleTranslations": "Title translations",
-            "groupProperties": "Group properties",
+            "titleTranslations": "Traducciones de títulos",
+            "groupProperties": "Propiedades del grupo",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Indentificar el formato de respuesta",
             "legenderror": "La leyenda no está disponible",
@@ -125,7 +125,7 @@
         "settings": "Ajustes",
         "help": "Ayuda",
         "docs": "Documentación",
-        "gohome": "Volver al inicio",
+        "gohome": "Volver a la página de inicio",
         "back": "Volver al Importador",
         "printbutton": "Imprimir",
         "annotationsbutton": "Anotaciones",
@@ -289,6 +289,7 @@
         },
         "map": {
             "loading": "Cargando...",
+            "loadingSpinner": "Cargando mapa",
             "loadingerror": "Error en la carga",
             "name": "Nombre",
             "description": "Descripción",
@@ -342,6 +343,13 @@
                 "titleUnsavedChanges": "Estás seguro de cerrar sin guardar los cambios?",
                 "sureToClose": "Estás seguro de cerrar sin guardar los cambios?",
                 "fieldsChanged": "Algunos campos han sido cambiados"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Mapa no encontrado",
+                    "notAccessible": "Mapa no accesible",
+                    "unknownError": "<p> <small> Uno de los siguientes motivos podría ser la causa: </small> <ul><li> no tiene permiso para acceder </li> <li> está intentando acceder a un mapa que no existe </li> <li> el mapa se ha eliminado </li></ul> <p>"
+                }
             }
         },
         "floatinglegend": {
@@ -688,7 +696,8 @@
                 "load_config_exception": "Error cargando configuración"
             },
             "comboField": {
-                "default_placeholder": "Select..."
+                "default_placeholder": "Seleccionar...",
+                 "drop_down": "Abrir el menú desplegable"
             },
             "form": {
                 "header": "Buscar en el conjunto de  datos",
@@ -1364,6 +1373,7 @@
             }
         },
         "dashboard": {
+            "loadingSpinner": "Panel de carga",
             "saveDialog": {
                 "title": "Editar propiedades del tablero",
                 "name": "Nombre",
@@ -1381,8 +1391,10 @@
                     "title": "Error al cargar el tablero",
                     "dashboardNotAccessible": "No tiene permiso para acceder a este panel. Póngase en contacto con el propietario del recurso",
                     "pleaseLogin": "Este panel no es público. Intente iniciar sesión",
-                    "dashboardDoesNotExist": "El panel al que está intentando acceder no existe o se ha eliminado",
-                    "unknownError": "Hubo un error al cargar el panel. Póngase en contacto con el administrador"
+                    "dashboardDoesNotExist": "El panel al que intenta acceder no existe",
+                    "unknownError": "Hubo un error al cargar el panel. Póngase en contacto con el administrador",
+                    "notFound": "Tablero no encontrado",
+                    "notAccessible": "Tablero no accesible"
                 },
                 "resourceAlreadyExists":  "Ya existe un recurso con este nombre. try '{data}'"
             },

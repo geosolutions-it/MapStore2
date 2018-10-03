@@ -210,6 +210,7 @@
 		},
         "map": {
             "loading": "Bezig met laden...",
+            "loadingSpinner": "Loading Map",
             "loadingerror": "Fout bij het laden",
             "name": "Naam",
             "description": "Beschrijving",
@@ -243,6 +244,13 @@
                 "canWrite": "kan wijzigen",
                 "noResult": "geen enkel resultaat gevonden",
                 "title": "geautoriseerde groepen"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Map not found",
+                    "notAccessible": "Map not accessible",
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li></ul><p>"
+                }
             }
         },
         "floatinglegend": {
@@ -529,7 +537,8 @@
                 "load_config_exception": "Fout bij het laden van de configuratie"
             },
             "comboField": {
-                "default_placeholder": "Kies..."
+                "default_placeholder": "Kies...",
+                 "drop_down": "Open Dropdown"
             },
             "form": {
                 "header": "Zoek in de data",
@@ -1051,6 +1060,40 @@
                 "line": "Advanced Options",
                 "bar": "Advanced Options"
             }
+        },
+        "dashboard": {
+            "loadingSpinner": "Loading Dashboard",
+            "saveDialog": {
+                "title": "Edit dashboard properties",
+                "name": "Name",
+                "description": "Description",
+                "namePlaceholder": "Type a name...",
+                "descriptionPlaceholder": "Type a description...",
+                "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",
+                "close": "Close",
+                "cancel": "Cancel",
+                "saveSuccessTitle": "Success",
+                "saveSuccessMessage": "Dashboard saved successfully"
+            },
+            "errors":{
+                "loading": {
+                    "title": "Error loading dashboard",
+                    "dashboardNotAccessible": "You don't have permission to access this dashboard. Please contact the resource owner",
+                    "pleaseLogin": "This dashboard is not public. Please try to login",
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
+                    "unknownError": "There was an error loading the dashboard. Please contact the administrator",
+                    "notFound": "Dashboard not found",
+	                "notAccessible": "Dashboard not accessible"
+                },
+                "resourceAlreadyExists": "A resource with this name already exists. try '{data}'"
+            },
+            "editor": {
+                "save": "Save the dashboard",
+                "addACardToTheDashboard": "Add a widget to the dashboard",
+                "showConnections": "Show connections",
+                "hideConnections": "HideConnections"
+            },
+            "emptyTitle": "The dashboard is empty"
         },
         "wizard": {
             "next": "Suivant",
