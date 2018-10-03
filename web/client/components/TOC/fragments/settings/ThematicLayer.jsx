@@ -17,7 +17,9 @@ const SwitchPanel = require('../../../misc/switch/SwitchPanel');
 const ColorRangeSelector = require('../../../style/ColorRangeSelector');
 
 const {Controlled: Codemirror} = require('react-codemirror2');
-const {NumberPicker} = require('react-widgets');
+
+const NumberPicker = require('../../../misc/NumberPicker');
+
 require('codemirror/lib/codemirror.css');
 
 require('codemirror/mode/javascript/javascript');
@@ -348,12 +350,13 @@ class ThematicLayer extends React.Component {
                                     text={thema.strokeColor} value={{ ...tinycolor(thema.strokeColor).toRgb(), a: 100 }}
                                     onChangeColor={this.updateStrokeColor}
                                 /></Col>
-                                <Col xs={3}><NumberPicker key="strokeWeight"
-                                    disabled={!thema.strokeOn}
-                                    format="- ###.###"
-                                    value={thema.strokeWeight}
-                                    onChange={this.updateStrokeWeight}
-                                /></Col>
+                                <Col xs={3}>
+                                    <NumberPicker key="strokeWeight"
+                                        disabled={!thema.strokeOn}
+                                        value={thema.strokeWeight}
+                                        onChange={this.updateStrokeWeight}
+                                    />
+                                </Col>
                             </FormGroup>
                         </Col> : null}
                         </Row>

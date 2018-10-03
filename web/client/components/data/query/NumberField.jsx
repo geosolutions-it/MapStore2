@@ -11,9 +11,8 @@ const React = require('react');
 const {Tooltip, Row, Col} = require("react-bootstrap");
 const OverlayTrigger = require('../../misc/OverlayTrigger');
 const LocaleUtils = require('../../../utils/LocaleUtils');
-const numberLocalizer = require('react-widgets/lib/localizers/simple-number');
-numberLocalizer();
-const {NumberPicker} = require('react-widgets');
+
+const NumberPicker = require('../../misc/NumberPicker');
 
 class NumberField extends React.Component {
     static propTypes = {
