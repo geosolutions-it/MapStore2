@@ -50,26 +50,6 @@ const getConfigurationOptions = function(query, defaultName, extension, geoStore
         legacy: !!mapId
     };
 };
-
-/**
- * it removes some params from the query string
- * return the shrinked url
-*/
-const getUrlWithoutParameters = (urlToFilter, skip) => {
-    const urlparts = urlToFilter.split('?');
-    let paramsFiltered = "";
-    if (urlparts.length >= 2 && urlparts[1]) {
-        const pars = urlparts[1].split(/[&;]/g).filter( p => !!p);
-        pars.forEach((par, i) => {
-            const param = par.split('=');
-            if (skip.indexOf(param[0].toLowerCase()) === -1) {
-                let addAnd = i === (pars.length - 1) ? "" : "&";
-                paramsFiltered += param.join("=") + addAnd;
-            }
-        });
-    }
-    return !!paramsFiltered ? urlparts[0] + "?" + paramsFiltered : urlparts[0];
-};
 /**
  * WORKAROUND: it removes the extra ? when the authkey param is present
  * the url was like         http......?authkey=....?service=....&otherparam
@@ -95,6 +75,26 @@ const cleanDuplicatedQuestionMarks = (urlToNormalize) => {
     }
     return urlToNormalize;
 };
+/**
+ * it removes some params from the query string
+ * return the shrinked url
+*/
+const getUrlWithoutParameters = (urlToFilter, skip) => {
+    const urlparts = cleanDuplicatedQuestionMarks(urlToFilter).split('?');
+    let paramsFiltered = "";
+    if (urlparts.length >= 2 && urlparts[1]) {
+        const pars = urlparts[1].split(/[&;]/g).filter( p => !!p);
+        pars.forEach((par, i) => {
+            const param = par.split('=');
+            if (skip.indexOf(param[0].toLowerCase()) === -1) {
+                let addAnd = i === (pars.length - 1) ? "" : "&";
+                paramsFiltered += param.join("=") + addAnd;
+            }
+        });
+    }
+    return !!paramsFiltered ? urlparts[0] + "?" + paramsFiltered : urlparts[0];
+};
+
 var ConfigUtils = {
     defaultSourceType: "gxp_wmssource",
     backgroundGroup: "background",
