@@ -723,7 +723,6 @@ module.exports = Quill => {
             iframe.setAttribute('height', height);
             let overlay = document.createElement('DIV');
             overlay.setAttribute('class', 'ms-quill-iframe');
-            overlay.style.display = 'none';
             overlay.style.overflow = 'hidden';
             overlay.style.position = 'absolute';
             overlay.style.left = '0';
