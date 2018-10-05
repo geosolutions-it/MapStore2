@@ -7,6 +7,8 @@
  */
 
 const { FORMAT_OPTIONS_FETCH, DOWNLOAD_FEATURES, onDownloadFinished, updateFormats, onDownloadOptionChange} = require('../actions/wfsdownload');
+const {cleanDuplicatedQuestionMarks} = require('../utils/ConfigUtils');
+
 const {TOGGLE_CONTROL, toggleControl} = require('../actions/controls');
 const {queryPanelSelector, wfsDownloadSelector} = require('../selectors/controls');
 const {DOWNLOAD} = require('../actions/layers');
@@ -50,10 +52,10 @@ const hasOutputFormat = (data) => {
 const getWFSFeature = ({url, filterObj = {}, downloadOptions= {}} = {}) => {
     const data = FilterUtils.toOGCFilter(filterObj.featureTypeName, filterObj, filterObj.ogcVersion, filterObj.sortOptions, false, null, null, downloadOptions.selectedSrs);
     return Rx.Observable.defer( () =>
-        axios.post(url + `?service=WFS&outputFormat=${downloadOptions.selectedFormat}`, data, {
-          timeout: 60000,
-          responseType: 'arraybuffer',
-          headers: {'Content-Type': 'application/xml'}
+        axios.post(cleanDuplicatedQuestionMarks(url + `?service=WFS&outputFormat=${downloadOptions.selectedFormat}`), data, {
+            timeout: 60000,
+            responseType: 'arraybuffer',
+            headers: {'Content-Type': 'application/xml'}
     }));
 };
 const getFileName = action => {
@@ -138,8 +140,9 @@ module.exports = {
                     saveAs(new Blob([data], {type: headers && headers["content-type"]}), getFileName(action));
                 })
                 .map( () => onDownloadFinished() )
-                .catch( () => Rx.Observable.of(
+                .catch( (e) => Rx.Observable.of(
                     error({
+                        error: e,
                         title: "wfsdownload.error.title",
                         message: "wfsdownload.error.invalidOutputFormat",
                         autoDismiss: 5,
