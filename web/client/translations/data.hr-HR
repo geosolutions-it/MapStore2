@@ -1393,7 +1393,9 @@
                     "dashboardNotAccessible": "Nemate dozvole za pristup ovoj ploči. Molimo kontaktirajte vlasnika resursa",
                     "pleaseLogin": "Ova kontrolna ploča nije javna. Molimo pokušajte se prijaviti u sustav",
                     "dashboardDoesNotExist": "Kontrolna ploča kojoj pokušavate pristupiti  ne postoji ili je uklonjena",
-                    "unknownError": "Došlo je do greške prilikom učitavanja kontrolne ploče. Molimo kontaktirajte administratora"
+                    "unknownError": "Došlo je do greške prilikom učitavanja kontrolne ploče. Molimo kontaktirajte administratora",
+                    "notFound": "Kontrolna ploča nije pronađena",
+                    "notAccessible": "Kontrolna ploča nije dostupna"
                 },
                 "resourceAlreadyExists": "Resurs sa ovim imenom već postoji. Pukušajte '{data}'"
             },
