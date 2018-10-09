@@ -12,7 +12,8 @@ const LocaleUtils = require('../../utils/LocaleUtils');
 const assign = require('object-assign');
 const BorderLayout = require('../layout/BorderLayout');
 const Select = require('react-select');
-
+const SwitchPanel = require('../misc/switch/SwitchPanel');
+const Toolbar = require('../misc/toolbar/Toolbar');
 const {FormControl, FormGroup, Alert, Pagination, Checkbox, Button, Panel, Form, Col, InputGroup, ControlLabel, Glyphicon} = require('react-bootstrap');
 const Spinner = require('react-spinkit');
 
@@ -255,6 +256,25 @@ class Catalog extends React.Component {
             buttons.push(<Button style={this.props.buttonStyle} disabled={this.props.saving} onClick={() => this.props.onChangeCatalogMode("view")} key="catalog_back_view_button">
                         <Message msgId="cancel"/>
                     </Button>);
+
+            return [
+                {
+                    glyph: 'arrow-left',
+                    tooltip: 'Back to catalog',
+                    onClick: () => this.props.onChangeCatalogMode("view")
+                },
+                {
+                    glyph: 'floppy-disk',
+                    tooltip: 'Save',
+                    onClick: () => this.props.onAddService()
+                },
+                {
+                    glyph: 'trash',
+                    tooltip: 'Remove catalog',
+                    visible: !this.props.newService.isNew ? true : false,
+                    onClick: () => this.props.onDeleteService()
+                }
+            ];
         }
         return buttons;
     };
@@ -324,8 +344,21 @@ class Catalog extends React.Component {
                             </div>
                         </BorderLayout>
             ) : (
+                <BorderLayout header={
+                    <Toolbar
+                        btnGroupProps={{
+                            className: 'text-center'
+                        }}
+                        btnDefaultProps={{
+                            bsStyle: "primary",
+                            className: "square-button-md"
+                        }}
+                        buttons={this.renderButtons()}/>
+                }>
+
                 <Form horizontal >
-                    <FormGroup>
+
+                    <FormGroup style={{ padding: '8px', paddingBottom: 0, width: 'unset'}}>
                         <Col xs={12}>
                             <ControlLabel><Message msgId="catalog.url"/></ControlLabel>
                             <FormControl
@@ -339,7 +372,7 @@ class Catalog extends React.Component {
                                 onChange={(e) => this.props.onChangeUrl(e.target.value)}/>
                         </Col>
                     </FormGroup>
-                    <FormGroup controlId="title" key="title">
+                    <FormGroup style={{ padding: '8px', width: 'unset'}} controlId="title" key="title">
                         <Col xs={12} sm={3} md={3}>
                             <ControlLabel><Message msgId="catalog.type"/></ControlLabel>
                             <FormControl
@@ -362,19 +395,79 @@ class Catalog extends React.Component {
                                 onChange={(e) => this.props.onChangeTitle(e.target.value)}/>
                         </Col>
                     </FormGroup>
-                    <FormGroup controlId="autoload" key="autoload">
-                        <Col xs={12}>
-                            <Checkbox value="autoload" onChange={(e) => this.props.onChangeAutoload(e.target.checked)} checked={this.props.newService.autoload}>
-                              <Message msgId="catalog.autoload"/>
-                            </Checkbox>
-                        </Col>
+              
+                    </Form>
+
+                    <SwitchPanel expanded={this.state.expanded} title={<div style={{paddingLeft: 14}}>Advanced Settings</div>} onSwitch={expanded => this.setState({expanded})}>
+                    
+
+                      
+                        
+                     
+                           
+         
+                        <FormGroup style={{ overflow: 'hidden'}}>
+                        <Col xs={12} ><Checkbox value="autoload" onChange={(e) => this.props.onChangeAutoload(e.target.checked)} checked={this.props.newService.autoload}>
+                                  <Message msgId="catalog.autoload"/>
+                                </Checkbox></Col>
+                        
+                        <Col xs={12} ><hr/><Checkbox onChange={() => this.setState({activeBasic: !this.state.activeBasic})}>Basic Authentication</Checkbox></Col>
+                                <div style={{marginBottom: 8, width: '100%'}}>
+                        <Col xs={6} >
+                            <ControlLabel>Username</ControlLabel>
+                            </Col>
+                            <Col xs={6} style={{marginBottom: 8}}>
+                            <FormControl
+                                ref="url"
+                                type="text"
+                                placeholder="Enter password"
+                                disabled={!this.state.activeBasic}/>
+                                </Col>
+                                </div>
+                                <div>
+                                <Col xs={6} >
+                                
+                            <ControlLabel>Password</ControlLabel>
+                            </Col>
+                            <Col xs={6} >
+                            <FormControl
+                                ref="url"
+                                type="text"
+                                disabled={!this.state.activeBasic}
+                                placeholder="Enter authkey"/>
+                                </Col>
+                                </div>
                     </FormGroup>
-                    <FormGroup controlId="buttons" key="butStons">
-                        <Col xs={12}>
-                            {this.renderButtons()}
-                        </Col>
-                    </FormGroup>
-                </Form>)
+                    <Col xs={12} ><hr/></Col>
+                    <FormGroup>
+                    <Col xs={6} >
+                            <ControlLabel>Format</ControlLabel>
+                            </Col >
+                            <Col xs={6} >
+                            <Select
+                                value="image/png"
+                                clearable={false}
+                                options={[{
+                                    label: 'image/png',
+                                    value: 'image/png'
+                                }, {
+                                    label: 'image/png8',
+                                    value: 'image/png8'
+                                }, {
+                                    label: 'image/jpeg',
+                                    value: 'image/jpeg'
+                                }, {
+                                    label: 'image/vnd.jpeg-png',
+                                    value: 'image/vnd.jpeg-png'
+                                }, {
+                                    label: 'image/gif',
+                                    value: 'image/gif'
+                                }]}/>
+                                </Col >
+                        </FormGroup>
+                    </SwitchPanel >
+                    </BorderLayout>
+                )
         );
     }
 
