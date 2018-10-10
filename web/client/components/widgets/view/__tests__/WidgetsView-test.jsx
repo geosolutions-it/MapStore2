@@ -27,7 +27,7 @@ describe('WidgetsView component', () => {
         expect(el).toExist();
     });
     it('Test WidgetsView with widgets', () => {
-        ReactDOM.render(<WidgetsView widgets={[{
+        ReactDOM.render(<WidgetsView type={false} widgets={[{
             title: "TEST",
             id: "TEST",
             layer: {
@@ -44,5 +44,24 @@ describe('WidgetsView component', () => {
         const container = document.getElementById('container');
         const el = container.querySelector('.mapstore-widget-card');
         expect(el).toExist();
+    });
+    it('WidgetsView should not be rendered in 3D mode', () => {
+        ReactDOM.render(<WidgetsView type widgets={[{
+            title: "TEST",
+            id: "TEST",
+            layer: {
+                name: "test",
+                url: 'base/web/client/test-resources/widgetbuilder/aggregate',
+                wpsUrl: 'base/web/client/test-resources/widgetbuilder/aggregate',
+                search: {url: 'base/web/client/test-resources/widgetbuilder/aggregate'}},
+            options: {
+                aggregateFunction: "Count",
+                aggregationAttribute: "test",
+                groupByAttributes: "test"
+            }
+        }]}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('.mapstore-widget-card');
+        expect(el).toBe(null);
     });
 });

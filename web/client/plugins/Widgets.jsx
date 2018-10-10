@@ -11,6 +11,7 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const { compose, withProps} = require('recompose');
 const {mapIdSelector} = require('../selectors/map');
+const {isCesium} = require('../selectors/maptype');
 const {getFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout} = require('../selectors/widgets');
 const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage} = require('../actions/widgets');
 const {rightPanelOpenSelector, bottomPanelOpenSelector} = require('../selectors/maplayout');
@@ -22,11 +23,13 @@ const WidgetsView =
 compose(
     connect(
         createSelector(
+            isCesium,
             mapIdSelector,
             getFloatingWidgets,
             getFloatingWidgetsLayout,
             dependenciesSelector,
-            (id, widgets, layouts, dependencies) => ({
+            (type, id, widgets, layouts, dependencies) => ({
+                type,
                 id,
                 widgets,
                 layouts,
