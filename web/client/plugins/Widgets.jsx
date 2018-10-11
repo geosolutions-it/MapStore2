@@ -23,13 +23,11 @@ const WidgetsView =
 compose(
     connect(
         createSelector(
-            isCesium,
             mapIdSelector,
             getFloatingWidgets,
             getFloatingWidgetsLayout,
             dependenciesSelector,
-            (cesium, id, widgets, layouts, dependencies) => ({
-                visible: !cesium,
+            (id, widgets, layouts, dependencies) => ({
                 id,
                 widgets,
                 layouts,
@@ -85,13 +83,11 @@ class Widgets extends React.Component {
 
 const WidgetsPlugin = connect(
     createSelector(
-
-        // we need to remove this selector when the widget view is resizable with the map layout
-        state => rightPanelOpenSelector(state) || bottomPanelOpenSelector(state),
-        //
-
-        (checkPanel) => ({
-            enabled: !checkPanel
+        rightPanelOpenSelector,
+        bottomPanelOpenSelector,
+        isCesium,
+        (rightPanel, bottomPanel, cesium) => ({
+            enabled: !rightPanel && !bottomPanel && !cesium
         })
     )
 )(Widgets);

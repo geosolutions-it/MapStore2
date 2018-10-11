@@ -25,7 +25,6 @@ const getWidgetGroups = (groups = [], w) => groups.filter(g => find(g.widgets, i
 require('react-grid-layout-resize-prevent-collision/css/styles.css');
 
 module.exports = pure(({
-    visible,
     id,
     style,
     className = "",
@@ -50,7 +49,7 @@ module.exports = pure(({
     onLayoutChange = () => { },
     ...actions
 } = {}) =>
-    ( visible ? <ResponsiveReactGridLayout
+    (<ResponsiveReactGridLayout
         key={id || "widgets-view"}
         useDefaultWidthProvider={useDefaultWidthProvider}
         measureBeforeMount={measureBeforeMount}
@@ -81,4 +80,4 @@ module.exports = pure(({
                 onDelete={() => deleteWidget(w)}
                 onEdit={() => editWidget(w)} /></div>))
         }
-    </ResponsiveReactGridLayout> : null));
+    </ResponsiveReactGridLayout>));

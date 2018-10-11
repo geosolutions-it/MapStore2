@@ -6,6 +6,7 @@ const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
 const { availableDependenciesSelector, isWidgetSelectionActive, getDependencySelectorConfig } = require('../selectors/widgets');
+const { pathnameSelector } = require('../selectors/routing');
 const { MAP_CREATED, SAVING_MAP, MAP_ERROR } = require('../actions/maps');
 const { DASHBOARD_LOADED } = require('../actions/dashboard');
 const {LOCATION_CHANGE} = require('react-router-redux');
@@ -122,13 +123,13 @@ module.exports = {
 
     clearWidgetsOnLocationChange: (action$, {getState = () => {}} = {}) =>
         action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
-            const location = get(getState(), "routing.location").pathname.split('/');
-            const loctionDifference = location.length >= 1 ? location[location.length - 1] : location;
+            const location = pathnameSelector(getState()).split('/');
+            const loctionDifference = location[location.length - 1];
             return action$.let(getValidLocationChange)
                 .filter( () => {
-                    const newLocation = get(getState(), "routing.location").pathname.split('/');
-                    const newLocationDefderence = newLocation.length >= 1 ? newLocation[newLocation.length - 1] : newLocation;
-                    return newLocationDefderence !== loctionDifference;
+                    const newLocation = pathnameSelector(getState()).split('/');
+                    const newLocationDifference = newLocation [newLocation.length - 1];
+                    return newLocationDifference !== loctionDifference;
                 }).switchMap( ({payload = {}} = {}) => {
                     if (payload && payload.pathname) {
                         return Rx.Observable.of(clearWidgets());
