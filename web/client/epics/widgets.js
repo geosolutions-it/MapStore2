@@ -123,11 +123,11 @@ module.exports = {
     clearWidgetsOnLocationChange: (action$, {getState = () => {}} = {}) =>
         action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
             const location = get(getState(), "routing.location").pathname.split('/');
-            const loctionDifference = location[location.length - 1];
+            const loctionDifference = location.length >= 1 ? location[location.length - 1] : location;
             return action$.let(getValidLocationChange)
                 .filter( () => {
                     const newLocation = get(getState(), "routing.location").pathname.split('/');
-                    const newLocationDefderence = newLocation [newLocation.length - 1];
+                    const newLocationDefderence = newLocation.length >= 1 ? newLocation[newLocation.length - 1] : newLocation;
                     return newLocationDefderence !== loctionDifference;
                 }).switchMap( ({payload = {}} = {}) => {
                     if (payload && payload.pathname) {

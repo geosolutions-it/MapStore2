@@ -28,8 +28,8 @@ compose(
             getFloatingWidgets,
             getFloatingWidgetsLayout,
             dependenciesSelector,
-            (type, id, widgets, layouts, dependencies) => ({
-                type,
+            (cesium, id, widgets, layouts, dependencies) => ({
+                visible: !cesium,
                 id,
                 widgets,
                 layouts,
