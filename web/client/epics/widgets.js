@@ -128,7 +128,7 @@ module.exports = {
             return action$.let(getValidLocationChange)
                 .filter( () => {
                     const newLocation = pathnameSelector(getState()).split('/');
-                    const newLocationDifference = newLocation [newLocation.length - 1];
+                    const newLocationDifference = newLocation[newLocation.length - 1];
                     return newLocationDifference !== loctionDifference;
                 }).switchMap( ({payload = {}} = {}) => {
                     if (payload && payload.pathname) {
