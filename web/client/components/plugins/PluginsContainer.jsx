@@ -116,12 +116,16 @@ class PluginsContainer extends React.Component {
 
     renderPlugins = (plugins) => {
         return plugins
+            // filter out plugins by localConfig hide property (the plugin is hidden when "hide" resolves to true)
+            // @deprecated: use cfg.disablePluginIf to achieve the same behaviour
             .filter((Plugin) => !PluginsUtils.handleExpression(this.getState, this.props.plugins && this.props.plugins.requires, Plugin.hide))
             .map(this.getPluginDescriptor)
-            .filter(plugin => PluginsUtils.filterDisabledPlugins({plugin: plugin && plugin.impl || plugin}, this.getState))
-            .filter((Plugin) => Plugin && !Plugin.impl.loadPlugin)
-            .filter(plugin => PluginsUtils.filterDisabledPlugins({plugin: plugin && plugin.impl || plugin}, this.getState))
-            .filter(this.filterPlugins)
+            // filter out plugins who are disabled (disablePluginIf property in plugin definition or cfg resolves to true)
+            .filter(this.filterDisabled)
+            // renders only loaded plugins (skip lazy ones, not loaded yet)
+            .filter(this.filterLoaded)
+            // renders only root plugins (children of other plugins are skipped)
+            .filter(this.filterRoot)
             .map((Plugin) => <Plugin.impl key={Plugin.id}
                 {...this.props.params} {...Plugin.cfg} pluginCfg={Plugin.cfg} items={Plugin.items}/>);
     };
@@ -145,8 +149,19 @@ class PluginsContainer extends React.Component {
         return null;
     }
 
-    filterPlugins = (Plugin) => {
-        const container = PluginsUtils.getMorePrioritizedContainer(Plugin.impl, this.props.pluginsConfig[this.props.mode], 0);
+    filterDisabled = (plugin) => {
+        return PluginsUtils.filterDisabledPlugins({
+            plugin: plugin && plugin.impl || plugin,
+            cfg: plugin && plugin.cfg || {}
+        }, this.getState);
+    };
+
+    filterLoaded = (plugin) => plugin && !plugin.impl.loadPlugin;
+
+    filterRoot = (plugin) => {
+        const container = PluginsUtils.getMorePrioritizedContainer(plugin.impl, this.props.pluginsConfig[this.props.mode], 0);
+        // render on root if container is root (plugin === null || plugin.impl === null) or plugin explicitly wants to render on root (doNotHide = true)
+        // in addition to the container
         return !container.plugin || !container.plugin.impl || container.plugin.impl.doNotHide;
     };
 
@@ -155,7 +170,7 @@ class PluginsContainer extends React.Component {
         (this.props.pluginsConfig && this.props.pluginsConfig[this.props.mode] || [])
             .map((plugin) => PluginsUtils.getPluginDescriptor(getState, this.props.plugins,
                 this.props.pluginsConfig[this.props.mode], plugin, this.state.loadedPlugins))
-            .filter(plugin => PluginsUtils.filterDisabledPlugins({plugin: plugin && plugin.impl || plugin}, getState))
+            .filter(plugin => PluginsUtils.filterDisabledPlugins({ plugin: plugin && plugin.impl || plugin, cfg: plugin && plugin.cfg || {}}, getState))
             .filter((plugin) => plugin && plugin.impl.loadPlugin).forEach((plugin) => {
                 if (!this.state.loadedPlugins[plugin.name]) {
                     if (!plugin.impl.enabler || plugin.impl.enabler(state)) {
