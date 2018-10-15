@@ -121,7 +121,7 @@ module.exports = {
                 : configureDependency(active, availableDependencies[0], options)
         ),
 
-        clearWidgetsOnLocationChange: (action$, {getState = () => {}} = {}) =>
+    clearWidgetsOnLocationChange: (action$, {getState = () => {}} = {}) =>
         action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
             const location = pathnameSelector(getState()).split('/');
             const loctionDifference = location[location.length - 1];
