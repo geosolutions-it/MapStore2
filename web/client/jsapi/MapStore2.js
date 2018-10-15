@@ -109,6 +109,7 @@ const getInitialActions = (options) => {
 const MapStore2 = {
     /**
      * Instantiates an embedded MapStore2 application in the given container.
+     * MapStore2 api doesn't use StandardRouter but It relies on StandardContainer
      * @memberof MapStore2
      * @static
      * @param {string} container id of the DOM element that should contain the embedded MapStore2
@@ -166,21 +167,17 @@ const MapStore2 = {
         const {versionSelector} = require('../selectors/version');
         const {loadAfterThemeSelector} = require('../selectors/config');
 
-        const pages = [{
-            name: "embedded",
-            path: "/",
-            component: component || embedded,
-            pageConfig: {
-                pluginsConfig: options.plugins || defaultPlugins
-            }
-        }];
-
-        const StandardRouter = connect((state) => ({
+        const StandardContainer = connect((state) => ({
             locale: state.locale || {},
-            pages,
+            componentConfig: {
+                component: component || embedded,
+                config: {
+                    pluginsConfig: options.plugins || defaultPlugins
+                }
+            },
             version: versionSelector(state),
             loadAfterTheme: loadAfterThemeSelector(state)
-        }))(require('../components/app/StandardRouter'));
+        }))(require('../components/app/StandardContainer'));
         const actionTrigger = generateActionTrigger(options.startAction || "CHANGE_MAP_VIEW");
         triggerAction = actionTrigger.trigger;
         const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {
@@ -194,7 +191,7 @@ const MapStore2 = {
             appStore,
             pluginsDef,
             initialActions,
-            appComponent: StandardRouter,
+            appComponent: StandardContainer,
             printingEnabled: options.printingEnabled || false
         };
         if (options.style) {
