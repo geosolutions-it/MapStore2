@@ -8,22 +8,22 @@ nav:
   - Home Page Overview: home-page.md
   - Managing Users and Groups: admin.md
   - Exploring Maps:
-      - Overview: exploring-maps.md
-      - Table of Contents: toc.md
-      - Managing Layer Settings: layer-settings.md
-      - Attribute Table Functionalities: attributes-table.md
-      - Creating Widgets: widgets.md
-      - Menu Bar: menu-bar.md
-      - Printing a Map: print.md
-      - Adding Local Vector Files: local-files.md
-      - Managing Remote Services from the Catalog: catalog.md
-      - Saving a Map: save.md
-      - Performing Measurments: measure.md
-      - Adding Annotations: annotations.md
-      - Sharing a Map: share.md
-      - Side Bar: side-bar.md
-      - Basemap Switcher: basemap.md
-      - Footer: footer.md
+    - Overview: exploring-maps.md
+    - Table of Contents: toc.md
+    - Managing Layer Settings: layer-settings.md
+    - Attribute Table Functionalities: attributes-table.md
+    - Creating Widgets: widgets.md
+    - Menu Bar: menu-bar.md
+    - Printing a Map: print.md
+    - Adding Local Vector Files: local-files.md
+    - Managing Remote Services from the Catalog: catalog.md
+    - Saving a Map: save.md
+    - Performing Measurments: measure.md
+    - Adding Annotations: annotations.md
+    - Sharing a Map: share.md
+    - Side Bar: side-bar.md
+    - Basemap Switcher: basemap.md
+    - Footer: footer.md
   - Exploring Dashboards: exploring-dashboards.md
 
 
