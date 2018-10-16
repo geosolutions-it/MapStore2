@@ -1,14 +1,13 @@
 site_name: MapStore 2 Documentation
-use_directory_urls: false
 theme: readthedocs
 docs_dir: docs/user-guide
 markdown_extensions:
   - admonition
-nav: 
-    - Introduction: intro.md 
+nav:
+    - Introduction: intro.md
     - Home Page Overview: home-page.md
     - Managing Users and Groups: admin.md
-    - Exploring Maps: 
+    - Exploring Maps:
         - Overview: exploring-maps.md
         - Table of Contents: toc.md
         - Managing Layer Settings: layer-settings.md
@@ -26,7 +25,6 @@ nav:
         - Basemap Switcher: basemap.md
         - Footer: footer.md
     - Exploring Dashboards: exploring-dashboards.md
- 
-        
-        
-        
+
+
+

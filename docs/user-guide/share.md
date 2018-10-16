@@ -1,27 +1,27 @@
 # Sharing a Map
 ***************
 
-Sharing a map works only if you have already saved your map. It allows you to share the the direct link of the map or on your favorite social networks or to embed it in your website. 
+Sharing a map works only if you have already saved your map. It allows you to share the the direct link of the map or on your favorite social networks or to embed it in your website.
 
 From the home page:
 
-* **Open** a saved map. 
+* **Open** a saved map.
 
 From the main menu bar:
 
-* **Click** on the *Burger menu* button <img src="img/burger.png" style="max-width:25px;" />.
-* **Click** on the *Share* option from the list <img src="img/share.png" style="max-width:80px;" />.
+* **Click** on the *Burger menu* button <img src="../img/burger.png" style="max-width:25px;" />.
+* **Click** on the *Share* option from the list <img src="../img/share.png" style="max-width:80px;" />.
 
-A pop-up page will open showing the share page. From the *Link* tab you can use the direct link or the QR code. 
+A pop-up page will open showing the share page. From the *Link* tab you can use the direct link or the QR code.
 
-<p align = "center" ><img src="img/share-1.png" style="max-width:500px;" /></p>
+<p align = "center" ><img src="../img/share-1.png" style="max-width:500px;" /></p>
 
-From the *Social* tab, you can share the map on social networks. 
+From the *Social* tab, you can share the map on social networks.
 
-<p align = "center" ><img src="img/share-2.png" style="max-width:500px;" /></p>
+<p align = "center" ><img src="../img/share-2.png" style="max-width:500px;" /></p>
 
-From the *Embed* tab, you can embed the iframe code in your website or using APIs for expert developers. 
+From the *Embed* tab, you can embed the iframe code in your website or using APIs for expert developers.
 
-<p align = "center" ><img src="img/share-3.png" style="max-width:500px;" /></p>
+<p align = "center" ><img src="../img/share-3.png" style="max-width:500px;" /></p>
 
 

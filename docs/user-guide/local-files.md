@@ -1,16 +1,16 @@
 # Adding Local Vector Files
 ***************************
 
-In [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) you can add local vector files from your machine to the map. 
+In [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) you can add local vector files from your machine to the map.
 
 Starting from a new map or an already existing map:
 
-* **Click** on the *Burger menu* button <img src="img/burger.png" style="max-width:25px;" /> from the main menu bar.
-* **Click** on the *ADD LOCAL VECTOR FILES* option from the list <img src="img/local-files.png" style="max-width:170px;" />.  
+* **Click** on the *Burger menu* button <img src="../img/burger.png" style="max-width:25px;" /> from the main menu bar.
+* **Click** on the *ADD LOCAL VECTOR FILES* option from the list <img src="../img/local-files.png" style="max-width:170px;" />.
 
-A pop-up page will open where you can drop the vector files or to browse them from local folders by clicking on the container. 
+A pop-up page will open where you can drop the vector files or to browse them from local folders by clicking on the container.
 
-<p align = "center" ><img src="img/add-files.png" style="max-width:300px;"  /> </p>
+<p align = "center" ><img src="../img/add-files.png" style="max-width:300px;"  /> </p>
 
 
 !!! note
@@ -20,11 +20,11 @@ A pop-up page will open where you can drop the vector files or to browse them fr
 
 * **Drop** a zipped shapefile for example. Another pop-up page will open allowing you to set the style of the layer.
 
-     <p align = "center" ><img src="img/style-shapefile.png" style="max-width:300px;"  /> </p>
+     <p align = "center" ><img src="../img/style-shapefile.png" style="max-width:300px;"  /> </p>
 
-* **Click** on *Add*. The shapefile will be added to the map. 
+* **Click** on *Add*. The shapefile will be added to the map.
 
-     <img src="img/map-localfile.png" style="max-width:600px;"  />
+     <img src="../img/map-localfile.png" style="max-width:600px;"  />
 
 
 !!! note
