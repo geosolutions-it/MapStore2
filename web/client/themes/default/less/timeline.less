@@ -17,7 +17,7 @@
     * {
         font-size: @font-size-small;
     }
-    
+
     .vis-custom-time {
 
         &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
@@ -79,7 +79,7 @@
                 left: -9px;
                 border-bottom: 10px solid lighten(@ms2-color-text, 30%);
             }
-            
+
         }
     }
 
@@ -97,7 +97,7 @@
                     bottom: 0;
                     left: 0;
                     border-top: 10px solid transparent;
-                    border-left: 10px solid lighten(@ms2-color-text, 30%); 
+                    border-left: 10px solid lighten(@ms2-color-text, 30%);
                     border-bottom: unset;
                 }
             }
@@ -113,7 +113,7 @@
                     bottom: 0;
                     left: -9px;
                     border-top: 10px solid transparent;
-                    border-right: 10px solid lighten(@ms2-color-text, 30%); 
+                    border-right: 10px solid lighten(@ms2-color-text, 30%);
                 }
             }
         }
@@ -170,22 +170,22 @@
                             &.vis-dot {
                                 animation: timeline-loading .3s linear infinite;
                             }
-                            &.vis-range {
-                                &.histogram-item {
-                                    .vis-item-overflow {
-                                        .vis-item-content {
-                                            
-                                            .histogram-box {
-                                                border-color: @ms2-color-shade-lighter;
-                                                animation: timeline-loading .3s linear infinite;
-                                            }
-                                            .histogram-count {
-                                                display: none;
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+                            // &.vis-range {
+                            //     &.histogram-item {
+                            //         .vis-item-overflow {
+                            //             .vis-item-content {
+
+                            //                 .histogram-box {
+                            //                     border-color: @ms2-color-shade-lighter;
+                            //                     animation: timeline-loading .3s linear infinite;
+                            //                 }
+                            //                 .histogram-count {
+                            //                     display: none;
+                            //                 }
+                            //             }
+                            //         }
+                            //     }
+                            // }
                         }
                     }
 
@@ -246,7 +246,7 @@
                 z-index: 30;
                 .vis-content {
                     border-bottom: 1px solid @ms2-color-shade-lighter;
-                    
+
                     .vis-label {
                         &:hover {
                             background-color: @ms2-color-shade-lighter;
@@ -288,8 +288,8 @@
                 }
             }
         }
-        
-        
+
+
     }
 
     .vis-item.vis-background.ms-current-range {

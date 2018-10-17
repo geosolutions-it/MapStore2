@@ -10,18 +10,19 @@ const {get} = require('lodash');
 const { currentTimeSelector } = require('../selectors/dimension');
 const moment = require('moment');
 
-const statusSelector = state => get(state, 'playback.status');
-const framesSelector = state => get(state, 'playback.frames');
+const statusSelector = state => state && state.playback && state.playback.status;
+const framesSelector = state => state && state.playback && state.playback.frames;
 const lastFrameSelector = state => {
     const frames = framesSelector(state) || [];
     return frames[frames.length - 1];
 };
-const loadingSelector = state => get(state, 'playback.framesLoading');
+const loadingSelector = state => state && state.playback && state.playback.framesLoading;
 
-const currentFrameSelector = state => get(state, 'playback.currentFrame');
+const currentFrameSelector = state => state && state.playback && state.playback.currentFrame;
+const range = state => state && state.playback && state.playback.playbackRange;
 const playbackRangeSelector = state => {
     const currentFrame = currentTimeSelector(state);
-    return get(state, 'playback.playbackRange') || {
+    return range(state)  || {
         startPlaybackTime: moment(currentFrame).subtract(6, 'month'),
         endPlaybackTime: moment(currentFrame).add(6, 'month')
     };
