@@ -32,14 +32,11 @@ const BUFFER_SIZE = 20;
 const PRELOAD_BEFORE = 10;
 const domainArgs = (getState, paginationOptions = {}) => {
     // const timeData = timeDataSelector(getState()) || {};
-   const selectedLayerId = selectedLayerSelector(getState());
-    const layer = get(getLayerFromId(getState(), selectedLayerId)
+    const selectedLayerId = selectedLayerSelector(getState());
+    const layer = getLayerFromId(getState(), selectedLayerId);
     const layerName = layer && layer.name;
-    const layerUrl = layer && layers.dimensions && layer.dimensions.filter(...)
-    const layerName = getLayerFromId(getState(), selectedLayer).name;
+    const layerUrl = layer && layer.dimensions && layer.dimensions.filter((x) => x.name === "time").map((l) => l.source.url);
 
-
-    const layerUrl = getLayerFromId(getState(), selectedLayer).dimensions.filter((x) => x.name === "time").map((l) => l.source.url);
 
     return [layerUrl, layerName, "time", {
         limit: BUFFER_SIZE,

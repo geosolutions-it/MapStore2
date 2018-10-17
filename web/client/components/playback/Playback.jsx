@@ -44,7 +44,7 @@ module.exports = collapsible(({
     // currentTime,
 
     // loading,
-
+    selectedLayer,
     status,
     statusMap,
     play = () => {},
@@ -106,7 +106,7 @@ module.exports = collapsible(({
                         tooltip: 'Step backward'
                     }, {
                         glyph: status === statusMap.PLAY ? "pause" : "play",
-                        onClick: () => status === statusMap.PLAY ? pause() : play(),
+                        onClick: () => status === statusMap.PLAY ? pause() : selectedLayer && play(),
                         tooltip: 'Play'
                     }, {
                         glyph: "stop",

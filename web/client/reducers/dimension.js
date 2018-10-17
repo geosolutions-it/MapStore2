@@ -1,7 +1,6 @@
 const { UPDATE_LAYER_DIMENSION_DATA, SET_CURRENT_TIME } = require('../actions/dimension');
 const { set } = require('../utils/ImmutableUtils');
 
-
 /**
  * Provide state for current time and dimension info.
  * It is updated with dimension information on load
@@ -37,10 +36,6 @@ module.exports = (state = {}, action) => {
         case SET_CURRENT_TIME: {
             return set(`currentTime`, action.time, state);
         }
-        // case REMOVE_NODE:{
-        //     return state.dimension.data.map((element) => element[action.layerId] && delete element[action.layerId]);
-
-        // }
         default:
             return state;
     }
