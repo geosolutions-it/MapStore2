@@ -9,6 +9,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const expect = require('expect');
 const ol = require('openlayers');
+const assign = require('object-assign');
 const DrawSupport = require('../DrawSupport');
 
 describe('Test DrawSupport', () => {
@@ -21,6 +22,14 @@ describe('Test DrawSupport', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
+
+    /**
+     * used to reduce a bit the boilerplate and ReactDom stuff
+     * TODO extend it to the other tests
+    */
+    const renderDrawSupport = (props = {}) => {
+        ReactDOM.render(<DrawSupport {...props}/>, document.getElementById("container"));
+    };
 
     it('creates a default style when none is specified', () => {
         // create layers
@@ -1258,6 +1267,52 @@ describe('Test DrawSupport', () => {
             options={{geodesic: true}}/>, document.getElementById("container"));
 
         expect(spyonEndDrawing).toHaveBeenCalled();
+
+    });
+
+    it('test endDrawing action clear', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:3857'
+                })
+            })
+        };
+
+        const radius = 2000000;
+        let properties = {
+            drawMethod: "Circle",
+            map: fakeMap,
+            features: [],
+            onEndDrawing: (feature, owner) => {
+                expect(feature).toExist();
+                expect(owner).toNotExist();
+                expect(feature.radius).toBe(radius);
+            },
+            options: {geodesic: true}
+        };
+        renderDrawSupport(properties);
+
+        let newProps = assign({}, properties, {
+            features: [{
+                center: {x: -11271098, y: 7748880},
+                coordinates: [-11271098, 7748880],
+                projection: 'EPSG:3857',
+                radius,
+                type: 'Polygon'
+            }],
+            drawStatus: "endDrawing"
+        });
+        renderDrawSupport(newProps);
     });
 
     it('test endDrawing action without features', () => {

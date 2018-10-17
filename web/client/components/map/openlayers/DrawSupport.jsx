@@ -175,6 +175,11 @@ class DrawSupport extends React.Component {
         const olFeature = this.replaceFeatures(newProps);
         if (olFeature) {
             const feature = this.fromOLFeature(olFeature);
+            if (newProps.drawMethod === "Circle" && newProps && newProps.features && newProps.features.length && newProps.features[0] && newProps.features[0].radius >= 0) {
+                // this is needed because th calculation of the radius is wrong
+                // and is not needed when the geometry details is edited
+                feature.radius = newProps.features[0].radius;
+            }
             this.props.onEndDrawing(feature, newProps.drawOwner);
         }
     }
