@@ -23,14 +23,6 @@ describe('Test DrawSupport', () => {
         setTimeout(done);
     });
 
-    /**
-     * used to reduce a bit the boilerplate and ReactDom stuff
-     * TODO extend it to the other tests
-    */
-    const renderDrawSupport = (props = {}) => {
-        ReactDOM.render(<DrawSupport {...props}/>, document.getElementById("container"));
-    };
-
     it('creates a default style when none is specified', () => {
         // create layers
         const support = ReactDOM.render(
@@ -1300,7 +1292,7 @@ describe('Test DrawSupport', () => {
             },
             options: {geodesic: true}
         };
-        renderDrawSupport(properties);
+        ReactDOM.render(<DrawSupport {...properties}/>, document.getElementById("container"));
 
         let newProps = assign({}, properties, {
             features: [{
@@ -1312,7 +1304,7 @@ describe('Test DrawSupport', () => {
             }],
             drawStatus: "endDrawing"
         });
-        renderDrawSupport(newProps);
+        ReactDOM.render(<DrawSupport {...newProps}/>, document.getElementById("container"));
     });
 
     it('test endDrawing action without features', () => {
