@@ -32,7 +32,10 @@ const BUFFER_SIZE = 20;
 const PRELOAD_BEFORE = 10;
 const domainArgs = (getState, paginationOptions = {}) => {
     // const timeData = timeDataSelector(getState()) || {};
-    const selectedLayer = selectedLayerSelector(getState());
+   const selectedLayerId = selectedLayerSelector(getState());
+    const layer = get(getLayerFromId(getState(), selectedLayerId)
+    const layerName = layer && layer.name;
+    const layerUrl = layer && layers.dimensions && layer.dimensions.filter(...)
     const layerName = getLayerFromId(getState(), selectedLayer).name;
 
 
