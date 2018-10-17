@@ -12,7 +12,7 @@ const { defaultProps, compose } = require('recompose');
 const {createSelector} = require('reselect');
 const { play, pause, stop, STATUS, selectPlaybackRange } = require('../actions/playback');
 const {currentTimeSelector} = require('../selectors/dimension');
-
+const {selectedLayerSelector} = require('../selectors/timeline');
 const { statusSelector, loadingSelector, playbackRangeSelector } = require('../selectors/playback');
 
 const { connect } = require('react-redux');
@@ -23,11 +23,13 @@ const Playback = compose(
     }),
     connect(
         createSelector(
+            selectedLayerSelector,
             statusSelector,
             currentTimeSelector,
             loadingSelector,
             playbackRangeSelector,
-            (status, currentTime, loading, playbackRange) => ({
+            (selectedLayer, status, currentTime, loading, playbackRange) => ({
+                selectedLayer,
                 loading,
                 currentTime,
                 status,

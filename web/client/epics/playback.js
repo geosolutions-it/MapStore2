@@ -16,7 +16,9 @@ const {
 } = require('../actions/dimension');
 const { LOCATION_CHANGE } = require('react-router-redux');
 
+const {getLayerFromId} = require('../selectors/layers');
 const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector} = require('../selectors/playback');
+const {selectedLayerSelector} = require('../selectors/timeline');
 
 const pausable = require('../observables/pausable');
 const { wrapStartStop } = require('../observables/epics');
@@ -30,7 +32,13 @@ const BUFFER_SIZE = 20;
 const PRELOAD_BEFORE = 10;
 const domainArgs = (getState, paginationOptions = {}) => {
     // const timeData = timeDataSelector(getState()) || {};
-    return ['http://cloudsdi.geo-solutions.it:80/geoserver/gwc/service/wmts', "landsat8:B3", "time", {
+    const selectedLayerId = selectedLayerSelector(getState());
+    const layer = getLayerFromId(getState(), selectedLayerId);
+    const layerName = layer && layer.name;
+    const layerUrl = layer && layer.dimensions && layer.dimensions.filter((x) => x.name === "time").map((l) => l.source.url);
+
+
+    return [layerUrl, layerName, "time", {
         limit: BUFFER_SIZE,
         ...paginationOptions
     }];
