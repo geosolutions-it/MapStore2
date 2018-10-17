@@ -162,6 +162,7 @@
             }
             &.vis-center {
                 .vis-group {
+                    z-index:10 ;
                     &.selected {
                         background-color: fade(@ms2-color-primary, 5%);
                     }
@@ -170,22 +171,22 @@
                             &.vis-dot {
                                 animation: timeline-loading .3s linear infinite;
                             }
-                            // &.vis-range {
-                            //     &.histogram-item {
-                            //         .vis-item-overflow {
-                            //             .vis-item-content {
+                            &.vis-range {
+                                &.histogram-item {
+                                    .vis-item-overflow {
+                                        .vis-item-content {
 
-                            //                 .histogram-box {
-                            //                     border-color: @ms2-color-shade-lighter;
-                            //                     animation: timeline-loading .3s linear infinite;
-                            //                 }
-                            //                 .histogram-count {
-                            //                     display: none;
-                            //                 }
-                            //             }
-                            //         }
-                            //     }
-                            // }
+                                            .histogram-box {
+                                                border-color: @ms2-color-shade-lighter;
+                                                animation: timeline-loading .3s linear infinite;
+                                            }
+                                            .histogram-count {
+                                                display: none;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
 
