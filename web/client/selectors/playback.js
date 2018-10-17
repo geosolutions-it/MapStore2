@@ -4,9 +4,8 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 
-const {get} = require('lodash');
 const { currentTimeSelector } = require('../selectors/dimension');
 const moment = require('moment');
 
@@ -22,7 +21,7 @@ const currentFrameSelector = state => state && state.playback && state.playback.
 const range = state => state && state.playback && state.playback.playbackRange;
 const playbackRangeSelector = state => {
     const currentFrame = currentTimeSelector(state);
-    return range(state)  || {
+    return range(state) || {
         startPlaybackTime: moment(currentFrame).subtract(6, 'month'),
         endPlaybackTime: moment(currentFrame).add(6, 'month')
     };

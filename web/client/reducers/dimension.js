@@ -1,7 +1,6 @@
 const { UPDATE_LAYER_DIMENSION_DATA, SET_CURRENT_TIME } = require('../actions/dimension');
-const {REMOVE_NODE} = require('../actions/layers');
 const { set } = require('../utils/ImmutableUtils');
-const assign = require('object-assign');
+
 
 /**
  * Provide state for current time and dimension info.

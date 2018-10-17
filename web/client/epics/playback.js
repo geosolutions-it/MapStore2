@@ -26,18 +26,18 @@ const { wrapStartStop } = require('../observables/epics');
 const {getDomainValues} = require('../api/MultiDim');
 
 const Rx = require('rxjs');
-const INTERVAL = 200;
+const INTERVAL = 2000;
 
 const BUFFER_SIZE = 20;
 const PRELOAD_BEFORE = 10;
 const domainArgs = (getState, paginationOptions = {}) => {
     // const timeData = timeDataSelector(getState()) || {};
-    const selectedLayer = selectedLayerSelector(getState()) ;
-    const layerName = getLayerFromId(getState(),selectedLayer).name;
+    const selectedLayer = selectedLayerSelector(getState());
+    const layerName = getLayerFromId(getState(), selectedLayer).name;
 
 
-    const layerUrl = getLayerFromId(getState(),selectedLayer).dimensions.filter((x) => x.name === "time")[0].source.url;
-console.log(layerUrl)
+    const layerUrl = getLayerFromId(getState(), selectedLayer).dimensions.filter((x) => x.name === "time").map((l) => l.source.url);
+
     return [layerUrl, layerName, "time", {
         limit: BUFFER_SIZE,
         ...paginationOptions
