@@ -149,7 +149,6 @@ describe('Test catalog selectors', () => {
     });
     it('test searchTextSelector', () => {
         let retVal = searchTextSelector(state);
-        expect(retVal).toExist();
         expect(retVal).toBe("");
 
         retVal = searchTextSelector(set("searchOptions.text", "someval", state));
