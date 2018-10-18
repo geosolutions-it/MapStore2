@@ -31,7 +31,8 @@ const serviceNew = {
 const catalog = require('../catalog');
 const {RECORD_LIST_LOADED, ADD_LAYER_ERROR, RESET_CATALOG, RECORD_LIST_LOAD_ERROR, CHANGE_CATALOG_FORMAT, CHANGE_CATALOG_MODE,
     FOCUS_SERVICES_LIST, CHANGE_TITLE, CHANGE_URL, CHANGE_TYPE, CHANGE_SELECTED_SERVICE, ADD_CATALOG_SERVICE,
-    CHANGE_AUTOLOAD, DELETE_CATALOG_SERVICE, SAVING_SERVICE} = require('../../actions/catalog');
+    CHANGE_AUTOLOAD, DELETE_CATALOG_SERVICE, SAVING_SERVICE,
+    changeText} = require('../../actions/catalog');
 const {MAP_CONFIG_LOADED} = require('../../actions/config');
 const sampleRecord = {
     boundingBox: {
@@ -128,6 +129,11 @@ describe('Test the catalog reducer', () => {
         let newType = "some type";
         const state = catalog({}, {type: CHANGE_TYPE, newType});
         expect(state.newService.type).toBe(newType);
+    });
+    it('CHANGE_TEXT', () => {
+        let val = "text";
+        const state = catalog({}, changeText(val));
+        expect(state.searchOptions.text).toBe(val);
     });
     it('CHANGE_URL', () => {
         const state = catalog({}, {type: CHANGE_URL, url});
