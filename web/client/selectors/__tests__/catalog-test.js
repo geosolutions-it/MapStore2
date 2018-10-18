@@ -148,13 +148,13 @@ describe('Test catalog selectors', () => {
         expect(retVal).toBeTruthy();
     });
     it('test searchTextSelector', () => {
-        const retVal = searchTextSelector(state);
+        let retVal = searchTextSelector(state);
         expect(retVal).toExist();
         expect(retVal).toBe("");
 
         retVal = searchTextSelector(set("searchOptions.text", "someval", state));
         expect(retVal).toExist();
-        expect(retVal).toBe("");
+        expect(retVal).toBe("someval");
     });
     it('test authkeyParamNameSelector with authkey params set', () => {
         const authkeyParamNames = authkeyParamNameSelector(state);
