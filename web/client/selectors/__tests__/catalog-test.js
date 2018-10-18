@@ -21,8 +21,11 @@ const {
     modeSelector,
     layerErrorSelector,
     activeSelector,
-    authkeyParamNameSelector
+    authkeyParamNameSelector,
+    searchTextSelector
 } = require("../catalog");
+
+const {set} = require('../../utils/ImutableUtils');
 const url = "https://demo.geo-solutions.it/geoserver/wms";
 const state = {
     controls: {
@@ -143,6 +146,15 @@ describe('Test catalog selectors', () => {
         const retVal = activeSelector(state);
         expect(retVal).toExist();
         expect(retVal).toBeTruthy();
+    });
+    it('test searchTextSelector', () => {
+        const retVal = searchTextSelector(state);
+        expect(retVal).toExist();
+        expect(retVal).toBe("");
+
+        retVal = searchTextSelector(set("searchOptions.text", "someval", state));
+        expect(retVal).toExist();
+        expect(retVal).toBe("");
     });
     it('test authkeyParamNameSelector with authkey params set', () => {
         const authkeyParamNames = authkeyParamNameSelector(state);
