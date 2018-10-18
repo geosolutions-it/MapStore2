@@ -25,7 +25,7 @@ const {
     searchTextSelector
 } = require("../catalog");
 
-const {set} = require('../../utils/ImutableUtils');
+const {set} = require('../../utils/ImmutableUtils');
 const url = "https://demo.geo-solutions.it/geoserver/wms";
 const state = {
     controls: {
