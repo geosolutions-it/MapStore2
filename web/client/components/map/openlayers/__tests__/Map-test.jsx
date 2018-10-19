@@ -14,7 +14,7 @@ const assign = require('object-assign');
 const ol = require('openlayers');
 const proj = require('proj4').default;
 const mapUtils = require('../../../../utils/MapUtils');
-
+const TestUtils = require('react-dom/test-utils');
 require('../../../../utils/openlayers/Layers');
 require('../plugins/OSMLayer');
 require('../plugins/VectorLayer');
@@ -592,6 +592,22 @@ describe('OpenlayersMap', () => {
         const mapDiv = olMap.getViewport();
         expect(mapDiv.style.cursor).toBe("pointer");
     });
+
+    it('this test verify the presence of div.preloadMarkerFont', () => {
+        // it is needed to preload the font that can be used in the
+        // rendering of the vector layers
+        const map = ReactDOM.render(
+            <OpenlayersMap
+                center={{y: 43.9, x: 10.3}}
+                zoom={11}
+                mousePointer="pointer"
+            />
+        , document.getElementById("map"));
+        let fontDiv = TestUtils.findRenderedDOMComponentWithClass(map, "preloadMarkerFont");
+        expect(fontDiv).toExist();
+
+    });
+
 
     it('test COMPUTE_BBOX_HOOK hook execution', () => {
         // instanciating the map that will be used to compute the bounfing box

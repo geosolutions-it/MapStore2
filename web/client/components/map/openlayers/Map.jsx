@@ -289,6 +289,8 @@ class OpenlayersMap extends React.Component {
 
         return (
             <div id={this.props.id} style={this.props.style}>
+                {/* this preloads the font for the markers, this needs to be loaded before maker is rendered, see issue #3155*/}
+                <div className="preloadMarkerFont" style={{fontFamily: "FontAwesome", visibility: "hidden", position: "absolute" }}>&nbsp;</div>
                 {children}
             </div>
         );
