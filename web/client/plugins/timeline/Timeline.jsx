@@ -42,9 +42,15 @@ const layerData = compose(
                 id: l.id,
                 className: (loading[l.id] ? "loading" : "") + ((l.id && l.id === selectedLayer) ? " selected" : ""),
                 content:
-                   `<div class="timeline-layer-label-container">`
-                   + (loading[l.id] ? `<div class="timeline-layer-icon"><div class="timeline-spinner"></div></div>` : `<div class="timeline-layer-icon">${(l.id && l.id === selectedLayer) ? '<i class="glyphicon glyphicon-time"></i>' : ''}</div>`)
-                    + `<div class="timeline-layer-title">${(isString(l.title) ? l.title : l.name)}</div></div>` // TODO: i18n for layer titles*/
+                    `<div class="timeline-layer-label-container">`
+                        + (loading[l.id]
+                            ? `<div class="timeline-layer-icon"><div class="timeline-spinner"></div></div>`
+                            : `<div class="timeline-layer-icon">${(l.id && l.id === selectedLayer)
+                                ? '<i class="glyphicon glyphicon-time"></i>'
+                                : ''
+                            }</div>`)
+                        + `<div class="timeline-layer-title">${(isString(l.title) ? l.title : l.name)}</div>`
+                    + "</div>" // TODO: i18n for layer titles*/
             }))
         })
     )

@@ -25,14 +25,10 @@ const moment = require('moment');
 const isValidOffset = (start, end) => moment(end).diff(start) > 0;
 
 /**
-  * ZoomIn Plugin. Provides button to zoom in
-  * @class  ZoomIn
+  * Timeline Plugin. Shows the timeline tool on the map
+  * @class  Timeline
   * @memberof plugins
   * @static
-  *
-  * @prop {object} cfg.style CSS to apply to the button
-  * @prop {string} cfg.className the class name for the button
-  *
   */
 const TimelinePlugin = compose(
     connect(
