@@ -9,6 +9,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const expect = require('expect');
 const ol = require('openlayers');
+const assign = require('object-assign');
 const DrawSupport = require('../DrawSupport');
 
 describe('Test DrawSupport', () => {
@@ -1258,6 +1259,52 @@ describe('Test DrawSupport', () => {
             options={{geodesic: true}}/>, document.getElementById("container"));
 
         expect(spyonEndDrawing).toHaveBeenCalled();
+
+    });
+
+    it('test endDrawing action clear', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:3857'
+                })
+            })
+        };
+
+        const radius = 2000000;
+        let properties = {
+            drawMethod: "Circle",
+            map: fakeMap,
+            features: [],
+            onEndDrawing: (feature, owner) => {
+                expect(feature).toExist();
+                expect(owner).toNotExist();
+                expect(feature.radius).toBe(radius);
+            },
+            options: {geodesic: true}
+        };
+        ReactDOM.render(<DrawSupport {...properties}/>, document.getElementById("container"));
+
+        let newProps = assign({}, properties, {
+            features: [{
+                center: {x: -11271098, y: 7748880},
+                coordinates: [-11271098, 7748880],
+                projection: 'EPSG:3857',
+                radius,
+                type: 'Polygon'
+            }],
+            drawStatus: "endDrawing"
+        });
+        ReactDOM.render(<DrawSupport {...newProps}/>, document.getElementById("container"));
     });
 
     it('test endDrawing action without features', () => {
