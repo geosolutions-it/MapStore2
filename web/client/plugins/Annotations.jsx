@@ -30,6 +30,10 @@ const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
 const AnnotationsEditor = connect(annotationsInfoSelector,
 {
+    onCancelRemove: cancelRemoveAnnotation,
+    onConfirmRemove: confirmRemoveAnnotation,
+    onCancelClose: cancelCloseAnnotations,
+    onConfirmClose: confirmCloseAnnotations,
     onEdit: editAnnotation,
     onCancelEdit: cancelEditAnnotation,
     onCancel: cancelShowAnnotation,
@@ -47,6 +51,10 @@ const AnnotationsEditor = connect(annotationsInfoSelector,
 
 const AnnotationsInfoViewer = connect(annotationsInfoSelector,
 {
+    onCancelRemove: cancelRemoveAnnotation,
+    onConfirmRemove: confirmRemoveAnnotation,
+    onCancelClose: cancelCloseAnnotations,
+    onConfirmClose: confirmCloseAnnotations,
     onEdit: editAnnotation,
     onCancelEdit: cancelEditAnnotation,
     onError: validationError,
