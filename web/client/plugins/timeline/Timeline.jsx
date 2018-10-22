@@ -116,13 +116,11 @@ const clickHandleEnhancer = withHandlers({
         setOffset = () => {}
     }) => ({ time, group, what, event } = {}) => {
         switch (what) {
-
+            case "axis":
             case "group-label": {
                 selectGroup(group);
                 break;
             }
-            case "axis":
-                break;
             default: {
                 const target = event && event.target && event.target.closest('.vis-custom-time');
                 const className = target && target.getAttribute('class');
