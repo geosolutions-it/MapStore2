@@ -114,7 +114,7 @@ const clickHandleEnhancer = withHandlers({
             const className = target && target.getAttribute('class');
             const timeId = className && trim(className.replace('vis-custom-time', ''));
             if (!timeId || timeId === 'currentTime') {
-                setCurrentTime(time.toISOString());
+                setCurrentTime(time.toISOString(), group);
             } if (timeId === 'offsetTime') {
                 const offset = moment(time).diff(currentTime);
                 if (offset > 0) setOffset(offset);

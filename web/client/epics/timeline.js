@@ -1,15 +1,19 @@
 
 const Rx = require('rxjs');
 const {isString, get, head, castArray} = require('lodash');
-const { SELECT_TIME, RANGE_CHANGED, timeDataLoading, rangeDataLoaded } = require('../actions/timeline');
-const {getLayerFromId} = require('../selectors/layers');
-const { getHistogram, describeDomains } = require('../api/MultiDim');
-const { rangeSelector, offsetEnabledSelector, offsetTimeSelector } = require('../selectors/timeline');
 const moment = require('moment');
 
+const { SELECT_TIME, RANGE_CHANGED, timeDataLoading, rangeDataLoaded } = require('../actions/timeline');
 const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA } = require('../actions/dimension');
-const { layerTimeSequenceSelectorCreator, timeDataSelector } = require('../selectors/dimension');
+
+
+const {getLayerFromId} = require('../selectors/layers');
+const { rangeSelector, offsetEnabledSelector, offsetTimeSelector, selectedLayerName, selectedLayerUrl } = require('../selectors/timeline');
+const { layerTimeSequenceSelectorCreator, timeDataSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
+
 const { getNearestDate, roundRangeResolution, isTimeDomainInterval } = require('../utils/TimeUtils');
+const { getHistogram, describeDomains, getDomainValues } = require('../api/MultiDim');
+
 const TIME_DIMENSION = "time";
 // const DEFAULT_RESOLUTION = "P1W";
 const MAX_ITEMS_PER_LAYER = 10;
@@ -18,8 +22,40 @@ const MAX_HISTOGRAM = 20;
 /**
  * creates an observable that emit a time that snap to the current time
  */
-const snapTime = (timeValues, time) => {
+
+const domainArgs = (state, paginationOptions = {}) => {
+
+    const layerName = selectedLayerName(state);
+    const layerUrl = selectedLayerUrl(state);
+
+    return [layerUrl, layerName, "time", {
+        limit: 1,
+        ...paginationOptions
+    }];
+};
+
+const snapTime = (state, group, time) => {
+
+    if (layersWithTimeDataSelector(state)) {
+        // do parallel request and return and observable that emit the correct value/ time as it is by default
+        return Rx.Observable.forkJoin(
+                getDomainValues(...domainArgs(state, { sort: "asc", fromValue: time }))
+                    .map(res => res.DomainValues.Domain.split(","))
+                    .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null)),
+                getDomainValues(...domainArgs(state, { sort: "desc", fromValue: time }))
+                    .map(res => res.DomainValues.Domain.split(","))
+                    .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null))
+            )
+            .map(values =>
+                getNearestDate(values.filter(v => !!v), time) || time
+            );
+
+
+    }
+
+    const timeValues = layerTimeSequenceSelectorCreator(getLayerFromId(state, group))(state);
     return Rx.Observable.of(getNearestDate(timeValues, time) || time);
+
 };
 const snap = true; // TODO: externalize to make this configurable.
 
@@ -108,14 +144,14 @@ module.exports = {
     /**
      * when a time is selected from timeline, tries to snap to nearest value and set the current time
      */
-    setTimelineCurrentTime: (action$, {getState = () => {}} = {}) => action$.ofType(SELECT_TIME)
+    setTimelineCurrentTime: (action$, {getState = () => {}} = {}) =>
+        action$.ofType(SELECT_TIME)
         .switchMap( ({time, group}) => {
             const state = getState();
             const offsetEnabled = offsetEnabledSelector(state);
+
             if (snap && group) {
-                return snapTime(
-                    layerTimeSequenceSelectorCreator(getLayerFromId(state, group))(state), time
-                ).map( t => setCurrentTime(getTimestamp(t, offsetEnabled, state)));
+                return snapTime(state, group, time).map( t => setCurrentTime(getTimestamp(t, offsetEnabled, state)));
             }
             return Rx.Observable.of(setCurrentTime(getTimestamp(time, offsetEnabled, state)));
         }),
