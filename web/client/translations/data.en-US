@@ -125,7 +125,7 @@
         "settings": "Settings",
         "help": "Help",
         "docs": "Docs",
-        "gohome": "Go home",
+        "gohome": "Back to home page",
         "back": "Back to the Importer",
         "printbutton": "Print",
         "annotationsbutton": "Annotations",
@@ -289,6 +289,7 @@
         },
         "map": {
             "loading": "Loading...",
+            "loadingSpinner": "Loading Map",
             "loadingerror": "Error during loading",
             "name": "Name",
             "description": "Description",
@@ -342,6 +343,13 @@
                 "titleUnsavedChanges": "Are you sure to close without save your changes?",
                 "sureToClose": "Are you sure to close without save your changes?",
                 "fieldsChanged": "Some fields has been changed"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Map not found",
+                    "notAccessible": "Map not accessible",
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li></ul><p>"
+                }
             }
         },
         "floatinglegend": {
@@ -688,7 +696,8 @@
                 "load_config_exception": "Error Loading Configuration"
             },
             "comboField": {
-                "default_placeholder": "Select..."
+                "default_placeholder": "Select...",
+                "drop_down": "Open Dropdown"
             },
             "form": {
                 "header": "Find in the dataset",
@@ -1365,6 +1374,7 @@
             }
         },
         "dashboard": {
+            "loadingSpinner": "Loading Dashboard",
             "saveDialog": {
                 "title": "Edit dashboard properties",
                 "name": "Name",
@@ -1382,8 +1392,10 @@
                     "title": "Error loading dashboard",
                     "dashboardNotAccessible": "You don't have permission to access this dashboard. Please contact the resource owner",
                     "pleaseLogin": "This dashboard is not public. Please try to login",
-                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist or has been removed",
-                    "unknownError": "There was an error loading the dashboard. Please contact the administrator"
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
+                    "unknownError": "There was an error loading the dashboard. Please contact the administrator",
+                    "notFound": "Dashboard not found",
+	                "notAccessible": "Dashboard not accessible"
                 },
                 "resourceAlreadyExists": "A resource with this name already exists. try '{data}'"
             },

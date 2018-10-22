@@ -3,43 +3,25 @@ Below you can find the release procedure as a checklist. On each release it can 
 Then you can check each entry on the GitHub issue when done until the release is end.
 
 ## Changelog generation
-
-To generate the changelog for a specific release you can use [github_changelog_generator](https://github.com/skywinder/github-changelog-generator)  
-The tool will overwrite the CHANGELOG.md file.
-
-**Install (Ubuntu)**
+Add an entry in the changelog like this:
 ```
-sudo apt-get install ruby-dev
-sudo gem install rake
-sudo gem install github_changelog_generator
+## [2018.02.00](https://github.com/geosolutions-it/MapStore2/tree/2018.02.00) (2018-09-11)
+ 
+ - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/tv2018.01.00...v2018.02.00)**
+
+ - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.00%22+is%3Aclosed+label%3Aenhancement)**
+
+ - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.00%22+is%3Aclosed+label%3Abug)**
+
+ - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.00%22+is%3Aclosed)**
+
 ```
+Replacing: 
+ -  replacing `2018.02.00` with branch name
+ - with current release tag name `v2018.02.00` 
+ - `%222018.02.00%22` with the name of the milestone (`%22` are `"` in the URL to generate a filter like `milestone:"2018.02.00"`)
 
-**Configure**
- * [Generate a github token](https://github.com/settings/tokens/new?description=GitHub%20Changelog%20Generator%20token) and place it in your .bashrc this:
-```
- export CHANGELOG_GITHUB_TOKEN="«your-40-digit-github-token»"
-```
-as an alternative use --token
-
-* cd to MapStore2
-* edit `.github_changelog_generator` file :
-   * set `since-tag ` (the first tag you want to exclude)
-   * if you are creating the changelog before creating the tag set `future-release`=YYYY.NN.mm with the "release branch name" (the tag still needs to be generated)
-
-For example the `.github_changelog_generator` file for the changes between 2017.02.00 and 2017.03.00 release can look like the following (**notice the initial 'v' for the tag**):
-
-    future-release=2017.03.00
-    since-tag=v2017.01.00
-
-**Run**
-
-Github REST API has some usage limits that don't allow to generate the full changelog for a big project like MapStore 2.
-
-To update the changelog you should generate only the latest changes (from the previews release) and add it to the existing change-log. This is more or less the procedure:
- -specify the since-tag with the previous tag (e.g. `v2017.05.00`, notice the `v`) and the future-release name (e.g. `2015-06-00`).
- - backup CHANGELOG.md
- - run the changelog generator with: `github_changelog_generator --max-issues 1000` (**notice max-issues flag needed for large repositories**)
- - Merge the old CHANGELOG.md with the new, appending the new on top.
+NOTE: we don't use  github_changelog_generator anymore because it has some issues that may address issues to wrong milestone, accordingly to our current workflow.
 
 ## Release Checklist
 - [ ] Create an issue with this checklist in the release milestone.
@@ -48,7 +30,7 @@ To update the changelog you should generate only the latest changes (from the pr
 - [ ] Test on QA [http://qa.mapstore2.geo-solutions.it/mapstore/](http://qa.mapstore2.geo-solutions.it/mapstore/)  
     * Any fix must be done on **YYYY.XX.mm**. The fixes will be manually merged on master
     * Test **everything**, not only the new features
-- [ ] Generate the changelog with github_changelog_generator. [Instructions](https://dev.mapstore2.geo-solutions.it/mapstore/docs/release)
+- [ ] Update `CHANGELOG.md`. [Instructions](https://dev.mapstore2.geo-solutions.it/mapstore/docs/release)
 - [ ] Commit the changelog to the release branch
 - [ ] Create a [github draft release](https://github.com/geosolutions-it/MapStore2/releases) pointing to the branch **YYYY.XX.mm**.  
   > The Release name should follow be named YYYY.XX.mm where YYYY is the year, XX is the incremental number of the release for the current year (starting from 01) and the second number mm is an incremental value (starting from 00) to increment for minor releases. Insert the tag vYYYY.XX.mm (**notice the initial 'v' for the tag**) to create when the release is published. In the release description describe the major changes and link the Changelog paragraph.

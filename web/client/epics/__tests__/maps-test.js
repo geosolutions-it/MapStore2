@@ -14,7 +14,8 @@ const {
     saveDetails, SET_DETAILS_CHANGED, MAPS_LIST_LOADING, MAPS_LIST_LOADED,
     CLOSE_DETAILS_PANEL, closeDetailsPanel, loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
     openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED, getMapResourcesByCategory,
-    MAP_DELETING, MAP_DELETED, deleteMap, TOGGLE_DETAILS_SHEET
+    MAP_DELETING, MAP_DELETED, deleteMap, TOGGLE_DETAILS_SHEET,
+    saveMapResource, MAP_CREATED, DISPLAY_METADATA_EDIT, SAVING_MAP, MAP_UPDATING
 } = require('../../actions/maps');
 const { mapInfoLoaded } = require('../../actions/config');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
@@ -25,7 +26,8 @@ const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
 const {
     setDetailsChangedEpic, loadMapsEpic, getMapsResourcesByCategoryEpic,
     closeDetailsPanelEpic, fetchDataForDetailsPanel,
-    fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic, storeDetailsInfoEpic} = require('../maps');
+    fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic,
+    storeDetailsInfoEpic, mapSaveMapResourceEpic} = require('../maps');
 const rootEpic = combineEpics(setDetailsChangedEpic, closeDetailsPanelEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -524,6 +526,53 @@ describe('Get Map Resource By Category Epic', () => {
                         expect(action.maps).toEqual(testMap);
                         expect(action.params).toEqual(params);
                         expect(action.searchText).toBe('test');
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        });
+    });
+});
+const Persistence = require("../../api/persistence");
+const Rx = require("rxjs");
+const api = {
+    createResource: () => Rx.Observable.of(10),
+    updateResource: () => Rx.Observable.of(10)
+};
+Persistence.addApi("test", api);
+describe('Create and update flow using persistence api', () => {
+    beforeEach(() => {
+        Persistence.setApi("test");
+    });
+    afterEach(() => {
+        Persistence.setApi("geostore");
+    });
+    it('test create flow ', done => {
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 4, saveMapResource( {}), actions => {
+            expect(actions.length).toBe(4);
+            actions.map((action) => {
+                switch (action.type) {
+                    case SAVING_MAP:
+                    case MAP_CREATED:
+                    case DISPLAY_METADATA_EDIT:
+                    case SHOW_NOTIFICATION:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        });
+    });
+    it('test update flow ', done => {
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 2, saveMapResource( {id: 10}), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                    case MAP_UPDATING:
+                    case SHOW_NOTIFICATION:
                         break;
                     default:
                         expect(true).toBe(false);

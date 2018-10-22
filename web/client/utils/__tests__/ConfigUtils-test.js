@@ -337,6 +337,11 @@ describe('ConfigUtils', () => {
         let shrinkedUrl = ConfigUtils.getUrlWithoutParameters(match, ["authkey"]);
         expect(shrinkedUrl).toBe("http://somesite.com/geoserver/wms?service=WMS&otherparam=OTHERVALUE");
     });
+    it('getUrlWithoutParameters from a normalized url with double ??', () => {
+        const match = "http://somesite.com/geoserver/wms??authkey=someautkeyvalue&service=WMS&otherparam=OTHERVALUE";
+        let shrinkedUrl = ConfigUtils.getUrlWithoutParameters(match, ["authkey"]);
+        expect(shrinkedUrl).toBe("http://somesite.com/geoserver/wms?service=WMS&otherparam=OTHERVALUE");
+    });
     it('getUrlWithoutParameters from a normalized url without passing params ', () => {
         const match = "http://somesite.com/geoserver/wms?authkey=someautkeyvalue&service=WMS&otherparam=OTHERVALUE";
         let shrinkedUrl = ConfigUtils.getUrlWithoutParameters(match, []);

@@ -68,6 +68,24 @@ describe('tests FloatingLegend component', () => {
         expect(visibleLayer.length).toBe(1);
     });
 
+    it('render layers that have no title', () => {
+        const cmp = ReactDOM.render(
+            <FloatingLegend
+                expanded
+                layers={[
+                    {
+                        name: 'layer:00',
+                        visibility: true,
+                        type: 'wms'
+                    }
+                ]}/>, document.getElementById("container"));
+
+        expect(cmp).toExist();
+
+        const title = document.getElementsByClassName('mapstore-side-card-title')[0].childNodes[0].childNodes[0].data;
+        expect(title).toBe('layer:00');
+    });
+
     it('render width layers and disabled opacity slider', () => {
         const cmp = ReactDOM.render(
             <FloatingLegend

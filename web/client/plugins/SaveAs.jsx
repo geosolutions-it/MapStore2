@@ -15,13 +15,14 @@ const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
 const {loadMapInfo} = require('../actions/config');
 const MetadataModal = require('../components/maps/modals/MetadataModal');
-const {createMap, createThumbnail, onDisplayMetadataEdit, metadataChanged} = require('../actions/maps');
+const {saveMapResource, createThumbnail, onDisplayMetadataEdit, metadataChanged} = require('../actions/maps');
 const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('../actions/currentMap');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {indexOf} = require('lodash');
+const uuid = require('uuid/v1');
 
 const MapUtils = require('../utils/MapUtils');
 
@@ -143,7 +144,7 @@ class SaveAs extends React.Component {
     };
 
     saveMap = (id, name, description) => {
-        this.props.editMap(this.props.map);
+        this.props.editMap(this.props.currentMap);
         let thumbComponent = this.refs.metadataModal.refs.thumbnail;
         let attributes = {"owner": this.props.user && this.props.user.name || null};
         let metadata = {
@@ -153,11 +154,12 @@ class SaveAs extends React.Component {
         };
         if (metadata.name !== "") {
             thumbComponent.getThumbnailDataUri( (data) => {
-                this.props.onMapSave(metadata, this.createV2Map(), {
+                this.props.onMapSave({category: "MAP", data: this.createV2Map(), metadata, linkedResources: data && {thumbnail: {
                     data,
                     category: "THUMBNAIL",
-                    name: thumbComponent.generateUUID()
-                });
+                    name: thumbComponent.generateUUID(),
+                    tail: `/raw?decode=datauri&v=${uuid()}`
+                }} || {}});
             });
         }
     };
@@ -170,7 +172,7 @@ module.exports = {
             onClose: () => onDisplayMetadataEdit(false),
             onUpdateCurrentMap: updateCurrentMap,
             onErrorCurrentMap: errorCurrentMap,
-            onMapSave: createMap,
+            onMapSave: saveMapResource,
             loadMapInfo,
             metadataChanged,
             editMap,

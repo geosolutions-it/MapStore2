@@ -19,7 +19,8 @@ const {
     loadDashboard,
     dashboardSaveError,
     SAVE_DASHBOARD,
-    LOAD_DASHBOARD
+    LOAD_DASHBOARD,
+    dashboardLoadError
 } = require('../actions/dashboard');
 const {
     setControlProperty,
@@ -57,7 +58,7 @@ const {
     createResource,
     updateResource,
     getResource
-} = require('../observables/geostore');
+} = require('../api/persistence');
 const {
     wrapStartStop
 } = require('../observables/epics');
@@ -146,27 +147,22 @@ module.exports = {
                     dashboardLoading(true, "loading"),
                     dashboardLoading(false, "loading"),
                     e => {
+                        let message = "dashboard.errors.loading.unknownError";
                         if (e.status === 403 ) {
+                            message = "dashboard.errors.loading.pleaseLogin";
                             if ( isLoggedIn(getState())) {
-                                return Rx.Observable.of(error({
-                                    title: "dashboard.errors.loading.title",
-                                    message: "dashboard.errors.loading.dashboardNotAccessible"
-                                }));
+                                message = "dashboard.errors.loading.dashboardNotAccessible";
                             }
-                            return Rx.Observable.of(error({
-                                title: "dashboard.errors.loading.title",
-                                message: "dashboard.errors.loading.pleaseLogin"
-                            }));
                         } if (e.status === 404) {
-                            return Rx.Observable.of(error({
-                                title: "dashboard.errors.loading.title",
-                                message: "dashboard.errors.loading.dashboardDoesNotExist"
-                            }));
+                            message = "dashboard.errors.loading.dashboardDoesNotExist";
                         }
-                        return Rx.Observable.of(error({
-                            title: "dashboard.errors.loading.title",
-                            message: "dashboard.errors.loading.unknownError"
-                        }));
+                        return Rx.Observable.of(
+                            error({
+                                title: "dashboard.errors.loading.title",
+                                message
+                            }),
+                            dashboardLoadError({...e, messageId: message})
+                        );
                     }
                 ))
         ),

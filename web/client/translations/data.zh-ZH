@@ -209,6 +209,7 @@
 		},
         "map": {
             "loading": "加载中...",
+            "loadingSpinner": "Loading Map",
             "loadingerror": "加载时出错",
             "name": "名称",
             "description": "描述",
@@ -242,6 +243,13 @@
                 "canWrite": "可以编辑",
                 "noResult": "未找到结果",
                 "title": "权限组"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Map not found",
+                    "notAccessible": "Map not accessible",
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li></ul><p>"
+                }
             }
         },
         "floatinglegend": {
@@ -532,7 +540,8 @@
                 "load_config_exception": "加载配置时出错"
             },
             "comboField": {
-                "default_placeholder": "选择..."
+                "default_placeholder": "选择...",
+                 "drop_down": "Open Dropdown"
             },
             "form": {
                 "header": "在数据集中查找",
@@ -1114,6 +1123,40 @@
                 "line": "Advanced Options",
                 "bar": "Advanced Options"
             }
+        },
+        "dashboard": {
+            "loadingSpinner": "Loading Dashboard",
+            "saveDialog": {
+                "title": "Edit dashboard properties",
+                "name": "Name",
+                "description": "Description",
+                "namePlaceholder": "Type a name...",
+                "descriptionPlaceholder": "Type a description...",
+                "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",
+                "close": "Close",
+                "cancel": "Cancel",
+                "saveSuccessTitle": "Success",
+                "saveSuccessMessage": "Dashboard saved successfully"
+            },
+            "errors":{
+                "loading": {
+                    "title": "Error loading dashboard",
+                    "dashboardNotAccessible": "You don't have permission to access this dashboard. Please contact the resource owner",
+                    "pleaseLogin": "This dashboard is not public. Please try to login",
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
+                    "unknownError": "There was an error loading the dashboard. Please contact the administrator",
+                    "notFound": "Dashboard not found",
+	                "notAccessible": "Dashboard not accessible"
+                },
+                "resourceAlreadyExists": "A resource with this name already exists. try '{data}'"
+            },
+            "editor": {
+                "save": "Save the dashboard",
+                "addACardToTheDashboard": "Add a widget to the dashboard",
+                "showConnections": "Show connections",
+                "hideConnections": "HideConnections"
+            },
+            "emptyTitle": "The dashboard is empty"
         },
         "wizard": {
             "next": "Next",
