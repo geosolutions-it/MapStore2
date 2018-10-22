@@ -16,7 +16,6 @@ const {
 } = require('../actions/dimension');
 const { LOCATION_CHANGE } = require('react-router-redux');
 
-const {getLayerFromId} = require('../selectors/layers');
 const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector} = require('../selectors/playback');
 const {selectedLayerName, selectedLayerUrl} = require('../selectors/timeline');
 
@@ -32,8 +31,8 @@ const BUFFER_SIZE = 20;
 const PRELOAD_BEFORE = 10;
 const domainArgs = (getState, paginationOptions = {}) => {
     // const timeData = timeDataSelector(getState()) || {};
-    const layerName = selectedLayerName(getState);
-    const layerUrl = selectedLayerUrl(getState);
+    const layerName = selectedLayerName(getState());
+    const layerUrl = selectedLayerUrl(getState());
 
     return [layerUrl, layerName, "time", {
         limit: BUFFER_SIZE,
