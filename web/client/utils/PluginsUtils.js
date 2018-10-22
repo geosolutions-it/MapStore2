@@ -291,6 +291,13 @@ const PluginsUtils = {
         }
         return pluginDef;
     },
+    setRefToWrappedComponent: (name) => {
+        return (connectedComponent) => {
+            if (connectedComponent) {
+                window[`${name}Plugin`] = connectedComponent.getWrappedInstance();
+            }
+        };
+    },
     /**
      * Custom react-redux connect function that can override state property with plugin config.
      * The plugin config properties are taken from the **pluginCfg** property.
