@@ -115,27 +115,33 @@ const clickHandleEnhancer = withHandlers({
         setPlaybackRange = () => {},
         setOffset = () => {}
     }) => ({ time, group, what, event } = {}) => {
-        if (["axis", "group-label"].indexOf(what) < 0) {
-            const target = event && event.target && event.target.closest('.vis-custom-time');
-            const className = target && target.getAttribute('class');
-            const timeId = className && trim(className.replace('vis-custom-time', ''));
-            if (!timeId || timeId === 'currentTime') {
-                setCurrentTime(time.toISOString());
-            } if (timeId === 'offsetTime') {
-                const offset = moment(time).diff(currentTime);
-                if (offset > 0) setOffset(offset);
-            } else if (timeId === 'startPlaybackTime' || timeId === 'endPlaybackTime') {
+        switch (what) {
 
-                const range = {...playbackRange, [timeId]: time.toISOString()};
-                const {start, end} = getStartEnd(range.startPlaybackTime, range.endPlaybackTime);
-                setPlaybackRange({
-                    startPlaybackTime: start,
-                    endPlaybackTime: end
-                });
-
+            case "group-label": {
+                selectGroup(group);
+                break;
             }
-        } else if (what === "group-label") {
-            selectGroup(group);
+            case "axis":
+                break;
+            default: {
+                const target = event && event.target && event.target.closest('.vis-custom-time');
+                const className = target && target.getAttribute('class');
+                const timeId = className && trim(className.replace('vis-custom-time', ''));
+                if (!timeId || timeId === 'currentTime') {
+                    setCurrentTime(time.toISOString());
+                } if (timeId === 'offsetTime') {
+                    const offset = moment(time).diff(currentTime);
+                    if (offset > 0) setOffset(offset);
+                } else if (timeId === 'startPlaybackTime' || timeId === 'endPlaybackTime') {
+                    const range = { ...playbackRange, [timeId]: time.toISOString() };
+                    const { start, end } = getStartEnd(range.startPlaybackTime, range.endPlaybackTime);
+                    setPlaybackRange({
+                        startPlaybackTime: start,
+                        endPlaybackTime: end
+                    });
+                }
+                break;
+            }
         }
     }
 });
@@ -152,6 +158,29 @@ const enhance = compose(
     clickHandleEnhancer,
     rangeEnhancer,
     layerData,
+    defaultProps({
+        key: 'timeline',
+        options: {
+            stack: false,
+            showMajorLabels: true,
+            showCurrentTime: false,
+            zoomMin: 10,
+            zoomable: true,
+            type: 'background',
+            margin: {
+                item: 0,
+                axis: 0
+            },
+            format: {
+                minorLabels: {
+                    minute: 'h:mma',
+                    hour: 'ha'
+                }
+            },
+            moment: date => moment(date).utc()
+        }
+    }),
+    // items enhancer
     withPropsOnChange(
         ['currentTime', 'offsetEnabled', 'calculatedOffsetTime', 'hideLayersName', 'playbackRange', 'playbackEnabled'],
         ({
@@ -176,34 +205,20 @@ const enhance = compose(
                     type: 'background',
                     className: 'ms-current-range'
                 } : null
-            ].filter(val => val),
-            key: 'timeline',
+            ].filter(val => val)
+        })
+    ),
+    // custom times enhancer
+    withPropsOnChange(
+        ['currentTime', 'playbackRange', 'playbackEnabled', 'offsetEnabled', 'calculatedOffsetTime'],
+        ({ currentTime, playbackRange, playbackEnabled, offsetEnabled, calculatedOffsetTime }) => ({
             customTimes: {
-                currentTime,
-                ...[
-                    (playbackEnabled ? playbackRange : {}),
-                    (offsetEnabled ? {offsetTime: calculatedOffsetTime} : {})]
-                .reduce((res, value) => value ? {...res, ...value} : {...res}, {})
-            },
-            options: {
-                stack: false,
-                showMajorLabels: true,
-                showCurrentTime: false,
-                zoomMin: 10,
-                zoomable: true,
-                type: 'background',
-                margin: {
-                    item: 0,
-                    axis: 0
-                },
-                format: {
-                    minorLabels: {
-                        minute: 'h:mma',
-                        hour: 'ha'
-                    }
-                },
-                moment: date => moment(date).utc()
-            }
+            currentTime,
+            ...[
+                (playbackEnabled ? playbackRange : {}),
+                (offsetEnabled ? { offsetTime: calculatedOffsetTime } : {})]
+                .reduce((res, value) => value ? { ...res, ...value } : { ...res }, {})
+        }
         })
     )
 );
