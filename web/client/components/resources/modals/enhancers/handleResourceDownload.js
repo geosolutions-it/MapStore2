@@ -7,7 +7,7 @@
  */
 
 const Rx = require('rxjs');
-const { getResource } = require('../../../../observables/geostore');
+const { getResource } = require('../../../../api/persistence');
 
 const { mapPropsStream } = require('recompose');
 module.exports = mapPropsStream(props$ => {

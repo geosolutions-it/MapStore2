@@ -126,7 +126,7 @@
         "settings": "Réglages",
         "help": "Aide",
         "docs": "Documentation",
-        "gohome": "Retour",
+        "gohome": "Retour à la page d'accueil",
         "back": "Retour à l'import",
         "printbutton": "Imprimer",
         "annotationsbutton": "Annotations",
@@ -290,6 +290,7 @@
         },
         "map": {
             "loading": "Chargement...",
+            "loadingSpinner": "Carte de chargement",
             "loadingerror": "Erreur de chargement",
             "name": "Nom",
             "description": "Description",
@@ -343,6 +344,13 @@
                 "titleUnsavedChanges": "Êtes-vous sûr de fermer sans enregistrer vos modifications?",
                 "sureToClose": "Êtes-vous sûr de fermer sans enregistrer vos modifications?",
                 "fieldsChanged": "Certains champs ont été modifiés"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Carte introuvable",
+                    "notAccessible": "Carte non accessible",
+                    "unknownError": "<p> <small> L'une des raisons suivantes pourrait être la cause: </small> <ul><li> vous n'avez pas la permission d'accéder à </li> <li> vous essayez d'accéder à une carte qui n'existe pas </li> <li> la carte a été supprimée </li><ul> <p>"
+                }
             }
         },
         "floatinglegend": {
@@ -689,7 +697,8 @@
                 "load_config_exception": "Erreur lors du chargement de la configuration"
             },
             "comboField": {
-                "default_placeholder": "Sélectionner..."
+                "default_placeholder": "Sélectionner...",
+                 "drop_down": "Ouvrir le menu déroulant"
             },
             "form": {
                 "header": "Rechercher dans les données",
@@ -1365,6 +1374,7 @@
             }
         },
         "dashboard": {
+            "loadingSpinner": "Chargement du tableau de bord",
             "saveDialog": {
                 "title": "Modifier les propriétés du tableau de bord",
                 "name": "Nom",
@@ -1382,8 +1392,10 @@
                     "title":  "Erreur lors du chargement du tableau de bord",
                     "dashboardNotAccessible": "Vous n'êtes pas autorisé à accéder à ce tableau de bord. Veuillez contacter le propriétaire de la ressource",
                     "pleaseLogin": "Ce tableau de bord n'est pas public. Veuillez essayer de vous connecter",
-                    "dashboardDoesNotExist": "Le tableau de bord auquel vous essayez d'accéder n'existe pas ou a été supprimé",
-                    "unknownError": "Une erreur est survenue lors du chargement du tableau de bord. Veuillez contacter l'administrateur"
+                    "dashboardDoesNotExist": "Le tableau de bord auquel vous tentez d'accéder n'existe pas",
+                    "unknownError": "Une erreur est survenue lors du chargement du tableau de bord. Veuillez contacter l'administrateur",
+                    "notFound": "Tableau de bord introuvable",
+                    "notAccessible": "Tableau de bord non accessible"
                 },
                 "resourceAlreadyExists": "Une ressource avec ce nom existe déjà. Essai '{data}'"
             },

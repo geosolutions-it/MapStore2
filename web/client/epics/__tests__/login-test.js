@@ -8,11 +8,12 @@
 
 const expect = require('expect');
 const {INIT_CATALOG} = require('../../actions/catalog');
-const {SET_CONTROL_PROPERTY} = require('../../actions/controls');
+const {SET_CONTROL_PROPERTY, setControlProperty} = require('../../actions/controls');
 const { loginSuccess, logout, logoutWithReload} = require('../../actions/security');
 const { initCatalogOnLoginOutEpic, promtLoginOnMapError, reloadMapConfig} = require('../login');
 const {configureError} = require('../../actions/config');
-
+const {dashboardLoadError} = require('../../actions/dashboard');
+const {FEEDBACK_MASK_LOADING} = require('../../actions/feedbackMask');
 
 const {testEpic} = require('./epicTestUtils');
 
@@ -62,5 +63,32 @@ describe('login Epics', () => {
             done();
         };
         testEpic(promtLoginOnMapError, 1, configureError(e, 123), epicResult, {});
+    });
+
+    it('it prompts login on accessing non-public dashboard', (done) => {
+        const error = {
+            status: 403
+        };
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(3);
+                const setControlAction = actions[0];
+                expect(setControlAction.type).toBe(SET_CONTROL_PROPERTY);
+                expect(setControlAction.control).toBe('LoginForm');
+                expect(setControlAction.property).toBe('enabled');
+
+                const feedbackAction = actions[1];
+                expect( feedbackAction.type).toBe(FEEDBACK_MASK_LOADING);
+
+                const pushAction = actions[2];
+                expect( pushAction.type).toBe('@@router/CALL_HISTORY_METHOD');
+                expect( pushAction.payload).toEqual({ method: 'push', args: [ '/' ] });
+
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+        testEpic(promtLoginOnMapError, 3, [dashboardLoadError(error), setControlProperty('LoginForm', 'enabled', false)], epicResult, {});
     });
 });

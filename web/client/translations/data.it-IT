@@ -62,8 +62,8 @@
             "featureTypeError": "Impossibile caricare gli attributi del layer",
             "featureTypeErrorInvalidJSON": "Impossibile caricare gli attributi del layer. La risposta non è valida",
             "elevation": "Elevazione",
-            "titleTranslations": "Title translations",
-            "groupProperties": "Group properties",
+            "titleTranslations": "Traduzioni di titoli",
+            "groupProperties": "Proprietà del gruppo",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa",
             "legenderror": "Legenda non disponibile",
@@ -289,6 +289,7 @@
         },
         "map": {
             "loading": "In caricamento...",
+            "loadingSpinner": "Caricamento Mappa",
             "loadingerror": "Errore di caricamento",
             "name": "Nome",
             "description": "Descrizione",
@@ -342,6 +343,13 @@
                 "titleUnsavedChanges": "Sicuro di chiudere senza salvare?",
                 "sureToClose": "Sicuro di chiudere senza salvare?",
                 "fieldsChanged": "Alcuni dati sono cambiati"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Mappa non trovata",
+                    "notAccessible": "Mappa non accessibile",
+                    "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li></ul> <p>"
+                }
             }
         },
         "floatinglegend": {
@@ -688,7 +696,8 @@
                 "load_config_exception": "Errore Caricamento Configurazione"
             },
             "comboField": {
-                "default_placeholder": "Seleziona..."
+                "default_placeholder": "Seleziona...",
+                 "drop_down": "Apri il menu a discesa"
             },
             "form": {
                 "header": "Cerca nel dataset",
@@ -1364,6 +1373,7 @@
             }
         },
         "dashboard": {
+            "loadingSpinner": "Caricamento Dashboard",
             "saveDialog": {
                 "title": "Modifica proprietà dashboard",
                 "name": "Nome",
@@ -1381,8 +1391,10 @@
                     "title": "Errore di caricamento della dashboard",
                     "dashboardNotAccessible": "Non hai i permessi per accedere a questa dashboard. Contatta il properietario",
                     "pleaseLogin": "Questa risorsa non è pubblica. Effettuare il login",
-                    "dashboardDoesNotExist": "La dashboard richiesta non esiste o è stata cancellata",
-                    "unknownError": "C'è stato un errore durante il caricamento della dashboard. Contattare l'amministratore"
+                    "dashboardDoesNotExist": "La dashboard richiesta non esiste",
+                    "unknownError": "C'è stato un errore durante il caricamento della dashboard. Contattare l'amministratore",
+                    "notFound": "Dashboard non trovata",
+                    "notAccessible": "Dashboard non accessibile"
                 },
                 "resourceAlreadyExists": "Una risorsa con questo nome esiste già. Provare con '{data}'"
             },

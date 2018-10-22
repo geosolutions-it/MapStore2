@@ -289,6 +289,7 @@
         },
         "map": {
             "loading": "Učitavanje...",
+            "loadingSpinner": "Učitavanje karte",
             "loadingerror": "Greška prilikom učitavanja",
             "name": "Ime",
             "description": "Opis",
@@ -342,6 +343,13 @@
                 "titleUnsavedChanges": "Jeste li sigurni da želite zatvoriti bez spremanja promjena?",
                 "sureToClose": "Jeste li sigurni da želite zatvoriti bez spremanja promjena?",
                 "fieldsChanged": "Neka polja su izmijenjena"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Karta nije pronađena",
+                    "notAccessible": "Karta nije dostupna",
+                    "unknownError": "<p><small>Jedan od slijedećih razloga može biti uzrok:</small> <ul><li>nemate dozvole za pristup</li> <li>pokušavate pristupiti karti koja ne postoji</li> <li>karta je uklonjena</li><ul><p>"
+                }
             }
         },
         "floatinglegend": {
@@ -688,7 +696,8 @@
                 "load_config_exception": "Greška učitavanja postavki"
             },
             "comboField": {
-                "default_placeholder": "Odaberi..."
+                "default_placeholder": "Odaberi...",
+                 "drop_down": "Otvori padajući izbornik"
             },
             "form": {
                 "header": "Pronađi u skupu podataka",
@@ -1365,6 +1374,7 @@
             }
         },
         "dashboard": {
+            "loadingSpinner": "Učitavanje kontrolne ploče",
             "saveDialog": {
                 "title": "Izmijeni svojstva kontrolne ploče",
                 "name": "Naziv",
@@ -1383,7 +1393,9 @@
                     "dashboardNotAccessible": "Nemate dozvole za pristup ovoj ploči. Molimo kontaktirajte vlasnika resursa",
                     "pleaseLogin": "Ova kontrolna ploča nije javna. Molimo pokušajte se prijaviti u sustav",
                     "dashboardDoesNotExist": "Kontrolna ploča kojoj pokušavate pristupiti  ne postoji ili je uklonjena",
-                    "unknownError": "Došlo je do greške prilikom učitavanja kontrolne ploče. Molimo kontaktirajte administratora"
+                    "unknownError": "Došlo je do greške prilikom učitavanja kontrolne ploče. Molimo kontaktirajte administratora",
+                    "notFound": "Kontrolna ploča nije pronađena",
+                    "notAccessible": "Kontrolna ploča nije dostupna"
                 },
                 "resourceAlreadyExists": "Resurs sa ovim imenom već postoji. Pukušajte '{data}'"
             },

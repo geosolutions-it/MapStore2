@@ -151,7 +151,7 @@ const PrintUtils = {
             "layout": PrintUtils.getLayoutName(spec),
             "dpi": parseInt(spec.resolution, 10),
             "outputFilename": "mapstore-print",
-            "geodetic": true,
+            "geodetic": false,
             "mapTitle": spec.name || '',
             "comment": spec.description || '',
             "layers": PrintUtils.getMapfishLayersSpecification(spec.layers, spec, 'map'),

@@ -13,6 +13,7 @@ const assign = require('object-assign');
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 const ConfigUtils = require('../../../utils/ConfigUtils');
 const mapUtils = require('../../../utils/MapUtils');
+const projUtils = require('../../../utils/openlayers/projUtils');
 
 const {isEqual, throttle} = require('lodash');
 
@@ -24,6 +25,7 @@ class OpenlayersMap extends React.Component {
         zoom: PropTypes.number.isRequired,
         mapStateSource: ConfigUtils.PropTypes.mapStateSource,
         projection: PropTypes.string,
+        projectionDefs: PropTypes.array,
         onMapViewChanges: PropTypes.func,
         onClick: PropTypes.func,
         mapOptions: PropTypes.object,
@@ -50,6 +52,7 @@ class OpenlayersMap extends React.Component {
         onMouseMove: () => {},
         mapOptions: {},
         projection: 'EPSG:3857',
+        projectionDefs: [],
         onLayerLoading: () => {},
         onLayerLoad: () => {},
         onLayerError: () => {},
@@ -60,7 +63,9 @@ class OpenlayersMap extends React.Component {
 
     componentDidMount() {
         var center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
-
+        this.props.projectionDefs.forEach(p => {
+            projUtils.addProjections(ol, p.code, p.extent, p.worldExtent);
+        });
         let interactionsOptions = assign(this.props.interactive ? {} : {
             doubleClickZoom: false,
             dragPan: false,

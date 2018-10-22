@@ -6,19 +6,21 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {refreshAccessToken, sessionValid, logout, LOGIN_SUCCESS, LOGOUT} = require('../actions/security');
+const {DASHBOARD_LOAD_ERROR} = require('../actions/dashboard');
 const {loadMapConfig, configureError, MAP_CONFIG_LOAD_ERROR} = require('../actions/config');
 const {mapIdSelector} = require('../selectors/map');
 const {hasMapAccessLoadingError} = require('../selectors/mapInitialConfig');
 const {initCatalog} = require('../actions/catalog');
-const {setControlProperty} = require('../actions/controls');
+const {setControlProperty, SET_CONTROL_PROPERTY} = require('../actions/controls');
 const {pathnameSelector} = require('../selectors/routing');
 const {isLoggedIn} = require('../selectors/security');
 const ConfigUtils = require('../utils/ConfigUtils');
 const AuthenticationAPI = require('../api/GeoStoreDAO');
 const Rx = require('rxjs');
-const { LOCATION_CHANGE } = require('react-router-redux');
+const { LOCATION_CHANGE, push } = require('react-router-redux');
 const url = require('url');
 const {get} = require('lodash');
+const {feedbackMaskLoading} = require('../actions/feedbackMask');
 
 /**
  * Refresh the access_token every 5 minutes
@@ -57,10 +59,17 @@ const reloadMapConfig = (action$, store) =>
     });
 
 const promtLoginOnMapError = (actions$, store) =>
-    actions$.ofType(MAP_CONFIG_LOAD_ERROR)
+    actions$.ofType(MAP_CONFIG_LOAD_ERROR, DASHBOARD_LOAD_ERROR)
     .filter( (action) => action.error && action.error.status === 403 && !isLoggedIn(store.getState()))
     .switchMap(() => {
-        return Rx.Observable.of(setControlProperty('LoginForm', 'enabled', true, true));
+        return Rx.Observable.of(setControlProperty('LoginForm', 'enabled', true))
+        // send to homepage if close is pressed on login modal
+        .merge(
+            actions$.ofType(SET_CONTROL_PROPERTY)
+                .filter(actn => actn.control === 'LoginForm' && actn.property === 'enabled' && actn.value === false && !isLoggedIn(store.getState()))
+                .exhaustMap(() => Rx.Observable.of(feedbackMaskLoading(), push('/')))
+                .takeUntil(actions$.ofType(LOGIN_SUCCESS))
+        );
     });
 
 const initCatalogOnLoginOutEpic = (action$) =>
