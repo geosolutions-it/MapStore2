@@ -12,9 +12,9 @@ const { createSelector } = require('reselect');
 const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('./timeline/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
-const { currentTimeSelector } = require('../selectors/dimension');
+const { currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
 const { offsetEnabledSelector, calculateOffsetTimeSelector } = require('../selectors/timeline');
-const { withState, compose } = require('recompose');
+const { withState, compose, branch, renderNothing } = require('recompose');
 const { selectTime, enableOffset, selectOffset } = require('../actions/timeline');
 const { selectPlaybackRange } = require('../actions/playback');
 const { playbackRangeSelector } = require('../selectors/playback');
@@ -33,11 +33,13 @@ const isValidOffset = (start, end) => moment(end).diff(start) > 0;
 const TimelinePlugin = compose(
     connect(
         createSelector(
+            layersWithTimeDataSelector,
             currentTimeSelector,
             calculateOffsetTimeSelector,
             offsetEnabledSelector,
             playbackRangeSelector,
-            (currentTime, calculateOffsetTime, offsetEnabled, playbackRange) => ({
+            (layers, currentTime, calculateOffsetTime, offsetEnabled, playbackRange) => ({
+                layers,
                 currentTime,
                 calculateOffsetTime,
                 offsetEnabled,
@@ -49,6 +51,7 @@ const TimelinePlugin = compose(
             setOffset: selectOffset,
             setPlaybackRange: selectPlaybackRange
         }),
+    branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
     withState('options', 'setOptions', {})
 )(
     ({
