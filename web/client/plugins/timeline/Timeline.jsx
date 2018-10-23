@@ -13,7 +13,7 @@ const { itemsSelector, loadingSelector, selectedLayerSelector, calculateOffsetTi
 const { selectPlaybackRange } = require('../../actions/playback');
 const { playbackRangeSelector } = require('../../selectors/playback');
 const { createStructuredSelector, createSelector } = require('reselect');
-const { compose, branch, withHandlers, withPropsOnChange, renderNothing, defaultProps } = require('recompose');
+const { compose, withHandlers, withPropsOnChange, defaultProps } = require('recompose');
 const moment = require('moment');
 /**
  * Provides time dimension data for layers
@@ -27,7 +27,6 @@ const layerData = compose(
             (items, layers, loading) => ({ items, layers, loading })
         )
     ),
-    branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
     withPropsOnChange(
         (props, nextProps) => {
             const { layers = [], loading, selectedLayer} = props;
