@@ -3,6 +3,7 @@ const { createShallowSelector } = require('../utils/ReselectUtils');
 const { timeIntervalToSequence, timeIntervalToIntervalSequence, analyzeIntervalInRange, isTimeDomainInterval } = require('../utils/TimeUtils');
 const moment = require('moment');
 const { timeDataSelector, currentTimeSelector } = require('../selectors/dimension');
+const {getLayerFromId} = require('../selectors/layers');
 const rangeSelector = state => get(state, 'timeline.range');
 const rangeDataSelector = state => get(state, 'timeline.rangeData');
 
@@ -123,6 +124,11 @@ const calculateOffsetTimeSelector = (state) => {
 };
 const offsetTimeSelector = state => get(state, "timeline.offsetTime");
 const offsetEnabledSelector = state => get(state, "timeline.offsetEnabled");
+
+const selectedLayerData = state => getLayerFromId(state, selectedLayerSelector(state));
+const selectedLayerName = state => selectedLayerData(state) && selectedLayerData(state).name;
+const selectedLayerUrl = state => selectedLayerData(state) && selectedLayerData(state).dimensions && selectedLayerData(state).dimensions.filter((x) => x.name === "time").map((l) => l.source.url);
+
 module.exports = {
     itemsSelector,
     rangeSelector,
@@ -130,5 +136,7 @@ module.exports = {
     selectedLayerSelector,
     offsetEnabledSelector,
     calculateOffsetTimeSelector,
-    offsetTimeSelector
+    offsetTimeSelector,
+    selectedLayerName,
+    selectedLayerUrl
 };
