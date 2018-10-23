@@ -12,7 +12,9 @@ const {
     wfsDownloadAvailable,
     wfsDownloadSelector,
     widgetBuilderAvailable,
-    widgetBuilderSelector
+    widgetBuilderSelector,
+    initialSettingsSelector,
+    originalSettingsSelector
 } = require("../controls");
 
 const state = {
@@ -30,6 +32,16 @@ const state = {
         },
         featuregrid: {
             enabled: true
+        },
+        layersettings: {
+            initialSettings: {
+                id: 'layerId',
+                name: 'layerName',
+                style: ''
+            },
+            originalSettings: {
+                style: 'generic'
+            }
         }
     }
 };
@@ -63,5 +75,21 @@ describe('Test controls selectors', () => {
         const retVal = widgetBuilderSelector(state);
         expect(retVal).toExist();
         expect(retVal).toBe(true);
+    });
+    it('test initialSettingsSelector', () => {
+        const retVal = initialSettingsSelector(state);
+        expect(retVal).toExist();
+        expect(retVal).toEqual({
+            id: 'layerId',
+            name: 'layerName',
+            style: ''
+        });
+    });
+    it('test originalSettingsSelector', () => {
+        const retVal = originalSettingsSelector(state);
+        expect(retVal).toExist();
+        expect(retVal).toEqual({
+            style: 'generic'
+        });
     });
 });

@@ -26,6 +26,7 @@ const Message = require('../I18N/Message');
  * @prop {boolean} dock switch between Dockable Panel and Resizable Modal, default true (DockPanel)
  * @prop {string} activeTab current active tab, should match the tab id
  * @prop {function} getTabs must return an array of object representing the tabs, eg (props) => [{ id: 'general', Component: MyGeneralComponent}]
+ * @prop {bool} locked if true disable inactive tabs and remove close button
  * @prop {string} className additional calss name
  */
 
@@ -52,10 +53,22 @@ const TOCItemSettings = (props, context) => {
         dock = true,
         showFullscreen,
         draggable,
-        position = 'left'
+        position = 'left',
+        locked
     } = props;
 
     const tabs = getTabs(props, context);
+    const ToolbarComponent = head(tabs.filter(tab => tab.id === activeTab && tab.toolbarComponent).map(tab => tab.toolbarComponent));
+    const toolbarButtons = [
+        {
+            glyph: 'floppy-disk',
+            tooltipId: 'save',
+            visible: !!onSave,
+            onClick: onSave
+        },
+        ...(head(tabs.filter(tab => tab.id === activeTab && tab.toolbar).map(tab => tab.toolbar)) || [])];
+
+    const tabsCloseActions = tabs && tabs.map(tab => tab && tab.onClose).filter(val => val) || [];
 
     return (
         <div>
@@ -64,7 +77,14 @@ const TOCItemSettings = (props, context) => {
                 glyph="wrench"
                 title={element.title && isObject(element.title) && (element.title[currentLocale] || element.title.default) || isString(element.title) && element.title || ''}
                 className={className}
-                onClose={onClose ? () => { onClose(); } : onHideSettings}
+                onClose={locked ? null : () => {
+                    if (onClose) {
+                        onClose(false, tabsCloseActions);
+                    } else {
+                        tabsCloseActions.forEach(tabOnClose => { tabOnClose(); });
+                        onHideSettings();
+                    }
+                }}
                 size={width}
                 style={dockStyle}
                 showFullscreen={showFullscreen}
@@ -74,15 +94,11 @@ const TOCItemSettings = (props, context) => {
                 header={[
                     <Row key="ms-toc-settings-toolbar" className="text-center">
                         <Col xs={12}>
-                            <Toolbar
+                            {ToolbarComponent ?
+                            <ToolbarComponent buttons={toolbarButtons}/>
+                            : <Toolbar
                                 btnDefaultProps={{ bsStyle: 'primary', className: 'square-button-md' }}
-                                buttons={[{
-                                    glyph: 'floppy-disk',
-                                    tooltipId: 'save',
-                                    visible: !!onSave,
-                                    onClick: onSave
-                                },
-                                ...(head(tabs.filter(tab => tab.id === activeTab && tab.toolbar).map(tab => tab.toolbar)) || [])]}/>
+                                buttons={toolbarButtons}/>}
                         </Col>
                     </Row>,
                     ...(tabs.length > 1 ? [<Row key="ms-toc-settings-navbar" className="ms-row-tab">
@@ -90,10 +106,14 @@ const TOCItemSettings = (props, context) => {
                             <Nav bsStyle="tabs" activeKey={activeTab} justified>
                                 {tabs.map(tab =>
                                     <NavItemT
+                                        disabled={locked && activeTab !== tab.id}
                                         key={'ms-tab-settings-' + tab.id}
                                         tooltip={<Message msgId={tab.tooltipId}/> }
                                         eventKey={tab.id}
-                                        onClick={() => onSetTab(tab.id)}>
+                                        onClick={() => {
+                                            onSetTab(tab.id);
+                                            if (tab.onClick) { tab.onClick(); }
+                                        }}>
                                         <Glyphicon glyph={tab.glyph}/>
                                     </NavItemT>
                                 )}
@@ -125,7 +145,7 @@ const TOCItemSettings = (props, context) => {
                         {
                             bsStyle: 'primary',
                             text: <Message msgId="close"/>,
-                            onClick: () => onClose(true)
+                            onClick: () => onClose(true, tabsCloseActions)
                         },
                         {
                             bsStyle: 'primary',

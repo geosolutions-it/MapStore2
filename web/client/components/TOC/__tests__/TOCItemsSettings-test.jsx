@@ -9,6 +9,7 @@ const React = require('react');
 const expect = require('expect');
 const ReactDOM = require('react-dom');
 const TOCItemsSettings = require('../TOCItemsSettings');
+const TestUtils = require('react-dom/test-utils');
 
 const layers = [
     {
@@ -104,6 +105,121 @@ describe("test TOCItemsSettings", () => {
         const baar = document.getElementsByClassName("container-fluid")[0].childNodes[0].childNodes[1].childNodes[0].textContent;
         expect(baar).toBe(layers[0].title.default);
 
+    });
+
+    it('test locked props ', () => {
+        ReactDOM.render(<TOCItemsSettings locked activeTab="general" getTabs={() => [
+            {
+                id: 'general',
+                titleId: 'layerProperties.general',
+                tooltipId: 'layerProperties.general',
+                glyph: 'wrench',
+                Component: () => <div id="test-general-body"></div>
+            },
+            {
+                id: 'display',
+                titleId: 'layerProperties.display',
+                tooltipId: 'layerProperties.display',
+                glyph: 'eye-open',
+                Component: () => <div id="test-display-body"></div>
+            }
+        ]} element={layers[0]}/>, document.getElementById("container"));
+
+        const closeButton = document.querySelectorAll('.square-button.ms-close');
+        expect(closeButton.length).toBe(0);
+        const disabledTabs = document.querySelectorAll('.disabled');
+        expect(disabledTabs.length).toBe(1);
+        expect(disabledTabs[0].querySelector('.glyphicon-eye-open')).toExist();
+    });
+
+    it('test onClick function on tab', () => {
+
+        const testHandlers = {
+            onClick: () => {}
+        };
+
+        const spyOnClick = expect.spyOn(testHandlers, 'onClick');
+
+        ReactDOM.render(<TOCItemsSettings activeTab="general" getTabs={() => [
+            {
+                id: 'general',
+                titleId: 'layerProperties.general',
+                tooltipId: 'layerProperties.general',
+                glyph: 'wrench',
+                onClick: testHandlers.onClick,
+                Component: () => <div id="test-general-body"></div>
+            },
+            {
+                id: 'display',
+                titleId: 'layerProperties.display',
+                tooltipId: 'layerProperties.display',
+                glyph: 'eye-open',
+                Component: () => <div id="test-display-body"></div>
+            }
+        ]} element={layers[0]}/>, document.getElementById("container"));
+
+        const tabs = document.querySelectorAll('.nav > li > a');
+        expect(tabs.length).toBe(2);
+        TestUtils.Simulate.click(tabs[0]);
+        expect(spyOnClick).toHaveBeenCalled();
+    });
+
+    it('test onClose function on tab', () => {
+
+        const testHandlers = {
+            onClose: () => {}
+        };
+
+        const spyOnClose = expect.spyOn(testHandlers, 'onClose');
+
+        ReactDOM.render(<TOCItemsSettings activeTab="general" getTabs={() => [
+            {
+                id: 'general',
+                titleId: 'layerProperties.general',
+                tooltipId: 'layerProperties.general',
+                glyph: 'wrench',
+                onClose: testHandlers.onClose,
+                Component: () => <div id="test-general-body"></div>
+            },
+            {
+                id: 'display',
+                titleId: 'layerProperties.display',
+                tooltipId: 'layerProperties.display',
+                glyph: 'eye-open',
+                Component: () => <div id="test-display-body"></div>
+            }
+        ]} onClose={null} element={layers[0]}/>, document.getElementById("container"));
+
+        const closeButton = document.querySelectorAll('.ms-close');
+        expect(closeButton.length).toBe(1);
+        TestUtils.Simulate.click(closeButton[0]);
+        expect(spyOnClose).toHaveBeenCalled();
+    });
+
+    it('test ToolbarComponent from tab', () => {
+
+        ReactDOM.render(<TOCItemsSettings locked activeTab="general" getTabs={() => [
+            {
+                id: 'general',
+                titleId: 'layerProperties.general',
+                tooltipId: 'layerProperties.general',
+                glyph: 'wrench',
+                toolbarComponent: () => <div className="custom-toolbar"></div>,
+                Component: () => <div id="test-general-body"></div>
+            },
+            {
+                id: 'display',
+                titleId: 'layerProperties.display',
+                tooltipId: 'layerProperties.display',
+                glyph: 'eye-open',
+                Component: () => <div id="test-display-body"></div>
+            }
+        ]} element={layers[0]}/>, document.getElementById("container"));
+
+        const btnGroup = document.querySelector('.btn-group');
+        expect(btnGroup).toNotExist();
+        const customToolbar = document.querySelector('.custom-toolbar');
+        expect(customToolbar).toExist();
     });
 
 });
