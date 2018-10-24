@@ -14,6 +14,11 @@ class OGCError extends Error {
         this.code = code;
     }
 }
+const parseXML = (xml, options = {
+    tagNameProcessors: [stripPrefix],
+    explicitArray: false,
+    mergeAttrs: true
+} ) => Rx.Observable.bindNodeCallback((data, callback) => parseString(data, options, callback))(xml);
 /**
  * Intercept OGC Exception (200 response with exceptionReport) to throw error in the stream
  * @param  {observable} observable The observable that emits the server response
@@ -89,6 +94,7 @@ const deleteResourceById = (resId, options) => resId ?
     Rx.Observable.of({resType: "success"});
 
 module.exports = {
+    parseXML,
     deleteResourceById,
     createAssociatedResource,
     updateAssociatedResource,

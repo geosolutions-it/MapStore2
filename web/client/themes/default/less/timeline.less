@@ -1,0 +1,388 @@
+
+@keyframes timeline-loading {
+    0% {
+        background-color: fade(darken(@ms2-color-shade-lighter, 10%), 70%);
+        border-color: fade(darken(@ms2-color-shade-lighter, 10%), 70%);
+    }
+    50% {
+        background-color: fade(@ms2-color-shade-lighter, 70%);
+        border-color: fade(@ms2-color-shade-lighter, 70%);
+    }
+    100% {
+        background-color: fade(darken(@ms2-color-shade-lighter, 10%), 70%);
+        border-color: fade(darken(@ms2-color-shade-lighter, 10%), 70%);
+    }
+}
+.timeline-plugin {
+    * {
+        font-size: @font-size-small;
+    }
+
+    .vis-custom-time {
+
+        &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
+            .shadow-soft;
+            background-color: lighten(@ms2-color-text, 30%);
+            width: 2px;
+            cursor: move;
+            z-index: 10;
+        }
+
+        &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
+            &:before, &::before, &:after, &::after {
+                content: '';
+                display: block;
+                width: 0;
+                height: 0;
+                box-sizing: border-box;
+                position: absolute;
+            }
+        }
+
+        &.endPlaybackTime {
+            background-color: lighten(@ms2-color-danger, 5%);
+            &:after, &::after {
+                bottom: 24px;
+                left: -16px;
+                content: "\E074";
+                font-size: 18px;
+                font-family: "mapstore2";
+                color: lighten(@ms2-color-danger, 5%);
+            }
+        }
+
+        &.startPlaybackTime {
+            background-color: lighten(@ms2-color-success, 10%);
+            &:after, &::after {
+                bottom: 24px;
+                left: 1px;
+                content: "\E072";
+                font-family: "mapstore2";
+                font-size: 18px;
+                color: lighten(@ms2-color-success, 10%);
+            }
+        }
+
+        &.currentTime {
+            background-color: lighten(@ms2-color-text, 30%);
+            &:before, &::before, &:after, &::after {
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+            }
+            &:before, &::before {
+                top: 0;
+                left: -9px;
+                border-top: 10px solid lighten(@ms2-color-text, 30%);
+            }
+            &:after, &::after {
+                bottom: 0;
+                left: -9px;
+                border-bottom: 10px solid lighten(@ms2-color-text, 30%);
+            }
+
+        }
+    }
+
+    &.with-time-offset {
+        .vis-custom-time {
+            &.currentTime {
+                &:before, &::before {
+                    top: 0;
+                    left: 0;
+                    border-bottom: 10px solid transparent;
+                    border-left: 10px solid lighten(@ms2-color-text, 30%);
+                    border-top: unset;
+                }
+                &:after, &::after {
+                    bottom: 0;
+                    left: 0;
+                    border-top: 10px solid transparent;
+                    border-left: 10px solid lighten(@ms2-color-text, 30%);
+                    border-bottom: unset;
+                }
+            }
+
+            &.offsetTime {
+                &:before, &::before {
+                    top: 0;
+                    left: -9px;
+                    border-bottom: 10px solid transparent;
+                    border-right: 10px solid lighten(@ms2-color-text, 30%);
+                }
+                &:after, &::after {
+                    bottom: 0;
+                    left: -9px;
+                    border-top: 10px solid transparent;
+                    border-right: 10px solid lighten(@ms2-color-text, 30%);
+                }
+            }
+        }
+    }
+
+    .shadow-soft;
+    .timeline-plugin-toolbar {
+        display: flex;
+        align-items: center;
+        position: relative;
+        background-color: @ms2-color-background;
+        padding: 2px;
+        z-index: 50;
+        .shadow-soft;
+        h4 {
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+        .btn-group {
+            margin-right: 4px;
+        }
+
+        .timeline-plugin-toolbar-right {
+            margin-right: 2px;
+            margin-left: auto;
+        }
+    }
+
+    .vis-timeline {
+        background-color: fade(@ms2-color-background, 90%);
+        border: none;
+        .vis-panel {
+            &.vis-background {
+                .vis-time-axis {
+                    .vis-grid {
+                        &.vis-major, &.vis-minor {
+                            z-index: 1;
+                        }
+                    }
+                }
+            }
+            &.vis-bottom {
+                .vis-time-axis {
+                    background-color: @ms2-color-background;
+                }
+            }
+            &.vis-center {
+                .vis-group {
+                    z-index:10 ;
+                    &.selected {
+                        background-color: fade(@ms2-color-primary, 5%);
+                    }
+                    &.loading {
+                        .vis-item {
+                            &.vis-dot {
+                                animation: timeline-loading .3s linear infinite;
+                            }
+                            &.vis-range {
+                                &.histogram-item {
+                                    .vis-item-overflow {
+                                        .vis-item-content {
+
+                                            .histogram-box {
+                                                border-color: @ms2-color-shade-lighter;
+                                                animation: timeline-loading .3s linear infinite;
+                                            }
+                                            .histogram-count {
+                                                display: none;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .vis-item {
+                        &.vis-dot {
+                            border-color: fade(@ms2-color-primary, 50%);
+                        }
+                        &.vis-range {
+                            border-color: transparent;
+                            background-color: fade(@ms2-color-primary, 50%);
+                            .vis-item-content {
+                                padding: 0 5px;
+                                margin: 5px 0;
+                                background-color: fade(@ms2-color-primary, 50%);
+                                border-color: darken(@ms2-color-primary, 10%);
+                            }
+
+                            background-color: transparent;
+                            border-color: transparent;
+                            &.histogram-item {
+                                background: none;
+                                border: none;
+                                bottom: 0;
+                                .vis-item-overflow {
+                                    bottom: 0;
+                                    .vis-item-content {
+                                        bottom: 0;
+                                        position: relative;
+                                        background-color: transparent;
+                                        width: 100%;
+                                        height: 100%;
+                                        .histogram-box {
+                                            width: 100%;
+                                            position: absolute;
+                                            bottom: 0;
+                                            background-color: fade(@ms2-color-primary, 50%);
+                                            border-color: darken(@ms2-color-primary, 10%);
+                                            bottom: 0;
+                                            left: 0;
+                                            right: 0;
+                                        }
+                                        .histogram-count {
+                                            z-index: 1;
+                                            position: relative;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            &.vis-left {
+                height: 100% !important;
+                background-color: @ms2-color-background;
+                border: none;
+                .shadow;
+                z-index: 30;
+                .vis-content {
+                    border-bottom: 1px solid @ms2-color-shade-lighter;
+
+                    .vis-label {
+                        &:hover {
+                            background-color: @ms2-color-shade-lighter;
+                            cursor: pointer;
+                        }
+                        &.selected {
+                            background-color: @ms2-color-primary;
+                            color: @ms2-color-text-primary;
+
+                            .vis-inner {
+                                .timeline-layer-label-container {
+                                    .timeline-layer-icon {
+                                        .timeline-spinner {
+                                            .mapstore-circle-loader(1px, 12px, @ms2-color-text-primary);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .vis-inner {
+                            .timeline-layer-label-container {
+                                .timeline-layer-icon {
+                                    width: 18px;
+                                    height: 18px;
+                                    border-right: 1px solid @ms2-color-shade-lighter;
+                                    float: left;
+                                    padding: 1px;
+                                    .timeline-spinner {
+                                        .mapstore-circle-loader(1px, 12px, @ms2-color-primary);
+                                    }
+                                }
+                                .timeline-layer-title {
+                                    margin-left: 6px;
+                                    float: left;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    .vis-item.vis-background.ms-current-range {
+        background-color: fade(lighten(@ms2-color-text, 10%), 20%);
+    }
+
+    .vis-item.vis-background.ms-playback-range {
+        background-color: fade(lighten(@ms2-color-success, 10%), 20%);
+    }
+
+    &.hide-layers-name {
+        .vis-panel {
+            &.vis-left {
+                .vis-content {
+                    .vis-label {
+                        .vis-inner {
+                            .timeline-layer-label-container {
+                                .timeline-layer-icon {
+                                    border-right: none;
+                                    width: 14px;
+                                }
+                                .timeline-layer-title {
+                                    display: none;
+                                    margin: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+.ms-inline-datetime {
+    margin-right: 8px;
+    padding-right: 8px;
+    border-right: 1px solid @ms2-color-shade-lighter;
+    background-color: @ms2-color-background;
+    .form-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+        & > .glyphicon:first-child {
+            font-size: 18px;
+        }
+        .btn {
+            width: 100%;
+            padding: 0;
+            border: transparent;
+            font-size: 7px;
+            .glyphicon {
+                font-size: 7px;
+            }
+        }
+        .form-control {
+            padding: 0;
+            font-size: @font-size-base;
+            text-align: center;
+            height: auto;
+        }
+        .ms-inline-datetime-input {
+            display: inline-block;
+            text-align: center;
+            width: 32px;
+            margin-right: 4px;
+            &.ms-dt-year {
+                width: 45px;
+            }
+            &.ms-dt-icon {
+                width: auto;
+                margin: auto 6px;
+            }
+            &.ms-dt-separator {
+                width: auto;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.playback-plugin {
+    .ms-playback-settings {
+        position: absolute;
+        bottom: 65px;
+        padding: 8px;
+        background-color: @ms2-color-background;
+        .shadow-soft;
+        h4 {
+            font-size: @font-size-h4;
+            margin-left: 0;
+            border-bottom: 1px solid @ms2-color-shade-lighter;
+        }
+    }
+}
