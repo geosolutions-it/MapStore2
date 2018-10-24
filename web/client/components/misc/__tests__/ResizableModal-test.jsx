@@ -94,4 +94,10 @@ describe('ResizableModal component', () => {
 
         expect(document.querySelector('.ms-lg')).toExist();
     });
+
+    it('ResizableModal rendering with fitContent', () => {
+        ReactDOM.render(<ResizableModal show fitContent/>, document.getElementById("container"));
+        const modalWithFitContent = document.querySelector('.ms-fit-content');
+        expect(modalWithFitContent).toExist();
+    });
 });

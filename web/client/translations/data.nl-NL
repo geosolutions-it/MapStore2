@@ -1133,6 +1133,31 @@
             "paneltitle": "Laagstijl",
             "layerlabel": "Laag"
         },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filter styles by name, title or abstract",
+            "templateFilterPlaceholder": "Filter styles templates by title",
+            "createStyleFromTemplate": "Select a template to create a new style",
+            "titleRequired": "<div>Title is required!</div><div>Title and abstract must be alphanumeric</div>",
+            "titleSettings": "Title",
+            "titleSettingsplaceholder": "Enter title (alphanumeric)",
+            "abstractSettings": "Abstract",
+            "abstractSettingsplaceholder": "Enter abstract (alphanumeric)",
+            "createStyleModalTitle": "Create new style",
+            "filterMatchNotFound": "No styles match entered text filter",
+            "backToList": "Back to style list",
+            "createNewStyle": "Create new style",
+            "editSelectedStyle": "Edit selected style",
+            "saveCurrentStyle": "Save current style",
+            "addSelectedTemplate": "Add selected template to list of styles",
+            "deleteSelectedStyle": "Delete selected style",
+            "closeWithoutSaveAlertTitle": "Style has changed",
+            "closeWithoutSaveAlert": "You are quitting the style editor without save your changes",
+            "deleteStyleAlertTitle": "Delete style",
+            "deleteStyleAlert": "Selected style will be permanently delete",
+            "delete": "Delete",
+            "defaultStyle": "Default style",
+            "availableStyle": "Available style"
+        },
         "rulesmanager": {
             "placeholders": {
                 "filter": "Zoeken..."
