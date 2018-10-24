@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
-
+const FontFaceObserver = require('font-face-observer');
 const assign = require('object-assign');
 const Spinner = require('react-spinkit');
 require('./map/css/map.css');
@@ -94,6 +94,7 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  *    {
  *      "name": "Map",
  *      "cfg": {
+ *        "fonts": ["FontAwesome"],
  *        "tools": ["measurement", "locate", "overview", "scalebar", "draw", {
  *          "leaflet": {
  *            "name": "test",
@@ -112,6 +113,13 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  *  - name is a unique name for the tool
  *  - impl is a placeholder (“{context.ToolName}”) where ToolName is the name you gave the tool in plugins.js (TestSupportLeaflet in our example)
  *
+ * You can also specify a list if fonts that will be loaded before the **openlayers** map gets rendered (on willMount lyfe)
+ *  {
+ *    "name": "Map",
+ *    "cfg": {
+ *      "fonts": ["FontAwesome"]
+ *    }
+ *  }
  * @memberof plugins
  * @class Map
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
@@ -146,6 +154,7 @@ class MapPlugin extends React.Component {
         loadingSpinner: PropTypes.bool,
         loadingError: PropTypes.string,
         tools: PropTypes.array,
+        fonts: PropTypes.array,
         options: PropTypes.object,
         mapOptions: PropTypes.object,
         projectionDefs: PropTypes.array,
@@ -165,6 +174,7 @@ class MapPlugin extends React.Component {
         tools: ["measurement", "locate", "scalebar", "draw", "highlight"],
         options: {},
         mapOptions: {},
+        fonts: ["FontAwesome"],
         toolsOptions: {
             measurement: {},
             locate: {},
@@ -190,6 +200,14 @@ class MapPlugin extends React.Component {
     };
 
     componentWillMount() {
+        const {mapType, fonts} = this.props;
+        if (mapType === "openlayers" && fonts && fonts.length) {
+            // load deach font pbefore rendering (see issue #3155)
+            fonts.forEach((font)=> {
+                let observer = new FontFaceObserver(font, {});
+                observer.check();
+            });
+        }
         this.updatePlugins(this.props);
     }
 
