@@ -205,7 +205,7 @@ class MapPlugin extends React.Component {
     componentWillMount() {
         const {mapType, fonts} = this.props;
         if (mapType === "openlayers" && fonts && fonts.length) {
-            // load deach font pbefore rendering (see issue #3155)
+            // load each font before rendering (see issue #3155)
             fonts.forEach((font)=> {
                 let observer = new FontFaceObserver(font, {});
                 observer.check();
