@@ -114,12 +114,15 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  *  - impl is a placeholder (“{context.ToolName}”) where ToolName is the name you gave the tool in plugins.js (TestSupportLeaflet in our example)
  *
  * You can also specify a list if fonts that will be loaded before the **openlayers** map gets rendered (on willMount lyfe)
- *  {
+ * ```
+ * {
  *    "name": "Map",
  *    "cfg": {
  *      "fonts": ["FontAwesome"]
  *    }
  *  }
+ * ```
+ *
  * @memberof plugins
  * @class Map
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
