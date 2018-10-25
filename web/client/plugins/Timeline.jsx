@@ -13,7 +13,7 @@ const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('./timeline/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
-const { offsetEnabledSelector, calculateOffsetTimeSelector } = require('../selectors/timeline');
+const { offsetEnabledSelector, calculateOffsetTimeSelector, selectedLayerSelector } = require('../selectors/timeline');
 const { withState, compose, branch, renderNothing } = require('recompose');
 const { selectTime, enableOffset, selectOffset } = require('../actions/timeline');
 const { selectPlaybackRange } = require('../actions/playback');
@@ -34,12 +34,14 @@ const TimelinePlugin = compose(
     connect(
         createSelector(
             layersWithTimeDataSelector,
+            selectedLayerSelector,
             currentTimeSelector,
             calculateOffsetTimeSelector,
             offsetEnabledSelector,
             playbackRangeSelector,
-            (layers, currentTime, calculateOffsetTime, offsetEnabled, playbackRange) => ({
+            (layers, selectedLayer, currentTime, calculateOffsetTime, offsetEnabled, playbackRange) => ({
                 layers,
+                selectedLayer,
                 currentTime,
                 calculateOffsetTime,
                 offsetEnabled,
@@ -130,8 +132,11 @@ const TimelinePlugin = compose(
                             active: offsetEnabled,
                             tooltip: offsetEnabled ? 'Disable current time with offset' : 'Enable current time with offset',
                             onClick: () => {
-                                onOffsetEnabled(!offsetEnabled);
-                                setOptions({ ...options, playbackEnabled: false });
+                                if (selectedLayer) {
+                                    onOffsetEnabled(!offsetEnabled);
+                                    setOptions({ ...options, playbackEnabled: false });
+                                }
+
                             }
                         },
                         {
@@ -141,9 +146,12 @@ const TimelinePlugin = compose(
                             active: playbackEnabled,
                             visible: !!Playback,
                             onClick: () => {
-                                onOffsetEnabled(false);
-                                setOptions({ ...options, playbackEnabled: !playbackEnabled });
-                                setPlaybackRange(playbackRange);
+                                if (selectedLayer) {
+                                    onOffsetEnabled(false);
+                                    setOptions({ ...options, playbackEnabled: !playbackEnabled });
+                                    setPlaybackRange(playbackRange);
+                                }
+
                             }
                         }
                     ]} />

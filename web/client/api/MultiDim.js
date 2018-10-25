@@ -89,6 +89,7 @@ const getHistogram = (url, layer, histogram, dimensionIdentifiers, resolution, {
  * @param {options} param4 other options
  */
 const getDomainValues = (url, layer, domain, {
+    time,
     fromValue,
     sort = "asc",
     limit = 20
@@ -109,7 +110,8 @@ const getDomainValues = (url, layer, domain, {
             domain,
             fromValue,
             sort,
-            limit
+            limit,
+            time
         })
     }))
     .let(interceptOGCError)

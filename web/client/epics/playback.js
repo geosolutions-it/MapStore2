@@ -39,10 +39,14 @@ const domainArgs = (getState, paginationOptions = {}) => {
         ...paginationOptions
     }];
 };
+const domainRangeIdentify = (start, end) => `${start}/${end}`;
+
 module.exports = {
     retrieveFramesForPlayback: (action$, { getState = () => { } } = {}) =>
         action$.ofType(PLAY).exhaustMap( () =>
-            getDomainValues(...domainArgs(getState))
+            getDomainValues(...domainArgs(getState, {
+                time: domainRangeIdentify(playbackRangeSelector(getState()).startPlaybackTime, playbackRangeSelector(getState()).endPlaybackTime)
+            }))
                 .map(res => res.DomainValues.Domain.split(","))
                 .map((frames) => setFrames(frames))
                 .let(wrapStartStop(framesLoading(true), framesLoading(false)))
