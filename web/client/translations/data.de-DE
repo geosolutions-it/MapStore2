@@ -288,6 +288,7 @@
             }
         },
         "map": {
+            "errorLoadingFont": "Die Marken mit der Schriftfamilie: {family} werden nicht korrekt gerendert, da die Schrift nicht geladen wurde",
             "loading": "Wird geladen...",
             "loadingSpinner": "Karte wird geladen",
             "loadingerror": "Fehler während des Ladens",
