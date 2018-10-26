@@ -129,7 +129,6 @@ const selectedLayerData = state => getLayerFromId(state, selectedLayerSelector(s
 const selectedLayerName = state => selectedLayerData(state) && selectedLayerData(state).name;
 const selectedLayerUrl = state => selectedLayerData(state) && selectedLayerData(state).dimensions && selectedLayerData(state).dimensions.filter((x) => x.name === "time").map((l) => l.source.url);
 
-
 module.exports = {
     itemsSelector,
     rangeSelector,
