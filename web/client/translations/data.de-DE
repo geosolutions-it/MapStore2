@@ -1467,7 +1467,17 @@
             "deleteStyleAlert": "Der ausgewählte Stil wird endgültig gelöscht",
             "delete": "Löschen",
             "defaultStyle": "Standardstil",
-            "availableStyle": "Verfügbarer Stil"
+            "availableStyle": "Verfügbarer Stil",
+            "styleNotFound": "Stil nicht gefunden",
+            "noPermission": "Benutzer kann keine Stile bearbeiten",
+            "deletedStyleSuccessTitle": "Löschen Sie den Stil",
+            "deletedStyleSuccessMessage": "Der Stil wurde erfolgreich gelöscht",
+            "deletedStyleErrorTitle": "Stilfehler löschen",
+            "deletedStyleErrorMessage": "Der aktuelle Stil konnte nicht gelöscht werden",
+            "savedStyleTitle": "Stil gespeichert",
+            "savedStyleMessage": "Der Style wurde erfolgreich gespeichert",
+            "missingAvailableStyles": "Fehlende Stile",
+            "missingAvailableStylesMessage": "<ul><h4> Mögliche Ursachen: </h4> <li> Die ausgewählte Ebene ist eine Ebenengruppe. </li> <li> Die Ebene ist nicht serverseitig richtig konfiguriert. </li> </ul>"
         },
         "rulesmanager": {
             "apply": "Anwenden",

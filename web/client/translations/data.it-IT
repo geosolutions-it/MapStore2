@@ -1467,7 +1467,17 @@
             "deleteStyleAlert": "Lo stile selezionato verrà eliminato in modo permanente",
             "delete": "Elimina",
             "defaultStyle": "Stile predefinito",
-            "availableStyle": "Stile disponibile"
+            "availableStyle": "Stile disponibile",
+            "styleNotFound": "Stile non trovato",
+            "noPermission": "L'utente non può modificare gli stili",
+            "deletedStyleSuccessTitle": "Elimina stile",
+            "deletedStyleSuccessMessage": "Lo stile è stato cancellato con successo",
+            "deletedStyleErrorTitle": "Elimina stile",
+            "deletedStyleErrorMessage": "Impossibile cancellare lo stile",
+            "savedStyleTitle": "Stile salvato",
+            "savedStyleMessage": "Lo stile è stato salvato",
+            "missingAvailableStyles": "Stili mancanti",
+            "missingAvailableStylesMessage": "<ul> <h4> Possibili cause: </h4> <li> Il layer selezionato è un layer group </li> <li> Il layer non è configurato correttamente lato server </li> </ul>"
         },
         "rulesmanager": {
             "apply": "Applica",

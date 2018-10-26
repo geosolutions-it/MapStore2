@@ -1467,7 +1467,18 @@
             "deleteStyleAlert": "El estilo seleccionado será eliminado permanentemente",
             "delete": "Borrar",
             "defaultStyle": "Estilo por Defecto",
-            "availableStyle": "Estilo disponible"
+            "availableStyle": "Estilo disponible",
+            "styleNotFound": "Estilo no encontrado",
+            "noPermission": "El usuario no puede editar estilos",
+            "deletedStyleSuccessTitle": "Eliminar estilo",
+            "deletedStyleSuccessMessage": "El estilo ha sido eliminado exitosamente.",
+            "deletedStyleErrorTitle": "Eliminar error de estilo",
+            "deletedStyleErrorMessage": "No se pudo eliminar el estilo actual",
+            "savedStyleTitle": "Estilo guardado",
+            "savedStyleMessage": "El estilo se ha guardado con éxito.",
+            "missingAvailableStyles": "Estilos que faltan",
+            "missingAvailableStylesMessage": "<ul> <h4> Causas posibles: </h4> <li> La capa seleccionada es un grupo de capas </li> <li> La capa no está configurada correctamente en el lado del servidor </li> </ul>"
+
         },
         "rulesmanager": {
             "apply": "Aplicar",

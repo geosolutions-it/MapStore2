@@ -21,6 +21,8 @@ const LayersUtils = require('../utils/LayersUtils');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {isAdminUserSelector} = require('../selectors/security');
 const {setControlProperty} = require('../actions/controls');
+const {toggleStyleEditor} = require('../actions/styleeditor');
+const {statusStyleSelector} = require('../selectors/styleeditor');
 const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
 
 const tocItemsSettingsSelector = createSelector([
@@ -31,8 +33,9 @@ const tocItemsSettingsSelector = createSelector([
     state => mapLayoutValuesSelector(state, {height: true}),
     isAdminUserSelector,
     initialSettingsSelector,
-    originalSettingsSelector
-], (settings, layers, groups, currentLocale, dockStyle, isAdmin, initialSettings, originalSettings) => ({
+    originalSettingsSelector,
+    statusStyleSelector
+], (settings, layers, groups, currentLocale, dockStyle, isAdmin, initialSettings, originalSettings, styleStatus) => ({
     settings,
     element: settings.nodeType === 'layers' && isArray(layers) && head(layers.filter(layer => layer.id === settings.node)) ||
     settings.nodeType === 'groups' && isArray(groups) && head(groups.filter(group => group.id === settings.node)) || {},
@@ -41,7 +44,8 @@ const tocItemsSettingsSelector = createSelector([
     dockStyle,
     isAdmin,
     initialSettings,
-    originalSettings
+    originalSettings,
+    locked: !!styleStatus
 }));
 
 /**
@@ -74,7 +78,8 @@ const TOCItemsSettingsPlugin = compose(
         onRetrieveLayerData: getLayerCapabilities,
         onUpdateOriginalSettings: setControlProperty.bind(null, 'layersettings', 'originalSettings'),
         onUpdateInitialSettings: setControlProperty.bind(null, 'layersettings', 'initialSettings'),
-        onUpdateParams: updateSettingsParams
+        onUpdateParams: updateSettingsParams,
+        onToggleStyleEditor: toggleStyleEditor
     }),
     withState('activeTab', 'onSetTab', 'general'),
     updateSettingsLifecycle,

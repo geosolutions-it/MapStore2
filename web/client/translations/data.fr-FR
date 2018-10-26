@@ -1468,7 +1468,17 @@
             "deleteStyleAlert": "Le style sélectionné sera définitivement supprimé",
             "delete": "Effacer",
             "defaultStyle": "Style par défaut",
-            "availableStyle": "Style disponible"
+            "availableStyle": "Style disponible",
+            "styleNotFound": "Style non trouvé",
+            "noPermission": "L'utilisateur ne peut pas éditer les styles",
+            "deletedStyleSuccessTitle": "Supprimer le style",
+            "deletedStyleSuccessMessage": "Le style a été supprimé avec succès",
+            "deletedStyleErrorTitle": "Supprimer l'erreur de style",
+            "deletedStyleErrorMessage": "Impossible de supprimer le style actuel",
+            "savedStyleTitle": "Style sauvegardé",
+            "savedStyleMessage": "Le style a été enregistré avec succès",
+            "missingAvailableStyles": "Styles manquants",
+            "missingAvailableStylesMessage": "<ul> <h4> Causes possibles: </h4> <li> La couche sélectionnée est un groupe de couches </li> <li> La couche n'est pas configurée correctement côté serveur </li> </ul>"
         },
         "rulesmanager": {
             "apply": "Appliquer",

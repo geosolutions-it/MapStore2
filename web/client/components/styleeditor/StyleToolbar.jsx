@@ -91,7 +91,7 @@ const StyleToolbar = ({
                     glyph: '1-stilo',
                     tooltipId: 'styleeditor.createNewStyle',
                     visible: !status && editEnabled ? true : false,
-                    disabled: !!loading || defaultStyles.indexOf(selectedStyle) !== -1 || !selectedStyle,
+                    disabled: !!loading,
                     onClick: () => onSelectStyle()
                 },
                 {

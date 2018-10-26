@@ -1468,7 +1468,17 @@
             "deleteStyleAlert": "Selected style will be permanently delete",
             "delete": "Delete",
             "defaultStyle": "Default style",
-            "availableStyle": "Available style"
+            "availableStyle": "Available style",
+            "styleNotFound": "Style not found",
+            "noPermission": "User cannot edit styles",
+            "deletedStyleSuccessTitle": "Delete style",
+            "deletedStyleSuccessMessage": "Style has been successfully deleted",
+            "deletedStyleErrorTitle": "Delete style error",
+            "deletedStyleErrorMessage": "Could not delete current style",
+            "savedStyleTitle": "Style saved",
+            "savedStyleMessage": "Style has been successfully saved",
+            "missingAvailableStyles": "Missing styles",
+            "missingAvailableStylesMessage": "<ul><h4>Possible causes:</h4> <li>Selected layer is a layer group</li><li>Layer is not correctly configured server side</li></ul>"
         },
         "rulesmanager": {
             "apply": "Apply",
