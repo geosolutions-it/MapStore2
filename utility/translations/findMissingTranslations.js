@@ -20,7 +20,7 @@
  */
 const basefile = process.argv[2] || 'data.en-US';
 const TRANSLATIONS_FOLDER = process.argv[3] || 'web/client/translations/';
-const MANDATORY_FILES = ["data.it-IT", "data.es-ES", "data.de-DE", "data.fr-FR"];
+const MANDATORY_FILES = ["data.it-IT", "data.es-ES", "data.de-DE", "data.fr-FR", "data.pt-PT"];
 const log = s => process.stdout.write(s);
 const isMandatory = file => MANDATORY_FILES.filter( f => f === file).length > 0;
 const isPresent = translation => translation !== undefined;
@@ -102,5 +102,3 @@ if (fail) {
     throw Error("i18n files failed");
 }
 log('## mandatory translations checks passed!! ##\n');
-
-

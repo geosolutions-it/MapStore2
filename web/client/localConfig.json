@@ -87,6 +87,10 @@
             "es": {
               "code": "es-ES",
               "description": "Español"
+            },
+            "pt": {
+              "code": "pt-PT",
+              "description": "Português"
             }
           }
         }
@@ -522,7 +526,7 @@
                 "containerPosition": "header",
                 "preset": "dashboard_tutorial"
             }
-        }, 
+        },
         {
             "name": "FeedbackMask",
             "cfg": {
