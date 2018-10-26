@@ -111,8 +111,10 @@ const Api = {
         let responses = [];
         let count = styles.length;
         return new Promise(function(resolve) {
-            if (!styles || styles.length === 0) return resolve([]);
-            styles.forEach(({name}, idx) =>
+            if (!styles || styles.length === 0) {
+                resolve([]);
+            } else {
+                styles.forEach(({name}, idx) =>
                 axios.get(`${baseUrl}${encodeURIComponent(name)}.json`)
                     .then(({data}) => {
                         responses[idx] = assign({}, styles[idx], data && data.style || {});
@@ -124,7 +126,8 @@ const Api = {
                         count--;
                         if (count === 0) resolve(responses.filter(val => val));
                     })
-            );
+                );
+            }
         });
     },
     /**

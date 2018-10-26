@@ -100,6 +100,7 @@ module.exports = function(CodeMirror) {
                 to: codeMirrorPos(cur.line, end)
             };
         }
+        return null;
     });
 };
 
