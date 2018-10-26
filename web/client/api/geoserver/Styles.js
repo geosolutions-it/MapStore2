@@ -110,7 +110,7 @@ const Api = {
         const baseUrl = `${geoserverBaseUrl}rest/styles/${workspace && workspace + '/' || ''}`;
         let responses = [];
         let count = styles.length;
-        return new Promise((resolve) => {
+        return new Promise(function(resolve) {
             if (!styles || styles.length === 0) return resolve([]);
             styles.forEach(({name}, idx) =>
                 axios.get(`${baseUrl}${encodeURIComponent(name)}.json`)

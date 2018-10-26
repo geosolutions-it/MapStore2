@@ -9,7 +9,7 @@ const {startsWith, trim} = require('lodash');
 
 module.exports = (CodeMirror) => {
 
-    CodeMirror.defineMode('geocss', (config, parserConfig = {}) => {
+    CodeMirror.defineMode('geocss', function(config, parserConfig = {}) {
 
         const { indentUnit } = config;
         const {
@@ -142,7 +142,7 @@ module.exports = (CodeMirror) => {
             return pass(currentType, stream, state);
         };
 
-        const wordAsValue = (stream) => {
+        const wordAsValue = function(stream) {
             let word = stream.current().toLowerCase();
             if (valueKeywords.hasOwnProperty(word)) {
                 override = "atom";

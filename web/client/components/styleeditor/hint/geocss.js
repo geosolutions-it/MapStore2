@@ -20,10 +20,10 @@ const getType = ({localPart, prefix}) => {
     || parseLocalPart[localPart] || localPart || '';
 };
 
-module.exports = (CodeMirror) => {
+module.exports = function(CodeMirror) {
     const {Pos: codeMirrorPos} = CodeMirror;
 
-    CodeMirror.registerHelper('hint', 'geocss', (cm) => {
+    CodeMirror.registerHelper('hint', 'geocss', function(cm) {
         const cur = cm.getCursor();
         const token = cm.getTokenAt(cur);
 
