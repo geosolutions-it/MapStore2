@@ -16,7 +16,7 @@ const {
 } = require('../actions/dimension');
 const { LOCATION_CHANGE } = require('react-router-redux');
 
-const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector} = require('../selectors/playback');
+const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector, playbackRangeSelector} = require('../selectors/playback');
 const {selectedLayerName, selectedLayerUrl} = require('../selectors/timeline');
 
 const pausable = require('../observables/pausable');

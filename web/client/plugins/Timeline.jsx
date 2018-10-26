@@ -57,6 +57,7 @@ const TimelinePlugin = compose(
     withState('options', 'setOptions', {})
 )(
     ({
+        selectedLayer,
         items,
         options,
         setOptions,

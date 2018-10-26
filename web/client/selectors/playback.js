@@ -6,7 +6,9 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-const { histogramTimeRange } = require('../selectors/timeline');
+const { selectedLayerSelector } = require('../selectors/timeline');
+const {layerDimensionDataSelectorCreator} = require('../selectors/dimension');
+
 
 const statusSelector = state => state && state.playback && state.playback.status;
 const framesSelector = state => state && state.playback && state.playback.frames;
@@ -19,10 +21,12 @@ const loadingSelector = state => state && state.playback && state.playback.frame
 const currentFrameSelector = state => state && state.playback && state.playback.currentFrame;
 const range = state => state && state.playback && state.playback.playbackRange;
 const playbackRangeSelector = state => {
-    const histogramRange = histogramTimeRange(state);
-    return range(state) || {
-        startPlaybackTime: histogramRange[0],
-        endPlaybackTime: histogramRange[1]
+    const layerID = selectedLayerSelector(state);
+    const timeRange = layerDimensionDataSelectorCreator(layerID, "time")(state);
+    const dataRange = timeRange && timeRange.domain && timeRange.domain.split('--');
+    return range(state) || dataRange && {
+        startPlaybackTime: dataRange[0],
+        endPlaybackTime: dataRange[1]
     };
 };
 const currentFrameValueSelector = state => (framesSelector(state) || [])[currentFrameSelector(state)];

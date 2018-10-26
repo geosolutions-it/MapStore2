@@ -179,7 +179,7 @@ const enhance = compose(
     }),
     // items enhancer
     withPropsOnChange(
-        ['currentTime', 'offsetEnabled', 'calculatedOffsetTime', 'hideLayersName', 'playbackRange', 'playbackEnabled'],
+        ['items', 'currentTime', 'offsetEnabled', 'calculatedOffsetTime', 'hideLayersName', 'playbackRange', 'playbackEnabled'],
         ({
             currentTime,
             calculatedOffsetTime,
