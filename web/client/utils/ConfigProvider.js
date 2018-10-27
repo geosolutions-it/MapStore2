@@ -739,25 +739,31 @@ const CONFIGPROVIDER = {
                 }
             },
 			nz_topo250_gridless_maps: {
+                options: {
 					attribution: 'Sourced from the <a href="https://data.linz.govt.nz/">LINZ Data Service</a> and licensed for reuse under the <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> license',
 					variant: 'layer=52324',
                     tilematrixset: 'EPSG:3857',
 					maxZoom: 22,
 					maxNativeZoom: 22
+                }
 			},
 			nz_topo250_maps: {
+                options: {
 					attribution: 'Sourced from the <a href="https://data.linz.govt.nz/">LINZ Data Service</a> and licensed for reuse under the <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> license',
 					variant: 'layer=50798',
                     tilematrixset: 'EPSG:3857',
 					maxZoom: 22,
 					maxNativeZoom: 22
+                }
 			},
 			nz_parcel_boundaries_wireframe: {
+                options: {
 					attribution: 'Sourced from the <a href="https://data.linz.govt.nz/">LINZ Data Service</a> and licensed for reuse under the <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> license',
 					variant: 'set=4769',
                     tilematrixset: 'EPSG:3857',
 					maxZoom: 22,
 					maxNativeZoom: 22
+                }
 			}
 		}
     }
