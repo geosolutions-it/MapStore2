@@ -697,7 +697,7 @@ const CONFIGPROVIDER = {
                 }
             }
         }
-    }
+    },
     LINZ: {
         // Maps from New Zealand LINZ Data Service https://www.linz.govt.nz/data/linz-data-service/guides-and-documentation/lds-web-map-tile-service-specifications
 		url: 'http://tiles-{s}.data-cdn.linz.govt.nz/services;key={linzAPIkey}/tiles/v4/{variant}/{tilematrixset}/{z}/{x}/{y}.png',
