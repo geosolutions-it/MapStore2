@@ -289,6 +289,7 @@
             }
         },
         "map": {
+            "errorLoadingFont": "Les marqueurs avec la famille de polices: {family} ne seront pas restitués correctement, car la police n'a pas été chargée.",
             "loading": "Chargement...",
             "loadingSpinner": "Carte de chargement",
             "loadingerror": "Erreur de chargement",
