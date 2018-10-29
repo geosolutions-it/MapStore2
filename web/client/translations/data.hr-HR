@@ -259,6 +259,7 @@
 			"search": "pretraži karte..."
 		},
         "map": {
+            "errorLoadingFont": "The markers with font family: {family} will not render correctly, because the font was not loaded",
             "loading": "Učitavanje...",
             "loadingSpinner": "Učitavanje karte",
             "loadingerror": "Greška prilikom učitavanja",
