@@ -1458,7 +1458,6 @@
                 "filter": "Ricerca...",
                 "role": "Cerca Gruppo",
                 "user": "Cerca Utenti",
-                "ip": "Seleziona IP",
                 "service": "Cerca Servizi",
                 "request": "Cerca Richieste",
                 "workspace": "Cerca Workspacs",
