@@ -16,7 +16,7 @@ const {
 } = require('../actions/dimension');
 const { LOCATION_CHANGE } = require('react-router-redux');
 
-const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector} = require('../selectors/playback');
+const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector, playbackRangeSelector} = require('../selectors/playback');
 const {selectedLayerName, selectedLayerUrl} = require('../selectors/timeline');
 
 const pausable = require('../observables/pausable');
@@ -29,6 +29,8 @@ const INTERVAL = 2000;
 
 const BUFFER_SIZE = 20;
 const PRELOAD_BEFORE = 10;
+const toAbsoluteInterval = (start, end) => `${start}/${end}`;
+
 const domainArgs = (getState, paginationOptions = {}) => {
     // const timeData = timeDataSelector(getState()) || {};
     const layerName = selectedLayerName(getState());
@@ -36,9 +38,12 @@ const domainArgs = (getState, paginationOptions = {}) => {
 
     return [layerUrl, layerName, "time", {
         limit: BUFFER_SIZE,
+        time: toAbsoluteInterval(playbackRangeSelector(getState()).startPlaybackTime, playbackRangeSelector(getState()).endPlaybackTime),
         ...paginationOptions
     }];
 };
+
+
 module.exports = {
     retrieveFramesForPlayback: (action$, { getState = () => { } } = {}) =>
         action$.ofType(PLAY).exhaustMap( () =>
