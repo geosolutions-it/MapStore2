@@ -29,6 +29,8 @@ const INTERVAL = 2000;
 
 const BUFFER_SIZE = 20;
 const PRELOAD_BEFORE = 10;
+const toAbsoluteInterval = (start, end) => `${start}/${end}`;
+
 const domainArgs = (getState, paginationOptions = {}) => {
     // const timeData = timeDataSelector(getState()) || {};
     const layerName = selectedLayerName(getState());
@@ -36,17 +38,16 @@ const domainArgs = (getState, paginationOptions = {}) => {
 
     return [layerUrl, layerName, "time", {
         limit: BUFFER_SIZE,
+        time: toAbsoluteInterval(playbackRangeSelector(getState()).startPlaybackTime, playbackRangeSelector(getState()).endPlaybackTime),
         ...paginationOptions
     }];
 };
-const domainRangeIdentify = (start, end) => `${start}/${end}`;
+
 
 module.exports = {
     retrieveFramesForPlayback: (action$, { getState = () => { } } = {}) =>
         action$.ofType(PLAY).exhaustMap( () =>
-            getDomainValues(...domainArgs(getState, {
-                time: domainRangeIdentify(playbackRangeSelector(getState()).startPlaybackTime, playbackRangeSelector(getState()).endPlaybackTime)
-            }))
+            getDomainValues(...domainArgs(getState))
                 .map(res => res.DomainValues.Domain.split(","))
                 .map((frames) => setFrames(frames))
                 .let(wrapStartStop(framesLoading(true), framesLoading(false)))
