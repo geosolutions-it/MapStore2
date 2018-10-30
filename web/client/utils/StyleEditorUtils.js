@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const { head, get, isArray } = require('lodash');
+const { head, get, isArray, isString } = require('lodash');
 const uuidv1 = require('uuid/v1');
 const url = require('url');
 const { baseTemplates, customTemplates } = require('./styleeditor/stylesTemplates');
@@ -119,6 +119,18 @@ const StyleEditorUtils = {
      */
     setCustomUtils: (name, fun) => {
         StyleEditorCustomUtils[name] = fun;
+    },
+    /**
+     * Get name and workspace from a goeserver name
+     * @param  {string} name function name
+     * @param  {object}
+     */
+    getNameParts(name) {
+        const layerPart = isString(name) && name.split(':') || [];
+        return {
+            workspace: layerPart[1] && layerPart[0],
+            name: layerPart[1] || layerPart[0]
+        };
     }
 };
 

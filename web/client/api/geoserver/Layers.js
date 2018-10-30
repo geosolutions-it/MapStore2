@@ -6,6 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 const axios = require('../../libs/ajax');
+const { getNameParts } = require('../../utils/StyleEditorUtils');
+
 /**
 * Api for GeoServer layers via rest
 * @name api.geoserver
@@ -18,25 +20,26 @@ const Api = {
     /**
     * Remove styles from available styles of geoserver layer object
     * @memberof api.geoserver
-    * @param {object} params {baseUrl, workspace, layerName, styles = [], options = {}}
+    * @param {object} params {baseUrl, layerName, styles = [], options = {}}
     * @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
     * @param {array} params.styles array of style to remove to geoserver layer object
     * @param {string} params.layerName name of layer
     * @return {object} geoserver layer object with updated styles
     */
-    removeStyles: ({baseUrl, workspace, layerName, styles = [], options = {}}) => {
-        const url = `${baseUrl}rest/layers/${workspace && workspace + '/' || ''}${layerName}.json`;
+    removeStyles: ({baseUrl, layerName, styles = [], options = {}}) => {
+        const { name, workspace } = getNameParts(layerName);
+        const url = `${baseUrl}rest/${workspace && `workspaces/${workspace}/` || ''}layers/${name}.json`;
         return axios.get(url, options)
             .then(({data}) => {
                 const layer = data.layer || {};
                 const currentAvailableStyle = layer.styles && layer.styles.style || [];
-                const stylesNames = styles.map(({name}) => name);
+                const stylesNames = styles.map(({name: styleName}) => styleName);
                 const layerObj = {
                     'layer': {
                         ...layer,
                         'styles': {
                             '@class': 'linked-hash-set',
-                            'style': currentAvailableStyle.filter(({name}) => stylesNames.indexOf(name) === -1)
+                            'style': currentAvailableStyle.filter(({name: styleName}) => stylesNames.indexOf(styleName) === -1)
                         }
                     }
                 };
@@ -47,14 +50,15 @@ const Api = {
     /**
     * Update available styles of geoserver layer object
     * @memberof api.geoserver
-    * @param {object} params {baseUrl, workspace, layerName, styles = [], options = {}}
+    * @param {object} params {baseUrl, layerName, styles = [], options = {}}
     * @param {string} params.baseUrl base url of GeoServer eg: /geoserver/
     * @param {array} params.styles array of style to add to geoserver layer object
     * @param {string} params.layerName name of layer
     * @return {object} geoserver layer object with updated styles
     */
-    updateAvailableStyles: ({baseUrl, workspace, layerName, styles = [], options = {}}) => {
-        const url = `${baseUrl}rest/layers/${workspace && workspace + '/' || ''}${layerName}.json`;
+    updateAvailableStyles: ({baseUrl, layerName, styles = [], options = {}}) => {
+        const { name, workspace } = getNameParts(layerName);
+        const url = `${baseUrl}rest/${workspace && `workspaces/${workspace}/` || ''}layers/${name}.json`;
         return axios.get(url, options)
             .then(({data}) => {
                 const layer = data.layer || {};
