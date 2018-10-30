@@ -12,6 +12,7 @@ const { success, error } = require('../actions/notifications');
 const { UPDATE_NODE, updateNode, updateSettingsParams } = require('../actions/layers');
 const { updateAdditionalLayer, removeAdditionalLayer, updateOptionsByOwner } = require('../actions/additionallayers');
 const { getDescribeLayer, getLayerCapabilities } = require('../actions/layerCapabilities');
+const { setControlProperty } = require('../actions/controls');
 const url = require('url');
 
 const {
@@ -52,7 +53,7 @@ const { getSelectedLayer } = require('../selectors/layers');
 const { isAdminUserSelector } = require('../selectors/security');
 const { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME } = require('../utils/StyleEditorUtils');
 const { normalizeUrl } = require('../utils/PrintUtils');
-
+const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
 /*
  * Observable to get code of a style, it works only in edit status
  */
@@ -228,6 +229,7 @@ module.exports = {
                         if (!isAdminUserSelector(state)) {
                             return setAdditionalLayers(updatedLayer.availableStyles);
                         }
+
                         return Rx.Observable.defer(() =>
                             StylesAPI.getStylesInfo({
                                 baseUrl: `${parsedUrl.protocol}//${parsedUrl.host}/geoserver/`,
@@ -437,6 +439,8 @@ module.exports = {
                 const state = store.getState();
                 const layer = getUpdatedLayer(state);
                 const { baseUrl = '' } = styleServiceSelector(state);
+                const originalSettings = originalSettingsSelector(state);
+                const initialSettings = initialSettingsSelector(state);
 
                 return Rx.Observable.defer(() =>
                     LayersAPI.removeStyles({
@@ -450,7 +454,10 @@ module.exports = {
                     return Rx.Observable.concat(
                         Rx.Observable.of(
                             updateSettingsParams({style: '', availableStyles}, true),
-                            loadedStyle()
+                            loadedStyle(),
+                            // style has been deleted so original and initial settings must be overrided
+                            setControlProperty('layersettings', 'originalSettings', {...originalSettings, style: ''}),
+                            setControlProperty('layersettings', 'initialSettings', {...initialSettings, style: ''})
                         ),
                         deleteStyleObservable({styleName, baseUrl})
                     );
