@@ -70,7 +70,14 @@ const toISOString = date => isString(date) ? date : date.toISOString();
  * @returns a stream of data with histogram and/or domain values
  */
 const loadRangeData = (id, timeData, getState) => {
-    const {range, resolution} = roundRangeResolution( rangeSelector(getState()), MAX_HISTOGRAM);
+    /**
+     * when there is no timeline state rangeSelector(getState()) returns undefiend, so instead we use the timeData[id] range
+     */
+    const dataRange = timeData.domain.split('--');
+
+    const initialRange = rangeSelector(getState()) || {start: new Date(dataRange[0]), end: new Date(dataRange[1])};
+
+    const {range, resolution} = roundRangeResolution( initialRange, MAX_HISTOGRAM);
     const layerName = getLayerFromId(getState(), id).name;
     const filter = {
         [TIME_DIMENSION]: `${toISOString(range.start)}/${toISOString(range.end)}`
@@ -163,10 +170,6 @@ module.exports = {
         action$.ofType(RANGE_CHANGED, UPDATE_LAYER_DIMENSION_DATA)
             .debounceTime(500)
             .switchMap( () => {
-                // if timeline is not present, don't update range data
-                if ( !rangeSelector(getState()) ) {
-                    return Rx.Observable.empty();
-                }
                 const timeData = timeDataSelector(getState()) || {};
                 const layerIds = Object.keys(timeData).filter(id => timeData[id] && timeData[id].domain && isTimeDomainInterval(timeData[id].domain));
                 // update range data for every layer that need to sync with histogram/domain

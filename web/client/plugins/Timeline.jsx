@@ -52,7 +52,7 @@ const TimelinePlugin = compose(
             setPlaybackRange: selectPlaybackRange
         }),
     branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
-    withState('options', 'setOptions', {})
+    withState('options', 'setOptions', {collapsed: true})
 )(
     ({
         items,
