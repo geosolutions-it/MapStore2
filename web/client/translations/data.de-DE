@@ -1458,7 +1458,6 @@
                 "filter": "Suche...",
                 "role": "Nach Rollen suchen",
                 "user": "Benutzer suchen",
-                "ip": "Wählen Sie IP",
                 "service": "Suchdienste",
                 "request": "Type to serach Requests",
                 "workspace": "Suchanfragen",
