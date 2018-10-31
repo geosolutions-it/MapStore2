@@ -25,6 +25,7 @@ const TERRAIN = require('./background/assets/img/TERRAIN.jpg');
 const SATELLITE = require('./background/assets/img/SATELLITE.jpg');
 const Aerial = require('./background/assets/img/Aerial.jpg');
 const mapnik = require('./background/assets/img/mapnik.jpg');
+const s2cloodless = require('./background/assets/img/s2cloudless.jpg');
 const mapquestOsm = require('./background/assets/img/mapquest-osm.jpg');
 const empty = require('./background/assets/img/none.jpg');
 const unknown = require('./background/assets/img/dafault.jpg');
@@ -58,7 +59,10 @@ const thumbs = {
     OpenTopoMap: {
         OpenTopoMap
     },
-    unknown
+    unknown,
+    s2cloudless: {
+        "s2cloudless:s2cloudless": s2cloodless
+    }
 };
 
 const backgroundSelector = createSelector([
