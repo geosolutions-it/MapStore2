@@ -12,7 +12,8 @@ const {
     wfsDownloadAvailable,
     wfsDownloadSelector,
     widgetBuilderAvailable,
-    widgetBuilderSelector
+    widgetBuilderSelector,
+    drawerEnabledControlSelector
 } = require("../controls");
 
 const state = {
@@ -61,6 +62,15 @@ describe('Test controls selectors', () => {
     });
     it('test widgetBuilderSelector', () => {
         const retVal = widgetBuilderSelector(state);
+        expect(retVal).toExist();
+        expect(retVal).toBe(true);
+    });
+    it('test drawerEnabledControlSelector default value', () => {
+        const retVal = drawerEnabledControlSelector(state);
+        expect(retVal).toBe(false);
+    });
+    it('test drawerEnabledControlSelector', () => {
+        const retVal = drawerEnabledControlSelector({controls: {drawer: {enabled: true}}});
         expect(retVal).toExist();
         expect(retVal).toBe(true);
     });
