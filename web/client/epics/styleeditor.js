@@ -326,7 +326,7 @@ module.exports = {
                             init: action.init
                         })
                     ],
-                    [
+                    status === 'edit' ? [] : [
                         error({
                             title: "styleeditor.updateTmpErrorTitle",
                             message: "styleeditor.updateTmpStyleErrorMessage",
