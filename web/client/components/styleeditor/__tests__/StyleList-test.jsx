@@ -112,7 +112,7 @@ describe('test StyleList module component', () => {
 
         TestUtils.Simulate.click(cards[2]);
 
-        expect(spyOnSelect).toHaveBeenCalledWith({style: 'circle'});
+        expect(spyOnSelect).toHaveBeenCalledWith({style: 'circle'}, true);
     });
 
     it('test StyleList onSelect default', () => {
@@ -158,6 +158,6 @@ describe('test StyleList module component', () => {
 
         TestUtils.Simulate.click(cards[0]);
 
-        expect(spyOnSelect).toHaveBeenCalledWith({style: ''});
+        expect(spyOnSelect).toHaveBeenCalledWith({style: ''}, true);
     });
 });

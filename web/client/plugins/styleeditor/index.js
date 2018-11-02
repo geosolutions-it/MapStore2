@@ -9,7 +9,7 @@
 const React = require('react');
 const { connect } = require('react-redux');
 const { createSelector } = require('reselect');
-const { compose, withState, defaultProps } = require('recompose');
+const { compose, withState, defaultProps, branch, lifecycle } = require('recompose');
 
 const inlineWidgets = require('./inlineWidgets');
 
@@ -24,6 +24,8 @@ const {
 } = require('../../actions/styleeditor');
 
 const { updateOptionsByOwner } = require('../../actions/additionallayers');
+const { updateSettingsParams } = require('../../actions/layers');
+const { getLayerCapabilities } = require('../../actions/layerCapabilities');
 
 const BorderLayout = require('../../components/layout/BorderLayout');
 const Editor = require('../../components/styleeditor/Editor');
@@ -46,7 +48,9 @@ const {
     addStyleSelector,
     selectedStyleSelector,
     canEditStyleSelector,
-    getAllStyles
+    getAllStyles,
+    styleServiceSelector,
+    getUpdatedLayer
 } = require('../../selectors/styleeditor');
 
 const { isAdminUserSelector } = require('../../selectors/security');
@@ -113,13 +117,15 @@ const StyleTemplates = compose(
                 templateIdSelector,
                 addStyleSelector,
                 geometryTypeSelector,
-                canEditStyleSelector
+                canEditStyleSelector,
+                styleServiceSelector
             ],
-            (selectedStyle, add, geometryType, canEdit) => ({
+            (selectedStyle, add, geometryType, canEdit, { formats = [] } = {}) => ({
                 selectedStyle,
                 add: add && selectedStyle,
                 geometryType,
-                canEdit
+                canEdit,
+                availableFormats: formats
             })
         ),
         {
@@ -134,7 +140,7 @@ const StyleTemplates = compose(
     withState('styleSettings', 'onUpdate', {})
 )(require('../../components/styleeditor/StyleTemplates'));
 
-const StyleSelector = compose(
+const StyleList = compose(
     connect(
         createSelector(
             [
@@ -147,11 +153,14 @@ const StyleSelector = compose(
                 enabledStyle,
                 availableStyles
             })
-        )
+        ),
+        {
+            onSelect: updateSettingsParams
+        }
     ),
     withState('filterText', 'onFilter', ''),
     withMask(
-        ({ status }) => status === 'template',
+        ({ status, readOnly }) => status === 'template' && !readOnly,
         () => <StyleTemplates />,
         {
             maskContainerStyle: {
@@ -202,9 +211,37 @@ const StyleToolbar = compose(
     )
 )(require('../../components/styleeditor/StyleToolbar'));
 
+const ReadOnlyStyleList = compose(
+    connect(createSelector(
+        [
+            getUpdatedLayer
+        ],
+        (layer) => ({
+            layer
+        })
+    ), {
+        onInit: getLayerCapabilities
+    }),
+    lifecycle({
+        componentWillMount() {
+            if (this.props.onInit && this.props.layer) {
+                this.props.onInit(this.props.layer);
+            }
+        }
+    })
+)(
+    () =>
+        <BorderLayout className="ms-style-editor-container" footer={<div style={{ height: 25 }} />}>
+            <StyleList readOnly />
+        </BorderLayout>
+);
+
 module.exports = {
+    StyleSelector: branch(
+        ({ readOnly }) => readOnly,
+        () => ReadOnlyStyleList
+    )(StyleList),
     StyleTemplates,
-    StyleSelector,
     StyleToolbar,
     StyleCodeEditor
 };

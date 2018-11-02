@@ -14,7 +14,8 @@ const {
     widgetBuilderAvailable,
     widgetBuilderSelector,
     initialSettingsSelector,
-    originalSettingsSelector
+    originalSettingsSelector,
+    activeTabSettingsSelector
 } = require("../controls");
 
 const state = {
@@ -41,7 +42,8 @@ const state = {
             },
             originalSettings: {
                 style: 'generic'
-            }
+            },
+            activeTab: 'style'
         }
     }
 };
@@ -91,5 +93,12 @@ describe('Test controls selectors', () => {
         expect(retVal).toEqual({
             style: 'generic'
         });
+    });
+    it('test activeTabSettingsSelector', () => {
+        const retVal = activeTabSettingsSelector(state);
+        expect(retVal).toExist();
+        expect(retVal).toBe('style');
+
+        expect(activeTabSettingsSelector({})).toBe('general');
     });
 });

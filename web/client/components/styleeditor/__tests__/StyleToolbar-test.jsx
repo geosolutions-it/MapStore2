@@ -50,7 +50,7 @@ describe('test StyleToolbar module component', () => {
         const buttons = document.querySelectorAll('.btn');
         expect(buttons.length).toBe(2);
         const disabledButtons = document.querySelectorAll('button:disabled');
-        expect(disabledButtons.length).toBe(1);
+        expect(disabledButtons.length).toBe(0);
     });
 
 });

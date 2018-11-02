@@ -23,8 +23,6 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 const General = require('../../components/TOC/fragments/settings/General');
 const Display = require('../../components/TOC/fragments/settings/Display');
 
-const WMSStyle = require('../../components/TOC/fragments/settings/WMSStyle');
-
 const Elevation = require('../../components/TOC/fragments/settings/Elevation');
 const FeatureInfoEditor = require('../../components/TOC/fragments/settings/FeatureInfoEditor');
 const LoadingView = require('../../components/misc/LoadingView');
@@ -34,6 +32,9 @@ const responses = {
     json: JSON.parse(require('raw-loader!./featureInfoPreviews/responseJSON.txt')),
     text: require('raw-loader!./featureInfoPreviews/responseText.txt')
 };
+
+const { StyleSelector } = require('../styleeditor/index');
+const StyleList = defaultProps({ readOnly: true })(StyleSelector);
 
 const formatCards = {
     TEXT: {
@@ -153,7 +154,7 @@ module.exports = ({showFeatureInfoTab = true, ...props}, {plugins, pluginsConfig
             visible: props.settings.nodeType === 'layers' && props.element.type === "wms",
             Component: props.activeTab === 'style' && props.element.thematic && settingsPlugins.ThematicLayer && getConfiguredPlugin(settingsPlugins.ThematicLayer, loadedPlugins, <LoadingView width={100} height={100} />)
             || settingsPlugins.StyleEditor && getConfiguredPlugin({...settingsPlugins.StyleEditor, cfg: {...settingsPlugins.StyleEditor.cfg, active: true }}, loadedPlugins, <LoadingView width={100} height={100} />)
-            || WMSStyle,
+            || StyleList,
             toolbar: [
                 {
                     glyph: 'list',

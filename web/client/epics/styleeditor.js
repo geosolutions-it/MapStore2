@@ -51,7 +51,7 @@ const {
 
 const { getSelectedLayer } = require('../selectors/layers');
 const { isAdminUserSelector } = require('../selectors/security');
-const { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME } = require('../utils/StyleEditorUtils');
+const { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts } = require('../utils/StyleEditorUtils');
 const { normalizeUrl } = require('../utils/PrintUtils');
 const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
 /*
@@ -305,7 +305,7 @@ module.exports = {
                 const styleName = temporaryId || generateTemporaryStyleId();
                 const format = action.format || formatStyleSelector(state);
                 const status = statusStyleSelector(state);
-                const { baseUrl = '' } = styleServiceSelector(state);
+                const { baseUrl = '', formats } = styleServiceSelector(state);
 
                 const updateTmpCode = createUpdateStyleObservable(
                     {
@@ -325,18 +325,40 @@ module.exports = {
                             format,
                             init: action.init
                         })
+                    ],
+                    [
+                        error({
+                            title: "styleeditor.updateTmpErrorTitle",
+                            message: "styleeditor.updateTmpStyleErrorMessage",
+                            uid: "updateTmpStyleError",
+                            autoDismiss: 5
+                        })
                     ]
                 );
 
+                const availableFormat = isArray(formats) && formats.indexOf('css') !== -1 && 'css' || 'sld';
+                // valid code needed to initialize and create temp style
+                const baseCode = availableFormat === 'css' && '* { stroke: #888888; }' ||
+                availableFormat === 'sld' && '<?xml version="1.0" encoding="ISO-8859-1"?>\n<StyledLayerDescriptor version="1.0.0"\n\t\txsi:schemaLocation="http://www.opengis.net/sld StyledLayerDescriptor.xsd"\n\t\txmlns="http://www.opengis.net/sld"\n\t\txmlns:ogc="http://www.opengis.net/ogc"\n\t\txmlns:xlink="http://www.w3.org/1999/xlink"\n\t\txmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">\n\n\t<NamedLayer>\n\t\t<Name>Default Style</Name>\n\t\t<UserStyle>\n\t\t\t<Title>${styleTitle}</Title>\n\t\t\t<Abstract>${styleAbstract}</Abstract>\n\t\t\t<FeatureTypeStyle>\n\t\t\t\t<Rule>\n\t\t\t\t\t<Name>Rule Name</Name>\n\t\t\t\t\t<Title>Rule Title</Title>\n\t\t\t\t\t<Abstract>Rule Abstract</Abstract>\n\t\t\t\t\t<LineSymbolizer>\n\t\t\t\t\t\t<Stroke>\n\t\t\t\t\t\t\t<CssParameter name="stroke">#0000FF</CssParameter>\n\t\t\t\t\t\t</Stroke>\n\t\t\t\t\t\t</LineSymbolizer>\n\t\t\t\t\t<PointSymbolizer>\n\t\t\t\t\t\t<Graphic>\n\t\t\t\t\t\t\t<Mark>\n\t\t\t\t\t\t\t\t<WellKnownName>square</WellKnownName>\n\t\t\t\t\t\t\t\t<Fill>\n\t\t\t\t\t\t\t\t\t<CssParameter name="fill">#FF0000</CssParameter>\n\t\t\t\t\t\t\t\t</Fill>\n\t\t\t\t\t\t\t</Mark>\n\t\t\t\t\t\t</Graphic>\n\t\t\t\t\t</PointSymbolizer>\n\t\t\t\t\t</Rule>\n\t\t\t\t</FeatureTypeStyle>\n\t\t\t</UserStyle>\n\t\t</NamedLayer>\n\t</StyledLayerDescriptor>\n'
+                || '';
+
                 return temporaryId && updateTmpCode ||
                     createUpdateStyleObservable({
-                        code: '* { stroke: #888888; }',
-                        format: 'css',
+                        code: baseCode,
+                        format: availableFormat,
                         styleName,
                         status,
                         baseUrl
                     },
-                    updateTmpCode
+                    updateTmpCode,
+                    [
+                        error({
+                            title: "styleeditor.createTmpErrorTitle",
+                            message: "styleeditor.createTmpStyleErrorMessage",
+                            uid: "createTmpStyleError",
+                            autoDismiss: 5
+                        })
+                    ]
                 );
             }),
     /**
@@ -349,11 +371,12 @@ module.exports = {
     createStyleEpic: (action$, store) =>
         action$.ofType(CREATE_STYLE)
             .switchMap(action => {
-
                 const state = store.getState();
                 const code = codeStyleSelector(state);
-                const styleName = generateStyleId(action.settings);
                 const layer = getUpdatedLayer(state);
+                const { workspace } = getNameParts(layer.name);
+                // add new style to layer workspace
+                const styleName = `${workspace ? `${workspace}:` : ''}${generateStyleId(action.settings)}`;
                 const format = formatStyleSelector(state);
                 const { title = '', _abstract = '' } = action.settings || {};
                 const { baseUrl = '' } = styleServiceSelector(state);
@@ -374,7 +397,15 @@ module.exports = {
                         )
                         .merge(
                             updateAvailableStylesObservable({layer, styleName, format, title, _abstract, baseUrl})
-                        )
+                        ),
+                        [
+                            error({
+                                title: "styleeditor.createStyleErrorTitle",
+                                message: "styleeditor.createStyleErrorMessage",
+                                uid: "createStyleError",
+                                autoDismiss: 5
+                            })
+                        ]
                     );
             }),
     /**
@@ -419,6 +450,14 @@ module.exports = {
                             title: "styleeditor.savedStyleTitle",
                             message: "styleeditor.savedStyleMessage",
                             uid: "savedStyleTitle",
+                            autoDismiss: 5
+                        })
+                    ],
+                    [
+                        error({
+                            title: "styleeditor.updateStyleErrorTitle",
+                            message: "styleeditor.updateStyleErrorMessage",
+                            uid: "updateStyleError",
                             autoDismiss: 5
                         })
                     ]

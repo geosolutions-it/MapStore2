@@ -142,7 +142,8 @@ const layerPropertiesSelector = state => {
  */
 const selectedStyleSelector = state => {
     const updatedLayer = getUpdatedLayer(state);
-    return updatedLayer.style || '';
+    return updatedLayer.style
+    || updatedLayer.availableStyles && updatedLayer.availableStyles[0] && updatedLayer.availableStyles[0].name;
 };
 /**
  * selects all style values of selected layer (availableStyles, defaultStyle, enabledStyle) from state

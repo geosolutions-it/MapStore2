@@ -26,7 +26,6 @@ const Message = require('../I18N/Message');
  * @prop {boolean} dock switch between Dockable Panel and Resizable Modal, default true (DockPanel)
  * @prop {string} activeTab current active tab, should match the tab id
  * @prop {function} getTabs must return an array of object representing the tabs, eg (props) => [{ id: 'general', Component: MyGeneralComponent}]
- * @prop {bool} locked if true disable inactive tabs and remove close button
  * @prop {string} className additional calss name
  */
 
@@ -53,22 +52,22 @@ const TOCItemSettings = (props, context) => {
         dock = true,
         showFullscreen,
         draggable,
-        position = 'left',
-        locked
+        position = 'left'
     } = props;
 
     const tabs = getTabs(props, context);
     const ToolbarComponent = head(tabs.filter(tab => tab.id === activeTab && tab.toolbarComponent).map(tab => tab.toolbarComponent));
+
+    const tabsCloseActions = tabs && tabs.map(tab => tab && tab.onClose).filter(val => val) || [];
+
     const toolbarButtons = [
         {
             glyph: 'floppy-disk',
             tooltipId: 'save',
             visible: !!onSave,
-            onClick: onSave
+            onClick: () => onSave(tabsCloseActions)
         },
         ...(head(tabs.filter(tab => tab.id === activeTab && tab.toolbar).map(tab => tab.toolbar)) || [])];
-
-    const tabsCloseActions = tabs && tabs.map(tab => tab && tab.onClose).filter(val => val) || [];
 
     return (
         <div>
@@ -77,7 +76,7 @@ const TOCItemSettings = (props, context) => {
                 glyph="wrench"
                 title={element.title && isObject(element.title) && (element.title[currentLocale] || element.title.default) || isString(element.title) && element.title || ''}
                 className={className}
-                onClose={locked ? null : () => {
+                onClose={() => {
                     if (onClose) {
                         onClose(false, tabsCloseActions);
                     } else {
@@ -106,7 +105,6 @@ const TOCItemSettings = (props, context) => {
                             <Nav bsStyle="tabs" activeKey={activeTab} justified>
                                 {tabs.map(tab =>
                                     <NavItemT
-                                        disabled={locked && activeTab !== tab.id}
                                         key={'ms-tab-settings-' + tab.id}
                                         tooltip={<Message msgId={tab.tooltipId}/> }
                                         eventKey={tab.id}

@@ -10,7 +10,7 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {layerSettingSelector, layersSelector, groupsSelector} = require('../selectors/layers');
 const {head, isArray} = require('lodash');
-const {withState, compose, defaultProps} = require('recompose');
+const {compose, defaultProps} = require('recompose');
 const {hideSettings, updateSettings, updateNode, updateSettingsParams} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {currentLocaleSelector} = require('../selectors/locale');
@@ -22,8 +22,7 @@ const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {isAdminUserSelector} = require('../selectors/security');
 const {setControlProperty} = require('../actions/controls');
 const {toggleStyleEditor} = require('../actions/styleeditor');
-const {statusStyleSelector} = require('../selectors/styleeditor');
-const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
+const { initialSettingsSelector, originalSettingsSelector, activeTabSettingsSelector } = require('../selectors/controls');
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,
@@ -34,8 +33,8 @@ const tocItemsSettingsSelector = createSelector([
     isAdminUserSelector,
     initialSettingsSelector,
     originalSettingsSelector,
-    statusStyleSelector
-], (settings, layers, groups, currentLocale, dockStyle, isAdmin, initialSettings, originalSettings, styleStatus) => ({
+    activeTabSettingsSelector
+], (settings, layers, groups, currentLocale, dockStyle, isAdmin, initialSettings, originalSettings, activeTab) => ({
     settings,
     element: settings.nodeType === 'layers' && isArray(layers) && head(layers.filter(layer => layer.id === settings.node)) ||
     settings.nodeType === 'groups' && isArray(groups) && head(groups.filter(group => group.id === settings.node)) || {},
@@ -45,7 +44,7 @@ const tocItemsSettingsSelector = createSelector([
     isAdmin,
     initialSettings,
     originalSettings,
-    locked: !!styleStatus
+    activeTab
 }));
 
 /**
@@ -78,10 +77,10 @@ const TOCItemsSettingsPlugin = compose(
         onRetrieveLayerData: getLayerCapabilities,
         onUpdateOriginalSettings: setControlProperty.bind(null, 'layersettings', 'originalSettings'),
         onUpdateInitialSettings: setControlProperty.bind(null, 'layersettings', 'initialSettings'),
+        onSetTab: setControlProperty.bind(null, 'layersettings', 'activeTab'),
         onUpdateParams: updateSettingsParams,
         onToggleStyleEditor: toggleStyleEditor
     }),
-    withState('activeTab', 'onSetTab', 'general'),
     updateSettingsLifecycle,
     defaultProps({
         getDimension: LayersUtils.getDimension,

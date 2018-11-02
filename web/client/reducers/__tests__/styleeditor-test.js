@@ -28,7 +28,7 @@ describe('Test styleeditor reducer', () => {
             baseUrl: '/geoserver'
         };
         const canEdit = true;
-        const state = styleeditor({canEdit: true}, initStyleService(service, canEdit));
+        const state = styleeditor({}, initStyleService(service, canEdit));
         expect(state).toEqual({
             service,
             canEdit: true
@@ -36,7 +36,7 @@ describe('Test styleeditor reducer', () => {
     });
     it('test setEditPermissionStyleEditor', () => {
         const canEdit = true;
-        const state = styleeditor({canEdit: true}, setEditPermissionStyleEditor(canEdit));
+        const state = styleeditor({}, setEditPermissionStyleEditor(canEdit));
         expect(state).toEqual({
             canEdit: true
         });
@@ -47,9 +47,8 @@ describe('Test styleeditor reducer', () => {
         const code = '* { stroke: #ff0000; }';
         const format = 'css';
         const init = true;
-        const state = styleeditor({canEdit: true}, updateTemporaryStyle({ temporaryId, templateId, code, format, init }));
+        const state = styleeditor({}, updateTemporaryStyle({ temporaryId, templateId, code, format, init }));
         expect(state).toEqual({
-            canEdit: true,
             temporaryId,
             templateId,
             code,
@@ -58,16 +57,14 @@ describe('Test styleeditor reducer', () => {
             initialCode: code
         });
     });
-    it('test updateTemporaryStyle', () => {
-        let state = styleeditor({canEdit: true}, updateStatus('edit'));
+    it('test updateStatus', () => {
+        let state = styleeditor({ }, updateStatus('edit'));
         expect(state).toEqual({
-            canEdit: true,
             status: 'edit'
         });
 
-        state = styleeditor({canEdit: true}, updateStatus(''));
+        state = styleeditor({}, updateStatus(''));
         expect(state).toEqual({
-            canEdit: true,
             status: '',
             code: '',
             templateId: '',
@@ -77,7 +74,7 @@ describe('Test styleeditor reducer', () => {
         });
     });
     it('test resetStyleEditor', () => {
-        const state = styleeditor({}, resetStyleEditor());
+        const state = styleeditor({canEdit: true}, resetStyleEditor());
         expect(state).toEqual({
             service: {},
             canEdit: true
@@ -105,7 +102,7 @@ describe('Test styleeditor reducer', () => {
     });
 
     it('test errorStyle', () => {
-        const state = styleeditor({ canEdit: true }, errorStyle('edit', { status: 400, statusText: 'Error on line 10, column 2' }));
+        const state = styleeditor({ }, errorStyle('edit', { status: 400, statusText: 'Error on line 10, column 2' }));
         expect(state).toEqual({
             loading: false,
             canEdit: true,
@@ -121,7 +118,7 @@ describe('Test styleeditor reducer', () => {
     });
 
     it('test errorStyle 401', () => {
-        const state = styleeditor({ canEdit: true }, errorStyle('', { status: 401, statusText: 'Error no auth' }));
+        const state = styleeditor({ }, errorStyle('', { status: 401, statusText: 'Error no auth' }));
         expect(state).toEqual({
             loading: false,
             canEdit: false,

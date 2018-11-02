@@ -18,19 +18,19 @@ const {
     SET_EDIT_PERMISSION
 } = require('../actions/styleeditor');
 
-function styleeditor(state = {canEdit: true}, action) {
+function styleeditor(state = {}, action) {
     switch (action.type) {
         case INIT_STYLE_SERVICE: {
             return {
                 ...state,
                 service: action.service,
-                canEdit: !state.canEdit ? false : action.canEdit
+                canEdit: action.canEdit
             };
         }
         case SET_EDIT_PERMISSION: {
             return {
                 ...state,
-                canEdit: !state.canEdit ? false : action.canEdit
+                canEdit: action.canEdit
             };
         }
         case UPDATE_TEMPORARY_STYLE: {
@@ -64,7 +64,7 @@ function styleeditor(state = {canEdit: true}, action) {
         case RESET_STYLE_EDITOR: {
             return {
                 service: state.service && {...state.service} || {},
-                canEdit: true
+                canEdit: state.canEdit
             };
         }
         case ADD_STYLE: {
@@ -99,7 +99,7 @@ function styleeditor(state = {canEdit: true}, action) {
             return {
                 ...state,
                 loading: false,
-                canEdit: !state.canEdit ? false : !(action.error && action.error.status === 401),
+                canEdit: !(action.error && (action.error.status === 401 || action.error.status === 403)),
                 error: {
                     ...state.error,
                     [action.status || 'global']: {

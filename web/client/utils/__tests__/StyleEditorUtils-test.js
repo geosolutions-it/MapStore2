@@ -22,7 +22,9 @@ const {
     extractFeatureProperties,
     getEditorMode,
     isSameOrigin,
-    getStyleTemplates
+    getStyleTemplates,
+    getNameParts,
+    stringifyNameParts
 } = require('../StyleEditorUtils');
 
 describe('StyleEditorUtils test', () => {
@@ -107,7 +109,23 @@ describe('StyleEditorUtils test', () => {
         expect(isSameOrigin({url: 'http://localhost:8080/geoserver'}, {baseUrl: '/geoserver', availableUrls: [ 'http://localhost:8080']})).toBe(true);
     });
     it('test getStyleTemplates', () => {
-        expect(getStyleTemplates().length > true).toBe(true);
+        expect(getStyleTemplates().length > 2).toBe(true);
+    });
+    it('test getNameParts', () => {
+        expect(getNameParts('workspace:name')).toEqual({
+            name: 'name',
+            workspace: 'workspace'
+        });
+
+        expect(getNameParts('name')).toEqual({
+            name: 'name',
+            workspace: undefined
+        });
+    });
+
+    it('test getNameParts', () => {
+        expect(stringifyNameParts({name: 'name', workspace: {name: 'workspace'}})).toBe('workspace:name');
+        expect(stringifyNameParts({name: 'name'})).toBe('name');
     });
 
 });

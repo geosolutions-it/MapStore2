@@ -61,6 +61,10 @@ const StyleTemplates = ({
     geometryType = '',
     templates = [],
     filterText,
+    availableFormats = [
+        'sld',
+        'css'
+    ],
     formFields = [
         {
             key: 'title',
@@ -108,7 +112,7 @@ const StyleTemplates = ({
                 }}
                 items={templates
                     .filter(({title}) => !filterText || filterText && title.indexOf(filterText) !== -1)
-                    .filter(({types}) => !types || head(types.filter(type => type === geometryType)))
+                    .filter(({types, format}) => (!types || head(types.filter(type => type === geometryType)) && availableFormats.indexOf(format) !== -1))
                     .map(styleTemplate => ({ ...styleTemplate, selected: styleTemplate.styleId === selectedStyle }))}/>
             <ResizableModal
                 show={!!add}

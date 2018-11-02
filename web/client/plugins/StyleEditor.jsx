@@ -43,14 +43,12 @@ class StyleEditorPanel extends React.Component {
         header: PropTypes.node,
         isEditing: PropTypes.bool,
         showToolbar: PropTypes.node.bool,
-        onUpdateParams: PropTypes.func,
         onInit: PropTypes.func,
         styleService: PropTypes.object
     };
 
     static defaultProps = {
         layer: {},
-        onUpdateParams: () => {},
         onInit: () => {},
         styleService: {
             baseUrl: '/geoserver/',
@@ -59,7 +57,7 @@ class StyleEditorPanel extends React.Component {
                 'sld'
             ],
             availableUrls: [
-                'http://localhost:8081/geoserver/'
+                'http://localhost:8080/geoserver/'
             ]
         }
     };
@@ -81,8 +79,7 @@ class StyleEditorPanel extends React.Component {
                     </div> : null
                 }
                 footer={<div style={{ height: 25 }} />}>
-                {this.props.isEditing ? <StyleCodeEditor /> : <StyleSelector
-                    onSelect={(params = {}) => this.props.onUpdateParams(params, true)}/>}
+                {this.props.isEditing ? <StyleCodeEditor /> : <StyleSelector />}
             </BorderLayout>
         );
     }

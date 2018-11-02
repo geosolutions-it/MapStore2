@@ -123,7 +123,7 @@ const StyleEditorUtils = {
     /**
      * Get name and workspace from a goeserver name
      * @param  {string} name function name
-     * @param  {object}
+     * @return  {object}
      */
     getNameParts(name) {
         const layerPart = isString(name) && name.split(':') || [];
@@ -131,7 +131,15 @@ const StyleEditorUtils = {
             workspace: layerPart[1] && layerPart[0],
             name: layerPart[1] || layerPart[0]
         };
-    }
+    },
+    /**
+     * Stringify name and workspace
+     * @param  {object} styleObj style object
+     * @param  {string} styleObj.name name of style without workspace
+     * @param  {object} styleObj.workspace {name: 'name of workspace'}
+     * @return  {string} combination of workspace and name, eg. 'workspace:stylename'
+     */
+    stringifyNameParts: ({name, workspace}) => `${workspace && workspace.name && `${workspace.name}:` || ''}${name}`
 };
 
 module.exports = StyleEditorUtils;

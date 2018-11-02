@@ -1478,7 +1478,15 @@
             "savedStyleTitle": "Style saved",
             "savedStyleMessage": "Style has been successfully saved",
             "missingAvailableStyles": "Missing styles",
-	        "missingAvailableStylesMessage": "<ul><h4>Possible causes:</h4> <li>Selected layer is a layer group</li><li>Layer is not correctly configured server side</li></ul>"
+	        "missingAvailableStylesMessage": "<ul><h4>Possible causes:</h4> <li>Selected layer is a layer group</li><li>Layer is not correctly configured server side</li></ul>",
+            "createTmpErrorTitle": "New Temporary Style",
+            "createTmpStyleErrorMessage": "Temporary style could not be created. This could due an unsupported style format on the style service",
+            "updateTmpErrorTitle": "Temporary Style Update",
+            "updateTmpStyleErrorMessage": "Temporary style could not be updated. This could be on unsupported style format or connection issue.",
+            "createStyleErrorTitle": "New Style",
+            "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
+            "updateStyleErrorTitle": "Edit Style",
+            "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue."
         },
         "rulesmanager": {
             "apply": "Primijeni",

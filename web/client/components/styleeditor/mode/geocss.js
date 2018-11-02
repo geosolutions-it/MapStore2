@@ -388,6 +388,8 @@ module.exports = (CodeMirror) => {
             "mark-size": true,
             "mark-rotation": true,
             "mark-label-obstacle": true,
+            "mark-anchor": true,
+            "mark-offset": true,
             "z-index": true,
             "stroke": true,
             "stroke-composite": true,

@@ -98,13 +98,13 @@ const StyleToolbar = ({
                     glyph: 'code',
                     tooltipId: 'styleeditor.editSelectedStyle',
                     visible: !status && editEnabled ? true : false,
-                    disabled: !!loading || defaultStyles.indexOf(selectedStyle) !== -1 || !selectedStyle,
+                    disabled: !!loading || defaultStyles.indexOf(selectedStyle) !== -1,
                     onClick: () => onEditStyle()
                 },
                 {
                     glyph: 'ok',
                     tooltipId: 'styleeditor.saveCurrentStyle',
-                    disabled: !!(error && error.edit && error.edit.status) || !!loading || defaultStyles.indexOf(selectedStyle) !== -1 || !selectedStyle,
+                    disabled: !!(error && error.edit && error.edit.status) || !!loading || defaultStyles.indexOf(selectedStyle) !== -1,
                     visible: status === 'edit' && editEnabled ? true : false,
                     onClick: () => onUpdate()
                 },

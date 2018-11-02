@@ -53,7 +53,8 @@ const settingsLifecycle = compose(
                 onUpdateInitialSettings({});
             }
         },
-        onSave: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onHideSettings = () => { }, onShowAlertModal = () => { } }) => () => {
+        onSave: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onHideSettings = () => { }, onShowAlertModal = () => { } }) => (tabsCloseActions = []) => {
+            tabsCloseActions.forEach(tabOnClose => { tabOnClose(); });
             onHideSettings();
             onShowAlertModal(false);
             // clean up internal settings state

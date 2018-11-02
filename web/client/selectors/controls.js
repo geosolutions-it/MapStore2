@@ -7,5 +7,6 @@ module.exports = {
     widgetBuilderAvailable: state => get(state, "controls.widgetBuilder.available", false),
     widgetBuilderSelector: (state) => get(state, "controls.widgetBuilder.enabled"),
     initialSettingsSelector: state => get(state, "controls.layersettings.initialSettings") || {},
-    originalSettingsSelector: state => get(state, "controls.layersettings.originalSettings") || {}
+    originalSettingsSelector: state => get(state, "controls.layersettings.originalSettings") || {},
+    activeTabSettingsSelector: state => get(state, "controls.layersettings.activeTab") || 'general'
 };

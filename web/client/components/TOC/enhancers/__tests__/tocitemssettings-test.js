@@ -158,7 +158,7 @@ describe("test updateSettingsLifecycle", () => {
         const spyOnUpdateOriginalSettings = expect.spyOn(testHandlers, 'onUpdateOriginalSettings');
         const spyOnUpdateInitialSettings = expect.spyOn(testHandlers, 'onUpdateInitialSettings');
 
-        const Component = settingsLifecycle(({onSave}) => <div id="test-save" onClick={onSave}></div>);
+        const Component = settingsLifecycle(({onSave}) => <div id="test-save" onClick={() => onSave()}></div>);
         ReactDOM.render(<Component
             onHideSettings={testHandlers.onHideSettings}
             onShowAlertModal={testHandlers.onShowAlertModal}

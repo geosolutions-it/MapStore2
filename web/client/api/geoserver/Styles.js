@@ -7,7 +7,7 @@
  */
 const axios = require('../../libs/ajax');
 const assign = require('object-assign');
-const { getNameParts } = require('../../utils/StyleEditorUtils');
+const { getNameParts, stringifyNameParts } = require('../../utils/StyleEditorUtils');
 
 const contentTypes = {
     css: 'application/vnd.geoserver.geocss+css',
@@ -29,7 +29,7 @@ const formatRequestData = ({options = {}, format, baseUrl, name, workspace}, isN
             'Content-Type': contentTypes[format]
         }
     };
-    const url = `${baseUrl}rest/styles${workspace && workspace + '/' || ''}${!isNameParam ? '/' + encodeURIComponent(name) : ''}`;
+    const url = `${baseUrl}rest/${workspace && `workspaces/${workspace}/` || ''}styles/${!isNameParam ? encodeURIComponent(name) : ''}`;
     return {
         options: opts,
         url
@@ -124,7 +124,7 @@ const Api = {
                 styles.forEach(({name}, idx) =>
                 axios.get(getStyleBaseUrl({...getNameParts(name), geoserverBaseUrl}))
                     .then(({data}) => {
-                        responses[idx] = assign({}, styles[idx], data && data.style || {});
+                        responses[idx] = assign({}, styles[idx], data && data.style && {...data.style, name: stringifyNameParts(data.style)} || {});
                         count--;
                         if (count === 0) resolve(responses.filter(val => val));
                     })

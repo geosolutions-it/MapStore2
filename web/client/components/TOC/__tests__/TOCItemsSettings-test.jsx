@@ -107,31 +107,6 @@ describe("test TOCItemsSettings", () => {
 
     });
 
-    it('test locked props ', () => {
-        ReactDOM.render(<TOCItemsSettings locked activeTab="general" getTabs={() => [
-            {
-                id: 'general',
-                titleId: 'layerProperties.general',
-                tooltipId: 'layerProperties.general',
-                glyph: 'wrench',
-                Component: () => <div id="test-general-body"></div>
-            },
-            {
-                id: 'display',
-                titleId: 'layerProperties.display',
-                tooltipId: 'layerProperties.display',
-                glyph: 'eye-open',
-                Component: () => <div id="test-display-body"></div>
-            }
-        ]} element={layers[0]}/>, document.getElementById("container"));
-
-        const closeButton = document.querySelectorAll('.square-button.ms-close');
-        expect(closeButton.length).toBe(0);
-        const disabledTabs = document.querySelectorAll('.disabled');
-        expect(disabledTabs.length).toBe(1);
-        expect(disabledTabs[0].querySelector('.glyphicon-eye-open')).toExist();
-    });
-
     it('test onClick function on tab', () => {
 
         const testHandlers = {
@@ -198,7 +173,7 @@ describe("test TOCItemsSettings", () => {
 
     it('test ToolbarComponent from tab', () => {
 
-        ReactDOM.render(<TOCItemsSettings locked activeTab="general" getTabs={() => [
+        ReactDOM.render(<TOCItemsSettings activeTab="general" getTabs={() => [
             {
                 id: 'general',
                 titleId: 'layerProperties.general',

@@ -1477,8 +1477,15 @@
             "savedStyleTitle": "Estilo guardado",
             "savedStyleMessage": "El estilo se ha guardado con éxito.",
             "missingAvailableStyles": "Estilos que faltan",
-            "missingAvailableStylesMessage": "<ul> <h4> Causas posibles: </h4> <li> La capa seleccionada es un grupo de capas </li> <li> La capa no está configurada correctamente en el lado del servidor </li> </ul>"
-
+            "missingAvailableStylesMessage": "<ul> <h4> Causas posibles: </h4> <li> La capa seleccionada es un grupo de capas </li> <li> La capa no está configurada correctamente en el lado del servidor </li> </ul>",
+            "createTmpErrorTitle": "Nuevo estilo temporal",
+            "createTmpStyleErrorMessage": "No se pudo crear el estilo temporal. Esto podría deberse a un formato de estilo no compatible en el servicio de estilo",
+            "updateTmpErrorTitle": "Actualización de estilo temporal",
+            "updateTmpStyleErrorMessage": "El estilo temporal no pudo ser actualizado. Esto podría estar en formato de estilo no compatible o problema de conexión.",
+            "createStyleErrorTitle": "Nuevo estilo",
+            "createStyleErrorMessage": "El estilo no se pudo guardar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión.",
+            "updateStyleErrorTitle": "Editar estilo",
+            "updateStyleErrorMessage": "El estilo no se pudo actualizar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión."
         },
         "rulesmanager": {
             "apply": "Aplicar",
