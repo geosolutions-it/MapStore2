@@ -63,8 +63,8 @@
             "featureTypeError": "Impossibile caricare gli attributi del layer",
             "featureTypeErrorInvalidJSON": "Impossibile caricare gli attributi del layer. La risposta non è valida",
             "elevation": "Elevazione",
-            "titleTranslations": "Title translations",
-            "groupProperties": "Group properties",
+            "titleTranslations": "Traduzioni di titoli",
+            "groupProperties": "Proprietà del gruppo",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Formato risposta interrogazioni su mappa",
             "legenderror": "Legenda non disponibile",
@@ -289,7 +289,9 @@
             }
         },
         "map": {
+            "errorLoadingFont": "Il marker con il font family: {family} non sarà renderizzato correttamente, perchè il font non è stato caricato",
             "loading": "In caricamento...",
+            "loadingSpinner": "Caricamento Mappa",
             "loadingerror": "Errore di caricamento",
             "name": "Nome",
             "description": "Descrizione",
@@ -343,6 +345,13 @@
                 "titleUnsavedChanges": "Sicuro di chiudere senza salvare?",
                 "sureToClose": "Sicuro di chiudere senza salvare?",
                 "fieldsChanged": "Alcuni dati sono cambiati"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Mappa non trovata",
+                    "notAccessible": "Mappa non accessibile",
+                    "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li></ul> <p>"
+                }
             }
         },
         "floatinglegend": {
@@ -405,6 +414,41 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Errore nella ricerca dei metadati"
                 }
+            },
+            "thematic": {
+                "classification_field": "Campo di classificazione:",
+                "classification_method": "Metodo di classificazione:",
+                "classification_aggregate": "Funzione aggregata:",
+                "classification_colors": "Colori:",
+                "classification_intervals": "Intervalli:",
+                "preview": "Anteprima",
+                "remove_thematic": "Stile semplice",
+                "values": {
+                    "equalInterval": "Intervalli uguali",
+                    "quantile": "Quantile",
+                    "jenks": "Interruzioni naturali",
+                    "sum": "Somma",
+                    "avg": "Media",
+                    "count": "Totale",
+                    "min": "Min",
+                    "max": "Max"
+                },
+                "configuration": "Configurazione",
+                "apply": "Applicare la classificazione",
+                "restore": "Annulla le personalizzazioni",
+                "go_to_cfg": "Configura ...",
+                "go_to_thema": "Usa questa configurazione",
+                "cfgError": "Errore nella configurazione JSON",
+                "classify": "Classificazione",
+                "remove": "Rimuovi la classificazione",
+                "data_panel": "Dati",
+                "classification_stroke": "Bordo",
+                "classification_error": "Errore durante la chiamata al servizio di classificazione: {message}",
+                "fields_error": "Errore durante il caricamento dell'elenco dei campi: {message}",
+                "interval_limit": "Inserisci un valore tra {min} e {max}",
+                "invalid_object": "Risposta del servizio non valida",
+                "invalid_geometry": "Il tipo di geometria non è valido, deve essere un punto, una linea o un poligono",
+                "invalid_classes": "Il valore massimo di ogni classe deve essere maggiore del relativo minimo"
             }
         },
         "print":{
@@ -667,7 +711,8 @@
                 "load_config_exception": "Errore Caricamento Configurazione"
             },
             "comboField": {
-                "default_placeholder": "Seleziona..."
+                "default_placeholder": "Seleziona...",
+                 "drop_down": "Apri il menu a discesa"
             },
             "form": {
                 "header": "Cerca nel dataset",
@@ -676,6 +721,7 @@
             "emptyfilter": "Nessun filtro selezionato. La ricerca potrebbe andare in timeout se il server non supporta la paginazione.",
             "attributefilter":{
                 "add_condition": " Aggiungi Condizione",
+                "delete": " Elimina",
                 "add_group": " Aggiungi Gruppo",
                 "group_label_a": "Soddisfa",
                 "group_label_b": "seguenti condizioni:",
@@ -706,6 +752,7 @@
                 "geometric_operation": "Operazione Geometrica",
                 "combo_placeholder": "Seleziona...",
                 "spatial_filter_header": "Regione di interesse",
+                "remove": "Rimuovi",
                 "draw_start_label": "Disegna sulla mappa l'area di interesse",
                 "dwithin_label": "metri",
                 "details": {
@@ -985,6 +1032,8 @@
             "serviceTitle": "Titolo",
             "serviceTitlePlaceholder": "inserisci un titolo",
             "missingReference": "Metadati di riferimento OGC mancanti",
+            "showDescription": "Mostra descrizione completa",
+            "hideDescription": "Nascondi descrizione completa",
             "notification": {
                 "warningAddCatalogService": "Inserisci un url e titolo validi.",
                 "addCatalogService": "Servizio aggiunto corretamente.",
@@ -1157,6 +1206,7 @@
                 "placeholders": {
                     "default": "Cerca...",
                     "string": "Digita testo da cercare...",
+                    "date": "Digita data da cercare...",
                     "number": "Digita numero o espressione..."
                 },
                 "tooltips": {
@@ -1331,6 +1381,9 @@
             },
             "chartOptionsTitle": "Configura dati",
             "widgetOptionsTitle": "Configura informazioni widget",
+            "placeHolder":{
+                "default":"Seleziona attributo"
+            },
             "groupByAttributes": {
                 "line": "Attributo X",
                 "pie": "Raggruppa per",
@@ -1341,11 +1394,11 @@
             },
             "aggregationAttribute": {
                 "line": "Attributo Y",
-                "pie": "Valore",
+                "pie": "Usa",
                 "bar": "Attributo Y",
-                "gauge": "Valore",
-                "counter": "Valore",
-                "default": "Valore"
+                "gauge": "Usa",
+                "counter": "Usa",
+                "default": "Usa"
             },
             "aggregateFunction": {
                 "line": "Operazione",
@@ -1377,10 +1430,25 @@
                 "pie": "Mostra legenda",
                 "bar": "Mostra legenda",
                 "gauge": "Mostra etichette"
+            },
+            "displayCartesian": {
+                "line": "Nascondi griglia",
+                "bar": "Nascondi griglia"
+            },"yAxis":{
+                "line": "Nascondi l'asse Y",
+                "bar": "Nascondi l'asse Y"
+            },
+            "yAxisLabel":{
+                "line": "Etichetta legenda",
+                "bar": "Etichetta legenda"
+            },
+            "advancedOptions":{
+                "line": "Opzioni avanzate",
+                "bar": "Opzioni avanzate"
             }
-
         },
         "dashboard": {
+            "loadingSpinner": "Caricamento Dashboard",
             "saveDialog": {
                 "title": "Modifica proprietà dashboard",
                 "name": "Nome",
@@ -1398,8 +1466,10 @@
                     "title": "Errore di caricamento della dashboard",
                     "dashboardNotAccessible": "Non hai i permessi per accedere a questa dashboard. Contatta il properietario",
                     "pleaseLogin": "Questa risorsa non è pubblica. Effettuare il login",
-                    "dashboardDoesNotExist": "La dashboard richiesta non esiste o è stata cancellata",
-                    "unknownError": "C'è stato un errore durante il caricamento della dashboard. Contattare l'amministratore"
+                    "dashboardDoesNotExist": "La dashboard richiesta non esiste",
+                    "unknownError": "C'è stato un errore durante il caricamento della dashboard. Contattare l'amministratore",
+                    "notFound": "Dashboard non trovata",
+                    "notAccessible": "Dashboard non accessibile"
                 },
                 "resourceAlreadyExists": "Una risorsa con questo nome esiste già. Provare con '{data}'"
             },
@@ -1462,7 +1532,6 @@
                 "filter": "Ricerca...",
                 "role": "Cerca Gruppo",
                 "user": "Cerca Utenti",
-                "ip": "Seleziona IP",
                 "service": "Cerca Servizi",
                 "request": "Cerca Richieste",
                 "workspace": "Cerca Workspacs",
@@ -1625,6 +1694,46 @@
                 "cesiumNavigation": {
                     "title": "Navigazione",
                     "text": "Qui puoi trovare i pulsanti per lo zoom in e out"
+                },
+                "dashboardIntro": {
+                    "title": "Dashboard Tutorial",
+                    "text": "Panoramica delle funzionalità della dashboard"
+                },
+                "dashboardNav": {
+                    "title": "Barra di navigazione",
+                    "text": "Qui puoi trovare il selettore della lingua, il login, il link della homepage e il menu delle opzioni"
+                },
+                "dashboardContainer": {
+                    "title": "Cruscotto",
+                    "text": "<p> Una Dashboard in MapStore2 fornisce un insieme di informazioni raccolte in modo appropriato per mostrare i dati aggregati in un'unica visualizzazione. I dati geospaziali visualizzati in una mappa possono essere affiancati alle relative tabelle degli attributi, grafici ed altro, allo scopo di connettere diversi tipi di informazioni, mostrare dettagli statistici e descrizioni testuali relative ad un contesto specifico. </p> <p> Tutti gli utenti possono visualizzare e interagire con le dashboard pubblicate, ma solo gli utenti autorizzati a modificare possono aggiungere, organizzare, ridimensionare o eliminare tutti i widget all'interno di una dashboard </p>"
+                },
+                "dashboardAddWidget": {
+                    "title": "Aggiungi widget",
+                    "text": "Per aggiungere un widget alla dashboard, puoi cliccare sul pulsante +"
+                },
+                "dashboardBuilder": {
+                    "title": "Crea un nuovo widget",
+                    "text": "È possibile selezionare il tipo di widget desiderato e quindi aggiungerlo alla dashboard selezionando uno degli elementi nell'elenco"
+                },
+                "dashboardAddChart": {
+                    "title": "Widget Grafico",
+                    "text": "<p> È un widget che mostra e aggrega i dati in grafici a torta, linea o a istogramma. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Seleziona il tipo di grafico </li> <li> Configura i dati del grafico </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+                },
+                "dashboardAddText": {
+                    "title": "Widget Testo",
+                    "text": "<p> Aggiungi un testo alla dashboard. </p> <p> Passaggi: </p> <p> <ul> <li> Modifica il testo nell'editor </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+                },
+                "dashboardAddTable": {
+                    "title": "Widget Tabella ",
+                    "text": "<p> Aggiungi una tabella di attributi alla dashboard che contiene dati di un livello vettoriale selezionato. Puoi anche filtrare i dati per personalizzare la tabella. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Configura dati tabella </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+                },
+                "dashboardAddCounter": {
+                    "title": "Widget Contatore",
+                    "text": "<p> Aggiungi un nuovo contatore alla dashboard. Il contatore mostrerà il valore numerico aggregando i dati da un livello vettoriale selezionato. </p> <p> Passi: </p> <p> <ul> <li> Seleziona un livello vettoriale </li> <li> Configura i dati del contatore </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
+                },
+                "dashboardAddMap": {
+                    "title": "Widget Mappa",
+                    "text": "<p> Aggiungi una nuova mappa interattiva alla dashboard. È possibile aggiungere più di una mappa con la possibilità di collegare ad esse altri widget. Dopo aver salvato la prima mappa, il widget legenda verrà aggiunto all'elenco. Legend Widget mostrerà una legenda relativa alla mappa connessa. </p> <p> Passaggi: </p> <p> <ul> <li> Seleziona una mappa </li> <li> Migliora la mappa aggiungendo nuovi livelli </li> <li> Salva e aggiungi alla dashboard </li> </ul> </p>"
                 }
             }
     }

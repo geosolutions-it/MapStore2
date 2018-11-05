@@ -8,6 +8,7 @@
 
 const expect = require('expect');
 const mapInfo = require('../mapInfo');
+const { featureInfoClick } = require('../../actions/mapInfo');
 const assign = require('object-assign');
 
 require('babel-polyfill');
@@ -194,11 +195,11 @@ describe('Test the mapInfo reducer', () => {
     });
 
     it('set a new point on map which has been clicked', () => {
-        let state = mapInfo({}, {type: 'FEATURE_INFO_CLICK', point: "p"});
+        let state = mapInfo({}, featureInfoClick("p"));
         expect(state.clickPoint).toExist();
         expect(state.clickPoint).toBe('p');
 
-        state = mapInfo({clickPoint: 'oldP'}, {type: 'FEATURE_INFO_CLICK', point: "p"});
+        state = mapInfo({ clickPoint: 'oldP' }, featureInfoClick("p"));
         expect(state.clickPoint).toExist();
         expect(state.clickPoint).toBe('p');
     });

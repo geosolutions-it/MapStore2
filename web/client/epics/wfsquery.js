@@ -109,13 +109,15 @@ const wfsQueryEpic = (action$, store) =>
         .switchMap(action => {
             const sortOptions = getDefaultSortOptions(getFirstAttribute(store.getState()));
             const totalFeatures = paginationInfo.totalFeatures(store.getState());
+            const queryOptions = action.queryOptions || {};
             const searchUrl = ConfigUtils.filterUrlParams(action.searchUrl, authkeyParamNameSelector(store.getState()));
             return Rx.Observable.merge(
                     getJSONFeatureWA(searchUrl, action.filterObj, {
                         totalFeatures,
-                        sortOptions
+                        sortOptions,
+                        ...queryOptions
                     })
-                    .map(data => querySearchResponse(data, action.searchUrl, action.filterObj))
+                    .map(data => querySearchResponse(data, action.searchUrl, action.filterObj, action.queryOptions))
                     .catch(error => Rx.Observable.of(queryError(error)))
                     .startWith(featureLoading(true))
                     .concat(Rx.Observable.of(featureLoading(false)))

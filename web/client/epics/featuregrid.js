@@ -22,6 +22,7 @@ const {changeDrawingStatus, GEOMETRY_CHANGED, drawSupportReset} = require('../ac
 const requestBuilder = require('../utils/ogc/WFST/RequestBuilder');
 const {findGeometryProperty} = require('../utils/ogc/WFS/base');
 const {setControlProperty} = require('../actions/controls');
+const { FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER} = require('../actions/mapInfo');
 const {query, QUERY_CREATE, QUERY_RESULT, LAYER_SELECTED_FOR_SEARCH, FEATURE_TYPE_LOADED, UPDATE_QUERY, featureTypeSelected, createQuery, updateQuery, TOGGLE_SYNC_WMS, QUERY_ERROR, FEATURE_LOADING} = require('../actions/wfsquery');
 const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
@@ -43,7 +44,7 @@ const {setHighlightFeaturesPath} = require('../actions/highlight');
 
 const {selectedFeaturesSelector, changesMapSelector, newFeaturesSelector, hasChangesSelector, hasNewFeaturesSelector,
     selectedFeatureSelector, selectedFeaturesCount, selectedLayerIdSelector, isDrawingSelector, modeSelector,
-    isFeatureGridOpen, hasSupportedGeometry} = require('../selectors/featuregrid');
+    isFeatureGridOpen, hasSupportedGeometry, queryOptionsSelector} = require('../selectors/featuregrid');
 const {queryPanelSelector} = require('../selectors/controls');
 
 const {error, warning} = require('../actions/notifications');
@@ -156,7 +157,6 @@ const createDeleteFlow = (features, describeFeatureType, url) => save(
     url,
     createDeleteTransaction(features, requestBuilder(describeFeatureType))
 );
-
 const createLoadPageFlow = (store) => ({page, size} = {}) => {
     const state = store.getState();
     return Rx.Observable.of( query(
@@ -165,7 +165,8 @@ const createLoadPageFlow = (store) => ({page, size} = {}) => {
                     ...(wfsFilter(state))
                 },
                 getPagination(state, {page, size})
-            )
+            ),
+            queryOptionsSelector(state)
     ));
 };
 
@@ -250,7 +251,8 @@ module.exports = {
                             sortOptions: {sortBy, sortOrder}
                         },
                         getPagination(store.getState())
-                    )
+                ),
+                queryOptionsSelector(store.getState())
             ))
             .merge(action$.ofType(QUERY_RESULT)
                     .map((ra) => fatureGridQueryResult(get(ra, "result.features", []), [get(ra, "filterObj.pagination.startIndex")]))
@@ -296,7 +298,8 @@ module.exports = {
                             ...wfsFilter(store.getState())
                         },
                         getPagination(store.getState(), {page: page, size})
-                    )
+                    ),
+                    queryOptionsSelector(store.getState())
                 ),
                 refreshLayerVersion(selectedLayerIdSelector(store.getState()))
             )
@@ -322,11 +325,11 @@ module.exports = {
                         wfsURL(store.getState())
                     ).map(() => saveSuccess())
                     .catch((e) => Rx.Observable.of(saveError(), error({
-                        title: "featuregrid.errorSaving",
-                        message: e.message || "Unknown Exception",
-                        uid: "saveError",
-                        autoDismiss: 5
-                      })))
+                            title: "featuregrid.errorSaving",
+                            message: e.message || "Unknown Exception",
+                            uid: "saveError",
+                            autoDismiss: 5
+                        })))
                 )
 
 
@@ -349,10 +352,10 @@ module.exports = {
                         title: "featuregrid.errorSaving",
                         message: e.message || "Unknown Exception",
                         uid: "saveError"
-                      }))).concat(Rx.Observable.of(
-                          toggleTool("deleteConfirm"),
-                          clearSelection()
-                      ))
+                        }))).concat(Rx.Observable.of(
+                            toggleTool("deleteConfirm"),
+                            clearSelection()
+                        ))
                 )
         ),
     /**
@@ -536,13 +539,70 @@ module.exports = {
         .switchMap( () => {
             return Rx.Observable.of(setControlProperty("drawer", "enabled", false), toggleTool("featureCloseConfirm", false));
         }),
+    /**
+     * Removes the WMSFilter from the layer when the feature grid is closed.
+     *
+     */
     removeWmsFilterOnGridClose: (action$, store) =>
-        action$.ofType(OPEN_ADVANCED_SEARCH, CLOSE_FEATURE_GRID)
-           .filter(() => isSyncWmsActive(store.getState()))
-           .scan((acc, cur) => {
-               return cur.type === CLOSE_FEATURE_GRID && acc.type !== OPEN_ADVANCED_SEARCH ? removeFilterFromWMSLayer(store.getState()) : cur;
-           }, {type: ''})
-           .filter((a) => a.type === 'CHANGE_LAYER_PROPERTIES'),
+        action$.ofType(OPEN_FEATURE_GRID)
+            // always finish internal flow before listening another OPEN_EVENT
+            .exhaustMap( () =>
+                // when close is performed.A delay is needed to avoid close event
+                // to start the flow before OPEN_ADVANCED_SEARCH
+                action$.ofType(CLOSE_FEATURE_GRID).delay(50)
+                    // and WMS filter is active
+                    .filter(() => isSyncWmsActive(store.getState()))
+                    // remove the WMS Filter
+                    .switchMap(() => Rx.Observable.of(removeFilterFromWMSLayer(store.getState())))
+                    // but stop listening for close event if feature info, open search or location
+                    // change are performed before it
+                    .takeUntil(action$.ofType(LOCATION_CHANGE, FEATURE_INFO_CLICK, OPEN_ADVANCED_SEARCH))
+            ),
+    /**
+     * re-opens the feature grid after it was closed by feature info click
+     */
+    autoReopenFeatureGridOnFeatureInfoClose: (action$) =>
+        action$.ofType(OPEN_FEATURE_GRID)
+            // need to finalize the flow before listen the next open event to avoid
+            // to catch open feature info triggered by this flow or advanced search
+            .exhaustMap(() =>
+                Rx.Observable.race(
+                    action$.ofType(FEATURE_INFO_CLICK).take(1),
+                    action$.ofType(CLOSE_FEATURE_GRID).take(1)
+                ).exhaustMap((action) => action.type === CLOSE_FEATURE_GRID
+                    // a close event stops the flow living it free to listen the next event
+                    ? Rx.Observable.empty()
+                    : action$
+                        // if feature info was clicked, wait for a feature info close to reopen the feature grid
+                        .ofType(HIDE_MAPINFO_MARKER)
+                        .switchMap(() => Rx.Observable.of(openFeatureGrid()))
+
+                    ).takeUntil(
+                        action$.ofType(LOCATION_CHANGE)
+                            .merge(
+                                action$
+                                    // a close feature grid event not between feature info click and hide mapinfo marker
+                                    .ofType(CLOSE_FEATURE_GRID)
+                                    .withLatestFrom(
+                                        action$
+                                            .ofType(FEATURE_INFO_CLICK, HIDE_MAPINFO_MARKER)
+                                            .scan((acc, { type }) => {
+                                                switch (type) {
+                                                    case FEATURE_INFO_CLICK:
+                                                        return false;
+                                                    case HIDE_MAPINFO_MARKER:
+                                                        return true;
+                                                    default:
+                                                        return false;
+                                                }
+                                            }, true)
+                                            .startWith(true),
+                                        (a, b) => b
+                                    ).filter(e => e)
+
+                            )
+                    )
+            ),
     onOpenAdvancedSearch: (action$, store) =>
         action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
             return Rx.Observable.of(
@@ -594,7 +654,7 @@ module.exports = {
      * if this info is missing and sync is active we need to perform a getCapabilites
      * to the single layer in order to fetch this data. see #2210 issue.
      */
-     startSyncWmsFilter: (action$, store) =>
+    startSyncWmsFilter: (action$, store) =>
         action$.ofType(TOGGLE_SYNC_WMS)
         .filter( () => isSyncWmsActive(store.getState()))
         .switchMap(() => {
@@ -688,7 +748,8 @@ module.exports = {
                                 ...(wfsFilter(state))
                                 },
                                 {startIndex: nPs[0] * size, maxFeatures: needPages * size }
-                            )
+                    ),
+                    queryOptionsSelector(state)
                     )).filter(() => nPs.length > 0)
                 .merge( action$.ofType(QUERY_RESULT)
                     .filter(() => nPs.length > 0)
@@ -704,7 +765,7 @@ module.exports = {
                     }).take(1).takeUntil(action$.ofType(QUERY_ERROR))
                 ).merge(
                     action$.ofType(FEATURE_LOADING).filter(() => nPs.length > 0)
-                     // When loading we store the load more features request, on loading end we emit the last
+                    // When loading we store the load more features request, on loading end we emit the last
                     .filter(a => !a.isLoading)
                     .withLatestFrom(action$.ofType(LOAD_MORE_FEATURES))
                     .map((p) => p[1])

@@ -8,7 +8,7 @@
 const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
-
+const TestUtils = require('react-dom/test-utils');
 const NumberField = require('../NumberField');
 
 describe('NumberField', () => {
@@ -73,5 +73,39 @@ describe('NumberField', () => {
         cmp.changeNumber(null);
         cmp.changeNumber(10);
 
+    });
+
+    it('if value is NaN changeNumber should not be called', () => {
+        const actions = {
+            onUpdateField: () => {}
+        };
+
+        const spyOnUpdateField = expect.spyOn(actions, 'onUpdateField');
+        const cmp = ReactDOM.render(
+        <NumberField
+        onUpdateField={actions.onUpdateField}
+            />, document.getElementById("container"));
+        expect(cmp).toExist();
+        const node = ReactDOM.findDOMNode(cmp);
+        const input = node.getElementsByTagName('INPUT');
+        TestUtils.Simulate.change(input[0], {target: {value: 'aaa'}});
+        expect(spyOnUpdateField).toNotHaveBeenCalled();
+    });
+
+    it('if value is number changeNumber should be called', () => {
+        const actions = {
+            onUpdateField: () => {}
+        };
+
+        const spyOnUpdateField = expect.spyOn(actions, 'onUpdateField');
+        const cmp = ReactDOM.render(
+        <NumberField
+        onUpdateField={actions.onUpdateField}
+            />, document.getElementById("container"));
+        expect(cmp).toExist();
+        const node = ReactDOM.findDOMNode(cmp);
+        const input = node.getElementsByTagName('INPUT');
+        TestUtils.Simulate.change(input[0], {target: {value: '7'}});
+        expect(spyOnUpdateField).toHaveBeenCalled();
     });
 });

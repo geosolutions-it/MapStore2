@@ -17,10 +17,10 @@ const Select = require('react-select');
 
 const GeometricOperationSelector = require('./GeometricOperationSelector');
 const GroupField = require('./GroupField');
+const {isSameUrl} = require('../../../utils/URLUtils');
 
 
-const isSameOGCServiceRoot = (origSearchUrl, {search, url} = {}) => origSearchUrl === url || origSearchUrl === (search && search.url);
-
+const isSameOGCServiceRoot = (origSearchUrl, {search, url} = {}) => isSameUrl(origSearchUrl, url) || isSameUrl(origSearchUrl, (search && search.url));
 // bbox make not sense with cross layer filter
 const getAllowedSpatialOperations = (spatialOperations) => (spatialOperations || []).filter( ({id} = {}) => id !== "BBOX");
 
@@ -52,7 +52,7 @@ module.exports = ({
 
     return (<SwitchPanel
         loading={loadingCapabilities}
-        expanded={crossLayerExpanded && !loadingCapabilities && !errorObj}
+        expanded={operation && queryCollection.typeName ? true : crossLayerExpanded && !loadingCapabilities && !errorObj }
         error={errorObj}
         errorMsgId={"queryPanel"}
         buttons={[

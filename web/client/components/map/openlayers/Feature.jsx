@@ -56,50 +56,36 @@ class Feature extends React.Component {
 
     addFeatures = (props) => {
         const format = new ol.format.GeoJSON();
-        let geometry = null;
-        if (this.props.type === "FeatureCollection") {
-            geometry = this.props.features;
+
+        let ftGeometry = null;
+        let canRender = false;
+
+        if (props.type === "FeatureCollection") {
+            ftGeometry = {features: props.features};
+            canRender = !!(props.features);
         } else {
-            if (this.props.geometry) {
-                if (this.props.geometry.type === "GeometryCollection") {
-                    geometry = this.props.geometry.geometries;
-                } else {
-                    geometry = this.props.geometry.coordinates;
-                }
-            }
+            // if type is geometryCollection or a simple geometry, the data will be in geometry prop
+            ftGeometry = {geometry: props.geometry};
+            canRender = !!(this.props.geometry.geometries || this.props.geometry.coordinates);
         }
 
-        if (props.container && geometry) {
-            if (props.features) {
-                this._feature = format.readFeatures({
-                    type: props.type,
-                    properties: props.properties,
-                    features: props.features,
-                    id: this.props.msId
-                });
-            } else {
-                this._feature = format.readFeatures({
-                    type: props.type,
-                    properties: props.properties,
-                    geometry: props.geometry,
-                    id: this.props.msId});
-            }
-            this._feature.
-                map(f => {
-                    let newF = f;
-                    if (f.getProperties().isCircle) {
-                        newF = transformPolygonToCircle(f, props.crs || 'EPSG:3857');
-                        newF.setGeometry(newF.getGeometry().transform(props.crs || 'EPSG:3857', props.featuresCrs));
-                    }
-                    return newF;
-                })
-                .forEach((f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
-            /*if (props.properties && props.properties.textValues && props.properties.textGeometriesIndexes) {
-                this._feature.forEach((f) => {
-                    f.set("textValues", props.properties.textValues);
-                    f.set("textGeometriesIndexes", props.properties.textGeometriesIndexes);
-                });
-            }*/
+        if (props.container && canRender) {
+            this._feature = format.readFeatures({
+                type: props.type,
+                properties: props.properties,
+                id: props.msId,
+                ...ftGeometry
+            });
+            this._feature.map(f => {
+                let newF = f;
+                if (f.getProperties().isCircle) {
+                    newF = transformPolygonToCircle(f, props.crs || 'EPSG:3857');
+                    newF.setGeometry(newF.getGeometry().transform(props.crs || 'EPSG:3857', props.featuresCrs));
+                }
+                return newF;
+            }).forEach(
+                (f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
+
             if (props.style && (props.style !== props.layerStyle)) {
                 this._feature.forEach((f) => { f.setStyle(getStyle({style: {...props.style, type: f.getGeometry().getType()}, properties: f.getProperties()})); });
             }

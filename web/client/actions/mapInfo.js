@@ -212,6 +212,18 @@ const closeIdentify = () => ({
     type: CLOSE_IDENTIFY
 });
 
+function featureInfoClick(point, layer) {
+    return {
+        type: FEATURE_INFO_CLICK,
+        point,
+        layer
+    };
+}
+
+const closeIdentify = () => ({
+    type: CLOSE_IDENTIFY
+});
+
 module.exports = {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
@@ -248,5 +260,6 @@ module.exports = {
     errorFeatureInfo,
     loadFeatureInfo,
     toggleMapInfoState,
-    updateCenterToMarker
+    updateCenterToMarker,
+    featureInfoClick
 };

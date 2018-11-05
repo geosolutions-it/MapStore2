@@ -219,7 +219,6 @@ describe('Test VectorStyle', () => {
 
     it('test styleFunction with MultiPolygon', () => {
 
-
         const multiPolygon = new ol.Feature({
             geometry: new ol.geom.MultiPolygon([
                 [
@@ -292,6 +291,7 @@ describe('Test VectorStyle', () => {
         expect(olStyle.getImage().getRadius()).toBe(5);
         expect(olStyle.getImage().getFill().getColor()).toBe("green");
     });
+
     it('test lastPointOfPolylineStyle defaults', () => {
         let olStyle = VectorStyle.lastPointOfPolylineStyle();
         expect(olStyle.getImage().getRadius()).toBe(5);
@@ -303,17 +303,90 @@ describe('Test VectorStyle', () => {
         expect(olStyle.getImage().getRadius()).toBe(4);
         expect(olStyle.getImage().getFill().getColor()).toBe("green");
     });
+
     it('test lastPointOfPolylineStyle {radius: 4}', () => {
         let olStyle = VectorStyle.lastPointOfPolylineStyle({radius: 4});
         expect(olStyle.getImage().getRadius()).toBe(4);
         expect(olStyle.getImage().getFill().getColor()).toBe("red");
     });
+
     it('test startEndPolylineStyle defaults', () => {
         let styles = VectorStyle.startEndPolylineStyle();
         expect(styles[0].getImage().getRadius()).toBe(5);
         expect(styles[0].getImage().getFill().getColor()).toBe("green");
         expect(styles[1].getImage().getRadius()).toBe(5);
         expect(styles[1].getImage().getFill().getColor()).toBe("red");
+
+    it('test styleFunction with GeometryCollection', () => {
+
+        const multiPolygon = new ol.geom.MultiPolygon([
+            [
+                [ [102.0, 2.0], [103.0, 2.0], [103.0, 3.0], [102.0, 3.0], [102.0, 2.0] ]
+            ],
+            [
+                [ [100.0, 0.0], [101.0, 0.0], [101.0, 1.0], [100.0, 1.0], [100.0, 0.0] ],
+                [ [100.2, 0.2], [100.8, 0.2], [100.8, 0.8], [100.2, 0.8], [100.2, 0.2] ]
+            ]
+        ]);
+
+        const geometryCollection = new ol.Feature({
+            geometry: new ol.geom.GeometryCollection([multiPolygon])
+        });
+
+        let olStyle = VectorStyle.styleFunction(geometryCollection);
+
+        let olFill = olStyle[0].getFill();
+        let olStroke = olStyle[0].getStroke();
+
+        expect(olFill.getColor()).toBe('rgba(0, 0, 255, 0.1)');
+        expect(olStroke.getColor()).toBe('blue');
+        expect(olStroke.getWidth()).toBe(3);
+        expect(olStroke.getLineDash()).toEqual([6]);
+
+        const options = {
+            style: {
+                color: '#3388ff',
+                weight: 4,
+                dashArray: '',
+                fillColor: '#3388ff',
+                fillOpacity: 0.2
+            }
+        };
+
+        olStyle = VectorStyle.styleFunction(geometryCollection, options);
+        olFill = olStyle[0].getFill();
+        olStroke = olStyle[0].getStroke();
+
+        expect(olFill.getColor()).toBe('rgba(51, 136, 255, 0.2)');
+        expect(olStroke.getColor()).toBe('#3388ff');
+        expect(olStroke.getWidth()).toBe(4);
+        expect(olStroke.getLineDash()).toEqual(['']);
+
+        const optionsWithFeatureType = {
+            style: {
+                color: '#3388ff',
+                weight: 4,
+                dashArray: '',
+                fillColor: '#3388ff',
+                fillOpacity: 0.2,
+                GeometryCollection: {
+                    color: '#ffaa33',
+                    weight: 10,
+                    dashArray: '10 5',
+                    fillColor: '#333333'
+                }
+            }
+        };
+
+        olStyle = VectorStyle.styleFunction(geometryCollection, optionsWithFeatureType);
+        olFill = olStyle[0].getFill();
+        olStroke = olStyle[0].getStroke();
+
+        expect(olFill.getColor()).toBe('rgb(51, 51, 51)');
+        expect(olStroke.getColor()).toBe('#ffaa33');
+        expect(olStroke.getWidth()).toBe(10);
+        expect(olStroke.getLineDash()).toEqual(['10', '5']);
+
     });
 
 });

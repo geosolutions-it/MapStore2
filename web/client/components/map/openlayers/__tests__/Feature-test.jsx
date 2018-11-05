@@ -105,6 +105,59 @@ describe('Test Feature', () => {
         const count = container.getSource().getFeatures().length;
         expect(count).toBe(1);
     });
+    it('adding a feature without a geometry', () => {
+        var options = {
+            crs: 'EPSG:4326',
+            features: {
+                type: 'FeatureCollection',
+                crs: {
+                    'type': 'name',
+                    'properties': {
+                        'name': 'EPSG:4326'
+                    }
+                },
+                features: [
+                    {
+                        type: 'Feature',
+                        properties: {
+                            'name': "some name"
+                        }
+                    }
+                ]
+            }
+        };
+        const source = new ol.source.Vector({
+            features: []
+        });
+        const msId = "some value";
+        let container = new ol.layer.Vector({
+            msId,
+            source: source,
+            visible: true,
+            zIndex: 1
+        });
+        const geometry = options.features.features[0].geometry;
+        const type = options.features.features[0].type;
+        const properties = options.features.features[0].properties;
+
+        // create layers
+        let layer = ReactDOM.render(
+            <Feature type="vector"
+                 options={options}
+                 geometry={geometry}
+                 type={type}
+                 properties={properties}
+                 msId={msId}
+                 container={container}
+                 featuresCrs={"EPSG:4326"}
+                 crs={"EPSG:4326"}
+                 />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        // count layers
+        const count = container.getSource().getFeatures().length;
+        expect(count).toBe(0);
+    });
 
     it('updating a feature', () => {
         var options = {

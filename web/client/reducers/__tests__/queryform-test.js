@@ -516,6 +516,24 @@ describe('Test the queryform reducer', () => {
         expect(newState.spatialField.value).toBe(args.value);
     });
 
+    it('test CHANGE_SPATIAL_FILTER_VALUE with srsName', () => {
+        const initialState = { spatialField: {geometry: {}} };
+        const args = {
+            collectGeometries: {},
+            value: "SELECTED_VALUE",
+            srsName: 'EPSG:4326',
+            feature: {
+                geometry: {
+                    type: "Point",
+                    coordinates: [1, 1]
+                }
+            }
+        };
+        const action = changeSpatialFilterValue(args);
+        const newState = queryform(initialState, action);
+        expect(newState.spatialField.geometry).toEqual({...args.feature.geometry, projection: 'EPSG:4326'});
+    });
+
     it('test CHANGE_DRAWING_STATUS', () => {
         const initialState = { toolbarEnabled: true };
         const testAction1 = {

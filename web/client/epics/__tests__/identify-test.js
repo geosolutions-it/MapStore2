@@ -8,11 +8,12 @@
 
 const expect = require('expect');
 
-const {ZOOM_TO_POINT} = require('../../actions/map');
-const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, loadFeatureInfo, closeIdentify} = require('../../actions/mapInfo');
-const { zoomToVisibleAreaEpic, closeFeatureInfoOnEdit} = require('../identify');
+
+const {ZOOM_TO_POINT, clickOnMap} = require('../../actions/map');
+const { FEATURE_INFO_CLICK, UPDATE_CENTER_TO_MARKER, PURGE_MAPINFO_RESULTS, loadFeatureInfo, featureInfoClick, closeIdentify} = require('../../actions/mapInfo');
+const { zoomToVisibleAreaEpic, onMapClick, closeFeatureAndAnnotationEditing} = require('../identify');
 const { CLOSE_ANNOTATIONS } = require('../../actions/annotations');
-const {testEpic} = require('./epicTestUtils');
+const {testEpic, TEST_TIMEOUT, addTimeoutEpic} = require('./epicTestUtils');
 const {registerHook} = require('../../utils/MapUtils');
 
 describe('identify Epics', () => {
@@ -53,7 +54,7 @@ describe('identify Epics', () => {
             }
         };
 
-        const sentActions = [{type: FEATURE_INFO_CLICK, point: {latlng: {lat: 36.95, lng: -79.84}}}, loadFeatureInfo()];
+        const sentActions = [featureInfoClick({latlng: {lat: 36.95, lng: -79.84}}), loadFeatureInfo()];
 
         const expectedAction = actions => {
             expect(actions.length).toBe(2);
@@ -113,7 +114,7 @@ describe('identify Epics', () => {
             }
         };
 
-        const sentActions = [{type: FEATURE_INFO_CLICK, point: {latlng: {lat: 36.95, lng: -79.84}}}, loadFeatureInfo()];
+        const sentActions = [featureInfoClick({latlng: {lat: 36.95, lng: -79.84}}), loadFeatureInfo()];
 
         const expectedAction = actions => {
             expect(actions.length).toBe(1);
@@ -131,7 +132,31 @@ describe('identify Epics', () => {
 
         testEpic(zoomToVisibleAreaEpic, 1, sentActions, expectedAction, state);
     });
-    it('closeFeatureInfoOnEdit', (done) => {
+
+    it('onMapClick triggers featureinfo when selected', done => {
+        testEpic(onMapClick, 1, [clickOnMap()], ([action]) => {
+            expect(action.type === FEATURE_INFO_CLICK);
+            done();
+        }, {
+            mapInfo: {
+                enabled: true,
+                disableAlwaysOn: false
+            }
+        });
+    });
+    it('onMapClick do not trigger when mapinfo is not elabled', done => {
+        testEpic(addTimeoutEpic(onMapClick, 10), 1, [clickOnMap()], ([action]) => {
+            if (action.type === TEST_TIMEOUT ) {
+                done();
+            }
+        }, {
+                mapInfo: {
+                    enabled: false,
+                    disableAlwaysOn: false
+                }
+            });
+    });
+    it('closeFeatureAndAnnotationEditing closes annotations', (done) => {
 
         const sentActions = closeIdentify();
 
@@ -148,9 +173,9 @@ describe('identify Epics', () => {
             });
         };
 
-        testEpic(closeFeatureInfoOnEdit, 1, sentActions, expectedAction, { annotations: { editing: true } });
+        testEpic(closeFeatureAndAnnotationEditing, 1, sentActions, expectedAction, { annotations: { editing: true } });
     });
-    it('closeFeatureInfoOnEdit', (done) => {
+    it('closeFeatureAndAnnotationEditing purges mapinfo results', (done) => {
 
         const sentActions = closeIdentify();
 
@@ -167,7 +192,7 @@ describe('identify Epics', () => {
             });
         };
 
-        testEpic(closeFeatureInfoOnEdit, 1, sentActions, expectedAction);
+        testEpic(closeFeatureAndAnnotationEditing, 1, sentActions, expectedAction);
     });
 
 });

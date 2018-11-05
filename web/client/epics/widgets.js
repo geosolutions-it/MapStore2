@@ -6,6 +6,7 @@ const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
 const { availableDependenciesSelector, isWidgetSelectionActive, getDependencySelectorConfig } = require('../selectors/widgets');
+const { pathnameSelector } = require('../selectors/routing');
 const { MAP_CREATED, SAVING_MAP, MAP_ERROR } = require('../actions/maps');
 const { DASHBOARD_LOADED } = require('../actions/dashboard');
 const {LOCATION_CHANGE} = require('react-router-redux');
@@ -83,7 +84,7 @@ module.exports = {
             [m === "map" ? "viewport" : `${m}.viewport`]: `${m}.bbox`, // {viewport: "map.bbox"} or {"widgets[ID_W].viewport": "widgets[ID_W].bbox"}
             [m === "map" ? "center" : `${m}.center`]: `${m}.center`, // {center: "map.center"} or {"widgets[ID_W].center": "widgets[ID_W].center"}
             [m === "map" ? "zoom" : `${m}.zoom`]: `${m}.zoom`,
-            [m === "map" ? "layers" : `${m}.layers`]: `${m}.layers`
+            [m === "map" ? "layers" : `${m}.layers`]: m === "map" ? `layers.flat` : `${m}.layers`
         }), {}))
     ),
     /**
@@ -122,11 +123,13 @@ module.exports = {
 
     clearWidgetsOnLocationChange: (action$, {getState = () => {}} = {}) =>
         action$.ofType(MAP_CONFIG_LOADED).switchMap( () => {
-            const location = get(getState(), "routing.location");
+            const location = pathnameSelector(getState()).split('/');
+            const loctionDifference = location[location.length - 1];
             return action$.let(getValidLocationChange)
                 .filter( () => {
-                    const newLocation = get(getState(), "routing.location");
-                    return newLocation !== location;
+                    const newLocation = pathnameSelector(getState()).split('/');
+                    const newLocationDifference = newLocation[newLocation.length - 1];
+                    return newLocationDifference !== loctionDifference;
                 }).switchMap( ({payload = {}} = {}) => {
                     if (payload && payload.pathname) {
                         return Rx.Observable.of(clearWidgets());

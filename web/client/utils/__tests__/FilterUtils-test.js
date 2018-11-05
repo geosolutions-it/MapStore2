@@ -173,6 +173,216 @@ describe('FilterUtils', () => {
         expect(filter.indexOf('maxFeatures="20"') !== -1).toBe(true);
         expect(filter.indexOf('startIndex="1"') !== -1).toBe(true);
     });
+
+    it('Check  for no oparation', () => {
+        const versionOGC = "1.1.0";
+        const nsplaceholder = "ogc";
+        const objFilter = {
+            featureTypeName: "topp:states",
+            groupFields: [{
+                id: 1,
+                logic: "OR",
+                index: 0
+            }],
+            filterFields: [],
+            spatialField: {
+                method: null,
+                operation: "INTERSECTS",
+                geometry: null,
+                attribute: "the_geom"
+            },
+            pagination: {
+                startIndex: 0,
+                maxFeatures: 20
+            },
+            filterType: "OGC",
+            ogcVersion: "1.1.0",
+            sortOptions: null,
+            crossLayerFilter: {
+                attribute: "the_geom",
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "topp:states",
+                        filterFields: [],
+                        geometryName: "the_geom",
+                        groupFields: [{
+                            id: 1,
+                            index: 0,
+                            logic: "OR"
+                        }]
+                    }
+            }
+            },
+            hits: false
+        };
+
+        let filterParts = FilterUtils.toOGCFilterParts(objFilter, versionOGC, nsplaceholder);
+        expect(filterParts).toEqual([]);
+    });
+    it('Check  for options.cqlFilter add parts to the query', () => {
+        const versionOGC = "1.1.0";
+        const nsplaceholder = "ogc";
+        const objFilter = {
+            featureTypeName: "topp:states",
+            groupFields: [{
+                id: 1,
+                logic: "OR",
+                index: 0
+            }],
+            filterFields: [],
+            spatialField: {
+                method: null,
+                operation: "INTERSECTS",
+                geometry: null,
+                attribute: "the_geom"
+            },
+            pagination: {
+                startIndex: 0,
+                maxFeatures: 20
+            },
+            filterType: "OGC",
+            ogcVersion: "1.1.0",
+            sortOptions: null,
+            options: { cqlFilter: "prop = 'value'"},
+            crossLayerFilter: {
+                attribute: "the_geom",
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "topp:states",
+                        filterFields: [],
+                        geometryName: "the_geom",
+                        groupFields: [{
+                            id: 1,
+                            index: 0,
+                            logic: "OR"
+                        }]
+                    }
+                }
+            },
+            hits: false
+        };
+
+        let filterParts = FilterUtils.toOGCFilterParts(objFilter, versionOGC, nsplaceholder);
+        expect(filterParts[0]).toEqual('<ogc:PropertyIsEqualTo><ogc:PropertyName>prop</ogc:PropertyName><ogc:Literal>value</ogc:Literal></ogc:PropertyIsEqualTo>');
+    });
+    it('Check  for options.cqlFilter are merged with existing fields', () => {
+        const versionOGC = "1.1.0";
+        const nsplaceholder = "ogc";
+        const objFilter = {
+            featureTypeName: "topp:states",
+            groupFields: [{
+                id: 1,
+                logic: "OR",
+                index: 0
+            }],
+            filterFields: [{
+                attribute: "attributeEmpty",
+                groupId: 1,
+                exception: null,
+                operator: "=",
+                rowId: "1",
+                type: "string",
+                value: ''
+            }],
+            spatialField: {
+                method: null,
+                operation: "INTERSECTS",
+                geometry: null,
+                attribute: "the_geom"
+            },
+            pagination: {
+                startIndex: 0,
+                maxFeatures: 20
+            },
+            filterType: "OGC",
+            ogcVersion: "1.1.0",
+            sortOptions: null,
+            options: { cqlFilter: "prop = 'value'" },
+            crossLayerFilter: {
+                attribute: "the_geom",
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "topp:states",
+                        filterFields: [],
+                        geometryName: "the_geom",
+                        groupFields: [{
+                            id: 1,
+                            index: 0,
+                            logic: "OR"
+                        }]
+                    }
+                }
+            },
+            hits: false
+        };
+
+        let filterParts = FilterUtils.toOGCFilterParts(objFilter, versionOGC, nsplaceholder);
+        const R1 = '<ogc:Or><ogc:PropertyIsEqualTo><ogc:PropertyName>attributeEmpty</ogc:PropertyName><ogc:Literal></ogc:Literal></ogc:PropertyIsEqualTo></ogc:Or>';
+        const R2 = '<ogc:PropertyIsEqualTo><ogc:PropertyName>prop</ogc:PropertyName><ogc:Literal>value</ogc:Literal></ogc:PropertyIsEqualTo>';
+        expect(filterParts[0]).toEqual(R1);
+        expect(filterParts[1]).toEqual(R2);
+        let filter = FilterUtils.toOGCFilter("ft_name_test", objFilter, versionOGC, nsplaceholder);
+        expect(filter.split("<ogc:Filter>")[1].split("</ogc:Filter>")[0]).toBe(`<ogc:And>${R1}${R2}</ogc:And>`);
+    });
+    it('Check  for options.cqlFilter are merged with existing fields (wfs 2.0)', () => {
+        const versionOGC = "2.0";
+        const nsplaceholder = "fes";
+        const objFilter = {
+            featureTypeName: "topp:states",
+            groupFields: [{
+                id: 1,
+                logic: "OR",
+                index: 0
+            }],
+            filterFields: [{
+                attribute: "attributeEmpty",
+                groupId: 1,
+                exception: null,
+                operator: "=",
+                rowId: "1",
+                type: "string",
+                value: ''
+            }],
+            spatialField: {
+                method: null,
+                operation: "INTERSECTS",
+                geometry: null,
+                attribute: "the_geom"
+            },
+            pagination: {
+                startIndex: 0,
+                maxFeatures: 20
+            },
+            filterType: "OGC",
+            ogcVersion: "2.0",
+            sortOptions: null,
+            options: { cqlFilter: "prop = 'value'" },
+            crossLayerFilter: {
+                attribute: "the_geom",
+                collectGeometries: {
+                    queryCollection: {
+                        typeName: "topp:states",
+                        filterFields: [],
+                        geometryName: "the_geom",
+                        groupFields: [{
+                            id: 1,
+                            index: 0,
+                            logic: "OR"
+                        }]
+                    }
+                }
+            },
+            hits: false
+        };
+
+        let filterParts = FilterUtils.toOGCFilterParts(objFilter, versionOGC, nsplaceholder);
+        const R1 = '<fes:Or><fes:PropertyIsEqualTo><fes:ValueReference>attributeEmpty</fes:ValueReference><fes:Literal></fes:Literal></fes:PropertyIsEqualTo></fes:Or>';
+        const R2 = '<fes:PropertyIsEqualTo><fes:ValueReference>prop</fes:ValueReference><fes:Literal>value</fes:Literal></fes:PropertyIsEqualTo>';
+        expect(filterParts[0]).toEqual(R1);
+        expect(filterParts[1]).toEqual(R2);
+        let filter = FilterUtils.toOGCFilter("ft_name_test", objFilter, versionOGC, nsplaceholder);
+        expect(filter.split("<fes:Filter>")[1].split("</fes:Filter>")[0]).toBe(`<fes:And>${R1}${R2}</fes:And>`);
+    });
     it('Check for pagination wfs 2.0', () => {
         let filterObj = {
             pagination: {
@@ -297,6 +507,12 @@ describe('FilterUtils', () => {
                 expect(valid).toEqual(true);
             }
         });
+    });
+    it('getGetFeatureBase gets viewParams', () => {
+        const version = "2.0";
+        const base = FilterUtils.getGetFeatureBase(version, null, false, "application/json", {viewParams: "a:b"});
+        expect(base.indexOf('viewParams="a:b"') > 0).toBeTruthy();
+        expect(FilterUtils.getGetFeatureBase(version, null, false, "application/json", { cql_filter: "a:b" }).indexOf('viewParams="a:b"') > 0).toBeFalsy();
     });
     it('Check for undefined or null values for string and number and list in ogc filter', () => {
         let filterObj = {

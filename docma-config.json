@@ -104,6 +104,7 @@
     "src": [
         {
           "framework": [
+            "web/client/api/SLDService.js",
             "web/client/components/index.jsdoc",
             "web/client/components/buttons/FullScreenButton.jsx",
             "web/client/components/buttons/GlobeViewSwitcherButton.jsx",
@@ -137,6 +138,8 @@
             "web/client/components/TOC/TOCItemsSettings.jsx",
             "web/client/components/TOC/fragments/settings/FeatureInfo.jsx",
             "web/client/components/TOC/fragments/settings/FeatureInfoEditor.jsx",
+            "web/client/components/TOC/fragments/settings/ThematicLayer.jsx",
+            "web/client/components/errors/ResourceUnavailable.jsx",
 
             "web/client/actions/index.jsdoc",
             "web/client/actions/controls.js",
@@ -173,6 +176,7 @@
             "web/client/epics/catalog.js",
             "web/client/epics/cookies.js",
             "web/client/epics/featuregrid.js",
+            "web/client/epics/feedbackMask.js",
             "web/client/epics/fullscreen.js",
             "web/client/epics/globeswitcher.js",
             "web/client/epics/maplayout.js",
@@ -202,6 +206,7 @@
                 "web/client/plugins/CreateNewMap.jsx",
                 "web/client/plugins/DrawerMenu.jsx",
                 "web/client/plugins/FeatureEditor.jsx",
+                "web/client/plugins/FeedbackMask.jsx",
                 "web/client/plugins/GlobeViewSwitcher.jsx",
                 "web/client/plugins/GoFull.jsx",
                 "web/client/plugins/Map.jsx",
@@ -216,12 +221,14 @@
                 "web/client/plugins/Login.jsx",
                 "web/client/plugins/MousePosition.jsx",
                 "web/client/plugins/Notifications.jsx",
+                "web/client/plugins/Print.jsx",
                 "web/client/plugins/QueryPanel.jsx",
                 "web/client/plugins/ScaleBox.jsx",
                 "web/client/plugins/ScrollTop.jsx",
                 "web/client/plugins/Search.jsx",
                 "web/client/plugins/SearchServicesConfig.jsx",
                 "web/client/plugins/TOC.jsx",
+                "web/client/plugins/ThematicLayer.jsx",
                 "web/client/plugins/WFSDownload.jsx",
                 "web/client/plugins/ZoomIn.jsx",
                 "web/client/plugins/ZoomOut.jsx"

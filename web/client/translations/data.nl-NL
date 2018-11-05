@@ -209,7 +209,9 @@
             "removeFromFeaturedMaps": "Remove from featured maps"
 		},
         "map": {
+            "errorLoadingFont": "The markers with font family: {family} will not render correctly, because the font was not loaded",
             "loading": "Bezig met laden...",
+            "loadingSpinner": "Loading Map",
             "loadingerror": "Fout bij het laden",
             "name": "Naam",
             "description": "Beschrijving",
@@ -243,6 +245,13 @@
                 "canWrite": "kan wijzigen",
                 "noResult": "geen enkel resultaat gevonden",
                 "title": "geautoriseerde groepen"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Map not found",
+                    "notAccessible": "Map not accessible",
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li></ul><p>"
+                }
             }
         },
         "floatinglegend": {
@@ -529,7 +538,8 @@
                 "load_config_exception": "Fout bij het laden van de configuratie"
             },
             "comboField": {
-                "default_placeholder": "Kies..."
+                "default_placeholder": "Kies...",
+                 "drop_down": "Open Dropdown"
             },
             "form": {
                 "header": "Zoek in de data",
@@ -538,6 +548,7 @@
             "emptyfilter": "Geen enkele filterset. De zoekopdracht kan verstrijken als paging niet door de server wordt ondersteund",
             "attributefilter":{
                 "add_condition": " Voeg een voorwaarde toe",
+                "delete": " Delete",
                 "add_group": " Voeg een groep toe",
                 "group_label_a": "Toereikendheid",
                 "group_label_b": "de volgende condities:",
@@ -568,6 +579,7 @@
                 "geometric_operation": "Geometrische operatie",
                 "combo_placeholder": "Kies...",
                 "spatial_filter_header": "Ruimtelijke filter",
+                "remove": "Remove",
                 "draw_start_label": "Teken de regio van belang op de kaart",
                 "dwithin_label": "meter",
                 "details": {
@@ -794,7 +806,9 @@
             "reset": "Verwijder",
             "options": "Opties",
             "srs_not_allowed": "Deze service ondersteunt het geografische coördinatensysteem van de kaart niet",
-            "missingReference": "Missing OGC reference metadata"
+            "missingReference": "Missing OGC reference metadata",
+            "showDescription": "Show full description",
+            "hideDescription": "Hide full description"
         },
         "uploader": {
             "filename": "File Name",
@@ -957,6 +971,7 @@
                     "placeholders": {
                         "default": "Search...",
                         "string": "Type text to filter...",
+                        "date": "Type date to filter...",
                         "number": "Type number or expression..."
                     },
                     "tooltips": {
@@ -1063,6 +1078,9 @@
             },
             "chartOptionsTitle": "Données",
             "widgetOptionsTitle": "Info sur le widget",
+            "placeHolder":{
+                "default":"Select attribute"
+            },
             "groupByAttributes": {
                 "line": "Attributs X",
                 "pie": "Grouper par",
@@ -1071,9 +1089,11 @@
             },
             "aggregationAttribute": {
                 "line": "Attributs Y",
-                "pie": "Valeur",
+                "pie": "Use",
                 "bar": "Attributs Y",
-                "gauge": "valeur"
+                "gauge": "Use",
+                "counter": "Use",
+                "default": "Use"
             },
             "aggregateFunction": {
                 "line": "Opération",
@@ -1093,8 +1113,56 @@
                 "pie": "Légende d'affichage",
                 "bar": "Légende d'affichage",
                 "gauge": "Afficher les étiquettes"
+            },
+            "displayCartesian": {
+                "line": "Hide Grid",
+                "bar": "Hide Grid"
+            },"yAxis":{
+                "line": "Hide Y axis",
+                "bar": "Hide Y axis"
+            },
+            "yAxisLabel":{
+                "line": "Legend Label",
+                "bar": "Legend Label"
+            },
+            "advancedOptions":{
+                "line": "Advanced Options",
+                "bar": "Advanced Options"
             }
-
+        },
+        "dashboard": {
+            "loadingSpinner": "Loading Dashboard",
+            "saveDialog": {
+                "title": "Edit dashboard properties",
+                "name": "Name",
+                "description": "Description",
+                "namePlaceholder": "Type a name...",
+                "descriptionPlaceholder": "Type a description...",
+                "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",
+                "close": "Close",
+                "cancel": "Cancel",
+                "saveSuccessTitle": "Success",
+                "saveSuccessMessage": "Dashboard saved successfully"
+            },
+            "errors":{
+                "loading": {
+                    "title": "Error loading dashboard",
+                    "dashboardNotAccessible": "You don't have permission to access this dashboard. Please contact the resource owner",
+                    "pleaseLogin": "This dashboard is not public. Please try to login",
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
+                    "unknownError": "There was an error loading the dashboard. Please contact the administrator",
+                    "notFound": "Dashboard not found",
+	                "notAccessible": "Dashboard not accessible"
+                },
+                "resourceAlreadyExists": "A resource with this name already exists. try '{data}'"
+            },
+            "editor": {
+                "save": "Save the dashboard",
+                "addACardToTheDashboard": "Add a widget to the dashboard",
+                "showConnections": "Show connections",
+                "hideConnections": "HideConnections"
+            },
+            "emptyTitle": "The dashboard is empty"
         },
         "wizard": {
             "next": "Suivant",
@@ -1259,6 +1327,46 @@
             "cesiumNavigation": {
                 "title": "Navigatie",
                 "text": "Hier kunt u de knoppen voor in- en uitzoomen vinden"
+            },
+            "dashboardIntro": {
+                "title": "Dashboard Tutorial",
+                "text": "Overview of dashboard functionalities"
+            },
+            "dashboardNav": {
+                "title": "Navigation Bar",
+                "text": "Here you can find language selector, login, homepage link and options menu"
+            },
+            "dashboardContainer": {
+                "title": "Dashboard",
+                "text": "<p>A Dashboard in MapStore2 provides a set of information suitably collected to show aggregated data in one shot view. Geospatial data displayed in a map can be placed side by side to related attribute tables, charts and other, with the aim to connect different kind of information, show statistical details and textual descriptions relating to a specific context.</p><p> All users can visualize and interact with published dashboards but only users allowed to edit can add, arrange, resize or delete all the widgets inside a dashboard</p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Add Widget",
+                "text": "To add a widget to the dashboard, you can click on the + button"
+            },
+            "dashboardBuilder": {
+                "title": "Create a new widget",
+                "text": "You can select which type of widget you want and then add to the dashboard selecting one of the items in the list"
+            },
+            "dashboardAddChart": {
+                "title": "Chart Widget",
+                "text": "<p>It's a widget that show and aggregate data into pie, line or bar charts.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Select chart type</li><li>Configure chart data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddText": {
+                "title": "Text Widget",
+                "text": "<p>Add your own text to the dashboard.</p><p>Steps:</p><p><ul><li>Edit text in editor</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddTable": {
+                "title": "Table Widget",
+                "text": "<p>Add an attribute table to the dashboard that contains data from a selected vector layer. You can also filter data to customize your table.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure table data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Counter Widget",
+                "text": "<p>Add a new counter to the dashboard. Counter will show numeric value aggregationg data from a selected vector layer.</p><p>Steps:</p><p><ul><li>Select a vector layer</li><li>Configure counter data</li><li>Save and add to dashboard</li></ul></p>"
+            },
+            "dashboardAddMap": {
+                "title": "Map Widget",
+                "text": "<p>Add a new interactive map to the dashboard. You can add more than one map with the ability to connect other widgets to them. After saving the first map, the legend widget will be added to the list. Legend Widget will show a legend related to the connected map.</p><p>Steps:</p><p><ul><li>Select a map</li><li>Improve map by adding new layers</li><li>Save and add to dashboard</li></ul></p>"
             }
         }
       }

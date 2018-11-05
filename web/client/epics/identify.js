@@ -7,8 +7,8 @@
 */
 const Rx = require('rxjs');
 const {get} = require('lodash');
+const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, featureInfoClick, updateCenterToMarker, purgeMapInfoResults} = require('../actions/mapInfo');
 
-const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, updateCenterToMarker, purgeMapInfoResults} = require('../actions/mapInfo');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {CHANGE_MOUSE_POINTER, CLICK_ON_MAP, zoomToPoint} = require('../actions/map');
 const { closeAnnotations } = require('../actions/annotations');
@@ -37,7 +37,7 @@ module.exports = {
      * If so, as to the proper tool to close (annotations)
      * Otherwise it closes by itself.
      */
-    closeFeatureInfoOnEdit: (action$, {getState = () => {}} = {}) =>
+    closeFeatureAndAnnotationEditing: (action$, {getState = () => {}} = {}) =>
         action$.ofType(CLOSE_IDENTIFY).switchMap( () =>
             get(getState(), "annotations.editing")
                 ? Rx.Observable.of(closeAnnotations())
@@ -52,7 +52,7 @@ module.exports = {
             const {disableAlwaysOn = false} = (store.getState()).mapInfo;
             return disableAlwaysOn || !stopGetFeatureInfoSelector(store.getState() || {});
         })
-        .map(({point, layer}) => ({type: FEATURE_INFO_CLICK, point, layer})),
+        .map(({point, layer}) => featureInfoClick(point, layer)),
     /**
      * Centers marker on visible map if it's hidden by layout
      * @param {external:Observable} action$ manages `FEATURE_INFO_CLICK` and `LOAD_FEATURE_INFO`.

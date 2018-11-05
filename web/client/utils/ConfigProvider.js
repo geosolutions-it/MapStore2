@@ -697,6 +697,75 @@ const CONFIGPROVIDER = {
                 }
             }
         }
+    },
+    LINZ: {
+        // Maps from LINZ Data Service https://www.linz.govt.nz/data/linz-data-service/guides-and-documentation/lds-web-map-tile-service-specifications
+        url: 'http://tiles-{s}.data-cdn.linz.govt.nz/services;key={linzAPIkey}/tiles/v4/{variant}/{tilematrixset}/{z}/{x}/{y}.png',
+        options: {
+            attribution: '<a href="https://www.linz.govt.nz/data/licensing-and-using-data/attributing-elevation-or-aerial-imagery-data">Sourced from LINZ. CC-BY 4.0</a>',
+            subdomains: ['a', 'b', 'c', 'd'],
+            linzAPIkey: '<insert your LINZ API Key here>',
+            variant: 'set=4702',
+            tilematrixset: 'EPSG:3857',
+            maxZoom: 22,
+            maxNativeZoom: 22
+        },
+        variants: {
+            nz_aerial_imagery: {
+                options: {
+                    attribution: '<a href="https://www.linz.govt.nz/data/licensing-and-using-data/attributing-elevation-or-aerial-imagery-data">Sourced from LINZ. CC-BY 4.0</a>',
+                    variant: 'set=4702',
+                    tilematrixset: 'EPSG:3857',
+                    maxZoom: 22,
+                    maxNativeZoom: 22
+                }
+            },
+            nz_topo50_maps: {
+                options: {
+                    attribution: 'Sourced from the <a href="https://data.linz.govt.nz/">LINZ Data Service</a> and licensed for reuse under the <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> license',
+                    variant: 'layer=50767',
+                    tilematrixset: 'EPSG:3857',
+                    maxZoom: 22,
+                    maxNativeZoom: 22
+                }
+            },
+            nz_topo50_gridless_maps: {
+                options: {
+                    attribution: 'Sourced from the <a href="https://data.linz.govt.nz/">LINZ Data Service</a> and licensed for reuse under the <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> license',
+                    variant: 'layer=52343',
+                    tilematrixset: 'EPSG:3857',
+                    maxZoom: 22,
+                    maxNativeZoom: 22
+                }
+            },
+            nz_topo250_gridless_maps: {
+                options: {
+                    attribution: 'Sourced from the <a href="https://data.linz.govt.nz/">LINZ Data Service</a> and licensed for reuse under the <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> license',
+                    variant: 'layer=52324',
+                    tilematrixset: 'EPSG:3857',
+                    maxZoom: 22,
+                    maxNativeZoom: 22
+                }
+            },
+            nz_topo250_maps: {
+                options: {
+                    attribution: 'Sourced from the <a href="https://data.linz.govt.nz/">LINZ Data Service</a> and licensed for reuse under the <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> license',
+                    variant: 'layer=50798',
+                    tilematrixset: 'EPSG:3857',
+                    maxZoom: 22,
+                    maxNativeZoom: 22
+                }
+            },
+            nz_parcel_boundaries_wireframe: {
+                options: {
+                    attribution: 'Sourced from the <a href="https://data.linz.govt.nz/">LINZ Data Service</a> and licensed for reuse under the <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a> license',
+                    variant: 'set=4769',
+                    tilematrixset: 'EPSG:3857',
+                    maxZoom: 22,
+                    maxNativeZoom: 22
+                }
+            }
+        }
     }
 };
 module.exports = CONFIGPROVIDER;

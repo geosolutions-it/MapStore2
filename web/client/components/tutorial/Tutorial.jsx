@@ -10,6 +10,7 @@ const React = require('react');
 const Joyride = require('react-joyride').default;
 const I18N = require('../I18N/I18N');
 const assign = require('object-assign');
+const {head} = require('lodash');
 
 require('react-joyride/lib/react-joyride-compiled.css');
 require('./style/tutorial.css');
@@ -118,35 +119,42 @@ class Tutorial extends React.Component {
         }
     };
 
+    state = {
+        checkAction: {}
+    }
+
     componentWillMount() {
         let defaultSteps = this.props.presetList[this.props.preset] || [];
         let checkbox = this.props.showCheckbox ? <div id="tutorial-intro-checkbox-container"><input type="checkbox" id="tutorial-intro-checkbox" className="tutorial-tooltip-intro-checkbox" onChange={this.props.actions.onDisable}/><span><I18N.Message msgId={"tutorial.checkbox"}/></span></div> : <div id="tutorial-intro-checkbox-container"/>;
         this.props.actions.onSetup('default', defaultSteps, this.props.introStyle, checkbox, this.props.defaultStep, assign({}, this.props.presetList, {default_tutorial: defaultSteps}));
     }
 
-    componentWillUpdate(newProps) {
+    componentWillUpdate(newProps, newState) {
         if (this.props.steps.length > 0) {
             if (!this.props.toggle && newProps.toggle) {
                 this.props.actions.onStart();
-            } else if (this.props.status === 'run' && newProps.status === 'error'
-            || this.props.status === 'error' && newProps.status === 'error') {
+                this.setState({checkAction: {}});
+            } else if (!this.state.checkAction[newProps.stepIndex] &&
+                (this.props.status === 'run' && newProps.status === 'error'
+            || this.props.status === 'error' && newProps.status === 'error')) {
 
-                const index = this.checkFirstValidStep(newProps.stepIndex, newProps.tourAction);
-
-                if (index === -1) {
-                    this.closeTour();
-                } else {
-                    this.joyride.setState({
-                        index,
-                        isRunning: true,
-                        shouldRedraw: true,
-                        shouldRenderTooltip: true
-                    });
-                    this.props.actions.onStart();
-                }
+                const newStep = newProps.steps && head(newProps.steps.filter((step, id) => id === newProps.stepIndex));
+                const isActionStep = newStep && newStep.action && !this.state.checkAction[newProps.stepIndex] ? newProps.stepIndex : null;
+                const index = isActionStep || this.checkFirstValidStep(newProps.stepIndex, newProps.tourAction);
+                this.restartTour(index, {[index]: true});
 
             } else if (this.props.status === 'run' && newProps.status === 'close') {
                 this.closeTour();
+                this.setState({checkAction: {}});
+            }
+            if (this.state.checkAction && newState.checkAction && !this.state.checkAction[newProps.stepIndex] && newState.checkAction[newProps.stepIndex]) {
+                // retry to find a valid step when it has action
+                const newStep = head(newProps.steps.filter((step, id) => id === newProps.stepIndex));
+                const isValid = newStep && newStep.selector && document.querySelector(newStep.selector) ? true : false;
+                if (!isValid) {
+                    const firstValidStep = this.checkFirstValidStep(newProps.stepIndex, newProps.tourAction);
+                    this.restartTour(firstValidStep, {});
+                }
             }
         }
     }
@@ -250,6 +258,21 @@ class Tutorial extends React.Component {
         }
 
         this.props.actions.onClose();
+    }
+
+    restartTour(index, checkAction) {
+        if (index === -1) {
+            this.closeTour();
+        } else {
+            this.joyride.setState({
+                index,
+                isRunning: true,
+                shouldRedraw: true,
+                shouldRenderTooltip: true
+            });
+            this.props.actions.onStart();
+            this.setState({checkAction});
+        }
     }
 }
 

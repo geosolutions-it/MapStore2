@@ -164,21 +164,40 @@ const SecurityUtils = {
             return parameters;
         }
         switch (this.getAuthenticationMethod(url)) {
-        case 'authkey':
+        case 'authkey': {
             const token = !isNil(securityToken) ? securityToken : this.getToken();
             if (!token) {
                 return parameters;
             }
             const authParam = this.getAuthKeyParameter(url);
             return assign(parameters || {}, {[authParam]: token});
+        }
+        case 'test': {
+            const rule = this.getAuthenticationRule(url);
+            const token = rule ? rule.token : "";
+            const authParam = this.getAuthKeyParameter(url);
+            return assign(parameters || {}, { [authParam]: token });
+        }
         default:
             // we cannot handle the required authentication method
             return parameters;
         }
     },
+    addAuthenticationToSLD: function(layerOptions, options) {
+        if (layerOptions.SLD) {
+            const parsed = URL.parse(layerOptions.SLD, true);
+            const params = SecurityUtils.addAuthenticationParameter(layerOptions.SLD, parsed.query, options.securityToken);
+            return assign({}, layerOptions, {
+                SLD: URL.format(assign({}, parsed, {
+                    query: params,
+                    search: undefined
+                }))
+            });
+        }
+        return layerOptions;
+    },
     getAuthKeyParameter: function(url) {
-        const foundRule = head(this.getAuthenticationRules().filter(
-            rule => rule && rule.urlPattern && url.match(new RegExp(rule.urlPattern, "i"))));
+        const foundRule = this.getAuthenticationRule(url);
         return foundRule && foundRule.authkeyParamName ? foundRule.authkeyParamName : 'authkey';
     },
     cleanAuthParamsFromURL: (url) => ConfigUtils.filterUrlParams(url, [SecurityUtils.getAuthKeyParameter(url)].filter(p => p))

@@ -120,14 +120,15 @@ class GroupField extends React.Component {
         let comboValues = this.getComboValues(selectedAttribute, this.props.attributes);
         const deleteButton = filterField.exception ?
                     (<OverlayTrigger placement="bottom" overlay={(<Tooltip id={filterField.rowId + "tooltip"}><strong><I18N.Message msgId={filterField.exception || ""}/></strong></Tooltip>)}>
-                        <Button id="remove-filter-field" className="remove-filter-button" style={{backgroundColor: "red"}} onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
+                        <Button id="remove-filter-field" className="filter-buttons no-border" style={{backgroundColor: "red"}} onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
                             <Glyphicon style={{color: "white"}} glyph="glyphicon glyphicon-warning-sign"/>
                         </Button>
                     </OverlayTrigger>)
                  :
-                    (<Button id="remove-filter-field" className="remove-filter-button no-border" onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
+                    (<OverlayTrigger placement="top" overlay={(<Tooltip id={filterField.rowId + "tooltip"}><strong>
+                    <I18N.Message msgId="queryform.attributefilter.delete" /></strong></Tooltip>)}><Button id="remove-filter-field" className="filter-buttons no-border" onClick={() => this.props.actions.onRemoveFilterField(filterField.rowId)}>
                         <Glyphicon glyph={this.props.removeButtonIcon}/>
-                    </Button>);
+                    </Button></OverlayTrigger>);
         return (
             <div key={filterField.rowId}>
                 <Row className="filter-field-row filter-field-row">
@@ -199,7 +200,8 @@ class GroupField extends React.Component {
         if (groupField.groupId) {
             buttons.push({
                 key: "remove-group",
-                className: "remove-filter-button no-border",
+                className: "filter-buttons no-border",
+                tooltipId: "queryform.attributefilter.delete",
                 glyph: this.props.removeButtonIcon,
                 onClick: () => this.props.actions.onRemoveGroupField(groupField.id)
             });

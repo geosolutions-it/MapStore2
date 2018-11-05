@@ -21,7 +21,7 @@ const CircleStyler = require('../../style/CircleStyler');
 const TextStyler = require('../../style/TextStyler');
 const PolylineStyler = require('../../style/PolylineStyler');
 const Message = require('../../I18N/Message');
-const { FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon/*, FormGroup, InputGroup*/ } = require('react-bootstrap');
+const { FormControl, Grid, Row, Col, Nav, NavItem, Glyphicon } = require('react-bootstrap');
 const DropdownFeatureType = require('./DropdownFeatureType');
 const ReactQuill = require('react-quill');
 require('react-quill/dist/quill.snow.css');
@@ -29,6 +29,7 @@ const tooltip = require('../../misc/enhancers/tooltip');
 const NavItemT = tooltip(NavItem);
 const { getAvailableStyler, convertGeoJSONToInternalModel } = require('../../../utils/AnnotationsUtils');
 const { isFunction } = require('lodash');
+
 const ConfirmDialog = require('../../misc/ConfirmDialog');
 const assign = require('object-assign');
 const Select = require('react-select');
@@ -161,6 +162,7 @@ class AnnotationsEditor extends React.Component {
         coordinateEditorEnabled: PropTypes.bool,
         styling: PropTypes.bool,
         closing: PropTypes.bool,
+        removing: PropTypes.bool,
         errors: PropTypes.object,
         stylerType: PropTypes.string,
         featureType: PropTypes.string,
@@ -569,6 +571,34 @@ class AnnotationsEditor extends React.Component {
         );
     };
 
+    renderModals = () => {
+        if (this.props.closing) {
+            return (<Portal><ConfirmDialog
+                show
+                modal
+                onClose={this.props.onCancelClose}
+                onConfirm={this.props.onConfirmClose}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                confirmButtonContent={<Message msgId="annotations.confirm" />}
+                closeText={<Message msgId="annotations.cancel" />}>
+                <Message msgId="annotations.undo" />
+            </ConfirmDialog></Portal>);
+        } else if (this.props.removing) {
+            return (<Portal><ConfirmDialog
+                show
+                modal
+                onClose={this.props.onCancelRemove}
+                onConfirm={() => this.props.onConfirmRemove(this.props.removing)}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                confirmButtonContent={<Message msgId="annotations.confirm" />}
+                closeText={<Message msgId="annotations.cancel" />}>
+                <Message msgId={this.props.mode === 'editing' ? "annotations.removegeometry" : "annotations.removeannotation"}/>
+                </ConfirmDialog></Portal>);
+        }
+    }
+
     renderError = (editing) => {
         return editing ? (Object.keys(this.props.errors)
             .filter(field => this.getConfig().fields.filter(f => f.name === field).length === 0).map(field => this.renderErrorOn(field))) : null;
@@ -716,11 +746,11 @@ class AnnotationsEditor extends React.Component {
         return this.props.onSetStyle(assign({}, this.props.editing.style, {
             "Point": {
                 ...this.props.editing.style.Point,
-                iconGlyph: option.value
+                iconGlyph: option && option.value || ""
             },
             "MultiPoint": {
                 ...this.props.editing.style.MultiPoint,
-                iconGlyph: option.value
+                iconGlyph: option && option.value || ""
             }
         }));
     };

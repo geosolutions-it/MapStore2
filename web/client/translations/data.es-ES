@@ -63,8 +63,8 @@
             "featureTypeError": "Imposible cargar los atributos del mapa",
             "featureTypeErrorInvalidJSON": "Imposible cargar los atributos del mapa. La respuesta no es válida",
             "elevation": "Elevación",
-            "titleTranslations": "Title translations",
-            "groupProperties": "Group properties",
+            "titleTranslations": "Traducciones de títulos",
+            "groupProperties": "Propiedades del grupo",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Indentificar el formato de respuesta",
             "legenderror": "La leyenda no está disponible",
@@ -126,7 +126,7 @@
         "settings": "Ajustes",
         "help": "Ayuda",
         "docs": "Documentación",
-        "gohome": "Volver al inicio",
+        "gohome": "Volver a la página de inicio",
         "back": "Volver al Importador",
         "printbutton": "Imprimir",
         "annotationsbutton": "Anotaciones",
@@ -289,7 +289,9 @@
             }
         },
         "map": {
+            "errorLoadingFont": "Los marcadores con familia de fuentes: {family} no se procesarán correctamente, porque la fuente no se cargó",
             "loading": "Cargando...",
+            "loadingSpinner": "Cargando mapa",
             "loadingerror": "Error en la carga",
             "name": "Nombre",
             "description": "Descripción",
@@ -343,6 +345,13 @@
                 "titleUnsavedChanges": "Estás seguro de cerrar sin guardar los cambios?",
                 "sureToClose": "Estás seguro de cerrar sin guardar los cambios?",
                 "fieldsChanged": "Algunos campos han sido cambiados"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Mapa no encontrado",
+                    "notAccessible": "Mapa no accesible",
+                    "unknownError": "<p> <small> Uno de los siguientes motivos podría ser la causa: </small> <ul><li> no tiene permiso para acceder </li> <li> está intentando acceder a un mapa que no existe </li> <li> el mapa se ha eliminado </li></ul> <p>"
+                }
             }
         },
         "floatinglegend": {
@@ -405,6 +414,41 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Error en la búsqueda de metadatos"
                 }
+            },
+            "thematic": {
+                "classification_field": "Campo de clasificación:",
+                "classification_method": "Método de clasificación:",
+                "classification_aggregate": "Función agregada:",
+                "classification_colors": "Rampa de color:",
+                "classification_intervals": "Intervalos:",
+                "preview": "Avance",
+                "remove_thematic": "Volver al estilo simple",
+                "values": {
+                    "equalInterval": "Intervalos iguales",
+                    "quantile": "Quantile",
+                    "jenks": "Escapadas naturales",
+                    "sum": "Suma",
+                    "avg": "Promedio",
+                    "count": "Contar",
+                    "min": "Min.",
+                    "max": "Max"
+                },
+                "configuration": "Configuración",
+                "apply": "Aplicar clasificación",
+                "restore": "Restablecer personalizaciones",
+                "go_to_cfg": "Configurar ...",
+                "go_to_thema": "Usa esta configuración",
+                "cfgError": "Error en la configuración JSON",
+                "classify": "Clasificar",
+                "remove": "Eliminar clasificación",
+                "data_panel": "Datos",
+                "classification_stroke": "tablero",
+                "classification_error": "Error al llamar al servicio de clasificación: {message}",
+                "fields_error": "Error al cargar la lista de campos: {message}",
+                "interval_limit": "Los intervalos deben ser un número entre {min} y {max}",
+                "invalid_object": "Respuesta de servicio inválida",
+                "invalid_geometry": "El tipo de geometría no es válido, no es un punto, línea o polígono",
+                "invalid_classes": "Max debe ser mayor que min en todas las clases"
             }
         },
         "print":{
@@ -667,7 +711,8 @@
                 "load_config_exception": "Error cargando configuración"
             },
             "comboField": {
-                "default_placeholder": "Select..."
+                "default_placeholder": "Seleccionar...",
+                 "drop_down": "Abrir el menú desplegable"
             },
             "form": {
                 "header": "Buscar en el conjunto de  datos",
@@ -676,6 +721,7 @@
             "emptyfilter": "Sin filtro. La cosulta puede expirar si la páginición no está activada en el servidor.",
             "attributefilter":{
                 "add_condition": " Añadir una condición",
+                "delete": " Borrar",
                 "add_group": " Añadir un grupo",
                 "group_label_a": "Match",
                 "group_label_b": "de las siguientes condiciones:",
@@ -706,6 +752,7 @@
                 "geometric_operation": "Operación geométrica",
                 "combo_placeholder": "Select...",
                 "spatial_filter_header": "Region de interes",
+                "remove": "Retirar",
                 "draw_start_label": "Dibuje la región de interés en el mapa",
                 "dwithin_label": "metros",
                 "details": {
@@ -985,6 +1032,8 @@
             "serviceTitle": "Título",
             "serviceTitlePlaceholder": "escribe un título",
             "missingReference": "Metadatos de referencia OGC faltantes",
+            "showDescription": "Mostrar descripción completa",
+            "hideDescription": "Ocultar descripción completa",
             "notification": {
                 "warningAddCatalogService": "Insertar una url y un título válidos",
                 "addCatalogService": "Servicio añadido correctamente",
@@ -1157,6 +1206,7 @@
                 "placeholders": {
                     "default": "Buscar...",
                     "string": "Escribe texto para filtrar...",
+                    "date": "Escriba la fecha para filtrar...",
                     "number": "Escriba el número o la expresión..."
                 },
                 "tooltips": {
@@ -1331,6 +1381,9 @@
             },
             "chartOptionsTitle": "Configurar Datos",
             "widgetOptionsTitle": "Configurar Información de widget",
+            "placeHolder":{
+                "default":"Seleccionar atributo"
+            },
             "groupByAttributes": {
                 "line": "Atributo X",
                 "pie": "Agrupar por",
@@ -1341,11 +1394,11 @@
             },
             "aggregationAttribute": {
                 "line": "Atributo Y",
-                "pie": "Valor",
+                "pie": "Utilizar",
                 "bar": "Atributo Y",
-                "gauge": "Valor",
-                "counter": "Valor",
-                "default": "Valor"
+                "gauge": "Utilizar",
+                "counter": "Utilizar",
+                "default": "Utilizar"
             },
             "aggregateFunction": {
                 "line": "Operación",
@@ -1377,10 +1430,25 @@
                 "pie": "Mostrar leyenda",
                 "bar": "Mostrar leyenda",
                 "gauge": "Mostrar etiquetas"
+            },
+            "displayCartesian": {
+                "line": "Ocultar cuadrícula",
+                "bar": "Ocultar cuadrícula"
+            },"yAxis":{
+                "line": "Ocultar el eje Y",
+                "bar": "Ocultar el eje Y"
+            },
+            "yAxisLabel":{
+                "line": "Etiqueta leyenda",
+                "bar": "Etiqueta leyenda"
+            },
+            "advancedOptions":{
+                "line": "Opciones avanzadas",
+                "bar": "Opciones avanzadas"
             }
-
         },
         "dashboard": {
+            "loadingSpinner": "Panel de carga",
             "saveDialog": {
                 "title": "Editar propiedades del tablero",
                 "name": "Nombre",
@@ -1398,8 +1466,10 @@
                     "title": "Error al cargar el tablero",
                     "dashboardNotAccessible": "No tiene permiso para acceder a este panel. Póngase en contacto con el propietario del recurso",
                     "pleaseLogin": "Este panel no es público. Intente iniciar sesión",
-                    "dashboardDoesNotExist": "El panel al que está intentando acceder no existe o se ha eliminado",
-                    "unknownError": "Hubo un error al cargar el panel. Póngase en contacto con el administrador"
+                    "dashboardDoesNotExist": "El panel al que intenta acceder no existe",
+                    "unknownError": "Hubo un error al cargar el panel. Póngase en contacto con el administrador",
+                    "notFound": "Tablero no encontrado",
+                    "notAccessible": "Tablero no accesible"
                 },
                 "resourceAlreadyExists":  "Ya existe un recurso con este nombre. try '{data}'"
             },
@@ -1462,7 +1532,6 @@
                 "filter": "Buscar...",
                 "role": "Escriba para buscar Roles",
                 "user": "Escriba para buscar usuarios",
-                "ip": "Seleccionar IP",
                 "service": "Escriba para buscar Servicios",
                 "request": "Escriba para buscar Solicitudes",
                 "workspace": "Escriba para buscar espacios de trabajo",
@@ -1625,6 +1694,46 @@
             "cesiumNavigation": {
                 "title": "Navegación",
                 "text": "Aquí puede encontrar los botones de zoom y zoom out"
+            },
+            "dashboardIntro": {
+                "title": "Tutorial del tablero",
+                "text": "Descripción general de las funciones del panel"
+            },
+            "dashboardNav": {
+                "title": "Barra de navegación",
+                "text": "Aquí puede encontrar el selector de idioma, el inicio de sesión, el enlace de la página de inicio y el menú de opciones"
+            },
+            "dashboardContainer": {
+                "title": "Tablero",
+                "text": "<p> Un Tablero en MapStore2 proporciona un conjunto de información recopilada adecuadamente para mostrar datos agregados en una vista de un solo disparo. Los datos geoespaciales mostrados en un mapa se pueden colocar uno al lado del otro en tablas de atributos relacionados, cuadros y otros, con el objetivo de conectar diferentes tipos de información, mostrar detalles estadísticos y descripciones textuales relacionadas con un contexto específico. </p> <p> Todos los usuarios pueden visualizar e interactuar con los paneles publicados, pero solo los usuarios a los que se les permite editar pueden agregar, organizar, cambiar el tamaño o eliminar todos los widgets dentro de un panel </p>"
+            },
+            "dashboardAddWidget": {
+                "title": "Agregar Widget",
+                "text": "Para agregar un widget al tablero, puede hacer clic en el botón +"
+            },
+            "dashboardBuilder": {
+                "title": "Crea un nuevo widget",
+                "text": "Puede seleccionar el tipo de widget que desea y luego agregarlo al panel seleccionando uno de los elementos de la lista"
+            },
+            "dashboardAddChart": {
+                "title": "Widget de carta",
+                "text": "<p> Es un widget que muestra y agrega datos en gráficos circulares, de pie o de barras. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione una capa vectorial </li> <li> Seleccione el tipo de gráfico </li> <li> Configure los datos del gráfico </li> <li> Guarde y agregue al tablero </li> </ul> </p>"
+            },
+            "dashboardAddText": {
+                "title": "Widget de texto",
+                "text": "<p> Agregue su propio texto al tablero. </p> <p> Pasos: </p> <p> <ul> <li> Edite texto en el editor </li> <li> Guárdelo y agréguelo al tablero </li> </ul> </p>"
+            },
+            "dashboardAddTable": {
+                "title": "Widget de mesa",
+                "text": "<p> Agregue una tabla de atributos al tablero que contenga datos de una capa vectorial seleccionada. También puede filtrar datos para personalizar su tabla. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione una capa vectorial </li> <li> Configure table data </​​li> <li> Guardar y agregar al tablero </li> </ul> </p>"
+            },
+            "dashboardAddCounter": {
+                "title": "Contador Widget",
+                "text": "<p> Agregue un nuevo contador al tablero. El contador mostrará los datos de agregación de valores numéricos de una capa vectorial seleccionada. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione una capa vectorial </li> <li> Configure los datos del contador </li> <li> Guardar y agregar al tablero </li> </ul> </p>"
+            },
+            "dashboardAddMap": {
+                "title": "Widget del mapa",
+                "text": "<p> Agregue un nuevo mapa interactivo al tablero. Puede agregar más de un mapa con la capacidad de conectar otros widgets a ellos. Después de guardar el primer mapa, el widget de leyenda se agregará a la lista. El widget de leyenda mostrará una leyenda relacionada con el mapa conectado. </p> <p> Pasos: </p> <p> <ul> <li> Seleccione un mapa </li> <li> Mejore el mapa agregando nuevas capas </li> <li> Guarde y agregue al tablero </li> </ul> </p>"
             }
         }
     }

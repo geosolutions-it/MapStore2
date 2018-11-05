@@ -256,4 +256,35 @@ describe('Test the tutorial reducer', () => {
         expect(state.enabled).toBe(true);
     });
 
+    it('setup the tutorial with intro but stop flag', () => {
+        const state = tutorial({}, {
+            type: SETUP_TUTORIAL,
+            steps: [{
+                title: 'test',
+                text: 'test',
+                selector: '#intro-tutorial'
+            },
+            {
+                translation: 'test',
+                selector: '.step-tutorial'
+            },
+            {
+                translationHTML: 'test',
+                selector: '#step-tutorial'
+            },
+            {
+                title: 'test',
+                text: 'test',
+                selector: 'step-tutorial'
+            }],
+            checkbox: 'checkbox',
+            style: {},
+            defaultStep: {},
+            stop: true
+        });
+        expect(state.run).toBe(false);
+        expect(state.start).toBe(false);
+        expect(state.status).toBe('close');
+    });
+
 });

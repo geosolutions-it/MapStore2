@@ -20,7 +20,8 @@ module.exports = {
         MapLoadingPlugin: require('../plugins/MapLoading'),
         GoFullPlugin: require('../plugins/GoFull'),
         OmniBarPlugin: require('../plugins/OmniBar'),
-        MapFooterPlugin: require('../plugins/MapFooter')
+        MapFooterPlugin: require('../plugins/MapFooter'),
+        FeedbackMaskPlugin: require('../plugins/FeedbackMask')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

@@ -8,15 +8,16 @@
 
 const PropTypes = require('prop-types');
 const React = require('react');
-const {connect} = require('react-redux');
+const {connect} = require('../utils/PluginsUtils');
 const {createSelector} = require('reselect');
-
+const FontFaceObserver = require('fontfaceobserver');
 const assign = require('object-assign');
 const Spinner = require('react-spinkit');
 require('./map/css/map.css');
 
 const Message = require('../components/I18N/Message');
 const ConfigUtils = require('../utils/ConfigUtils');
+const {errorLoadingFont} = require('../actions/map');
 
 const {isString} = require('lodash');
 let plugins;
@@ -57,8 +58,8 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  *        ...
  *    }
  *    ...
- * ```
  * }
+ * ```
  * In addition to standard tools, you can also develop your own, ad configure them to be used.
  *
  * To do that you need to:
@@ -94,6 +95,8 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  *    {
  *      "name": "Map",
  *      "cfg": {
+ *        "shouldLoadFont": true,
+ *        "fonts": {'FontAwesome': {}},
  *        "tools": ["measurement", "locate", "overview", "scalebar", "draw", {
  *          "leaflet": {
  *            "name": "test",
@@ -112,29 +115,49 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  *  - name is a unique name for the tool
  *  - impl is a placeholder (“{context.ToolName}”) where ToolName is the name you gave the tool in plugins.js (TestSupportLeaflet in our example)
  *
+ * You can also specify a list if fonts that will be loaded before map is rendered (on willMount lyfe) and
+ * if the shouldLoadFont is true
+ * For each font you can specify an object describing the variation. The object can contain weight, style, and stretch properties.
+ * If a property is not present it will default to normal.
+ * ```
+ * {
+ *    "name": "Map",
+ *    "cfg": {
+ *      "shouldLoadFont": true,
+ *      "fonts": {
+ *        'FontAwesome': { weight: 400 },
+ *        'AnotherFontFamily': {}
+ *      }
+ *    }
+ *  }
+ * ```
+ * For more info on metadata visit [fontfaceobserver](https://github.com/bramstein/fontfaceobserver)
+ *
  * @memberof plugins
  * @class Map
  * @prop {array} additionalLayers static layers available in addition to those loaded from the configuration
  * @static
  * @example
-  * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)
-  * {
-  *   "cfg": {
-  *     "additionalLayers": [{
-  *         "type": "wms",
-  *         "url": "http://localhost:8090/geoserver/wms",
-  *         "visibility": true,
-  *         "title": "Elevation",
-  *         "name": "topp:elevation",
-  *         "format": "application/bil16",
-  *         "useForElevation": true,
-  *         "nodata": -9999,
-  *         "hidden": true
-  *      }]
-  *   }
-  * }
+ * // Adding a layer to be used as a source for the elevation (shown in the MousePosition plugin configured with showElevation = true)
+ * {
+ *   "cfg": {
+ *     "additionalLayers": [{
+ *         "type": "wms",
+ *         "url": "http://localhost:8090/geoserver/wms",
+ *         "visibility": true,
+ *         "title": "Elevation",
+ *         "name": "topp:elevation",
+ *         "format": "application/bil16",
+ *         "useForElevation": true,
+ *         "nodata": -9999,
+ *         "hidden": true
+ *      }]
+ *   }
+ * }
  *
  */
+
+
 class MapPlugin extends React.Component {
     static propTypes = {
         mapType: PropTypes.string,
@@ -146,13 +169,16 @@ class MapPlugin extends React.Component {
         loadingSpinner: PropTypes.bool,
         loadingError: PropTypes.string,
         tools: PropTypes.array,
+        fonts: PropTypes.array,
         options: PropTypes.object,
         mapOptions: PropTypes.object,
         projectionDefs: PropTypes.array,
         toolsOptions: PropTypes.object,
+        onFontError: PropTypes.func,
         actions: PropTypes.object,
         features: PropTypes.array,
         securityToken: PropTypes.string,
+        shouldLoadFont: PropTypes.bool,
         elevationEnabled: PropTypes.bool
     };
 
@@ -165,6 +191,9 @@ class MapPlugin extends React.Component {
         tools: ["measurement", "locate", "scalebar", "draw", "highlight"],
         options: {},
         mapOptions: {},
+        fonts: {
+            'FontAwesome': {}
+        },
         toolsOptions: {
             measurement: {},
             locate: {},
@@ -186,10 +215,36 @@ class MapPlugin extends React.Component {
         },
         securityToken: '',
         additionalLayers: [],
-        elevationEnabled: false
+        shouldLoadFont: false,
+        elevationEnabled: false,
+        onFontError: () => {}
+    };
+    state = {
+        canRender: true
     };
 
     componentWillMount() {
+        const {shouldLoadFont, fonts} = this.props;
+
+        // load each font before rendering (see issue #3155)
+        if (shouldLoadFont && fonts) {
+            this.setState({canRender: false});
+            let observers = [];
+            // Make one observer for each font,
+            // by iterating over the data we already have
+            Object.keys(fonts).forEach((family) => {
+                let data = fonts[family];
+                let obs = new FontFaceObserver(family, data);
+                observers.push(obs.load().catch(error => {
+                    // every promise that will fail, will show a notification
+                    this.props.onFontError(error);
+                }));
+            });
+
+            Promise.all(observers).then(() => {
+                this.setState({canRender: true});
+            });
+        }
         this.updatePlugins(this.props);
     }
 
@@ -271,7 +326,7 @@ class MapPlugin extends React.Component {
     };
 
     render() {
-        if (this.props.map) {
+        if (this.props.map && this.state.canRender) {
             const {mapOptions = {}} = this.props.map;
 
             return (
@@ -318,7 +373,7 @@ class MapPlugin extends React.Component {
 }
 
 const {mapSelector, projectionDefsSelector} = require('../selectors/map');
-const { mapTypeSelector } = require('../selectors/maptype');
+const { mapTypeSelector, isOpenlayers } = require('../selectors/maptype');
 const {layerSelectorWithMarkers} = require('../selectors/layers');
 const {highlighedFeatures} = require('../selectors/highlight');
 const {securityTokenSelector} = require('../selectors/security');
@@ -332,8 +387,9 @@ const selector = createSelector(
         highlighedFeatures,
         (state) => state.mapInitialConfig && state.mapInitialConfig.loadingError && state.mapInitialConfig.loadingError.data,
         securityTokenSelector,
-        (state) => state.mousePosition && state.mousePosition.enabled
-    ], (projectionDefs, map, mapType, layers, features, loadingError, securityToken, elevationEnabled) => ({
+        (state) => state.mousePosition && state.mousePosition.enabled,
+        isOpenlayers
+    ], (projectionDefs, map, mapType, layers, features, loadingError, securityToken, elevationEnabled, shouldLoadFont) => ({
         projectionDefs,
         map,
         mapType,
@@ -341,11 +397,14 @@ const selector = createSelector(
         features,
         loadingError,
         securityToken,
-        elevationEnabled
+        elevationEnabled,
+        shouldLoadFont
     })
 );
 module.exports = {
-    MapPlugin: connect(selector)(MapPlugin),
+    MapPlugin: connect(selector, {
+        onFontError: errorLoadingFont
+    })(MapPlugin),
     reducers: {
         draw: require('../reducers/draw'),
         highlight: require('../reducers/highlight'),

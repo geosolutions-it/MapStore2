@@ -16,7 +16,7 @@ const { getCurrentPaginationOptions, updatePages } = require('../../../../utils/
  * props to retrieve data using virtual scroll.
  */
 module.exports = pages$ => props$ => props$.switchMap(({
-            layer = {},
+    layer = {},
     size = 20,
     maxStoredPages = 5,
     filter,
@@ -29,7 +29,8 @@ module.exports = pages$ => props$ => props$.switchMap(({
         ...getCurrentPaginationOptions(pagesRange, pages, size),
         timeout: 15000,
         totalFeatures: pagination.totalFeatures, // this is needed to allow workaround of GEOS-7233
-        propertyName: options.propertyName
+        propertyName: options.propertyName,
+        viewParams: options.viewParams
         // TODO: defaultSortOptions - to skip primary-key issues
     })
         .do(data => onLoad({

@@ -19,6 +19,7 @@ const WidgetOptions = require('./common/WidgetOptions');
 
 const wpsCounter = require('../../enhancers/wpsCounter');
 const dependenciesToFilter = require('../../enhancers/dependenciesToFilter');
+const dependenciesToOptions = require('../../enhancers/dependenciesToOptions');
 const dependenciesToWidget = require('../../enhancers/dependenciesToWidget');
 const emptyChartState = require('../../enhancers/emptyChartState');
 const errorChartState = require('../../enhancers/errorChartState');
@@ -37,6 +38,7 @@ const triggerSetValid = compose(
 const enhancePreview = compose(
     dependenciesToWidget,
     dependenciesToFilter,
+    dependenciesToOptions,
     wpsCounter,
     triggerSetValid,
     loadingState,

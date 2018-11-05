@@ -3,13 +3,17 @@ const PropTypes = require('prop-types');
 const ColorUtils = require('../../utils/ColorUtils');
 const ColorRampItem = require('./EqualIntervalComponents/ColorRampItem');
 const DropdownList = require('react-widgets').DropdownList;
+const {head} = require('lodash');
+
 class ColorRangeSelector extends React.Component {
 
     static propTypes = {
         value: PropTypes.oneOfType([PropTypes.string, PropTypes.object]),
         samples: PropTypes.number,
         onChange: PropTypes.func,
-        items: PropTypes.array
+        items: PropTypes.array,
+        rampFunction: PropTypes.func,
+        disabled: PropTypes.bool
     };
     static contextTypes = {
         messages: PropTypes.object
@@ -41,16 +45,17 @@ class ColorRangeSelector extends React.Component {
             name: 'global.colors.random',
             schema: 'qualitative',
             options: {base: 190, range: 340, options: {base: 10, range: 360, s: 0.67, v: 0.67}}
-        }]
+        }],
+        disabled: false
     };
     getValue = () => {
-        this.getItems().filter( (i = {}) => i === this.props.value || i.name === (this.props.value && this.props.value.name));
+        return head(this.getItems().filter( (i = {}) => i === this.props.value || i.name === (this.props.value && this.props.value.name)));
     }
     getItems = () => {
         return this.props.items.map(({options = {}, ...item}) => ({
             ...item,
             options,
-            ramp: (ColorUtils.sameToneRangeColors(options.base, options.range, this.props.samples + 1, options.options) || ["#AAA"]).splice(1)
+            ramp: this.props.rampFunction ? this.props.rampFunction(item, options) : (ColorUtils.sameToneRangeColors(options.base, options.range, this.props.samples + 1, options.options) || ["#AAA"]).splice(1)
         }));
     }
 
@@ -60,6 +65,7 @@ class ColorRangeSelector extends React.Component {
             <DropdownList
                 className="color-range-selector"
                 data={items}
+                disabled={this.props.disabled}
                 valueComponent={(props) => <ColorRampItem {...props} data={items} />}
                 itemComponent={ColorRampItem}
                 value={this.getValue()}

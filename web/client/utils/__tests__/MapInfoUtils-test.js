@@ -413,5 +413,77 @@ describe('MapInfoUtils', () => {
         expect(getCleanTemplate(template, testObj, /\$\{.*?\}/g, 2, 1)).toBe('<p>the name is ${ properties.name } and the description  and again the name is ${ properties.name }</p>');
 
     });
+    it('buildIdentifyRequest cql_filter management for wms and wmts2', () => {
+        let props = {
+            map: {
+                zoom: 0,
+                projection: 'EPSG:4326'
+            },
+            point: {
+                latlng: {
+                    lat: 0,
+                    lng: 0
+                }
+            }
+        };
+        let layer1 = {
+            type: "wms",
+            queryLayers: ["sublayer1", "sublayer2"],
+            name: "layer",
+            url: "http://localhost",
+            params: {
+                CQL_FILTER: "prop1 = 'value'"
+            },
+            featureInfo: {
+                format: "PROPERTIES",
+                viewer: {
+                    type: 'customViewer'
+                }
+            }
+        };
+        let layer2 = {
+            type: "wms",
+            queryLayers: ["sublayer1", "sublayer2"],
+            name: "layer",
+            url: "http://localhost",
+            filterObj: {
+                filterFields: [
+                    {
+                        groupId: 1,
+                        attribute: "prop2",
+                        exception: null,
+                        operator: "=",
+                        rowId: "3",
+                        type: "number",
+                        value: "value2"
+                    }],
+                groupFields: [{
+                    id: 1,
+                    index: 0,
+                    logic: "OR"
+                }]
+            },
+            featureInfo: {
+                format: "PROPERTIES",
+                viewer: {
+                    type: 'customViewer'
+                }
+            }
+        };
+        const layer3 = {...layer1, ...layer2};
+        const wmts1 = {...layer1, type: "wmts"};
+        const wmts2 = { ...layer2, type: "wmts" };
+        const wmts3 = { ...layer3, type: "wmts" };
+        expect(buildIdentifyRequest(layer1, props).request.CQL_FILTER).toBe("prop1 = 'value'");
+        expect(buildIdentifyRequest(layer2, props).request.CQL_FILTER).toBe("(\"prop2\" = 'value2')");
+        // the filterObj and CQL_FILTER must be merged into a unique filter
+        expect(buildIdentifyRequest(layer3, props).request.CQL_FILTER).toBe("((\"prop2\" = 'value2')) AND (prop1 = 'value')");
+        expect(buildIdentifyRequest(wmts1, props).request.CQL_FILTER).toBe("prop1 = 'value'");
+        expect(buildIdentifyRequest(wmts2, props).request.CQL_FILTER).toBe("(\"prop2\" = 'value2')");
+        // the filterObj and CQL_FILTER must be merged into a unique filter
+        expect(buildIdentifyRequest(wmts3, props).request.CQL_FILTER).toBe("((\"prop2\" = 'value2')) AND (prop1 = 'value')");
+
+    });
+
 });
 

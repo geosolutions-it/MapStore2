@@ -1,7 +1,7 @@
 {
     "proxyUrl": {
         "url": "proxy/?url=",
-        "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver"]
+        "useCORS": ["http://demo.geo-solutions.it/geoserver", "https://demo.geo-solutions.it:443/geoserver", "https://demo.geo-solutions.it/geoserver", "https://nominatim.openstreetmap.org"]
     },
     "geoStoreUrl": "rest/geostore/",
     "printUrl": "pdf/info.json",
@@ -16,9 +16,7 @@
           "flyTo": true,
           "navigationTools": true,
           "terrainProvider": {
-              "type": "cesium",
-              "url": "https://assets.agi.com/stk-terrain/world",
-              "requestVertexNormals": true
+              "type": "ellipsoid"
           }
       }
     },
@@ -204,7 +202,8 @@
                 "externalCookieUrl" : "",
                 "declineUrl" : "http://www.google.com"
               }
-            }
+            },
+            "FeedbackMask"
         ],
         "desktop": [ "Details",
           {
@@ -261,7 +260,6 @@
                   "activateQueryTool": true,
                   "spatialOperations": [
                       {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
-                      {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},
                       {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
                       {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"}
                   ],
@@ -277,19 +275,7 @@
                 "cfg": {
                     "activateQueryTool": true,
                     "activateAddLayerButton": true,
-                    "activateMetedataTool": false,
-                    "spatialOperations": [
-                        {"id": "INTERSECTS", "name": "queryform.spatialfilter.operations.intersects"},
-                        {"id": "BBOX", "name": "queryform.spatialfilter.operations.bbox"},
-                        {"id": "CONTAINS", "name": "queryform.spatialfilter.operations.contains"},
-                        {"id": "WITHIN", "name": "queryform.spatialfilter.operations.within"}
-                    ],
-                    "spatialMethodOptions": [
-                        {"id": "Viewport", "name": "queryform.spatialfilter.methods.viewport"},
-                        {"id": "BBOX", "name": "queryform.spatialfilter.methods.box"},
-                        {"id": "Circle", "name": "queryform.spatialfilter.methods.circle"},
-                        {"id": "Polygon", "name": "queryform.spatialfilter.methods.poly"}
-                    ]
+                    "activateMetedataTool": false
                 }
             },
             "Tutorial", "MapFooter", {
@@ -366,7 +352,8 @@
                 }
             },
             "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets",
-            "FloatingLegend"
+            "FloatingLegend",
+            "FeedbackMask"
         ],
         "embedded": [{
                 "name": "Map",
@@ -475,7 +462,8 @@
                         "alwaysVisible": true
                     }
                 }
-            }
+            },
+            "FeedbackMask"
         ],
         "common": [{
             "name": "OmniBar",
@@ -516,7 +504,7 @@
                 "containerPosition": "header",
                 "className": "navbar shadow navbar-home"
             }
-        }, "ManagerMenu", "Login", "Language", "NavMenu", "Attribution", "Home", {
+        }, "Login", "Language", "NavMenu", "Attribution", "Home", {
           "name": "DashboardEditor",
           "cfg": {
              "catalog": {
@@ -536,7 +524,20 @@
             },
             "containerPosition": "columns"
           }
-        }, "Dashboard", "Notifications"],
+        }, "BurgerMenu", "Dashboard", "Notifications", {
+            "name": "Tutorial",
+            "cfg": {
+                "allowClicksThruHole": false,
+                "containerPosition": "header",
+                "preset": "dashboard_tutorial"
+            }
+        },
+        {
+            "name": "FeedbackMask",
+            "cfg": {
+                "containerPosition": "header"
+            }
+        }],
         "manager": ["Header", "Redirect", "Manager", "Home", "UserManager", "GroupManager", "Footer"]
     }
 }

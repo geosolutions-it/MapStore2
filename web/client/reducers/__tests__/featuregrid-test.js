@@ -174,11 +174,13 @@ describe('Test the featuregrid reducer', () => {
         expect(state.multiselect).toBeTruthy();
         expect(state.mode).toBe(MODES.EDIT);
         expect(state.tools.settings).toBeFalsy();
+        expect(state.showPopoverSync).toBe(false);
     });
     it('toggleViewMode view', () => {
         let state = featuregrid( {}, toggleViewMode());
         expect(state.multiselect).toBeFalsy();
         expect(state.mode).toBe(MODES.VIEW);
+        expect(state.showPopoverSync).toBe(true);
     });
     it('featureSaving', () => {
         let state = featuregrid( {}, featureSaving());

@@ -53,8 +53,21 @@ const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false)
  * @return {boolean} true if the get feature info has to stop the request
  */
 
-const stopGetFeatureInfoSelector = createSelector(mapInfoDisabledSelector, measureActiveSelector, drawSupportActiveSelector, gridEditingSelector, annotationsEditingSelector, queryPanelSelector,
-    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isGridEditing, isAnnotationsEditing, isQueryPanelActive) => isMapInfoDisabled || !!isMeasureActive || isDrawSupportActive || isGridEditing || !!isAnnotationsEditing || !!isQueryPanelActive);
+const stopGetFeatureInfoSelector = createSelector(
+    mapInfoDisabledSelector,
+    measureActiveSelector,
+    drawSupportActiveSelector,
+    gridEditingSelector,
+    annotationsEditingSelector,
+    queryPanelSelector,
+    (isMapInfoDisabled, isMeasureActive, isDrawSupportActive, isGridEditing, isAnnotationsEditing, isQueryPanelActive) =>
+        isMapInfoDisabled
+        || !!isMeasureActive
+        || isDrawSupportActive
+        || isGridEditing
+        || !!isAnnotationsEditing
+        || !!isQueryPanelActive
+    );
 
 module.exports = {
     isMapInfoOpen,

@@ -11,6 +11,7 @@ const LOAD_DASHBOARD = "DASHBOARD:LOAD_DASHBOARD";
 const DASHBOARD_RESET = "DASHBOARD:DASHBOARD_RESET";
 const DASHBOARD_LOADED = "DASHBOARD:DASHBOARD_LOADED";
 const DASHBOARD_LOADING = "DASHBOARD:DASHBOARD_LOADING";
+const DASHBOARD_LOAD_ERROR = "DASHBOARD:DASHBOARD_LOAD_ERROR";
 
 module.exports = {
     SET_EDITING,
@@ -42,5 +43,7 @@ module.exports = {
         type: DASHBOARD_LOADING,
         name,
         value
-    })
+    }),
+    DASHBOARD_LOAD_ERROR,
+    dashboardLoadError: error => ({type: DASHBOARD_LOAD_ERROR, error})
 };

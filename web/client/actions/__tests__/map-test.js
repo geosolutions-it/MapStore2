@@ -16,12 +16,11 @@ var {
     CHANGE_MAP_SCALES,
     CHANGE_MAP_STYLE,
     CHANGE_ROTATION,
-    CREATION_ERROR_LAYER,
     UPDATE_VERSION,
     INIT_MAP,
     ZOOM_TO_EXTENT,
     RESIZE_MAP,
-    creationError,
+    errorLoadingFont,
     changeMapView,
     clickOnMap,
     changeMousePointer,
@@ -35,6 +34,9 @@ var {
     zoomToExtent,
     resizeMap
 } = require('../map');
+const {
+    SHOW_NOTIFICATION
+} = require('../notifications');
 
 describe('Test correctness of the map actions', () => {
 
@@ -64,13 +66,39 @@ describe('Test correctness of the map actions', () => {
         expect(retval.point).toBe(testVal);
     });
 
-    it('manage creation layer error', () => {
-        const options = {type: "tileprovider"};
-        const retval = creationError(options);
+    it('test errorLoadingFont', () => {
+        const err = {family: "FontAwesome"};
+        let {type, values, title, message, autoDismiss, position } = errorLoadingFont(err);
 
-        expect(retval.type).toBe(CREATION_ERROR_LAYER);
-        expect(retval.options).toExist();
-        expect(retval.options).toBe(options);
+        expect(type).toBe(SHOW_NOTIFICATION);
+        expect(values).toExist();
+        expect(values.family).toExist();
+        expect(title).toExist();
+        expect(message).toExist();
+        expect(position).toExist();
+        expect(autoDismiss).toExist();
+        expect(values.family).toBe("FontAwesome");
+        expect(title).toBe("warning");
+        expect(message).toBe("map.errorLoadingFont");
+        expect(position).toBe("tc");
+        expect(autoDismiss).toBe(10);
+    });
+
+    it('test errorLoadingFont default', () => {
+        let {type, values, title, message, autoDismiss, position } = errorLoadingFont();
+
+        expect(type).toBe(SHOW_NOTIFICATION);
+        expect(values).toExist();
+        expect(title).toExist();
+        expect(message).toExist();
+        expect(position).toExist();
+        expect(autoDismiss).toExist();
+        expect(values.family).toBe("");
+        expect(title).toBe("warning");
+        expect(message).toBe("map.errorLoadingFont");
+        expect(position).toBe("tc");
+        expect(autoDismiss).toBe(10);
+
     });
 
     it('set a new mouse pointer', () => {
