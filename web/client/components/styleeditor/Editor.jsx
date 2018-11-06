@@ -149,7 +149,8 @@ class Editor extends React.Component {
         const cur = instance.getCursor();
         const token = instance.getTokenAt(cur);
         if (token.string && (endsWith(token.string, '-') || token.string.match(/^[.`\w@]\w*$/)) && token.string.length > 0) {
-            CM.commands.autocomplete(instance, null, { completeSingle: false });
+            const wrapperElement = this.editor && this.editor.getWrapperElement && this.editor.getWrapperElement() || null;
+            CM.commands.autocomplete(instance, null, { completeSingle: false, container: wrapperElement });
         }
     };
 
@@ -183,7 +184,6 @@ class Editor extends React.Component {
                     </div>
                 }>
                 <Codemirror
-                    ref={cmp => { this.cfgEditor = cmp; }}
                     key="style-editor"
                     value={this.state.code}
                     editorDidMount={editor => {
