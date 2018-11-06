@@ -797,7 +797,7 @@ const CoordinatesUtils = {
      * @return the rounded value or the orignal one
     */
     checkRounding: ({ roundingBehaviour = "round", value = 0, maximumFractionDigits = 0 } = {}) => {
-        if (maximumFractionDigits === 0 && !!Math[roundingBehaviour]) {
+        if (maximumFractionDigits === 0 && Math[roundingBehaviour]) {
             return Math[roundingBehaviour](value);
         }
         return value;
