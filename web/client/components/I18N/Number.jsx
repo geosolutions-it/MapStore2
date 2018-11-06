@@ -1,18 +1,19 @@
-var PropTypes = require('prop-types');
 /**
- * Copyright 2015, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
-var React = require('react');
-var {FormattedNumber} = require('react-intl');
-
+* Copyright 2015, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+const PropTypes = require('prop-types');
+const React = require('react');
+const {FormattedNumber} = require('react-intl');
+const { checkRounding } = require('../../utils/CoordinatesUtils');
 class NumberFormat extends React.Component {
     static propTypes = {
         value: PropTypes.oneOf([PropTypes.object, PropTypes.number]),
-        numberParams: PropTypes.object
+        numberParams: PropTypes.object,
+        roundingBehaviour: PropTypes.string
     };
 
     static contextTypes = {
@@ -20,11 +21,16 @@ class NumberFormat extends React.Component {
     };
 
     static defaultProps = {
-        value: new Date()
+        value: new Date(),
+        roundingBehaviour: "round"
     };
 
     render() {
-        return this.context.intl ? <FormattedNumber value={this.props.value} {...this.props.numberParams}/> : <span>{this.props.value && this.props.value.toString() || ''}</span>;
+        const {value, roundingBehaviour, numberParams} = this.props;
+        const {maximumFractionDigits} = numberParams;
+
+        const roundingOptions = {value, roundingBehaviour, maximumFractionDigits};
+        return this.context.intl ? <FormattedNumber value={checkRounding(roundingOptions)} {...numberParams}/> : <span>{value && value.toString() || ''}</span>;
     }
 }
 

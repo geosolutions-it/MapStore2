@@ -41,14 +41,14 @@ class MousePositionLabelDMS extends React.Component {
         return (
                 <h5>
                 <Label bsSize="lg" bsStyle="info">
-                    <span>Lat: </span><NumberFormat key="latD" numberParams={integerFormat} value={pos.lat} />
-                    <span>° </span><NumberFormat key="latM" numberParams={integerFormat} value={pos.latM} />
-                    <span>&apos; </span><NumberFormat key="latS" numberParams={decimalFormat} value={pos.latS} />
+                    <span>Lat: </span><NumberFormat key="latD" numberParams={integerFormat} value={pos.lat} roundingBehaviour="floor"/>
+                    <span>° </span><NumberFormat key="latM" numberParams={integerFormat} value={pos.latM} roundingBehaviour="floor"/>
+                    <span>&apos; </span><NumberFormat key="latS" numberParams={decimalFormat} value={pos.latS}/>
                     <span>&apos;&apos;</span>
                     <span className="mouseposition-separator"/>
-                    <span> Lng: </span><NumberFormat key="lngD" numberParams={lngDFormat} value={pos.lng} />
-                    <span>° </span><NumberFormat key="lngM" numberParams={integerFormat} value={pos.lngM} />
-                    <span>&apos; </span><NumberFormat key="lngS" numberParams={decimalFormat} value={pos.lngS} /><span>''</span>
+                    <span> Lng: </span><NumberFormat key="lngD" numberParams={lngDFormat} value={pos.lng} roundingBehaviour="floor" />
+                    <span>° </span><NumberFormat key="lngM" numberParams={integerFormat} value={pos.lngM} roundingBehaviour="floor"/>
+                    <span>&apos; </span><NumberFormat key="lngS" numberParams={decimalFormat} value={pos.lngS}/><span>''</span>
                 </Label>
                 </h5>);
     }

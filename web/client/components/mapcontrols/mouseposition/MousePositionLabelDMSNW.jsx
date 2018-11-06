@@ -40,13 +40,12 @@ class MousePositionLabelDMS extends React.Component {
         let lngDFormat = {style: "decimal", minimumIntegerDigits: 3, maximumFractionDigits: 0};
         return (
                 <h5>
-
                 <Label bsSize="lg" bsStyle="info">
-                    <NumberFormat key="latD" numberParams={integerFormat} value={Math.abs(pos.lat)} />
-                    <span>° </span><NumberFormat key="latM" numberParams={integerFormat} value={pos.latM} />
+                    <NumberFormat key="latD" numberParams={integerFormat} value={Math.abs(pos.lat)} roundingBehaviour="floor"/>
+                    <span>° </span><NumberFormat key="latM" numberParams={integerFormat} value={pos.latM} roundingBehaviour="floor"/>
                     <span>&apos; </span><NumberFormat key="latS" numberParams={decimalFormat} value={pos.latS} />
-                    <span>&apos;&apos; {pos.lat > 0 ? "N" : "S"} </span><NumberFormat key="lngD" numberParams={lngDFormat} value={Math.abs(pos.lng)} />
-                    <span>° </span><NumberFormat key="lngM" numberParams={integerFormat} value={pos.lngM} />
+                    <span>&apos;&apos; {pos.lat > 0 ? "N" : "S"} </span><NumberFormat key="lngD" numberParams={lngDFormat} value={Math.abs(pos.lng)} roundingBehaviour="floor" />
+                    <span>° </span><NumberFormat key="lngM" numberParams={integerFormat} value={pos.lngM} roundingBehaviour="floor"/>
                     <span>&apos; </span><NumberFormat key="lngS" numberParams={decimalFormat} value={pos.lngS} /><span>'' {pos.lng > 0 ? "E" : "W"}</span>
                 </Label>
                 </h5>);
