@@ -158,7 +158,7 @@ describe("test updateSettingsLifecycle", () => {
         const spyOnUpdateOriginalSettings = expect.spyOn(testHandlers, 'onUpdateOriginalSettings');
         const spyOnUpdateInitialSettings = expect.spyOn(testHandlers, 'onUpdateInitialSettings');
 
-        const Component = settingsLifecycle(({onSave}) => <div id="test-save" onClick={onSave}></div>);
+        const Component = settingsLifecycle(({onSave}) => <div id="test-save" onClick={() => onSave()}></div>);
         ReactDOM.render(<Component
             onHideSettings={testHandlers.onHideSettings}
             onShowAlertModal={testHandlers.onShowAlertModal}
@@ -290,59 +290,4 @@ describe("test updateSettingsLifecycle", () => {
         expect(spyOnUpdateOriginalSettings).toHaveBeenCalled();
         expect(spyOnUpdateInitialSettings).toHaveBeenCalled();
     });
-
-    it('test component on update params', () => {
-        const testHandlers = {
-            onUpdateOriginalSettings: () => {},
-            onUpdateSettings: () => {},
-            onUpdateNode: () => {}
-        };
-
-        const spyOnUpdateOriginalSettings = expect.spyOn(testHandlers, 'onUpdateOriginalSettings');
-        const spyOnUpdateSettings = expect.spyOn(testHandlers, 'onUpdateSettings');
-        const spyOnUpdateNode = expect.spyOn(testHandlers, 'onUpdateNode');
-
-        const Component = settingsLifecycle(({onUpdateParams}) => <div id="test-update-params" onClick={() => onUpdateParams({newParam: 'param'}, true)}></div>);
-        ReactDOM.render(<Component
-            originalSettings={{}}
-            initialSettings={{}}
-            onUpdateNode={testHandlers.onUpdateNode}
-            onUpdateSettings={testHandlers.onUpdateSettings}
-            onUpdateOriginalSettings={testHandlers.onUpdateOriginalSettings}
-            settings={{node: '0', nodeType: 'layer', options: {}}} />, document.getElementById("container"));
-
-        const testUpdateParams = document.getElementById('test-update-params');
-        TestUtils.Simulate.click(testUpdateParams);
-        expect(spyOnUpdateOriginalSettings.calls.length).toBe(2);
-        expect(spyOnUpdateSettings).toHaveBeenCalled();
-        expect(spyOnUpdateNode).toHaveBeenCalled();
-    });
-
-    it('test component on update params realtime update to false', () => {
-        const testHandlers = {
-            onUpdateOriginalSettings: () => {},
-            onUpdateSettings: () => {},
-            onUpdateNode: () => {}
-        };
-
-        const spyOnUpdateOriginalSettings = expect.spyOn(testHandlers, 'onUpdateOriginalSettings');
-        const spyOnUpdateSettings = expect.spyOn(testHandlers, 'onUpdateSettings');
-        const spyOnUpdateNode = expect.spyOn(testHandlers, 'onUpdateNode');
-
-        const Component = settingsLifecycle(({onUpdateParams}) => <div id="test-update-params" onClick={() => onUpdateParams({newParam: 'param'}, false)}></div>);
-        ReactDOM.render(<Component
-            originalSettings={{}}
-            initialSettings={{}}
-            onUpdateNode={testHandlers.onUpdateNode}
-            onUpdateSettings={testHandlers.onUpdateSettings}
-            onUpdateOriginalSettings={testHandlers.onUpdateOriginalSettings}
-            settings={{node: '0', nodeType: 'layer', options: {}}} />, document.getElementById("container"));
-
-        const testUpdateParams = document.getElementById('test-update-params');
-        TestUtils.Simulate.click(testUpdateParams);
-        expect(spyOnUpdateOriginalSettings.calls.length).toBe(2);
-        expect(spyOnUpdateSettings).toHaveBeenCalled();
-        expect(spyOnUpdateNode).toNotHaveBeenCalled();
-    });
-
 });

@@ -95,7 +95,8 @@ module.exports = {
         FloatingLegendPlugin: require('../plugins/FloatingLegend'),
         TimelinePlugin: require('../plugins/Timeline'),
         ThematicLayerPlugin: require('../plugins/ThematicLayer'),
-        FeedbackMaskPlugin: require('../plugins/FeedbackMask')
+        FeedbackMaskPlugin: require('../plugins/FeedbackMask'),
+        StyleEditorPlugin: require('../plugins/StyleEditor')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

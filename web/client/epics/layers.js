@@ -8,8 +8,11 @@
 
 const Rx = require('rxjs');
 const Api = require('../api/WMS');
-const { REFRESH_LAYERS, UPDATE_LAYERS_DIMENSION, layersRefreshed, updateNode, layersRefreshError, changeLayerParams} = require('../actions/layers');
-const {getLayersWithDimension} = require('../selectors/layers');
+const { REFRESH_LAYERS, UPDATE_LAYERS_DIMENSION, UPDATE_SETTINGS_PARAMS, layersRefreshed, updateNode, updateSettings, layersRefreshError, changeLayerParams} = require('../actions/layers');
+const {getLayersWithDimension, layerSettingSelector} = require('../selectors/layers');
+
+const { setControlProperty } = require('../actions/controls');
+const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
 
 const LayersUtils = require('../utils/LayersUtils');
 
@@ -108,7 +111,45 @@ const updateDimension = (action$, {getState = () => {}} = {}) =>
                 )
             )
         );
+
+/**
+ * Update original and initial state of layer settings.
+ * Initial settings is the layer object before settings session started.
+ * Original settings contains only changed properties keys with initial value stored during settings session.
+ * Action performed: updateSettings, setControlProperty and updateNode (updateNode only if action.update is true)
+ * @memberof epics.layers
+ * @param {external:Observable} action$ manages `UPDATE_SETTINGS_PARAMS`
+ * @return {external:Observable}
+ */
+const updateSettingsParamsEpic = (action$, store) =>
+    action$.ofType(UPDATE_SETTINGS_PARAMS)
+        .switchMap(({ newParams = {}, update }) => {
+
+            const state = store.getState();
+            const settings = layerSettingSelector(state);
+            const initialSettings = initialSettingsSelector(state);
+            const orig = originalSettingsSelector(state);
+
+            let originalSettings = { ...(orig || {}) };
+            // TODO one level only storage of original settings for the moment
+            Object.keys(newParams).forEach((key) => {
+                originalSettings[key] = initialSettings && initialSettings[key];
+            });
+
+            return Rx.Observable.of(
+                updateSettings(newParams),
+                // update changed keys to verify only modified values (internal state)
+                setControlProperty('layersettings', 'originalSettings', originalSettings),
+                ...(update ? [updateNode(
+                    settings.node,
+                    settings.nodeType,
+                    { ...settings.options, ...newParams }
+                )] : [])
+            );
+        });
+
 module.exports = {
     refresh,
-    updateDimension
+    updateDimension,
+    updateSettingsParamsEpic
 };

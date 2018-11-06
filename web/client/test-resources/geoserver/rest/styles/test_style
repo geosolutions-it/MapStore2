@@ -1,0 +1,10 @@
+{
+    "style": {
+        "name": "test_style",
+        "format": "css",
+        "languageVersion": {
+            "version": "1.0.0"
+        },
+        "filename": "test_style.css"
+    }
+}
