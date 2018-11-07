@@ -10,7 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const { connect } = require('react-redux');
 const { createSelector } = require('reselect');
-const { compose, branch } = require('recompose');
+const { compose, branch, toClass } = require('recompose');
 const assign = require('object-assign');
 
 const Loader = require('../components/misc/Loader');
@@ -100,10 +100,13 @@ class StyleEditorPanel extends React.Component {
  * @class StyleEditor
  */
 const StyleEditorPlugin = compose(
+    // Plugin needs to be a class
+    // in this case 'branch' return always a functional component and PluginUtils expects a class
+    toClass,
     // No rendering if not active
     // eg: now only TOCItemsSettings can active following plugin
     branch(
-        ({ active }) => !active,
+        ({ active } = {}) => !active,
         () => () => null
     ),
     // end
