@@ -53,7 +53,6 @@ const {
     getUpdatedLayer
 } = require('../../selectors/styleeditor');
 
-const { isAdminUserSelector } = require('../../selectors/security');
 const { getEditorMode, STYLE_OWNER_NAME, getStyleTemplates } = require('../../utils/StyleEditorUtils');
 
 const stylesTemplates = getStyleTemplates();
@@ -186,17 +185,16 @@ const StyleToolbar = compose(
                 codeStyleSelector,
                 loadingStyleSelector,
                 selectedStyleSelector,
-                isAdminUserSelector,
                 canEditStyleSelector
             ],
-            (status, templateId, error, initialCode, code, loading, selectedStyle, isAdmin, canEdit) => ({
+            (status, templateId, error, initialCode, code, loading, selectedStyle, canEdit) => ({
                 status,
                 templateId,
                 error,
                 isCodeChanged: initialCode !== code,
                 loading,
                 selectedStyle,
-                editEnabled: isAdmin && canEdit
+                editEnabled: canEdit
             })
         ),
         {

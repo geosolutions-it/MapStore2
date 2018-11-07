@@ -12,6 +12,7 @@ const { connect } = require('react-redux');
 const { createSelector } = require('reselect');
 const { compose, branch, toClass } = require('recompose');
 const assign = require('object-assign');
+const { isArray, isString } = require('lodash');
 
 const Loader = require('../components/misc/Loader');
 const BorderLayout = require('../components/layout/BorderLayout');
@@ -25,6 +26,8 @@ const {
     getUpdatedLayer,
     errorStyleSelector
 } = require('../selectors/styleeditor');
+
+const { userRoleSelector } = require('../selectors/security');
 
 const { initStyleService } = require('../actions/styleeditor');
 const { updateSettingsParams } = require('../actions/layers');
@@ -44,7 +47,9 @@ class StyleEditorPanel extends React.Component {
         isEditing: PropTypes.bool,
         showToolbar: PropTypes.node.bool,
         onInit: PropTypes.func,
-        styleService: PropTypes.object
+        styleService: PropTypes.object,
+        userRole: PropTypes.string,
+        editingAllowedRoles: PropTypes.array
     };
 
     static defaultProps = {
@@ -59,11 +64,16 @@ class StyleEditorPanel extends React.Component {
             availableUrls: [
                 'http://localhost:8080/geoserver/'
             ]
-        }
+        },
+        editingAllowedRoles: [
+            'ADMIN'
+        ]
     };
 
     componentWillMount() {
-        this.props.onInit(this.props.styleService, isSameOrigin(this.props.layer, this.props.styleService));
+        const canEdit = !this.props.editingAllowedRoles || (isArray(this.props.editingAllowedRoles) && isString(this.props.userRole)
+            && this.props.editingAllowedRoles.indexOf(this.props.userRole) !== -1);
+        this.props.onInit(this.props.styleService, canEdit && isSameOrigin(this.props.layer, this.props.styleService));
     }
 
     render() {
@@ -96,6 +106,7 @@ class StyleEditorPanel extends React.Component {
  * @prop {string} cfg.styleService.baseUrl base url of service eg: '/geoserver/'
  * @prop {array} cfg.styleService.availableUrls a list of urls that can access directly to the style service
  * @prop {array} cfg.styleService.formats supported formats, could be one of [ 'sld' ] or [ 'sld', 'css' ]
+ * @prop {array} cfg.editingAllowedRoles all roles with edit permission eg: ['ADMIN'], if null all roles have edit permission
  * @memberof plugins
  * @class StyleEditor
  */
@@ -116,13 +127,15 @@ const StyleEditorPlugin = compose(
                 statusStyleSelector,
                 loadingStyleSelector,
                 getUpdatedLayer,
-                errorStyleSelector
+                errorStyleSelector,
+                userRoleSelector
             ],
-            (status, loading, layer, error) => ({
+            (status, loading, layer, error, userRole) => ({
                 isEditing: status === 'edit',
                 loading,
                 layer,
-                error: !!(error && error.availableStyles)
+                error: !!(error && error.availableStyles),
+                userRole
             })
         ),
         {

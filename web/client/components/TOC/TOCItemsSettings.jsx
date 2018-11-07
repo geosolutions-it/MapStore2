@@ -148,7 +148,7 @@ const TOCItemSettings = (props, context) => {
                         {
                             bsStyle: 'primary',
                             text: <Message msgId="save"/>,
-                            onClick: onSave
+                            onClick: () => onSave(tabsCloseActions)
                         }
                     ]}>
                     <div className="ms-alert">

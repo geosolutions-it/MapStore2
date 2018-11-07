@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { isNil, isEqual } = require('lodash');
+const { isNil, isEqual, isArray, isFunction } = require('lodash');
 const { withState, withHandlers, compose, lifecycle } = require('recompose');
 
 /**
@@ -35,12 +35,18 @@ const settingsState = compose(
  */
 const settingsLifecycle = compose(
     withHandlers({
-        onClose: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onUpdateNode, originalSettings, settings, onHideSettings, onShowAlertModal }) => (forceClose, tabsCloseActions = []) => {
+        onClose: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onUpdateNode = () => {}, originalSettings, settings, onHideSettings = () => {}, onShowAlertModal = () => {} }) => (forceClose, tabsCloseActions = []) => {
             const originalOptions = Object.keys(settings.options).reduce((options, key) => ({ ...options, [key]: key === 'opacity' && !originalSettings[key] && 1.0 || originalSettings[key] }), {});
             if (!isEqual(originalOptions, settings.options) && !forceClose) {
                 onShowAlertModal(true);
             } else {
-                tabsCloseActions.forEach(tabOnClose => { tabOnClose(); });
+                if (isArray(tabsCloseActions)) {
+                    tabsCloseActions.forEach(tabOnClose => {
+                        if (isFunction(tabOnClose)) {
+                            tabOnClose();
+                        }
+                    });
+                }
                 onUpdateNode(
                     settings.node,
                     settings.nodeType,
@@ -54,7 +60,13 @@ const settingsLifecycle = compose(
             }
         },
         onSave: ({ onUpdateInitialSettings = () => {}, onUpdateOriginalSettings = () => {}, onHideSettings = () => { }, onShowAlertModal = () => { } }) => (tabsCloseActions = []) => {
-            tabsCloseActions.forEach(tabOnClose => { tabOnClose(); });
+            if (isArray(tabsCloseActions)) {
+                tabsCloseActions.forEach(tabOnClose => {
+                    if (isFunction(tabOnClose)) {
+                        tabOnClose();
+                    }
+                });
+            }
             onHideSettings();
             onShowAlertModal(false);
             // clean up internal settings state
