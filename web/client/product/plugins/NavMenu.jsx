@@ -15,6 +15,38 @@ const {Nav, NavItem, Glyphicon} = require('react-bootstrap');
 const ContainerDimensions = require('react-container-dimensions').default;
 const NavItemT = tooltip(NavItem);
 
+/**
+ * Plugin for navigation menu. It renders some items passed as props (or injected by other plugins)
+ * An item should contain at least the `position` property to sort items correctly in the menu, one of this properties to be rendered:
+ *
+ *  - `href`: a link to open
+ *  - `linkId`: the Id of an item in the page to scroll to.
+ *  - `tool`:  a function that returns the `item` itself. The returned object should contain `href` or `linkId` (useful if you want to inject some components instead of simply configure statically the item)
+ *
+ * In case of `href`, or `linkId`, the item can also to contain:
+ *  - `label`: a node (react element or string, for instance) to render
+ *  - `glyph` icon to use when the window's width is less then `minWidth`
+ *
+ * Examples:
+ * ```
+ * {
+ *  tool: () => {
+ *               position: 0,
+ *               label: props.label || 'GeoSolutions',
+ *               href: props.href || 'https://www.geo-solutions.it/',
+ *               img: props.src && <img className="customer-logo" src={props.src} height="30" /> || <img className="customer-logo" src={src} height="30" />,
+ *               logo: true
+ *           }
+ * }
+ * ```
+ *
+ * @memberof plugins
+ * @name NavMenu
+ * @class
+ * @prop {object[]} items items to render. Note: they can be injected also by the plugin container
+ * @prop {number} [minWidth=768] min width to switch between icon and label visualization.
+ *
+ */
 class NavMenu extends React.Component {
     static propTypes = {
         src: PropTypes.string,
@@ -48,14 +80,14 @@ class NavMenu extends React.Component {
         return this.props.items && [...this.props.items, ...(this.props.links || [])]
             .filter(item => item.href || item.linkId || item.tool)
             .map(item => item.tool && isFunction(item.tool) && item.tool(item.cfg) || item)
-            .sort((itemA, itemB) => itemA.position > itemB.position)
+            .sort((itemA, itemB) => itemA.position - itemB.position)
             .map((item, idx) => {
                 return width > this.props.minWidth && !item.logo ?
                 <NavItem
                     key={idx}
                     target="_blank"
                     href={isString(item.href) && !item.linkId && item.href}
-                    onClick={isString(item.linkId) ? () => this.scroolIntoView(item.linkId) : () => {}}>
+                    onClick={isString(item.linkId) ? () => this.scrollIntoView(item.linkId) : () => {}}>
                     {item.label}
                 </NavItem>
                 :
@@ -65,7 +97,7 @@ class NavMenu extends React.Component {
                     tooltip={item.label}
                     tooltipPosition="bottom"
                     href={isString(item.href) && !item.linkId && item.href}
-                    onClick={isString(item.linkId) ? () => this.scroolIntoView(item.linkId) : () => {}}>
+                    onClick={isString(item.linkId) ? () => this.scrollIntoView(item.linkId) : () => {}}>
                     {item.glyph && <Glyphicon glyph={item.glyph}/> || item.img}
                 </NavItemT>;
             }) || [];
@@ -83,7 +115,7 @@ class NavMenu extends React.Component {
         );
     }
 
-    scroolIntoView = linkId => {
+    scrollIntoView = linkId => {
         const node = document.getElementById(trimStart(linkId, '#'));
         if (node && node.scrollIntoView) {
             node.scrollIntoView({behavior: 'smooth', block: 'start'});
