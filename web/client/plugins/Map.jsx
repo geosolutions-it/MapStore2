@@ -119,14 +119,13 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  *
  * You can also specify a list if fonts that will be loaded before map is rendered (on willMount lyfe) and
  * if the shouldLoadFont is true
- * For each font you can specify an object describing the variation. The object can contain weight, style, and stretch properties.
- * If a property is not present it will default to normal.
+ * For each font you can specify the Fontname used in the `@font-face` declaration which must be included otherwise a notification error will appear:
  * ```
  * {
  *    "name": "Map",
  *    "cfg": {
  *      "shouldLoadFont": true,
- *      "fonts": ['FontAwesome','AnotherFontFamily']
+ *      "fonts": ['FontAwesome']
  *    }
  *  }
  * ```
