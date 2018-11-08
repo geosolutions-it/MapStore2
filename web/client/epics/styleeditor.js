@@ -50,7 +50,6 @@ const {
 } = require('../selectors/styleeditor');
 
 const { getSelectedLayer } = require('../selectors/layers');
-const { isAdminUserSelector } = require('../selectors/security');
 const { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts } = require('../utils/StyleEditorUtils');
 const { normalizeUrl } = require('../utils/PrintUtils');
 const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
@@ -216,7 +215,6 @@ module.exports = {
                     [getLayerCapabilities(layer)],
                     (updatedLayer) => {
 
-                        // layer groups have not available styles
                         if (!updatedLayer.availableStyles) {
                             return Rx.Observable.of(errorStyle('availableStyles', { status: 401 }));
                         }
@@ -226,10 +224,6 @@ module.exports = {
                             updateSettingsParams({ availableStyles }),
                             loadedStyle()
                         );
-                        if (!isAdminUserSelector(state)) {
-                            return setAdditionalLayers(updatedLayer.availableStyles);
-                        }
-
                         return Rx.Observable.defer(() =>
                             StylesAPI.getStylesInfo({
                                 baseUrl: `${parsedUrl.protocol}//${parsedUrl.host}/geoserver/`,
