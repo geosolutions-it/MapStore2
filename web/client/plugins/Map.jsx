@@ -117,7 +117,7 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  *  - name is a unique name for the tool
  *  - impl is a placeholder (“{context.ToolName}”) where ToolName is the name you gave the tool in plugins.js (TestSupportLeaflet in our example)
  *
- * You can also specify a list if fonts that will be loaded before map is rendered (on willMount lyfe) and
+ * You can also specify a list of fonts that have to be loaded before map rendering
  * if the shouldLoadFont is true
  * For each font you can specify the Fontname used in the `@font-face` declaration which must be included otherwise a notification error will appear:
  * ```
