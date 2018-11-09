@@ -289,7 +289,7 @@
             }
         },
         "map": {
-            "errorLoadingFont": "The markers with font family: {family} will not render correctly, because the font was not loaded",
+            "errorLoadingFont": "The font family {family} is not correctly loaded. Some elements (like symbols in markers) can have rendering problems",
             "loading": "Loading...",
             "loadingSpinner": "Loading Map",
             "loadingerror": "Error during loading",

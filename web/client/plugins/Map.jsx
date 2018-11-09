@@ -10,7 +10,9 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('../utils/PluginsUtils');
 const {createSelector} = require('reselect');
-const FontFaceObserver = require('fontfaceobserver');
+
+const {loadFont} = require('../utils/AgentUtils');
+
 const assign = require('object-assign');
 const Spinner = require('react-spinkit');
 require('./map/css/map.css');
@@ -96,7 +98,7 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  *      "name": "Map",
  *      "cfg": {
  *        "shouldLoadFont": true,
- *        "fonts": {'FontAwesome': {}},
+ *        "fonts": ['FontAwesome'],
  *        "tools": ["measurement", "locate", "overview", "scalebar", "draw", {
  *          "leaflet": {
  *            "name": "test",
@@ -115,19 +117,16 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit} 
  *  - name is a unique name for the tool
  *  - impl is a placeholder (“{context.ToolName}”) where ToolName is the name you gave the tool in plugins.js (TestSupportLeaflet in our example)
  *
- * You can also specify a list if fonts that will be loaded before map is rendered (on willMount lyfe) and
+ * You can also specify a list of fonts that have to be loaded before map rendering
  * if the shouldLoadFont is true
- * For each font you can specify an object describing the variation. The object can contain weight, style, and stretch properties.
- * If a property is not present it will default to normal.
+ * This font pre-load list is required if you're using canvas based mapping libraries (e.g. OpenLayers) and you need to show markers with symbols (e.g. Annotations).
+ * For each font you must specify the font name used in the `@font-face` inside the "fonts" array property. Note: the `@font-face` declaration must be present in css of the page, otherwise the font can not be loaded anyway.
  * ```
  * {
  *    "name": "Map",
  *    "cfg": {
  *      "shouldLoadFont": true,
- *      "fonts": {
- *        'FontAwesome': { weight: 400 },
- *        'AnotherFontFamily': {}
- *      }
+ *      "fonts": ['FontAwesome']
  *    }
  *  }
  * ```
@@ -191,9 +190,7 @@ class MapPlugin extends React.Component {
         tools: ["measurement", "locate", "scalebar", "draw", "highlight"],
         options: {},
         mapOptions: {},
-        fonts: {
-            'FontAwesome': {}
-        },
+        fonts: ['FontAwesome'],
         toolsOptions: {
             measurement: {},
             locate: {},
@@ -229,21 +226,19 @@ class MapPlugin extends React.Component {
         // load each font before rendering (see issue #3155)
         if (shouldLoadFont && fonts) {
             this.setState({canRender: false});
-            let observers = [];
-            // Make one observer for each font,
-            // by iterating over the data we already have
-            Object.keys(fonts).forEach((family) => {
-                let data = fonts[family];
-                let obs = new FontFaceObserver(family, data);
-                observers.push(obs.load().catch(error => {
-                    // every promise that will fail, will show a notification
-                    this.props.onFontError(error);
-                }));
-            });
 
-            Promise.all(observers).then(() => {
+            Promise.all(
+                fonts.map(f =>
+                    loadFont(f, {
+                        timeoutAfter: 5000 // 5 seconds in milliseconds
+                    }).catch(() => {
+                        this.props.onFontError({family: f});
+                    }
+                ))
+            ).then(() => {
                 this.setState({canRender: true});
             });
+
         }
         this.updatePlugins(this.props);
     }
