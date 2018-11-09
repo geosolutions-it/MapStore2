@@ -38,7 +38,8 @@ const {
     selectStyleTemplate,
     createStyle,
     updateStyleCode,
-    deleteStyle
+    deleteStyle,
+    UPDATE_STATUS
 } = require('../../actions/styleeditor');
 
 const {
@@ -240,7 +241,7 @@ describe('styleeditor Epics', () => {
             results,
         state);
     });
-    it('test updateTemporaryStyleEpic', (done) => {
+    it('test updateTemporaryStyleEpic error due to generated uuid', (done) => {
         const state = {
             layers: {
                 flat: [
@@ -384,7 +385,7 @@ describe('styleeditor Epics', () => {
                 }
             }
         };
-        const NUMBER_OF_ACTIONS = 3;
+        const NUMBER_OF_ACTIONS = 5;
         const results = (actions) => {
             expect(actions.length).toBe(NUMBER_OF_ACTIONS);
             try {
@@ -393,15 +394,88 @@ describe('styleeditor Epics', () => {
                         case LOADING_STYLE:
                             expect(action.status).toBe('');
                             break;
-                        case ERROR_STYLE:
+                        case UPDATE_OPTIONS_BY_OWNER:
+                            expect(action.owner).toBe('styleeditor');
+                            expect(action.options).toEqual([{}]);
+                            break;
+                        case UPDATE_SETTINGS_PARAMS:
+                            const styleName = action.newParams.style.split('___');
+                            expect(styleName[0]).toBe('style_title');
+                            expect(action.update).toBe(true);
+                            break;
+                        case UPDATE_STATUS:
                             expect(action.status).toBe('');
-                            expect(action.error).toExist();
                             break;
                         case LOADED_STYLE:
                             expect(action).toExist();
                             break;
                         default:
-                            expect(true).toBe(false);
+                            expect(action).toBe(false);
+                    }
+                });
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            createStyleEpic,
+            NUMBER_OF_ACTIONS,
+            createStyle({title: 'style TitLe'}),
+            results,
+        state);
+    });
+
+    it('test createStyleEpic with workspace', (done) => {
+        const workspace = 'test';
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: `${workspace}:layerName`,
+                        url: 'base/web/client/test-resources/geoserver/',
+                        describeFeatureType: {},
+                        style: 'test_style'
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ]
+            },
+            styleeditor: {
+                service: {
+                    baseUrl: 'base/web/client/test-resources/geoserver/'
+                }
+            }
+        };
+        const NUMBER_OF_ACTIONS = 4;
+        const results = (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            try {
+                actions.map((action) => {
+                    switch (action.type) {
+                        case LOADING_STYLE:
+                            expect(action.status).toBe('');
+                            break;
+                        case UPDATE_OPTIONS_BY_OWNER:
+                            expect(action.owner).toBe('styleeditor');
+                            expect(action.options).toEqual([{}]);
+                            break;
+                        case UPDATE_SETTINGS_PARAMS:
+                            const styleName = action.newParams.style.split('___');
+                            expect(styleName[0]).toBe(`${workspace}:style_title`);
+                            expect(action.update).toBe(true);
+                            break;
+                        case UPDATE_STATUS:
+                            expect(action.status).toBe('');
+                            break;
+                        case LOADED_STYLE:
+                            expect(action).toExist();
+                            break;
+                        default:
+                            expect(action).toBe(false);
                     }
                 });
             } catch(e) {
