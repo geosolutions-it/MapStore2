@@ -7,7 +7,7 @@
  */
 const UPDATE_LAYER_DIMENSION_DATA = "DIMENSION:UPDATE_LAYER_DIMENSION_DATA";
 const SET_CURRENT_TIME = "TIME_MANAGER:SET_CURRENT_TIME";
-
+const SET_OFFSET_TIME = "TIME_MANAGER:SET_OFFSET_TIME";
 
 /**
  *
@@ -20,10 +20,15 @@ const updateLayerDimensionData = (layerId, dimension, data) => ({ type: UPDATE_L
  * @param {string|date} time the current time to set
  */
 const setCurrentTime = time => ({ type: SET_CURRENT_TIME, time });
+const setCurrentOffset = offsetTime => ({ type: SET_OFFSET_TIME, offsetTime });
+
 
 module.exports = {
     updateLayerDimensionData,
     UPDATE_LAYER_DIMENSION_DATA,
     setCurrentTime,
-    SET_CURRENT_TIME
+    SET_CURRENT_TIME,
+    setCurrentOffset,
+    SET_OFFSET_TIME
+
 };

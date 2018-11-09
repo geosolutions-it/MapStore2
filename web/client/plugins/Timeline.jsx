@@ -13,9 +13,9 @@ const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('./timeline/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
-const { offsetEnabledSelector, calculateOffsetTimeSelector, selectedLayerSelector } = require('../selectors/timeline');
+const { offsetEnabledSelector, selectedLayerSelector, timeLineCustomRange } = require('../selectors/timeline');
 const { withState, compose, branch, renderNothing } = require('recompose');
-const { selectTime, enableOffset, selectOffset } = require('../actions/timeline');
+const { selectTime, enableOffset, selectOffset, setCusomizedRange } = require('../actions/timeline');
 const { selectPlaybackRange } = require('../actions/playback');
 const { playbackRangeSelector } = require('../selectors/playback');
 
@@ -36,14 +36,14 @@ const TimelinePlugin = compose(
             layersWithTimeDataSelector,
             selectedLayerSelector,
             currentTimeSelector,
-            calculateOffsetTimeSelector,
+            timeLineCustomRange,
             offsetEnabledSelector,
             playbackRangeSelector,
-            (layers, selectedLayer, currentTime, calculateOffsetTime, offsetEnabled, playbackRange) => ({
+            (layers, selectedLayer, currentTime, customRange, offsetEnabled, playbackRange) => ({
                 layers,
                 selectedLayer,
                 currentTime,
-                calculateOffsetTime,
+                customRange,
                 offsetEnabled,
                 playbackRange
             })
@@ -51,7 +51,8 @@ const TimelinePlugin = compose(
             setCurrentTime: selectTime,
             onOffsetEnabled: enableOffset,
             setOffset: selectOffset,
-            setPlaybackRange: selectPlaybackRange
+            setPlaybackRange: selectPlaybackRange,
+            setTimeLineRange: setCusomizedRange
         }),
     branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
     withState('options', 'setOptions', {collapsed: true})
@@ -65,7 +66,7 @@ const TimelinePlugin = compose(
         setCurrentTime,
         offsetEnabled,
         onOffsetEnabled,
-        calculateOffsetTime,
+        customRange,
         setOffset,
         playbackRange,
         setPlaybackRange
@@ -89,8 +90,8 @@ const TimelinePlugin = compose(
             {offsetEnabled && <InlineDateTimeSelector
                 glyph="range-start"
                 tooltip="Current time"
-                date={currentTime}
-                onUpdate={start => isValidOffset(start, calculateOffsetTime) && setCurrentTime(start)}
+                date={currentTime || customRange && customRange.startTimeLineRange}
+                onUpdate={start => isValidOffset(start, customRange.endTimeLineRange) && setCurrentTime(start)}
                 className="shadow-soft"
                 style={{
                     position: 'absolute',
@@ -105,13 +106,13 @@ const TimelinePlugin = compose(
                     <InlineDateTimeSelector
                         glyph={'range-end'}
                         tooltip="Offset time"
-                        date={calculateOffsetTime}
-                        onUpdate={end => isValidOffset(currentTime, end) && setOffset(moment(end).diff(currentTime))} /> :
+                        date={customRange.endTimeLineRange}
+                        onUpdate={end => isValidOffset(currentTime, end) && setOffset(end)} /> :
                     <InlineDateTimeSelector
                         glyph={'time-current'}
                         tooltip="Current time"
-                        date={currentTime}
-                        onUpdate={start => isValidOffset(start, calculateOffsetTime) && setCurrentTime(start)} />}
+                        date={currentTime || customRange && customRange.startTimeLineRange}
+                        onUpdate={start => isValidOffset(start, customRange.endTimeLineRange) && setCurrentTime(start)} />}
 
                 <Toolbar
                     btnDefaultProps={{

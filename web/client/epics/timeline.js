@@ -8,8 +8,8 @@ const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA } = require('../actions/dime
 
 
 const {getLayerFromId} = require('../selectors/layers');
-const { rangeSelector, offsetEnabledSelector, offsetTimeSelector, selectedLayerName, selectedLayerUrl } = require('../selectors/timeline');
-const { layerTimeSequenceSelectorCreator, timeDataSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
+const { rangeSelector, offsetEnabledSelector, selectedLayerName, selectedLayerUrl } = require('../selectors/timeline');
+const { layerTimeSequenceSelectorCreator, timeDataSelector, layersWithTimeDataSelector, offsetTimeSelector } = require('../selectors/dimension');
 
 const { getNearestDate, roundRangeResolution, isTimeDomainInterval } = require('../utils/TimeUtils');
 const { getHistogram, describeDomains, getDomainValues } = require('../api/MultiDim');

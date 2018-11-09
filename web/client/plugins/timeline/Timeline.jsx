@@ -8,13 +8,16 @@
 const { connect } = require('react-redux');
 const { isString, differenceBy, trim } = require('lodash');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
-const { selectTime, selectOffset, selectLayer, onRangeChanged } = require('../../actions/timeline');
-const { itemsSelector, loadingSelector, selectedLayerSelector, calculateOffsetTimeSelector } = require('../../selectors/timeline');
+const { selectTime, selectLayer, onRangeChanged, setMouseEventData, setCusomizedRange } = require('../../actions/timeline');
+const { itemsSelector, loadingSelector, selectedLayerSelector, mouseEventSelector, timeLineCustomRange } = require('../../selectors/timeline');
+const { setCurrentOffset } = require('../../actions/dimension');
 const { selectPlaybackRange } = require('../../actions/playback');
 const { playbackRangeSelector } = require('../../selectors/playback');
 const { createStructuredSelector, createSelector } = require('reselect');
 const { compose, withHandlers, withPropsOnChange, defaultProps } = require('recompose');
 const moment = require('moment');
+
+const isValidOffset = (start, end) => moment(end).diff(start) > 0;
 /**
  * Provides time dimension data for layers
  */
@@ -59,21 +62,21 @@ const layerData = compose(
  */
 const currentTimeEnhancer = compose(
     connect(
-        createStructuredSelector({
-            currentTime: currentTimeSelector,
-            calculatedOffsetTime: calculateOffsetTimeSelector
-        }),
+        createSelector(
+            currentTimeSelector,
+            timeLineCustomRange,
+            (current, range) => ({
+                        currentTime: current || range && range.startTimeLineRange || new Date().toISOString(),
+                        customizedRange: range
+            })
+        ),
         {
             setCurrentTime: selectTime,
-            setOffset: selectOffset
+            setOffset: setCurrentOffset,
+            setTimeLineRange: setCusomizedRange
         }
-    ),
-    defaultProps({
-        currentTime: new Date().toISOString(),
-        calculatedOffsetTime: 10000
-    })
+    )
 );
-
 const playbackRangeEnhancer = compose(
     connect(
         createStructuredSelector({
@@ -97,6 +100,18 @@ const layerSelectionEnhancer = compose(
     )
 );
 
+const mouseInteractionEnhancer = compose(
+    connect(
+        createSelector(
+            mouseEventSelector,
+            (mouseEventProps) => ({mouseEventProps})
+        ),
+        {
+            setMouseData: setMouseEventData
+        }
+    )
+);
+
 const getStartEnd = (startTime, endTime) => {
     const diff = moment(startTime).diff(endTime);
     return {
@@ -106,42 +121,97 @@ const getStartEnd = (startTime, endTime) => {
 };
 
 const clickHandleEnhancer = withHandlers({
-    clickHandler: ({
+    mouseDownHandler: ({
+        offsetEnabled,
+        setMouseData = () => { },
+        selectGroup= () => {}
+    }) => ({ time, event, what, group } = {}) => {
+        // if theu user selects a layer from layer group
+        if (what === "group-label") {
+            return group && selectGroup(group);
+        }
+        // initialize dragging range event
+        let target = event && event.target && event.target.closest('.ms-current-range');
+        if ( offsetEnabled && target) {
+            setMouseData({dragging: true, startTime: time.toISOString(), draggedWhat: what });
+        } else {
+            target = event && event.target && event.target.closest('.vis-custom-time');
+            const className = target && target.getAttribute('class');
+            const timeId = className && trim(className.replace('vis-custom-time', ''));
+            setMouseData({dragging: false, borderID: timeId ? timeId : null, startTime: time.toISOString(), movement: event.pageX});
+        }
+
+    },
+    mouseUpHandler: ({
+        selectedLayer,
         currentTime,
+        setOffset = () => {},
         setCurrentTime = () => { },
-        selectGroup = () => { },
+        customizedRange = {},
+        mouseEventProps ={},
+        offsetEnabled,
         playbackRange,
-        setPlaybackRange = () => {},
-        setOffset = () => {}
-    }) => ({ time, group, what, event } = {}) => {
-        switch (what) {
-            case "axis":
-            case "group-label": {
-                selectGroup(group);
-                break;
-            }
-            default: {
-                const target = event && event.target && event.target.closest('.vis-custom-time');
-                const className = target && target.getAttribute('class');
-                const timeId = className && trim(className.replace('vis-custom-time', ''));
-                if (!timeId || timeId === 'currentTime') {
-                    setCurrentTime(time.toISOString(), group);
-                } if (timeId === 'offsetTime') {
-                    const offset = moment(time).diff(currentTime);
-                    if (offset > 0) setOffset(offset);
-                } else if (timeId === 'startPlaybackTime' || timeId === 'endPlaybackTime') {
-                    const range = { ...playbackRange, [timeId]: time.toISOString() };
-                    const { start, end } = getStartEnd(range.startPlaybackTime, range.endPlaybackTime);
-                    setPlaybackRange({
-                        startPlaybackTime: start,
-                        endPlaybackTime: end
+        setTimeLineRange = () => {},
+        setMouseData = () => {},
+        setPlaybackRange = () => {}
+    }) => ({ time, event, group, what } = {}) => {
+
+        let target = event && event.target && event.target.closest('.vis-center');
+        const border = mouseEventProps.borderID;
+        // sets the playbackRange range
+        if (!mouseEventProps.dragging && border === 'startPlaybackTime' || border === 'endPlaybackTime') {
+            const range = { ...playbackRange, [border]: time.toISOString() };
+            let { start, end } = getStartEnd(range.startPlaybackTime, range.endPlaybackTime);
+            if (isValidOffset(start, end)) {
+                setPlaybackRange({
+                    startPlaybackTime: start,
+                    endPlaybackTime: end
                     });
-                }
-                break;
             }
         }
+        if (offsetEnabled) {
+            // range dragging
+            if ( mouseEventProps.dragging && target ) {
+                const off = moment(time).diff(mouseEventProps.startTime);
+
+                const startRangeShift = moment(customizedRange.startTimeLineRange).add(off);
+                const endRangeShift = moment(customizedRange.endTimeLineRange).add(off);
+                // no snap for range borders
+                setCurrentTime(startRangeShift.toISOString(), null);
+                setOffset(endRangeShift.toISOString());
+                const newRange = {startTimeLineRange: startRangeShift, endTimeLineRange: endRangeShift};
+                setTimeLineRange(newRange);
+
+            } else {
+                // changing the rang by moving currentTime or offsetTime
+                if (border === 'currentTime' && isValidOffset(time, customizedRange.endTimeLineRange )) {
+                    setCurrentTime(time.toISOString(), null);
+                } else if (border === 'offsetTime' && isValidOffset(currentTime, time )) {
+                    setOffset(time.toISOString());
+                }
+                const id = border === 'currentTime' && 'startTimeLineRange' || border === 'offsetTime' && 'endTimeLineRange';
+                const TimeRange = { ...customizedRange, [id]: time.toISOString() };
+                let { start, end } = getStartEnd(TimeRange.startTimeLineRange, TimeRange.endTimeLineRange);
+                if (isValidOffset(start, end)) {
+                    setTimeLineRange({
+                    startTimeLineRange: start,
+                    endTimeLineRange: end
+                    });
+                }
+            }
+                // normal click event
+        } else if (event.pageX === mouseEventProps.movement) {
+            if (time && !border && what !== "axis") {
+                setCurrentTime(time.toISOString(), group || selectedLayer);
+            }
+        }
+        // reseting the mouse event data
+        setMouseData({});
     }
+
+
 });
+
 const rangeEnhancer = compose(
     connect(() => ({}), {
         rangechangedHandler: onRangeChanged
@@ -149,6 +219,7 @@ const rangeEnhancer = compose(
 );
 
 const enhance = compose(
+    mouseInteractionEnhancer,
     currentTimeEnhancer,
     playbackRangeEnhancer,
     layerSelectionEnhancer,
@@ -179,10 +250,9 @@ const enhance = compose(
     }),
     // items enhancer
     withPropsOnChange(
-        ['items', 'currentTime', 'offsetEnabled', 'calculatedOffsetTime', 'hideLayersName', 'playbackRange', 'playbackEnabled'],
+        ['items', 'currentTime', 'offsetEnabled', 'calculatedOffsetTime', 'hideLayersName', 'playbackRange', 'playbackEnabled', 'selectedLayer'],
         ({
-            currentTime,
-            calculatedOffsetTime,
+            customizedRange,
             items,
             playbackEnabled,
             offsetEnabled,
@@ -198,7 +268,7 @@ const enhance = compose(
                 } : null,
                 offsetEnabled ? {
                     id: 'current-range',
-                    ...getStartEnd(currentTime, calculatedOffsetTime),
+                    ...getStartEnd(customizedRange.startTimeLineRange, customizedRange.endTimeLineRange),
                     type: 'background',
                     className: 'ms-current-range'
                 } : null
@@ -207,13 +277,13 @@ const enhance = compose(
     ),
     // custom times enhancer
     withPropsOnChange(
-        ['currentTime', 'playbackRange', 'playbackEnabled', 'offsetEnabled', 'calculatedOffsetTime'],
-        ({ currentTime, playbackRange, playbackEnabled, offsetEnabled, calculatedOffsetTime }) => ({
+        ['currentTime', 'playbackRange', 'playbackEnabled', 'offsetEnabled', 'customizedRange'],
+        ({ currentTime, playbackRange, playbackEnabled, offsetEnabled, customizedRange }) => ({
             customTimes: {
             currentTime,
             ...[
                 (playbackEnabled ? playbackRange : {}),
-                (offsetEnabled ? { offsetTime: calculatedOffsetTime } : {})]
+                (offsetEnabled ? { offsetTime: customizedRange.endTimeLineRange } : {})]
                 .reduce((res, value) => value ? { ...res, ...value } : { ...res }, {})
         }
         })
