@@ -12,6 +12,7 @@ const {connect} = require('react-redux');
 const assign = require('object-assign');
 const {createSelector} = require("reselect");
 const {Glyphicon, Panel} = require('react-bootstrap');
+const ContainerDimensions = require('react-container-dimensions').default;
 
 const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
     changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
@@ -122,19 +123,23 @@ class MetadataExplorerComponent extends React.Component {
     render() {
         const panel = <Catalog zoomToLayer={this.props.zoomToLayer} searchOnStartup={this.props.searchOnStartup} active={this.props.active} {...this.props}/>;
         return (
-            <DockPanel
-                open={this.props.active}
-                size={this.props.width}
-                position="right"
-                bsStyle="primary"
-                title={<Message msgId="catalog.title"/>}
-                onClose={() => this.props.toggleControl()}
-                glyph="folder-open"
-                style={this.props.dockStyle}>
-                <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
-                    {panel}
-                </Panel>
-            </DockPanel>
+            <div style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
+                <ContainerDimensions>
+                    {({ width }) => (<DockPanel
+                        open={this.props.active}
+                        size={this.props.width / width > 1 ? width : this.props.width}
+                        position="right"
+                        bsStyle="primary"
+                        title={<Message msgId="catalog.title"/>}
+                        onClose={() => this.props.toggleControl()}
+                        glyph="folder-open"
+                        style={this.props.dockStyle}>
+                        <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+                            {panel}
+                        </Panel>
+                    </DockPanel>)}
+                </ContainerDimensions>
+            </div>
         );
     }
 }
