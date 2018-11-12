@@ -1485,7 +1485,8 @@
             "createStyleErrorTitle": "Nuevo estilo",
             "createStyleErrorMessage": "El estilo no se pudo guardar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión.",
             "updateStyleErrorTitle": "Editar estilo",
-            "updateStyleErrorMessage": "El estilo no se pudo actualizar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión."
+            "updateStyleErrorMessage": "El estilo no se pudo actualizar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión.",
+            "genericValidationError": "El estilo no es válido y no se pudo aplicar."
         },
         "rulesmanager": {
             "apply": "Aplicar",
