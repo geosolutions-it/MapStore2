@@ -34,12 +34,13 @@ const Api = {
                 const layer = data.layer || {};
                 const currentAvailableStyle = layer.styles && layer.styles.style || [];
                 const stylesNames = styles.map(({name: styleName}) => styleName);
+                const filteredStyles = currentAvailableStyle.filter(({name: styleName}) => stylesNames.indexOf(styleName) === -1);
                 const layerObj = {
                     'layer': {
                         ...layer,
                         'styles': {
                             '@class': 'linked-hash-set',
-                            'style': currentAvailableStyle.filter(({name: styleName}) => stylesNames.indexOf(styleName) === -1)
+                            'style': filteredStyles
                         }
                     }
                 };

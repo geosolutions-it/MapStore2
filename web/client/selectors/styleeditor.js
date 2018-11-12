@@ -6,7 +6,7 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const { get, head } = require('lodash');
+const { get, head, uniqBy } = require('lodash');
 const { layerSettingSelector, getSelectedLayer } = require('./layers');
 const { STYLE_ID_SEPARATOR, extractFeatureProperties } = require('../utils/StyleEditorUtils');
 
@@ -157,14 +157,14 @@ const getAllStyles = (state) => {
     const { name: defaultStyle } = head(availableStyles) || {};
     const enabledStyle = updatedLayer.style || updatedLayer && !updatedLayer.style && defaultStyle;
     return {
-        availableStyles: availableStyles.map(style => {
+        availableStyles: uniqBy(availableStyles.map(style => {
             const splittedName = style.title && style.title.split(STYLE_ID_SEPARATOR);
             const label = splittedName[0] || style.name;
             return {
                 ...style,
                 label
             };
-        }),
+        }), 'name'),
         defaultStyle,
         enabledStyle
     };

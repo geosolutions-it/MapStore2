@@ -296,7 +296,11 @@ module.exports = {
 
                 const state = store.getState();
                 const temporaryId = temporaryIdSelector(state);
-                const styleName = temporaryId || generateTemporaryStyleId();
+
+                const layer = getUpdatedLayer(state);
+                const { workspace } = getNameParts(layer.name);
+
+                const styleName = temporaryId || `${workspace ? `${workspace}:` : ''}${generateTemporaryStyleId()}`;
                 const format = action.format || formatStyleSelector(state);
                 const status = statusStyleSelector(state);
                 const { baseUrl = '', formats } = styleServiceSelector(state);

@@ -14,6 +14,7 @@ const CM = require('codemirror/lib/codemirror');
 const BorderLayout = require('../layout/BorderLayout');
 const Loader = require('../misc/Loader');
 const InfoPopover = require('../widgets/widget/InfoPopover');
+const Message = require('../I18N/Message');
 const assign = require('object-assign');
 
 require('codemirror/lib/codemirror.css');
@@ -94,12 +95,19 @@ class Editor extends React.Component {
                 this.marker.clear();
                 this.marker = null;
             }
-            if (newProps.error && newProps.error.line) {
-                const startLine = newProps.error.line - 1;
-                const endLine = newProps.error.line;
+            if (newProps.error) {
+                const lineCount = this.editor.lineCount();
+                const startPos = {
+                    line: newProps.error.line - 1 || 0,
+                    ch: 0
+                };
+                const endPos = newProps.error.line ? {
+                    line: lineCount,
+                    ch: 0
+                } : this.editor.getCursor();
                 this.marker = this.editor.markText(
-                    {line: startLine, ch: 0},
-                    {line: endLine, ch: 0},
+                    startPos,
+                    endPos,
                     {className: 'ms-style-editor-error'});
             }
         }
@@ -175,12 +183,13 @@ class Editor extends React.Component {
                 header={
                     <div className="ms-style-editor-head">
                         {this.props.loading && <Loader className="ms-style-editor-loader" size={20}/>}
-                        {this.props.error && <InfoPopover
+                        {this.props.error && this.props.error.line && <InfoPopover
                             glyph="exclamation-mark"
                             bsStyle="danger"
                             placement="right"
                             title={'Validation Error'}
-                            text={this.props.error.message}/>}
+                            text={this.props.error.message}/>
+                        || this.props.error && <Message msgId="styleeditor.genericValidationError"/>}
                     </div>
                 }>
                 <Codemirror

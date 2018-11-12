@@ -185,15 +185,16 @@ const StyleToolbar = compose(
                 codeStyleSelector,
                 loadingStyleSelector,
                 selectedStyleSelector,
-                canEditStyleSelector
+                canEditStyleSelector,
+                getAllStyles
             ],
-            (status, templateId, error, initialCode, code, loading, selectedStyle, canEdit) => ({
+            (status, templateId, error, initialCode, code, loading, selectedStyle, canEdit, { defaultStyle }) => ({
                 status,
                 templateId,
                 error,
                 isCodeChanged: initialCode !== code,
                 loading,
-                selectedStyle,
+                selectedStyle: defaultStyle === selectedStyle ? '' : selectedStyle,
                 editEnabled: canEdit
             })
         ),

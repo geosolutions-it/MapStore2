@@ -29,7 +29,7 @@ const formatRequestData = ({options = {}, format, baseUrl, name, workspace}, isN
             'Content-Type': contentTypes[format]
         }
     };
-    const url = `${baseUrl}rest/${workspace && `workspaces/${workspace}/` || ''}styles/${!isNameParam ? encodeURIComponent(name) : ''}`;
+    const url = `${baseUrl}rest/${workspace && `workspaces/${workspace}/` || ''}styles${!isNameParam ? `/${encodeURIComponent(name)}` : '.json'}`;
     return {
         options: opts,
         url
