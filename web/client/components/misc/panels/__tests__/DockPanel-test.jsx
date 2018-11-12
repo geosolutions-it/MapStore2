@@ -65,4 +65,18 @@ describe("test DockPanel", () => {
         TestUtils.Simulate.click(buttons[0]);
         expect(buttons[0].children[0].getAttribute('class')).toBe('glyphicon glyphicon-chevron-right');
     });
+
+    it('hide header', () => {
+        ReactDOM.render(
+            <DockPanel
+                open
+                hideHeader
+                header={<div className="my-custom-head-row"/>}
+                footer={<div className="my-custom-footer"/>}>
+                <div className="my-custom-body-child"/>
+            </DockPanel>, document.getElementById("container"));
+
+        const header = document.getElementsByClassName('my-custom-head-row');
+        expect(header).toNotExist();
+    });
 });

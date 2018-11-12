@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
-const Dock = require('react-dock').default;
+const DockPanel = require("../components/misc/panels/DockPanel");
 
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
@@ -71,19 +71,17 @@ class SideBarComponent extends React.Component {
         this.props.onUnmount();
     }
     render() {
-        return (<Dock
-            id={this.props.id}
+        return (
+        <DockPanel
+            open={this.props.enabled}
+            size={this.props.dockSize}
             zIndex={this.props.zIndex}
             position={this.props.position}
-            size={this.props.dockSize}
-            dimMode={this.props.dimMode}
-            isVisible={this.props.enabled}
-            onSizeChange={this.limitDockHeight}
-            fluid={this.props.fluid}
-            dockStyle={{...this.props.layout, background: "white" /* TODO set it to undefined when you can inject a class inside Dock, to use theme */}}
-        >
+            bsStyle="primary"
+            hideHeader
+            style={{...this.props.layout, background: "white"}}>
             <Builder enabled={this.props.enabled} onClose={this.props.onClose} typeFilter={({ type } = {}) => type !== 'map' && type !== 'legend' }/>
-        </Dock>);
+        </DockPanel>);
 
     }
 }
