@@ -77,6 +77,6 @@ describe("test DockPanel", () => {
             </DockPanel>, document.getElementById("container"));
 
         const header = document.getElementsByClassName('my-custom-head-row');
-        expect(header).toNotExist();
+        expect(header.length).toBe(0);
     });
 });
