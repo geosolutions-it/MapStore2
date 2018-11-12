@@ -1487,6 +1487,36 @@
             "updateStyleErrorTitle": "Editar estilo",
             "updateStyleErrorMessage": "El estilo no se pudo actualizar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión."
         },
+         "playback": {
+            "settings": {
+                "title": "Ajustes de reproducción",
+                "frameDuration": "Duración del marco",
+                "range": {
+                    "title": "Rabia de animacion",
+                    "zoomTooltip": "Zoom al rango de animación actual",
+                    "animationStart": "Inicio de animacion",
+                    "animationEnd": "Fin de la animacion"
+                },
+                "step": {
+                    "fixed": "Paso fijo",
+                    "label": "Paso de animacion",
+                    "year": "{number, plural, =0 {Año} =1 {Año} other {Años}}",
+                    "week": "{number, plural, =0 {Semana} =1 {Semana} other {Semanas}}",
+                    "day": "{number, plural, =0 {Día} =1 {Día} other {Días}}",
+                    "hour": "{number, plural, =0 {Hora} =1 {Hora} other {Horas}}",
+                    "minute": "{number, plural, =0 {Minuto} =1 {Minuto} other {Minutos}}",
+                    "second": "{number, plural, =0 {Segundo} =1 {Segundo} other {Segundos}}"
+                },
+                "mode": {
+                    "title": "Modo",
+                    "following": "Siguiendo",
+                    "followingDescription": "Cuando la animación está activa, sigue el cursor."
+                }
+            }
+        },
+        "timeline": {
+            "currentTime": "Tiempo actual"
+        },
         "rulesmanager": {
             "apply": "Aplicar",
             "remove": "Eliminar geometría",

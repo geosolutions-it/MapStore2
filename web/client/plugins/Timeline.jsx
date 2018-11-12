@@ -10,7 +10,7 @@ const React = require('react');
 const { connect } = require('react-redux');
 const { createSelector } = require('reselect');
 const Timeline = require('./timeline/Timeline');
-const InlineDateTimeSelector = require('./timeline/InlineDateTimeSelector');
+const InlineDateTimeSelector = require('../components/time/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
 const { offsetEnabledSelector, calculateOffsetTimeSelector, selectedLayerSelector } = require('../selectors/timeline');
@@ -88,7 +88,7 @@ const TimelinePlugin = compose(
 
             {offsetEnabled && <InlineDateTimeSelector
                 glyph="range-start"
-                tooltip="Current time"
+                tooltipId="timeline.currentTime"
                 date={currentTime}
                 onUpdate={start => isValidOffset(start, calculateOffsetTime) && setCurrentTime(start)}
                 className="shadow-soft"
@@ -109,7 +109,7 @@ const TimelinePlugin = compose(
                         onUpdate={end => isValidOffset(currentTime, end) && setOffset(moment(end).diff(currentTime))} /> :
                     <InlineDateTimeSelector
                         glyph={'time-current'}
-                        tooltip="Current time"
+                        tooltipId="timeline.currentTime"
                         date={currentTime}
                         onUpdate={start => isValidOffset(start, calculateOffsetTime) && setCurrentTime(start)} />}
 

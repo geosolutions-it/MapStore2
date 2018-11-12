@@ -1488,6 +1488,36 @@
             "updateStyleErrorTitle": "Edit Style",
             "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue."
         },
+        "playback": {
+            "settings": {
+                "title": "Playback Settings",
+                "frameDuration": "Frame Duration",
+                "range": {
+                    "title": "Animation Rage",
+                    "zoomTooltip": "Zoom to current animation range",
+                    "animationStart": "Animation start",
+                    "animationEnd": "Animation end"
+                },
+                "step": {
+                    "fixed": "Fixed step",
+                    "label": "Animation Step",
+                    "year": "{number, plural, =0 {Year} =1 {Year} other {Years}}",
+                    "week": "{number, plural, =0 {Week} =1 {Week} other {Weeks}}",
+                    "day": "{number, plural, =0 {Day} =1 {Day} other {Days}}",
+                    "hour": "{number, plural, =0 {Hour} =1 {Hour} other {Hours}}",
+                    "minute": "{number, plural, =0 {Minute} =1 {Minute} other {Minutes}}",
+                    "second": "{number, plural, =0 {Second} =1 {Second} other {Seconds}}"
+                },
+                "mode": {
+                    "title": "Mode",
+                    "following": "Following",
+                    "followingDescription": "When the animation is active, follow the cursor"
+                }
+            }
+        },
+        "timeline": {
+            "currentTime": "Current Time"
+        },
         "rulesmanager": {
             "apply": "Apply",
             "remove": "Remove geometry",

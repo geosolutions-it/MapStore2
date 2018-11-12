@@ -1487,6 +1487,36 @@
             "updateStyleErrorTitle": "Stil bearbeiten",
             "updateStyleErrorMessage": "Der Stil konnte im Stildienst nicht aktualisiert werden. Dies kann auf ein nicht unterstütztes Format- oder Verbindungsproblem zurückzuführen sein."
         },
+        "playback": {
+            "settings": {
+                "title": "Wiedergabeeinstellungen",
+                "frameDuration": "Frame-Dauer",
+                "range": {
+                    "title": "Animations-Wut",
+                    "zoomTooltip": "Zoom auf den aktuellen Animationsbereich",
+                    "animationStart": "Animation beginnt",
+                    "animationEnd": "Ende der Animation"
+                },
+                "step": {
+                    "fixed": "Feststehender Schritt",
+                    "label": "Animationsschritt",
+                    "year": "{number, plural, =0 {Jahr} =1 {Jahr} other {Jahre}}",
+                    "week": "{number, plural, =0 {Woche} =1 {Woche} other {Wochen}}",
+                    "day": "{number, plural, =0 {Tag} =1 {Tag} other {Tage}}",
+                    "hour": "{number, plural, =0 {Stunde} =1 {Stunde} other {Stunden}}",
+                    "minute": "{number, plural, =0 {Minute} =1 {Minute} other {Minuten}}",
+                    "second": "{number, plural, =0 {Sekunde} =1 {Sekunde} other {Sekunden}}"
+                },
+                "mode": {
+                    "title": "Modus",
+                    "following": "Folgende",
+                    "followingDescription": "Wenn die Animation aktiv ist, folgen Sie dem Cursor"
+                }
+            }
+        },
+        "timeline": {
+            "currentTime": "Aktuelle Uhrzeit"
+        },
         "rulesmanager": {
             "apply": "Anwenden",
             "remove": "Entfernen Sie die Geometrie",

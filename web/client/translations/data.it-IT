@@ -1487,6 +1487,36 @@
             "updateStyleErrorTitle": "Modifica stile",
             "updateStyleErrorMessage": "Lo stile non può essere aggiornato . Questo potrebbe essere dovuto ad un formato di stile non supportato o ad un problema di connessione."
         },
+        "playback": {
+            "settings": {
+                "title": "Impostazioni Riproduzione",
+                "frameDuration": "Durata Fotogramma",
+                "range": {
+                    "title": "Intervallo di animazione",
+                    "zoomTooltip": "Fai zoom all'intervallo di animazione corrente",
+                    "animationStart": "Inizio animazione",
+                    "animationEnd": "Fine animazione"
+                },
+                "step": {
+                    "fixed": "Passo fisso",
+                    "label": "Passo di animazione",
+                    "year": "{number, plural, =0 {Anni} =1 {Anno} other {Anni}}",
+                    "week": "{number, plural, =0 {Settimane} =1 {Settimana} other {Settimane}}",
+                    "day": "{number, plural, =0 {Giorni} =1 {Giorno} other {Giorni}}",
+                    "hour": "{number, plural, =0 {Ore} =1 {Ora} other {Ore}}",
+                    "minute": "{number, plural, =0 {Minuti} =1 {Minuto} other {Minuti}}",
+                    "second": "{number, plural, =0 {Secondi} =1 {Secondo} other {Secondi}}"
+                },
+                "mode": {
+                    "title": "Modalità",
+                    "following": "Inseguimento",
+                    "followingDescription": "Durante l'animazione, insegui il cursore"
+                }
+            }
+        },
+        "timeline": {
+            "currentTime": "Istante corrente"
+        },
         "rulesmanager": {
             "apply": "Applica",
             "remove": "Elimina la geometia",
