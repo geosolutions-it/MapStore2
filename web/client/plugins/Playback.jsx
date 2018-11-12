@@ -10,10 +10,10 @@ const React = require('react');
 const assign = require('object-assign');
 const { defaultProps, compose } = require('recompose');
 const {createSelector} = require('reselect');
-const { play, pause, stop, STATUS, selectPlaybackRange } = require('../actions/playback');
+const { play, pause, stop, STATUS, selectPlaybackRange, changeSetting } = require('../actions/playback');
 const {currentTimeSelector} = require('../selectors/dimension');
 const {selectedLayerSelector} = require('../selectors/timeline');
-const { statusSelector, loadingSelector, playbackRangeSelector } = require('../selectors/playback');
+const { statusSelector, loadingSelector, playbackRangeSelector, playbackSettingsSelector } = require('../selectors/playback');
 
 const { connect } = require('react-redux');
 
@@ -28,18 +28,21 @@ const Playback = compose(
             currentTimeSelector,
             loadingSelector,
             playbackRangeSelector,
-            (selectedLayer, status, currentTime, loading, playbackRange) => ({
+            playbackSettingsSelector,
+            (selectedLayer, status, currentTime, loading, playbackRange, settings) => ({
                 selectedLayer,
                 loading,
                 currentTime,
                 status,
-                playbackRange
+                playbackRange,
+                settings
             })
         ), {
             play,
             pause,
             stop,
-            setPlaybackRange: selectPlaybackRange
+            setPlaybackRange: selectPlaybackRange,
+            onSettingChange: changeSetting
         }
     )
 )(require('../components/playback/Playback'));

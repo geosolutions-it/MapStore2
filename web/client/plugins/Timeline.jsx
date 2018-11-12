@@ -88,7 +88,7 @@ const TimelinePlugin = compose(
 
             {offsetEnabled && <InlineDateTimeSelector
                 glyph="range-start"
-                tooltip="Current time"
+                tooltipId="timeline.currentTime"
                 date={currentTime}
                 onUpdate={start => isValidOffset(start, calculateOffsetTime) && setCurrentTime(start)}
                 className="shadow-soft"
@@ -109,7 +109,7 @@ const TimelinePlugin = compose(
                         onUpdate={end => isValidOffset(currentTime, end) && setOffset(moment(end).diff(currentTime))} /> :
                     <InlineDateTimeSelector
                         glyph={'time-current'}
-                        tooltip="Current time"
+                        tooltipId="timeline.currentTime"
                         date={currentTime}
                         onUpdate={start => isValidOffset(start, calculateOffsetTime) && setCurrentTime(start)} />}
 

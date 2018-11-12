@@ -1488,6 +1488,36 @@
             "updateStyleErrorTitle": "Modifier le style",
             "updateStyleErrorMessage": "Le style n'a pas pu être mis à jour sur le service de style. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion."
         },
+        "playback": {
+            "settings": {
+                "title": "Paramètres de lecture",
+                "frameDuration": "Durée du cadre",
+                "range": {
+                    "title": "Animation rage",
+                    "zoomTooltip": "Zoom sur la plage d'animation actuelle",
+                    "animationStart": "Début de l'animation",
+                    "animationEnd": "Fin de l'animation"
+                },
+                "step": {
+                    "fixed": "Pas fixe",
+                    "label": "Étape d'animation",
+                    "year": "{number, plural, =0 {Année} =1 {Année} other {Années}}",
+                    "week": "{number, plural, =0 {semaine} =1 {semaine} other {semaine}}",
+                    "day": "{number, plural, =0 {jour} =1 {jour} other {jours}}",
+                    "hour": "{number, plural, =0 {heure} =1 {heure} other {heures}}",
+                    "minute": "{number, plural, =0 {minute} =1 {minute} other {minute}}",
+                    "second": "{number, plural, =0 {seconde} =1 {seconde} other {secondes}}"
+                },
+                "mode": {
+                    "title": "Mode",
+                    "following": "Suivant",
+                    "followingDescription": "Lorsque l'animation est active, suivez le curseur"
+                }
+            }
+        },
+        "timeline": {
+            "currentTime": "Heure actuelle"
+        },
         "rulesmanager": {
             "apply": "Appliquer",
             "remove": "Supprimer la géométrie",

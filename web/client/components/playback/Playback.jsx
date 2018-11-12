@@ -33,9 +33,9 @@ const collapsible = compose(
 const PlaybackSettings = connect(() => ({}))(require("./PlaybackSettings"));
 
 module.exports = collapsible(({
-    frameDuration,
+    settings,
+    onSettingChange = () => { },
     setPlaybackRange = () => { },
-
     // loading,
     selectedLayer,
     status,
@@ -45,39 +45,41 @@ module.exports = collapsible(({
     stop = () => {},
     showSettings,
     onShowSettings = () => {}
-}) => ( <div style={{display: 'flex'}}>
-            {showSettings &&
-            <PlaybackSettings
-                animationPeriod={frameDuration}
-                setPlaybackRange={setPlaybackRange}/>}
-            <Toolbar
-                btnDefaultProps={{
-                    className: 'square-button-md',
-                    bsStyle: 'primary'
-                }}
-                buttons={[
-                    {
-                        glyph: "step-backward",
-                        tooltip: 'Step backward'
-                    }, {
-                        glyph: status === statusMap.PLAY ? "pause" : "play",
-                        onClick: () => status === statusMap.PLAY ? pause() : selectedLayer && play(),
-                        tooltip: 'Play'
-                    }, {
-                        glyph: "stop",
-                        onClick: stop,
-                        tooltip: 'Stop'
-                    }, {
-                        glyph: "step-forward",
-                        tooltip: 'Step forward'
-                    }, {
-                        glyph: "wrench",
-                        bsStyle: showSettings ? 'success' : 'primary',
-                        active: !!showSettings,
-                        onClick: () => onShowSettings(!showSettings),
-                        tooltip: 'Playback settings'
-                    }
-                ]}/>
-        </div>
+}) =>
+( <div style={{display: 'flex'}}>
+        {showSettings &&
+        <PlaybackSettings
+            {...settings}
+            onSettingChange={onSettingChange}
+            setPlaybackRange={setPlaybackRange}/>}
+        <Toolbar
+            btnDefaultProps={{
+                className: 'square-button-md',
+                bsStyle: 'primary'
+            }}
+            buttons={[
+                {
+                    glyph: "step-backward",
+                    tooltip: 'Step backward'
+                }, {
+                    glyph: status === statusMap.PLAY ? "pause" : "play",
+                    onClick: () => status === statusMap.PLAY ? pause() : selectedLayer && play(),
+                    tooltip: 'Play'
+                }, {
+                    glyph: "stop",
+                    onClick: stop,
+                    tooltip: 'Stop'
+                }, {
+                    glyph: "step-forward",
+                    tooltip: 'Step forward'
+                }, {
+                    glyph: "wrench",
+                    bsStyle: showSettings ? 'success' : 'primary',
+                    active: !!showSettings,
+                    onClick: () => onShowSettings(!showSettings),
+                    tooltip: 'Playback settings'
+                }
+            ]}/>
+    </div>
     )
 );
