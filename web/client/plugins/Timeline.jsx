@@ -13,9 +13,9 @@ const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('./timeline/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
-const { offsetEnabledSelector, selectedLayerSelector, timeLineCustomRange } = require('../selectors/timeline');
+const { offsetEnabledSelector, selectedLayerSelector, currentTimeRange } = require('../selectors/timeline');
 const { withState, compose, branch, renderNothing } = require('recompose');
-const { selectTime, enableOffset, selectOffset, setCusomizedRange } = require('../actions/timeline');
+const { selectTime, enableOffset, selectOffset } = require('../actions/timeline');
 const { selectPlaybackRange } = require('../actions/playback');
 const { playbackRangeSelector } = require('../selectors/playback');
 
@@ -36,7 +36,7 @@ const TimelinePlugin = compose(
             layersWithTimeDataSelector,
             selectedLayerSelector,
             currentTimeSelector,
-            timeLineCustomRange,
+            currentTimeRange,
             offsetEnabledSelector,
             playbackRangeSelector,
             (layers, selectedLayer, currentTime, customRange, offsetEnabled, playbackRange) => ({
@@ -51,8 +51,7 @@ const TimelinePlugin = compose(
             setCurrentTime: selectTime,
             onOffsetEnabled: enableOffset,
             setOffset: selectOffset,
-            setPlaybackRange: selectPlaybackRange,
-            setTimeLineRange: setCusomizedRange
+            setPlaybackRange: selectPlaybackRange
         }),
     branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
     withState('options', 'setOptions', {collapsed: true})

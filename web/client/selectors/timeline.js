@@ -130,7 +130,7 @@ const selectedLayerUrl = state => selectedLayerData(state) && selectedLayerData(
 
 const mouseEventSelector = state => get(state, "timeline.mouseEvent");
 
-const timeLineCustomRange = state => {
+const currentTimeRange = state => {
     const layerID = selectedLayerSelector(state);
     const dataRange = layerDimensionRangeSelector(state, layerID);
     const time = currentTimeSelector(state);
@@ -139,7 +139,7 @@ const timeLineCustomRange = state => {
 };
 
 module.exports = {
-    timeLineCustomRange,
+    currentTimeRange,
     mouseEventSelector,
     itemsSelector,
     rangeSelector,

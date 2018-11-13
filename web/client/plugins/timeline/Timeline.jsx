@@ -8,8 +8,8 @@
 const { connect } = require('react-redux');
 const { isString, differenceBy, trim } = require('lodash');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
-const { selectTime, selectLayer, onRangeChanged, setMouseEventData, setCusomizedRange } = require('../../actions/timeline');
-const { itemsSelector, loadingSelector, selectedLayerSelector, mouseEventSelector, timeLineCustomRange } = require('../../selectors/timeline');
+const { selectTime, selectLayer, onRangeChanged, setMouseEventData } = require('../../actions/timeline');
+const { itemsSelector, loadingSelector, selectedLayerSelector, mouseEventSelector, currentTimeRange } = require('../../selectors/timeline');
 const { setCurrentOffset } = require('../../actions/dimension');
 const { selectPlaybackRange } = require('../../actions/playback');
 const { playbackRangeSelector } = require('../../selectors/playback');
@@ -64,16 +64,15 @@ const currentTimeEnhancer = compose(
     connect(
         createSelector(
             currentTimeSelector,
-            timeLineCustomRange,
+            currentTimeRange,
             (current, range) => ({
-                        currentTime: current || range && range.startTimeLineRange || new Date().toISOString(),
+                        currentTime: current,
                         customizedRange: range
             })
         ),
         {
             setCurrentTime: selectTime,
-            setOffset: setCurrentOffset,
-            setTimeLineRange: setCusomizedRange
+            setOffset: setCurrentOffset
         }
     )
 );
@@ -256,7 +255,7 @@ const enhance = compose(
             items,
             playbackEnabled,
             offsetEnabled,
-            playbackRange = {}
+            playbackRange
         }) => ({
             items: [
                 ...items,
@@ -280,8 +279,7 @@ const enhance = compose(
         ['currentTime', 'playbackRange', 'playbackEnabled', 'offsetEnabled', 'customizedRange'],
         ({ currentTime, playbackRange, playbackEnabled, offsetEnabled, customizedRange }) => ({
             customTimes: {
-            currentTime,
-            ...[
+            ...[(currentTime ? {currentTime: currentTime } : {}),
                 (playbackEnabled ? playbackRange : {}),
                 (offsetEnabled ? { offsetTime: customizedRange.endTimeLineRange } : {})]
                 .reduce((res, value) => value ? { ...res, ...value } : { ...res }, {})
@@ -289,6 +287,6 @@ const enhance = compose(
         })
     )
 );
-const Timeline = require('react-visjs-timeline').default;
+const Timeline = require('./TimelineComponent');
 
 module.exports = enhance(Timeline);

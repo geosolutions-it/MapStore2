@@ -69,12 +69,8 @@ const enableOffset = enabled => ({ type: ENABLE_OFFSET, enabled});
 const MOUSE_EVENT = "TIMELINE:MOUSE_EVENT";
 const setMouseEventData = eventData => ({ type: MOUSE_EVENT, eventData});
 
-const CUSTOMIZED_RANGE_SET = "TIMELINE:CUSTOMIZED_RANGE_SET";
-const setCusomizedRange = range => ({ type: CUSTOMIZED_RANGE_SET, range});
 
 module.exports = {
-    CUSTOMIZED_RANGE_SET,
-    setCusomizedRange,
     MOUSE_EVENT,
     setMouseEventData,
     RANGE_CHANGED,
