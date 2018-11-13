@@ -1445,6 +1445,80 @@
             "paneltitle": "Style de couche",
             "layerlabel": "Couche"
         },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filtrer les styles par nom, titre ou résumé",
+            "templateFilterPlaceholder": "Filtrer les modèles de styles par titre",
+            "createStyleFromTemplate": "Sélectionnez un modèle pour créer un nouveau style",
+            "titleRequired": "<div> Un titre est requis! </ div> <div> Le titre et le résumé doivent être alphanumériques </ div>.",
+            "titleSettings": "Titre",
+            "titleSettingsplaceholder": "Entrez le titre (alphanumérique)",
+            "abstractSettings": "Abstrait",
+            "abstractSettingsplaceholder": "Entrez abstract (alphanumeric)",
+            "createStyleModalTitle": "Créer un nouveau style",
+            "filterMatchNotFound": "Aucun style ne correspond au filtre de texte saisi",
+            "backToList": "Retour à la liste de style",
+            "createNewStyle": "Créer un nouveau style",
+            "editSelectedStyle": "Modifier le style sélectionné",
+            "saveCurrentStyle": "Enregistrer le style actuel",
+            "addSelectedTemplate": "Ajouter le modèle sélectionné à la liste des styles",
+            "deleteSelectedStyle": "Supprimer le style sélectionné",
+            "closeWithoutSaveAlertTitle": "Le style a changé",
+            "closeWithoutSaveAlert": "Vous quittez l'éditeur de style sans enregistrer vos modifications",
+            "deleteStyleAlertTitle": "Supprimer le style",
+            "deleteStyleAlert": "Le style sélectionné sera définitivement supprimé",
+            "delete": "Effacer",
+            "defaultStyle": "Style par défaut",
+            "availableStyle": "Style disponible",
+            "styleNotFound": "Style non trouvé",
+            "noPermission": "L'utilisateur ne peut pas éditer les styles",
+            "deletedStyleSuccessTitle": "Supprimer le style",
+            "deletedStyleSuccessMessage": "Le style a été supprimé avec succès",
+            "deletedStyleErrorTitle": "Supprimer l'erreur de style",
+            "deletedStyleErrorMessage": "Impossible de supprimer le style actuel",
+            "savedStyleTitle": "Style sauvegardé",
+            "savedStyleMessage": "Le style a été enregistré avec succès",
+            "missingAvailableStyles": "Styles manquants",
+            "missingAvailableStylesMessage": "<ul> <h4> Causes possibles: </h4> <li> La couche sélectionnée est un groupe de couches </li> <li> La couche n'est pas configurée correctement côté serveur </li> </ul>",
+            "createTmpErrorTitle": "Nouveau style temporaire",
+            "createTmpStyleErrorMessage": "Le style temporaire n'a pas pu être créé. Cela pourrait être dû à un format de style non pris en charge sur le service de styles.",
+            "updateTmpErrorTitle": "Mise à jour de style temporaire",
+            "updateTmpStyleErrorMessage": "Le style temporaire n'a pas pu être mis à jour. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion.",
+            "createStyleErrorTitle": "Nouveau style",
+            "createStyleErrorMessage": "Le style n'a pas pu être enregistré sur le service de style. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion.",
+            "updateStyleErrorTitle": "Modifier le style",
+            "updateStyleErrorMessage": "Le style n'a pas pu être mis à jour sur le service de style. Cela pourrait être sur un format de style non pris en charge ou un problème de connexion.",
+            "genericValidationError": "Le style n'est pas valide et il n'a pas pu être appliqué."
+        },
+        "playback": {
+            "settings": {
+                "title": "Paramètres de lecture",
+                "frameDuration": "Durée du cadre",
+                "range": {
+                    "title": "Animation rage",
+                    "zoomTooltip": "Zoom sur la plage d'animation actuelle",
+                    "animationStart": "Début de l'animation",
+                    "animationEnd": "Fin de l'animation"
+                },
+                "step": {
+                    "fixed": "Pas fixe",
+                    "label": "Étape d'animation",
+                    "year": "{number, plural, =0 {Année} =1 {Année} other {Années}}",
+                    "week": "{number, plural, =0 {semaine} =1 {semaine} other {semaine}}",
+                    "day": "{number, plural, =0 {jour} =1 {jour} other {jours}}",
+                    "hour": "{number, plural, =0 {heure} =1 {heure} other {heures}}",
+                    "minute": "{number, plural, =0 {minute} =1 {minute} other {minute}}",
+                    "second": "{number, plural, =0 {seconde} =1 {seconde} other {secondes}}"
+                },
+                "mode": {
+                    "title": "Mode",
+                    "following": "Suivant",
+                    "followingDescription": "Lorsque l'animation est active, suivez le curseur"
+                }
+            }
+        },
+        "timeline": {
+            "currentTime": "Heure actuelle"
+        },
         "rulesmanager": {
             "apply": "Appliquer",
             "remove": "Supprimer la géométrie",

@@ -1444,6 +1444,80 @@
             "paneltitle": "Gestalter",
             "layerlabel": "Ebene"
         },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filtern Sie Stile nach Name, Titel oder Abstract",
+            "templateFilterPlaceholder": "Filterstile Vorlagen nach Titel",
+            "createStyleFromTemplate": "Wählen Sie eine Vorlage aus, um einen neuen Stil zu erstellen",
+            "titleRequired": "<div> Titel ist Pflicht! </div> <div> Titel und Abstract müssen alphanumerisch sein </div>",
+            "titleSettings": "Titel",
+            "titleSettingsplaceholder": "Titel eingeben (alphanumerisch)",
+            "abstractSettings": "Abstrakt",
+            "abstractSettingsplaceholder": "Abstrakt eingeben (alphanumerisch)",
+            "createStyleModalTitle": "Erstellen Sie einen neuen Stil",
+            "filterMatchNotFound": "Keine Stile entsprechen dem eingegebenen Textfilter",
+            "backToList": "Zurück zur Stilliste",
+            "createNewStyle": "Erstellen Sie einen neuen Stil",
+            "editSelectedStyle": "Bearbeiten Sie den ausgewählten Stil",
+            "saveCurrentStyle": "Aktuellen Stil speichern",
+            "addSelectedTemplate": "Fügen Sie die ausgewählte Vorlage zur Liste der Stile hinzu",
+            "deleteSelectedStyle": "Löschen Sie den ausgewählten Stil",
+            "closeWithoutSaveAlertTitle": "Der Stil hat sich geändert",
+            "closeWithoutSaveAlert": "Sie beenden den Style-Editor, ohne Ihre Änderungen zu speichern",
+            "deleteStyleAlertTitle": "Löschen Sie den Stil",
+            "deleteStyleAlert": "Der ausgewählte Stil wird endgültig gelöscht",
+            "delete": "Löschen",
+            "defaultStyle": "Standardstil",
+            "availableStyle": "Verfügbarer Stil",
+            "styleNotFound": "Stil nicht gefunden",
+            "noPermission": "Benutzer kann keine Stile bearbeiten",
+            "deletedStyleSuccessTitle": "Löschen Sie den Stil",
+            "deletedStyleSuccessMessage": "Der Stil wurde erfolgreich gelöscht",
+            "deletedStyleErrorTitle": "Stilfehler löschen",
+            "deletedStyleErrorMessage": "Der aktuelle Stil konnte nicht gelöscht werden",
+            "savedStyleTitle": "Stil gespeichert",
+            "savedStyleMessage": "Der Style wurde erfolgreich gespeichert",
+            "missingAvailableStyles": "Fehlende Stile",
+            "missingAvailableStylesMessage": "<ul><h4> Mögliche Ursachen: </h4> <li> Die ausgewählte Ebene ist eine Ebenengruppe. </li> <li> Die Ebene ist nicht serverseitig richtig konfiguriert. </li> </ul>",
+            "createTmpErrorTitle": "Neuer temporärer Stil",
+            "createTmpStyleErrorMessage": "Temporärer Stil konnte nicht erstellt werden. Dies könnte aufgrund eines nicht unterstützten Formatformats des Style-Service erfolgen",
+            "updateTmpErrorTitle": "Temporäre Stilaktualisierung",
+            "updateTmpStyleErrorMessage": "Temporärer Stil konnte nicht aktualisiert werden. Dies kann auf ein nicht unterstütztes Format- oder Verbindungsproblem zurückzuführen sein.",
+            "createStyleErrorTitle": "Neuer Stil",
+            "createStyleErrorMessage": "Stil konnte nicht im Stildienst gespeichert werden. Dies kann auf ein nicht unterstütztes Format- oder Verbindungsproblem zurückzuführen sein.",
+            "updateStyleErrorTitle": "Stil bearbeiten",
+            "updateStyleErrorMessage": "Der Stil konnte im Stildienst nicht aktualisiert werden. Dies kann auf ein nicht unterstütztes Format- oder Verbindungsproblem zurückzuführen sein.",
+            "genericValidationError": "Stil ist nicht gültig und konnte nicht angewendet werden."
+        },
+        "playback": {
+            "settings": {
+                "title": "Wiedergabeeinstellungen",
+                "frameDuration": "Frame-Dauer",
+                "range": {
+                    "title": "Animations-Wut",
+                    "zoomTooltip": "Zoom auf den aktuellen Animationsbereich",
+                    "animationStart": "Animation beginnt",
+                    "animationEnd": "Ende der Animation"
+                },
+                "step": {
+                    "fixed": "Feststehender Schritt",
+                    "label": "Animationsschritt",
+                    "year": "{number, plural, =0 {Jahr} =1 {Jahr} other {Jahre}}",
+                    "week": "{number, plural, =0 {Woche} =1 {Woche} other {Wochen}}",
+                    "day": "{number, plural, =0 {Tag} =1 {Tag} other {Tage}}",
+                    "hour": "{number, plural, =0 {Stunde} =1 {Stunde} other {Stunden}}",
+                    "minute": "{number, plural, =0 {Minute} =1 {Minute} other {Minuten}}",
+                    "second": "{number, plural, =0 {Sekunde} =1 {Sekunde} other {Sekunden}}"
+                },
+                "mode": {
+                    "title": "Modus",
+                    "following": "Folgende",
+                    "followingDescription": "Wenn die Animation aktiv ist, folgen Sie dem Cursor"
+                }
+            }
+        },
+        "timeline": {
+            "currentTime": "Aktuelle Uhrzeit"
+        },
         "rulesmanager": {
             "apply": "Anwenden",
             "remove": "Entfernen Sie die Geometrie",

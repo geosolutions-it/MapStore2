@@ -31,6 +31,7 @@ var {
     FILTER_LAYERS,
     SHOW_LAYER_METADATA,
     HIDE_LAYER_METADATA,
+    UPDATE_SETTINGS_PARAMS,
     changeLayerProperties,
     toggleNode,
     sortNode,
@@ -53,7 +54,8 @@ var {
     selectNode,
     filterLayers,
     showLayerMetadata,
-    hideLayerMetadata
+    hideLayerMetadata,
+    updateSettingsParams
 } = require('../layers');
 var {getLayerCapabilities} = require('../layerCapabilities');
 
@@ -292,5 +294,14 @@ describe('Test correctness of the layers actions', () => {
     it('hide layer metadata', () => {
         const action = hideLayerMetadata();
         expect(action.type).toBe(HIDE_LAYER_METADATA);
+    });
+
+    it('update settings params', () => {
+        const newParams = { style: 'new_style' };
+        const update = true;
+        const action = updateSettingsParams(newParams, update);
+        expect(action.type).toBe(UPDATE_SETTINGS_PARAMS);
+        expect(action.newParams).toBe(newParams);
+        expect(action.update).toBe(update);
     });
 });

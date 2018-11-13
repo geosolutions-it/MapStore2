@@ -1443,7 +1443,81 @@
             "tooltip": "Crea e modifica lo stile dei layer",
             "paneltitle": "Styler",
             "layerlabel": "Layer"
-            },
+        },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filtra gli stili per nome, titolo o abstract",
+            "templateFilterPlaceholder": "Filtra template per titolo",
+            "createStyleFromTemplate": "Seleziona un template per creare un nuovo stile",
+            "titleRequired": "<div> Il titolo è obbligatorio! </div> <div> Il titolo e l'abstract devono essere alfanumerici </div>",
+            "titleSettings": "Titolo",
+            "titleSettingsplaceholder": "Inserisci il titolo (alfanumerico)",
+            "abstractSettings": "Abstract",
+            "abstractSettingsplaceholder": "Inserisci abstract (alfanumerico)",
+            "createStyleModalTitle": "Crea un nuovo stile",
+            "filterMatchNotFound": "Nessuno stile corrisponde al filtro inserito",
+            "backToList": "Torna all'elenco degli stili",
+            "createNewStyle": "Crea un nuovo stile",
+            "editSelectedStyle": "Modifica lo stile selezionato",
+            "saveCurrentStyle": "Salva lo stile attuale",
+            "addSelectedTemplate": "Aggiungi il modello selezionato all'elenco degli stili",
+            "deleteSelectedStyle": "Elimina lo stile selezionato",
+            "closeWithoutSaveAlertTitle": "Lo stile è stato modificato",
+            "closeWithoutSaveAlert": "Stai abbandonando l'editor di stile senza salvare le modifiche",
+            "deleteStyleAlertTitle": "Elimina stile",
+            "deleteStyleAlert": "Lo stile selezionato verrà eliminato in modo permanente",
+            "delete": "Elimina",
+            "defaultStyle": "Stile predefinito",
+            "availableStyle": "Stile disponibile",
+            "styleNotFound": "Stile non trovato",
+            "noPermission": "L'utente non può modificare gli stili",
+            "deletedStyleSuccessTitle": "Elimina stile",
+            "deletedStyleSuccessMessage": "Lo stile è stato cancellato con successo",
+            "deletedStyleErrorTitle": "Elimina stile",
+            "deletedStyleErrorMessage": "Impossibile cancellare lo stile",
+            "savedStyleTitle": "Stile salvato",
+            "savedStyleMessage": "Lo stile è stato salvato",
+            "missingAvailableStyles": "Stili mancanti",
+            "missingAvailableStylesMessage": "<ul> <h4> Possibili cause: </h4> <li> Il layer selezionato è un layer group </li> <li> Il layer non è configurato correttamente lato server </li> </ul>",
+            "createTmpErrorTitle": "Nuovo stile temporaneo",
+            "createTmpStyleErrorMessage": "Non è stato possibile creare uno stile temporaneo. Questo potrebbe essere dovuto al formato di stile non supportato dal servizio",
+            "updateTmpErrorTitle": "Aggiornamento di stile temporaneo",
+            "updateTmpStyleErrorMessage": "Lo stile temporaneo non può essere aggiornato. Questo potrebbe essere dovuto al formato di stile non supportato o ad un problema di connessione.",
+            "createStyleErrorTitle": "Nuovo stile",
+            "createStyleErrorMessage": "Lo stile non può essere salvato. Questo potrebbe essere dovuto al formato di stile non supportato o ad un problema di connessione.",
+            "updateStyleErrorTitle": "Modifica stile",
+            "updateStyleErrorMessage": "Lo stile non può essere aggiornato . Questo potrebbe essere dovuto ad un formato di stile non supportato o ad un problema di connessione.",
+            "genericValidationError": "Lo stile non è valido e non è stato possibile applicarlo."
+        },
+        "playback": {
+            "settings": {
+                "title": "Impostazioni Riproduzione",
+                "frameDuration": "Durata Fotogramma",
+                "range": {
+                    "title": "Intervallo di animazione",
+                    "zoomTooltip": "Fai zoom all'intervallo di animazione corrente",
+                    "animationStart": "Inizio animazione",
+                    "animationEnd": "Fine animazione"
+                },
+                "step": {
+                    "fixed": "Passo fisso",
+                    "label": "Passo di animazione",
+                    "year": "{number, plural, =0 {Anni} =1 {Anno} other {Anni}}",
+                    "week": "{number, plural, =0 {Settimane} =1 {Settimana} other {Settimane}}",
+                    "day": "{number, plural, =0 {Giorni} =1 {Giorno} other {Giorni}}",
+                    "hour": "{number, plural, =0 {Ore} =1 {Ora} other {Ore}}",
+                    "minute": "{number, plural, =0 {Minuti} =1 {Minuto} other {Minuti}}",
+                    "second": "{number, plural, =0 {Secondi} =1 {Secondo} other {Secondi}}"
+                },
+                "mode": {
+                    "title": "Modalità",
+                    "following": "Inseguimento",
+                    "followingDescription": "Durante l'animazione, insegui il cursore"
+                }
+            }
+        },
+        "timeline": {
+            "currentTime": "Istante corrente"
+        },
         "rulesmanager": {
             "apply": "Applica",
             "remove": "Elimina la geometia",

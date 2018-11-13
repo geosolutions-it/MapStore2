@@ -31,6 +31,7 @@ const PanelHeader = require('./PanelHeader');
  * @prop {string} glyph glyph displayed on top corner of panel
  * @prop {node} header additional element for header
  * @prop {node} footer footer content
+ * @prop {bool} hideHeader hide header
  */
 
 module.exports = withState('fullscreen', 'onFullscreen', false)(
@@ -52,7 +53,8 @@ module.exports = withState('fullscreen', 'onFullscreen', false)(
         footer,
         children,
         onFullscreen = () => {},
-        fixed = false
+        fixed = false,
+        hideHeader
     }) =>
         <div className={'ms-side-panel ' + (!fixed ? 'ms-absolute-dock ' : '') + className}>
             <Dock
@@ -65,7 +67,7 @@ module.exports = withState('fullscreen', 'onFullscreen', false)(
                 zIndex={zIndex}>
                 <BorderLayout
                     header={
-                        <PanelHeader
+                        !hideHeader && <PanelHeader
                             position={position}
                             onClose={onClose}
                             bsStyle={bsStyle}

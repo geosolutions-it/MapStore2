@@ -384,15 +384,30 @@ describe('Test the CatalogUtils', () => {
                     identifier: "09d4e114-74a0-11e8-9c12-20c9d079dc21"
 
                 }
+            },
+            {
+                dc: {
+                    alternative: "1-Hurricane Track",
+                    identifier: "e5efb394-aac2-432e-b784-f18a6f663915",
+                    references: [{
+                            scheme: "WWW:DOWNLOAD-REST_MAP",
+                            value: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Hurricanes/MapServer"
+                        }]
+                    }
             }]
         }, {});
-        expect(records.length).toBe(1);
+        expect(records.length).toBe(2);
         const r = records[0];
         expect(r.thumbnail).toExist();
         expect(r.references.length).toBe(1);
         const ref = r.references[0];
         expect(ref.type).toBe("OGC:WMS");
         expect(ref.params.name).toBe("layer.name");
+        const esri = records[1];
+        expect(esri).toExist();
+        expect(esri.references[0]).toExist();
+        expect(esri.references[0].type).toBe("arcgis");
+        expect(esri.references[0].params.name).toBe("1-Hurricane Track");
     });
 
 });

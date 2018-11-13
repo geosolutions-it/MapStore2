@@ -1444,6 +1444,80 @@
             "paneltitle": "Estilo de la capa",
             "layerlabel": "Capa"
         },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filtrar estilos por nombre, título o resumen.",
+            "templateFilterPlaceholder": "Filtrar plantillas de estilos por título",
+            "createStyleFromTemplate": "Seleccione una plantilla para crear un nuevo estilo",
+            "titleRequired": "<div> ¡Se requiere título! </div> <div> El título y el resumen deben ser alfanuméricos </div>",
+            "titleSettings": "Título",
+            "titleSettingsplaceholder": "Introduzca el título (alfanumérico)",
+            "abstractSettings": "Resumen",
+            "abstractSettingsplaceholder": "Introduzca resumen (alfanumérico)",
+            "createStyleModalTitle": "Crear nuevo estilo",
+            "filterMatchNotFound": "No hay estilos que coincidan con el filtro de texto introducido",
+            "backToList": "Volver a la lista de estilos",
+            "createNewStyle": "Crear nuevo estilo",
+            "editSelectedStyle": "Editar el estilo seleccionado",
+            "saveCurrentStyle": "Guardar el estilo actual",
+            "addSelectedTemplate": "Añadir plantilla seleccionada a la lista de estilos",
+            "deleteSelectedStyle": "Eliminar el estilo seleccionado",
+            "closeWithoutSaveAlertTitle": "El estilo ha cambiado",
+            "closeWithoutSaveAlert": "Está saliendo del editor de estilos sin guardar los cambios.",
+            "deleteStyleAlertTitle": "Eliminar estilo",
+            "deleteStyleAlert": "El estilo seleccionado será eliminado permanentemente",
+            "delete": "Borrar",
+            "defaultStyle": "Estilo por Defecto",
+            "availableStyle": "Estilo disponible",
+            "styleNotFound": "Estilo no encontrado",
+            "noPermission": "El usuario no puede editar estilos",
+            "deletedStyleSuccessTitle": "Eliminar estilo",
+            "deletedStyleSuccessMessage": "El estilo ha sido eliminado exitosamente.",
+            "deletedStyleErrorTitle": "Eliminar error de estilo",
+            "deletedStyleErrorMessage": "No se pudo eliminar el estilo actual",
+            "savedStyleTitle": "Estilo guardado",
+            "savedStyleMessage": "El estilo se ha guardado con éxito.",
+            "missingAvailableStyles": "Estilos que faltan",
+            "missingAvailableStylesMessage": "<ul> <h4> Causas posibles: </h4> <li> La capa seleccionada es un grupo de capas </li> <li> La capa no está configurada correctamente en el lado del servidor </li> </ul>",
+            "createTmpErrorTitle": "Nuevo estilo temporal",
+            "createTmpStyleErrorMessage": "No se pudo crear el estilo temporal. Esto podría deberse a un formato de estilo no compatible en el servicio de estilo",
+            "updateTmpErrorTitle": "Actualización de estilo temporal",
+            "updateTmpStyleErrorMessage": "El estilo temporal no pudo ser actualizado. Esto podría estar en formato de estilo no compatible o problema de conexión.",
+            "createStyleErrorTitle": "Nuevo estilo",
+            "createStyleErrorMessage": "El estilo no se pudo guardar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión.",
+            "updateStyleErrorTitle": "Editar estilo",
+            "updateStyleErrorMessage": "El estilo no se pudo actualizar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión.",
+            "genericValidationError": "El estilo no es válido y no se pudo aplicar."
+        },
+         "playback": {
+            "settings": {
+                "title": "Ajustes de reproducción",
+                "frameDuration": "Duración del marco",
+                "range": {
+                    "title": "Rabia de animacion",
+                    "zoomTooltip": "Zoom al rango de animación actual",
+                    "animationStart": "Inicio de animacion",
+                    "animationEnd": "Fin de la animacion"
+                },
+                "step": {
+                    "fixed": "Paso fijo",
+                    "label": "Paso de animacion",
+                    "year": "{number, plural, =0 {Año} =1 {Año} other {Años}}",
+                    "week": "{number, plural, =0 {Semana} =1 {Semana} other {Semanas}}",
+                    "day": "{number, plural, =0 {Día} =1 {Día} other {Días}}",
+                    "hour": "{number, plural, =0 {Hora} =1 {Hora} other {Horas}}",
+                    "minute": "{number, plural, =0 {Minuto} =1 {Minuto} other {Minutos}}",
+                    "second": "{number, plural, =0 {Segundo} =1 {Segundo} other {Segundos}}"
+                },
+                "mode": {
+                    "title": "Modo",
+                    "following": "Siguiendo",
+                    "followingDescription": "Cuando la animación está activa, sigue el cursor."
+                }
+            }
+        },
+        "timeline": {
+            "currentTime": "Tiempo actual"
+        },
         "rulesmanager": {
             "apply": "Aplicar",
             "remove": "Eliminar geometría",

@@ -9,7 +9,7 @@
 const { selectedLayerSelector } = require('../selectors/timeline');
 const { layerDimensionRangeSelector } = require('../selectors/dimension');
 
-
+const playbackSettingsSelector = state => state && state.playback && state.playback.settings;
 const statusSelector = state => state && state.playback && state.playback.status;
 const framesSelector = state => state && state.playback && state.playback.frames;
 const lastFrameSelector = state => {
@@ -28,6 +28,7 @@ const playbackRangeSelector = state => {
 
 const currentFrameValueSelector = state => (framesSelector(state) || [])[currentFrameSelector(state)];
 module.exports = {
+    playbackSettingsSelector,
     statusSelector,
     loadingSelector,
     lastFrameSelector,
