@@ -63,7 +63,7 @@ module.exports = collapsible(({
                     tooltip: 'Step backward'
                 }, {
                     glyph: status === statusMap.PLAY ? "pause" : "play",
-                    onClick: () => status === statusMap.PLAY ? pause() : selectedLayer && play(),
+                    onClick: () => status === statusMap.PLAY ? pause() : play(),
                     tooltip: 'Play'
                 }, {
                     glyph: "stop",

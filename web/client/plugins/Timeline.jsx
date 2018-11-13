@@ -133,10 +133,8 @@ const TimelinePlugin = compose(
                             active: offsetEnabled,
                             tooltip: offsetEnabled ? 'Disable current time with offset' : 'Enable current time with offset',
                             onClick: () => {
-                                if (selectedLayer) {
-                                    onOffsetEnabled(!offsetEnabled);
-                                    setOptions({ ...options, playbackEnabled: false });
-                                }
+                                onOffsetEnabled(!offsetEnabled);
+                                setOptions({ ...options, playbackEnabled: false });
 
                             }
                         },
@@ -147,12 +145,9 @@ const TimelinePlugin = compose(
                             active: playbackEnabled,
                             visible: !!Playback,
                             onClick: () => {
-                                if (selectedLayer) {
-                                    onOffsetEnabled(false);
-                                    setOptions({ ...options, playbackEnabled: !playbackEnabled });
-                                    setPlaybackRange(playbackRange);
-                                }
-
+                                onOffsetEnabled(false);
+                                setOptions({ ...options, playbackEnabled: !playbackEnabled });
+                                setPlaybackRange(playbackRange);
                             }
                         }
                     ]} />

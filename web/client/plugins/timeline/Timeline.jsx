@@ -190,13 +190,13 @@ const enhance = compose(
         }) => ({
             items: [
                 ...items,
-                playbackEnabled ? {
+                playbackEnabled && playbackRange.startPlaybackTime !== undefined && playbackRange.endPlaybackTime !== undefined ? {
                     id: 'playback-range',
                     ...getStartEnd(playbackRange.startPlaybackTime, playbackRange.endPlaybackTime),
                     type: 'background',
                     className: 'ms-playback-range'
                 } : null,
-                offsetEnabled ? {
+                offsetEnabled && currentTime !== undefined && calculatedOffsetTime !== undefined ? {
                     id: 'current-range',
                     ...getStartEnd(currentTime, calculatedOffsetTime),
                     type: 'background',
