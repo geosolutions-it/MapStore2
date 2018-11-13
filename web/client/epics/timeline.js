@@ -162,7 +162,7 @@ module.exports = {
             }
             return Rx.Observable.of(setCurrentTime(getTimestamp(time, offsetEnabled, state)));
         }),
-        /**
+     /**
      * When offset is initiated this epic sets both initial current time and offset if any does not exist
      */
     settingInitialOffsetValue: (action$, {getState = () => {}} = {}) =>
