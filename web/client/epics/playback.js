@@ -6,15 +6,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 const moment = require('moment');
+const {get} = require('lodash');
 const {
-    PLAY, PAUSE, STOP, SET_FRAMES, SET_CURRENT_FRAME,
+    PLAY, PAUSE, STOP, SET_FRAMES, SET_CURRENT_FRAME, TOGGLE_ANIMATION_MODE,
     stop, setFrames, appendFrames, setCurrentFrame,
     framesLoading
 } = require('../actions/playback');
 const {
     setCurrentTime
 } = require('../actions/dimension');
-const { currentTimeSelector } = require('../selectors/dimension');
+const {
+    selectLayer
+} = require('../actions/timeline');
+const { currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
 
 const { LOCATION_CHANGE } = require('react-router-redux');
 
@@ -119,5 +123,21 @@ module.exports = {
                 .map(() => setCurrentFrame(currentFrameSelector(getState()) + 1))
             .concat(Rx.Observable.of(stop()))
             .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
+        ),
+    /**
+     */
+    playbackToggleGuideLayerToFixedStep: (action$, { getState = () => { } } = {}) =>
+        action$
+            .ofType(TOGGLE_ANIMATION_MODE)
+            .exhaustMap(() =>
+                    selectedLayerName(getState())
+                        // need to deselect
+                        ? Rx.Observable.of(selectLayer(undefined))
+                        // need to select first
+                    : Rx.Observable.of(
+                        selectLayer(
+                            get(layersWithTimeDataSelector(getState()), "[0].id")
+                        )
+                    )
         )
 };

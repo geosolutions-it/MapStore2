@@ -30,12 +30,13 @@ const collapsible = compose(
     })
 );
 
-const PlaybackSettings = connect(() => ({}))(require("./PlaybackSettings"));
+const PlaybackSettings = require("./PlaybackSettings");
 
 module.exports = collapsible(({
     settings,
     onSettingChange = () => { },
     setPlaybackRange = () => { },
+    toggleAnimationMode = () => {},
     // loading,
     selectedLayer,
     status,
@@ -50,6 +51,8 @@ module.exports = collapsible(({
         {showSettings &&
         <PlaybackSettings
             {...settings}
+            fixedStep={!selectedLayer}
+            toggleAnimationMode={toggleAnimationMode}
             onSettingChange={onSettingChange}
             setPlaybackRange={setPlaybackRange}/>}
         <Toolbar

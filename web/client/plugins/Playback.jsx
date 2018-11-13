@@ -10,7 +10,7 @@ const React = require('react');
 const assign = require('object-assign');
 const { defaultProps, compose } = require('recompose');
 const {createSelector} = require('reselect');
-const { play, pause, stop, STATUS, selectPlaybackRange, changeSetting } = require('../actions/playback');
+const { play, pause, stop, STATUS, selectPlaybackRange, changeSetting, toggleAnimationMode } = require('../actions/playback');
 const {currentTimeSelector} = require('../selectors/dimension');
 const {selectedLayerSelector} = require('../selectors/timeline');
 const { statusSelector, loadingSelector, playbackRangeSelector, playbackSettingsSelector } = require('../selectors/playback');
@@ -42,7 +42,8 @@ const Playback = compose(
             pause,
             stop,
             setPlaybackRange: selectPlaybackRange,
-            onSettingChange: changeSetting
+            onSettingChange: changeSetting,
+            toggleAnimationMode
         }
     )
 )(require('../components/playback/Playback'));
