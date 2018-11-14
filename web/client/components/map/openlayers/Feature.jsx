@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 var React = require('react');
 var ol = require('openlayers');
 const {isEqual} = require('lodash');
-const {getStyle} = require('./VectorStyle');
+const VectorStyle = require('./VectorStyle');
 const {transformPolygonToCircle} = require('../../../utils/DrawSupportUtils');
 
 class Feature extends React.Component {
@@ -66,7 +66,7 @@ class Feature extends React.Component {
         } else {
             // if type is geometryCollection or a simple geometry, the data will be in geometry prop
             ftGeometry = {geometry: props.geometry};
-            canRender = !!(this.props.geometry.geometries || this.props.geometry.coordinates);
+            canRender = !!(props.geometry && (props.geometry.geometries || props.geometry.coordinates));
         }
 
         if (props.container && canRender) {
@@ -87,7 +87,7 @@ class Feature extends React.Component {
                 (f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
 
             if (props.style && (props.style !== props.layerStyle)) {
-                this._feature.forEach((f) => { f.setStyle(getStyle({style: {...props.style, type: f.getGeometry().getType()}, properties: f.getProperties()})); });
+                this._feature.forEach((f) => { f.setStyle(VectorStyle.getStyle({style: {...props.style, type: f.getGeometry().getType()}, properties: f.getProperties()})); });
             }
             props.container.getSource().addFeatures(this._feature);
         }

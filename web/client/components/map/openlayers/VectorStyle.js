@@ -254,9 +254,6 @@ const defaultOLStyles = {
 };
 
 const styleFunction = function(feature, options) {
-/*const styleFunction = function(feature, options) {
-    const type = feature.getGeometry().getType();
-    return defaultStyles[type](options && options.style && options.style[type] && {style: {...options.style[type]}} || options || {});*/
     const type = feature.getGeometry().getType();
     return defaultOLStyles[type](options && options.style && options.style[type] && {style: {...options.style[type]}} || options || {});
 };
@@ -272,6 +269,11 @@ function getMarkerStyle(options) {
     return null;
 }
 
+
+/**
+ * TODO DOCUMENT This
+ *
+*/
 const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, textValues, fallbackStyle, radius = 0 ) => {
     let tempStyle = options.style[geomType] || options.style;
     if (geomType === "MultiLineString" || geomType === "LineString") {

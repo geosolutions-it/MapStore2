@@ -51,6 +51,7 @@ const bbox = require('@turf/bbox');
  * @prop {object} errors key/value set of validation errors (field_name: error_id)
  * @prop {object} feature object with the annotation properties
  * @prop {bool} showBack shows / hides the back button in the view mode
+ * @prop {bool} showEdit shows / hides the edit button in the view mode
  * @prop {function} onEdit triggered when the user clicks on the edit button
  * @prop {function} onCancelEdit triggered when the user cancels current editing session
  * @prop {function} onCancelStyle triggered when the user cancels style selection
@@ -167,6 +168,7 @@ class AnnotationsEditor extends React.Component {
         stylerType: PropTypes.string,
         featureType: PropTypes.string,
         showBack: PropTypes.bool,
+        showEdit: PropTypes.bool,
         showUnsavedChangesModal: PropTypes.bool,
         showUnsavedStyleModal: PropTypes.bool,
         showDeleteFeatureModal: PropTypes.bool,
@@ -190,6 +192,7 @@ class AnnotationsEditor extends React.Component {
         selected: null,
         editedFields: {},
         showBack: false,
+        showEdit: true,
         coordinateEditorEnabled: false,
         feature: {},
         maxZoom: 18,
@@ -252,7 +255,7 @@ class AnnotationsEditor extends React.Component {
                             }, {
                                 glyph: "pencil",
                                 tooltipId: "annotations.edit",
-                                visible: true,
+                                visible: this.props.showEdit,
                                 multiGeometry: this.props.config.multiGeometry,
                                 onClick: () => { this.props.onEdit(this.props.id); },
                                 disabled: !this.props.config.multiGeometry && this.props.editing && this.props.editing.features && this.props.editing.features.length,

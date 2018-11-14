@@ -43,7 +43,7 @@ describe('leaflet Feature component', () => {
             geometry={geometry}/>, document.getElementById("container"));
 
         expect(lineString._layer).toExist();
-        expect({...lineString._layer.options}).toEqual({});
+        expect({...lineString._layer.options}).toEqual({highlight: undefined});
 
         const style = {
             color: '#3388ff',
@@ -57,7 +57,7 @@ describe('leaflet Feature component', () => {
             geometry={geometry}/>, document.getElementById("container"));
 
         expect(lineString._layer).toExist();
-        expect({...lineString._layer.options}).toEqual(style);
+        expect({...lineString._layer.options}).toEqual({...style, highlight: undefined});
 
         const styleWithFeatureType = {
             color: '#3388ff',
@@ -75,7 +75,7 @@ describe('leaflet Feature component', () => {
             geometry={geometry}/>, document.getElementById("container"));
 
         expect(lineString._layer).toExist();
-        expect({...lineString._layer.options}).toEqual(styleWithFeatureType.LineString);
+        expect({...lineString._layer.options}).toEqual({...styleWithFeatureType.LineString, highlight: undefined});
     });
 
 
@@ -97,7 +97,7 @@ describe('leaflet Feature component', () => {
 
         let layersKeys = Object.keys(multiLineString._layer._layers);
         let firstLayer = multiLineString._layer._layers[layersKeys[0]];
-        expect({...firstLayer.options}).toEqual({});
+        expect({...firstLayer.options}).toEqual({highlight: undefined});
 
         const style = {
             color: '#3388ff',
@@ -114,7 +114,7 @@ describe('leaflet Feature component', () => {
 
         layersKeys = Object.keys(multiLineString._layer._layers);
         firstLayer = multiLineString._layer._layers[layersKeys[0]];
-        expect({...firstLayer.options}).toEqual(style);
+        expect({...firstLayer.options}).toEqual({...style, highlight: undefined});
 
         const styleWithFeatureType = {
             color: '#3388ff',
@@ -135,7 +135,7 @@ describe('leaflet Feature component', () => {
 
         layersKeys = Object.keys(multiLineString._layer._layers);
         firstLayer = multiLineString._layer._layers[layersKeys[0]];
-        expect({...firstLayer.options}).toEqual(styleWithFeatureType.MultiLineString);
+        expect({...firstLayer.options}).toEqual({...styleWithFeatureType.MultiLineString, highlight: undefined});
     });
 
     it('test Polygon style', () => {
@@ -153,7 +153,7 @@ describe('leaflet Feature component', () => {
             geometry={geometry}/>, document.getElementById("container"));
 
         expect(polygon._layer).toExist();
-        expect({...polygon._layer.options}).toEqual({});
+        expect({...polygon._layer.options}).toEqual({highlight: undefined});
 
         const style = {
             color: '#3388ff',
@@ -169,7 +169,7 @@ describe('leaflet Feature component', () => {
             geometry={geometry}/>, document.getElementById("container"));
 
         expect(polygon._layer).toExist();
-        expect({...polygon._layer.options}).toEqual(style);
+        expect({...polygon._layer.options}).toEqual({...style, highlight: undefined});
 
         const styleWithFeatureType = {
             color: '#3388ff',
@@ -191,7 +191,7 @@ describe('leaflet Feature component', () => {
             geometry={geometry}/>, document.getElementById("container"));
 
         expect(polygon._layer).toExist();
-        expect({...polygon._layer.options}).toEqual(styleWithFeatureType.Polygon);
+        expect({...polygon._layer.options}).toEqual({...styleWithFeatureType.Polygon, highlight: undefined});
     });
 
     it('test MultiPolygon style', () => {
@@ -218,7 +218,7 @@ describe('leaflet Feature component', () => {
 
         let layersKeys = Object.keys(multiPolygon._layer._layers);
         let firstLayer = multiPolygon._layer._layers[layersKeys[0]];
-        expect({...firstLayer.options}).toEqual({});
+        expect({...firstLayer.options}).toEqual({highlight: undefined});
 
         const style = {
             color: '#3388ff',
@@ -237,7 +237,7 @@ describe('leaflet Feature component', () => {
 
         layersKeys = Object.keys(multiPolygon._layer._layers);
         firstLayer = multiPolygon._layer._layers[layersKeys[0]];
-        expect({...firstLayer.options}).toEqual(style);
+        expect({...firstLayer.options}).toEqual({...style, highlight: undefined});
 
         const styleWithFeatureType = {
             color: '#3388ff',
@@ -260,6 +260,6 @@ describe('leaflet Feature component', () => {
 
         layersKeys = Object.keys(multiPolygon._layer._layers);
         firstLayer = multiPolygon._layer._layers[layersKeys[0]];
-        expect({...firstLayer.options}).toEqual(styleWithFeatureType.MultiPolygon);
+        expect({...firstLayer.options}).toEqual({...styleWithFeatureType.MultiPolygon, highlight: undefined});
     });
 });

@@ -9,6 +9,7 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const {isEqual} = require('lodash');
+const assign = require('object-assign');
 
 const {geometryToLayer} = require('../../../utils/leaflet/Vector');
 
@@ -20,13 +21,14 @@ class Feature extends React.Component {
         properties: PropTypes.object,
         container: PropTypes.object, // TODO it must be a L.GeoJSON
         geometry: PropTypes.object, // TODO check for geojson format for geometry
+        features: PropTypes.array,
         style: PropTypes.object,
         onClick: PropTypes.func,
         options: PropTypes.object
     };
 
     componentDidMount() {
-        if (this.props.container && this.props.geometry) {
+        if (this.props.container && this.props.geometry || this.props.features) {
             this.createLayer(this.props);
         }
     }
@@ -53,6 +55,23 @@ class Feature extends React.Component {
     }
 
     createLayer = (props) => {
+        if (props.geometry) {
+            this.addFeature(props);
+        }
+        if (props.features) {
+            // supporting FeatureCollection
+            props.features.forEach(f => {
+                let newProps = assign({}, props, {
+                    type: f.type,
+                    geometry: f.geometry,
+                    properties: f.properties
+                });
+                this.addFeature(newProps);
+            });
+        }
+    };
+
+    addFeature(props) {
         this._layer = geometryToLayer({
             type: props.type,
             geometry: props.geometry,
@@ -62,9 +81,7 @@ class Feature extends React.Component {
         }, {
             style: props.style
         });
-
         props.container.addLayer(this._layer);
-
         this._layer.on('click', (event) => {
             if (props.onClick) {
                 props.onClick({
@@ -76,7 +93,7 @@ class Feature extends React.Component {
                 }, this.props.options.handleClickOnLayer ? this.props.options.id : null);
             }
         });
-    };
+    }
 }
 
 module.exports = Feature;

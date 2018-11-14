@@ -16,7 +16,9 @@ const {set} = require('../utils/ImmutableUtils');
 const {validateCoordsArray} = require('../utils/AnnotationsUtils');
 const {reprojectGeoJson} = require('../utils/CoordinatesUtils');
 const {error} = require('../actions/notifications');
-
+const {closeFeatureGrid} = require('../actions/featuregrid');
+const {isFeatureGridOpen} = require('../selectors/featuregrid');
+const {queryPanelSelector, measureSelector} = require('../selectors/controls');
 const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAdd,
     showAnnotation, editAnnotation,
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
@@ -109,7 +111,8 @@ const toggleDrawOrEdit = (state, featureType) => {
         editEnabled: type !== "Circle",
         drawing,
         drawEnabled: type === "Circle",
-        transformToFeatureCollection: true
+        transformToFeatureCollection: true,
+        addClickCallback: true
     };
     return changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false})/* || {[type]: DEFAULT_ANNOTATIONS_STYLES[type]}*/);
 };
@@ -261,7 +264,8 @@ module.exports = (viewer) => ({
                 useSelectedStyle: true,
                 editFilter: (f) => f.getProperties().canEdit,
                 defaultTextAnnotation,
-                transformToFeatureCollection: true
+                transformToFeatureCollection: true,
+                addClickCallback: true
             };
             return Rx.Observable.of(changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false})));
         }),
@@ -353,7 +357,17 @@ module.exports = (viewer) => ({
         .filter((action) => action.control === 'annotations' && store.getState().controls.annotations.enabled)
         .switchMap(() => {
             const state = store.getState();
-            return state.controls.measure && state.controls.measure.enabled ? Rx.Observable.from([toggleControl("measure")]) : Rx.Observable.empty();
+            let actions = [];
+            if (queryPanelSelector(state)) { // if query panel is open, close it
+                actions.push(setControlProperty('queryPanel', "enabled", false));
+            }
+            if (isFeatureGridOpen(state)) { // if FeatureGrid is open, close it
+                actions.push(closeFeatureGrid());
+            }
+            if (measureSelector(state)) { // if measure is open, close it
+                actions.push(toggleControl("measure"));
+            }
+            return actions.length ? Rx.Observable.from(actions) : Rx.Observable.empty();
         }),
     closeAnnotationsEpic: (action$, store) => action$.ofType(TOGGLE_CONTROL)
         .filter((action) => action.control === 'annotations' && !store.getState().controls.annotations.enabled)
@@ -459,7 +473,8 @@ module.exports = (viewer) => ({
                 editFilter: (f) => f.getProperties().canEdit,
                 useSelectedStyle: true,
                 drawEnabled: false,
-                transformToFeatureCollection: true
+                transformToFeatureCollection: true,
+                addClickCallback: true
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
@@ -516,7 +531,8 @@ module.exports = (viewer) => ({
                 editFilter: (f) => f.getProperties().canEdit,
                 drawEnabled: false,
                 useSelectedStyle: true,
-                transformToFeatureCollection: true
+                transformToFeatureCollection: true,
+                addClickCallback: true
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
@@ -553,7 +569,8 @@ module.exports = (viewer) => ({
                 editFilter: (f) => f.getProperties().canEdit,
                 drawEnabled: false,
                 useSelectedStyle: true,
-                transformToFeatureCollection: true
+                transformToFeatureCollection: true,
+                addClickCallback: true
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         }),
@@ -580,7 +597,8 @@ module.exports = (viewer) => ({
                 editFilter: (f) => f.getProperties().canEdit,
                 drawEnabled: false,
                 useSelectedStyle: true,
-                transformToFeatureCollection: true
+                transformToFeatureCollection: true,
+                addClickCallback: true
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of( changeDrawingStatus("clean"), action);
         }),
@@ -601,7 +619,8 @@ module.exports = (viewer) => ({
                 editFilter: (f) => f.getProperties().canEdit,
                 drawEnabled: false,
                 useSelectedStyle: true,
-                transformToFeatureCollection: true
+                transformToFeatureCollection: true,
+                addClickCallback: true
             }, assign({}, style, {highlight: false}));
             return Rx.Observable.of(action);
         })

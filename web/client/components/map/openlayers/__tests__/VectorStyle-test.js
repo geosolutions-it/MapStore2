@@ -316,6 +316,7 @@ describe('Test VectorStyle', () => {
         expect(styles[0].getImage().getFill().getColor()).toBe("green");
         expect(styles[1].getImage().getRadius()).toBe(5);
         expect(styles[1].getImage().getFill().getColor()).toBe("red");
+    });
 
     it('test styleFunction with GeometryCollection', () => {
 
@@ -386,7 +387,5 @@ describe('Test VectorStyle', () => {
         expect(olStroke.getColor()).toBe('#ffaa33');
         expect(olStroke.getWidth()).toBe(10);
         expect(olStroke.getLineDash()).toEqual(['10', '5']);
-
     });
-
 });
