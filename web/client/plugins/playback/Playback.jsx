@@ -8,10 +8,14 @@
 
 const React = require('react');
 const { connect } = require('react-redux');
+const {createSelector} = require('reselect');
 const {compose, withState, withProps, lifecycle} = require('recompose');
+const { playbackSettingsSelector, playbackRangeSelector} = require('../../selectors/playback');
+const {selectedLayerSelector} = require('../../selectors/timeline');
+const { selectPlaybackRange, changeSetting, toggleAnimationMode } = require('../../actions/playback');
 
 
-const Toolbar = require('../misc/toolbar/Toolbar');
+const Toolbar = require('../../components/misc/toolbar/Toolbar');
 
 
 const collapsible = compose(
@@ -30,15 +34,28 @@ const collapsible = compose(
     })
 );
 
-const PlaybackSettings = require("./PlaybackSettings");
+const PlaybackSettings = compose(
+    connect(createSelector(
+        playbackSettingsSelector,
+        selectedLayerSelector,
+        playbackRangeSelector,
+        (settings, selectedLayer, playbackRange) => ({
+            fixedStep: !selectedLayer,
+            playbackRange,
+            ...settings
+        })
+    ), {
+            setPlaybackRange: selectPlaybackRange,
+            onSettingChange: changeSetting,
+            toggleAnimationMode
+    }
+
+    )
+)(
+    require("../../components/playback/PlaybackSettings")
+);
 
 module.exports = collapsible(({
-    settings,
-    onSettingChange = () => { },
-    setPlaybackRange = () => { },
-    toggleAnimationMode = () => {},
-    // loading,
-    selectedLayer,
     status,
     statusMap,
     play = () => {},
@@ -48,13 +65,7 @@ module.exports = collapsible(({
     onShowSettings = () => {}
 }) =>
 ( <div style={{display: 'flex'}}>
-        {showSettings &&
-        <PlaybackSettings
-            {...settings}
-            fixedStep={!selectedLayer}
-            toggleAnimationMode={toggleAnimationMode}
-            onSettingChange={onSettingChange}
-            setPlaybackRange={setPlaybackRange}/>}
+        {showSettings && <PlaybackSettings />}
         <Toolbar
             btnDefaultProps={{
                 className: 'square-button-md',

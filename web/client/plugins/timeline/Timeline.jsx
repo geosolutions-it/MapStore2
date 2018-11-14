@@ -9,7 +9,7 @@ const { connect } = require('react-redux');
 const { isString, differenceBy, trim } = require('lodash');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
 const { selectTime, selectOffset, selectLayer, onRangeChanged } = require('../../actions/timeline');
-const { itemsSelector, loadingSelector, selectedLayerSelector, calculateOffsetTimeSelector } = require('../../selectors/timeline');
+const { itemsSelector, rangeSelector, loadingSelector, selectedLayerSelector, calculateOffsetTimeSelector } = require('../../selectors/timeline');
 const { selectPlaybackRange } = require('../../actions/playback');
 const { playbackRangeSelector } = require('../../selectors/playback');
 const { createStructuredSelector, createSelector } = require('reselect');
@@ -21,10 +21,16 @@ const moment = require('moment');
 const layerData = compose(
     connect(
         createSelector(
+            rangeSelector,
             itemsSelector,
             layersWithTimeDataSelector,
             loadingSelector,
-            (items, layers, loading) => ({ items, layers, loading })
+            (viewRange, items, layers, loading) => ({
+                viewRange,
+                items,
+                layers,
+                loading
+            })
         )
     ),
     withPropsOnChange(
@@ -177,6 +183,12 @@ const enhance = compose(
             moment: date => moment(date).utc()
         }
     }),
+    withPropsOnChange(['viewRange', 'options'], ({ viewRange = {}, options}) => ({
+        options: {
+            ...options,
+            ...(viewRange)
+        }
+    })),
     // items enhancer
     withPropsOnChange(
         ['items', 'currentTime', 'offsetEnabled', 'calculatedOffsetTime', 'hideLayersName', 'playbackRange', 'playbackEnabled'],
