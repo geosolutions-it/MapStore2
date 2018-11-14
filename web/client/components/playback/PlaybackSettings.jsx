@@ -97,7 +97,7 @@ module.exports = ({
     <FormGroup controlId="formPlaybackStep">
         <Form componentClass="fieldset" inline>
             <ControlLabel><Message msgId="playback.settings.step.fixed" /></ControlLabel>
-            <span><SwitchButton checked={fixedStep} onChange={v => toggleAnimationMode()} /></span>
+            <span><SwitchButton checked={fixedStep} onChange={() => toggleAnimationMode()} /></span>
             <FormControl
                 disabled={!fixedStep}
                 componentClass="input"
