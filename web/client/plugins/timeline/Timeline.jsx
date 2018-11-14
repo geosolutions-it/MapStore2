@@ -155,7 +155,7 @@ const clickHandleEnhancer = withHandlers({
                 const target = event && event.target && event.target.closest('.vis-custom-time');
                 const className = target && target.getAttribute('class');
                 const timeId = className && trim(className.replace('vis-custom-time', ''));
-                if (!mouseEventProps.timeId && time && !offsetEnabled && timeId !== "startPlaybackTime" || timeId !== "endPlaybackTime" ) setCurrentTime(time.toISOString(), group || selectedLayer);
+                if (!mouseEventProps.timeId && time && !offsetEnabled && timeId !== "startPlaybackTime" && timeId !== "endPlaybackTime" ) setCurrentTime(time.toISOString(), group || selectedLayer);
                 break;
             }
         }
