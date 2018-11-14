@@ -7,7 +7,7 @@
  */
 const { connect } = require('react-redux');
 const { isString, differenceBy, trim } = require('lodash');
-const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
+const { currentTimeSelector, layersWithTimeDataSelector, offsetTimeSelector } = require('../../selectors/dimension');
 const { selectTime, selectLayer, onRangeChanged, setMouseEventData } = require('../../actions/timeline');
 const { itemsSelector, loadingSelector, selectedLayerSelector, mouseEventSelector, currentTimeRangeSelector } = require('../../selectors/timeline');
 const { setCurrentOffset } = require('../../actions/dimension');
@@ -65,9 +65,11 @@ const currentTimeEnhancer = compose(
         createSelector(
             currentTimeSelector,
             currentTimeRangeSelector,
-            (current, range) => ({
+            offsetTimeSelector,
+            (current, range, currentOffset) => ({
                         currentTime: current,
-                        currentTimeRange: range
+                        currentTimeRange: range,
+                        currentOffseTime: currentOffset
             })
         ),
         {
@@ -150,7 +152,10 @@ const clickHandleEnhancer = withHandlers({
                 break;
             }
             default: {
-                if (!mouseEventProps.timeId && !offsetEnabled && time) setCurrentTime(time.toISOString(), group || selectedLayer);
+                const target = event && event.target && event.target.closest('.vis-custom-time');
+                const className = target && target.getAttribute('class');
+                const timeId = className && trim(className.replace('vis-custom-time', ''));
+                if (!mouseEventProps.timeId && time && !offsetEnabled && timeId !== "startPlaybackTime" && timeId !== "endPlaybackTime" ) setCurrentTime(time.toISOString(), group || selectedLayer);
                 break;
             }
         }
@@ -258,7 +263,7 @@ const enhance = compose(
     }),
     // items enhancer
     withPropsOnChange(
-        ['items', 'currentTime', 'offsetEnabled', 'hideLayersName', 'playbackRange', 'playbackEnabled', 'selectedLayer'],
+        ['items', 'currentTime', 'offsetEnabled', 'hideLayersName', 'playbackRange', 'playbackEnabled', 'selectedLayer', 'currentTimeRange', 'currentOffsetTime'],
         ({
             currentTimeRange,
             items,
@@ -285,12 +290,12 @@ const enhance = compose(
     ),
     // custom times enhancer
     withPropsOnChange(
-        ['currentTime', 'playbackRange', 'playbackEnabled', 'offsetEnabled', 'currentTimeRange'],
-        ({ currentTime, playbackRange, playbackEnabled, offsetEnabled, currentTimeRange }) => ({
+        ['currentTime', 'playbackRange', 'playbackEnabled', 'offsetEnabled', 'currentTimeRange', 'currentOffsetTime'],
+        ({ currentTime, playbackRange, playbackEnabled, offsetEnabled, currentTimeRange, currentOffseTime }) => ({
             customTimes: {
             ...[(currentTime ? {currentTime: currentTime } : {}),
                 (playbackEnabled ? playbackRange : {}),
-                (offsetEnabled ? { offsetTime: currentTimeRange.end } : {})]
+                (offsetEnabled ? { offsetTime: currentTimeRange.end || currentOffseTime } : {})]
                 .reduce((res, value) => value ? { ...res, ...value } : { ...res }, {})
         }
         })
