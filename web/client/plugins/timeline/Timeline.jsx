@@ -7,9 +7,11 @@
  */
 const { connect } = require('react-redux');
 const { isString, differenceBy, trim } = require('lodash');
-const { currentTimeSelector, layersWithTimeDataSelector, offsetTimeSelector } = require('../../selectors/dimension');
+const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
+
+
 const { selectTime, selectLayer, onRangeChanged, setMouseEventData } = require('../../actions/timeline');
-const { itemsSelector, loadingSelector, selectedLayerSelector, mouseEventSelector, currentTimeRangeSelector } = require('../../selectors/timeline');
+const { itemsSelector, loadingSelector, selectedLayerSelector, mouseEventSelector, currentTimeRangeSelector, rangeSelector } = require('../../selectors/timeline');
 const { setCurrentOffset } = require('../../actions/dimension');
 const { selectPlaybackRange } = require('../../actions/playback');
 const { playbackRangeSelector } = require('../../selectors/playback');
@@ -24,10 +26,16 @@ const isValidOffset = (start, end) => moment(end).diff(start) > 0;
 const layerData = compose(
     connect(
         createSelector(
+            rangeSelector,
             itemsSelector,
             layersWithTimeDataSelector,
             loadingSelector,
-            (items, layers, loading) => ({ items, layers, loading })
+            (viewRange, items, layers, loading) => ({
+                viewRange,
+                items,
+                layers,
+                loading
+            })
         )
     ),
     withPropsOnChange(
@@ -65,11 +73,9 @@ const currentTimeEnhancer = compose(
         createSelector(
             currentTimeSelector,
             currentTimeRangeSelector,
-            offsetTimeSelector,
-            (current, range, currentOffset) => ({
+            (current, range) => ({
                         currentTime: current,
-                        currentTimeRange: range,
-                        currentOffseTime: currentOffset
+                        currentTimeRange: range
             })
         ),
         {
@@ -261,6 +267,12 @@ const enhance = compose(
             moment: date => moment(date).utc()
         }
     }),
+    withPropsOnChange(['viewRange', 'options'], ({ viewRange = {}, options}) => ({
+        options: {
+            ...options,
+            ...(viewRange)
+        }
+    })),
     // items enhancer
     withPropsOnChange(
         ['items', 'currentTime', 'offsetEnabled', 'hideLayersName', 'playbackRange', 'playbackEnabled', 'selectedLayer', 'currentTimeRange', 'currentOffsetTime'],
@@ -273,13 +285,13 @@ const enhance = compose(
         }) => ({
             items: [
                 ...items,
-                playbackEnabled ? {
+                playbackEnabled && playbackRange && playbackRange.startPlaybackTime !== undefined && playbackRange.endPlaybackTime !== undefined ? {
                     id: 'playback-range',
                     ...getStartEnd(playbackRange.startPlaybackTime, playbackRange.endPlaybackTime),
                     type: 'background',
                     className: 'ms-playback-range'
                 } : null,
-                offsetEnabled ? {
+                offsetEnabled && playbackRange && playbackRange.startPlaybackTime !== undefined && playbackRange.endPlaybackTime !== undefined ? {
                     id: 'current-range',
                     ...getStartEnd(currentTimeRange.start, currentTimeRange.end),
                     type: 'background',
@@ -290,12 +302,12 @@ const enhance = compose(
     ),
     // custom times enhancer
     withPropsOnChange(
-        ['currentTime', 'playbackRange', 'playbackEnabled', 'offsetEnabled', 'currentTimeRange', 'currentOffsetTime'],
-        ({ currentTime, playbackRange, playbackEnabled, offsetEnabled, currentTimeRange, currentOffseTime }) => ({
+        ['currentTime', 'playbackRange', 'playbackEnabled', 'offsetEnabled', 'currentTimeRange'],
+        ({ currentTime, playbackRange, playbackEnabled, offsetEnabled, currentTimeRange }) => ({
             customTimes: {
             ...[(currentTime ? {currentTime: currentTime } : {}),
                 (playbackEnabled ? playbackRange : {}),
-                (offsetEnabled ? { offsetTime: currentTimeRange.end || currentOffseTime } : {})]
+                (offsetEnabled && currentTimeRange ? { offsetTime: currentTimeRange.end } : {})]
                 .reduce((res, value) => value ? { ...res, ...value } : { ...res }, {})
         }
         })

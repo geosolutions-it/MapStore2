@@ -10,10 +10,9 @@ const React = require('react');
 const assign = require('object-assign');
 const { defaultProps, compose } = require('recompose');
 const {createSelector} = require('reselect');
-const { play, pause, stop, STATUS, selectPlaybackRange, changeSetting } = require('../actions/playback');
+const { play, pause, stop, STATUS } = require('../actions/playback');
 const {currentTimeSelector} = require('../selectors/dimension');
-const {selectedLayerSelector} = require('../selectors/timeline');
-const { statusSelector, loadingSelector, playbackRangeSelector, playbackSettingsSelector } = require('../selectors/playback');
+const { statusSelector, loadingSelector } = require('../selectors/playback');
 
 const { connect } = require('react-redux');
 
@@ -23,29 +22,21 @@ const Playback = compose(
     }),
     connect(
         createSelector(
-            selectedLayerSelector,
             statusSelector,
             currentTimeSelector,
             loadingSelector,
-            playbackRangeSelector,
-            playbackSettingsSelector,
-            (selectedLayer, status, currentTime, loading, playbackRange, settings) => ({
-                selectedLayer,
+            (status, currentTime, loading) => ({
                 loading,
                 currentTime,
-                status,
-                playbackRange,
-                settings
+                status
             })
         ), {
             play,
             pause,
-            stop,
-            setPlaybackRange: selectPlaybackRange,
-            onSettingChange: changeSetting
+            stop
         }
     )
-)(require('../components/playback/Playback'));
+)(require('./playback/Playback'));
 
 class PlaybackPlugin extends React.Component {
     render() {

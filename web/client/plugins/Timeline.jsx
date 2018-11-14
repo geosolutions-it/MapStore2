@@ -13,6 +13,7 @@ const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('../components/time/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
+
 const { offsetEnabledSelector, selectedLayerSelector, currentTimeRangeSelector } = require('../selectors/timeline');
 const { withState, compose, branch, renderNothing } = require('recompose');
 const { selectTime, enableOffset, selectOffset } = require('../actions/timeline');
@@ -57,7 +58,6 @@ const TimelinePlugin = compose(
     withState('options', 'setOptions', {collapsed: true})
 )(
     ({
-        selectedLayer,
         items,
         options,
         setOptions,
@@ -99,9 +99,7 @@ const TimelinePlugin = compose(
                 }} />}
 
             <div className="timeline-plugin-toolbar">
-
-                {offsetEnabled ?
-
+                {offsetEnabled && currentTimeRange ?
                     <InlineDateTimeSelector
                         glyph={'range-end'}
                         tooltip="Offset time"
@@ -133,10 +131,8 @@ const TimelinePlugin = compose(
                             active: offsetEnabled,
                             tooltip: offsetEnabled ? 'Disable current time with offset' : 'Enable current time with offset',
                             onClick: () => {
-                                if (selectedLayer) {
-                                    onOffsetEnabled(!offsetEnabled);
-                                    setOptions({ ...options, playbackEnabled: false });
-                                }
+                                onOffsetEnabled(!offsetEnabled);
+                                setOptions({ ...options, playbackEnabled: false });
 
                             }
                         },
@@ -147,12 +143,9 @@ const TimelinePlugin = compose(
                             active: playbackEnabled,
                             visible: !!Playback,
                             onClick: () => {
-                                if (selectedLayer) {
-                                    onOffsetEnabled(false);
-                                    setOptions({ ...options, playbackEnabled: !playbackEnabled });
-                                    setPlaybackRange(playbackRange);
-                                }
-
+                                onOffsetEnabled(false);
+                                setOptions({ ...options, playbackEnabled: !playbackEnabled });
+                                setPlaybackRange(playbackRange);
                             }
                         }
                     ]} />
