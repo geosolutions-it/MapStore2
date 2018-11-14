@@ -64,7 +64,7 @@ const createAnimationValues = (getState, { fromValue } = {}) => {
     }
     for (let i = 0; i < BUFFER_SIZE; i++) {
         currentTime = moment(currentTime).add(interval);
-        if (!endPlaybackTime || currentTime <= endPlaybackTime) {
+        if (!endPlaybackTime || currentTime.isBefore(endPlaybackTime)) {
             values.push(currentTime.toISOString());
         } else {
             break;
