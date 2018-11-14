@@ -130,16 +130,16 @@ const selectedLayerUrl = state => selectedLayerData(state) && selectedLayerData(
 
 const mouseEventSelector = state => get(state, "timeline.mouseEvent");
 
-const currentTimeRange = state => {
+const currentTimeRangeSelector = state => {
     const layerID = selectedLayerSelector(state);
     const dataRange = layerDimensionRangeSelector(state, layerID);
     const time = currentTimeSelector(state);
     const offsetTime = offsetTimeSelector(state);
-    return dataRange && { startTimeLineRange: time && time || dataRange.start, endTimeLineRange: offsetTime ? offsetTime : dataRange.end };
+    return dataRange && { start: time && time || dataRange.start, end: offsetTime ? offsetTime : dataRange.end };
 };
 
 module.exports = {
-    currentTimeRange,
+    currentTimeRangeSelector,
     mouseEventSelector,
     itemsSelector,
     rangeSelector,

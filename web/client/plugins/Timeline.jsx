@@ -13,7 +13,7 @@ const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('../components/time/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
-const { offsetEnabledSelector, selectedLayerSelector, currentTimeRange } = require('../selectors/timeline');
+const { offsetEnabledSelector, selectedLayerSelector, currentTimeRangeSelector } = require('../selectors/timeline');
 const { withState, compose, branch, renderNothing } = require('recompose');
 const { selectTime, enableOffset, selectOffset } = require('../actions/timeline');
 const { selectPlaybackRange } = require('../actions/playback');
@@ -36,14 +36,14 @@ const TimelinePlugin = compose(
             layersWithTimeDataSelector,
             selectedLayerSelector,
             currentTimeSelector,
-            currentTimeRange,
+            currentTimeRangeSelector,
             offsetEnabledSelector,
             playbackRangeSelector,
-            (layers, selectedLayer, currentTime, customRange, offsetEnabled, playbackRange) => ({
+            (layers, selectedLayer, currentTime, currentTimeRange, offsetEnabled, playbackRange) => ({
                 layers,
                 selectedLayer,
                 currentTime,
-                customRange,
+                currentTimeRange,
                 offsetEnabled,
                 playbackRange
             })
@@ -65,7 +65,7 @@ const TimelinePlugin = compose(
         setCurrentTime,
         offsetEnabled,
         onOffsetEnabled,
-        customRange,
+        currentTimeRange,
         setOffset,
         playbackRange,
         setPlaybackRange
@@ -89,8 +89,8 @@ const TimelinePlugin = compose(
             {offsetEnabled && <InlineDateTimeSelector
                 glyph="range-start"
                 tooltip="timeline.currentTime"
-                date={currentTime || customRange && customRange.startTimeLineRange}
-                onUpdate={start => isValidOffset(start, customRange.endTimeLineRange) && setCurrentTime(start)}
+                date={currentTime || currentTimeRange && currentTimeRange.start}
+                onUpdate={start => isValidOffset(start, currentTimeRange.end) && setCurrentTime(start)}
                 className="shadow-soft"
                 style={{
                     position: 'absolute',
@@ -105,13 +105,13 @@ const TimelinePlugin = compose(
                     <InlineDateTimeSelector
                         glyph={'range-end'}
                         tooltip="Offset time"
-                        date={customRange.endTimeLineRange}
+                        date={currentTimeRange.end}
                         onUpdate={end => isValidOffset(currentTime, end) && setOffset(end)} /> :
                     <InlineDateTimeSelector
                         glyph={'time-current'}
                         tooltip="timeline.currentTime"
-                        date={currentTime || customRange && customRange.startTimeLineRange}
-                        onUpdate={start => isValidOffset(start, customRange.endTimeLineRange) && setCurrentTime(start)} />}
+                        date={currentTime || currentTimeRange && currentTimeRange.start}
+                        onUpdate={start => isValidOffset(start, currentTimeRange.end) && setCurrentTime(start)} />}
 
                 <Toolbar
                     btnDefaultProps={{
