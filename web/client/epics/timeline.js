@@ -3,13 +3,13 @@ const Rx = require('rxjs');
 const {isString, get, head, castArray} = require('lodash');
 const moment = require('moment');
 
-const { SELECT_TIME, RANGE_CHANGED, timeDataLoading, rangeDataLoaded } = require('../actions/timeline');
-const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA } = require('../actions/dimension');
+const { SELECT_TIME, RANGE_CHANGED, ENABLE_OFFSET, timeDataLoading, rangeDataLoaded } = require('../actions/timeline');
+const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } = require('../actions/dimension');
 
 
 const {getLayerFromId} = require('../selectors/layers');
-const { rangeSelector, offsetEnabledSelector, offsetTimeSelector, selectedLayerName, selectedLayerUrl } = require('../selectors/timeline');
-const { layerTimeSequenceSelectorCreator, timeDataSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
+const { rangeSelector, offsetEnabledSelector, selectedLayerName, selectedLayerUrl } = require('../selectors/timeline');
+const { layerTimeSequenceSelectorCreator, timeDataSelector, layersWithTimeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
 
 const { getNearestDate, roundRangeResolution, isTimeDomainInterval } = require('../utils/TimeUtils');
 const { getHistogram, describeDomains, getDomainValues } = require('../api/MultiDim');
@@ -162,7 +162,26 @@ module.exports = {
             }
             return Rx.Observable.of(setCurrentTime(getTimestamp(time, offsetEnabled, state)));
         }),
-    /**
+     /**
+     * When offset is initiated this epic sets both initial current time and offset if any does not exist
+     */
+    settingInitialOffsetValue: (action$, {getState = () => {}} = {}) =>
+        action$.ofType(ENABLE_OFFSET)
+        .switchMap( (action) => {
+            const state = getState();
+            const time = currentTimeSelector(state);
+            const {start, end} = rangeSelector(state);
+            const currentOffset = offsetTimeSelector(state);
+            const rangeDistance = moment(end).diff(start);
+            let currentMoment = moment(start).add(rangeDistance / 2 ).toISOString();
+
+            const initialOffsetTime = moment(time ? time : currentMoment).add(rangeDistance / 5);
+            let setTime = action.enabled && !time ? Rx.Observable.of(setCurrentTime(currentMoment)) : Rx.Observable.empty();
+            let setOff = action.enabled && !currentOffset || action.enabled && moment(currentOffset).diff(time) < 0 ? Rx.Observable.of(setCurrentOffset(initialOffsetTime.toISOString()))
+            : Rx.Observable.empty();
+            return setTime.concat(setOff);
+        }),
+         /**
      * Update the time data when the timeline range changes, or when the layer dimension data is
      * updated (for instance when a layer is added to the map)
      */

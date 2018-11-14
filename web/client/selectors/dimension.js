@@ -38,6 +38,7 @@ const currentTimeSelector = state => {
     return currentTime && currentTime.split('/')[0];
 };
 
+const offsetTimeSelector = state => get(state, 'dimension.offsetTime');
 // get times sorted by date
 const timeSequenceSelector = createSelector(
     timeDataSelector,
@@ -59,11 +60,24 @@ const layerTimeSequenceSelectorCreator =
     layer =>
         state =>
             [...get(layerDimensionSelectorCreator(layer, "time")(state), "values", [])].sort();
+
+const layerDimensionRangeSelector = (state, layerId) => {
+    const timeRange = layerDimensionDataSelectorCreator(layerId, "time")(state);
+    const dataRange = timeRange && timeRange.domain && timeRange.domain.split('--');
+
+    return dataRange && {
+            start: dataRange[0],
+            end: dataRange[1]
+    };
+};
+
 module.exports = {
+    layerDimensionRangeSelector,
     layerDimensionDataSelectorCreator,
     layerTimeSequenceSelectorCreator,
     timeSequenceSelector,
     currentTimeSelector,
     layersWithTimeDataSelector,
-    timeDataSelector
+    timeDataSelector,
+    offsetTimeSelector
 };
