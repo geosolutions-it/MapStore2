@@ -9,6 +9,7 @@ const { connect } = require('react-redux');
 const { isString, differenceBy, trim } = require('lodash');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
 
+
 const { selectTime, selectLayer, onRangeChanged, setMouseEventData } = require('../../actions/timeline');
 const { itemsSelector, loadingSelector, selectedLayerSelector, mouseEventSelector, currentTimeRangeSelector, rangeSelector } = require('../../selectors/timeline');
 const { setCurrentOffset } = require('../../actions/dimension');
@@ -274,7 +275,7 @@ const enhance = compose(
     })),
     // items enhancer
     withPropsOnChange(
-        ['items', 'currentTime', 'offsetEnabled', 'hideLayersName', 'playbackRange', 'playbackEnabled', 'selectedLayer'],
+        ['items', 'currentTime', 'offsetEnabled', 'hideLayersName', 'playbackRange', 'playbackEnabled', 'selectedLayer', 'currentTimeRange', 'currentOffsetTime'],
         ({
             currentTimeRange,
             items,
