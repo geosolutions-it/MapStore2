@@ -13,7 +13,7 @@ const {
     framesLoading
 } = require('../actions/playback');
 const {
-    setCurrentTime, SET_CURRENT_TIME
+    moveTime, SET_CURRENT_TIME, MOVE_TIME, SET_OFFSET_TIME
 } = require('../actions/dimension');
 const {
     selectLayer,
@@ -116,10 +116,10 @@ module.exports = {
     updateCurrentTimeFromAnimation: (action$, { getState = () => { } } = {}) =>
         action$.ofType(SET_CURRENT_FRAME)
             .map(() => currentFrameValueSelector(getState()))
-            .map(t => t ? setCurrentTime(t) : stop()),
+            .map(t => t ? moveTime(t) : stop()),
     timeDimensionPlayback: (action$, { getState = () => { } } = {}) =>
         action$.ofType(SET_FRAMES).exhaustMap(() =>
-            Rx.Observable.interval(frameDurationSelector(getState()) * 1000)
+            Rx.Observable.interval(frameDurationSelector(getState()) * 1000).startWith(0) // start immediately
                 .let(pausable(
                     action$
                         .ofType(PLAY, PAUSE)
@@ -155,7 +155,7 @@ module.exports = {
      */
     playbackFollowCursor: (action$, { getState = () => { } } = {}) =>
         action$
-            .ofType(SET_CURRENT_TIME)
+            .ofType(SET_CURRENT_TIME, MOVE_TIME, SET_OFFSET_TIME)
             .filter(() => statusSelector(getState()) === STATUS.PLAY && isOutOfRange(currentTimeSelector(getState()), rangeSelector(getState())))
             .switchMap(() => Rx.Observable.of(
                 onRangeChanged(

@@ -12,11 +12,12 @@ const { createSelector } = require('reselect');
 const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('../components/time/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
-const { currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
-
-const { offsetEnabledSelector, selectedLayerSelector, currentTimeRangeSelector } = require('../selectors/timeline');
+const { offsetEnabledSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
+const { selectedLayerSelector, currentTimeRangeSelector } = require('../selectors/timeline');
 const { withState, compose, branch, renderNothing } = require('recompose');
-const { selectTime, enableOffset, selectOffset } = require('../actions/timeline');
+const { selectTime, enableOffset } = require('../actions/timeline');
+const { setCurrentOffset } = require('../actions/dimension');
+
 const { selectPlaybackRange } = require('../actions/playback');
 const { playbackRangeSelector } = require('../selectors/playback');
 
@@ -51,7 +52,7 @@ const TimelinePlugin = compose(
         ), {
             setCurrentTime: selectTime,
             onOffsetEnabled: enableOffset,
-            setOffset: selectOffset,
+            setOffset: setCurrentOffset,
             setPlaybackRange: selectPlaybackRange
         }),
     branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
@@ -86,7 +87,8 @@ const TimelinePlugin = compose(
             }}
             className={`timeline-plugin${hideLayersName ? ' hide-layers-name' : ''}${offsetEnabled ? ' with-time-offset' : ''}`}>
 
-            {offsetEnabled && <InlineDateTimeSelector
+            {offsetEnabled // if range is present and configured, show the floating start point.
+                && <InlineDateTimeSelector
                 glyph="range-start"
                 tooltip="timeline.currentTime"
                 date={currentTime || currentTimeRange && currentTimeRange.start}
@@ -99,12 +101,14 @@ const TimelinePlugin = compose(
                 }} />}
 
             <div className="timeline-plugin-toolbar">
-                {offsetEnabled && currentTimeRange ?
-                    <InlineDateTimeSelector
+                {offsetEnabled && currentTimeRange
+                    // if range enabled, show time end in the timeline
+                    ? <InlineDateTimeSelector
                         glyph={'range-end'}
                         tooltip="Offset time"
                         date={currentTimeRange.end}
-                        onUpdate={end => isValidOffset(currentTime, end) && setOffset(end)} /> :
+                        onUpdate={end => isValidOffset(currentTime, end) && setOffset(end)} />
+                    : // show current time if using single time
                     <InlineDateTimeSelector
                         glyph={'time-current'}
                         tooltip="timeline.currentTime"
@@ -132,7 +136,6 @@ const TimelinePlugin = compose(
                             tooltip: offsetEnabled ? 'Disable current time with offset' : 'Enable current time with offset',
                             onClick: () => {
                                 onOffsetEnabled(!offsetEnabled);
-                                setOptions({ ...options, playbackEnabled: false });
 
                             }
                         },
@@ -143,7 +146,6 @@ const TimelinePlugin = compose(
                             active: playbackEnabled,
                             visible: !!Playback,
                             onClick: () => {
-                                onOffsetEnabled(false);
                                 setOptions({ ...options, playbackEnabled: !playbackEnabled });
                                 setPlaybackRange(playbackRange);
                             }
