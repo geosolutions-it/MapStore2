@@ -39,6 +39,8 @@ const currentTimeSelector = state => {
 };
 
 const offsetTimeSelector = state => get(state, 'dimension.offsetTime');
+
+const offsetEnabledSelector = state => !!offsetTimeSelector(state);
 // get times sorted by date
 const timeSequenceSelector = createSelector(
     timeDataSelector,
@@ -79,5 +81,6 @@ module.exports = {
     currentTimeSelector,
     layersWithTimeDataSelector,
     timeDataSelector,
-    offsetTimeSelector
+    offsetTimeSelector,
+    offsetEnabledSelector
 };

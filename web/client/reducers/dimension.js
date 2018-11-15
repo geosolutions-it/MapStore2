@@ -1,5 +1,7 @@
-const { UPDATE_LAYER_DIMENSION_DATA, SET_CURRENT_TIME, SET_OFFSET_TIME } = require('../actions/dimension');
+const { UPDATE_LAYER_DIMENSION_DATA, SET_CURRENT_TIME, SET_OFFSET_TIME, MOVE_TIME } = require('../actions/dimension');
 const { set } = require('../utils/ImmutableUtils');
+const moment = require('moment');
+
 
 /**
  * Provide state for current time and dimension info.
@@ -38,6 +40,14 @@ module.exports = (state = {}, action) => {
         }
         case SET_OFFSET_TIME: {
             return set('offsetTime', action.offsetTime, state);
+        }
+        case MOVE_TIME: { // same as SET_CURRENT_TIME, but if offsetTime is defined, it moves it together with time
+            if (state.offsetTime && state.currentTime) {
+                const currentRange = moment(state.offsetTime).diff(state.currentTime);
+                const nextOffsetTime = moment(action.time).add(currentRange);
+                return set(`currentTime`, action.time, set('offsetTime', nextOffsetTime.toISOString(), state));
+            }
+            return set(`currentTime`, action.time, state);
         }
         default:
             return state;

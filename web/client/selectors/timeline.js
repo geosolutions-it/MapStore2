@@ -122,7 +122,6 @@ const calculateOffsetTimeSelector = (state) => {
     const time = currentTimeSelector(state);
     return time && offset && moment(time).add(offset) || time && moment(time).add(1, 'month');
 };
-const offsetEnabledSelector = state => get(state, "timeline.offsetEnabled");
 
 const selectedLayerData = state => getLayerFromId(state, selectedLayerSelector(state));
 const selectedLayerName = state => selectedLayerData(state) && selectedLayerData(state).name;
@@ -131,11 +130,9 @@ const selectedLayerUrl = state => selectedLayerData(state) && selectedLayerData(
 const mouseEventSelector = state => get(state, "timeline.mouseEvent");
 
 const currentTimeRangeSelector = state => {
-    const layerID = selectedLayerSelector(state);
-    const dataRange = layerDimensionRangeSelector(state, layerID);
-    const time = currentTimeSelector(state);
-    const offsetTime = offsetTimeSelector(state);
-    return dataRange && { start: time && time || dataRange.start, end: offsetTime ? offsetTime : dataRange.end };
+    const start = currentTimeSelector(state);
+    const end = offsetTimeSelector(state);
+    return start && end && {start, end};
 };
 
 module.exports = {
@@ -145,7 +142,6 @@ module.exports = {
     rangeSelector,
     loadingSelector,
     selectedLayerSelector,
-    offsetEnabledSelector,
     calculateOffsetTimeSelector,
     selectedLayerName,
     selectedLayerUrl

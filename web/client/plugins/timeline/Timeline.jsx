@@ -267,13 +267,14 @@ const enhance = compose(
             moment: date => moment(date).utc()
         }
     }),
+    // add view range to the options, to sync current range with state one and allow to control it
     withPropsOnChange(['viewRange', 'options'], ({ viewRange = {}, options}) => ({
         options: {
             ...options,
-            ...(viewRange)
+            ...(viewRange) // TODO: if the new view range is very far from the current one, the animation takes a lot. We should allow also to disable animation (animation: false in the options)
         }
     })),
-    // items enhancer
+    // items enhancer. Add background items for playback and time ranges
     withPropsOnChange(
         ['items', 'currentTime', 'offsetEnabled', 'hideLayersName', 'playbackRange', 'playbackEnabled', 'selectedLayer', 'currentTimeRange'],
         ({
