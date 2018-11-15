@@ -97,7 +97,11 @@ module.exports = ({
     <FormGroup controlId="formPlaybackStep">
         <Form componentClass="fieldset" inline>
             <ControlLabel><Message msgId="playback.settings.step.fixed" /></ControlLabel>
+<<<<<<< HEAD
             <span><SwitchButton checked={fixedStep} onChange={v => toggleAnimationMode()} /></span>
+=======
+            <span><SwitchButton checked={fixedStep} onChange={() => toggleAnimationMode()} /></span>
+>>>>>>> upstream/c127_geonode_integration
             <FormControl
                 disabled={!fixedStep}
                 componentClass="input"
