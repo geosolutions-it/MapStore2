@@ -9,6 +9,7 @@ const SET_CURRENT_FRAME = "PLAYBACK:SET_CURRENT_FRAME";
 const SELECT_PLAYBACK_RANGE = "PLAYBACK:SELECT_PLAYBACK_RANGE";
 
 const CHANGE_SETTING = "PLAYBACK:SETTINGS_CHANGE";
+const TOGGLE_ANIMATION_MODE = "PLAYBACK:TOGGLE_ANIMATION_MODE";
 
 const STATUS = {
     PLAY: "PLAY",
@@ -25,6 +26,7 @@ const appendFrames = (frames) => ({ type: APPEND_FRAMES, frames});
 const framesLoading = loading => ({ type: FRAMES_LOADING, loading});
 const selectPlaybackRange = range => ({ type: SELECT_PLAYBACK_RANGE, range});
 const changeSetting = (name, value) => ({type: CHANGE_SETTING, name, value });
+const toggleAnimationMode = () => ({type: TOGGLE_ANIMATION_MODE});
 
 module.exports = {
     play,
@@ -36,6 +38,7 @@ module.exports = {
     setCurrentFrame,
     selectPlaybackRange,
     changeSetting,
+    toggleAnimationMode,
     PLAY,
     PAUSE,
     STOP,
@@ -45,5 +48,6 @@ module.exports = {
     FRAMES_LOADING,
     SET_CURRENT_FRAME,
     SELECT_PLAYBACK_RANGE,
-    CHANGE_SETTING
+    CHANGE_SETTING,
+    TOGGLE_ANIMATION_MODE
 };

@@ -1,5 +1,5 @@
 const { RANGE_CHANGED } = require('../actions/timeline');
-const { RANGE_DATA_LOADED, LOADING, SELECT_LAYER, ENABLE_OFFSET, SELECT_OFFSET } = require('../actions/timeline');
+const { RANGE_DATA_LOADED, LOADING, SELECT_LAYER, ENABLE_OFFSET, SELECT_OFFSET, MOUSE_EVENT } = require('../actions/timeline');
 const { set } = require('../utils/ImmutableUtils');
 
 
@@ -69,6 +69,9 @@ module.exports = (state = {}, action) => {
         }
         case ENABLE_OFFSET: {
             return set('offsetEnabled', action.enabled, state);
+        }
+        case MOUSE_EVENT: {
+            return set('mouseEvent', action.eventData, state);
         }
         default:
             return state;

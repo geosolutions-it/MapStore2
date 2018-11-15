@@ -1,4 +1,4 @@
-const { UPDATE_LAYER_DIMENSION_DATA, SET_CURRENT_TIME } = require('../actions/dimension');
+const { UPDATE_LAYER_DIMENSION_DATA, SET_CURRENT_TIME, SET_OFFSET_TIME } = require('../actions/dimension');
 const { set } = require('../utils/ImmutableUtils');
 
 /**
@@ -35,6 +35,9 @@ module.exports = (state = {}, action) => {
         }
         case SET_CURRENT_TIME: {
             return set(`currentTime`, action.time, state);
+        }
+        case SET_OFFSET_TIME: {
+            return set('offsetTime', action.offsetTime, state);
         }
         default:
             return state;

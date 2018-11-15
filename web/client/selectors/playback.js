@@ -7,9 +7,10 @@
 */
 
 const { selectedLayerSelector } = require('../selectors/timeline');
-const {layerDimensionDataSelectorCreator} = require('../selectors/dimension');
+const { layerDimensionRangeSelector } = require('../selectors/dimension');
 
 const playbackSettingsSelector = state => state && state.playback && state.playback.settings;
+const frameDurationSelector = state => ((playbackSettingsSelector(state) || {}).frameDuration || 5); // seconds
 const statusSelector = state => state && state.playback && state.playback.status;
 const framesSelector = state => state && state.playback && state.playback.frames;
 const lastFrameSelector = state => {
@@ -22,16 +23,14 @@ const currentFrameSelector = state => state && state.playback && state.playback.
 const range = state => state && state.playback && state.playback.playbackRange;
 const playbackRangeSelector = state => {
     const layerID = selectedLayerSelector(state);
-    const timeRange = layerDimensionDataSelectorCreator(layerID, "time")(state);
-    const dataRange = timeRange && timeRange.domain && timeRange.domain.split('--');
-    return range(state) || dataRange && {
-        startPlaybackTime: dataRange[0],
-        endPlaybackTime: dataRange[1]
-    };
+    const dataRange = layerDimensionRangeSelector(state, layerID);
+    return range(state) || dataRange && { startPlaybackTime: dataRange.start, endPlaybackTime: dataRange.end };
 };
+
 const currentFrameValueSelector = state => (framesSelector(state) || [])[currentFrameSelector(state)];
 module.exports = {
     playbackSettingsSelector,
+    frameDurationSelector,
     statusSelector,
     loadingSelector,
     lastFrameSelector,
