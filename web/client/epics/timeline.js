@@ -186,11 +186,11 @@ module.exports = {
                 const currentOffset = offsetTimeSelector(state);
                 const rangeDistance = moment(end).diff(start);
                 // Set current moment, if not set yet, to current viewport center. otherwise, it is set to now.
-                let currentMoment = currentViewRange ? moment(start).add(rangeDistance / 2).toISOString() : moment(new Date());
+                let currentMoment = currentViewRange ? moment(start).add(rangeDistance / 2).toISOString() : moment(new Date()).toISOString();
 
                 const initialOffsetTime = moment(time ? time : currentMoment).add(rangeDistance / RATIO);
-                let setTime = action.enabled && !time ? Rx.Observable.of(setCurrentTime(currentMoment.toISOString())) : Rx.Observable.empty();
-                let setOff = action.enabled && !currentOffset || action.enabled && moment(currentOffset.toISOString()).diff(time) < 0 ? Rx.Observable.of(setCurrentOffset(initialOffsetTime.toISOString()))
+                let setTime = action.enabled && !time ? Rx.Observable.of(setCurrentTime(currentMoment)) : Rx.Observable.empty();
+                let setOff = action.enabled && !currentOffset || action.enabled && moment(currentOffset).diff(time) < 0 ? Rx.Observable.of(setCurrentOffset(initialOffsetTime.toISOString()))
                     : Rx.Observable.empty();
                 const centerToCurrentViewRange = currentViewRange ? Rx.Observable.empty() : Rx.Observable.of(
                     onRangeChanged({

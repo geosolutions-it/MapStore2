@@ -248,6 +248,8 @@ const enhance = compose(
     defaultProps({
         key: 'timeline',
         options: {
+            maxHeight: '150px',
+            verticalScroll: true,
             stack: false,
             showMajorLabels: true,
             showCurrentTime: false,
@@ -292,7 +294,7 @@ const enhance = compose(
                     type: 'background',
                     className: 'ms-playback-range'
                 } : null,
-                offsetEnabled && playbackRange && playbackRange.startPlaybackTime !== undefined && playbackRange.endPlaybackTime !== undefined ? {
+                offsetEnabled && currentTimeRange.start !== undefined && currentTimeRange.end !== undefined ? {
                     id: 'current-range',
                     ...getStartEnd(currentTimeRange.start, currentTimeRange.end),
                     type: 'background',
