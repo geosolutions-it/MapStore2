@@ -294,7 +294,7 @@ const enhance = compose(
                     type: 'background',
                     className: 'ms-playback-range'
                 } : null,
-                offsetEnabled && playbackRange && playbackRange.startPlaybackTime !== undefined && playbackRange.endPlaybackTime !== undefined ? {
+                offsetEnabled && currentTimeRange.start !== undefined && currentTimeRange.end !== undefined ? {
                     id: 'current-range',
                     ...getStartEnd(currentTimeRange.start, currentTimeRange.end),
                     type: 'background',
