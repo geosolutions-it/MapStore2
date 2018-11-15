@@ -2,7 +2,7 @@ const { get } = require('lodash');
 const { createShallowSelector } = require('../utils/ReselectUtils');
 const { timeIntervalToSequence, timeIntervalToIntervalSequence, analyzeIntervalInRange, isTimeDomainInterval } = require('../utils/TimeUtils');
 const moment = require('moment');
-const { timeDataSelector, currentTimeSelector, layerDimensionRangeSelector, offsetTimeSelector } = require('../selectors/dimension');
+const { timeDataSelector, currentTimeSelector, offsetTimeSelector } = require('../selectors/dimension');
 const {getLayerFromId} = require('../selectors/layers');
 const rangeSelector = state => get(state, 'timeline.range');
 const rangeDataSelector = state => get(state, 'timeline.rangeData');

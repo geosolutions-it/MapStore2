@@ -15,7 +15,9 @@ const Toolbar = require('../components/misc/toolbar/Toolbar');
 const { offsetEnabledSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
 const { selectedLayerSelector, currentTimeRangeSelector } = require('../selectors/timeline');
 const { withState, compose, branch, renderNothing } = require('recompose');
-const { selectTime, enableOffset, selectOffset } = require('../actions/timeline');
+const { selectTime, enableOffset } = require('../actions/timeline');
+const { setCurrentOffset } = require('../actions/dimension');
+
 const { selectPlaybackRange } = require('../actions/playback');
 const { playbackRangeSelector } = require('../selectors/playback');
 
@@ -50,7 +52,7 @@ const TimelinePlugin = compose(
         ), {
             setCurrentTime: selectTime,
             onOffsetEnabled: enableOffset,
-            setOffset: selectOffset,
+            setOffset: setCurrentOffset,
             setPlaybackRange: selectPlaybackRange
         }),
     branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
