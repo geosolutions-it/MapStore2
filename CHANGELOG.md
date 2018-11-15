@@ -1,16 +1,6 @@
 # Change Log
 
-## [2018.02.02](https://github.com/geosolutions-it/MapStore2/tree/2018.02.02) (2018-11-16)
- 
- - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/tv2018.02.01...v2018.02.02)**
-
- - **[Implemented enhancements](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.02%22+is%3Aclosed+label%3Aenhancement)**
-
- - **[Fixed bugs](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.02%22+is%3Aclosed+label%3Abug)**
-
- - **[Closed issues](https://github.com/geosolutions-it/MapStore2/issues?q=is%3Aissue+milestone%3A%222018.02.02%22+is%3Aclosed)**
- 
-## [2018.02.01](https://github.com/geosolutions-it/MapStore2/tree/2018.02.01) 
+## [2018.02.01](https://github.com/geosolutions-it/MapStore2/tree/2018.02.01) (2018-11-16)
  
  - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/tv2018.02.00...v2018.02.01)**
 
