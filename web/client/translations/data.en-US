@@ -1494,7 +1494,7 @@
                 "title": "Playback Settings",
                 "frameDuration": "Frame Duration",
                 "range": {
-                    "title": "Animation Rage",
+                    "title": "Animation Range",
                     "zoomTooltip": "Zoom to current animation range",
                     "animationStart": "Animation start",
                     "animationEnd": "Animation end"
