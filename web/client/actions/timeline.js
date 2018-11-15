@@ -56,10 +56,11 @@ const SELECT_LAYER = "TIMELINE:SELECT_LAYER";
  */
 const selectLayer = layerId => ({ type: SELECT_LAYER, layerId});
 
-const SELECT_OFFSET = "TIMELINE:SELECT_OFFSET";
-const selectOffset = offset => ({ type: SELECT_OFFSET, offset});
-
 const ENABLE_OFFSET = "TIMELINE:ENABLE_OFFSET";
+/**
+ * Toggles ranged(offset) vs single time mode
+ * @param {boolean} enabled if true, enables ranged mode
+ */
 const enableOffset = enabled => ({ type: ENABLE_OFFSET, enabled});
 
 /**
@@ -83,8 +84,6 @@ module.exports = {
     timeDataLoading,
     SELECT_LAYER,
     selectLayer,
-    SELECT_OFFSET,
-    selectOffset,
     ENABLE_OFFSET,
     enableOffset
 };

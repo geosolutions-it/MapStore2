@@ -3,8 +3,8 @@ const { Observable } = require('rxjs');
 const { updateLayerDimension, changeLayerProperties, ADD_LAYER} = require('../actions/layers');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 
-const { SET_CURRENT_TIME, updateLayerDimensionData} = require('../actions/dimension');
-const { layersWithTimeDataSelector } = require('../selectors/dimension');
+const { SET_CURRENT_TIME, MOVE_TIME, SET_OFFSET_TIME, updateLayerDimensionData} = require('../actions/dimension');
+const { layersWithTimeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
 const {describeDomains} = require('../api/MultiDim');
 const { castArray, pick, find } = require('lodash');
 
@@ -28,8 +28,13 @@ module.exports = {
     /**
      * Sync current time param of the layer with the current time element
      */
-    updateLayerDimensionOnCurrentTimeSelection: action$ =>
-        action$.ofType(SET_CURRENT_TIME).switchMap(({time}) => Observable.of(updateLayerDimension('time', time))),
+    updateLayerDimensionOnCurrentTimeSelection: (action$, { getState = () => { } } = {}) =>
+        action$.ofType(SET_CURRENT_TIME, SET_OFFSET_TIME, MOVE_TIME).switchMap(() => {
+            const currentTime = currentTimeSelector(getState());
+            const offsetTime = offsetTimeSelector(getState());
+            const time = offsetTime ? `${currentTime}/${offsetTime}` : currentTime;
+            return Observable.of(updateLayerDimension('time', time));
+        }),
 
     /**
      * Check the presence of Multidimensional API extension, then setup layers properly.

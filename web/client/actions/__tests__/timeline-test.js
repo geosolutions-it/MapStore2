@@ -15,8 +15,10 @@ const {
     RANGE_DATA_LOADED,
     rangeDataLoaded,
     LOADING,
-    timeDataLoading
- } = require('../timeline');
+    timeDataLoading,
+    ENABLE_OFFSET,
+    enableOffset
+} = require('../timeline');
 
 describe('timeline actions', () => {
     it('onRangeChanged', () => {
@@ -38,5 +40,11 @@ describe('timeline actions', () => {
         const retVal = timeDataLoading();
         expect(retVal).toExist();
         expect(retVal.type).toBe(LOADING);
+    });
+    it('enableOffset', () => {
+        const retval = enableOffset(true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(ENABLE_OFFSET);
+        expect(retval.enabled).toBe(true);
     });
 });
