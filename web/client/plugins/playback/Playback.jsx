@@ -9,11 +9,12 @@
 const React = require('react');
 const { connect } = require('react-redux');
 const {createSelector} = require('reselect');
-const {compose, withState, withProps, lifecycle} = require('recompose');
+const moment = require('moment');
+const { compose, withState, withProps, withHandlers, lifecycle} = require('recompose');
 const { playbackSettingsSelector, playbackRangeSelector} = require('../../selectors/playback');
-const {selectedLayerSelector} = require('../../selectors/timeline');
+const { selectedLayerSelector, rangeSelector, selectedLayerDataRangeSelector} = require('../../selectors/timeline');
 const { selectPlaybackRange, changeSetting, toggleAnimationMode } = require('../../actions/playback');
-
+const { onRangeChanged } = require('../../actions/timeline');
 
 const Toolbar = require('../../components/misc/toolbar/Toolbar');
 
@@ -50,7 +51,52 @@ const PlaybackSettings = compose(
             toggleAnimationMode
     }
 
+    ),
+    // playback buttons
+    compose(
+        connect(createSelector(
+            rangeSelector,
+            selectedLayerDataRangeSelector,
+            (viewRange, layerRange) => ({
+                layerRange,
+                viewRange
+            })
+        ), {
+                moveTo: onRangeChanged
+        }),
+        withHandlers({
+            setPlaybackToCurrentViewRange: ({ viewRange = {}, setPlaybackRange = () => { } }) => () => {
+                if (viewRange.start && viewRange.end) {
+                    setPlaybackRange({
+                        startPlaybackTime: moment(viewRange.start).toISOString(),
+                        endPlaybackTime: moment(viewRange.end).toISOString()
+                    });
+                }
+            },
+            setPlaybackToCurrentLayerDataRange: ({ setPlaybackRange = () => { }, layerRange }) => () => layerRange && setPlaybackRange({
+                startPlaybackTime: layerRange.start,
+                endPlaybackTime: layerRange.end
+            })
+        }),
+        withProps(({ playbackRange, fixedStep, moveTo = () => { }, setPlaybackToCurrentViewRange = () => { }, setPlaybackToCurrentLayerDataRange = () => {} }) => {
+            return {
+                playbackButtons: [{
+                    glyph: "search",
+                    onClick: () => moveTo({start: playbackRange.startPlaybackTime, end: playbackRange.endPlaybackTime})
+                }, {
+                    glyph: "resize-horizontal",
+                    tooltip: "Set to current view range",
+                    onClick: () => setPlaybackToCurrentViewRange()
+                }, {
+                    glyph: "1-layer",
+                    visible: !fixedStep,
+                    tooltip: "Fit to selected layer's range",
+                    onClick: () => setPlaybackToCurrentLayerDataRange()
+                }]
+            };
+        })
     )
+
 )(
     require("../../components/playback/PlaybackSettings")
 );

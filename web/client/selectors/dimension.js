@@ -66,11 +66,21 @@ const layerTimeSequenceSelectorCreator =
 const layerDimensionRangeSelector = (state, layerId) => {
     const timeRange = layerDimensionDataSelectorCreator(layerId, "time")(state);
     const dataRange = timeRange && timeRange.domain && timeRange.domain.split('--');
-
-    return dataRange && {
+    if (dataRange && dataRange.length === 2) {
+        return dataRange && {
             start: dataRange[0],
             end: dataRange[1]
-    };
+        };
+    }
+    const values = timeRange && timeRange.domain && timeRange.domain.split(",");
+    if (values && values.length > 0) {
+        return {
+            start: values[0],
+            end: values[values.length - 1]
+        };
+    }
+
+
 };
 
 module.exports = {
