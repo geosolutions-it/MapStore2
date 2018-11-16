@@ -42,6 +42,11 @@ const BUFFER_SIZE = 20;
 const PRELOAD_BEFORE = 10;
 const toAbsoluteInterval = (start, end) => `${start}/${end}`;
 
+/**
+ * Generates the argument to pass to the getDomainValues service.
+ * @param {function} getState return the state
+ * @param {object} paginationOptions additional options to send to the service. (e.g. `fromValue`)
+ */
 const domainArgs = (getState, paginationOptions = {}) => {
     // const timeData = timeDataSelector(getState()) || {};
     const layerName = selectedLayerName(getState());
@@ -53,6 +58,14 @@ const domainArgs = (getState, paginationOptions = {}) => {
         ...paginationOptions
     }];
 };
+
+/**
+ * Emulates the getDomainValues when user wants to animate with fixed step (e.g. 1 hour)
+ * Returns the stream that emits an array containing the animation steps.
+ *
+ * @param {function} getState returns the state
+ * @param {objects} param1 the options to use. May contain `fromValue`
+ */
 const createAnimationValues = (getState, { fromValue } = {}) => {
     const {
         timeStep,
@@ -160,8 +173,8 @@ module.exports = {
                             getAnimationFrames(getState, {
                                 fromValue: lastFrameSelector(getState())
                             })
-                                .map(appendFrames)
-                                .let(wrapStartStop(framesLoading(true), framesLoading(false)))
+                            .map(appendFrames)
+                            .let(wrapStartStop(framesLoading(true), framesLoading(false)))
                         )
                 )
                 .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))

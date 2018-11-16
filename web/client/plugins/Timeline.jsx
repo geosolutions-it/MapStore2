@@ -67,9 +67,7 @@ const TimelinePlugin = compose(
         offsetEnabled,
         onOffsetEnabled,
         currentTimeRange,
-        setOffset,
-        playbackRange,
-        setPlaybackRange
+        setOffset
     }) => {
 
         const { hideLayersName, collapsed, playbackEnabled } = options;
@@ -147,7 +145,7 @@ const TimelinePlugin = compose(
                             visible: !!Playback,
                             onClick: () => {
                                 setOptions({ ...options, playbackEnabled: !playbackEnabled });
-                                setPlaybackRange(playbackRange);
+
                             }
                         }
                     ]} />

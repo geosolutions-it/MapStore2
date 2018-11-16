@@ -307,12 +307,11 @@ const enhance = compose(
     withPropsOnChange(
         ['currentTime', 'playbackRange', 'playbackEnabled', 'offsetEnabled', 'currentTimeRange'],
         ({ currentTime, playbackRange, playbackEnabled, offsetEnabled, currentTimeRange }) => ({
-            customTimes: {
-            ...[(currentTime ? {currentTime: currentTime } : {}),
-                (playbackEnabled ? playbackRange : {}),
-                (offsetEnabled && currentTimeRange ? { offsetTime: currentTimeRange.end } : {})]
-                .reduce((res, value) => value ? { ...res, ...value } : { ...res }, {})
-        }
+            customTimes: [
+                (currentTime ? {currentTime: currentTime } : {}),
+                (playbackEnabled && playbackRange && playbackRange.startPlaybackTime && playbackRange.endPlaybackTime ? playbackRange : {}),
+                (offsetEnabled && currentTimeRange ? { offsetTime: currentTimeRange.end } : {})
+            ].reduce((res, value) => value ? { ...res, ...value } : { ...res }, {}) // becomes an object
         })
     )
 );
