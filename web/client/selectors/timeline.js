@@ -125,7 +125,8 @@ const calculateOffsetTimeSelector = (state) => {
 
 const selectedLayerData = state => getLayerFromId(state, selectedLayerSelector(state));
 const selectedLayerName = state => selectedLayerData(state) && selectedLayerData(state).name;
-const selectedLayerUrl = state => selectedLayerData(state) && selectedLayerData(state).dimensions && selectedLayerData(state).dimensions.filter((x) => x.name === "time").map((l) => l.source.url);
+const selectedLayerTimeDimensionConfiguration = state => selectedLayerData(state) && selectedLayerData(state).dimensions && selectedLayerData(state).dimensions.filter((x) => x.name === "time");
+const selectedLayerUrl = state => selectedLayerTimeDimensionConfiguration(state).map((l) => l.source.url);
 
 const mouseEventSelector = state => get(state, "timeline.mouseEvent");
 
@@ -143,6 +144,8 @@ module.exports = {
     loadingSelector,
     selectedLayerSelector,
     calculateOffsetTimeSelector,
+    selectedLayerData,
+    selectedLayerTimeDimensionConfiguration,
     selectedLayerName,
     selectedLayerUrl
 };
