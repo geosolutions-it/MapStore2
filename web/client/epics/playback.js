@@ -20,6 +20,8 @@ const {
     onRangeChanged
 } = require('../actions/timeline');
 
+const { changeLayerProperties } = require('../actions/layers');
+
 const { error } = require('../actions/notifications');
 
 const { currentTimeSelector, layersWithTimeDataSelector, layerTimeSequenceSelectorCreator } = require('../selectors/dimension');
@@ -103,7 +105,7 @@ const getAnimationFrames = (getState, { fromValue } = {}) => {
         const values = layerTimeSequenceSelectorCreator(selectedLayerData(getState()))(getState());
         const timeDimConfig = selectedLayerTimeDimensionConfiguration(getState());
         // check if multidim extension is available. It has priority to local values
-        if (timeDimConfig && !timeDimConfig.source && !(timeDimConfig.source.type === "multidim-extension") && values && values.length > 0) {
+        if (get(timeDimConfig, "source.type") !== "multidim-extension" && values && values.length > 0) {
             return filterAnimationValues(values, getState, {fromValue});
         }
         return getDomainValues(...domainArgs(getState, {
@@ -116,7 +118,21 @@ const getAnimationFrames = (getState, { fromValue } = {}) => {
     });
 };
 
-
+/**
+ * Setup animation adding some action before and after the animationEventsStream$
+ * Function returns a a function that operates on the stream (aka pipe-able aka let-table operator)
+ * @param {function} getState returns the current state
+ */
+const setupAnimation = (getState = () => ({})) => animationEventsStream$ => {
+    const layers = layersWithTimeDataSelector(getState());
+    return Rx.Observable.from(
+            layers.map(l => changeLayerProperties(l.id, {singleTile: true}))
+        ).concat(animationEventsStream$)
+        // restore original singleTile configuration
+        .concat(Rx.Observable.from(
+            layers.map(l => changeLayerProperties(l.id, { singleTile: l.singleTile }))
+        ));
+};
 /**
  * Check if a time is in out of the defined range. If range start or end are not defined, returns false.
  */
@@ -131,8 +147,8 @@ module.exports = {
                 .map((frames) => setFrames(frames))
                 .let(wrapStartStop(framesLoading(true), framesLoading(false)), () => Rx.Observable.of(
                     error({
-                        title: "There was an error retriving animation",
-                        message: "Please contact the administrator"
+                        title: "There was an error retriving animation", // TODO: localize
+                        message: "Please contact the administrator" // TODO: localize
                     }),
                     stop()
                 ))
@@ -149,6 +165,7 @@ module.exports = {
                         )
                 )
                 .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
+                .let(setupAnimation(getState))
         ),
     updateCurrentTimeFromAnimation: (action$, { getState = () => { } } = {}) =>
         action$.ofType(SET_CURRENT_FRAME)
@@ -169,7 +186,6 @@ module.exports = {
                     .map(() => setCurrentFrame(currentFrameSelector(getState()) + 1))
                     .concat(Rx.Observable.of(stop()))
                     .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
-
         ),
     /**
      * Synchronizes the fixed animation step toggle with guide layer on timeline
