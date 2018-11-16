@@ -9,7 +9,7 @@ const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } = requir
 
 const {getLayerFromId} = require('../selectors/layers');
 const { rangeSelector, selectedLayerName, selectedLayerUrl } = require('../selectors/timeline');
-const { layerTimeSequenceSelectorCreator, offsetEnabledSelector, timeDataSelector, layersWithTimeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
+const { layerTimeSequenceSelectorCreator, timeDataSelector, layersWithTimeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
 
 const { getNearestDate, roundRangeResolution, isTimeDomainInterval } = require('../utils/TimeUtils');
 const { getHistogram, describeDomains, getDomainValues } = require('../api/MultiDim');
@@ -140,12 +140,6 @@ const loadRangeData = (id, timeData, getState) => {
     });
 };
 
-const getTimestamp = (time, offsetEnabled, state) => {
-    if (!offsetEnabled) return time;
-    const offset = offsetTimeSelector(state);
-    const calculatedOffsetTime = moment(time).add(offset);
-    return time + '/' + calculatedOffsetTime.toISOString();
-};
 
 module.exports = {
     /**
@@ -155,12 +149,11 @@ module.exports = {
         action$.ofType(SELECT_TIME)
         .switchMap( ({time, group}) => {
             const state = getState();
-            const offsetEnabled = offsetEnabledSelector(state);
 
             if (snap && group) {
-                return snapTime(state, group, time).map( t => setCurrentTime(getTimestamp(t, offsetEnabled, state)));
+                return snapTime(state, group, time).map( t => setCurrentTime(t));
             }
-            return Rx.Observable.of(setCurrentTime(getTimestamp(time, offsetEnabled, state)));
+            return Rx.Observable.of(setCurrentTime(time));
         }),
      /**
      * When offset is initiated this epic sets both initial current time and offset if any does not exist

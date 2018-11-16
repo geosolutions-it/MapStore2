@@ -52,9 +52,16 @@ module.exports = {
                     .switchMap( domains => {
                         const dimensions = domainsToDimensionsObject(domains, layer);
                         if (dimensions && dimensions.length > 0) {
+                            /**
+                             * updating the time object in state.layers (from describeDomains),
+                             * while maintaning other dimensions information in state.layer,
+                             * it also creates a list of dimensions (from descibeDomains) in state.dimensions.
+                             *  */
+                            const timeDimensionData = dimensions.filter(d => d.name === 'time').reduce(el => el);
+                            const newDimensions = layer.dimensions.map(dimension => dimension.name === 'time' && timeDimensionData ? timeDimensionData : dimension );
                             return Observable.of(
                                 changeLayerProperties(layer.id, {
-                                    dimensions: dimensions.map(d => pick(d, ['source', 'name']))
+                                    dimensions: newDimensions.map(d => d.name === 'time' ? pick(d, ['source', 'name']) : d )
                                 }),
                                 ...dimensions.map(d => updateLayerDimensionData(layer.id, d.name, d)));
                         }
