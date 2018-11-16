@@ -19,12 +19,15 @@ const {
     selectLayer,
     onRangeChanged
 } = require('../actions/timeline');
-const { currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
+
+const { error } = require('../actions/notifications');
+
+const { currentTimeSelector, layersWithTimeDataSelector, layerTimeSequenceSelectorCreator } = require('../selectors/dimension');
 
 const { LOCATION_CHANGE } = require('react-router-redux');
 
 const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector, playbackRangeSelector, playbackSettingsSelector, frameDurationSelector, statusSelector } = require('../selectors/playback');
-const { selectedLayerName, selectedLayerUrl, rangeSelector } = require('../selectors/timeline');
+const { selectedLayerName, selectedLayerUrl, selectedLayerData, selectedLayerTimeDimensionConfiguration, rangeSelector } = require('../selectors/timeline');
 
 const pausable = require('../observables/pausable');
 const { wrapStartStop } = require('../observables/epics');
@@ -73,8 +76,36 @@ const createAnimationValues = (getState, { fromValue } = {}) => {
     return Rx.Observable.of(values);
 };
 
+/**
+ * Gets the static list of times to animate
+ */
+const filterAnimationValues = (values, getState, {fromValue} = {}) => {
+    const playbackRange = playbackRangeSelector(getState()) || {};
+    const startPlaybackTime = playbackRange.startPlaybackTime;
+    const endPlaybackTime = playbackRange.endPlaybackTime;
+    return Rx.Observable.of(values
+        // remove times before out of playback range
+        .filter(v => startPlaybackTime && endPlaybackTime ? moment(v).isSameOrAfter(startPlaybackTime) && moment(v).isSameOrBefore(endPlaybackTime) : true)
+        // Remove values before fromValue
+        .filter(v => fromValue ? moment(v).isAfter(fromValue) : true)
+        // limit size to BUFFER_SIZE
+        .slice(0, BUFFER_SIZE));
+};
+
+/**
+ * Returns an observable that emit an array of time frames, based of the current configuration:
+ *  - If configured as fixed steps, it returns the list of next animation frame calculating them
+ *  - If there is a selected layer and there is the Multidim extension, then use it (in favour of static values configured)
+ *  - If there are values in the dimension configuration, and the Multidim extension is not present, use them to animate
+ */
 const getAnimationFrames = (getState, { fromValue } = {}) => {
     if (selectedLayerName(getState())) {
+        const values = layerTimeSequenceSelectorCreator(selectedLayerData(getState()))(getState());
+        const timeDimConfig = selectedLayerTimeDimensionConfiguration(getState());
+        // check if multidim extension is available. It has priority to local values
+        if (timeDimConfig && !timeDimConfig.source && !(timeDimConfig.source.type === "multidim-extension") && values && values.length > 0) {
+            return filterAnimationValues(values, getState, {fromValue});
+        }
         return getDomainValues(...domainArgs(getState, {
             fromValue: fromValue
         }))
@@ -98,7 +129,13 @@ module.exports = {
         action$.ofType(PLAY).exhaustMap(() =>
             getAnimationFrames(getState)
                 .map((frames) => setFrames(frames))
-                .let(wrapStartStop(framesLoading(true), framesLoading(false)))
+                .let(wrapStartStop(framesLoading(true), framesLoading(false)), () => Rx.Observable.of(
+                    error({
+                        title: "There was an error retriving animation",
+                        message: "Please contact the administrator"
+                    }),
+                    stop()
+                ))
                 .concat(
                     action$
                         .ofType(SET_CURRENT_FRAME)
@@ -118,19 +155,21 @@ module.exports = {
             .map(() => currentFrameValueSelector(getState()))
             .map(t => t ? moveTime(t) : stop()),
     timeDimensionPlayback: (action$, { getState = () => { } } = {}) =>
-        action$.ofType(SET_FRAMES).exhaustMap(() =>
-            Rx.Observable.interval(frameDurationSelector(getState()) * 1000).startWith(0) // start immediately
-                .let(pausable(
-                    action$
-                        .ofType(PLAY, PAUSE)
-                        .map(a => a.type === PLAY)
-                ))
-                // pause is with loss, so the count of timer is not correct.
-                // the following scan emit a for every event emitted effectively, with correct count
-                // TODO: in case of loop, we can reset to 0 on load end.
-                .map(() => setCurrentFrame(currentFrameSelector(getState()) + 1))
-                .concat(Rx.Observable.of(stop()))
-                .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
+        action$.ofType(SET_FRAMES)
+            .exhaustMap(() =>
+                Rx.Observable.interval(frameDurationSelector(getState()) * 1000).startWith(0) // start immediately
+                    .let(pausable(
+                        action$
+                            .ofType(PLAY, PAUSE)
+                            .map(a => a.type === PLAY)
+                    ))
+                    // pause is with loss, so the count of timer is not correct.
+                    // the following scan emit a for every event emitted effectively, with correct count
+                    // TODO: in case of loop, we can reset to 0 on load end.
+                    .map(() => setCurrentFrame(currentFrameSelector(getState()) + 1))
+                    .concat(Rx.Observable.of(stop()))
+                    .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
+
         ),
     /**
      * Synchronizes the fixed animation step toggle with guide layer on timeline
