@@ -51,10 +51,10 @@ const domainArgs = (getState, paginationOptions = {}) => {
     // const timeData = timeDataSelector(getState()) || {};
     const layerName = selectedLayerName(getState());
     const layerUrl = selectedLayerUrl(getState());
-
+    const { startPlaybackTime, endPlaybackTime } = playbackRangeSelector(getState()) || {};
     return [layerUrl, layerName, "time", {
         limit: BUFFER_SIZE,
-        time: toAbsoluteInterval(playbackRangeSelector(getState()).startPlaybackTime, playbackRangeSelector(getState()).endPlaybackTime),
+        time: startPlaybackTime && endPlaybackTime ? toAbsoluteInterval(startPlaybackTime, endPlaybackTime) : undefined,
         ...paginationOptions
     }];
 };
