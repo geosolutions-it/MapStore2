@@ -129,11 +129,10 @@ module.exports = {
         action$.ofType(PLAY).exhaustMap(() =>
             getAnimationFrames(getState)
                 .map((frames) => setFrames(frames))
-                .let(wrapStartStop(framesLoading(true), framesLoading(false)), e => Rx.Observable.of(
+                .let(wrapStartStop(framesLoading(true), framesLoading(false)), () => Rx.Observable.of(
                     error({
                         title: "There was an error retriving animation",
                         message: "Please contact the administrator"
-
                     }),
                     stop()
                 ))
@@ -156,19 +155,21 @@ module.exports = {
             .map(() => currentFrameValueSelector(getState()))
             .map(t => t ? moveTime(t) : stop()),
     timeDimensionPlayback: (action$, { getState = () => { } } = {}) =>
-        action$.ofType(SET_FRAMES).exhaustMap(() =>
-            Rx.Observable.interval(frameDurationSelector(getState()) * 1000).startWith(0) // start immediately
-                .let(pausable(
-                    action$
-                        .ofType(PLAY, PAUSE)
-                        .map(a => a.type === PLAY)
-                ))
-                // pause is with loss, so the count of timer is not correct.
-                // the following scan emit a for every event emitted effectively, with correct count
-                // TODO: in case of loop, we can reset to 0 on load end.
-                .map(() => setCurrentFrame(currentFrameSelector(getState()) + 1))
-                .concat(Rx.Observable.of(stop()))
-                .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
+        action$.ofType(SET_FRAMES)
+            .exhaustMap(() =>
+                Rx.Observable.interval(frameDurationSelector(getState()) * 1000).startWith(0) // start immediately
+                    .let(pausable(
+                        action$
+                            .ofType(PLAY, PAUSE)
+                            .map(a => a.type === PLAY)
+                    ))
+                    // pause is with loss, so the count of timer is not correct.
+                    // the following scan emit a for every event emitted effectively, with correct count
+                    // TODO: in case of loop, we can reset to 0 on load end.
+                    .map(() => setCurrentFrame(currentFrameSelector(getState()) + 1))
+                    .concat(Rx.Observable.of(stop()))
+                    .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
+
         ),
     /**
      * Synchronizes the fixed animation step toggle with guide layer on timeline
