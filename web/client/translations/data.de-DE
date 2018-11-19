@@ -1513,10 +1513,24 @@
                     "following": "Folgende",
                     "followingDescription": "Wenn die Animation aktiv ist, folgen Sie dem Cursor"
                 }
-            }
+            },
+            "backwardStep": "Schritt zurück",
+            "forwarStep" : "Schritt vorwärts",
+            "play": "abspielen",
+            "pause": "Pause",
+            "stop": "Stopp"
         },
         "timeline": {
-            "currentTime": "Aktuelle Uhrzeit"
+            "currentTime": "Aktuelle Uhrzeit",
+            "offsetTime" : "Versatzzeit",
+            "hideLayerName" : "Ebenennamen verbergen",
+            "showLayerName" : "Ebenennamen anzeigen",
+            "enableOffset": "Aktuelle Uhrzeit mit Offset aktivieren",
+            "disableOffset": "Aktuelle Uhrzeit mit Offset deaktivieren",
+            "enablePlayBack": "Aktivieren Sie die Wiedergabesteuerung",
+            "disablePlayBack": "Deaktivieren Sie die Wiedergabesteuerung",
+            "expand" : "Erweitern Sie den Zeitschieberegler",
+            "collapse" : "Schieberegler für die Zeitspanne reduzieren"
         },
         "rulesmanager": {
             "apply": "Anwenden",

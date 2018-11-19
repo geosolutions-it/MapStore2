@@ -57,7 +57,7 @@ module.exports = {
                              * while maintaning other dimensions information in state.layer,
                              * it also creates a list of dimensions (from descibeDomains) in state.dimensions.
                              *  */
-                            const timeDimensionData = dimensions.filter(d => d.name === 'time').reduce(el => el);
+                            const timeDimensionData = find(dimensions, d => d.name === 'time');
                             const newDimensions = layer.dimensions.map(dimension => dimension.name === 'time' && timeDimensionData ? timeDimensionData : dimension );
                             return Observable.of(
                                 changeLayerProperties(layer.id, {

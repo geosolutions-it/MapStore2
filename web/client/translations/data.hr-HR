@@ -1489,6 +1489,50 @@
             "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
             "genericValidationError": "Style is not valid and it could not be applied."
         },
+        "playback": {
+            "settings": {
+                "title": "Playback Settings",
+                "frameDuration": "Frame Duration",
+                "range": {
+                    "title": "Animation Range",
+                    "zoomTooltip": "Zoom to current animation range",
+                    "animationStart": "Animation start",
+                    "animationEnd": "Animation end"
+                },
+                "step": {
+                    "fixed": "Fixed step",
+                    "label": "Animation Step",
+                    "year": "{number, plural, =0 {Year} =1 {Year} other {Years}}",
+                    "week": "{number, plural, =0 {Week} =1 {Week} other {Weeks}}",
+                    "day": "{number, plural, =0 {Day} =1 {Day} other {Days}}",
+                    "hour": "{number, plural, =0 {Hour} =1 {Hour} other {Hours}}",
+                    "minute": "{number, plural, =0 {Minute} =1 {Minute} other {Minutes}}",
+                    "second": "{number, plural, =0 {Second} =1 {Second} other {Seconds}}"
+                },
+                "mode": {
+                    "title": "Mode",
+                    "following": "Following",
+                    "followingDescription": "When the animation is active, follow the cursor"
+                }
+            },
+            "backwardStep": "Step backward",
+            "forwarStep" : "Step forward",
+            "play": "play",
+            "pause": "pause",
+            "stop": "stop"
+        },
+        "timeline": {
+            "currentTime": "Current Time",
+            "offsetTime" : "Offset Time",
+            "hideLayerName" : "Hide layers name",
+            "showLayerName" : "Show layers name",
+            "enableOffset": "Enable current time with offset",
+            "disableOffset": "Disable current time with offset",
+            "enablePlayBack": "Enable playback controls",
+            "disablePlayBack": "Disable playback controls",
+            "expand" : "Expand time slider",
+            "collapse" : "Collapse time slider"
+        },
         "rulesmanager": {
             "apply": "Primijeni",
             "remove": "Ukloni geometriju",
