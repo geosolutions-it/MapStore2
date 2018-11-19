@@ -13,27 +13,11 @@ const moment = require('moment');
 const { compose, withState, withProps, withHandlers, lifecycle} = require('recompose');
 const { playbackSettingsSelector, playbackRangeSelector} = require('../../selectors/playback');
 const { selectedLayerSelector, rangeSelector, selectedLayerDataRangeSelector} = require('../../selectors/timeline');
-const { selectPlaybackRange, changeSetting, toggleAnimationMode } = require('../../actions/playback');
+const { selectPlaybackRange, changeSetting, toggleAnimationMode, animationStepMove } = require('../../actions/playback');
+
 const { onRangeChanged } = require('../../actions/timeline');
 
 const Toolbar = require('../../components/misc/toolbar/Toolbar');
-
-
-const collapsible = compose(
-    withState("showSettings", "onShowSettings", false),
-    withState("collapsed", "setCollapsed", true),
-        withProps(({ setCollapsed }) => ({
-            buttons: [{
-                glyph: 'minus',
-                onClick: () => setCollapsed(true)
-            }]
-    })),
-    lifecycle({
-        componentWillUnmount() {
-            this.props.stop();
-        }
-    })
-);
 
 const PlaybackSettings = compose(
     connect(createSelector(
@@ -65,6 +49,15 @@ const PlaybackSettings = compose(
                 moveTo: onRangeChanged
         }),
         withHandlers({
+            toggleAnimationRange: ({ fixedStep, layerRange, viewRange = {}, setPlaybackRange = () => { } }) => (enabled) => {
+                let currentPlaybackRange = fixedStep ? viewRange : layerRange;
+                // when view range is collapsed, nothing may be initialized yet, so by default 1 day before and after today
+                currentPlaybackRange = {
+                    startPlaybackTime: moment(currentPlaybackRange.start || new Date()).subtract(1, 'days').toISOString(),
+                    endPlaybackTime: moment(currentPlaybackRange.end || new Date()).add(1, 'days').toISOString()
+                };
+                setPlaybackRange(enabled ? currentPlaybackRange : undefined);
+            },
             setPlaybackToCurrentViewRange: ({ viewRange = {}, setPlaybackRange = () => { } }) => () => {
                 if (viewRange.start && viewRange.end) {
                     setPlaybackRange({
@@ -101,10 +94,50 @@ const PlaybackSettings = compose(
     require("../../components/playback/PlaybackSettings")
 );
 
-module.exports = collapsible(({
+
+/**
+ * Support for expand/collapse timeline
+ */
+const collapsible = compose(
+    withState("showSettings", "onShowSettings", false),
+    withState("collapsed", "setCollapsed", true),
+    withProps(({ setCollapsed }) => ({
+        buttons: [{
+            glyph: 'minus',
+            onClick: () => setCollapsed(true)
+        }]
+    }))
+);
+
+/**
+ * Implements playback buttons functionalities
+ */
+const playbackButtons = compose(
+    connect(() => ({}), {
+        stepMove: animationStepMove
+    }),
+    withHandlers({
+        forward: ({ stepMove = () => { }}) => () => stepMove(+1),
+        backward: ({ stepMove = () => { } }) => () => stepMove(-1)
+    })
+);
+
+const playbackEnhancer = compose(
+    collapsible,
+    playbackButtons,
+    lifecycle({
+        componentWillUnmount() {
+            this.props.stop();
+        }
+    })
+);
+
+module.exports = playbackEnhancer(({
     status,
     statusMap,
     play = () => {},
+    forward = () => {},
+    backward = () => {},
     pause = () => {},
     stop = () => {},
     showSettings,
@@ -120,7 +153,8 @@ module.exports = collapsible(({
             buttons={[
                 {
                     glyph: "step-backward",
-                    tooltip: 'Step backward'
+                    tooltip: 'Step backward',
+                    onClick: backward
                 }, {
                     glyph: status === statusMap.PLAY ? "pause" : "play",
                     onClick: () => status === statusMap.PLAY ? pause() : play(),
@@ -131,7 +165,8 @@ module.exports = collapsible(({
                     tooltip: 'Stop'
                 }, {
                     glyph: "step-forward",
-                    tooltip: 'Step forward'
+                    tooltip: 'Step forward',
+                    onClick: forward
                 }, {
                     glyph: "wrench",
                     bsStyle: showSettings ? 'success' : 'primary',

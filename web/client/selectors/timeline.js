@@ -126,7 +126,7 @@ const calculateOffsetTimeSelector = (state) => {
 const selectedLayerData = state => getLayerFromId(state, selectedLayerSelector(state));
 const selectedLayerName = state => selectedLayerData(state) && selectedLayerData(state).name;
 const selectedLayerTimeDimensionConfiguration = state => selectedLayerData(state) && selectedLayerData(state).dimensions && selectedLayerData(state).dimensions.filter((x) => x.name === "time");
-const selectedLayerUrl = state => selectedLayerTimeDimensionConfiguration(state).map((l) => l.source.url);
+const selectedLayerUrl = state => selectedLayerTimeDimensionConfiguration(state).map((l) => get(l, "source.url"));
 
 const mouseEventSelector = state => get(state, "timeline.mouseEvent");
 

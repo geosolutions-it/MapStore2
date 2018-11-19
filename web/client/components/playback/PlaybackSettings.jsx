@@ -55,7 +55,8 @@ module.exports = ({
     timeStep,
     stepUnit,
     onSettingChange = () => { },
-    toggleAnimationMode = () => {},
+    toggleAnimationMode = () => { },
+    toggleAnimationRange = () => { },
     /*
      * Boolean step for animation
      */
@@ -118,10 +119,7 @@ module.exports = ({
             </FormControl>
         </Form>
     </FormGroup>
-        <SwitchPanel onSwitch={(enabled) => setPlaybackRange(enabled ? {
-            startPlaybackTime: "2017-03-25T00:00:00.000Z",
-            endPlaybackTime: "2017-04-26T00:00:00.000Z"
-        } : undefined)} expanded={playbackRange.startPlaybackTime && playbackRange.endPlaybackTime} title={<Message msgId="playback.settings.range.title" />} buttons={playbackButtons}>
+        <SwitchPanel onSwitch={(enabled) => toggleAnimationRange(enabled)} expanded={playbackRange.startPlaybackTime && playbackRange.endPlaybackTime} title={<Message msgId="playback.settings.range.title" />} buttons={playbackButtons}>
         <FormGroup controlId="formPlaybackMode" style={{margin: 10}}>
             <InlineDateTimeSelector
                 tooltipId="playback.settings.range.animationStart"
