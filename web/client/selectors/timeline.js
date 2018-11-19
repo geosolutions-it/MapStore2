@@ -10,6 +10,7 @@ const rangeDataSelector = state => get(state, 'timeline.rangeData');
 // items
 const MAX_ITEMS = 50;
 
+const isAutoSelectEnabled = state => get(state, 'timeline.settings.autoSelect');
 /**
  * Converts the list of timestamps into timeline items.
  * If a timestamp is a start/end/resolution, and items in viewRange are less than MAX_ITEMS, returns tha array of items,
@@ -143,6 +144,7 @@ module.exports = {
     mouseEventSelector,
     itemsSelector,
     rangeSelector,
+    isAutoSelectEnabled,
     loadingSelector,
     selectedLayerSelector,
     calculateOffsetTimeSelector,

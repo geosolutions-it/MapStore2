@@ -150,6 +150,12 @@ const isOutOfRange = (time, { start, end } = {}) =>
 
 
 module.exports = {
+    /**
+     * When animation start, triggers the flow to retrieve the frames, buffering them:
+     * The first setFrames will trigger the animation.
+     * On any new animation frame, if the buffer is near to finish, this epic triggers
+     * the retrieval of the next frames, until the animation ends.
+     */
     retrieveFramesForPlayback: (action$, { getState = () => { } } = {}) =>
         action$.ofType(PLAY).exhaustMap(() =>
             getAnimationFrames(getState)
@@ -176,14 +182,22 @@ module.exports = {
                 .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
                 .let(setupAnimation(getState))
         ),
+    /**
+     * When the new animation frame is triggered, changes the current time, if the next frame is available. Otherwise stops.
+     * NOTE: we don't have a count of next animation steps, so we suppose that the selector has already pre-loaded next animation steps.
+     */
     updateCurrentTimeFromAnimation: (action$, { getState = () => { } } = {}) =>
         action$.ofType(SET_CURRENT_FRAME)
             .map(() => currentFrameValueSelector(getState()))
             .map(t => t ? moveTime(t) : stop()),
+    /**
+     * When a new frame sequence is set, the animation starts.
+     */
     timeDimensionPlayback: (action$, { getState = () => { } } = {}) =>
         action$.ofType(SET_FRAMES)
             .exhaustMap(() =>
-                Rx.Observable.interval(frameDurationSelector(getState()) * 1000).startWith(0) // start immediately
+                Rx.Observable.interval(frameDurationSelector(getState()) * 1000)
+                    .startWith(0) // start immediately
                     .let(pausable(
                         action$
                             .ofType(PLAY, PAUSE)

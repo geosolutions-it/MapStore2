@@ -7,6 +7,9 @@ const { set } = require('../utils/ImmutableUtils');
  * Provides state for the timeline. Example:
  * ```
  * {
+ *     settings: {
+ *         autoSelect: true // true by defaults, if set the first layer available will be selected on startup
+ *     },
  *     range: {
  *         start: // start date of the current range
  *         end: // end date of the current range
@@ -42,7 +45,9 @@ const { set } = require('../utils/ImmutableUtils');
  * @param {action} action
 
  */
-module.exports = (state = {}, action) => {
+module.exports = (state = {
+    settings: {autoSelect: true} // selects the first layer available as guide layer. This is a configuration only setting for now
+}, action) => {
     switch (action.type) {
         case RANGE_CHANGED: {
             return set(`range`, {

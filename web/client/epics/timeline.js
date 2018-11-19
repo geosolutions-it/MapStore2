@@ -3,13 +3,13 @@ const Rx = require('rxjs');
 const {isString, get, head, castArray} = require('lodash');
 const moment = require('moment');
 
-const { SELECT_TIME, RANGE_CHANGED, ENABLE_OFFSET, timeDataLoading, rangeDataLoaded, onRangeChanged } = require('../actions/timeline');
+const { SELECT_TIME, RANGE_CHANGED, ENABLE_OFFSET, timeDataLoading, rangeDataLoaded, onRangeChanged, selectLayer } = require('../actions/timeline');
 const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } = require('../actions/dimension');
-
+const {MAP_CONFIG_LOADED} = require('../actions/config');
 
 const {getLayerFromId} = require('../selectors/layers');
-const { rangeSelector, selectedLayerName, selectedLayerUrl } = require('../selectors/timeline');
-const { layerTimeSequenceSelectorCreator, timeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
+const { rangeSelector, selectedLayerName, selectedLayerUrl, isAutoSelectEnabled } = require('../selectors/timeline');
+const { layerTimeSequenceSelectorCreator, timeDataSelector, offsetTimeSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
 
 const { getNearestDate, roundRangeResolution, isTimeDomainInterval } = require('../utils/TimeUtils');
 const { getHistogram, describeDomains, getDomainValues } = require('../api/MultiDim');
@@ -140,7 +140,6 @@ const loadRangeData = (id, timeData, getState) => {
     });
 };
 
-
 module.exports = {
     /**
      * when a time is selected from timeline, tries to snap to nearest value and set the current time
@@ -155,6 +154,18 @@ module.exports = {
             }
             return Rx.Observable.of(setCurrentTime(time));
         }),
+    /**
+     * Initializes the time line
+     */
+    setupSettings: (action$, { getState = () => { } } = {}) => action$.ofType(UPDATE_LAYER_DIMENSION_DATA)
+        .switchMap(() => isAutoSelectEnabled(getState()) && !selectedLayerName(getState()) && get(layersWithTimeDataSelector(getState()), "[0].id")
+            ? Rx.Observable.of(
+                selectLayer(
+                    get(layersWithTimeDataSelector(getState()), "[0].id")
+                )
+            )
+            : Rx.Observable.empty()
+    ),
      /**
      * When offset is initiated this epic sets both initial current time and offset if any does not exist
      * The policy is:
