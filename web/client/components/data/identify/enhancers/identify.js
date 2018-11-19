@@ -104,11 +104,11 @@ const identifyLifecycle = compose(
                 if (!newProps.point.modifiers || newProps.point.modifiers.ctrl !== true || !newProps.allowMultiselection) {
                     purgeResults();
                 }
-                const queryableLayers = isArray(newProps.layers) && newProps.layers
-                    .filter(newProps.queryableLayersFilter);
+                const queryableLayers = isArray(newProps.layers) && (newProps.queryableLayersFilter && newProps.layers
+                    .filter(newProps.queryableLayersFilter) || newProps.layers);
                     /*
                      * .filter(newProps.layer ? l => l.id === newProps.layer : () => true);
-                     * this line was filtering too much, i.e. see issue https://github.com/geosolutions-it/austrocontrol-C125/issues/97
+                     * this line was filtering too much, i.e. see issue #3344
                     */
                 if (queryableLayers) {
                     queryableLayers.forEach((layer) => {
