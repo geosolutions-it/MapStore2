@@ -17,7 +17,7 @@ const { selectedLayerSelector, currentTimeRangeSelector } = require('../selector
 const { withState, compose, branch, renderNothing } = require('recompose');
 const { selectTime, enableOffset } = require('../actions/timeline');
 const { setCurrentOffset } = require('../actions/dimension');
-
+const Message = require('../components/I18N/Message');
 const { selectPlaybackRange } = require('../actions/playback');
 const { playbackRangeSelector } = require('../selectors/playback');
 
@@ -88,9 +88,9 @@ const TimelinePlugin = compose(
             {offsetEnabled // if range is present and configured, show the floating start point.
                 && <InlineDateTimeSelector
                 glyph="range-start"
-                tooltip="timeline.currentTime"
+                tooltip={<Message msgId="timeline.currentTime"/>}
                 date={currentTime || currentTimeRange && currentTimeRange.start}
-                onUpdate={start => isValidOffset(start, currentTimeRange.end) && setCurrentTime(start)}
+                onUpdate={start => !currentTimeRange || isValidOffset(start, currentTimeRange.end) && setCurrentTime(start)}
                 className="shadow-soft"
                 style={{
                     position: 'absolute',
@@ -109,7 +109,7 @@ const TimelinePlugin = compose(
                     : // show current time if using single time
                     <InlineDateTimeSelector
                         glyph={'time-current'}
-                        tooltip="timeline.currentTime"
+                        tooltip={<Message msgId="timeline.currentTime"/>}
                         date={currentTime || currentTimeRange && currentTimeRange.start}
                         onUpdate={start => isValidOffset(start, currentTimeRange.end) && setCurrentTime(start)} />}
 
@@ -121,7 +121,7 @@ const TimelinePlugin = compose(
                     buttons={[
                         {
                             glyph: 'list',
-                            tooltip: !hideLayersName ? 'Hide layers name' : 'Show layers name',
+                            tooltip: <Message msgId={!hideLayersName ? "timeline.hideLayerName" : "timeline.showLayerName" } />,
                             bsStyle: !hideLayersName ? 'success' : 'primary',
                             visible: !collapsed,
                             active: !hideLayersName,
@@ -131,7 +131,7 @@ const TimelinePlugin = compose(
                             glyph: 'time-offset',
                             bsStyle: offsetEnabled ? 'success' : 'primary',
                             active: offsetEnabled,
-                            tooltip: offsetEnabled ? 'Disable current time with offset' : 'Enable current time with offset',
+                            tooltip: <Message msgId={offsetEnabled ? "timeline.enableOffset" : "timeline.disableOffset"} />,
                             onClick: () => {
                                 onOffsetEnabled(!offsetEnabled);
 
@@ -139,7 +139,7 @@ const TimelinePlugin = compose(
                         },
                         {
                             glyph: 'playback',
-                            tooltip: !playbackEnabled ? 'Enable playback controls' : 'Disable playback controls',
+                            tooltip: <Message msgId= {!playbackEnabled ? "timeline.enablePlayBack" : "timeline.disablePlayBack"}/>,
                             bsStyle: playbackEnabled ? 'success' : 'primary',
                             active: playbackEnabled,
                             visible: !!Playback,
@@ -160,7 +160,7 @@ const TimelinePlugin = compose(
                     }}
                     buttons={[
                         {
-                            tooltip: collapsed ? 'Expand time slider' : 'Collapse time slider',
+                            tooltip: <Message msgId= {collapsed ? "timeline.expand" : "timeline.collapse"}/>,
                             glyph: collapsed ? 'resize-full' : 'resize-small',
                             onClick: () => setOptions({ ...options, collapsed: !collapsed })
                         }

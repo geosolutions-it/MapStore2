@@ -13,7 +13,7 @@ const {compose, withState, withProps, lifecycle} = require('recompose');
 const { playbackSettingsSelector, playbackRangeSelector} = require('../../selectors/playback');
 const {selectedLayerSelector} = require('../../selectors/timeline');
 const { selectPlaybackRange, changeSetting, toggleAnimationMode } = require('../../actions/playback');
-
+const Message = require('../../components/I18N/Message');
 
 const Toolbar = require('../../components/misc/toolbar/Toolbar');
 
@@ -74,24 +74,24 @@ module.exports = collapsible(({
             buttons={[
                 {
                     glyph: "step-backward",
-                    tooltip: 'Step backward'
+                    tooltip: <Message msgId={"playback.backwardStep"} />
                 }, {
                     glyph: status === statusMap.PLAY ? "pause" : "play",
                     onClick: () => status === statusMap.PLAY ? pause() : play(),
-                    tooltip: 'Play'
+                    tooltip: <Message msgId={status === statusMap.PLAY ? "playback.pause" : "playback.play"} />
                 }, {
                     glyph: "stop",
                     onClick: stop,
-                    tooltip: 'Stop'
+                    tooltip: <Message msgId={"playback.stop"} />
                 }, {
                     glyph: "step-forward",
-                    tooltip: 'Step forward'
+                    tooltip: <Message msgId={"playback.forwarStep"} />
                 }, {
                     glyph: "wrench",
                     bsStyle: showSettings ? 'success' : 'primary',
                     active: !!showSettings,
                     onClick: () => onShowSettings(!showSettings),
-                    tooltip: 'Playback settings'
+                    tooltip: <Message msgId={"playback.settings.title"} />
                 }
             ]}/>
     </div>
