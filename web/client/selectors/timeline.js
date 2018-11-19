@@ -152,5 +152,6 @@ module.exports = {
     selectedLayerTimeDimensionConfiguration,
     selectedLayerDataRangeSelector,
     selectedLayerName,
-    selectedLayerUrl
+    selectedLayerUrl,
+    rangeDataSelector
 };

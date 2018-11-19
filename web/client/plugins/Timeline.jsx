@@ -13,7 +13,7 @@ const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('../components/time/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const { offsetEnabledSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
-const { selectedLayerSelector, currentTimeRangeSelector } = require('../selectors/timeline');
+const { selectedLayerSelector, currentTimeRangeSelector, rangeDataSelector } = require('../selectors/timeline');
 const { withState, compose, branch, renderNothing } = require('recompose');
 const { selectTime, enableOffset } = require('../actions/timeline');
 const { setCurrentOffset } = require('../actions/dimension');
@@ -21,7 +21,7 @@ const Message = require('../components/I18N/Message');
 const { selectPlaybackRange } = require('../actions/playback');
 const { playbackRangeSelector } = require('../selectors/playback');
 
-const { head } = require('lodash');
+const { head, isObject } = require('lodash');
 const moment = require('moment');
 
 const isValidOffset = (start, end) => moment(end).diff(start) > 0;
@@ -41,13 +41,15 @@ const TimelinePlugin = compose(
             currentTimeRangeSelector,
             offsetEnabledSelector,
             playbackRangeSelector,
-            (layers, selectedLayer, currentTime, currentTimeRange, offsetEnabled, playbackRange) => ({
+            rangeDataSelector,
+            (layers, selectedLayer, currentTime, currentTimeRange, offsetEnabled, playbackRange, rangeData) => ({
                 layers,
                 selectedLayer,
                 currentTime,
                 currentTimeRange,
                 offsetEnabled,
-                playbackRange
+                playbackRange,
+                rangeData
             })
         ), {
             setCurrentTime: selectTime,
@@ -59,6 +61,7 @@ const TimelinePlugin = compose(
     withState('options', 'setOptions', {collapsed: true})
 )(
     ({
+        rangeData,
         items,
         options,
         setOptions,
@@ -90,7 +93,7 @@ const TimelinePlugin = compose(
                 glyph="range-start"
                 tooltip={<Message msgId="timeline.currentTime"/>}
                 date={currentTime || currentTimeRange && currentTimeRange.start}
-                onUpdate={start => !currentTimeRange || isValidOffset(start, currentTimeRange.end) && setCurrentTime(start)}
+                onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && setCurrentTime(start)}
                 className="shadow-soft"
                 style={{
                     position: 'absolute',
@@ -111,7 +114,7 @@ const TimelinePlugin = compose(
                         glyph={'time-current'}
                         tooltip={<Message msgId="timeline.currentTime"/>}
                         date={currentTime || currentTimeRange && currentTimeRange.start}
-                        onUpdate={start => isValidOffset(start, currentTimeRange.end) && setCurrentTime(start)} />}
+                        onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && setCurrentTime(start)} />}
 
                 <Toolbar
                     btnDefaultProps={{
@@ -162,6 +165,8 @@ const TimelinePlugin = compose(
                         {
                             tooltip: <Message msgId= {collapsed ? "timeline.expand" : "timeline.collapse"}/>,
                             glyph: collapsed ? 'resize-full' : 'resize-small',
+                            // we perform a check if the timeline data is loaded before allowing the user to expand the timeline and render an empty component
+                            visible: isObject(rangeData),
                             onClick: () => setOptions({ ...options, collapsed: !collapsed })
                         }
                     ]} />
