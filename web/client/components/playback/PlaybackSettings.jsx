@@ -9,7 +9,7 @@ const React = require('react');
 
 const moment = require('moment');
 const { isNaN } = require('lodash');
-const { Form, FormGroup, ControlLabel, FormControl, InputGroup, Glyphicon, Button: BButton } = require('react-bootstrap');
+const { Form, FormGroup, ControlLabel, FormControl, InputGroup } = require('react-bootstrap');
 const Message = require('../I18N/Message');
 const InfoPopover = require('../widgets/widget/InfoPopover');
 
