@@ -5,7 +5,6 @@ const moment = require('moment');
 
 const { SELECT_TIME, RANGE_CHANGED, ENABLE_OFFSET, timeDataLoading, rangeDataLoaded, onRangeChanged, selectLayer } = require('../actions/timeline');
 const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } = require('../actions/dimension');
-const {MAP_CONFIG_LOADED} = require('../actions/config');
 
 const {getLayerFromId} = require('../selectors/layers');
 const { rangeSelector, selectedLayerName, selectedLayerUrl, isAutoSelectEnabled } = require('../selectors/timeline');
