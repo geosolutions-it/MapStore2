@@ -1514,23 +1514,23 @@
                     "followingDescription": "Durante l'animazione, insegui il cursore"
                 }
             },
-            "backwardStep": "Passo indietro",
-            "forwarStep" : "Passo in avanti",
-            "play": "giocare",
-            "pause": "pausa",
+            "backwardStep": "Indietro",
+            "forwarStep" : "Avanti",
+            "play": "Play",
+            "pause": "Pausa",
             "stop": "stop"
         },
         "timeline": {
             "currentTime": "Istante corrente",
-            "offsetTime" : "Tempo di offset",
+            "offsetTime" : "Fine intervallo",
             "hideLayerName" : "Nascondi il nome dei livelli",
             "showLayerName" : "Mostra il nome dei livelli",
-            "enableOffset": "Attiva l'ora corrente con offset",
-            "disableOffset": "Disattiva l'ora corrente con offset",
+            "enableOffset": "Attiva intervallo temporale",
+            "disableOffset": "Disattiva intervallo temporale",
             "enablePlayBack": "Abilita i controlli di riproduzione",
             "disablePlayBack": "Disabilita i controlli di riproduzione",
-            "expand" : "Espandi il cursore del tempo",
-            "collapse" : "Cursore del tempo di collasso"
+            "expand" : "Espandi",
+            "collapse" : "Riduci"
         },
         "rulesmanager": {
             "apply": "Applica",
