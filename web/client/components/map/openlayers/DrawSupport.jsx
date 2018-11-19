@@ -8,7 +8,7 @@
 
 const React = require('react');
 const ol = require('openlayers');
-const {concat, head, find, slice, omit, isArray, last, filter} = require('lodash');
+const {concat, head, find, slice, omit, isArray, last, filter, isNil} = require('lodash');
 const PropTypes = require('prop-types');
 const assign = require('object-assign');
 const uuid = require('uuid');
@@ -84,6 +84,7 @@ class DrawSupport extends React.Component {
  * replace allows to replace all the features drawn by Drawsupport with new ones
  * clean it cleans the drawn features and stop the drawsupport
  * cleanAndContinueDrawing it cleares the drawn features and allows to continue drawing features
+ * endDrawing as for 'replace' action allows to replace all the features in addition triggers end drawing action to store data in state
 */
     componentWillReceiveProps(newProps) {
         if (this.drawLayer) {
@@ -101,6 +102,7 @@ class DrawSupport extends React.Component {
                 case "replace": this.replaceFeatures(newProps); break;
                 case "clean": this.clean(); break;
                 case "cleanAndContinueDrawing": this.clean(true); break;
+                case "endDrawing": this.endDrawing(newProps); break;
                 default : return;
             }
         }
@@ -154,11 +156,13 @@ class DrawSupport extends React.Component {
             this.addInteractions(newProps);
         }
 
-        this.addFeatures(newProps);
+        const feature = this.addFeatures(newProps);
+        return feature;
     };
 
     addFeatures = ({features, drawMethod, options}) => {
         const mapCrs = this.getMapCrs();
+        let feature;
         features.forEach((f) => {
             if (f.type === "FeatureCollection") {
                 let featuresOL = (new ol.format.GeoJSON()).readFeatures(f);
@@ -174,7 +178,6 @@ class DrawSupport extends React.Component {
                     geometry = reprojectGeoJson(geometry, geometry.featureProjection, mapCrs).geometry;
                 }
                 if (geometry.type !== "GeometryCollection") {
-                    let feature;
                     if (drawMethod === "Circle" && geometry && (geometry.properties && geometry.properties.center || geometry.center)) {
                         center = geometry.properties && geometry.properties.center ? reproject(geometry.properties.center, "EPSG:4326", mapCrs) : geometry.center;
                         center = [center.x, center.y];
@@ -203,7 +206,7 @@ class DrawSupport extends React.Component {
                 });
                 this.drawLayer.setSource(this.drawSource);
             } else {
-                const feature = new ol.Feature({
+                feature = new ol.Feature({
                     geometry: this.createOLGeometry({type: drawMethod, coordinates: null})
                 });
                 this.drawSource.addFeature(feature);
@@ -221,10 +224,11 @@ class DrawSupport extends React.Component {
             }
             if (features[0] && features[0].geometry && features[0].geometry.type === "GeometryCollection" ) {
                 // HERE IT ENTERS WITH REPLACE
-                let feature = reprojectGeoJson(features[0], options.featureProjection, mapCrs).geometry;
+                feature = reprojectGeoJson(features[0], options.featureProjection, mapCrs).geometry;
                 this.drawSource = new ol.source.Vector({
                     features: (new ol.format.GeoJSON()).readFeatures(feature)
                 });
+                // TODO remove this props
                 this.drawSource.getFeatures()[0].set("textGeometriesIndexes", features[0].properties && features[0].properties.textGeometriesIndexes);
                 this.drawSource.getFeatures()[0].set("textValues", features[0].properties && features[0].properties.textValues);
                 this.drawSource.getFeatures()[0].set("circles", features[0].properties && features[0].properties.circles);
@@ -232,20 +236,35 @@ class DrawSupport extends React.Component {
             }
         }
         this.updateFeatureStyles(features);
-
+        return feature;
     };
 
     replaceFeatures = (newProps) => {
+        let feature;
         if (!this.drawLayer) {
-            this.addLayer(newProps, newProps.options && newProps.options.drawEnabled || false);
+            feature = this.addLayer(newProps, newProps.options && newProps.options.drawEnabled || false);
         } else {
             this.drawSource.clear();
-            this.addFeatures(newProps);
+            feature = this.addFeatures(newProps);
             if (newProps.style) {
                 this.drawLayer.setStyle(VectorStyle.getStyle(newProps, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.valueText && [newProps.features[0].properties.valueText] || [] ));
             }
         }
+        return feature;
     };
+
+    endDrawing = (newProps) => {
+        const olFeature = this.replaceFeatures(newProps);
+        if (olFeature) {
+            const feature = this.fromOLFeature(olFeature);
+            if (newProps.drawMethod === "Circle" && newProps && newProps.features && newProps.features.length && newProps.features[0] && newProps.features[0].radius >= 0) {
+                // this prevents the radius coming from `fromOLFeature` to override the radius set from an external tool
+                // this is because `endDrawing` need to impose the radius value, without any re-calculation or approximation
+                feature.radius = newProps.features[0].radius;
+            }
+            this.props.onEndDrawing(feature, newProps.drawOwner);
+        }
+    }
 
     addDrawInteraction = (drawMethod, startingPoint, maxPoints, newProps) => {
         if (this.drawInteraction) {
@@ -402,7 +421,6 @@ class DrawSupport extends React.Component {
                         previousGeometries = this.toMulti(head(drawnFeatures).getGeometry());
                     }
 /*
-
                 // TODO PROBABLY THIS IS NO LONGER NEEDED
                     return f.getGeometry();
                 });
@@ -417,7 +435,6 @@ class DrawSupport extends React.Component {
                     // create new multi geom
                     newMultiGeom = this.toMulti(this.createOLGeometry({type: drawMethod, coordinates: [drawnGeom.getCoordinates()], options: newProps.options}));
                 }
-
 */
                     // find geometry of same type
                     let geometries = drawnFeatures.map(f => {
@@ -574,6 +591,7 @@ class DrawSupport extends React.Component {
                         let geom = geometry;
                         if (!geom) {
                             geom = new ol.geom.Polygon(null);
+                            geom.setProperties({geodesicCenter: [...coordinates[0]]}, true);
                         }
                         let projection = this.props.map.getView().getProjection().getCode();
                         let wgs84Coordinates = [...coordinates].map((coordinate) => {
@@ -802,7 +820,9 @@ class DrawSupport extends React.Component {
             if (newProps.options.translateEnabled !== false) {
                 this.addTranslateInteraction();
             }
-            this.setState({keySingleClickCallback: this.addSingleClickListener(singleClickCallback)});
+            if (newProps.options.addClickCallback) {
+                this.setState({keySingleClickCallback: this.addSingleClickListener(singleClickCallback)});
+            }
         }
         if (newProps.options && newProps.options.selectEnabled/* && (newProps.drawMethod !== "Point" && newProps.drawMethod !== "Text")*/) { // TODO fix all call to this which are missing "selectEnabled" flag
             this.addSelectInteraction(newProps.options && newProps.options.selected, newProps);
@@ -932,12 +952,16 @@ class DrawSupport extends React.Component {
     fromOLFeature = (feature, startingPoint, properties) => {
         let geometry = feature.getGeometry();
         let extent = geometry.getExtent();
-        let center = ol.extent.getCenter(extent);
+        let geometryProperties = geometry.getProperties();
+        // retrieve geodesic center from properties
+        // it's different from extent center
+        let center = geometryProperties && geometryProperties.geodesicCenter || ol.extent.getCenter(extent);
+        let coordinates = geometry.getCoordinates();
         let projection = this.props.map.getView().getProjection().getCode();
         let radius;
         let type = geometry.getType();
         if (geometry.getCoordinates) {
-            let coordinates = geometry.getCoordinates();
+            coordinates = geometry.getCoordinates();
             if (startingPoint) {
                 coordinates = concat(startingPoint, coordinates);
                 geometry.setCoordinates(coordinates);
@@ -967,7 +991,7 @@ class DrawSupport extends React.Component {
         let geometries = geometry.getGeometries().map((g, i) => {
             extent = g.getExtent();
             center = ol.extent.getCenter(extent);
-            let coordinates = g.getCoordinates();
+            coordinates = g.getCoordinates();
             if (startingPoint) {
                 coordinates = concat(startingPoint, coordinates);
                 g.setCoordinates(coordinates);
@@ -1201,30 +1225,28 @@ class DrawSupport extends React.Component {
             case "MultiPoint": /*case "Text":*/ { geometry = new ol.geom.MultiPoint(coordinates ? coordinates : []); break; } // TODO move text on "Point"
             case "MultiLineString": { geometry = new ol.geom.MultiLineString(coordinates ? coordinates : []); break; }
             case "MultiPolygon": { geometry = new ol.geom.MultiPolygon(coordinates ? coordinates : []); break; }
-/*
-            // TODO check if this is not needed anymore
-            case "Circle": {
-                if (radius && center) {
-                    let correctCenter = isArray(center) ? {x: center[0], y: center[1]} : center;
-                    // TODO fix here if we need a polygon or a circle
-                    let circle = new ol.geom.Circle([correctCenter.x, correctCenter.y], radius);
-                    geometry = realCircle ? circle : ol.geom.Polygon.fromCircle(circle, 100); break;
-                } else {
-                    geometry = new ol.geom.Polygon(coordinates && isArray(coordinates[0]) ? [coordinates] : []);
-                }
-            }*/
             // default is Polygon
             default: {
                 let correctCenter = isArray(center) ? {x: center[0], y: center[1]} : center;
-                geometry = projection
-                && !isNaN(parseFloat(radius))
-                && correctCenter
-                && !isNaN(parseFloat(correctCenter.x))
-                && !isNaN(parseFloat(correctCenter.y)) ?
-                options.geodesic ?
-                ol.geom.Polygon.circular(wgs84Sphere, this.reprojectCoordinatesToWGS84([correctCenter.x, correctCenter.y], projection), radius, 100).clone().transform('EPSG:4326', projection)
-                : ol.geom.Polygon.fromCircle(new ol.geom.Circle([correctCenter.x, correctCenter.y], radius), 100)
-                    : new ol.geom.Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
+                const isCircle = projection
+                    && !isNaN(parseFloat(radius))
+                    && correctCenter
+                    && !isNil(correctCenter.x)
+                    && !isNil(correctCenter.y)
+                    && !isNaN(parseFloat(correctCenter.x))
+                    && !isNaN(parseFloat(correctCenter.y));
+
+                    // TODO simplify, too much use of elvis operator
+                geometry = isCircle ?
+                    options.geodesic ?
+                    ol.geom.Polygon.circular(wgs84Sphere, this.reprojectCoordinatesToWGS84([correctCenter.x, correctCenter.y], projection), radius, 100).clone().transform('EPSG:4326', projection)
+                    : ol.geom.Polygon.fromCircle(new ol.geom.Circle([correctCenter.x, correctCenter.y], radius), 100)
+                        : new ol.geom.Polygon(coordinates && isArray(coordinates[0]) ? coordinates : []);
+
+                    // store geodesic center
+                if (geometry && isCircle && options.geodesic) {
+                    geometry.setProperties({geodesicCenter: [correctCenter.x, correctCenter.y]}, true);
+                }
             }
         }
         return geometry;

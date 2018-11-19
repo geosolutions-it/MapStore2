@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const React = require('react');
 const assign = require('object-assign');
 const {omit, isObject, head, isArray, isString, memoize, get} = require('lodash');
 const {combineReducers} = require('redux');
@@ -84,7 +85,8 @@ const handleExpression = (state, context, expression) => {
  * @return {Boolean}             the result of the expression evaluation in the given context.
  */
 const filterDisabledPlugins = (item, state = {}, plugins = {}) => {
-    const disablePluginIf = item && item.plugin && item.plugin.disablePluginIf || item.cfg && item.cfg.disablePluginIf;
+    // checks for disablePluginIf first in cfg then in plugin definition (cfg overrides plugin default)
+    const disablePluginIf = item && item.cfg && item.cfg.disablePluginIf || item && item.plugin && item.plugin.disablePluginIf;
     if (disablePluginIf && !(item && item.cfg && item.cfg.skipAutoDisable)) {
         return !handleExpression(state, plugins.requires, disablePluginIf);
     }
@@ -131,7 +133,7 @@ const parsePluginConfig = (state, requires, cfg) => {
     return parseExpression(state, requires, cfg);
 };
 
-const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins) => {
+const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins, filter) => {
     return Object.keys(plugins)
             .filter((plugin) => plugins[plugin][name])
             .filter((plugin) => {
@@ -144,7 +146,9 @@ const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, load
                 const pluginImpl = includeLoadedItem(pluginName, loadedPlugins, plugins[plugin]);
                 const pluginCfg = isPluginConfigured(pluginsConfig, plugin);
                 const item = pluginImpl[name].impl || pluginImpl[name];
-                return assign({},
+                return assign({
+                        name: pluginName
+                    },
                     item,
                     pluginCfg.override && pluginCfg.override[name] || {},
                     {
@@ -154,7 +158,7 @@ const getPluginItems = (state, plugins, pluginsConfig, name, id, isDefault, load
                         plugin: pluginImpl,
                         items: getPluginItems(state, plugins, pluginsConfig, pluginName, null, true, loadedPlugins)
                     });
-            }).filter( (item) => filterDisabledPlugins(item, state, plugins) );
+            }).filter((item) => filterDisabledPlugins(item, state, plugins) && (!filter || filter(item)));
 };
 
 const getReducers = (plugins) => Object.keys(plugins).map((name) => plugins[name].reducers)
@@ -232,7 +236,7 @@ const PluginsUtils = {
             };
         }, {}),
     getPlugins: (plugins) => Object.keys(plugins).map((name) => plugins[name])
-                                .reduce((previous, current) => assign({}, previous, omit(current, 'reducers')), {}),
+                                .reduce((previous, current) => assign({}, previous, omit(current, 'reducers', 'epics')), {}),
     /**
      * provide the pluginDescriptor for a given plugin, with a state and a configuration
      * @param {object} state the state. This is required to laod plugins that depend from the state itself
@@ -272,6 +276,26 @@ const PluginsUtils = {
             impl: includeLoaded(name, loadedPlugins, impl.loadPlugin || impl.displayName || impl.prototype.isReactComponent ? impl : impl(stateSelector)),
             cfg: assign({}, impl.cfg || {}, isObject(pluginDef) ? parsePluginConfig(state, plugins.requires, pluginDef.cfg) : {}),
             items: getPluginItems(state, plugins, pluginsConfig, name, id, isDefault, loadedPlugins)
+        };
+    },
+    getPluginItems,
+    getConfiguredPlugin: (pluginDef, loadedPlugins, loaderComponent) => {
+        if (pluginDef) {
+            const Plugin = loadedPlugins && loadedPlugins[pluginDef.name] || (pluginDef.plugin && !pluginDef.plugin.loadPlugin && pluginDef.plugin);
+            const result = (props) => {
+                return Plugin ? (<Plugin key={pluginDef.id}
+                    {...props} {...pluginDef.cfg} pluginCfg={pluginDef.cfg} />) : loaderComponent;
+            };
+            result.loaded = !!Plugin;
+            return result;
+        }
+        return pluginDef;
+    },
+    setRefToWrappedComponent: (name) => {
+        return (connectedComponent) => {
+            if (connectedComponent) {
+                window[`${name}Plugin`] = connectedComponent.getWrappedInstance();
+            }
         };
     },
     /**

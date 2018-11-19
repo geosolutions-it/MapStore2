@@ -92,6 +92,27 @@ const VectorUtils = {
             console.log(f);
         });
     },
+    /**
+     * create point or text layer
+     */
+    createTextPointMarkerLayer: ({pointToLayer, geojson, latlng, options, style = {}, highlight = false} = {}) => {
+        if (geojson.properties && geojson.properties.isText) {
+            // this is a Text Feature
+            let myIcon = L.divIcon({html: geojson.properties.valueText, className: ''});
+            return new L.Marker(latlng, {icon: myIcon});
+        }
+        return VectorUtils.getPointLayer(pointToLayer, geojson, latlng, {...options, style, highlight});
+    },
+    /**
+    * create Circle or polygon layer
+    */
+    createPolygonCircleLayer: ({geojson, style = {}, latlngs = [], coordsToLatLng = () => {}} = {}) => {
+        if (geojson.properties && geojson.properties.isCircle) {
+            let latlng = coordsToLatLng(geojson.properties.center);
+            return L.circle(latlng, { ...style.Circle, radius: geojson.properties.radius});
+        }
+        return new L.Polygon(latlngs, style);
+    },
     geometryToLayer: function(geojson, options) {
         var geometry = geojson.type === 'Feature' ? geojson.geometry : geojson;
         var coords = geometry ? geometry.coordinates : null;
@@ -117,18 +138,17 @@ const VectorUtils = {
             return null;
         }
         let layer;
-        let style = options.style && options.style[geometry.type] || options.style;
+        let style = assign({}, options.style && options.style[geometry.type] || options.style, {highlight: options.style && options.style.highlight});
 
         switch (geometry.type) {
             case 'Point':
                 latlng = coordsToLatLng(coords);
-                layer = VectorUtils.getPointLayer(pointToLayer, geojson, latlng, {...options, style: style && style.Point, highlight: style && style.highlight});
-                layer.msId = geojson.id;
+                layer = VectorUtils.createTextPointMarkerLayer({pointToLayer, geojson, latlng, options, style, highlight: style && style.highlight});
                 return layer;
             case 'MultiPoint':
                 for (i = 0, len = coords.length; i < len; i++) {
                     latlng = coordsToLatLng(coords[i]);
-                    layer = VectorUtils.getPointLayer(pointToLayer, geojson, latlng, {...options, style: style && style.MultiPoint, highlight: style && style.highlight});
+                    layer = VectorUtils.createTextPointMarkerLayer({pointToLayer, geojson, latlng, options, style, highlight: style && style.highlight});
                     layer.msId = geojson.id;
                     layers.push(layer);
                 }
@@ -154,14 +174,14 @@ const VectorUtils = {
             case 'Polygon':
                 VectorUtils.updateHighlightStyle(style);
                 latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
-                layer = new L.Polygon(latlngs, style);
+                layer = VectorUtils.createPolygonCircleLayer({geojson, style, latlngs, coordsToLatLng});
                 layer.msId = geojson.id;
                 return layer;
             case 'MultiPolygon':
                 VectorUtils.updateHighlightStyle(style);
                 latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
                 for (i = 0, len = latlngs.length; i < len; i++) {
-                    layer = new L.Polygon(latlngs[i], style);
+                    layer = VectorUtils.createPolygonCircleLayer({geojson, style, latlngs, coordsToLatLng});
                     layer.msId = geojson.id;
                     if (layer) {
                         layers.push(layer);
@@ -187,9 +207,10 @@ const VectorUtils = {
         }
     },
     updateHighlightStyle: (style) => {
-        if (style && style.highlight) {
+        let highlight = {style};
+        if (highlight) {
             return assign({}, style, {
-                dashArray: style && style.highlight ? "10" : null
+                dashArray: highlight ? "10" : null
             });
         }
         return style;

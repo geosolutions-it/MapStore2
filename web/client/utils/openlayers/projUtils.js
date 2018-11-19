@@ -10,14 +10,15 @@ const projUtils = {
     /**
     * function needed in openlayer for adding new projection
     */
-    addProjections: function(code, extent, worldExtent) {
-        const ol = window.ol;
-        ol.proj.addProjection(new ol.proj.Projection({
-            code,
-            extent,
-            worldExtent
-            })
-        );
+    addProjections: function(ol, code, extent, worldExtent) {
+        if (!ol.proj.get(code)) {
+            ol.proj.addProjection(new ol.proj.Projection({
+                    code,
+                    extent,
+                    worldExtent
+                })
+            );
+        }
     }
 };
 

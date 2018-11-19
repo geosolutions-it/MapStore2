@@ -30,13 +30,12 @@ describe('LangSelector', () => {
 
         const cmp = ReactDOM.render(<LangSelector/>, document.getElementById("container"));
         expect(cmp).toExist();
-
         const cmpDom = ReactDOM.findDOMNode(cmp);
         expect(cmpDom).toExist();
 
         const opts = cmpDom.childNodes;
         const langs = {
-            'Italiano': 'it-IT', 'English': 'en-US', 'Français': 'fr-FR', 'Deutsch': 'de-DE', 'Español': 'es-ES', "中文": "zh-ZH", 'Nederlands': 'nl-NL', 'Hrvatski': 'hr-HR'};
+            'Italiano': 'it-IT', 'English': 'en-US', 'Français': 'fr-FR', 'Deutsch': 'de-DE', 'Español': 'es-ES', "中文": "zh-ZH", 'Nederlands': 'nl-NL', 'Hrvatski': 'hr-HR', 'Português': 'pt-PT'};
 
         for (let i = 0; i < opts.length; i++) {
             lbl = opts[i].innerHTML;

@@ -93,7 +93,9 @@ module.exports = {
         FeaturedMaps: require('../plugins/FeaturedMaps'),
         NavMenu: require('./plugins/NavMenu'),
         RulesEditorPlugin: require('../plugins/RulesEditor'),
-        FloatingLegendPlugin: require('../plugins/FloatingLegend')
+        FloatingLegendPlugin: require('../plugins/FloatingLegend'),
+        ThematicLayerPlugin: require('../plugins/ThematicLayer'),
+        FeedbackMaskPlugin: require('../plugins/FeedbackMask')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

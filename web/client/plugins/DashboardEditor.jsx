@@ -15,7 +15,7 @@ const PropTypes = require('prop-types');
 const { isDashboardEditing } = require('../selectors/dashboard');
 const { isLoggedIn } = require('../selectors/security');
 const { dashboardHasWidgets, getWidgetsDependenciesGroups } = require('../selectors/widgets');
-const { showConnectionsSelector, dashboardResource, isDashboardLoading } = require('../selectors/dashboard');
+const { showConnectionsSelector, dashboardResource, isDashboardLoading, buttonCanEdit } = require('../selectors/dashboard');
 const { dashboardSelector } = require('./widgetbuilder/commons');
 
 const { createWidget, toggleConnection } = require('../actions/widgets');
@@ -40,12 +40,13 @@ const Toolbar = compose(
             isLoggedIn,
             dashboardResource,
             dashboardHasWidgets,
+            buttonCanEdit,
             getWidgetsDependenciesGroups,
-            (showConnections, logged, resource, hasWidgets, groups = []) => ({
+            (showConnections, logged, resource, hasWidgets, edit, groups = []) => ({
                 showConnections,
                 hasConnections: groups.length > 0,
                 hasWidgets,
-                canEdit: (resource ? resource.canEdit : true),
+                canEdit: edit,
                 canSave: logged && hasWidgets && (resource ? resource.canEdit : true)
             })
         ),
@@ -70,6 +71,7 @@ const Toolbar = compose(
             tooltipId: 'dashboard.editor.addACardToTheDashboard',
             bsStyle: 'primary',
             visible: canEdit,
+            id: 'ms-add-card-dashboard',
             onClick: () => onAddWidget()
         }, {
             glyph: 'floppy-disk',
@@ -82,7 +84,7 @@ const Toolbar = compose(
             glyph: showConnections ? 'bulb-on' : 'bulb-off',
             tooltipId: showConnections ? 'dashboard.editor.hideConnections' : 'dashboard.editor.showConnections',
             bsStyle: showConnections ? 'success' : 'primary',
-            visible: !!hasWidgets && !!hasConnections,
+            visible: !!hasWidgets && !!hasConnections || !canEdit,
             onClick: () => onShowConnections(!showConnections)
         }]
     }))

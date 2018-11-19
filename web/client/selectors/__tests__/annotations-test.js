@@ -535,8 +535,8 @@ describe('Test annotations selectors', () => {
     });
     it('test annotationsInfoSelector', () => {
         const retVal = annotationsInfoSelector(state);
-        expect(Object.keys(retVal).length).toBe(24);
-        const params = ["closing", "config", "drawing", "drawingText",
+        expect(Object.keys(retVal).length).toBe(25);
+        const params = ["showEdit", "closing", "config", "drawing", "drawingText",
         "errors", "editing", "coordinateEditorEnabled", "editedFields",
         "mode", "removing", "selected", "featureType",
         "showUnsavedChangesModal", "showUnsavedStyleModal",

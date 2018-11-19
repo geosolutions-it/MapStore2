@@ -11,7 +11,8 @@ class ColorPicker extends React.Component {
         text: PropTypes.string,
         line: PropTypes.bool,
         style: PropTypes.object,
-        disabled: PropTypes.bool
+        disabled: PropTypes.bool,
+        pickerProps: PropTypes.object
     };
 
     static defaultProps = {
@@ -24,7 +25,8 @@ class ColorPicker extends React.Component {
             b: 0,
             a: 1
         },
-        onChangeColor: () => {}
+        onChangeColor: () => {},
+        pickerProps: {}
     };
 
     state = {
@@ -33,15 +35,16 @@ class ColorPicker extends React.Component {
 
     getStyle = () => {
         let color = this.state.color || this.props.value;
+        let {r, g, b, a} = color;
         return this.props.line ?
         {
-            color: `rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`,
-            background: `rgba(${ 256 - color.r }, ${ 256 - color.g }, ${ 256 - color.b }, 1)`
+            color: `rgba(${ r }, ${ g }, ${ b }, ${ a })`,
+            background: `rgba(${ 256 - r }, ${ 256 - g }, ${ 256 - b }, 1)`
         }
       :
         {
-            background: `rgba(${ color.r }, ${ color.g }, ${ color.b }, ${ color.a })`,
-            color: `rgba(${ 256 - color.r }, ${ 256 - color.g }, ${ 256 - color.b }, 1)`
+            background: `rgba(${ r }, ${ g }, ${ b }, ${ a })`,
+            color: `rgba(${ 256 - r }, ${ 256 - g }, ${ 256 - b }, 1)`
         };
     };
 
@@ -53,7 +56,7 @@ class ColorPicker extends React.Component {
         </div>
         { this.state.displayColorPicker ? <div className="cp-popover" style={{width: this.props.style && this.props.style.width}}>
           <div className="cp-cover" onClick={ () => { this.setState({ displayColorPicker: false, color: undefined}); this.props.onChangeColor(this.state.color); }}/>
-          <SketchPicker color={ this.state.color || this.props.value} onChange={ (color) => { this.setState({ color: color.rgb }); }} />
+          <SketchPicker {...this.props.pickerProps} color={ this.state.color || this.props.value} onChange={ (color) => { this.setState({ color: color.rgb }); }} />
         </div> : null }
 
       </div>

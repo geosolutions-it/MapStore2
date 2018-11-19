@@ -11,18 +11,23 @@ const Message = require('../../components/I18N/Message');
 const {defaultProps} = require('recompose');
 const {Glyphicon} = require('react-bootstrap');
 
+const assign = require('object-assign');
 const HTMLViewer = require('../../components/data/identify/viewers/HTMLViewer');
 const TextViewer = require('../../components/data/identify/viewers/TextViewer');
 const JSONViewer = require('../../components/data/identify/viewers/JSONViewer');
 const HtmlRenderer = require('../../components/misc/HtmlRenderer');
 
 const MapInfoUtils = require('../../utils/MapInfoUtils');
+const PluginsUtils = require('../../utils/PluginsUtils');
 
 const General = require('../../components/TOC/fragments/settings/General');
 const Display = require('../../components/TOC/fragments/settings/Display');
+
 const WMSStyle = require('../../components/TOC/fragments/settings/WMSStyle');
+
 const Elevation = require('../../components/TOC/fragments/settings/Elevation');
 const FeatureInfoEditor = require('../../components/TOC/fragments/settings/FeatureInfoEditor');
+const LoadingView = require('../../components/misc/LoadingView');
 
 const responses = {
     html: require('raw-loader!./featureInfoPreviews/responseHTML.txt'),
@@ -98,53 +103,97 @@ const FeatureInfo = defaultProps({
     defaultInfoFormat: MapInfoUtils.getAvailableInfoFormat()
 })(require('../../components/TOC/fragments/settings/FeatureInfo'));
 
-module.exports = ({showFeatureInfoTab = true, ...props}) => [
-    {
-        id: 'general',
-        titleId: 'layerProperties.general',
-        tooltipId: 'layerProperties.general',
-        glyph: 'wrench',
-        visible: true,
-        Component: General
-    },
-    {
-        id: 'display',
-        titleId: 'layerProperties.display',
-        tooltipId: 'layerProperties.display',
-        glyph: 'eye-open',
-        visible: props.settings.nodeType === 'layers',
-        Component: Display
-    },
-    {
-        id: 'style',
-        titleId: 'layerProperties.style',
-        tooltipId: 'layerProperties.style',
-        glyph: 'dropper',
-        visible: props.settings.nodeType === 'layers' && props.element.type === "wms",
-        Component: WMSStyle
-    },
-    {
-        id: 'feature',
-        titleId: 'layerProperties.featureInfo',
-        tooltipId: 'layerProperties.featureInfo',
-        glyph: 'map-marker',
-        visible: showFeatureInfoTab && props.settings.nodeType === 'layers' && props.element.type === "wms" && !(props.element.featureInfo && props.element.featureInfo.viewer),
-        Component: FeatureInfo,
-        toolbar: [
-            {
-                glyph: 'pencil',
-                tooltipId: 'layerProperties.editCustomFormat',
-                visible: !props.showEditor && props.element && props.element.featureInfo && props.element.featureInfo.format === 'TEMPLATE' || false,
-                onClick: () => props.onShowEditor && props.onShowEditor(!props.showEditor)
+let settingsPlugins = null;
+const configuredPlugins = {};
+
+const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
+    if (plugin) {
+        let configured = configuredPlugins[plugin.name];
+        if (!configured) {
+            configured = PluginsUtils.getConfiguredPlugin(plugin, loaded, loadingComp);
+            if (configured && configured.loaded) {
+                configuredPlugins[plugin.name] = configured;
             }
-        ]
-    },
-    {
-        id: 'elevation',
-        titleId: 'layerProperties.elevation',
-        tooltipId: 'layerProperties.elevation',
-        glyph: '1-vector',
-        visible: props.settings.nodeType === 'layers' && props.element.type === "wms" && props.element.dimensions && props.getDimension && props.getDimension(props.element.dimensions, 'elevation'),
-        Component: Elevation
+        }
+        return configured;
     }
-].filter(tab => tab.visible);
+    return plugin;
+};
+
+module.exports = ({showFeatureInfoTab = true, ...props}, {plugins, pluginsConfig, loadedPlugins}) => {
+    if (!settingsPlugins) {
+        settingsPlugins = assign({}, (PluginsUtils.getPluginItems({}, plugins, pluginsConfig, "TOC", props.id, true, loadedPlugins, (p) => p.container === 'TOCItemSettings') || [])
+            .reduce((previoius, p) => ({[p.name]: p}), {}));
+    }
+
+    return [
+        {
+            id: 'general',
+            titleId: 'layerProperties.general',
+            tooltipId: 'layerProperties.general',
+            glyph: 'wrench',
+            visible: true,
+            Component: General
+        },
+        {
+            id: 'display',
+            titleId: 'layerProperties.display',
+            tooltipId: 'layerProperties.display',
+            glyph: 'eye-open',
+            visible: props.settings.nodeType === 'layers',
+            Component: Display
+        },
+        {
+            id: 'style',
+            titleId: 'layerProperties.style',
+            tooltipId: 'layerProperties.style',
+            glyph: 'dropper',
+            visible: props.settings.nodeType === 'layers' && props.element.type === "wms",
+            Component: props.activeTab === 'style' && props.element.thematic && settingsPlugins.ThematicLayer && getConfiguredPlugin(settingsPlugins.ThematicLayer, loadedPlugins, <LoadingView width={100} height={100} />) || WMSStyle,
+            toolbar: [
+                {
+                    glyph: 'list',
+                    tooltipId: 'toc.thematic.classify',
+                    visible: settingsPlugins.ThematicLayer && props.isAdmin && !props.element.thematic && props.element.search || false,
+                    onClick: () => props.onUpdateParams && props.onUpdateParams({
+                        thematic: {
+                            unconfigured: true
+                        }
+                    })
+                },
+                {
+                    glyph: 'trash',
+                    tooltipId: 'toc.thematic.remove_thematic',
+                    visible: settingsPlugins.ThematicLayer && props.isAdmin && props.element.thematic || false,
+                    onClick: () => props.onUpdateParams && props.onUpdateParams({
+                        thematic: null
+                    })
+                }
+            ]
+        },
+        {
+            id: 'feature',
+            titleId: 'layerProperties.featureInfo',
+            tooltipId: 'layerProperties.featureInfo',
+            glyph: 'map-marker',
+            visible: showFeatureInfoTab && props.settings.nodeType === 'layers' && props.element.type === "wms" && !(props.element.featureInfo && props.element.featureInfo.viewer),
+            Component: FeatureInfo,
+            toolbar: [
+                {
+                    glyph: 'pencil',
+                    tooltipId: 'layerProperties.editCustomFormat',
+                    visible: !props.showEditor && props.element && props.element.featureInfo && props.element.featureInfo.format === 'TEMPLATE' || false,
+                    onClick: () => props.onShowEditor && props.onShowEditor(!props.showEditor)
+                }
+            ]
+        },
+        {
+            id: 'elevation',
+            titleId: 'layerProperties.elevation',
+            tooltipId: 'layerProperties.elevation',
+            glyph: '1-vector',
+            visible: props.settings.nodeType === 'layers' && props.element.type === "wms" && props.element.dimensions && props.getDimension && props.getDimension(props.element.dimensions, 'elevation'),
+            Component: Elevation
+        }
+    ].filter(tab => tab.visible);
+};

@@ -17,7 +17,7 @@ const {layersSelector} = require('../selectors/layers');
 
 const {getFeatureInfo, getVectorInfo, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState} = require('../actions/mapInfo');
 const {changeMousePointer} = require('../actions/map');
-const {changeMapInfoFormat, updateCenterToMarker, closeIdentify} = require('../actions/mapInfo');
+const {changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults} = require('../actions/mapInfo');
 const {currentLocaleSelector} = require('../selectors/locale');
 
 const {compose, defaultProps} = require('recompose');
@@ -119,7 +119,8 @@ const identifyDefaultProps = defaultProps({
     size: 660,
     getButtons: defaultIdentifyButtons,
     showFullscreen: false,
-    validator: MapInfoUtils.getValidator
+    validator: MapInfoUtils.getValidator,
+    zIndex: 1050
 });
 
 /**
@@ -143,6 +144,7 @@ const identifyDefaultProps = defaultProps({
  * @prop cfg.viewerOptions.container {expression} the container of the viewer, expression from the context
  * @prop cfg.viewerOptions.header {expression} the geader of the viewer, expression from the context{expression}
  * @prop cfg.disableCenterToMarker {bool} disable zoom to marker action
+ * @prop cfg.zIndex {number} component z index order
  *
  * @example
  * {
@@ -163,7 +165,8 @@ const IdentifyPlugin = compose(
     connect(selector, {
         sendRequest: getFeatureInfo,
         localRequest: getVectorInfo,
-        purgeResults: closeIdentify,
+        purgeResults: purgeMapInfoResults,
+        closeIdentify,
         changeMousePointer,
         showMarker: showMapinfoMarker,
         noQueryableLayers,

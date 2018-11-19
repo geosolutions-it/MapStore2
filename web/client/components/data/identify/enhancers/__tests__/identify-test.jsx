@@ -369,4 +369,31 @@ describe("test identify enhancers", () => {
         expect(spySetIndex.calls.length).toEqual(0);
     });
 
+    it("test identifyLifecycle on close", () => {
+        const Component = identifyLifecycle(({onClose = () => {}}) => <div id="test-component" onClick={() => onClose()}></div>);
+        const testHandlers = {
+            closeIdentify: () => {},
+            purgeResults: () => {},
+            hideMarker: () => {}
+        };
+        const spyCloseIdentify = expect.spyOn(testHandlers, 'closeIdentify');
+        const spyPurgeResults = expect.spyOn(testHandlers, 'purgeResults');
+        const spyHideMarker = expect.spyOn(testHandlers, 'hideMarker');
+        ReactDOM.render(
+            <Component
+                enabled
+                responses={[{}]}
+                closeIdentify={testHandlers.closeIdentify}
+                purgeResults={testHandlers.purgeResults}
+                hideMarker={testHandlers.hideMarker}/>,
+            document.getElementById("container")
+        );
+
+        const testComponent = document.getElementById('test-component');
+        TestUtils.Simulate.click(testComponent);
+        expect(spyCloseIdentify).toHaveBeenCalled();
+        expect(spyPurgeResults).toHaveBeenCalled();
+        expect(spyHideMarker).toHaveBeenCalled();
+    });
+
 });

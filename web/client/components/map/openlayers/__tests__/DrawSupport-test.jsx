@@ -9,6 +9,7 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const expect = require('expect');
 const ol = require('openlayers');
+const assign = require('object-assign');
 const DrawSupport = require('../DrawSupport');
 const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
 
@@ -1617,9 +1618,12 @@ describe('Test DrawSupport', () => {
             y: 0
         };
         const projection = 'EPSG:3857';
-        const geometry = support.createOLGeometry({type, coordinates, radius, center, projection});
+        const geometry = support.createOLGeometry({type, coordinates, radius, center, projection, options: { geodesic: true }});
         const geometryCoordinates = geometry.getCoordinates();
         expect(geometryCoordinates[0].length).toBe(101);
+        const geometryProperties = geometry.getProperties();
+        const geodesicCenter = geometryProperties.geodesicCenter;
+        expect(geodesicCenter).toEqual([0, 0]);
     });
 
     it('test createOLGeometry type Circle missing param', () => {
@@ -1632,17 +1636,26 @@ describe('Test DrawSupport', () => {
             y: 0
         };
 
-        const geometryMissingCenter = support.createOLGeometry({type, radius, projection});
+        const geometryMissingCenter = support.createOLGeometry({type, radius, projection, options: { geodesic: true }});
         let geometryCoordinates = geometryMissingCenter.getCoordinates();
         expect(geometryCoordinates.length).toBe(0);
+        let geometryProperties = geometryMissingCenter.getProperties();
+        let geodesicCenter = geometryProperties.geodesicCenter;
+        expect(geodesicCenter).toBe(undefined);
 
-        const geometryMissingProjection = support.createOLGeometry({type, radius, center});
+        const geometryMissingProjection = support.createOLGeometry({type, radius, center, options: { geodesic: true }});
         geometryCoordinates = geometryMissingProjection.getCoordinates();
         expect(geometryCoordinates.length).toBe(0);
+        geometryProperties = geometryMissingProjection.getProperties();
+        geodesicCenter = geometryProperties.geodesicCenter;
+        expect(geodesicCenter).toBe(undefined);
 
-        const geometryMissingRadius = support.createOLGeometry({type, projection, center});
+        const geometryMissingRadius = support.createOLGeometry({type, projection, center, options: { geodesic: true }});
         geometryCoordinates = geometryMissingRadius.getCoordinates();
         expect(geometryCoordinates.length).toBe(0);
+        geometryProperties = geometryMissingRadius.getProperties();
+        geodesicCenter = geometryProperties.geodesicCenter;
+        expect(geodesicCenter).toBe(undefined);
     });
 
     it('test createOLGeometry type Circle wrong center', () => {
@@ -1654,9 +1667,12 @@ describe('Test DrawSupport', () => {
             y: 0
         };
         const projection = 'EPSG:3857';
-        const geometry = support.createOLGeometry({type, radius, center, projection});
+        const geometry = support.createOLGeometry({type, radius, center, projection, options: { geodesic: true }});
         const geometryCoordinates = geometry.getCoordinates();
         expect(geometryCoordinates.length).toBe(0);
+        const geometryProperties = geometry.getProperties();
+        const geodesicCenter = geometryProperties.geodesicCenter;
+        expect(geodesicCenter).toEqual(undefined);
     });
     it('test fromOLFeature verify radius', () => {
 
@@ -1691,5 +1707,139 @@ describe('Test DrawSupport', () => {
         const featureData = support.fromOLFeature(simplifiedCircle);
 
         expect(Math.round(featureData.radius)).toBe(80);
+    });
+
+    it('test endDrawing action', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:3857'
+                })
+            })
+        };
+        const actions = {
+            onEndDrawing: () => {}
+        };
+
+        const spyonEndDrawing = expect.spyOn(actions, "onEndDrawing");
+
+        ReactDOM.render(<DrawSupport
+            drawMethod="Circle"
+            map={fakeMap}
+            features={[]}
+            onEndDrawing={actions.onEndDrawing}
+            options={{geodesic: true}}/>, document.getElementById("container"));
+
+        ReactDOM.render(<DrawSupport
+            drawMethod="Circle"
+            map={fakeMap}
+            features={[{
+                center: {x: -11271098, y: 7748880},
+                coordinates: [-11271098, 7748880],
+                projection: 'EPSG:3857',
+                radius: 2000000,
+                type: 'Polygon'
+            }]}
+            drawStatus="endDrawing"
+            onEndDrawing={actions.onEndDrawing}
+            options={{geodesic: true}}/>, document.getElementById("container"));
+
+        expect(spyonEndDrawing).toHaveBeenCalled();
+
+    });
+
+    it('test endDrawing action clear', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:3857'
+                })
+            })
+        };
+
+        const radius = 2000000;
+        let properties = {
+            drawMethod: "Circle",
+            map: fakeMap,
+            features: [],
+            onEndDrawing: (feature, owner) => {
+                expect(feature).toExist();
+                expect(owner).toNotExist();
+                expect(feature.radius).toBe(radius);
+            },
+            options: {geodesic: true}
+        };
+        ReactDOM.render(<DrawSupport {...properties}/>, document.getElementById("container"));
+
+        let newProps = assign({}, properties, {
+            features: [{
+                center: {x: -11271098, y: 7748880},
+                coordinates: [-11271098, 7748880],
+                projection: 'EPSG:3857',
+                radius,
+                type: 'Polygon'
+            }],
+            drawStatus: "endDrawing"
+        });
+        ReactDOM.render(<DrawSupport {...newProps}/>, document.getElementById("container"));
+    });
+
+    it('test endDrawing action without features', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:3857'
+                })
+            })
+        };
+        const actions = {
+            onEndDrawing: () => {}
+        };
+
+        const spyonEndDrawing = expect.spyOn(actions, "onEndDrawing");
+
+        ReactDOM.render(<DrawSupport
+            drawMethod="Circle"
+            map={fakeMap}
+            features={[]}
+            onEndDrawing={actions.onEndDrawing}
+            options={{geodesic: true}}/>, document.getElementById("container"));
+
+        ReactDOM.render(<DrawSupport
+            drawMethod="Circle"
+            map={fakeMap}
+            features={[]}
+            drawStatus="endDrawing"
+            onEndDrawing={actions.onEndDrawing}
+            options={{geodesic: true}}/>, document.getElementById("container"));
+
+        expect(spyonEndDrawing).toNotHaveBeenCalled();
     });
 });

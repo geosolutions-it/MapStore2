@@ -8,18 +8,20 @@
 
 const Rx = require('rxjs');
 const uuidv1 = require('uuid/v1');
+const assign = require('object-assign');
 const {basicError, basicSuccess} = require('../utils/NotificationUtils');
 const GeoStoreApi = require('../api/GeoStoreDAO');
 const { MAP_INFO_LOADED } = require('../actions/config');
 const {isNil, find} = require('lodash');
 const {
-    SAVE_DETAILS, SAVE_RESOURCE_DETAILS,
-    DELETE_MAP, OPEN_DETAILS_PANEL,
-    CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE,
-    setDetailsChanged, updateDetails,
-    mapDeleting, toggleDetailsEditability, mapDeleted, loadMaps,
+    SAVE_DETAILS, SAVE_RESOURCE_DETAILS, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
+    DELETE_MAP, OPEN_DETAILS_PANEL, MAPS_LOAD_MAP,
+    CLOSE_DETAILS_PANEL, NO_DETAILS_AVAILABLE, SAVE_MAP_RESOURCE,
+    setDetailsChanged, updateDetails, mapsLoading, mapsLoaded,
+    mapDeleting, toggleDetailsEditability, mapDeleted, loadError,
     doNothing, detailsLoaded, detailsSaving, onDisplayMetadataEdit,
-    RESET_UPDATING, resetUpdating, toggleDetailsSheet
+    RESET_UPDATING, resetUpdating, toggleDetailsSheet, getMapResourcesByCategory,
+    mapUpdating, savingMap, mapCreated, mapError
 } = require('../actions/maps');
 const {
     resetCurrentMap, EDIT_MAP
@@ -28,7 +30,7 @@ const {closeFeatureGrid} = require('../actions/featuregrid');
 const {toggleControl} = require('../actions/controls');
 const {
     mapPermissionsFromIdSelector, mapThumbnailsUriFromIdSelector,
-    mapDetailsUriFromIdSelector, isMapsLastPageSelector
+    mapDetailsUriFromIdSelector
 } = require('../selectors/maps');
 
 const {
@@ -42,9 +44,11 @@ const {
 
 const {userParamsSelector} = require('../selectors/security');
 const {deleteResourceById, createAssociatedResource, deleteAssociatedResource, updateAssociatedResource} = require('../utils/ObservableUtils');
-const ConfigUtils = require('../utils/ConfigUtils');
 
 const {getIdFromUri} = require('../utils/MapUtils');
+
+const {getErrorMessage} = require('../utils/LocaleUtils');
+const Persistence = require("../api/persistence");
 
 const manageMapResource = ({map = {}, attribute = "", resource = null, type = "STRING", optionsDel = {}, messages = {}} = {}) => {
     const attrVal = map[attribute];
@@ -167,6 +171,33 @@ const fetchDetailsFromResourceEpic = (action$, store) =>
             });
     });
 
+    /**
+         Epics used to load Maps
+     */
+const loadMapsEpic = (action$) =>
+    action$.ofType(MAPS_LOAD_MAP)
+    .switchMap((action) => {
+        let {params, searchText, geoStoreUrl} = action;
+        let modifiedSearchText = searchText.replace(/[/?:;@=&\\]+/g, '');
+        let opts = assign({}, {params}, geoStoreUrl ? {baseURL: geoStoreUrl} : {});
+        return Rx.Observable.of(
+            mapsLoading(modifiedSearchText, params),
+            getMapResourcesByCategory("MAP", modifiedSearchText, opts)
+        );
+
+    });
+
+const getMapsResourcesByCategoryEpic = (action$) =>
+    action$.ofType(MAPS_GET_MAP_RESOURCES_BY_CATEGORY)
+    .switchMap((action) => {
+        let {map, searchText, opts } = action;
+        return Rx.Observable.fromPromise(GeoStoreApi.getResourcesByCategory(map, searchText, opts)
+    .then(data => data))
+    .switchMap((response) => Rx.Observable.of(
+        mapsLoaded(response, opts.params, searchText)
+    ))
+    .catch((e) => loadError(e));
+    });
 const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
     action$.ofType(DELETE_MAP)
     .switchMap((action) => {
@@ -199,9 +230,11 @@ const deleteMapAndAssociatedResourcesEpic = (action$, store) =>
             }
             if (map.resType === "success") {
                 actions.push(mapDeleted(mapId, "success"));
-                if ( isMapsLastPageSelector(state)) {
-                    actions.push(loadMaps(false, state.maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*"));
-                }
+                // TODO: if after delete the page is empty, you should re-do the query for the previous page (if it exists)
+                // something like :
+                // if ( condition ) {
+                //    actions.push(loadMaps(false, state.maps.searchText || ConfigUtils.getDefaults().initialMapFilter || "*")); // first page
+                // }
             }
             if (map.resType === "success" && details.resType === "success" && thumbnail.resType === "success") {
                 actions.push(basicSuccess({ message: "maps.feedback.allResDeleted"}));
@@ -267,15 +300,62 @@ const storeDetailsInfoEpic = (action$, store) =>
                     );
             });
     });
-
-
+// UPDATE MAP_RESOURCE FLOW
+const updateMapResource = (resource) => Persistence.updateResource(resource)
+        .switchMap(() =>
+            Rx.Observable.of(basicSuccess({
+                    title: 'map.savedMapTitle',
+                    message: 'map.savedMapMessage',
+                    autoDismiss: 6,
+                    position: 'tc'
+                        })
+            )
+        )
+        .catch((e) => Rx.Observable.of(loadError(e), basicError({
+            ...getErrorMessage(e, 'geostore', 'mapsError'),
+            autoDismiss: 6,
+            position: 'tc'
+        })
+        ))
+        .startWith(mapUpdating(resource.metadata));
+// CREATE MAP_RESOURCE FLOW
+const createMapResource = (resource) => Persistence.createResource(resource)
+        .switchMap((rid) =>
+            Rx.Observable.of(
+                mapCreated(rid, assign({id: rid, canDelete: true, canEdit: true, canCopy: true}, resource.metadata), resource.data),
+                onDisplayMetadataEdit(false),
+                basicSuccess({
+                    title: 'map.savedMapTitle',
+                    message: 'map.savedMapMessage',
+                    autoDismiss: 6,
+                    position: 'tc'
+                })
+                )
+        )
+        .catch((e) => Rx.Observable.of(mapError(e), basicError({
+                ...getErrorMessage(e, 'geostore', 'mapsError'),
+                autoDismiss: 6,
+                position: 'tc'
+            })
+        ))
+        .startWith(savingMap(resource.metadata));
+/**
+ * Create or update map reosurce with persistence api
+ */
+const mapSaveMapResourceEpic = (action$) =>
+      action$.ofType(SAVE_MAP_RESOURCE)
+      .exhaustMap(({resource}) => (!resource.id ? createMapResource(resource) : updateMapResource(resource))
+    );
 module.exports = {
+    loadMapsEpic,
     resetCurrentMapEpic,
     storeDetailsInfoEpic,
     closeDetailsPanelEpic,
     fetchDataForDetailsPanel,
     deleteMapAndAssociatedResourcesEpic,
+    getMapsResourcesByCategoryEpic,
     setDetailsChangedEpic,
     fetchDetailsFromResourceEpic,
-    saveResourceDetailsEpic
+    saveResourceDetailsEpic,
+    mapSaveMapResourceEpic
 };

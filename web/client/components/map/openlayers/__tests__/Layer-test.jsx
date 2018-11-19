@@ -261,6 +261,95 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
     });
 
+    it('test wmts max and min resolutions', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "matrixIds": {
+                'EPSG:900913': [
+                    {
+                        identifier: "EPSG:900913:0",
+                        ranges: {
+                            cols: {min: "0", max: "0"},
+                            rows: {min: "0", max: "0"}
+                        }
+
+                    },
+                    {
+                        identifier: "EPSG:900913:1",
+                        ranges: {
+                            cols: {min: "0", max: "1"},
+                            rows: {min: "0", max: "1"}
+                        }
+
+                    },
+                    {
+                        identifier: "EPSG:900913:2",
+                        ranges: {
+                            cols: {min: "0", max: "3"},
+                            rows: {min: "1", max: "2"}
+                        }
+
+                    }
+                ]
+
+            },
+
+            "tileMatrixSet": [
+                {
+                    "TileMatrix": [
+                        {
+                            "MatrixHeight": "1",
+                            "MatrixWidth": "1",
+                            "ScaleDenominator": "5.590822639508929E8",
+                            "TileHeight": "256",
+                            "TileWidth": "256",
+                            "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                            "ows:Identifier": "EPSG:900913:0"
+                        },
+                        {
+                            "MatrixHeight": "2",
+                            "MatrixWidth": "2",
+                            "ScaleDenominator": "2.7954113197544646E8",
+                            "TileHeight": "256",
+                            "TileWidth": "256",
+                            "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                            "ows:Identifier": "EPSG:900913:1"
+                        },
+                        {
+                            "MatrixHeight": "4",
+                            "MatrixWidth": "4",
+                            "ScaleDenominator": "1.3977056598772323E8",
+                            "TileHeight": "256",
+                            "TileWidth": "256",
+                            "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                            "ows:Identifier": "EPSG:900913:2"
+                        }
+                    ],
+                    "ows:Identifier": "EPSG:900913",
+                    "ows:SupportedCRS": "urn:ogc:def:crs:EPSG:900913"
+                }
+            ],
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        const wmtsLayer = map.getLayers().item(0);
+        expect(Math.round(wmtsLayer.getMinResolution())).toBe(39136);
+        expect(Math.round(wmtsLayer.getMaxResolution())).toBe(156543);
+    });
+
     it('creates a wmts layer with multiple urls for openlayers map', () => {
         var options = {
             "type": "wmts",
@@ -998,6 +1087,50 @@ describe('Openlayers layer', () => {
                  options={assign({}, options, {params: {cql_filter: "EXCLUDE"}})} map={map}/>, document.getElementById("container"));
         expect(layer.layer.getSource().getParams().cql_filter).toBe("EXCLUDE");
     });
+    it('test wms security token on SLD param', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms",
+            params: {
+                SLD: "http://sample.server/geoserver/rest/sld?test1=aaa"
+            }
+        };
+        ConfigUtils.setConfigProp('useAuthenticationRules', true);
+        ConfigUtils.setConfigProp('authenticationRules', [
+            {
+                urlPattern: '.*geostore.*',
+                method: 'bearer'
+            }, {
+                urlPattern: '\\/geoserver.*',
+                authkeyParamName: 'ms2-authkey',
+                method: 'authkey'
+            }
+        ]);
+
+        SecurityUtils.setStore({
+            getState: () => ({
+                security: {
+                    token: "########-####-####-####-###########"
+                }
+            })
+        });
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+            securityToken="########-####-####-####-###########" />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.getLayers().getLength()).toBe(1);
+        expect(layer.layer.getSource()).toExist();
+        expect(layer.layer.getSource().getParams()['ms2-authkey']).toBe("########-####-####-####-###########");
+        expect(layer.layer.getSource().getParams().SLD).toBe("http://sample.server/geoserver/rest/sld?test1=aaa&ms2-authkey=" + encodeURIComponent("########-####-####-####-###########"));
+    });
     it('test wms security token', () => {
         const options = {
             type: "wms",
@@ -1170,5 +1303,150 @@ describe('Openlayers layer', () => {
         expect(layer.layer.getSource().getUrls().map(u => decodeURIComponent(u))).toEqual(["http://sample.server/geoserver/gwc/service/wmts?ms2-authkey=########-####-$$$$-####-###########"]);
 
 
+    });
+    it('test cql_filter param to be passed to the layer object', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms",
+            params: {
+                CQL_FILTER: "prop = 'value'"
+            }
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("prop = 'value'");
+    });
+    it('test filterObj param to be transformed in cql_filter', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms",
+            filterObj: {
+                filterFields: [
+                    {
+                        groupId: 1,
+                        attribute: "prop2",
+                        exception: null,
+                        operator: "=",
+                        rowId: "3",
+                        type: "number",
+                        value: "value2"
+                    }],
+                groupFields: [{
+                    id: 1,
+                    index: 0,
+                    logic: "OR"
+                }]
+            }
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+
+        expect(layer).toExist();
+
+        expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("(\"prop2\" = 'value2')");
+    });
+    it('test reset of cql_filter (after filterObj gets removed)', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms",
+            filterObj: {
+                filterFields: [
+                    {
+                        groupId: 1,
+                        attribute: "prop2",
+                        exception: null,
+                        operator: "=",
+                        rowId: "3",
+                        type: "number",
+                        value: "value2"
+                    }],
+                groupFields: [{
+                    id: 1,
+                    index: 0,
+                    logic: "OR"
+                }]
+            }
+        };
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+        expect(layer).toExist();
+        expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("(\"prop2\" = 'value2')");
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{...options, filterObj: undefined}}
+            map={map}
+        />, document.getElementById("container"));
+        expect(layer).toExist();
+        expect(layer.layer.getSource().getParams().CQL_FILTER).toBe(undefined);
+    });
+
+    it('test filterObj and cql_filter combination (featuregrid active filter use this combination)', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms",
+            params: {
+                CQL_FILTER: "prop = 'value'"
+            },
+            filterObj: {
+                filterFields: [
+                    {
+                        groupId: 1,
+                        attribute: "prop2",
+                        exception: null,
+                        operator: "=",
+                        rowId: "3",
+                        type: "number",
+                        value: "value2"
+                    }],
+                groupFields: [{
+                    id: 1,
+                    index: 0,
+                    logic: "OR"
+                }]
+            }
+        };
+
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+
+        expect(layer).toExist();
+
+        expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("((\"prop2\" = 'value2')) AND (prop = 'value')");
     });
 });

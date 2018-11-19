@@ -209,22 +209,17 @@ const defaultOLStyles = {
         strokeStyle(options),
         fillStyle(options)
     ))],
-    'GeometryCollection': () => [new ol.style.Style({
-      stroke: new ol.style.Stroke({
-        color: 'magenta',
-        width: 2
-      }),
-      fill: new ol.style.Fill({
-        color: 'magenta'
-      }),
-      image: new ol.style.Circle({
+    'GeometryCollection': options => [new ol.style.Style(assign({},
+        strokeStyle(options),
+        fillStyle(options),
+      {image: new ol.style.Circle({
         radius: 10,
         fill: null,
         stroke: new ol.style.Stroke({
           color: 'magenta'
         })
       })
-    })],
+    }))],
   'Circle': () => [new ol.style.Style({
     stroke: new ol.style.Stroke({
       color: 'red',
@@ -259,9 +254,6 @@ const defaultOLStyles = {
 };
 
 const styleFunction = function(feature, options) {
-/*const styleFunction = function(feature, options) {
-    const type = feature.getGeometry().getType();
-    return defaultStyles[type](options && options.style && options.style[type] && {style: {...options.style[type]}} || options || {});*/
     const type = feature.getGeometry().getType();
     return defaultOLStyles[type](options && options.style && options.style[type] && {style: {...options.style[type]}} || options || {});
 };
@@ -277,6 +269,11 @@ function getMarkerStyle(options) {
     return null;
 }
 
+
+/**
+ * TODO DOCUMENT This
+ *
+*/
 const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, textValues, fallbackStyle, radius = 0 ) => {
     let tempStyle = options.style[geomType] || options.style;
     if (geomType === "MultiLineString" || geomType === "LineString") {

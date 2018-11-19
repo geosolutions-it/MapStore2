@@ -51,12 +51,40 @@ describe('widgets Epics', () => {
                 return count++
                     ? {
                         routing: {
-                            location: "new"
+                            location: { pathname: "new/3012"}
                         }
                     }
                     : {
                         routing: {
-                            location: "old"
+                            location: { pathname: "old/2013"}
+                        }
+                    };
+            });
+    });
+    it('clearWidgetsOnLocationChange does not trigger CLEAR_WIDGETS when change maptype', (done) => {
+        const checkActions = actions => {
+            expect(actions.length).toBe(1);
+            const action = actions[0];
+            expect(action.type).toBe(CLEAR_WIDGETS);
+            done();
+        };
+        let count = 0;
+        testEpic(clearWidgetsOnLocationChange,
+            1,
+            [configureMap(), { type: LOCATION_CHANGE, payload: {
+                pathname: "newPath"
+            }}],
+            checkActions,
+            () => {
+                return count++
+                    ? {
+                        routing: {
+                            location: { pathname: "new-map-type/3012"}
+                        }
+                    }
+                    : {
+                        routing: {
+                            location: { pathname: "old-map-type/2013"}
                         }
                     };
             });
@@ -86,12 +114,12 @@ describe('widgets Epics', () => {
                 return count++
                     ? {
                         routing: {
-                            location: "new"
+                            location: { pathname: "new/3012"}
                         }
                     }
                     : {
                         routing: {
-                            location: "old"
+                            location: { pathname: "old/2013"}
                         }
                     };
             });
@@ -125,12 +153,12 @@ describe('widgets Epics', () => {
                 return count++
                     ? {
                         routing: {
-                            location: "new"
+                            location: { pathname: "new/3012"}
                         }
                     }
                     : {
                         routing: {
-                            location: "old"
+                            location: { pathname: "old/2013"}
                         }
                     };
             });

@@ -7,7 +7,8 @@
 */
 const expect = require('expect');
 
-const feature = require("json-loader!../../test-resources/Annotation.json");
+const feature = require("json-loader!../../test-resources/Annotation_geomColl.json");
+
 const {getAvailableStyler, getRelativeStyler, convertGeoJSONToInternalModel,
     DEFAULT_ANNOTATIONS_STYLES, createFont, circlesToMultiPolygon, textToPoint,
     flattenGeometryCollection, normalizeAnnotation, removeDuplicate,

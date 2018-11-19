@@ -83,7 +83,7 @@ const getStylesObject = ({type = "Point", features = []} = {}) => {
         return p;
     }, {type: "FeatureCollection"}) : {...DEFAULT_ANNOTATIONS_STYLES[type]};
 };
-const getProperties = (props = {}, messages = {}) => ({title: LocaleUtils.getMessageById(messages, "annotations.defaulttitle") || "Default title", id: uuidv1(), ...props});
+const getProperties = (props = {}, messages = {}) => ({title: LocaleUtils.getMessageById(messages, "annotations.defaulttitle") !== "annotations.defaulttitle" ? LocaleUtils.getMessageById(messages, "annotations.defaulttitle") : "Default title", id: uuidv1(), ...props});
 
 const annStyleToOlStyle = (type, style, label = "") => {
     const s = style[type] || style;
@@ -304,7 +304,7 @@ const AnnotationsUtils = {
     * @param {object} style
     * @return {object} feature
     */
-    circlesToMultiPolygon: ({geometries}, {circles}, style = STYLE_CIRCLE) => {
+    circlesToMultiPolygon: ({geometries = []}, {circles = []}, style = STYLE_CIRCLE) => {
         const coordinates = circles.reduce((coords, cIdx) => coords.concat([geometries[cIdx].coordinates]), []);
         return {type: "Feature", geometry: {type: "MultiPolygon", coordinates}, properties: {id: uuidv1(), ms_style: annStyleToOlStyle("Circle", style)}};
     },
@@ -335,7 +335,7 @@ const AnnotationsUtils = {
     * @param {object} style
     * @return {object[]} features
     */
-    textToPoint: ({geometries}, {textGeometriesIndexes, textValues}, style = STYLE_TEXT) => {
+    textToPoint: ({geometries= []}, {textGeometriesIndexes = [], textValues= []}, style = STYLE_TEXT) => {
         return textGeometriesIndexes.map((tIdx, cIdx) => {
             return {type: "Feature", geometry: geometries[tIdx], properties: {id: uuidv1(), ms_style: annStyleToOlStyle("Text", style, textValues[cIdx])}};
         });

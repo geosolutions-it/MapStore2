@@ -20,7 +20,8 @@ const {
     describeSelector,
     getFeatureById,
     attributesSelector,
-    isSyncWmsActive
+    isSyncWmsActive,
+    isFilterActive
 } = require('../query');
 
 const idFt1 = "idFt1";
@@ -390,5 +391,95 @@ describe('Test query selectors', () => {
         expect(fc.features.length).toBe(4);
     });
 
+    it('test isFilterActive selector', () => {
 
+        let isFilterActiveState = isFilterActive({});
+        expect(isFilterActiveState).toBe(false);
+
+        const emptyState = {
+            query: {
+                filterObj: {
+                    filterFields: [],
+                    spatialField: {
+                        method: null,
+                        attribute: 'the_geom',
+                        operation: 'INTERSECTS',
+                        geometry: null
+                    },
+                    crossLayerFilter: null
+                }
+            }
+        };
+
+        isFilterActiveState = isFilterActive(emptyState);
+        expect(isFilterActiveState).toBe(false);
+
+        const spatialState = {
+            query: {
+                filterObj: {
+                    filterFields: [],
+                    spatialField: {
+                        method: 'Circle',
+                        attribute: 'the_geom',
+                        operation: 'INTERSECTS',
+                        geometry: {
+                            type: 'Polygon',
+                            extent: [],
+                            center: [],
+                            coordinates: [],
+                            radius: 424941.79896156304,
+                            projection: 'EPSG:4326'
+                        }
+                    },
+                    crossLayerFilter: null
+                }
+            }
+        };
+
+        isFilterActiveState = isFilterActive(spatialState);
+        expect(isFilterActiveState).toBe(true);
+
+        const attributeState = {
+            query: {
+                filterObj: {
+                    filterFields: [
+                        {rowId: 1, groupId: 1, attribute: 'name', operator: "=", value: 'value'}
+                    ],
+                    spatialField: {
+                        method: null,
+                        attribute: 'the_geom',
+                        operation: 'INTERSECTS',
+                        geometry: null
+                    },
+                    crossLayerFilter: null
+                }
+            }
+        };
+
+        isFilterActiveState = isFilterActive(attributeState);
+        expect(isFilterActiveState).toBe(true);
+
+        const crossLayerState = {
+            query: {
+                filterObj: {
+                    filterFields: [],
+                    spatialField: {
+                        method: null,
+                        attribute: 'the_geom',
+                        operation: 'INTERSECTS',
+                        geometry: null
+                    },
+                    crossLayerFilter: {
+                        attribute: 'the_geom',
+                        operation: 'INTERSECTS',
+                        collectGeometries: {typeName: 'topp:states', filterFields: [], geometryName: 'the_geom'}
+                    }
+                }
+            }
+        };
+
+        isFilterActiveState = isFilterActive(crossLayerState);
+        expect(isFilterActiveState).toBe(true);
+
+    });
 });

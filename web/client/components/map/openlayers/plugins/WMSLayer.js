@@ -14,7 +14,7 @@ const objectAssign = require('object-assign');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
 const ProxyUtils = require('../../../../utils/ProxyUtils');
 const {isArray} = require('lodash');
-const FilterUtils = require('../../../../utils/FilterUtils');
+const {optionsToVendorParams} = require('../../../../utils/VendorParamsUtils');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const mapUtils = require('../../../../utils/MapUtils');
 const ElevationUtils = require('../../../../utils/ElevationUtils');
@@ -24,9 +24,9 @@ const ElevationUtils = require('../../../../utils/ElevationUtils');
     tiled params must be tru if not defined
 */
 function wmsToOpenlayersOptions(options) {
-    const CQL_FILTER = FilterUtils.isFilterValid(options.filterObj) && FilterUtils.toCQLFilter(options.filterObj);
+    const params = optionsToVendorParams(options);
     // NOTE: can we use opacity to manage visibility?
-    return objectAssign({}, options.baseParams, {
+    const result = objectAssign({}, options.baseParams, {
         LAYERS: options.name,
         STYLES: options.style || "",
         FORMAT: options.format || 'image/png',
@@ -34,13 +34,13 @@ function wmsToOpenlayersOptions(options) {
         SRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         CRS: CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS),
         TILED: !isNil(options.tiled) ? options.tiled : true,
-        VERSION: options.version || "1.3.0",
-        CQL_FILTER
+        VERSION: options.version || "1.3.0"
     }, objectAssign(
         {},
         (options._v_ ? {_v_: options._v_} : {}),
-        (options.params || {})
+        (params || {})
     ));
+    return SecurityUtils.addAuthenticationToSLD(result, options);
 }
 
 function getWMSURLs( urls ) {
@@ -165,12 +165,12 @@ Layers.registerType('wms', {
                     }
                     return found;
                 }, false);
-            } else if (!oldOptions.params && newOptions.params) {
+            } else if ((!oldOptions.params && newOptions.params) || (oldOptions.params && !newOptions.params)) {
                 changed = true;
             }
             let oldParams = wmsToOpenlayersOptions(oldOptions);
             let newParams = wmsToOpenlayersOptions(newOptions);
-            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER"].reduce((found, param) => {
+            changed = changed || ["LAYERS", "STYLES", "FORMAT", "TRANSPARENT", "TILED", "VERSION", "_v_", "CQL_FILTER", "SLD", "VIEWPARAMS"].reduce((found, param) => {
                 if (oldParams[param] !== newParams[param]) {
                     return true;
                 }
@@ -186,7 +186,15 @@ Layers.registerType('wms', {
                 });
             }
             if (changed) {
-                layer.getSource().updateParams(objectAssign(newParams, newOptions.params));
+                const params = objectAssign(newParams, SecurityUtils.addAuthenticationToSLD(optionsToVendorParams(newOptions) || {}, newOptions));
+                layer.getSource().updateParams(objectAssign(params, Object.keys(oldParams || {}).reduce((previous, key) => {
+                    return params[key] ? previous : objectAssign(previous, {
+                        [key]: undefined
+                    });
+                }, {})));
+                if (layer.getSource().refresh) {
+                    layer.getSource().refresh();
+                }
             }
             if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken || oldOptions.ratio !== newOptions.ratio) {
                 const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);

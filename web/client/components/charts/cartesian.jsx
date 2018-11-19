@@ -12,6 +12,6 @@ const { XAxis, YAxis, CartesianGrid} = require('recharts');
 
 const renderCartesianTools = ({xAxis, yAxis, cartesian}) => ([
     xAxis && xAxis.show !== false ? <XAxis key="xaxis" {...xAxis}/> : null,
-    yAxis && yAxis.show !== false ? <YAxis key="yaxis" {...yAxis}/> : null,
+    yAxis ? <YAxis key="yaxis" {...yAxis}/> : null,
     cartesian !== false ? <CartesianGrid key="cartesiangrid" {...cartesian}/> : null]);
 module.exports = {renderCartesianTools};

@@ -208,6 +208,15 @@ function updateCenterToMarker(status) {
         status
     };
 }
+
+function featureInfoClick(point, layer) {
+    return {
+        type: FEATURE_INFO_CLICK,
+        point,
+        layer
+    };
+}
+
 const closeIdentify = () => ({
     type: CLOSE_IDENTIFY
 });
@@ -248,5 +257,6 @@ module.exports = {
     errorFeatureInfo,
     loadFeatureInfo,
     toggleMapInfoState,
-    updateCenterToMarker
+    updateCenterToMarker,
+    featureInfoClick
 };

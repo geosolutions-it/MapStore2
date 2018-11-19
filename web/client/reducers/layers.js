@@ -57,7 +57,7 @@ const moveNode = (groups, node, groupId, newLayers, foreground = true) => {
     return LayersUtils.removeEmptyGroups(newGroups);
 };
 
-function layers(state = [], action) {
+function layers(state = { flat: [] }, action) {
     switch (action.type) {
         case TOGGLE_CONTROL: {
             if (action.control === 'RefreshLayers') {
@@ -213,9 +213,10 @@ function layers(state = [], action) {
                 const newLayers = state.flat.filter((layer) => layer.id !== action.node);
                 return assign({}, state, {
                     flat: newLayers,
-                    groups: newGroups
+                    groups: LayersUtils.removeEmptyGroups(newGroups)
                 });
             }
+            return state;
         }
         case ADD_LAYER: {
             let newLayers = (state.flat || []).concat();

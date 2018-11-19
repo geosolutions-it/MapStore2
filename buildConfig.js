@@ -6,8 +6,8 @@ const NoEmitOnErrorsPlugin = require("webpack/lib/NoEmitOnErrorsPlugin");
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const path = require('path');
 const ParallelUglifyPlugin = require("webpack-parallel-uglify-plugin");
-const HtmlWebpackPlugin = require('html-webpack-plugin');
-module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publicPath, cssPrefix) => ({
+
+module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publicPath, cssPrefix, chunks) => ({
     entry: assign({
         'webpack-dev-server': 'webpack-dev-server/client?http://0.0.0.0:8081', // WebpackDevServer host and port
         'webpack': 'webpack/hot/only-dev-server' // "only" prevents reload on syntax errors
@@ -49,24 +49,7 @@ module.exports = (bundles, themeEntries, paths, extractThemesPlugin, prod, publi
         new NormalModuleReplacementPlugin(/proj4$/, path.join(paths.framework, "libs", "proj4")),
         new NoEmitOnErrorsPlugin(),
         extractThemesPlugin
-    ].concat(prod ? [new HtmlWebpackPlugin({
-            template: path.join(paths.framework, 'indexTemplate.html'),
-            chunks: ['mapstore2'],
-            inject: true,
-            hash: true
-    }), new HtmlWebpackPlugin({
-            template: path.join(paths.framework, 'embeddedTemplate.html'),
-            chunks: ['embedded'],
-            inject: true,
-            hash: true,
-            filename: 'embedded.html'
-    }), new HtmlWebpackPlugin({
-            template: path.join(paths.framework, 'apiTemplate.html'),
-            chunks: ['ms2-api'],
-            inject: 'head',
-            hash: true,
-            filename: 'api.html'
-    })] : []).concat(prod ? [new ParallelUglifyPlugin({
+    ].concat(prod && chunks || []).concat(prod ? [new ParallelUglifyPlugin({
         uglifyJS: {
             sourceMap: false,
             compress: {warnings: false},

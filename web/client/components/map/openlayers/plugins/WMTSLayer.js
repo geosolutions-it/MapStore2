@@ -79,11 +79,16 @@ const createLayer = options => {
     urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
     const queryParametersString = urlParser.format({ query: {...queryParameters}});
 
+    const maxResolution = resolutions[0]; // exclusive
+    const minResolution = resolutions[resolutions.length - 1]; // inclusive
+
     return new ol.layer.Tile({
         opacity: options.opacity !== undefined ? options.opacity : 1,
         zIndex: options.zIndex,
         extent: extent,
         visible: options.visibility !== false,
+        maxResolution,
+        minResolution,
         source: new ol.source.WMTS(assign({
             urls: urls.map(u => u + queryParametersString),
             layer: options.name,

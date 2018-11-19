@@ -8,6 +8,7 @@
 
 const {createSelector} = require('reselect');
 const {layersSelector} = require('./layers');
+const {isOpenlayers} = require('./maptype');
 const {isMapInfoOpen} = require('./mapinfo');
 const {head, get} = require('lodash');
 const assign = require('object-assign');
@@ -16,7 +17,6 @@ const annotationsLayerSelector = createSelector([
         layersSelector
     ], (layers) => head(layers.filter(l => l.id === 'annotations'))
 );
-
 
 const removingSelector = (state) => get(state, "annotations.removing");
 const formatSelector = (state) => get(state, "annotations.format");
@@ -44,6 +44,7 @@ const errorsSelector = (state) => get(state, "annotations.validationErrors", {})
 const configSelector = (state) => get(state, "annotations.config", {});
 
 const annotationsInfoSelector = (state) => (assign({}, {
+    showEdit: isOpenlayers(state),
     mouseHoverEvents: isMapInfoOpen(state),
     closing: closingSelector(state),
     format: formatSelector(state),

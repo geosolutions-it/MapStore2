@@ -8,7 +8,7 @@
 var objectAssign = require('object-assign');
 
 var WMSUtils = {
-    PARAM_OPTIONS: ["layers", "styles", "format", "transparent", "version", "tiled", "zindex", "_v_", "cql_filter"],
+    PARAM_OPTIONS: ["layers", "styles", "format", "transparent", "version", "tiled", "zindex", "_v_", "cql_filter", "sld"],
     wmsToLeafletOptions: function(options) {
         var opacity = options.opacity !== undefined ? options.opacity : 1;
         // NOTE: can we use opacity to manage visibility?

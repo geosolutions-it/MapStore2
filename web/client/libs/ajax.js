@@ -56,6 +56,14 @@ function addAuthenticationToAxios(axiosConfig) {
             addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
             return axiosConfig;
         }
+        case 'test': {
+            const token = rule ? rule.token : "";
+            if (!token) {
+                return axiosConfig;
+            }
+            addParameterToAxiosConfig(axiosConfig, rule.authkeyParamName || 'authkey', token);
+            return axiosConfig;
+        }
         case 'basic':
             const basicAuthHeader = SecurityUtils.getBasicAuthHeader();
             if (!basicAuthHeader) {

@@ -206,7 +206,7 @@ const AnnotationsPlugin = connect(annotationsSelector, {
 
 module.exports = {
     AnnotationsPlugin: assign(AnnotationsPlugin, {
-            disablePluginIf: "{state('mapType') === 'cesium'}"
+            disablePluginIf: "{state('mapType') === 'cesium' || state('mapType') === 'leaflet' }"
         }, {
         BurgerMenu: {
             name: 'annotations',
