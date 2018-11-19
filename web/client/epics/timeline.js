@@ -9,7 +9,7 @@ const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } = requir
 
 const {getLayerFromId} = require('../selectors/layers');
 const { rangeSelector, selectedLayerName, selectedLayerUrl } = require('../selectors/timeline');
-const { layerTimeSequenceSelectorCreator, timeDataSelector, layersWithTimeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
+const { layerTimeSequenceSelectorCreator, timeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
 
 const { getNearestDate, roundRangeResolution, isTimeDomainInterval } = require('../utils/TimeUtils');
 const { getHistogram, describeDomains, getDomainValues } = require('../api/MultiDim');
@@ -36,7 +36,7 @@ const domainArgs = (state, paginationOptions = {}) => {
 
 const snapTime = (state, group, time) => {
 
-    if (layersWithTimeDataSelector(state)) {
+    if (selectedLayerName(state)) { // TODO: evaluate to snap to clicked layer instead of current selected layer, and change layer selection
         // do parallel request and return and observable that emit the correct value/ time as it is by default
         return Rx.Observable.forkJoin(
                 getDomainValues(...domainArgs(state, { sort: "asc", fromValue: time }))

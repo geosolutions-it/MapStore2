@@ -1204,7 +1204,7 @@
                 }
             },
             "backwardStep": "Step backward",
-            "forwarStep" : "Step forward",
+            "forwardStep" : "Step forward",
             "play": "play",
             "pause": "pause",
             "stop": "stop"

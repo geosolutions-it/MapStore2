@@ -8,15 +8,14 @@
 const React = require('react');
 
 const moment = require('moment');
-const tooltip = require('../misc/enhancers/tooltip');
 const { isNaN } = require('lodash');
-const { Form, FormGroup, ControlLabel, FormControl, InputGroup, Glyphicon, Button: BButton } = require('react-bootstrap');
+const { Form, FormGroup, ControlLabel, FormControl, InputGroup } = require('react-bootstrap');
 const Message = require('../I18N/Message');
 const InfoPopover = require('../widgets/widget/InfoPopover');
 
 const InlineDateTimeSelector = require('../time/InlineDateTimeSelector');
 const SwitchButton = require('../misc/switch/SwitchButton');
-const Button = tooltip(BButton);
+const SwitchPanel = require('../misc/switch/SwitchPanel');
 
 /**
  *
@@ -56,25 +55,25 @@ module.exports = ({
     timeStep,
     stepUnit,
     onSettingChange = () => { },
-    toggleAnimationMode = () => {},
+    toggleAnimationMode = () => { },
+    toggleAnimationRange = () => { },
     /*
      * Boolean step for animation
      */
     fixedStep = false,
 
     playbackRange = {
-        startPlaybackTime: new Date().toISOString(),
-        endPlaybackTime: new Date().toISOString()
+
     },
     setPlaybackRange = () => { },
-
+    playbackButtons,
     dateSelectorStyle = {
         padding: 0,
         margin: 0,
         border: 'none'
     }
 
-}) => (<div className="ms-playback-settings">
+}) => (<div className="ms-playback-settings" style={{minWidth: 400}}>
     <h4><Message msgId="playback.settings.title" /></h4>
         <FormGroup controlId="frameDuration" >
         <ControlLabel><Message msgId="playback.settings.frameDuration" /></ControlLabel>
@@ -83,7 +82,6 @@ module.exports = ({
                 componentClass="input"
                 type="number"
                 value={frameDuration}
-
                     onChange={({ target = {} } = {}) => onValidInteger(
                     target.value,
                     v => {
@@ -120,21 +118,22 @@ module.exports = ({
             </FormControl>
         </Form>
     </FormGroup>
-    <FormGroup controlId="formPlaybackMode">
-        <ControlLabel><Message msgId="playback.settings.range.title" /><Button className="no-border" bsSize="xs" tooltipId="playback.settings.range.zoomTooltip" ><Glyphicon glyph="search" /></Button></ControlLabel>
-        <InlineDateTimeSelector
-            tooltipId="playback.settings.range.animationStart"
-            glyph="play"
-            date={playbackRange.startPlaybackTime}
-            onUpdate={startPlaybackTime => setPlaybackRange(getPlaybackRange({ ...playbackRange, startPlaybackTime }))}
-            style={dateSelectorStyle} />
-        <InlineDateTimeSelector
-            glyph="stop"
-            tooltipId="playback.settings.range.animationEnd"
-            date={playbackRange.endPlaybackTime}
-            onUpdate={endPlaybackTime => setPlaybackRange(getPlaybackRange({ ...playbackRange, endPlaybackTime }))}
-            style={dateSelectorStyle} />
-    </FormGroup>
+        <SwitchPanel onSwitch={(enabled) => toggleAnimationRange(enabled)} expanded={playbackRange.startPlaybackTime && playbackRange.endPlaybackTime} title={<Message msgId="playback.settings.range.title" />} buttons={playbackButtons}>
+        <FormGroup controlId="formPlaybackMode" style={{margin: 10}}>
+            <InlineDateTimeSelector
+                tooltipId="playback.settings.range.animationStart"
+                glyph="play"
+                date={playbackRange.startPlaybackTime}
+                onUpdate={startPlaybackTime => setPlaybackRange(getPlaybackRange({ ...playbackRange, startPlaybackTime }))}
+                style={dateSelectorStyle} />
+            <InlineDateTimeSelector
+                glyph="stop"
+                tooltipId="playback.settings.range.animationEnd"
+                date={playbackRange.endPlaybackTime}
+                onUpdate={endPlaybackTime => setPlaybackRange(getPlaybackRange({ ...playbackRange, endPlaybackTime }))}
+                style={dateSelectorStyle} />
+        </FormGroup>
+    </SwitchPanel>
     <FormGroup controlId="formPlaybackFollowingMode">
         <Form componentClass="fieldset" inline>
             <ControlLabel><Message msgId="playback.settings.mode.following" /><InfoPopover text={<Message msgId="playback.settings.mode.followingDescription" />} /></ControlLabel>

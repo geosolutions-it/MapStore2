@@ -1496,7 +1496,10 @@
                     "title": "Animations-Wut",
                     "zoomTooltip": "Zoom auf den aktuellen Animationsbereich",
                     "animationStart": "Animation beginnt",
-                    "animationEnd": "Ende der Animation"
+                    "animationEnd": "Ende der Animation",
+                    "zoomToCurrentPlayackRange": "Zoom auf den aktuellen Wiedergabebereich",
+                    "setToCurrentViewRange": "Auf aktuellen Ansichtsbereich setzen",
+                    "fitToSelectedLayerRange": "An den Bereich der ausgewählten Ebene anpassen"
                 },
                 "step": {
                     "fixed": "Feststehender Schritt",
@@ -1515,7 +1518,7 @@
                 }
             },
             "backwardStep": "Schritt zurück",
-            "forwarStep" : "Schritt vorwärts",
+            "forwardStep" : "Schritt vorwärts",
             "play": "abspielen",
             "pause": "Pause",
             "stop": "Stopp"

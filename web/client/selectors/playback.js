@@ -5,10 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
 */
-
-const { selectedLayerSelector } = require('../selectors/timeline');
-const { layerDimensionRangeSelector } = require('../selectors/dimension');
-
 const playbackSettingsSelector = state => state && state.playback && state.playback.settings;
 const frameDurationSelector = state => ((playbackSettingsSelector(state) || {}).frameDuration || 5); // seconds
 const statusSelector = state => state && state.playback && state.playback.status;
@@ -22,9 +18,7 @@ const loadingSelector = state => state && state.playback && state.playback.frame
 const currentFrameSelector = state => state && state.playback && state.playback.currentFrame;
 const range = state => state && state.playback && state.playback.playbackRange;
 const playbackRangeSelector = state => {
-    const layerID = selectedLayerSelector(state);
-    const dataRange = layerDimensionRangeSelector(state, layerID);
-    return range(state) || dataRange && { startPlaybackTime: dataRange.start, endPlaybackTime: dataRange.end };
+    return range(state);
 };
 
 const currentFrameValueSelector = state => (framesSelector(state) || [])[currentFrameSelector(state)];

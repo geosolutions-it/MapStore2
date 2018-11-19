@@ -1496,7 +1496,10 @@
                     "title": "Rabia de animacion",
                     "zoomTooltip": "Zoom al rango de animación actual",
                     "animationStart": "Inicio de animacion",
-                    "animationEnd": "Fin de la animacion"
+                    "animationEnd": "Fin de la animacion",
+                    "zoomToCurrentPlayackRange": "Zoom al rango de reproducción actual",
+                    "setToCurrentViewRange": "Establecer en el rango de vista actual",
+                    "fitToSelectedLayerRange": "Ajustar al rango de la capa seleccionada"
                 },
                 "step": {
                     "fixed": "Paso fijo",
@@ -1515,7 +1518,7 @@
                 }
             },
             "backwardStep": "Paso atrás",
-            "forwarStep" : "paso adelante",
+            "forwardStep" : "paso adelante",
             "play": "jugar",
             "pause": "pausa",
             "stop": "parada"

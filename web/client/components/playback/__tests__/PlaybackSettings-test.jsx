@@ -52,4 +52,42 @@ describe('PlaybackSettings component', () => {
         expect(spyonChangeSetting).toHaveBeenCalled();
         expect(spyonChangeSetting.calls[0].arguments[1]).toBe(1);
     });
+    it('Test PlaybackSettings toggleAnimationRange', () => {
+        const actions = {
+            toggleAnimationRange: () => {}
+        };
+        const spytoggleAnimationRange = expect.spyOn(actions, 'toggleAnimationRange');
+        ReactDOM.render(<PlaybackSettings toggleAnimationRange={actions.toggleAnimationRange} />, document.getElementById("container"));
+        ReactTestUtils.Simulate.click(document.querySelector(".mapstore-switch-panel .m-slider")); // <-- trigger event callback
+        expect(spytoggleAnimationRange).toHaveBeenCalled();
+        expect(spytoggleAnimationRange.calls[0].arguments[0]).toBe(true);
+    });
+    it('Test PlaybackSettings toggleAnimationRange disable', () => {
+        const actions = {
+            toggleAnimationRange: () => { }
+        };
+        const spytoggleAnimationRange = expect.spyOn(actions, 'toggleAnimationRange');
+        ReactDOM.render(<PlaybackSettings playbackRange={{
+            startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" }} toggleAnimationRange={actions.toggleAnimationRange} />, document.getElementById("container"));
+        ReactTestUtils.Simulate.click(document.querySelector(".mapstore-switch-panel .m-slider")); // <-- trigger event callback
+        expect(spytoggleAnimationRange).toHaveBeenCalled();
+        expect(spytoggleAnimationRange.calls[0].arguments[0]).toBe(false);
+    });
+    it('Test PlaybackSettings playbackButtons', () => {
+        const actions = {
+            onClick: () => { }
+        };
+        const spyClick = expect.spyOn(actions, 'onClick');
+        ReactDOM.render(<PlaybackSettings
+            playbackRange={{
+                startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" // this have to be valid to show buttons
+            }}
+         playbackButtons={[{
+            className: "test_button",
+            onClick: actions.onClick
+        }]} />, document.getElementById("container"));
+        ReactTestUtils.Simulate.click(document.querySelector(".mapstore-switch-panel .test_button")); // <-- trigger event callback
+        expect(spyClick).toHaveBeenCalled();
+    });
+
 });

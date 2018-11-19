@@ -8,7 +8,7 @@
 const moment = require('moment');
 const { get } = require('lodash');
 const {
-    PLAY, PAUSE, STOP, STATUS, SET_FRAMES, SET_CURRENT_FRAME, TOGGLE_ANIMATION_MODE,
+    PLAY, PAUSE, STOP, STATUS, SET_FRAMES, SET_CURRENT_FRAME, TOGGLE_ANIMATION_MODE, ANIMATION_STEP_MOVE,
     stop, setFrames, appendFrames, setCurrentFrame,
     framesLoading
 } = require('../actions/playback');
@@ -53,7 +53,7 @@ const domainArgs = (getState, paginationOptions = {}) => {
     const layerUrl = selectedLayerUrl(getState());
     const { startPlaybackTime, endPlaybackTime } = playbackRangeSelector(getState()) || {};
     return [layerUrl, layerName, "time", {
-        limit: BUFFER_SIZE,
+        limit: BUFFER_SIZE, // default, can be overridden by pagination options
         time: startPlaybackTime && endPlaybackTime ? toAbsoluteInterval(startPlaybackTime, endPlaybackTime) : undefined,
         ...paginationOptions
     }];
@@ -66,7 +66,7 @@ const domainArgs = (getState, paginationOptions = {}) => {
  * @param {function} getState returns the state
  * @param {objects} param1 the options to use. May contain `fromValue`
  */
-const createAnimationValues = (getState, { fromValue } = {}) => {
+const createAnimationValues = (getState, { fromValue, limit = BUFFER_SIZE, sort = "asc" } = {}) => {
     const {
         timeStep,
         stepUnit
@@ -80,8 +80,8 @@ const createAnimationValues = (getState, { fromValue } = {}) => {
     if (currentTime !== fromValue) {
         values.push(moment(currentTime).toISOString());
     }
-    for (let i = 0; i < BUFFER_SIZE; i++) {
-        currentTime = moment(currentTime).add(interval);
+    for (let i = 0; i < limit; i++) {
+        currentTime = moment(currentTime).add(sort === "asc" ? interval : -1 * interval);
         if (!endPlaybackTime || currentTime.isBefore(endPlaybackTime)) {
             values.push(currentTime.toISOString());
         } else {
@@ -94,7 +94,7 @@ const createAnimationValues = (getState, { fromValue } = {}) => {
 /**
  * Gets the static list of times to animate
  */
-const filterAnimationValues = (values, getState, {fromValue} = {}) => {
+const filterAnimationValues = (values, getState, {fromValue, limit = BUFFER_SIZE} = {}) => {
     const playbackRange = playbackRangeSelector(getState()) || {};
     const startPlaybackTime = playbackRange.startPlaybackTime;
     const endPlaybackTime = playbackRange.endPlaybackTime;
@@ -104,7 +104,7 @@ const filterAnimationValues = (values, getState, {fromValue} = {}) => {
         // Remove values before fromValue
         .filter(v => fromValue ? moment(v).isAfter(fromValue) : true)
         // limit size to BUFFER_SIZE
-        .slice(0, BUFFER_SIZE));
+        .slice(0, limit));
 };
 
 /**
@@ -113,22 +113,18 @@ const filterAnimationValues = (values, getState, {fromValue} = {}) => {
  *  - If there is a selected layer and there is the Multidim extension, then use it (in favour of static values configured)
  *  - If there are values in the dimension configuration, and the Multidim extension is not present, use them to animate
  */
-const getAnimationFrames = (getState, { fromValue } = {}) => {
+const getAnimationFrames = (getState, options) => {
     if (selectedLayerName(getState())) {
         const values = layerTimeSequenceSelectorCreator(selectedLayerData(getState()))(getState());
         const timeDimConfig = selectedLayerTimeDimensionConfiguration(getState());
         // check if multidim extension is available. It has priority to local values
         if (get(timeDimConfig, "source.type") !== "multidim-extension" && values && values.length > 0) {
-            return filterAnimationValues(values, getState, {fromValue});
+            return filterAnimationValues(values, getState, options);
         }
-        return getDomainValues(...domainArgs(getState, {
-            fromValue: fromValue
-        }))
+        return getDomainValues(...domainArgs(getState, options))
             .map(res => res.DomainValues.Domain.split(","));
     }
-    return createAnimationValues(getState, {
-        fromValue: fromValue
-    });
+    return createAnimationValues(getState, options);
 };
 
 /**
@@ -197,6 +193,11 @@ module.exports = {
                     // the following scan emit a for every event emitted effectively, with correct count
                     // TODO: in case of loop, we can reset to 0 on load end.
                     .map(() => setCurrentFrame(currentFrameSelector(getState()) + 1))
+                    .merge( action$.ofType(ANIMATION_STEP_MOVE)
+                        .map(({direction}) =>
+                            setCurrentFrame(
+                                Math.max(0, currentFrameSelector(getState()) + direction)))
+                    )
                     .concat(Rx.Observable.of(stop()))
                     .takeUntil(action$.ofType(STOP, LOCATION_CHANGE))
         ),
@@ -217,6 +218,19 @@ module.exports = {
                         )
                     )
             ),
+    /**
+     * Allow to move time 1 single step. TODO: evaluate to move this in timeline controls
+     */
+    playbackMoveStep: (action$, { getState = () => { } } = {}) =>
+        action$
+            .ofType(ANIMATION_STEP_MOVE)
+            .filter(() => statusSelector(getState()) !== STATUS.PLAY) // if is playing, the animation manages this event
+            .switchMap(({ direction = 1 }) =>
+                getAnimationFrames(getState, {limit: 1, sort: direction > 0 ? "asc" : "desc", fromValue: currentTimeSelector(getState()) })
+                    .map(([t] = []) => t)
+                    .filter(t => !!t)
+                    .map(t => moveTime(t))
+        ),
     /**
      * During animation, on every current time change event, if the current time is out of the current range window, the timeline will shift to
      * current start-end values

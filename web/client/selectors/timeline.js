@@ -2,7 +2,7 @@ const { get } = require('lodash');
 const { createShallowSelector } = require('../utils/ReselectUtils');
 const { timeIntervalToSequence, timeIntervalToIntervalSequence, analyzeIntervalInRange, isTimeDomainInterval } = require('../utils/TimeUtils');
 const moment = require('moment');
-const { timeDataSelector, currentTimeSelector, offsetTimeSelector } = require('../selectors/dimension');
+const { timeDataSelector, currentTimeSelector, offsetTimeSelector, layerDimensionRangeSelector } = require('../selectors/dimension');
 const {getLayerFromId} = require('../selectors/layers');
 const rangeSelector = state => get(state, 'timeline.range');
 const rangeDataSelector = state => get(state, 'timeline.rangeData');
@@ -126,7 +126,7 @@ const calculateOffsetTimeSelector = (state) => {
 const selectedLayerData = state => getLayerFromId(state, selectedLayerSelector(state));
 const selectedLayerName = state => selectedLayerData(state) && selectedLayerData(state).name;
 const selectedLayerTimeDimensionConfiguration = state => selectedLayerData(state) && selectedLayerData(state).dimensions && selectedLayerData(state).dimensions.filter((x) => x.name === "time");
-const selectedLayerUrl = state => selectedLayerTimeDimensionConfiguration(state).map((l) => l.source.url);
+const selectedLayerUrl = state => selectedLayerTimeDimensionConfiguration(state).map((l) => get(l, "source.url"));
 
 const mouseEventSelector = state => get(state, "timeline.mouseEvent");
 
@@ -135,6 +135,8 @@ const currentTimeRangeSelector = state => {
     const end = offsetTimeSelector(state);
     return start && end && {start, end};
 };
+const selectedLayerDataRangeSelector = state => layerDimensionRangeSelector(state, selectedLayerSelector(state));
+
 
 module.exports = {
     currentTimeRangeSelector,
@@ -146,6 +148,7 @@ module.exports = {
     calculateOffsetTimeSelector,
     selectedLayerData,
     selectedLayerTimeDimensionConfiguration,
+    selectedLayerDataRangeSelector,
     selectedLayerName,
     selectedLayerUrl
 };
