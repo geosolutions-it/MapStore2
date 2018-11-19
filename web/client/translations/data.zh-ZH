@@ -1248,7 +1248,10 @@
                     "title": "Animation Range",
                     "zoomTooltip": "Zoom to current animation range",
                     "animationStart": "Animation start",
-                    "animationEnd": "Animation end"
+                    "animationEnd": "Animation end",
+                    "zoomToCurrentPlayackRange": "Zoom to current playback range",
+                    "setToCurrentViewRange": "Set to current view range",
+                    "fitToSelectedLayerRange": "Fit to selected layer's range"
                 },
                 "step": {
                     "fixed": "Fixed step",

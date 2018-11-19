@@ -67,7 +67,6 @@ module.exports = ({
     },
     setPlaybackRange = () => { },
     playbackButtons,
-
     dateSelectorStyle = {
         padding: 0,
         margin: 0,

@@ -1497,7 +1497,10 @@
                     "title": "Animation rage",
                     "zoomTooltip": "Zoom sur la plage d'animation actuelle",
                     "animationStart": "Début de l'animation",
-                    "animationEnd": "Fin de l'animation"
+                    "animationEnd": "Fin de l'animation",
+                    "zoomToCurrentPlayackRange": "Zoom sur la plage de lecture actuelle",
+                    "setToCurrentViewRange": "Définir à la plage de vue actuelle",
+                    "fitToSelectedLayerRange": "Ajuster à la plage du calque sélectionné"
                 },
                 "step": {
                     "fixed": "Pas fixe",

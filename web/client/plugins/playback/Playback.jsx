@@ -76,15 +76,16 @@ const PlaybackSettings = compose(
             return {
                 playbackButtons: [{
                     glyph: "search",
+                    tooltipId: "playback.settings.range.zoomToCurrentPlayackRange",
                     onClick: () => moveTo({start: playbackRange.startPlaybackTime, end: playbackRange.endPlaybackTime})
                 }, {
                     glyph: "resize-horizontal",
-                    tooltip: "Set to current view range",
+                        tooltipId: "playback.settings.range.setToCurrentViewRange",
                     onClick: () => setPlaybackToCurrentViewRange()
                 }, {
                     glyph: "1-layer",
                     visible: !fixedStep,
-                    tooltip: "Fit to selected layer's range",
+                    tooltipId: "playback.settings.range.fitToSelectedLayerRange",
                     onClick: () => setPlaybackToCurrentLayerDataRange()
                 }]
             };

@@ -1496,7 +1496,10 @@
                     "title": "Intervallo di animazione",
                     "zoomTooltip": "Fai zoom all'intervallo di animazione corrente",
                     "animationStart": "Inizio animazione",
-                    "animationEnd": "Fine animazione"
+                    "animationEnd": "Fine animazione",
+                    "zoomToCurrentPlayackRange": "Zoom all'intervallo di riproduzione corrente",
+                    "setToCurrentViewRange": "Imposta sull'intervallo di visualizzazione corrente",
+                    "fitToSelectedLayerRange": "Adatta ai dati del livello selezionato"
                 },
                 "step": {
                     "fixed": "Passo fisso",
