@@ -137,8 +137,11 @@ class Identify extends React.Component {
                 this.props.purgeResults();
             }
             const queryableLayers = newProps.layers
-                .filter(newProps.queryableLayersFilter)
-                .filter(newProps.layer ? l => l.id === newProps.layer : () => true);
+                .filter(newProps.queryableLayersFilter);
+                /*
+                 * .filter(newProps.layer ? l => l.id === newProps.layer : () => true);
+                 * this line was filtering too much, i.e. see issue https://github.com/geosolutions-it/austrocontrol-C125/issues/97
+                */
             queryableLayers.forEach((layer) => {
                 const {url, request, metadata} = this.props.buildRequest(layer, newProps);
                 if (url) {
