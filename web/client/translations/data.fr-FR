@@ -1514,10 +1514,24 @@
                     "following": "Suivant",
                     "followingDescription": "Lorsque l'animation est active, suivez le curseur"
                 }
-            }
+            },
+            "backwardStep": "reculer",
+            "forwardStep" : "avancer",
+            "play": "jouer",
+            "pause": "pause",
+            "stop": "Arrêtez"
         },
         "timeline": {
-            "currentTime": "Heure actuelle"
+            "currentTime": "Heure actuelle",
+            "offsetTime" : "temps compensé",
+            "hideLayerName" : "cacher le nom de la couche",
+            "showLayerName" : "Afficher le nom de la couche",
+            "enableOffset": "Activer l'heure actuelle avec décalage",
+            "disableOffset": "Désactiver l'heure actuelle avec décalage",
+            "enablePlayBack": "Activer les contrôles de lecture",
+            "disablePlayBack": "Désactiver les contrôles de lecture",
+            "expand" : "Augmenter le curseur temporel",
+            "collapse" : "Réduire le curseur temporel"
         },
         "rulesmanager": {
             "apply": "Appliquer",

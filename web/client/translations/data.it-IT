@@ -1513,10 +1513,24 @@
                     "following": "Inseguimento",
                     "followingDescription": "Durante l'animazione, insegui il cursore"
                 }
-            }
+            },
+            "backwardStep": "Indietro",
+            "forwardStep" : "Avanti",
+            "play": "Play",
+            "pause": "Pausa",
+            "stop": "stop"
         },
         "timeline": {
-            "currentTime": "Istante corrente"
+            "currentTime": "Istante corrente",
+            "offsetTime" : "Fine intervallo",
+            "hideLayerName" : "Nascondi il nome dei livelli",
+            "showLayerName" : "Mostra il nome dei livelli",
+            "enableOffset": "Attiva intervallo temporale",
+            "disableOffset": "Disattiva intervallo temporale",
+            "enablePlayBack": "Abilita i controlli di riproduzione",
+            "disablePlayBack": "Disabilita i controlli di riproduzione",
+            "expand" : "Espandi",
+            "collapse" : "Riduci"
         },
         "rulesmanager": {
             "apply": "Applica",

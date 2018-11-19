@@ -14,8 +14,9 @@ const { compose, withState, withProps, withHandlers, lifecycle} = require('recom
 const { playbackSettingsSelector, playbackRangeSelector} = require('../../selectors/playback');
 const { selectedLayerSelector, rangeSelector, selectedLayerDataRangeSelector} = require('../../selectors/timeline');
 const { selectPlaybackRange, changeSetting, toggleAnimationMode, animationStepMove } = require('../../actions/playback');
-
+const Message = require('../../components/I18N/Message');
 const { onRangeChanged } = require('../../actions/timeline');
+
 
 const Toolbar = require('../../components/misc/toolbar/Toolbar');
 
@@ -153,26 +154,26 @@ module.exports = playbackEnhancer(({
             buttons={[
                 {
                     glyph: "step-backward",
-                    tooltip: 'Step backward',
-                    onClick: backward
+                    onClick: backward,
+                    tooltip: <Message msgId={"playback.backwardStep"} />
                 }, {
                     glyph: status === statusMap.PLAY ? "pause" : "play",
                     onClick: () => status === statusMap.PLAY ? pause() : play(),
-                    tooltip: 'Play'
+                    tooltip: <Message msgId={status === statusMap.PLAY ? "playback.pause" : "playback.play"} />
                 }, {
                     glyph: "stop",
                     onClick: stop,
-                    tooltip: 'Stop'
+                    tooltip: <Message msgId={"playback.stop"} />
                 }, {
                     glyph: "step-forward",
-                    tooltip: 'Step forward',
-                    onClick: forward
+                    onClick: forward,
+                    tooltip: <Message msgId={"playback.forwardStep"} />
                 }, {
                     glyph: "wrench",
                     bsStyle: showSettings ? 'success' : 'primary',
                     active: !!showSettings,
                     onClick: () => onShowSettings(!showSettings),
-                    tooltip: 'Playback settings'
+                    tooltip: <Message msgId={"playback.settings.title"} />
                 }
             ]}/>
     </div>

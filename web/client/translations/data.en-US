@@ -1514,10 +1514,24 @@
                     "following": "Following",
                     "followingDescription": "When the animation is active, follow the cursor"
                 }
-            }
+            },
+            "backwardStep": "Step backward",
+            "forwardStep" : "Step forward",
+            "play": "play",
+            "pause": "pause",
+            "stop": "stop"
         },
         "timeline": {
-            "currentTime": "Current Time"
+            "currentTime": "Current Time",
+            "offsetTime" : "Offset Time",
+            "hideLayerName" : "Hide layers name",
+            "showLayerName" : "Show layers name",
+            "enableOffset": "Enable current time with offset",
+            "disableOffset": "Disable current time with offset",
+            "enablePlayBack": "Enable playback controls",
+            "disablePlayBack": "Disable playback controls",
+            "expand" : "Expand time slider",
+            "collapse" : "Collapse time slider"
         },
         "rulesmanager": {
             "apply": "Apply",

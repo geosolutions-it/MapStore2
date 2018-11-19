@@ -1488,7 +1488,7 @@
             "updateStyleErrorMessage": "El estilo no se pudo actualizar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión.",
             "genericValidationError": "El estilo no es válido y no se pudo aplicar."
         },
-         "playback": {
+        "playback": {
             "settings": {
                 "title": "Ajustes de reproducción",
                 "frameDuration": "Duración del marco",
@@ -1513,10 +1513,24 @@
                     "following": "Siguiendo",
                     "followingDescription": "Cuando la animación está activa, sigue el cursor."
                 }
-            }
+            },
+            "backwardStep": "Paso atrás",
+            "forwardStep" : "paso adelante",
+            "play": "jugar",
+            "pause": "pausa",
+            "stop": "parada"
         },
         "timeline": {
-            "currentTime": "Tiempo actual"
+            "currentTime": "Tiempo actual",
+            "offsetTime" : "Tiempo de compensación",
+            "hideLayerName" : "esconder el nombre de las capas",
+            "showLayerName" : "mostrar el nombre de las capas",
+            "enableOffset": "Habilitar el tiempo actual con offset",
+            "disableOffset": "Deshabilita la hora actual con offset",
+            "enablePlayBack": "Habilitar controles de reproducción",
+            "disablePlayBack": "Deshabilita los controles de reproducción",
+            "expand" : "Expandir el control deslizante de tiempo",
+            "collapse" : "colapsar el control deslizante de tiempo"
         },
         "rulesmanager": {
             "apply": "Aplicar",
