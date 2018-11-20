@@ -17,7 +17,8 @@ const es = require('react-intl/locale-data/es');
 const nl = require('react-intl/locale-data/nl');
 const zh = require('react-intl/locale-data/zh');
 const hr = require('react-intl/locale-data/hr');
-addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl, ...zh, ...hr]);
+const pt = require('react-intl/locale-data/pt');
+addLocaleData([...en, ...it, ...fr, ...de, ...es, ...nl, ...zh, ...hr, ...pt]);
 
 /*
  * it, en, fr, de, es are the default locales and it is preferrable to customize them via configuration.
@@ -55,6 +56,10 @@ let supportedLocales = {
     "hr": {
         code: "hr-HR",
         description: "Hrvatski"
+    },
+    "pt": {
+        code: "pt-PT",
+        description: "Português"
     }
 };
 const DATE_FORMATS = {
@@ -63,7 +68,8 @@ const DATE_FORMATS = {
     "it-IT": "dd/MM/yyyy",
     "nl-NL": "dd/MM/yyyy",
     "zh-ZH": "yyyy/MM/dd",
-    "hr-HR": "dd/MM/yyyy"
+    "hr-HR": "dd/MM/yyyy",
+    "pt-PT": "dd/MM/yyyy"
 };
 
 let errorParser = {};
@@ -84,6 +90,7 @@ const LocaleUtils = {
             require('intl/locale-data/jsonp/nl.js');
             require('intl/locale-data/jsonp/zh.js');
             require('intl/locale-data/jsonp/hr.js');
+            require('intl/locale-data/jsonp/pt.js');
             if (callback) {
                 callback();
             }

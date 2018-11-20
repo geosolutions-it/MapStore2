@@ -208,6 +208,7 @@
             "removeFromFeaturedMaps": "Remove from featured maps"
 		},
         "map": {
+            "errorLoadingFont": "The font family {family} is not correctly loaded. Some elements (like symbols in markers) can have rendering problems",
             "loading": "加载中...",
             "loadingSpinner": "Loading Map",
             "loadingerror": "加载时出错",

@@ -15,7 +15,8 @@ const {
     widgetBuilderSelector,
     initialSettingsSelector,
     originalSettingsSelector,
-    activeTabSettingsSelector
+    activeTabSettingsSelector,
+    drawerEnabledControlSelector
 } = require("../controls");
 
 const state = {
@@ -98,7 +99,15 @@ describe('Test controls selectors', () => {
         const retVal = activeTabSettingsSelector(state);
         expect(retVal).toExist();
         expect(retVal).toBe('style');
-
         expect(activeTabSettingsSelector({})).toBe('general');
+    });
+    it('test drawerEnabledControlSelector default value', () => {
+        const retVal = drawerEnabledControlSelector(state);
+        expect(retVal).toBe(false);
+    });
+    it('test drawerEnabledControlSelector', () => {
+        const retVal = drawerEnabledControlSelector({controls: {drawer: {enabled: true}}});
+        expect(retVal).toExist();
+        expect(retVal).toBe(true);
     });
 });
