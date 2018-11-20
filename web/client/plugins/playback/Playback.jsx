@@ -54,8 +54,8 @@ const PlaybackSettings = compose(
                 let currentPlaybackRange = fixedStep ? viewRange : layerRange;
                 // when view range is collapsed, nothing may be initialized yet, so by default 1 day before and after today
                 currentPlaybackRange = {
-                    startPlaybackTime: moment(currentPlaybackRange.start || new Date()).subtract(1, 'days').toISOString(),
-                    endPlaybackTime: moment(currentPlaybackRange.end || new Date()).add(1, 'days').toISOString()
+                    startPlaybackTime: moment(currentPlaybackRange && currentPlaybackRange.start || new Date()).subtract(1, 'days').toISOString(),
+                    endPlaybackTime: moment(currentPlaybackRange && currentPlaybackRange.end || new Date()).add(1, 'days').toISOString()
                 };
                 setPlaybackRange(enabled ? currentPlaybackRange : undefined);
             },

@@ -18,6 +18,13 @@ const layerDimensionSelectorCreator = (layer, dimension) => (state) => {
     return layerDimensionDataSelectorCreator(layer.id, dimension)(state) || getLayerStaticDimension(layer, dimension);
 
 };
+
+/**
+ * Returns the dimension configurations of layers with time dimension.
+ *
+ * @param {object} state the current state
+ * @return {object} a map of id -> time dimension configuration for layers that have one dimension named "time".
+ */
 const timeDataSelector = state => layersSelector(state).reduce((timeDataMap, layer) => {
     const timeData = layerDimensionSelectorCreator(layer, "time")(state);
     if (timeData) {
@@ -26,7 +33,8 @@ const timeDataSelector = state => layersSelector(state).reduce((timeDataMap, lay
             [layer.id]: timeData
         };
     }
-}, []);
+    return timeDataMap;
+}, {});
 
 /**
  * Returns a list of layers with time data

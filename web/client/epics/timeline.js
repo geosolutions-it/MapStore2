@@ -34,8 +34,9 @@ const domainArgs = (state, paginationOptions = {}) => {
 };
 
 const snapTime = (state, group, time) => {
-
-    if (selectedLayerName(state)) { // TODO: evaluate to snap to clicked layer instead of current selected layer, and change layer selection
+    // TODO: evaluate to snap to clicked layer instead of current selected layer, and change layer selection
+    // TODO: support local list of values for no multidim-extension.
+    if (selectedLayerName(state)) {
         // do parallel request and return and observable that emit the correct value/ time as it is by default
         return Rx.Observable.forkJoin(
                 getDomainValues(...domainArgs(state, { sort: "asc", fromValue: time }))

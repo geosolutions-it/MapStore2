@@ -248,7 +248,7 @@ const enhance = compose(
     defaultProps({
         key: 'timeline',
         options: {
-            maxHeight: '150px',
+            maxHeight: '90%',
             verticalScroll: true,
             stack: false,
             showMajorLabels: true,
