@@ -14,7 +14,7 @@ const { selectTime, selectLayer, onRangeChanged, setMouseEventData } = require('
 const { itemsSelector, loadingSelector, selectedLayerSelector, mouseEventSelector, currentTimeRangeSelector, rangeSelector } = require('../../selectors/timeline');
 const { setCurrentOffset } = require('../../actions/dimension');
 const { selectPlaybackRange } = require('../../actions/playback');
-const { playbackRangeSelector } = require('../../selectors/playback');
+const { playbackRangeSelector, statusSelector } = require('../../selectors/playback');
 const { createStructuredSelector, createSelector } = require('reselect');
 const { compose, withHandlers, withPropsOnChange, defaultProps } = require('recompose');
 const moment = require('moment');
@@ -87,7 +87,8 @@ const currentTimeEnhancer = compose(
 const playbackRangeEnhancer = compose(
     connect(
         createStructuredSelector({
-            playbackRange: playbackRangeSelector
+            playbackRange: playbackRangeSelector,
+            status: statusSelector
         }),
         {
             setPlaybackRange: selectPlaybackRange
@@ -130,8 +131,12 @@ const getStartEnd = (startTime, endTime) => {
 const clickHandleEnhancer = withHandlers({
     mouseDownHandler: ({
         offsetEnabled,
+        status,
         setMouseData = () => { }
     }) => ({ time, event } = {}) => {
+        if (status === "PLAY") {
+            return;
+        }
         // initialize dragging range event
         let target = event && event.target && event.target.closest('.ms-current-range');
         if ( offsetEnabled && target) {
@@ -140,21 +145,25 @@ const clickHandleEnhancer = withHandlers({
             target = event && event.target && event.target.closest('.vis-custom-time');
             const className = target && target.getAttribute('class');
             const timeId = className && trim(className.replace('vis-custom-time', ''));
-            return timeId && setMouseData({dragging: false, borderID: timeId, startTime: time.toISOString()});
+            if (timeId) setMouseData({dragging: false, borderID: timeId, startTime: time.toISOString()});
         }
 
     },
     clickHandler: ({
         selectedLayer,
         offsetEnabled,
+        status,
         setCurrentTime = () => { },
         selectGroup = () => { },
         mouseEventProps= {}
     }) => ({ time, group, what } = {}) => {
+        if (status === "PLAY") {
+            return;
+        }
         switch (what) {
             // case "axis":
             case "group-label": {
-                if (group) selectGroup(group);
+                if (group && status !== "PLAY") selectGroup(group);
                 break;
             }
             default: {
@@ -168,6 +177,7 @@ const clickHandleEnhancer = withHandlers({
     },
     mouseUpHandler: ({
         currentTime,
+        status,
         setOffset = () => {},
         setCurrentTime = () => { },
         currentTimeRange = {},
@@ -178,7 +188,9 @@ const clickHandleEnhancer = withHandlers({
         setMouseData = () => {},
         setPlaybackRange = () => {}
     }) => ({ time, event } = {}) => {
-
+        if (status === "PLAY") {
+            return;
+        }
         let target = event && event.target && event.target.closest('.vis-center');
         const border = mouseEventProps.borderID;
         // sets the playbackRange range
@@ -225,7 +237,7 @@ const clickHandleEnhancer = withHandlers({
                 // normal click event
         }
         // reseting the mouse event data
-        return Object.keys(mouseEventProps).length > 0 && setMouseData({});
+        if (Object.keys(mouseEventProps).length > 0) setMouseData({});
     }
 
 
@@ -254,7 +266,6 @@ const enhance = compose(
             showMajorLabels: true,
             showCurrentTime: false,
             zoomMin: 10,
-            zoomable: true,
             type: 'background',
             margin: {
                 item: 0,
@@ -270,9 +281,10 @@ const enhance = compose(
         }
     }),
     // add view range to the options, to sync current range with state one and allow to control it
-    withPropsOnChange(['viewRange', 'options'], ({ viewRange = {}, options}) => ({
+    withPropsOnChange(['viewRange', 'options', 'status'], ({ viewRange = {}, options, status}) => ({
         options: {
             ...options,
+            moveable: status !== "PLAY",
             ...(viewRange) // TODO: if the new view range is very far from the current one, the animation takes a lot. We should allow also to disable animation (animation: false in the options)
         }
     })),
