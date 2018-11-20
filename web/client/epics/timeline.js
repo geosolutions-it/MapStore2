@@ -7,7 +7,7 @@ const { SELECT_TIME, RANGE_CHANGED, ENABLE_OFFSET, timeDataLoading, rangeDataLoa
 const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } = require('../actions/dimension');
 
 const {getLayerFromId} = require('../selectors/layers');
-const { rangeSelector, selectedLayerName, selectedLayerUrl, isAutoSelectEnabled } = require('../selectors/timeline');
+const { rangeSelector, selectedLayerName, selectedLayerUrl, isAutoSelectEnabled, selectedLayerSelector } = require('../selectors/timeline');
 const { layerTimeSequenceSelectorCreator, timeDataSelector, offsetTimeSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
 
 const { getNearestDate, roundRangeResolution, isTimeDomainInterval } = require('../utils/TimeUtils');
@@ -18,9 +18,6 @@ const TIME_DIMENSION = "time";
 const MAX_ITEMS_PER_LAYER = 10;
 const MAX_HISTOGRAM = 20;
 
-/**
- * creates an observable that emit a time that snap to the current time
- */
 
 const domainArgs = (state, paginationOptions = {}) => {
 
@@ -32,7 +29,9 @@ const domainArgs = (state, paginationOptions = {}) => {
         ...paginationOptions
     }];
 };
-
+/**
+ * creates an observable that emit a time that snap the values of the selected layer to the current time
+ */
 const snapTime = (state, group, time) => {
     // TODO: evaluate to snap to clicked layer instead of current selected layer, and change layer selection
     // TODO: support local list of values for no multidim-extension.
@@ -140,6 +139,7 @@ const loadRangeData = (id, timeData, getState) => {
     });
 };
 
+
 module.exports = {
     /**
      * when a time is selected from timeline, tries to snap to nearest value and set the current time
@@ -159,11 +159,13 @@ module.exports = {
      */
     setupSettings: (action$, { getState = () => { } } = {}) => action$.ofType(UPDATE_LAYER_DIMENSION_DATA)
         .switchMap(() => isAutoSelectEnabled(getState()) && !selectedLayerName(getState()) && get(layersWithTimeDataSelector(getState()), "[0].id")
-            ? Rx.Observable.of(
-                selectLayer(
-                    get(layersWithTimeDataSelector(getState()), "[0].id")
+            ? Rx.Observable.of(selectLayer(get(layersWithTimeDataSelector(getState()), "[0].id")))
+                .concat(
+                    Rx.Observable.of(1).delay(2000).switchMap( () =>
+                        snapTime(getState(), get(layersWithTimeDataSelector(getState()), "[0].id"), currentTimeSelector(getState) || new Date().toISOString())
+                            .filter( v => v)
+                            .map(time => setCurrentTime(time)))
                 )
-            )
             : Rx.Observable.empty()
     ),
      /**
