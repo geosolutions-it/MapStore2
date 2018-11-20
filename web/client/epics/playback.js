@@ -253,6 +253,7 @@ module.exports = {
         action$
             .ofType(SET_CURRENT_TIME, MOVE_TIME, SET_OFFSET_TIME)
             .filter(() => statusSelector(getState()) === STATUS.PLAY && isOutOfRange(currentTimeSelector(getState()), rangeSelector(getState())))
+            .filter(() => get(playbackSettingsSelector(getState()), "following") )
             .switchMap(() => Rx.Observable.of(
                 onRangeChanged(
                     (() => {
