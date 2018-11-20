@@ -13,7 +13,9 @@ const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('../components/time/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const { offsetEnabledSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
-const { selectedLayerSelector, currentTimeRangeSelector, rangeDataSelector } = require('../selectors/timeline');
+const { selectedLayerSelector, currentTimeRangeSelector } = require('../selectors/timeline');
+const { mapLayoutValuesSelector } = require('../selectors/maplayout');
+
 const { withState, compose, branch, renderNothing } = require('recompose');
 const { selectTime, enableOffset } = require('../actions/timeline');
 const { setCurrentOffset } = require('../actions/dimension');
@@ -21,7 +23,7 @@ const Message = require('../components/I18N/Message');
 const { selectPlaybackRange } = require('../actions/playback');
 const { playbackRangeSelector } = require('../selectors/playback');
 
-const { head, isObject } = require('lodash');
+const { head } = require('lodash');
 const moment = require('moment');
 
 const isValidOffset = (start, end) => moment(end).diff(start) > 0;
@@ -41,15 +43,13 @@ const TimelinePlugin = compose(
             currentTimeRangeSelector,
             offsetEnabledSelector,
             playbackRangeSelector,
-            rangeDataSelector,
-            (layers, selectedLayer, currentTime, currentTimeRange, offsetEnabled, playbackRange, rangeData) => ({
+            (layers, selectedLayer, currentTime, currentTimeRange, offsetEnabled, playbackRange) => ({
                 layers,
                 selectedLayer,
                 currentTime,
                 currentTimeRange,
                 offsetEnabled,
-                playbackRange,
-                rangeData
+                playbackRange
             })
         ), {
             setCurrentTime: selectTime,
@@ -58,10 +58,13 @@ const TimelinePlugin = compose(
             setPlaybackRange: selectPlaybackRange
         }),
     branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
-    withState('options', 'setOptions', {collapsed: true})
+    withState('options', 'setOptions', {collapsed: true}),
+    connect( createSelector(
+        state => mapLayoutValuesSelector(state, { right: true, bottom: true, left: true }),
+        style => ({style})
+    ))
 )(
     ({
-        rangeData,
         items,
         options,
         setOptions,
@@ -70,7 +73,8 @@ const TimelinePlugin = compose(
         offsetEnabled,
         onOffsetEnabled,
         currentTimeRange,
-        setOffset
+        setOffset,
+        style
     }) => {
 
         const { hideLayersName, collapsed, playbackEnabled } = options;
@@ -81,10 +85,12 @@ const TimelinePlugin = compose(
         return (<div
             style={{
                 position: "absolute",
-                bottom: 65,
-                left: 100,
-                right: collapsed ? 'auto' : 80,
-                background: "transparent"
+                marginBottom: 35,
+                marginLeft: 100,
+
+                background: "transparent",
+                ...style,
+                right: collapsed ? 'auto' : 80 + (style.right || 0)
             }}
             className={`timeline-plugin${hideLayersName ? ' hide-layers-name' : ''}${offsetEnabled ? ' with-time-offset' : ''}`}>
 
@@ -166,13 +172,13 @@ const TimelinePlugin = compose(
                             tooltip: <Message msgId= {collapsed ? "timeline.expand" : "timeline.collapse"}/>,
                             glyph: collapsed ? 'resize-full' : 'resize-small',
                             // we perform a check if the timeline data is loaded before allowing the user to expand the timeline and render an empty component
-                            visible: isObject(rangeData),
                             onClick: () => setOptions({ ...options, collapsed: !collapsed })
                         }
                     ]} />
             </div>
             {!collapsed &&
                 <Timeline
+                    style={style}
                     offsetEnabled={offsetEnabled}
                     playbackEnabled={playbackEnabled}
                     hideLayersName={hideLayersName} />}
