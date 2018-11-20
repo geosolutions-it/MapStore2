@@ -83,7 +83,7 @@ class Timeline extends React.Component {
   shouldComponentUpdate(nextProps) {
       const { items, groups, options, selection, customTimes } = this.props;
 
-      const itemsChange = items !== nextProps.items;
+      const itemsChange = items !== nextProps.items || (items || []).length !== (nextProps.items || []).length;
       const groupsChange = groups !== nextProps.groups;
       const optionsChange = options !== nextProps.options;
       const customTimesChange = customTimes !== nextProps.customTimes;
