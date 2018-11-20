@@ -289,7 +289,7 @@
             }
         },
         "map": {
-            "errorLoadingFont": "Il marker con il font family: {family} non sarà renderizzato correttamente, perchè il font non è stato caricato",
+            "errorLoadingFont": "Il font {family} non è stato caricato correttamente. Alcuni elementi (i simboli nei marker) possono avere problemi di rendering",
             "loading": "In caricamento...",
             "loadingSpinner": "Caricamento Mappa",
             "loadingerror": "Errore di caricamento",

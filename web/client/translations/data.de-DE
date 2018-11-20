@@ -289,7 +289,7 @@
             }
         },
         "map": {
-            "errorLoadingFont": "Die Marken mit der Schriftfamilie: {family} werden nicht korrekt gerendert, da die Schrift nicht geladen wurde",
+            "errorLoadingFont": "Die Schriftfamilie {family} ist nicht korrekt geladen. Einige Elemente (wie Symbole in Markern) können zu Darstellungsproblemen führen",
             "loading": "Wird geladen...",
             "loadingSpinner": "Karte wird geladen",
             "loadingerror": "Fehler während des Ladens",

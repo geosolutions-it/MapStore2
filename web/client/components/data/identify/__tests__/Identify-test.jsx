@@ -116,6 +116,65 @@ describe('Identify', () => {
         expect(spySendRequest.calls.length).toEqual(2);
     });
 
+    it('creates the Identify component which sends requests on point and 2 other layers (toppstates and a background)', () => {
+        const testHandlers = {
+            sendRequest: () => {}
+        };
+
+        const spySendRequest = expect.spyOn(testHandlers, 'sendRequest');
+
+        ReactDOM.render(
+            <Identify
+                enabled layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
+                />,
+            document.getElementById("container")
+        );
+        const layers = [
+            {
+                id: 'OpenTopoMap__3',
+                group: 'background',
+                source: 'OpenTopoMap',
+                name: 'OpenTopoMap',
+                title: 'OpenTopoMap',
+                type: 'tileprovider',
+                visibility: false,
+                handleClickOnLayer: false,
+                hidden: false
+            },
+            {
+                id: 'topp:states__4',
+                name: 'topp:states',
+                title: 'USA Population',
+                type: 'wms',
+                url: 'https://demo.geo-solutions.it:443/geoserver/wms',
+                visibility: true,
+                handleClickOnLayer: false,
+                hidden: false
+            },
+            {
+                id: 'annotations',
+                features: [],
+                name: 'Annotations',
+                type: 'vector',
+                visibility: true,
+                handleClickOnLayer: true,
+                hidden: false
+            }
+        ];
+        ReactDOM.render(
+            <Identify
+                point={{pixel: {x: 1, y: 1}}}
+                layer="annotations"
+                enabled
+                layers={layers}
+                sendRequest={testHandlers.sendRequest}
+                buildRequest={() => ({url: "myurl"})}
+                />,
+            document.getElementById("container")
+        );
+        expect(spySendRequest.calls.length).toEqual(2);
+    });
+
     it('creates the Identify component sends local requess on point if no url is specified', () => {
         const testHandlers = {
             sendRequest: () => {}

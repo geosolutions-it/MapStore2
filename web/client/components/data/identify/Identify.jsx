@@ -9,7 +9,7 @@ const PropTypes = require('prop-types');
 
 const React = require('react');
 const {Panel, Glyphicon, Modal} = require('react-bootstrap');
-const {findIndex} = require('lodash');
+const {findIndex, isArray} = require('lodash');
 
 require('./css/identify.css');
 
@@ -136,9 +136,12 @@ class Identify extends React.Component {
             if (!newProps.point.modifiers || newProps.point.modifiers.ctrl !== true || !newProps.allowMultiselection) {
                 this.props.purgeResults();
             }
-            const queryableLayers = newProps.layers
-                .filter(newProps.queryableLayersFilter)
-                .filter(newProps.layer ? l => l.id === newProps.layer : () => true);
+            const queryableLayers = isArray(newProps.layers) && (newProps.queryableLayersFilter && newProps.layers
+                .filter(newProps.queryableLayersFilter) || newProps.layers) || [];
+                /*
+                 * .filter(newProps.layer ? l => l.id === newProps.layer : () => true);
+                 * this line was filtering too much, i.e. see issue #3344
+                */
             queryableLayers.forEach((layer) => {
                 const {url, request, metadata} = this.props.buildRequest(layer, newProps);
                 if (url) {

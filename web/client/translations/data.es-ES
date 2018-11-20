@@ -289,7 +289,7 @@
             }
         },
         "map": {
-            "errorLoadingFont": "Los marcadores con familia de fuentes: {family} no se procesarán correctamente, porque la fuente no se cargó",
+            "errorLoadingFont": "La familia de fuentes {family} no está correctamente cargada. Algunos elementos (como los símbolos en los marcadores) pueden tener problemas de renderización",
             "loading": "Cargando...",
             "loadingSpinner": "Cargando mapa",
             "loadingerror": "Error en la carga",
