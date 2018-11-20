@@ -145,7 +145,7 @@ const TimelinePlugin = compose(
                             active: offsetEnabled,
                             tooltip: <Message msgId={offsetEnabled ? "timeline.enableOffset" : "timeline.disableOffset"} />,
                             onClick: () => {
-                                onOffsetEnabled(!offsetEnabled);
+                                if (status !== "PLAY") onOffsetEnabled(!offsetEnabled);
 
                             }
                         },
