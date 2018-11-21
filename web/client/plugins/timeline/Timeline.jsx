@@ -44,7 +44,8 @@ const layerData = compose(
             const { layers: nextLayers, loading: nextLoading, selectedLayer: nextSelectedLayer } = nextProps;
             return loading !== nextLoading
                 || selectedLayer !== nextSelectedLayer
-                || differenceBy(layers, nextLayers || [], ({id, title, name} = {}) => id + title + name).length > 0;
+                || differenceBy(layers, nextLayers || [], ({id, title, name} = {}) => id + title + name).length > 0
+                || layers.length !== nextLayers.length;
         },
         // (props = {}, nextProps = {}) => Object.keys(props.data).length !== Object.keys(nextProps.data).length,
         ({ layers = [], loading = {}, selectedLayer }) => ({
@@ -248,8 +249,7 @@ const enhance = compose(
     defaultProps({
         key: 'timeline',
         options: {
-            maxHeight: '90%',
-            verticalScroll: true,
+            maxHeight: '300px',
             stack: false,
             showMajorLabels: true,
             showCurrentTime: false,
@@ -270,9 +270,11 @@ const enhance = compose(
         }
     }),
     // add view range to the options, to sync current range with state one and allow to control it
-    withPropsOnChange(['viewRange', 'options'], ({ viewRange = {}, options}) => ({
+    withPropsOnChange(['viewRange', 'options', 'status', 'layers'], ({ viewRange = {}, options, status, layers}) => ({
         options: {
             ...options,
+            moveable: status !== "PLAY",
+            verticalScroll: (56 + 28 * Object.keys(layers).length) > 300,
             ...(viewRange) // TODO: if the new view range is very far from the current one, the animation takes a lot. We should allow also to disable animation (animation: false in the options)
         }
     })),
