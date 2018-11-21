@@ -288,6 +288,7 @@
             }
         },
         "map": {
+            "errorLoadingFont": "La familia de fuentes {family} no está correctamente cargada. Algunos elementos (como los símbolos en los marcadores) pueden tener problemas de renderización",
             "loading": "Cargando...",
             "loadingSpinner": "Cargando mapa",
             "loadingerror": "Error en la carga",
@@ -1548,7 +1549,6 @@
                 "filter": "Buscar...",
                 "role": "Escriba para buscar Roles",
                 "user": "Escriba para buscar usuarios",
-                "ip": "Seleccionar IP",
                 "service": "Escriba para buscar Servicios",
                 "request": "Escriba para buscar Solicitudes",
                 "workspace": "Escriba para buscar espacios de trabajo",

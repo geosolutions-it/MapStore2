@@ -288,6 +288,7 @@
             }
         },
         "map": {
+            "errorLoadingFont": "Die Schriftfamilie {family} ist nicht korrekt geladen. Einige Elemente (wie Symbole in Markern) können zu Darstellungsproblemen führen",
             "loading": "Wird geladen...",
             "loadingSpinner": "Karte wird geladen",
             "loadingerror": "Fehler während des Ladens",
@@ -1548,7 +1549,6 @@
                 "filter": "Suche...",
                 "role": "Nach Rollen suchen",
                 "user": "Benutzer suchen",
-                "ip": "Wählen Sie IP",
                 "service": "Suchdienste",
                 "request": "Type to serach Requests",
                 "workspace": "Suchanfragen",

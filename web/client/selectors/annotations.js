@@ -8,17 +8,25 @@
 
 const {createSelector} = require('reselect');
 const {layersSelector} = require('./layers');
-const {head} = require('lodash');
+const {head, get} = require('lodash');
 const assign = require('object-assign');
 
 const annotationsLayerSelector = createSelector([
         layersSelector
     ], (layers) => head(layers.filter(l => l.id === 'annotations'))
 );
+const removingSelector = (state) => get(state, "annotations.removing");
+const closingSelector = (state) => !!get(state, "annotations.closing");
+const editingSelector = (state) => get(state, "annotations.editing");
+const currentSelector = (state) => get(state, "annotations.current");
+const modeSelector = (state) => editingSelector(state) && 'editing' || currentSelector(state) && 'detail' || 'list';
 
 const annotationsInfoSelector = (state) => (assign({}, {
-    editing: state.annotations && state.annotations.editing,
+    editing: editingSelector(state),
     drawing: state.annotations && !!state.annotations.drawing,
+    mode: modeSelector(state),
+    closing: closingSelector(state),
+    removing: removingSelector(state),
     styling: state.annotations && !!state.annotations.styling,
     errors: state.annotations.validationErrors
 }, (state.annotations && state.annotations.config) ? {

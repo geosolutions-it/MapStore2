@@ -289,6 +289,7 @@
             }
         },
         "map": {
+            "errorLoadingFont": "La famille de polices {family} n'est pas correctement chargée. Certains éléments (comme les symboles dans les marqueurs) peuvent avoir des problèmes de rendu",
             "loading": "Chargement...",
             "loadingSpinner": "Carte de chargement",
             "loadingerror": "Erreur de chargement",
@@ -1549,7 +1550,6 @@
                 "filter": "Chercher...",
                 "role": "Tapez pour rechercher des rôles",
                 "user": "Tapez pour rechercher des utilisateurs",
-                "ip": "Sélectionnez IP",
                 "service": "Tapez pour rechercher des services",
                 "request": "Tapez pour rechercher des demandes",
                 "workspace": "Tapez pour rechercher des espaces de travail",
