@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const {error} = require('./notifications');
 const CHANGE_MAP_VIEW = 'CHANGE_MAP_VIEW';
 const CLICK_ON_MAP = 'CLICK_ON_MAP';
 const CHANGE_MOUSE_POINTER = 'CHANGE_MOUSE_POINTER';
@@ -22,11 +23,15 @@ const UPDATE_VERSION = 'UPDATE_VERSION';
 const INIT_MAP = 'INIT_MAP';
 const RESIZE_MAP = 'RESIZE_MAP';
 
-function creationError(options) {
-    return {
-        type: CREATION_ERROR_LAYER,
-        options
-    };
+
+function errorLoadingFont(err = {family: ""}) {
+    return error({
+        title: "warning",
+        message: "map.errorLoadingFont",
+        values: err,
+        position: "tc",
+        autoDismiss: 10
+    });
 }
 function zoomToPoint(pos, zoom, crs) {
     return {
@@ -164,7 +169,7 @@ module.exports = {
     changeMapStyle,
     changeRotation,
     zoomToPoint,
-    creationError,
+    errorLoadingFont,
     updateVersion,
     initMap,
     resizeMap

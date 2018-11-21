@@ -85,7 +85,8 @@ const handleExpression = (state, context, expression) => {
  * @return {Boolean}             the result of the expression evaluation in the given context.
  */
 const filterDisabledPlugins = (item, state = {}, plugins = {}) => {
-    const disablePluginIf = item && item.plugin && item.plugin.disablePluginIf || item.cfg && item.cfg.disablePluginIf;
+    // checks for disablePluginIf first in cfg then in plugin definition (cfg overrides plugin default)
+    const disablePluginIf = item && item.cfg && item.cfg.disablePluginIf || item && item.plugin && item.plugin.disablePluginIf;
     if (disablePluginIf && !(item && item.cfg && item.cfg.skipAutoDisable)) {
         return !handleExpression(state, plugins.requires, disablePluginIf);
     }
@@ -289,6 +290,13 @@ const PluginsUtils = {
             return result;
         }
         return pluginDef;
+    },
+    setRefToWrappedComponent: (name) => {
+        return (connectedComponent) => {
+            if (connectedComponent) {
+                window[`${name}Plugin`] = connectedComponent.getWrappedInstance();
+            }
+        };
     },
     /**
      * Custom react-redux connect function that can override state property with plugin config.

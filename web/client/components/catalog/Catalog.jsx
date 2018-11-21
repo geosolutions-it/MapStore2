@@ -39,6 +39,7 @@ class Catalog extends React.Component {
         onChangeCatalogMode: PropTypes.func,
         onChangeFormat: PropTypes.func,
         onChangeTitle: PropTypes.func,
+        onChangeText: PropTypes.func,
         onChangeType: PropTypes.func,
         onChangeUrl: PropTypes.func,
         onChangeSelectedService: PropTypes.func,
@@ -91,6 +92,7 @@ class Catalog extends React.Component {
         onChangeCatalogMode: () => {},
         onChangeFormat: () => {},
         onChangeTitle: () => {},
+        onChangeText: () => {},
         onChangeType: () => {},
         onChangeUrl: () => {},
         onChangeSelectedService: () => {},
@@ -117,7 +119,7 @@ class Catalog extends React.Component {
         if (this.props.selectedService &&
             this.isValidServiceSelected() &&
             this.props.services[this.props.selectedService].autoload) {
-            this.search({services: this.props.services, selectedService: this.props.selectedService});
+            this.search({services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText});
         }
     }
 
@@ -131,24 +133,24 @@ class Catalog extends React.Component {
                 nextProps.selectedService &&
                 nextProps.services[nextProps.selectedService] &&
                 nextProps.services[nextProps.selectedService].autoload) {
-                this.search({services: nextProps.services, selectedService: nextProps.selectedService});
+                this.search({services: nextProps.services, selectedService: nextProps.selectedService, searchText: nextProps.searchText});
             }
             if (nextProps.active && this.props.active === false &&
                 nextProps.selectedService &&
                 nextProps.services[nextProps.selectedService] &&
                 nextProps.services[nextProps.selectedService].autoload) {
-                this.search({services: nextProps.services, selectedService: nextProps.selectedService});
+                this.search({services: nextProps.services, selectedService: nextProps.selectedService, searchText: nextProps.searchText});
             }
         }
     }
 
     onSearchTextChange = (event) => {
-        this.setState({searchText: event.target.value});
+        this.props.onChangeText(event.target.value);
     };
 
     onKeyDown = (event) => {
         if (event.keyCode === 13) {
-            this.search({services: this.props.services, selectedService: this.props.selectedService});
+            this.search({services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText});
         }
     };
 
@@ -229,7 +231,7 @@ class Catalog extends React.Component {
         const buttons = [];
         if (this.props.mode === "view" ) {
             if (this.props.includeSearchButton) {
-                buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={() => this.search({services: this.props.services, selectedService: this.props.selectedService})}
+                buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={() => this.search({services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText})}
                             className={this.props.buttonClassName} key="catalog_search_button" disabled={!this.isValidServiceSelected()}>
                             {this.renderLoading()} <Message msgId="catalog.search"/>
                         </Button>);
@@ -263,6 +265,7 @@ class Catalog extends React.Component {
             style={{
                 textOverflow: "ellipsis"
             }}
+            value={this.props.searchText}
             placeholder={LocaleUtils.getMessageById(this.context.messages, "catalog.textSearchPlaceholder")}
             onChange={this.onSearchTextChange}
             onKeyDown={this.onKeyDown}/>);
@@ -378,10 +381,10 @@ class Catalog extends React.Component {
     isValidServiceSelected = () => {
         return this.props.services[this.props.selectedService] !== undefined;
     };
-    search = ({services, selectedService, start = 1}) => {
+    search = ({services, selectedService, start = 1, searchText = ""} = {}) => {
         const url = services[selectedService].url;
         const type = services[selectedService].type;
-        this.props.onSearch(type, url, start, this.props.pageSize, this.state && this.state.searchText || "");
+        this.props.onSearch(type, url, start, this.props.pageSize, searchText || "");
         this.setState({
             loading: true
         });
@@ -404,7 +407,7 @@ class Catalog extends React.Component {
     handlePage = (eventKey) => {
         if (eventKey) {
             let start = (eventKey - 1) * this.props.pageSize + 1;
-            this.search({services: this.props.services, selectedService: this.props.selectedService, start});
+            this.search({services: this.props.services, selectedService: this.props.selectedService, start, searchText: this.props.searchText});
             this.setState({
                 loading: true
             });

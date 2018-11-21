@@ -288,6 +288,7 @@
             }
         },
         "map": {
+            "errorLoadingFont": "Il font {family} non è stato caricato correttamente. Alcuni elementi (i simboli nei marker) possono avere problemi di rendering",
             "loading": "In caricamento...",
             "loadingSpinner": "Caricamento Mappa",
             "loadingerror": "Errore di caricamento",
@@ -1548,7 +1549,6 @@
                 "filter": "Ricerca...",
                 "role": "Cerca Gruppo",
                 "user": "Cerca Utenti",
-                "ip": "Seleziona IP",
                 "service": "Cerca Servizi",
                 "request": "Cerca Richieste",
                 "workspace": "Cerca Workspacs",

@@ -523,7 +523,7 @@
                 "containerPosition": "header",
                 "preset": "dashboard_tutorial"
             }
-        }, 
+        },
         {
             "name": "FeedbackMask",
             "cfg": {
