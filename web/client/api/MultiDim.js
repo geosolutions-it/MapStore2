@@ -7,13 +7,13 @@
  */
 
 const ajax = require('../libs/ajax');
-const {endsWith, replace} = require('lodash');
+// const {endsWith, replace} = require('lodash');
 const {Observable} = require('rxjs');
 const {parseXML, interceptOGCError} = require('../utils/ObservableUtils');
 
-
-const toMultiDimURL = url => endsWith(url, "wms") ? replace(url, "wms", "gwc/service/wmts") : url;
-
+// TODO: remove this. It should be automatically the correct address
+// const toMultiDimURL = url => endsWith(url, "wms") ? replace(url, "wms", "gwc/service/wmts") : url;
+const toMultiDimURL = url => url;
 // this fixes temporary this issue
 // https://github.com/geosolutions-it/MapStore2/issues/3144
 // can be removed or replaced with identity function when the issue is fixed
