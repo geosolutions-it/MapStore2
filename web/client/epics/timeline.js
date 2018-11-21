@@ -15,7 +15,7 @@ const { getHistogram, describeDomains, getDomainValues } = require('../api/Multi
 
 const TIME_DIMENSION = "time";
 // const DEFAULT_RESOLUTION = "P1W";
-const MAX_ITEMS_PER_LAYER = 10;
+const MAX_ITEMS_PER_LAYER = 20;
 const MAX_HISTOGRAM = 20;
 
 
@@ -157,8 +157,8 @@ module.exports = {
     /**
      * Initializes the time line
      */
-    setupSettings: (action$, { getState = () => { } } = {}) => action$.ofType(UPDATE_LAYER_DIMENSION_DATA)
-        .switchMap(() => isAutoSelectEnabled(getState()) && !selectedLayerName(getState()) && get(layersWithTimeDataSelector(getState()), "[0].id")
+    setupTimelineExistingSettings: (action$, { getState = () => { } } = {}) => action$.ofType(UPDATE_LAYER_DIMENSION_DATA)
+        .exhaustMap(() => isAutoSelectEnabled(getState()) && !selectedLayerName(getState()) && get(layersWithTimeDataSelector(getState()), "[0].id")
             ? Rx.Observable.of(selectLayer(get(layersWithTimeDataSelector(getState()), "[0].id")))
                 .concat(
                     Rx.Observable.of(1).delay(2000).switchMap( () =>
