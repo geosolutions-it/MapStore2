@@ -21,7 +21,7 @@ const { selectTime, enableOffset } = require('../actions/timeline');
 const { setCurrentOffset } = require('../actions/dimension');
 const Message = require('../components/I18N/Message');
 const { selectPlaybackRange } = require('../actions/playback');
-const { playbackRangeSelector } = require('../selectors/playback');
+const { playbackRangeSelector, statusSelector } = require('../selectors/playback');
 
 const { head } = require('lodash');
 const moment = require('moment');
@@ -43,13 +43,15 @@ const TimelinePlugin = compose(
             currentTimeRangeSelector,
             offsetEnabledSelector,
             playbackRangeSelector,
-            (layers, selectedLayer, currentTime, currentTimeRange, offsetEnabled, playbackRange) => ({
+            statusSelector,
+            (layers, selectedLayer, currentTime, currentTimeRange, offsetEnabled, playbackRange, status) => ({
                 layers,
                 selectedLayer,
                 currentTime,
                 currentTimeRange,
                 offsetEnabled,
-                playbackRange
+                playbackRange,
+                status
             })
         ), {
             setCurrentTime: selectTime,
@@ -74,7 +76,8 @@ const TimelinePlugin = compose(
         onOffsetEnabled,
         currentTimeRange,
         setOffset,
-        style
+        style,
+        status
     }) => {
 
         const { hideLayersName, collapsed, playbackEnabled } = options;
@@ -99,7 +102,7 @@ const TimelinePlugin = compose(
                 glyph="range-start"
                 tooltip={<Message msgId="timeline.currentTime"/>}
                 date={currentTime || currentTimeRange && currentTimeRange.start}
-                onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && setCurrentTime(start)}
+                onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
                 className="shadow-soft"
                 style={{
                     position: 'absolute',
@@ -114,13 +117,13 @@ const TimelinePlugin = compose(
                         glyph={'range-end'}
                         tooltip="Offset time"
                         date={currentTimeRange.end}
-                        onUpdate={end => isValidOffset(currentTime, end) && setOffset(end)} />
+                        onUpdate={end => status !== "PLAY" && isValidOffset(currentTime, end) && setOffset(end)} />
                     : // show current time if using single time
                     <InlineDateTimeSelector
                         glyph={'time-current'}
                         tooltip={<Message msgId="timeline.currentTime"/>}
                         date={currentTime || currentTimeRange && currentTimeRange.start}
-                        onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && setCurrentTime(start)} />}
+                        onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)} />}
 
                 <Toolbar
                     btnDefaultProps={{
@@ -142,7 +145,7 @@ const TimelinePlugin = compose(
                             active: offsetEnabled,
                             tooltip: <Message msgId={offsetEnabled ? "timeline.enableOffset" : "timeline.disableOffset"} />,
                             onClick: () => {
-                                onOffsetEnabled(!offsetEnabled);
+                                if (status !== "PLAY") onOffsetEnabled(!offsetEnabled);
 
                             }
                         },
