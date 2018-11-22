@@ -161,7 +161,7 @@ module.exports = {
         .exhaustMap(() => isAutoSelectEnabled(getState()) && !selectedLayerName(getState()) && get(layersWithTimeDataSelector(getState()), "[0].id")
             ? Rx.Observable.of(selectLayer(get(layersWithTimeDataSelector(getState()), "[0].id")))
                 .concat(
-                    Rx.Observable.of(1).delay(2000).switchMap( () =>
+                    Rx.Observable.of(1).switchMap( () =>
                         snapTime(getState(), get(layersWithTimeDataSelector(getState()), "[0].id"), currentTimeSelector(getState) || new Date().toISOString())
                             .filter( v => v)
                             .map(time => setCurrentTime(time)))

@@ -73,10 +73,10 @@ module.exports = {
                              *  */
                             const timeDimensionData = find(dimensions, d => d.name === 'time');
                             if (timeDimensionData) {
-                                const newDimensions = [...(layer.dimensions || []).filter(dimension => dimension.name === 'time'), timeDimensionData];
+                                const newDimensions = [...(layer.dimensions || []).filter(dimension => dimension.name !== 'time'), pick(timeDimensionData, ['source', 'name'])];
                                 return Observable.of(
                                     changeLayerProperties(layer.id, {
-                                        dimensions: newDimensions.map(d => d.name === 'time' ? pick(d, ['source', 'name']) : d)
+                                        dimensions: newDimensions
                                     }),
                                     ...dimensions.map(d => updateLayerDimensionData(layer.id, d.name, d)));
                             }
