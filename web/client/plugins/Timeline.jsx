@@ -94,11 +94,15 @@ const TimelinePlugin = compose(
                 right = isPercent(right) && (getPercent(right) * containerWidth) || right;
                 left = isPercent(right) && (getPercent(right) * containerWidth) || right;
                 const { collapsed, playbackEnabled} = options;
+                // size of date picker with all margins
                 const DATE_TIME_BAR = 378;
+                // 94 + 4 the timeline button-group expanded and its margin (1 button more than when collapsed)
+                // 62 + 4 the timeline button-group collapsed and its margin
+                // 32 + 2 Expand button
                 const MIN_EXPANDED = DATE_TIME_BAR + 94 + 4 + 32 + 2;
                 const MIN_COLLAPSED = DATE_TIME_BAR + 62 + 4 + 32 + 2;
+                // 160 playback offset width with its margins
                 const PLAYBACK_OFFSET = 160;
-                // 94 + 4 + 160 + 32 + 2
                 const minWidth = (collapsed ? MIN_COLLAPSED : MIN_EXPANDED );
                 if (containerWidth) {
                     const availableWidth = containerWidth - right - left - marginLeft - marginRight;
