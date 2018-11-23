@@ -158,8 +158,8 @@ module.exports = {
      * Initializes the time line
      */
     setupTimelineExistingSettings: (action$, { getState = () => { } } = {}) => action$.ofType(REMOVE_NODE, UPDATE_LAYER_DIMENSION_DATA)
-        .exhaustMap(action => isAutoSelectEnabled(getState()) && !selectedLayerName(getState())
-        || (selectedLayerSelector(getState()) === '' || selectedLayerSelector(getState()) === action.node) && get(layersWithTimeDataSelector(getState()), "[0].id")
+        .exhaustMap(action => isAutoSelectEnabled(getState()) && !selectedLayerName(getState()) && get(layersWithTimeDataSelector(getState()), "[0].id")
+        && (selectedLayerSelector(getState()) === '' || selectedLayerSelector(getState()) === action.node)
             ? Rx.Observable.of(selectLayer(get(layersWithTimeDataSelector(getState()), "[0].id")))
                 .concat(
                     Rx.Observable.of(1).switchMap( () =>
