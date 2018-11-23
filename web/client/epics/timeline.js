@@ -234,7 +234,7 @@ module.exports = {
                             uid: "error_with_timeline_update",
                             title: "timeline.errors.multidim_error_title",
                             message: "timeline.errors.multidim_error_message"
-                        }))) // TODO: notify time data loading errors
+                        })))
                         .concat( Rx.Observable.of(timeDataLoading(id, false)))
                     ));
 
