@@ -1522,6 +1522,7 @@
             "forwardStep" : "Schritt vorwärts",
             "play": "abspielen",
             "pause": "Pause",
+            "paused": "abspielen (pausiert)",
             "stop": "Stopp"
         },
         "timeline": {
@@ -1534,7 +1535,11 @@
             "enablePlayBack": "Aktivieren Sie die Wiedergabesteuerung",
             "disablePlayBack": "Deaktivieren Sie die Wiedergabesteuerung",
             "expand" : "Erweitern Sie den Zeitschieberegler",
-            "collapse" : "Schieberegler für die Zeitspanne reduzieren"
+            "collapse" : "Schieberegler für die Zeitspanne reduzieren",
+            "errors": {
+                "multidim_error_title": "Der Backend-Service reagiert nicht",
+                "multidim_error_message": "Die erforderlichen Dienste für die mehrdimensionale Unterstützung reagieren nicht. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Administrator."
+            }
         },
         "rulesmanager": {
             "apply": "Anwenden",

@@ -126,12 +126,7 @@ const playbackButtons = compose(
 
 const playbackEnhancer = compose(
     collapsible,
-    playbackButtons,
-    lifecycle({
-        componentWillUnmount() {
-            this.props.stop();
-        }
-    })
+    playbackButtons
 );
 
 module.exports = playbackEnhancer(({
@@ -159,8 +154,13 @@ module.exports = playbackEnhancer(({
                     tooltip: <Message msgId={"playback.backwardStep"} />
                 }, {
                     glyph: status === statusMap.PLAY ? "pause" : "play",
+                    bsStyle: status === statusMap.PLAY || status === statusMap.PAUSE ? "success" : "primary",
                     onClick: () => status === statusMap.PLAY ? pause() : play(),
-                    tooltip: <Message msgId={status === statusMap.PLAY ? "playback.pause" : "playback.play"} />
+                    tooltipId: status === statusMap.PLAY
+                        ? "playback.pause"
+                        : status === statusMap.PAUSE
+                                ? "playback.paused"
+                                : "playback.play"
                 }, {
                     glyph: "stop",
                     onClick: stop,

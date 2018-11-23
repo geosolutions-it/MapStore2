@@ -1520,7 +1520,8 @@
             },
             "backwardStep": "Paso atrás",
             "forwardStep" : "paso adelante",
-            "play": "jugar",
+            "play": "reproducir",
+            "paused": "reproducir (pausado)",
             "pause": "pausa",
             "stop": "parada"
         },
@@ -1534,7 +1535,11 @@
             "enablePlayBack": "Habilitar controles de reproducción",
             "disablePlayBack": "Deshabilita los controles de reproducción",
             "expand" : "Expandir el control deslizante de tiempo",
-            "collapse" : "colapsar el control deslizante de tiempo"
+            "collapse" : "colapsar el control deslizante de tiempo",
+            "errors": {
+                "multidim_error_title": "El servicio de backend no responde",
+                "multidim_error_message": "Los servicios requeridos para soporte multidinensional no están respondiendo. Inténtelo de nuevo más tarde o póngase en contacto con el administrador."
+            }
         },
         "rulesmanager": {
             "apply": "Aplicar",
