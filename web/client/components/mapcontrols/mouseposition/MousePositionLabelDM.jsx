@@ -38,10 +38,10 @@ class MousePositionLabelDM extends React.Component {
         return (
                 <h5>
                 <Label bsSize="lg" bsStyle="info">
-                    <span>Lat: </span><NumberFormat key="latD" numberParams={integerFormat} value={pos.lat} />
+                    <span>Lat: </span><NumberFormat key="latD" numberParams={integerFormat} value={pos.lat} roundingBehaviour="floor"/>
                     <span>° </span><NumberFormat key="latM" numberParams={decimalFormat} value={pos.latM} />
                     <span>&apos; </span>
-                    <span>Lng: </span><NumberFormat key="lngD" numberParams={lngDFormat} value={pos.lng} />
+                    <span>Lng: </span><NumberFormat key="lngD" numberParams={lngDFormat} value={pos.lng} roundingBehaviour="floor"/>
                     <span>° </span><NumberFormat key="lngM" numberParams={decimalFormat} value={pos.lngM} />
                     <span>&apos; </span>
                 </Label>
