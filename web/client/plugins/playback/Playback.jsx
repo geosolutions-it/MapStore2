@@ -146,7 +146,7 @@ module.exports = playbackEnhancer(({
     onShowSettings = () => {}
 }) =>
 ( <div style={{display: 'flex'}}>
-        {showSettings && <PlaybackSettings />}
+        { (status !== statusMap.PLAY && status !== statusMap.PAUSE) && showSettings && <PlaybackSettings />}
         <Toolbar
             btnDefaultProps={{
                 className: 'square-button-md',
@@ -171,9 +171,9 @@ module.exports = playbackEnhancer(({
                     tooltip: <Message msgId={"playback.forwardStep"} />
                 }, {
                     glyph: "wrench",
-                    bsStyle: showSettings ? 'success' : 'primary',
-                    active: !!showSettings,
-                    onClick: () => onShowSettings(!showSettings),
+                    bsStyle: (status !== statusMap.PLAY && status !== statusMap.PAUSE) && showSettings ? 'success' : 'primary',
+                    active: (status !== statusMap.PLAY || status !== statusMap.PAUSE) && !!showSettings,
+                    onClick: () => status !== statusMap.PLAY && onShowSettings(!showSettings),
                     tooltip: <Message msgId={"playback.settings.title"} />
                 }
             ]}/>
