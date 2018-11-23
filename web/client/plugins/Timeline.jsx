@@ -16,16 +16,19 @@ const { offsetEnabledSelector, currentTimeSelector, layersWithTimeDataSelector }
 const { selectedLayerSelector, currentTimeRangeSelector } = require('../selectors/timeline');
 const { mapLayoutValuesSelector } = require('../selectors/maplayout');
 
-const { withState, compose, branch, renderNothing } = require('recompose');
+const { withState, compose, branch, renderNothing, withStateHandlers, withProps, defaultProps } = require('recompose');
+const withResizeSpy = require('../components/misc/enhancers/withResizeSpy');
+
 const { selectTime, enableOffset } = require('../actions/timeline');
 const { setCurrentOffset } = require('../actions/dimension');
 const Message = require('../components/I18N/Message');
 const { selectPlaybackRange } = require('../actions/playback');
 const { playbackRangeSelector, statusSelector } = require('../selectors/playback');
 
-const { head } = require('lodash');
+const { head, isString} = require('lodash');
 const moment = require('moment');
-
+const isPercent = (val) => isString(val) && val.indexOf("%") !== -1;
+const getPercent = (val) => parseInt(val, 10) / 100;
 const isValidOffset = (start, end) => moment(end).diff(start) > 0;
 
 /**
@@ -61,10 +64,65 @@ const TimelinePlugin = compose(
         }),
     branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
     withState('options', 'setOptions', {collapsed: true}),
-    connect( createSelector(
-        state => mapLayoutValuesSelector(state, { right: true, bottom: true, left: true }),
-        style => ({style})
-    ))
+    //
+    // ** Responsiveness to container.
+    // These enhancers allow to properly place the timeline inside the map
+    // and resize it or hide accordingly with the available space
+    //
+    compose(
+        // get container size
+        compose(
+            withStateHandlers(() => ({}), {
+                onResize: () => ({ width }) => ({ containerWidth: width })
+            }),
+            withResizeSpy({ querySelector: ".ms2", closest: true, debounceTime: 100 })
+        ),
+        defaultProps({
+            style: {
+                marginBottom: 35,
+                marginLeft: 100,
+                marginRight: 80
+            }
+        }),
+        // get info about expand, collapse panel
+        connect( createSelector(
+            state => mapLayoutValuesSelector(state, { right: true, bottom: true, left: true }),
+            mapLayoutStyle => ({mapLayoutStyle}))),
+        // guess when to hide
+        withProps(
+            ({containerWidth, style, mapLayoutStyle, options = {}}) => {
+                const { marginLeft, marginRight} = style || {};
+                let {left = 0, right = 0} = mapLayoutStyle;
+                right = isPercent(right) && (getPercent(right) * containerWidth) || right;
+                left = isPercent(right) && (getPercent(right) * containerWidth) || right;
+                const { collapsed, playbackEnabled} = options;
+                // size of date picker with all margins
+                const DATE_TIME_BAR = 378;
+                // 94 + 4 the timeline button-group expanded and its margin (1 button more than when collapsed)
+                // 62 + 4 the timeline button-group collapsed and its margin
+                // 32 + 2 Expand button
+                const MIN_EXPANDED = DATE_TIME_BAR + 94 + 4 + 32 + 2;
+                const MIN_COLLAPSED = DATE_TIME_BAR + 62 + 4 + 32 + 2;
+                // 160 playback offset width with its margins
+                const PLAYBACK_OFFSET = 160;
+                const minWidth = (collapsed ? MIN_COLLAPSED : MIN_EXPANDED );
+                if (containerWidth) {
+                    const availableWidth = containerWidth - right - left - marginLeft - marginRight;
+                    const canExpand = !collapsed || availableWidth > MIN_EXPANDED + (playbackEnabled && 160 || 0);
+                    const canExpandPlayback = playbackEnabled || availableWidth > (minWidth + PLAYBACK_OFFSET) - (!canExpand && 32 || 0);
+                    return {
+                        hide: availableWidth < minWidth,
+                        canExpand,
+                        canExpandPlayback,
+                        style: {...style, ...mapLayoutStyle}
+                    };
+                }
+                return {style: {...style, ...mapLayoutStyle}};
+            }
+        ),
+        // effective hide
+        branch(({ hide }) => hide, renderNothing)
+    )
 )(
     ({
         items,
@@ -77,10 +135,12 @@ const TimelinePlugin = compose(
         currentTimeRange,
         setOffset,
         style,
+        canExpand,
+        canExpandPlayback,
         status
     }) => {
 
-        const { hideLayersName, collapsed, playbackEnabled } = options;
+        const { hideLayersName, collapsed, playbackEnabled} = options;
 
         const playbackItem = head(items && items.filter(item => item.name === 'playback'));
         const Playback = playbackItem && playbackItem.plugin;
@@ -93,7 +153,7 @@ const TimelinePlugin = compose(
 
                 background: "transparent",
                 ...style,
-                right: collapsed ? 'auto' : 80 + (style.right || 0)
+                right: collapsed ? 'auto' : (style.right || 0)
             }}
             className={`timeline-plugin${hideLayersName ? ' hide-layers-name' : ''}${offsetEnabled ? ' with-time-offset' : ''}`}>
 
@@ -154,7 +214,7 @@ const TimelinePlugin = compose(
                             tooltip: <Message msgId= {!playbackEnabled ? "timeline.enablePlayBack" : "timeline.disablePlayBack"}/>,
                             bsStyle: playbackEnabled ? 'success' : 'primary',
                             active: playbackEnabled,
-                            visible: !!Playback,
+                            visible: !!Playback && canExpandPlayback,
                             onClick: () => {
                                 setOptions({ ...options, playbackEnabled: !playbackEnabled });
 
@@ -172,6 +232,7 @@ const TimelinePlugin = compose(
                     }}
                     buttons={[
                         {
+                            visible: canExpand,
                             tooltip: <Message msgId= {collapsed ? "timeline.expand" : "timeline.collapse"}/>,
                             glyph: collapsed ? 'resize-full' : 'resize-small',
                             // we perform a check if the timeline data is loaded before allowing the user to expand the timeline and render an empty component
@@ -181,7 +242,6 @@ const TimelinePlugin = compose(
             </div>
             {!collapsed &&
                 <Timeline
-                    style={style}
                     offsetEnabled={offsetEnabled}
                     playbackEnabled={playbackEnabled}
                     hideLayersName={hideLayersName} />}
