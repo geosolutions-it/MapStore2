@@ -103,13 +103,14 @@ const TimelinePlugin = compose(
                 // 32 + 2 Expand button
                 const MIN_EXPANDED = DATE_TIME_BAR + 94 + 4 + 32 + 2;
                 const MIN_COLLAPSED = DATE_TIME_BAR + 62 + 4 + 32 + 2;
+
                 // 160 playback offset width with its margins
                 const PLAYBACK_OFFSET = 160;
                 const minWidth = (collapsed ? MIN_COLLAPSED : MIN_EXPANDED );
                 if (containerWidth) {
                     const availableWidth = containerWidth - right - left - marginLeft - marginRight;
                     const canExpand = !collapsed || availableWidth > MIN_EXPANDED + (playbackEnabled && 160 || 0);
-                    const canExpandPlayback = playbackEnabled || availableWidth > (minWidth + PLAYBACK_OFFSET) - (!canExpand && 32 || 0);
+                    const canExpandPlayback = playbackEnabled || availableWidth > (minWidth + PLAYBACK_OFFSET) - (collapsed && 32 || 0);
                     return {
                         hide: availableWidth < minWidth,
                         canExpand,
