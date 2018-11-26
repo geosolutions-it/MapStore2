@@ -10,7 +10,7 @@ const React = require('react');
 const { connect } = require('react-redux');
 const {createSelector} = require('reselect');
 const moment = require('moment');
-const { compose, withState, withProps, withHandlers, lifecycle} = require('recompose');
+const { compose, withState, withProps, withHandlers} = require('recompose');
 const { playbackSettingsSelector, playbackRangeSelector} = require('../../selectors/playback');
 const { selectedLayerSelector, rangeSelector, selectedLayerDataRangeSelector} = require('../../selectors/timeline');
 const { selectPlaybackRange, changeSetting, toggleAnimationMode, animationStepMove } = require('../../actions/playback');
@@ -126,12 +126,7 @@ const playbackButtons = compose(
 
 const playbackEnhancer = compose(
     collapsible,
-    playbackButtons,
-    lifecycle({
-        componentWillUnmount() {
-            this.props.stop();
-        }
-    })
+    playbackButtons
 );
 
 module.exports = playbackEnhancer(({
@@ -159,8 +154,13 @@ module.exports = playbackEnhancer(({
                     tooltip: <Message msgId={"playback.backwardStep"} />
                 }, {
                     glyph: status === statusMap.PLAY ? "pause" : "play",
+                    bsStyle: status === statusMap.PLAY || status === statusMap.PAUSE ? "success" : "primary",
                     onClick: () => status === statusMap.PLAY ? pause() : play(),
-                    tooltip: <Message msgId={status === statusMap.PLAY ? "playback.pause" : "playback.play"} />
+                    tooltipId: status === statusMap.PLAY
+                        ? "playback.pause"
+                        : status === statusMap.PAUSE
+                                ? "playback.paused"
+                                : "playback.play"
                 }, {
                     glyph: "stop",
                     onClick: stop,

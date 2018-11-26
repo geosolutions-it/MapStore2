@@ -1523,6 +1523,7 @@
             "forwardStep" : "avancer",
             "play": "jouer",
             "pause": "pause",
+            "paused": "jouer (en pause)",
             "stop": "Arrêtez"
         },
         "timeline": {
@@ -1535,7 +1536,11 @@
             "enablePlayBack": "Activer les contrôles de lecture",
             "disablePlayBack": "Désactiver les contrôles de lecture",
             "expand" : "Augmenter le curseur temporel",
-            "collapse" : "Réduire le curseur temporel"
+            "collapse" : "Réduire le curseur temporel",
+            "errors": {
+                "multidim_error_title": "Le service principal ne répond pas",
+                "multidim_error_message": "Les services requis pour le support multidimensionnel ne répondent pas. Veuillez réessayer plus tard ou contactez l'administrateur."
+            }
         },
         "rulesmanager": {
             "apply": "Appliquer",

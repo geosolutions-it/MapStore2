@@ -6,6 +6,8 @@ const moment = require('moment');
 const { SELECT_TIME, RANGE_CHANGED, ENABLE_OFFSET, timeDataLoading, rangeDataLoaded, onRangeChanged, selectLayer } = require('../actions/timeline');
 const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } = require('../actions/dimension');
 const {REMOVE_NODE} = require('../actions/layers');
+const {error} = require('../actions/notifications');
+
 const {getLayerFromId} = require('../selectors/layers');
 const { rangeSelector, selectedLayerName, selectedLayerUrl, isAutoSelectEnabled, selectedLayerSelector } = require('../selectors/timeline');
 const { layerTimeSequenceSelectorCreator, timeDataSelector, offsetTimeSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
@@ -82,23 +84,23 @@ const loadRangeData = (id, timeData, getState) => {
         [TIME_DIMENSION]: `${toISOString(range.start)}/${toISOString(range.end)}`
     };
     return getHistogram(
-        timeData.source.url,
-        layerName,
-        TIME_DIMENSION,
-        {
-            [TIME_DIMENSION]: `${toISOString(range.start)}/${toISOString(range.end)}`
-        },
-        resolution
-    )
-    .merge(
-        describeDomains(
             timeData.source.url,
             layerName,
-            filter,
+            TIME_DIMENSION,
             {
-                expandLimit: MAX_ITEMS_PER_LAYER
-            }
+                [TIME_DIMENSION]: `${toISOString(range.start)}/${toISOString(range.end)}`
+            },
+            resolution
         )
+        .merge(
+            describeDomains(
+                timeData.source.url,
+                layerName,
+                filter,
+                {
+                    expandLimit: MAX_ITEMS_PER_LAYER
+                }
+            )
     )
     .scan((acc, val) => ({...acc, ...val}), {})
     .switchMap(({ Histogram: histogram, Domains: domains }) => {
@@ -115,7 +117,7 @@ const loadRangeData = (id, timeData, getState) => {
         let values;
         try {
             values = histogram && histogram.Values && histogram.Values.split(',').map(v => parseInt(v, 10)) || [];
-        } catch (error) {
+        } catch (e) {
             values = []; // TODO notify some issue
         }
 
@@ -216,7 +218,7 @@ module.exports = {
      */
     updateRangeDataOnRangeChange: (action$, { getState = () => { } } = {}) =>
         action$.ofType(RANGE_CHANGED, UPDATE_LAYER_DIMENSION_DATA)
-            .debounceTime(500)
+            .debounceTime(400)
             .switchMap( () => {
                 const timeData = timeDataSelector(getState()) || {};
                 const layerIds = Object.keys(timeData).filter(id => timeData[id] && timeData[id].domain && isTimeDomainInterval(timeData[id].domain));
@@ -230,7 +232,11 @@ module.exports = {
                             domain
                         ))
                         .startWith(timeDataLoading(id, true))
-                        .catch(() => Rx.Observable.empty()) // TODO: notify time data loading errors
+                        .catch(() => Rx.Observable.of(error({
+                            uid: "error_with_timeline_update",
+                            title: "timeline.errors.multidim_error_title",
+                            message: "timeline.errors.multidim_error_message"
+                        })))
                         .concat( Rx.Observable.of(timeDataLoading(id, false)))
                     ));
 

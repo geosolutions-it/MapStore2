@@ -73,7 +73,7 @@ module.exports = ({
         border: 'none'
     }
 
-}) => (<div className="ms-playback-settings" style={{minWidth: 400}}>
+}) => (<div className="ms-playback-settings" style={{minWidth: 400, right: 0}}>
     <h4><Message msgId="playback.settings.title" /></h4>
         <FormGroup controlId="frameDuration" >
         <ControlLabel><Message msgId="playback.settings.frameDuration" /></ControlLabel>

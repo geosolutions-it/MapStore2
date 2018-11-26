@@ -1522,6 +1522,7 @@
             "forwardStep" : "Avanti",
             "play": "Play",
             "pause": "Pausa",
+            "paused": "Play (in pausa)",
             "stop": "stop"
         },
         "timeline": {
@@ -1534,7 +1535,11 @@
             "enablePlayBack": "Abilita i controlli di riproduzione",
             "disablePlayBack": "Disabilita i controlli di riproduzione",
             "expand" : "Espandi",
-            "collapse" : "Riduci"
+            "collapse" : "Riduci",
+            "errors": {
+                "multidim_error_title": "Il servizio di backend non risponde",
+                "multidim_error_message": "I servizi richiesti per il supporto multidimensionale non rispondono. Si prega di riprovare più tardi o contattare l'amministratore."
+            }
         },
         "rulesmanager": {
             "apply": "Applica",
