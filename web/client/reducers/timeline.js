@@ -76,9 +76,9 @@ module.exports = (state = {
         case REMOVE_NODE: {
             let newState = state;
             return assign({}, state, {
-                rangeData: has(newState.rangeData, action.node) && pickBy(newState.rangeData, (values, key) => key !== action.node),
-                loading: has(newState.rangeData, action.node) && pickBy(newState.loading, (values, key) => key !== action.node),
-                selectedLayer: state.selectedLayer === action.node && undefined
+                rangeData: has(newState.rangeData, action.node) ? pickBy(newState.rangeData, (values, key) => key !== action.node) : newState.rangeData,
+                loading: has(newState.rangeData, action.node) ? pickBy(newState.loading, (values, key) => key !== action.node) : newState.loading,
+                selectedLayer: state.selectedLayer === action.node ? undefined : state.selectedLayer
                 });
         }
         default:
