@@ -94,7 +94,7 @@ const TimelinePlugin = compose(
                 const { marginLeft, marginRight} = style || {};
                 let {left = 0, right = 0} = mapLayoutStyle;
                 right = isPercent(right) && (getPercent(right) * containerWidth) || right;
-                left = isPercent(right) && (getPercent(left) * containerWidth) || left;
+                left = isPercent(left) && (getPercent(left) * containerWidth) || left;
                 const { collapsed, playbackEnabled} = options;
                 // size of date picker with all margins
                 const DATE_TIME_BAR = 378;
