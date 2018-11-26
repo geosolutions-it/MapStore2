@@ -272,13 +272,11 @@ module.exports = {
     playbackStopWhenDeleteLayer: (action$, { getState = () => {} }= {}) =>
         action$
         .ofType(REMOVE_NODE)
-        .switchMap( action =>
-            selectedLayerSelector(getState()) === action.node || selectedLayerSelector(getState()) === ""
-            ? Rx.Observable.of(
-                stop()
-            ) :
-            Rx.Observable.empty()
-            )
+        .filter( () =>
+                !selectedLayerSelector(getState())
+                && statusSelector(getState()) === "PLAY"
+        )
+        .switchMap( () => Rx.Observable.of(stop()))
 
 
 };

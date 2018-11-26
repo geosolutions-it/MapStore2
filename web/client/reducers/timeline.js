@@ -2,7 +2,7 @@ const { RANGE_CHANGED } = require('../actions/timeline');
 const { REMOVE_NODE } = require('../actions/layers');
 const { RANGE_DATA_LOADED, LOADING, SELECT_LAYER, MOUSE_EVENT } = require('../actions/timeline');
 const { set } = require('../utils/ImmutableUtils');
-const { assign, pickBy } = require('lodash');
+const { assign, pickBy, has } = require('lodash');
 
 /**
  * Provides state for the timeline. Example:
@@ -74,14 +74,12 @@ module.exports = (state = {
             return set('mouseEvent', action.eventData, state);
         }
         case REMOVE_NODE: {
-            if (state.selectedLayer === action.node) {
-                let newState = state;
-                return assign({}, state, {
-                     rangeData: pickBy(newState.rangeData, (values, key) => key !== action.node),
-                     loading: pickBy(newState.loading, (values, key) => key !== action.node),
-                     selectedLayer: ''
+            let newState = state;
+            return assign({}, state, {
+                rangeData: has(newState.rangeData, action.node) && pickBy(newState.rangeData, (values, key) => key !== action.node),
+                loading: has(newState.rangeData, action.node) && pickBy(newState.loading, (values, key) => key !== action.node),
+                selectedLayer: state.selectedLayer === action.node && undefined
                 });
-            }
         }
         default:
             return state;
