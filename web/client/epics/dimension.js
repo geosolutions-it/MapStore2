@@ -2,6 +2,7 @@
 const { Observable } = require('rxjs');
 const { updateLayerDimension, changeLayerProperties, ADD_LAYER} = require('../actions/layers');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
+const { error } = require('../actions/notifications');
 
 const { SET_CURRENT_TIME, MOVE_TIME, SET_OFFSET_TIME, updateLayerDimensionData} = require('../actions/dimension');
 const { layersWithTimeDataSelector, offsetTimeSelector, currentTimeSelector } = require('../selectors/dimension');
@@ -101,12 +102,19 @@ module.exports = {
                         )
                     )
                     // one flow for each dimension
-                    .flatMap(l =>
+                    .mergeMap(l =>
                         describeDomains(getTimeMultidimURL(l), l.name, undefined, DESCRIBE_DOMAIN_OPTIONS)
                             .switchMap( domains =>
-                                Observable.from(domainsToDimensionsObject(domains, getTimeMultidimURL(l))
-                                    .map(d => updateLayerDimensionData(l.id, d.name, d))
+                                    Observable.from(domainsToDimensionsObject(domains, getTimeMultidimURL(l))
+                                        .map(d => updateLayerDimensionData(l.id, d.name, d))
+                                )
                             )
+                            .catch(() =>
+                                Observable.of(error({
+                                    uid: "error_with_timeline_update",
+                                    title: "timeline.errors.multidim_error_title",
+                                    message: "timeline.errors.multidim_error_message"
+                                })).delay(2000)
                         )
                     );
             })

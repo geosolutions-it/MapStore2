@@ -1523,6 +1523,7 @@
             "forwardStep" : "Step forward",
             "play": "play",
             "pause": "pause",
+            "paused": "play (paused)",
             "stop": "stop"
         },
         "timeline": {
@@ -1535,7 +1536,11 @@
             "enablePlayBack": "Enable playback controls",
             "disablePlayBack": "Disable playback controls",
             "expand" : "Expand time slider",
-            "collapse" : "Collapse time slider"
+            "collapse" : "Collapse time slider",
+            "errors": {
+                "multidim_error_title": "Backend service is not responding",
+                "multidim_error_message": "The required services for multidinensional support are not responding. Please try again later or contact the administrator."
+            }
         },
         "rulesmanager": {
             "apply": "Apply",
