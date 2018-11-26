@@ -1,7 +1,8 @@
 const { UPDATE_LAYER_DIMENSION_DATA, SET_CURRENT_TIME, SET_OFFSET_TIME, MOVE_TIME } = require('../actions/dimension');
+const { REMOVE_NODE } = require('../actions/layers');
 const { set } = require('../utils/ImmutableUtils');
 const moment = require('moment');
-
+const {mapValues, pickBy } = require('lodash');
 
 /**
  * Provide state for current time and dimension info.
@@ -48,6 +49,10 @@ module.exports = (state = {}, action) => {
                 return set(`currentTime`, action.time, set('offsetTime', nextOffsetTime.toISOString(), state));
             }
             return set(`currentTime`, action.time, state);
+        }
+        case REMOVE_NODE: {
+            const newData = mapValues(state.data, (o) => pickBy(o, (values, keys) => keys !== action.node));
+            return set(`data`, newData, state);
         }
         default:
             return state;

@@ -20,7 +20,7 @@ const {
     onRangeChanged
 } = require('../actions/timeline');
 
-const { changeLayerProperties } = require('../actions/layers');
+const { changeLayerProperties, REMOVE_NODE } = require('../actions/layers');
 
 const { error } = require('../actions/notifications');
 
@@ -29,7 +29,7 @@ const { currentTimeSelector, layersWithTimeDataSelector, layerTimeSequenceSelect
 const { LOCATION_CHANGE } = require('react-router-redux');
 
 const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector, playbackRangeSelector, playbackSettingsSelector, frameDurationSelector, statusSelector } = require('../selectors/playback');
-const { selectedLayerName, selectedLayerUrl, selectedLayerData, selectedLayerTimeDimensionConfiguration, rangeSelector } = require('../selectors/timeline');
+const { selectedLayerName, selectedLayerUrl, selectedLayerData, selectedLayerTimeDimensionConfiguration, rangeSelector, selectedLayerSelector } = require('../selectors/timeline');
 
 const pausable = require('../observables/pausable');
 const { wrapStartStop } = require('../observables/epics');
@@ -267,5 +267,16 @@ module.exports = {
                         };
                     })()
                 )
-            ))
+            )),
+
+    playbackStopWhenDeleteLayer: (action$, { getState = () => {} }= {}) =>
+        action$
+        .ofType(REMOVE_NODE)
+        .filter( () =>
+                !selectedLayerSelector(getState())
+                && statusSelector(getState()) === "PLAY"
+        )
+        .switchMap( () => Rx.Observable.of(stop()))
+
+
 };

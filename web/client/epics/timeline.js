@@ -5,10 +5,11 @@ const moment = require('moment');
 
 const { SELECT_TIME, RANGE_CHANGED, ENABLE_OFFSET, timeDataLoading, rangeDataLoaded, onRangeChanged, selectLayer } = require('../actions/timeline');
 const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } = require('../actions/dimension');
+const {REMOVE_NODE} = require('../actions/layers');
 const {error} = require('../actions/notifications');
 
 const {getLayerFromId} = require('../selectors/layers');
-const { rangeSelector, selectedLayerName, selectedLayerUrl, isAutoSelectEnabled } = require('../selectors/timeline');
+const { rangeSelector, selectedLayerName, selectedLayerUrl, isAutoSelectEnabled, selectedLayerSelector } = require('../selectors/timeline');
 const { layerTimeSequenceSelectorCreator, timeDataSelector, offsetTimeSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
 
 const { getNearestDate, roundRangeResolution, isTimeDomainInterval } = require('../utils/TimeUtils');
@@ -158,8 +159,9 @@ module.exports = {
     /**
      * Initializes the time line
      */
-    setupTimelineExistingSettings: (action$, { getState = () => { } } = {}) => action$.ofType(UPDATE_LAYER_DIMENSION_DATA)
-        .exhaustMap(() => isAutoSelectEnabled(getState()) && !selectedLayerName(getState()) && get(layersWithTimeDataSelector(getState()), "[0].id")
+    setupTimelineExistingSettings: (action$, { getState = () => { } } = {}) => action$.ofType(REMOVE_NODE, UPDATE_LAYER_DIMENSION_DATA)
+        .exhaustMap(() => isAutoSelectEnabled(getState()) && get(layersWithTimeDataSelector(getState()), "[0].id")
+        && !selectedLayerSelector(getState())
             ? Rx.Observable.of(selectLayer(get(layersWithTimeDataSelector(getState()), "[0].id")))
                 .concat(
                     Rx.Observable.of(1).switchMap( () =>
