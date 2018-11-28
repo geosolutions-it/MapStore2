@@ -20,6 +20,7 @@ const {
 module.exports = ({
     onEdit = () => {},
     toggleDeleteConfirm = () => {},
+    topLeftItems,
     id, title, text,
     headerStyle,
     canEdit = true,
@@ -27,6 +28,7 @@ module.exports = ({
     onDelete=() => {}
 } = {}) =>
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
+    topLeftItems={topLeftItems}
     topRightItems={<ButtonToolbar>
         {canEdit ? (<DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
             <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>

@@ -11,11 +11,14 @@ const deleteWidget = require('../enhancers/deleteWidget');
 const enhanceTableWidget = require('../enhancers/tableWidget');
 const legendWidget = require('../enhancers/legendWidget');
 const wpsChart = require('../enhancers/wpsChart');
+
 const {compose} = require('recompose');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const dependenciesToOptions = require('../enhancers/dependenciesToOptions');
 const dependenciesToWidget = require('../enhancers/dependenciesToWidget');
 const dependenciesToMapProp = require('../enhancers/dependenciesToMapProp');
+const { lockableWidget, hidableWidget, withTools} = require('../enhancers/tools');
+
 const ChartWidget = compose(
     dependenciesToWidget,
     dependenciesToFilter,
@@ -23,7 +26,13 @@ const ChartWidget = compose(
     wpsChart,
     enhanceChartWidget
 )(require('./ChartWidget'));
-const TextWidget = deleteWidget(require('./TextWidget'));
+const TextWidget = compose(
+    deleteWidget,
+    lockableWidget(),
+    hidableWidget(),
+    withTools(),
+)(require('./TextWidget'));
+
 const MapWidget = compose(
     dependenciesToWidget,
     dependenciesToMapProp('center'),
@@ -86,5 +95,4 @@ module.exports = ({
                 dependencies={dependencies}
                 exportImage={exportImage}
                 onDelete={onDelete}
-                onEdit={onEdit} />)
-         ;
+                onEdit={onEdit} />);
