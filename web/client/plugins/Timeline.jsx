@@ -195,7 +195,7 @@ const TimelinePlugin = compose(
             {offsetEnabled // if range is present and configured, show the floating start point.
                 && <InlineDateTimeSelector
                 glyph="range-start"
-                onZoomTo= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
+                onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
                 tooltip={<Message msgId="timeline.offsetRangeStart"/>}
                 date={currentTime || currentTimeRange && currentTimeRange.start}
                 onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
@@ -211,14 +211,14 @@ const TimelinePlugin = compose(
                     // if range enabled, show time end in the timeline
                     ? <InlineDateTimeSelector
                         glyph={'range-end'}
-                        onZoomTo= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
+                        onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
                         tooltip="Offset time"
                         date={currentTimeRange.end}
                         onUpdate={end => status !== "PLAY" && isValidOffset(currentTime, end) && setOffset(end)} />
                     : // show current time if using single time
                     <InlineDateTimeSelector
                         glyph={'time-current'}
-                        onZoomTo= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange)}
+                        onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange)}
                         tooltip={<Message msgId="timeline.currentTime"/>}
                         date={currentTime || currentTimeRange && currentTimeRange.start}
                         onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)} />}

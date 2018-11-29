@@ -19,7 +19,7 @@ class InlineDateTimeSelector extends React.Component {
     static propTypes = {
         date: PropTypes.string,
         onUpdate: PropTypes.func,
-        onZoomTo: PropTypes.func,
+        onIconClick: PropTypes.func,
         glyph: PropTypes.string,
         style: PropTypes.object,
         className: PropTypes.string,
@@ -29,7 +29,7 @@ class InlineDateTimeSelector extends React.Component {
 
     static defaultProps = {
         date: '',
-        onZoomTo: () => {},
+        onIconClick: () => {},
         onUpdate: () => {},
         glyph: 'time',
         style: {},
@@ -115,7 +115,7 @@ class InlineDateTimeSelector extends React.Component {
             <Form className={`ms-inline-datetime ${this.props.className}`} style={this.props.style}>
                 <FormGroup controlId="inlineDateTime">
                     {this.props.glyph &&
-                    <div style = {{"cursor": "pointer"}} onClick ={() => this.props.onZoomTo(this.props.date, this.props.glyph) }>
+                    <div style = {{"cursor": "pointer"}} onClick ={() => this.props.onIconClick(this.props.date, this.props.glyph) }>
                         <Glyphicon
                         tooltip={this.props.tooltip}
                         tooltipId={this.props.tooltipId}
