@@ -83,12 +83,11 @@ class Timeline extends React.Component {
   shouldComponentUpdate(nextProps) {
       const { items, groups, options, selection, customTimes } = this.props;
 
-      const itemsChange = items !== nextProps.items || (items || []).length !== (nextProps.items || []).length;
+      const itemsChange = items !== nextProps.items;
       const groupsChange = groups !== nextProps.groups;
       const optionsChange = options !== nextProps.options;
       const customTimesChange = customTimes !== nextProps.customTimes;
       const selectionChange = selection !== nextProps.selection;
-
       return (
         itemsChange ||
         groupsChange ||
@@ -130,8 +129,8 @@ class Timeline extends React.Component {
           timelineOptions = omit(options, 'start', 'end');
 
           this.$el.setWindow(options.start, options.end, {
-          animation: animate
-      });
+            animation: animate
+          });
       }
 
       this.$el.setOptions(timelineOptions);
@@ -142,7 +141,16 @@ class Timeline extends React.Component {
           this.$el.setGroups(groupsDataset);
       }
 
-      this.$el.setItems(items);
+      if ( items && items.length > 0) {
+          if (!this.$el.initialFitDone) {
+              this.$el.setItems(items);
+              this.$el.emit('changed');
+          }else {
+              this.$el.setItems(items);
+          }
+      }else if (this.$el.initialRangeChangeDone) {
+          this.$el.setItems(items);
+      }
       this.$el.setSelection(selection, selectionOptions);
 
       if (currentTime) {
