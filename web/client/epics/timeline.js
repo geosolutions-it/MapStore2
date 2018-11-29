@@ -20,7 +20,11 @@ const TIME_DIMENSION = "time";
 const MAX_ITEMS_PER_LAYER = 20;
 const MAX_HISTOGRAM = 20;
 
-
+/**
+ * Gets the getDomain args for retrieve **single** value surrounding current time for the selected layer
+ * @param {object} state application state
+ * @param {object} paginationOptions
+ */
 const domainArgs = (state, paginationOptions = {}) => {
 
     const layerName = selectedLayerName(state);
@@ -40,6 +44,7 @@ const snapTime = (state, group, time) => {
     if (selectedLayerName(state)) {
         // do parallel request and return and observable that emit the correct value/ time as it is by default
         return Rx.Observable.forkJoin(
+                // TODO: find out a way to optimize and do only one request
                 getDomainValues(...domainArgs(state, { sort: "asc", fromValue: time }))
                     .map(res => res.DomainValues.Domain.split(","))
                     .map(([tt])=> tt).catch(err => err && Rx.Observable.of(null)),
@@ -72,7 +77,7 @@ const toISOString = date => isString(date) ? date : date.toISOString();
  */
 const loadRangeData = (id, timeData, getState) => {
     /**
-     * when there is no timeline state rangeSelector(getState()) returns undefiend, so instead we use the timeData[id] range
+     * when there is no timeline state rangeSelector(getState()) returns undefined, so instead we use the timeData[id] range
      */
     const dataRange = timeData.domain.split('--');
 

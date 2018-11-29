@@ -11,6 +11,7 @@ const SELECT_PLAYBACK_RANGE = "PLAYBACK:SELECT_PLAYBACK_RANGE";
 const CHANGE_SETTING = "PLAYBACK:SETTINGS_CHANGE";
 const TOGGLE_ANIMATION_MODE = "PLAYBACK:TOGGLE_ANIMATION_MODE";
 const ANIMATION_STEP_MOVE = "PLAYBACK:ANIMATION_STEP_MOVE";
+const UPDATE_METADATA = "PLAYBACK:UPDATE_METADATA";
 
 const STATUS = {
     PLAY: "PLAY",
@@ -64,6 +65,13 @@ const animationStepMove = (direction) => ({
     direction
 });
 
+const updateMetadata = ({next, previous, forTime}) => ({
+    type: UPDATE_METADATA,
+    forTime,
+    next,
+    previous
+});
+
 module.exports = {
     play,
     stop,
@@ -76,6 +84,7 @@ module.exports = {
     changeSetting,
     toggleAnimationMode,
     animationStepMove,
+    updateMetadata,
     PLAY,
     PAUSE,
     STOP,
@@ -87,5 +96,6 @@ module.exports = {
     SELECT_PLAYBACK_RANGE,
     CHANGE_SETTING,
     TOGGLE_ANIMATION_MODE,
-    ANIMATION_STEP_MOVE
+    ANIMATION_STEP_MOVE,
+    UPDATE_METADATA
 };
