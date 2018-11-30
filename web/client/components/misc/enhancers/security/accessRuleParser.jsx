@@ -6,30 +6,39 @@
  * LICENSE file in the root directory of this source tree.
  */
 const { withPropsOnChange } = require('recompose');
-const { get, castArray, mapValues, isString } = require('lodash');
+const { get, castArray, mapValues, isString, isArray } = require('lodash');
 
 const parseRules = ({accessInfo, postProcessValue, reduceFun}) => rawRules => {
     let rules = castArray(rawRules);
     let effectiveReduceFun = reduceFun;
     if (rules.length > 1 && rules[0] === "__OR__") {
         effectiveReduceFun = (acc, v) => acc || v;
-        rules = rules.splice(1);
+        rules = rules.slice(1);
     }
     // evaluate rules
     return rules
-        .map(rule => {
+        .map(r => {
+            let rule = r;
+            if (isArray(rule)) {
+                return parseRules({ accessInfo, postProcessValue, reduceFun })(rule);
+            }
+            let negate = false;
+            if (rule && isString(rule) && rule.startsWith("!")) {
+                negate = true;
+                rule = rule.substr(1);
+            }
+            const finalize = v => negate ? !v : v;
             const ruleParts = isString(rule) && rule.split(":"); // part after `:` is reserved for future use, e.g. default values or flags
             if (ruleParts && ruleParts[0]) {
                 const diffRuleCore = ruleParts[0].split(/\!\=\=?/); // = can be used to compare
                 const equalRuleCore = ruleParts[0].split(/\=\=?\=?/);
                 if (diffRuleCore.length > 1) {
-                    return postProcessValue(get(accessInfo, diffRuleCore[0]), rule) !== diffRuleCore[1];
+                    return finalize(postProcessValue(get(accessInfo, diffRuleCore[0]), rule) !== diffRuleCore[1]);
                 } else if (equalRuleCore.length > 1) { // if != is not matched, than also = is valid
-                    return postProcessValue(get(accessInfo, equalRuleCore[0]), rule) === equalRuleCore[1];
+                    return finalize(postProcessValue(get(accessInfo, equalRuleCore[0]), rule) === equalRuleCore[1]);
                 }
                 // in case of normal string
-                return postProcessValue(get(accessInfo, ruleParts[0]), rule);
-
+                return finalize(postProcessValue(get(accessInfo, ruleParts[0]), rule));
             }
             // in case it was not a string
             return rule;
@@ -57,6 +66,7 @@ const parseRules = ({accessInfo, postProcessValue, reduceFun}) => rawRules => {
  * const CMP = accessRuleParser("hasAllAccess", {asObject: true})(oldCMP);
  * return <CMP accessInfo={{ user: {role: "ADMIN"}, mapInfo: {canEdit: true, canDelete: true}}} hasAllAccess={["__OR__", "mapInfo.canEdit", "mapInfo.canDelete"]} />
  * ```
+ * **NOTE**: this limit the values of the variables that work with this parser. They can not start with `!` or be contained in `{}` (TODO: support JS expression like plugins)
  *
  * @name accessRuleParser
  * @memberof components.misc.enhancers.security

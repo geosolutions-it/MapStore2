@@ -8,7 +8,7 @@
 const {compose} = require('recompose');
 const { connect } = require('react-redux');
 const {createSelector} = require('reselect');
-const { mapInfoSelector } = require('../../selectors/map');
+const { mapInfoSelector, mapIdSelector } = require('../../selectors/map');
 const { userSelector } = require('../../selectors/security');
 
 
@@ -18,10 +18,11 @@ const accessRuleParser = require('../../components/misc/enhancers/security/acces
 module.exports = (...args) => compose(
         connect(
             createSelector(
+                mapIdSelector,
                 mapInfoSelector,
                 userSelector,
-                (mapInfo, user) => ({
-                    accessInfo: { mapInfo, user}
+                (mapId, mapInfo, user) => ({
+                    accessInfo: { mapId, mapInfo, user}
                 })
             )
         ),

@@ -94,7 +94,7 @@ module.exports = pure(({
 
             )) : undefined}>
         {
-            widgets.map(w => (<div key={w.id} data-grid={w.dataGrid} onClick={() => onWidgetClick(w)} className={getWidgetClass(w)}><DefaultWidget
+            widgets.filter(({ hide }) => hide ? toolsOptions.seeHidden : true).map(w => (<div key={w.id} data-grid={w.dataGrid} onClick={() => onWidgetClick(w)} className={getWidgetClass(w)}><DefaultWidget
                 data-grid={w.dataGrid}
                 {...actions}
                 {...w}

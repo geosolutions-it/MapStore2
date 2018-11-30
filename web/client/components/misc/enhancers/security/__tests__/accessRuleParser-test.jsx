@@ -86,6 +86,70 @@ describe('accessRuleParser enhancer', () => {
         }));
         ReactDOM.render(<Sink accessInfo={{ mapInfo: { canEdit: true, canDelete: false } }} hasAllAccess={["__OR__", "mapInfo.canEdit", "mapInfo.canDelete"]} />, document.getElementById("container"));
     });
+    it('single negative rule', (done) => {
+        const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
+            expect(props).toExist();
+            expect(props.hasAllAccess).toBe(false);
+            done();
+        }));
+        ReactDOM.render(<Sink accessInfo={{ mapInfo: { canEdit: true, canDelete: false } }} hasAllAccess="!mapInfo.canEdit" />, document.getElementById("container"));
+    });
+    it('single negative rule with equal return true (so false)', (done) => {
+        const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
+            expect(props).toExist();
+            expect(props.hasAllAccess).toBe(false);
+            done();
+        }));
+        ReactDOM.render(<Sink accessInfo={{ user: { role: "ADMIN" }, mapInfo: { canEdit: true, canDelete: false } }} hasAllAccess="!user.role==ADMIN" />, document.getElementById("container"));
+    });
+    it('single negative rule with equal return false (so true)', (done) => {
+        const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
+            expect(props).toExist();
+            expect(props.hasAllAccess).toBe(true);
+            done();
+        }));
+        ReactDOM.render(<Sink accessInfo={{ user: { role: "USER" }, mapInfo: { canEdit: true, canDelete: false } }} hasAllAccess="!user.role==ADMIN" />, document.getElementById("container"));
+    });
+    it('single negative rule with differ return true (so false)', (done) => {
+        const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
+            expect(props).toExist();
+            expect(props.hasAllAccess).toBe(false);
+            done();
+        }));
+        ReactDOM.render(<Sink accessInfo={{ user: { role: "USER" }, mapInfo: { canEdit: true, canDelete: false } }} hasAllAccess="!user.role!=ADMIN" />, document.getElementById("container"));
+    });
+    it('single negative rule with differ return false (so true)', (done) => {
+        const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
+            expect(props).toExist();
+            expect(props.hasAllAccess).toBe(true);
+            done();
+        }));
+        ReactDOM.render(<Sink accessInfo={{ user: { role: "ADMIN" }, mapInfo: { canEdit: true, canDelete: false } }} hasAllAccess="!user.role!=ADMIN" />, document.getElementById("container"));
+    });
+    it('array of rules', (done) => {
+        const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
+            expect(props).toExist();
+            expect(props.hasAllAccess).toBeFalsy();
+            done();
+        }));
+        ReactDOM.render(<Sink accessInfo={{ mapInfo: { canEdit: true, canDelete: false } }} hasAllAccess={["mapInfo.canEdit", "mapInfo.canDelete"]} />, document.getElementById("container"));
+    });
+    it('array of rules with __OR__', (done) => {
+        const Sink = accessRuleParser("hasAllAccess")(createSink(props => {
+            expect(props).toExist();
+            const { accessInfo } = props;
+            const { mapInfo } = accessInfo;
+            const {canEdit, canDelete} = mapInfo;
+            expect(props.hasAllAccess).toBe(!!(canEdit || canDelete) );
+            done();
+        }));
+        const rules = ["__OR__", "mapInfo.canEdit", "mapInfo.canDelete"];
+        ReactDOM.render(<Sink accessInfo={{ mapInfo: { canEdit: false, canDelete: false } }} hasAllAccess={rules} />, document.getElementById("container"));
+        ReactDOM.render(<Sink accessInfo={{ mapInfo: { canEdit: true, canDelete: false } }} hasAllAccess={rules} />, document.getElementById("container"));
+        ReactDOM.render(<Sink accessInfo={{ mapInfo: { canEdit: false, canDelete: true } }} hasAllAccess={rules} />, document.getElementById("container"));
+        ReactDOM.render(<Sink accessInfo={{ mapInfo: { canEdit: true, canDelete: true } }} hasAllAccess={rules} />, document.getElementById("container"));
+
+    });
     it('asObject option', (done) => {
         const Sink = accessRuleParser("hasAllAccess", {asObject: true})(createSink(props => {
             expect(props).toExist();
@@ -110,6 +174,27 @@ describe('accessRuleParser enhancer', () => {
         }));
         ReactDOM.render(<Sink accessInfo={{ mapInfo: { canEdit: true, canDelete: false } }} hasAllAccess={{
             test: ["mapInfo.canEdit", "mapInfo.canDelete"]
+        }} />, document.getElementById("container"));
+    });
+    it('asObject with array of rules nested (XOR)', (done) => {
+        const Sink = accessRuleParser("hasAllAccess", { asObject: true })(createSink(props => {
+            expect(props).toExist();
+            const {accessInfo, hasAllAccess} = props;
+            const {mapInfo} = accessInfo;
+            expect(hasAllAccess.test).toBe(!!(!mapInfo.canEdit && mapInfo.canDelete || mapInfo.canEdit && !mapInfo.canDelete ));
+            done();
+        }));
+        ReactDOM.render(<Sink accessInfo={{ mapInfo: { canEdit: false, canDelete: false } }} hasAllAccess={{
+            test: ["__OR__", ["!mapInfo.canEdit", "mapInfo.canDelete"], ["mapInfo.canEdit", "!mapInfo.canDelete"]]
+        }} />, document.getElementById("container"));
+        ReactDOM.render(<Sink accessInfo={{ mapInfo: { canEdit: true, canDelete: false } }} hasAllAccess={{
+            test: ["__OR__", ["!mapInfo.canEdit", "mapInfo.canDelete"], ["mapInfo.canEdit", "!mapInfo.canDelete"]]
+        }} />, document.getElementById("container"));
+        ReactDOM.render(<Sink accessInfo={{ mapInfo: { canEdit: false, canDelete: true } }} hasAllAccess={{
+            test: ["__OR__", ["!mapInfo.canEdit", "mapInfo.canDelete"], ["mapInfo.canEdit", "!mapInfo.canDelete"]]
+        }} />, document.getElementById("container"));
+        ReactDOM.render(<Sink accessInfo={{ mapInfo: { canEdit: true, canDelete: true } }} hasAllAccess={{
+            test: ["__OR__", ["!mapInfo.canEdit", "mapInfo.canDelete"], ["mapInfo.canEdit", "!mapInfo.canDelete"]]
         }} />, document.getElementById("container"));
     });
     it('asObject, with multiple entries, different kinds of rules and sequential renderings', (done) => {
