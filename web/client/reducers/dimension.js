@@ -1,5 +1,6 @@
 const { UPDATE_LAYER_DIMENSION_DATA, SET_CURRENT_TIME, SET_OFFSET_TIME, MOVE_TIME } = require('../actions/dimension');
 const { REMOVE_NODE } = require('../actions/layers');
+const { RESET_CONTROLS } = require('../actions/controls');
 const { set } = require('../utils/ImmutableUtils');
 const moment = require('moment');
 const {mapValues, pickBy } = require('lodash');
@@ -53,6 +54,9 @@ module.exports = (state = {}, action) => {
         case REMOVE_NODE: {
             const newData = mapValues(state.data, (o) => pickBy(o, (values, keys) => keys !== action.node));
             return set(`data`, newData, state);
+        }
+        case RESET_CONTROLS: {
+            return set('data', undefined, set('currentTime', undefined, set('offsetTime', undefined, state)));
         }
         default:
             return state;

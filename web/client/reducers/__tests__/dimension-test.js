@@ -55,5 +55,16 @@ describe('Test the dimension reducer', () => {
         const state = dimension(initialState, action);
         expect(state).toExist();
     });
+    it('reset dimension data when switch to a new map', () => {
+        const action = {
+            type: 'RESET_CONTROLS'
+        };
+        const initialState = {
+            currentTime: '00:00:00z'
+          };
+        const state = dimension(initialState, action);
+        expect(state).toExist();
+        expect(state.currentTime).toNotExist();
+    });
 
 });

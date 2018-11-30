@@ -1,5 +1,6 @@
 const { RANGE_CHANGED } = require('../actions/timeline');
 const { REMOVE_NODE } = require('../actions/layers');
+const { RESET_CONTROLS } = require('../actions/controls');
 const { RANGE_DATA_LOADED, LOADING, SELECT_LAYER, MOUSE_EVENT } = require('../actions/timeline');
 const { set } = require('../utils/ImmutableUtils');
 const { assign, pickBy, has } = require('lodash');
@@ -80,6 +81,9 @@ module.exports = (state = {
                 loading: has(newState.rangeData, action.node) ? pickBy(newState.loading, (values, key) => key !== action.node) : newState.loading,
                 selectedLayer: state.selectedLayer === action.node ? undefined : state.selectedLayer
                 });
+        }
+        case RESET_CONTROLS: {
+            return assign({}, state, { range: undefined, rangeData: undefined, selectedLayer: undefined, loading: undefined, MouseEvent: undefined});
         }
         default:
             return state;
