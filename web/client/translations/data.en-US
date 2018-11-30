@@ -1527,9 +1527,9 @@
             "stop": "stop"
         },
         "timeline": {
-            "currentTime": " go to Current Time",
-            "offsetRangeStart":" go to the Offset Range",
-            "offsetTime" : " go to the Offset Range",
+            "currentTime": "go to Current Time",
+            "offsetRangeStart":"go to the Offset Range",
+            "offsetTime" : "go to the Offset Range",
             "hideLayerName" : "Hide layers name",
             "showLayerName" : "Show layers name",
             "enableOffset": "Enable current time with offset",

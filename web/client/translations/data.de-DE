@@ -1526,8 +1526,9 @@
             "stop": "Stopp"
         },
         "timeline": {
-            "currentTime": "Aktuelle Uhrzeit",
-            "offsetTime" : "Versatzzeit",
+            "currentTime": "Gehe zur aktuellen Uhrzeit",
+            "offsetRangeStart":"Gehen Sie zum Versatzbereich",
+            "offsetTime" : "Gehen Sie zum Versatzbereich",
             "hideLayerName" : "Ebenennamen verbergen",
             "showLayerName" : "Ebenennamen anzeigen",
             "enableOffset": "Aktuelle Uhrzeit mit Offset aktivieren",

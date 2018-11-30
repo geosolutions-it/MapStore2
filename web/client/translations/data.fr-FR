@@ -1527,8 +1527,9 @@
             "stop": "Arrêtez"
         },
         "timeline": {
-            "currentTime": "Heure actuelle",
-            "offsetTime" : "temps compensé",
+            "currentTime": "Aller à l'heure actuelle",
+            "offsetRangeStart":"Aller à la plage de décalage",
+            "offsetTime" : "Aller à la plage de décalage",
             "hideLayerName" : "cacher le nom de la couche",
             "showLayerName" : "Afficher le nom de la couche",
             "enableOffset": "Activer l'heure actuelle avec décalage",
