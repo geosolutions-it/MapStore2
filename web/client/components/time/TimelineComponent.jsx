@@ -141,13 +141,21 @@ class Timeline extends React.Component {
           this.$el.setGroups(groupsDataset);
       }
 
+      /*
+      ** the init() function keeps re-triggerd with change of some props
+      * when the item is set at the first init(), it return no range (vis-timelin.js)
+      * in this case we emit 'change' action to create a view range from th new items.
+      **/
       if ( items && items.length > 0) {
+          // first setItems is triggerd only when the component recieve items. trigger 'change' event to create  view range.
           if (!this.$el.initialFitDone) {
               this.$el.setItems(items);
               this.$el.emit('changed');
           }else {
+              // when we have a change in items we perform set item (e.g zoom /move events)
               this.$el.setItems(items);
           }
+      // when there is a view range but no items on the timeline (e.g. user moved the timeline where there are no data). we re-set items again
       }else if (this.$el.initialRangeChangeDone) {
           this.$el.setItems(items);
       }
