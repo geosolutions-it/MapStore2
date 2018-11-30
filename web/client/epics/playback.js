@@ -10,7 +10,7 @@ const { get } = require('lodash');
 const {
     PLAY, PAUSE, STOP, STATUS, SET_FRAMES, SET_CURRENT_FRAME, TOGGLE_ANIMATION_MODE, ANIMATION_STEP_MOVE,
     stop, setFrames, appendFrames, setCurrentFrame,
-    framesLoading
+    framesLoading, updateMetadata
 } = require('../actions/playback');
 const {
     moveTime, SET_CURRENT_TIME, MOVE_TIME, SET_OFFSET_TIME
@@ -28,7 +28,7 @@ const { currentTimeSelector, layersWithTimeDataSelector, layerTimeSequenceSelect
 
 const { LOCATION_CHANGE } = require('react-router-redux');
 
-const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector, playbackRangeSelector, playbackSettingsSelector, frameDurationSelector, statusSelector } = require('../selectors/playback');
+const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector, playbackRangeSelector, playbackSettingsSelector, frameDurationSelector, statusSelector, playbackMetadataSelector } = require('../selectors/playback');
 const { selectedLayerName, selectedLayerUrl, selectedLayerData, selectedLayerTimeDimensionConfiguration, rangeSelector, selectedLayerSelector } = require('../selectors/timeline');
 
 const pausable = require('../observables/pausable');
@@ -112,6 +112,8 @@ const filterAnimationValues = (values, getState, {fromValue, limit = BUFFER_SIZE
  *  - If configured as fixed steps, it returns the list of next animation frame calculating them
  *  - If there is a selected layer and there is the Multidim extension, then use it (in favour of static values configured)
  *  - If there are values in the dimension configuration, and the Multidim extension is not present, use them to animate
+ * @param {function} getState returns the application state
+ * @param {object} options the options that normally match the getDomainValues options
  */
 const getAnimationFrames = (getState, options) => {
     if (selectedLayerName(getState())) {
@@ -144,6 +146,8 @@ const setupAnimation = (getState = () => ({})) => animationEventsStream$ => {
 };
 /**
  * Check if a time is in out of the defined range. If range start or end are not defined, returns false.
+ * @param {string|Date} time the time to check
+ * @param {Object} interval the interval where the time should stay `{start: ISODate|Date, end: ISODate|Date}
  */
 const isOutOfRange = (time, { start, end } = {}) =>
     start && end && ( moment(time).isBefore(start) || moment(time).isAfter(end));
@@ -238,13 +242,46 @@ module.exports = {
     playbackMoveStep: (action$, { getState = () => { } } = {}) =>
         action$
             .ofType(ANIMATION_STEP_MOVE)
-            .filter(() => statusSelector(getState()) !== STATUS.PLAY) // if is playing, the animation manages this event
-            .switchMap(({ direction = 1 }) =>
-                getAnimationFrames(getState, {limit: 1, sort: direction > 0 ? "asc" : "desc", fromValue: currentTimeSelector(getState()) })
-                    .map(([t] = []) => t)
-                    .filter(t => !!t)
-                    .map(t => moveTime(t))
-        ),
+            .filter(() => statusSelector(getState()) !== STATUS.PLAY /* && statusSelector(getState()) !== STATUS.PAUSE*/) // if is playing, the animation manages this event
+            .switchMap(({ direction = 1 }) => {
+                const md = playbackMetadataSelector(getState()) || {};
+                const currentTime = currentTimeSelector(getState());
+                // check if the next/prev value is present in the state (by `playbackCacheNextPreviousTimes`)
+                if (currentTime && md.forTime === currentTime) {
+                    return Rx.Observable.of(direction > 0 ? md.next : md.previous);
+                }
+                // if not downloaded yet, download it
+                return getAnimationFrames(getState, { limit: 1, sort: direction > 0 ? "asc" : "desc", fromValue: currentTimeSelector(getState()) })
+                    .map(([t] = []) => t);
+            }).filter(t => !!t)
+            .map(t => moveTime(t)),
+    /**
+     * Pre-loads next and previous values for the current time, when change.
+     * This is useful to enable/disable playback buttons in guide-layer mode. The state updated by this
+     * epic is also used as a cache to load next/previous button (only when the animation is not active)
+     */
+    playbackCacheNextPreviousTimes: (action$, { getState = () => { } } = {}) =>
+        action$
+            .ofType(SET_CURRENT_TIME, MOVE_TIME)
+                .filter(() => statusSelector(getState()) !== STATUS.PLAY && statusSelector(getState()) !== STATUS.PAUSE)
+                .filter(() => selectedLayerSelector(getState()))
+                .filter( t => !!t )
+                .switchMap(({time}) =>
+                    Rx.Observable.forkJoin( // TODO: find out a way to optimize and do only one request
+                        getDomainValues(...domainArgs(getState, { sort: "asc", limit: 1, fromValue: time }))
+                            .map(res => res.DomainValues.Domain.split(","))
+                            .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null)),
+                        getDomainValues(...domainArgs(getState, { sort: "desc", limit: 1, fromValue: time }))
+                            .map(res => res.DomainValues.Domain.split(","))
+                            .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null))
+                    ).map(([next, previous]) =>
+                        updateMetadata({
+                            forTime: time,
+                            next,
+                            previous
+                        })
+                    )
+                ),
     /**
      * During animation, on every current time change event, if the current time is out of the current range window, the timeline will shift to
      * current start-end values

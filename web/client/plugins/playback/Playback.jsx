@@ -8,94 +8,18 @@
 
 const React = require('react');
 const { connect } = require('react-redux');
-const {createSelector} = require('reselect');
-const moment = require('moment');
-const { compose, withState, withProps, withHandlers} = require('recompose');
-const { playbackSettingsSelector, playbackRangeSelector} = require('../../selectors/playback');
-const { selectedLayerSelector, rangeSelector, selectedLayerDataRangeSelector} = require('../../selectors/timeline');
-const { selectPlaybackRange, changeSetting, toggleAnimationMode, animationStepMove } = require('../../actions/playback');
+const { createSelector } = require('reselect');
+const { compose, withState, withProps, withHandlers } = require('recompose');
+const {selectedLayerSelector} = require('../../selectors/timeline');
+
+const { statusSelector, hasPrevNextAnimationSteps, playbackMetadataSelector } = require('../../selectors/playback');
+const { animationStepMove, STATUS } = require('../../actions/playback');
+
+
 const Message = require('../../components/I18N/Message');
-const { onRangeChanged } = require('../../actions/timeline');
-
-
 const Toolbar = require('../../components/misc/toolbar/Toolbar');
 
-const PlaybackSettings = compose(
-    connect(createSelector(
-        playbackSettingsSelector,
-        selectedLayerSelector,
-        playbackRangeSelector,
-        (settings, selectedLayer, playbackRange) => ({
-            fixedStep: !selectedLayer,
-            playbackRange,
-            ...settings
-        })
-    ), {
-            setPlaybackRange: selectPlaybackRange,
-            onSettingChange: changeSetting,
-            toggleAnimationMode
-    }
-
-    ),
-    // playback buttons
-    compose(
-        connect(createSelector(
-            rangeSelector,
-            selectedLayerDataRangeSelector,
-            (viewRange, layerRange) => ({
-                layerRange,
-                viewRange
-            })
-        ), {
-                moveTo: onRangeChanged
-        }),
-        withHandlers({
-            toggleAnimationRange: ({ fixedStep, layerRange, viewRange = {}, setPlaybackRange = () => { } }) => (enabled) => {
-                let currentPlaybackRange = fixedStep ? viewRange : layerRange;
-                // when view range is collapsed, nothing may be initialized yet, so by default 1 day before and after today
-                currentPlaybackRange = {
-                    startPlaybackTime: moment(currentPlaybackRange && currentPlaybackRange.start || new Date()).subtract(1, 'days').toISOString(),
-                    endPlaybackTime: moment(currentPlaybackRange && currentPlaybackRange.end || new Date()).add(1, 'days').toISOString()
-                };
-                setPlaybackRange(enabled ? currentPlaybackRange : undefined);
-            },
-            setPlaybackToCurrentViewRange: ({ viewRange = {}, setPlaybackRange = () => { } }) => () => {
-                if (viewRange.start && viewRange.end) {
-                    setPlaybackRange({
-                        startPlaybackTime: moment(viewRange.start).toISOString(),
-                        endPlaybackTime: moment(viewRange.end).toISOString()
-                    });
-                }
-            },
-            setPlaybackToCurrentLayerDataRange: ({ setPlaybackRange = () => { }, layerRange }) => () => layerRange && setPlaybackRange({
-                startPlaybackTime: layerRange.start,
-                endPlaybackTime: layerRange.end
-            })
-        }),
-        withProps(({ playbackRange, fixedStep, moveTo = () => { }, setPlaybackToCurrentViewRange = () => { }, setPlaybackToCurrentLayerDataRange = () => {} }) => {
-            return {
-                playbackButtons: [{
-                    glyph: "search",
-                    tooltipId: "playback.settings.range.zoomToCurrentPlayackRange",
-                    onClick: () => moveTo({start: playbackRange.startPlaybackTime, end: playbackRange.endPlaybackTime})
-                }, {
-                    glyph: "resize-horizontal",
-                        tooltipId: "playback.settings.range.setToCurrentViewRange",
-                    onClick: () => setPlaybackToCurrentViewRange()
-                }, {
-                    glyph: "1-layer",
-                    visible: !fixedStep,
-                    tooltipId: "playback.settings.range.fitToSelectedLayerRange",
-                    onClick: () => setPlaybackToCurrentLayerDataRange()
-                }]
-            };
-        })
-    )
-
-)(
-    require("../../components/playback/PlaybackSettings")
-);
-
+const PlaybackSettings = require('./Settings');
 
 /**
  * Support for expand/collapse timeline
@@ -111,11 +35,25 @@ const collapsible = compose(
     }))
 );
 
+const playbackButtonsSelector = createSelector(
+    statusSelector,
+    selectedLayerSelector,
+    playbackMetadataSelector,
+    hasPrevNextAnimationSteps,
+    (status, layer, metadata = {}, animationState) =>
+        !layer
+            ? { hasNext: true, hasPrevious: true } // fixed step
+            : status === STATUS.PLAY || status === STATUS.PAUSE
+                ? animationState // animation mode with guide layer
+                : { hasNext: !!metadata.next, hasPrevious: !!metadata.previous} // normal mode with guide layer
+);
+
+
 /**
  * Implements playback buttons functionalities
  */
 const playbackButtons = compose(
-    connect(() => ({}), {
+    connect(playbackButtonsSelector, {
         stepMove: animationStepMove
     }),
     withHandlers({
@@ -137,6 +75,8 @@ module.exports = playbackEnhancer(({
     backward = () => {},
     pause = () => {},
     stop = () => {},
+    hasPrevious,
+    hasNext,
     showSettings,
     onShowSettings = () => {}
 }) =>
@@ -151,6 +91,7 @@ module.exports = playbackEnhancer(({
                 {
                     glyph: "step-backward",
                     onClick: backward,
+                    disabled: !hasPrevious,
                     tooltip: <Message msgId={"playback.backwardStep"} />
                 }, {
                     glyph: status === statusMap.PLAY ? "pause" : "play",
@@ -168,6 +109,7 @@ module.exports = playbackEnhancer(({
                 }, {
                     glyph: "step-forward",
                     onClick: forward,
+                    disabled: !hasNext,
                     tooltip: <Message msgId={"playback.forwardStep"} />
                 }, {
                     glyph: "wrench",
