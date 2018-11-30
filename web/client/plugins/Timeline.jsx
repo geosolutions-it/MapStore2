@@ -13,7 +13,7 @@ const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('../components/time/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const { offsetEnabledSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
-const { selectedLayerSelector, currentTimeRangeSelector } = require('../selectors/timeline');
+const { currentTimeRangeSelector } = require('../selectors/timeline');
 const { mapLayoutValuesSelector } = require('../selectors/maplayout');
 
 const { withState, compose, branch, renderNothing, withStateHandlers, withProps, defaultProps } = require('recompose');
@@ -41,15 +41,13 @@ const TimelinePlugin = compose(
     connect(
         createSelector(
             layersWithTimeDataSelector,
-            selectedLayerSelector,
             currentTimeSelector,
             currentTimeRangeSelector,
             offsetEnabledSelector,
             playbackRangeSelector,
             statusSelector,
-            (layers, selectedLayer, currentTime, currentTimeRange, offsetEnabled, playbackRange, status) => ({
+            (layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status) => ({
                 layers,
-                selectedLayer,
                 currentTime,
                 currentTimeRange,
                 offsetEnabled,
@@ -236,7 +234,6 @@ const TimelinePlugin = compose(
                             visible: canExpand,
                             tooltip: <Message msgId= {collapsed ? "timeline.expand" : "timeline.collapse"}/>,
                             glyph: collapsed ? 'resize-full' : 'resize-small',
-                            // we perform a check if the timeline data is loaded before allowing the user to expand the timeline and render an empty component
                             onClick: () => setOptions({ ...options, collapsed: !collapsed })
                         }
                     ]} />

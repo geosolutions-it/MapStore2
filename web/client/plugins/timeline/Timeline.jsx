@@ -327,6 +327,6 @@ const enhance = compose(
         })
     )
 );
-const Timeline = require('./TimelineComponent');
+const Timeline = require('../../components/time/TimelineComponent');
 
 module.exports = enhance(Timeline);
