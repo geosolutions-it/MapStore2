@@ -19,6 +19,7 @@ class InlineDateTimeSelector extends React.Component {
     static propTypes = {
         date: PropTypes.string,
         onUpdate: PropTypes.func,
+        onIconClick: PropTypes.func,
         glyph: PropTypes.string,
         style: PropTypes.object,
         className: PropTypes.string,
@@ -28,6 +29,7 @@ class InlineDateTimeSelector extends React.Component {
 
     static defaultProps = {
         date: '',
+        onIconClick: () => {},
         onUpdate: () => {},
         glyph: 'time',
         style: {},
@@ -112,11 +114,15 @@ class InlineDateTimeSelector extends React.Component {
         return (
             <Form className={`ms-inline-datetime ${this.props.className}`} style={this.props.style}>
                 <FormGroup controlId="inlineDateTime">
-                    {this.props.glyph && <Glyphicon
+                    {this.props.glyph &&
+                    <div style = {{"cursor": "pointer"}} onClick ={() => this.props.onIconClick(this.props.date, this.props.glyph) }>
+                        <Glyphicon
                         tooltip={this.props.tooltip}
                         tooltipId={this.props.tooltipId}
                         className="ms-inline-datetime-icon"
-                        glyph={this.props.glyph}/>}
+                        glyph={this.props.glyph}/>
+                    </div>
+                    }
                     {formStructure.map(el =>
                         el.type === 'icon' &&
                         <div

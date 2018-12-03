@@ -1526,8 +1526,9 @@
             "stop": "parada"
         },
         "timeline": {
-            "currentTime": "Tiempo actual",
-            "offsetTime" : "Tiempo de compensación",
+            "currentTime": "Ir a la hora actual",
+            "offsetRangeStart":"Ir al rango de compensación",
+            "offsetTime" : "Ir al rango de compensación",
             "hideLayerName" : "esconder el nombre de las capas",
             "showLayerName" : "mostrar el nombre de las capas",
             "enableOffset": "Habilitar el tiempo actual con offset",

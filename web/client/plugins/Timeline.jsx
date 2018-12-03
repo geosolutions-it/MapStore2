@@ -13,13 +13,13 @@ const Timeline = require('./timeline/Timeline');
 const InlineDateTimeSelector = require('../components/time/InlineDateTimeSelector');
 const Toolbar = require('../components/misc/toolbar/Toolbar');
 const { offsetEnabledSelector, currentTimeSelector, layersWithTimeDataSelector } = require('../selectors/dimension');
-const { currentTimeRangeSelector } = require('../selectors/timeline');
+const { currentTimeRangeSelector, rangeSelector } = require('../selectors/timeline');
 const { mapLayoutValuesSelector } = require('../selectors/maplayout');
 
 const { withState, compose, branch, renderNothing, withStateHandlers, withProps, defaultProps } = require('recompose');
 const withResizeSpy = require('../components/misc/enhancers/withResizeSpy');
 
-const { selectTime, enableOffset } = require('../actions/timeline');
+const { selectTime, enableOffset, onRangeChanged } = require('../actions/timeline');
 const { setCurrentOffset } = require('../actions/dimension');
 const Message = require('../components/I18N/Message');
 const { selectPlaybackRange } = require('../actions/playback');
@@ -46,19 +46,22 @@ const TimelinePlugin = compose(
             offsetEnabledSelector,
             playbackRangeSelector,
             statusSelector,
-            (layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status) => ({
+            rangeSelector,
+            (layers, currentTime, currentTimeRange, offsetEnabled, playbackRange, status, viewRange) => ({
                 layers,
                 currentTime,
                 currentTimeRange,
                 offsetEnabled,
                 playbackRange,
-                status
+                status,
+                viewRange
             })
         ), {
             setCurrentTime: selectTime,
             onOffsetEnabled: enableOffset,
             setOffset: setCurrentOffset,
-            setPlaybackRange: selectPlaybackRange
+            setPlaybackRange: selectPlaybackRange,
+            moveRangeTo: onRangeChanged
         }),
     branch(({ layers = [] }) => Object.keys(layers).length === 0, renderNothing),
     withState('options', 'setOptions', {collapsed: true}),
@@ -136,7 +139,9 @@ const TimelinePlugin = compose(
         style,
         canExpand,
         canExpandPlayback,
-        status
+        status,
+        viewRange,
+        moveRangeTo
     }) => {
 
         const { hideLayersName, collapsed, playbackEnabled} = options;
@@ -144,6 +149,35 @@ const TimelinePlugin = compose(
         const playbackItem = head(items && items.filter(item => item.name === 'playback'));
         const Playback = playbackItem && playbackItem.plugin;
 
+        const zoomToCurrent = (time, type, view, offsetRange ) => {
+            const shift = moment(view.end).diff(view.start) / 2;
+            if (type === "time-current" && view) {
+                // if the current time is centered to viewRange do nothing
+                return view.start.toString() !== moment(time).add(-1 * shift).toString() && view.end.toString() !== moment(time).add(shift).toString()
+                && moveRangeTo({
+                        start: moment(time).add(-1 * shift),
+                        end: moment(time).add(shift)
+                });
+            }
+            // center to the current offset range
+            if (type === "range-start" || type === "range-end") {
+                const offsetRangeDistance = moment(offsetRange.end).diff(offsetRange.start);
+                const offsetCenter = moment(offsetRange.start).add(offsetRangeDistance / 2);
+                // if the range is smaller than the view range then move the range
+                if ( offsetRangeDistance / 2 <= shift ) {
+                    moveRangeTo({
+                        start: moment(offsetCenter).add(-1 * shift),
+                        end: moment(offsetCenter).add(shift)
+                });
+                // if offset range is wider than the view range zoom out + move
+                } else {
+                    moveRangeTo({
+                        start: moment(offsetCenter).add(-1 * offsetRangeDistance * 5 / 2),
+                        end: moment(offsetCenter).add( offsetRangeDistance * 5 / 2)
+                });
+                }
+            }
+        };
         return (<div
             style={{
                 position: "absolute",
@@ -159,7 +193,8 @@ const TimelinePlugin = compose(
             {offsetEnabled // if range is present and configured, show the floating start point.
                 && <InlineDateTimeSelector
                 glyph="range-start"
-                tooltip={<Message msgId="timeline.currentTime"/>}
+                onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
+                tooltip={<Message msgId="timeline.offsetRangeStart"/>}
                 date={currentTime || currentTimeRange && currentTimeRange.start}
                 onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
                 className="shadow-soft"
@@ -174,12 +209,14 @@ const TimelinePlugin = compose(
                     // if range enabled, show time end in the timeline
                     ? <InlineDateTimeSelector
                         glyph={'range-end'}
+                        onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
                         tooltip="Offset time"
                         date={currentTimeRange.end}
                         onUpdate={end => status !== "PLAY" && isValidOffset(currentTime, end) && setOffset(end)} />
                     : // show current time if using single time
                     <InlineDateTimeSelector
                         glyph={'time-current'}
+                        onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange)}
                         tooltip={<Message msgId="timeline.currentTime"/>}
                         date={currentTime || currentTimeRange && currentTimeRange.start}
                         onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)} />}

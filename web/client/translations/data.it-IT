@@ -1527,7 +1527,8 @@
         },
         "timeline": {
             "currentTime": "Istante corrente",
-            "offsetTime" : "Fine intervallo",
+            "offsetRangeStart":"vai al campo offset",
+            "offsetTime" : "vai al campo offset",
             "hideLayerName" : "Nascondi il nome dei livelli",
             "showLayerName" : "Mostra il nome dei livelli",
             "enableOffset": "Attiva intervallo temporale",
