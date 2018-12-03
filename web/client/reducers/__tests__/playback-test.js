@@ -75,4 +75,16 @@ describe('playback reducer', () => {
         expect(state.metadata.previous).toBe(previous);
         expect(state.metadata.forTime).toBe(forTime);
     });
+    it('reset playback data when switch to a new map', () => {
+        const action = {
+            type: 'RESET_CONTROLS'
+        };
+        const D0 = "2015-11-29T16:17:46.520Z";
+        const D1 = "2017-11-29T16:17:46.520Z";
+        const state = playback( {frames: [D0, D1], currentFrame: 0 }, action);
+        expect(state).toExist();
+        expect(state.frame).toNotExist();
+        expect(state.currentFrame).toBe(-1);
+    });
+
 });

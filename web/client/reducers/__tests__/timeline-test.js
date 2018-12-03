@@ -98,4 +98,20 @@ describe('Test the timeline reducer', () => {
         expect(state.rangeData.layer2).toExist();
         expect(state.selectedLayer).toNotExist();
     });
+    it('reset timeline data when switch to a new map', () => {
+        const action = {
+            type: 'RESET_CONTROLS'
+        };
+        const initialState = {
+            selectedLayer: 'layer3',
+            rangeData: {
+                layer1: { range: 'old range', histogram: 'old histogram'},
+                layer2: { }
+            }
+          };
+        const state = timeline(initialState, action);
+        expect(state).toExist();
+        expect(state.rangeData).toNotExist();
+        expect(state.selectedLayer).toNotExist();
+    });
 });

@@ -1,4 +1,5 @@
 const { PLAY, PAUSE, STOP, STATUS, SET_FRAMES, APPEND_FRAMES, FRAMES_LOADING, SET_CURRENT_FRAME, SELECT_PLAYBACK_RANGE, CHANGE_SETTING, UPDATE_METADATA } = require('../actions/playback');
+const { RESET_CONTROLS } = require('../actions/controls');
 const { set } = require('../utils/ImmutableUtils');
 
 module.exports = (state = { status: STATUS.STOP, currentFrame: -1, settings: {
@@ -44,6 +45,16 @@ module.exports = (state = { status: STATUS.STOP, currentFrame: -1, settings: {
         }
         case UPDATE_METADATA: {
             return set('metadata', { next: action.next, previous: action.previous, forTime: action.forTime}, state);
+        }
+        case RESET_CONTROLS: {
+            return set('metadata', undefined, set('framesLoading', undefined, set('playbackRange', undefined, set('frames', undefined,
+                       set('currentFrame', -1, set('status', "STOP", set('settings', {
+                        timeStep: 1,
+                        stepUnit: "days",
+                        frameDuration: 5,
+                        following: true
+                       }, state)
+            ))))));
         }
         default:
             return state;
