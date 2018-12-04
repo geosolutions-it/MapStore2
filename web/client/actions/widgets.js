@@ -32,6 +32,8 @@ const DEFAULT_TARGET = "floating";
 const DEPENDENCY_SELECTOR_KEY = "dependencySelector";
 const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
 
+const TOGGLE_COLLAPSE = "WIDGET:TOGGLE_COLLAPSE";
+const TOGGLE_COLLAPSE_ALL = "WIDGET:TOGGLE_COLLAPSE_ALL";
 
 /**
  * Intent to create a new Widgets
@@ -248,6 +250,23 @@ const toggleDependencySelector = (active, settings) => setupDependencySelector({
     active,
     ...settings
 });
+/**
+ * Collapse/Expand the widget
+ * @param {object} widget the widget to collapse
+ */
+const toggleCollapse = (widget, target = DEFAULT_TARGET) => ({
+    type: TOGGLE_COLLAPSE,
+    widget,
+    target
+});
+
+/**
+ * Collapse/Expand all the widgets
+ */
+const toggleCollapseAll = (target = DEFAULT_TARGET) => ({
+    type: TOGGLE_COLLAPSE_ALL,
+    target
+});
 
 module.exports = {
     NEW,
@@ -297,5 +316,7 @@ module.exports = {
     toggleDependencySelector,
     DEPENDENCY_SELECTOR_KEY,
     DEFAULT_TARGET,
-    WIDGETS_REGEX
+    WIDGETS_REGEX,
+    toggleCollapse, TOGGLE_COLLAPSE,
+    toggleCollapseAll, TOGGLE_COLLAPSE_ALL
 };

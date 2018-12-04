@@ -84,6 +84,7 @@ module.exports = {
         Dashboard: require('../plugins/Dashboard'),
         DashboardEditor: require('../plugins/DashboardEditor'),
         WidgetsPlugin: require('../plugins/Widgets'),
+        WidgetsTrayPlugin: require('../plugins/WidgetsTray'),
         WidgetsBuilderPlugin: require('../plugins/WidgetsBuilder'),
         TOCItemsSettingsPlugin: require('../plugins/TOCItemsSettings'),
         RulesDataGridPlugin: require('../plugins/RulesDataGrid'),

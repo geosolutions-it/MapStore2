@@ -19,8 +19,8 @@ const isShallowEqual = (el1, el2) => {
  * This allows to avoid re-render when dependencies if the dependency keys do not change
  */
 const createShallowSelector = createSelectorCreator(
-  defaultMemoize,
-  (a, b) => isEqualWith(a, b, isShallowEqual)
+    defaultMemoize,
+    (a, b) => isEqualWith(a, b, isShallowEqual)
 );
 const getEditorSettings = state => get(state, "widgets.builder.settings");
 const getDependenciesMap = s => get(s, "widgets.dependencies") || {};
@@ -34,7 +34,21 @@ const getWidgetLayer = createSelector(
 );
 
 const getFloatingWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
-
+const getCollapsedState = state => get(state, `widgets.containers[${DEFAULT_TARGET}].collapsed`);
+const getVisibleFloatingWidgets = createSelector(
+    getFloatingWidgets,
+    getCollapsedState,
+    (widgets, collapsed) => {
+        if (widgets && collapsed) {
+            return widgets.filter(({ id } = {}) => !collapsed[id]);
+        }
+        return widgets;
+    }
+);
+const getCollapsedIds = createSelector(
+    getCollapsedState,
+    (collapsed = {}) => Object.keys(collapsed)
+);
 const getMapWidgets = state => (getFloatingWidgets(state) || []).filter(({ widgetType } = {}) => widgetType === "map");
 
 /**
@@ -68,6 +82,8 @@ const getDashboardWidgets = state => get(state, `widgets.containers[${DEFAULT_TA
 
 module.exports = {
     getFloatingWidgets,
+    getVisibleFloatingWidgets,
+    getCollapsedIds,
     getFloatingWidgetsLayout,
     // let's use the same container for the moment
     getDashboardWidgets,

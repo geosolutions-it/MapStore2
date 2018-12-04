@@ -8,6 +8,7 @@
 
 const {get, findIndex} = require('lodash');
 const set = require('lodash/fp/set');
+const compose = require('lodash/fp/compose');
 
 
 /**
@@ -85,6 +86,7 @@ module.exports = {
      * set('a.b.c',2, {}); // returns {a: {b: {c: 2}}});
      */
     set,
+    compose,
     arrayUpsert,
     arrayUpdate,
     arrayDelete

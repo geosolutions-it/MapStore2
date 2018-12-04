@@ -1371,6 +1371,13 @@
             "advancedOptions":{
                 "line": "Opciones avanzadas",
                 "bar": "Opciones avanzadas"
+            },
+            "tray": {
+                "title": "Widgets",
+                "expandTray": "Expandir la bandeja de widgets",
+                "collapseTray": "Contraer la bandeja de widgets",
+                "expandAll": "Expandir todos los widgets",
+                "collapseAll": "Contraer todos los widgets"
             }
         },
         "dashboard": {
