@@ -15,7 +15,8 @@ const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
 const {toggleControl} = require('../actions/controls');
 const {loadMapInfo} = require('../actions/config');
-const {updateMap} = require('../actions/maps');
+const {saveMapResource} = require('../actions/maps');
+
 const ConfirmModal = require('../components/maps/modals/ConfirmModal');
 const ConfigUtils = require('../utils/ConfigUtils');
 
@@ -90,7 +91,8 @@ class Save extends React.Component {
         if (this.props.mapId) {
             if (this.props.map && this.props.layers) {
                 const resultingmap = MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions);
-                this.props.onMapSave(this.props.mapId, resultingmap);
+                const {name, description} = this.props.map.info;
+                this.props.onMapSave({id: this.props.mapId, data: resultingmap, metadata: {name, description}, category: "MAP"});
                 this.props.onClose();
             }
         }
@@ -101,7 +103,7 @@ module.exports = {
     SavePlugin: connect(selector,
         {
             onClose: toggleControl.bind(null, 'save', false),
-            onMapSave: updateMap,
+            onMapSave: saveMapResource,
             loadMapInfo
         })(assign(Save, {
             BurgerMenu: {

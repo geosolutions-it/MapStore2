@@ -17,15 +17,17 @@ const Dock = require('react-dock').default;
 const {changeLayerProperties} = require('../actions/layers');
 const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
     changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
-    addLayer, addLayerError, resetCatalog, focusServicesList} = require("../actions/catalog");
+    addLayer, addLayerError, resetCatalog, focusServicesList, changeText} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
 const {currentLocaleSelector} = require("../selectors/locale");
 const {setControlProperty, toggleControl} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
     servicesSelector, formatsSelector, loadingErrorSelector, selectedServiceSelector,
-    modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector
+    modeSelector, layerErrorSelector, activeSelector, savingSelector, authkeyParamNameSelector,
+    searchTextSelector
 } = require("../selectors/catalog");
+
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const Message = require("../components/I18N/Message");
 require('./metadataexplorer/css/style.css');
@@ -152,8 +154,9 @@ const metadataExplorerSelector = createSelector([
     servicesSelector,
     layerErrorSelector,
     activeSelector,
-    state => mapLayoutValuesSelector(state, {height: true})
-], (searchOptions, formats, result, loadingError, selectedService, mode, services, layerError, active, dockStyle) => ({
+    state => mapLayoutValuesSelector(state, {height: true}),
+    searchTextSelector
+], (searchOptions, formats, result, loadingError, selectedService, mode, services, layerError, active, dockStyle, searchText) => ({
     searchOptions,
     formats,
     result,
@@ -162,7 +165,8 @@ const metadataExplorerSelector = createSelector([
     mode, services,
     layerError,
     active,
-    dockStyle
+    dockStyle,
+    searchText
 }));
 
 const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
@@ -173,6 +177,7 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
     onChangeUrl: changeUrl,
     onChangeType: changeType,
     onChangeTitle: changeTitle,
+    onChangeText: changeText,
     onChangeAutoload: changeAutoload,
     onChangeSelectedService: changeSelectedService,
     onChangeCatalogMode: changeCatalogMode,

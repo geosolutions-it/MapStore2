@@ -21,7 +21,11 @@ module.exports = require('./buildConfig')(
     paths,
     extractThemesPlugin,
     true,
+<<<<<<< HEAD
     "/mockups/mapstore2/backgroundedit/dist/",
+=======
+    "dist/",
+>>>>>>> upstream/master
     undefined,
     [
         new HtmlWebpackPlugin({

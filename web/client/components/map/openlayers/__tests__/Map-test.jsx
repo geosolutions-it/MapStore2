@@ -12,8 +12,8 @@ const OpenlayersLayer = require('../Layer.jsx');
 const expect = require('expect');
 const assign = require('object-assign');
 const ol = require('openlayers');
+const proj = require('proj4').default;
 const mapUtils = require('../../../../utils/MapUtils');
-
 require('../../../../utils/openlayers/Layers');
 require('../plugins/OSMLayer');
 require('../plugins/VectorLayer');
@@ -94,6 +94,22 @@ describe('OpenlayersMap', () => {
         const map = ReactDOM.render(comp, document.getElementById("map"));
         expect(map).toExist();
         expect(map.map.getView().getProjection().getCode()).toBe('EPSG:3857');
+    });
+
+    it('custom projection', () => {
+        proj.defs("EPSG:25830", "+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+        const projectionDefs = [{
+            code: "EPSG:25830",
+            extent: [-1300000, 4000000, 1900000, 7500000],
+            worldExtent: [-6.0000, 35.9500, 0.0000, 63.9500]
+        }];
+        const comp = (<OpenlayersMap projection="EPSG:25830" projectionDefs={projectionDefs} center={{ y: 43.9, x: 10.3 }} zoom={11}
+        />);
+
+        const map = ReactDOM.render(comp, document.getElementById("map"));
+        expect(map).toExist();
+        expect(map.map.getView().getProjection().getCode()).toBe('EPSG:25830');
+        expect(ol.proj.get('EPSG:25830')).toExist();
     });
 
     it('check if the handler for "click" event is called with elevation', () => {
@@ -575,6 +591,7 @@ describe('OpenlayersMap', () => {
         const mapDiv = olMap.getViewport();
         expect(mapDiv.style.cursor).toBe("pointer");
     });
+
 
     it('test COMPUTE_BBOX_HOOK hook execution', () => {
         // instanciating the map that will be used to compute the bounfing box

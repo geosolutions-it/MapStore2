@@ -12,12 +12,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const {userGroupSecuritySelector, userSelector} = require('../selectors/security');
 const {currentMapDetailsChangedSelector} = require('../selectors/currentmap');
 const {resetCurrentMap} = require('./currentMap');
-const assign = require('object-assign');
-
-const {error: notificationError, success: notificationSuccess} = require('./notifications');
-const {getErrorMessage} = require('../utils/LocaleUtils');
 const {findIndex, isNil} = require('lodash');
-
 const MAPS_LIST_LOADED = 'MAPS_LIST_LOADED';
 const MAPS_LIST_LOADING = 'MAPS_LIST_LOADING';
 const MAPS_LIST_LOAD_ERROR = 'MAPS_LIST_LOAD_ERROR';
@@ -64,6 +59,7 @@ const DETAILS_LOADED = 'DETAILS:DETAILS_LOADED';
 const DETAILS_SAVING = 'DETAILS:DETAILS_SAVING';
 const NO_DETAILS_AVAILABLE = "NO_DETAILS_AVAILABLE";
 const FEATURED_MAPS_SET_ENABLED = "FEATURED_MAPS:SET_ENABLED";
+const SAVE_MAP_RESOURCE = "SAVE_MAP_RESOURCE";
 
 
 /**
@@ -485,35 +481,6 @@ function loadAvailableGroups(user) {
 }
 
 /**
- * updates a map
- * @memberof actions.maps
- * @param  {number} resourceId the id of the map to update
- * @param  {object} content    the new content
- * @param  {object} [options]   options for the request
- * @return {thunk}  dispatches notificationSuccess or loadError and notificationError
- */
-function updateMap(resourceId, content, options) {
-    return (dispatch) => {
-        dispatch(mapUpdating(resourceId, content));
-        GeoStoreApi.putResource(resourceId, content, options).then(() => {
-            dispatch(notificationSuccess({
-                title: 'map.savedMapTitle',
-                message: 'map.savedMapMessage',
-                autoDismiss: 6,
-                position: 'tc'
-            }));
-        }).catch((e) => {
-            dispatch(loadError(e));
-            dispatch(notificationError({
-                ...getErrorMessage(e, 'geostore', 'mapsError'),
-                autoDismiss: 6,
-                position: 'tc'
-            }));
-        });
-    };
-}
-
-/**
  * updates metadata for a map
  * @memberof actions.maps
  * @param  {number} resourceId     the id of the map to updates
@@ -709,42 +676,6 @@ function deleteThumbnail(resourceId, resourceIdMap, options, reset) {
         });
     };
 }
-/**
- * Creates a new map.
- * @memberof actions.maps
- * @param  {object} metadata    metadata for the new map
- * @param  {object} content     the map object itself
- * @param  {object} [thumbnail] the thumbnail
- * @param  {object} [options]   options for the request
- * @return {thunk}              creates the map and dispatches  createThumbnail, mapCreated and so on
- */
-function createMap(metadata, content, thumbnail, options) {
-    return (dispatch) => {
-        dispatch(savingMap(metadata));
-        GeoStoreApi.createResource(metadata, content, "MAP", options).then((response) => {
-            let resourceId = response.data;
-            if (thumbnail && thumbnail.data) {
-                dispatch(createThumbnail(null, null, thumbnail.name, thumbnail.data, thumbnail.category, resourceId, options));
-            }
-
-            dispatch(mapCreated(response.data, assign({id: response.data, canDelete: true, canEdit: true, canCopy: true}, metadata), content));
-            dispatch(onDisplayMetadataEdit(false));
-            dispatch(notificationSuccess({
-                title: 'map.savedMapTitle',
-                message: 'map.savedMapMessage',
-                autoDismiss: 6,
-                position: 'tc'
-            }));
-        }).catch((e) => {
-            dispatch(mapError(e));
-            dispatch(notificationError({
-                ...getErrorMessage(e, 'geostore', 'mapsError'),
-                autoDismiss: 6,
-                position: 'tc'
-            }));
-        });
-    };
-}
 
 /**
  * Deletes a map.
@@ -936,6 +867,15 @@ const setFeaturedMapsEnabled = (enabled) => ({
     type: FEATURED_MAPS_SET_ENABLED,
     enabled
 });
+/**
+ * Save or update the map resource using geostore observables
+ * @memberof actions.maps
+ * @param {boolean} enabled the `enabled` flag
+ */
+const saveMapResource = (resource) => ({
+    type: SAVE_MAP_RESOURCE,
+    resource
+});
 
 /**
  * Actions for maps
@@ -966,6 +906,7 @@ module.exports = {
     MAPS_SEARCH_TEXT_CHANGED,
     METADATA_CHANGED,
     NO_DETAILS_AVAILABLE,
+    SAVE_MAP_RESOURCE,
     toggleDetailsSheet, TOGGLE_DETAILS_SHEET,
     toggleGroupProperties, TOGGLE_GROUP_PROPERTIES,
     toggleUnsavedChanges, TOGGLE_UNSAVED_CHANGES,
@@ -994,7 +935,6 @@ module.exports = {
     mapCreated,
     mapDeleted,
     mapDeleting,
-    updateMap,
     updateMapMetadata,
     mapMetadataUpdated,
     deleteThumbnail,
@@ -1008,7 +948,6 @@ module.exports = {
     savingMap,
     saveMap,
     thumbnailError,
-    createMap,
     loadError,
     loadPermissions,
     loadAvailableGroups,
@@ -1017,5 +956,6 @@ module.exports = {
     resetUpdating,
     mapError,
     mapsSearchTextChanged,
-    updateAttribute
+    updateAttribute,
+    saveMapResource
 };

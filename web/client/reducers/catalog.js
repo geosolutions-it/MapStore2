@@ -15,6 +15,7 @@ const {
     CHANGE_SELECTED_SERVICE,
     CHANGE_CATALOG_MODE,
     CHANGE_TITLE,
+    CHANGE_TEXT,
     CHANGE_AUTOLOAD,
     CHANGE_TYPE,
     CHANGE_URL,
@@ -26,6 +27,8 @@ const {
 const {
     MAP_CONFIG_LOADED
 } = require('../actions/config');
+const { set } = require('../utils/ImmutableUtils');
+
 const {isNil} = require('lodash');
 const assign = require('object-assign');
 const emptyService = {
@@ -105,6 +108,8 @@ function catalog(state = {
         return assign({}, state, {openCatalogServiceList: action.status});
     case CHANGE_TITLE:
         return assign({}, state, {newService: assign({}, state.newService, {title: action.title})});
+    case CHANGE_TEXT:
+        return set("searchOptions.text", action.text, state);
     case CHANGE_URL:
         return assign({}, state, {newService: assign({}, state.newService, {url: action.url})});
     case CHANGE_AUTOLOAD:
@@ -129,6 +134,9 @@ function catalog(state = {
                 mode: "view",
                 result: null,
                 loadingError: null,
+                searchOptions: assign({}, state.searchOptions, {
+                    text: ""
+                }),
                 layerError: null
             }) : state;
     }

@@ -653,4 +653,29 @@ describe('CoordinatesUtils', () => {
         expect(newCenter.crs).toBe('EPSG:4326');
     });
 
+    it("test rounding of a number 28.45", () => {
+        const value = 28.45;
+        const roundingBehaviour = "floor";
+        const maximumFractionDigits = 0;
+
+        const roundingOptions = {value, roundingBehaviour, maximumFractionDigits};
+        const res = CoordinatesUtils.checkRounding(roundingOptions);
+        expect(res).toBe(28);
+    });
+    it("test rounding of a number 28.55", () => {
+        const value = 28.55;
+        const roundingBehaviour = "floor";
+        const maximumFractionDigits = 0;
+        const roundingOptions = {value, roundingBehaviour, maximumFractionDigits};
+        const res = CoordinatesUtils.checkRounding(roundingOptions);
+        expect(res).toBe(28);
+    });
+    it("test rounding of a number 28.55 with fractional digits", () => {
+        const value = 28.55;
+        const roundingBehaviour = "floor";
+        const maximumFractionDigits = 2;
+        const roundingOptions = {value, roundingBehaviour, maximumFractionDigits};
+        const res = CoordinatesUtils.checkRounding(roundingOptions);
+        expect(res).toBe(28.55);
+    });
 });

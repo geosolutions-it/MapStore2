@@ -96,6 +96,65 @@ describe("test identify enhancers", () => {
         expect(spySendRequest.calls.length).toEqual(2);
     });
 
+    it('creates the Identify component which sends requests on point and another layer', () => {
+        const Component = identifyLifecycle(() => <div id="test-component"></div>);
+        const testHandlers = {
+            sendRequest: () => {}
+        };
+
+        const spySendRequest = expect.spyOn(testHandlers, 'sendRequest');
+
+        ReactDOM.render(
+            <Component
+                enabled layers={[{}, {}]} sendRequest={testHandlers.sendRequest} buildRequest={() => ({url: "myurl"})}
+                />,
+            document.getElementById("container")
+        );
+        const layers = [
+            {
+                id: 'OpenTopoMap__3',
+                group: 'background',
+                source: 'OpenTopoMap',
+                name: 'OpenTopoMap',
+                title: 'OpenTopoMap',
+                type: 'tileprovider',
+                visibility: false,
+                handleClickOnLayer: false,
+                hidden: false
+            },
+            {
+                id: 'topp:states__4',
+                name: 'topp:states',
+                title: 'USA Population',
+                type: 'wms',
+                url: 'https://demo.geo-solutions.it:443/geoserver/wms',
+                visibility: true,
+                handleClickOnLayer: false,
+                hidden: false
+            },
+            {
+                id: 'annotations',
+                features: [],
+                name: 'Annotations',
+                type: 'vector',
+                visibility: true,
+                handleClickOnLayer: true,
+                hidden: false
+            }
+        ];
+        ReactDOM.render(
+            <Component
+                point={{pixel: {x: 1, y: 1}}}
+                layer="annotations"
+                enabled
+                layers={layers}
+                sendRequest={testHandlers.sendRequest}
+                buildRequest={() => ({url: "myurl"})}
+                />,
+            document.getElementById("container")
+        );
+        expect(spySendRequest.calls.length).toEqual(3);
+    });
     it('test switchControlledIdentify component sends local requess on point if no url is specified', () => {
         const Component = identifyLifecycle(() => <div id="test-component"></div>);
         const testHandlers = {

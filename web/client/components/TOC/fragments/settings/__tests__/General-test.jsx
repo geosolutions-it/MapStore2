@@ -44,7 +44,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(11);
+        expect(inputs.length).toBe(12);
 
     });
     it('tests Layer Properties Display component events', () => {
@@ -69,9 +69,35 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(11);
+        expect(inputs.length).toBe(12);
         ReactTestUtils.Simulate.change(inputs[0]);
         expect(spy.calls.length).toBe(1);
+    });
+    it('tests hidden title translations', () => {
+        const l = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: {opacity: 1}
+        };
+        const handlers = {
+            onChange() {}
+        };
+        const pluginCfg = {
+            hideTitleTranslations: true
+        };
+        // wrap in a stateful component, stateless components render return null
+        // see: https://facebook.github.io/react/docs/top-level-api.html#reactdom.render
+        const comp = ReactDOM.render(<General pluginCfg={pluginCfg} element={l} settings={settings} onChange={handlers.onChange}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        const forms = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "form-group" );
+        expect(forms).toExist();
+        expect(forms.length).toBe(3);
     });
 
 });

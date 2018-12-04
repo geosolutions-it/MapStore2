@@ -17,22 +17,28 @@ const {invalidateUnsupportedLayer} = require('../utils/LayersUtils');
 const {mapSelector} = require('../selectors/map');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
-const drawerEnabledControlSelector = (state) => (state.controls && state.controls.drawer && state.controls.drawer.enabled) || false;
+const {drawerEnabledControlSelector} = require('../selectors/controls');
 
-const HYBRID = require('./background/assets/img/HYBRID.jpg');
+
 const ROADMAP = require('./background/assets/img/ROADMAP.jpg');
 const TERRAIN = require('./background/assets/img/TERRAIN.jpg');
 const SATELLITE = require('./background/assets/img/SATELLITE.jpg');
 const Aerial = require('./background/assets/img/Aerial.jpg');
 const mapnik = require('./background/assets/img/mapnik.jpg');
-const mapquestOsm = require('./background/assets/img/mapquest-osm.jpg');
+const s2cloodless = require('./background/assets/img/s2cloudless.jpg');
 const empty = require('./background/assets/img/none.jpg');
 const unknown = require('./background/assets/img/dafault.jpg');
 const Night2012 = require('./background/assets/img/NASA_NIGHT.jpg');
 const AerialWithLabels = require('./background/assets/img/AerialWithLabels.jpg');
 const OpenTopoMap = require('./background/assets/img/OpenTopoMap.jpg');
 
+<<<<<<< HEAD
 const {removeNode} = require('../actions/layers');
+=======
+// TODO REMOVE these once they are removed from all maps see issue #3304
+const HYBRID = require('./background/assets/img/HYBRID.jpg');
+const mapquestOsm = require('./background/assets/img/mapquest-osm.jpg');
+>>>>>>> upstream/master
 
 const thumbs = {
     google: {
@@ -60,7 +66,10 @@ const thumbs = {
     OpenTopoMap: {
         OpenTopoMap
     },
-    unknown
+    unknown,
+    s2cloudless: {
+        "s2cloudless:s2cloudless": s2cloodless
+    }
 };
 
 const backgroundSelector = createSelector([
