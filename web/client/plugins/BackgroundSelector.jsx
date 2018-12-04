@@ -32,13 +32,10 @@ const Night2012 = require('./background/assets/img/NASA_NIGHT.jpg');
 const AerialWithLabels = require('./background/assets/img/AerialWithLabels.jpg');
 const OpenTopoMap = require('./background/assets/img/OpenTopoMap.jpg');
 
-<<<<<<< HEAD
 const {removeNode} = require('../actions/layers');
-=======
 // TODO REMOVE these once they are removed from all maps see issue #3304
 const HYBRID = require('./background/assets/img/HYBRID.jpg');
 const mapquestOsm = require('./background/assets/img/mapquest-osm.jpg');
->>>>>>> upstream/master
 
 const thumbs = {
     google: {
