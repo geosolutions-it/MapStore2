@@ -9,14 +9,14 @@
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
-const { compose, withProps} = require('recompose');
+const { compose, defaultProps, withProps, withPropsOnChange} = require('recompose');
 const {mapIdSelector} = require('../selectors/map');
-const {isCesium} = require('../selectors/maptype');
-const {getFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout} = require('../selectors/widgets');
+const {getVisibleFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout} = require('../selectors/widgets');
 const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage} = require('../actions/widgets');
 const editOptions = require('./widgets/editOptions');
+const autoDisableWidgets = require('./widgets/autoDisableWidgets');
 
-const {rightPanelOpenSelector, bottomPanelOpenSelector} = require('../selectors/maplayout');
+
 const {heightProvider} = require('../components/layout/enhancers/gridLayout');
 const ContainerDimensions = require('react-container-dimensions').default;
 
@@ -26,7 +26,7 @@ compose(
     connect(
         createSelector(
             mapIdSelector,
-            getFloatingWidgets,
+            getVisibleFloatingWidgets,
             getFloatingWidgetsLayout,
             dependenciesSelector,
             (id, widgets, layouts, dependencies) => ({
@@ -69,7 +69,26 @@ compose(
             });
         })
     ),
-    editOptions("toolsOptions", { asObject: true }) // allow to customize toolsOptions object, with rules. see accessRuleParser
+    /* toolsOptions configurations support
+     * Provide functionalities to manage widgets tools visibility.
+     */
+    compose(
+        defaultProps({
+            toolsOptions: {
+                showLock: "user.role===ADMIN",
+                showHide: "user.role===ADMIN",
+                seeHidden: "user.role===ADMIN"
+            }
+        }),
+        // allow to customize toolsOptions object, with rules. see accessRuleParser
+        editOptions("toolsOptions", { asObject: true }),
+        withPropsOnChange(
+            ["widgets", "toolsOptions"],
+            ({ widgets = [], toolsOptions = {}}) => ({
+                widgets: widgets.filter(({ hide }) => hide ? toolsOptions.seeHidden : true)
+            })
+        )
+    )
 )(require('../components/widgets/view/WidgetsView'));
 
 
@@ -95,18 +114,12 @@ class Widgets extends React.Component {
  *       ```
  *       {showLock: ["__OR__", "user.role===ADMIN", "mapInfo.canEdit"]}
  *       ```
+ * @prop {boolean|string|array} [showLock] show lock tool. By default is visible only to the admin
+ * @prop {boolean|string|array} [showHide] show hide tool. Allow to hide the tool when hide is false.
+ * @prop {boolean|string|array} [seeHidden] hides the widgets under particular conditions
  *
  */
-const WidgetsPlugin = connect(
-    createSelector(
-        rightPanelOpenSelector,
-        bottomPanelOpenSelector,
-        isCesium,
-        (rightPanel, bottomPanel, cesium) => ({
-            enabled: !rightPanel && !bottomPanel && !cesium
-        })
-    )
-)(Widgets);
+const WidgetsPlugin = autoDisableWidgets(Widgets);
 
 module.exports = {
     WidgetsPlugin,

@@ -12,7 +12,7 @@ const {compose, withProps} = require('recompose');
  */
 module.exports = () =>
 compose(
-    withProps(({ widgetTools = [], toolsOptions = {}, updateProperty = () => { }, dataGrid = {}}) => ({
+    withProps(({ widgetTools = [], toolsOptions = {}, updateProperty = () => { }, canEdit, dataGrid = {}}) => ({
         widgetTools: [
             ...widgetTools,
             {
@@ -26,6 +26,8 @@ compose(
                 },
                 onClick: () => updateProperty("dataGrid.static", !dataGrid.static)
             }
-        ]}
-    ))
+            ],
+        // locked tools can not be edited
+        canEdit: canEdit && !dataGrid.static
+    }))
 );
