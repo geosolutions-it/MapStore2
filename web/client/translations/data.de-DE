@@ -1229,6 +1229,10 @@
                 "timeoutExpired": "Der Service hat zu lange gedauert. Vielleicht ist die Abfrage zu komplex oder der Server ist beschäftigt",
                 "genericError": "Beim Abrufen der Daten ist ein Fehler aufgetreten"
             },
+            "tools": {
+                "lock": "Sperren Sie dieses Widget",
+                "hide": "Verstecken Sie dieses Widget für andere Benutzer"
+            },
             "builder": {
                 "header": {
                     "title": "Widget"

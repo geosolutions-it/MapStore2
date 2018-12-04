@@ -1230,6 +1230,10 @@
                 "timeoutExpired": "Le service a pris trop de temps pour répondre. Peut-être que la requête est trop complexe ou que le serveur est occupé",
                 "genericError": "Erreur lors de la récupération des données"
             },
+            "tools": {
+                "lock": "Verrouiller ce widget",
+                "hide": "Cacher ce widget aux autres utilisateurs"
+            },
             "builder": {
                 "header": {
                     "title": "Widget"

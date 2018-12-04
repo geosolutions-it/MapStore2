@@ -17,6 +17,7 @@ compose(
             ...widgetTools,
             {
                 glyph: "lock",
+                tooltipId: "widgets.tools.lock",
                 visible: !!toolsOptions.showLock,
                 style: {
                     paddingLeft: 4,

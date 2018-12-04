@@ -1229,6 +1229,10 @@
                 "timeoutExpired": "The service took too much time to respond. Maybe the query is too complex or the server is busy",
                 "genericError": "There was an error during data retrival"
             },
+            "tools": {
+                "lock": "Lock this widget",
+                "hide": "Hide this widget to other users"
+            },
             "builder": {
                 "header": {
                     "title": "Widget"

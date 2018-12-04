@@ -18,6 +18,7 @@ compose(
             ...widgetTools,
             {
                 glyph: hide ? "eye-close" : "eye-open",
+                tooltipId: "widgets.tools.hide",
                 visible: !!toolsOptions.showHide,
                 style: {
                     paddingLeft: 4,

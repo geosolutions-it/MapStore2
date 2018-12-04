@@ -1229,6 +1229,10 @@
                 "timeoutExpired": "Il servizio ha impiegato troppo tempo a rispondere. La query potrebbe essere troppo complicata o il server troppo occupato",
                 "genericError": "C'è stato un errore durante la generazione del grafico"
             },
+            "tools": {
+                "lock": "Blocca questo widget",
+                "hide": "Nascondi questo widget per altri utenti"
+            },
             "builder": {
                 "header": {
                     "title": "Widget"

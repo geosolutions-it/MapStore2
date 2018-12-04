@@ -20,22 +20,26 @@ const { toggleCollapse, toggleCollapseAll } = require('../../actions/widgets');
 
 const Message = require('../../components/I18N/Message');
 const BorderLayout = require('../../components/layout/BorderLayout');
-
+const treyWidgets = createSelector(
+    getFloatingWidgets,
+    getCollapsedIds,
+    (widgets = [], collapsedIds) => widgets
+            .filter(w => !w.hide && (!w.dataGrid || !w.dataGrid.static))
+            .map(w => findIndex(collapsedIds, id => id === w.id) >= 0
+                ? {
+                    ...w,
+                    collapsed: true
+                }
+                : w)
+);
 
 const WidgetsBar = compose(
     connect(
         createSelector(
-            getFloatingWidgets,
-            getCollapsedIds,
-            (widgets = [], collapsedIds) => ({
-                widgets: widgets.map(w => findIndex(collapsedIds, id => id === w.id) >= 0
-                    ? {
-                        ...w,
-                        collapsed: true
-                    }
-                    : w)
-            })
-        ), {
+            treyWidgets,
+            widgets => ({widgets})
+        ),
+        {
             onClick: toggleCollapse
         }
     ),
@@ -124,4 +128,15 @@ class WidgetsTray extends React.Component {
         : null;
     }
 }
-module.exports = withState("expanded", "setExpanded", false)(WidgetsTray);
+module.exports = compose(
+    withState("expanded", "setExpanded", false),
+    connect(createSelector(
+            treyWidgets,
+            (widgets = []) => ({
+                hasTrayWidgets: widgets.length > 0
+            })
+    )),
+    withProps(({ enabled, hasTrayWidgets}) => ({
+        enabled: enabled && hasTrayWidgets
+    }))
+)(WidgetsTray);
