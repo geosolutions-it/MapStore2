@@ -5,10 +5,8 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-const React = require('react');
 const { compose, withPropsOnChange} = require('recompose');
 const Toolbar = require('../../misc/toolbar/Toolbar');
-const Message = require('../../I18N/Message');
 
 const getWidgetIcon = ({widgetType, type} = {}) => {
     const iconType = !widgetType || widgetType === "chart" ? type : widgetType;
