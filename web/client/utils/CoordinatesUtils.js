@@ -796,7 +796,7 @@ const CoordinatesUtils = {
      * choose to round or floor value incase of 0 fractional digits
      * @return the rounded value or the orignal one
     */
-    checkRounding: ({ roundingBehaviour = "round", value = 0, maximumFractionDigits = 0 } = {}) => {
+    roundCoord: ({ roundingBehaviour = "round", value = 0, maximumFractionDigits = 0 } = {}) => {
         if (maximumFractionDigits === 0 && Math[roundingBehaviour]) {
             return Math[roundingBehaviour](value);
         }

@@ -659,7 +659,7 @@ describe('CoordinatesUtils', () => {
         const maximumFractionDigits = 0;
 
         const roundingOptions = {value, roundingBehaviour, maximumFractionDigits};
-        const res = CoordinatesUtils.checkRounding(roundingOptions);
+        const res = CoordinatesUtils.roundCoord(roundingOptions);
         expect(res).toBe(28);
     });
     it("test rounding of a number 28.55", () => {
@@ -667,7 +667,7 @@ describe('CoordinatesUtils', () => {
         const roundingBehaviour = "floor";
         const maximumFractionDigits = 0;
         const roundingOptions = {value, roundingBehaviour, maximumFractionDigits};
-        const res = CoordinatesUtils.checkRounding(roundingOptions);
+        const res = CoordinatesUtils.roundCoord(roundingOptions);
         expect(res).toBe(28);
     });
     it("test rounding of a number 28.55 with fractional digits", () => {
@@ -675,7 +675,7 @@ describe('CoordinatesUtils', () => {
         const roundingBehaviour = "floor";
         const maximumFractionDigits = 2;
         const roundingOptions = {value, roundingBehaviour, maximumFractionDigits};
-        const res = CoordinatesUtils.checkRounding(roundingOptions);
+        const res = CoordinatesUtils.roundCoord(roundingOptions);
         expect(res).toBe(28.55);
     });
 });
