@@ -20,7 +20,12 @@ const { toggleCollapse, toggleCollapseAll } = require('../../actions/widgets');
 
 const Message = require('../../components/I18N/Message');
 const BorderLayout = require('../../components/layout/BorderLayout');
-const treyWidgets = createSelector(
+
+/**
+ * A selector that retrieves widgets to display in the tray area
+ * @return the widgets to display in the tray area
+ */
+const trayWidgets = createSelector(
     getFloatingWidgets,
     getCollapsedIds,
     (widgets = [], collapsedIds) => widgets
@@ -33,10 +38,14 @@ const treyWidgets = createSelector(
                 : w)
 );
 
+/**
+ * Button bar with the list of widgets to
+ * minimize/expand
+ */
 const WidgetsBar = compose(
     connect(
         createSelector(
-            treyWidgets,
+            trayWidgets,
             widgets => ({widgets})
         ),
         {
@@ -60,11 +69,18 @@ const WidgetsBar = compose(
     })),
 )(require('../../components/widgets/view/WidgetsBar'));
 
+/**
+ * The title of the tray
+ */
 const TrayTitle = () =>
     (<span style={{ order: -1, margin: 2, marginRight: 5 }}>
         <Message msgId="widgets.tray.title" />
     </span>);
 
+/**
+ * Button that allows collapse/Expand functionality of the tray.
+ * @param {object} props
+ */
 const CollapseTrayButton = ({expanded, onClick=() => {}} = {}) =>
     (<Button
         tooltipId={expanded ? "widgets.tray.collapseTray" : "widgets.tray.expandTray"}
@@ -75,6 +91,9 @@ const CollapseTrayButton = ({expanded, onClick=() => {}} = {}) =>
             <Glyphicon glyph={expanded ? "chevron-right" : "chevron-left"} />
     </Button>);
 
+/**
+ * Button to collapse/expand all widgets
+ */
 const CollapseAllButton = connect(
     createSelector(
         getVisibleFloatingWidgets,
@@ -95,6 +114,13 @@ const CollapseAllButton = connect(
             <Glyphicon glyph={"list"} />
     </Button>));
 
+
+/**
+ * Main component of the widgets tray.
+ * @prop {boolean} enabled if true, the component is enabled and visible
+ * @prop {boolean} expanded if true, it shows the list of widgets
+ * @prop {function} setExpanded handler to toggle expand/collapse the tray
+ */
 class WidgetsTray extends React.Component {
     static propTypes = {
         enabled: PropTypes.bool,
@@ -131,7 +157,7 @@ class WidgetsTray extends React.Component {
 module.exports = compose(
     withState("expanded", "setExpanded", false),
     connect(createSelector(
-            treyWidgets,
+            trayWidgets,
             (widgets = []) => ({
                 hasTrayWidgets: widgets.length > 0
             })

@@ -13,9 +13,9 @@ const {rightPanelOpenSelector, bottomPanelOpenSelector} = require('../../selecto
 const {isCesium} = require('../../selectors/maptype');
 
 /**
- * Hides the widgets when rightPanel, bottomPanel are open or when the maptype is cesium
+ * enhances the component disabling it (setting `enabled` property to `false`) when rightPanel, bottomPanel are open or when the maptype is cesium.
  */
-module.exports = connect(
+const autoDisableWidgets = connect(
     createSelector(
         rightPanelOpenSelector,
         bottomPanelOpenSelector,
@@ -25,3 +25,4 @@ module.exports = connect(
         })
     )
 );
+module.exports = autoDisableWidgets;
