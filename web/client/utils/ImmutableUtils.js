@@ -86,6 +86,14 @@ module.exports = {
      * set('a.b.c',2, {}); // returns {a: {b: {c: 2}}});
      */
     set,
+    /**
+     * compose of lodash fp. Allow to compose functions with currying.
+     * Allows to write something like `set(a, b, set(c, d, set(e, f, state)))`
+     * as
+     * ```
+     * compose(set(a, b), set(c, d), set(e, f))(state)
+     * ```
+     */
     compose,
     arrayUpsert,
     arrayUpdate,

@@ -20,7 +20,7 @@ const { toggleCollapse, toggleCollapseAll } = require('../../actions/widgets');
 
 const Message = require('../../components/I18N/Message');
 const BorderLayout = require('../../components/layout/BorderLayout');
-
+const noHiddenOrStaticWidgets = w => !w.hide && (!w.dataGrid || !w.dataGrid.static);
 /**
  * A selector that retrieves widgets to display in the tray area
  * @return the widgets to display in the tray area
@@ -29,7 +29,7 @@ const trayWidgets = createSelector(
     getFloatingWidgets,
     getCollapsedIds,
     (widgets = [], collapsedIds) => widgets
-            .filter(w => !w.hide && (!w.dataGrid || !w.dataGrid.static))
+            .filter(noHiddenOrStaticWidgets)
             .map(w => findIndex(collapsedIds, id => id === w.id) >= 0
                 ? {
                     ...w,
@@ -98,7 +98,7 @@ const CollapseAllButton = connect(
     createSelector(
         getVisibleFloatingWidgets,
         ( visible = [] ) => ({
-            shouldExpand: visible.filter(w => !w.dataGrid || !w.dataGrid.static).length === 0
+            shouldExpand: visible.filter(noHiddenOrStaticWidgets).length === 0
         })
     ), // TODO: get all collapsed
     {

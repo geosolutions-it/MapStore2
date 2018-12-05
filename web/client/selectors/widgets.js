@@ -83,6 +83,7 @@ const getDashboardWidgets = state => get(state, `widgets.containers[${DEFAULT_TA
 module.exports = {
     getFloatingWidgets,
     getVisibleFloatingWidgets,
+    getCollapsedState,
     getCollapsedIds,
     getFloatingWidgetsLayout,
     // let's use the same container for the moment
