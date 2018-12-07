@@ -198,7 +198,7 @@
               }
             }
         ],
-        "desktop": [ "Details",
+        "desktop": [ "CRSSelector", "Details",
           {
             "name": "Map",
             "cfg": {

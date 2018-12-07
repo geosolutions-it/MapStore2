@@ -8,9 +8,9 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
-const {FormControl, FormGroup, ControlLabel} = require('react-bootstrap');
+const {FormControl, FormGroup, ControlLabel, ListGroupItem} = require('react-bootstrap');
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
-
+const CustomMenu = require('../crsselector/crsselector');
 class CRSSelector extends React.Component {
     static propTypes = {
         id: PropTypes.string,
@@ -46,7 +46,11 @@ class CRSSelector extends React.Component {
             if (availableCRS.hasOwnProperty(crs)) {
                 val = crs;
                 label = availableCRS[crs].label;
-                list.push(<option value={val} key={val}>{label}</option>);
+                list.push(<ListGroupItem
+                            key={val}
+                            eventKey={val}>
+                            {label}
+                        </ListGroupItem>);
             }
         }
 
@@ -58,7 +62,7 @@ class CRSSelector extends React.Component {
                     onChange={this.launchNewCRSAction}
                     bsSize="small"
                     >
-                    {list}
+                    <CustomMenu bsRole="menu">{list}</CustomMenu>
                 </select>);
         } else if (this.props.enabled && !this.props.useRawInput) {
             return (
@@ -71,7 +75,9 @@ class CRSSelector extends React.Component {
                       onChange={this.launchNewCRSAction}
                       bsSize="small"
                       >
+                      <CustomMenu bsRole="menu">
                       {list}
+                      </CustomMenu>
               </FormControl>
           </FormGroup>);
         }

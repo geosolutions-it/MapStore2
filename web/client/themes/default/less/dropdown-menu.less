@@ -36,6 +36,11 @@
 	color: @ms2-color-text;
 }
 
+.navbar-dx .dropdown-menu li.active a,
+.navbar-home .dropdown-menu li.active a {
+	color: @ms2-color-text-primary;
+}
+
 .navbar-dx .dropdown-menu li a span {
 	position: relative;
 }
@@ -45,6 +50,25 @@
 	border-left: 1px solid @ms2-color-info;
 }
 
+#mapstore-navbar-container .dropdown-menu {
+	> .btn-group {
+		width: 100%;
+		> .btn {
+			border: none;
+			box-shadow: none;
+			padding: 0;
+			width: 100%;
+			a {
+				width: 100%;
+				display: block;
+				text-align: left;
+				text-decoration: none;
+			}
+		}
+	}
+}
+
+#mapstore-navbar-container .dropdown-menu > .btn-group li > a,
 #mapstore-navbar-container .dropdown-menu > li > a {
     padding: 10px 15px;
 }
