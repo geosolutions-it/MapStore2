@@ -61,7 +61,7 @@ An **epic** is basically nothing more that:
 
  *a function that returns a stream of redux actions to emit.*
 
-A simple epic in mapstore can be this:
+A simple epic in mapstore can be this one:
 
 ```javascript
 const fetchUserEpic = (action$, store) => action$
