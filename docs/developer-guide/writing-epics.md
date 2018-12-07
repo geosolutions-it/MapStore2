@@ -79,7 +79,7 @@ The epic function has 2 arguments:
 - `action$`: the stream of of redux action. Every time an action is triggered redux, it is emitted as an event on the `action$` stream.
 - `store`. A *small version* of redux store, that contains essentially only one important method called `getState()`. This method returns the current redux state object.
 
-This function **must return** a new stream that emits the action we want to send back to redux. The **redux-observable** middleware subscribes the epics returned streams so the action will be automatically triggered on redux when they are emitted by the stream.
+This function **must return** a new stream that emits the actions we want to dispatch to redux. The **redux-observable** middleware subscribes the epics returned streams so the action will be automatically triggered on redux when they are emitted by the stream.
 
 > **NOTE**: **redux-observable** middleware is already added to the MapStore2's StandardStore and StandardApp, so a developer should only take care of creating his own epics and add them to MapStore.
 
