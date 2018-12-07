@@ -189,7 +189,7 @@ Ajax calls in MapStore should all pass by `libs/ajax.js`. This is an `axios` ins
 
 Axios is a library that uses es6 Promises to do ajax calls. Luckily RxJs allow to use Promises instead of streams in most of the cases. In the other cases, there are specific operators called `fromPromise` or `defer` that you can use to wrap your Promise into a stream.
 
-> NOTE: is perfectly normal to consider the concept of Promise as a special case of a stream, that emit one value, then closes.
+> NOTE: it is perfectly normal to consider the concept of Promise as a special case of a stream, that emit one value, then closes.
 
 
 So,everytime you have to do an ajax call, you will need to use axios:
