@@ -20,7 +20,7 @@ X is an error
 
 ```
 
-**Observable** is the core entity of RxJS and, more generically, of the whole reactive programming paradigm. Basically is an entity that emit events and can be subscribed, so then the subscribers can intercept the events emitted. It this the entity that implements the concept of **stream** (so *stream* and *Observable* are almost used as synonym).
+**Observable** is the core entity of RxJS and, more generically, of the whole reactive programming paradigm. Basically is an entity that emit events and can be subscribed to, so that subscribers can intercept the events emitted. This is the entity that implements the concept of **stream** (so *stream* and *Observable* are almost used as synonym).
 
 Subscribing observables can be hard, so RxJs provides a lot of **operators** to help manipulating and combining observables (so, *streams*).
 here an example of how operators allow manipulating an event streams to count clicks:
