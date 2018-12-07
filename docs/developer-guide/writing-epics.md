@@ -1,6 +1,6 @@
 # Writing Epics
 
-Most of the asynchronous operation we are going to do in MapStore2 are implemented using epics. This guide help a developer to have the base concepts about epics and then provides the best practices to write and add your epics to mapstore.
+Most of the asynchronous operations we are doing in MapStore2 are implemented using epics. This guide gives the developer the base concepts about epics and provides the best practices to write and add your epics to a MapStore2 project.
 
 ## Base Concepts
 
