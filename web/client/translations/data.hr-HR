@@ -1526,7 +1526,7 @@
             "stop": "stop"
         },
         "timeline": {
-            ""currentTime": "Go to current time",
+            "currentTime": "Go to current time",
             "rangeStart":"go to the current time range",
             "rangeEnd" : "go to the current time range",
             "hideLayerName" : "Hide layers names",
