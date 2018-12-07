@@ -83,7 +83,7 @@ This function **must return** a new stream that emits the action we want to send
 
 > **NOTE**: **redux-observable** middleware is already added to the MapStore2's StandardStore and StandardApp, so a developer should only take care of creating his own epics and add them to MapStore.
 
-Typically the stream returned by an epic is always listening for new actions and sends other actions:
+Typically the stream returned by an epic is always listening for new actions and dispatches other actions:
 
 > ** actions in, actions out **.
 
