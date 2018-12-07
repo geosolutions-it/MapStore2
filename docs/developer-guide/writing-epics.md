@@ -116,16 +116,21 @@ const notifyMapLoaded = (action$, store) => action$
 );
 ```
 
-## Doing async
+## Create complext data flows triggered by actions
 
-Typical async operation involve operators like:
+Typical opeartor to start creating a complext data flow involves operators like:
 
 - [switchMap](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-switchMap)
 - [mergeMap](http://reactivex.io/rxjs/class/es6/Observable.js~Observable.html#instance-method-mergeMap)
-- many others
+- exhaustMap, forkJoin and many others...
 
-The base concept of all these solutions is to project to the main stream the result of some other observable.
+The base concept of all these solutions is to create one or more new streams (using a function passed as argument) and then emit the events on the final Observer.
 
+> Note: Creating ([Higher order observables](https://gianttoast.gitbooks.io/rxjs-observables/content/higher-order-observables.html), that are basically streams of streams) and merging their events is a common pattern in RxJs, so, mergeMap and switchMap are simpler shortcuts to increase readability and maintainability of the code:  
+> - mergeMap() is just map() + mergeAll()
+> - switchMap() is just map() + switch().
+
+Example:
 ```javascript
 const countDown = action$ => action$
     .ofType(START_COUNTDOWN)
@@ -136,7 +141,6 @@ const countDown = action$ => action$
     );
 ```
 
-Example:
 
 ```text
 ---{seconds: 5}------------------------> action in
@@ -182,6 +186,7 @@ vvvvvvvvvvvvvvvvvvvvvvvvvv switchMap vvvvvvvvvvvvvvvvvvvvvvvvvv
 --------------{5}--{4}--{3}--{2}-{5}-{1}-{4}--{3}--{2}--{1}------->   value
 
 ```
+
 
 ## Doing AJAX
 
