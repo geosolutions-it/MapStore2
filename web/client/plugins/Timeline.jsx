@@ -194,7 +194,7 @@ const TimelinePlugin = compose(
                 && <InlineDateTimeSelector
                 glyph="range-start"
                 onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
-                tooltip={<Message msgId="timeline.offsetRangeStart"/>}
+                tooltip={<Message msgId="timeline.rangeStart"/>}
                 date={currentTime || currentTimeRange && currentTimeRange.start}
                 onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
                 className="shadow-soft"
@@ -239,7 +239,7 @@ const TimelinePlugin = compose(
                             glyph: 'time-offset',
                             bsStyle: offsetEnabled ? 'success' : 'primary',
                             active: offsetEnabled,
-                            tooltip: <Message msgId={offsetEnabled ? "timeline.enableOffset" : "timeline.disableOffset"} />,
+                            tooltip: <Message msgId={!offsetEnabled ? "timeline.enableRange" : "timeline.disableRange"} />,
                             onClick: () => {
                                 if (status !== "PLAY") onOffsetEnabled(!offsetEnabled);
 

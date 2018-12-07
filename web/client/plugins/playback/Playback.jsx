@@ -104,6 +104,7 @@ module.exports = playbackEnhancer(({
                                 : "playback.play"
                 }, {
                     glyph: "stop",
+                    disabled: status !== statusMap.PLAY && status !== statusMap.PAUSE,
                     onClick: stop,
                     tooltip: <Message msgId={"playback.stop"} />
                 }, {
@@ -115,6 +116,7 @@ module.exports = playbackEnhancer(({
                     glyph: "wrench",
                     bsStyle: (status !== statusMap.PLAY && status !== statusMap.PAUSE) && showSettings ? 'success' : 'primary',
                     active: (status !== statusMap.PLAY || status !== statusMap.PAUSE) && !!showSettings,
+                    disabled: (status === statusMap.PLAY || status === statusMap.PAUSE),
                     onClick: () => status !== statusMap.PLAY && onShowSettings(!showSettings),
                     tooltip: <Message msgId={"playback.settings.title"} />
                 }
