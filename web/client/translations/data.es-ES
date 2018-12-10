@@ -1519,16 +1519,16 @@
                 }
             },
             "backwardStep": "Paso atrás",
-            "forwardStep" : "paso adelante",
-            "play": "reproducir",
-            "paused": "reproducir (pausado)",
-            "pause": "pausa",
-            "stop": "parada"
+            "forwardStep" : "Paso adelante",
+            "play": "Reproducir",
+            "paused": "Reproducir (pausado)",
+            "pause": "Pausa",
+            "stop": "Parada"
         },
         "timeline": {
             "currentTime": "Ir a la hora actual",
-            "rangeStart": "ir al rango de tiempo actual",
-            "rangeEnd": "ir al rango de tiempo actual",
+            "rangeStart": "Ir al rango de tiempo actual",
+            "rangeEnd": "Ir al rango de tiempo actual",
             "hideLayerName": "Ocultar nombres de capas",
             "showLayerName": "Mostrar nombres de capas",
             "enableRange": "Habilitar rango de tiempo",

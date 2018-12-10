@@ -1523,12 +1523,12 @@
             "play": "Play",
             "pause": "Pausa",
             "paused": "Play (in pausa)",
-            "stop": "stop"
+            "stop": "Stop"
         },
         "timeline": {
             "currentTime": "Istante corrente",
-            "rangeStart": "vai all'intervallo di tempo corrente",
-            "rangeEnd": "vai all'intervallo di tempo corrente",
+            "rangeStart": "Vai all'intervallo di tempo corrente",
+            "rangeEnd": "Vai all'intervallo di tempo corrente",
             "hideLayerName": "Nascondi i nomi dei livelli",
             "showLayerName": "Mostra i nomi dei livelli",
             "enableRange": "Abilita intervallo",

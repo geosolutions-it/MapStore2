@@ -25,6 +25,10 @@ const Message = require('../components/I18N/Message');
 const { selectPlaybackRange } = require('../actions/playback');
 const { playbackRangeSelector, statusSelector } = require('../selectors/playback');
 
+const { Button: ButtonRB, Glyphicon } = require('react-bootstrap');
+const tooltip = require('../components/misc/enhancers/tooltip');
+const Button = tooltip(ButtonRB);
+
 const { head, isString} = require('lodash');
 const moment = require('moment');
 const isPercent = (val) => isString(val) && val.indexOf("%") !== -1;
@@ -91,35 +95,23 @@ const TimelinePlugin = compose(
             mapLayoutStyle => ({mapLayoutStyle}))),
         // guess when to hide
         withProps(
-            ({containerWidth, style, mapLayoutStyle, options = {}}) => {
+            ({containerWidth, style, mapLayoutStyle}) => {
                 const { marginLeft, marginRight} = style || {};
                 let {left = 0, right = 0} = mapLayoutStyle;
                 right = isPercent(right) && (getPercent(right) * containerWidth) || right;
                 left = isPercent(left) && (getPercent(left) * containerWidth) || left;
-                const { collapsed, playbackEnabled} = options;
-                // size of date picker with all margins
-                const DATE_TIME_BAR = 378;
-                // 94 + 4 the timeline button-group expanded and its margin (1 button more than when collapsed)
-                // 62 + 4 the timeline button-group collapsed and its margin
-                // 32 + 2 Expand button
-                const MIN_EXPANDED = DATE_TIME_BAR + 94 + 4 + 32 + 2;
-                const MIN_COLLAPSED = DATE_TIME_BAR + 62 + 4 + 32 + 2;
 
-                // 160 playback offset width with its margins
-                const PLAYBACK_OFFSET = 160;
-                const minWidth = (collapsed ? MIN_COLLAPSED : MIN_EXPANDED );
+                const minWidth = 410;
+
                 if (containerWidth) {
                     const availableWidth = containerWidth - right - left - marginLeft - marginRight;
-                    const canExpand = !collapsed || availableWidth > MIN_EXPANDED + (playbackEnabled && 160 || 0);
-                    const canExpandPlayback = playbackEnabled || availableWidth > (minWidth + PLAYBACK_OFFSET) - (collapsed && 32 || 0);
                     return {
                         hide: availableWidth < minWidth,
-                        canExpand,
-                        canExpandPlayback,
-                        style: {...style, ...mapLayoutStyle}
+                        compactToolbar: availableWidth < 610,
+                        style: {...style, ...mapLayoutStyle, minWidth}
                     };
                 }
-                return {style: {...style, ...mapLayoutStyle}};
+                return {style: {...style, ...mapLayoutStyle, minWidth}};
             }
         ),
         // effective hide
@@ -137,11 +129,10 @@ const TimelinePlugin = compose(
         currentTimeRange,
         setOffset,
         style,
-        canExpand,
-        canExpandPlayback,
         status,
         viewRange,
-        moveRangeTo
+        moveRangeTo,
+        compactToolbar
     }) => {
 
         const { hideLayersName, collapsed, playbackEnabled} = options;
@@ -183,7 +174,6 @@ const TimelinePlugin = compose(
                 position: "absolute",
                 marginBottom: 35,
                 marginLeft: 100,
-
                 background: "transparent",
                 ...style,
                 right: collapsed ? 'auto' : (style.right || 0)
@@ -195,85 +185,73 @@ const TimelinePlugin = compose(
                 glyph="range-start"
                 onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
                 tooltip={<Message msgId="timeline.rangeStart"/>}
+                showButtons={!collapsed}
                 date={currentTime || currentTimeRange && currentTimeRange.start}
                 onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
                 className="shadow-soft"
                 style={{
                     position: 'absolute',
-                    top: -60,
-                    left: 2
+                    top: 0,
+                    left: 2,
+                    transform: 'translateY(calc(-100% - 5px))'
                 }} />}
 
-            <div className="timeline-plugin-toolbar">
+            <div
+                className={`timeline-plugin-toolbar${compactToolbar ? ' ms-collapsed' : ''}`}>
                 {offsetEnabled && currentTimeRange
                     // if range enabled, show time end in the timeline
                     ? <InlineDateTimeSelector
                         glyph={'range-end'}
                         onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
-                        tooltip="Offset time"
+                        tooltip={<Message msgId="timeline.rangeEnd"/>}
                         date={currentTimeRange.end}
+                        showButtons={!collapsed}
                         onUpdate={end => status !== "PLAY" && isValidOffset(currentTime, end) && setOffset(end)} />
                     : // show current time if using single time
                     <InlineDateTimeSelector
                         glyph={'time-current'}
+                        showButtons={!collapsed}
                         onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange)}
                         tooltip={<Message msgId="timeline.currentTime"/>}
                         date={currentTime || currentTimeRange && currentTimeRange.start}
                         onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)} />}
+                <div className="timeline-plugin-btn-group">
+                    <Toolbar
+                        btnDefaultProps={{
+                            className: 'square-button-md',
+                            bsStyle: 'primary'
+                        }}
+                        buttons={[
+                            {
+                                glyph: 'list',
+                                tooltip: <Message msgId={!hideLayersName ? "timeline.hideLayerName" : "timeline.showLayerName" } />,
+                                bsStyle: !hideLayersName ? 'success' : 'primary',
+                                visible: !collapsed,
+                                active: !hideLayersName,
+                                onClick: () => setOptions({ ...options, hideLayersName: !hideLayersName })
+                            },
+                            {
+                                glyph: 'time-offset',
+                                bsStyle: offsetEnabled ? 'success' : 'primary',
+                                active: offsetEnabled,
+                                tooltip: <Message msgId={!offsetEnabled ? "timeline.enableRange" : "timeline.disableRange"} />,
+                                onClick: () => {
+                                    if (status !== "PLAY") onOffsetEnabled(!offsetEnabled);
 
-                <Toolbar
-                    btnDefaultProps={{
-                        className: 'square-button-md',
-                        bsStyle: 'primary'
-                    }}
-                    buttons={[
-                        {
-                            glyph: 'list',
-                            tooltip: <Message msgId={!hideLayersName ? "timeline.hideLayerName" : "timeline.showLayerName" } />,
-                            bsStyle: !hideLayersName ? 'success' : 'primary',
-                            visible: !collapsed,
-                            active: !hideLayersName,
-                            onClick: () => setOptions({ ...options, hideLayersName: !hideLayersName })
-                        },
-                        {
-                            glyph: 'time-offset',
-                            bsStyle: offsetEnabled ? 'success' : 'primary',
-                            active: offsetEnabled,
-                            tooltip: <Message msgId={!offsetEnabled ? "timeline.enableRange" : "timeline.disableRange"} />,
-                            onClick: () => {
-                                if (status !== "PLAY") onOffsetEnabled(!offsetEnabled);
-
+                                }
                             }
-                        },
-                        {
-                            glyph: 'playback',
-                            tooltip: <Message msgId= {!playbackEnabled ? "timeline.enablePlayBack" : "timeline.disablePlayBack"}/>,
-                            bsStyle: playbackEnabled ? 'success' : 'primary',
-                            active: playbackEnabled,
-                            visible: !!Playback && canExpandPlayback,
-                            onClick: () => {
-                                setOptions({ ...options, playbackEnabled: !playbackEnabled });
+                        ]} />
+                    <Playback {...playbackItem}/>
+                </div>
 
-                            }
-                        }
-                    ]} />
-                {playbackEnabled && <Playback {...playbackItem}/>}
-                <Toolbar
-                    btnGroupProps={{
-                        className: 'timeline-plugin-toolbar-right'
-                    }}
-                    btnDefaultProps={{
-                        className: 'square-button-md',
-                        bsStyle: 'primary'
-                    }}
-                    buttons={[
-                        {
-                            visible: canExpand,
-                            tooltip: <Message msgId= {collapsed ? "timeline.expand" : "timeline.collapse"}/>,
-                            glyph: collapsed ? 'resize-full' : 'resize-small',
-                            onClick: () => setOptions({ ...options, collapsed: !collapsed })
-                        }
-                    ]} />
+                <Button
+                    onClick={() => setOptions({ ...options, collapsed: !collapsed })}
+                    className="square-button-sm ms-timeline-expand"
+                    bsStyle="primary"
+                    tooltip={<Message msgId= {collapsed ? "timeline.expand" : "timeline.collapse"}/>}>
+                    <Glyphicon glyph={collapsed ? 'chevron-up' : 'chevron-down'}/>
+                </Button>
+
             </div>
             {!collapsed &&
                 <Timeline

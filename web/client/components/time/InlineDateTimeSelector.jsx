@@ -24,7 +24,8 @@ class InlineDateTimeSelector extends React.Component {
         style: PropTypes.object,
         className: PropTypes.string,
         tooltip: PropTypes.string,
-        tooltipId: PropTypes.string
+        tooltipId: PropTypes.string,
+        showButtons: PropTypes.bool
     };
 
     static defaultProps = {
@@ -61,16 +62,19 @@ class InlineDateTimeSelector extends React.Component {
             },
             {
                 name: 'day',
+                placeholder: 'DD',
                 value: currentTime && currentTime.date()
             },
             {
                 name: 'month',
+                placeholder: 'MM',
                 value: currentTime && currentTime.month(),
-                format: value => !isNil(value) && moment.monthsShort(value),
+                format: value => !isNil(value) && value !== '' && moment.monthsShort(value),
                 parseValue: value => value - 1
             },
             {
                 name: 'year',
+                placeholder: 'YYYY',
                 value: currentTime && currentTime.year()
             },
             {
@@ -80,6 +84,7 @@ class InlineDateTimeSelector extends React.Component {
             },
             {
                 name: 'hours',
+                placeholder: 'hh',
                 value: currentTime && currentTime.hours()
             },
             {
@@ -89,6 +94,7 @@ class InlineDateTimeSelector extends React.Component {
             },
             {
                 name: 'minutes',
+                placeholder: 'mm',
                 value: currentTime && currentTime.minutes()
             },
             {
@@ -98,6 +104,7 @@ class InlineDateTimeSelector extends React.Component {
             },
             {
                 name: 'seconds',
+                placeholder: 'ss',
                 value: currentTime && currentTime.seconds()
             },
             {
@@ -137,24 +144,24 @@ class InlineDateTimeSelector extends React.Component {
                         </div>
                         || <div
                             className={`ms-inline-datetime-input ms-dt-${el.name}`}>
-                            <Button
+                            {this.props.showButtons && <Button
                                 bsSize="xs"
                                 disabled={!this.props.date}
                                 onClick={() => this.onUpdate(el.name, true)}>
                                 <Glyphicon glyph="chevron-up"/>
-                            </Button>
+                            </Button>}
                             <FormControl
                                 type="text"
-                                placeholder={el.name}
+                                placeholder={el.placeholder || el.name}
                                 disabled={!this.props.date}
                                 value={el.format && el.format(el.value) || el.value}
                                 onChange={event => this.onChange(el.name, event.target.value, el.parseValue)}/>
-                            <Button
+                            {this.props.showButtons && <Button
                                 bsSize="xs"
                                 disabled={!this.props.date}
                                 onClick={() => this.onUpdate(el.name)}>
                                 <Glyphicon glyph="chevron-down"/>
-                            </Button>
+                            </Button>}
                         </div>
 
                     )}

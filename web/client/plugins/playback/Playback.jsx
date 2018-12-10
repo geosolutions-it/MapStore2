@@ -113,7 +113,7 @@ module.exports = playbackEnhancer(({
                     disabled: !hasNext,
                     tooltip: <Message msgId={"playback.forwardStep"} />
                 }, {
-                    glyph: "wrench",
+                    glyph: "cog",
                     bsStyle: (status !== statusMap.PLAY && status !== statusMap.PAUSE) && showSettings ? 'success' : 'primary',
                     active: (status !== statusMap.PLAY || status !== statusMap.PAUSE) && !!showSettings,
                     disabled: (status === statusMap.PLAY || status === statusMap.PAUSE),
