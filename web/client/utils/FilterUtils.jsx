@@ -78,7 +78,7 @@ const ogcDateField = (attribute, operator, value, nsplaceholder) => {
     if (operator === "><") {
         if (value.startDate && value.endDate) {
             const startIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
-            const endIso = value.startDate.toISOString ? value.startDate.toISOString() : value.startDate; // for Compatibility reasons. We should use ISO string to store data.
+            const endIso = value.endDate.toISOString ? value.endDate.toISOString() : value.endDate; // for Compatibility reasons. We should use ISO string to store data.
             fieldFilter =
                         ogcComparisonOperators[operator](nsplaceholder,
                             propertyTagReference[nsplaceholder].startTag +
