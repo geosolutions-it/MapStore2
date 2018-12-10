@@ -157,7 +157,24 @@ module.exports = {
             const state = getState();
 
             if (snap && group) {
-                return snapTime(state, group, time).map( t => setCurrentTime(t));
+                return snapTime(state, group, time)
+                    .switchMap( t => {
+                        const currentViewRange = rangeSelector(state);
+                        const {
+                            start,
+                            end
+                        } = currentViewRange || {};
+                        let actions = [];
+                        // re- center the view is snapped time is out of view range
+                        if (start && end && (moment(t).isBefore(start) || moment(t).isAfter(end))) {
+                            const rangeDistance = moment(end).diff(start);
+                            actions = [onRangeChanged({
+                                start: moment(t).subtract(rangeDistance / 2),
+                                end: moment(t).add(rangeDistance / 2)
+                            })];
+                        }
+                        return Rx.Observable.from([...actions, setCurrentTime(t)]);
+                    });
             }
             return Rx.Observable.of(setCurrentTime(time));
         }),
@@ -222,8 +239,9 @@ module.exports = {
      * updated (for instance when a layer is added to the map)
      */
     updateRangeDataOnRangeChange: (action$, { getState = () => { } } = {}) =>
-        action$.ofType(RANGE_CHANGED, UPDATE_LAYER_DIMENSION_DATA)
+        action$.ofType(RANGE_CHANGED)
             .debounceTime(400)
+            .merge(action$.ofType(UPDATE_LAYER_DIMENSION_DATA).debounceTime(50))
             .switchMap( () => {
                 const timeData = timeDataSelector(getState()) || {};
                 const layerIds = Object.keys(timeData).filter(id => timeData[id] && timeData[id].domain && isTimeDomainInterval(timeData[id].domain));

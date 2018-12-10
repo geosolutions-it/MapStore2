@@ -13,7 +13,7 @@ const {
     framesLoading, updateMetadata
 } = require('../actions/playback');
 const {
-    moveTime, SET_CURRENT_TIME, MOVE_TIME, SET_OFFSET_TIME
+    moveTime, SET_CURRENT_TIME, MOVE_TIME
 } = require('../actions/dimension');
 const {
     selectLayer,
@@ -288,8 +288,10 @@ module.exports = {
      */
     playbackFollowCursor: (action$, { getState = () => { } } = {}) =>
         action$
-            .ofType(SET_CURRENT_TIME, MOVE_TIME, SET_OFFSET_TIME)
-            .filter(() => statusSelector(getState()) === STATUS.PLAY && isOutOfRange(currentTimeSelector(getState()), rangeSelector(getState())))
+            .ofType(MOVE_TIME)
+            .filter(({type}) =>
+                (type === MOVE_TIME || statusSelector(getState()) === STATUS.PLAY )
+                && isOutOfRange(currentTimeSelector(getState()), rangeSelector(getState())))
             .filter(() => get(playbackSettingsSelector(getState()), "following") )
             .switchMap(() => Rx.Observable.of(
                 onRangeChanged(

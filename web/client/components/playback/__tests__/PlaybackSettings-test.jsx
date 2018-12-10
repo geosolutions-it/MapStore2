@@ -82,12 +82,61 @@ describe('PlaybackSettings component', () => {
             playbackRange={{
                 startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" // this have to be valid to show buttons
             }}
-         playbackButtons={[{
+        playbackButtons={[{
             className: "test_button",
             onClick: actions.onClick
         }]} />, document.getElementById("container"));
         ReactTestUtils.Simulate.click(document.querySelector(".mapstore-switch-panel .test_button")); // <-- trigger event callback
         expect(spyClick).toHaveBeenCalled();
     });
+    it('setPlaybackRange callback', () => {
+        const actions = {
+            setPlaybackRange: () => { }
+        };
+        const spyClick = expect.spyOn(actions, 'setPlaybackRange');
+        ReactDOM.render(<PlaybackSettings
+            playbackRange={{
+                startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" // this have to be valid to show buttons
+            }}
+            setPlaybackRange={actions.setPlaybackRange}
+        />, document.getElementById("container"));
+        ReactTestUtils.Simulate.click(document.querySelectorAll(".ms-inline-datetime")[0].querySelector("button"));
+        expect(spyClick).toHaveBeenCalled();
+        expect(spyClick.calls[0].arguments[0].startPlaybackTime).toExist();
+        expect(spyClick.calls[0].arguments[0].endPlaybackTime).toExist();
+    });
+    it('setPlaybackRange callback for time end', () => {
+        const actions = {
+            setPlaybackRange: () => { }
+        };
+        const spyClick = expect.spyOn(actions, 'setPlaybackRange');
+        ReactDOM.render(<PlaybackSettings
+            playbackRange={{
+                startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" // this have to be valid to show buttons
+            }}
+            setPlaybackRange={actions.setPlaybackRange}
+        />, document.getElementById("container"));
+        ReactTestUtils.Simulate.click(document.querySelectorAll(".ms-inline-datetime")[1].querySelector("button")); // <-- trigger event callback
+        expect(spyClick).toHaveBeenCalled();
+        expect(spyClick.calls[0].arguments[0].startPlaybackTime).toExist();
+        expect(spyClick.calls[0].arguments[0].endPlaybackTime).toExist();
+    });
+    it('follow button', () => {
+        const actions = {
+            onSettingChange: () => { }
+        };
+        const spyClick = expect.spyOn(actions, 'onSettingChange');
+        ReactDOM.render(<PlaybackSettings
+            playbackRange={{
+                startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" // this have to be valid to show buttons
+            }}
+            onSettingChange={actions.onSettingChange}
+        />, document.getElementById("container"));
+        ReactTestUtils.Simulate.change(document.querySelectorAll('input[type=checkbox]')[2]); // <-- trigger event callback
+        expect(spyClick).toHaveBeenCalled();
+        expect(spyClick.calls[0].arguments[0]).toBe("following");
+        expect(spyClick.calls[0].arguments[1]).toBe(true);
+    });
+
 
 });
