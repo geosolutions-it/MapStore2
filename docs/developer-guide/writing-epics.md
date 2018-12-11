@@ -37,23 +37,8 @@ The final stream can be finally subscribed to update, for instance, a counter on
 
 ### Versions
 
-At the time of writing this documentation MapStore2 are using RxJS 5.1.1 and redux-observable 0.13.0.
-Some changes are coming in RxJs and so in redux-observable from versions 1.0.0 (redux-observable) and 6 (RxJs). In particular the from RxJs6 the whole library became more *functional programming* oriented, and so an instance of an `Observable` (so a stream) has not any method anymore, using method like `pipe` instead of dot-style concateation:
-
-```javascript
-// typical epic in  1.0.0 - pipe
-const pingEpic = action$ => action$.pipe(
-    filter(action => action.type === 'PING'),
-    mapTo({ type: 'PONG' })
-);
-// typical epic in 0.13.0 - dot concatenation
-const pingEpic = action$ => action$
-    .ofType('PING'),
-    .mapTo({ type: 'PONG' })
-;
-```
-
-So make you sure to check the documentation about the current versions of these libraries.
+At the time of writing this documentation MapStore2 is using RxJS 5.1.1 and redux-observable 0.13.0.
+So make you sure to check the correct documentation about the current versions of these libraries.
 
 ## What is an epic
 
