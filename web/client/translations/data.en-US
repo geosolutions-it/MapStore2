@@ -125,7 +125,7 @@
         "settings": "Settings",
         "help": "Help",
         "docs": "Docs",
-        "gohome": "Go home",
+        "gohome": "Back to home page",
         "back": "Back to the Importer",
         "printbutton": "Print",
         "annotationsbutton": "Annotations",
@@ -288,7 +288,9 @@
             }
         },
         "map": {
+            "errorLoadingFont": "The font family {family} is not correctly loaded. Some elements (like symbols in markers) can have rendering problems",
             "loading": "Loading...",
+            "loadingSpinner": "Loading Map",
             "loadingerror": "Error during loading",
             "name": "Name",
             "description": "Description",
@@ -342,6 +344,13 @@
                 "titleUnsavedChanges": "Are you sure to close without save your changes?",
                 "sureToClose": "Are you sure to close without save your changes?",
                 "fieldsChanged": "Some fields has been changed"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Map not found",
+                    "notAccessible": "Map not accessible",
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li></ul><p>"
+                }
             }
         },
         "floatinglegend": {
@@ -688,7 +697,8 @@
                 "load_config_exception": "Error Loading Configuration"
             },
             "comboField": {
-                "default_placeholder": "Select..."
+                "default_placeholder": "Select...",
+                "drop_down": "Open Dropdown"
             },
             "form": {
                 "header": "Find in the dataset",
@@ -697,6 +707,7 @@
             "emptyfilter": "No filter set. Searching could timeout if pagination is not supported by the server.",
             "attributefilter":{
                 "add_condition": " Add Condition",
+                "delete": " Delete",
                 "add_group": " Add Group",
                 "group_label_a": "Match",
                 "group_label_b": "of the following conditions:",
@@ -727,6 +738,7 @@
                 "geometric_operation": "Geometric Operation",
                 "combo_placeholder": "Select...",
                 "spatial_filter_header": "Region of interest",
+                "remove": "Remove",
                 "draw_start_label": "Draw the region of interest on the map",
                 "dwithin_label": "meters",
                 "details": {
@@ -1295,6 +1307,9 @@
             },
             "chartOptionsTitle": "Configure data",
             "widgetOptionsTitle": "Configure Widget Info",
+            "placeHolder":{
+                "default":"Select attribute"
+            },
             "groupByAttributes": {
                 "line": "X Attribute",
                 "pie": "Group By",
@@ -1305,11 +1320,11 @@
             },
             "aggregationAttribute": {
                 "line": "Y Attribute",
-                "pie": "Value",
+                "pie": "Use",
                 "bar": "Y Attribute",
-                "gauge": "Value",
-                "counter": "Value",
-                "default": "Value"
+                "gauge": "Use",
+                "counter": "Use",
+                "default": "Use"
             },
             "aggregateFunction": {
                 "line": "Operation",
@@ -1341,10 +1356,26 @@
                 "pie": "Display Legend",
                 "bar": "Display Legend",
                 "gauge": "Display labels"
+            },
+            "displayCartesian": {
+                "line": "Hide Grid",
+                "bar": "Hide Grid"
+            },
+            "yAxis":{
+                "line": "Hide Y axis",
+                "bar": "Hide Y axis"
+            },
+            "yAxisLabel":{
+                "line": "Legend Label",
+                "bar": "Legend Label"
+            },
+            "advancedOptions":{
+                "line": "Advanced Options",
+                "bar": "Advanced Options"
             }
-
         },
         "dashboard": {
+            "loadingSpinner": "Loading Dashboard",
             "saveDialog": {
                 "title": "Edit dashboard properties",
                 "name": "Name",
@@ -1362,8 +1393,10 @@
                     "title": "Error loading dashboard",
                     "dashboardNotAccessible": "You don't have permission to access this dashboard. Please contact the resource owner",
                     "pleaseLogin": "This dashboard is not public. Please try to login",
-                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist or has been removed",
-                    "unknownError": "There was an error loading the dashboard. Please contact the administrator"
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
+                    "unknownError": "There was an error loading the dashboard. Please contact the administrator",
+                    "notFound": "Dashboard not found",
+	                "notAccessible": "Dashboard not accessible"
                 },
                 "resourceAlreadyExists": "A resource with this name already exists. try '{data}'"
             },
@@ -1423,10 +1456,8 @@
             "clearbtn": "Clear All",
             "selectbtn": "Select All",
             "placeholders": {
-                "filter": "Search...",
                 "role": "Type to search Roles",
                 "user": "Type to search Users",
-                "ip": "Select IP",
                 "service": "Type to search Services",
                 "request": "Type to search Requests",
                 "workspace": "Type to search Workspaces",

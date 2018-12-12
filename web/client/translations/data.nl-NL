@@ -209,7 +209,9 @@
             "removeFromFeaturedMaps": "Remove from featured maps"
 		},
         "map": {
+            "errorLoadingFont": "The font family {family} is not correctly loaded. Some elements (like symbols in markers) can have rendering problems",
             "loading": "Bezig met laden...",
+            "loadingSpinner": "Loading Map",
             "loadingerror": "Fout bij het laden",
             "name": "Naam",
             "description": "Beschrijving",
@@ -243,6 +245,13 @@
                 "canWrite": "kan wijzigen",
                 "noResult": "geen enkel resultaat gevonden",
                 "title": "geautoriseerde groepen"
+            },
+            "errors": {
+                "loading": {
+                    "notFound": "Map not found",
+                    "notAccessible": "Map not accessible",
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li></ul><p>"
+                }
             }
         },
         "floatinglegend": {
@@ -529,7 +538,8 @@
                 "load_config_exception": "Fout bij het laden van de configuratie"
             },
             "comboField": {
-                "default_placeholder": "Kies..."
+                "default_placeholder": "Kies...",
+                 "drop_down": "Open Dropdown"
             },
             "form": {
                 "header": "Zoek in de data",
@@ -538,6 +548,7 @@
             "emptyfilter": "Geen enkele filterset. De zoekopdracht kan verstrijken als paging niet door de server wordt ondersteund",
             "attributefilter":{
                 "add_condition": " Voeg een voorwaarde toe",
+                "delete": " Delete",
                 "add_group": " Voeg een groep toe",
                 "group_label_a": "Toereikendheid",
                 "group_label_b": "de volgende condities:",
@@ -568,6 +579,7 @@
                 "geometric_operation": "Geometrische operatie",
                 "combo_placeholder": "Kies...",
                 "spatial_filter_header": "Ruimtelijke filter",
+                "remove": "Remove",
                 "draw_start_label": "Teken de regio van belang op de kaart",
                 "dwithin_label": "meter",
                 "details": {
@@ -998,6 +1010,9 @@
             },
             "chartOptionsTitle": "Données",
             "widgetOptionsTitle": "Info sur le widget",
+            "placeHolder":{
+                "default":"Select attribute"
+            },
             "groupByAttributes": {
                 "line": "Attributs X",
                 "pie": "Grouper par",
@@ -1006,9 +1021,11 @@
             },
             "aggregationAttribute": {
                 "line": "Attributs Y",
-                "pie": "Valeur",
+                "pie": "Use",
                 "bar": "Attributs Y",
-                "gauge": "valeur"
+                "gauge": "Use",
+                "counter": "Use",
+                "default": "Use"
             },
             "aggregateFunction": {
                 "line": "Opération",
@@ -1028,8 +1045,56 @@
                 "pie": "Légende d'affichage",
                 "bar": "Légende d'affichage",
                 "gauge": "Afficher les étiquettes"
+            },
+            "displayCartesian": {
+                "line": "Hide Grid",
+                "bar": "Hide Grid"
+            },"yAxis":{
+                "line": "Hide Y axis",
+                "bar": "Hide Y axis"
+            },
+            "yAxisLabel":{
+                "line": "Legend Label",
+                "bar": "Legend Label"
+            },
+            "advancedOptions":{
+                "line": "Advanced Options",
+                "bar": "Advanced Options"
             }
-
+        },
+        "dashboard": {
+            "loadingSpinner": "Loading Dashboard",
+            "saveDialog": {
+                "title": "Edit dashboard properties",
+                "name": "Name",
+                "description": "Description",
+                "namePlaceholder": "Type a name...",
+                "descriptionPlaceholder": "Type a description...",
+                "confirmCloseText": "There are pending changes, are you sure that you want to close without saving?",
+                "close": "Close",
+                "cancel": "Cancel",
+                "saveSuccessTitle": "Success",
+                "saveSuccessMessage": "Dashboard saved successfully"
+            },
+            "errors":{
+                "loading": {
+                    "title": "Error loading dashboard",
+                    "dashboardNotAccessible": "You don't have permission to access this dashboard. Please contact the resource owner",
+                    "pleaseLogin": "This dashboard is not public. Please try to login",
+                    "dashboardDoesNotExist": "The dashboard you are trying to access doesn't exist",
+                    "unknownError": "There was an error loading the dashboard. Please contact the administrator",
+                    "notFound": "Dashboard not found",
+	                "notAccessible": "Dashboard not accessible"
+                },
+                "resourceAlreadyExists": "A resource with this name already exists. try '{data}'"
+            },
+            "editor": {
+                "save": "Save the dashboard",
+                "addACardToTheDashboard": "Add a widget to the dashboard",
+                "showConnections": "Show connections",
+                "hideConnections": "HideConnections"
+            },
+            "emptyTitle": "The dashboard is empty"
         },
         "wizard": {
             "next": "Suivant",

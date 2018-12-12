@@ -28,6 +28,7 @@ const DESCRIBE_ERROR = "CATALOG:DESCRIBE_ERROR";
 const CHANGE_SELECTED_SERVICE = 'CATALOG:CHANGE_SELECTED_SERVICE';
 const CHANGE_CATALOG_MODE = 'CATALOG:CHANGE_CATALOG_MODE';
 const CHANGE_TITLE = 'CATALOG:CHANGE_TITLE';
+const CHANGE_TEXT = 'CATALOG:CHANGE_TEXT';
 const CHANGE_TYPE = 'CATALOG:CHANGE_TYPE';
 const CHANGE_AUTOLOAD = 'CATALOG:CHANGE_AUTOLOAD';
 const FOCUS_SERVICES_LIST = 'CATALOG:FOCUS_SERVICES_LIST';
@@ -82,6 +83,12 @@ function changeTitle(title) {
     return {
         type: CHANGE_TITLE,
         title
+    };
+}
+function changeText(text) {
+    return {
+        type: CHANGE_TEXT,
+        text
     };
 }
 function changeAutoload(autoload) {
@@ -250,6 +257,7 @@ module.exports = {
     ADD_SERVICE, addService,
     CHANGE_AUTOLOAD, changeAutoload,
     CHANGE_TITLE, changeTitle,
+    CHANGE_TEXT, changeText,
     CHANGE_TYPE, changeType,
     CHANGE_URL, changeUrl,
     SAVING_SERVICE, savingService,

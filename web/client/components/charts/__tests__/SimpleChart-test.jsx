@@ -63,4 +63,15 @@ describe('SimpleChart component', () => {
         const el = container.querySelector('div');
         expect(el).toExist();
     });
+    it('test chart legend and tooltip', () => {
+        ReactDOM.render(<SimpleChart data={data} xAxis={{dataKey: "name"}} series={SERIES}/>, document.getElementById("container"));
+        const container = document.getElementById('container');
+        const el = container.querySelector('div');
+        const legend = container.querySelector("div > div.recharts-legend-wrapper");
+        const tooltip = container.querySelector("div > div.recharts-tooltip-wrapper");
+        expect(el).toExist();
+        expect(legend).toExist();
+        expect(tooltip).toExist();
+
+    });
 });

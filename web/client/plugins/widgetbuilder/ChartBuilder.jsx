@@ -75,7 +75,8 @@ const chooseLayerEnhancer = compose(
 
 module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton, editorData, toggleConnection, availableDependencies = [], dependencies, ...props} = {}) =>
 
-    (<BorderLayout
+    (<div className = "mapstore-chart-advance-options">
+    <BorderLayout
         header={<BuilderHeader onClose={onClose}>
             <Toolbar
                 exitButton={exitButton}
@@ -86,4 +87,5 @@ module.exports = chooseLayerEnhancer(({ enabled, onClose = () => { }, exitButton
         </BuilderHeader>}
         >
         {enabled ? <Builder dependencies={dependencies} {...props}/> : null}
-    </BorderLayout>));
+    </BorderLayout>
+    </div>));

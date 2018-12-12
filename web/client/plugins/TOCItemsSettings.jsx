@@ -50,7 +50,7 @@ const tocItemsSettingsSelector = createSelector([
  * @prop cfg.width {number} width of panel
  * @prop cfg.showFeatureInfoTab {bool} enable/disbale feature info settings
  * @prop cfg.enableIFrameModule {bool} enable iframe in template editor of feature info, default true
- *
+ * @prop cfg.hideTitleTranslations {bool} if true hide the title translations tool
  * @example
  * {
  *   "name": "TOCItemsSettings",

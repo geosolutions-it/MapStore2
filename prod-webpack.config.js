@@ -24,7 +24,7 @@ module.exports = require('./buildConfig')(
     paths,
     extractThemesPlugin,
     true,
-    "/mapstore/dist/",
+    "dist/",
     undefined,
     [
         new HtmlWebpackPlugin({

@@ -14,7 +14,6 @@ const assign = require('object-assign');
 const ol = require('openlayers');
 const proj = require('proj4').default;
 const mapUtils = require('../../../../utils/MapUtils');
-
 require('../../../../utils/openlayers/Layers');
 require('../plugins/OSMLayer');
 require('../plugins/VectorLayer');
@@ -592,6 +591,7 @@ describe('OpenlayersMap', () => {
         const mapDiv = olMap.getViewport();
         expect(mapDiv.style.cursor).toBe("pointer");
     });
+
 
     it('test COMPUTE_BBOX_HOOK hook execution', () => {
         // instanciating the map that will be used to compute the bounfing box

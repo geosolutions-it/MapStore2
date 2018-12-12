@@ -1365,6 +1365,49 @@ describe('Openlayers layer', () => {
 
         expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("(\"prop2\" = 'value2')");
     });
+    it('test reset of cql_filter (after filterObj gets removed)', () => {
+        const options = {
+            type: "wms",
+            visibility: true,
+            name: "nurc:Arc_Sample",
+            group: "Meteo",
+            format: "image/png",
+            opacity: 1.0,
+            url: "http://sample.server/geoserver/wms",
+            filterObj: {
+                filterFields: [
+                    {
+                        groupId: 1,
+                        attribute: "prop2",
+                        exception: null,
+                        operator: "=",
+                        rowId: "3",
+                        type: "number",
+                        value: "value2"
+                    }],
+                groupFields: [{
+                    id: 1,
+                    index: 0,
+                    logic: "OR"
+                }]
+            }
+        };
+        let layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={options}
+            map={map}
+        />, document.getElementById("container"));
+        expect(layer).toExist();
+        expect(layer.layer.getSource().getParams().CQL_FILTER).toBe("(\"prop2\" = 'value2')");
+        layer = ReactDOM.render(<OpenlayersLayer
+            type="wms"
+            options={{...options, filterObj: undefined}}
+            map={map}
+        />, document.getElementById("container"));
+        expect(layer).toExist();
+        expect(layer.layer.getSource().getParams().CQL_FILTER).toBe(undefined);
+    });
+
     it('test filterObj and cql_filter combination (featuregrid active filter use this combination)', () => {
         const options = {
             type: "wms",

@@ -11,10 +11,11 @@ var expect = require('expect');
 const configureMockStore = require('redux-mock-store').default;
 const {createEpicMiddleware, combineEpics } = require('redux-observable');
 const {
-    saveDetails, SET_DETAILS_CHANGED,
-    CLOSE_DETAILS_PANEL, closeDetailsPanel,
-    openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED,
-    MAP_DELETING, MAP_DELETED, deleteMap, TOGGLE_DETAILS_SHEET
+    saveDetails, SET_DETAILS_CHANGED, MAPS_LIST_LOADING, MAPS_LIST_LOADED,
+    CLOSE_DETAILS_PANEL, closeDetailsPanel, loadMaps, MAPS_GET_MAP_RESOURCES_BY_CATEGORY,
+    openDetailsPanel, UPDATE_DETAILS, DETAILS_LOADED, getMapResourcesByCategory,
+    MAP_DELETING, MAP_DELETED, deleteMap, TOGGLE_DETAILS_SHEET,
+    saveMapResource, MAP_CREATED, DISPLAY_METADATA_EDIT, SAVING_MAP, MAP_UPDATING
 } = require('../../actions/maps');
 const { mapInfoLoaded } = require('../../actions/config');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
@@ -23,19 +24,19 @@ const {RESET_CURRENT_MAP, editMap} = require('../../actions/currentMap');
 const {CLOSE_FEATURE_GRID} = require('../../actions/featuregrid');
 
 const {
-    setDetailsChangedEpic,
+    setDetailsChangedEpic, loadMapsEpic, getMapsResourcesByCategoryEpic,
     closeDetailsPanelEpic, fetchDataForDetailsPanel,
-    fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic, storeDetailsInfoEpic} = require('../maps');
+    fetchDetailsFromResourceEpic, deleteMapAndAssociatedResourcesEpic,
+    storeDetailsInfoEpic, mapSaveMapResourceEpic} = require('../maps');
 const rootEpic = combineEpics(setDetailsChangedEpic, closeDetailsPanelEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
 
 const ConfigUtils = require('../../utils/ConfigUtils');
+const params = {start: 0, limit: 12 };
 const baseUrl = "base/web/client/test-resources/geostore/";
-ConfigUtils.getDefaults = () => ({
-    geoStoreUrl: baseUrl
-});
+
 const locale = {
     messages: {
         maps: {
@@ -81,14 +82,38 @@ const mapsState = {
         }
     }
 };
+
+const testMap = {
+        "success": true,
+        "totalCount": 13,
+        "results": [
+        {
+            "canDelete": false,
+            "canEdit": false,
+            "canCopy": true,
+            "creation": "2014-04-04 12:14:21.17",
+            "lastUpdate": "2017-05-17 10:18:11.455",
+            "description": "",
+            "id": 464,
+            "name": "TEST MAP",
+            "thumbnail": "base%2Fweb%2Fclient%2Ftest-resources%2Fimg%2Fblank.jpg",
+            "owner": "mapstore"
+        }
+        ]
+    };
 describe('maps Epics', () => {
+    const oldGetDefaults = ConfigUtils.getDefaults;
     let store;
     beforeEach(() => {
         store = mockStore();
+        ConfigUtils.getDefaults = () => ({
+            geoStoreUrl: baseUrl
+        });
     });
 
     afterEach(() => {
         epicMiddleware.replaceEpic(rootEpic);
+        ConfigUtils.getDefaults = oldGetDefaults;
     });
 
     it('test setDetailsChangedEpic', (done) => {
@@ -105,7 +130,7 @@ describe('maps Epics', () => {
                 return done(e);
             }
             done();
-        }, 100);
+        }, 50);
 
     });
     it('test setDetailsChangedEpic with details resource present', (done) => {
@@ -150,7 +175,7 @@ describe('maps Epics', () => {
                 return done(e);
             }
             done();
-        }, 100);
+        }, 50);
 
     });
     it('test fetchDataForDetailsPanel', (done) => {
@@ -288,7 +313,7 @@ describe('maps Epics', () => {
     it('test deleteMapAndAssociatedResourcesEpic, with map, details, thumbnail errors', (done) => {
         map1.thumbnail = "wronguri/data/5/";
         map1.details = "wronguri/data/6/";
-        testEpic(addTimeoutEpic(deleteMapAndAssociatedResourcesEpic), 5, deleteMap(mapId, {}), actions => {
+        testEpic(deleteMapAndAssociatedResourcesEpic, 5, deleteMap(mapId, {}), actions => {
             expect(actions.length).toBe(5);
             actions.map((action, i) => {
                 switch (action.type) {
@@ -329,7 +354,7 @@ describe('maps Epics', () => {
         });
     });
     it('test deleteMapAndAssociatedResourcesEpic, only map deleted, details and thumbnail not provided', (done) => {
-        testEpic(addTimeoutEpic(deleteMapAndAssociatedResourcesEpic), 3, deleteMap(mapId8, {}), actions => {
+        testEpic(addTimeoutEpic(deleteMapAndAssociatedResourcesEpic, 50), 3, deleteMap(mapId8, {}), actions => {
             map8.thumbnail = "NODATA";
             map8.details = "NODATA";
             expect(actions.length).toBe(3);
@@ -365,8 +390,8 @@ describe('maps Epics', () => {
     it('test deleteMapAndAssociatedResourcesEpic, map deleted, but details, thumbnail errors', (done) => {
         map8.thumbnail = "wronguri/data/5/";
         map8.details = "wronguri/data/6/";
-        testEpic(addTimeoutEpic(deleteMapAndAssociatedResourcesEpic), 6, deleteMap(mapId8, {}), actions => {
-            expect(actions.length).toBe(6);
+        testEpic(addTimeoutEpic(deleteMapAndAssociatedResourcesEpic, 50), 5, deleteMap(mapId8, {}), actions => {
+            expect(actions.length).toBe(5);
             actions.filter(a => !!a.type).map((action, i) => {
                 switch (action.type) {
                     case SHOW_NOTIFICATION:
@@ -406,8 +431,8 @@ describe('maps Epics', () => {
     it('test deleteMapAndAssociatedResourcesEpic, map, details, thumbnail deleted', (done) => {
         map8.thumbnail = "wronguri/9/";
         map8.details = "wronguri/10/";
-        testEpic(addTimeoutEpic(deleteMapAndAssociatedResourcesEpic), 4, deleteMap(mapId8, {}), actions => {
-            expect(actions.length).toBe(4);
+        testEpic(addTimeoutEpic(deleteMapAndAssociatedResourcesEpic), 3, deleteMap(mapId8, {}), actions => {
+            expect(actions.length).toBe(3);
             actions.filter(a => !!a.type).map((action) => {
                 switch (action.type) {
                     case SHOW_NOTIFICATION:
@@ -419,9 +444,6 @@ describe('maps Epics', () => {
                     case MAP_DELETED:
                         expect(action.resourceId).toBe(mapId8);
                         expect(action.result).toBe("success");
-                        break;
-                    case TEST_TIMEOUT:
-                        expect(action.type).toBe(TEST_TIMEOUT);
                         break;
                     default:
                         expect(true).toBe(false);
@@ -457,6 +479,106 @@ describe('maps Epics', () => {
             "mapId": mapId2
         }});
     });
+    it('it test loadMapsEpic when search text is a special character', (done) => {
+        const searchText = 'tes/t\?:;@=&';
+        testEpic(loadMapsEpic, 2, loadMaps(baseUrl, searchText, params), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                    case MAPS_LIST_LOADING:
+                        expect(action.searchText).toBe('test');
+                        expect(action.params).toEqual(params);
+                        break;
+                    case MAPS_GET_MAP_RESOURCES_BY_CATEGORY:
+                        expect(action.map).toBe('MAP');
+                        expect(action.searchText).toBe('test');
+                        expect(action.opts).toEqual({baseUrl, params});
+                        break;
+                    default:
+                    expect(true).toBe(false);
+                }
+            });
+        });
+        done();
+    });
+});
+describe('Get Map Resource By Category Epic', () => {
+    const oldGetDefaults = ConfigUtils.getDefaults;
+    beforeEach(() => {
+        let customUrl = "base/web/client/test-resources/geostore/extjs/search/category/MAP/test.json#";
+        ConfigUtils.getDefaults = () => ({
+            geoStoreUrl: customUrl
+        });
+    });
+    afterEach(() => {
+        ConfigUtils.getDefaults = oldGetDefaults;
+    });
+    it('test getMapsResourcesByCategoryEpic ', done => {
 
-
+        testEpic(addTimeoutEpic(getMapsResourcesByCategoryEpic), 1, getMapResourcesByCategory('MAP', 'test', {
+            baseUrl,
+            params: { start: 0, limit: 12 }
+        }), actions => {
+            expect(actions.length).toBe(1);
+            actions.map((action) => {
+                switch (action.type) {
+                    case MAPS_LIST_LOADED:
+                        expect(action.maps).toEqual(testMap);
+                        expect(action.params).toEqual(params);
+                        expect(action.searchText).toBe('test');
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        });
+    });
+});
+const Persistence = require("../../api/persistence");
+const Rx = require("rxjs");
+const api = {
+    createResource: () => Rx.Observable.of(10),
+    updateResource: () => Rx.Observable.of(10)
+};
+Persistence.addApi("test", api);
+describe('Create and update flow using persistence api', () => {
+    beforeEach(() => {
+        Persistence.setApi("test");
+    });
+    afterEach(() => {
+        Persistence.setApi("geostore");
+    });
+    it('test create flow ', done => {
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 4, saveMapResource( {}), actions => {
+            expect(actions.length).toBe(4);
+            actions.map((action) => {
+                switch (action.type) {
+                    case SAVING_MAP:
+                    case MAP_CREATED:
+                    case DISPLAY_METADATA_EDIT:
+                    case SHOW_NOTIFICATION:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        });
+    });
+    it('test update flow ', done => {
+        testEpic(addTimeoutEpic(mapSaveMapResourceEpic), 2, saveMapResource( {id: 10}), actions => {
+            expect(actions.length).toBe(2);
+            actions.map((action) => {
+                switch (action.type) {
+                    case MAP_UPDATING:
+                    case SHOW_NOTIFICATION:
+                        break;
+                    default:
+                        expect(true).toBe(false);
+                }
+            });
+            done();
+        });
+    });
 });

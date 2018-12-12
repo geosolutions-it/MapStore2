@@ -158,7 +158,7 @@ const updateOtherLinkedResourcesPermissions = (id, linkedResources, permission, 
  * @param {number} id the id of the resource to get
  * @param {options} param1 `includeAttributes` and `withData` flags, both true by default
  * @param {object} API the API to use
- * @return and observable that emits the resource
+ * @return an observable that emits the resource
  */
 const getResource = (id, { includeAttributes = true, withData = true } = {}, API = GeoStoreDAO) =>
     Rx.Observable.forkJoin([
@@ -237,6 +237,7 @@ const createResource = ({ data, category, metadata, permission: configuredPermis
  * Updates a resource setting up permission and linked resources
  * @param {resource} param0 the resource to update (must contain the id)
  * @param {object} API the API to use
+ * @return an observable that emits the id of the updated resource
  */
 const updateResource = ({ id, data, category, permission, metadata, linkedResources = {} } = {}, API = GeoStoreDAO) =>
     Rx.Observable.forkJoin([
@@ -262,10 +263,11 @@ const updateResource = ({ id, data, category, permission, metadata, linkedResour
         )
     ]).map(() => id);
 /**
- * Deletes a resource and the linked resources
+ * Deletes a resource and Its linked attributes
  * @param {object} resource the resource with the id
- * @param {object} options options
+ * @param {object} options options deleteLinkedResources default true
  * @param {object} API the API to use
+ * @return an observable that emits axios response for the deleted resource and for each of its deleted attributes
  */
 const deleteResource = ({ id }, { deleteLinkedResources = true} = {}, API = GeoStoreDAO) =>
     (deleteLinkedResources

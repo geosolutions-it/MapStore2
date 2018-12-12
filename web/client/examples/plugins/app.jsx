@@ -63,8 +63,6 @@ const startApp = () => {
 
     let customReducers;
 
-    const context = require('./context');
-
     const customReducer = (state = {}, action) => {
         if (customReducers) {
             const newState = assign({}, state);
@@ -127,12 +125,11 @@ const startApp = () => {
         applyStyle(theme, callback);
     };
 
-    const customPlugin = (callback, code) => {
+    const customPluginApply = (callback, code, context) => {
         /*eslint-disable */
         const require = context;
         try {
             customReducers = eval(Babel.transform(code, { presets: ['es2015', 'react', 'stage-0'] }).code).reducers || null;
-
             /*eslint-enable */
             userPlugin = connect(() => ({
                 template: code,
@@ -152,6 +149,13 @@ const startApp = () => {
         } catch (e) {
             store.dispatch(compileError(e.message));
         }
+    };
+
+    const customPlugin = (callback, code) => {
+        require.ensure(['./context'], (require) => {
+            const context = require('./context');
+            customPluginApply(callback, code, context);
+        });
     };
 
     const PluginConfigurator = require('./components/PluginConfigurator');

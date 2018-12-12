@@ -93,7 +93,8 @@ module.exports = {
         RulesEditorPlugin: require('../plugins/RulesEditor'),
         FloatingLegendPlugin: require('../plugins/FloatingLegend'),
         ThematicLayerPlugin: require('../plugins/ThematicLayer'),
-        CRSSelectorPlugin: require('../plugins/CRSSelector')
+        CRSSelectorPlugin: require('../plugins/CRSSelector'),
+        FeedbackMaskPlugin: require('../plugins/FeedbackMask')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

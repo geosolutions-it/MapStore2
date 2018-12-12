@@ -13,14 +13,14 @@ const {Button, Glyphicon} = require('react-bootstrap');
 const TButton = require('../../data/featuregrid/toolbars/TButton');
 
 const Message = require('../../I18N/Message');
-
+const Portal = require('../../misc/Portal');
 const {FormControl, ButtonGroup, Grid, Row, Col} = require('react-bootstrap');
 
 const ReactQuill = require('react-quill');
 require('react-quill/dist/quill.snow.css');
 
 const {isFunction} = require('lodash');
-
+const ConfirmDialog = require('../../misc/ConfirmDialog');
 const assign = require('object-assign');
 
 const Select = require('react-select');
@@ -70,14 +70,21 @@ class AnnotationsEditor extends React.Component {
         onError: PropTypes.func,
         onAddGeometry: PropTypes.func,
         onDeleteGeometry: PropTypes.func,
+        onCancelClose: PropTypes.func,
+        onConfirmClose: PropTypes.func,
+        onCancelRemove: PropTypes.func,
+        onConfirmRemove: PropTypes.func,
         onStyleGeometry: PropTypes.func,
         onSetStyle: PropTypes.func,
         onZoom: PropTypes.func,
         editing: PropTypes.object,
         drawing: PropTypes.bool,
         styling: PropTypes.bool,
+        closing: PropTypes.bool,
+        removing: PropTypes.bool,
         errors: PropTypes.object,
         showBack: PropTypes.bool,
+        mode: PropTypes.string,
         config: PropTypes.object,
         feature: PropTypes.object,
         maxZoom: PropTypes.number
@@ -272,6 +279,34 @@ class AnnotationsEditor extends React.Component {
         );
     };
 
+    renderModals = () => {
+        if (this.props.closing) {
+            return (<Portal><ConfirmDialog
+                show
+                modal
+                onClose={this.props.onCancelClose}
+                onConfirm={this.props.onConfirmClose}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                confirmButtonContent={<Message msgId="annotations.confirm" />}
+                closeText={<Message msgId="annotations.cancel" />}>
+                <Message msgId="annotations.undo" />
+            </ConfirmDialog></Portal>);
+        } else if (this.props.removing) {
+            return (<Portal><ConfirmDialog
+                show
+                modal
+                onClose={this.props.onCancelRemove}
+                onConfirm={() => this.props.onConfirmRemove(this.props.removing)}
+                confirmButtonBSStyle="default"
+                closeGlyph="1-close"
+                confirmButtonContent={<Message msgId="annotations.confirm" />}
+                closeText={<Message msgId="annotations.cancel" />}>
+                <Message msgId={this.props.mode === 'editing' ? "annotations.removegeometry" : "annotations.removeannotation"}/>
+                </ConfirmDialog></Portal>);
+        }
+    }
+
     renderError = (editing) => {
         return editing ? (Object.keys(this.props.errors)
             .filter(field => this.getConfig().fields.filter(f => f.name === field).length === 0).map(field => this.renderErrorOn(field))) : null;
@@ -287,6 +322,7 @@ class AnnotationsEditor extends React.Component {
             <div className="mapstore-annotations-info-viewer">
                 {this.renderButtons(editing)}
                 {this.renderError(editing)}
+                {this.renderModals()}
                 {this.renderBody(editing)}
             </div>
         );
@@ -324,7 +360,7 @@ class AnnotationsEditor extends React.Component {
 
     selectGlyph = (option) => {
         return this.props.onSetStyle(assign({}, this.props.editing.style, {
-            iconGlyph: option.value
+            iconGlyph: option && option.value || ""
         }));
     };
 

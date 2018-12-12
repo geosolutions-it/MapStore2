@@ -251,7 +251,7 @@ class SpatialFilter extends React.Component {
         if (showReset) {
             buttons.push({
                 glyph: 'clear-filter',
-                tooltipId: "remove",
+                tooltipId: "queryform.spatialfilter.remove",
                 onClick: () => this.resetSpatialFilter()
             });
         }

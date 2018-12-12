@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {lifecycle, withHandlers, branch, withState, compose} = require('recompose');
+const {lifecycle, withHandlers, branch, withState, compose, defaultProps} = require('recompose');
 const MapInfoUtils = require('../../../../utils/MapInfoUtils');
 const {isEqual, isArray} = require('lodash');
 
@@ -43,9 +43,10 @@ const identifyHandlers = withHandlers({
         }
         return false;
     },
-    onClose: ({hideMarker, purgeResults}) => () => {
+    onClose: ({hideMarker = () => {}, purgeResults = () => {}, closeIdentify = () => {}}) => () => {
         hideMarker();
         purgeResults();
+        closeIdentify();
     }
 });
 
@@ -61,6 +62,9 @@ const identifyHandlers = withHandlers({
  */
 const identifyLifecycle = compose(
     identifyHandlers,
+    defaultProps({
+        queryableLayersFilter: () => true
+    }),
     lifecycle({
         componentDidMount() {
             const {
@@ -100,9 +104,12 @@ const identifyLifecycle = compose(
                 if (!newProps.point.modifiers || newProps.point.modifiers.ctrl !== true || !newProps.allowMultiselection) {
                     purgeResults();
                 }
-                const queryableLayers = isArray(newProps.layers) && newProps.layers
-                    .filter(newProps.queryableLayersFilter)
-                    .filter(newProps.layer ? l => l.id === newProps.layer : () => true);
+                const queryableLayers = isArray(newProps.layers) && (newProps.queryableLayersFilter && newProps.layers
+                    .filter(newProps.queryableLayersFilter) || newProps.layers);
+                    /*
+                     * .filter(newProps.layer ? l => l.id === newProps.layer : () => true);
+                     * this line was filtering too much, i.e. see issue #3344
+                    */
                 if (queryableLayers) {
                     queryableLayers.forEach((layer) => {
                         const {url, request, metadata} = buildRequest(layer, newProps);
