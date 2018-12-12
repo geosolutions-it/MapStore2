@@ -1521,15 +1521,15 @@
             },
             "backwardStep": "Step backward",
             "forwardStep" : "Step forward",
-            "play": "play",
-            "pause": "pause",
-            "paused": "play (paused)",
-            "stop": "stop"
+            "play": "Play",
+            "pause": "Pause",
+            "paused": "Play (paused)",
+            "stop": "Stop"
         },
         "timeline": {
             "currentTime": "Go to current time",
-            "rangeStart":"go to the current time range",
-            "rangeEnd" : "go to the current time range",
+            "rangeStart":"Go to the current time range",
+            "rangeEnd" : "Go to the current time range",
             "hideLayerName" : "Hide layers names",
             "showLayerName" : "Show layers names",
             "enableRange": "Enable time range",

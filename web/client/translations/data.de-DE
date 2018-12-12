@@ -1520,9 +1520,9 @@
             },
             "backwardStep": "Schritt zurück",
             "forwardStep" : "Schritt vorwärts",
-            "play": "abspielen",
+            "play": "Abspielen",
             "pause": "Pause",
-            "paused": "abspielen (pausiert)",
+            "paused": "Abspielen (pausiert)",
             "stop": "Stopp"
         },
         "timeline": {

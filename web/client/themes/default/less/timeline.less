@@ -21,6 +21,15 @@
             font-weight: bold;
         }
     }
+    .ms-timeline-expand {
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(-50%, -100%);
+        border-top-left-radius: 50%;
+        border-top-right-radius: 50%;
+        height: 20px;
+    }
 
     .vis-custom-time {
 
@@ -132,6 +141,9 @@
         padding: 2px;
         z-index: 50;
         .shadow-soft;
+        .timeline-plugin-btn-group {
+            display: flex;
+        }
         h4 {
             margin-left: 8px;
             margin-right: 8px;
@@ -143,6 +155,23 @@
         .timeline-plugin-toolbar-right {
             margin-right: 2px;
             margin-left: auto;
+        }
+        &.ms-collapsed {
+            flex-direction: column;
+            .ms-inline-datetime {
+                margin-right: 0;
+                padding-right: 8px;
+                border-right: none;
+                align-self: flex-start;
+                + .timeline-plugin-btn-group {
+                    margin-top: 2px;
+                    padding-top: 2px;
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    border-top: 1px solid @ms2-color-shade-lighter;
+                }
+            }
         }
     }
 
@@ -337,6 +366,9 @@
     padding-right: 8px;
     border-right: 1px solid @ms2-color-shade-lighter;
     background-color: @ms2-color-background;
+    min-height: @square-btn-medium-size;
+    display: flex;
+    align-items: center;
     .form-group {
         display: flex;
         align-items: center;
@@ -382,10 +414,15 @@
 .playback-plugin {
     .ms-playback-settings {
         position: absolute;
-        bottom: 65px;
+        overflow: auto;
+        right: @square-btn-small-size * 2;
+        top: 0;
+        transform: ~"translateY(calc(-100% - 5px))";
         padding: 8px;
         background-color: @ms2-color-background;
-        .shadow-soft;
+        min-width: 300px;
+        .shadow-far;
+
         h4 {
             font-size: @font-size-h4;
             margin-left: 0;
