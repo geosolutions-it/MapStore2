@@ -8,32 +8,28 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
-const { Glyphicon, ListGroupItem, ListGroup, FormControl, Dropdown, Button: ButtonRB } = require('react-bootstrap');
-const tooltip = require('../../misc/enhancers/tooltip');
-const Button = tooltip(ButtonRB);
+const { ListGroupItem, ListGroup, FormControl } = require('react-bootstrap');
 const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
-
 
 class CustomMenu extends React.Component {
     static propTypes = {
         selected: PropTypes.string,
         value: PropTypes.string,
-        label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
+        changeInputValue: PropTypes.func,
         availableCRS: PropTypes.object,
         filterAllowedCRS: PropTypes.array,
         projectionDefs: PropTypes.array,
         additionalCRS: PropTypes.object,
-        crs: PropTypes.string,
-        enabled: PropTypes.bool,
-        onCRSChange: PropTypes.func,
-        useRawInput: PropTypes.bool
+        onSelectCrs: PropTypes.func
     };
+
     static defaultProps = {
-        value: '',
         availableCRS: CoordinatesUtils.getAvailableCRS(),
-        crs: null,
-        onCRSChange: function() {}
-    };
+        selected: 'EPSG:3857',
+        value: '',
+        changeInputValue: () => {},
+        onSelectCrs: () => {}
+    }
 
     render() {
         const { children } = this.props;
@@ -50,7 +46,7 @@ class CustomMenu extends React.Component {
                     <div>{this.props.selected}</div>
                 </ListGroupItem>
                 <ListGroup style={{ maxHeight: 150, overflowY: 'auto', marginBottom: 0}}>
-                    {React.Children.toArray(children).filter(
+                    {children.filter(
                         child => !this.props.value.trim() || child.props.children.indexOf(this.props.value) !== -1
                     )}
                 </ListGroup>
@@ -67,9 +63,9 @@ class CustomMenu extends React.Component {
         );
     }
 
-    // handleChange = (e) => {
-    //     this.setState({ value: e.target.value });
-    // }
+    handleChange = (e) => {
+        this.props.changeInputValue(e.target.value);
+    }
 
     focusNext = () => {
         const input = ReactDOM.findDOMNode(this.input);
