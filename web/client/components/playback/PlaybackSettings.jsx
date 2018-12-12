@@ -125,13 +125,15 @@ module.exports = ({
                 glyph="play"
                 date={playbackRange.startPlaybackTime}
                 onUpdate={startPlaybackTime => setPlaybackRange(getPlaybackRange({ ...playbackRange, startPlaybackTime }))}
-                style={dateSelectorStyle} />
+                style={dateSelectorStyle}
+                showButtons />
             <InlineDateTimeSelector
                 glyph="stop"
                 tooltipId="playback.settings.range.animationEnd"
                 date={playbackRange.endPlaybackTime}
                 onUpdate={endPlaybackTime => setPlaybackRange(getPlaybackRange({ ...playbackRange, endPlaybackTime }))}
-                style={dateSelectorStyle} />
+                style={dateSelectorStyle}
+                showButtons />
         </FormGroup>
     </SwitchPanel>
     <FormGroup controlId="formPlaybackFollowingMode">
