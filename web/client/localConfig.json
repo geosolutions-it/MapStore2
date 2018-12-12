@@ -300,7 +300,17 @@
                 "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
                 "additionalCRS": {}
               }
-            }, {
+            },
+            {
+                "name": "CRSSelector",
+                "cfg":{
+                    "additionalCRS": {
+                        "EPSG:3003": { "label": "EPSG:3003" }
+                    },
+                    "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"]
+                }
+            },
+            {
                 "name": "Search",
                 "cfg": {
                   "withToggle": ["max-width: 768px", "min-width: 768px"]
@@ -345,15 +355,6 @@
               "cfg": {
                 "externalCookieUrl" : "",
                 "declineUrl" : "http://www.google.com"
-                }
-            },
-            {
-                "name": "CRSSelector",
-                "cfg":{
-                    "additionalCRS": {
-                        "EPSG:3003": { "label": "EPSG:3003" }
-                    },
-                    "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"]
                 }
             },
             "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets",

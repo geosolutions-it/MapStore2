@@ -12,14 +12,13 @@ const assign = require('object-assign');
 const { Glyphicon, Dropdown, Button: ButtonRB, ListGroupItem } = require('react-bootstrap');
 const tooltip = require('../components/misc/enhancers/tooltip');
 const Button = tooltip(ButtonRB);
-const {compose} = require('recompose');
 const {changeMapCrs} = require('../actions/map');
 const {setInputValue} = require('../actions/crsselector');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
 const {connect} = require('react-redux');
 const CustomMenu = require('../components/mapcontrols/crsselectormenu/crsSelectormenu');
 const {projectionDefsSelector} = require('../selectors/map');
-const {crsInputValueSelector, selectedProjectionSelector, projectionsList} = require('../selectors/crsselector');
+const {crsInputValueSelector, selectedProjectionSelector} = require('../selectors/crsselector');
 
 class Selector extends React.Component {
     static propTypes = {
@@ -44,7 +43,7 @@ class Selector extends React.Component {
     };
 
     render() {
-        var label;
+
         var list = [];
         let availableCRS = {};
         if (Object.keys(this.props.availableCRS).length) {
@@ -52,9 +51,7 @@ class Selector extends React.Component {
         }
         for (let crs in availableCRS) {
             if (availableCRS.hasOwnProperty(crs)) {
-
-                label = availableCRS[crs].label;
-                list.push({value: label});
+                list.push({value: crs});
             }
         }
         return (<Dropdown
@@ -104,8 +101,10 @@ const crsSelector = connect(
 module.exports = {
     CRSSelectorPlugin: assign(crsSelector, {
         MapFooter: {
+            name: "crsSelector",
             position: 10,
-            tool: true
+            tool: true,
+            priority: 1
         }
     }),
     reducers: {crsselector: require('../reducers/crsselector')},
