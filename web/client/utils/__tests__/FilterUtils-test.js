@@ -265,7 +265,7 @@ describe('FilterUtils', () => {
         let filterParts = FilterUtils.toOGCFilterParts(objFilter, versionOGC, nsplaceholder);
         expect(filterParts[0]).toEqual('<ogc:PropertyIsEqualTo><ogc:PropertyName>prop</ogc:PropertyName><ogc:Literal>value</ogc:Literal></ogc:PropertyIsEqualTo>');
     });
-    it('Check date field', () => {
+    it('Check date field >< operator', () => {
         const versionOGC = "1.1.0";
         const nsplaceholder = "ogc";
         const startDate = "2000-01-01T00:00:00.000Z";
