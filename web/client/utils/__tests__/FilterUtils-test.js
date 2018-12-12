@@ -265,6 +265,52 @@ describe('FilterUtils', () => {
         let filterParts = FilterUtils.toOGCFilterParts(objFilter, versionOGC, nsplaceholder);
         expect(filterParts[0]).toEqual('<ogc:PropertyIsEqualTo><ogc:PropertyName>prop</ogc:PropertyName><ogc:Literal>value</ogc:Literal></ogc:PropertyIsEqualTo>');
     });
+    it('Check date field', () => {
+        const versionOGC = "1.1.0";
+        const nsplaceholder = "ogc";
+        const startDate = "2000-01-01T00:00:00.000Z";
+        const endDate = "3000-01-01T00:00:00.000Z";
+        const objFilter = {
+            featureTypeName: "topp:states",
+            groupFields: [{
+                id: 1,
+                logic: "OR",
+                index: 0
+            }],
+            filterFields: [{
+                attribute: "attributeEmpty",
+                groupId: 1,
+                exception: null,
+                operator: "><",
+                rowId: "1",
+                type: "date",
+                value: {
+                    startDate: new Date(startDate),
+                    endDate: new Date(endDate)
+                }
+            }],
+            spatialField: {
+                method: null,
+                operation: "INTERSECTS",
+                geometry: null,
+                attribute: "the_geom"
+            },
+            pagination: {
+                startIndex: 0,
+                maxFeatures: 20
+            },
+            filterType: "OGC",
+            ogcVersion: "1.1.0",
+            sortOptions: null
+        };
+
+        let filterParts = FilterUtils.toOGCFilterParts(objFilter, versionOGC, nsplaceholder);
+        expect(filterParts[0]).toEqual('<ogc:Or><ogc:PropertyIsBetween>'
+            + '<ogc:PropertyName>attributeEmpty</ogc:PropertyName>'
+                + '<ogc:LowerBoundary><ogc:Literal>' + startDate + '</ogc:Literal></ogc:LowerBoundary>'
+                + '<ogc:UpperBoundary><ogc:Literal>' + endDate + '</ogc:Literal></ogc:UpperBoundary>'
+            + '</ogc:PropertyIsBetween></ogc:Or>');
+    });
     it('Check  for options.cqlFilter are merged with existing fields', () => {
         const versionOGC = "1.1.0";
         const nsplaceholder = "ogc";
