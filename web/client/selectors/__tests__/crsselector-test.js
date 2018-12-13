@@ -7,7 +7,7 @@
 */
 
 const expect = require('expect');
-const {crsInputValueSelector, selectedProjectionSelector} = require('../crsselector');
+const {crsInputValueSelector} = require('../crsselector');
 describe('Test layers selectors', () => {
     it('test crsInputValueSelector', () => {
         const props = crsInputValueSelector({crsselector: {value: 'EPSG:4326'}});
@@ -15,12 +15,4 @@ describe('Test layers selectors', () => {
         expect(props).toExist();
         expect(props).toBe('EPSG:4326');
     });
-
-    it('test selectedProjectionSelector', () => {
-        const props = selectedProjectionSelector({crsselector: {selected: 'EPSG:4326'}});
-        expect(props).toExist();
-        expect(props).toBe('EPSG:4326');
-
-    });
-
 });

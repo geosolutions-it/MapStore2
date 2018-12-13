@@ -21,14 +21,4 @@ describe('Test the mousePosition reducer', () => {
         expect(state.value).toBe('EPSG:4326');
     });
 
-    it('Change the selected projection', () => {
-        let testAction = {
-            type: 'CHANGE_MAP_CRS',
-            crs: 'EPSG:4326'
-        };
-        let state = crsSelect( {}, testAction);
-        expect(state).toExist();
-        expect(state.selected).toBe('EPSG:4326');
-    });
-
 });

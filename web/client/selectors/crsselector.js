@@ -7,10 +7,8 @@
  */
 
 const crsInputValueSelector = state => state && state.crsselector && state.crsselector.value;
-const selectedProjectionSelector = state => state && state.crsselector && state.crsselector.selected;
 
 
 module.exports = {
-    crsInputValueSelector,
-    selectedProjectionSelector
+    crsInputValueSelector
 };

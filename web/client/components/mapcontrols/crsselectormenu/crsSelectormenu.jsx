@@ -9,26 +9,17 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
 const { ListGroupItem, ListGroup, FormControl } = require('react-bootstrap');
-const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
 class CustomMenu extends React.Component {
     static propTypes = {
         selected: PropTypes.string,
         value: PropTypes.string,
-        changeInputValue: PropTypes.func,
-        availableCRS: PropTypes.object,
-        filterAllowedCRS: PropTypes.array,
-        projectionDefs: PropTypes.array,
-        additionalCRS: PropTypes.object,
-        onSelectCrs: PropTypes.func
+        changeInputValue: PropTypes.func
     };
 
     static defaultProps = {
-        availableCRS: CoordinatesUtils.getAvailableCRS(),
-        selected: 'EPSG:3857',
         value: '',
-        changeInputValue: () => {},
-        onSelectCrs: () => {}
+        changeInputValue: () => {}
     }
 
     render() {
@@ -40,7 +31,7 @@ class CustomMenu extends React.Component {
                 right: 0
             }}>
                 <ListGroupItem
-                    className="ms-prj-header"
+                className="ms-prj-header"
                     bsSize="sm">
                     <div>Selected:</div>
                     <div>{this.props.selected}</div>

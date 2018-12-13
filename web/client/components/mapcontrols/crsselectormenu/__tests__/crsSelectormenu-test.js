@@ -14,10 +14,14 @@ describe('crsSelectormenu component', () => {
         setTimeout(done);
     });
     it('crsSelectormenu rendering with defaults', () => {
-        ReactDOM.render(<CustomMenu>
+        ReactDOM.render(<CustomMenu selected={'EPSG:4326'} >
             [<ListGroupItem
-            key={'EPSG:4326'} eventKey={'EPSG:4326'}>
+            key={'EPSG:4326'} eventKey={'EPSG:4326'} selected={'EPSG:4326'}>
                 EPSG:4326
+            </ListGroupItem>,
+            <ListGroupItem
+            key={'EPSG:4266'} eventKey={'EPSG:4266'} selected={'EPSG:4266'}>
+                EPSG:4266
             </ListGroupItem>]</CustomMenu>, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.dropdown-menu');
