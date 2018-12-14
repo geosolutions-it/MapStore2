@@ -54,7 +54,8 @@ const WidgetsBar = compose(
     ),
     defaultProps({
         btnGroupProps: {
-            className: "widgets-toolbar"
+            className: "widgets-toolbar",
+            style: { marginLeft: 2, marginRight: 2 }
         }
     }),
     withProps( ({btnGroupProps = {}, btnDefaultProps = {}}) => ({
@@ -70,21 +71,12 @@ const WidgetsBar = compose(
 )(require('../../components/widgets/view/WidgetsBar'));
 
 /**
- * The title of the tray
- */
-const TrayTitle = () =>
-    (<span style={{ order: -1, margin: 2, marginRight: 5 }}>
-        <Message msgId="widgets.tray.title" />
-    </span>);
-
-/**
  * Button that allows collapse/Expand functionality of the tray.
  * @param {object} props
  */
 const CollapseTrayButton = ({expanded, onClick=() => {}} = {}) =>
     (<Button
         tooltipId={expanded ? "widgets.tray.collapseTray" : "widgets.tray.expandTray"}
-        style={{ order: -1}}
         bsSize="xsmall"
         bsStyle="primary"
         onClick={onClick}>
@@ -108,7 +100,7 @@ const CollapseAllButton = connect(
     (<Button
         tooltipId={ shouldExpand ? "widgets.tray.expandAll" : "widgets.tray.collapseAll"}
         bsStyle={ shouldExpand ? "primary" : undefined}
-        style={{ order: -1 }}
+
         bsSize="xsmall"
         onClick={onClick}>
             <Glyphicon glyph={"list"} />
@@ -144,9 +136,8 @@ class WidgetsTray extends React.Component {
                 }}>
                 <BorderLayout
                     columns={[
-                        <CollapseTrayButton expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)}/>,
                         <CollapseAllButton />,
-                        <TrayTitle />
+                        <CollapseTrayButton expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)}/>
                     ]}
                 >{this.props.expanded ? <WidgetsBar /> : null}
                 </BorderLayout>
