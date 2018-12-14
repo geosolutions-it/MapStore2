@@ -77,6 +77,7 @@ const getWidgetsDependenciesGroups = createSelector(
     widgets => getWidgetsGroups(widgets)
 );
 const getFloatingWidgetsLayout = state => get(state, `widgets.containers[${DEFAULT_TARGET}].layouts`);
+const getFloatingWidgetsCurrentLayout = state => get(state, `widgets.containers[${DEFAULT_TARGET}].layout`);
 
 const getDashboardWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
 
@@ -86,6 +87,7 @@ module.exports = {
     getCollapsedState,
     getCollapsedIds,
     getFloatingWidgetsLayout,
+    getFloatingWidgetsCurrentLayout,
     // let's use the same container for the moment
     getDashboardWidgets,
     dashboardHasWidgets: state => (getDashboardWidgets(state) || []).length > 0,

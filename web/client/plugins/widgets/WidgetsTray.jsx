@@ -7,18 +7,17 @@
  */
 const React = require('react');
 const PropTypes = require('prop-types');
-const {connect} = require('react-redux');
-const { compose, withProps, withState, defaultProps} = require('recompose');
-const {createSelector} = require('reselect');
-const { findIndex } = require('lodash');
+const { connect } = require('react-redux');
+const { compose, withProps, withState, defaultProps } = require('recompose');
+const { createSelector } = require('reselect');
+const { find, findIndex, sortBy } = require('lodash');
 const tooltip = require('../../components/misc/enhancers/tooltip');
 
-const {Glyphicon, Button: BButton} = require('react-bootstrap');
+const { Glyphicon, Button: BButton } = require('react-bootstrap');
 const Button = tooltip(BButton);
-const { getFloatingWidgets, getVisibleFloatingWidgets, getCollapsedIds } = require('../../selectors/widgets');
+const { getFloatingWidgets, getVisibleFloatingWidgets, getFloatingWidgetsCurrentLayout, getCollapsedIds, getCollapsedState } = require('../../selectors/widgets');
 const { toggleCollapse, toggleCollapseAll } = require('../../actions/widgets');
 
-const Message = require('../../components/I18N/Message');
 const BorderLayout = require('../../components/layout/BorderLayout');
 const noHiddenOrStaticWidgets = w => !w.hide && (!w.dataGrid || !w.dataGrid.static);
 /**
@@ -28,14 +27,28 @@ const noHiddenOrStaticWidgets = w => !w.hide && (!w.dataGrid || !w.dataGrid.stat
 const trayWidgets = createSelector(
     getFloatingWidgets,
     getCollapsedIds,
-    (widgets = [], collapsedIds) => widgets
+    getFloatingWidgetsCurrentLayout,
+    getCollapsedState,
+    (widgets = [], collapsedIds, layout, collapsed = {}) =>
+        // sort, filter and add collapsed state to the widgets
+        sortBy(
+            // only non-static non-hidden widgets should be visible in tray
+            widgets
             .filter(noHiddenOrStaticWidgets)
+            // collapsed widgets should have the flag - Collapsed
             .map(w => findIndex(collapsedIds, id => id === w.id) >= 0
                 ? {
                     ...w,
                     collapsed: true
                 }
-                : w)
+                : w),
+            // sort by layout position (row, column)
+            w => {
+                const collapsedLayout = collapsed[w.id] && collapsed[w.id].layout;
+                const position = find(layout, { i: w.id }) || collapsedLayout || {};
+                const { x = 0, y = 0 } = position;
+                return y * 100 + x;
+            })
 );
 
 /**
@@ -46,7 +59,7 @@ const WidgetsBar = compose(
     connect(
         createSelector(
             trayWidgets,
-            widgets => ({widgets})
+            widgets => ({ widgets })
         ),
         {
             onClick: toggleCollapse
@@ -58,7 +71,7 @@ const WidgetsBar = compose(
             style: { marginLeft: 2, marginRight: 2 }
         }
     }),
-    withProps( ({btnGroupProps = {}, btnDefaultProps = {}}) => ({
+    withProps(({ btnGroupProps = {}, btnDefaultProps = {} }) => ({
         btnGroupProps: {
             bsSize: "xsmall",
             ...btnGroupProps
@@ -67,20 +80,20 @@ const WidgetsBar = compose(
             bsSize: "xsmall",
             ...(btnDefaultProps || {})
         }
-    })),
+    }))
 )(require('../../components/widgets/view/WidgetsBar'));
 
 /**
  * Button that allows collapse/Expand functionality of the tray.
  * @param {object} props
  */
-const CollapseTrayButton = ({expanded, onClick=() => {}} = {}) =>
+const CollapseTrayButton = ({ expanded, onClick = () => { } } = {}) =>
     (<Button
         tooltipId={expanded ? "widgets.tray.collapseTray" : "widgets.tray.expandTray"}
         bsSize="xsmall"
         bsStyle="primary"
         onClick={onClick}>
-            <Glyphicon glyph={expanded ? "chevron-right" : "chevron-left"} />
+        <Glyphicon glyph={expanded ? "chevron-right" : "chevron-left"} />
     </Button>);
 
 /**
@@ -89,21 +102,21 @@ const CollapseTrayButton = ({expanded, onClick=() => {}} = {}) =>
 const CollapseAllButton = connect(
     createSelector(
         getVisibleFloatingWidgets,
-        ( visible = [] ) => ({
+        (visible = []) => ({
             shouldExpand: visible.filter(noHiddenOrStaticWidgets).length === 0
         })
     ), // TODO: get all collapsed
     {
         onClick: () => toggleCollapseAll()
     }
-)(({ onClick = () => { }, shouldExpand = false} = {}) =>
+)(({ onClick = () => { }, shouldExpand = false } = {}) =>
     (<Button
-        tooltipId={ shouldExpand ? "widgets.tray.expandAll" : "widgets.tray.collapseAll"}
-        bsStyle={ shouldExpand ? "primary" : undefined}
+        tooltipId={shouldExpand ? "widgets.tray.expandAll" : "widgets.tray.collapseAll"}
+        bsStyle={shouldExpand ? "primary" : undefined}
 
         bsSize="xsmall"
         onClick={onClick}>
-            <Glyphicon glyph={"list"} />
+        <Glyphicon glyph={"list"} />
     </Button>));
 
 
@@ -122,7 +135,7 @@ class WidgetsTray extends React.Component {
     static defaultProps = {
         enabled: true,
         expanded: false,
-        setExpanded: () => {}
+        setExpanded: () => { }
     };
     render() {
         return this.props.enabled
@@ -137,23 +150,23 @@ class WidgetsTray extends React.Component {
                 <BorderLayout
                     columns={[
                         <CollapseAllButton />,
-                        <CollapseTrayButton expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)}/>
+                        <CollapseTrayButton expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />
                     ]}
                 >{this.props.expanded ? <WidgetsBar /> : null}
                 </BorderLayout>
-                </div>)
-        : null;
+            </div>)
+            : null;
     }
 }
 module.exports = compose(
     withState("expanded", "setExpanded", false),
     connect(createSelector(
-            trayWidgets,
-            (widgets = []) => ({
-                hasTrayWidgets: widgets.length > 0
-            })
+        trayWidgets,
+        (widgets = []) => ({
+            hasTrayWidgets: widgets.length > 0
+        })
     )),
-    withProps(({ enabled, hasTrayWidgets}) => ({
+    withProps(({ enabled, hasTrayWidgets }) => ({
         enabled: enabled && hasTrayWidgets
     }))
 )(WidgetsTray);
