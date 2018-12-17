@@ -2,7 +2,7 @@
 
 This guide wants to provide general information and suggestions about how to write code for MapStore2.
 
- * Writing plugins - TODO (@mbarto)
+ * [Writing plugins](plugins-howto)
  * Writing components - TODO TBD
  * Writing actions and reducers - TODO (@MV88)
  * [Writing epics](writing-epics) - IN PROGRESS (@offtherailz)
