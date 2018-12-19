@@ -8,10 +8,15 @@
 const expect = require('expect');
 
 var dimension = require('../dimension');
-const { updateLayerDimensionData } = require('../../actions/dimension');
+const { updateLayerDimensionData, setCurrentTime, setCurrentOffset, moveTime } = require('../../actions/dimension');
 const { layerDimensionDataSelectorCreator } = require('../../selectors/dimension');
 
 describe('Test the dimension reducer', () => {
+    it('external action', () => {
+        const oldState = { something: "something"};
+        const state = dimension(oldState, {type: "NO_ACTION"});
+        expect(state).toBe(oldState);
+    });
     it('dimension updateLayerDimensionData', () => {
         const action = updateLayerDimensionData("TEST_LAYER", "time", {
             name: "time",
@@ -29,11 +34,11 @@ describe('Test the dimension reducer', () => {
             node: 'sample1'
         };
         const initialState = {
-          currentTime: '00:00:00z',
-          data: {
-              dimension1: { sample1: {}, sample2: {}},
-              dimension2: { sample2: {}}
-          }
+            currentTime: '00:00:00z',
+            data: {
+                dimension1: { sample1: {}, sample2: {}},
+                dimension2: { sample2: {}}
+            }
         };
         const state = dimension(initialState, action);
         expect(state).toExist();
@@ -44,13 +49,13 @@ describe('Test the dimension reducer', () => {
             dimension: state
         })).toExist();
     });
-    it('removing a layer when there is no data in dimensin state', () => {
+    it('removing a layer when there is no data in dimension state', () => {
         const action = {
             type: 'REMOVE_NODE',
             node: 'sample'
         };
         const initialState = {
-          currentTime: '00:00:00z'
+            currentTime: '00:00:00z'
         };
         const state = dimension(initialState, action);
         expect(state).toExist();
@@ -61,10 +66,48 @@ describe('Test the dimension reducer', () => {
         };
         const initialState = {
             currentTime: '00:00:00z'
-          };
+        };
         const state = dimension(initialState, action);
         expect(state).toExist();
         expect(state.currentTime).toNotExist();
+    });
+    it('setCurrentTime', () => {
+        const NEXT_TIME = '2016-09-03T00:00:00.000Z';
+        const action = setCurrentTime(NEXT_TIME);
+        const state = dimension( undefined, action);
+        expect(state).toExist();
+        expect(state.currentTime).toBe(NEXT_TIME);
+    });
+    it('setCurrentOffset', () => {
+        const NEXT_TIME = '2016-09-03T00:00:00.000Z';
+        const action = setCurrentOffset(NEXT_TIME);
+        const state = dimension(undefined, action);
+        expect(state).toExist();
+        expect(state.offsetTime).toBe(NEXT_TIME);
+    });
+    it('moveTime', () => {
+        const d = {
+            currentTime: '2016-09-01T00:00:00.000Z'
+        };
+        const NEXT_TIME = '2016-09-03T00:00:00.000Z';
+        const action = moveTime(NEXT_TIME);
+        const state = dimension(d, action);
+        expect(state).toExist();
+        expect(state.currentTime).toBe(NEXT_TIME);
+        expect(state.offsetTime).toNotExist();
+    });
+    it('moveTime with offset', () => {
+        const d = {
+            currentTime: '2016-09-01T00:00:00.000Z',
+            offsetTime: '2016-09-02T00:00:00.000Z'
+        };
+        const NEXT_TIME = '2016-09-03T00:00:00.000Z';
+        const action = moveTime(NEXT_TIME);
+        const state = dimension(d, action);
+        expect(state).toExist();
+        expect(state.currentTime).toBe(NEXT_TIME);
+        // also offset time should shift of old offsetTime - currentTime from NEXT_TIME
+        expect(state.offsetTime).toBe('2016-09-04T00:00:00.000Z');
     });
 
 });

@@ -6,9 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 var expect = require('expect');
-const { updateMetadata, play, pause, stop, setFrames, appendFrames, setCurrentFrame, changeSetting, STATUS } = require('../../actions/playback');
+const { updateMetadata, play, pause, stop, setFrames, appendFrames, setCurrentFrame, changeSetting, selectPlaybackRange, framesLoading, STATUS } = require('../../actions/playback');
 const playback = require('../playback');
 describe('playback reducer', () => {
+    it('default', () => {
+        const oldState = {};
+        const state = playback(oldState, {type: "NO_ACTION"});
+        expect(state).toExist();
+        expect(state).toBe(oldState);
+    });
     it('playback play', () => {
         const action = play();
         const state = playback( undefined, action);
@@ -86,5 +92,20 @@ describe('playback reducer', () => {
         expect(state.frame).toNotExist();
         expect(state.currentFrame).toBe(-1);
     });
-
+    it('playback selectPlaybackRange', () => {
+        const range = {
+            startPlaybackRange: "2017-11-29T16:17:46.520Z",
+            endPlaybackRange: "2017-12-29T16:17:46.520Z"
+        };
+        const action = selectPlaybackRange(range);
+        const state = playback( undefined, action);
+        expect(state).toExist();
+        expect(state.playbackRange).toBe(range);
+    });
+    it('playback framesLoading', () => {
+        const action = framesLoading(true);
+        const state = playback( undefined, action);
+        expect(state).toExist();
+        expect(state.framesLoading).toBe(true);
+    });
 });
