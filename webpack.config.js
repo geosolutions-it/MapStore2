@@ -18,5 +18,5 @@ module.exports = require('./buildConfig')(
     },
     extractThemesPlugin,
     false,
-    "/dist/"
+    "dist/"
 );

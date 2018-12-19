@@ -26,13 +26,15 @@ You can configure MapStore2 to provide to the user only a restricted list of sel
 "defaultState":
 {
     "locales": {
-        "en": {
-            code: "en-EN",
-            description: "English"
-        },
-        "it": {
-            code: "it-IT",
-            description: "Italiano"
+        "supportedLocales": {
+            "en": {
+                "code": "en-EN",
+                "description": "English"
+            },
+            "it": {
+                "code": "it-IT",
+                "description": "Italiano"
+            }
         }
     }
 }

@@ -12,7 +12,7 @@
         "about_ul0_li0": "MapViewer je jednostavni preglednik predefiniranih karata (po izboru pohranjenih u bazi koristeći GeoStore)",
         "about_ul0_li1": "MapPublisher je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd. Za više informacija provjerite",
         "about_h20": "Licenca",
-        "about_p3": "MapStore je slobodan softver otvorenoga koda, baziran je na OpenLayers 3, Leaflet i ReactJS bibiliotekama i licenciran je pod Simplified BSD License.",
+        "about_p3": "MapStore je slobodan softver otvorenoga koda, baziran je na OpenLayers 3, Leaflet i ReactJS bibliotekama i licenciran je pod jednostavnom BSD licencom.",
         "about_p5-0": "Za više informacija posjetite",
         "about_a0": "ovu",
         "about_p5-1": "stranicu.",
@@ -103,7 +103,7 @@
             "tooltipActivate": "Uđi u 3D prikaz"
         },
         "cookie":{
-            "info": "Ova stranica koristi kolačiće za pružanje boljeg korisničkog iskustva i funkcionalnosti. Postavke kolačića mogu se kontrolirati i konfigurirati u vašem web pregledniku.",
+            "info": "Ova stranica koristi kolačiće za pružanje boljeg korisničkog iskustva i funkcionalnosti. Postavke kolačića mogu se kontrolirati i prilagoditi u vašem web pregledniku.",
             "moreDetailsButton": "Više detalja",
             "leave": "Napusti",
             "accept": "Prihvati"
@@ -266,7 +266,7 @@
             "resource": {
                 "deleteResource": "Izbriši",
                 "editResource": "Uredi svojstva",
-                "addToFeatured": "Dodaj odabranome",
+                "addToFeatured": "Dodaj odabranom",
                 "removeFromFeatured": "Ukloni sa odabranoga",
                 "showDetails": "Prikaži detalje"
             },
@@ -288,7 +288,7 @@
             }
         },
         "map": {
-            "errorLoadingFont": "The font family {family} is not correctly loaded. Some elements (like symbols in markers) can have rendering problems",
+            "errorLoadingFont": "Grupa fontova {family} nije ispravno učitana. Neki elementi (poput simbola u markerima) mogu imati problema u prikazu",
             "loading": "Učitavanje...",
             "loadingSpinner": "Učitavanje karte",
             "loadingerror": "Greška prilikom učitavanja",
@@ -313,7 +313,7 @@
                 "errorDefault": "Mrežna greška"
             },
             "mapError": {
-                "errorTitle": "Cannot save current map",
+                "errorTitle": "Nije moguće spremiti trenutnu kartu",
                 "error403": "Nemate dozvole za ažuriranje karte",
                 "error404": "Došlo je do pogreške prilikom stvaranja karte",
                 "error409": "Karta sa tim imenom već postoji",
@@ -363,9 +363,9 @@
             "displayLegendAndTools": "Prikaži kazalo i alate",
             "zoomToLayerExtent": "Prikaži puni opseg sloja",
             "addLayer": "Dodaj sloj",
-            "toolZoomToLayerTooltip": "Prikaži puni opseg odabranog sloja",
+            "toolZoomToLayerTooltip": "Prikaži puni opseg odabranoga sloja",
             "toolZoomToLayersTooltip": "Prikaži puni opseg odabranih slojeva",
-            "toolLayerSettingsTooltip": "Svojstva odabranog sloja",
+            "toolLayerSettingsTooltip": "Svojstva odabranoga sloja",
             "toolGroupSettingsTooltip": "Svojstva odabrane grupe",
             "toolTrashLayerTooltip": "Ukloni odabrani sloj",
             "toolTrashLayersTooltip": "Ukloni odabrane slojeve",
@@ -374,7 +374,7 @@
             "noFilteredResults": "Nema rezultata",
             "filterPlaceholder": "Filtriraj slojeve",
             "clearFilter": "Očisti filter",
-            "toolReloadLayerTooltip": "Ponovno učitavanje odabranog sloja",
+            "toolReloadLayerTooltip": "Ponovno učitavanje odabranoga sloja",
             "toolReloadLayersTooltip": "Ponovno učitavanje odabranih slojeva",
             "statusIconOpen": "Zatvori grupu",
             "statusIconClose": "Otvori grupu",
@@ -487,7 +487,7 @@
         "expandtoolbar": {
             "tooltip": "Proširi / Suzi"
         },
-        "getFeatureInfoTitle": "Informacije o objekima",
+        "getFeatureInfoTitle": "Informacije o objektima",
         "identifyTitle": "Informacije o objektu",
         "identifyNoQueryableLayers": "Nema aktivnih slojeva za dohvat informacija",
         "identifyRevGeocodeHeader": "Koordinate",
@@ -530,7 +530,7 @@
         },
         "search":{
             "placeholder": "Pretraži po imenu lokacije ili koordinatama ...",
-            "searchservicesbutton": "Konfiguriraj servise preraživanja",
+            "searchservicesbutton": "Konfiguriraj servise pretraživanja",
             "configpaneltitle": "Kreiraj/izmijeni servis pretraživanja",
             "serviceslistlabel": "Dostupni servisi",
             "overriedservice": "Nadjačaj zadane servise",
@@ -668,7 +668,7 @@
             "scaleBox": "Ovo je pomoć za kontrolu mjerila",
             "zoomToMaxExtentButton": "Ovo je pomoć za kontrolu prikaza punog opsega",
             "zoomIn": "Ovo je pomoć za kontrolu približavanja",
-            "zoomOut": "Ovo je pomoć za kontrolu udaljivanja",
+            "zoomOut": "Ovo je pomoć za kontrolu udaljavanja",
             "searchBar": "Unesite adresu mjesta za pretragu npr. 'Ilica, Zagreb'. Možete također unijeti kordinate u ovom formatu: 43.87,10.20",
             "metadataexplorer": "Ovo je pomoć za kontrolu pregleda metapodataka",
             "settingsPanel": "Ovo je pomoć za kontrolu postavki",
@@ -957,7 +957,7 @@
             "type": "Tip",
             "serviceTitle": "Naslov",
             "serviceTitlePlaceholder": "unesi naslov",
-            "missingReference": "Neodstaju referentni OGC metapodaci",
+            "missingReference": "Nedostaju referentni OGC metapodaci",
             "showDescription": "Prikaži puni opis",
             "hideDescription": "Sakrij puni opis",
             "notification": {
@@ -1005,7 +1005,7 @@
                 "status": "Status",
                 "archive": "Arhiviraj",
                 "deleting": "Brisanje...",
-                "analyzing": "Provera paketa...",
+                "analyzing": "Provjera paketa...",
                 "applyingPreset": "Primjena prilagodbe..."
             },
             "task": {
@@ -1032,7 +1032,7 @@
                 "actions": "Radnje",
                 "options": "Postavke transformacije",
                 "overviewlevels": "Razine pregleda",
-                "delete": "Izbriši ovu trnsformaciju"
+                "delete": "Izbriši ovu transformaciju"
             }
         },
         "rasterstyler": {
@@ -1120,7 +1120,7 @@
             "errorSaving": "Došlo je do greške prilikom operacije spremanja",
             "errorProjFetch": "Greška u dohvatu proj4 izraza sa spatialreference.org. Alat ne može primijeniti prostorni filter.",
             "notSupportedGeometryTitle": "Tip geometrije nije podržan ",
-            "notSupportedGeometry": "Tip geometrije trenutnoga sloja nije podržan, međutim, možete ažurirati atribute",
+            "notSupportedGeometry": "Tip geometrije trenutnog sloja nije podržan, međutim, možete ažurirati atribute",
             "yesButton": "Da",
             "noButton": "Ne",
             "deleteButton": "Izbriši",
@@ -1398,7 +1398,7 @@
                     "notFound": "Kontrolna ploča nije pronađena",
                     "notAccessible": "Kontrolna ploča nije dostupna"
                 },
-                "resourceAlreadyExists": "Resurs sa ovim imenom već postoji. Pukušajte '{data}'"
+                "resourceAlreadyExists": "Resurs sa ovim imenom već postoji. Pokušajte '{data}'"
             },
             "editor": {
                 "save": "Spremi kontrolnu ploču",
@@ -1563,7 +1563,7 @@
             "tooltip": {
                 "addT": "Dodaj pravilo",
                 "editT": "Izmijeni odabrano pravilo",
-                "addBeT": "Dodaj novo pravilo ispred odabranog",
+                "addBeT": "Dodaj novo pravilo ispred odabranoga",
                 "addAfT": "Dodaj novo pravilo iza odabranoga",
                 "deleteT": "Ukloni odabrano pravilo",
                 "cacheT": "Očisti predmemoriju",
@@ -1708,14 +1708,14 @@
             },
             "cesiumCompass": {
                 "title": "Busola",
-                "text": "Možete koristiti buslu za kruženje oko zemaljske kugle. Povuci za rotiranje karte"
+                "text": "Možete koristiti busolu za kruženje oko zemaljske kugle. Povuci za rotiranje karte"
             },
             "cesiumNavigation": {
                 "title": "Navigacija",
                 "text": "Ovdje možete naći dugmad za približavanje i udaljavanje sadržaja karte"
             },
             "dashboardIntro": {
-                "title": "Uputstva za kontrolnu ploču",
+                "title": "Upute za kontrolnu ploču",
                 "text": "Pregled mogućnosti kontrolne ploče"
             },
             "dashboardNav": {
@@ -1744,11 +1744,11 @@
             },
             "dashboardAddTable": {
                 "title": "Tablica",
-                "text": "<p>Dodaj atributnu tabelu koja sadrži podatke odabranog vektorskog sloja na ploču. Također, možete filtrirati podatke kako bi prilagodili tablicu.</p><p>Koraci:</p><p><ul><li>Odaberi vektorski sloj</li><li>Prilagodi podatke tablice</li><li>Spremi i dodaj na ploču</li></ul></p>"
+                "text": "<p>Dodaj atributnu tabelu koja sadrži podatke odabranoga vektorskog sloja na ploču. Također, možete filtrirati podatke kako bi prilagodili tablicu.</p><p>Koraci:</p><p><ul><li>Odaberi vektorski sloj</li><li>Prilagodi podatke tablice</li><li>Spremi i dodaj na ploču</li></ul></p>"
             },
             "dashboardAddCounter": {
                 "title": "Brojač",
-                "text": "<p>Dodaj novi brojač na ploču. Brojač će prikazivati agregirane brojčane vrijednosti iz odabranog vektorskog sloja.</p><p>Koraci:</p><p><ul><li>Odaberi vektorski sloj</li><li>Prilagodi podatke brojača</li><li>Spremi i dodaj na ploču</li></ul></p>"
+                "text": "<p>Dodaj novi brojač na ploču. Brojač će prikazivati agregirane brojčane vrijednosti iz odabranoga vektorskog sloja.</p><p>Koraci:</p><p><ul><li>Odaberi vektorski sloj</li><li>Prilagodi podatke brojača</li><li>Spremi i dodaj na ploču</li></ul></p>"
             },
             "dashboardAddMap": {
                 "title": "Karta",

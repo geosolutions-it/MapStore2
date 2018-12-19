@@ -1,17 +1,16 @@
-var PropTypes = require('prop-types');
 /**
- * Copyright 2015, GeoSolutions Sas.
- * All rights reserved.
- *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree.
- */
-var React = require('react');
-var {FormattedNumber} = require('react-intl');
-
+* Copyright 2015, GeoSolutions Sas.
+* All rights reserved.
+*
+* This source code is licensed under the BSD-style license found in the
+* LICENSE file in the root directory of this source tree.
+*/
+const PropTypes = require('prop-types');
+const React = require('react');
+const {FormattedNumber} = require('react-intl');
 class NumberFormat extends React.Component {
     static propTypes = {
-        value: PropTypes.oneOf([PropTypes.object, PropTypes.number]),
+        value: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
         numberParams: PropTypes.object
     };
 

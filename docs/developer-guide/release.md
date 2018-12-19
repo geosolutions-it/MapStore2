@@ -30,6 +30,7 @@ NOTE: we don't use  github_changelog_generator anymore because it has some issue
 - [ ] Test on QA [http://qa.mapstore2.geo-solutions.it/mapstore/](http://qa.mapstore2.geo-solutions.it/mapstore/)  
     * Any fix must be done on **YYYY.XX.mm**. The fixes will be manually merged on master
     * Test **everything**, not only the new features
+- [ ] Test Binary
 - [ ] Update `CHANGELOG.md`. [Instructions](https://dev.mapstore2.geo-solutions.it/mapstore/docs/release)
 - [ ] Commit the changelog to the release branch
 - [ ] Create a [github draft release](https://github.com/geosolutions-it/MapStore2/releases) pointing to the branch **YYYY.XX.mm**.  
