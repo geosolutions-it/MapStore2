@@ -135,7 +135,7 @@ const TimelinePlugin = compose(
         compactToolbar
     }) => {
 
-        const { hideLayersName, collapsed, playbackEnabled} = options;
+        const { hideLayersName, collapsed } = options;
 
         const playbackItem = head(items && items.filter(item => item.name === 'playback'));
         const Playback = playbackItem && playbackItem.plugin;
@@ -256,7 +256,7 @@ const TimelinePlugin = compose(
             {!collapsed &&
                 <Timeline
                     offsetEnabled={offsetEnabled}
-                    playbackEnabled={playbackEnabled}
+                    playbackEnabled
                     hideLayersName={hideLayersName} />}
         </div>);
     }
