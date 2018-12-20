@@ -17,7 +17,8 @@ const {
 } = require('../actions/dimension');
 const {
     selectLayer,
-    onRangeChanged
+    onRangeChanged,
+    SELECT_LAYER
 } = require('../actions/timeline');
 
 const { changeLayerProperties, REMOVE_NODE } = require('../actions/layers');
@@ -52,9 +53,10 @@ const domainArgs = (getState, paginationOptions = {}) => {
     const layerName = selectedLayerName(getState());
     const layerUrl = selectedLayerUrl(getState());
     const { startPlaybackTime, endPlaybackTime } = playbackRangeSelector(getState()) || {};
+    const shouldFilter = statusSelector(getState()) === STATUS.PLAY || statusSelector(getState()) === STATUS.PAUSE;
     return [layerUrl, layerName, "time", {
         limit: BUFFER_SIZE, // default, can be overridden by pagination options
-        time: startPlaybackTime && endPlaybackTime ? toAbsoluteInterval(startPlaybackTime, endPlaybackTime) : undefined,
+        time: startPlaybackTime && endPlaybackTime && shouldFilter ? toAbsoluteInterval(startPlaybackTime, endPlaybackTime) : undefined,
         ...paginationOptions
     }];
 };
@@ -262,12 +264,14 @@ module.exports = {
      */
     playbackCacheNextPreviousTimes: (action$, { getState = () => { } } = {}) =>
         action$
-            .ofType(SET_CURRENT_TIME, MOVE_TIME)
+            .ofType(SET_CURRENT_TIME, MOVE_TIME, SELECT_LAYER, STOP)
                 .filter(() => statusSelector(getState()) !== STATUS.PLAY && statusSelector(getState()) !== STATUS.PAUSE)
                 .filter(() => selectedLayerSelector(getState()))
                 .filter( t => !!t )
-                .switchMap(({time}) =>
-                    Rx.Observable.forkJoin( // TODO: find out a way to optimize and do only one request
+                .switchMap(({time: actionTime}) => {
+                    // get current time in case of SELECT_LAYER
+                    const time = actionTime || currentTimeSelector(getState());
+                    return Rx.Observable.forkJoin( // TODO: find out a way to optimize and do only one request
                         getDomainValues(...domainArgs(getState, { sort: "asc", limit: 1, fromValue: time }))
                             .map(res => res.DomainValues.Domain.split(","))
                             .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null)),
@@ -280,8 +284,8 @@ module.exports = {
                             next,
                             previous
                         })
-                    )
-                ),
+                    );
+                }),
     /**
      * During animation, on every current time change event, if the current time is out of the current range window, the timeline will shift to
      * current start-end values

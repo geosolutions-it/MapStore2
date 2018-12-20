@@ -44,6 +44,7 @@ const layerData = compose(
             const { layers: nextLayers, loading: nextLoading, selectedLayer: nextSelectedLayer } = nextProps;
             return loading !== nextLoading
                 || selectedLayer !== nextSelectedLayer
+                || (layers && nextLayers && layers.length !== nextLayers.length)
                 || differenceBy(layers, nextLayers || [], ({id, title, name} = {}) => id + title + name).length > 0;
         },
         // (props = {}, nextProps = {}) => Object.keys(props.data).length !== Object.keys(nextProps.data).length,
