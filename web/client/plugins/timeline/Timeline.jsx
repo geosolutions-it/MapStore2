@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const { connect } = require('react-redux');
-const { isString, differenceBy, trim } = require('lodash');
+const { isString, differenceBy } = require('lodash');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
 
 
@@ -16,10 +16,12 @@ const { setCurrentOffset } = require('../../actions/dimension');
 const { selectPlaybackRange } = require('../../actions/playback');
 const { playbackRangeSelector, statusSelector } = require('../../selectors/playback');
 const { createStructuredSelector, createSelector } = require('reselect');
-const { compose, withHandlers, withPropsOnChange, defaultProps } = require('recompose');
+const { compose, withPropsOnChange, defaultProps } = require('recompose');
+
+const clickHandleEnhancer = require('../../components/time/enhancers/clickHandlers');
+
 const moment = require('moment');
 
-const isValidOffset = (start, end) => moment(end).diff(start) > 0;
 /**
  * Provides time dimension data for layers
  */
@@ -127,121 +129,6 @@ const getStartEnd = (startTime, endTime) => {
         end: diff >= 0 ? startTime : endTime
     };
 };
-
-const clickHandleEnhancer = withHandlers({
-    mouseDownHandler: ({
-        offsetEnabled,
-        status,
-        setMouseData = () => { }
-    }) => ({ time, event } = {}) => {
-        if (status === "PLAY") {
-            return;
-        }
-        // initialize dragging range event
-        let target = event && event.target && event.target.closest('.ms-current-range');
-        if ( offsetEnabled && target) {
-            setMouseData({dragging: true, startTime: time.toISOString()});
-        } else {
-            target = event && event.target && event.target.closest('.vis-custom-time');
-            const className = target && target.getAttribute('class');
-            const timeId = className && trim(className.replace('vis-custom-time', ''));
-            if (timeId) setMouseData({dragging: false, borderID: timeId, startTime: time.toISOString()});
-        }
-
-    },
-    clickHandler: ({
-        selectedLayer,
-        offsetEnabled,
-        status,
-        setCurrentTime = () => { },
-        selectGroup = () => { },
-        mouseEventProps= {}
-    }) => ({ time, group, what } = {}) => {
-        if (status === "PLAY") {
-            return;
-        }
-        switch (what) {
-            // case "axis":
-            case "group-label": {
-                if (group && status !== "PLAY") selectGroup(group);
-                break;
-            }
-            default: {
-                const target = event && event.target && event.target.closest('.vis-custom-time');
-                const className = target && target.getAttribute('class');
-                const timeId = className && trim(className.replace('vis-custom-time', ''));
-                if (!mouseEventProps.timeId && time && !offsetEnabled && timeId !== "startPlaybackTime" && timeId !== "endPlaybackTime" ) setCurrentTime(time.toISOString(), group || selectedLayer);
-                break;
-            }
-        }
-    },
-    mouseUpHandler: ({
-        currentTime,
-        status,
-        setOffset = () => {},
-        setCurrentTime = () => { },
-        currentTimeRange = {},
-        mouseEventProps ={},
-        offsetEnabled,
-        playbackRange,
-        setTimeLineRange = () => {},
-        setMouseData = () => {},
-        setPlaybackRange = () => {}
-    }) => ({ time, event } = {}) => {
-        if (status === "PLAY") {
-            return;
-        }
-        let target = event && event.target && event.target.closest('.vis-center');
-        const border = mouseEventProps.borderID;
-        // sets the playbackRange range
-        if (!mouseEventProps.dragging && border === 'startPlaybackTime' || border === 'endPlaybackTime') {
-            const range = { ...playbackRange, [border]: time.toISOString() };
-            let { start, end } = getStartEnd(range.startPlaybackTime, range.endPlaybackTime);
-            if (isValidOffset(start, end)) {
-                setPlaybackRange({
-                    startPlaybackTime: start,
-                    endPlaybackTime: end
-                    });
-            }
-        }
-        if (offsetEnabled) {
-            // range dragging
-            if ( mouseEventProps.dragging && target ) {
-                const off = moment(time).diff(mouseEventProps.startTime);
-
-                const startRangeShift = moment(currentTimeRange.start).add(off);
-                const endRangeShift = moment(currentTimeRange.end).add(off);
-                // no snap for range borders
-                setCurrentTime(startRangeShift.toISOString(), null);
-                setOffset(endRangeShift.toISOString());
-                const newRange = {start: startRangeShift, end: endRangeShift};
-                setTimeLineRange(newRange);
-
-            } else {
-                // changing the rang by moving currentTime or offsetTime
-                if (border === 'currentTime' && isValidOffset(time, currentTimeRange.endTimeLineRange )) {
-                    setCurrentTime(time.toISOString(), null);
-                } else if (border === 'offsetTime' && isValidOffset(currentTime, time )) {
-                    setOffset(time.toISOString());
-                }
-                const id = border === 'currentTime' && 'start' || border === 'offsetTime' && 'end';
-                const TimeRange = { ...currentTimeRange, [id]: time.toISOString() };
-                let { start, end } = getStartEnd(TimeRange.start, TimeRange.end);
-                if (isValidOffset(start, end)) {
-                    setTimeLineRange({
-                    start: start,
-                    end: end
-                    });
-                }
-            }
-                // normal click event
-        }
-        // reseting the mouse event data
-        if (Object.keys(mouseEventProps).length > 0) setMouseData({});
-    }
-
-
-});
 
 const rangeEnhancer = compose(
     connect(() => ({}), {
