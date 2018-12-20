@@ -68,6 +68,7 @@ class InlineDateTimeSelector extends React.Component {
             {
                 name: 'month',
                 placeholder: 'MM',
+                readOnly: true,
                 value: currentTime && currentTime.month(),
                 format: value => !isNil(value) && value !== '' && moment.monthsShort(value),
                 parseValue: value => value - 1
@@ -152,6 +153,7 @@ class InlineDateTimeSelector extends React.Component {
                             </Button>}
                             <FormControl
                                 type="text"
+                                readOnly={el.readOnly}
                                 placeholder={el.placeholder || el.name}
                                 disabled={!this.props.date}
                                 value={el.format && el.format(el.value) || el.value}
