@@ -53,9 +53,10 @@ const domainArgs = (getState, paginationOptions = {}) => {
     const layerName = selectedLayerName(getState());
     const layerUrl = selectedLayerUrl(getState());
     const { startPlaybackTime, endPlaybackTime } = playbackRangeSelector(getState()) || {};
+    const shouldFilter = statusSelector(getState()) === STATUS.PLAY || statusSelector(getState()) === STATUS.PAUSE;
     return [layerUrl, layerName, "time", {
         limit: BUFFER_SIZE, // default, can be overridden by pagination options
-        time: startPlaybackTime && endPlaybackTime ? toAbsoluteInterval(startPlaybackTime, endPlaybackTime) : undefined,
+        time: startPlaybackTime && endPlaybackTime && shouldFilter ? toAbsoluteInterval(startPlaybackTime, endPlaybackTime) : undefined,
         ...paginationOptions
     }];
 };
