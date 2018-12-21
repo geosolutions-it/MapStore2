@@ -93,7 +93,9 @@
             "noBackgroundLayerSupported": "Il n'y a pas de couches de fond supportées pour ce type de carte.",
             "updateOldMap": "Ceci est une carte ancienne, toutes les fonctionnalités ne peuvent pas s'y retrouver. Cliquez sur le bouton de mise à jour pour rafraîchir la carte ou ne tenez pas compte de cet avertissement pour ne pas rafraîchir la carte.",
             "warningSaveUpdatedMap": "Certaines couches n'ont pas été mises à jour correctement",
-            "saveUpdatedMap": "Toutes les couches ont bien été mises à jour"
+            "saveUpdatedMap": "Toutes les couches ont bien été mises à jour",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"the current layer and map projection are not completely compatible. Parts or all of the data might not appear in the map"
         },
         "dock": {
             "row": "{rowsSelected} ligne sélectionnée",

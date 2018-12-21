@@ -15,10 +15,16 @@ const Button = tooltip(ButtonRB);
 const {changeMapCrs} = require('../actions/map');
 const {setInputValue} = require('../actions/crsselector');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
+const {isCesium} = require('../selectors/maptype');
 const {connect} = require('react-redux');
-const CustomMenu = require('../components/mapcontrols/crsselectormenu/crsSelectormenu');
+const CrsSelectorMenu = require('../components/mapcontrols/crsselectormenu/CrsSelectorMenu');
 const {projectionDefsSelector, projectionSelector} = require('../selectors/map');
 const {crsInputValueSelector} = require('../selectors/crsselector');
+const {currentBackgroundSelector} = require('../selectors/layers');
+const{modeSelector} = require('../selectors/featuregrid');
+const {warning} = require('../actions/notifications');
+
+const {indexOf, has} = require('lodash');
 
 class Selector extends React.Component {
     static propTypes = {
@@ -30,12 +36,16 @@ class Selector extends React.Component {
         projectionDefs: PropTypes.array,
         additionalCRS: PropTypes.object,
         setCrs: PropTypes.func,
-        typeInput: PropTypes.func
+        typeInput: PropTypes.func,
+        enabled: PropTypes.bool,
+        currentBackground: PropTypes.object,
+        warning: PropTypes.func
     };
     static defaultProps = {
         availableCRS: CoordinatesUtils.getAvailableCRS(),
         setCrs: ()=> {},
-        typeInput: () => {}
+        typeInput: () => {},
+        enabled: true
     };
 
     render() {
@@ -51,7 +61,23 @@ class Selector extends React.Component {
             }
         }
         const currentCRS = CoordinatesUtils.normalizeSRS(this.props.selected, this.props.filterAllowedCRS);
-        return (<Dropdown
+        const compatibleCrs = ['EPSG:4326', 'EPSG:3857', 'EPSG:900913'];
+        const changeCrs = (crs) => {
+            if ( indexOf(compatibleCrs, crs) > -1 || this.props.currentBackground.type === "wms" || this.props.currentBackground.type === "empty" ||
+            (this.props.currentBackground.allowedSRS && has(this.props.currentBackground.allowedSRS, crs))) {
+                this.props.setCrs(crs);
+            } else {
+                this.props.onWarning({
+                    title: "error",
+                    message: "notification.incompatibleDataAndProjection",
+                    action: {
+                        label: "close"
+                    },
+                    position: "tc"
+                });
+            }
+        };
+        return (this.props.enabled ? <Dropdown
         dropup
         className="ms-prj-selector">
         <Button
@@ -62,38 +88,45 @@ class Selector extends React.Component {
             tooltipPosition="top">
             <Glyphicon glyph="crs" />
         </Button>
-        <CustomMenu bsRole="menu" value={this.props.value} selected={currentCRS} projectionDefs={this.props.projectionDefs}
+        <CrsSelectorMenu bsRole="menu" value={this.props.value} selected={currentCRS} projectionDefs={this.props.projectionDefs}
             filterAllowedCRS={this.props.filterAllowedCRS} additionalCRS={this.props.additionalCRS} changeInputValue={v => this.props.typeInput(v)}>
                 {list.map(crs =>
                         <ListGroupItem
                         key={crs.value}
                         active={currentCRS === crs.value}
-                        onClick= { es => this.props.setCrs(es.target.textContent)}
+                        onClick= { es => changeCrs(es.target.textContent)}
                         eventKey={crs.value}
                         >
                             {crs.value}
                         </ListGroupItem>)}
-        </CustomMenu>
-    </Dropdown>);
+        </CrsSelectorMenu>
+    </Dropdown> : null );
     }
 }
 
 const crsSelector = connect(
         createSelector(
+            currentBackgroundSelector,
             projectionSelector,
             projectionDefsSelector,
             crsInputValueSelector,
-                ( selected, projectionDefs, value) => ({
-
+            modeSelector,
+            isCesium,
+                ( currentBackground, selected, projectionDefs, value, mode, cesium) => ({
+                    currentBackground,
                     selected,
                     projectionDefs,
-                    value
+                    value,
+                    enabled: (mode !== 'EDIT') && !cesium
                 })
             ), {
                 typeInput: setInputValue,
-                setCrs: changeMapCrs
+                setCrs: changeMapCrs,
+                onWarning: warning
             }
         )(Selector);
+
+
 /**
   * CRSSelector Plugin is a plugin that shows the coordinate of the mouse position in a selected crs.
   * it gets displayed into the mapFooter plugin

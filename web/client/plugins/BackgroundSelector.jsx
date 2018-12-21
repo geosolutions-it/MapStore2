@@ -19,7 +19,7 @@ const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
 const {drawerEnabledControlSelector} = require('../selectors/controls');
 
-
+const {projectionSelector} = require('../selectors/map');
 const ROADMAP = require('./background/assets/img/ROADMAP.jpg');
 const TERRAIN = require('./background/assets/img/TERRAIN.jpg');
 const SATELLITE = require('./background/assets/img/SATELLITE.jpg');
@@ -69,6 +69,7 @@ const thumbs = {
 };
 
 const backgroundSelector = createSelector([
+        projectionSelector,
         mapSelector,
         layersSelector,
         backgroundControlsSelector,
@@ -78,14 +79,15 @@ const backgroundSelector = createSelector([
         tempBackgroundSelector,
         state => mapLayoutValuesSelector(state, {left: true, bottom: true})
     ],
-    (map, layers, controls, drawer, maptype, currentLayer, tempLayer, style) => ({
+    (projection, map, layers, controls, drawer, maptype, currentLayer, tempLayer, style) => ({
         size: map && map.size || {width: 0, height: 0},
         layers: layers.filter((l) => l && l.group === "background").map((l) => invalidateUnsupportedLayer(l, maptype)) || [],
         tempLayer,
         currentLayer,
         start: controls.start || 0,
         enabled: controls.enabled,
-        style
+        style,
+        projection
     }));
 
 /**

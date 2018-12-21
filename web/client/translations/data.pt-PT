@@ -92,7 +92,9 @@
             "noBackgroundLayerSupported": "Não existem temas base suportados para este tipo de mapa.",
             "updateOldMap": "Este é um mapa activo, logo nem todas as funcionalidades poderão ser activadas. Clique no botão para actualizar o mapa ou ignore esta notificação se não pretender actualizar.",
             "warningSaveUpdatedMap": "Alguns temas não foram actualizados correctamente",
-            "saveUpdatedMap": "Todos os temas foram actualizados com sucesso"
+            "saveUpdatedMap": "Todos os temas foram actualizados com sucesso",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"the current layer and map projection are not completely compatible. Parts or all of the data might not appear in the map"
         },
         "dock": {
             "row": "{rowsSelected} registo seleccionado",

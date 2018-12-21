@@ -44,8 +44,13 @@ const createLayer = options => {
 
     const matrixIds = WMTSUtils.limitMatrix(options.matrixIds && WMTSUtils.getMatrixIds(options.matrixIds, tilMatrixSetName || srs) || WMTSUtils.getDefaultMatrixId(options), resolutions.length);
 
-    const origin = tileMatrixSet && tileMatrixSet.TileMatrix && tileMatrixSet.TileMatrix[1] && tileMatrixSet.TileMatrix[1].TopLeftCorner && CoordinatesUtils.parseString(tileMatrixSet.TileMatrix[1].TopLeftCorner) || {};
-
+    let origin = tileMatrixSet && tileMatrixSet.TileMatrix && tileMatrixSet.TileMatrix[1] && tileMatrixSet.TileMatrix[1].TopLeftCorner && CoordinatesUtils.parseString(tileMatrixSet.TileMatrix[1].TopLeftCorner) || {};
+    // switch lat.long to long lat
+    if (srs === 'EPSG:4326') {
+        let temp = origin.x;
+        origin.x = origin.y;
+        origin.y = temp;
+    }
     let bbox = null;
 
     /* calculate bbox from tile matrix set to avoid tile errors when fit world bounds*/
@@ -112,7 +117,7 @@ const createLayer = options => {
 };
 
 const updateLayer = (layer, newOptions, oldOptions) => {
-    if (oldOptions.securityToken !== newOptions.securityToken) {
+    if (oldOptions.securityToken !== newOptions.securityToken || oldOptions.srs !== newOptions.srs) {
         return createLayer(newOptions);
     }
     return null;

@@ -15,6 +15,8 @@ const Rx = require('rxjs');
 
 class OpenlayersLayer extends React.Component {
     static propTypes = {
+        onWarning: PropTypes.func,
+        maxExtent: PropTypes.array,
         map: PropTypes.object,
         mapId: PropTypes.string,
         srs: PropTypes.string,
@@ -123,9 +125,34 @@ class OpenlayersLayer extends React.Component {
         if (type) {
             const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs), securityToken);
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
+            const parentMap = this.layer && this.layer.getProperties().map;
+            const mapExtent = parentMap && parentMap.getView().getProjection().getExtent();
+            const layerExtent = options && options.bbox && options.bbox.bounds;
+            const mapBboxPolygon = mapExtent && CoordinatesUtils.reprojectBbox(mapExtent, this.props.srs, 'EPSG:4326');
+            let LayerBboxPolygon = layerExtent && CoordinatesUtils.getExtentFromNormalized(layerExtent, this.props.srs).extent;
             if (this.layer && !this.layer.detached) {
+
+                if (LayerBboxPolygon && LayerBboxPolygon.length === 2 && _.isArray(LayerBboxPolygon[1])) {
+                    LayerBboxPolygon = LayerBboxPolygon[1];
+                }
+
+                if (mapBboxPolygon && LayerBboxPolygon &&
+                    !CoordinatesUtils.isBboxCompatible(CoordinatesUtils.getPolygonFromExtent(mapBboxPolygon), CoordinatesUtils.getPolygonFromExtent(LayerBboxPolygon)) ||
+                    (layerOptions.type === "wmts" &&
+                    !_.head(CoordinatesUtils.getEquivalentSRS(this.props.srs).filter(proj => layerOptions.matrixIds.hasOwnProperty(proj)))
+                    )) {
+                    this.props.onWarning({
+                        title: "warning",
+                            message: "notification.incompatibleDataAndProjection",
+                        action: {
+                            label: "close"
+                        },
+                        position: "tc"
+                    });
+                }
                 this.addLayer(options);
             }
+
             if (this.layer && this.layer.get && this.layer.get('getElevation')) {
                 this.props.map.set('elevationLayer', this.layer);
             }

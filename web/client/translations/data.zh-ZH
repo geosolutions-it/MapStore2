@@ -68,7 +68,9 @@
             "noBackgroundLayerSupported": "这种类型的地图没有受支持的背景层.",
             "updateOldMap": "这是一个旧的地图，因此并不是所有的功能都可以启用。 点击更新按钮为了更新地图或简单地关闭此通知，如果你不想更新它。",
             "warningSaveUpdatedMap": "某些图层尚未正确更新",
-            "saveUpdatedMap": "所有图层都已成功更新"
+            "saveUpdatedMap": "所有图层都已成功更新",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"the current layer and map projection are not completely compatible. Parts or all of the data might not appear in the map"
         },
         "dock": {
             "row": "{rowsSelected} row selected",

@@ -6,11 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const ReactDOM = require('react-dom');
 const PropTypes = require('prop-types');
 const { ListGroupItem, ListGroup, FormControl } = require('react-bootstrap');
 
-class CustomMenu extends React.Component {
+class CrsSelectorMenu extends React.Component {
     static propTypes = {
         selected: PropTypes.string,
         value: PropTypes.string,
@@ -58,13 +57,6 @@ class CustomMenu extends React.Component {
         this.props.changeInputValue(e.target.value);
     }
 
-    focusNext = () => {
-        const input = ReactDOM.findDOMNode(this.input);
-
-        if (input) {
-            input.focus();
-        }
-    }
 }
 
-module.exports = CustomMenu;
+module.exports = CrsSelectorMenu;
