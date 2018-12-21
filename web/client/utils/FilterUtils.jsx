@@ -644,7 +644,7 @@ const FilterUtils = {
         return null;
     },
     processCQLFilterGroup: function(root, objFilter) {
-        let cql = FilterUtils.processCQLFilterFields(root, objFilter);
+        let cql = this.processCQLFilterFields(root, objFilter);
 
         let subGroups = this.findSubGroups(root, objFilter.groupFields);
         if (subGroups.length > 0) {
