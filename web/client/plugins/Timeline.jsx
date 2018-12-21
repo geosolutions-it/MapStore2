@@ -185,7 +185,7 @@ const TimelinePlugin = compose(
                 glyph="range-start"
                 onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
                 tooltip={<Message msgId="timeline.rangeStart"/>}
-                showButtons={!collapsed}
+                showButtons
                 date={currentTime || currentTimeRange && currentTimeRange.start}
                 onUpdate={start => (currentTimeRange && isValidOffset(start, currentTimeRange.end) || !currentTimeRange) && status !== "PLAY" && setCurrentTime(start)}
                 className="shadow-soft"
@@ -205,12 +205,12 @@ const TimelinePlugin = compose(
                         onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
                         tooltip={<Message msgId="timeline.rangeEnd"/>}
                         date={currentTimeRange.end}
-                        showButtons={!collapsed}
+                        showButtons
                         onUpdate={end => status !== "PLAY" && isValidOffset(currentTime, end) && setOffset(end)} />
                     : // show current time if using single time
                     <InlineDateTimeSelector
                         glyph={'time-current'}
-                        showButtons={!collapsed}
+                        showButtons
                         onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange)}
                         tooltip={<Message msgId="timeline.currentTime"/>}
                         date={currentTime || currentTimeRange && currentTimeRange.start}

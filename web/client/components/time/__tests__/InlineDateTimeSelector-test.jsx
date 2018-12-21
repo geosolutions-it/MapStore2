@@ -1,6 +1,6 @@
 const React = require('react');
 const ReactDOM = require('react-dom');
-const ReactTestUtils = require('react-dom/test-utils');
+const TestUtils = require('react-dom/test-utils');
 const expect = require('expect');
 const InlineDateTimeSelector = require('../InlineDateTimeSelector');
 describe('InlineDateTimeSelector component', () => {
@@ -28,7 +28,18 @@ describe('InlineDateTimeSelector component', () => {
         const spyonIconClick = expect.spyOn(actions, 'onIconClick');
         ReactDOM.render(<InlineDateTimeSelector onIconClick={actions.onIconClick} />, document.getElementById("container"));
         const el = document.querySelector('.ms-inline-datetime-icon');
-        ReactTestUtils.Simulate.click(el); // <-- trigger event callback
+        TestUtils.Simulate.click(el); // <-- trigger event callback
         expect(spyonIconClick).toHaveBeenCalled();
+    });
+    it('Test InlineDateTimeSelector edit days', () => {
+        const actions = {
+            onUpdate: () => { }
+        };
+        const spyonUpdate = expect.spyOn(actions, 'onUpdate');
+        ReactDOM.render(<InlineDateTimeSelector date="2018-12-21T15:00:00.000Z" onUpdate={actions.onUpdate} />, document.getElementById("container"));
+        const input = document.querySelectorAll('input');
+        TestUtils.Simulate.change(input[0], { target: { value: '2' } });
+        expect(spyonUpdate).toHaveBeenCalled();
+        expect(spyonUpdate.calls[0].arguments[0]).toBe("2018-12-02T15:00:00.000Z");
     });
 });
