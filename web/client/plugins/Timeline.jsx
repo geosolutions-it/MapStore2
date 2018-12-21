@@ -191,9 +191,9 @@ const TimelinePlugin = compose(
                 className="shadow-soft"
                 style={{
                     position: 'absolute',
-                    top: 0,
+                    top: -5,
                     left: 2,
-                    transform: 'translateY(calc(-100% - 5px))'
+                    transform: 'translateY(-100%)'
                 }} />}
 
             <div
