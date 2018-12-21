@@ -644,13 +644,14 @@ const FilterUtils = {
         return null;
     },
     processCQLFilterGroup: function(root, objFilter) {
-        let cql = this.processCQLFilterFields(root, objFilter);
+        let cql = FilterUtils.processCQLFilterFields(root, objFilter);
 
         let subGroups = this.findSubGroups(root, objFilter.groupFields);
         if (subGroups.length > 0) {
-            subGroups.forEach((subGroup) => {
-                cql += " " + root.logic + " (" + this.processFilterGroup(subGroup) + ")";
-            });
+            const subGroupCql = subGroups
+                .map((subGroup) => "(" + this.processCQLFilterGroup(subGroup, objFilter) + ")")
+                .join(" " + root.logic + " ");
+            return cql ? [cql, subGroupCql].join(" " + root.logic + " ") : subGroupCql;
         }
 
         return cql;
