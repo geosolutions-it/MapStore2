@@ -45,9 +45,12 @@ class InlineDateTimeSelector extends React.Component {
     };
 
     onChange = (key, value, parseValue = val => val) => {
-        const currentTime = moment(this.props.date).utc();
-        const newTime = currentTime[key] && currentTime[key](parseValue(value));
-        this.props.onUpdate(newTime.toISOString());
+        if (value !== "") {
+            const currentTime = moment(this.props.date).utc();
+            const newTime = currentTime[key === "day" ? "date" : key]
+                && moment(currentTime)[key === "day" ? "date" : key](parseValue(value));
+            this.props.onUpdate(newTime.toISOString());
+        }
     };
 
     getForm = () => {
@@ -68,6 +71,7 @@ class InlineDateTimeSelector extends React.Component {
             {
                 name: 'month',
                 placeholder: 'MM',
+                readOnly: true,
                 value: currentTime && currentTime.month(),
                 format: value => !isNil(value) && value !== '' && moment.monthsShort(value),
                 parseValue: value => value - 1
@@ -152,6 +156,7 @@ class InlineDateTimeSelector extends React.Component {
                             </Button>}
                             <FormControl
                                 type="text"
+                                readOnly={el.readOnly}
                                 placeholder={el.placeholder || el.name}
                                 disabled={!this.props.date}
                                 value={el.format && el.format(el.value) || el.value}
