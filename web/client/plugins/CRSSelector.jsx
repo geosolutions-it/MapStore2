@@ -19,10 +19,11 @@ const {isCesium} = require('../selectors/maptype');
 const {connect} = require('react-redux');
 const CrsSelectorMenu = require('../components/mapcontrols/crsselectormenu/CrsSelectorMenu');
 const {projectionDefsSelector, projectionSelector} = require('../selectors/map');
+const {bottomPanelOpenSelector} = require('../selectors/maplayout');
 const {crsInputValueSelector} = require('../selectors/crsselector');
 const {currentBackgroundSelector} = require('../selectors/layers');
 const{modeSelector} = require('../selectors/featuregrid');
-const {warning} = require('../actions/notifications');
+const {error} = require('../actions/notifications');
 
 const {indexOf, has} = require('lodash');
 
@@ -39,7 +40,7 @@ class Selector extends React.Component {
         typeInput: PropTypes.func,
         enabled: PropTypes.bool,
         currentBackground: PropTypes.object,
-        warning: PropTypes.func
+        onError: PropTypes.func
     };
     static defaultProps = {
         availableCRS: CoordinatesUtils.getAvailableCRS(),
@@ -50,7 +51,7 @@ class Selector extends React.Component {
 
     render() {
 
-        var list = [];
+        let list = [];
         let availableCRS = {};
         if (Object.keys(this.props.availableCRS).length) {
             availableCRS = CoordinatesUtils.filterCRSList(this.props.availableCRS, this.props.filterAllowedCRS, this.props.additionalCRS, this.props.projectionDefs );
@@ -67,9 +68,9 @@ class Selector extends React.Component {
             (this.props.currentBackground.allowedSRS && has(this.props.currentBackground.allowedSRS, crs))) {
                 this.props.setCrs(crs);
             } else {
-                this.props.onWarning({
+                this.props.onError({
                     title: "error",
-                    message: "notification.incompatibleDataAndProjection",
+                    message: "notification.incompatibleBackgroundAndProjection",
                     action: {
                         label: "close"
                     },
@@ -112,23 +113,24 @@ const crsSelector = connect(
             crsInputValueSelector,
             modeSelector,
             isCesium,
-                ( currentBackground, selected, projectionDefs, value, mode, cesium) => ({
+            bottomPanelOpenSelector,
+                ( currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel) => ({
                     currentBackground,
                     selected,
                     projectionDefs,
                     value,
-                    enabled: (mode !== 'EDIT') && !cesium
+                    enabled: (mode !== 'EDIT') && !cesium && !bottomPanel
                 })
             ), {
                 typeInput: setInputValue,
                 setCrs: changeMapCrs,
-                onWarning: warning
+                onError: error
             }
         )(Selector);
 
 
 /**
-  * CRSSelector Plugin is a plugin that shows the coordinate of the mouse position in a selected crs.
+  * CRSSelector Plugin is a plugin that switches from to the pre-configured projections.
   * it gets displayed into the mapFooter plugin
   * @name CRSSelector
   * @memberof plugins
@@ -160,6 +162,8 @@ const crsSelector = connect(
 */
 module.exports = {
     CRSSelectorPlugin: assign(crsSelector, {
+        disablePluginIf: "{true}"
+    }, {
         MapFooter: {
             name: "crsSelector",
             position: 10,

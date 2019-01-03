@@ -199,28 +199,30 @@ class OpenlayersMap extends React.Component {
             this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view));
             const mapExtent = mapProjection && CoordinatesUtils.reprojectBbox(newProps.maxExtent, mapProjection, 'EPSG:4326');
             // perform a check if the data and the projection are compatible
-            head(newProps.children).map( layer => {
-                let BBox = layer.props.options.bbox;
-                if (BBox) {
-                    let layerExtent = CoordinatesUtils.getExtentFromNormalized(BBox.bounds, BBox.crs).extent;
-                    if (layerExtent.length === 2 && isArray(layerExtent[1])) {
-                        layerExtent = layerExtent[1];
-                    }
+            if (newProps.children) {
+                head(newProps.children).map( layer => {
+                    let BBox = layer.props.options.bbox;
+                    if (BBox) {
+                        let layerExtent = CoordinatesUtils.getExtentFromNormalized(BBox.bounds, BBox.crs).extent;
+                        if (layerExtent.length === 2 && isArray(layerExtent[1])) {
+                            layerExtent = layerExtent[1];
+                        }
 
-                    if ( mapProjection !== BBox.bounds.crs && !CoordinatesUtils.isBboxCompatible(CoordinatesUtils.getPolygonFromExtent(mapExtent),
-                    CoordinatesUtils.getPolygonFromExtent(layerExtent)) ||
-                    (layer.props.options.type === "wmts" && !head(CoordinatesUtils.getEquivalentSRS(mapProjection).filter(proj => layer.props.options.matrixIds.hasOwnProperty(proj))))) {
-                        this.props.onWarning({
-                            title: "warning",
-                            message: "notification.incompatibleDataAndProjection",
-                            action: {
-                                label: "close"
-                            },
-                            position: "tc"
-                        });
+                        if ( mapProjection !== BBox.bounds.crs && !CoordinatesUtils.isBboxCompatible(CoordinatesUtils.getPolygonFromExtent(mapExtent),
+                        CoordinatesUtils.getPolygonFromExtent(layerExtent)) ||
+                        (layer.props.options.type === "wmts" && !head(CoordinatesUtils.getEquivalentSRS(mapProjection).filter(proj => layer.props.options.matrixIds.hasOwnProperty(proj))))) {
+                            this.props.onWarning({
+                                title: "warning",
+                                message: "notification.incompatibleDataAndProjection",
+                                action: {
+                                    label: "close"
+                                },
+                                position: "tc"
+                            });
+                        }
                     }
-                }
-            });
+                });
+            }
             // We have to force ol to drop tile and reload
             this.map.getLayers().forEach((l) => {
                 let source = l.getSource();

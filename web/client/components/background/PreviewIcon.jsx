@@ -42,10 +42,10 @@ class PreviewIcon extends React.Component {
     render() {
         const compatibleCrs = ['EPSG:4326', 'EPSG:3857', 'EPSG:900913'];
         const validCrs = indexOf(compatibleCrs, this.props.projection) > -1;
-        const compatibWmts = this.props.layer.type === "wmts" && has(this.props.layer.allowedSRS, this.props.projection);
+        const compatibleWmts = this.props.layer.type === "wmts" && has(this.props.layer.allowedSRS, this.props.projection);
         const containerClass = this.props.vertical ? 'background-preview-icon-container-vertical' : 'background-preview-icon-container-horizontal';
         const type = this.props.layer.visibility ? ' bg-primary' : ' bg-body';
-        const invalid = ((validCrs || compatibWmts || this.props.layer.type === "wms" || this.props.layer.type === "empty") && !this.props.layer.invalid ) ? '' : ' disabled-icon';
+        const invalid = ((validCrs || compatibleWmts || this.props.layer.type === "wms" || this.props.layer.type === "empty") && !this.props.layer.invalid ) ? '' : ' disabled-icon';
 
         const click = invalid === ' disabled-icon' ? () => {} : () => { this.props.onToggle(); this.props.onPropertiesChange(this.props.layer.id, {visibility: true}); this.props.onLayerChange('currentLayer', this.props.layer); };
         return (

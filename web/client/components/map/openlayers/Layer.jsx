@@ -36,7 +36,9 @@ class OpenlayersLayer extends React.Component {
         onLayerLoading: () => {},
         onLayerLoad: () => {},
         onLayerError: () => {},
-        onCreationError: () => {}
+        onCreationError: () => {},
+        onWarning: () => {},
+        srs: "EPSG:3857"
     };
 
     componentDidMount() {
@@ -125,13 +127,13 @@ class OpenlayersLayer extends React.Component {
         if (type) {
             const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs), securityToken);
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
-            const parentMap = this.layer && this.layer.getProperties().map;
-            const mapExtent = parentMap && parentMap.getView().getProjection().getExtent();
-            const layerExtent = options && options.bbox && options.bbox.bounds;
-            const mapBboxPolygon = mapExtent && CoordinatesUtils.reprojectBbox(mapExtent, this.props.srs, 'EPSG:4326');
-            let LayerBboxPolygon = layerExtent && CoordinatesUtils.getExtentFromNormalized(layerExtent, this.props.srs).extent;
-            if (this.layer && !this.layer.detached) {
 
+            if (this.layer && !this.layer.detached) {
+                const parentMap = this.layer && this.layer.getProperties().map;
+                const mapExtent = parentMap && parentMap.getView().getProjection().getExtent();
+                const layerExtent = options && options.bbox && options.bbox.bounds;
+                const mapBboxPolygon = mapExtent && CoordinatesUtils.reprojectBbox(mapExtent, this.props.srs, 'EPSG:4326');
+                let LayerBboxPolygon = layerExtent && CoordinatesUtils.getExtentFromNormalized(layerExtent, this.props.srs).extent;
                 if (LayerBboxPolygon && LayerBboxPolygon.length === 2 && _.isArray(LayerBboxPolygon[1])) {
                     LayerBboxPolygon = LayerBboxPolygon[1];
                 }
@@ -139,7 +141,7 @@ class OpenlayersLayer extends React.Component {
                 if (mapBboxPolygon && LayerBboxPolygon &&
                     !CoordinatesUtils.isBboxCompatible(CoordinatesUtils.getPolygonFromExtent(mapBboxPolygon), CoordinatesUtils.getPolygonFromExtent(LayerBboxPolygon)) ||
                     (layerOptions.type === "wmts" &&
-                    !_.head(CoordinatesUtils.getEquivalentSRS(this.props.srs).filter(proj => layerOptions.matrixIds.hasOwnProperty(proj)))
+                    !_.head(CoordinatesUtils.getEquivalentSRS(this.props.srs).filter(proj => layerOptions.matrixIds && layerOptions.matrixIds.hasOwnProperty(proj)))
                     )) {
                     this.props.onWarning({
                         title: "warning",
