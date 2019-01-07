@@ -648,9 +648,10 @@ const FilterUtils = {
 
         let subGroups = this.findSubGroups(root, objFilter.groupFields);
         if (subGroups.length > 0) {
-            subGroups.forEach((subGroup) => {
-                cql += " " + root.logic + " (" + this.processFilterGroup(subGroup) + ")";
-            });
+            const subGroupCql = subGroups
+                .map((subGroup) => "(" + this.processCQLFilterGroup(subGroup, objFilter) + ")")
+                .join(" " + root.logic + " ");
+            return cql ? [cql, subGroupCql].join(" " + root.logic + " ") : subGroupCql;
         }
 
         return cql;
