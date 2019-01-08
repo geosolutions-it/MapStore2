@@ -7,7 +7,7 @@
  */
 var expect = require('expect');
 var layers = require('../layers');
-const { changeLayerParams } = require('../../actions/layers');
+const { changeLayerParams, addLayer } = require('../../actions/layers');
 
 
 describe('Test the layers reducer', () => {
@@ -488,6 +488,33 @@ describe('Test the layers reducer', () => {
         expect(state.groups[0].name).toBe("test");
         expect(state.groups[0].nodes[0]).toBe("test_id3");
         expect(state.groups[0].nodes[1]).toBe("test_id1");
+    });
+
+    it('add new layer and verify old state', () => {
+        const testAction = addLayer({ group: "test", id: "test_id1" });
+
+        const state = layers(
+            {
+                flat: [
+                    {
+                        id: "layer"
+                    }
+                ],
+                settings: {
+                    options: {
+                        opacity: 0.8
+                    }
+                },
+                selected: [
+                    "layer"
+                ]
+            },
+            testAction
+        );
+
+        expect(state.settings).toExist();
+        expect(state.selected).toExist();
+
     });
 
     it('remove layer', () => {
