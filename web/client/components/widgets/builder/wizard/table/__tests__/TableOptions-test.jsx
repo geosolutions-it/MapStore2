@@ -54,7 +54,7 @@ describe('TableOptions component', () => {
             onChange={actions.onChange}
             dependencies={{ viewport: {} }} />, document.getElementById("container"));
         const inputs = document.querySelectorAll('input');
-        expect(inputs.length).toBe(15);
+        expect(inputs.length).toBe(10);
         const resetButton = document.querySelector('.btn');
         expect(resetButton).toExist();
         ReactTestUtils.Simulate.click(resetButton);
