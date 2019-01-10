@@ -28,9 +28,9 @@ module.exports = branch(
                     .scan((acc) => acc + 1, 0)
                     .map(scrollToTopCounter => ({scrollToTopCounter}))
                     .startWith({}),
-                (props, newProps) => ({
+                (props, forceScrollProps) => ({
                     ...props,
-                    ...newProps,
+                    ...forceScrollProps,
                     scrollToTop
                 })
             );
