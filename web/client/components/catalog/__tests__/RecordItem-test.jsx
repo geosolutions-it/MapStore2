@@ -110,6 +110,24 @@ const longDescriptioRecord = {
     }]
 };
 
+const esriRecord = {
+    title: "Esri Title",
+    description: "Atlantic Hurricanes 2000",
+    identifier: "f4bed551-faa2-4e9c-9820-e623098ba526",
+    tags: "",
+    boundingBox: {
+        extent: [-100.999999999, 10.3000000376, -3.9999999715, 70.7000000118],
+        crs: "EPSG:4326"
+    },
+    references: [{
+        type: "arcgis",
+        url: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Hurricanes/MapServer",
+        SRS: [],
+        params: {
+            name: "0-Atlantic Hurricanes 2000"}
+        }]
+    };
+
 describe('This test for RecordItem', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -169,6 +187,31 @@ describe('This test for RecordItem', () => {
         expect(actionsSpy.calls.length).toBe(1);
         expect(actionsSpy2.calls.length).toBe(1);
     });
+    it('check esri resource', () => {
+        let actions = {
+            onLayerAdd: () => {
+
+            }
+        };
+        let actionsSpy = expect.spyOn(actions, "onLayerAdd");
+
+        const item = ReactDOM.render(<ReactItem
+            record={esriRecord}
+            onLayerAdd={actions.onLayerAdd}/>, document.getElementById("container"));
+        expect(item).toExist();
+
+        const itemDom = ReactDOM.findDOMNode(item);
+        expect(itemDom).toExist();
+        expect(itemDom.className).toBe('record-item panel panel-default');
+        let button = TestUtils.findRenderedDOMComponentWithTag(
+            item, 'button'
+        );
+        expect(button).toExist();
+        button.click();
+        expect(actionsSpy.calls.length).toBe(1);
+    });
+
+
     // test handlers
     it('check event handlers', () => {
         let actions = {

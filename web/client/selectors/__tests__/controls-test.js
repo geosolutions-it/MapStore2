@@ -13,6 +13,9 @@ const {
     wfsDownloadSelector,
     widgetBuilderAvailable,
     widgetBuilderSelector,
+    initialSettingsSelector,
+    originalSettingsSelector,
+    activeTabSettingsSelector,
     drawerEnabledControlSelector
 } = require("../controls");
 
@@ -31,6 +34,17 @@ const state = {
         },
         featuregrid: {
             enabled: true
+        },
+        layersettings: {
+            initialSettings: {
+                id: 'layerId',
+                name: 'layerName',
+                style: ''
+            },
+            originalSettings: {
+                style: 'generic'
+            },
+            activeTab: 'style'
         }
     }
 };
@@ -64,6 +78,28 @@ describe('Test controls selectors', () => {
         const retVal = widgetBuilderSelector(state);
         expect(retVal).toExist();
         expect(retVal).toBe(true);
+    });
+    it('test initialSettingsSelector', () => {
+        const retVal = initialSettingsSelector(state);
+        expect(retVal).toExist();
+        expect(retVal).toEqual({
+            id: 'layerId',
+            name: 'layerName',
+            style: ''
+        });
+    });
+    it('test originalSettingsSelector', () => {
+        const retVal = originalSettingsSelector(state);
+        expect(retVal).toExist();
+        expect(retVal).toEqual({
+            style: 'generic'
+        });
+    });
+    it('test activeTabSettingsSelector', () => {
+        const retVal = activeTabSettingsSelector(state);
+        expect(retVal).toExist();
+        expect(retVal).toBe('style');
+        expect(activeTabSettingsSelector({})).toBe('general');
     });
     it('test drawerEnabledControlSelector default value', () => {
         const retVal = drawerEnabledControlSelector(state);

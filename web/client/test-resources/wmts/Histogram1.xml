@@ -1,0 +1,5 @@
+<Histogram xmlns="http://demo.geo-solutions.it/share/wmts-multidim/wmts_multi_dimensional.xsd" xmlns:ows="http://www.opengis.net/ows/1.1">
+  <ows:Identifier>time</ows:Identifier>
+  <Domain>2016-02-23T00:00:00.000Z/2016-02-25T00:00:00.000Z/PT8H</Domain>
+  <Values>240,0,240,0,0,240</Values>
+</Histogram>

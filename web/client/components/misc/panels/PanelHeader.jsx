@@ -46,7 +46,7 @@ const fullscreenGlyph = {
 
 module.exports = ({
     position = 'right',
-    onClose = () => {},
+    onClose,
     bsStyle = 'default',
     title = '',
     fullscreen = false,
@@ -55,7 +55,7 @@ module.exports = ({
     additionalRows,
     onFullscreen = () => {}
 }) => {
-    const closeButton = (
+    const closeButton = !onClose ? null : (
         <Button key="ms-header-close" className="square-button ms-close" onClick={onClose} bsStyle={bsStyle}>
             <Glyphicon glyph="1-close"/>
         </Button>
