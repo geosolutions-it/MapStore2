@@ -271,7 +271,9 @@ module.exports = {
                 .switchMap(({time: actionTime}) => {
                     // get current time in case of SELECT_LAYER
                     const time = actionTime || currentTimeSelector(getState());
-                    return Rx.Observable.forkJoin( // TODO: find out a way to optimize and do only one request
+                    return Rx.Observable.forkJoin(
+                        // TODO: find out a way to optimize and do only one request
+                        // TODO: support for local list of values (in case of missing multidim-extension)
                         getDomainValues(...domainArgs(getState, { sort: "asc", limit: 1, fromValue: time }))
                             .map(res => res.DomainValues.Domain.split(","))
                             .map(([tt]) => tt).catch(err => err && Rx.Observable.of(null)),

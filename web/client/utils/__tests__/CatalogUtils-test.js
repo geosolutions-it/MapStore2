@@ -44,7 +44,7 @@ describe('Test the CatalogUtils', () => {
             records: [{
                 Dimension: [{
                     $: {
-                        name: 'time'
+                        name: 'elevation'
                     }
                 }]
             }]
@@ -59,7 +59,7 @@ describe('Test the CatalogUtils', () => {
             records: [{
                 Dimension: [{
                     $: {
-                        name: 'time'
+                        name: 'elevation'
                     },
                     _: '1,2'
                 }]
@@ -68,6 +68,21 @@ describe('Test the CatalogUtils', () => {
         expect(records.length).toBe(1);
         expect(records[0].dimensions.length).toBe(1);
         expect(records[0].dimensions[0].values.length).toBe(2);
+    });
+    // this is needed to avoid to show time values for timeline, until support for time values is fully implemented
+    it('wms dimensions time is excluded', () => {
+        const records = CatalogUtils.getCatalogRecords('wms', {
+            records: [{
+                Dimension: [{
+                    $: {
+                        name: 'time'
+                    },
+                    _: '2008-10-31T00:00:00.000Z,2008-11-04T00:00:00.000Z'
+                }]
+            }]
+        }, {});
+        expect(records.length).toBe(1);
+        expect(records[0].dimensions.length).toBe(0);
     });
 
     it('wms limited srs', () => {
