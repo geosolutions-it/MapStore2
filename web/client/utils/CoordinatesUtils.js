@@ -188,6 +188,14 @@ const reprojectExtent = (extent, projection, isIDL) => {
     ].reduce((a, b) => [...a, b.x, b.y], []));
 };
 
+const getPolygonFromExtent = (extent) => {
+    if (extent) {
+        if (extent.hasOwnProperty('geometry') && extent.geometry.type === "Polygon") {
+            return extent;
+        }
+        return bboxPolygon(extent);
+    }
+};
 /**
  * Reproject extent to verify the intersection with the international date line (isIDL)
  * if on IDL return double extent array
@@ -817,15 +825,10 @@ const CoordinatesUtils = {
         return value;
     },
     getExtentFromNormalized,
-    getPolygonFromExtent: (extent) => {
-        if (extent) {
-            if (extent.hasOwnProperty('geometry') && extent.geometry.type === "Polygon") {
-                return extent;
-            }
-            return bboxPolygon(extent);
-        }
+    getPolygonFromExtent,
+    isPointInsideExtent: (point = {lat: 1, lng: 1}, extent) => {
+        return contains(getPolygonFromExtent(extent), toPoint([point.lng, point.lat]));
     },
-
     isBboxCompatible: (extent1, extent2) => overlap(extent1, extent2) || contains(extent1, extent2) || contains(extent2, extent1)
 
 };

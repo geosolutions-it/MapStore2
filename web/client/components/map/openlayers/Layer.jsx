@@ -133,13 +133,13 @@ class OpenlayersLayer extends React.Component {
                 const mapExtent = parentMap && parentMap.getView().getProjection().getExtent();
                 const layerExtent = options && options.bbox && options.bbox.bounds;
                 const mapBboxPolygon = mapExtent && CoordinatesUtils.reprojectBbox(mapExtent, this.props.srs, 'EPSG:4326');
-                let LayerBboxPolygon = layerExtent && CoordinatesUtils.getExtentFromNormalized(layerExtent, this.props.srs).extent;
-                if (LayerBboxPolygon && LayerBboxPolygon.length === 2 && _.isArray(LayerBboxPolygon[1])) {
-                    LayerBboxPolygon = LayerBboxPolygon[1];
+                let layerBboxPolygon = layerExtent && CoordinatesUtils.getExtentFromNormalized(layerExtent, this.props.srs).extent;
+                if (layerBboxPolygon && layerBboxPolygon.length === 2 && _.isArray(layerBboxPolygon[1])) {
+                    layerBboxPolygon = layerBboxPolygon[1];
                 }
 
-                if (mapBboxPolygon && LayerBboxPolygon &&
-                    !CoordinatesUtils.isBboxCompatible(CoordinatesUtils.getPolygonFromExtent(mapBboxPolygon), CoordinatesUtils.getPolygonFromExtent(LayerBboxPolygon)) ||
+                if (mapBboxPolygon && layerBboxPolygon &&
+                    !CoordinatesUtils.isBboxCompatible(CoordinatesUtils.getPolygonFromExtent(mapBboxPolygon), CoordinatesUtils.getPolygonFromExtent(layerBboxPolygon)) ||
                     (layerOptions.type === "wmts" &&
                     !_.head(CoordinatesUtils.getEquivalentSRS(this.props.srs).filter(proj => layerOptions.matrixIds && layerOptions.matrixIds.hasOwnProperty(proj)))
                     )) {
@@ -149,7 +149,8 @@ class OpenlayersLayer extends React.Component {
                         action: {
                             label: "close"
                         },
-                        position: "tc"
+                        position: "tc",
+                        uid: "1"
                     });
                 }
                 this.addLayer(options);

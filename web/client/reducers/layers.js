@@ -228,10 +228,10 @@ function layers(state = { flat: [] }, action) {
                 newGroups = moveNode(newGroups, newLayer.id, groupId, newLayers, action.foreground);
             }
             let orderedNewLayers = LayersUtils.sortLayers ? LayersUtils.sortLayers(newGroups, newLayers) : newLayers;
-            return {
-                    flat: orderedNewLayers,
-                    groups: newGroups
-            };
+            return assign({}, state, {
+                flat: orderedNewLayers,
+                groups: newGroups
+            });
         }
         case REMOVE_LAYER: {
             const newGroups = deepRemove(state.groups, action.layerId);

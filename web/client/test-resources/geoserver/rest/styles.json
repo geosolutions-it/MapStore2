@@ -1,0 +1,14 @@
+{
+    "styles": {
+        "style": [
+            {
+                "name": "test_style",
+                "href": "base\/\/web\/client\/test-resources\/geoserver\/styles\/test_style.json"
+            },
+            {
+                "name": "test_TEST_LAYER_1",
+                "href": "base\/\/web\/client\/test-resources\/geoserver\/styles\/test_TEST_LAYER_1.json"
+            }
+        ]
+    }
+}

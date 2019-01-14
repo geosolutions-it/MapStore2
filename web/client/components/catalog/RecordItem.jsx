@@ -15,7 +15,7 @@ const {isObject} = require('lodash');
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const ContainerDimensions = require('react-container-dimensions').default;
 const ConfigUtils = require('../../utils/ConfigUtils');
-const {getRecordLinks, recordToLayer, extractOGCServicesReferences, buildSRSMap, removeParameters} = require('../../utils/CatalogUtils');
+const {getRecordLinks, recordToLayer, extractOGCServicesReferences, buildSRSMap, removeParameters, extractEsriReferences, esriToLayer} = require('../../utils/CatalogUtils');
 
 const tooltip = require('../misc/enhancers/tooltip');
 const Button = tooltip(ButtonRB);
@@ -86,6 +86,9 @@ class RecordItem extends React.Component {
         }
         // let's extract the references we need
         const {wms, wmts} = extractOGCServicesReferences(record);
+        // let's extract the esri
+        const {esri} = extractEsriReferences(record);
+
         // let's create the buttons
         let buttons = [];
         // TODO addLayer and addwmtsLayer do almost the same thing and they should be unified
@@ -110,6 +113,19 @@ class RecordItem extends React.Component {
                     bsStyle="primary"
                     bsSize={this.props.buttonSize}
                     onClick={() => { this.addwmtsLayer(wmts); }}
+                    key="addwmtsLayer">
+                        <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap"/>
+                </Button>
+            );
+        }
+        if (esri) {
+            buttons.push(
+                <Button
+                    key="wmts-button"
+                    className="record-button"
+                    bsStyle="primary"
+                    bsSize={this.props.buttonSize}
+                    onClick={() => { this.addEsriLayer(); }}
                     key="addwmtsLayer">
                         <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap"/>
                 </Button>
@@ -145,6 +161,7 @@ class RecordItem extends React.Component {
     render() {
         let record = this.props.record;
         const {wms, wmts} = extractOGCServicesReferences(record);
+        const {esri} = extractEsriReferences(record);
         return (
             <Panel className="record-item">
                 {!this.props.hideThumbnail && <div className="record-item-thumb">
@@ -167,7 +184,7 @@ class RecordItem extends React.Component {
                         {!this.props.hideIdentifier && <h4><small>{record && record.identifier}</small></h4>}
                         <p className="record-item-description">{this.renderDescription(record)}</p>
                     </div>
-                    {!wms && !wmts && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}
+                    {!wms && !wmts && !esri && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}
                     {!this.props.hideExpand && <div
                     className="ms-ruler"
                     style={{visibility: 'hidden', height: 0, whiteSpace: 'nowrap', position: 'absolute' }}
@@ -225,7 +242,14 @@ class RecordItem extends React.Component {
             }
         }
     };
-
+    addEsriLayer = () => {
+        this.props.onLayerAdd(esriToLayer(this.props.record));
+        if (this.props.record.boundingBox && this.props.zoomToLayer) {
+            let extent = this.props.record.boundingBox.extent;
+            let crs = this.props.record.boundingBox.crs;
+            this.props.onZoomToExtent(extent, crs);
+        }
+    };
     displayExpand = width => {
         const descriptionWidth = this.descriptionRuler ? this.descriptionRuler.clientWidth : 0;
         return descriptionWidth > width;

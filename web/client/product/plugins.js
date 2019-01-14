@@ -40,6 +40,7 @@ module.exports = {
         OmniBarPlugin: require('../plugins/OmniBar'),
         GridContainerPlugin: require('../plugins/GridContainer'),
         BurgerMenuPlugin: require('../plugins/BurgerMenu'),
+        PlaybackPlugin: require('../plugins/Playback.jsx'),
         UndoPlugin: require('../plugins/History'),
         RedoPlugin: require('../plugins/History'),
         MapsPlugin: require('../plugins/Maps'),
@@ -92,9 +93,11 @@ module.exports = {
         NavMenu: require('./plugins/NavMenu'),
         RulesEditorPlugin: require('../plugins/RulesEditor'),
         FloatingLegendPlugin: require('../plugins/FloatingLegend'),
+        TimelinePlugin: require('../plugins/Timeline'),
         ThematicLayerPlugin: require('../plugins/ThematicLayer'),
         CRSSelectorPlugin: require('../plugins/CRSSelector'),
-        FeedbackMaskPlugin: require('../plugins/FeedbackMask')
+        FeedbackMaskPlugin: require('../plugins/FeedbackMask'),
+        StyleEditorPlugin: require('../plugins/StyleEditor')
     },
     requires: {
         ReactSwipe: require('react-swipeable-views').default,

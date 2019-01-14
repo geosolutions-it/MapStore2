@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 const Rx = require('rxjs');
-const {get} = require('lodash');
+const {get, find} = require('lodash');
 
 
 const { LOAD_FEATURE_INFO, ERROR_FEATURE_INFO, GET_VECTOR_INFO, FEATURE_INFO_CLICK, CLOSE_IDENTIFY, featureInfoClick, updateCenterToMarker, purgeMapInfoResults} = require('../actions/mapInfo');
@@ -17,9 +17,9 @@ const { closeAnnotations } = require('../actions/annotations');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {stopGetFeatureInfoSelector} = require('../selectors/mapinfo');
 const {centerToMarkerSelector} = require('../selectors/layers');
-const {mapSelector} = require('../selectors/map');
+const {mapSelector, projectionDefsSelector, projectionSelector } = require('../selectors/map');
 const {boundingMapRectSelector} = require('../selectors/maplayout');
-const {centerToVisibleArea, isInsideVisibleArea} = require('../utils/CoordinatesUtils');
+const {centerToVisibleArea, isInsideVisibleArea, isPointInsideExtent, reprojectBbox} = require('../utils/CoordinatesUtils');
 const {getCurrentResolution, parseLayoutValue} = require('../utils/MapUtils');
 
 /**
@@ -69,6 +69,11 @@ module.exports = {
             .switchMap(() => {
                 const state = store.getState();
                 const map = mapSelector(state);
+                const mapProjection = projectionSelector(state);
+                const projectionDefs = projectionDefsSelector(state);
+                const currentprojectionDefs = find(projectionDefs, {'code': mapProjection});
+                const projectionExtent = currentprojectionDefs && currentprojectionDefs.extent;
+                const reprojectExtent = projectionExtent && reprojectBbox(projectionExtent, mapProjection, "EPSG:4326");
                 const boundingMapRect = boundingMapRectSelector(state);
                 const coords = action.point && action.point && action.point.latlng;
                 const resolution = getCurrentResolution(Math.round(map.zoom), 0, 21, 96);
@@ -81,6 +86,9 @@ module.exports = {
                 // exclude cesium with cartographic options
                 if (!map || !layoutBounds || !coords || action.point.cartographic || isInsideVisibleArea(coords, map, layoutBounds, resolution)) {
                     return Rx.Observable.of(updateCenterToMarker('disabled'));
+                }
+                if (reprojectExtent && !isPointInsideExtent(coords, reprojectExtent)) {
+                    return Rx.Observable.empty();
                 }
                 const center = centerToVisibleArea(coords, map, layoutBounds, resolution);
                 return Rx.Observable.of(updateCenterToMarker('enabled'), zoomToPoint(center.pos, center.zoom, center.crs));

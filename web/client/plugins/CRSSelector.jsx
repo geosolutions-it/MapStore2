@@ -74,7 +74,8 @@ class Selector extends React.Component {
                     action: {
                         label: "close"
                     },
-                    position: "tc"
+                    position: "tc",
+                    uid: "3"
                 });
             }
         };
@@ -162,8 +163,6 @@ const crsSelector = connect(
 */
 module.exports = {
     CRSSelectorPlugin: assign(crsSelector, {
-        disablePluginIf: "{true}"
-    }, {
         MapFooter: {
             name: "crsSelector",
             position: 10,
