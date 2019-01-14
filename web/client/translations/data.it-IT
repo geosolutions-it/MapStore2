@@ -1491,6 +1491,7 @@
         },
         "playback": {
             "settings": {
+                "tooltip": "Impostazioni",
                 "title": "Impostazioni Riproduzione",
                 "frameDuration": "Durata Fotogramma",
                 "range": {
@@ -1503,7 +1504,7 @@
                     "fitToSelectedLayerRange": "Adatta ai dati del livello selezionato"
                 },
                 "step": {
-                    "fixed": "Passo fisso",
+                    "tooltip": "Quando l'opzione 'Aggancia al livello guida' è disabilitata, si può personalizzare il passo di animazione",
                     "label": "Passo di animazione",
                     "year": "{number, plural, =0 {Anni} =1 {Anno} other {Anni}}",
                     "week": "{number, plural, =0 {Settimane} =1 {Settimana} other {Settimane}}",
@@ -1514,7 +1515,7 @@
                 },
                 "mode": {
                     "title": "Modalità",
-                    "following": "Inseguimento",
+                    "following": "Insegui l'animazione",
                     "followingDescription": "Durante l'animazione, insegui il cursore"
                 }
             },
@@ -1526,6 +1527,11 @@
             "stop": "Stop"
         },
         "timeline": {
+            "settings": {
+                "title": "Impostazione linea di tempo",
+                "snapToGuideLayer": "Aggancia al livello guida",
+                "snapToGuideLayerTooltip": "Forza il cursore del tempo in modo che si agganci ai dati del livello selezionato. Disattiva questa opzione per sbloccare i cursori temporali e abilitare la personalizzazione del passo di animazione"
+            },
             "currentTime": "Istante corrente",
             "rangeStart": "Vai all'intervallo di tempo corrente",
             "rangeEnd": "Vai all'intervallo di tempo corrente",
