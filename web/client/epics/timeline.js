@@ -2,6 +2,7 @@
 const Rx = require('rxjs');
 const {isString, get, head, castArray} = require('lodash');
 const moment = require('moment');
+const {wrapStartStop} = require('../observables/epics');
 
 const { SELECT_TIME, RANGE_CHANGED, ENABLE_OFFSET, timeDataLoading, rangeDataLoaded, onRangeChanged, selectLayer } = require('../actions/timeline');
 const { setCurrentTime, UPDATE_LAYER_DIMENSION_DATA, setCurrentOffset } = require('../actions/dimension');
@@ -174,7 +175,9 @@ module.exports = {
                             })];
                         }
                         return Rx.Observable.from([...actions, setCurrentTime(t)]);
-                    });
+                    })
+                    // .let(wrapStartStop(timeDataLoading(false, true), timeDataLoading(false, false)))
+                    ;
             }
             return Rx.Observable.of(setCurrentTime(time));
         }),

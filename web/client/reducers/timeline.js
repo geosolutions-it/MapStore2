@@ -66,7 +66,7 @@ module.exports = (state = {
             }, state);
         }
         case LOADING: {
-            return set(`loading[${action.layerId}]`, action.loading, state);
+            return action.layerId ? set(`loading[${action.layerId}]`, action.loading, state) : set(`loading.timeline`, action.loading, state);
         }
         case SELECT_LAYER: {
             return set('selectedLayer', action.layerId, state);

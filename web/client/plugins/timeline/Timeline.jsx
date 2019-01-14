@@ -5,6 +5,7 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
+const React = require('react');
 const { connect } = require('react-redux');
 const { isString, differenceBy } = require('lodash');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
@@ -17,6 +18,8 @@ const { selectPlaybackRange } = require('../../actions/playback');
 const { playbackRangeSelector, statusSelector } = require('../../selectors/playback');
 const { createStructuredSelector, createSelector } = require('reselect');
 const { compose, withPropsOnChange, defaultProps } = require('recompose');
+const withMask = require('../../components/misc/enhancers/withMask');
+
 
 const clickHandleEnhancer = require('../../components/time/enhancers/clickHandlers');
 
@@ -213,6 +216,10 @@ const enhance = compose(
                 (offsetEnabled && currentTimeRange ? { offsetTime: currentTimeRange.end } : {})
             ].reduce((res, value) => value ? { ...res, ...value } : { ...res }, {}) // becomes an object
         })
+    ),
+    withMask(
+        ({loading}) => loading && loading.timeline,
+        () => <div style={{ margin: "auto" }} >Loading...</div>
     )
 );
 const Timeline = require('../../components/time/TimelineComponent');
