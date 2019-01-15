@@ -1491,6 +1491,7 @@
         },
         "playback": {
             "settings": {
+                "tooltip": "Configuraciones",
                 "title": "Ajustes de reproducción",
                 "frameDuration": "Duración del marco",
                 "range": {
@@ -1503,7 +1504,7 @@
                     "fitToSelectedLayerRange": "Ajustar al rango de la capa seleccionada"
                 },
                 "step": {
-                    "fixed": "Paso fijo",
+                    "tooltip": "Cuando la opción 'Ajustar a la capa de guía' está deshabilitada, puede personalizar el paso de animación",
                     "label": "Paso de animacion",
                     "year": "{number, plural, =0 {Año} =1 {Año} other {Años}}",
                     "week": "{number, plural, =0 {Semana} =1 {Semana} other {Semanas}}",
@@ -1514,7 +1515,7 @@
                 },
                 "mode": {
                     "title": "Modo",
-                    "following": "Siguiendo",
+                    "following": "Sigue la animación",
                     "followingDescription": "Cuando la animación está activa, sigue el cursor."
                 }
             },
@@ -1526,6 +1527,11 @@
             "stop": "Parada"
         },
         "timeline": {
+            "settings": {
+                "title": "Configuración de la línea de tiempo",
+                "snapToGuideLayer": "Ajustar a capa de guía",
+                "snapToGuideLayerTooltip": "Hace que el cursor del tiempo se ajuste a los datos de la capa seleccionada. Desactive esta opción para desbloquear los cursores de tiempo y habilitar la personalización del paso de animación"
+            },
             "currentTime": "Ir a la hora actual",
             "rangeStart": "Ir al rango de tiempo actual",
             "rangeEnd": "Ir al rango de tiempo actual",

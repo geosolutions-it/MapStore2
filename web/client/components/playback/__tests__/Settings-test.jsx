@@ -2,8 +2,8 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
-const PlaybackSettings = require('../PlaybackSettings');
-describe('PlaybackSettings component', () => {
+const Settings = require('../Settings');
+describe('Timeline/Playback Settings component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -13,14 +13,14 @@ describe('PlaybackSettings component', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-    it('PlaybackSettings rendering with defaults', () => {
-        ReactDOM.render(<PlaybackSettings />, document.getElementById("container"));
+    it('rendering with defaults', () => {
+        ReactDOM.render(<Settings />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-playback-settings');
         expect(el).toExist();
     });
-    it('PlaybackSettings rendering with values', () => {
-        ReactDOM.render(<PlaybackSettings following stepUnit="days" timeStep={1} frameDuration={1} />, document.getElementById("container"));
+    it('rendering with values', () => {
+        ReactDOM.render(<Settings following stepUnit="days" timeStep={1} frameDuration={1} />, document.getElementById("container"));
         const container = document.getElementById('container');
         const el = container.querySelector('.ms-playback-settings');
         expect(el).toExist();
@@ -28,57 +28,76 @@ describe('PlaybackSettings component', () => {
         expect(document.querySelector('input#formPlaybackStep').value).toBe('1');
         expect(document.querySelector('select#formPlaybackStep').value).toBe('days');
     });
-
-    it('Test PlaybackSettings onChangeSetting', () => {
+    it('test guide layer switch value', () => {
+        ReactDOM.render(<Settings fixedStep={false} />, document.getElementById("container"));
+        expect(document.querySelectorAll('input[type=checkbox]')[0].checked).toBe(true);
+        ReactDOM.render(<Settings fixedStep />, document.getElementById("container"));
+        expect(document.querySelectorAll('input[type=checkbox]')[0].checked).toBe(false);
+    });
+    it('Test toggleAnimationMode', () => {
+        const actions = {
+            toggleAnimationMode: () => { }
+        };
+        const spy = expect.spyOn(actions, 'toggleAnimationMode');
+        ReactDOM.render(<Settings
+            playbackRange={{
+                startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" // this have to be valid to show buttons
+            }}
+            toggleAnimationMode={actions.toggleAnimationMode}
+        />, document.getElementById("container"));
+        ReactTestUtils.Simulate.change(document.querySelectorAll('input[type=checkbox]')[0]); // <-- trigger event callback
+        expect(spy).toHaveBeenCalled();
+    });
+    it('Test onChangeSetting', () => {
         const actions = {
             onSettingChange: () => {}
         };
         const spyonChangeSetting = expect.spyOn(actions, 'onSettingChange');
-        ReactDOM.render(<PlaybackSettings onSettingChange={actions.onSettingChange} />, document.getElementById("container"));
+        ReactDOM.render(<Settings onSettingChange={actions.onSettingChange} />, document.getElementById("container"));
         const element = document.querySelector('#frameDuration');
         ReactTestUtils.Simulate.change(element, { target: { value: "2" } });
         expect(spyonChangeSetting).toHaveBeenCalled();
         expect(spyonChangeSetting.calls[0].arguments[0]).toBe("frameDuration");
         expect(spyonChangeSetting.calls[0].arguments[1]).toBe(2);
     });
-    it('Test PlaybackSettings onChangeSetting default values to 1', () => {
+    it('Test onChangeSetting default values to 1', () => {
         const actions = {
             onSettingChange: () => { }
         };
         const spyonChangeSetting = expect.spyOn(actions, 'onSettingChange');
-        ReactDOM.render(<PlaybackSettings onSettingChange={actions.onSettingChange} />, document.getElementById("container"));
+        ReactDOM.render(<Settings onSettingChange={actions.onSettingChange} />, document.getElementById("container"));
         const element = document.querySelector('#frameDuration');
         ReactTestUtils.Simulate.change(element, { target: { value: "-2" } });
         expect(spyonChangeSetting).toHaveBeenCalled();
         expect(spyonChangeSetting.calls[0].arguments[1]).toBe(1);
     });
-    it('Test PlaybackSettings toggleAnimationRange', () => {
+    it('Test toggleAnimationRange', () => {
         const actions = {
             toggleAnimationRange: () => {}
         };
         const spytoggleAnimationRange = expect.spyOn(actions, 'toggleAnimationRange');
-        ReactDOM.render(<PlaybackSettings toggleAnimationRange={actions.toggleAnimationRange} />, document.getElementById("container"));
+        ReactDOM.render(<Settings toggleAnimationRange={actions.toggleAnimationRange} />, document.getElementById("container"));
         ReactTestUtils.Simulate.click(document.querySelector(".mapstore-switch-panel .m-slider")); // <-- trigger event callback
         expect(spytoggleAnimationRange).toHaveBeenCalled();
         expect(spytoggleAnimationRange.calls[0].arguments[0]).toBe(true);
     });
-    it('Test PlaybackSettings toggleAnimationRange disable', () => {
+    it('Test toggleAnimationRange disable', () => {
         const actions = {
             toggleAnimationRange: () => { }
         };
         const spytoggleAnimationRange = expect.spyOn(actions, 'toggleAnimationRange');
-        ReactDOM.render(<PlaybackSettings playbackRange={{
+        ReactDOM.render(<Settings playbackRange={{
             startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" }} toggleAnimationRange={actions.toggleAnimationRange} />, document.getElementById("container"));
         ReactTestUtils.Simulate.click(document.querySelector(".mapstore-switch-panel .m-slider")); // <-- trigger event callback
         expect(spytoggleAnimationRange).toHaveBeenCalled();
         expect(spytoggleAnimationRange.calls[0].arguments[0]).toBe(false);
     });
-    it('Test PlaybackSettings playbackButtons', () => {
+    it('Test playbackButtons', () => {
         const actions = {
             onClick: () => { }
         };
         const spyClick = expect.spyOn(actions, 'onClick');
-        ReactDOM.render(<PlaybackSettings
+        ReactDOM.render(<Settings
             playbackRange={{
                 startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" // this have to be valid to show buttons
             }}
@@ -94,7 +113,7 @@ describe('PlaybackSettings component', () => {
             setPlaybackRange: () => { }
         };
         const spyClick = expect.spyOn(actions, 'setPlaybackRange');
-        ReactDOM.render(<PlaybackSettings
+        ReactDOM.render(<Settings
             playbackRange={{
                 startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" // this have to be valid to show buttons
             }}
@@ -110,7 +129,7 @@ describe('PlaybackSettings component', () => {
             setPlaybackRange: () => { }
         };
         const spyClick = expect.spyOn(actions, 'setPlaybackRange');
-        ReactDOM.render(<PlaybackSettings
+        ReactDOM.render(<Settings
             playbackRange={{
                 startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" // this have to be valid to show buttons
             }}
@@ -126,7 +145,7 @@ describe('PlaybackSettings component', () => {
             onSettingChange: () => { }
         };
         const spyClick = expect.spyOn(actions, 'onSettingChange');
-        ReactDOM.render(<PlaybackSettings
+        ReactDOM.render(<Settings
             playbackRange={{
                 startPlaybackTime: "2018-11-19T11:36:26.990Z", endPlaybackTime: "2019-11-19T11:36:26.990Z" // this have to be valid to show buttons
             }}

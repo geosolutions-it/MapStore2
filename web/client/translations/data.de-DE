@@ -1491,6 +1491,7 @@
         },
         "playback": {
             "settings": {
+                "tooltip": "die Einstellungen",
                 "title": "Wiedergabeeinstellungen",
                 "frameDuration": "Frame-Dauer",
                 "range": {
@@ -1503,7 +1504,7 @@
                     "fitToSelectedLayerRange": "An den Bereich der ausgewählten Ebene anpassen"
                 },
                 "step": {
-                    "fixed": "Feststehender Schritt",
+                    "tooltip": "Wenn die Option 'An Führungsebene anpassen' deaktiviert ist, können Sie den Animationsschritt anpassen",
                     "label": "Animationsschritt",
                     "year": "{number, plural, =0 {Jahr} =1 {Jahr} other {Jahre}}",
                     "week": "{number, plural, =0 {Woche} =1 {Woche} other {Wochen}}",
@@ -1514,7 +1515,7 @@
                 },
                 "mode": {
                     "title": "Modus",
-                    "following": "Folgende",
+                    "following": "Folge der Animation",
                     "followingDescription": "Wenn die Animation aktiv ist, folgen Sie dem Cursor"
                 }
             },
@@ -1526,6 +1527,11 @@
             "stop": "Stopp"
         },
         "timeline": {
+            "settings": {
+                "title": "Timeline-Einstellungen",
+                "snapToGuideLayer": "Auf Führungsebene ausrichten",
+                "snapToGuideLayerTooltip": "Zwingt den Zeitcursor, sich an den Daten der ausgewählten Ebene zu fangen. Deaktivieren Sie diese Option, um die Zeitcursor zu entsperren und die Anpassung des Animationsschritts zu aktivieren."
+            },
             "currentTime": "Gehe zur aktuellen Uhrzeit",
             "rangeStart": "Gehe zum aktuellen Zeitbereich",
             "rangeEnd": "Gehe zum aktuellen Zeitbereich",

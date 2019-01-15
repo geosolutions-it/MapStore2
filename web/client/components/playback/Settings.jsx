@@ -74,6 +74,16 @@ module.exports = ({
     }
 
 }) => (<div className="ms-playback-settings">
+        <h4><Message msgId="timeline.settings.title" /></h4>
+        <FormGroup controlId="timelineSettings">
+            <Form componentClass="fieldset" inline>
+                <ControlLabel>
+                    <Message msgId="timeline.settings.snapToGuideLayer" />&nbsp;
+                    <InfoPopover text={<Message msgId="timeline.settings.snapToGuideLayerTooltip" />} />
+                </ControlLabel>
+                <span><SwitchButton checked={!fixedStep} onChange={() => toggleAnimationMode()} /></span>
+            </Form>
+        </FormGroup>
     <h4><Message msgId="playback.settings.title" /></h4>
         <FormGroup controlId="frameDuration" >
         <ControlLabel><Message msgId="playback.settings.frameDuration" /></ControlLabel>
@@ -91,11 +101,12 @@ module.exports = ({
         </InputGroup>
 
     </FormGroup>
-    <ControlLabel><Message msgId="playback.settings.step.label" /></ControlLabel>
+    <ControlLabel>
+        <Message msgId="playback.settings.step.label" />
+        &nbsp;<InfoPopover text={<Message msgId="playback.settings.step.tooltip" />} />
+    </ControlLabel>
     <FormGroup controlId="formPlaybackStep">
         <Form componentClass="fieldset" inline>
-            <ControlLabel><Message msgId="playback.settings.step.fixed" /></ControlLabel>
-            <span><SwitchButton checked={fixedStep} onChange={() => toggleAnimationMode()} /></span>
             <FormControl
                 disabled={!fixedStep}
                 componentClass="input"
@@ -138,7 +149,7 @@ module.exports = ({
     </SwitchPanel>
     <FormGroup controlId="formPlaybackFollowingMode">
         <Form componentClass="fieldset" inline>
-            <ControlLabel><Message msgId="playback.settings.mode.following" /><InfoPopover text={<Message msgId="playback.settings.mode.followingDescription" />} /></ControlLabel>
+                <ControlLabel><Message msgId="playback.settings.mode.following" />&nbsp;<InfoPopover text={<Message msgId="playback.settings.mode.followingDescription" />} /></ControlLabel>
                 <span><SwitchButton checked={following} onChange={v => onSettingChange("following", v)}/></span>
         </Form>
     </FormGroup>

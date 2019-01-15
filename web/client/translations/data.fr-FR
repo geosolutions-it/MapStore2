@@ -1492,6 +1492,7 @@
         },
         "playback": {
             "settings": {
+                "tooltip": "Paramètres",
                 "title": "Paramètres de lecture",
                 "frameDuration": "Durée du cadre",
                 "range": {
@@ -1504,7 +1505,7 @@
                     "fitToSelectedLayerRange": "Ajuster à la plage du calque sélectionné"
                 },
                 "step": {
-                    "fixed": "Pas fixe",
+                    "tooltip": "Lorsque l'option 'Aligner sur le calque guide' est désactivée, vous pouvez personnaliser l'étape de l'animation",
                     "label": "Étape d'animation",
                     "year": "{number, plural, =0 {Année} =1 {Année} other {Années}}",
                     "week": "{number, plural, =0 {semaine} =1 {semaine} other {semaine}}",
@@ -1515,7 +1516,7 @@
                 },
                 "mode": {
                     "title": "Mode",
-                    "following": "Suivant",
+                    "following": "Suivre l'animation",
                     "followingDescription": "Lorsque l'animation est active, suivez le curseur"
                 }
             },
@@ -1527,6 +1528,11 @@
             "stop": "Arrêtez"
         },
         "timeline": {
+            "settings": {
+                "title": "Paramètres de la timeline",
+                "snapToGuideLayer": "Aligner sur le calque guide",
+                "snapToGuideLayerTooltip": "Force le curseur temporel à s'aligner sur les données du calque sélectionné. Désactivez cette option pour déverrouiller les curseurs temporels et activer la personnalisation de l'étape d'animation"
+            },
             "currentTime": "Aller à l'heure actuelle",
             "rangeStart": "Aller à la plage de temps actuelle",
             "rangeEnd": "Aller à la plage de temps actuelle",

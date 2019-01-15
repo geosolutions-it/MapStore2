@@ -1492,6 +1492,7 @@
         },
         "playback": {
             "settings": {
+                "tooltip": "Settings",
                 "title": "Playback Settings",
                 "frameDuration": "Frame Duration",
                 "range": {
@@ -1504,7 +1505,7 @@
                     "fitToSelectedLayerRange": "Fit to selected layer's range"
                 },
                 "step": {
-                    "fixed": "Fixed step",
+                    "tooltip": "When 'Snap to guide Layer' option is disabled, you can customize the animation step",
                     "label": "Animation Step",
                     "year": "{number, plural, =0 {Year} =1 {Year} other {Years}}",
                     "week": "{number, plural, =0 {Week} =1 {Week} other {Weeks}}",
@@ -1515,7 +1516,7 @@
                 },
                 "mode": {
                     "title": "Mode",
-                    "following": "Following",
+                    "following": "Follow the animation",
                     "followingDescription": "When the animation is active, follow the cursor"
                 }
             },
@@ -1527,6 +1528,11 @@
             "stop": "Stop"
         },
         "timeline": {
+            "settings": {
+                "title": "Timeline Settings",
+                "snapToGuideLayer": "Snap to guide layer",
+                "snapToGuideLayerTooltip": "Forces the time cursor to snap to the selected layer's data. Disable this option to unlock the time cursors and enable the customization of animation step"
+            },
             "currentTime": "Go to current time",
             "rangeStart":"Go to the current time range",
             "rangeEnd" : "Go to the current time range",

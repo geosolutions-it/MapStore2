@@ -19,7 +19,7 @@ const { animationStepMove, STATUS } = require('../../actions/playback');
 const Message = require('../../components/I18N/Message');
 const Toolbar = require('../../components/misc/toolbar/Toolbar');
 
-const PlaybackSettings = require('./Settings');
+const Settings = require('./Settings');
 
 /**
  * Support for expand/collapse timeline
@@ -81,7 +81,7 @@ module.exports = playbackEnhancer(({
     onShowSettings = () => {}
 }) =>
 ( <div style={{display: 'flex'}}>
-        { (status !== statusMap.PLAY && status !== statusMap.PAUSE) && showSettings && <PlaybackSettings />}
+        { (status !== statusMap.PLAY && status !== statusMap.PAUSE) && showSettings && <Settings />}
         <Toolbar
             btnDefaultProps={{
                 className: 'square-button-md',
@@ -118,7 +118,7 @@ module.exports = playbackEnhancer(({
                     active: (status !== statusMap.PLAY || status !== statusMap.PAUSE) && !!showSettings,
                     disabled: (status === statusMap.PLAY || status === statusMap.PAUSE),
                     onClick: () => status !== statusMap.PLAY && onShowSettings(!showSettings),
-                    tooltip: <Message msgId={"playback.settings.title"} />
+                    tooltip: <Message msgId={"playback.settings.tooltip"} />
                 }
             ]}/>
     </div>
