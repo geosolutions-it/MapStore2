@@ -19,6 +19,8 @@ const { playbackRangeSelector, statusSelector } = require('../../selectors/playb
 const { createStructuredSelector, createSelector } = require('reselect');
 const { compose, withPropsOnChange, defaultProps } = require('recompose');
 const withMask = require('../../components/misc/enhancers/withMask');
+const Message = require('../../components/I18N/Message');
+const LoadingSpinner = require('../../components/misc/LoadingSpinner');
 
 
 const clickHandleEnhancer = require('../../components/time/enhancers/clickHandlers');
@@ -219,7 +221,8 @@ const enhance = compose(
     ),
     withMask(
         ({loading}) => loading && loading.timeline,
-        () => <div style={{ margin: "auto" }} >Loading...</div>
+        () => <div style={{ margin: "auto" }} ><LoadingSpinner style={{ display: "inline-block", verticalAlign: "middle" }}/><Message msgId="loading" /></div>,
+        {white: true}
     )
 );
 const Timeline = require('../../components/time/TimelineComponent');

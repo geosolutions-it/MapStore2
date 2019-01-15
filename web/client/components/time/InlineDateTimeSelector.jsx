@@ -18,6 +18,7 @@ const moment = require('moment');
 class InlineDateTimeSelector extends React.Component {
     static propTypes = {
         date: PropTypes.string,
+        clickable: PropTypes.bool,
         onUpdate: PropTypes.func,
         onIconClick: PropTypes.func,
         glyph: PropTypes.string,
@@ -31,6 +32,7 @@ class InlineDateTimeSelector extends React.Component {
     static defaultProps = {
         date: '',
         onIconClick: () => {},
+        clickable: false,
         onUpdate: () => {},
         glyph: 'time',
         style: {},
@@ -41,7 +43,10 @@ class InlineDateTimeSelector extends React.Component {
     onUpdate = (key, add) => {
         const currentTime = moment(this.props.date).utc();
         const newTime = add ? moment(currentTime).add(1, key) : moment(currentTime).subtract(1, key);
-        this.props.onUpdate(newTime.toISOString());
+        // check validity of date. this can become NaN when time exceeds max time (+/-864e13 milliseconds -- from Apr 20 -271821 to 13 Sep 275760)
+        if (newTime.isValid() && !isNaN(newTime.toDate().getTime())) {
+            this.props.onUpdate(newTime.toISOString());
+        }
     };
 
     onChange = (key, value, parseValue = val => val) => {
@@ -49,7 +54,10 @@ class InlineDateTimeSelector extends React.Component {
             const currentTime = moment(this.props.date).utc();
             const newTime = currentTime[key === "day" ? "date" : key]
                 && moment(currentTime)[key === "day" ? "date" : key](parseValue(value));
-            this.props.onUpdate(newTime.toISOString());
+            // check validity of date. this can become NaN when time exceeds max time (+/-864e13 milliseconds -- from Apr 20 -271821 to 13 Sep 275760)
+            if (newTime.isValid() && !isNaN(newTime.toDate().getTime())) {
+                this.props.onUpdate(newTime.toISOString());
+            }
         }
     };
 
@@ -126,10 +134,10 @@ class InlineDateTimeSelector extends React.Component {
             <Form className={`ms-inline-datetime ${this.props.className}`} style={this.props.style}>
                 <FormGroup controlId="inlineDateTime">
                     {this.props.glyph &&
-                    <div style = {{"cursor": "pointer"}} onClick ={() => this.props.onIconClick(this.props.date, this.props.glyph) }>
+                        <div style={this.props.clickable ? { "cursor": "pointer" } : {}} onClick={() => this.props.clickable && this.props.onIconClick(this.props.date, this.props.glyph) }>
                         <Glyphicon
-                        tooltip={this.props.tooltip}
-                        tooltipId={this.props.tooltipId}
+                        tooltip={this.props.clickable ? this.props.tooltip : undefined}
+                        tooltipId={this.props.clickable ? this.props.tooltipId : undefined}
                         className="ms-inline-datetime-icon"
                         glyph={this.props.glyph}/>
                     </div>

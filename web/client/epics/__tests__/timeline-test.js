@@ -25,10 +25,14 @@ describe('timeline Epics', () => {
             done();
         });
     });
-    it('setTimelineCurrentTime with selected layer ( with time in range)', done => {
+    it('setTimelineCurrentTime with selected layer (with time in range)', done => {
         const t = "2010-01-01T00:00:00.000Z";
-        testEpic(setTimelineCurrentTime, 1, selectTime(t, "TEST_LAYER"), ([action]) => {
-            const { time, type } = action;
+        testEpic(setTimelineCurrentTime, 3, selectTime(t, "TEST_LAYER"), ([action1, action2, action3]) => {
+            const { type: loadingStartType } = action1;
+            const { time, type } = action2;
+            const { type: loadingEndType } = action3;
+            expect(loadingStartType).toBe(LOADING);
+            expect(loadingEndType).toBe(LOADING);
             // this time the current time will be set snapping to the data from DomainValues request
             expect(time).toBe("2016-09-01T00:00:00.000Z");
             expect(type).toBe(SET_CURRENT_TIME);
@@ -67,9 +71,13 @@ describe('timeline Epics', () => {
     it('setTimelineCurrentTime with selected layer time out of range', done => {
         const t = "2001-01-01T00:00:00.000Z";
         const EXPECTED_TIME_DOMAIN = "2016-09-01T00:00:00.000Z";
-        testEpic(setTimelineCurrentTime, 2, selectTime(t, "TEST_LAYER"), ([action1, action2]) => {
-            const { start, end } = action1;
-            const { time, type } = action2;
+        testEpic(setTimelineCurrentTime, 4, selectTime(t, "TEST_LAYER"), ([action1, action2, action3, action4]) => {
+            const { type: loadingStartType} = action1;
+            const { start, end } = action2;
+            const { time, type } = action3;
+            const { type: loadingStartEnd } = action4;
+            expect(loadingStartType).toBe(LOADING);
+            expect(loadingStartEnd).toBe(LOADING);
             // first action moves the current timeline view to center the current time
             expect(moment(start).isBefore(time)).toBe(true);
             expect(moment(end).isAfter(time)).toBe(true);

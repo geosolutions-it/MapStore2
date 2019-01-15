@@ -329,6 +329,9 @@
 
     .vis-item.vis-background.ms-current-range {
         cursor: grab;
+        &:active {
+            cursor: move;
+        }
         z-index: 60;
         background-color: fade(lighten(@ms2-color-text, 10%), 20%);
     }

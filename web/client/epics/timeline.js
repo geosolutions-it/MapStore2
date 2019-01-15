@@ -176,7 +176,7 @@ module.exports = {
                         }
                         return Rx.Observable.from([...actions, setCurrentTime(t)]);
                     })
-                    // .let(wrapStartStop(timeDataLoading(false, true), timeDataLoading(false, false)))
+                    .let(wrapStartStop(timeDataLoading(false, true), timeDataLoading(false, false)))
                     ;
             }
             return Rx.Observable.of(setCurrentTime(time));

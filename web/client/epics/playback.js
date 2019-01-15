@@ -18,6 +18,7 @@ const {
 const {
     selectLayer,
     onRangeChanged,
+    timeDataLoading,
     SELECT_LAYER
 } = require('../actions/timeline');
 
@@ -30,6 +31,7 @@ const { currentTimeSelector, layersWithTimeDataSelector, layerTimeSequenceSelect
 const { LOCATION_CHANGE } = require('react-router-redux');
 
 const { currentFrameSelector, currentFrameValueSelector, lastFrameSelector, playbackRangeSelector, playbackSettingsSelector, frameDurationSelector, statusSelector, playbackMetadataSelector } = require('../selectors/playback');
+
 const { selectedLayerName, selectedLayerUrl, selectedLayerData, selectedLayerTimeDimensionConfiguration, rangeSelector, selectedLayerSelector } = require('../selectors/timeline');
 
 const pausable = require('../observables/pausable');
@@ -168,11 +170,13 @@ module.exports = {
                 .map((frames) => setFrames(frames))
                 .let(wrapStartStop(framesLoading(true), framesLoading(false)), () => Rx.Observable.of(
                     error({
-                        title: "There was an error retriving animation", // TODO: localize
+                        title: "There was an error retrieving animation", // TODO: localize
                         message: "Please contact the administrator" // TODO: localize
                     }),
                     stop()
                 ))
+                // show loading mask
+                .let(wrapStartStop(timeDataLoading(false, true), timeDataLoading(false, false)))
                 .concat(
                     action$
                         .ofType(SET_CURRENT_FRAME)
