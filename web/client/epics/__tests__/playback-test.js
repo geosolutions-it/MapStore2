@@ -16,7 +16,6 @@ const { setCurrentTime, moveTime } = require('../../actions/dimension');
 const { selectLayer, LOADING } = require('../../actions/timeline');
 describe('playback Epics', () => {
     it('retrieveFramesForPlayback', done => {
-        const time = '2016-09-04T00:00:00.000Z';
         testEpic(retrieveFramesForPlayback, 6, play(), ([a0, a1, a2, a3, a4, a5]) => {
             // set single tile
             expect(a0.type).toBe(CHANGE_LAYER_PROPERTIES);
