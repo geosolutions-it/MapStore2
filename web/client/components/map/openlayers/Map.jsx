@@ -121,15 +121,24 @@ class OpenlayersMap extends React.Component {
         map.on('singleclick', (event) => {
             if (this.props.onClick && !this.map.disabledListeners.singleclick) {
                 let view = this.map.getView();
-                let tempCenter = view.getCenter();
+                let pos = event.coordinate.slice();
                 let projectionExtent = view.getProjection().getExtent();
-                const currentProjectionName = view.getProjection().getCode();
-                if (currentProjectionName === 'EPSG:4326' || currentProjectionName === 'EPSG:900913' || currentProjectionName === 'EPSG:3857') tempCenter[0] = CoordinatesUtils.normalizeLng(tempCenter[0]);
+                if (this.props.projection === 'EPSG:4326') {
+                    pos[0] = CoordinatesUtils.normalizeLng(pos[0]);
+                }
+                if (this.props.projection === 'EPSG:900913' || this.props.projection === 'EPSG:3857') {
+                    pos = ol.proj.toLonLat(pos, this.props.projection);
+                    projectionExtent = CoordinatesUtils.reprojectBbox(projectionExtent, this.props.projection, "EPSG:4326");
+                }
                 // prevent user from clicking outside the projection extent
-                if (tempCenter[0] >= projectionExtent[0] && tempCenter[0] <= projectionExtent[2] &&
-                    tempCenter[1] >= projectionExtent[1] && tempCenter[1] <= projectionExtent[3]) {
-                    let pos = event.coordinate.slice();
-                    let coords = CoordinatesUtils.reproject(pos, this.props.projection, "EPSG:4326");
+                if (pos[0] >= projectionExtent[0] && pos[0] <= projectionExtent[2] &&
+                    pos[1] >= projectionExtent[1] && pos[1] <= projectionExtent[3]) {
+                    let coords;
+                    if (this.props.projection !== 'EPSG:900913' && this.props.projection !== 'EPSG:3857') {
+                        coords = CoordinatesUtils.reproject(pos, this.props.projection, "EPSG:4326");
+                    } else {
+                        coords = {x: pos[0], y: pos[1]};
+                    }
                     let tLng = CoordinatesUtils.normalizeLng(coords.x);
                     let layerInfo;
                     map.forEachFeatureAtPixel(event.pixel, (feature, layer) => {
@@ -237,8 +246,6 @@ class OpenlayersMap extends React.Component {
             this.map.getLayers().forEach((l) => {
                 let source = l.getSource();
                 if (source.getTileLoadFunction) {
-                    // l.setExtent(mapExtent);
-                    l.getExtent();
                     source.setTileLoadFunction(source.getTileLoadFunction());
                 }
 
@@ -254,7 +261,9 @@ class OpenlayersMap extends React.Component {
         if (attributionContainer && attributionContainer.querySelector('.ol-attribution')) {
             attributionContainer.removeChild(attributionContainer.querySelector('.ol-attribution'));
         }
-        this.map.setTarget(null);
+        if (this.map) {
+            this.map.setTarget(null);
+        }
     }
 
     getResolutions = () => {

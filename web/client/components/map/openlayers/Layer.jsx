@@ -127,9 +127,9 @@ class OpenlayersLayer extends React.Component {
         if (type) {
             const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs), securityToken);
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
-
+            const compatible = Layers.isCompatible(type, layerOptions);
             if (this.layer && !this.layer.detached) {
-                const parentMap = this.layer && this.layer.getProperties().map;
+                const parentMap = this.props.map;
                 const mapExtent = parentMap && parentMap.getView().getProjection().getExtent();
                 const layerExtent = options && options.bbox && options.bbox.bounds;
                 const mapBboxPolygon = mapExtent && CoordinatesUtils.reprojectBbox(mapExtent, this.props.srs, 'EPSG:4326');
@@ -140,9 +140,7 @@ class OpenlayersLayer extends React.Component {
 
                 if (mapBboxPolygon && layerBboxPolygon &&
                     !CoordinatesUtils.isBboxCompatible(CoordinatesUtils.getPolygonFromExtent(mapBboxPolygon), CoordinatesUtils.getPolygonFromExtent(layerBboxPolygon)) ||
-                    (layerOptions.type === "wmts" &&
-                    !_.head(CoordinatesUtils.getEquivalentSRS(this.props.srs).filter(proj => layerOptions.matrixIds && layerOptions.matrixIds.hasOwnProperty(proj)))
-                    )) {
+                    !compatible) {
                     this.props.onWarning({
                         title: "warning",
                             message: "notification.incompatibleDataAndProjection",

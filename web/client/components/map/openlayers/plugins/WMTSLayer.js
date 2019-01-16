@@ -123,4 +123,8 @@ const updateLayer = (layer, newOptions, oldOptions) => {
     return null;
 };
 
-Layers.registerType('wmts', {create: createLayer, update: updateLayer});
+const combatibleLayer = options =>
+    head(CoordinatesUtils.getEquivalentSRS(options.srs).filter(proj => options.matrixIds && options.matrixIds.hasOwnProperty(proj))) ? true : false;
+
+
+Layers.registerType('wmts', {create: createLayer, update: updateLayer, isCompatible: combatibleLayer});

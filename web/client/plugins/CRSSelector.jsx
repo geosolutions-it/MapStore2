@@ -163,6 +163,7 @@ const crsSelector = connect(
 */
 module.exports = {
     CRSSelectorPlugin: assign(crsSelector, {
+        disablePluginIf: "{state('mapType') === 'leaflet'}",
         MapFooter: {
             name: "crsSelector",
             position: 10,
