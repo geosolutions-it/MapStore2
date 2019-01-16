@@ -7,13 +7,13 @@
   <version>1.0-SNAPSHOT</version>
   <name>MapStore 2 Release Module</name>
   <url>http://www.geo-solutions.it</url>
-  
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <tomcat.version>7.0.75</tomcat.version>
     <release.number>${project.version}</release.number>
   </properties>
-  
+
   <dependencies>
     <dependency>
       <groupId>org.apache.tomcat</groupId>
@@ -91,7 +91,7 @@
       <version>${tomcat.version}</version>
     </dependency>
   </dependencies>
-  
+
   <build>
     <plugins>
       <plugin>
@@ -118,8 +118,6 @@
                 <echo message="Untar JRE..." />
                 <gunzip src="${project.build.directory}/jre.tar.gz" dest="${project.build.directory}/jre.tar" />
                 <untar src="${project.build.directory}/jre.tar" dest="${project.build.directory}/jre" />
-                <echo message="Copy Database..." />
-                <copyfile src="data/geostore.h2.db" dest="${project.build.directory}/geostore.h2.db" />
               </tasks>
             </configuration>
             <goals>
