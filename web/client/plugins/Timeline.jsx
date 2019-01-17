@@ -182,6 +182,7 @@ const TimelinePlugin = compose(
 
             {offsetEnabled // if range is present and configured, show the floating start point.
                 && <InlineDateTimeSelector
+                clickable={!collapsed}
                 glyph="range-start"
                 onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
                 tooltip={<Message msgId="timeline.rangeStart"/>}
@@ -201,6 +202,7 @@ const TimelinePlugin = compose(
                 {offsetEnabled && currentTimeRange
                     // if range enabled, show time end in the timeline
                     ? <InlineDateTimeSelector
+                        clickable={!collapsed}
                         glyph={'range-end'}
                         onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange, currentTimeRange)}
                         tooltip={<Message msgId="timeline.rangeEnd"/>}
@@ -209,6 +211,7 @@ const TimelinePlugin = compose(
                         onUpdate={end => status !== "PLAY" && isValidOffset(currentTime, end) && setOffset(end)} />
                     : // show current time if using single time
                     <InlineDateTimeSelector
+                        clickable={!collapsed}
                         glyph={'time-current'}
                         showButtons
                         onIconClick= {(time, type) => status !== "PLAY" && zoomToCurrent(time, type, viewRange)}
