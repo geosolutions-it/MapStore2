@@ -2,16 +2,16 @@ In cartogrophy, a map is any two-dimensional graphic representation of the spati
 
 Let us discover the WebGIS portal interface and its main components by creating a simple map and adding a layer.
 
-From the *Home Page*, **Click** on the *New Map* icon <img src="../img/new-map-icon.png" style="max-width:20px;" />. You will be addressed directly to the map viewer.
+From the *Home Page*, **Click** on the *New Map* icon <img src="../img/new-map-icon.jpg" style="max-width:20px;" />. You will be addressed directly to the map viewer.
 
-<img src="../img/map-viewer.png" style="max-width:700px;" />
+<img src="../img/map-viewer.jpg" style="max-width:700px;" />
 
 
 MapStore WebGIS Portal Interface
 --------------------------------
 To explain you better the map viewer, we have specially added a layer. You will learn more on layers in the [Table of Contents (TOC)](toc.md) and [Menu Bar](menu-bar) sections.
 
-<img src="../img/gui.png" style="max-width:700px;" />
+<img src="../img/gui.jpg" style="max-width:700px;" />
 
 The portal interface of [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/)  consists of the following blocks which will be often referred during the documentation.
 
