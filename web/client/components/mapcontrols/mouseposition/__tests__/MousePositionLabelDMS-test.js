@@ -38,23 +38,23 @@ describe('MousePositionLabelDMS', () => {
 
         let spans = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "span");
         expect(spans.length).toBe(16);
-        expect(spans[1].innerText).toBe("Lat: ");
-        expect(spans[2].innerText).toBe("");
-        expect(spans[3].innerText).toBe("° ");
-        expect(spans[4].innerText).toBe("");
-        expect(spans[5].innerText).toBe("\' ");
-        expect(spans[6].innerText).toBe("");
-        expect(spans[7].innerText).toBe("\'\'");
+        expect(spans[1].textContent).toBe("Lat: ");
+        expect(spans[2].textContent).toBe("");
+        expect(spans[3].textContent).toBe("° ");
+        expect(spans[4].textContent).toBe("");
+        expect(spans[5].textContent).toBe("\' ");
+        expect(spans[6].textContent).toBe("");
+        expect(spans[7].textContent).toBe("\'\'");
 
         expect(spans[8].className).toBe("mouseposition-separator");
 
         expect(spans[9].textContent).toBe(" Lng: ");
-        expect(spans[10].innerText).toBe("");
-        expect(spans[11].innerText).toBe("° ");
-        expect(spans[12].innerText).toBe("");
-        expect(spans[13].innerText).toBe("\' ");
-        expect(spans[14].innerText).toBe("");
-        expect(spans[15].innerText).toBe("\'\'");
+        expect(spans[10].textContent).toBe("");
+        expect(spans[11].textContent).toBe("° ");
+        expect(spans[12].textContent).toBe("");
+        expect(spans[13].textContent).toBe("\' ");
+        expect(spans[14].textContent).toBe("");
+        expect(spans[15].textContent).toBe("\'\'");
     });
 
     it('a position with defaults', () => {
