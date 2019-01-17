@@ -31,7 +31,8 @@ const {
     UPDATE_STYLE_CODE,
     EDIT_STYLE_CODE,
     DELETE_STYLE,
-    setEditPermissionStyleEditor
+    setEditPermissionStyleEditor,
+    SET_DEFAULT_STYLE
 } = require('../actions/styleeditor');
 
 const StylesAPI = require('../api/geoserver/Styles');
@@ -501,6 +502,55 @@ module.exports = {
                 })
                 .catch(() => Rx.Observable.of(loadedStyle()))
                 .startWith(() => Rx.Observable.of(loadingStyle('global')));
+            }),
+    /**
+     * Gets every `SET_DEFAULT_STYLE` event.
+     * Update default style of the selected layer
+     * @param {external:Observable} action$ manages `SET_DEFAULT_STYLE`
+     * @memberof epics.styleeditor
+     * @return {external:Observable}
+     */
+    setDefaultStyleEpic: (action$, store) =>
+        action$.ofType(SET_DEFAULT_STYLE)
+            .switchMap(() => {
+                const state = store.getState();
+                const { baseUrl = '' } = styleServiceSelector(state);
+                const layer = getUpdatedLayer(state);
+                const styleName = selectedStyleSelector(state);
+                return Rx.Observable.defer(() =>
+                    LayersAPI.updateDefaultStyle({
+                        baseUrl,
+                        layerName: layer.name,
+                        styleName
+                    })
+                )
+                .switchMap(() => {
+                    const defaultStyle = layer.availableStyles.filter(({ name }) => styleName === name);
+                    const filteredStyles = layer.availableStyles.filter(({ name }) => styleName !== name);
+                    const availableStyles = [...defaultStyle, ...filteredStyles];
+                    return Rx.Observable.of(
+                        updateSettingsParams({ availableStyles }, true),
+                        success({
+                            title: "styleeditor.setDefaultStyleSuccessTitle",
+                            message: "styleeditor.setDefaultStyleSuccessMessage",
+                            uid: "setDefaultStyleSuccess",
+                            autoDismiss: 5
+                        }),
+                        loadedStyle()
+                    );
+                })
+                .startWith(loadingStyle('global'))
+                .catch(() => {
+                    return Rx.Observable.of(
+                        error({
+                            title: "styleeditor.setDefaultStyleErrorTitle",
+                            message: "styleeditor.setDefaultStyleErrorMessage",
+                            uid: "setDefaultStyleError",
+                            autoDismiss: 5
+                        }),
+                        loadedStyle()
+                    );
+                });
             })
 };
 

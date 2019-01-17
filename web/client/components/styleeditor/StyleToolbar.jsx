@@ -21,6 +21,7 @@ const { Alert } = require('react-bootstrap');
  * @prop {array|node} buttons additional buttons, array of buttons object or toolbar node
  * @prop {bool} editEnabled enable/disable edit/templates buttons
  * @prop {array} defaultStyles array of style names not editable
+ * @prop {bool} enableSetDefaultStyle enable/disable set default style button
  * @prop {bool} loading loading state
  */
 
@@ -35,6 +36,7 @@ const StyleToolbar = ({
     loading,
     selectedStyle,
     editEnabled,
+    enableSetDefaultStyle,
     defaultStyles = [
         'generic',
         'point',
@@ -48,7 +50,8 @@ const StyleToolbar = ({
     onDelete = () => {},
     onSelectStyle = () => {},
     onEditStyle = () => {},
-    onUpdate = () => {}
+    onUpdate = () => {},
+    onSetDefault = () => {}
 }) => (
     <div>
         <Toolbar
@@ -138,6 +141,13 @@ const StyleToolbar = ({
                             ]
                         });
                     }
+                },
+                {
+                    glyph: 'star',
+                    tooltipId: 'styleeditor.setDefaultStyle',
+                    disabled: !!loading || defaultStyles.indexOf(selectedStyle) !== -1 || !selectedStyle,
+                    visible: enableSetDefaultStyle && !status && editEnabled ? true : false,
+                    onClick: () => onSetDefault()
                 },
                 ...(!!status ? [] : buttons)
             ]} />

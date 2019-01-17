@@ -160,4 +160,49 @@ describe('test StyleList module component', () => {
 
         expect(spyOnSelect).toHaveBeenCalledWith({style: ''}, true);
     });
+
+
+    it('test StyleList showDefaultStyleIcon', () => {
+
+        ReactDOM.render(<StyleList
+            defaultStyle="point"
+            enabledStyle="square"
+            showDefaultStyleIcon
+            availableStyles={
+                [
+                    {
+                        name: 'point',
+                        filename: 'default_point.sld',
+                        format: 'sld',
+                        title: 'A boring default style',
+                        _abstract: 'A sample style that just prints out a purple square'
+                    },
+                    {
+                        name: 'square',
+                        filename: 'square.css',
+                        format: 'css',
+                        title: 'Square',
+                        _abstract: 'Simple square'
+                    },
+                    {
+                        name: 'circle',
+                        filename: 'circle.css',
+                        format: 'css',
+                        title: 'Circle',
+                        _abstract: 'Simple circle'
+                    }
+                ]
+            }/>, document.getElementById("container"));
+        const cards = document.querySelectorAll('.mapstore-side-card');
+        expect(cards.length).toBe(3);
+
+        const iconDefault = cards[0].querySelectorAll('.glyphicon');
+        expect(iconDefault.length).toBe(1);
+
+        const icon1 = cards[1].querySelectorAll('.glyphicon');
+        expect(icon1.length).toBe(0);
+
+        const icon2 = cards[1].querySelectorAll('.glyphicon');
+        expect(icon2.length).toBe(0);
+    });
 });
