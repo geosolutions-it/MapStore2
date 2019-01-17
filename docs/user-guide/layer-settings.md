@@ -17,7 +17,7 @@ translate it in several languages, add a description and assign it to a new Laye
 Display Form
 ------------
 
-On the second page, you can set the rendering options of the layer such as the image format and the opacity (transparency). You can enable/disable the use of the cache and displaying the layer as a single tile.
+On the second page, you can set the rendering options of the layer such as the image format and the opacity (transparency). You can enable/disable the use of the cache (if checked the **Tiled=true** URL parameter will be added to the WMS request) and displaying the layer as a single tile.
 
 <img src="../img/display.jpg" style="max-width:350px;"/>
 

@@ -26,10 +26,8 @@ Linux: `./mapstore2_shutdown.sh`
 * [Java JRE (Win and Linux)](http://www.oracle.com/technetwork/java/javase/downloads/jre7-downloads-1880261.html)
 
 # Demo Maps
-* **Unesco Italian sites** - Simple WMS layer map demo
 * **Aerial Imagery** - Simple map demo showing some aerial imagery data
 * **WFS Query Map** - Demo map configured with MapStore2 built-in ability to query feature over WFS
-* **Multi-Layered Map** - A more real world approach to a simple WMS map built with MapStore2 with multiple layers.
 * **User Map and User1 Map** - Map only visible to *user* and *user1* respectively, to demonstrate MapStore2 capabilities on user/group management and permissions.
 
 # Demo accounts/groups
