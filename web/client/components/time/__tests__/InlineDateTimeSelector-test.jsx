@@ -21,12 +21,22 @@ describe('InlineDateTimeSelector component', () => {
         expect(inputs[0]).toExist();
         expect(inputs[1].readOnly).toBe(true); // month should not be editable
     });
-    it('Test InlineDateTimeSelector onIconClick', () => {
+    it('Test InlineDateTimeSelector onIconClick (disabled by default)', () => {
         const actions = {
             onIconClick: () => {}
         };
         const spyonIconClick = expect.spyOn(actions, 'onIconClick');
         ReactDOM.render(<InlineDateTimeSelector onIconClick={actions.onIconClick} />, document.getElementById("container"));
+        const el = document.querySelector('.ms-inline-datetime-icon');
+        TestUtils.Simulate.click(el); // <-- trigger event callback
+        expect(spyonIconClick).toNotHaveBeenCalled();
+    });
+    it('Test InlineDateTimeSelector onIconClick when clickable flag is on', () => {
+        const actions = {
+            onIconClick: () => { }
+        };
+        const spyonIconClick = expect.spyOn(actions, 'onIconClick');
+        ReactDOM.render(<InlineDateTimeSelector clickable onIconClick={actions.onIconClick} />, document.getElementById("container"));
         const el = document.querySelector('.ms-inline-datetime-icon');
         TestUtils.Simulate.click(el); // <-- trigger event callback
         expect(spyonIconClick).toHaveBeenCalled();
@@ -41,5 +51,21 @@ describe('InlineDateTimeSelector component', () => {
         TestUtils.Simulate.change(input[0], { target: { value: '2' } });
         expect(spyonUpdate).toHaveBeenCalled();
         expect(spyonUpdate.calls[0].arguments[0]).toBe("2018-12-02T15:00:00.000Z");
+    });
+    it('Test InlineDateTimeSelector edit year too big ', () => {
+        // avoid to update when time exceeds min/max time (+/-864e13 milliseconds -- from Apr 20 -271821 to 13 Sep 275760)
+        const actions = {
+            onUpdate: () => { }
+        };
+        const spyonUpdate = expect.spyOn(actions, 'onUpdate');
+        ReactDOM.render(<InlineDateTimeSelector date="2018-12-21T15:00:00.000Z" onUpdate={actions.onUpdate} />, document.getElementById("container"));
+        const input = document.querySelectorAll('input');
+        TestUtils.Simulate.change(input[2], { target: { value: '275761' } });
+        TestUtils.Simulate.change(input[2], { target: { value: '-271822' } });
+        expect(spyonUpdate).toNotHaveBeenCalled();
+        TestUtils.Simulate.change(input[2], { target: { value: '275759' } });
+        TestUtils.Simulate.change(input[2], { target: { value: '-271820' } });
+        expect(spyonUpdate).toHaveBeenCalled();
+        expect(spyonUpdate.calls.length).toBe(2);
     });
 });
