@@ -158,7 +158,7 @@
         },
         "home":{
             "open": "Öffnen",
-            "shortDescription": "Modern webmapping mit OL3, Leaflet und React<br/><small>besuchen sie die <a href=\"/mapstore/docs/\">dokumentationsseite</a></small>",
+            "shortDescription": "Modern webmapping mit OpenLayers, Leaflet und React<br/><small>besuchen sie die <a href=\"/mapstore/docs/\">dokumentationsseite</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren.<br/>Besuche die <a href=\"/mapstore/docs/\">Homepage</a> für mehr Details.",
             "Applications": "Anwendungen",
