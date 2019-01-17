@@ -48,7 +48,7 @@ describe('MousePositionLabelDMS', () => {
 
         expect(spans[8].className).toBe("mouseposition-separator");
 
-        expect(spans[9].innerText).toBe("Lng: ");
+        expect(spans[9].textContent).toBe(" Lng: ");
         expect(spans[10].innerText).toBe("");
         expect(spans[11].innerText).toBe("° ");
         expect(spans[12].innerText).toBe("");
