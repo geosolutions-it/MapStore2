@@ -7,7 +7,7 @@
   <fileSets>
     <fileSet>
       <!-- the main webapp -->
-      <directory>../web/target/</directory>
+      <directory>./bin-war/target/</directory>
       <outputDirectory>mapstore2/webapps/</outputDirectory>
       <includes>
         <include>mapstore.war</include>
