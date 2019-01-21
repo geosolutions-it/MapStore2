@@ -28,7 +28,7 @@
     {"name": "routing", "path": "routing.location.pathname"},
     {"name": "browser", "path": "browser"},
     {"name": "featuregridmode", "path": "featuregrid.mode"}],
-    "projectionDefs": [],
+  "projectionDefs": [],
   "initialState": {
     "defaultState": {
       "maptype": {
@@ -295,8 +295,7 @@
               "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
               "additionalCRS": {}
             }
-          },
-          {
+          }, {
               "name": "Search",
               "cfg": {
                 "withToggle": ["max-width: 768px", "min-width: 768px"]
