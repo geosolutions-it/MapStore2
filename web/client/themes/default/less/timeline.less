@@ -31,14 +31,71 @@
         height: 20px;
     }
 
+    .ms-time-color-active(
+        @color: @ms2-color-text,
+        @b-top: @ms2-color-text,
+        @b-right: 'transparent',
+        @b-bottom: @ms2-color-text,
+        @b-left: 'transparent',
+        @a-color: 'unset'
+    ) {
+        background-color: @color;
+        border-left: 1px solid @color;
+        box-sizing: unset;
+        border-right: 1px solid @color;
+        &:before, &::before, &:after, &::after {
+            border-top-color: @b-top;
+            border-right-color: @b-right;
+            border-bottom-color: @b-bottom;
+            border-left-color: @b-left;
+            color: @a-color;
+        }
+    }
+
     .vis-custom-time {
 
         &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
             .shadow-soft;
             background-color: lighten(@ms2-color-text, 30%);
             width: 2px;
-            cursor: move;
-            z-index: 10;
+            z-index: 65;
+            cursor: ew-resize;
+            & > div {
+                &:hover, &:active {
+
+                    &:before, &::before {
+                        display: flex;
+                        font-size: 10px;
+                        justify-content: flex-start;
+                        content: "\e257";
+                    }
+                    &:after, &::after {
+                        display: flex;
+                        font-size: 10px;
+                        justify-content: flex-end;
+                        content: "\e258";
+                    }
+                }
+                &:hover, &:active {
+                    &:before, &::before, &:after, &::after {
+                        align-items: center;
+                        
+                        box-sizing: border-box;
+                        position: absolute;
+                        pointer-events: none;
+                        bottom: 12px;
+                        width: 30px;
+                        height: 20px;
+                        font-family: "mapstore2";
+                        left: 50%;
+                        margin-left: 1px;
+                        transform: translateX(-50%);
+                        color: lighten(@ms2-color-text, 20%);
+                    }
+                }
+                
+            }
+            
         }
 
         &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
@@ -49,6 +106,7 @@
                 height: 0;
                 box-sizing: border-box;
                 position: absolute;
+                pointer-events: none;
             }
         }
 
@@ -62,6 +120,24 @@
                 font-family: "mapstore2";
                 color: lighten(@ms2-color-danger, 5%);
             }
+            &:hover, &:active {
+                .ms-time-color-active(
+                    @ms2-color-danger,
+                    'transparent',
+                    'transparent',
+                    'transparent',
+                    'transparent',
+                    @ms2-color-danger
+                );
+                z-index: 67;
+            }
+            & > div {
+                &:active, &:hover {
+                    &:before, &::before, &:after, &::after {
+                        color: @ms2-color-danger;
+                    }
+                }
+            }
         }
 
         &.startPlaybackTime {
@@ -74,10 +150,33 @@
                 font-size: 18px;
                 color: lighten(@ms2-color-success, 10%);
             }
+            &:hover, &:active {
+                .ms-time-color-active(
+                    @ms2-color-success,
+                    'transparent',
+                    'transparent',
+                    'transparent',
+                    'transparent',
+                    @ms2-color-success
+                );
+                z-index: 67;
+            }
+            & > div {
+                &:active, &:hover {
+                    &:before, &::before, &:after, &::after {
+                        color: @ms2-color-success;
+                    }
+                }
+            }
         }
 
         &.currentTime {
             background-color: lighten(@ms2-color-text, 30%);
+            cursor: move;
+            cursor: grab;
+            cursor: -moz-grab;
+            cursor: -webkit-grab;
+            
             &:before, &::before, &:after, &::after {
                 border-left: 10px solid transparent;
                 border-right: 10px solid transparent;
@@ -92,13 +191,34 @@
                 left: -9px;
                 border-bottom: 10px solid lighten(@ms2-color-text, 30%);
             }
-
+            
+            &:hover {
+                .ms-time-color-active(
+                    lighten(@ms2-color-text, 20%),
+                    lighten(@ms2-color-text, 20%),
+                    'transparent',
+                    lighten(@ms2-color-text, 20%)
+                );
+            }
+            &:active {
+                cursor: grabbing;
+                cursor: -moz-grabbing;
+                cursor: -webkit-grabbing;
+                .ms-time-color-active(
+                    lighten(@ms2-color-text, 20%),
+                    lighten(@ms2-color-text, 20%),
+                    'transparent',
+                    lighten(@ms2-color-text, 20%)
+                );
+                z-index: 67;
+            }
         }
     }
 
     &.with-time-offset {
         .vis-custom-time {
             &.currentTime {
+                cursor: ew-resize;
                 &:before, &::before {
                     top: 0;
                     left: 0;
@@ -112,6 +232,16 @@
                     border-top: 10px solid transparent;
                     border-left: 10px solid lighten(@ms2-color-text, 30%);
                     border-bottom: unset;
+                }
+                &:hover, &:active {
+                    .ms-time-color-active(
+                        lighten(@ms2-color-text, 20%),
+                        'transparent',
+                        'transparent',
+                        'transparent',
+                        lighten(@ms2-color-text, 20%)
+                    );
+                    z-index: 67;
                 }
             }
 
@@ -127,6 +257,17 @@
                     left: -9px;
                     border-top: 10px solid transparent;
                     border-right: 10px solid lighten(@ms2-color-text, 30%);
+                }
+                
+                &:hover, &:active {
+                    .ms-time-color-active(
+                        lighten(@ms2-color-text, 20%),
+                        'transparent',
+                        lighten(@ms2-color-text, 20%),
+                        'transparent',
+                        'transparent'
+                    );
+                    z-index: 67;
                 }
             }
         }
@@ -195,7 +336,7 @@
             }
             &.vis-center {
                 .vis-group {
-                    z-index:10 ;
+                    z-index: 10;
                     &.selected {
                         background-color: fade(@ms2-color-primary, 5%);
                     }
@@ -328,9 +469,15 @@
     }
 
     .vis-item.vis-background.ms-current-range {
+        cursor: move;
         cursor: grab;
+        cursor: -moz-grab;
+        cursor: -webkit-grab;
         &:active {
             cursor: move;
+            cursor: grabbing;
+            cursor: -moz-grabbing;
+            cursor: -webkit-grabbing;
         }
         z-index: 60;
         background-color: fade(lighten(@ms2-color-text, 10%), 20%);
