@@ -107,7 +107,7 @@ const TimelinePlugin = compose(
                     const availableWidth = containerWidth - right - left - marginLeft - marginRight;
                     return {
                         hide: availableWidth < minWidth,
-                        compactToolbar: availableWidth < 610,
+                        compactToolbar: availableWidth < 880,
                         style: {...style, ...mapLayoutStyle, minWidth}
                     };
                 }
@@ -244,7 +244,11 @@ const TimelinePlugin = compose(
                                 }
                             }
                         ]} />
-                    <Playback {...playbackItem}/>
+                    <Playback
+                        {...playbackItem}
+                        settingsStyle={{
+                            right: (collapsed || compactToolbar) ? 40 : 'unset'
+                        }}/>
                 </div>
 
                 <Button
