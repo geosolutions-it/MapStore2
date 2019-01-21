@@ -92,7 +92,9 @@
             "noBackgroundLayerSupported": "Nema dostupnih pozadinskih slojeva za ovaj tip karte.",
             "updateOldMap": "Ovo je stara karta, stoga sve funkcionalnosti ne mogu biti omogućene. Kliknite na dugme za ažuriranje ili zanemarite ovo upozorenje ako ne želite ažurirati kartu.",
             "warningSaveUpdatedMap": "Neki od slojeva se nisu ispravno ažurirali",
-            "saveUpdatedMap": "Svi slojevi su uspješno ažurirani"
+            "saveUpdatedMap": "Svi slojevi su uspješno ažurirani",
+            "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
+            "incompatibleDataAndProjection":"the current layer and map projection are not completely compatible. Parts or all of the data might not appear in the map"
         },
         "dock": {
             "row": "{rowsSelected} redak odabran",

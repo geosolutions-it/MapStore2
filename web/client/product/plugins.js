@@ -95,6 +95,7 @@ module.exports = {
         FloatingLegendPlugin: require('../plugins/FloatingLegend'),
         TimelinePlugin: require('../plugins/Timeline'),
         ThematicLayerPlugin: require('../plugins/ThematicLayer'),
+        CRSSelectorPlugin: require('../plugins/CRSSelector'),
         FeedbackMaskPlugin: require('../plugins/FeedbackMask'),
         StyleEditorPlugin: require('../plugins/StyleEditor')
     },

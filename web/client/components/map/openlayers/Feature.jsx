@@ -11,6 +11,7 @@ var React = require('react');
 var ol = require('openlayers');
 const {isEqual} = require('lodash');
 const {getStyle} = require('./VectorStyle');
+const CoordinatesUtils = require('../../../utils/CoordinatesUtils');
 
 class Feature extends React.Component {
     static propTypes = {
@@ -32,13 +33,12 @@ class Feature extends React.Component {
     componentDidMount() {
         this.addFeatures(this.props);
     }
-
     shouldComponentUpdate(nextProps) {
-        return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry) || !isEqual(nextProps.style, this.props.style);
+        return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry) || !isEqual(nextProps.style, this.props.style) || !isEqual(nextProps.crs, this.props.crs);
     }
 
     componentWillUpdate(newProps) {
-        if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || !isEqual(newProps.style, this.props.style)) {
+        if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || !isEqual(newProps.style, this.props.style) || !isEqual(newProps.crs, this.props.crs)) {
             this.removeFromContainer();
             this.addFeatures(newProps);
         }
@@ -57,12 +57,12 @@ class Feature extends React.Component {
         if (this.props.geometry) {
             const geometry = this.props.geometry.type === "GeometryCollection" ? this.props.geometry && this.props.geometry.geometries : this.props.geometry && this.props.geometry.coordinates;
             if (props.container && geometry) {
-                this._feature = format.readFeatures({
-                    type: props.type,
-                    properties: props.properties,
-                    geometry: props.geometry,
-                    id: this.props.msId});
-                this._feature.forEach((f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
+                this._feature = format.readFeatures(
+                    CoordinatesUtils.reprojectGeoJson({
+                        type: props.type,
+                        properties: props.properties,
+                        geometry: props.geometry,
+                        id: this.props.msId}, props.featuresCrs, props.crs));
                 if (props.style && (props.style !== props.layerStyle)) {
                     this._feature.forEach((f) => { f.setStyle(getStyle({style: props.style})); });
                 }
@@ -79,7 +79,7 @@ class Feature extends React.Component {
                 const layersSource = this.props.container.getSource();
                 this._feature.map((feature) => {
                     let featureId = feature.getId();
-                    if (featureId === undefined) {
+                    if (featureId === undefined || !layersSource.getFeatureById(featureId)) {
                         layersSource.removeFeature(feature);
                     } else {
                         layersSource.removeFeature(layersSource.getFeatureById(featureId));

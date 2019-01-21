@@ -395,7 +395,7 @@ describe('OpenlayersMap', () => {
             "useForElevation": true
         };
         const map = ReactDOM.render(<OpenlayersMap center={{y: 43.9, x: 10.3}} zoom={11}>
-            <OpenlayersLayer type="wms" options={options} />
+            <OpenlayersLayer type="wms" srs="EPSG:3857" options={options} />
         </OpenlayersMap>, document.getElementById("map"));
         expect(map).toExist();
         expect(map.map.get('elevationLayer')).toExist();
@@ -555,6 +555,7 @@ describe('OpenlayersMap', () => {
                 zoom={11.6}
                 measurement={{}}
                 mapOptions={{view: {resolutions: [10, 5, 2, 1]}}}
+                maxExtent= {[-180, -90, 180, 80]}
             />
         , document.getElementById("map"));
         expect( map.haveResolutionsChanged(testProps({mapOptions: undefined})) ).toBe(true);

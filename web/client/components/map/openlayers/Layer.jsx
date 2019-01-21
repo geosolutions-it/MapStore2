@@ -15,6 +15,8 @@ const Rx = require('rxjs');
 
 class OpenlayersLayer extends React.Component {
     static propTypes = {
+        onWarning: PropTypes.func,
+        maxExtent: PropTypes.array,
         map: PropTypes.object,
         mapId: PropTypes.string,
         srs: PropTypes.string,
@@ -34,7 +36,9 @@ class OpenlayersLayer extends React.Component {
         onLayerLoading: () => {},
         onLayerLoad: () => {},
         onLayerError: () => {},
-        onCreationError: () => {}
+        onCreationError: () => {},
+        onWarning: () => {},
+        srs: "EPSG:3857"
     };
 
     componentDidMount() {
@@ -123,9 +127,33 @@ class OpenlayersLayer extends React.Component {
         if (type) {
             const layerOptions = this.generateOpts(options, position, CoordinatesUtils.normalizeSRS(this.props.srs), securityToken);
             this.layer = Layers.createLayer(type, layerOptions, this.props.map, this.props.mapId);
+            const compatible = Layers.isCompatible(type, layerOptions);
             if (this.layer && !this.layer.detached) {
+                const parentMap = this.props.map;
+                const mapExtent = parentMap && parentMap.getView().getProjection().getExtent();
+                const layerExtent = options && options.bbox && options.bbox.bounds;
+                const mapBboxPolygon = mapExtent && CoordinatesUtils.reprojectBbox(mapExtent, this.props.srs, 'EPSG:4326');
+                let layerBboxPolygon = layerExtent && CoordinatesUtils.getExtentFromNormalized(layerExtent, this.props.srs).extent;
+                if (layerBboxPolygon && layerBboxPolygon.length === 2 && _.isArray(layerBboxPolygon[1])) {
+                    layerBboxPolygon = layerBboxPolygon[1];
+                }
+
+                if (mapBboxPolygon && layerBboxPolygon &&
+                    !CoordinatesUtils.isBboxCompatible(CoordinatesUtils.getPolygonFromExtent(mapBboxPolygon), CoordinatesUtils.getPolygonFromExtent(layerBboxPolygon)) ||
+                    !compatible) {
+                    this.props.onWarning({
+                        title: "warning",
+                            message: "notification.incompatibleDataAndProjection",
+                        action: {
+                            label: "close"
+                        },
+                        position: "tc",
+                        uid: "1"
+                    });
+                }
                 this.addLayer(options);
             }
+
             if (this.layer && this.layer.get && this.layer.get('getElevation')) {
                 this.props.map.set('elevationLayer', this.layer);
             }
