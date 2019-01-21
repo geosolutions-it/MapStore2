@@ -36,7 +36,11 @@ module.exports = withHandlers({
         // initialize dragging range event
         let target = event && event.target && event.target.closest('.ms-current-range');
         if (offsetEnabled && target) {
-            setMouseData({ dragging: true, startTime: time.toISOString() });
+            const startEvent = {
+                clientX: event.clientX,
+                clientY: event.clientY
+            };
+            setMouseData({ dragging: true, startTime: time.toISOString(), startEvent });
         } else {
             target = event && event.target && event.target.closest('.vis-custom-time');
             const className = target && target.getAttribute('class');
@@ -44,6 +48,18 @@ module.exports = withHandlers({
             if (timeId) setMouseData({ dragging: false, borderID: timeId, startTime: time.toISOString() });
         }
 
+    },
+    mouseMoveHandler: ({ mouseEventProps = {}}) =>
+    ({ event } = {}) => {
+        if (mouseEventProps.dragging) {
+            event.stopPropagation();
+            let target = event && event.target && event.target.closest('.ms-current-range');
+            if (target && mouseEventProps.startEvent && mouseEventProps.startEvent.clientX) {
+                const deltaX = event.clientX - mouseEventProps.startEvent.clientX;
+                target.style.transform = `translateX(${deltaX}px)`;
+                target.style.zIndex = 100;
+            }
+        }
     },
     clickHandler: ({
         selectedLayer,
@@ -137,6 +153,21 @@ module.exports = withHandlers({
         // resetting the mouse event data
         if (Object.keys(mouseEventProps).length > 0) setMouseData({});
     }
-
-
+    /*
+    timechangedHandler: ({
+        currentTime,
+        status,
+        setOffset = () => { },
+        setCurrentTime = () => { },
+        currentTimeRange = {},
+        mouseEventProps = {},
+        offsetEnabled,
+        playbackRange,
+        setTimeLineRange = () => { },
+        setMouseData = () => { },
+        setPlaybackRange = () => { }
+    }) => ({ time, event, id } = {})  => {
+        console.log(args);
+    }
+    */
 });

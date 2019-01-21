@@ -23,7 +23,9 @@ const Message = require('../../components/I18N/Message');
 const LoadingSpinner = require('../../components/misc/LoadingSpinner');
 
 
-const clickHandleEnhancer = require('../../components/time/enhancers/clickHandlers');
+const clickHandleEnhancer = compose(
+    require('../../components/time/enhancers/clickHandlers')
+);
 
 const moment = require('moment');
 
@@ -181,31 +183,59 @@ const enhance = compose(
             ...(viewRange) // TODO: if the new view range is very far from the current one, the animation takes a lot. We should allow also to disable animation (animation: false in the options)
         }
     })),
-    // items enhancer. Add background items for playback and time ranges
+    // Playback range background
     withPropsOnChange(
-        ['items', 'currentTime', 'offsetEnabled', 'hideLayersName', 'playbackRange', 'playbackEnabled', 'selectedLayer', 'currentTimeRange'],
+        (props, nextProps) => {
+            const update = Object.keys(props)
+                .filter(k => ['items', 'hideLayersName', 'playbackRange', 'playbackEnabled', 'selectedLayer'].indexOf(k) >= 0)
+                .filter(k => props[k] !== nextProps[k]);
+            return update.length > 0;
+        },
+        ({
+            items,
+            playbackEnabled,
+            playbackRange
+        }) => ({
+                items: playbackEnabled && playbackRange && playbackRange.startPlaybackTime !== undefined && playbackRange.endPlaybackTime !== undefined
+                    ? [
+                        ...items,
+                        {
+                            id: 'playback-range',
+                            ...getStartEnd(playbackRange.startPlaybackTime, playbackRange.endPlaybackTime),
+                            type: 'background',
+                            className: 'ms-playback-range'
+                        }
+                    ].filter(val => val)
+                    : items
+        })
+    ),
+    // offset range background
+    withPropsOnChange(
+        (props, nextProps) => {
+            const update = Object.keys(props)
+                .filter(k => ['items', 'currentTime', 'offsetEnabled', 'hideLayersName', 'selectedLayer', 'currentTimeRange'].indexOf(k) >= 0)
+                .filter( k => props[k] !== nextProps[k]);
+            return update.length > 0;
+        },
         ({
             currentTimeRange,
             items,
-            playbackEnabled,
-            offsetEnabled,
-            playbackRange
+            offsetEnabled
         }) => ({
-            items: [
-                ...items,
-                playbackEnabled && playbackRange && playbackRange.startPlaybackTime !== undefined && playbackRange.endPlaybackTime !== undefined ? {
-                    id: 'playback-range',
-                    ...getStartEnd(playbackRange.startPlaybackTime, playbackRange.endPlaybackTime),
-                    type: 'background',
-                    className: 'ms-playback-range'
-                } : null,
-                offsetEnabled && currentTimeRange.start !== undefined && currentTimeRange.end !== undefined ? {
-                    id: 'current-range',
-                    ...getStartEnd(currentTimeRange.start, currentTimeRange.end),
-                    type: 'background',
-                    className: 'ms-current-range'
-                } : null
-            ].filter(val => val)
+                items: offsetEnabled && currentTimeRange.start !== undefined && currentTimeRange.end !== undefined
+                ? [
+                    ...items,
+                        {
+                            id: 'current-range',
+                            ...getStartEnd(currentTimeRange.start, currentTimeRange.end),
+                            editable: {
+
+                            },
+                            type: 'background',
+                            className: 'ms-current-range'
+                        }
+                    ].filter(val => val)
+                : items
         })
     ),
     // custom times enhancer
@@ -223,7 +253,10 @@ const enhance = compose(
         ({loading}) => loading && loading.timeline,
         () => <div style={{ margin: "auto" }} ><LoadingSpinner style={{ display: "inline-block", verticalAlign: "middle" }}/><Message msgId="loading" /></div>,
         {white: true}
-    )
+    ),
+    withPropsOnChange(['status'], ({status}) => ({
+        readOnly: status === "PLAY"
+    }))
 );
 const Timeline = require('../../components/time/TimelineComponent');
 

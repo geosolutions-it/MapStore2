@@ -81,23 +81,25 @@ class Timeline extends React.Component {
         this.init();
     }
     shouldComponentUpdate(nextProps) {
-        const { items, groups, options, selection, customTimes } = this.props;
+        const { items, groups, options, selection, customTimes, readOnly } = this.props;
 
         const itemsChange = items !== nextProps.items;
         const groupsChange = groups !== nextProps.groups;
         const optionsChange = options !== nextProps.options;
         const customTimesChange = customTimes !== nextProps.customTimes;
         const selectionChange = selection !== nextProps.selection;
+        const readOnlyChange = readOnly !== nextProps.readOnly;
         return (
             itemsChange ||
             groupsChange ||
             optionsChange ||
             customTimesChange ||
-            selectionChange
+            selectionChange ||
+            readOnlyChange
         );
     }
-    componentDidUpdate() {
-        this.init();
+    componentDidUpdate(prevProps) {
+        this.init(prevProps);
     }
     componentWillUnmount() {
         this.$el.destroy();
@@ -105,11 +107,11 @@ class Timeline extends React.Component {
 
 
     render() {
-        return <div ref="container" />;
+        return <div ref="container" className={this.props.readOnly ? 'read-only-timeline' : ''} />;
     }
 
 
-    init() {
+    init(prevProps = {}) {
         const {
             items,
             groups,
@@ -142,23 +144,26 @@ class Timeline extends React.Component {
         }
 
         /*
-        ** the init() function keeps re-triggerd with change of some props
-        * when the item is set at the first init(), it return no range (vis-timelin.js)
+        ** the init() function keeps re-triggered with change of some props
+        * when the item is set at the first init(), it return no range (vis-timeline.js)
         * in this case we emit 'change' action to create a view range from th new items.
         **/
-        if (items && items.length > 0) {
-            // first setItems is triggerd only when the component recieve items. trigger 'change' event to create  view range.
-            if (!this.$el.initialFitDone) {
-                this.$el.setItems(items);
-                this.$el.emit('changed');
-            } else {
-                // when we have a change in items we perform set item (e.g zoom /move events)
+        if (items && items !== prevProps.items) {
+            if (items.length > 0) {
+                // first setItems is triggerd only when the component receive items. trigger 'change' event to create  view range.
+                if (!this.$el.initialFitDone) {
+                    this.$el.setItems(items);
+                    this.$el.emit('changed');
+                } else {
+                    // when we have a change in items we perform set item (e.g zoom /move events)
+                    this.$el.setItems(items);
+                }
+                // when there is a view range but no items on the timeline (e.g. user moved the timeline where there are no data). we re-set items again
+            } else if (this.$el.initialRangeChangeDone) {
                 this.$el.setItems(items);
             }
-            // when there is a view range but no items on the timeline (e.g. user moved the timeline where there are no data). we re-set items again
-        } else if (this.$el.initialRangeChangeDone) {
-            this.$el.setItems(items);
         }
+
         this.$el.setSelection(selection, selectionOptions);
 
         if (currentTime) {
@@ -195,6 +200,20 @@ class Timeline extends React.Component {
 
         // store new customTimes in state for future diff
         this.setState({ customTimes });
+
+        // disable events on readOnly
+        if (this.props.readOnly !== prevProps.readOnly || this.props.readOnly && customTimeKeysToAdd.length > 0) {
+            each(this.$el.customTimes, time => {
+                if (this.props.readOnly) {
+                    time.hammer.off("panstart panmove panend");
+                } else if (prevProps.readOnly === true) {
+                    time.hammer.on('panstart', time._onDragStart.bind(time));
+                    time.hammer.on('panmove', time._onDrag.bind(time));
+                    time.hammer.on('panend', time._onDragEnd.bind(time));
+                }
+            });
+
+        }
     }
 
 }
