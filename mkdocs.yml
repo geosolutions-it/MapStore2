@@ -1,9 +1,9 @@
 site_name: MapStore 2 Documentation
 theme: readthedocs
-docs_dir: docs/user-guide
+docs_dir: 'docs/user-guide'
 markdown_extensions:
   - admonition
-pages:
+nav:
   - Introduction: 'index.md'
   - Home Page Overview: 'home-page.md'
   - Managing Users and Groups: 'admin.md'
@@ -23,6 +23,7 @@ pages:
     - Sharing a Map: 'share.md'
     - Side Bar: 'side-bar.md'
     - Basemap Switcher: 'basemap.md'
+    - Timeline: 'timeline.md'
     - Footer: 'footer.md'
   - Exploring Dashboards: 'exploring-dashboards.md'
   - Binary Package: 'binary-demo-package.md'
