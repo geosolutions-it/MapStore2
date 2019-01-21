@@ -146,6 +146,58 @@ describe('styleeditor Epics', () => {
         state);
 
     });
+    it('test toggleStyleEditorEpic enabled in state true but availableStyles missing from settings', (done) => {
+
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerName',
+                        url: '/geoserver/'
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ],
+                settings: {
+                    options: {
+                        opacity: 1
+                    }
+                }
+            },
+            styleeditor: {
+                enabled: true
+            }
+        };
+        const NUMBER_OF_ACTIONS = 1;
+
+        const results = (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            try {
+                actions.map((action) => {
+                    switch (action.type) {
+                        case LOADING_STYLE:
+                            expect(action.status).toBe('global');
+                            break;
+                        default:
+                            expect(true).toBe(false);
+                    }
+                });
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            toggleStyleEditorEpic,
+            NUMBER_OF_ACTIONS,
+            toggleStyleEditor(undefined, true),
+            results,
+        state);
+
+    });
     it('test updateLayerOnStatusChangeEpic status template', (done) => {
 
         const state = {

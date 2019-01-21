@@ -7,7 +7,7 @@
  */
 
 const Rx = require('rxjs');
-const { head, isArray, template } = require('lodash');
+const { get, head, isArray, template } = require('lodash');
 const { success, error } = require('../actions/notifications');
 const { UPDATE_NODE, updateNode, updateSettingsParams } = require('../actions/layers');
 const { updateAdditionalLayer, removeAdditionalLayer, updateOptionsByOwner } = require('../actions/additionallayers');
@@ -49,7 +49,7 @@ const {
     getUpdatedLayer
 } = require('../selectors/styleeditor');
 
-const { getSelectedLayer } = require('../selectors/layers');
+const { getSelectedLayer, layerSettingSelector } = require('../selectors/layers');
 const { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts } = require('../utils/StyleEditorUtils');
 const { normalizeUrl } = require('../utils/PrintUtils');
 const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
@@ -200,9 +200,11 @@ module.exports = {
             .switchMap((action) => {
 
                 const state = store.getState();
+                const settings = layerSettingSelector(state);
+                const isInitialized = !!get(settings, 'options.availableStyles');
 
                 if (!action.enabled) return resetStyleEditorObservable(state);
-                if (enabledStyleEditorSelector(state)) return Rx.Observable.empty();
+                if (enabledStyleEditorSelector(state) && isInitialized) return Rx.Observable.empty();
 
                 const layer = action.layer || getSelectedLayer(state);
                 if (!layer || layer && !layer.url) return Rx.Observable.empty();
