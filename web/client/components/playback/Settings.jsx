@@ -71,9 +71,10 @@ module.exports = ({
         padding: 0,
         margin: 0,
         border: 'none'
-    }
+    },
+    style = {}
 
-}) => (<div className="ms-playback-settings">
+}) => (<div className="ms-playback-settings" style={style}>
         <h4><Message msgId="timeline.settings.title" /></h4>
         <FormGroup controlId="timelineSettings">
             <Form componentClass="fieldset" inline>

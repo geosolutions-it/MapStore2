@@ -78,10 +78,11 @@ module.exports = playbackEnhancer(({
     hasPrevious,
     hasNext,
     showSettings,
-    onShowSettings = () => {}
+    onShowSettings = () => {},
+    settingsStyle = {}
 }) =>
 ( <div style={{display: 'flex'}}>
-        { (status !== statusMap.PLAY && status !== statusMap.PAUSE) && showSettings && <Settings />}
+        { (status !== statusMap.PLAY && status !== statusMap.PAUSE) && showSettings && <Settings style={settingsStyle}/>}
         <Toolbar
             btnDefaultProps={{
                 className: 'square-button-md',
