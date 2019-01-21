@@ -33,18 +33,12 @@ class Feature extends React.Component {
     componentDidMount() {
         this.addFeatures(this.props);
     }
-    componentWillReceiveProps(newProps) {
-        if (!isEqual(newProps.crs, this.props.crs)) {
-            this.removeFromContainer();
-            this.addFeatures(newProps);
-        }
-    }
     shouldComponentUpdate(nextProps) {
-        return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry) || !isEqual(nextProps.style, this.props.style);
+        return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry) || !isEqual(nextProps.style, this.props.style) || !isEqual(nextProps.crs, this.props.crs);
     }
 
     componentWillUpdate(newProps) {
-        if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || !isEqual(newProps.style, this.props.style)) {
+        if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || !isEqual(newProps.style, this.props.style) || !isEqual(newProps.crs, this.props.crs)) {
             this.removeFromContainer();
             this.addFeatures(newProps);
         }
