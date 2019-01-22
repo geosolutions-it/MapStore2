@@ -97,7 +97,7 @@ module.exports = withHandlers({
         mouseEventProps = {},
         offsetEnabled,
         setTimeLineRange = () => { },
-        setMouseData = () => { },
+        setMouseData = () => { }
     }) => ({ time, event } = {}) => {
         if (status === "PLAY") {
             return;
@@ -130,7 +130,7 @@ module.exports = withHandlers({
         playbackRange,
         setTimeLineRange = () => { },
         setPlaybackRange = () => { }
-    }) => ({ time, event, id } = {}) => {
+    }) => ({ time, id } = {}) => {
         if (id === 'startPlaybackTime' || id === 'endPlaybackTime') {
             const range = { ...playbackRange, [id]: time.toISOString() };
             let { start, end } = getStartEnd(range.startPlaybackTime, range.endPlaybackTime);
