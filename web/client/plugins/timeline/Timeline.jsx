@@ -13,11 +13,13 @@ const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selec
 
 const { selectTime, selectLayer, onRangeChanged, setMouseEventData } = require('../../actions/timeline');
 const { itemsSelector, loadingSelector, selectedLayerSelector, mouseEventSelector, currentTimeRangeSelector, rangeSelector } = require('../../selectors/timeline');
-const { setCurrentOffset } = require('../../actions/dimension');
+const { moveTime, setCurrentOffset } = require('../../actions/dimension');
 const { selectPlaybackRange } = require('../../actions/playback');
 const { playbackRangeSelector, statusSelector } = require('../../selectors/playback');
 const { createStructuredSelector, createSelector } = require('reselect');
-const { compose, withPropsOnChange, defaultProps } = require('recompose');
+const { createShallowSelectorCreator } = require('../../utils/ReselectUtils');
+
+const { compose, withHandlers, withPropsOnChange, defaultProps } = require('recompose');
 const withMask = require('../../components/misc/enhancers/withMask');
 const Message = require('../../components/I18N/Message');
 const LoadingSpinner = require('../../components/misc/LoadingSpinner');
@@ -28,6 +30,15 @@ const clickHandleEnhancer = compose(
 );
 
 const moment = require('moment');
+/**
+ * Optimization to skip re-render when the layers update properties that are not needed.
+ * Typically `loading` attribute
+ */
+const timeLayersSelector = createShallowSelectorCreator(
+    (a = {}, b = {}) => {
+        return a.id === b.id && a.title === b.title && a.name === b.name;
+    }
+)(layersWithTimeDataSelector, layers => layers);
 
 /**
  * Provides time dimension data for layers
@@ -37,7 +48,7 @@ const layerData = compose(
         createSelector(
             rangeSelector,
             itemsSelector,
-            layersWithTimeDataSelector,
+            timeLayersSelector,
             loadingSelector,
             (viewRange, items, layers, loading) => ({
                 viewRange,
@@ -90,6 +101,7 @@ const currentTimeEnhancer = compose(
         ),
         {
             setCurrentTime: selectTime,
+            moveCurrentRange: moveTime,
             setOffset: setCurrentOffset
         }
     )
@@ -173,6 +185,7 @@ const enhance = compose(
                     hour: 'ha'
                 }
             },
+            itemsAlwaysDraggable: true,
             moment: date => moment(date).utc()
         }
     }),
@@ -183,22 +196,26 @@ const enhance = compose(
             ...(viewRange) // TODO: if the new view range is very far from the current one, the animation takes a lot. We should allow also to disable animation (animation: false in the options)
         }
     })),
+    // disable some functionalities when playing
+    withPropsOnChange(['status'], ({ status }) => ({
+        readOnly: status === "PLAY"
+    })),
     // Playback range background
     withPropsOnChange(
         (props, nextProps) => {
             const update = Object.keys(props)
-                .filter(k => ['items', 'hideLayersName', 'playbackRange', 'playbackEnabled', 'selectedLayer'].indexOf(k) >= 0)
+                .filter(k => ['rangeItems', 'hideLayersName', 'playbackRange', 'playbackEnabled', 'selectedLayer'].indexOf(k) >= 0)
                 .filter(k => props[k] !== nextProps[k]);
             return update.length > 0;
         },
         ({
-            items,
+            rangeItems = [],
             playbackEnabled,
             playbackRange
         }) => ({
-                items: playbackEnabled && playbackRange && playbackRange.startPlaybackTime !== undefined && playbackRange.endPlaybackTime !== undefined
+                rangeItems: playbackEnabled && playbackRange && playbackRange.startPlaybackTime !== undefined && playbackRange.endPlaybackTime !== undefined
                     ? [
-                        ...items,
+                    ...rangeItems,
                         {
                             id: 'playback-range',
                             ...getStartEnd(playbackRange.startPlaybackTime, playbackRange.endPlaybackTime),
@@ -206,37 +223,66 @@ const enhance = compose(
                             className: 'ms-playback-range'
                         }
                     ].filter(val => val)
-                    : items
+                    : rangeItems
         })
     ),
-    // offset range background
-    withPropsOnChange(
-        (props, nextProps) => {
-            const update = Object.keys(props)
-                .filter(k => ['items', 'currentTime', 'offsetEnabled', 'hideLayersName', 'selectedLayer', 'currentTimeRange'].indexOf(k) >= 0)
-                .filter( k => props[k] !== nextProps[k]);
-            return update.length > 0;
-        },
-        ({
-            currentTimeRange,
-            items,
-            offsetEnabled
-        }) => ({
-                items: offsetEnabled && currentTimeRange.start !== undefined && currentTimeRange.end !== undefined
-                ? [
-                    ...items,
+    // support for offset and it's range background. TODO: compose also with the proper custom time, to isolate the functionality
+    compose(
+        withHandlers({
+            onUpdate: ({ moveCurrentRange = () => {}}) => ({id, start}) => {
+                if (id === 'current-range') {
+                    moveCurrentRange(start.toISOString());
+                }
+
+            }
+        }),
+        withPropsOnChange(['options', 'onUpdate'], ({ options = {}, onUpdate = () => {} }) => ({
+            options: {
+                ...options,
+                snap: null,
+                editable: {
+                    // ...(options.editable || {}), // we may improve this merge to allow some configuration.
+                    add: false,         // add new items by double tapping
+                    updateTime: false,  // drag items horizontally
+                    updateGroup: false, // drag items from one group to another
+                    remove: false,       // delete an item by tapping the delete button top right
+                    overrideItems: false  // allow these options to override item.editable
+                },
+                onMove: (item = {}, callback) => {
+                    onUpdate(item);
+                    callback(item);
+
+                }
+            }
+        })),
+        withPropsOnChange(
+            (props, nextProps) => {
+                const update = Object.keys(props)
+                    .filter(k => ['rangeItems', 'currentTime', 'offsetEnabled', 'hideLayersName', 'selectedLayer', 'currentTimeRange', 'readOnly'].indexOf(k) >= 0)
+                    .filter(k => props[k] !== nextProps[k]);
+                // console.log(update);
+                return update.length > 0;
+            },
+            ({
+                currentTimeRange,
+                rangeItems = [],
+                readOnly,
+                offsetEnabled
+            }) => ({
+                rangeItems: offsetEnabled && currentTimeRange.start !== undefined && currentTimeRange.end !== undefined
+                    ? [
+                        ...rangeItems,
                         {
                             id: 'current-range',
+                            editable: { updateTime: !readOnly, updateGroup: false, remove: false },
                             ...getStartEnd(currentTimeRange.start, currentTimeRange.end),
-                            editable: {
-
-                            },
                             type: 'background',
                             className: 'ms-current-range'
                         }
                     ].filter(val => val)
-                : items
-        })
+                    : rangeItems
+            })
+        )
     ),
     // custom times enhancer
     withPropsOnChange(
@@ -253,10 +299,7 @@ const enhance = compose(
         ({loading}) => loading && loading.timeline,
         () => <div style={{ margin: "auto" }} ><LoadingSpinner style={{ display: "inline-block", verticalAlign: "middle" }}/><Message msgId="loading" /></div>,
         {white: true}
-    ),
-    withPropsOnChange(['status'], ({status}) => ({
-        readOnly: status === "PLAY"
-    }))
+    )
 );
 const Timeline = require('../../components/time/TimelineComponent');
 

@@ -25,42 +25,10 @@ const getStartEnd = (startTime, endTime) => {
  *
  */
 module.exports = withHandlers({
-    mouseDownHandler: ({
-        offsetEnabled,
-        status,
-        setMouseData = () => { }
-    }) => ({ time, event } = {}) => {
-        if (status === "PLAY") {
-            return;
-        }
-        // initialize dragging range event
-        let target = event && event.target && event.target.closest('.ms-current-range');
-        if (offsetEnabled && target) {
-            const startEvent = {
-                clientX: event.clientX,
-                clientY: event.clientY
-            };
-            setMouseData({ dragging: true, startTime: time.toISOString(), startEvent });
-        } else {
-            target = event && event.target && event.target.closest('.vis-custom-time');
-            const className = target && target.getAttribute('class');
-            const timeId = className && trim(className.replace('vis-custom-time', ''));
-            if (timeId) setMouseData({ dragging: false, borderID: timeId, startTime: time.toISOString() });
-        }
-
-    },
-    mouseMoveHandler: ({ mouseEventProps = {}}) =>
-    ({ event } = {}) => {
-        if (mouseEventProps.dragging) {
-            event.stopPropagation();
-            let target = event && event.target && event.target.closest('.ms-current-range');
-            if (target && mouseEventProps.startEvent && mouseEventProps.startEvent.clientX) {
-                const deltaX = event.clientX - mouseEventProps.startEvent.clientX;
-                target.style.transform = `translateX(${deltaX}px)`;
-                target.style.zIndex = 100;
-            }
-        }
-    },
+    /**
+     * manages click on group label or on timeline (to select current time with one click)
+     *
+     */
     clickHandler: ({
         selectedLayer,
         offsetEnabled,
@@ -89,39 +57,10 @@ module.exports = withHandlers({
             }
         }
     },
-    mouseUpHandler: ({
-        status,
-        setOffset = () => { },
-        setCurrentTime = () => { },
-        currentTimeRange = {},
-        mouseEventProps = {},
-        offsetEnabled,
-        setTimeLineRange = () => { },
-        setMouseData = () => { }
-    }) => ({ time, event } = {}) => {
-        if (status === "PLAY") {
-            return;
-        }
-        let target = event && event.target && event.target.closest('.vis-center');
-        // sets the playbackRange range
-        if (offsetEnabled) {
-            // range dragging
-            if (mouseEventProps.dragging && target) {
-                const off = moment(time).diff(mouseEventProps.startTime);
-
-                const startRangeShift = moment(currentTimeRange.start).add(off);
-                const endRangeShift = moment(currentTimeRange.end).add(off);
-                // no snap for range borders
-                setCurrentTime(startRangeShift.toISOString(), null);
-                setOffset(endRangeShift.toISOString());
-                const newRange = { start: startRangeShift, end: endRangeShift };
-                setTimeLineRange(newRange);
-
-            }
-        }
-        // resetting the mouse event data
-        if (Object.keys(mouseEventProps).length > 0) setMouseData({});
-    },
+    /**
+     * Manages customTimes (cursors) events.
+     * TODO: split the functionality for every custom time, to separate behaviors for playback and range cursors
+     */
     timechangedHandler: ({
         currentTime,
         setOffset = () => { },

@@ -1,10 +1,53 @@
-const vis = require('vis/dist/vis-timeline-graph2d.min');
-require('vis/dist/vis-timeline-graph2d.min.css');
+/*
+ * Copyright 2018, GeoSolutions Sas.
+ * All rights reserved.
+ *
+ * This source code is licensed under the BSD-style license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 const React = require('react');
 const PropTypes = require('prop-types');
-const { difference, keys, intersection, each, omit, assign } = require('lodash');
 
-const noop = function () { };
+
+
+const vis = require('vis/index-timeline-graph2d');
+/*
+ * This override enables editing for BackgroundItem
+ */
+vis.timeline.components.items.BackgroundItem.prototype._createDomElement = function() {
+    if (!this.dom) {
+        // create DOM
+        this.dom = {};
+
+        // background box
+        this.dom.box = document.createElement('div');
+        // className is updated in redraw()
+
+        // frame box (to prevent the item contents from overflowing
+        this.dom.frame = document.createElement('div');
+        this.dom.frame.className = 'vis-item-overflow';
+        this.dom.box.appendChild(this.dom.frame);
+
+        // contents box
+        this.dom.content = document.createElement('div');
+        this.dom.content.className = 'vis-item-content';
+        this.dom.frame.appendChild(this.dom.content);
+
+        // Note: we do NOT attach this item as attribute to the DOM,
+        //       such that background items cannot be selected
+        this.dom.box['timeline-item'] = this; // <-- un-commented from original timeline
+
+        this.dirty = true;
+    }
+};
+
+require('vis/dist/vis-timeline-graph2d.min.css');
+
+
+const { difference, differenceBy, keys, intersection, intersectionBy, each, omit, assign } = require('lodash');
+
+const noop = () => { };
+
 const events = [
     'currentTimeTick',
     'click',
@@ -20,6 +63,7 @@ const events = [
     'timechanged',
     'mouseOver',
     'mouseMove',
+    'mouseleave',
     'itemover',
     'itemout',
     'mouseDown',
@@ -38,6 +82,7 @@ each(events, event => {
 
 const types = {
     items: PropTypes.array,
+    rangeItems: PropTypes.array,
     groups: PropTypes.array,
     options: PropTypes.object,
     selectionOptions: PropTypes.object,
@@ -62,6 +107,11 @@ const defaults = {
     customTimes: {}
 };
 
+/**
+ * Wrapper for visjs-timeline in react
+ * This wrapper adds also some functionalities:
+ *  - read-only that disables customTimes
+ */
 class Timeline extends React.Component {
     static propTypes = assign(types, eventPropTypes);
     static defaultProps = assign(defaults, eventDefaultProps);
@@ -81,7 +131,7 @@ class Timeline extends React.Component {
         this.init();
     }
     shouldComponentUpdate(nextProps) {
-        const { items, groups, options, selection, customTimes, readOnly } = this.props;
+        const { items, groups, options, selection, customTimes, readOnly, rangeItems } = this.props;
 
         const itemsChange = items !== nextProps.items;
         const groupsChange = groups !== nextProps.groups;
@@ -89,13 +139,15 @@ class Timeline extends React.Component {
         const customTimesChange = customTimes !== nextProps.customTimes;
         const selectionChange = selection !== nextProps.selection;
         const readOnlyChange = readOnly !== nextProps.readOnly;
+        const rangeItemsChange = rangeItems !== nextProps.rangeItems;
         return (
             itemsChange ||
             groupsChange ||
             optionsChange ||
             customTimesChange ||
             selectionChange ||
-            readOnlyChange
+            readOnlyChange ||
+            rangeItemsChange
         );
     }
     componentDidUpdate(prevProps) {
@@ -107,13 +159,43 @@ class Timeline extends React.Component {
 
 
     render() {
-        return <div ref="container" className={this.props.readOnly ? 'read-only-timeline' : ''} />;
+        return <div ref="container" className={this.props.readOnly ? 'read-only-timeline' : ''} onMouseOut={this.props.onMouseOutHandler} />;
     }
-
+    /**
+     * forces the re-render of all items
+     */
+    setAllItems = items => {
+        // force reset
+        this.$el.setItems([...(items || []), ...(this.props.rangeItems || [])]);
+    }
+    /**
+     * manages items update, managing peculiar cases that happen during initialization
+     */
+    setItems = items => {
+        /*
+        ** the init() function keeps re-triggered with change of some props
+        * when the item is set at the first init(), it return no range (vis-timeline.js)
+        * in this case we emit 'change' action to create a view range from th new items.
+        **/
+        if (items.length > 0) {
+            // first setItems is triggered only when the component receive items. trigger 'change' event to create  view range.
+            if (!this.$el.initialFitDone) {
+                this.setAllItems(items);
+                this.$el.emit('changed');
+            } else {
+                // when we have a change in items we perform set item (e.g zoom /move events)
+                this.setAllItems(items);
+            }
+            // when there is a view range but no items on the timeline (e.g. user moved the timeline where there are no data). we re-set items again
+        } else if (this.$el.initialRangeChangeDone) {
+            this.setAllItems(items);
+        }
+    };
 
     init(prevProps = {}) {
         const {
             items,
+            rangeItems,
             groups,
             options,
             selection,
@@ -143,24 +225,24 @@ class Timeline extends React.Component {
             this.$el.setGroups(groupsDataset);
         }
 
-        /*
-        ** the init() function keeps re-triggered with change of some props
-        * when the item is set at the first init(), it return no range (vis-timeline.js)
-        * in this case we emit 'change' action to create a view range from th new items.
-        **/
+
         if (items && items !== prevProps.items) {
-            if (items.length > 0) {
-                // first setItems is triggerd only when the component receive items. trigger 'change' event to create  view range.
-                if (!this.$el.initialFitDone) {
-                    this.$el.setItems(items);
-                    this.$el.emit('changed');
-                } else {
-                    // when we have a change in items we perform set item (e.g zoom /move events)
-                    this.$el.setItems(items);
-                }
-                // when there is a view range but no items on the timeline (e.g. user moved the timeline where there are no data). we re-set items again
-            } else if (this.$el.initialRangeChangeDone) {
-                this.$el.setItems(items);
+            this.setItems(items);
+        // optimization for rangeItems
+        } else if (rangeItems !== prevProps.rangeItems) {
+            // rangeItems must have an ID.
+            // so they can be updated without re-rendering all other items
+            // this is typically used when editing range.
+            const dataSet = this.$el && this.$el.itemsData && this.$el.itemsData.getDataSet();
+            if (dataSet) {
+                const itemsToUpdate = intersectionBy(rangeItems || [], prevProps.rangeItems || [], "id");
+                const itemsToAdd = differenceBy(rangeItems || [], prevProps.rangeItems || [], "id");
+                const itemsToDelete = differenceBy(prevProps.rangeItems || [], rangeItems || [], "id");
+                itemsToUpdate.map( i => dataSet.update(i));
+                itemsToAdd.map(i => dataSet.add(i));
+                itemsToDelete.map(({id}) => dataSet.remove(id));
+            } else {
+                this.setItems(items);
             }
         }
 
@@ -201,11 +283,12 @@ class Timeline extends React.Component {
         // store new customTimes in state for future diff
         this.setState({ customTimes });
 
-        // disable events on readOnly
+        // disable customTimes events on readOnly
         if (this.props.readOnly !== prevProps.readOnly || this.props.readOnly && customTimeKeysToAdd.length > 0) {
             each(this.$el.customTimes, time => {
                 if (this.props.readOnly) {
                     time.hammer.off("panstart panmove panend");
+                // restore only if switched from readOnly=true to false
                 } else if (prevProps.readOnly === true) {
                     time.hammer.on('panstart', time._onDragStart.bind(time));
                     time.hammer.on('panmove', time._onDrag.bind(time));
