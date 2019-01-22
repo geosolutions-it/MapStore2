@@ -79,6 +79,7 @@ class CesiumMap extends React.Component {
             navigationHelpButton: false,
             navigationInstructionsInitiallyVisible: false
         }, this.getMapOptions(this.props.mapOptions)));
+        map.scene.globe.baseColor = Cesium.Color.WHITE;
         map.imageryLayers.removeAll();
         map.camera.moveEnd.addEventListener(this.updateMapInfoState);
         this.hand = new Cesium.ScreenSpaceEventHandler(map.scene.canvas);
