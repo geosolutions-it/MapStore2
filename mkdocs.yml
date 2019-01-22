@@ -3,7 +3,7 @@ theme: readthedocs
 docs_dir: 'docs/user-guide'
 markdown_extensions:
   - admonition
-nav:
+pages:
   - Introduction: 'index.md'
   - Home Page Overview: 'home-page.md'
   - Managing Users and Groups: 'admin.md'
