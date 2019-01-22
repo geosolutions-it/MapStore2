@@ -90,34 +90,20 @@ module.exports = withHandlers({
         }
     },
     mouseUpHandler: ({
-        currentTime,
         status,
         setOffset = () => { },
         setCurrentTime = () => { },
         currentTimeRange = {},
         mouseEventProps = {},
         offsetEnabled,
-        playbackRange,
         setTimeLineRange = () => { },
         setMouseData = () => { },
-        setPlaybackRange = () => { }
     }) => ({ time, event } = {}) => {
         if (status === "PLAY") {
             return;
         }
         let target = event && event.target && event.target.closest('.vis-center');
-        const border = mouseEventProps.borderID;
         // sets the playbackRange range
-        if (!mouseEventProps.dragging && border === 'startPlaybackTime' || border === 'endPlaybackTime') {
-            const range = { ...playbackRange, [border]: time.toISOString() };
-            let { start, end } = getStartEnd(range.startPlaybackTime, range.endPlaybackTime);
-            if (isValidOffset(start, end)) {
-                setPlaybackRange({
-                    startPlaybackTime: start,
-                    endPlaybackTime: end
-                });
-            }
-        }
         if (offsetEnabled) {
             // range dragging
             if (mouseEventProps.dragging && target) {
@@ -131,43 +117,45 @@ module.exports = withHandlers({
                 const newRange = { start: startRangeShift, end: endRangeShift };
                 setTimeLineRange(newRange);
 
-            } else {
-                // changing the rang by moving currentTime or offsetTime
-                if (border === 'currentTime' && isValidOffset(time, currentTimeRange.endTimeLineRange)) {
-                    setCurrentTime(time.toISOString(), null);
-                } else if (border === 'offsetTime' && isValidOffset(currentTime, time)) {
-                    setOffset(time.toISOString());
-                }
-                const id = border === 'currentTime' && 'start' || border === 'offsetTime' && 'end';
-                const TimeRange = { ...currentTimeRange, [id]: time.toISOString() };
-                let { start, end } = getStartEnd(TimeRange.start, TimeRange.end);
-                if (isValidOffset(start, end)) {
-                    setTimeLineRange({
-                        start: start,
-                        end: end
-                    });
-                }
             }
-            // normal click event
         }
         // resetting the mouse event data
         if (Object.keys(mouseEventProps).length > 0) setMouseData({});
-    }
-    /*
+    },
     timechangedHandler: ({
         currentTime,
-        status,
         setOffset = () => { },
         setCurrentTime = () => { },
         currentTimeRange = {},
-        mouseEventProps = {},
-        offsetEnabled,
         playbackRange,
         setTimeLineRange = () => { },
-        setMouseData = () => { },
         setPlaybackRange = () => { }
-    }) => ({ time, event, id } = {})  => {
-        console.log(args);
+    }) => ({ time, event, id } = {}) => {
+        if (id === 'startPlaybackTime' || id === 'endPlaybackTime') {
+            const range = { ...playbackRange, [id]: time.toISOString() };
+            let { start, end } = getStartEnd(range.startPlaybackTime, range.endPlaybackTime);
+            if (isValidOffset(start, end)) {
+                setPlaybackRange({
+                    startPlaybackTime: start,
+                    endPlaybackTime: end
+                });
+            }
+        } else if (id === 'currentTime' && isValidOffset(time, currentTimeRange.endTimeLineRange)) {
+            setCurrentTime(time.toISOString(), null);
+        } else if (id === 'offsetTime' && isValidOffset(currentTime, time)) {
+            setOffset(time.toISOString());
+        }
+        if (id === 'currentTime' || id === 'offsetTime' ) {
+            const key = id === 'currentTime' ? 'start' : 'end';
+            const TimeRange = { ...currentTimeRange, [key]: time.toISOString() };
+            let { start, end } = getStartEnd(TimeRange.start, TimeRange.end);
+            if (isValidOffset(start, end)) {
+                setTimeLineRange({
+                    start: start,
+                    end: end
+                });
+            }
+        }
+
     }
-    */
 });
