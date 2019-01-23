@@ -3,6 +3,11 @@ const ReactDOM = require('react-dom');
 const {createSink} = require('recompose');
 const expect = require('expect');
 const clickHandlers = require('../customTimesHandlers');
+const CURRENT_TIME = "2016-01-01T00:00:00.001Z";
+const CURRENT_OFFSET = "2017-01-01T00:00:00.001Z";
+const CURRENT_PLAYBACK_START = "2016-01-01T00:00:00.001Z";
+const CURRENT_PLAYBACK_END = "2017-01-01T00:00:00.001Z";
+
 const mockCurrentTimeTarget = {
     closest: () => ({
         getAttribute: () => 'currentTime'
@@ -142,8 +147,6 @@ describe('customTimesHandlers enhancer', () => {
         };
         const spyOffsetCallback = expect.spyOn(actions, 'setOffset');
         const spyCurrentTimeCallback = expect.spyOn(actions, 'setCurrentTime');
-        const CURRENT_TIME = "2016-01-01T00:00:00.001Z";
-        const CURRENT_OFFSET = "2017-01-01T00:00:00.001Z";
         const currentTimeRange = {
             start: CURRENT_TIME,
             end: CURRENT_OFFSET
@@ -169,8 +172,6 @@ describe('customTimesHandlers enhancer', () => {
             setOffset: () => { }
         };
         const spyCallback = expect.spyOn(actions, 'setOffset');
-        const CURRENT_TIME = "2016-01-01T00:00:00.001Z";
-        const CURRENT_OFFSET = "2017-01-01T00:00:00.001Z";
         const currentTimeRange = {
             start: CURRENT_TIME,
             end: CURRENT_OFFSET
@@ -196,8 +197,6 @@ describe('customTimesHandlers enhancer', () => {
         };
         const spyOffsetCallback = expect.spyOn(actions, 'setOffset');
         const spyCurrentTimeCallback = expect.spyOn(actions, 'setCurrentTime');
-        const CURRENT_TIME = "2016-01-01T00:00:00.001Z";
-        const CURRENT_OFFSET = "2017-01-01T00:00:00.001Z";
         const currentTimeRange = {
             start: CURRENT_TIME,
             end: CURRENT_OFFSET
@@ -225,8 +224,6 @@ describe('customTimesHandlers enhancer', () => {
         };
         const spyOffsetCallback = expect.spyOn(actions, 'setOffset');
         const spyCurrentTimeCallback = expect.spyOn(actions, 'setCurrentTime');
-        const CURRENT_TIME = "2016-01-01T00:00:00.001Z";
-        const CURRENT_OFFSET = "2017-01-01T00:00:00.001Z";
         const currentTimeRange = {
             start: CURRENT_TIME,
             end: CURRENT_OFFSET
@@ -254,8 +251,7 @@ describe('customTimesHandlers enhancer', () => {
         const spyCallback = expect.spyOn(actions, 'setPlaybackRange');
         const DATE = "2018-12-20T15:07:42.981Z";
         const CURSOR = "startPlaybackTime";
-        const CURRENT_PLAYBACK_START = "2016-01-01T00:00:00.001Z";
-        const CURRENT_PLAYBACK_END = "2017-01-01T00:00:00.001Z";
+
         const playbackRange = {
             startPlaybackTime: CURRENT_PLAYBACK_START,
             endPlaybackTime: CURRENT_PLAYBACK_END
@@ -281,8 +277,6 @@ describe('customTimesHandlers enhancer', () => {
         const spyCallback = expect.spyOn(actions, 'setPlaybackRange');
         const DATE = "2018-12-20T15:07:42.981Z";
         const CURSOR = "endPlaybackTime";
-        const CURRENT_PLAYBACK_START = "2016-01-01T00:00:00.001Z";
-        const CURRENT_PLAYBACK_END = "2017-01-01T00:00:00.001Z";
         const playbackRange = {
             startPlaybackTime: CURRENT_PLAYBACK_START,
             endPlaybackTime: CURRENT_PLAYBACK_END

@@ -8,8 +8,6 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
-
-
 const vis = require('vis/index-timeline-graph2d');
 /*
  * This override enables editing for BackgroundItem
@@ -177,7 +175,7 @@ class Timeline extends React.Component {
         * when the item is set at the first init(), it return no range (vis-timeline.js)
         * in this case we emit 'change' action to create a view range from th new items.
         **/
-        if (items.length > 0) {
+        if ((items.length || 0) + (this.props.rangeItems && this.props.rangeItems.length || 0) > 0) { // TODO: verify if necessary to check > 0 length
             // first setItems is triggered only when the component receive items. trigger 'change' event to create  view range.
             if (!this.$el.initialFitDone) {
                 this.setAllItems(items);
@@ -295,11 +293,8 @@ class Timeline extends React.Component {
                     time.hammer.on('panend', time._onDragEnd.bind(time));
                 }
             });
-
         }
     }
-
 }
-
 
 module.exports = Timeline;
