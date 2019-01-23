@@ -8,15 +8,15 @@
 const {compose, withPropsOnChange, withHandlers} = require('recompose');
 const { getStartEnd } = require('../../../utils/TimeUtils');
 
+/**
+ * Enhances timeline with cursors for playback and time range.
+ * Also draws backgrounds for the 2 ranges and add needed options to make time range draggable.
+ *
+ */
 module.exports = compose(
     // Playback range background
     withPropsOnChange(
-        (props, nextProps) => {
-            const update = Object.keys(props)
-                .filter(k => ['rangeItems', 'playbackRange', 'playbackEnabled', 'selectedLayer'].indexOf(k) >= 0)
-                .filter(k => props[k] !== nextProps[k]);
-            return update.length > 0;
-        },
+        ['rangeItems', 'playbackRange', 'playbackEnabled', 'selectedLayer'],
         ({
             rangeItems = [],
             playbackEnabled,
@@ -65,12 +65,7 @@ module.exports = compose(
             }
         })),
         withPropsOnChange(
-            (props, nextProps) => {
-                const update = Object.keys(props)
-                    .filter(k => ['rangeItems', 'currentTime', 'offsetEnabled', 'selectedLayer', 'currentTimeRange', 'readOnly'].indexOf(k) >= 0)
-                    .filter(k => props[k] !== nextProps[k]);
-                return update.length > 0;
-            },
+            ['rangeItems', 'currentTime', 'offsetEnabled', 'selectedLayer', 'currentTimeRange', 'readOnly'],
             ({
                 currentTimeRange,
                 rangeItems = [],
@@ -92,7 +87,7 @@ module.exports = compose(
             })
         )
     ),
-    // custom times enhancer
+    // custom times enhancer. TODO: separate playback and currentTimeRange cursors
     withPropsOnChange(
         ['currentTime', 'playbackRange', 'playbackEnabled', 'offsetEnabled', 'currentTimeRange'],
         ({ currentTime, playbackRange, playbackEnabled, offsetEnabled, currentTimeRange }) => ({
