@@ -29,8 +29,7 @@ module.exports = withHandlers({
         offsetEnabled,
         status,
         setCurrentTime = () => { },
-        selectGroup = () => { },
-        mouseEventProps = {}
+        selectGroup = () => { }
     }) => ({ time, group, what, event } = {}) => {
         if (status === "PLAY") {
             return;
@@ -45,7 +44,7 @@ module.exports = withHandlers({
                 const target = event && event.target && event.target.closest('.vis-custom-time');
                 const className = target && target.getAttribute('class');
                 const timeId = className && trim(className.replace('vis-custom-time', ''));
-                if (!mouseEventProps.timeId && time && !offsetEnabled && timeId !== "startPlaybackTime" && timeId !== "endPlaybackTime") {
+                if (time && !offsetEnabled && timeId !== "startPlaybackTime" && timeId !== "endPlaybackTime") {
                     setCurrentTime(time.toISOString(), group || selectedLayer);
                 }
                 break;

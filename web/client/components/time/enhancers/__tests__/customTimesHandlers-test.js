@@ -2,13 +2,13 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const {createSink} = require('recompose');
 const expect = require('expect');
-const clickHandlers = require('../clickHandlers');
+const clickHandlers = require('../customTimesHandlers');
 const mockCurrentTimeTarget = {
     closest: () => ({
         getAttribute: () => 'currentTime'
     })
 };
-describe('clickHandlers enhancer', () => {
+describe('customTimesHandlers enhancer', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -26,7 +26,7 @@ describe('clickHandlers enhancer', () => {
         }));
         ReactDOM.render(<Sink />, document.getElementById("container"));
     });
-    it('click handler triggers setCurrentTime', () => {
+    it('click triggers setCurrentTime', () => {
         const actions = {
             setCurrentTime: () => {}
         };
@@ -40,29 +40,6 @@ describe('clickHandlers enhancer', () => {
                 event: {
                     target: mockCurrentTimeTarget
                 }});
-
-        }));
-        const cmp = ReactDOM.render(<Sink setCurrentTime={actions.setCurrentTime} />, document.getElementById("container"));
-        expect(cmp).toExist();
-        expect(spyCallback).toHaveBeenCalled();
-        expect(spyCallback.calls[0].arguments[0]).toBe(DATE);
-        expect(spyCallback.calls[0].arguments[1]).toBe(LAYER);
-    });
-    it('click handler does not trigger anything while dragging', () => {
-        const actions = {
-            setCurrentTime: () => { }
-        };
-        const spyCallback = expect.spyOn(actions, 'setCurrentTime');
-        const DATE = "2018-12-20T15:07:42.981Z";
-        const LAYER = "LAYER";
-        const Sink = clickHandlers(createSink(props => {
-            props.clickHandler({
-                time: new Date(DATE),
-                group: LAYER,
-                event: {
-                    target: mockCurrentTimeTarget
-                }
-            });
 
         }));
         const cmp = ReactDOM.render(<Sink setCurrentTime={actions.setCurrentTime} />, document.getElementById("container"));

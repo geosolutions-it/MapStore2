@@ -25,7 +25,7 @@ const Message = require('../../components/I18N/Message');
 const LoadingSpinner = require('../../components/misc/LoadingSpinner');
 
 
-const clickHandleEnhancer = require('../../components/time/enhancers/clickHandlers');
+const customTimesHandlers = require('../../components/time/enhancers/customTimesHandlers');
 const customTimesEnhancer = require('../../components/time/enhancers/customTimesEnhancer');
 
 const moment = require('moment');
@@ -149,7 +149,7 @@ const enhance = compose(
     currentTimeEnhancer,
     playbackRangeEnhancer,
     layerSelectionEnhancer,
-    clickHandleEnhancer,
+    customTimesHandlers,
     rangeEnhancer,
     layerData,
     defaultProps({
