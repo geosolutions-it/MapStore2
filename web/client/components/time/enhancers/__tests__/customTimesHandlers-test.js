@@ -247,4 +247,58 @@ describe('customTimesHandlers enhancer', () => {
         expect(spyOffsetCallback.calls[0].arguments[0]).toBe(CURRENT_TIME);
         expect(spyCurrentTimeCallback.calls[0].arguments[0]).toBe(NEW_DATE);
     });
+    it('timechangedHandler for playback controls (startPlaybackTime), with switch)', () => {
+        const actions = {
+            setPlaybackRange: () => { }
+        };
+        const spyCallback = expect.spyOn(actions, 'setPlaybackRange');
+        const DATE = "2018-12-20T15:07:42.981Z";
+        const CURSOR = "startPlaybackTime";
+        const CURRENT_PLAYBACK_START = "2016-01-01T00:00:00.001Z";
+        const CURRENT_PLAYBACK_END = "2017-01-01T00:00:00.001Z";
+        const playbackRange = {
+            startPlaybackTime: CURRENT_PLAYBACK_START,
+            endPlaybackTime: CURRENT_PLAYBACK_END
+        };
+        const Sink = clickHandlers(createSink(props => {
+            props.timechangedHandler({
+                time: new Date(DATE),
+                id: CURSOR
+            });
+
+        }));
+        const cmp = ReactDOM.render(<Sink playbackRange={playbackRange} setPlaybackRange={actions.setPlaybackRange} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        expect(spyCallback).toHaveBeenCalled();
+        // dates switch
+        expect(spyCallback.calls[0].arguments[0].startPlaybackTime).toBe(CURRENT_PLAYBACK_END);
+        expect(spyCallback.calls[0].arguments[0].endPlaybackTime).toBe(DATE);
+    });
+    it('timechangedHandler for playback controls (endPlaybackTime)', () => {
+        const actions = {
+            setPlaybackRange: () => { }
+        };
+        const spyCallback = expect.spyOn(actions, 'setPlaybackRange');
+        const DATE = "2018-12-20T15:07:42.981Z";
+        const CURSOR = "endPlaybackTime";
+        const CURRENT_PLAYBACK_START = "2016-01-01T00:00:00.001Z";
+        const CURRENT_PLAYBACK_END = "2017-01-01T00:00:00.001Z";
+        const playbackRange = {
+            startPlaybackTime: CURRENT_PLAYBACK_START,
+            endPlaybackTime: CURRENT_PLAYBACK_END
+        };
+        const Sink = clickHandlers(createSink(props => {
+            props.timechangedHandler({
+                time: new Date(DATE),
+                id: CURSOR
+            });
+
+        }));
+        const cmp = ReactDOM.render(<Sink playbackRange={playbackRange} setPlaybackRange={actions.setPlaybackRange} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        expect(spyCallback).toHaveBeenCalled();
+        // dates switch
+        expect(spyCallback.calls[0].arguments[0].startPlaybackTime).toBe(CURRENT_PLAYBACK_START);
+        expect(spyCallback.calls[0].arguments[0].endPlaybackTime).toBe(DATE);
+    });
 });
