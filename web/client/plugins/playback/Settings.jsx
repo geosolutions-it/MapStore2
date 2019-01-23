@@ -90,4 +90,4 @@ module.exports = compose(
         })
     )
 
-)(require("../../components/playback/PlaybackSettings"));
+)(require("../../components/playback/Settings"));

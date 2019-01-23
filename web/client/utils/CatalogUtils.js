@@ -171,8 +171,23 @@ const converters = {
                 service: records.service,
                 boundingBox: WMS.getBBox(record),
                 dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
-                    values: dim._ && dim._.split(',') || []
-                }, dim.$ || {})),
+                        values: dim._ && dim._.split(',') || []
+                    }, dim.$ || {}))
+                    // TODO: re-enable when support to inline values is full (now timeline miss snap, auto-select and forward-backward buttons enabled/disabled for this kind of values)
+                    // TODO: replace with capabilities URL service. something like this:
+                    /*
+                    .map(dim => dim && dim.name !== "time" ? dim : {
+                        ...dim,
+                        values: undefined, <-- remove values (they can be removed from dimension's epic instead, using them as initial value)
+                        source: { <-- add the source
+                            type: "wms-capabilities",
+                            url: options.url
+                        }
+                    })
+                    */
+                    // excludes time from dimensions. TODO: remove when time from WMS capabilities is supported
+                    .filter(dim => dim && dim.name !== "time"),
+
                 references: [{
                     type: "OGC:WMS",
                     url: options && options.url,
