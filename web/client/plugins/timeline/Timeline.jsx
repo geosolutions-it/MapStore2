@@ -11,23 +11,22 @@ const { isString, differenceBy } = require('lodash');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
 
 
-const { selectTime, selectLayer, onRangeChanged, setMouseEventData } = require('../../actions/timeline');
-const { itemsSelector, loadingSelector, selectedLayerSelector, mouseEventSelector, currentTimeRangeSelector, rangeSelector } = require('../../selectors/timeline');
+const { selectTime, selectLayer, onRangeChanged } = require('../../actions/timeline');
+const { itemsSelector, loadingSelector, selectedLayerSelector, currentTimeRangeSelector, rangeSelector } = require('../../selectors/timeline');
 const { moveTime, setCurrentOffset } = require('../../actions/dimension');
 const { selectPlaybackRange } = require('../../actions/playback');
 const { playbackRangeSelector, statusSelector } = require('../../selectors/playback');
 const { createStructuredSelector, createSelector } = require('reselect');
 const { createShallowSelectorCreator } = require('../../utils/ReselectUtils');
 
-const { compose, withHandlers, withPropsOnChange, defaultProps } = require('recompose');
+const { compose, withPropsOnChange, defaultProps } = require('recompose');
 const withMask = require('../../components/misc/enhancers/withMask');
 const Message = require('../../components/I18N/Message');
 const LoadingSpinner = require('../../components/misc/LoadingSpinner');
 
 
-const clickHandleEnhancer = compose(
-    require('../../components/time/enhancers/clickHandlers')
-);
+const clickHandleEnhancer = require('../../components/time/enhancers/clickHandlers');
+const customTimesEnhancer = require('../../components/time/enhancers/customTimesEnhancer');
 
 const moment = require('moment');
 /**
@@ -62,8 +61,10 @@ const layerData = compose(
         (props, nextProps) => {
             const { layers = [], loading, selectedLayer} = props;
             const { layers: nextLayers, loading: nextLoading, selectedLayer: nextSelectedLayer } = nextProps;
+            const hideNamesChange = props.hideLayersName !== nextProps.hideLayersName;
             return loading !== nextLoading
                 || selectedLayer !== nextSelectedLayer
+                || hideNamesChange
                 || (layers && nextLayers && layers.length !== nextLayers.length)
                 || differenceBy(layers, nextLayers || [], ({id, title, name} = {}) => id + title + name).length > 0;
         },
@@ -106,6 +107,10 @@ const currentTimeEnhancer = compose(
         }
     )
 );
+
+/**
+ * Add playback state and handlers
+ */
 const playbackRangeEnhancer = compose(
     connect(
         createStructuredSelector({
@@ -118,6 +123,9 @@ const playbackRangeEnhancer = compose(
     )
 );
 
+/**
+ * Add selected layer state and handler for layer selection
+ */
 const layerSelectionEnhancer = compose(
     connect(
         createSelector(
@@ -130,25 +138,6 @@ const layerSelectionEnhancer = compose(
     )
 );
 
-const mouseInteractionEnhancer = compose(
-    connect(
-        createSelector(
-            mouseEventSelector,
-            (mouseEventProps) => ({mouseEventProps})
-        ),
-        {
-            setMouseData: setMouseEventData
-        }
-    )
-);
-
-const getStartEnd = (startTime, endTime) => {
-    const diff = moment(startTime).diff(endTime);
-    return {
-        start: diff >= 0 ? endTime : startTime,
-        end: diff >= 0 ? startTime : endTime
-    };
-};
 
 const rangeEnhancer = compose(
     connect(() => ({}), {
@@ -157,7 +146,6 @@ const rangeEnhancer = compose(
 );
 
 const enhance = compose(
-    mouseInteractionEnhancer,
     currentTimeEnhancer,
     playbackRangeEnhancer,
     layerSelectionEnhancer,
@@ -200,101 +188,7 @@ const enhance = compose(
     withPropsOnChange(['status'], ({ status }) => ({
         readOnly: status === "PLAY"
     })),
-    // Playback range background
-    withPropsOnChange(
-        (props, nextProps) => {
-            const update = Object.keys(props)
-                .filter(k => ['rangeItems', 'hideLayersName', 'playbackRange', 'playbackEnabled', 'selectedLayer'].indexOf(k) >= 0)
-                .filter(k => props[k] !== nextProps[k]);
-            return update.length > 0;
-        },
-        ({
-            rangeItems = [],
-            playbackEnabled,
-            playbackRange
-        }) => ({
-                rangeItems: playbackEnabled && playbackRange && playbackRange.startPlaybackTime !== undefined && playbackRange.endPlaybackTime !== undefined
-                    ? [
-                    ...rangeItems,
-                        {
-                            id: 'playback-range',
-                            ...getStartEnd(playbackRange.startPlaybackTime, playbackRange.endPlaybackTime),
-                            type: 'background',
-                            className: 'ms-playback-range'
-                        }
-                    ].filter(val => val)
-                    : rangeItems
-        })
-    ),
-    // support for offset and it's range background. TODO: compose also with the proper custom time, to isolate the functionality
-    compose(
-        withHandlers({
-            onUpdate: ({ moveCurrentRange = () => {}}) => ({id, start}) => {
-                if (id === 'current-range') {
-                    moveCurrentRange(start.toISOString());
-                }
-
-            }
-        }),
-        withPropsOnChange(['options', 'onUpdate'], ({ options = {}, onUpdate = () => {} }) => ({
-            options: {
-                ...options,
-                snap: null,
-                editable: {
-                    // ...(options.editable || {}), // we may improve this merge to allow some configuration.
-                    add: false,         // add new items by double tapping
-                    updateTime: false,  // drag items horizontally
-                    updateGroup: false, // drag items from one group to another
-                    remove: false,       // delete an item by tapping the delete button top right
-                    overrideItems: false  // allow these options to override item.editable
-                },
-                onMove: (item = {}, callback) => {
-                    onUpdate(item);
-                    callback(item);
-
-                }
-            }
-        })),
-        withPropsOnChange(
-            (props, nextProps) => {
-                const update = Object.keys(props)
-                    .filter(k => ['rangeItems', 'currentTime', 'offsetEnabled', 'hideLayersName', 'selectedLayer', 'currentTimeRange', 'readOnly'].indexOf(k) >= 0)
-                    .filter(k => props[k] !== nextProps[k]);
-                // console.log(update);
-                return update.length > 0;
-            },
-            ({
-                currentTimeRange,
-                rangeItems = [],
-                readOnly,
-                offsetEnabled
-            }) => ({
-                rangeItems: offsetEnabled && currentTimeRange.start !== undefined && currentTimeRange.end !== undefined
-                    ? [
-                        ...rangeItems,
-                        {
-                            id: 'current-range',
-                            editable: { updateTime: !readOnly, updateGroup: false, remove: false },
-                            ...getStartEnd(currentTimeRange.start, currentTimeRange.end),
-                            type: 'background',
-                            className: 'ms-current-range'
-                        }
-                    ].filter(val => val)
-                    : rangeItems
-            })
-        )
-    ),
-    // custom times enhancer
-    withPropsOnChange(
-        ['currentTime', 'playbackRange', 'playbackEnabled', 'offsetEnabled', 'currentTimeRange'],
-        ({ currentTime, playbackRange, playbackEnabled, offsetEnabled, currentTimeRange }) => ({
-            customTimes: [
-                (currentTime ? {currentTime: currentTime } : {}),
-                (playbackEnabled && playbackRange && playbackRange.startPlaybackTime && playbackRange.endPlaybackTime ? playbackRange : {}),
-                (offsetEnabled && currentTimeRange ? { offsetTime: currentTimeRange.end } : {})
-            ].reduce((res, value) => value ? { ...res, ...value } : { ...res }, {}) // becomes an object
-        })
-    ),
+    customTimesEnhancer,
     withMask(
         ({loading}) => loading && loading.timeline,
         () => <div style={{ margin: "auto" }} ><LoadingSpinner style={{ display: "inline-block", verticalAlign: "middle" }}/><Message msgId="loading" /></div>,

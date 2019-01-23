@@ -10,13 +10,8 @@ const {trim} = require('lodash');
 const moment = require('moment');
 
 const isValidOffset = (start, end) => moment(end).diff(start) > 0;
-const getStartEnd = (startTime, endTime) => {
-    const diff = moment(startTime).diff(endTime);
-    return {
-        start: diff >= 0 ? endTime : startTime,
-        end: diff >= 0 ? startTime : endTime
-    };
-};
+const { getStartEnd } = require('../../../utils/TimeUtils');
+
 
 /**
  * Enhancer for timeline. Handles click events to correctly manage dragging
@@ -67,9 +62,9 @@ module.exports = withHandlers({
         setCurrentTime = () => { },
         currentTimeRange = {},
         playbackRange,
-        setTimeLineRange = () => { },
         setPlaybackRange = () => { }
     }) => ({ time, id } = {}) => {
+        // playback range change
         if (id === 'startPlaybackTime' || id === 'endPlaybackTime') {
             const range = { ...playbackRange, [id]: time.toISOString() };
             let { start, end } = getStartEnd(range.startPlaybackTime, range.endPlaybackTime);
@@ -79,22 +74,29 @@ module.exports = withHandlers({
                     endPlaybackTime: end
                 });
             }
-        } else if (id === 'currentTime' && isValidOffset(time, currentTimeRange.endTimeLineRange)) {
-            setCurrentTime(time.toISOString(), null);
-        } else if (id === 'offsetTime' && isValidOffset(currentTime, time)) {
-            setOffset(time.toISOString());
+            return;
         }
-        if (id === 'currentTime' || id === 'offsetTime' ) {
-            const key = id === 'currentTime' ? 'start' : 'end';
-            const TimeRange = { ...currentTimeRange, [key]: time.toISOString() };
-            let { start, end } = getStartEnd(TimeRange.start, TimeRange.end);
-            if (isValidOffset(start, end)) {
-                setTimeLineRange({
-                    start: start,
-                    end: end
-                });
+
+        if (id === 'currentTime' ) {
+            if (!currentTimeRange.end) {
+                setCurrentTime(time.toISOString(), null);
+            } else if (isValidOffset(time, currentTimeRange.end)) {
+                setCurrentTime(time.toISOString(), null);
+            } else {
+                // switch times
+                setCurrentTime(currentTimeRange.end);
+                setOffset(time.toISOString());
             }
         }
 
+        if (id === 'offsetTime') {
+            if (isValidOffset(currentTime, time)) {
+                setOffset(time.toISOString());
+            } else {
+                // switch times
+                setCurrentTime(time.toISOString());
+                setOffset(currentTime);
+            }
+        }
     }
 });
