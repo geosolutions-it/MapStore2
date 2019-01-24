@@ -8,7 +8,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 
-const vis = require('vis/index-timeline-graph2d');
+// const vis = require('vis/index-timeline-graph2d'); // debug version. Doesn't work with uglify plugin, probably because of this issue: https://github.com/almende/vis/issues/3290
+const vis = require('vis/dist/vis-timeline-graph2d.min');
 /*
  * This override enables editing for BackgroundItem
  */
