@@ -154,6 +154,7 @@ module.exports = {
      */
     setTimelineCurrentTime: (action$, {getState = () => {}} = {}) =>
         action$.ofType(SELECT_TIME)
+        .throttleTime(100) // avoid multiple request in case of mouse events drag and click
         .switchMap( ({time, group}) => {
             const state = getState();
 

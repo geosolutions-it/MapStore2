@@ -38,6 +38,7 @@ describe('customTimesHandlers enhancer', () => {
         const spyCallback = expect.spyOn(actions, 'setCurrentTime');
         const DATE = "2018-12-20T15:07:42.981Z";
         const LAYER = "LAYER";
+        const SELECTED_LAYER = "SELECTED_LAYER";
         const Sink = clickHandlers(createSink(props => {
             props.clickHandler({
                 time: new Date(DATE),
@@ -47,11 +48,11 @@ describe('customTimesHandlers enhancer', () => {
                 }});
 
         }));
-        const cmp = ReactDOM.render(<Sink setCurrentTime={actions.setCurrentTime} />, document.getElementById("container"));
+        const cmp = ReactDOM.render(<Sink selectedLayer={SELECTED_LAYER} setCurrentTime={actions.setCurrentTime} />, document.getElementById("container"));
         expect(cmp).toExist();
         expect(spyCallback).toHaveBeenCalled();
         expect(spyCallback.calls[0].arguments[0]).toBe(DATE);
-        expect(spyCallback.calls[0].arguments[1]).toBe(LAYER);
+        expect(spyCallback.calls[0].arguments[1]).toBe(SELECTED_LAYER);
     });
     it('click triggers selectGroup', () => {
         const actions = {
@@ -139,6 +140,28 @@ describe('customTimesHandlers enhancer', () => {
         expect(cmp).toExist();
         expect(spyCallback).toHaveBeenCalled();
         expect(spyCallback.calls[0].arguments[0]).toBe(DATE);
+        expect(spyCallback.calls[0].arguments[1]).toBe(undefined);
+    });
+    it('timechangedHandler for currentTime with selected layer', () => {
+        const actions = {
+            setCurrentTime: () => { }
+        };
+        const spyCallback = expect.spyOn(actions, 'setCurrentTime');
+        const DATE = "2018-12-20T15:07:42.981Z";
+        const CURSOR = "currentTime";
+        const SELECTED_LAYER = "SELECTED_LAYER";
+        const Sink = clickHandlers(createSink(props => {
+            props.timechangedHandler({
+                time: new Date(DATE),
+                id: CURSOR
+            });
+
+        }));
+        const cmp = ReactDOM.render(<Sink selectedLayer={SELECTED_LAYER} setCurrentTime={actions.setCurrentTime} />, document.getElementById("container"));
+        expect(cmp).toExist();
+        expect(spyCallback).toHaveBeenCalled();
+        expect(spyCallback.calls[0].arguments[0]).toBe(DATE);
+        expect(spyCallback.calls[0].arguments[1]).toBe(SELECTED_LAYER);
     });
     it('timechangedHandler with range', () => {
         const actions = {
