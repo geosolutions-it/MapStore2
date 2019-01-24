@@ -191,7 +191,7 @@ const enhance = compose(
     customTimesEnhancer,
     withMask(
         ({loading}) => loading && loading.timeline,
-        () => <div style={{ margin: "auto" }} ><LoadingSpinner style={{ display: "inline-block", verticalAlign: "middle" }}/><Message msgId="loading" /></div>,
+        () => <div style={{ margin: "auto", fontWeight: 'bold' }} ><LoadingSpinner style={{ display: "inline-block", verticalAlign: "middle" }}/><Message msgId="loading" /></div>,
         {white: true}
     )
 );
