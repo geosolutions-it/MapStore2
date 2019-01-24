@@ -11,21 +11,33 @@ const { isString, differenceBy } = require('lodash');
 const { currentTimeSelector, layersWithTimeDataSelector } = require('../../selectors/dimension');
 
 
-const { selectTime, selectLayer, onRangeChanged, setMouseEventData } = require('../../actions/timeline');
-const { itemsSelector, loadingSelector, selectedLayerSelector, mouseEventSelector, currentTimeRangeSelector, rangeSelector } = require('../../selectors/timeline');
-const { setCurrentOffset } = require('../../actions/dimension');
+const { selectTime, selectLayer, onRangeChanged } = require('../../actions/timeline');
+const { itemsSelector, loadingSelector, selectedLayerSelector, currentTimeRangeSelector, rangeSelector } = require('../../selectors/timeline');
+const { moveTime, setCurrentOffset } = require('../../actions/dimension');
 const { selectPlaybackRange } = require('../../actions/playback');
 const { playbackRangeSelector, statusSelector } = require('../../selectors/playback');
 const { createStructuredSelector, createSelector } = require('reselect');
+const { createShallowSelectorCreator } = require('../../utils/ReselectUtils');
+
 const { compose, withPropsOnChange, defaultProps } = require('recompose');
 const withMask = require('../../components/misc/enhancers/withMask');
 const Message = require('../../components/I18N/Message');
 const LoadingSpinner = require('../../components/misc/LoadingSpinner');
 
 
-const clickHandleEnhancer = require('../../components/time/enhancers/clickHandlers');
+const customTimesHandlers = require('../../components/time/enhancers/customTimesHandlers');
+const customTimesEnhancer = require('../../components/time/enhancers/customTimesEnhancer');
 
 const moment = require('moment');
+/**
+ * Optimization to skip re-render when the layers update properties that are not needed.
+ * Typically `loading` attribute
+ */
+const timeLayersSelector = createShallowSelectorCreator(
+    (a = {}, b = {}) => {
+        return a.id === b.id && a.title === b.title && a.name === b.name;
+    }
+)(layersWithTimeDataSelector, layers => layers);
 
 /**
  * Provides time dimension data for layers
@@ -35,7 +47,7 @@ const layerData = compose(
         createSelector(
             rangeSelector,
             itemsSelector,
-            layersWithTimeDataSelector,
+            timeLayersSelector,
             loadingSelector,
             (viewRange, items, layers, loading) => ({
                 viewRange,
@@ -49,8 +61,10 @@ const layerData = compose(
         (props, nextProps) => {
             const { layers = [], loading, selectedLayer} = props;
             const { layers: nextLayers, loading: nextLoading, selectedLayer: nextSelectedLayer } = nextProps;
+            const hideNamesChange = props.hideLayersName !== nextProps.hideLayersName;
             return loading !== nextLoading
                 || selectedLayer !== nextSelectedLayer
+                || hideNamesChange
                 || (layers && nextLayers && layers.length !== nextLayers.length)
                 || differenceBy(layers, nextLayers || [], ({id, title, name} = {}) => id + title + name).length > 0;
         },
@@ -88,10 +102,15 @@ const currentTimeEnhancer = compose(
         ),
         {
             setCurrentTime: selectTime,
+            moveCurrentRange: moveTime,
             setOffset: setCurrentOffset
         }
     )
 );
+
+/**
+ * Add playback state and handlers
+ */
 const playbackRangeEnhancer = compose(
     connect(
         createStructuredSelector({
@@ -104,6 +123,9 @@ const playbackRangeEnhancer = compose(
     )
 );
 
+/**
+ * Add selected layer state and handler for layer selection
+ */
 const layerSelectionEnhancer = compose(
     connect(
         createSelector(
@@ -116,25 +138,6 @@ const layerSelectionEnhancer = compose(
     )
 );
 
-const mouseInteractionEnhancer = compose(
-    connect(
-        createSelector(
-            mouseEventSelector,
-            (mouseEventProps) => ({mouseEventProps})
-        ),
-        {
-            setMouseData: setMouseEventData
-        }
-    )
-);
-
-const getStartEnd = (startTime, endTime) => {
-    const diff = moment(startTime).diff(endTime);
-    return {
-        start: diff >= 0 ? endTime : startTime,
-        end: diff >= 0 ? startTime : endTime
-    };
-};
 
 const rangeEnhancer = compose(
     connect(() => ({}), {
@@ -143,11 +146,10 @@ const rangeEnhancer = compose(
 );
 
 const enhance = compose(
-    mouseInteractionEnhancer,
     currentTimeEnhancer,
     playbackRangeEnhancer,
     layerSelectionEnhancer,
-    clickHandleEnhancer,
+    customTimesHandlers,
     rangeEnhancer,
     layerData,
     defaultProps({
@@ -171,6 +173,7 @@ const enhance = compose(
                     hour: 'ha'
                 }
             },
+            itemsAlwaysDraggable: true,
             moment: date => moment(date).utc()
         }
     }),
@@ -181,44 +184,11 @@ const enhance = compose(
             ...(viewRange) // TODO: if the new view range is very far from the current one, the animation takes a lot. We should allow also to disable animation (animation: false in the options)
         }
     })),
-    // items enhancer. Add background items for playback and time ranges
-    withPropsOnChange(
-        ['items', 'currentTime', 'offsetEnabled', 'hideLayersName', 'playbackRange', 'playbackEnabled', 'selectedLayer', 'currentTimeRange'],
-        ({
-            currentTimeRange,
-            items,
-            playbackEnabled,
-            offsetEnabled,
-            playbackRange
-        }) => ({
-            items: [
-                ...items,
-                playbackEnabled && playbackRange && playbackRange.startPlaybackTime !== undefined && playbackRange.endPlaybackTime !== undefined ? {
-                    id: 'playback-range',
-                    ...getStartEnd(playbackRange.startPlaybackTime, playbackRange.endPlaybackTime),
-                    type: 'background',
-                    className: 'ms-playback-range'
-                } : null,
-                offsetEnabled && currentTimeRange.start !== undefined && currentTimeRange.end !== undefined ? {
-                    id: 'current-range',
-                    ...getStartEnd(currentTimeRange.start, currentTimeRange.end),
-                    type: 'background',
-                    className: 'ms-current-range'
-                } : null
-            ].filter(val => val)
-        })
-    ),
-    // custom times enhancer
-    withPropsOnChange(
-        ['currentTime', 'playbackRange', 'playbackEnabled', 'offsetEnabled', 'currentTimeRange'],
-        ({ currentTime, playbackRange, playbackEnabled, offsetEnabled, currentTimeRange }) => ({
-            customTimes: [
-                (currentTime ? {currentTime: currentTime } : {}),
-                (playbackEnabled && playbackRange && playbackRange.startPlaybackTime && playbackRange.endPlaybackTime ? playbackRange : {}),
-                (offsetEnabled && currentTimeRange ? { offsetTime: currentTimeRange.end } : {})
-            ].reduce((res, value) => value ? { ...res, ...value } : { ...res }, {}) // becomes an object
-        })
-    ),
+    // disable some functionalities when playing
+    withPropsOnChange(['status'], ({ status }) => ({
+        readOnly: status === "PLAY"
+    })),
+    customTimesEnhancer,
     withMask(
         ({loading}) => loading && loading.timeline,
         () => <div style={{ margin: "auto" }} ><LoadingSpinner style={{ display: "inline-block", verticalAlign: "middle" }}/><Message msgId="loading" /></div>,

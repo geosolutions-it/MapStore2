@@ -1,4 +1,5 @@
 const { get, head } = require('lodash');
+const {createSelector} = require('reselect');
 const { createShallowSelector } = require('../utils/ReselectUtils');
 const { timeIntervalToSequence, timeIntervalToIntervalSequence, analyzeIntervalInRange, isTimeDomainInterval } = require('../utils/TimeUtils');
 const moment = require('moment');
@@ -131,11 +132,11 @@ const selectedLayerUrl = state => get(selectedLayerTimeDimensionConfiguration(st
 
 const mouseEventSelector = state => get(state, "timeline.mouseEvent");
 
-const currentTimeRangeSelector = state => {
-    const start = currentTimeSelector(state);
-    const end = offsetTimeSelector(state);
-    return start && end && {start, end};
-};
+const currentTimeRangeSelector = createSelector(
+    currentTimeSelector,
+    offsetTimeSelector,
+    (start, end) => ({ start, end })
+);
 const selectedLayerDataRangeSelector = state => layerDimensionRangeSelector(state, selectedLayerSelector(state));
 
 

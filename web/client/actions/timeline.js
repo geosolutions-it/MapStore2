@@ -67,13 +67,7 @@ const enableOffset = enabled => ({ type: ENABLE_OFFSET, enabled});
  * Actions for timeline
  * @module actions.timeline
  */
-const MOUSE_EVENT = "TIMELINE:MOUSE_EVENT";
-const setMouseEventData = eventData => ({ type: MOUSE_EVENT, eventData});
-
-
 module.exports = {
-    MOUSE_EVENT,
-    setMouseEventData,
     RANGE_CHANGED,
     onRangeChanged,
     SELECT_TIME,

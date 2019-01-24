@@ -79,7 +79,7 @@
                 &:hover, &:active {
                     &:before, &::before, &:after, &::after {
                         align-items: center;
-                        
+
                         box-sizing: border-box;
                         position: absolute;
                         pointer-events: none;
@@ -93,9 +93,9 @@
                         color: lighten(@ms2-color-text, 20%);
                     }
                 }
-                
+
             }
-            
+
         }
 
         &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
@@ -176,7 +176,7 @@
             cursor: grab;
             cursor: -moz-grab;
             cursor: -webkit-grab;
-            
+
             &:before, &::before, &:after, &::after {
                 border-left: 10px solid transparent;
                 border-right: 10px solid transparent;
@@ -191,7 +191,7 @@
                 left: -9px;
                 border-bottom: 10px solid lighten(@ms2-color-text, 30%);
             }
-            
+
             &:hover {
                 .ms-time-color-active(
                     lighten(@ms2-color-text, 20%),
@@ -258,7 +258,7 @@
                     border-top: 10px solid transparent;
                     border-right: 10px solid lighten(@ms2-color-text, 30%);
                 }
-                
+
                 &:hover, &:active {
                     .ms-time-color-active(
                         lighten(@ms2-color-text, 20%),
@@ -381,6 +381,9 @@
                             background-color: transparent;
                             border-color: transparent;
                             &.histogram-item {
+                                &.vis-item {
+                                    top: 0 !important; // override inline offset due to auto-set
+                                }
                                 background: none;
                                 border: none;
                                 bottom: 0;
@@ -481,6 +484,9 @@
         }
         z-index: 60;
         background-color: fade(lighten(@ms2-color-text, 10%), 20%);
+        border-left: 1px dashed lighten(@ms2-color-text, 10%);
+        border-right: 1px dashed lighten(@ms2-color-text, 10%);
+        box-sizing: border-box;
     }
 
     .vis-item.vis-background.ms-playback-range {

@@ -135,6 +135,21 @@ const roundRangeResolution = ({start, end} = {}, max) => {
 const getNearestDate = (dates = [], target) => dates[getNearestDateIndex(dates, target)];
 
 const isTimeDomainInterval = values => values && values.indexOf && values.indexOf("--") > 0;
+
+/**
+ * Gets 2 dates (Date object or ISO8601) and returns then in the form `{start: d1, end: d2}
+ * Sorting them accordingly.
+ * @param {string|Date} startTime the first value
+ * @param {string|Date} endTime the second date
+ */
+const getStartEnd = (startTime, endTime) => {
+    const diff = moment(startTime).diff(endTime);
+    return {
+        start: diff >= 0 ? endTime : startTime,
+        end: diff >= 0 ? startTime : endTime
+    };
+};
+
 module.exports = {
     timeIntervalNumber,
     timeIntervalToSequence,
@@ -144,5 +159,6 @@ module.exports = {
     getNearestDateIndex,
     roundResolution,
     roundRangeResolution,
-    isTimeDomainInterval
+    isTimeDomainInterval,
+    getStartEnd
 };

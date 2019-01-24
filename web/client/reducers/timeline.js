@@ -1,7 +1,7 @@
 const { RANGE_CHANGED } = require('../actions/timeline');
 const { REMOVE_NODE } = require('../actions/layers');
 const { RESET_CONTROLS } = require('../actions/controls');
-const { RANGE_DATA_LOADED, LOADING, SELECT_LAYER, MOUSE_EVENT } = require('../actions/timeline');
+const { RANGE_DATA_LOADED, LOADING, SELECT_LAYER } = require('../actions/timeline');
 const { set } = require('../utils/ImmutableUtils');
 const { assign, pickBy, has } = require('lodash');
 
@@ -70,9 +70,6 @@ module.exports = (state = {
         }
         case SELECT_LAYER: {
             return set('selectedLayer', action.layerId, state);
-        }
-        case MOUSE_EVENT: {
-            return set('mouseEvent', action.eventData, state);
         }
         case REMOVE_NODE: {
             let newState = state;
