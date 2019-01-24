@@ -1,9 +1,22 @@
 site_name: MapStore 2 Documentation
-theme: readthedocs
+site_url: 'https://mapstore.geo-solutions.it/mapstore/'
+theme:
+  name: 'material'
+  logo: 'img/mapstore2_logo.png'
+  palette:
+    primary: 'teal'
+    accent: 'teal'
+  font:
+    text: 'Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif'
+    code: 'Open Sans, Helvetica Neue, Helvetica, Arial, sans-serif'
+extra_css:
+  - 'css/extra.css'
+repo_name: 'geosolutions-it/MapStore2'
+repo_url: 'https://github.com/geosolutions-it/MapStore2/'
 docs_dir: 'docs/user-guide'
 markdown_extensions:
   - admonition
-nav:
+pages:
   - Introduction: 'index.md'
   - Home Page Overview: 'home-page.md'
   - Managing Users and Groups: 'admin.md'

@@ -1,0 +1,15 @@
+.md-header {
+    background-image: linear-gradient(120deg, #155799, #159957);
+}
+a,
+a:active,
+a:hover {
+    outline: None;
+}
+.md-header-nav > div > div > a {
+    margin: 0px;
+}
+.md-header-nav > div > div > a > img {
+    width: 35px;
+    height: 35px;
+}
