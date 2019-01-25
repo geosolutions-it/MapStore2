@@ -45,7 +45,7 @@ module.exports = withHandlers({
                 const className = target && target.getAttribute('class');
                 const timeId = className && trim(className.replace('vis-custom-time', ''));
                 if (time && !offsetEnabled && timeId !== "startPlaybackTime" && timeId !== "endPlaybackTime") {
-                    setCurrentTime(time.toISOString(), group || selectedLayer);
+                    setCurrentTime(time.toISOString(), selectedLayer);
                 }
                 break;
             }
@@ -61,7 +61,8 @@ module.exports = withHandlers({
         setCurrentTime = () => { },
         currentTimeRange = {},
         playbackRange,
-        setPlaybackRange = () => { }
+        setPlaybackRange = () => { },
+        selectedLayer
     }) => ({ time, id } = {}) => {
         // playback range change
         if (id === 'startPlaybackTime' || id === 'endPlaybackTime') {
@@ -78,7 +79,7 @@ module.exports = withHandlers({
 
         if (id === 'currentTime' ) {
             if (!currentTimeRange.end) {
-                setCurrentTime(time.toISOString(), null);
+                setCurrentTime(time.toISOString(), selectedLayer);
             } else if (isValidOffset(time, currentTimeRange.end)) {
                 setCurrentTime(time.toISOString(), null);
             } else {
