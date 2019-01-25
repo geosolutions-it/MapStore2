@@ -146,7 +146,7 @@ describe('styleeditor Epics', () => {
         state);
 
     });
-    it('test toggleStyleEditorEpic enabled in state true but availableStyles missing from settings', (done) => {
+    it('toggleStyleEditorEpic: missing availableStyles starts the styles retrieval', (done) => {
 
         const state = {
             layers: {
