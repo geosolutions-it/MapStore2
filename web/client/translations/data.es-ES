@@ -158,7 +158,7 @@
         },
         "home":{
             "open": "Abrir",
-            "shortDescription": "Modern webmapping con OL3, Leaflet y React<br/><small>visite la página de <a href=\"/mapstore/docs/\">documentación</a></small>",
+            "shortDescription": "Modern webmapping con OpenLayers, Leaflet y React<br/><small>visite la página de <a href=\"/mapstore/docs/\">documentación</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que propocionone protocolos estandar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"/mapstore/docs/\">página principal</a> para más detalles.",
             "Applications": "Aplicaciones",
@@ -1487,7 +1487,12 @@
             "createStyleErrorMessage": "El estilo no se pudo guardar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión.",
             "updateStyleErrorTitle": "Editar estilo",
             "updateStyleErrorMessage": "El estilo no se pudo actualizar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión.",
-            "genericValidationError": "El estilo no es válido y no se pudo aplicar."
+            "genericValidationError": "El estilo no es válido y no se pudo aplicar.",
+            "setDefaultStyle": "Establecer el estilo seleccionado como predeterminado para la capa actual",
+            "setDefaultStyleSuccessTitle": "Éxito en el estilo por defecto establecido",
+            "setDefaultStyleSuccessMessage": "El estilo predeterminado se ha aplicado con éxito",
+            "setDefaultStyleErrorTitle": "Error en el estilo predeterminado del set",
+            "setDefaultStyleErrorMessage": "No es posible aplicar el estilo seleccionado por defecto."
         },
         "playback": {
             "settings": {

@@ -20,7 +20,8 @@ const {
     createStyle,
     updateStyleCode,
     editStyleCode,
-    deleteStyle
+    deleteStyle,
+    setDefaultStyle
 } = require('../../actions/styleeditor');
 
 const { updateOptionsByOwner } = require('../../actions/additionallayers');
@@ -205,7 +206,8 @@ const StyleToolbar = compose(
             onReset: updateOptionsByOwner.bind(null, STYLE_OWNER_NAME, [{}]),
             onAdd: addStyle.bind(null, true),
             onUpdate: updateStyleCode,
-            onDelete: deleteStyle
+            onDelete: deleteStyle,
+            onSetDefault: setDefaultStyle
         }
     )
 )(require('../../components/styleeditor/StyleToolbar'));

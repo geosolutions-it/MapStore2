@@ -158,7 +158,7 @@
         },
         "home":{
             "open": "Abrir",
-            "shortDescription": "Modern webmapping com OL3, Leaflet e React<br/><small>visite a página de <a href=\"/mapstore/docs/\">documentação</a></small>",
+            "shortDescription": "Modern webmapping com OpenLayers, Leaflet e React<br/><small>visite a página de <a href=\"/mapstore/docs/\">documentação</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore 2 foi desenvolvido para criar, guardar e partilhar de uma maneira simples e intuitiva mapas e mashups criados seleccionando conteudos de fontes populares como o Google Maps e OpenStreetMap ou de serviços fornecidos por organisações utilizando protocolos livre como OGC WMS, WFS, WMTS ou TMS, etc.<br/>Visite <a href=\"http://geosolutions-it.github.io/MapStore2/\">home page</a> para mais detalhes.",
             "Applications": "Aplicações",

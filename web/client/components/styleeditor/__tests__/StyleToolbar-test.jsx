@@ -53,4 +53,10 @@ describe('test StyleToolbar module component', () => {
         expect(disabledButtons.length).toBe(0);
     });
 
+    it('test StyleToolbar show set default style', () => {
+        ReactDOM.render(<StyleToolbar editEnable enableSetDefaultStyle editEnabled/>, document.getElementById("container"));
+        const buttons = document.querySelectorAll('.btn');
+        expect(buttons.length).toBe(4);
+    });
+
 });

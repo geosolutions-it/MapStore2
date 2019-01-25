@@ -175,7 +175,11 @@ module.exports = ({showFeatureInfoTab = true, ...props}, {plugins, pluginsConfig
                     })
                 }
             ],
-            toolbarComponent: settingsPlugins.StyleEditor && settingsPlugins.StyleEditor.ToolbarComponent
+            toolbarComponent: settingsPlugins && settingsPlugins.StyleEditor && settingsPlugins.StyleEditor.ToolbarComponent &&
+                (
+                    settingsPlugins.StyleEditor.cfg && defaultProps(settingsPlugins.StyleEditor.cfg)(settingsPlugins.StyleEditor.ToolbarComponent)
+                    || settingsPlugins.StyleEditor.ToolbarComponent
+                )
         },
         {
             id: 'feature',

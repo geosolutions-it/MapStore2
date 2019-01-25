@@ -24,6 +24,7 @@ const {
     DELETE_STYLE,
     INIT_STYLE_SERVICE,
     SET_EDIT_PERMISSION,
+    SET_DEFAULT_STYLE,
     updateTemporaryStyle,
     updateStatus,
     toggleStyleEditor,
@@ -38,7 +39,8 @@ const {
     editStyleCode,
     deleteStyle,
     initStyleService,
-    setEditPermissionStyleEditor
+    setEditPermissionStyleEditor,
+    setDefaultStyle
 } = require('../styleeditor');
 
 describe('Test the styleeditor actions', () => {
@@ -167,5 +169,10 @@ describe('Test the styleeditor actions', () => {
         expect(retval).toExist();
         expect(retval.type).toBe(SET_EDIT_PERMISSION);
         expect(retval.canEdit).toBe(canEdit);
+    });
+    it('setDefaultStyle', () => {
+        const retval = setDefaultStyle();
+        expect(retval).toExist();
+        expect(retval.type).toBe(SET_DEFAULT_STYLE);
     });
 });

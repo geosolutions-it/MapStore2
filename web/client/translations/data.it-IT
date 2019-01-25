@@ -158,7 +158,7 @@
         },
         "home":{
             "open": "Apri",
-            "shortDescription": "Modern webmapping con OL3, Leaflet e React<br/><small>visita la pagina di <a href=\"/mapstore/docs/\">documentazione</a></small>",
+            "shortDescription": "Modern webmapping con OpenLayers, Leaflet e React<br/><small>visita la pagina di <a href=\"/mapstore/docs/\">documentazione</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore è sviluppato per creare, salvare e condividere in modo semplice ed intuitivo mappe e mashup creati selezionando contenuti da server come Google Maps, OpenStreetMap, MapQuest o da server specifici forniti dalla propria organizzazione o da terzi. <br/> Visita la <a href=\"/mapstore/docs/\">home page</a> per maggiori dettagli.",
             "Applications": "Applicazioni",
@@ -1487,7 +1487,12 @@
             "createStyleErrorMessage": "Lo stile non può essere salvato. Questo potrebbe essere dovuto al formato di stile non supportato o ad un problema di connessione.",
             "updateStyleErrorTitle": "Modifica stile",
             "updateStyleErrorMessage": "Lo stile non può essere aggiornato . Questo potrebbe essere dovuto ad un formato di stile non supportato o ad un problema di connessione.",
-            "genericValidationError": "Lo stile non è valido e non è stato possibile applicarlo."
+            "genericValidationError": "Lo stile non è valido e non è stato possibile applicarlo.",
+            "setDefaultStyle": "Imposta lo stile selezionato come predefinito per il layer corrente",
+            "setDefaultStyleSuccessTitle": "Stile predefinito aggiornamento",
+            "setDefaultStyleSuccessMessage": "Lo stile predefinito è stato aggiornato con successo",
+            "setDefaultStyleErrorTitle": "Errore nell'aggiornamento dello stile predefinito",
+            "setDefaultStyleErrorMessage": "Non è possibile aggiornare lo stile selezionato come predefinito"
         },
         "playback": {
             "settings": {
