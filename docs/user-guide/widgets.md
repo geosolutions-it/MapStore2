@@ -31,7 +31,7 @@ On the top of the page, you can find a set of options <img src="../img/widget-op
 
     <img src="../img/configure-chart.jpg" style="max-width:400px;"/>
 
-* * **Click** on *Configure widget options*  <img src="../img/next.jpg" style="max-width:25px;"/>.
+* **Click** on *Configure widget options*  <img src="../img/next.jpg" style="max-width:25px;"/>.
     * **Set** a *Title* and a *Description*.
     * **Click** on *Save*.
 
@@ -69,7 +69,7 @@ Creating Table widget
 
     <img src="../img/table-widget.jpg" style="max-width:650px;"/>
 
-* * **Choose** the fields you want to include in the table.
+* **Choose** the fields you want to include in the table.
     * **click** on the next button <img src="../img/next.jpg" style="max-width:25px;"/>.
 
     * **Set** a Title and a Description.
@@ -89,5 +89,5 @@ Creating Counter Widget
 
   * **Set** a Title and a Description.
   * **Add** the widget to the map.
-<b>
+<br>
   <img src="../img/counter-map.jpg" style="max-width:500px;"/>

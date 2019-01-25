@@ -1,5 +1,9 @@
 .md-header {
     background-image: linear-gradient(120deg, #155799, #159957);
+    height: 80px;
+}
+.md-sidebar[data-md-state="lock"] {
+    top: 8rem;
 }
 a,
 a:active,
@@ -10,6 +14,6 @@ a:hover {
     margin: 0px;
 }
 .md-header-nav > div > div > a > img {
-    width: 35px;
-    height: 35px;
+    height: 63px;
+    width: auto;
 }
