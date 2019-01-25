@@ -237,7 +237,7 @@ const TimelinePlugin = compose(
                                 glyph: 'time-offset',
                                 bsStyle: offsetEnabled ? 'success' : 'primary',
                                 active: offsetEnabled,
-                                disabled: !(status !== "PLAY"),
+                                disabled: status === "PLAY",
                                 tooltip: <Message msgId={!offsetEnabled ? "timeline.enableRange" : "timeline.disableRange"} />,
                                 onClick: () => {
                                     if (status !== "PLAY") onOffsetEnabled(!offsetEnabled);
