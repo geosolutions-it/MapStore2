@@ -31,6 +31,7 @@
         height: 20px;
     }
 
+    /* local mixin to highlight handlers on timeline, used on active and over */
     .ms-time-color-active(
         @color: @ms2-color-text,
         @b-top: @ms2-color-text,
@@ -62,13 +63,14 @@
             cursor: ew-resize;
             & > div {
                 &:hover, &:active {
-
+                    /* chevron right icon */
                     &:before, &::before {
                         display: flex;
                         font-size: 10px;
                         justify-content: flex-start;
                         content: "\e257";
                     }
+                    /* chevron left icon */
                     &:after, &::after {
                         display: flex;
                         font-size: 10px;
@@ -77,6 +79,7 @@
                     }
                 }
                 &:hover, &:active {
+                    /* common style between chevron left and right */
                     &:before, &::before, &:after, &::after {
                         align-items: center;
 
@@ -112,6 +115,7 @@
 
         &.endPlaybackTime {
             background-color: lighten(@ms2-color-danger, 5%);
+            /* stop icon */
             &:after, &::after {
                 bottom: 24px;
                 left: -16px;
@@ -121,6 +125,7 @@
                 color: lighten(@ms2-color-danger, 5%);
             }
             &:hover, &:active {
+                /* mixin hightlight handler, change background and stop icon colors */
                 .ms-time-color-active(
                     @ms2-color-danger,
                     'transparent',
@@ -142,6 +147,7 @@
 
         &.startPlaybackTime {
             background-color: lighten(@ms2-color-success, 10%);
+            /* play icon */
             &:after, &::after {
                 bottom: 24px;
                 left: 1px;
@@ -151,6 +157,7 @@
                 color: lighten(@ms2-color-success, 10%);
             }
             &:hover, &:active {
+                /* mixin hightlight handler, change background and play icon colors */
                 .ms-time-color-active(
                     @ms2-color-success,
                     'transparent',
@@ -181,11 +188,13 @@
                 border-left: 10px solid transparent;
                 border-right: 10px solid transparent;
             }
+            /* generate a triangle on top of the handler */
             &:before, &::before {
                 top: 0;
                 left: -9px;
                 border-top: 10px solid lighten(@ms2-color-text, 30%);
             }
+            /* generate a triangle on bottom of the handler */
             &:after, &::after {
                 bottom: 0;
                 left: -9px;
@@ -193,6 +202,7 @@
             }
 
             &:hover {
+                /* mixin hightlight handler, change background and triangles colors */
                 .ms-time-color-active(
                     lighten(@ms2-color-text, 20%),
                     lighten(@ms2-color-text, 20%),
@@ -204,6 +214,7 @@
                 cursor: grabbing;
                 cursor: -moz-grabbing;
                 cursor: -webkit-grabbing;
+                /* mixin hightlight handler, change background and triangles colors */
                 .ms-time-color-active(
                     lighten(@ms2-color-text, 20%),
                     lighten(@ms2-color-text, 20%),
@@ -219,6 +230,7 @@
         .vis-custom-time {
             &.currentTime {
                 cursor: ew-resize;
+                /* generate a smaller tiangle on bottom of the handler */
                 &:before, &::before {
                     top: 0;
                     left: 0;
@@ -226,6 +238,7 @@
                     border-left: 10px solid lighten(@ms2-color-text, 30%);
                     border-top: unset;
                 }
+                /* generate a smaller tiangle on top of the handler */
                 &:after, &::after {
                     bottom: 0;
                     left: 0;
@@ -234,6 +247,7 @@
                     border-bottom: unset;
                 }
                 &:hover, &:active {
+                    /* mixin hightlight handler, change background and triangles colors */
                     .ms-time-color-active(
                         lighten(@ms2-color-text, 20%),
                         'transparent',
@@ -246,12 +260,14 @@
             }
 
             &.offsetTime {
+                /* generate a smaller tiangle on bottom of the handler */
                 &:before, &::before {
                     top: 0;
                     left: -9px;
                     border-bottom: 10px solid transparent;
                     border-right: 10px solid lighten(@ms2-color-text, 30%);
                 }
+                /* generate a smaller tiangle on top of the handler */
                 &:after, &::after {
                     bottom: 0;
                     left: -9px;
@@ -260,6 +276,7 @@
                 }
 
                 &:hover, &:active {
+                    /* mixin hightlight handler, change background and triangles colors */
                     .ms-time-color-active(
                         lighten(@ms2-color-text, 20%),
                         'transparent',
@@ -476,13 +493,15 @@
         cursor: grab;
         cursor: -moz-grab;
         cursor: -webkit-grab;
+        z-index: 60;
         &:active {
             cursor: move;
             cursor: grabbing;
             cursor: -moz-grabbing;
             cursor: -webkit-grabbing;
+            z-index: 70;
         }
-        z-index: 60;
+
         background-color: fade(lighten(@ms2-color-text, 10%), 20%);
         border-left: 1px dashed lighten(@ms2-color-text, 10%);
         border-right: 1px dashed lighten(@ms2-color-text, 10%);
@@ -515,6 +534,39 @@
             }
         }
     }
+
+    /* read only section */
+    &, &.with-time-offset {
+        .read-only-timeline {
+            .vis-custom-time {
+                &.currentTime,
+                &.startPlaybackTime,
+                &.endPlaybackTime,
+                &.offsetTime {
+                    cursor: default;
+                    border: none;
+                    & > div {
+                        &:before, &::before, &:after, &::after {
+                            content: "";
+                        }
+                    }
+                }
+
+                &.currentTime,
+                &.offsetTime {
+                    background-color: lighten(@ms2-color-text, 30%);
+                }
+
+                &.endPlaybackTime {
+                    background-color: @ms2-color-danger;
+                }
+                &.startPlaybackTime {
+                    background-color: @ms2-color-success;
+                }
+            }
+        }
+    }
+    
 }
 
 .ms-inline-datetime {
