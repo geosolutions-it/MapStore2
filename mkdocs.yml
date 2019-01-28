@@ -24,7 +24,7 @@ pages:
     - Overview: 'exploring-maps.md'
     - Table of Contents: 'toc.md'
     - Managing Layer Settings: 'layer-settings.md'
-    - Attribute Table Functionalities: 'attributes-table.md'
+    - Attribute Table: 'attributes-table.md'
     - Creating Widgets: 'widgets.md'
     - Menu Bar: 'menu-bar.md'
     - Printing a Map: 'print.md'

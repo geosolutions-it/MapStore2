@@ -27,6 +27,52 @@ On the third page, you can choose a style from the list and apply it on the laye
 
 <img src="../img/style.jpg" style="max-width:500px;"/>
 
+
+Style Editor
+------------
+
+If you have *editing grants* on your layers' source, you can customize the layers' style through the **Style Editor**.
+
+<img src="../img/style_editor.jpg" alt="TODO IMG"/>
+
+You can edit an existing style or create a new one.
+
+***Edit styles***
+
+* **Click** on the **Edit selected style** button <img src="../img/style_editor_edit_button.jpg" style="max-width:25px;"/> if you want to edit an existing style.
+
+    <img src="../img/style_editor_edit_style.gif" alt="TODO IMG"/>
+
+* **Click** on the **Save current style** button <img src="../img/style_editor_save_current_style.jpg" style="max-width:25px;" alt="TODO IMG"/> to save your changes
+* **Click** on the **Back to style list** button <img src="../img/style_editor_back_button.jpg" style="max-width:25px;" alt="TODO IMG"/> to go back without saving the changes.
+
+***Create new styles***
+
+* **Click** on the **Create new style** button <img src="../img/style_editor_new_style_button.jpg" style="max-width:25px;"/> if you want to create your style from scratch.   [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) shows you some style templates from which you can start your customization. Those templates can be:
+
+    * ***CSS - Cascading Style Sheet*** (a language used for describing the presentation of a document written in a markup language (es. HTML))
+
+    * ***SLD - Styled Layer Descriptor*** (an XML schema specified by the Open Geospatial Consortium (OGC) for describing the appearance of map layers)
+
+        <img src="../img/style_editor_add_style_template.jpg" style="max-width:500px;">
+
+* **Select** a style template
+
+* **Click** on the **Add selected template to list of styles** button <img src="../img/style_editor_add_style_button.jpg" style="max-width:25px;" alt="TODO IMG"/>
+
+* **Enter** a *Title* (and an *Abstract* if you want to) for your style
+
+    <img src="../img/style_editor_new_style_name.jpg" style="max-width:300px;">
+
+* **Click** on *Save*
+
+    Now you can see your new style in the styles' list.
+
+    <img src="../img/style_editor_new_style_in_list.jpg" style="max-width:500px;">
+
+    Edit your new style as described in the previous section.
+
+
 Feature Info Form
 -----------------
 
