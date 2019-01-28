@@ -25,7 +25,7 @@ class Footer extends React.Component {
                 </Row>
                 <Row>
                     <Col xs={12} className="text-center">
-                        <small>GeoSolutions S.a.s. | Via Poggio alle Viti, 1187 - 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>
+                        <small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>
                     </Col>
                 </Row>
             </Grid>
