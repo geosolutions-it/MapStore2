@@ -94,7 +94,7 @@
             "warningSaveUpdatedMap": "Alcuni layer non sono stati aggiornati correttamente",
             "saveUpdatedMap": "Tutti i layer sono stati aggiornati con successo",
             "incompatibleBackgroundAndProjection":"The Projection you selected is not compatible with background, switch to a compatible -or an empty- background, then select this projection!",
-            "incompatibleDataAndProjection":"the current layer and map projection are not completely compatible. Parts or all of the data might not appear in the map"
+            "incompatibleDataAndProjection":"il livello(i) corrente(i) e la proiezione della mappa non sono completamente compatibili. Parti o tutti i dati potrebbero non essere visualizzati sulla mappa"
         },
         "dock": {
             "row": "{rowsSelected} riga selezionata",

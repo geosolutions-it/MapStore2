@@ -42,14 +42,15 @@ class Selector extends React.Component {
         enabled: PropTypes.bool,
         currentBackground: PropTypes.object,
         onError: PropTypes.func,
-        AllowedUsers: PropTypes.array,
+        allowedUsers: PropTypes.array,
         currentRole: PropTypes.string
     };
     static defaultProps = {
         availableCRS: CoordinatesUtils.getAvailableCRS(),
         setCrs: ()=> {},
         typeInput: () => {},
-        enabled: true
+        enabled: true,
+        allowedUsers: ['ALL']
     };
 
     render() {
@@ -82,7 +83,7 @@ class Selector extends React.Component {
                 });
             }
         };
-        const allowed = (role) => includes(this.props.AllowedUsers, "ALL") ? true : includes(role, this.props.AllowedUsers);
+        const allowed = (role) => includes(this.props.allowedUsers, "ALL") ? true : includes(role, this.props.allowedUsers);
         return (this.props.enabled && allowed(this.props.currentRole) ? <Dropdown
         dropup
         className="ms-prj-selector">
@@ -145,7 +146,7 @@ const crsSelector = connect(
   * @prop {object[]} projectionDefs list of additional project definitions
   * @prop {string[]} cfg.filterAllowedCRS list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
   * @prop {object} cfg.additionalCRS additional crs added to the list. The label param is used after in the combobox.
-  * @prop {array} cfg.AllowedUsers list of the authuried roles that can use the plugin, if you want all users to access the plugin, add a "ALL" element to the array.
+  * @prop {array} cfg.allowedUsers list of the authuried roles that can use the plugin, if you want all users to access the plugin, add a "ALL" element to the array.
   * @example
   * // If you want to add some crs you need to provide a definition and adding it in the additionalCRS property
   * // Put the following lines at the first level of the localconfig
@@ -165,7 +166,7 @@ const crsSelector = connect(
   *       "EPSG:3003": { "label": "EPSG:3003" }
   *     },
   *     "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
-  *     "AllowedUsers" : ["ADMIN", "USER", "ALL"]
+  *     "allowedUsers" : ["ADMIN", "USER", "ALL"]
   *   }
   * }
 */
