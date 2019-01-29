@@ -208,39 +208,41 @@ class OpenlayersMap extends React.Component {
             }, 0);
         }
 
-        if (this.map && (this.props.projection !== newProps.projection || this.haveResolutionsChanged(newProps))) {
-            let mapProjection = newProps.projection;
-            const center = CoordinatesUtils.reproject([
-                newProps.center.x,
-                newProps.center.y
-            ], 'EPSG:4326', mapProjection);
-            this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view));
-            const mapExtent = mapProjection && CoordinatesUtils.reprojectBbox(newProps.maxExtent, mapProjection, 'EPSG:4326');
-            // perform a check if the data and the projection are compatible
-            if (newProps.children) {
-                head(newProps.children).map( layer => {
-                    let boundingBox = layer.props.options.bbox;
-                    if (boundingBox) {
-                        let layerExtent = CoordinatesUtils.getExtentFromNormalized(boundingBox.bounds, boundingBox.crs).extent;
-                        if (layerExtent.length === 2 && isArray(layerExtent[1])) {
-                            layerExtent = layerExtent[1];
-                        }
+        if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps))) {
+            if (this.props.projection !== newProps.projection) {
+                let mapProjection = newProps.projection;
+                const center = CoordinatesUtils.reproject([
+                    newProps.center.x,
+                    newProps.center.y
+                ], 'EPSG:4326', mapProjection);
+                this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view));
+                const mapExtent = mapProjection && newProps.maxExtent && CoordinatesUtils.reprojectBbox(newProps.maxExtent, mapProjection, 'EPSG:4326');
+                // perform a check if the data and the projection are compatible
+                if (newProps.children) {
+                    head(newProps.children).map( layer => {
+                        let boundingBox = layer.props.options.bbox;
+                        if (boundingBox) {
+                            let layerExtent = CoordinatesUtils.getExtentFromNormalized(boundingBox.bounds, boundingBox.crs).extent;
+                            if (layerExtent.length === 2 && isArray(layerExtent[1])) {
+                                layerExtent = layerExtent[1];
+                            }
 
-                        if ( mapProjection !== boundingBox.bounds.crs && !CoordinatesUtils.isBboxCompatible(CoordinatesUtils.getPolygonFromExtent(mapExtent),
-                        CoordinatesUtils.getPolygonFromExtent(layerExtent)) ||
-                        (layer.props.options.type === "wmts" && !head(CoordinatesUtils.getEquivalentSRS(mapProjection).filter(proj => layer.props.options.matrixIds.hasOwnProperty(proj))))) {
-                            this.props.onWarning({
-                                title: "warning",
-                                message: "notification.incompatibleDataAndProjection",
-                                action: {
-                                    label: "close"
-                                },
-                                position: "tc",
-                                uid: "2"
-                            });
+                            if ( mapProjection !== boundingBox.bounds.crs && (mapExtent && !CoordinatesUtils.isBboxCompatible(CoordinatesUtils.getPolygonFromExtent(mapExtent),
+                            CoordinatesUtils.getPolygonFromExtent(layerExtent))) ||
+                            (layer.props.options.type === "wmts" && !head(CoordinatesUtils.getEquivalentSRS(mapProjection).filter(proj => layer.props.options.matrixIds.hasOwnProperty(proj))))) {
+                                this.props.onWarning({
+                                    title: "warning",
+                                    message: "notification.incompatibleDataAndProjection",
+                                    action: {
+                                        label: "close"
+                                    },
+                                    position: "tc",
+                                    uid: "2"
+                                });
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
             // We have to force ol to drop tile and reload
             this.map.getLayers().forEach((l) => {

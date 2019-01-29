@@ -24,8 +24,9 @@ const {crsInputValueSelector} = require('../selectors/crsselector');
 const {currentBackgroundSelector} = require('../selectors/layers');
 const{modeSelector} = require('../selectors/featuregrid');
 const {error} = require('../actions/notifications');
+const {userRoleSelector} = require('../selectors/security');
 
-const {indexOf, has} = require('lodash');
+const {indexOf, has, includes} = require('lodash');
 
 class Selector extends React.Component {
     static propTypes = {
@@ -40,13 +41,16 @@ class Selector extends React.Component {
         typeInput: PropTypes.func,
         enabled: PropTypes.bool,
         currentBackground: PropTypes.object,
-        onError: PropTypes.func
+        onError: PropTypes.func,
+        allowedRoles: PropTypes.array,
+        currentRole: PropTypes.string
     };
     static defaultProps = {
         availableCRS: CoordinatesUtils.getAvailableCRS(),
         setCrs: ()=> {},
         typeInput: () => {},
-        enabled: true
+        enabled: true,
+        allowedRoles: ['ALL']
     };
 
     render() {
@@ -79,7 +83,8 @@ class Selector extends React.Component {
                 });
             }
         };
-        return (this.props.enabled ? <Dropdown
+        const allowed = (role) => includes(this.props.allowedRoles, "ALL") ? true : includes(role, this.props.allowedRoles);
+        return (this.props.enabled && allowed(this.props.currentRole) ? <Dropdown
         dropup
         className="ms-prj-selector">
         <Button
@@ -108,6 +113,7 @@ class Selector extends React.Component {
 
 const crsSelector = connect(
         createSelector(
+            userRoleSelector,
             currentBackgroundSelector,
             projectionSelector,
             projectionDefsSelector,
@@ -115,7 +121,8 @@ const crsSelector = connect(
             modeSelector,
             isCesium,
             bottomPanelOpenSelector,
-                ( currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel) => ({
+                ( currentRole, currentBackground, selected, projectionDefs, value, mode, cesium, bottomPanel) => ({
+                    currentRole,
                     currentBackground,
                     selected,
                     projectionDefs,
@@ -139,6 +146,7 @@ const crsSelector = connect(
   * @prop {object[]} projectionDefs list of additional project definitions
   * @prop {string[]} cfg.filterAllowedCRS list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
   * @prop {object} cfg.additionalCRS additional crs added to the list. The label param is used after in the combobox.
+  * @prop {array} cfg.allowedRoles list of the authuried roles that can use the plugin, if you want all users to access the plugin, add a "ALL" element to the array.
   * @example
   * // If you want to add some crs you need to provide a definition and adding it in the additionalCRS property
   * // Put the following lines at the first level of the localconfig
@@ -157,7 +165,8 @@ const crsSelector = connect(
   *     "additionalCRS": {
   *       "EPSG:3003": { "label": "EPSG:3003" }
   *     },
-  *     "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"]
+  *     "filterAllowedCRS": ["EPSG:4326", "EPSG:3857"],
+  *     "allowedRoles" : ["ADMIN", "USER", "ALL"]
   *   }
   * }
 */

@@ -252,7 +252,8 @@
                 "loading": {
                     "notFound": "Map not found",
                     "notAccessible": "Map not accessible",
-                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li></ul><p>"
+                    "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li> <li>the projection of the map is not configured</li></ul><p>",
+                    "title" : "Map cannot be viewed"
                 }
             }
         },

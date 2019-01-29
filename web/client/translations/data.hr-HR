@@ -351,7 +351,8 @@
                 "loading": {
                     "notFound": "Karta nije pronađena",
                     "notAccessible": "Karta nije dostupna",
-                    "unknownError": "<p><small>Jedan od slijedećih razloga može biti uzrok:</small> <ul><li>nemate dozvole za pristup</li> <li>pokušavate pristupiti karti koja ne postoji</li> <li>karta je uklonjena</li><ul><p>"
+                    "unknownError": "<p><small>Jedan od slijedećih razloga može biti uzrok:</small> <ul><li>nemate dozvole za pristup</li> <li>pokušavate pristupiti karti koja ne postoji</li> <li>karta je uklonjena</li> <li>the projection of the map is not configured</li></ul><p>",
+                    "title" : "Map cannot be viewed"
                 }
             }
         },
