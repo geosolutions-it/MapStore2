@@ -9,19 +9,20 @@
 const uuidv1 = require('uuid/v1');
 const LocaleUtils = require('./LocaleUtils');
 const {extraMarkers} = require('./MarkerUtils');
+const {geometryFunctions, fetchStyle, hashAndStringify} = require('./VectorStyleUtils');
 const {isCompletePolygon} = require('./DrawSupportUtils');
 const {set} = require('./ImmutableUtils');
-const {values, isNil, slice, head} = require('lodash');
+const {values, isNil, slice, head, castArray, last, isArray} = require('lodash');
 const uuid = require('uuid');
-
+const turfCenter = require('@turf/center').default;
+const assign = require('object-assign');
 
 const STYLE_CIRCLE = {
     color: '#ffcc33',
     opacity: 1,
     weight: 3,
     fillColor: '#ffffff',
-    fillOpacity: 0.2,
-    radius: 10
+    fillOpacity: 0.2
 };
 const STYLE_POINT = {
     iconGlyph: 'comment',
@@ -37,14 +38,14 @@ const STYLE_TEXT = {
     font: "14px Arial",
     textAlign: 'center',
     color: '#000000',
-    opacity: 1
+    opacity: 1,
+    fillColor: '#000000',
+    fillOpacity: 1
 };
 const STYLE_LINE = {
     color: '#ffcc33',
     opacity: 1,
     weight: 3,
-    fillColor: '#ffffff',
-    fillOpacity: 0.2,
     editing: {
         fill: 1
     }
@@ -59,6 +60,7 @@ const STYLE_POLYGON = {
         fill: 1
     }
 };
+
 const DEFAULT_ANNOTATIONS_STYLES = {
     "Text": STYLE_TEXT,
     "Point": STYLE_POINT,
@@ -70,6 +72,15 @@ const DEFAULT_ANNOTATIONS_STYLES = {
     "MultiPolygon": STYLE_POLYGON
 };
 
+/**
+ * return two styles object for start and end point.
+ * usually added to a LineString
+ * @return {object[]} the two styles
+*/
+const getStartEndPointsForLinestring = () => {
+    return [{...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "StartPoint Style", geometry: "startPoint", filtering: false, id: uuidv1()},
+    {...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, iconAnchor: [0.5, 0.5], type: "Point", title: "EndPoint Style", geometry: "endPoint", filtering: false, id: uuidv1()}];
+};
 
 const rgbaTorgb = (rgba = "") => {
     return rgba.indexOf("rgba") !== -1 ? `rgb${rgba.slice(rgba.indexOf("("), rgba.lastIndexOf(","))})` : rgba;
@@ -85,8 +96,9 @@ const getStylesObject = ({type = "Point", features = []} = {}) => {
 };
 const getProperties = (props = {}, messages = {}) => ({title: LocaleUtils.getMessageById(messages, "annotations.defaulttitle") !== "annotations.defaulttitle" ? LocaleUtils.getMessageById(messages, "annotations.defaulttitle") : "Default title", id: uuidv1(), ...props});
 
-const annStyleToOlStyle = (type, style, label = "") => {
-    const s = style[type] || style;
+const annStyleToOlStyle = (type, tempStyle, label = "") => {
+    let style = tempStyle && tempStyle[type] ? tempStyle[type] : tempStyle;
+    const s = style;
     switch (type) {
         case "MultiPolygon":
         case "Polygon":
@@ -112,28 +124,50 @@ const annStyleToOlStyle = (type, style, label = "") => {
                 "fontFamily": s.fontFamily,
                 "fontWeight": s.fontWeight,
                 "labelAlign": textAlignTolabelAlign(s.textAlign),
-                "fontColor": rgbaTorgb(s.color),
-                "fontOpacity": s.opacity,
+                "fontColor": rgbaTorgb(s.fillColor),
+                "fontOpacity": s.fillOpacity,
                 "label": label,
-                "fill": false,
-                "stroke": false
+                "labelOutlineColor": rgbaTorgb(s.color),
+                "labelOutlineOpacity": s.opacity,
+                "labelOutlineWidth": s.weight,
+                "stroke": true,
+                "strokeColor": rgbaTorgb(s.color),
+                "strokeOpacity": s.opacity,
+                "strokeWidth": s.weight
             };
         case "Point":
         case "MultiPoint": {
-            const externalGraphic = extraMarkers.markerToDataUrl(s);
+            // TODO TEST THIS
+            const externalGraphic = s.symbolUrl && fetchStyle(hashAndStringify(s), "base64") || extraMarkers.markerToDataUrl(s);
+            let graphicXOffset = -18;
+            let graphicYOffset = -46;
+            if (s.iconAnchor && isArray(s.iconAnchor) && s.size) {
+                if (s.anchorXUnits === "pixels") {
+                    graphicXOffset = -1 * s.iconAnchor[0];
+                } else {
+                    graphicXOffset = -1 * s.size * s.iconAnchor[0];
+                }
+                if (s.anchorYUnits === "pixels") {
+                    graphicYOffset = -1 * s.iconAnchor[1];
+                } else {
+                    graphicYOffset = -1 * s.size * s.iconAnchor[1];
+                }
+            }
             return externalGraphic ? {
-                    externalGraphic: externalGraphic,
-                    "graphicWidth": 36,
-                    "graphicHeight": 46,
-                    "graphicXOffset": -18,
-                    "graphicYOffset": -46
+                    "graphicWidth": s.size || 36,
+                    "graphicHeight": s.size || 46,
+                    externalGraphic,
+                    graphicXOffset,
+                    graphicYOffset,
+                    "display": s.filtering === false && "none"
                 } : {
                     "fillColor": "#0000AE",
                     "fillOpacity": 0.5,
                     "strokeColor": "#0000FF",
                     "pointRadius": 10,
                     "strokeOpacity": 1,
-                    "strokeWidth": 1
+                    "strokeWidth": 1,
+                    "display": s.filtering === false && "none"
             };
         }
         default:
@@ -220,6 +254,9 @@ const AnnotationsUtils = {
             case "Point": case "MultiPoint": {
                 return [AnnotationsUtils.getRelativeStyler(type)];
             }
+            case "Symbol": {
+                return [AnnotationsUtils.getRelativeStyler(type)];
+            }
             case "LineString": case "MultiLineString": {
                 return [AnnotationsUtils.getRelativeStyler(type)];
             }
@@ -253,6 +290,9 @@ const AnnotationsUtils = {
         switch (type) {
             case "Point": case "MultiPoint": {
                 return "marker";
+            }
+            case "Symbol": {
+                return "symbol";
             }
             case "Circle": {
                 return "circle";
@@ -358,22 +398,35 @@ const AnnotationsUtils = {
             }));
         return features.concat(circles, texts);
     },
+    // for the moment is used with ol functions
+    createGeometryFromGeomFunction: (ft) => {
+        let type = geometryFunctions[ft.style.geometry] && geometryFunctions[ft.style.geometry].type || ft.geometry.type;
+        let coordinates = ft.geometry.coordinates || [];
+        switch (ft.style.geometry ) {
+            case "startPoint": coordinates = head(coordinates); break;
+            case "endPoint": coordinates = last(coordinates); break;
+            case "centerPoint": coordinates = turfCenter(ft).geometry.coordinates; break;
+            default: break;
+        }
+        return {coordinates, type};
+    },
     /**
     * transform an annotation Feature into a simple geojson feature
     * @param {object} feature coming from a ftcoll
     * @return {object} a transformed feature
     */
-    fromAnnotationToGeoJson: ({geometry, properties = {}, style = DEFAULT_ANNOTATIONS_STYLES} = {}) => {
-        if (properties.isCircle) {
-            return AnnotationsUtils.fromCircleToPolygon(geometry, properties, style.Circle);
+    fromAnnotationToGeoJson: ({geometry: ftGeom, properties = {}, style = {}} = {}) => {
+        let geometry = style.geometry ? AnnotationsUtils.createGeometryFromGeomFunction({geometry: ftGeom, properties, style, type: "Feature"}) : ftGeom;
+        if (properties.isCircle && geometry.type === "Polygon") {
+            return AnnotationsUtils.fromCircleToPolygon(geometry, properties, style);
         }
         if (properties.isText) {
-            return AnnotationsUtils.fromTextToPoint(geometry, properties, style.Text);
+            return AnnotationsUtils.fromTextToPoint(geometry, properties, style);
         }
         return {
             type: "Feature",
             geometry,
-            properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle(geometry.type, style[geometry.type])}
+            properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle(geometry.type, style)}
         };
     },
     /**
@@ -386,7 +439,10 @@ const AnnotationsUtils = {
         return features.reduce((coll, f) => {
             if (f.type === "FeatureCollection") {
                 // takes the style from the feature coll if it is missing from the feature
-                return coll.concat(f.features.map(ft => AnnotationsUtils.fromAnnotationToGeoJson({...ft, style: ft.style || f.style})));
+                return coll.concat(f.features.map(ft => {
+                    return castArray(ft.style || f.style).map(style => AnnotationsUtils.fromAnnotationToGeoJson({...ft, style}));
+                }).reduce((p, c) => p.concat(c), []));
+                // AnnotationsUtils.fromAnnotationToGeoJson({...ft, style: ft.style || f.style})));
             }
             return f.geometry && f.geometry.type === "GeometryCollection" ? coll.concat(AnnotationsUtils.flattenGeometryCollection(f))
                 : coll.concat({type: "Feature", geometry: f.geometry, properties: {...f.properties, ms_style: annStyleToOlStyle(f.geometry.type, f.style)}});
@@ -425,9 +481,9 @@ const AnnotationsUtils = {
     validateCoordsArray: ([lon, lat] = []) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
     validateCoord: (c) => !isNaN(parseFloat(c)),
     coordToArray: (c = {}) => [c.lon, c.lat],
-    validateCoordinates: ({components = [], remove = false, type, isArray = false } = {}) => {
+    validateCoordinates: ({components = [], remove = false, type, isArrayFlag = false } = {}) => {
         if (components && components.length) {
-            const validComponents = components.filter(AnnotationsUtils[isArray ? "validateCoordsArray" : "validateCoords"]);
+            const validComponents = components.filter(AnnotationsUtils[isArrayFlag ? "validateCoordsArray" : "validateCoords"]);
 
             if (remove) {
                 return validComponents.length > AnnotationsUtils.COMPONENTS_VALIDATION[type].min && validComponents.length === components.length;
@@ -436,38 +492,49 @@ const AnnotationsUtils = {
         }
         return false;
     },
-    validateCircle: ({components = [], properties = {radius: 0}, isArray = false} = {}) => {
+    validateCircle: ({components = [], properties = {radius: 0}, isArrayFlag = false} = {}) => {
         if (components && components.length) {
             const cmp = head(components);
-            return !isNaN(parseFloat(properties.radius)) && (isArray ? AnnotationsUtils.validateCoordsArray(cmp) : AnnotationsUtils.validateCoords(cmp));
+            return !isNaN(parseFloat(properties.radius)) && (isArrayFlag ? AnnotationsUtils.validateCoordsArray(cmp) : AnnotationsUtils.validateCoords(cmp));
         }
         return false;
     },
-    validateText: ({components = [], properties = {valueText: ""}, isArray = false} = {}) => {
+    validateText: ({components = [], properties = {valueText: ""}, isArrayFlag = false} = {}) => {
         if (components && components.length) {
             const cmp = head(components);
-            return properties && !!properties.valueText && (isArray ? AnnotationsUtils.validateCoordsArray(cmp) : AnnotationsUtils.validateCoords(cmp));
+            return properties && !!properties.valueText && (isArrayFlag ? AnnotationsUtils.validateCoordsArray(cmp) : AnnotationsUtils.validateCoords(cmp));
         }
         return false;
     },
-    validateFeature: ({components = [[]], type, remove = false, properties = {}, isArray = false} = {}) => {
+    validateFeature: ({components = [[]], type, remove = false, properties = {}, isArrayFlag = false} = {}) => {
         if (isNil(type)) {
             return false;
         }
         if (type === "Text") {
-            return AnnotationsUtils.validateText({components, properties, isArray});
+            return AnnotationsUtils.validateText({components, properties, isArrayFlag});
         }
         if (type === "Circle") {
-            return AnnotationsUtils.validateCircle({components, properties, isArray});
+            return AnnotationsUtils.validateCircle({components, properties, isArrayFlag});
         }
-        return AnnotationsUtils.validateCoordinates({components, remove, type, isArray});
+        return AnnotationsUtils.validateCoordinates({components, remove, type, isArrayFlag});
     },
     getBaseCoord: (type) => {
         switch (type) {
             case "Polygon": case "LineString": return [];
             default: return [[]];
         }
-    }
+    },
+    updateAllStyles: (ftColl = {}, newStyle = {}) => {
+        if (ftColl.features && ftColl.features.length) {
+            return {
+                ...ftColl,
+                features: ftColl.features.map(f => assign({}, f, {
+                    style: castArray(f.style).map(s => assign({}, s, newStyle))}
+                ))};
+        }
+        return ftColl;
+    },
+    getStartEndPointsForLinestring
 };
 
 module.exports = AnnotationsUtils;

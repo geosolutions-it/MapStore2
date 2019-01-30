@@ -17,11 +17,11 @@ class LineThumb extends React.Component {
         stroke: PropTypes.string,
         fillColor: PropTypes.string,
         strokeWidth: PropTypes.number,
-        styleRect: PropTypes.object
+        style: PropTypes.object
     };
 
     static defaultProps = {
-        styleRect: {},
+        style: {},
         linecap: 'round', // butt round square
         linejoin: 'round', // miter round bevel
         strokeWidth: 3,
@@ -30,7 +30,7 @@ class LineThumb extends React.Component {
     };
 
     render() {
-        const {color, weight, fillColor} = this.props.styleRect;
+        const {color, weight, fillColor} = this.props.style;
         return (
             <div className="ms-thumb-geom">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox={"0 0 100 100"}>

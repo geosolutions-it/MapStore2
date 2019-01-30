@@ -1,6 +1,10 @@
 const React = require('react');
 const PropTypes = require('prop-types');
-const {Grid, Row, Col, FormGroup, ControlLabel, FormControl} = require('react-bootstrap');
+const {Grid, Row, Col, FormGroup, ControlLabel, FormControl, MenuItem, DropdownButton: DropdownButtonRB, Glyphicon: GlyphiconRB} = require('react-bootstrap');
+
+const tooltip = require('../../misc/enhancers/tooltip');
+const Glyphicon = tooltip(GlyphiconRB);
+const DropdownButton = tooltip(DropdownButtonRB);
 const {head, isNaN} = require('lodash');
 const Toolbar = require('../../misc/toolbar/Toolbar');
 const draggableContainer = require('../../misc/enhancers/draggableContainer');
@@ -69,7 +73,8 @@ class CoordinateEditor extends React.Component {
             transitionEnterTimeout: 300,
             transitionLeaveTimeout: 300
         },
-        isDraggable: true
+        isDraggable: true,
+        properties: {}
     };
 
     getValidationStateText = (text) => {
@@ -143,31 +148,33 @@ class CoordinateEditor extends React.Component {
         const actualValidComponents = actualComponents.filter(validateCoords);
         const allValidComponents = actualValidComponents.length === actualComponents.length;
         const validationCompleteButton = this[componentsValidation[type].validation]() && allValidComponents;
+        const formats = [{
+                value: 'decimal',
+                text: <Message msgId="annotations.editor.decimal"/>
+            }, {
+                value: 'aeronautical',
+                text: <Message msgId="annotations.editor.aeronautical"/>
+            }];
+
         const buttons = [
             {
-                visible: true,
-                el: () =>
-                (
-                    <FormGroup
-                         style={{
-                        display: "inline-flex",
-                        alignItems: "baseline"}}>
-                        <ControlLabel style={{marginRight: 5}}>Format</ControlLabel>{  }
-                        <FormControl componentClass="select" placeholder="select"
-                            value={this.props.format}
-                            selected={this.props.format}
-                        onChange={(e) => {
-                            this.props.onChangeFormat(e.target.value);
-                        }}>
-                            <option value="decimal"><Message msgId="annotations.editor.decimal"/></option>
-                            <option value="aeronautical"><Message msgId="annotations.editor.aeronautical"/></option>
-                        </FormControl>
-                </FormGroup>)
-            },
-            {
-                glyph: validationCompleteButton ? 'ok' : 'exclamation-mark text-danger',
+                glyph: validationCompleteButton ? 'ok-sign text-success' : 'exclamation-mark text-danger',
                 tooltipId: validationCompleteButton ? 'annotations.editor.valid' : componentsValidation[type].notValid,
                 visible: true
+            }, {
+            el: () => (
+                <DropdownButton
+                    noCaret
+                    title={<Glyphicon glyph="cog"/>}
+                    pullRight
+                    className="square-button-md no-border"
+                    tooltip="Format">
+                    {formats.map(({text, value}) => <MenuItem
+                        active={this.props.format === value}
+                        key={value}
+                        onClick={() => this.props.onChangeFormat(value)}>{text}</MenuItem>)}
+                </DropdownButton>
+                )
             },
             {
                 glyph: 'plus',
@@ -183,9 +190,9 @@ class CoordinateEditor extends React.Component {
         const toolbarVisible = !!buttons.filter(b => b.visible).length;
         return (
             <Grid fluid style={{display: 'flex', flexDirection: 'column', flex: 1}}>
-                <Row>
+                <Row style={{display: 'flex', alignItems: 'center', marginBottom: 8}}>
                     <Col xs={toolbarVisible ? 6 : 12}>
-                        <Message msgId={"annotations.editor.title." + this.props.type}/>
+                        <h5><Message msgId={"annotations.editor.title." + this.props.type}/></h5>
                     </Col>
                     <Col xs={6}>
                         <Toolbar
@@ -203,15 +210,16 @@ class CoordinateEditor extends React.Component {
                         }
                     </Col>
                 </Row>
-                <Row style={{flex: 1, overflowY: 'auto'}}>
-                    <Col xs={5} xsOffset={1}>
-                        <Message msgId="annotations.editor.lat"/>
-                    </Col>
-                    <Col xs={5}>
-                        <Message msgId="annotations.editor.lon"/>
-                    </Col>
-                    <Col xs={1}/>
-                </Row>
+                 {!(!this.props.components || this.props.components.length === 0) &&
+                     <Row style={{flex: 1, overflowY: 'auto'}}>
+                        <Col xs={5} xsOffset={1}>
+                            <Message msgId="annotations.editor.lat"/>
+                        </Col>
+                        <Col xs={5}>
+                            <Message msgId="annotations.editor.lon"/>
+                        </Col>
+                        <Col xs={1}/>
+                    </Row>}
                 <Row style={{flex: 1, overflowY: 'auto', overflowX: 'hidden'}}>
                     {this.props.components.map((component, idx) => <CoordinatesRow
                         format={this.props.format}
@@ -270,6 +278,7 @@ class CoordinateEditor extends React.Component {
                             }
                         }}/>)}
                 </Row>
+                 {(!this.props.components || this.props.components.length === 0) && <Row><Col xs={12} className="text-center" style={{padding: 15, paddingBottom: 30}}><i>Add new coordinates by clicking the plus button or on the map </i></Col></Row>}
             </Grid>
         );
     }

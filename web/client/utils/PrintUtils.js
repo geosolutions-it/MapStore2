@@ -382,7 +382,7 @@ const PrintUtils = {
      * each vector type.
      */
     getOlDefaultStyle(layer, styleType) {
-        switch (styleType || getGeomType(layer)) {
+        switch (styleType || getGeomType(layer) || "") {
             case 'Polygon':
             case 'MultiPolygon': {
                 return {

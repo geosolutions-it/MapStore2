@@ -7,7 +7,7 @@
 */
 
 const expect = require('expect');
-const {isEmpty} = require('lodash');
+const {isEmpty, isArray} = require('lodash');
 const {
     annotationsLayerSelector,
     removingSelector,
@@ -32,7 +32,8 @@ const {
     annotationsInfoSelector,
     aeronauticalOptionsSelector,
     annotationSelector,
-    annotationsListSelector
+    annotationsListSelector,
+    symbolListSelector
 } = require("../annotations");
 
 const state = {
@@ -521,28 +522,35 @@ describe('Test annotations selectors', () => {
         const retVal = annotationsListSelector(state);
         expect(retVal.removing).toBe(null);
         expect(retVal.filter).toBe('');
-
     });
     it('test aeronauticalOptionsSelector', () => {
         const retVal = aeronauticalOptionsSelector(state);
         expect(retVal).toBe(undefined);
-
     });
     it('test aeronauticalOptionsSelector with true value', () => {
         const retVal = aeronauticalOptionsSelector({annotations: {aeronauticalOptions: true}});
         expect(retVal).toBe(true);
+    });
+    it('test symbolListSelector ', () => {
+        let retVal = symbolListSelector({annotations: {}});
+        expect(isArray(retVal)).toBe(true);
+        expect(retVal.length).toBe(0);
 
+        const symbolList = [{name: "symbolName"}];
+        retVal = symbolListSelector({annotations: {symbolList}});
+        expect(isArray(retVal)).toBe(true);
+        expect(retVal.length).toBe(symbolList.length);
     });
     it('test annotationsInfoSelector', () => {
         const retVal = annotationsInfoSelector(state);
-        expect(Object.keys(retVal).length).toBe(25);
+        expect(Object.keys(retVal).length).toBe(26);
         const params = ["showEdit", "closing", "config", "drawing", "drawingText",
         "errors", "editing", "coordinateEditorEnabled", "editedFields",
         "mode", "removing", "selected", "featureType",
         "showUnsavedChangesModal", "showUnsavedStyleModal",
         "showUnsavedGeometryModal", "showDeleteFeatureModal",
         "stylerType", "styling", "unsavedChanges", "unsavedStyle",
-        "unsavedGeometry", "format", "mouseHoverEvents", "aeronauticalOptions" ];
+        "unsavedGeometry", "format", "mouseHoverEvents", "aeronauticalOptions", "symbolList"];
         Object.keys(retVal).forEach(r => {
             expect(params.indexOf(r) !== -1).toBe(true);
         });

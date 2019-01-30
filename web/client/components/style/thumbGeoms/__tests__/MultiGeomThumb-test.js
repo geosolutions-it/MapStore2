@@ -30,7 +30,7 @@ describe("Test the MultiGeomThumb component", () => {
         expect(rect).toExist();
         const path = TestUtils.scryRenderedDOMComponentsWithTag(cmp, 'path');
         expect(path.length).toBe(0);
-        expect(rect.attributes.style.value).toBe("fill: rgb(255, 255, 255); stroke-width: 3; stroke: rgb(255, 204, 51); fill-opacity: 0.2; opacity: 1;");
+        expect(rect.attributes.style.value).toBe("fill: rgb(255, 255, 255); stroke-width: 2; stroke: rgb(255, 204, 51); fill-opacity: 0; opacity: 1;");
         expect(rect.attributes.width.value).toBe("50");
         expect(rect.attributes.height.value).toBe("50");
         expect(rect.attributes.x.value).toBe("20");
@@ -40,14 +40,18 @@ describe("Test the MultiGeomThumb component", () => {
 
     });
     it('create component with only MultiPolygon LineString', () => {
-        const style = DEFAULT_ANNOTATIONS_STYLES;
+
+        const stroke = {color: "#ffcc33", opacity: 1, weight: 2 };
+        const fill = {fillColor: "#FFFFFF", fillOpacity: 0 };
+        const style = {...stroke, ...fill};
+
         const cmp = ReactDOM.render(<MultiGeomThumb styleMultiGeom={style} geometry={{features: [{geometry: {type: "Polygon"}}, {geometry: {type: "LineString"}} ]}}/>, document.getElementById("container"));
         expect(cmp).toExist();
         const rect = TestUtils.findRenderedDOMComponentWithTag(cmp, 'rect');
 
         const svg = TestUtils.findRenderedDOMComponentWithTag(cmp, 'svg');
         expect(rect).toExist();
-        expect(rect.attributes.style.value).toBe("fill: rgb(255, 255, 255); stroke-width: 3; stroke: rgb(255, 204, 51); fill-opacity: 0.2; opacity: 1;");
+        expect(rect.attributes.style.value).toBe("fill: rgb(255, 255, 255); stroke-width: 2; stroke: rgb(255, 204, 51); fill-opacity: 0; opacity: 1;");
         expect(rect.attributes.width.value).toBe("50");
         expect(rect.attributes.height.value).toBe("50");
         expect(rect.attributes.x.value).toBe("40");
@@ -67,10 +71,10 @@ describe("Test the MultiGeomThumb component", () => {
         expect(circle.attributes.cy.value).toBe("50");
         expect(circle.attributes.r.value).toBe("25");
         expect(circle.attributes.stroke.value).toBe("#ffcc33");
-        expect(circle.attributes.fill.value).toBe("#ffffff");
+        expect(circle.attributes.fill.value).toBe("#FFFFFF");
         expect(circle.attributes.opacity.value).toBe("1");
-        expect(circle.attributes["stroke-width"].value).toBe("3");
-        expect(circle.attributes["fill-opacity"].value).toBe("0.2");
+        expect(circle.attributes["stroke-width"].value).toBe("2");
+        expect(circle.attributes["fill-opacity"].value).toBe("0");
 
     });
 

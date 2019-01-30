@@ -9,6 +9,7 @@
 const L = require('leaflet');
 const Icons = require('./Icons');
 const assign = require('object-assign');
+const {isMarkerStyle, isSymbolStyle} = require('../VectorStyleUtils');
 
 const getIcon = (style, geojson) => {
     if (style && style.iconGlyph) {
@@ -20,7 +21,7 @@ const getIcon = (style, geojson) => {
     if (style && style.html && geojson) {
         return Icons.html.getIcon(style, geojson);
     }
-    if (style && style.iconUrl) {
+    if (style && style.iconUrl || style.symbolUrlCustomized || style.symbolUrl) {
         return Icons.standard.getIcon(style);
     }
 
@@ -49,8 +50,8 @@ const isMarker = (props) => {
     if (props.geometry.type === "GeometryCollection") {
         return false;
     }
-    const newStructuredStyle = props.style && props.style[props.geometry.type];
-    return props.styleName === "marker" || (newStructuredStyle && (newStructuredStyle.iconUrl || newStructuredStyle.iconGlyph) || props.style && (props.style.iconUrl || props.style.iconGlyph));
+    const newStructuredStyle = props.style;
+    return newStructuredStyle && (isMarkerStyle(newStructuredStyle) || isSymbolStyle(newStructuredStyle) || (newStructuredStyle.iconUrl || newStructuredStyle.iconGlyph));
 };
 // Create a new Leaflet layer with custom icon marker or circleMarker
 
@@ -109,7 +110,7 @@ const VectorUtils = {
     createPolygonCircleLayer: ({geojson, style = {}, latlngs = [], coordsToLatLng = () => {}} = {}) => {
         if (geojson.properties && geojson.properties.isCircle) {
             let latlng = coordsToLatLng(geojson.properties.center);
-            return L.circle(latlng, { ...style.Circle, radius: geojson.properties.radius});
+            return L.circle(latlng, { ...style, radius: geojson.properties.radius});
         }
         return new L.Polygon(latlngs, style);
     },
@@ -117,10 +118,10 @@ const VectorUtils = {
         var geometry = geojson.type === 'Feature' ? geojson.geometry : geojson;
         var coords = geometry ? geometry.coordinates : null;
         var layers = [];
-        var props = {style: options.style, ...geojson};
+        var props = {style: options.style && options.style[0] || options.style, ...geojson};
         var pointToLayer = options && !isMarker(props) ? function(feature, latlng) {
             // probably this need a fix
-            return L.circleMarker(latlng, props.style[geojson.geometry.type] || props.style || {
+            return L.circleMarker(latlng, props.style && props.style[0] || {
                 radius: 5,
                 color: "red",
                 weight: 1,
@@ -138,7 +139,7 @@ const VectorUtils = {
             return null;
         }
         let layer;
-        let style = assign({}, options.style && options.style[geometry.type] || options.style, {highlight: options.style && options.style.highlight});
+        let style = props.style || assign({}, options.style && options.style[geometry.type] || options.style, {highlight: options.style && options.style.highlight});
 
         switch (geometry.type) {
             case 'Point':
@@ -155,13 +156,13 @@ const VectorUtils = {
                 return new L.FeatureGroup(layers);
 
             case 'LineString':
-                VectorUtils.updateHighlightStyle(style);
+                style = VectorUtils.updateHighlightStyle(style);
                 latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
                 layer = new L.Polyline(latlngs, style);
                 layer.msId = geojson.id;
                 return layer;
             case 'MultiLineString':
-                VectorUtils.updateHighlightStyle(style);
+                style = VectorUtils.updateHighlightStyle(style);
                 latlngs = coordsToLatLngs(coords, geometry.type === 'LineString' ? 0 : 1, coordsToLatLng);
                 for (i = 0, len = latlngs.length; i < len; i++) {
                     layer = new L.Polyline(latlngs[i], style);
@@ -172,13 +173,13 @@ const VectorUtils = {
                 }
                 return new L.FeatureGroup(layers);
             case 'Polygon':
-                VectorUtils.updateHighlightStyle(style);
+                style = VectorUtils.updateHighlightStyle(style);
                 latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
                 layer = VectorUtils.createPolygonCircleLayer({geojson, style, latlngs, coordsToLatLng});
                 layer.msId = geojson.id;
                 return layer;
             case 'MultiPolygon':
-                VectorUtils.updateHighlightStyle(style);
+                style = VectorUtils.updateHighlightStyle(style);
                 latlngs = coordsToLatLngs(coords, geometry.type === 'Polygon' ? 1 : 2, coordsToLatLng);
                 for (i = 0, len = latlngs.length; i < len; i++) {
                     layer = VectorUtils.createPolygonCircleLayer({geojson, style, latlngs, coordsToLatLng});
@@ -207,7 +208,7 @@ const VectorUtils = {
         }
     },
     updateHighlightStyle: (style) => {
-        let highlight = {style};
+        let {highlight} = style;
         if (highlight) {
             return assign({}, style, {
                 dashArray: highlight ? "10" : null

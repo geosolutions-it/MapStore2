@@ -348,6 +348,7 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Error loading map",
                     "notFound": "Map not found",
                     "notAccessible": "Map not accessible",
                     "unknownError": "<p><small>One of the following reason could be the cause:</small> <ul><li>you don't have permission to access</li> <li>you are trying to access a map that doesn't exist</li> <li>the map has been removed</li></ul><p>"
@@ -558,16 +559,28 @@
             "serviceslistempty": "No custom services defined"
         },
         "draw": {
-            "fill": "Fill:",
-            "stroke": "Stroke:",
-            "strokeWidth": "Stroke Width:",
+            "fill": "Fill",
+            "text": "Text",
+            "fontTitle": "Font",
+            "stroke": "Stroke",
+            "color": "Color",
+            "lineDash": "LineDash",
+            "opacity": "Opacity",
+            "width": "Width",
+            "marker": {
+                "layout": "Layout",
+                "shape": "Shape",
+                "size": "Size",
+                "type": "Type",
+                "icon": "Icon"
+            },
             "font": {
-                "textColor": "text color",
-                "family": "font-family",
-                "size": "font-size",
-                "textAlign": "text align",
-                "style": "font-style",
-                "weight": "font-weight"
+                "textColor": "Color",
+                "family": "Family",
+                "size": "Size",
+                "style": "Style",
+                "weight": "Weight",
+                "textAlign": "Align"
             }
         },
         "drawLocal": {
@@ -799,6 +812,7 @@
             "save": "Save",
             "cancel": "Cancel",
             "back": "Back",
+            "applyStyle": "Apply Style",
             "addMarker": "Add a new geometry",
             "styleGeometry": "Change style",
             "deleteGeometry": "Remove all annotation geometries",
@@ -1236,7 +1250,7 @@
                 "downloadGridData": "Download grid data",
                 "hideShowColumns": "Hide/show columns",
                 "zoomAll": "Zoom to page extent",
-                "syncOnMap": "Sync map with fitler",
+                "syncOnMap": "Sync map with filter",
                 "createNewChart": "Create a chart for the selected layer"
             }
         },

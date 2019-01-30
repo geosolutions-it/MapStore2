@@ -86,7 +86,7 @@ class AeronauticalCoordinateEditor extends React.Component {
     }
 
     render() {
-        const inputStyle = { padding: 0, textAlign: "center" };
+        const inputStyle = { padding: 0, textAlign: "center", borderRight: 'none'};
         const degreesInvalidStyle = isNaN(this.props.degrees) ? {borderColor: "red"} : {};
         const minutesInvalidStyle = isNaN(this.props.minutes) ? {borderColor: "red"} : {};
         const secondsInvalidStyle = isNaN(this.props.seconds) ? {borderColor: "red"} : {};
@@ -96,54 +96,59 @@ class AeronauticalCoordinateEditor extends React.Component {
             overflow: "visible",
             zIndex: 3,
             left: -23,
-            fontSize: 20,
             width: 0,
             height: 0
         };
         const {step: stepSeconds} = this.props.aeronauticalOptions.seconds;
         return (
             <FormGroup style={{display: "inline-flex"}}>
-                <FormControl
-                    key={this.props.coordinate + "degree"}
-                    value={this.props.degrees}
-                    placeholder="d"
-                    onChange={e => this.onChange("degrees", parseInt(e.target.value, 10))}
-                    step={1}
-                    max={this.props.maxDegrees}
-                    min={-1}
-                    style={{ width: 60, ...inputStyle, ...degreesInvalidStyle }}
-                    type="number"
-                />
-                <span style={labelStyle}>&deg;</span>
-                <FormControl
-                    key={this.props.coordinate + "minutes"}
-                    placeholder={"m"}
-                    value={this.props.minutes}
-                    onChange={e => this.onChange("minutes", parseInt(e.target.value, 10))}
-                    max={60}
-                    min={-1}
-                    style={{ width: 60, ...inputStyle, ...minutesInvalidStyle}}
-                    step={1}
-                    type="number"
-                />
-                <span style={labelStyle}>&prime;</span>
-                <FormControl
-                    key={this.props.coordinate + "seconds"}
-                    value={this.props.seconds}
-                    placeholder="s"
-                    onChange={e => this.onChange("seconds", parseFloat(e.target.value))}
-                    step={stepSeconds}
-                    max={60}
-                    min={-1}
-                    style={{ width: 80, ...inputStyle, ...secondsInvalidStyle}}
-                    type="number"
-                />
-            <span style={labelStyle}>&Prime;</span>
+                <div style={{width: 50, display: 'flex'}}>
+                    <FormControl
+                        key={this.props.coordinate + "degree"}
+                        value={this.props.degrees}
+                        placeholder="d"
+                        onChange={e => this.onChange("degrees", parseInt(e.target.value, 10))}
+                        step={1}
+                        max={this.props.maxDegrees}
+                        min={-1}
+                        style={{ width: '100%', ...inputStyle, ...degreesInvalidStyle }}
+                        type="number"
+                    />
+                    <span style={labelStyle}>&deg;</span>
+                </div>
+                <div style={{width: 50, display: 'flex' }}>
+                    <FormControl
+                        key={this.props.coordinate + "minutes"}
+                        placeholder={"m"}
+                        value={this.props.minutes}
+                        onChange={e => this.onChange("minutes", parseInt(e.target.value, 10))}
+                        max={60}
+                        min={-1}
+                        style={{ width: '100%', ...inputStyle, ...minutesInvalidStyle}}
+                        step={1}
+                        type="number"
+                    />
+                    <span style={labelStyle}>&prime;</span>
+                </div>
+                <div style={{flex: 1, display: 'flex'}}>
+                    <FormControl
+                        key={this.props.coordinate + "seconds"}
+                        value={this.props.seconds}
+                        placeholder="s"
+                        onChange={e => this.onChange("seconds", parseFloat(e.target.value))}
+                        step={stepSeconds}
+                        max={60}
+                        min={-1}
+                        style={{ width: '100%', ...inputStyle, ...secondsInvalidStyle}}
+                        type="number"
+                    />
+                    <span style={labelStyle}>&Prime;</span>
+                </div>
                 <FormControl
                     componentClass="select" placeholder="select"
                     value={this.props.direction}
                     onChange={e => this.onChange("direction", e.target.value)}
-                    style={{ width: 65 }}>
+                    style={{ width: 47, paddingLeft: 4, paddingRight: 4 }}>
                     {this.props.directions.map((d) => <option key={d} value={d}>{d}</option>)}
                 </FormControl>
             </FormGroup>

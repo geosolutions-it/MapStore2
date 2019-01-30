@@ -37,7 +37,7 @@ var createVectorLayer = function(options) {
             return L.circleMarker(latlng, options.style || defaultStyle);
         } : null,
         hideLoading: hideLoading,
-        style: options.nativeStyle || options.style || defaultStyle
+        style: options.nativeStyle || options.style || defaultStyle // TODO ol nativeStyle should not be taken from the store
     });
     layer.setOpacity = (opacity) => {
         const style = assign({}, layer.options.style || defaultStyle, {opacity: opacity, fillOpacity: opacity});

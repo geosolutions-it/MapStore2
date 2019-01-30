@@ -28,7 +28,37 @@
 
 .mapstore-annotations-info-viewer-styler {
     min-height: 600px;
+    .mapstore-switch-panel {
+        .shadow-soft;
+        border: none;
+        padding: 8px;
+    }
+    .mapstore-annotations-info-viewer-styler-container {
+        .ms2-border-layout-content {
+            overflow: auto;
+        }
+    }
+
+    .ms-style {
+        .Select {
+            border-radius: 0;
+            > * {
+                border-radius: 0;
+            }
+            width: 100%;
+            margin: 0;
+        }
+        .Select-menu-outer {
+            z-index: 10;
+            .shadow-soft;
+        }
+        .row {
+            display: flex;
+            align-items: center;
+        }
+    }
 }
+
 
 .mapstore-annotations-info-viewer-styler .Select {
     clear: both;
@@ -82,6 +112,7 @@
 
 .mapstore-annotations-info-viewer .ql-editor {
     max-height: 500px;
+    min-height: 180px;
 }
 
 #mapstore-annotations-panel .mapstore-annotations-info-viewer {
@@ -216,9 +247,9 @@
     .ms2-border-layout-content {
         .row {
             &:first-child {
-                margin-top: 15px;
+                margin-top: 8px;
             }
-            margin-bottom: 15px;
+            margin-bottom: 8px;
         }
         .noTopMargin.row {
             &:first-child {
@@ -471,4 +502,67 @@
             margin-top: 5px;
         }
     }
+}
+
+
+.coordinateRow {
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    border: 1px solid @ms2-color-shade-lighter;
+    margin: 8px 15px !important;
+    font-family: @font-family-monospace;
+    .col-xs-5, .col-xs-1 {
+        padding: 0;
+        float: unset;
+        width: auto;
+        margin: 0 4px;
+    }
+    .form-group {
+        width: 100%;
+    }
+    .col-xs-5 {
+        flex: 1;
+        .form-group {
+            margin: 4px 0;
+        }
+    }
+    input {
+        font-size: @font-size-small;
+    }
+    .glyphicon-menu-hamburger {
+        width: 10px;
+        overflow: hidden;
+    }
+}
+
+.ms-dragging {
+    opacity: 0.5;
+}
+
+.ms-over {
+    box-sizing: border-box;
+    .coordinateRow {
+        border: 1px dashed @ms2-color-primary;
+    }
+    &.ms-above {
+        .coordinateRow {
+            border-bottom-width: 2px;
+        }
+
+    }
+    &.ms-below {
+        .coordinateRow {
+            border-top-width: 2px;
+        }
+    }
+    &.ms-dragging {
+        .coordinateRow {
+            border: 1px dashed @ms2-color-shade-lighter;
+        }
+    }
+}
+
+.modal-dialog-container{
+    border: none;
 }

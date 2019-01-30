@@ -54,10 +54,10 @@ module.exports = {
          getIcon: (options) => {
              let markerStyle = [new ol.style.Style({
                    image: new ol.style.Icon(({
-                     anchor: options.iconAnchor || [0.5, 1],
-                     anchorXUnits: ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
-                     anchorYUnits: ( options.iconAnchor || options.iconAnchor === 0) ? 'pixels' : 'fraction',
-                     src: options.style.iconUrl
+                     anchor: options.style.iconAnchor || [0.5, 1],
+                     anchorXUnits: options.style.anchorXUnits || (( options.style.iconAnchor || options.style.iconAnchor === 0) ? 'pixels' : 'fraction'),
+                     anchorYUnits: options.style.anchorYUnits || (( options.style.iconAnchor || options.style.iconAnchor === 0) ? 'pixels' : 'fraction'),
+                     src: options.style.iconUrl || options.style.symbolUrlCustomized || options.style.symbolUrl
                  }))
              })];
              if (options.style.shadowUrl) {
@@ -68,15 +68,15 @@ module.exports = {
                          anchorYUnits: 'pixels',
                          src: options.style.shadowUrl
                        }))
-                   }), markerStyle [0]];
+                   }), markerStyle[0]];
              }
              return markerStyle;
          }
-     },
-     html: {
-         getIcon: () => {
-             // NOT implemented yet
-             return null;
-         }
-     }
- };
+    },
+    html: {
+        getIcon: () => {
+            // NOT implemented yet
+            return null;
+        }
+    }
+};

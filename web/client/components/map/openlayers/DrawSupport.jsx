@@ -17,6 +17,7 @@ const {reprojectGeoJson, calculateDistance, reproject} = require('../../../utils
 const wgs84Sphere = new ol.Sphere(6378137);
 const {transformPolygonToCircle, isCompletePolygon} = require('../../../utils/DrawSupportUtils');
 const VectorStyle = require('./VectorStyle');
+const {parseStyles} = require('./VectorStyleNew');
 const geojsonFormat = new ol.format.GeoJSON();
 
 /**
@@ -126,7 +127,7 @@ class DrawSupport extends React.Component {
                 if (f.style) {
                     let olFeature = this.toOlFeature(f);
                     if (olFeature) {
-                        olFeature.setStyle(f.style && f.style.type ? VectorStyle.getStyle(f) : this.toOlStyle(f.style, f.selected));
+                        olFeature.setStyle(f.style ? VectorStyle.getStyle(f) : this.toOlStyle(f.style, f.selected));
                     }
                 }
             });
@@ -137,10 +138,23 @@ class DrawSupport extends React.Component {
         let layerStyle = null;
         const styleType = this.convertGeometryTypeToStyleType(newProps.drawMethod);
         if (newProps.style) {
-            layerStyle = newProps.style.type ? VectorStyle.getStyle({ ...newProps, style: {...newProps.style, type: styleType, useSelectedStyle: newProps.options.useSelectedStyle }}, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.valueText && [newProps.features[0].properties.valueText] || [] ) : this.toOlStyle(newProps.style, null, newProps.features[0] && newProps.features[0].type);
+            layerStyle = (ftOl) => {
+                let originalFeature = head(newProps.features) && find(head(newProps.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id) || null;
+                return originalFeature && parseStyles(originalFeature);
+            };
+
+            /*
+                VectorStyle.getStyle({ ...newProps, style: {...newProps.style, type: styleType, useSelectedStyle: newProps.options.useSelectedStyle }}, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.valueText && [newProps.features[0].properties.valueText] || [] );*/
         } else {
-            const style = VectorStyle.defaultStyles[styleType] || VectorStyle.defaultStyles;
-            layerStyle = VectorStyle.getStyle({ ...newProps, style: {...style, type: styleType, useSelectedStyle: newProps.options.useSelectedStyle }}, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.valueText && [newProps.features[0].properties.valueText] || [] );
+            layerStyle = (ftOl) => {
+                let originalFeature = head(newProps.features) && find(head(newProps.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id) || null;
+                if (originalFeature) {
+                    return parseStyles(originalFeature);
+                }
+                return parseStyles({style: VectorStyle.defaultStyles[styleType]});
+            };
+            /*const style = VectorStyle.defaultStyles[styleType] || VectorStyle.defaultStyles;
+            layerStyle = VectorStyle.getStyle({ ...newProps, style: {...style, type: styleType, useSelectedStyle: newProps.options.useSelectedStyle }}, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.valueText && [newProps.features[0].properties.valueText] || [] );*/
         }
         this.geojson = new ol.format.GeoJSON();
         this.drawSource = new ol.source.Vector();
@@ -155,9 +169,16 @@ class DrawSupport extends React.Component {
         if (addInteraction) {
             this.addInteractions(newProps);
         }
+        let newFeature = head(newProps.features);
+        if (newFeature && newFeature.features && newFeature.features.length) {
+            // filtering circles features only when drawing
+            return this.addFeatures(assign({}, newProps, {features: [{...newFeature, features: newFeature.features.filter(f => !f.properties.isCircle || !newProps.options.drawEnabled)}]}));
+        }
+        return this.addFeatures(newProps);
 
+/*
         const feature = this.addFeatures(newProps);
-        return feature;
+        return feature;*/
     };
 
     addFeatures = ({features, drawMethod, options}) => {
@@ -167,6 +188,12 @@ class DrawSupport extends React.Component {
             if (f.type === "FeatureCollection") {
                 let featuresOL = (new ol.format.GeoJSON()).readFeatures(f);
                 featuresOL = featuresOL.map(ft => transformPolygonToCircle(ft, mapCrs));
+                /*featuresOL = featuresOL.forEach(ft => {
+                    // TODO: it does not work anything
+                    let originalFeature = find(f.features, ftTemp => ftTemp.properties.id === ft.getProperties().id);
+                    // for each ft drawn fetch its style from the FeatureCollection
+                    ft.setStyle((ftOl) => parseStyles({...originalFeature.style, useSelectedStyle: options.useSelectedStyle}, originalFeature, ftOl));
+                });*/
                 this.drawSource = new ol.source.Vector({
                     features: featuresOL
                 });
@@ -247,7 +274,11 @@ class DrawSupport extends React.Component {
             this.drawSource.clear();
             feature = this.addFeatures(newProps);
             if (newProps.style) {
-                this.drawLayer.setStyle(VectorStyle.getStyle(newProps, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.valueText && [newProps.features[0].properties.valueText] || [] ));
+                this.drawLayer.setStyle((ftOl) => {
+                    let originalFeature = find(head(newProps.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
+                    return parseStyles(originalFeature);
+                });
+                // this.drawLayer.setStyle(VectorStyle.getStyle(newProps, false, newProps.features[0] && newProps.features[0].properties && newProps.features[0].properties.valueText && [newProps.features[0].properties.valueText] || [] ));
             }
         }
         return feature;
@@ -344,7 +375,9 @@ class DrawSupport extends React.Component {
                     newFeature = this.getNewFeature(newDrawMethod, coordinates);
                     // TODO verify center is projected in 4326 and is an array
                     center = reproject(center, this.getMapCrs(), "EPSG:4326", false);
-                    newFeature.setProperties({isCircle: true, radius, center: [center.x, center.y]});
+                    const originalId = newProps && newProps.features && newProps.features.length && newProps.features[0].features && newProps.features[0].features.length && newProps.features[0].features.filter(f => f.properties.isDrawing)[0].properties.id || this.sketchFeature.get("id");
+                    // this.sketchFeature.set('id', originalId);
+                    newFeature.setProperties({isCircle: true, radius, center: [center.x, center.y], id: originalId});
                 } else if (drawMethod === "Polygon") {
                     newDrawMethod = this.props.drawMethod;
                     let coordinates = drawnGeom.getCoordinates();
@@ -360,7 +393,9 @@ class DrawSupport extends React.Component {
                 }
                 // drawnFeatures is array of ol.Feature
                 const previousFeatures = drawnFeatures.length >= 1 ? [...this.replaceCirclesWithPolygonsInFeatureColl(drawnFeatures)] : [];
-                newFeature.setProperties({id: uuid.v1()});
+                if (!newFeature.getProperties().id) {
+                    newFeature.setProperties({id: uuid.v1()});
+                }
                 const newFeatures = [...previousFeatures, newFeature];
                 // create FeatureCollection externalize as function
                 let newFeatureColl = geojsonFormat.writeFeaturesObject(newFeatures);
@@ -800,10 +835,16 @@ class DrawSupport extends React.Component {
 
         let newFeature = reprojectGeoJson(head(newProps.features), newProps.options.featureProjection, this.getMapCrs());
         let props;
-        if (newFeature.features && newFeature.features.length) {
+        if (newFeature && newFeature.features && newFeature.features.length) {
+            // filtering circles features only when drawing
+
             props = assign({}, newProps, {features: [newFeature]});
         } else {
-            props = assign({}, newProps, {features: newFeature.geometry ? [{...newFeature.geometry, properties: newFeature.properties}] : []});
+            if (newFeature && newFeature.properties && newFeature.properties.isCircle) {
+                props = assign({}, newProps, {features: []}); // TODO verify this
+            } else {
+                props = assign({}, newProps, {features: newFeature.geometry ? [{...newFeature.geometry, properties: newFeature.properties}] : []});
+            }
         }
         // TODO investigate if this newFeature.geometry is needed instead of only newFeature
         if (!this.drawLayer) {
@@ -1251,10 +1292,10 @@ class DrawSupport extends React.Component {
         }
         return geometry;
     }
-    convertGeometryTypeToStyleType = (geomType) => {
-        switch (geomType) {
+    convertGeometryTypeToStyleType = (drawMethod) => {
+        switch (drawMethod) {
             case "BBOX": return "LineString";
-            default: return geomType;
+            default: return drawMethod;
         }
     }
 

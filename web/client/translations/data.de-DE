@@ -348,6 +348,7 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Fehler beim Laden der Karte",
                     "notFound": "Karte nicht gefunden",
                     "notAccessible": "Karte nicht zugänglich",
                     "unknownError": "<p> <small> Einer der folgenden Gründe könnte die Ursache sein: </small> <ul><li> Sie haben keine Zugriffsberechtigung </li> <li> Sie versuchen, auf eine nicht vorhandene Map zuzugreifen </li> <li> Die Karte wurde entfernt </li></ul> <p>"

@@ -16,7 +16,6 @@ const {set} = require('../../utils/ImmutableUtils');
 const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS, purgeMapInfoResults} = require('../../actions/mapInfo');
 const {configureMap} = require('../../actions/config');
 const {CLOSE_IDENTIFY} = require('../../actions/mapInfo');
-// const {TOGGLE_CONTROL} = require('../../actions/controls');
 const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation,
     setStyle, highlight, cleanHighlight, download, loadAnnotations, SET_STYLE, toggleStyle,
     resetCoordEditor, changeRadius, changeText, changeSelected, confirmDeleteFeature, openEditor, SHOW_ANNOTATION
@@ -312,8 +311,13 @@ describe('annotations Epics', () => {
         store.dispatch(action);
     });
     it('when the styler is opened, clicks on the map does not add new points to the feature, styling=true', (done) => {
+
+        let newState = set("annotations.styling", true, defaultState);
+        newState = set("annotations.selected", {style: {iconGliph: "comment", iconShape: "square", iconColor: "blue"}}, newState);
+        newState = set("draw.drawMethod", "Polygon", newState);
+
         store = mockStore(
-            set("annotations.styling", true, defaultState)
+            newState
         );
 
         store.subscribe(() => {
@@ -325,11 +329,14 @@ describe('annotations Epics', () => {
         });
         const action = toggleStyle({});
         store.dispatch(action);
-
     });
     it('when the styler is opened, clicks on the map does not add new points to the feature, styling=false', (done) => {
+        let newState = set("annotations.styling", true, defaultState);
+        newState = set("annotations.selected", {style: {iconGliph: "comment", iconShape: "square", iconColor: "blue"}}, newState);
+        newState = set("draw.drawMethod", "Polygon", newState);
+
         store = mockStore(
-            set("annotations.styling", false, defaultState)
+            set("annotations.styling", false, newState)
         );
 
         store.subscribe(() => {

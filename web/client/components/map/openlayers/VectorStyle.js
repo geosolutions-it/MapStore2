@@ -72,7 +72,7 @@ const lastPointOfPolylineStyle = ({radius = 5, fillColor = 'red', applyToPolygon
 });
 
 /**
-    creates styles to highlight/customize start and end point of a polylin
+    creates styles to highlight/customize start and end point of a polyline
 */
 const startEndPolylineStyle = (startPointOptions = {}, endPointOptions = {}) => {
     return [firstPointOfPolylineStyle(startPointOptions), lastPointOfPolylineStyle(endPointOptions)];
@@ -87,6 +87,7 @@ const getTextStyle = (tempStyle, valueText, highlight = false) => {
             text: valueText || "",
             font: tempStyle.font,
             fill: new ol.style.Fill({
+                // WRONG, SETTING A FILL STYLE WITH A COLOR (STROKE) ATTRIBUTE
                 color: colorToRgbaStr(tempStyle.stroke || tempStyle.color || '#000000', tempStyle.opacity || 1)
             }),
             // halo
@@ -117,8 +118,13 @@ const STYLE_POINT = {
     fillOpacity: 0.2,
     radius: 10
 };
-const STYLE_CIRCLE = STYLE_POINT;
-
+const STYLE_CIRCLE = {
+    color: '#ffcc33',
+    opacity: 1,
+    weight: 3,
+    fillColor: '#ffffff',
+    fillOpacity: 0.2
+};
 const STYLE_TEXT = {
     fontStyle: 'normal',
     fontSize: '14',
@@ -286,7 +292,7 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
             }),
             new ol.style.Style(tempStyle ? {
                 stroke: new ol.style.Stroke( tempStyle && tempStyle.stroke ? tempStyle.stroke : {
-                    color: options.style.useSelectedStyle ? blue : colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
+                    color: colorToRgbaStr(options.style && tempStyle.color || "#0000FF", tempStyle.opacity || 1),
                     lineDash: options.style.highlight ? [10] : [0],
                     width: tempStyle.weight || 1
                 }),
@@ -300,7 +306,7 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
             })
         ];
         let startEndPointStyles = options.style.useSelectedStyle ? startEndPolylineStyle({radius: tempStyle.weight, applyToPolygon: true}, {radius: tempStyle.weight, applyToPolygon: true}) : [];
-        return [...styles, ...startEndPointStyles];
+        return [ ...startEndPointStyles, ...styles];
     }
 
     if ((geomType === "MultiPoint" || geomType === "Point") && (tempStyle.iconUrl || tempStyle.iconGlyph) ) {
@@ -376,6 +382,8 @@ const getValidStyle = (geomType, options = { style: defaultStyles}, isDrawing, t
 
 function getStyle(options, isDrawing = false, textValues = []) {
 
+    // this is causing max call stack size exceeded because it contains ol functions and it comes from the store
+    // we suggest to remove this behaviour
     let style = options.nativeStyle;
     let type;
     let textStrings = textValues;

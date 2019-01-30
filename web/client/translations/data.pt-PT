@@ -346,6 +346,7 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Error loading map",
                     "notFound": "Mapa não encontrado",
                     "notAccessible": "Mapa não acessível",
                     "unknownError": "<p><small>Uma das seguintes razões poderá ser a causa:</small> <ul><li>não tem permissões de acesso</li> <li>está a tentar a aceder a um mapa não existente</li> <li>o mapa foi removido</li></ul><p>"
@@ -1161,7 +1162,7 @@
                 "downloadGridData": "Download grid data",
                 "hideShowColumns": "Hide/show columns",
                 "zoomAll": "Zoom to page extent",
-                "syncOnMap": "Sync map with fitler",
+                "syncOnMap": "Sync map with filter",
                 "createNewChart": "Create a chart for the selected layer"
             }
         },

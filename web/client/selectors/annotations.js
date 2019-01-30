@@ -42,6 +42,7 @@ const unsavedGeometrySelector = (state) => get(state, "annotations.unsavedGeomet
 const unsavedStyleSelector = (state) => get(state, "annotations.unsavedStyle", false);
 const errorsSelector = (state) => get(state, "annotations.validationErrors", {});
 const configSelector = (state) => get(state, "annotations.config", {});
+const symbolListSelector = (state) => get(state, "annotations.symbolList", []);
 
 const annotationsInfoSelector = (state) => (assign({}, {
     showEdit: isOpenlayers(state),
@@ -68,7 +69,8 @@ const annotationsInfoSelector = (state) => (assign({}, {
     styling: stylingSelector(state),
     unsavedChanges: unsavedChangesSelector(state),
     unsavedGeometry: unsavedGeometrySelector(state),
-    unsavedStyle: unsavedStyleSelector(state)
+    unsavedStyle: unsavedStyleSelector(state),
+    symbolList: symbolListSelector(state)
     }) );
 
 const annotationsSelector = (state) => ({
@@ -129,5 +131,6 @@ module.exports = {
     unsavedStyleSelector,
     formatSelector,
     errorsSelector,
-    configSelector
+    configSelector,
+    symbolListSelector
 };

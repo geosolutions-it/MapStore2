@@ -7,11 +7,13 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var ol = require('openlayers');
-const {isEqual} = require('lodash');
-const VectorStyle = require('./VectorStyle');
+const React = require('react');
+const axios = require('axios');
+const ol = require('openlayers');
+const {isEqual, find, castArray} = require('lodash');
+const {parseStyles} = require('./VectorStyleNew');
 const {transformPolygonToCircle} = require('../../../utils/DrawSupportUtils');
+const {createStylesAsync} = require('../../../utils/VectorStyleUtils');
 
 class Feature extends React.Component {
     static propTypes = {
@@ -86,13 +88,32 @@ class Feature extends React.Component {
             }).forEach(
                 (f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
 
-            if (props.style && (props.style !== props.layerStyle)) {
-                this._feature.forEach((f) => { f.setStyle(VectorStyle.getStyle({style: {...props.style, type: f.getGeometry().getType()}, properties: f.getProperties()})); });
+            if (props.style && (props.style !== props.layerStyle)) { // TODO test this logic with other functionalities
+                this._feature.forEach((f) => {
+                    let promises = [];
+                    let geoJSONFeature = {};
+                    if ( props.type === "FeatureCollection") {
+                        geoJSONFeature = find(props.features, (ft) => ft.properties.id === f.getProperties().id);
+                        promises = createStylesAsync(castArray(geoJSONFeature.style));
+                    } else {
+                        // TODO Check if this works, it should be a normal geojson Feature
+                        promises = createStylesAsync(castArray(props.style));
+                        geoJSONFeature = {
+                            type: props.type,
+                            geometry: props.geometry,
+                            properties: props.properties,
+                            style: props.style
+                        };
+                    }
+
+                    axios.all(promises).then((styles) => {
+                        f.setStyle(() => parseStyles({...geoJSONFeature, style: styles}));
+                    });
+                });
             }
             props.container.getSource().addFeatures(this._feature);
         }
     };
-
 
     removeFromContainer = () => {
         if (this._feature) {

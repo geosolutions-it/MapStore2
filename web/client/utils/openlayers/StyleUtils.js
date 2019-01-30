@@ -19,6 +19,7 @@ const toVectorStyle = function(layer, style) {
     let geomT = getGeomType(layer);
     if (style.marker && (geomT === 'Point' || geomT === 'MultiPoint')) {
         newLayer.styleName = "marker";
+        newLayer.handleClickOnLayer = true;
     } else {
         newLayer.style = {
             weight: style.width,
@@ -38,6 +39,7 @@ const toVectorStyle = function(layer, style) {
         switch (getGeomType(layer)) {
         case 'Polygon':
         case 'MultiPolygon': {
+            // TODO clear this, it goes in maximum call stack size exceeded
             newLayer.nativeStyle = new ol.style.Style({
                 stroke: stroke,
                 fill: fill
@@ -47,6 +49,7 @@ const toVectorStyle = function(layer, style) {
         case 'MultiLineString':
         case 'LineString':
             {
+                // TODO clear this, it goes in maximum call stack size exceeded
                 newLayer.nativeStyle = new ol.style.Style({
                     stroke: stroke
                 });
@@ -54,6 +57,7 @@ const toVectorStyle = function(layer, style) {
             }
         case 'Point':
         case 'MultiPoint': {
+            // TODO clear this, it goes in maximum call stack size exceeded
             newLayer.nativeStyle = new ol.style.Style({
                 image: new ol.style.Circle({
                     radius: style.radius,
@@ -63,6 +67,7 @@ const toVectorStyle = function(layer, style) {
             break;
         }
         case 'GeometryCollection': {
+            // TODO clear this, it goes in maximum call stack size exceeded
             newLayer.nativeStyle = new ol.style.Style({
                 radius: style.radius,
                 stroke: stroke,
