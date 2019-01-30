@@ -360,7 +360,7 @@ const CatalogUtils = {
             matrixIds: type === "wmts" ? record.matrixIds || [] : undefined,
             description: record.description || "",
             tileMatrixSet: type === "wmts" ? record.tileMatrixSet || [] : undefined,
-            credits: record.credits,
+            credits: !ConfigUtils.getConfigProp("noCreditsFromCatalog") && record.credits,
             bbox: {
                 crs: record.boundingBox.crs,
                 bounds: {
