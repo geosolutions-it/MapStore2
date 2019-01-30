@@ -481,10 +481,10 @@ describe('LayersUtils', () => {
                 },
                 l => {
                     expect(l.params).toNotExist();
-                    Object.keys(l).map( k => expect(k).toNotBe("params"));
-                    Object.keys(l).map(k => expect(k).toNotBe("credits"));
-                    Object.keys(l).map(k => expect(k).toNotBe("id"));
-                    expect(l).toEqual(layers[0][0]);
+                    const keys = Object.keys(l);
+                    expect(keys).toContain('id');
+                    expect(keys).toNotContain('params');
+                    expect(keys).toNotContain('credits');
                 }
             ],
             // save params if present
@@ -511,7 +511,7 @@ describe('LayersUtils', () => {
                 }
             ]
         ];
-        layers.map(([layer, test]) => test(layer) );
+        layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
     });
 
 });
