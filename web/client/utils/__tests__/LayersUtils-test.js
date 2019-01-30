@@ -457,5 +457,18 @@ describe('LayersUtils', () => {
         expect(RES_4[0].visibility).toBe(true);
 
     });
+    it('creditsToAttribution', () => {
+        const TESTS = [
+            [{ title: "test"}, 'test'], // text only
+            [{ imageUrl: "image.png" }, '<img src="image.png" >'], // image and text
+            [{ title: "test", imageUrl: "image.png" }, '<img src="image.png" title="test">'], // image and text
+            [{ title: "test", link: "http://url.com" }, '<a href="http://url.com" target="_blank">test</a>'], // text with link
+            [{ title: "test", link: "http://url.com", imageUrl: "image.png" }, '<a href="http://url.com" target="_blank"><img src="image.png" title="test"></a>'], // text, image, link
+            [[], undefined], // no data returns undefined
+            [[{}], undefined], // empty object returns undefined
+            [{ link: "http://url.com" }, undefined] // only link returns undefined
+        ];
+        TESTS.map(([credits, expectedResult]) => expect(LayersUtils.creditsToAttribution(credits)).toBe(expectedResult));
+    });
 
 });

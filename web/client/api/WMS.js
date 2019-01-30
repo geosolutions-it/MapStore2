@@ -16,7 +16,7 @@ const xml2js = require('xml2js');
 
 const capabilitiesCache = {};
 
-const {isArray, castArray} = require('lodash');
+const {isArray, castArray, get} = require('lodash');
 
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
@@ -27,6 +27,39 @@ const parseUrl = (url) => {
             request: "GetCapabilities"
         }, parsed.query)
     }));
+};
+
+/**
+ * Extract `credits` property from layer's Attribution
+ * (Web Map Service Implementation Specification OGC 01-068r3 - 7.1.4.5.9 )
+ * @param {object} attribution Attribution object of WMS Capabilities (parsed with xml2js default format)
+ * @return {object} an object to place in `credits` attribute of layer with the structure in the example.
+ * @example
+ * {
+ *     title: "content of <Title></Title>",
+ *     imageUrl: "url of the image linked as LogoURL",
+ *     link: "http://some.site.of.reference",
+ *     logo: { // more info about the logo
+ *         format: "image/png",
+ *         width: "200",
+ *         height: "100"
+ *     }
+ * }
+ *
+ */
+const extractCredits = attribution => {
+    const title = attribution && attribution.Title;
+    const logo = attribution.LogoURL && {
+        ...(get(attribution, 'LogoURL.$') || {}),
+        format: get(attribution, 'LogoURL.Format') // e.g. image/png
+    };
+    const link = get(attribution, 'OnlineResource.$["xlink:href"]');
+    return {
+        title,
+        logo,
+        imageUrl: get(attribution, 'LogoURL.OnlineResource.$["xlink:href"]'),
+        link
+    };
 };
 
 const _ = require('lodash');
@@ -44,6 +77,7 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
     const service = (json.WMS_Capabilities || json.WMT_MS_Capabilities || {}).Service;
     const onlineResource = getOnlineResource(root);
     const SRSList = root.Layer && (root.Layer.SRS || root.Layer.CRS) || [];
+    const credits = root.Layer && root.Layer.Attribution && extractCredits(root.Layer.Attribution);
     const layersObj = flatLayers(root);
     const layers = isArray(layersObj) ? layersObj : [layersObj];
     const filteredLayers = layers
@@ -55,7 +89,7 @@ const searchAndPaginate = (json = {}, startPosition, maxRecords, text) => {
         service,
         records: filteredLayers
             .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
-            .map((layer) => assign({}, layer, {onlineResource, SRS: SRSList}))
+            .map((layer) => assign({}, layer, { onlineResource, SRS: SRSList, credits: layer.Attribution ? extractCredits(layer.Attribution) : credits}))
     };
 };
 

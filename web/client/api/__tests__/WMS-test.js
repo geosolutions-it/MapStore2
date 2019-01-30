@@ -131,6 +131,22 @@ describe('Test correctness of the WMS APIs', () => {
             }
         });
     });
+    it('GetRecords attribution creates the credits object', (done) => {
+        // note: maxRecords = 2 because of strange pagination system. Need to restore this when fixed
+        API.getRecords('base/web/client/test-resources/wms/attribution.xml', 0, 2, '').then((result) => {
+            try {
+                expect(result).toExist();
+                expect(result.service).toExist();
+                expect(result.numberOfRecordsMatched).toBe(2);
+                expect(result.records[0]).toExist();
+                expect(result.records[0].credits).toExist();
+                expect(result.records[0].credits.imageUrl).toBe('logo.png');
+                done();
+            } catch (ex) {
+                done(ex);
+            }
+        });
+    });
     it('GetRecords 1.1.1', (done) => {
         API.getRecords('base/web/client/test-resources/wms/GetCapabilities-1.1.1.xml', 0, 1, '').then((result) => {
             try {
