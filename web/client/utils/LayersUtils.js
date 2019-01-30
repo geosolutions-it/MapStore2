@@ -361,7 +361,7 @@ const LayersUtils = {
         };
     },
     saveLayer: (layer) => {
-        return {
+        return assign({
             id: layer.id,
             features: layer.features,
             format: layer.format,
@@ -400,10 +400,10 @@ const LayersUtils = {
             useForElevation: layer.useForElevation || false,
             hidden: layer.hidden || false,
             origin: layer.origin,
-            thematic: layer.thematic,
-            credits: layer.credits,
-            ...assign({}, layer.params ? {params: layer.params} : {})
-        };
+            thematic: layer.thematic
+        },
+        layer.params ? { params: layer.params } : {},
+        layer.credits ? { credits: layer.credits } : {});
     },
     /**
     * default regex rule for searching for a /geoserver/ string in a url
