@@ -75,9 +75,9 @@ So, if you want to test latest features use DEV, if you are not that brave use S
 Start developing your custom app
 ------------
 
-Clone the repository with the --recursive option to automatically clone submodules:
+Clone the repository:
 
-`git clone --recursive https://github.com/geosolutions-it/MapStore2.git`
+`git clone https://github.com/geosolutions-it/MapStore2.git`
 
 Install NodeJS >= 7.10.0 , if needed, from [here](https://nodejs.org/en/download/releases/).
 
