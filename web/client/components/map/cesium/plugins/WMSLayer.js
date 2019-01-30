@@ -83,7 +83,7 @@ function wmsToCesiumOptions(options) {
         proxy = ProxyUtils.needProxy(options.url) && proxyUrl;
     }
     const cr = options.credits;
-    const credit = cr ? new Cesium.Credit(cr.text, cr.imageUrl, cr.link) : options.attribution;
+    const credit = cr ? new Cesium.Credit(cr.text || cr.title, cr.imageUrl, cr.link) : options.attribution;
     // NOTE: can we use opacity to manage visibility?
     return assign({
         url: "{s}",
