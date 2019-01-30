@@ -615,7 +615,7 @@ const CoordinatesUtils = {
      * Return the viewport geometry from the view bounds
      * @param bounds {object} bounds {minx, miny, maxx, maxy}
      * @param projection {string} the projection of bounds coordinates
-     * @return {object} geomtry {type, radius, projection, coordinates, extent, center}
+     * @return {object} geometry {type, radius, projection, coordinates, extent, center}
      */
     getViewportGeometry: (bounds, projection) => {
         if (head(supportedSplitExtentEPSG.filter(epsg => epsg === projection))) {
@@ -716,7 +716,7 @@ const CoordinatesUtils = {
     /**
      * Return true if coordinates are inside of visible area
      * @param coords {object} coordinates {lat, lng}
-     * @param map {object} must containt present map
+     * @param map {object} must contain present map
      * @param layout {object} current layout on map {bottom, top, left, right}
      * @param resolution {number} resolutions of current map zoom
      * @return {bool}
@@ -758,7 +758,7 @@ const CoordinatesUtils = {
     /**
      * Return new center position based of visible area
      * @param center {object} new visible center {lat, lng}
-     * @param map {object} must containt present map
+     * @param map {object} must contain present map
      * @param layout {object} current layout on map {bottom, top, left, right}
      * @param resolution {number} resolutions of current map zoom
      * @return {object} {pos, zoom, crs}
@@ -816,7 +816,7 @@ const CoordinatesUtils = {
     },
     /**
      * choose to round or floor value incase of 0 fractional digits
-     * @return {number} the rounded value or the orignal one
+     * @return {number} the rounded value or the original one
     */
     roundCoord: ({ roundingBehaviour = "round", value = 0, maximumFractionDigits = 0 } = {}) => {
         if (maximumFractionDigits === 0 && Math[roundingBehaviour]) {

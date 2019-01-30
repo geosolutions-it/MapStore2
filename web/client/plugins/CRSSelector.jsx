@@ -146,7 +146,7 @@ const crsSelector = connect(
   * @prop {object[]} projectionDefs list of additional project definitions
   * @prop {string[]} cfg.filterAllowedCRS list of allowed crs in the combobox list to used as filter for the one of retrieved proj4.defs()
   * @prop {object} cfg.additionalCRS additional crs added to the list. The label param is used after in the combobox.
-  * @prop {array} cfg.allowedRoles list of the authuried roles that can use the plugin, if you want all users to access the plugin, add a "ALL" element to the array.
+  * @prop {array} cfg.allowedRoles list of the authorized roles that can use the plugin, if you want all users to access the plugin, add a "ALL" element to the array.
   * @example
   * // If you want to add some crs you need to provide a definition and adding it in the additionalCRS property
   * // Put the following lines at the first level of the localconfig

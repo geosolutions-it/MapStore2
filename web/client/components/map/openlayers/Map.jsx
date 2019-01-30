@@ -215,7 +215,7 @@ class OpenlayersMap extends React.Component {
                     newProps.center.x,
                     newProps.center.y
                 ], 'EPSG:4326', mapProjection);
-                this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view));
+                this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, this.props.projection));
                 const mapExtent = mapProjection && newProps.maxExtent && CoordinatesUtils.reprojectBbox(newProps.maxExtent, mapProjection, 'EPSG:4326');
                 // perform a check if the data and the projection are compatible
                 if (newProps.children) {
@@ -374,7 +374,7 @@ class OpenlayersMap extends React.Component {
         let view = this.map.getView();
         let tempCenter = view.getCenter();
         let projectionExtent = view.getProjection().getExtent();
-        // prevent user from paning outside the projection extent
+        // prevent user from dragging outside the projection extent
         if (tempCenter[0] >= projectionExtent[0] && tempCenter[0] <= projectionExtent[2] &&
             tempCenter[1] >= projectionExtent[1] && tempCenter[1] <= projectionExtent[3]) {
             let c = this.normalizeCenter(view.getCenter());
@@ -402,12 +402,22 @@ class OpenlayersMap extends React.Component {
         return !isEqual(resolutions, newResolutions);
     };
 
-    createView = (center, zoom, projection, options) => {
+    createView = (center, zoom, projection, options, oldProjection) => {
+        // reprojecting the extent of the newly created view. If the extent is set in the localConfig file
+        let newOptions = options;
+        if (options && options.extent) {
+            newOptions.extent = CoordinatesUtils.reprojectBbox(options.extent, oldProjection || 'EPSG:3857', projection);
+
+        }
+        /*
+        * setting the zoom level in the localConfig file is co-related to the projection extent(size)
+        * it is recommended to use projections with the same coverage area (extent). If you want to have the same restricted zoom level (minZoom)
+        */
         const viewOptions = assign({}, {
             projection: CoordinatesUtils.normalizeSRS(projection),
             center: [center.x, center.y],
             zoom: zoom
-        }, options || {});
+        }, newOptions || {});
         return new ol.View(viewOptions);
     };
 
