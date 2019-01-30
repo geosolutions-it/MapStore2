@@ -401,6 +401,7 @@ const LayersUtils = {
             hidden: layer.hidden || false,
             origin: layer.origin,
             thematic: layer.thematic,
+            credits: layer.credits,
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },
@@ -502,6 +503,11 @@ const LayersUtils = {
 
         }
         return layers;
+    },
+    creditsToAttribution: ({ imageUrl, link, title }) => {
+        // TODO: check if format is valid for an img (svg, for instance, may not work)
+        const html = imageUrl ? `<img src="${imageUrl}" ${title ? `title="${title}"` : ``}>` : title;
+        return link && html ? `<a href="${link}" target="_blank">${html}</a>` : html;
     }
 };
 

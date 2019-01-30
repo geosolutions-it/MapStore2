@@ -17,6 +17,8 @@ const objectAssign = require('object-assign');
 const {isArray, isNil} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const ElevationUtils = require('../../../../utils/ElevationUtils');
+const { creditsToAttribution } = require('../../../../utils/LayersUtils');
+
 require('leaflet.nontiledlayer');
 
 L.NonTiledLayer.WMSCustom = L.NonTiledLayer.WMS.extend({
@@ -156,12 +158,12 @@ const removeNulls = (obj = {}) => {
     }, {});
 };
 
-
 function wmsToLeafletOptions(options) {
     var opacity = options.opacity !== undefined ? options.opacity : 1;
     const params = optionsToVendorParams(options);
     // NOTE: can we use opacity to manage visibility?
     const result = objectAssign({}, options.baseParams, {
+        attribution: options.credits && creditsToAttribution(options.credits),
         layers: options.name,
         styles: options.style || "",
         format: options.format || 'image/png',

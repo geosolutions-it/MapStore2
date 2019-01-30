@@ -162,6 +162,28 @@ describe('Cesium layer', () => {
         expect(map.imageryLayers._layers[0]._imageryProvider._tileProvider._subdomains.length).toBe(1);
         expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toExist();
     });
+    it('wms layer with credits', () => {
+        var options = {
+            "type": "wms",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://demo.geo-solutions.it/geoserver/wms",
+            credits: {
+                imageUrl: "test.png",
+                title: "test"
+            }
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="wms"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+        expect(layer).toExist();
+        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers._layers[0].imageryProvider.credit).toExist();
+    });
     it('creates a wms layer with caching for Cesium map', () => {
         var options = {
             "type": "wms",
