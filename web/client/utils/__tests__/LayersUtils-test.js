@@ -470,5 +470,48 @@ describe('LayersUtils', () => {
         ];
         TESTS.map(([credits, expectedResult]) => expect(LayersUtils.creditsToAttribution(credits)).toBe(expectedResult));
     });
+    it('saveLayer', () => {
+        const layers = [
+            // no params if not present
+            [
+                {
+                    name: "test",
+                    title: "test",
+                    type: "wms"
+                },
+                l => {
+                    expect(l.params).toNotExist();
+                    const keys = Object.keys(l);
+                    expect(keys).toContain('id');
+                    expect(keys).toNotContain('params');
+                    expect(keys).toNotContain('credits');
+                }
+            ],
+            // save params if present
+            [
+                {
+                    params: {
+                        viewParams: "a:b"
+                    }
+                },
+                l => {
+                    expect(l.params).toExist();
+                    expect(l.params.viewParams).toExist();
+                }
+            ],
+            // save credits if present
+            [
+                {
+                    credits: {
+                        title: "test"
+                    }
+                },
+                l => {
+                    expect(l.credits).toExist();
+                }
+            ]
+        ];
+        layers.map(([layer, test]) => test(LayersUtils.saveLayer(layer)) );
+    });
 
 });

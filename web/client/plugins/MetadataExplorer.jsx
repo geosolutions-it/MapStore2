@@ -195,6 +195,9 @@ const API = {
 };
 /**
  * MetadataExplorer plugin. Shows the catalogs results (CSW, WMS and WMTS).
+ * Some useful flags in `localConfig.json`:
+ * - `noCreditsFromCatalog`: avoid add credits (attribution) from catalog
+ *
  * @class
  * @name MetadataExplorer
  * @memberof plugins
