@@ -42,7 +42,9 @@ class OpenlayersMap extends React.Component {
         interactive: PropTypes.bool,
         onCreationError: PropTypes.func,
         bbox: PropTypes.object,
-        onWarning: PropTypes.func
+        onWarning: PropTypes.func,
+        onSetMapView: PropTypes.func,
+        extent: PropTypes.array
     };
 
     static defaultProps = {
@@ -57,6 +59,7 @@ class OpenlayersMap extends React.Component {
         onLayerLoading: () => {},
         onLayerLoad: () => {},
         onLayerError: () => {},
+        onSetMapView: () => {},
         resize: 0,
         registerHooks: true,
         interactive: true
@@ -375,7 +378,7 @@ class OpenlayersMap extends React.Component {
         let tempCenter = view.getCenter();
         let projectionExtent = view.getProjection().getExtent();
         // prevent user from dragging outside the projection extent
-        if (tempCenter[0] >= projectionExtent[0] && tempCenter[0] <= projectionExtent[2] &&
+        if (tempCenter && tempCenter[0] >= projectionExtent[0] && tempCenter[0] <= projectionExtent[2] &&
             tempCenter[1] >= projectionExtent[1] && tempCenter[1] <= projectionExtent[3]) {
             let c = this.normalizeCenter(view.getCenter());
             let bbox = view.calculateExtent(this.map.getSize());
@@ -403,12 +406,15 @@ class OpenlayersMap extends React.Component {
     };
 
     createView = (center, zoom, projection, options, oldProjection) => {
-        // reprojecting the extent of the newly created view. If the extent is set in the localConfig file
-        let newOptions = options;
+    // reprojecting the extent of the newly created view. If the extent is set in the localConfig file
+        let newOptions = assign({}, options);
         if (options && options.extent) {
-            newOptions.extent = CoordinatesUtils.reprojectBbox(options.extent, oldProjection || 'EPSG:3857', projection);
-
+            if (oldProjection) {
+                newOptions = assign({}, options, {extent: CoordinatesUtils.reprojectBbox(this.props.extent || options.extent, oldProjection, projection)});
+            }
+            this.props.onSetMapView(newOptions.extent);
         }
+
         /*
         * setting the zoom level in the localConfig file is co-related to the projection extent(size)
         * it is recommended to use projections with the same coverage area (extent). If you want to have the same restricted zoom level (minZoom)

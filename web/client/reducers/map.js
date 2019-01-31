@@ -8,7 +8,7 @@
 
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, CHANGE_MAP_SCALES, ZOOM_TO_EXTENT, PAN_TO,
-    CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT, RESIZE_MAP} = require('../actions/map');
+    CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT, RESIZE_MAP, SET_MAP_VIEW_EXTENT} = require('../actions/map');
 const {isArray} = require('lodash');
 
 
@@ -33,6 +33,10 @@ function mapConfig(state = null, action) {
     case CHANGE_MAP_CRS:
         return assign({}, state, {
             projection: action.crs
+        });
+    case SET_MAP_VIEW_EXTENT:
+        return assign({}, state, {
+            extent: action.extent
         });
     case CHANGE_MAP_SCALES:
         if (action.scales) {
