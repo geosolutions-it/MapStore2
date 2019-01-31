@@ -565,7 +565,7 @@
             "color": "Colore",
             "lineDash": "Tratteggio",
             "stroke": "Linea",
-            "opacity": "Opacità"
+            "opacity": "Opacità",
             "width": "Larghezza",
             "font": {
                 "textColor": "Colore",
