@@ -560,16 +560,28 @@
             "serviceslistempty": "Aucun service personnalisé n'a été défini"
         },
         "draw": {
-            "fill": "Remplissage:",
-            "stroke": "Ligne:",
-            "strokeWidth": "Largeur de ligne:",
+            "fill": "Remplissage",
+            "text": "Texte",
+            "fontTitle": "Font",
+            "color": "Couleur",
+            "lineDash": "Ligne tiret",
+            "stroke": "Ligne",
+            "opacity": "Opacité",
+            "width": "Largeur",
             "font": {
-                "textColor": "couleur du texte",
-                "family": "font-family",
-                "size": "font-size",
-                "textAlign": "alignement du texte",
-                "style": "font-style",
-                "weight": "font-weight"
+                "textColor": "Couleur",
+                "family": "Famille",
+                "size": "Taille",
+                "style": "Style",
+                "weight": "Poids",
+                "textAlign": "Alignement"
+            },
+            "marker": {
+                "layout": "Disposition",
+                "shape": "Forme",
+                "size": "Taille",
+                "type": "Type",
+                "icon": "Icône"
             }
         },
         "drawLocal": {
@@ -801,6 +813,7 @@
             "save": "Enregistrer",
             "cancel": "Annuler",
             "back": "Arrière",
+            "applyStyle": "Appliquer le style",
             "addMarker": "Ajouter une géométrie",
             "styleGeometry": "Changer le style",
             "deleteGeometry": "Supprimer toutes les géométries d'annotations",

@@ -562,18 +562,11 @@
             "fill": "Fill",
             "text": "Text",
             "fontTitle": "Font",
-            "stroke": "Stroke",
             "color": "Color",
             "lineDash": "LineDash",
+            "stroke": "Stroke",
             "opacity": "Opacity",
             "width": "Width",
-            "marker": {
-                "layout": "Layout",
-                "shape": "Shape",
-                "size": "Size",
-                "type": "Type",
-                "icon": "Icon"
-            },
             "font": {
                 "textColor": "Color",
                 "family": "Family",
@@ -581,6 +574,13 @@
                 "style": "Style",
                 "weight": "Weight",
                 "textAlign": "Align"
+            },
+            "marker": {
+                "layout": "Layout",
+                "shape": "Shape",
+                "size": "Size",
+                "type": "Type",
+                "icon": "Icon"
             }
         },
         "drawLocal": {

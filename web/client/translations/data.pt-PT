@@ -556,6 +556,31 @@
             "s_priority_info": "Used to sort search results, higher values first. Nominatim results have priority = 5",
             "serviceslistempty": "No custom services defined"
         },
+        "draw": {
+            "fill": "Fill",
+            "text": "Text",
+            "fontTitle": "Font",
+            "color": "Color",
+            "lineDash": "LineDash",
+            "stroke": "Stroke",
+            "opacity": "Opacity",
+            "width": "Width",
+            "font": {
+                "textColor": "Color",
+                "family": "Family",
+                "size": "Size",
+                "style": "Style",
+                "weight": "Weight",
+                "textAlign": "Align"
+            },
+            "marker": {
+                "layout": "Layout",
+                "shape": "Shape",
+                "size": "Size",
+                "type": "Type",
+                "icon": "Icon"
+            }
+        },
         "drawLocal": {
             "draw": {
                 "toolbar": {
@@ -814,6 +839,7 @@
             "save": "Save",
             "cancel": "Cancel",
             "back": "Back",
+            "applyStyle": "Apply Style",
             "addMarker": "Add a new point on the map",
             "styleGeometry": "Choose a different style for points",
             "deleteGeometry": "Remove existing points",

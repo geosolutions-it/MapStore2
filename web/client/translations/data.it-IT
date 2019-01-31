@@ -559,16 +559,28 @@
             "serviceslistempty": "Nessun servizio definito"
         },
         "draw": {
-            "fill": "Riempimento:",
-            "stroke": "Linea:",
-            "strokeWidth": "Larghezza Linea:",
+            "fill": "Riempimento",
+            "text": "Testo",
+            "fontTitle": "Font",
+            "color": "Colore",
+            "lineDash": "Tratteggio",
+            "stroke": "Linea",
+            "opacity": "Opacità"
+            "width": "Larghezza",
             "font": {
-                "textColor": "colore del testo",
-                "family": "font-family",
-                "size": "font-size",
-                "textAlign": "allineamento del testo",
-                "style": "font-style",
-                "weight": "font-weight"
+                "textColor": "Colore",
+                "family": "Famiglia",
+                "size": "Taglia",
+                "style": "Stile",
+                "weight": "Peso",
+                "textAlign": "Allineamento"
+            },
+            "marker": {
+                "layout": "Layout",
+                "shape": "Forma",
+                "size": "Grandezza",
+                "type": "Tipo",
+                "icon": "Icona"
             }
         },
         "drawLocal": {
@@ -800,6 +812,7 @@
             "save": "Salva",
             "cancel": "Annulla",
             "back": "Indietro",
+            "applyStyle": "Applica stile",
             "addMarker": "Aggiungi una geometria",
             "styleGeometry": "Cambia stile",
             "deleteGeometry": "Rimuovi tutte le feature",

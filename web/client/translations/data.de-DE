@@ -559,16 +559,28 @@
             "serviceslistempty": "Keine benutzerdefinierten Services definiert"
         },
         "draw": {
-            "fill": "Füllung:",
-            "stroke": "Linie:",
-            "strokeWidth": "Linienbreite:",
+            "fill": "Füllung",
+            "text": "Text",
+            "fontTitle": "Font",
+            "color": "Farbe",
+            "lineDash": "Zeilenstrich",
+            "stroke": "Linie",
+            "opacity": "Opacity",
+            "width": "Linienbreite",
             "font": {
-                "textColor": "textfarbe",
-                "family": "font-family",
-                "size": "font-size",
-                "textAlign": "ausrichtung des Textes",
-                "style": "font-style",
-                "weight": "font-weight"
+                "textColor": "Farbe",
+                "family": "Familie",
+                "size": "Größe",
+                "style": "Stil",
+                "weight": "Gewicht",
+                "textAlign": "ausrichtung des Textes"
+            },
+            "marker": {
+                "layout": "Layout",
+                "shape": "Gestalten",
+                "size": "Größe",
+                "type": "Typ",
+                "icon": "Symbol"
             }
         },
         "drawLocal": {
@@ -800,6 +812,7 @@
             "save": "Speichern",
             "cancel": "Abbrechen",
             "back": "Zurück",
+            "applyStyle": "Stil anwenden",
             "addMarker": "Fügen Sie eine Geometrie hinzu",
             "styleGeometry": "Stil ändern",
             "deleteGeometry": "Entfernen Sie alle Anmerkungsgeometrien",
