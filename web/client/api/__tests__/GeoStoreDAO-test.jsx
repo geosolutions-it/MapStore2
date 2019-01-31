@@ -11,7 +11,7 @@ const API = require('../GeoStoreDAO');
 const axios = require("../../libs/ajax");
 const MockAdapter = require("axios-mock-adapter");
 
-const mockAxios = new MockAdapter(axios);
+let mockAxios;
 
 const SAMPLE_RULES = {
    "SecurityRuleList": {
@@ -73,11 +73,12 @@ const SAMPLE_XML_RULES = "<SecurityRuleList>"
 describe('Test correctness of the GeoStore APIs', () => {
 
     beforeEach(done => {
+        mockAxios = new MockAdapter(axios);
         setTimeout(done);
     });
 
     afterEach(done => {
-        mockAxios.reset();
+        mockAxios.restore();
         setTimeout(done);
     });
 
