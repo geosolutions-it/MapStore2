@@ -195,7 +195,8 @@ const converters = {
                     params: {
                         name: record.Name
                     }
-                }]
+                }],
+                credits: record.credits
                 };
             });
         }
@@ -359,6 +360,7 @@ const CatalogUtils = {
             matrixIds: type === "wmts" ? record.matrixIds || [] : undefined,
             description: record.description || "",
             tileMatrixSet: type === "wmts" ? record.tileMatrixSet || [] : undefined,
+            credits: !ConfigUtils.getConfigProp("noCreditsFromCatalog") && record.credits,
             bbox: {
                 crs: record.boundingBox.crs,
                 bounds: {

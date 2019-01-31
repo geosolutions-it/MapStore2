@@ -22,10 +22,15 @@
         span {
             color: @ms2-color-text-primary;
         }
-        
+
     }
 
     .leaflet-control-attribution {
+        display: flex;
+        max-height: 2.6em;
+        img {
+            max-height: 2.6em;
+        }
         position: absolute;
         width: 50%;
         height: 30px;
@@ -37,6 +42,16 @@
    }
 
    .ol-attribution.ol-uncollapsible {
+        ul {
+            display: flex;
+            li {
+                margin: auto 2px;
+            }
+        }
+       max-height: 2.6em;
+       img {
+           max-height: 2.6em;
+       }
        position: absolute;
        left: 0;
        height: 30px;
@@ -58,7 +73,7 @@
 
 .ms-prj-selector {
     border: none;
-    
+
     .dropdown-toggle-primary {
         .btn-primary;
         box-shadow: none;
