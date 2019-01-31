@@ -6,6 +6,7 @@
   "main": "index.js",
   "devDependencies": {
     "acorn-jsx": "https://github.com/geosolutions-it/acorn-jsx/tarball/master",
+    "axios-mock-adapter": "1.16.0",
     "babel-core": "6.8.0",
     "babel-eslint": "4.1.8",
     "babel-istanbul-loader": "0.1.0",
