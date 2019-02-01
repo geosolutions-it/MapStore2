@@ -144,7 +144,7 @@ Layers.registerType('wms', {
                 extent: extent,
                 resolutions: mapUtils.getResolutions(),
                 tileSize: options.tileSize ? options.tileSize : 256,
-                origin: options.origin ? options.origin : [extent[0], extent[1]]
+                origin: options.origin ? options.origin : [extent[0], extent[3]]
             })
         }, options);
         const layer = new ol.layer.Tile({
@@ -187,7 +187,7 @@ Layers.registerType('wms', {
                     extent: extent,
                     resolutions: mapUtils.getResolutions(),
                     tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
-                    origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
+                    origin: newOptions.origin ? newOptions.origin : [extent[0], extent[3]]
                 });
             }
             if (changed) {
@@ -204,7 +204,7 @@ Layers.registerType('wms', {
             if (oldOptions.singleTile !== newOptions.singleTile
                 || oldOptions.securityToken !== newOptions.securityToken
                 || oldOptions.ratio !== newOptions.ratio
-                 // no way to remove attribution when credits are removed, so have re-create the layer is needed. Seems to be solved in OL v5.3.0, due to the ol commit 9b8232f65b391d5d381d7a99a7cd070fc36696e9 (https://github.com/openlayers/openlayers/pull/7329)
+                // no way to remove attribution when credits are removed, so have re-create the layer is needed. Seems to be solved in OL v5.3.0, due to the ol commit 9b8232f65b391d5d381d7a99a7cd070fc36696e9 (https://github.com/openlayers/openlayers/pull/7329)
                 || oldOptions.credits !== newOptions.credits && !newOptions.credits
                 ) {
                 // this forces cache empty, required when auth permission changed to avoid caching when unauthorized
@@ -247,7 +247,7 @@ Layers.registerType('wms', {
                                 extent: extent,
                                 resolutions: mapUtils.getResolutions(),
                                 tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
-                                origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
+                                origin: newOptions.origin ? newOptions.origin : [extent[0], extent[3]]
                             })
                         }, newOptions.forceProxy ? {tileLoadFunction: proxyTileLoadFunction} : {}))
                     });
