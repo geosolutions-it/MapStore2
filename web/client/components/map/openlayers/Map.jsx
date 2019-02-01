@@ -216,7 +216,8 @@ class OpenlayersMap extends React.Component {
                     newProps.center.x,
                     newProps.center.y
                 ], 'EPSG:4326', mapProjection);
-                this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, newProps.maxExtent));
+                const ViewExtent = CoordinatesUtils.reprojectBbox(this.map.getView().calculateExtent(this.map.getSize()), this.props.projection, newProps.projection);
+                this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, ViewExtent));
                 const mapExtent = mapProjection && newProps.maxExtent && CoordinatesUtils.reprojectBbox(newProps.maxExtent, mapProjection, 'EPSG:4326');
                 // perform a check if the data and the projection are compatible
                 if (newProps.children) {
@@ -404,9 +405,8 @@ class OpenlayersMap extends React.Component {
     };
 
     createView = (center, zoom, projection, options, newExtent) => {
-    // reprojecting the extent of the newly created view. If the extent is set in the localConfig file
-        const mapExtent = newExtent || this.props.maxExtent;
-        const newOptions = assign({}, options, {extent: mapExtent});
+
+        const newOptions = newExtent ? assign({}, options, {extent: newExtent}) : assign({}, options);
         /*
         * setting the zoom level in the localConfig file is co-related to the projection extent(size)
         * it is recommended to use projections with the same coverage area (extent). If you want to have the same restricted zoom level (minZoom)
