@@ -22,7 +22,6 @@ const CREATION_ERROR_LAYER = 'CREATION_ERROR_LAYER';
 const UPDATE_VERSION = 'UPDATE_VERSION';
 const INIT_MAP = 'INIT_MAP';
 const RESIZE_MAP = 'RESIZE_MAP';
-const SET_MAP_VIEW_EXTENT = 'SET_MAP_VIEW_EXTENT';
 
 
 function errorLoadingFont(err = {family: ""}) {
@@ -60,12 +59,6 @@ function changeMapCrs(crs) {
     return {
         type: CHANGE_MAP_CRS,
         crs: crs
-    };
-}
-function setMapViewExtent(extent) {
-    return {
-        type: SET_MAP_VIEW_EXTENT,
-        extent: extent
     };
 }
 
@@ -157,7 +150,6 @@ module.exports = {
     PAN_TO,
     ZOOM_TO_EXTENT,
     CHANGE_MAP_CRS,
-    SET_MAP_VIEW_EXTENT,
     CHANGE_MAP_SCALES,
     CHANGE_MAP_STYLE,
     CHANGE_ROTATION,
@@ -180,6 +172,5 @@ module.exports = {
     errorLoadingFont,
     updateVersion,
     initMap,
-    resizeMap,
-    setMapViewExtent
+    resizeMap
 };

@@ -8,7 +8,7 @@
 
 const React = require('react');
 
-const {creationError, changeMapView, clickOnMap, setMapViewExtent} = require('../../actions/map');
+const {creationError, changeMapView, clickOnMap} = require('../../actions/map');
 const {layerLoading, layerLoad, layerError} = require('../../actions/layers');
 const {changeMousePosition} = require('../../actions/mousePosition');
 const {changeMeasurementState, changeGeometry} = require('../../actions/measurement');
@@ -34,7 +34,6 @@ module.exports = (mapType, actions) => {
     }), assign({}, {
         onCreationError: creationError,
         onMapViewChanges: changeMapView,
-        onSetMapView: setMapViewExtent,
         onClick: clickOnMap,
         onMouseMove: changeMousePosition,
         onLayerLoading: layerLoading,

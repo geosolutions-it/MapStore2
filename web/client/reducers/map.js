@@ -8,7 +8,7 @@
 
 var {CHANGE_MAP_VIEW, CHANGE_MOUSE_POINTER,
     CHANGE_ZOOM_LVL, CHANGE_MAP_CRS, CHANGE_MAP_SCALES, ZOOM_TO_EXTENT, PAN_TO,
-    CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT, RESIZE_MAP, SET_MAP_VIEW_EXTENT} = require('../actions/map');
+    CHANGE_MAP_STYLE, CHANGE_ROTATION, UPDATE_VERSION, ZOOM_TO_POINT, RESIZE_MAP} = require('../actions/map');
 const {isArray} = require('lodash');
 
 
@@ -31,12 +31,12 @@ function mapConfig(state = null, action) {
             mapStateSource: action.mapStateSource
         });
     case CHANGE_MAP_CRS:
+    const ViewExtent = state && state.maxExtent;
+    const currentCrs = state && state.projection;
+
         return assign({}, state, {
+            maxExtent: ViewExtent && CoordinatesUtils.reprojectBbox(ViewExtent, currentCrs, action.crs),
             projection: action.crs
-        });
-    case SET_MAP_VIEW_EXTENT:
-        return assign({}, state, {
-            extent: action.extent
         });
     case CHANGE_MAP_SCALES:
         if (action.scales) {
