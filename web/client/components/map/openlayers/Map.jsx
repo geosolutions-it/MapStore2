@@ -63,10 +63,12 @@ class OpenlayersMap extends React.Component {
     };
 
     componentDidMount() {
-        var center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
         this.props.projectionDefs.forEach(p => {
             projUtils.addProjections(ol, p.code, p.extent, p.worldExtent);
         });
+        // It may be a good idea to check if CoordinateUtils also registered the projectionDefs
+        // normally it happens ad application level.
+        let center = CoordinatesUtils.reproject([this.props.center.x, this.props.center.y], 'EPSG:4326', this.props.projection);
         let interactionsOptions = assign(this.props.interactive ? {} : {
             doubleClickZoom: false,
             dragPan: false,
@@ -287,10 +289,10 @@ class OpenlayersMap extends React.Component {
         const projection = this.map.getView().getProjection();
         const extent = projection.getExtent();
         const size = !extent ?
-            // use an extent that can fit the whole world if need be
+            // use the max width
             360 * ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES] /
                 ol.proj.METERS_PER_UNIT[projection.getUnits()] :
-            Math.max(ol.extent.getWidth(extent), ol.extent.getHeight(extent));
+            ol.extent.getWidth(extent);
 
         const defaultMaxResolution = size / 256 / Math.pow(
             defaultZoomFactor, 0);
@@ -415,7 +417,7 @@ class OpenlayersMap extends React.Component {
         var view = this.map.getView();
         const currentCenter = this.props.center;
         const centerIsUpdated = newProps.center.y === currentCenter.y &&
-                               newProps.center.x === currentCenter.x;
+                                newProps.center.x === currentCenter.x;
 
         if (!centerIsUpdated) {
             // let center = ol.proj.transform([newProps.center.x, newProps.center.y], 'EPSG:4326', newProps.projection);

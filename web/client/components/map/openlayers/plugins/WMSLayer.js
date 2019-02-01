@@ -142,7 +142,7 @@ Layers.registerType('wms', {
             params: queryParameters,
             tileGrid: new ol.tilegrid.TileGrid({
                 extent: extent,
-                resolutions: mapUtils.getResolutions(),
+                resolutions: [...mapUtils.getResolutions()],
                 tileSize: options.tileSize ? options.tileSize : 256,
                 origin: options.origin ? options.origin : [extent[0], extent[3]]
             })
@@ -185,7 +185,7 @@ Layers.registerType('wms', {
                 const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS)).getExtent();
                 layer.getSource().tileGrid = new ol.tilegrid.TileGrid({
                     extent: extent,
-                    resolutions: mapUtils.getResolutions(),
+                    resolutions: [...mapUtils.getResolutions()],
                     tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
                     origin: newOptions.origin ? newOptions.origin : [extent[0], extent[3]]
                 });
@@ -204,7 +204,7 @@ Layers.registerType('wms', {
             if (oldOptions.singleTile !== newOptions.singleTile
                 || oldOptions.securityToken !== newOptions.securityToken
                 || oldOptions.ratio !== newOptions.ratio
-                // no way to remove attribution when credits are removed, so have re-create the layer is needed. Seems to be solved in OL v5.3.0, due to the ol commit 9b8232f65b391d5d381d7a99a7cd070fc36696e9 (https://github.com/openlayers/openlayers/pull/7329)
+                 // no way to remove attribution when credits are removed, so have re-create the layer is needed. Seems to be solved in OL v5.3.0, due to the ol commit 9b8232f65b391d5d381d7a99a7cd070fc36696e9 (https://github.com/openlayers/openlayers/pull/7329)
                 || oldOptions.credits !== newOptions.credits && !newOptions.credits
                 ) {
                 // this forces cache empty, required when auth permission changed to avoid caching when unauthorized
@@ -245,7 +245,7 @@ Layers.registerType('wms', {
                             params: queryParameters,
                             tileGrid: new ol.tilegrid.TileGrid({
                                 extent: extent,
-                                resolutions: mapUtils.getResolutions(),
+                                resolutions: [...mapUtils.getResolutions()],
                                 tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
                                 origin: newOptions.origin ? newOptions.origin : [extent[0], extent[3]]
                             })
