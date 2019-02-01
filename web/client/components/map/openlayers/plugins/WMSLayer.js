@@ -142,7 +142,7 @@ Layers.registerType('wms', {
             params: queryParameters,
             tileGrid: new ol.tilegrid.TileGrid({
                 extent: extent,
-                resolutions: [...mapUtils.getResolutions()],
+                resolutions: mapUtils.getResolutions(),
                 tileSize: options.tileSize ? options.tileSize : 256,
                 origin: options.origin ? options.origin : [extent[0], extent[3]]
             })
@@ -185,7 +185,7 @@ Layers.registerType('wms', {
                 const extent = ol.proj.get(CoordinatesUtils.normalizeSRS(newOptions.srs, newOptions.allowedSRS)).getExtent();
                 layer.getSource().tileGrid = new ol.tilegrid.TileGrid({
                     extent: extent,
-                    resolutions: [...mapUtils.getResolutions()],
+                    resolutions: mapUtils.getResolutions(),
                     tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
                     origin: newOptions.origin ? newOptions.origin : [extent[0], extent[3]]
                 });
@@ -245,7 +245,7 @@ Layers.registerType('wms', {
                             params: queryParameters,
                             tileGrid: new ol.tilegrid.TileGrid({
                                 extent: extent,
-                                resolutions: [...mapUtils.getResolutions()],
+                                resolutions: mapUtils.getResolutions(),
                                 tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
                                 origin: newOptions.origin ? newOptions.origin : [extent[0], extent[3]]
                             })
