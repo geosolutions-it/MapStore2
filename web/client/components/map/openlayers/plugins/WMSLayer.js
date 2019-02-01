@@ -144,7 +144,7 @@ Layers.registerType('wms', {
                 extent: extent,
                 resolutions: mapUtils.getResolutions(),
                 tileSize: options.tileSize ? options.tileSize : 256,
-                origin: options.origin ? options.origin : [extent[0], extent[1]]
+                origin: options.origin ? options.origin : [extent[0], extent[3]]
             })
         }, options);
         const layer = new ol.layer.Tile({
@@ -187,7 +187,7 @@ Layers.registerType('wms', {
                     extent: extent,
                     resolutions: mapUtils.getResolutions(),
                     tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
-                    origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
+                    origin: newOptions.origin ? newOptions.origin : [extent[0], extent[3]]
                 });
             }
             if (changed) {
@@ -247,7 +247,7 @@ Layers.registerType('wms', {
                                 extent: extent,
                                 resolutions: mapUtils.getResolutions(),
                                 tileSize: newOptions.tileSize ? newOptions.tileSize : 256,
-                                origin: newOptions.origin ? newOptions.origin : [extent[0], extent[1]]
+                                origin: newOptions.origin ? newOptions.origin : [extent[0], extent[3]]
                             })
                         }, newOptions.forceProxy ? {tileLoadFunction: proxyTileLoadFunction} : {}))
                     });

@@ -655,7 +655,57 @@ describe('OpenlayersMap', () => {
         attributions = document.body.getElementsByClassName('ol-attribution');
         expect(attributions.length).toBe(0);
     });
+    it('test getResolutions default', () => {
+        const maxResolution = 2 * 20037508.34;
+        const tileSize = 256;
+        const expectedResolutions = Array.from(Array(29).keys()).map( k=> maxResolution / tileSize / Math.pow(2, k));
+        let map = ReactDOM.render(<OpenlayersMap id="ol-map" center={{ y: 43.9, x: 10.3 }} zoom={11} mapOptions={{ attribution: { container: 'body' } }} />, document.getElementById("map"));
+        expect(map.getResolutions().length).toBe(expectedResolutions.length);
+        // NOTE: round
+        expect(map.getResolutions().map(a => a.toFixed(4))).toEqual(expectedResolutions.map(a => a.toFixed(4)));
 
+    });
+    it('test getResolutions with custom projection', () => {
+        const projectionDefs = [
+            {
+                "code": "EPSG:3003",
+                "def": "+proj=tmerc +lat_0=0 +lon_0=9 +k=0.9996 +x_0=1500000 +y_0=0 +ellps=intl+towgs84=-104.1,-49.1,-9.9,0.971,-2.917,0.714,-11.68 +units=m +no_defs",
+                "extent": [
+                    1241482.0019432348,
+                    972767.2605398067,
+                    1847542.2626266503,
+                    5215189.085323715
+                ],
+                "worldExtent": [
+                    6.6500,
+                    8.8000,
+                    12.0000,
+                    47.0500
+                ]
+            }
+        ];
+        proj.defs(projectionDefs[0].code, projectionDefs[0].def);
+        const maxResolution = 1847542.2626266503 - 1241482.0019432348;
+        const tileSize = 256;
+        const expectedResolutions = Array.from(Array(29).keys()).map(k => maxResolution / tileSize / Math.pow(2, k));
+        let map = ReactDOM.render(<OpenlayersMap
+            id="ol-map"
+            center={{
+                x: 10.710054361528954,
+                y: 43.69814562139725,
+                crs: 'EPSG:4326'
+            }}
+            projectionDefs={projectionDefs}
+            zoom={11}
+            mapOptions={{ attribution: { container: 'body' } }}
+            projection={projectionDefs[0].code}
+            />, document.getElementById("map"));
+
+        expect(map.getResolutions()).toExist();
+        expect(map.getResolutions().length).toBe(expectedResolutions.length);
+        // NOTE: round
+        expect(map.getResolutions().map(a => a.toFixed(4))).toEqual(expectedResolutions.map(a => a.toFixed(4)));
+    });
     it('test double attribution on document', () => {
         let map = ReactDOM.render(
             <span>
