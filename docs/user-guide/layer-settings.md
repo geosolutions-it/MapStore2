@@ -35,9 +35,9 @@ If you have any *editing grants* on the styles' source, you can customize layers
 
 <img src="../img/style_editor.jpg" alt="style_editor"/>
 
-You can manage styles on [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) only if you have the *Admin* permissions on [GeoServer](http://geoserver.org/) because the **Style Editor** consumes its REST API.
-The editing tool can be available also for those MapStore2 administrators who have configured the account's integration between MapStore2 and GeoServer.
-Without the user integration a basic authentication form will appears to enter the admin credential of GeoServer.
+The Style Editor tool provides its functionalities on top of [GeoServer](http://geoserver.org/) REST APIs, so the styling 
+functionalities are available only for those layers that are loaded in [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) from GeoServer.
+By default the GeoServer's REST APIs are available only for the GeoServer administrators, so a basic authentication form will appears in MapStore2 to enter the *Admin* credentials. Without Admin rights, the editing capabilities on styles are not available and only a list of the available styles will be shown in order to assign one of them to the selected layer. If the users integration between GeoServer and MapStore2 is configured, the editing functionalities of the styles will be available according to the role of the authenticated user in MapStore2 in a more transparent way. 
 <br>
 Once done these requirements' checks you can edit an existing style or create a new one from scratch.
 
