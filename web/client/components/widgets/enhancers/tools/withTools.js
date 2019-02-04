@@ -6,33 +6,40 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const {compose, withProps} = require('recompose');
+const { compose, withPropsOnChange} = require('recompose');
 const Toolbar = require('../../../misc/toolbar/Toolbar');
 
+const isTool = t => t.target === "top-left-items";
+const hasTools = (tt = []) => tt.filter(isTool).length > 0;
+
 /**
- * Support widget locking. When locked, a widget becomes static, except if the user doesn't have
- * the edit permission on it.
+ * Transforms widgetTools into leftItems for the widget.
  */
 module.exports = () =>
 compose(
-    withProps(({ topLeftItems = [], widgetTools}) => ({
-        topLeftItems: [
-            ...topLeftItems,
-            (<Toolbar btnGroupProps={{
-                style: {
-                    position: 'absolute',
-                    left: 14
-                }
-            }}
-            btnDefaultProps={{
-                className: 'no-border',
-                bsSize: 'small',
-                bsStyle: 'link',
-                style: {
-                    paddingLeft: 4,
-                    paddingRight: 4
-                }
-            }}
-            buttons={widgetTools} />)]
-    }))
+    withPropsOnChange(
+        ['topLeftItems', 'widgetTools'],
+        ({ topLeftItems = [], widgetTools}) => ({
+        topLeftItems: hasTools(widgetTools)
+            ? [
+                ...topLeftItems,
+                (<Toolbar btnGroupProps={{
+                    style: {
+                        position: 'absolute',
+                        left: 14
+                    }
+                }}
+                btnDefaultProps={{
+                    className: 'no-border',
+                    bsSize: 'small',
+                    bsStyle: 'link',
+                    style: {
+                        paddingLeft: 4,
+                        paddingRight: 4
+                    }
+                }}
+                buttons={widgetTools.filter(isTool)} />)]
+            : topLeftItems
+        })
+    )
 );

@@ -7,35 +7,21 @@
  */
 const React = require('react');
 const WidgetContainer = require('./WidgetContainer');
-const Message = require('../../I18N/Message');
 const emptyTextState = require('../enhancers/emptyTextState');
 const TextView = emptyTextState(({text} = {}) => <div className="mapstore-widget-default-content" dangerouslySetInnerHTML={{__html: text}}></div>);
-const {
-     Glyphicon,
-     ButtonToolbar,
-     DropdownButton,
-     MenuItem
-} = require('react-bootstrap');
 
 module.exports = ({
-    onEdit = () => {},
     toggleDeleteConfirm = () => {},
     topLeftItems,
     id, title, text,
     headerStyle,
-    canEdit = true,
-    lock = false,
+    topRightItems,
     confirmDelete= false,
     onDelete=() => {}
 } = {}) =>
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
     topLeftItems={topLeftItems}
-    topRightItems={<ButtonToolbar>
-        {canEdit && !lock ? (<DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
-            <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil"/>&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>
-            <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash"/>&nbsp;<Message msgId="widgets.widget.menu.delete" /></MenuItem>
-        </DropdownButton>) : null}
-    </ButtonToolbar>}
+    topRightItems={topRightItems}
         >
     <TextView text={text} />
     </WidgetContainer>

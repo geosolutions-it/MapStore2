@@ -17,7 +17,7 @@ const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const dependenciesToOptions = require('../enhancers/dependenciesToOptions');
 const dependenciesToWidget = require('../enhancers/dependenciesToWidget');
 const dependenciesToMapProp = require('../enhancers/dependenciesToMapProp');
-const { lockableWidget, hidableWidget, withTools} = require('../enhancers/tools');
+const { pinnableWidget, hidableWidget, withTools, withMenu, editableWidget} = require('../enhancers/tools');
 
 const ChartWidget = compose(
     dependenciesToWidget,
@@ -28,16 +28,20 @@ const ChartWidget = compose(
 )(require('./ChartWidget'));
 const TextWidget = compose(
     deleteWidget,
-    lockableWidget(),
-    hidableWidget(),
     withTools(),
+    pinnableWidget(),
+    editableWidget(),
+    hidableWidget(),
+    withMenu()
 )(require('./TextWidget'));
 
 const MapWidget = compose(
     dependenciesToWidget,
     dependenciesToMapProp('center'),
     dependenciesToMapProp('zoom'),
-    deleteWidget
+    deleteWidget,
+    editableWidget(),
+    withMenu()
 )(require('./MapWidget'));
 const TableWidget = compose(
     dependenciesToWidget,
@@ -55,7 +59,9 @@ const CounterWidget = compose(
 
 const LegendWidget = compose(
     legendWidget,
-    deleteWidget
+    deleteWidget,
+    editableWidget(),
+    withMenu()
 )(require("./LegendWidget"));
 module.exports = ({
     dependencies,

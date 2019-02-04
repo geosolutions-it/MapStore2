@@ -13,13 +13,16 @@ const {compose, withProps} = require('recompose');
  */
 module.exports = () =>
 compose(
-        withProps(({ widgetTools = [], toolsOptions = {}, updateProperty = () => { }, hide= false}) => ({
+    withProps(({ widgetTools = [], toolsOptions = {}, canEdit, updateProperty = () => { }, hide= false}) => ({
         widgetTools: [
             ...widgetTools,
             {
-                glyph: hide ? "eye-close" : "eye-open",
-                tooltipId: "widgets.tools.hide",
-                visible: !!toolsOptions.showHide,
+                glyph: "lock",
+                target: "menu",
+                active: hide,
+                textId: hide ? "widgets.widget.menu.unhide" : "widgets.widget.menu.hide",
+                tooltipId: hide ? "widgets.widget.menu.unhideDescription" : "widgets.widget.menu.hideDescription",
+                visible: canEdit && !!toolsOptions.showHide,
                 style: {
                     paddingLeft: 4,
                     paddingRight: 4,

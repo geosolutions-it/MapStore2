@@ -1229,10 +1229,6 @@
                 "timeoutExpired": "The service took too much time to respond. Maybe the query is too complex or the server is busy",
                 "genericError": "There was an error during data retrival"
             },
-            "tools": {
-                "lock": "Lock this widget",
-                "hide": "Hide this widget to other users"
-            },
             "builder": {
                 "header": {
                     "title": "Widget"
@@ -1284,7 +1280,13 @@
                     "delete": "Delete",
                     "confirmDelete": "Are you sure?",
                     "downloadData": "Download Data",
-                    "exportImage": "Export Image"
+                    "exportImage": "Export Image",
+                    "pin": "Pin",
+                    "unpin": "Unpin",
+                    "hide": "Hide",
+                    "hideDescription": "Hide this widget to other users",
+                    "unhide": "Unhide",
+                    "unhideDescription": "Unhide the widget to other users"
                 }
             },
             "chartType": {

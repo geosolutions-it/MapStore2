@@ -1229,10 +1229,6 @@
                 "timeoutExpired": "El servicio tomó demasiado tiempo para responder. Tal vez la consulta es demasiado compleja o el servidor está ocupado",
                 "genericError": "Hubo un error durante la recuperación de datos"
             },
-            "tools": {
-                "lock": "Bloquear este widget",
-                "hide": "Ocultar este widget a otros usuarios"
-            },
             "builder": {
                 "header": {
                     "title": "Widget"
@@ -1284,7 +1280,13 @@
                     "delete": "Borrar",
                     "confirmDelete": "Está seguro?",
                     "downloadData": "Descargar datos",
-                    "exportImage": "Exportar imagen"
+                    "exportImage": "Exportar imagen",
+                    "pin": "Alfiler",
+                    "unpin": "Desprender",
+                    "hide": "Esconder",
+                    "hideDescription": "Ocultar este widget a otros usuarios",
+                    "unhide": "Ocultar",
+                    "unhideDescription": "Mostrar el widget a otros usuarios"
                 }
             },
             "chartType": {

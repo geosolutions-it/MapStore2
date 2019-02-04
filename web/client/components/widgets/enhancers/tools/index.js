@@ -7,12 +7,17 @@
  */
 
 const withTools = require('./withTools');
-const lockableWidget = require('./lockableWidget');
+const pinnableWidget = require('./pinnableWidget');
 const hidableWidget = require('./hidableWidget');
-
+const withMenu = require('./withMenu');
+const editableWidget = require('./editableWidget');
+const exportableWidget = require('./exportableWidget');
 
 module.exports = {
     withTools,
-    lockableWidget,
-    hidableWidget
+    pinnableWidget,
+    hidableWidget,
+    withMenu,
+    editableWidget,
+    exportableWidget
 };

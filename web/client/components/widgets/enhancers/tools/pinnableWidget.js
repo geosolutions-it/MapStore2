@@ -16,9 +16,12 @@ compose(
         widgetTools: [
             ...widgetTools,
             {
-                glyph: "lock",
-                tooltipId: "widgets.tools.lock",
-                visible: !!toolsOptions.showLock,
+                glyph: "pushpin",
+                active: dataGrid.static,
+                glyphClassName: dataGrid.static ? "pinned-icon" : undefined,
+                textId: dataGrid.static ? "widgets.widget.menu.unpin" : "widgets.widget.menu.pin",
+                target: 'menu',
+                visible: !!toolsOptions.showPin,
                 style: {
                     paddingLeft: 4,
                     paddingRight: 4,

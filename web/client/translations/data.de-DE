@@ -1229,10 +1229,6 @@
                 "timeoutExpired": "Der Service hat zu lange gedauert. Vielleicht ist die Abfrage zu komplex oder der Server ist beschäftigt",
                 "genericError": "Beim Abrufen der Daten ist ein Fehler aufgetreten"
             },
-            "tools": {
-                "lock": "Sperren Sie dieses Widget",
-                "hide": "Verstecken Sie dieses Widget für andere Benutzer"
-            },
             "builder": {
                 "header": {
                     "title": "Widget"
@@ -1284,7 +1280,13 @@
                     "delete": "Löschen",
                     "confirmDelete": "Bist du sicher?",
                     "downloadData": "Daten herunterladen",
-                    "exportImage": "Bild exportieren"
+                    "exportImage": "Bild exportieren",
+                    "pin": "Pin",
+                    "unpin": "Unpin",
+                    "hide": "verbergen",
+                    "hideDescription": "Verstecken Sie dieses Widget für andere Benutzer",
+                    "unhide": "Einblenden",
+                    "unhideDescription": "Blenden Sie das Widget für andere Benutzer ein"
                 }
             },
             "chartType": {

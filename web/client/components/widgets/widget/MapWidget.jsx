@@ -28,25 +28,19 @@ const renderHeaderLeftTopItem = ({ title, description } = {}) => {
 };
 
 module.exports = ({
-    onEdit = () => { },
     updateProperty = () => { },
     toggleDeleteConfirm = () => { },
     id, title, loading, description,
     map,
     mapStateSource,
-    canEdit = true,
+    topRightItems,
     confirmDelete = false,
     onDelete = () => {},
     headerStyle
 } = {}) =>
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
         topLeftItems={renderHeaderLeftTopItem({ loading, title, description })}
-        topRightItems={canEdit ? (<ButtonToolbar>
-            <DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
-                <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil" />&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>
-                <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash" />&nbsp;<Message msgId="widgets.widget.menu.delete" /></MenuItem>
-            </DropdownButton>
-        </ButtonToolbar>) : null}
+        topRightItems={topRightItems}
     >
         <MapView updateProperty={updateProperty} id={id} map={omit(map, 'mapStateSource')} mapStateSource={mapStateSource} layers={map && map.layers} options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}/>
     </WidgetContainer>);
