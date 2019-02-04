@@ -7,7 +7,7 @@
  */
 
 const Rx = require('rxjs');
-const { get, head, isArray, template } = require('lodash');
+const { get, head, isArray, template, startsWith } = require('lodash');
 const { success, error } = require('../actions/notifications');
 const { UPDATE_NODE, updateNode, updateSettingsParams } = require('../actions/layers');
 const { updateAdditionalLayer, removeAdditionalLayer, updateOptionsByOwner } = require('../actions/additionallayers');
@@ -210,7 +210,13 @@ module.exports = {
                 const layer = action.layer || getSelectedLayer(state);
                 if (!layer || layer && !layer.url) return Rx.Observable.empty();
 
-                const normalizedUrl = normalizeUrl(layer.url);
+                // check url without / or protocol and add /
+                // eg: geoserver/wms
+                const layerUrl = startsWith(layer.url, 'http') || startsWith(layer.url, '/')
+                    ? layer.url
+                    : `/${layer.url}`;
+
+                const normalizedUrl = normalizeUrl(layerUrl) || layer.url;
                 const parsedUrl = url.parse(normalizedUrl);
 
                 return updateLayerSettingsObservable(action$, store,

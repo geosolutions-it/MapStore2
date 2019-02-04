@@ -58,14 +58,59 @@ const { testEpic } = require('./epicTestUtils');
 describe('styleeditor Epics', () => {
 
     it('test toggleStyleEditorEpic enabled to true', (done) => {
-
+        const LAYER_URL = '/geoserver/';
         const state = {
             layers: {
                 flat: [
                     {
                         id: 'layerId',
                         name: 'layerName',
-                        url: '/geoserver/'
+                        url: LAYER_URL
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ]
+            }
+        };
+        const NUMBER_OF_ACTIONS = 1;
+
+        const results = (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            try {
+                actions.map((action) => {
+                    switch (action.type) {
+                        case LOADING_STYLE:
+                            expect(action.status).toBe('global');
+                            break;
+                        default:
+                            expect(true).toBe(false);
+                    }
+                });
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            toggleStyleEditorEpic,
+            NUMBER_OF_ACTIONS,
+            toggleStyleEditor(undefined, true),
+            results,
+        state);
+
+    });
+
+    it('test toggleStyleEditorEpic enabled to true with relative url of layer', (done) => {
+        const LAYER_URL = 'geoserver/';
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerName',
+                        url: LAYER_URL
                     }
                 ],
                 selected: [
