@@ -9,6 +9,6 @@
 MapStore 2 User Guide
 ------------------------
 * [Home Page Overview](home-page.md)
-* [Managing Users and Groups](admin.md)
+* [Managing Users and Groups](managing-admin.md)
 * [Exploring Maps](exploring-maps.md)
 * [Exploring Dashboards](exploring-dashboards.md)
