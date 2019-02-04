@@ -242,4 +242,12 @@ describe('Test the map reducer', () => {
         let state = mapConfig({}, action);
         expect(state.resize).toEqual(1);
     });
+    it('change the max extent of a map', () => {
+        const action = {
+            type: 'CHANGE_MAP_MAXEXTENT',
+            extent: [1, 2, 3, 4]
+        };
+        let state = mapConfig({}, action);
+        expect(state.maxExtent.length).toBe(4);
+    });
 });
