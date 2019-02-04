@@ -19,7 +19,7 @@ const React = require('react');
  * @prop {array} texts array of text object, eg: [{ text: 'HELLO', fill: '#f2f2f2', style: {fontSize: 70, fontWeight: 'bold'}}]
  * @prop {string} backgroundColor background color of the preview
  * @example
- * ```
+ *
  * // point
  * <SVGPreview type="point" paths={[{d: 'M30 160 L100 40', stroke: '#999999'}]}/>
  *
@@ -35,14 +35,17 @@ const React = require('react');
  * // text
  * <SVGPreview backgroundColor="#333333" texts={[{text: 'HELLO', fill: '#f2f2f2', style: {fontSize: 70, fontWeight: 'bold'}}]}/>
  *
- * ```
+ *
  */
 
 const SVGPreview = ({ type, patterns, paths, texts, backgroundColor = '#ffffff' }) =>
     <svg viewBox="0 0 200 200">
         <defs>
-            {patterns && patterns.map(pattern => <pattern id={pattern.id} viewBox="0 0 1 1" width="15%" height="15%">
+            {patterns && patterns.filter(pattern => pattern.icon).map(pattern => <pattern id={pattern.id} viewBox="0 0 1 1" width="15%" height="15%">
                 {pattern.icon && <path {...pattern.icon} />}
+            </pattern>)}
+            {patterns && patterns.filter(pattern => pattern.image).map(pattern => <pattern id={pattern.id} width="100%" height="100%">
+                {pattern.image && <image {...pattern.image} />}
             </pattern>)}
         </defs>
         <path fill={backgroundColor} d={`M0 0 L200 0 L200 200 L0 200Z`} />

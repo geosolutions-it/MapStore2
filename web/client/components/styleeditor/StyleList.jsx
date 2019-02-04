@@ -56,6 +56,7 @@ const StyleList = ({
     onFilter = () => {}
 }) => (
         <BorderLayout
+            className="ms-style-editor-list"
             header={
                 <Filter
                     filterPlaceholder="styleeditor.styleListfilterPlaceholder"
