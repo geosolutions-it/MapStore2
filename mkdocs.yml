@@ -23,7 +23,7 @@ pages:
     - Overview: 'managing-users-and-groups.md'
     - Managing Users: 'managing-users.md'
     - Managing Groups: 'managing-groups.md'
-    - Managing User Rights: 'managing-user-rights.md'
+    - Managing User Rights on Maps: 'managing-user-rights.md'
   - Exploring Maps:
     - Overview: 'exploring-maps.md'
     - Table of Contents: 'toc.md'
