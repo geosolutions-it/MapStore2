@@ -12,7 +12,7 @@ const {createSelector} = require('reselect');
 const { compose, defaultProps, withProps, withPropsOnChange} = require('recompose');
 const {mapIdSelector} = require('../selectors/map');
 const {getVisibleFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout} = require('../selectors/widgets');
-const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage} = require('../actions/widgets');
+const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage, toggleCollapse} = require('../actions/widgets');
 const editOptions = require('./widgets/editOptions');
 const autoDisableWidgets = require('./widgets/autoDisableWidgets');
 
@@ -39,6 +39,7 @@ compose(
             editWidget,
             updateWidgetProperty,
             exportCSV,
+            toggleCollapse,
             exportImage,
             deleteWidget,
             onLayoutChange: changeLayout
@@ -75,9 +76,10 @@ compose(
     compose(
         defaultProps({
             toolsOptions: {
-                showLock: "user.role===ADMIN",
+                showPin: "user.role===ADMIN",
+                seeHidden: "user.role===ADMIN",
                 showHide: "user.role===ADMIN",
-                seeHidden: "user.role===ADMIN"
+                showCollapse: true
             }
         }),
         // allow to customize toolsOptions object, with rules. see accessRuleParser
@@ -112,9 +114,9 @@ class Widgets extends React.Component {
  *       Access rules can be defined using the syntax (@see components.misc.enhancers.security.accessRuleParser).
  *       The accessible parts of the state are `{mapInfo: {canEdit, canDelete...}, user: {role: "USER"}}`. So you can define rules like this:
  *       ```
- *       {showLock: ["__OR__", "user.role===ADMIN", "mapInfo.canEdit"]}
+ *       {showPin: ["__OR__", "user.role===ADMIN", "mapInfo.canEdit"]}
  *       ```
- * @prop {boolean|string|array} [showLock] show lock tool. By default is visible only to the admin
+ * @prop {boolean|string|array} [showPin] show lock tool. By default is visible only to the admin
  * @prop {boolean|string|array} [showHide] show hide tool. Allow to hide the tool when hide is false.
  * @prop {boolean|string|array} [seeHidden] hides the widgets under particular conditions
  *

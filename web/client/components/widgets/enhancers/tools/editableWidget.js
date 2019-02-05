@@ -6,6 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {withProps} = require('recompose');
+
+/**
+ * Add the edit/delete items to the widget menu
+ */
 module.exports = () =>
     withProps(({ widgetTools = [], canEdit, onEdit = () => {}, toggleDeleteConfirm = () => {} }) => ({
     widgetTools: canEdit

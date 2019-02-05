@@ -8,13 +8,13 @@
 const {compose, withProps} = require('recompose');
 
 /**
- * Support widget hiding. Add the hide button to the widget tools.
- * Needs `withTools` enhancer inner component.
+ * Support widget hiding. Add the hide button to the widget menu.
  */
 module.exports = () =>
 compose(
     withProps(({ widgetTools = [], toolsOptions = {}, canEdit, updateProperty = () => { }, hide= false}) => ({
-        widgetTools: [
+        widgetTools: !!toolsOptions.showHide
+            ? [
             ...widgetTools,
             {
                 glyph: "lock",
@@ -22,15 +22,9 @@ compose(
                 active: hide,
                 textId: hide ? "widgets.widget.menu.unhide" : "widgets.widget.menu.hide",
                 tooltipId: hide ? "widgets.widget.menu.unhideDescription" : "widgets.widget.menu.hideDescription",
-                visible: canEdit && !!toolsOptions.showHide,
-                style: {
-                    paddingLeft: 4,
-                    paddingRight: 4,
-                    color: !hide ? "grey" : undefined,
-                    opacity: !hide ? 0.5 : 1
-                },
+                visible: canEdit,
                 onClick: () => updateProperty("hide", !hide)
             }
-        ]}
+        ] : widgetTools}
     ))
 );

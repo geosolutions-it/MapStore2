@@ -12,6 +12,8 @@ const hidableWidget = require('./hidableWidget');
 const withMenu = require('./withMenu');
 const editableWidget = require('./editableWidget');
 const exportableWidget = require('./exportableWidget');
+const collapsibleWidget = require('./collapsibleWidget');
+
 
 module.exports = {
     withTools,
@@ -19,5 +21,6 @@ module.exports = {
     hidableWidget,
     withMenu,
     editableWidget,
-    exportableWidget
+    exportableWidget,
+    collapsibleWidget
 };

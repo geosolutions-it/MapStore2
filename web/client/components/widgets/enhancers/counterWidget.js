@@ -7,11 +7,12 @@
  */
 
 const {compose} = require('recompose');
-const { editableWidget, withMenu } = require('./tools');
+const { editableWidget, withMenu, collapsibleWidget } = require('./tools');
 
 module.exports = compose(
     require("./deleteWidget"),
     require("./wpsCounter"),
+    collapsibleWidget(),
     editableWidget(),
     withMenu()
 );

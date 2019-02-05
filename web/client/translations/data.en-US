@@ -1278,6 +1278,7 @@
                     "showChartData": "Show chart data",
                     "edit": "Edit",
                     "delete": "Delete",
+                    "collapse": "Collapse",
                     "confirmDelete": "Are you sure?",
                     "downloadData": "Download Data",
                     "exportImage": "Export Image",

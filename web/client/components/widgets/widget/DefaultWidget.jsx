@@ -17,7 +17,12 @@ const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const dependenciesToOptions = require('../enhancers/dependenciesToOptions');
 const dependenciesToWidget = require('../enhancers/dependenciesToWidget');
 const dependenciesToMapProp = require('../enhancers/dependenciesToMapProp');
-const { pinnableWidget, hidableWidget, withTools, withMenu, editableWidget} = require('../enhancers/tools');
+const { pinnableWidget, hidableWidget, withTools, withMenu, editableWidget, collapsibleWidget} = require('../enhancers/tools');
+
+/*
+ * TODO: now tools in menu are added checking the same order the enhancers are applied to the components.
+ * A better solution should be to add an attribute to the tool to sort entries in the menu.
+ */
 
 const ChartWidget = compose(
     dependenciesToWidget,
@@ -26,10 +31,12 @@ const ChartWidget = compose(
     wpsChart,
     enhanceChartWidget
 )(require('./ChartWidget'));
+
 const TextWidget = compose(
     deleteWidget,
     withTools(),
     pinnableWidget(),
+    collapsibleWidget(),
     editableWidget(),
     hidableWidget(),
     withMenu()
@@ -40,15 +47,18 @@ const MapWidget = compose(
     dependenciesToMapProp('center'),
     dependenciesToMapProp('zoom'),
     deleteWidget,
+    collapsibleWidget(),
     editableWidget(),
     withMenu()
 )(require('./MapWidget'));
+
 const TableWidget = compose(
     dependenciesToWidget,
     dependenciesToOptions,
     dependenciesToFilter,
     enhanceTableWidget
 )(require('./TableWidget'));
+
 const enhanceCounter = require('../enhancers/counterWidget');
 const CounterWidget = compose(
     dependenciesToWidget,
@@ -60,11 +70,14 @@ const CounterWidget = compose(
 const LegendWidget = compose(
     legendWidget,
     deleteWidget,
+    collapsibleWidget(),
     editableWidget(),
     withMenu()
 )(require("./LegendWidget"));
+
 module.exports = ({
     dependencies,
+    toggleCollapse = () => {},
     exportCSV = () => {},
     exportImage = () => {},
     onDelete = () => {},
@@ -72,10 +85,12 @@ module.exports = ({
     ...w
 } = {}) => w.widgetType === "text"
             ? (<TextWidget {...w}
+                toggleCollapse={toggleCollapse}
                 onDelete={onDelete}
                 onEdit={onEdit}/>)
             : w.widgetType === "table"
             ? <TableWidget {...w}
+                toggleCollapse={toggleCollapse}
                 exportCSV={exportCSV}
                 dependencies={dependencies}
                 onDelete={onDelete}
@@ -83,20 +98,24 @@ module.exports = ({
             />
             : w.widgetType === "counter"
             ? <CounterWidget {...w}
+                toggleCollapse={toggleCollapse}
                 dependencies={dependencies}
                 onDelete={onDelete}
                 onEdit={onEdit} />
             : w.widgetType === "map"
             ? <MapWidget {...w}
+                toggleCollapse={toggleCollapse}
                 dependencies={dependencies}
                 onDelete={onDelete}
                 onEdit={onEdit} />
             : w.widgetType === "legend"
             ? <LegendWidget {...w}
+                toggleCollapse={toggleCollapse}
                 dependencies={dependencies}
                 onDelete={onDelete}
                 onEdit={onEdit} />
             : (<ChartWidget {...w}
+                toggleCollapse={toggleCollapse}
                 exportCSV={exportCSV}
                 dependencies={dependencies}
                 exportImage={exportImage}

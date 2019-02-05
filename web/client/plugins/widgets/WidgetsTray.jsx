@@ -19,7 +19,13 @@ const { getFloatingWidgets, getVisibleFloatingWidgets, getFloatingWidgetsCurrent
 const { toggleCollapse, toggleCollapseAll } = require('../../actions/widgets');
 
 const BorderLayout = require('../../components/layout/BorderLayout');
+
+/**
+ * Only widgets that are not hidden (to some users) or pinned (static) can be in tray
+ * @param {object} widget the widget configuration
+ */
 const noHiddenOrStaticWidgets = w => !w.hide && (!w.dataGrid || !w.dataGrid.static);
+
 /**
  * A selector that retrieves widgets to display in the tray area
  * @return the widgets to display in the tray area
@@ -149,8 +155,8 @@ class WidgetsTray extends React.Component {
                 }}>
                 <BorderLayout
                     columns={[
-                        <CollapseAllButton />,
-                        <CollapseTrayButton expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />
+                        <CollapseTrayButton expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />,
+                        <CollapseAllButton />
                     ]}
                 >{this.props.expanded ? <WidgetsBar /> : null}
                 </BorderLayout>

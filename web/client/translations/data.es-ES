@@ -1278,6 +1278,7 @@
                     "showChartData": "Mostrar datos de gráfico",
                     "edit": "Editar",
                     "delete": "Borrar",
+                    "collapse": "Contraer",
                     "confirmDelete": "Está seguro?",
                     "downloadData": "Descargar datos",
                     "exportImage": "Exportar imagen",

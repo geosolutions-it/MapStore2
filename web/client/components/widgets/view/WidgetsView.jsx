@@ -47,6 +47,7 @@ module.exports = pure(({
     onWidgetClick = () => { },
     updateWidgetProperty = () => { },
     deleteWidget = () => { },
+    toggleCollapse = ( ) => { },
     editWidget = () => { },
     onLayoutChange = () => { },
     ...actions
@@ -104,6 +105,7 @@ module.exports = pure(({
                 dependencies={dependencies}
                 canEdit={canEdit}
                 updateProperty={(...args) => updateWidgetProperty(w.id, ...args)}
+                toggleCollapse= {() => toggleCollapse(w)}
                 onDelete={() => deleteWidget(w)}
                 onEdit={() => editWidget(w)} /></div>))
         }

@@ -7,7 +7,7 @@
   */
 const { compose, branch, withState, withProps, withHandlers} = require('recompose');
 const deleteWidget = require('./deleteWidget');
-const {editableWidget, exportableWidget, withMenu} = require('./tools');
+const { editableWidget, exportableWidget, collapsibleWidget, withMenu} = require('./tools');
 
 
 module.exports = compose(
@@ -33,6 +33,7 @@ module.exports = compose(
             ]
         }))
     ),
+    collapsibleWidget(),
     editableWidget(),
     exportableWidget(),
     branch(

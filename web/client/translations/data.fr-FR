@@ -1277,8 +1277,9 @@
             "widget": {
                 "menu": {
                     "showChartData": "Afficher les données de graphique",
-                    "edit": "éditer",
-                    "delete": "effacer",
+                    "edit": "Éditer",
+                    "delete": "Effacer",
+                    "collapse": "Réduire",
                     "confirmDelete": "Êtes-vous sûr?",
                     "downloadData": "Télécharger les données",
                     "exportImage": "Exporter l'image",
