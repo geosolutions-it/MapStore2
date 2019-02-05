@@ -19,12 +19,16 @@ markdown_extensions:
 pages:
   - Introduction: 'index.md'
   - Home Page Overview: 'home-page.md'
-  - Managing Users and Groups: 'admin.md'
+  - Managing Users and Groups:
+    - Overview: 'managing-users-and-groups.md'
+    - Managing Users: 'managing-users.md'
+    - Managing Groups: 'managing-groups.md'
+    - Managing User Rights on Maps: 'managing-user-rights.md'
   - Exploring Maps:
     - Overview: 'exploring-maps.md'
     - Table of Contents: 'toc.md'
     - Managing Layer Settings: 'layer-settings.md'
-    - Attribute Table Functionalities: 'attributes-table.md'
+    - Attribute Table: 'attributes-table.md'
     - Creating Widgets: 'widgets.md'
     - Menu Bar: 'menu-bar.md'
     - Printing a Map: 'print.md'

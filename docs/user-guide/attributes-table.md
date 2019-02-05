@@ -19,8 +19,6 @@ The attribute table will open showing the data table and a set of functionalitie
 Editing
 -------
 
-Nono lo so! Per ora la lascio.
-
 
 Advanced Filtering
 ------------------
