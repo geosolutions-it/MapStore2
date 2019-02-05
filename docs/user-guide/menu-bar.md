@@ -61,9 +61,9 @@ Let's customize it!
 
     - **Name** can be whatever you prefer, it is a good practice to refer it to some other properties as the *Layer* and/or the *Attributes*
 
-    - **Service url** is the WFS you want to call, in this example we used a WFS service available on the [GeoSolutions Demo Server](https://demo.geo-solutions.it/)
+    - **Service url** is the WFS you want to call, in this example we used a WFS service available on the GeoSolutions Demo Server
 
-    - **Layer** is the layer from which you want to retrieve information, for example the MultiLineString TIGER layer *Manhattan (NY) roads*
+    - **Layer** is the layer from which you want to retrieve information, for example the TIGER layer *Manhattan (NY) roads*
 
     - **Attributes** identifies which field should be considered by the search query, in this case we are interested in roads' name so we choose the NAME field
 
@@ -73,7 +73,7 @@ Let's customize it!
 
     - **Title** is displayed on the top of each results row. You might want to show here the content of the fields of interest, in this example we choose to display the NAME field values so we type `${properties.NAME}`
 
-    - **Description** is displayed to the bottom of each results row. We use *Manhattan Roads* to point out the source layer name but feel free to change it
+    - **Description** is displayed to the bottom of each results row. We use *Manhattan Roads* to point out the source layer name but feel free to change it. You can use the same property placeholder syntax here.
 
     - **Priority** is a weight assigned to the custom results. It is used to sort all the search results so higher values determine higher positions in the results list. The default [OpenStreetMap Nominatim search engine](https://nominatim.openstreetmap.org/) result has priority equals to 5, so to see our custom results in the first positions we should set a value greater than 5 for this field. We use 6.
 
