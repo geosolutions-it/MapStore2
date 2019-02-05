@@ -130,15 +130,15 @@ const {handleCreationLayerError, handleCreationBackgroundError, resetMapOnInit, 
  *    }
  *  }
  * ```
- * an additional feature is the ability to set the map maximum extent in the localConfig.json file using "view" property e.g
- * "view":{
+ * an additional feature is the ability to set the map maximum extent in the localConfig.json file using "mapConstraints" property e.g
+ * "mapConstraints":{
  *  "crs":"EPSG:3857",
  *  "maxExtent":[
  *    1060334.456371965,5228292.734706056,
  *    1392988.403469052,5503466.036532691
  *   ]
  *  }
- * where crs refers to the reference system of the written coordinates, this property is independent of the map plugin.
+ * where crs refers to the reference system of the written coordinates, this property is located in the root of localConfig.json.
  *  ```
  * For more info on metadata visit [fontfaceobserver](https://github.com/bramstein/fontfaceobserver)
  *

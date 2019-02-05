@@ -104,11 +104,11 @@ describe('Test map selectors', () => {
         expect(props).toBe('');
     });
     it('test configuredExtentSelectorCrs', () => {
-        const props = configuredMaxExtentCrsSelector({localConfig: {view: {crs: 'EPSG:4326'}}});
+        const props = configuredMaxExtentCrsSelector({localConfig: {mapConstraints: {crs: 'EPSG:4326'}}});
         expect(props).toBe('EPSG:4326');
     });
     it('test configuredExtentSelector', () => {
-        const props = configuredMaxExtentSelector({localConfig: {view: {maxExtent: [12, 12, 12, 12]}}});
+        const props = configuredMaxExtentSelector({localConfig: {mapConstraints: {maxExtent: [12, 12, 12, 12]}}});
         expect(props.length).toBe(4);
     });
 });
