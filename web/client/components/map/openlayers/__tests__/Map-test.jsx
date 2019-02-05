@@ -504,7 +504,6 @@ describe('OpenlayersMap', () => {
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
                 measurement={{}}
-                maxExtent={[-2503084.09, 4101942.87, 3016213.46, 9488437.05]}
             />
         , document.getElementById("map"));
         const firstView = map.map.getView().calculateExtent(map.map.getSize());
@@ -515,14 +514,12 @@ describe('OpenlayersMap', () => {
                 center={{y: 43.9, x: 10.3}}
                 zoom={11}
                 measurement={{}}
-                maxExtent={[-1300000, 4000000, 1900000, 7500000]}
             />
         , document.getElementById("map"));
         const secondView = map.map.getView().calculateExtent(map.map.getSize());
         expect(firstView.length).toBe(4);
         expect(secondView.length).toBe(4);
-        expect(firstView[0].toFixed(0)).toBe('1107646');
-        expect(secondView[0].toFixed(0)).toBe('1565012');
+        expect(firstView[0].toFixed(0)).toNotEqual(secondView[0].toFixed(0));
 
     });
 
