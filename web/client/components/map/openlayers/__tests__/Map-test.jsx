@@ -489,6 +489,40 @@ describe('OpenlayersMap', () => {
         expect(center[0].toFixed(1)).toBe('10.0');
     });
 
+    it('check if the map reprojects the view coordinates when the projection is changed', () => {
+        proj.defs("EPSG:25830", "+proj=utm +zone=30 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs");
+        const projectionDefs = [{
+            code: "EPSG:25830",
+            extent: [-1300000, 4000000, 1900000, 7500000],
+            worldExtent: [-6.0000, 35.9500, 0.0000, 63.9500]
+        }];
+
+        let map = ReactDOM.render(
+            <OpenlayersMap
+                projection="EPSG:900913"
+                projectionDefs={projectionDefs}
+                center={{y: 43.9, x: 10.3}}
+                zoom={11}
+                measurement={{}}
+            />
+        , document.getElementById("map"));
+        const firstView = map.map.getView().calculateExtent(map.map.getSize());
+        map = ReactDOM.render(
+            <OpenlayersMap
+            projection="EPSG:25830"
+                projectionDefs={projectionDefs}
+                center={{y: 43.9, x: 10.3}}
+                zoom={11}
+                measurement={{}}
+            />
+        , document.getElementById("map"));
+        const secondView = map.map.getView().calculateExtent(map.map.getSize());
+        expect(firstView.length).toBe(4);
+        expect(secondView.length).toBe(4);
+        expect(firstView[0].toFixed(0)).toNotEqual(secondView[0].toFixed(0));
+
+    });
+
     it('check result of "haveResolutionsChanged()" when receiving new props', () => {
         let map = ReactDOM.render(
             <OpenlayersMap
