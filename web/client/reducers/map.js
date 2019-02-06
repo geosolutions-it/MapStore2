@@ -32,16 +32,13 @@ function mapConfig(state = null, action) {
         });
     case CHANGE_MAP_EXTENTS:
         return assign({}, state, {
-        maxExtent: action.maxExtent || state.maxExtent,
         restrictedExtent: action.restrictedExtent || state.restrictedExtent
     });
     case CHANGE_MAP_CRS:
-    const maxExtent = state && state.maxExtent;
     const restrictedExtent = state && state.restrictedExtent;
     const currentCrs = state && state.projection;
 
         return assign({}, state, {
-            maxExtent: maxExtent && CoordinatesUtils.reprojectBbox(maxExtent, currentCrs, action.crs),
             restrictedExtent: restrictedExtent && CoordinatesUtils.reprojectBbox(restrictedExtent, currentCrs, action.crs),
             projection: action.crs
         });

@@ -15,8 +15,8 @@ const {
     projectionDefsSelector,
     mapNameSelector,
     mapInfoDetailsUriFromIdSelector,
-    configuredMaxExtentSelector,
-    configuredMaxExtentCrsSelector
+    configuredRestrictedExtentSelector,
+    configuredExtentCrsSelector
 } = require('../map');
 const center = {x: 1, y: 1};
 let state = {
@@ -104,11 +104,11 @@ describe('Test map selectors', () => {
         expect(props).toBe('');
     });
     it('test configuredExtentSelectorCrs', () => {
-        const props = configuredMaxExtentCrsSelector({localConfig: {mapConstraints: {crs: 'EPSG:4326'}}});
+        const props = configuredExtentCrsSelector({localConfig: {mapConstraints: {crs: 'EPSG:4326'}}});
         expect(props).toBe('EPSG:4326');
     });
     it('test configuredExtentSelector', () => {
-        const props = configuredMaxExtentSelector({localConfig: {mapConstraints: {maxExtent: [12, 12, 12, 12]}}});
+        const props = configuredRestrictedExtentSelector({localConfig: {mapConstraints: {restrictedExtent: [12, 12, 12, 12]}}});
         expect(props.length).toBe(4);
     });
 });

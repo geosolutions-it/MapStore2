@@ -190,12 +190,11 @@ describe('Test correctness of the map actions', () => {
         expect(retval.type).toEqual(RESIZE_MAP);
     });
     it('change map max extent', () => {
-        const testVal = [[1, 2, 3, 4], [0, 0, 0, 0]];
-        const retval = changeMapExtents(testVal[0], testVal[1]);
+        const testVal = [0, 0, 0, 0];
+        const retval = changeMapExtents(testVal);
 
         expect(retval).toExist();
         expect(retval.type).toBe(CHANGE_MAP_EXTENTS);
-        expect(retval.maxExtent).toBe(testVal[0]);
-        expect(retval.restrictedExtent).toBe(testVal[1]);
+        expect(retval.restrictedExtent).toBe(testVal);
     });
 });

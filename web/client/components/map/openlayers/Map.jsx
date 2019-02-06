@@ -109,7 +109,7 @@ class OpenlayersMap extends React.Component {
             controls: controls,
             interactions: interactions,
             target: this.props.id,
-            view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view)
+            view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.restrictedExtent)
         });
 
         this.map = map;
@@ -461,7 +461,7 @@ class OpenlayersMap extends React.Component {
         });
         mapUtils.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
             var olCenter = CoordinatesUtils.reproject([center.x, center.y], 'EPSG:4326', this.props.projection);
-            let view = this.createView(olCenter, zoom, this.props.projection, this.props.mapOptions && this.props.mapOptions.view);
+            let view = this.createView(olCenter, zoom, this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.restrictedExtent);
             let size = this.map.getSize();
             let bbox = view.calculateExtent(size);
             return {

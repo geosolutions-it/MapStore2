@@ -142,10 +142,9 @@ function resizeMap() {
         type: RESIZE_MAP
     };
 }
-function changeMapExtents(maxExtent, restrictedExtent) {
+function changeMapExtents(restrictedExtent) {
     return {
         type: CHANGE_MAP_EXTENTS,
-        maxExtent,
         restrictedExtent
     };
 }

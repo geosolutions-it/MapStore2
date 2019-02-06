@@ -33,8 +33,7 @@ const stateMapIdSelector = (state) => get(mapSelector(state), "mapId") && parseI
 const mapIdSelector = (state) => get(state, "mapInitialConfig.mapId") && parseInt(get(state, "mapInitialConfig.mapId"), 10) || stateMapIdSelector(state);
 const mapInfoDetailsUriFromIdSelector = (state) => mapSelector(state) && mapSelector(state).info && mapSelector(state).info.details;
 const configuredRestrictedExtentSelector = (state) => state.localConfig && state.localConfig.mapConstraints && state.localConfig.mapConstraints.restrictedExtent;
-const configuredMaxExtentSelector = (state) => state.localConfig && state.localConfig.mapConstraints && state.localConfig.mapConstraints.maxExtent;
-const configuredMaxExtentCrsSelector = (state) => state.localConfig && state.localConfig.mapConstraints && state.localConfig.mapConstraints.crs;
+const configuredExtentCrsSelector = (state) => state.localConfig && state.localConfig.mapConstraints && state.localConfig.mapConstraints.crs;
 
 /**
  * Get the scales of the current map
@@ -81,7 +80,6 @@ module.exports = {
     projectionDefsSelector,
     mapVersionSelector,
     mapNameSelector,
-    configuredMaxExtentSelector,
-    configuredMaxExtentCrsSelector,
+    configuredExtentCrsSelector,
     configuredRestrictedExtentSelector
 };

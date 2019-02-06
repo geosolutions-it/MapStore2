@@ -9,8 +9,7 @@
 const Rx = require('rxjs');
 const {changeLayerProperties} = require('../actions/layers');
 const {CREATION_ERROR_LAYER, INIT_MAP, changeMapExtents} = require('../actions/map');
-const { configuredMaxExtentSelector, configuredMaxExtentCrsSelector,
-        projectionSelector, configuredRestrictedExtentSelector} = require('../selectors/map');
+const { configuredExtentCrsSelector, projectionSelector, configuredRestrictedExtentSelector} = require('../selectors/map');
 const {currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId} = require('../selectors/layers');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {setControlProperty} = require('../actions/controls');
@@ -73,16 +72,15 @@ const handleCreationLayerError = (action$, store) =>
 
 const resetMapOnInit = (action$) => action$.ofType(INIT_MAP).switchMap(() => Rx.Observable.of(resetControls(), clearLayers()));
 
-const resetExtnentOnInit = (action$, store) =>
+const resetExtentOnInit = (action$, store) =>
     action$.ofType(MAP_CONFIG_LOADED)
     .switchMap(() => {
-        const confExtent = configuredMaxExtentSelector(store.getState());
-        const confExtentCrs = configuredMaxExtentCrsSelector(store.getState());
+        const confExtentCrs = configuredExtentCrsSelector(store.getState());
         const projection = projectionSelector(store.getState());
         const restrictedExtent = configuredRestrictedExtentSelector(store.getState());
-        const reprojectionIsValid = confExtent && confExtentCrs && projection && projection !== confExtentCrs;
-        const extent = reprojectionIsValid ? CoordinatesUtils.reprojectBbox(confExtent, confExtentCrs, projection) : confExtent;
-        return Rx.Observable.of(changeMapExtents(extent, restrictedExtent));
+        const reprojectionIsValid = restrictedExtent && confExtentCrs && projection && projection !== confExtentCrs;
+        const extent = reprojectionIsValid ? CoordinatesUtils.reprojectBbox(restrictedExtent, confExtentCrs, projection) : restrictedExtent;
+        return Rx.Observable.of(changeMapExtents(extent));
 
     });
 
@@ -91,5 +89,5 @@ module.exports = {
     handleCreationLayerError,
     handleCreationBackgroundError,
     resetMapOnInit,
-    resetExtnentOnInit
+    resetExtentOnInit
 };
