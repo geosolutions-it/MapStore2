@@ -9,7 +9,7 @@ const expect = require('expect');
 
 const {resetExtnentOnInit} = require('../map');
 const {configureMap} = require('../../actions/config');
-const {CHANGE_MAP_MAXEXTENT} = require('../../actions/map');
+const {CHANGE_MAP_EXTENTS} = require('../../actions/map');
 const {testEpic} = require('./epicTestUtils');
 describe('map Epics', () => {
 
@@ -24,15 +24,18 @@ describe('map Epics', () => {
                 localConfig: {
                     mapConstraints: {
                         crs: "EPSG:3857",
-                        maxExtent: [1060334.456371965, 5228292.734706056, 1392988.403469052, 5503466.036532691]
+                        maxExtent: [1060334.456371965, 5228292.734706056, 1392988.403469052, 5503466.036532691],
+                        restrictedExtent: [100000, 10000, 10000, 10000]
                 }
             }
         };
         testEpic(resetExtnentOnInit, 1, configureMap(), ([action]) => {
-            const { extent, type } = action;
-            expect(extent.length).toBe(4);
-            expect(extent).toEqual([1060334.456371965, 5228292.734706056, 1392988.403469052, 5503466.036532691]);
-            expect(type).toBe(CHANGE_MAP_MAXEXTENT);
+            const { maxExtent, restrictedExtent, type } = action;
+            expect(maxExtent.length).toBe(4);
+            expect(maxExtent).toEqual([1060334.456371965, 5228292.734706056, 1392988.403469052, 5503466.036532691]);
+            expect(restrictedExtent.length).toBe(4);
+            expect(restrictedExtent).toEqual([100000, 10000, 10000, 10000]);
+            expect(type).toBe(CHANGE_MAP_EXTENTS);
             done();
         }, state);
     });

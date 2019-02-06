@@ -8,8 +8,9 @@
 
 const Rx = require('rxjs');
 const {changeLayerProperties} = require('../actions/layers');
-const {CREATION_ERROR_LAYER, INIT_MAP, changeMapMaxExtent} = require('../actions/map');
-const { configuredMaxExtentSelector, configuredMaxExtentCrsSelector, projectionSelector} = require('../selectors/map');
+const {CREATION_ERROR_LAYER, INIT_MAP, changeMapExtents} = require('../actions/map');
+const { configuredMaxExtentSelector, configuredMaxExtentCrsSelector,
+        projectionSelector, configuredRestrictedExtentSelector} = require('../selectors/map');
 const {currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId} = require('../selectors/layers');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {setControlProperty} = require('../actions/controls');
@@ -78,9 +79,10 @@ const resetExtnentOnInit = (action$, store) =>
         const confExtent = configuredMaxExtentSelector(store.getState());
         const confExtentCrs = configuredMaxExtentCrsSelector(store.getState());
         const projection = projectionSelector(store.getState());
-
-        const extent = projection !== confExtentCrs ? CoordinatesUtils.reprojectBbox(confExtent, confExtentCrs, projection) : confExtent;
-        return confExtent ? Rx.Observable.of(changeMapMaxExtent(extent)) : Rx.Observable.empty();
+        const restrictedExtent = configuredRestrictedExtentSelector(store.getState());
+        const reprojectionIsValid = confExtent && confExtentCrs && projection && projection !== confExtentCrs;
+        const extent = reprojectionIsValid ? CoordinatesUtils.reprojectBbox(confExtent, confExtentCrs, projection) : confExtent;
+        return Rx.Observable.of(changeMapExtents(extent, restrictedExtent));
 
     });
 

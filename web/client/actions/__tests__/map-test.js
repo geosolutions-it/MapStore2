@@ -20,7 +20,7 @@ var {
     INIT_MAP,
     ZOOM_TO_EXTENT,
     RESIZE_MAP,
-    CHANGE_MAP_MAXEXTENT,
+    CHANGE_MAP_EXTENTS,
     errorLoadingFont,
     changeMapView,
     clickOnMap,
@@ -34,7 +34,7 @@ var {
     initMap,
     zoomToExtent,
     resizeMap,
-    changeMapMaxExtent
+    changeMapExtents
 } = require('../map');
 const {
     SHOW_NOTIFICATION
@@ -190,11 +190,12 @@ describe('Test correctness of the map actions', () => {
         expect(retval.type).toEqual(RESIZE_MAP);
     });
     it('change map max extent', () => {
-        const testVal = [1, 2, 3, 4];
-        const retval = changeMapMaxExtent(testVal);
+        const testVal = [[1, 2, 3, 4], [0, 0, 0, 0]];
+        const retval = changeMapExtents(testVal[0], testVal[1]);
 
         expect(retval).toExist();
-        expect(retval.type).toBe(CHANGE_MAP_MAXEXTENT);
-        expect(retval.extent).toBe(testVal);
+        expect(retval.type).toBe(CHANGE_MAP_EXTENTS);
+        expect(retval.maxExtent).toBe(testVal[0]);
+        expect(retval.restrictedExtent).toBe(testVal[1]);
     });
 });

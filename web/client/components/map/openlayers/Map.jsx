@@ -43,7 +43,8 @@ class OpenlayersMap extends React.Component {
         onCreationError: PropTypes.func,
         bbox: PropTypes.object,
         onWarning: PropTypes.func,
-        maxExtent: PropTypes.array
+        maxExtent: PropTypes.array,
+        restrictedExtent: PropTypes.array
     };
 
     static defaultProps = {
@@ -218,7 +219,7 @@ class OpenlayersMap extends React.Component {
                     newProps.center.x,
                     newProps.center.y
                 ], 'EPSG:4326', mapProjection);
-                this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, newProps.maxExtent));
+                this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, newProps.restrictedExtent));
                 const mapExtent = mapProjection && newProps.maxExtent && CoordinatesUtils.reprojectBbox(newProps.maxExtent, mapProjection, 'EPSG:4326');
                 // perform a check if the data and the projection are compatible
                 if (newProps.children) {

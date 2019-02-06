@@ -32,6 +32,7 @@ const projectionSelector = createSelector([mapSelector], (map) => map && map.pro
 const stateMapIdSelector = (state) => get(mapSelector(state), "mapId") && parseInt(get(mapSelector(state), "mapId"), 10) || null;
 const mapIdSelector = (state) => get(state, "mapInitialConfig.mapId") && parseInt(get(state, "mapInitialConfig.mapId"), 10) || stateMapIdSelector(state);
 const mapInfoDetailsUriFromIdSelector = (state) => mapSelector(state) && mapSelector(state).info && mapSelector(state).info.details;
+const configuredRestrictedExtentSelector = (state) => state.localConfig && state.localConfig.mapConstraints && state.localConfig.mapConstraints.restrictedExtent;
 const configuredMaxExtentSelector = (state) => state.localConfig && state.localConfig.mapConstraints && state.localConfig.mapConstraints.maxExtent;
 const configuredMaxExtentCrsSelector = (state) => state.localConfig && state.localConfig.mapConstraints && state.localConfig.mapConstraints.crs;
 
@@ -81,5 +82,6 @@ module.exports = {
     mapVersionSelector,
     mapNameSelector,
     configuredMaxExtentSelector,
-    configuredMaxExtentCrsSelector
+    configuredMaxExtentCrsSelector,
+    configuredRestrictedExtentSelector
 };
