@@ -2,7 +2,7 @@
 *******************
 
 In order to get started, let us take a look at the portal interface and get an idea of how to navigate around it. Some functionalities are only restricted for
-*Administrators* and will be pointed out once encountered. However, you will learn more about *Administrators*, *Users* and *Groups* [here](managing-admin.md).
+*Administrators* and will be pointed out once encountered. However, you will learn more about *Administrators*, *Users* and *Groups* [here](managing-users-and-groups.md).
 
 Once logged in as *Administrator*, the *Welcome Home Page* shows up as in the figure below and you will be able to view and make use of all the functionalities.
 
