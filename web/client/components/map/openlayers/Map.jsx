@@ -212,8 +212,8 @@ class OpenlayersMap extends React.Component {
             }, 0);
         }
 
-        if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps))) {
-            if (this.props.projection !== newProps.projection) {
+        if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps)) || this.props.restrictedExtent !== newProps.restrictedExtent) {
+            if (this.props.projection !== newProps.projection || this.props.restrictedExtent !== newProps.restrictedExtent) {
                 let mapProjection = newProps.projection;
                 const center = CoordinatesUtils.reproject([
                     newProps.center.x,
