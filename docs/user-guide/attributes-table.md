@@ -16,9 +16,99 @@ The attribute table will open showing the data table and a set of functionalitie
 
 <img src="../img/attributes-table-1.jpg" style="max-width:600px;"/>
 
+
 Editing
 -------
 
+The basic Web Feature Service allows querying and retrieval of features.
+Through Transactional Web Feature Services (WFS-T) [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) allows creation, deletion, and updating of features.
+
+!!! warning
+    By default editing functionalities are available only for MapStore2 ***Admin*** users. Other users can use these tools only if explicitly configured in the plugin configuration (see the [APIs documentation](https://dev.mapstore2.geo-solutions.it/mapstore/docs/api/plugins#plugins.FeatureEditor) for more details). In any case, the user must have editing rights on the layer to edit it (see for example the [GeoServer Security Settings](https://docs.geoserver.org/stable/en/user/security/webadmin/data.html)).
+
+The **Editing** tools can be reached from the *Attribute Table* panel and they allow to edit only the layer which the table refers to.
+
+* **Open** the *Attribute Table* of a layer (e.g '`Lakes, Mountains and Forest`')
+
+    <img src="../img/attribute-table-editing-layer.jpg" />
+
+* **Click** on the *Edit mode* icon <img src="../img/editing-button.jpg" style="max-width:25px;" /> to start an editing session
+
+!!! note
+    When the *Edit mode* is enabled only the editing functionalities are available to the user, all other tools are deactivated.
+
+By default, in *Edit mode*, you can see a panel like that below:
+
+<img src="../img/edit-mode.jpg" />
+
+Through the *Quit edit mode* button <img src="../img/quit-edit-mode-button.jpg" style="max-width:25px;" /> you can stop the editing session to make the other functionalities available again.
+
+### Creation of features
+
+Once the *Edit mode* is enabled, you can add new features to your layers as described in the following steps:
+
+* **Click** on the *Add New Feature* icon <img src="../img/add-new-feature-icon.jpg" style="max-width:25px;" /> to create a new row in the *Attribute Table* and fill out its fields
+
+    <img src="../img/add-new-feature-attributes.jpg" />
+
+    When editing a text field, MapStore2 provides some suggestion such as the *type* field above so you can choose the value from a select menu.
+    <br>
+    The *Missing geometry* exclamation point <img src="../img/missing-geometry-exclamation-point.jpg" style="max-width:25px;" /> in the second column of the *Attibute Table* means that the feature doesn't have a geometry yet. You can add it later or draw it on the map before saving.
+
+    <img src="../img/missing-geometry.jpg" style="max-width:300px;" />
+
+    If you want to save the changes made until now, **Click** on the *Save changes* icon <img src="../img/save-changes.jpg" style="max-width:25px;" />.
+    <br>
+    To undo your changes and exit from the *Add New Feature* process **Click** on the *Cancel changes* icon <img src="../img/cancel-changes.jpg" style="max-width:25px;" />.
+
+* **Click** on the *Add a shape to existing geometry* icon <img src="../img/add-shape-icon.jpg" style="max-width:25px;" /> to draw the shape on the map.
+
+    In the case of the '`Lakes, Mountains and Forest`' layer we have ***Polygons and Multipolygons*** geometries so for each click on the map one new vertex is added to the geometry shape, you should draw at least three vertices for each polygon. You can change the shape dragging vertices in new positions anytime with your mouse.
+
+    <img src="../img/drawing-polygon-shape.gif" />
+
+    You can delete the whole shape with the *Delete geometry* button <img src="../img/delete-geometry-button.jpg" style="max-width:25px;" />.
+    <br>
+
+* **Click** on the *Save changes* button <img src="../img/save-changes.jpg" style="max-width:25px;" /> to commit your changes.
+
+For ***Lines and Multilines*** geometries (e.g. '`Roads`' layer) the shape drawing function works more or less in the same way. The only difference is that you need at least two vertices to draw a line and not three vertices like for polygons.
+
+<img src="../img/drawing-line-shape.gif" />
+
+For ***Points*** geometries (e.g. '`Points of Interest`' layer) you can see a marker <img src="../img/marker.jpg" style="max-height:25px;" /> on your mouse cursor, a point is drawn down when you click on the map.
+
+<img src="../img/drawing-point-shape.gif" />
+
+### Updating of features
+
+If you want to update an existing feature, start an editing session by clicking the *Edit mode* icon <img src="../img/editing-button.jpg" style="max-width:25px;" /> button and follow these steps:
+
+* **Select** the feature of interest by clicking the corresponding box in the first column of the *Attribute Table*
+
+* If you need to do update the attributes values, **type** your new data into the input fields
+
+* If want to update the geometry shape, you can:
+
+    * **move** the existing vertices to new positions
+
+    * **click** on the *Add a shape to the existing geometry* button <img src="../img/add-shape-icon.jpg" style="max-width:25px;" /> to draw a new shape
+
+* **Click** on the **Save changes** button <img src="../img/save-changes.jpg" style="max-width:25px;" /> to commit your changes.
+
+<img src="../img/update-polygon-shape.gif" />
+
+### Deletion of features
+
+In *Edit mode*, you can delete existing features following these steps:
+
+* **Select** the features of interest by clicking the corresponding boxes in the first column of the *Attribute Table*
+
+* **Click** on the *Delete selected features* button <img src="../img/delete-features-button.jpg" style="max-width:25px;" /> to trigger the deletion of the selected features
+
+* **Confirm** your choice in the subsequent dialog by clicking on '`Delete`' or return back by clicking '`Close`'
+
+<img src="../img/delete-line-shape.gif" />
 
 Advanced Filtering
 ------------------
@@ -110,7 +200,7 @@ The second filter type called **Region of Interest** allows the user to filter t
 
 * **Select** the *Filter Type*, e.g. Circle.
 * **Draw** the circle on the map; eventually you can change the position of the center and the radius by clicking on the icon <img src="../img/edit-icon-1.jpg" style="max-width:30px;"/>.
-* **Set** the *Geomatric Operation*, e.g.Contains.
+* **Set** the *Geometric Operation*, e.g.Contains.
 
 <p align = "center" ><img src="../img/geometry-filter-1.jpg" style="max-width:700px;"/></p>
 
