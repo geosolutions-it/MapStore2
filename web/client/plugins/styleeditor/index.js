@@ -118,14 +118,16 @@ const StyleTemplates = compose(
                 addStyleSelector,
                 geometryTypeSelector,
                 canEditStyleSelector,
-                styleServiceSelector
+                styleServiceSelector,
+                loadingStyleSelector
             ],
-            (selectedStyle, add, geometryType, canEdit, { formats = [] } = {}) => ({
+            (selectedStyle, add, geometryType, canEdit, { formats = [] } = {}, loading) => ({
                 selectedStyle,
                 add: add && selectedStyle,
                 geometryType,
                 canEdit,
-                availableFormats: formats
+                availableFormats: formats,
+                loading
             })
         ),
         {

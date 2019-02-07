@@ -12,6 +12,7 @@ const { Form, FormGroup, FormControl: FormControlRB, ControlLabel, Alert } = req
 
 const BorderLayout = require('../layout/BorderLayout');
 const emptyState = require('../misc/enhancers/emptyState');
+const Loader = require('../misc/Loader');
 
 const SquareCard = require('../misc/cardgrids/SquareCard');
 const withLocal = require("../misc/enhancers/localizedProps");
@@ -81,7 +82,8 @@ const StyleTemplates = ({
     onSelect = () => {},
     onClose = () => {},
     onSave = () => {},
-    onUpdate = () => {}
+    onUpdate = () => {},
+    loading
 }) => (
         <BorderLayout
             header={
@@ -91,7 +93,7 @@ const StyleTemplates = ({
                         filterText={filterText}
                         onFilter={onFilter}/>
                     <div className="text-center">
-                        <small><Message msgId="styleeditor.createStyleFromTemplate"/></small>
+                        <small>{loading ? <Loader size={15} style={{ display: 'inline-block' }}/> : <Message msgId="styleeditor.createStyleFromTemplate"/>}</small>
                     </div>
                 </div>
             }>
@@ -113,7 +115,11 @@ const StyleTemplates = ({
                 items={templates
                     .filter(({title}) => !filterText || filterText && title.indexOf(filterText) !== -1)
                     .filter(({types, format}) => (!types || head(types.filter(type => type === geometryType)) && availableFormats.indexOf(format) !== -1))
-                    .map(styleTemplate => ({ ...styleTemplate, selected: styleTemplate.styleId === selectedStyle }))}/>
+                    .map(styleTemplate => ({
+                        ...styleTemplate,
+                        selected: styleTemplate.styleId === selectedStyle,
+                        disabled: loading
+                        }))}/>
             <ResizableModal
                 show={!!add}
                 fitContent
