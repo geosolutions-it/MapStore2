@@ -34,7 +34,7 @@ module.exports = pure(({
     widgets = [],
     layouts,
     dependencies,
-    compactType,
+    verticalCompact = false,
     useDefaultWidthProvider = true,
     measureBeforeMount,
     width,
@@ -64,7 +64,7 @@ module.exports = pure(({
         className={`widget-container ${className} ${canEdit ? '' : 'no-drag'}`}
         rowHeight={rowHeight}
         autoSize
-        compactType={compactType}
+        verticalCompact={verticalCompact}
         breakpoints={breakpoints}
         cols={cols}>
         {
