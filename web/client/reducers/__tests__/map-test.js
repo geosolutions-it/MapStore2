@@ -8,6 +8,7 @@
 var expect = require('expect');
 
 var mapConfig = require('../map');
+const { changeMapLimits } = require('../../actions/map');
 
 
 describe('Test the map reducer', () => {
@@ -242,13 +243,20 @@ describe('Test the map reducer', () => {
         let state = mapConfig({}, action);
         expect(state.resize).toEqual(1);
     });
-    it('change the max extent and the restricted extent of a map', () => {
-        const action = {
-            type: 'CHANGE_MAP_EXTENTS',
-            restrictedExtent: [9, 9, 9, 9]
-        };
+    it('change the restricted extent of a map', () => {
+        const action = changeMapLimits({
+            restrictedExtent: [9, 9, 9, 9],
+            crs: "EPSG:4326"
+        });
         let state = mapConfig({}, action);
-        expect(state.restrictedExtent.length).toBe(4);
-        expect(state.restrictedExtent).toEqual([9, 9, 9, 9]);
+        expect(state.limits.restrictedExtent.length).toBe(4);
+        expect(state.limits.restrictedExtent).toEqual([9, 9, 9, 9]);
+    });
+    it('change min zoom a map', () => {
+        const action = changeMapLimits({
+            minZoom: 1
+        });
+        let state = mapConfig({}, action);
+        expect(state.limits.minZoom).toBe(1);
     });
 });

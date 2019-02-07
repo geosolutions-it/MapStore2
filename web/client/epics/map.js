@@ -8,8 +8,8 @@
 
 const Rx = require('rxjs');
 const {changeLayerProperties} = require('../actions/layers');
-const {CREATION_ERROR_LAYER, INIT_MAP, changeMapExtents} = require('../actions/map');
-const { configuredExtentCrsSelector, projectionSelector, configuredRestrictedExtentSelector} = require('../selectors/map');
+const { CREATION_ERROR_LAYER, INIT_MAP, CHANGE_MAP_CRS, changeMapLimits} = require('../actions/map');
+const { configuredExtentCrsSelector, configuredRestrictedExtentSelector, configuredMinZoomSelector} = require('../selectors/map');
 const {currentBackgroundLayerSelector, allBackgroundLayerSelector, getLayerFromId} = require('../selectors/layers');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {setControlProperty} = require('../actions/controls');
@@ -19,7 +19,6 @@ const {warning} = require('../actions/notifications');
 const {resetControls} = require('../actions/controls');
 const {clearLayers} = require('../actions/layers');
 const {head} = require('lodash');
-const CoordinatesUtils = require('../utils/CoordinatesUtils');
 
 const handleCreationBackgroundError = (action$, store) =>
     action$.ofType(CREATION_ERROR_LAYER)
@@ -72,16 +71,13 @@ const handleCreationLayerError = (action$, store) =>
 
 const resetMapOnInit = (action$) => action$.ofType(INIT_MAP).switchMap(() => Rx.Observable.of(resetControls(), clearLayers()));
 
-const resetExtentOnInit = (action$, store) =>
-    action$.ofType(MAP_CONFIG_LOADED)
+const resetLimitsOnInit = (action$, store) =>
+    action$.ofType(MAP_CONFIG_LOADED, CHANGE_MAP_CRS)
     .switchMap(() => {
         const confExtentCrs = configuredExtentCrsSelector(store.getState());
-        const projection = projectionSelector(store.getState());
         const restrictedExtent = configuredRestrictedExtentSelector(store.getState());
-        const reprojectionIsValid = restrictedExtent && confExtentCrs && projection && projection !== confExtentCrs;
-        const extent = reprojectionIsValid ? CoordinatesUtils.reprojectBbox(restrictedExtent, confExtentCrs, projection) : restrictedExtent;
-        return Rx.Observable.of(changeMapExtents(extent));
-
+        const minZoom = configuredMinZoomSelector(store.getState());
+        return Rx.Observable.of(changeMapLimits({ restrictedExtent, crs: confExtentCrs, minZoom}));
     });
 
 
@@ -89,5 +85,5 @@ module.exports = {
     handleCreationLayerError,
     handleCreationBackgroundError,
     resetMapOnInit,
-    resetExtentOnInit
+    resetLimitsOnInit
 };

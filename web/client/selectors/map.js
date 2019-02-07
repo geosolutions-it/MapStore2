@@ -26,14 +26,26 @@ const {get} = require('lodash');
  * @return {object} the map configuration
  */
 const mapSelector = (state) => state.map && state.map.present || state.map || state.config && state.config.map || null;
-const projectionDefsSelector = (state) => state.localConfig && state.localConfig.projectionDefs || [];
 
 const projectionSelector = createSelector([mapSelector], (map) => map && map.projection);
 const stateMapIdSelector = (state) => get(mapSelector(state), "mapId") && parseInt(get(mapSelector(state), "mapId"), 10) || null;
 const mapIdSelector = (state) => get(state, "mapInitialConfig.mapId") && parseInt(get(state, "mapInitialConfig.mapId"), 10) || stateMapIdSelector(state);
 const mapInfoDetailsUriFromIdSelector = (state) => mapSelector(state) && mapSelector(state).info && mapSelector(state).info.details;
-const configuredRestrictedExtentSelector = (state) => state.localConfig && state.localConfig.mapConstraints && state.localConfig.mapConstraints.restrictedExtent;
-const configuredExtentCrsSelector = (state) => state.localConfig && state.localConfig.mapConstraints && state.localConfig.mapConstraints.crs;
+
+// TODO: move these in selectors/localConfig.js or selectors/config.js
+const projectionDefsSelector = (state) => state.localConfig && state.localConfig.projectionDefs || [];
+const mapConstraintsSelector = state => state.localConfig && state.localConfig.mapConstraints || {};
+const configuredRestrictedExtentSelector = (state) => mapConstraintsSelector(state).restrictedExtent;
+const configuredExtentCrsSelector = (state) => mapConstraintsSelector(state).crs;
+const configuredMinZoomSelector = state => {
+    const constraints = mapConstraintsSelector(state);
+    const projection = projectionSelector(state);
+    return projection && get(constraints, `projectionsConstraints["${projection}"].minZoom`) || get(constraints, 'minZoom');
+};
+// END localConfig selectors
+
+const mapLimitsSelector = state => get(mapSelector(state), "limits");
+const minZoomSelector = state => get(mapLimitsSelector(state), "minZoom" );
 
 /**
  * Get the scales of the current map
@@ -76,10 +88,12 @@ module.exports = {
     mapSelector,
     scalesSelector,
     projectionSelector,
+    minZoomSelector,
     mapIdSelector,
     projectionDefsSelector,
     mapVersionSelector,
     mapNameSelector,
+    configuredMinZoomSelector,
     configuredExtentCrsSelector,
     configuredRestrictedExtentSelector
 };

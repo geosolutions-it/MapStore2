@@ -20,7 +20,7 @@ var {
     INIT_MAP,
     ZOOM_TO_EXTENT,
     RESIZE_MAP,
-    CHANGE_MAP_EXTENTS,
+    CHANGE_MAP_LIMITS,
     errorLoadingFont,
     changeMapView,
     clickOnMap,
@@ -34,7 +34,7 @@ var {
     initMap,
     zoomToExtent,
     resizeMap,
-    changeMapExtents
+    changeMapLimits
 } = require('../map');
 const {
     SHOW_NOTIFICATION
@@ -189,12 +189,15 @@ describe('Test correctness of the map actions', () => {
         expect(retval).toExist();
         expect(retval.type).toEqual(RESIZE_MAP);
     });
-    it('change map max extent', () => {
-        const testVal = [0, 0, 0, 0];
-        const retval = changeMapExtents(testVal);
-
-        expect(retval).toExist();
-        expect(retval.type).toBe(CHANGE_MAP_EXTENTS);
-        expect(retval.restrictedExtent).toBe(testVal);
+    it('change map limits', () => {
+        const restrictedExtent = [0, 0, 1, 1];
+        const crs = "EPSG:4326";
+        const minZoom = 2;
+        const action = changeMapLimits({ restrictedExtent, crs, minZoom});
+        expect(action).toExist();
+        expect(action.type).toBe(CHANGE_MAP_LIMITS);
+        expect(action.restrictedExtent).toBe(restrictedExtent);
+        expect(action.crs).toBe(crs);
+        expect(action.minZoom).toBe(minZoom);
     });
 });

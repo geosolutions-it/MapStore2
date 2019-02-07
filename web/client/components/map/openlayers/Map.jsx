@@ -15,7 +15,7 @@ const ConfigUtils = require('../../../utils/ConfigUtils');
 const mapUtils = require('../../../utils/MapUtils');
 const projUtils = require('../../../utils/openlayers/projUtils');
 
-const {isEqual, throttle, head, isArray} = require('lodash');
+const {isEqual, throttle} = require('lodash');
 
 class OpenlayersMap extends React.Component {
     static propTypes = {
@@ -44,7 +44,7 @@ class OpenlayersMap extends React.Component {
         bbox: PropTypes.object,
         onWarning: PropTypes.func,
         maxExtent: PropTypes.array,
-        restrictedExtent: PropTypes.array
+        limits: PropTypes.object
     };
 
     static defaultProps = {
@@ -109,7 +109,7 @@ class OpenlayersMap extends React.Component {
             controls: controls,
             interactions: interactions,
             target: this.props.id,
-            view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.restrictedExtent)
+            view: this.createView(center, Math.round(this.props.zoom), this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.limits)
         });
 
         this.map = map;
@@ -212,41 +212,14 @@ class OpenlayersMap extends React.Component {
             }, 0);
         }
 
-        if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps)) || this.props.restrictedExtent !== newProps.restrictedExtent) {
-            if (this.props.projection !== newProps.projection || this.props.restrictedExtent !== newProps.restrictedExtent) {
+        if (this.map && ((this.props.projection !== newProps.projection) || this.haveResolutionsChanged(newProps)) || this.props.limits !== newProps.limits) {
+            if (this.props.projection !== newProps.projection || this.props.limits !== newProps.limits) {
                 let mapProjection = newProps.projection;
                 const center = CoordinatesUtils.reproject([
                     newProps.center.x,
                     newProps.center.y
                 ], 'EPSG:4326', mapProjection);
-                this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, newProps.restrictedExtent));
-                const mapExtent = mapProjection && newProps.maxExtent && CoordinatesUtils.reprojectBbox(newProps.maxExtent, mapProjection, 'EPSG:4326');
-                // perform a check if the data and the projection are compatible
-                if (newProps.children) {
-                    head(newProps.children).map( layer => {
-                        let boundingBox = layer.props.options.bbox;
-                        if (boundingBox) {
-                            let layerExtent = CoordinatesUtils.getExtentFromNormalized(boundingBox.bounds, boundingBox.crs).extent;
-                            if (layerExtent.length === 2 && isArray(layerExtent[1])) {
-                                layerExtent = layerExtent[1];
-                            }
-
-                            if ( mapProjection !== boundingBox.bounds.crs && (mapExtent && !CoordinatesUtils.isBboxCompatible(CoordinatesUtils.getPolygonFromExtent(mapExtent),
-                            CoordinatesUtils.getPolygonFromExtent(layerExtent))) ||
-                            (layer.props.options.type === "wmts" && !head(CoordinatesUtils.getEquivalentSRS(mapProjection).filter(proj => layer.props.options.matrixIds.hasOwnProperty(proj))))) {
-                                this.props.onWarning({
-                                    title: "warning",
-                                    message: "notification.incompatibleDataAndProjection",
-                                    action: {
-                                        label: "close"
-                                    },
-                                    position: "tc",
-                                    uid: "2"
-                                });
-                            }
-                        }
-                    });
-                }
+                this.map.setView(this.createView(center, newProps.zoom, newProps.projection, newProps.mapOptions && newProps.mapOptions.view, newProps.limits));
             }
             // We have to force ol to drop tile and reload
             this.map.getLayers().forEach((l) => {
@@ -406,9 +379,10 @@ class OpenlayersMap extends React.Component {
         return !isEqual(resolutions, newResolutions);
     };
 
-    createView = (center, zoom, projection, options, newExtent) => {
-
-        const newOptions = !options || (options && !options.view) ? assign({}, options, {extent: newExtent}) : assign({}, options);
+    createView = (center, zoom, projection, options, limits = {}) => {
+        // limit has a crs defined
+        const extent = limits.restrictedExtent && limits.crs && CoordinatesUtils.reprojectBbox(limits.restrictedExtent, limits.crs, CoordinatesUtils.normalizeSRS(projection));
+        const newOptions = !options || (options && !options.view) ? assign({}, options, {extent}) : assign({}, options);
         /*
         * setting the zoom level in the localConfig file is co-related to the projection extent(size)
         * it is recommended to use projections with the same coverage area (extent). If you want to have the same restricted zoom level (minZoom)
@@ -416,7 +390,8 @@ class OpenlayersMap extends React.Component {
         const viewOptions = assign({}, {
             projection: CoordinatesUtils.normalizeSRS(projection),
             center: [center.x, center.y],
-            zoom: zoom
+            zoom: zoom,
+            minZoom: limits.minZoom
         }, newOptions || {});
         return new ol.View(viewOptions);
     };
@@ -461,7 +436,7 @@ class OpenlayersMap extends React.Component {
         });
         mapUtils.registerHook(mapUtils.COMPUTE_BBOX_HOOK, (center, zoom) => {
             var olCenter = CoordinatesUtils.reproject([center.x, center.y], 'EPSG:4326', this.props.projection);
-            let view = this.createView(olCenter, zoom, this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.restrictedExtent);
+            let view = this.createView(olCenter, zoom, this.props.projection, this.props.mapOptions && this.props.mapOptions.view, this.props.limits);
             let size = this.map.getSize();
             let bbox = view.calculateExtent(size);
             return {

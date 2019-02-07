@@ -18,6 +18,7 @@ class ScaleBox extends React.Component {
         style: PropTypes.object,
         scales: PropTypes.array,
         currentZoomLvl: PropTypes.number,
+        minZoom: PropTypes.number,
         onChange: PropTypes.func,
         readOnly: PropTypes.bool,
         label: PropTypes.oneOfType([PropTypes.func, PropTypes.string, PropTypes.object]),
@@ -29,9 +30,12 @@ class ScaleBox extends React.Component {
         id: 'mapstore-scalebox',
         scales: mapUtils.getGoogleMercatorScales(0, 28),
         currentZoomLvl: 0,
+        minZoom: 0,
         onChange() {},
         readOnly: false,
-        template: (scale) => "1 : " + Math.round(scale),
+        template: scale => scale < 1
+            ? Math.round(1 / scale) + " : 1"
+            : "1 : " + Math.round(scale),
         useRawInput: false
     };
 
@@ -49,7 +53,7 @@ class ScaleBox extends React.Component {
             return (
                 <option value={index} key={index}>{this.props.template(item, index)}</option>
             );
-        });
+        }).filter((element, index) => index >= this.props.minZoom);
     };
 
     render() {
