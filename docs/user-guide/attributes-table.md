@@ -24,7 +24,7 @@ The basic Web Feature Service allows querying and retrieval of features.
 Through Transactional Web Feature Services (WFS-T) [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) allows creation, deletion, and updating of features.
 
 !!! warning
-    By default editing functionalities are available only for MapStore2 ***Admin*** users. Other users can use these tools only if the **WFS-T capabilities** have been enabled in the configuration file of MapStore2. In any case, the user must have editing rights on the layer to edit it.
+    By default editing functionalities are available only for MapStore2 ***Admin*** users. Other users can use these tools only if explicitly configured in the plugin configuration (see the [APIs documentation](https://dev.mapstore2.geo-solutions.it/mapstore/docs/api/plugins#plugins.FeatureEditor) for more details). In any case, the user must have editing rights on the layer to edit it (see for example the [GeoServer Security Settings](https://docs.geoserver.org/stable/en/user/security/webadmin/data.html)).
 
 The **Editing** tools can be reached from the *Attribute Table* panel and they allow to edit only the layer which the table refers to.
 
@@ -41,7 +41,7 @@ By default, in *Edit mode*, you can see a panel like that below:
 
 <img src="../img/edit-mode.jpg" />
 
-Through the *Quit edit mode* button <img src="../img/quit-edit-mode-button.jpg" style="max-width:25px;" /> you can stop the editing session and to make the other functionalities available again.
+Through the *Quit edit mode* button <img src="../img/quit-edit-mode-button.jpg" style="max-width:25px;" /> you can stop the editing session to make the other functionalities available again.
 
 ### Creation of features
 
@@ -51,9 +51,9 @@ Once the *Edit mode* is enabled, you can add new features to your layers as desc
 
     <img src="../img/add-new-feature-attributes.jpg" />
 
-    Some fields can have predefined values, such as the *type* field above so you can choose the value from a select menu.
+    When editing a text field, MapStore2 provides some suggestion such as the *type* field above so you can choose the value from a select menu.
     <br>
-    The *Missing geometry* exclamation point <img src="../img/missing-geometry-exclamation-point.jpg" style="max-width:25px;" /> in the second column of the *Attibute Table* means that the feature doesn't have a shape associated to its geometry yet. You can add it later or draw it on the map before saving.
+    The *Missing geometry* exclamation point <img src="../img/missing-geometry-exclamation-point.jpg" style="max-width:25px;" /> in the second column of the *Attibute Table* means that the feature doesn't have a geometry yet. You can add it later or draw it on the map before saving.
 
     <img src="../img/missing-geometry.jpg" style="max-width:300px;" />
 
@@ -92,7 +92,7 @@ If you want to update an existing feature, start an editing session by clicking 
 
     * **move** the existing vertices to new positions
 
-    * **click** on the *Add a shape to ther existing geometry* button <img src="../img/add-shape-icon.jpg" style="max-width:25px;" /> to draw a new shape
+    * **click** on the *Add a shape to the existing geometry* button <img src="../img/add-shape-icon.jpg" style="max-width:25px;" /> to draw a new shape
 
 * **Click** on the **Save changes** button <img src="../img/save-changes.jpg" style="max-width:25px;" /> to commit your changes.
 
