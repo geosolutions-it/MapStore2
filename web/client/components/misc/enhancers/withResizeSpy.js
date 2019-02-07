@@ -78,6 +78,12 @@ class WithResizeSpy extends React.Component {
             this.ro.observe(div);
         }
     }
+    componentWillUnmount() {
+        const div = this.findDomNode();
+        if (div && this.ro && this.ro.unobserve) {
+            this.ro.unobserve(div);
+        }
+    }
 
 
     render() {
