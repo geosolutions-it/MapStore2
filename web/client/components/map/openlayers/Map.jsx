@@ -15,7 +15,7 @@ const ConfigUtils = require('../../../utils/ConfigUtils');
 const mapUtils = require('../../../utils/MapUtils');
 const projUtils = require('../../../utils/openlayers/projUtils');
 
-const {isEqual, throttle, head, isArray} = require('lodash');
+const {isEqual, throttle} = require('lodash');
 
 class OpenlayersMap extends React.Component {
     static propTypes = {
