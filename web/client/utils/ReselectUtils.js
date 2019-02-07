@@ -1,12 +1,14 @@
 const { isEqualWith, isObject } = require('lodash');
 const { defaultMemoize, createSelectorCreator } = require('reselect');
 
-const isShallowEqual = (el1, el2) => {
+const defaultCompare = (a, b) => a === b;
+
+const isShallowEqualBy = (compare = defaultCompare) => (el1, el2) => {
     if (Array.isArray(el1) && Array.isArray(el2)) {
-        return el1 === el2 || el1.reduce((acc, curr, i) => acc && curr === el2[i], true);
+        return el1 === el2 || el1.reduce((acc, curr, i) => acc && compare(curr, el2[i]), true);
     }
     if (isObject(el1) && isObject(el2)) {
-        return el1 === el2 || Object.keys(el1).reduce( (acc, k) => acc && el1[k] === el2[k], true);
+        return el1 === el2 || Object.keys(el1).reduce((acc, k) => acc && compare(el1[k], el2[k]), true);
     }
     return el1 === el2;
 };
@@ -18,8 +20,13 @@ const isShallowEqual = (el1, el2) => {
  */
 const createShallowSelector = createSelectorCreator(
     defaultMemoize,
-    (a, b) => isEqualWith(a, b, isShallowEqual)
+    (a, b) => isEqualWith(a, b, isShallowEqualBy())
+);
+const createShallowSelectorCreator = (compare) => createSelectorCreator(
+    defaultMemoize,
+    (a, b) => isEqualWith(a, b, isShallowEqualBy(compare))
 );
 module.exports = {
-    createShallowSelector
+    createShallowSelector,
+    createShallowSelectorCreator
 };

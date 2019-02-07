@@ -9,6 +9,7 @@
 const React = require('react');
 const uuidv1 = require('uuid/v1');
 const SVGPreview = require('../../components/styleeditor/SVGPreview');
+const randomDots = require('./img/randomdots.png');
 
 /**
  * Template object structure
@@ -219,23 +220,665 @@ const customTemplates = [
             ]}/>
     },
     {
-        types: ['polygon', 'vector'],
-        title: 'Solid fill',
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    stroke: symbol('circle');
+    stroke-dasharray: 8 20;
+    :stroke {
+        size: 8;
+        fill: #ddd;
+        stroke: #777;
+        stroke-width: 0.5;
+    };
+}
+`,
+        types: ['linestring', 'vector'],
+        title: 'Stroke Pattern',
         format: 'css',
-        code: "@styleTitle '${styleTitle}';\n@styleAbstract '${styleAbstract}';\n\n* {\n\tfill: #aaaaaa;\n}",
-        preview: <SVGPreview type="polygon" paths={[{ fill: "#aaaaaa"}]} />
+        preview: <SVGPreview
+            type="linestring"
+            paths={[{
+                type: 'point',
+                transform: 'translate(-0, -55)',
+                d: 'M 100, 100 m -10, 0 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0',
+                stroke: '#777',
+                strokeWidth: 2,
+                fill: '#ddd'
+            }, {
+                type: 'point',
+                transform: 'translate(-65, 55)',
+                d: 'M 100, 100 m -10, 0 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0',
+                stroke: '#777',
+                strokeWidth: 2,
+                fill: '#ddd'
+            }, {
+                type: 'point',
+                transform: 'translate(-33, 0)',
+                d: 'M 100, 100 m -10, 0 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0',
+                stroke: '#777',
+                strokeWidth: 2,
+                fill: '#ddd'
+            }, {
+                type: 'point',
+                transform: 'translate(33, 0)',
+                d: 'M 100, 100 m -10, 0 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0',
+                stroke: '#777',
+                strokeWidth: 2,
+                fill: '#ddd'
+            }, {
+                type: 'point',
+                transform: 'translate(65, 55)',
+                d: 'M 100, 100 m -10, 0 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0',
+                stroke: '#777',
+                strokeWidth: 2,
+                fill: '#ddd'
+            }]}/>
     },
     {
-        types: ['polygon', 'vector'],
-        title: 'Forest fill',
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    stroke: #000, #f2f2f2, symbol(square);
+    stroke-width: 4, 2;
+    stroke-dasharray: none, none, 8 20;
+    :stroke {
+        size: 8;
+        fill: #ddd;
+        stroke: #333;
+        stroke-width: 0.5;
+    };
+}
+`,
+        types: ['linestring', 'vector'],
+        title: 'Fence',
         format: 'css',
-        code: "@styleTitle '${styleTitle}';\n@styleAbstract '${styleAbstract}';\n\n* {\n\tfill: #c1ffb3, symbol(triangle);\n\t:fill {\n\t\tfill: #98c390;\n\t\tstroke: #e9ffde;\n\t\tsize: 15;\n\t};\n}",
+        preview: <SVGPreview
+            type="linestring"
+            type="linestring"
+            paths={[{
+                stroke: "#000",
+                strokeWidth: 12
+            }, {
+                stroke: "#f2f2f2",
+                strokeWidth: 8
+            },
+            {
+                type: 'point',
+                transform: 'translate(100, 40)',
+                d: 'M-15 -15 L15 -15 L15 15 L-15 15Z',
+                stroke: '#777',
+                strokeWidth: 2,
+                fill: '#ddd'
+            }, {
+                type: 'point',
+                transform: 'translate(35, 150) rotate(-60)',
+                d: 'M-15 -15 L15 -15 L15 15 L-15 15Z',
+                stroke: '#777',
+                strokeWidth: 2,
+                fill: '#ddd'
+            }, {
+                type: 'point',
+                transform: 'translate(165, 150) rotate(60)',
+                d: 'M-15 -15 L15 -15 L15 15 L-15 15ZZ',
+                stroke: '#777',
+                strokeWidth: 2,
+                fill: '#ddd'
+            }, {
+                type: 'point',
+                transform: 'translate(67.5, 92.5) rotate(-60)',
+                d: 'M-15 -15 L15 -15 L15 15 L-15 15Z',
+                stroke: '#777',
+                strokeWidth: 2,
+                fill: '#ddd'
+            }, {
+                type: 'point',
+                transform: 'translate(132.5, 92.5) rotate(60)',
+                d: 'M-15 -15 L15 -15 L15 15 L-15 15Z',
+                stroke: '#777',
+                strokeWidth: 2,
+                fill: '#ddd'
+            }]} />
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    stroke: #33aaff, symbol('extshape://triangle');
+    /*stroke: #33aaff, symbol('extshape://emicircle');*/
+    /*stroke: #33aaff, symbol('extshape://triangleemicircle');*/
+    stroke-width: 1;
+    stroke-dasharray: none, 20 20;
+    :stroke {
+        size: 20;
+        fill: #33aaff;
+        stroke: #3a8bbe;
+        stroke-width: 0.5;
+    };
+ }
+`,
+        types: ['linestring', 'vector'],
+        title: 'Weather Symbol',
+        format: 'css',
+        preview: <SVGPreview
+            type="linestring"
+            paths={[{
+                stroke: "#33aaff",
+                strokeWidth: 4
+            },
+            {
+                type: 'point',
+                transform: 'translate(67.5, 92.5) rotate(-60)',
+                d: 'M-15 0 L15 0 L0 -15Z',
+                stroke: '#3a8bbe',
+                strokeWidth: 2,
+                fill: '#33aaff'
+            }, {
+                type: 'point',
+                transform: 'translate(132.5, 92.5) rotate(60)',
+                d: 'M-15 0 L15 0 L0 -15Z',
+                stroke: '#3a8bbe',
+                strokeWidth: 2,
+                fill: '#33aaff'
+            }]} />
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    stroke: #333;
+    /*
+    replace "Label" with [myPropertyName]
+    to get a label from feature data
+    */
+    label: "Label";
+    label-anchor: 0.5 0.5;
+    /* label-group: true; */
+    label-conflict-resolution: false;
+
+    font-fill: #000;
+    font-family: "sans-serif";
+    /* font-weight: bold; */
+    /* font-style: italic; */
+    font-size: 20;
+
+    halo-color: #fff;
+    halo-radius: 4;
+}
+`,
+        types: ['linestring', 'vector'],
+        title: 'Label',
+        format: 'css',
+        preview: <SVGPreview
+            type="linestring"
+            paths={[{
+                stroke: "#333",
+                strokeWidth: 4
+            }]}
+            texts={[
+                {
+                    text: 'Label',
+                    transform: 'translate(-40, 0)',
+                    style: {
+                        fontSize: 30,
+                        fontWeight: 'bold',
+                        strokeWidth: 12,
+                        stroke: '#ffffff'
+                    }
+                },
+                {
+                    text: 'Label',
+                    fill: '#000000',
+                    transform: 'translate(-40, 0)',
+                    style: {
+                        fontSize: 30,
+                        fontWeight: 'bold',
+                        strokeWidth: 1,
+                        stroke: '#000000'
+                    }
+                }
+            ]} />
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    stroke: #333;
+    /*
+    replace "Label" with [myPropertyName]
+    to get a label from feature data
+    */
+    label: "Label";
+    label-anchor: 0.5 0.5;
+    label-conflict-resolution: true;
+    label-follow-line: true;
+    label-max-angle-delta: 90;
+    label-max-displacement: 400;
+    label-repeat: 150;
+    /* move label at the bottom of the line*/
+    /* label-offset: 20; */
+
+    font-fill: #000;
+    font-family: "sans-serif";
+    font-size: 20;
+    /* font-weight: bold; */
+    /* font-style: italic; */
+
+    halo-color: #fff;
+    halo-radius: 4;
+}
+`,
+        types: ['linestring', 'vector'],
+        title: 'Label Follow Line',
+        format: 'css',
+        preview: <SVGPreview
+            type="linestring"
+            paths={[{
+                stroke: "#333",
+                strokeWidth: 4
+            }]}
+            texts={[
+                {
+                    text: 'Label',
+                    transform: 'translate(100, 100) rotate(-60) translate(-120, -130)',
+                    style: {
+                        fontSize: 30,
+                        fontWeight: 'bold',
+                        strokeWidth: 12,
+                        stroke: '#ffffff'
+                    }
+                },
+                {
+                    text: 'Label',
+                    fill: '#000000',
+                    transform: 'translate(100, 100) rotate(-60) translate(-120, -130)',
+                    style: {
+                        fontSize: 30,
+                        fontWeight: 'bold',
+                        strokeWidth: 1,
+                        stroke: '#000000'
+                    }
+                }
+            ]}
+            />
+    },
+
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    fill: #ddd;
+}
+`,
+        types: ['polygon', 'vector'],
+        title: 'Fill',
+        format: 'css',
+        preview: <SVGPreview type="polygon" paths={[{ fill: "#ddd"}]} />
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    stroke: #333;
+    stroke-width: 1;
+}
+`,
+        types: ['polygon', 'vector'],
+        title: 'Border',
+        format: 'css',
         preview: <SVGPreview
             type="polygon"
-            paths={[{ fill: "#c1ffb3"}, {fill: "url(#tree)"}]}
-            patterns={[{
-                id: 'tree', icon: { d: 'M0.1 0.9 L0.5 0.1 L0.9 0.9Z', fill: '#98c390'}
+            paths={[{
+                fill: "transparent",
+                stroke: "#333",
+                strokeWidth: 4
             }]} />
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    stroke: #333;
+    stroke-dasharray: 10 5;
+    stroke-width: 2;
+    stroke-opacity: 0.5;
+}
+`,
+        types: ['polygon', 'vector'],
+        title: 'Dashed Border',
+        format: 'css',
+        preview: <SVGPreview
+            type="polygon"
+            paths={[{
+                fill: "transparent",
+                stroke: "#333",
+                strokeWidth: 4,
+                strokeDasharray: "20 10",
+                strokeOpacity: 0.5
+            }]} />
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    fill: #ddd;
+    stroke: #333;
+    stroke-width: 1;
+}
+`,
+        types: ['polygon', 'vector'],
+        title: 'Simple',
+        format: 'css',
+        preview: <SVGPreview
+            type="polygon"
+            paths={[{
+                fill: "#ddd",
+                stroke: "#333",
+                strokeWidth: 4
+            }]} />
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    fill: symbol("shape://slash");
+    /* fill: symbol("shape://vertline"); */
+    /* fill: symbol("shape://horline"); */
+    /* fill: symbol("shape://slash"); */
+    /* fill: symbol("shape://backslash"); */
+    /* fill: symbol("shape://plus"); */
+    /* fill: symbol("shape://times"); */
+    :fill {
+        size: 8;
+        stroke: #000;
+        stroke-width: 1;
+        stroke-linecap: round;
+    };
+}
+`,
+        types: ['polygon', 'vector'],
+        title: 'Line Pattern',
+        format: 'css',
+        preview: <SVGPreview
+            type="polygon"
+            paths={[{
+                fill: "url(#line)"
+            }]}
+            patterns={[{
+                id: 'line',
+                icon: {
+                    d: 'M0.0 1.0 L1.0 0.0',
+                    stroke: '#000',
+                    strokeWidth: 0.05
+                }
+            }]} />
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    fill: symbol("shape://dot");
+    :fill {
+        size: 8;
+        stroke: black;
+        stroke-width: 4;
+    };
+}
+`,
+        types: ['polygon', 'vector'],
+        title: 'Dot Pattern',
+        format: 'css',
+        preview: <SVGPreview
+            type="polygon"
+            paths={[{
+                fill: "url(#poly_dot)"
+            }]}
+            patterns={[{
+                id: 'poly_dot',
+                icon: {
+                    d: 'M0.5 0.5 L0.5 0.52Z',
+                    stroke: '#000',
+                    strokeLinecap: 'round',
+                    strokeWidth: 0.2
+                }
+            }]} />
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+	mark: symbol("circle");
+    /* mark: symbol("square"); */
+    /* mark: symbol("circle"); */
+    /* mark: symbol("triangle"); */
+    /* mark: symbol("star"); */
+    /* mark: symbol("cross"); */
+    /* mark: symbol("x"); */
+    stroke: #333333;
+    stroke-width: 0.5;
+    :mark {
+        size: 16;
+        stroke: #333;
+        stroke-width: 2;
+        fill: #ddd;
+    };
+}
+`,
+        types: ['polygon', 'vector'],
+        title: 'Marker',
+        format: 'css',
+        preview: <SVGPreview
+            type="polygon"
+            paths={[{
+                fill: "transparent",
+                stroke: "#333"
+            },
+            {type: 'point', d: 'M 160,100 A 60,60 0 0 1 100,160 60,60 0 0 1 40,100 60,60 0 0 1 100,40 60,60 0 0 1 160,100 Z', stroke: '#333', fill: "#ddd", strokeWidth: 4}]}/>
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    fill: #ddd, symbol("square");
+    graphic-margin: 2;
+    /* mark: symbol("circle"); */
+    /* mark: symbol("triangle"); */
+    /* mark: symbol("star"); */
+    /* mark: symbol("cross"); */
+    /* mark: symbol("x"); */
+    :fill {
+        size: 20;
+        stroke: #333;
+        stroke-width: 1;
+        fill: #f2f2f2;
+    };
+}
+`,
+        types: ['polygon', 'vector'],
+        title: 'Fill Pattern',
+        format: 'css',
+        preview: <SVGPreview
+            type="polygon"
+            paths={[{
+                fill: "#ddd"
+            }, {
+                fill: "url(#poly_square)"
+            }]}
+            patterns={[{
+                id: 'poly_square',
+                icon: {
+                    d: 'M0.1 0.1 L0.9 0.1 L0.9 0.9 L0.1 0.9Z',
+                    stroke: '#333',
+                    strokeLinecap: 'round',
+                    strokeWidth: 0.05,
+                    fill: '#f2f2f2'
+                }
+            }]}/>
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    stroke:  #555555, #000000;
+    stroke-offset: 0, -5;
+    stroke-dasharray: 1 0, 8 4;
+    stroke-width: 0.5, 1;
+}
+`,
+        types: ['polygon', 'vector'],
+        title: 'Section',
+        format: 'css',
+        preview: <SVGPreview
+            type="polygon"
+            paths={[{
+                fill: "transparent",
+                stroke: "#555555",
+                strokeWidth: 2
+            }, {
+                type: 'point',
+                fill: "transparent",
+                stroke: "#000000",
+                strokeDasharray: "32 16",
+                d: 'M30 30 L170 30 L170 170 L30 170Z',
+                strokeWidth: 4
+            }]}/>
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    fill: symbol("shape://dot");
+    :fill {
+      size: 8;
+      stroke: #333;
+      stroke-width: 2;
+    };
+    stroke: #333;
+    stroke-width: 0.5;
+    stroke-dasharray: 1;
+    fill-random: free;
+    fill-random-seed: 5;
+    fill-random-rotation: none;
+    fill-random-symbol-count: 200;
+    fill-random-tile-size: 100;
+}
+`,
+        types: ['polygon', 'vector'],
+        title: 'Random Dots',
+        format: 'css',
+        preview: <SVGPreview
+            type="polygon"
+            paths={[{
+                fill: "transparent",
+                stroke: "#333",
+                strokeDasharray: "4 4",
+                strokeWidth: 2
+            }, {fill: "url(#random_dots)"}]}
+            patterns={[
+                {
+                    id: 'random_dots',
+                    image: {
+                        xlinkHref: randomDots,
+                        height: 256,
+                        width: 256
+                    }
+                }
+            ]}/>
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    /*
+    replace "Label" with [myPropertyName]
+    to get a label from feature data
+    */
+    label: "Label";
+    label-anchor: 0.5 0.5;
+
+    font-fill: #000;
+    font-family: "sans-serif";
+    font-size: 20;
+
+    halo-color: #fff;
+    halo-radius: 4;
+
+    stroke: #474747;
+    fill: symbol("shape://slash");
+    :fill {
+        size: 8;
+        stroke: #000;
+        stroke-width: 1;
+        stroke-linecap: round;
+    };
+}
+`,
+        types: ['polygon', 'vector'],
+        title: 'Label & Fill',
+        format: 'css',
+        preview: <SVGPreview
+            type="polygon"
+            paths={[{
+                fill: 'transparent',
+                stroke: "#000",
+                strokeWidth: 2
+            }, {
+                fill: "url(#line)"
+            }]}
+            texts={[
+                {
+                    text: 'Label',
+                    style: {
+                        fontSize: 50,
+                        fontWeight: 'bold',
+                        strokeWidth: 12,
+                        stroke: '#ffffff'
+                    }
+                },
+                {
+                    text: 'Label',
+                    fill: '#000000',
+
+                    style: {
+                        fontSize: 50,
+                        fontWeight: 'bold',
+                        strokeWidth: 1,
+                        stroke: '#000000'
+                    }
+                }
+            ]}/>
     },
     {
         types: ['point', 'vector'],
@@ -382,6 +1025,80 @@ const customTemplates = [
                 strokeWidth: 4,
                 fill: 'none'
             }]} />
+    },
+    {
+        code:
+`@styleTitle '\${styleTitle}';
+@styleAbstract '\${styleAbstract}';
+
+* {
+    /*
+    replace "Label" with [myPropertyName]
+    to get a label from feature data
+    */
+    label: "Label";
+    label-anchor: 0.5 2;
+    /* label-group: true; */
+    label-conflict-resolution: false;
+
+    font-fill: #000;
+    font-family: "sans-serif";
+    /* font-weight: bold; */
+    /* font-style: italic; */
+    font-size: 20;
+
+    halo-color: #fff;
+    halo-radius: 4;
+
+    mark: symbol("circle"), symbol("circle");
+    :mark {
+        size: 7, 3;
+        stroke: #0d0d0d;
+        stroke-width: 0.7;
+    };
+}
+`,
+        types: ['polygon', 'point', 'vector'],
+        title: 'Label & Marker',
+        format: 'css',
+        preview: <SVGPreview
+            type="polygon"
+            paths={[{
+                type: 'point',
+                d: 'M 100, 100 m -10, 0 a 10,10 0 1,0 20,0 a 10,10 0 1,0 -20,0',
+                stroke: '#0d0d0d',
+                fill: "transparent",
+                strokeWidth: 2
+            }, {
+                type: 'point',
+                d: 'M 100, 100 m -4, 0 a 4,4 0 1,0 8,0 a 4,4 0 1,0 -8,0',
+                stroke: '#0d0d0d',
+                fill: "transparent",
+                strokeWidth: 2
+            }]}
+            texts={[
+                {
+                    text: 'Label',
+                    y: 150,
+                    style: {
+                        fontSize: 50,
+                        fontWeight: 'bold',
+                        strokeWidth: 12,
+                        stroke: '#ffffff'
+                    }
+                },
+                {
+                    text: 'Label',
+                    fill: '#000000',
+                    y: 150,
+                    style: {
+                        fontSize: 50,
+                        fontWeight: 'bold',
+                        strokeWidth: 1,
+                        stroke: '#000000'
+                    }
+                }
+            ]}/>
     }
 ].map(style => ({ ...style, styleId: uuidv1() }));
 

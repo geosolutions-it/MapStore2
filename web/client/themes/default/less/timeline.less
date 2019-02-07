@@ -31,14 +31,74 @@
         height: 20px;
     }
 
+    /* local mixin to highlight handlers on timeline, used on active and over */
+    .ms-time-color-active(
+        @color: @ms2-color-text,
+        @b-top: @ms2-color-text,
+        @b-right: 'transparent',
+        @b-bottom: @ms2-color-text,
+        @b-left: 'transparent',
+        @a-color: 'unset'
+    ) {
+        background-color: @color;
+        border-left: 1px solid @color;
+        box-sizing: unset;
+        border-right: 1px solid @color;
+        &:before, &::before, &:after, &::after {
+            border-top-color: @b-top;
+            border-right-color: @b-right;
+            border-bottom-color: @b-bottom;
+            border-left-color: @b-left;
+            color: @a-color;
+        }
+    }
+
     .vis-custom-time {
 
         &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
             .shadow-soft;
             background-color: lighten(@ms2-color-text, 30%);
             width: 2px;
-            cursor: move;
-            z-index: 10;
+            z-index: 65;
+            cursor: ew-resize;
+            & > div {
+                &:hover, &:active {
+                    /* chevron right icon */
+                    &:before, &::before {
+                        display: flex;
+                        font-size: 10px;
+                        justify-content: flex-start;
+                        content: "\e257";
+                    }
+                    /* chevron left icon */
+                    &:after, &::after {
+                        display: flex;
+                        font-size: 10px;
+                        justify-content: flex-end;
+                        content: "\e258";
+                    }
+                }
+                &:hover, &:active {
+                    /* common style between chevron left and right */
+                    &:before, &::before, &:after, &::after {
+                        align-items: center;
+
+                        box-sizing: border-box;
+                        position: absolute;
+                        pointer-events: none;
+                        bottom: 12px;
+                        width: 30px;
+                        height: 20px;
+                        font-family: "mapstore2";
+                        left: 50%;
+                        margin-left: 1px;
+                        transform: translateX(-50%);
+                        color: lighten(@ms2-color-text, 20%);
+                    }
+                }
+
+            }
+
         }
 
         &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
@@ -49,11 +109,13 @@
                 height: 0;
                 box-sizing: border-box;
                 position: absolute;
+                pointer-events: none;
             }
         }
 
         &.endPlaybackTime {
             background-color: lighten(@ms2-color-danger, 5%);
+            /* stop icon */
             &:after, &::after {
                 bottom: 24px;
                 left: -16px;
@@ -62,10 +124,30 @@
                 font-family: "mapstore2";
                 color: lighten(@ms2-color-danger, 5%);
             }
+            &:hover, &:active {
+                /* mixin hightlight handler, change background and stop icon colors */
+                .ms-time-color-active(
+                    @ms2-color-danger,
+                    'transparent',
+                    'transparent',
+                    'transparent',
+                    'transparent',
+                    @ms2-color-danger
+                );
+                z-index: 67;
+            }
+            & > div {
+                &:active, &:hover {
+                    &:before, &::before, &:after, &::after {
+                        color: @ms2-color-danger;
+                    }
+                }
+            }
         }
 
         &.startPlaybackTime {
             background-color: lighten(@ms2-color-success, 10%);
+            /* play icon */
             &:after, &::after {
                 bottom: 24px;
                 left: 1px;
@@ -74,31 +156,81 @@
                 font-size: 18px;
                 color: lighten(@ms2-color-success, 10%);
             }
+            &:hover, &:active {
+                /* mixin hightlight handler, change background and play icon colors */
+                .ms-time-color-active(
+                    @ms2-color-success,
+                    'transparent',
+                    'transparent',
+                    'transparent',
+                    'transparent',
+                    @ms2-color-success
+                );
+                z-index: 67;
+            }
+            & > div {
+                &:active, &:hover {
+                    &:before, &::before, &:after, &::after {
+                        color: @ms2-color-success;
+                    }
+                }
+            }
         }
 
         &.currentTime {
             background-color: lighten(@ms2-color-text, 30%);
+            cursor: move;
+            cursor: grab;
+            cursor: -moz-grab;
+            cursor: -webkit-grab;
+
             &:before, &::before, &:after, &::after {
                 border-left: 10px solid transparent;
                 border-right: 10px solid transparent;
             }
+            /* generate a triangle on top of the handler */
             &:before, &::before {
                 top: 0;
                 left: -9px;
                 border-top: 10px solid lighten(@ms2-color-text, 30%);
             }
+            /* generate a triangle on bottom of the handler */
             &:after, &::after {
                 bottom: 0;
                 left: -9px;
                 border-bottom: 10px solid lighten(@ms2-color-text, 30%);
             }
 
+            &:hover {
+                /* mixin hightlight handler, change background and triangles colors */
+                .ms-time-color-active(
+                    lighten(@ms2-color-text, 20%),
+                    lighten(@ms2-color-text, 20%),
+                    'transparent',
+                    lighten(@ms2-color-text, 20%)
+                );
+            }
+            &:active {
+                cursor: grabbing;
+                cursor: -moz-grabbing;
+                cursor: -webkit-grabbing;
+                /* mixin hightlight handler, change background and triangles colors */
+                .ms-time-color-active(
+                    lighten(@ms2-color-text, 20%),
+                    lighten(@ms2-color-text, 20%),
+                    'transparent',
+                    lighten(@ms2-color-text, 20%)
+                );
+                z-index: 67;
+            }
         }
     }
 
     &.with-time-offset {
         .vis-custom-time {
             &.currentTime {
+                cursor: ew-resize;
+                /* generate a smaller tiangle on bottom of the handler */
                 &:before, &::before {
                     top: 0;
                     left: 0;
@@ -106,6 +238,7 @@
                     border-left: 10px solid lighten(@ms2-color-text, 30%);
                     border-top: unset;
                 }
+                /* generate a smaller tiangle on top of the handler */
                 &:after, &::after {
                     bottom: 0;
                     left: 0;
@@ -113,20 +246,45 @@
                     border-left: 10px solid lighten(@ms2-color-text, 30%);
                     border-bottom: unset;
                 }
+                &:hover, &:active {
+                    /* mixin hightlight handler, change background and triangles colors */
+                    .ms-time-color-active(
+                        lighten(@ms2-color-text, 20%),
+                        'transparent',
+                        'transparent',
+                        'transparent',
+                        lighten(@ms2-color-text, 20%)
+                    );
+                    z-index: 67;
+                }
             }
 
             &.offsetTime {
+                /* generate a smaller tiangle on bottom of the handler */
                 &:before, &::before {
                     top: 0;
                     left: -9px;
                     border-bottom: 10px solid transparent;
                     border-right: 10px solid lighten(@ms2-color-text, 30%);
                 }
+                /* generate a smaller tiangle on top of the handler */
                 &:after, &::after {
                     bottom: 0;
                     left: -9px;
                     border-top: 10px solid transparent;
                     border-right: 10px solid lighten(@ms2-color-text, 30%);
+                }
+
+                &:hover, &:active {
+                    /* mixin hightlight handler, change background and triangles colors */
+                    .ms-time-color-active(
+                        lighten(@ms2-color-text, 20%),
+                        'transparent',
+                        lighten(@ms2-color-text, 20%),
+                        'transparent',
+                        'transparent'
+                    );
+                    z-index: 67;
                 }
             }
         }
@@ -195,7 +353,7 @@
             }
             &.vis-center {
                 .vis-group {
-                    z-index:10 ;
+                    z-index: 10;
                     &.selected {
                         background-color: fade(@ms2-color-primary, 5%);
                     }
@@ -240,6 +398,9 @@
                             background-color: transparent;
                             border-color: transparent;
                             &.histogram-item {
+                                &.vis-item {
+                                    top: 0 !important; // override inline offset due to auto-set
+                                }
                                 background: none;
                                 border: none;
                                 bottom: 0;
@@ -328,9 +489,23 @@
     }
 
     .vis-item.vis-background.ms-current-range {
+        cursor: move;
         cursor: grab;
+        cursor: -moz-grab;
+        cursor: -webkit-grab;
         z-index: 60;
+        &:active {
+            cursor: move;
+            cursor: grabbing;
+            cursor: -moz-grabbing;
+            cursor: -webkit-grabbing;
+            z-index: 70;
+        }
+
         background-color: fade(lighten(@ms2-color-text, 10%), 20%);
+        border-left: 1px dashed lighten(@ms2-color-text, 10%);
+        border-right: 1px dashed lighten(@ms2-color-text, 10%);
+        box-sizing: border-box;
     }
 
     .vis-item.vis-background.ms-playback-range {
@@ -359,6 +534,39 @@
             }
         }
     }
+
+    /* read only section */
+    &, &.with-time-offset {
+        .read-only-timeline {
+            .vis-custom-time {
+                &.currentTime,
+                &.startPlaybackTime,
+                &.endPlaybackTime,
+                &.offsetTime {
+                    cursor: default;
+                    border: none;
+                    & > div {
+                        &:before, &::before, &:after, &::after {
+                            content: "";
+                        }
+                    }
+                }
+
+                &.currentTime,
+                &.offsetTime {
+                    background-color: lighten(@ms2-color-text, 30%);
+                }
+
+                &.endPlaybackTime {
+                    background-color: @ms2-color-danger;
+                }
+                &.startPlaybackTime {
+                    background-color: @ms2-color-success;
+                }
+            }
+        }
+    }
+    
 }
 
 .ms-inline-datetime {
@@ -415,7 +623,6 @@
     .ms-playback-settings {
         position: absolute;
         overflow: auto;
-        right: @square-btn-small-size * 2;
         top: -5px;
         transform: ~"translateY(-100%)";
         padding: 8px;

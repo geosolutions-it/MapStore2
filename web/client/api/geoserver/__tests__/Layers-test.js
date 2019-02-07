@@ -46,4 +46,23 @@ describe('Test layers rest API', () => {
             done();
         });
     });
+
+    it('test updateDefaultStyle', (done) => {
+        const LAYER_NAME = "TEST_LAYER_2";
+        const newDefaultStyle = 'point';
+        API.updateDefaultStyle({
+            baseUrl: 'base/web/client/test-resources/geoserver/',
+            layerName: LAYER_NAME,
+            styleName: newDefaultStyle
+        }).then((layerObj)=> {
+            expect(layerObj).toExist();
+            expect(layerObj.layer.defaultStyle.name).toBe(newDefaultStyle);
+            expect(layerObj.layer.styles.style.length).toBe(2);
+            expect(layerObj.layer.styles.style[0].name).toBe('test_TEST_LAYER_1');
+            expect(layerObj.layer.styles.style[1].name).toBe('generic');
+            done();
+        }).catch(e => {
+            done(e);
+        });
+    });
 });

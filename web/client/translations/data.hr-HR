@@ -160,7 +160,7 @@
         },
         "home":{
             "open": "Otvori",
-            "shortDescription": "Moderan webmapping pomoću OL3, Leaflet i React<br/><small>pregledaj stranicu sa <a href=\"/mapstore/docs/\">dokumentacijom</a></small>",
+            "shortDescription": "Moderan webmapping pomoću OpenLayers, Leaflet i React<br/><small>pregledaj stranicu sa <a href=\"/mapstore/docs/\">dokumentacijom</a></small>",
             "forkMeOnGitHub": "Forkaj me na GitHub-u",
             "description": "MapStore je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd.<br/>Posjetite <a href=\"/mapstore/docs/\">početnu stranicu</a> za više informacija.",
             "Applications": "Aplikacije",
@@ -1491,7 +1491,12 @@
             "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
             "updateStyleErrorTitle": "Edit Style",
             "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
-            "genericValidationError": "Style is not valid and it could not be applied."
+            "genericValidationError": "Style is not valid and it could not be applied.",
+            "setDefaultStyle": "Set selected style as default for the current layer",
+            "setDefaultStyleSuccessTitle": "Success on set default style",
+            "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
+            "setDefaultStyleErrorTitle": "Error on set default style",
+            "setDefaultStyleErrorMessage": "It's not possible apply selected style as default"
         },
         "playback": {
             "settings": {

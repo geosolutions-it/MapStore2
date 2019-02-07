@@ -6,6 +6,7 @@
   "main": "index.js",
   "devDependencies": {
     "acorn-jsx": "https://github.com/geosolutions-it/acorn-jsx/tarball/master",
+    "axios-mock-adapter": "1.16.0",
     "babel-core": "6.8.0",
     "babel-eslint": "4.1.8",
     "babel-istanbul-loader": "0.1.0",
@@ -191,7 +192,7 @@
     "reselect": "2.5.1",
     "resize-observer-polyfill": "1.5.0",
     "rxjs": "5.1.1",
-    "screenfull": "3.1.0",
+    "screenfull": "4.0.0",
     "shpjs": "3.4.2",
     "tinycolor2": "1.4.1",
     "turf-bbox": "3.0.10",

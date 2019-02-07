@@ -38,17 +38,17 @@ describe('MousePositionLabelDM', () => {
 
         let spans = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmp, "span");
         expect(spans.length).toBe(11);
-        expect(spans[1].innerText).toBe("Lat: ");
-        expect(spans[2].innerText).toBe("");
-        expect(spans[3].innerText).toBe("° ");
-        expect(spans[4].innerText).toBe("");
-        expect(spans[5].innerText).toBe("\' ");
+        expect(spans[1].textContent).toBe("Lat: ");
+        expect(spans[2].textContent).toBe("");
+        expect(spans[3].textContent).toBe("° ");
+        expect(spans[4].textContent).toBe("");
+        expect(spans[5].textContent).toBe("\' ");
 
-        expect(spans[6].innerText).toBe("Lng: ");
-        expect(spans[7].innerText).toBe("");
-        expect(spans[8].innerText).toBe("° ");
-        expect(spans[9].innerText).toBe("");
-        expect(spans[10].innerText).toBe("\'");
+        expect(spans[6].textContent).toBe("Lng: ");
+        expect(spans[7].textContent).toBe("");
+        expect(spans[8].textContent).toBe("° ");
+        expect(spans[9].textContent).toBe("");
+        expect(spans[10].textContent).toBe("\' ");
     });
 
     it('a position with defaults', () => {

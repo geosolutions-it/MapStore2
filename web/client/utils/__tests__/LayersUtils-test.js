@@ -335,9 +335,9 @@ describe('LayersUtils', () => {
             const res = LayersUtils.isSupportedLayer(emptyBackground, "openlayers");
             expect(res).toBeTruthy();
         });
-        it('type: ' + typeV1 + '  maptype: cesium, not supported', () => {
+        it('type: ' + typeV1 + '  maptype: cesium, supported', () => {
             const res = LayersUtils.isSupportedLayer(emptyBackground, "cesium");
-            expect(res).toBeFalsy();
+            expect(res).toBeTruthy();
         });
         it('type: wms  maptype: leaflet, supported', () => {
             const maptype = "leaflet";

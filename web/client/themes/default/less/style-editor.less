@@ -162,6 +162,17 @@ ul.CodeMirror-hints {
     }
 }
 
+/* display correctly text overflow ellipsis in firefox */
+.ms-style-editor-list {
+    & > .ms2-border-layout-body {
+        position: relative;
+        & > .ms2-border-layout-content {
+            position: absolute;
+            padding-bottom: 15px; 
+        }
+    }
+}
+
 /*
 http://lesscss.org/ dark theme
 Ported to CodeMirror by Peter Kroon

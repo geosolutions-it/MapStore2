@@ -20,10 +20,10 @@ const React = require('react');
  * @prop {function} onClick callback on card click
  */
 
-const SquareCard = ({ selected, title, preview, previewSrc, onClick = () => { } }) => (
+const SquareCard = ({ disabled, selected, title, preview, previewSrc, onClick = () => { } }) => (
     <div
-        className={`ms-square-card${selected ? ' ms-selected' : ''}`}
-        onClick={() => onClick()}>
+        className={`ms-square-card${selected ? ' ms-selected' : ''}${disabled ? ' ms-disabled' : ''}`}
+        onClick={disabled ? null : () => onClick()}>
         {(preview || previewSrc) && <div className="ms-preview">
             {preview || previewSrc && <img src={previewSrc} />}
         </div>}

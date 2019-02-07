@@ -32,6 +32,7 @@ const SideGrid = emptyState(
  * @memberof components.styleeditor
  * @name StyleList
  * @class
+ * @prop {bool} showDefaultStyleIcon show icon near default style
  * @prop {string} enabledStyle name of style in use
  * @prop {string} defaultStyle name of default style
  * @prop {array} availableStyles array of all available styles, eg: [{TYPE_NAME: "WMS_1_3_0.Style", filename: "style.sld", format: "sld", languageVersion: {version: "1.0.0"}, legendURL: [{…}], name: "point", title: "Title", _abstract: ""}]
@@ -42,6 +43,7 @@ const SideGrid = emptyState(
  */
 
 const StyleList = ({
+    showDefaultStyleIcon,
     enabledStyle,
     defaultStyle,
     availableStyles = [],
@@ -54,6 +56,7 @@ const StyleList = ({
     onFilter = () => {}
 }) => (
         <BorderLayout
+            className="ms-style-editor-list"
             header={
                 <Filter
                     filterPlaceholder="styleeditor.styleListfilterPlaceholder"
@@ -87,9 +90,7 @@ const StyleList = ({
                                             fontWeight: 'bold'
                                         }
                                     }]}/> || <Glyphicon glyph="geoserver" />,
-                        tools: defaultStyle === style.name &&
-                        <Glyphicon glyph="star" tooltipId="styleeditor.defaultStyle"/>
-                        || <Glyphicon glyph="ok" tooltipId="styleeditor.availableStyle"/>
+                        tools: showDefaultStyleIcon && defaultStyle === style.name ? <Glyphicon glyph="star" tooltipId="styleeditor.defaultStyle"/> : null
                     }))} />
         </BorderLayout>
     );

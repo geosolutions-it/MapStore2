@@ -24,7 +24,8 @@ const {
     statusStyleSelector,
     loadingStyleSelector,
     getUpdatedLayer,
-    errorStyleSelector
+    errorStyleSelector,
+    canEditStyleSelector
 } = require('../selectors/styleeditor');
 
 const { userRoleSelector } = require('../selectors/security');
@@ -49,7 +50,9 @@ class StyleEditorPanel extends React.Component {
         onInit: PropTypes.func,
         styleService: PropTypes.object,
         userRole: PropTypes.string,
-        editingAllowedRoles: PropTypes.array
+        editingAllowedRoles: PropTypes.array,
+        enableSetDefaultStyle: PropTypes.bool,
+        canEdit: PropTypes.bool
     };
 
     static defaultProps = {
@@ -84,12 +87,16 @@ class StyleEditorPanel extends React.Component {
                     this.props.showToolbar ? <div className="ms-style-editor-container-header">
                         {this.props.header}
                         <div className="text-center">
-                            <StyleToolbar />
+                            <StyleToolbar
+                                enableSetDefaultStyle={this.props.enableSetDefaultStyle}/>
                         </div>
                     </div> : null
                 }
                 footer={<div style={{ height: 25 }} />}>
-                {this.props.isEditing ? <StyleCodeEditor /> : <StyleSelector />}
+                {this.props.isEditing
+                    ? <StyleCodeEditor />
+                    : <StyleSelector
+                        showDefaultStyleIcon={this.props.canEdit && this.props.enableSetDefaultStyle}/>}
             </BorderLayout>
         );
     }
@@ -106,7 +113,8 @@ class StyleEditorPanel extends React.Component {
  * @prop {string} cfg.styleService.baseUrl base url of service eg: '/geoserver/'
  * @prop {array} cfg.styleService.availableUrls a list of urls that can access directly to the style service
  * @prop {array} cfg.styleService.formats supported formats, could be one of [ 'sld' ] or [ 'sld', 'css' ]
- * @prop {array} cfg.editingAllowedRoles all roles with edit permission eg: ['ADMIN'], if null all roles have edit permission
+ * @prop {array} cfg.editingAllowedRoles all roles with edit permission eg: [ 'ADMIN' ], if null all roles have edit permission
+ * @prop {array} cfg.enableSetDefaultStyle enable set default style functionality
  * @memberof plugins
  * @class StyleEditor
  */
@@ -128,14 +136,16 @@ const StyleEditorPlugin = compose(
                 loadingStyleSelector,
                 getUpdatedLayer,
                 errorStyleSelector,
-                userRoleSelector
+                userRoleSelector,
+                canEditStyleSelector
             ],
-            (status, loading, layer, error, userRole) => ({
+            (status, loading, layer, error, userRole, canEdit) => ({
                 isEditing: status === 'edit',
                 loading,
                 layer,
                 error: !!(error && error.availableStyles),
-                userRole
+                userRole,
+                canEdit
             })
         ),
         {

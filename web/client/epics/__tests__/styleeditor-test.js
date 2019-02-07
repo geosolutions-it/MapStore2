@@ -39,7 +39,8 @@ const {
     createStyle,
     updateStyleCode,
     deleteStyle,
-    UPDATE_STATUS
+    UPDATE_STATUS,
+    setDefaultStyle
 } = require('../../actions/styleeditor');
 
 const {
@@ -48,7 +49,8 @@ const {
     updateTemporaryStyleEpic,
     createStyleEpic,
     updateStyleCodeEpic,
-    deleteStyleEpic
+    deleteStyleEpic,
+    setDefaultStyleEpic
 } = require('../styleeditor');
 
 const { testEpic } = require('./epicTestUtils');
@@ -142,6 +144,58 @@ describe('styleeditor Epics', () => {
             toggleStyleEditorEpic,
             NUMBER_OF_ACTIONS,
             toggleStyleEditor(undefined, false),
+            results,
+        state);
+
+    });
+    it('toggleStyleEditorEpic: missing availableStyles starts the styles retrieval', (done) => {
+
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'layerName',
+                        url: '/geoserver/'
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ],
+                settings: {
+                    options: {
+                        opacity: 1
+                    }
+                }
+            },
+            styleeditor: {
+                enabled: true
+            }
+        };
+        const NUMBER_OF_ACTIONS = 1;
+
+        const results = (actions) => {
+            expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+            try {
+                actions.map((action) => {
+                    switch (action.type) {
+                        case LOADING_STYLE:
+                            expect(action.status).toBe('global');
+                            break;
+                        default:
+                            expect(true).toBe(false);
+                    }
+                });
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+
+        testEpic(
+            toggleStyleEditorEpic,
+            NUMBER_OF_ACTIONS,
+            toggleStyleEditor(undefined, true),
             results,
         state);
 
@@ -610,5 +664,95 @@ describe('styleeditor Epics', () => {
             deleteStyle('test_style'),
             results,
         state);
+    });
+
+    it('test setDefaultStyleEpic', (done) => {
+
+        const selectedStyle = 'point';
+        const currentAvailableStyles = [
+            // default style is on first position pf array
+            {
+                name: 'test_TEST_LAYER_1'
+            },
+            //
+            {
+                name: 'point'
+            },
+            {
+                name: 'generic'
+            }
+        ];
+        const updatedAvailableStyles = [
+            // default style is on first position pf array
+            {
+                name: 'point'
+            },
+            //
+            {
+                name: 'test_TEST_LAYER_1'
+            },
+            {
+                name: 'generic'
+            }
+        ];
+
+        const state = {
+            layers: {
+                flat: [
+                    {
+                        id: 'layerId',
+                        name: 'TEST_LAYER_2',
+                        url: 'base/web/client/test-resources/geoserver/',
+                        describeFeatureType: {},
+                        style: ''
+                    }
+                ],
+                selected: [
+                    'layerId'
+                ],
+                settings: {
+                    node: 'layerId',
+                    nodeType: 'layers',
+                    options: {
+                        availableStyles: currentAvailableStyles,
+                        style: selectedStyle
+                    }
+                }
+            },
+            styleeditor: {
+                service: {
+                    baseUrl: 'base/web/client/test-resources/geoserver/'
+                }
+            }
+        };
+        const NUMBER_OF_ACTIONS = 4;
+        const results = (actions) => {
+            try {
+                expect(actions.length).toBe(NUMBER_OF_ACTIONS);
+
+                expect(actions[0].type).toBe(LOADING_STYLE);
+
+                expect(actions[1].type).toBe(UPDATE_SETTINGS_PARAMS);
+                expect(actions[1].newParams.availableStyles).toEqual(updatedAvailableStyles);
+
+                expect(actions[2].type).toBe(SHOW_NOTIFICATION);
+
+                expect(actions[3].type).toBe(LOADED_STYLE);
+            } catch(e) {
+                done(e);
+            }
+            done();
+        };
+        try {
+            testEpic(
+                setDefaultStyleEpic,
+                NUMBER_OF_ACTIONS,
+                setDefaultStyle(),
+                results,
+            state);
+
+        } catch(e) {
+            done(e);
+        }
     });
 });

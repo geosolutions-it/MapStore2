@@ -134,7 +134,7 @@
         },
         "home":{
             "open": "Openen",
-            "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
+            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. <br/>Bezoek onze <a href=\"/mapstore/docs/\">homepage</a> voor meer detail.",
             "Applications": "Toepassingen",
@@ -1179,7 +1179,12 @@
             "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
             "updateStyleErrorTitle": "Edit Style",
             "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
-            "genericValidationError": "Style is not valid and it could not be applied."
+            "genericValidationError": "Style is not valid and it could not be applied.",
+            "setDefaultStyle": "Set selected style as default for the current layer",
+            "setDefaultStyleSuccessTitle": "Success on set default style",
+            "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
+            "setDefaultStyleErrorTitle": "Error on set default style",
+            "setDefaultStyleErrorMessage": "It's not possible apply selected style as default"
         },
         "playback": {
             "settings": {

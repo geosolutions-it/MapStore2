@@ -7,7 +7,7 @@
  */
 
 const Rx = require('rxjs');
-const { head, isArray, template } = require('lodash');
+const { get, head, isArray, template } = require('lodash');
 const { success, error } = require('../actions/notifications');
 const { UPDATE_NODE, updateNode, updateSettingsParams } = require('../actions/layers');
 const { updateAdditionalLayer, removeAdditionalLayer, updateOptionsByOwner } = require('../actions/additionallayers');
@@ -31,7 +31,8 @@ const {
     UPDATE_STYLE_CODE,
     EDIT_STYLE_CODE,
     DELETE_STYLE,
-    setEditPermissionStyleEditor
+    setEditPermissionStyleEditor,
+    SET_DEFAULT_STYLE
 } = require('../actions/styleeditor');
 
 const StylesAPI = require('../api/geoserver/Styles');
@@ -49,7 +50,7 @@ const {
     getUpdatedLayer
 } = require('../selectors/styleeditor');
 
-const { getSelectedLayer } = require('../selectors/layers');
+const { getSelectedLayer, layerSettingSelector } = require('../selectors/layers');
 const { generateTemporaryStyleId, generateStyleId, STYLE_OWNER_NAME, getNameParts } = require('../utils/StyleEditorUtils');
 const { normalizeUrl } = require('../utils/PrintUtils');
 const { initialSettingsSelector, originalSettingsSelector } = require('../selectors/controls');
@@ -200,9 +201,11 @@ module.exports = {
             .switchMap((action) => {
 
                 const state = store.getState();
+                const settings = layerSettingSelector(state);
+                const isInitialized = !!get(settings, 'options.availableStyles');
 
                 if (!action.enabled) return resetStyleEditorObservable(state);
-                if (enabledStyleEditorSelector(state)) return Rx.Observable.empty();
+                if (enabledStyleEditorSelector(state) && isInitialized) return Rx.Observable.empty();
 
                 const layer = action.layer || getSelectedLayer(state);
                 if (!layer || layer && !layer.url) return Rx.Observable.empty();
@@ -501,6 +504,55 @@ module.exports = {
                 })
                 .catch(() => Rx.Observable.of(loadedStyle()))
                 .startWith(() => Rx.Observable.of(loadingStyle('global')));
+            }),
+    /**
+     * Gets every `SET_DEFAULT_STYLE` event.
+     * Update default style of the selected layer
+     * @param {external:Observable} action$ manages `SET_DEFAULT_STYLE`
+     * @memberof epics.styleeditor
+     * @return {external:Observable}
+     */
+    setDefaultStyleEpic: (action$, store) =>
+        action$.ofType(SET_DEFAULT_STYLE)
+            .switchMap(() => {
+                const state = store.getState();
+                const { baseUrl = '' } = styleServiceSelector(state);
+                const layer = getUpdatedLayer(state);
+                const styleName = selectedStyleSelector(state);
+                return Rx.Observable.defer(() =>
+                    LayersAPI.updateDefaultStyle({
+                        baseUrl,
+                        layerName: layer.name,
+                        styleName
+                    })
+                )
+                .switchMap(() => {
+                    const defaultStyle = layer.availableStyles.filter(({ name }) => styleName === name);
+                    const filteredStyles = layer.availableStyles.filter(({ name }) => styleName !== name);
+                    const availableStyles = [...defaultStyle, ...filteredStyles];
+                    return Rx.Observable.of(
+                        updateSettingsParams({ availableStyles }, true),
+                        success({
+                            title: "styleeditor.setDefaultStyleSuccessTitle",
+                            message: "styleeditor.setDefaultStyleSuccessMessage",
+                            uid: "setDefaultStyleSuccess",
+                            autoDismiss: 5
+                        }),
+                        loadedStyle()
+                    );
+                })
+                .startWith(loadingStyle('global'))
+                .catch(() => {
+                    return Rx.Observable.of(
+                        error({
+                            title: "styleeditor.setDefaultStyleErrorTitle",
+                            message: "styleeditor.setDefaultStyleErrorMessage",
+                            uid: "setDefaultStyleError",
+                            autoDismiss: 5
+                        }),
+                        loadedStyle()
+                    );
+                });
             })
 };
 
