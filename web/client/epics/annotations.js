@@ -163,7 +163,10 @@ module.exports = (viewer) => ({
                             extraStyles.concat(getStartEndPointsForLinestring());
                         }
                         return {...ft,
-                        style: isArray(ft.style) ? ft.style : [{...ftColl.style[styleType], id: ftColl.style[styleType].id || uuidv1()}].concat(extraStyles)};
+                        style: isArray(ft.style) ? ft.style.map(ftStyle => {
+                            const {symbolUrlCustomized, ...filteredStyle} = ftStyle;
+                            return filteredStyle;
+                        }) : [{...ftColl.style[styleType], id: ftColl.style[styleType].id || uuidv1(), symbolUrlCustomized: undefined}].concat(extraStyles)};
                     })};
                 });
 
@@ -189,6 +192,7 @@ module.exports = (viewer) => ({
                 drawEnabled: false,
                 transformToFeatureCollection: true
             };
+            // parsing styles searching for missing symbols, therefore updating it with a missing symbol
             return Rx.Observable.from([
                 changeLayerProperties('annotations', {visibility: false}),
                 changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {

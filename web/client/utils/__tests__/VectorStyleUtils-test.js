@@ -51,9 +51,19 @@ describe("VectorStyleUtils ", () => {
     });
     it("isStrokeStyle", () => {
         expect(isStrokeStyle({})).toBe(false);
-        const styleStroke = {
-            color: "#FF00FF"
-        };
+        let styleStroke = { color: "#FF00FF" };
+        expect(isStrokeStyle(styleStroke)).toBe(true);
+        styleStroke = { opacity: 1 };
+        expect(isStrokeStyle(styleStroke)).toBe(true);
+        styleStroke = { dashArray: [1] };
+        expect(isStrokeStyle(styleStroke)).toBe(true);
+        styleStroke = { dashOffset: 1 };
+        expect(isStrokeStyle(styleStroke)).toBe(true);
+        styleStroke = { lineCap: "round"};
+        expect(isStrokeStyle(styleStroke)).toBe(true);
+        styleStroke = { lineJoin: "round" };
+        expect(isStrokeStyle(styleStroke)).toBe(true);
+        styleStroke = { weight: 2 };
         expect(isStrokeStyle(styleStroke)).toBe(true);
         expect(isFillStyle(styleStroke)).toBe(false);
         expect(isCircleStyle(styleStroke)).toBe(false);
@@ -69,11 +79,15 @@ describe("VectorStyleUtils ", () => {
     });
     it("isFillStyle", () => {
         expect(isFillStyle({})).toBe(false);
-        const styleFill = {
+        let styleFill = {
             fillColor: "#FF00FF"
         };
-        expect(isStrokeStyle(styleFill)).toBe(false);
         expect(isFillStyle(styleFill)).toBe(true);
+        styleFill = {
+            fillOpacity: "#FF00FF"
+        };
+        expect(isFillStyle(styleFill)).toBe(true);
+        expect(isStrokeStyle(styleFill)).toBe(false);
         expect(isCircleStyle(styleFill)).toBe(false);
         expect(isTextStyle(styleFill)).toBe(false);
         expect(isMarkerStyle(styleFill)).toBe(false);
@@ -267,7 +281,7 @@ describe("VectorStyleUtils ", () => {
             color: "#005544",
             fillColor: "#218f8f"
         };
-        registerStyle(hashAndStringify(style), style);
+        registerStyle(hashAndStringify(style), {style});
         expect(Object.keys(getSymbolsStyles()).length).toBe(1);
 
         try {
@@ -282,7 +296,7 @@ describe("VectorStyleUtils ", () => {
             color: "#005544",
             fillColor: "#218f8f"
         };
-        registerStyle(hashAndStringify(style), style);
+        registerStyle(hashAndStringify(style), {style});
         expect(fetchStyle(hashAndStringify(style)).color).toBe("#005544");
     });
     it("hashAndStringify", () => {

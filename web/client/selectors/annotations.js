@@ -43,8 +43,10 @@ const unsavedStyleSelector = (state) => get(state, "annotations.unsavedStyle", f
 const errorsSelector = (state) => get(state, "annotations.validationErrors", {});
 const configSelector = (state) => get(state, "annotations.config", {});
 const symbolListSelector = (state) => get(state, "annotations.symbolList", []);
+const symbolErrorsSelector = (state) => get(state, "annotations.symbolErrors", []);
 
 const annotationsInfoSelector = (state) => (assign({}, {
+    symbolErrors: symbolErrorsSelector(state),
     showEdit: isOpenlayers(state),
     mouseHoverEvents: isMapInfoOpen(state),
     closing: closingSelector(state),
@@ -107,6 +109,7 @@ const annotationSelector = createSelector([annotationsListSelector], (annotation
 });
 
 module.exports = {
+    symbolErrorsSelector,
     annotationsLayerSelector,
     annotationsInfoSelector,
     aeronauticalOptionsSelector,

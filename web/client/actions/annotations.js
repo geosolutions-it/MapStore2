@@ -50,10 +50,15 @@ const TOGGLE_DELETE_FT_MODAL = 'ANNOTATIONS:TOGGLE_DELETE_FT_MODAL';
 const CONFIRM_DELETE_FEATURE = 'ANNOTATIONS:CONFIRM_DELETE_FEATURE';
 const CHANGE_FORMAT = 'ANNOTATIONS:CHANGE_FORMAT';
 const UPDATE_SYMBOLS = 'ANNOTATIONS:UPDATE_SYMBOLS';
+const ERROR_SYMBOLS = 'ANNOTATIONS:ERROR_SYMBOLS';
 
 const updateSymbols = (symbols = []) => ({
         type: UPDATE_SYMBOLS,
         symbols
+    });
+const setErrorSymbol = (symbolErrors) => ({
+        type: ERROR_SYMBOLS,
+        symbolErrors
     });
 
 function loadAnnotations(features, override = false) {
@@ -391,5 +396,6 @@ module.exports = {
     SET_INVALID_SELECTED, setInvalidSelected,
     CHANGE_FORMAT, changeFormat,
     CHANGED_SELECTED, changeSelected,
-    UPDATE_SYMBOLS, updateSymbols
+    UPDATE_SYMBOLS, updateSymbols,
+    ERROR_SYMBOLS, setErrorSymbol
 };

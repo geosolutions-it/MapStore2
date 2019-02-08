@@ -807,6 +807,7 @@
             }
         },
         "annotations": {
+            "errorLoadingSymbols": "Beim Laden der Symbolliste ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Administrator, um die Konfigurationsoptionen zu überprüfen",
             "edit": "Bearbeiten",
             "remove": "Löschen",
             "save": "Speichern",

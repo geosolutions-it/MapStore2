@@ -236,10 +236,14 @@ class extends React.Component {
             <HelpWrapper
                 id="search-help"
                 key="seachBar-help"
-                    helpText={<Message msgId="helptexts.searchBar"/>}>
+                helpText={<Message msgId="helptexts.searchBar"/>}>
                     {this.getSearchAndToggleButton()}
-                </HelpWrapper>
-                <SearchResultList fitToMapSize={this.props.fitResultsToMapSize} searchOptions={this.props.searchOptions} resultsStyle={this.props.resultsStyle} key="nominatimresults"/>
+            </HelpWrapper>
+            <SearchResultList
+                fitToMapSize={this.props.fitResultsToMapSize}
+                searchOptions={this.props.searchOptions}
+                resultsStyle={this.props.resultsStyle}
+                key="nominatimresults"/>
             </span>)
         ;
     }

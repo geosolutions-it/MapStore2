@@ -808,6 +808,7 @@
             }
         },
         "annotations": {
+            "errorLoadingSymbols": "Un problème est survenu lors du chargement de la liste de symboles. S'il vous plaît, contactez l'administrateur afin de vérifier les options de configuration",
             "edit": "Modifier",
             "remove": "Effacer",
             "save": "Enregistrer",

@@ -36,14 +36,16 @@ class Feature extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || !isEqual(newProps.features, this.props.features) || !isEqual(newProps.style, this.props.style)) {
+        // TODO check if shallow comparison is enough properties and geometry
+        if (isEqual(newProps.properties, this.props.properties) || isEqual(newProps.geometry, this.props.geometry) || (newProps.features !== this.props.features) || (newProps.style !== this.props.style)) {
             newProps.container.removeLayer(this._layer);
             this.createLayer(newProps);
         }
     }
 
     shouldComponentUpdate(nextProps) {
-        return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry) || !isEqual(nextProps.features, this.props.features);
+        // TODO check if shallow comparison is enough properties and geometry
+        return isEqual(nextProps.properties, this.props.properties) || isEqual(nextProps.geometry, this.props.geometry) || (nextProps.features !== this.props.features);
     }
 
     componentWillUnmount() {

@@ -25,7 +25,7 @@ const isAttrPresent = (style = {}, attributes) => (attributes.filter(prop => !is
  * @param {string[]} attibutes of a stroke style
  * @return {boolean} if the style is compatible with an ol.Stroke
 */
-const isStrokeStyle = (style = {}, attributes = ["color", "opacity", "lineDash", "lineDashOffset", "lineCap", "lineJoin", "weight"]) => {
+const isStrokeStyle = (style = {}, attributes = ["color", "opacity", "dashArray", "dashOffset", "lineCap", "lineJoin", "weight"]) => {
     return isAttrPresent(style, attributes);
 };
 
@@ -192,12 +192,11 @@ let SymbolsStyles = {
 /**
 * register a symbol style in a local cache
 * @param {number} sha unique id generated from the json stringify of the style object
-* @param {object} style object to register
+* @param {object} styleItems object to register {style, base64, svg} etc.
 */
-const registerStyle = (sha, style) => {
-    if (sha && style) {
-        let {...styleToHash} = style;
-        SymbolsStyles[sha] = {style: styleToHash};
+const registerStyle = (sha, styleItems) => {
+    if (sha && styleItems) {
+        SymbolsStyles[sha] = styleItems;
     } else {
         throw new Error("specify all the params: sha, style");
     }
@@ -257,7 +256,7 @@ const createSvgUrl = (style = {}, url) => {
      * then it create and object URL that can be cached in a dictionary
     */
     // TODO think about adding a try catch for loading the not found icon
-    return isSymbolStyle(style) && style.symbolUrl && !fetchStyle(hashAndStringify(style)) ?
+    return isSymbolStyle(style) && style.symbolUrl/* && !fetchStyle(hashAndStringify(style))*/ ?
         axios.get(url, { 'Content-Type': "image/svg+xml;charset=utf-8" })
         .then(response => {
             const DOMURL = window.URL || window.webkitURL || window;
@@ -303,6 +302,8 @@ const createSvgUrl = (style = {}, url) => {
             registerStyle(sha, {style: {...style, symbolUrlCustomized}, svg, base64});
 
             return symbolUrlCustomized;
+        }).catch(()=> {
+            return require('../product/assets/symbols/symbolMissing.svg');
         }) : new Promise((resolve) => {
             resolve(null);
         });
@@ -313,6 +314,8 @@ const createStylesAsync = (styles = []) => {
         return isSymbolStyle(style) ? createSvgUrl(style, style.symbolUrl || style.symbolUrlCustomized)
             .then(symbolUrlCustomized => {
                 return symbolUrlCustomized ? {...style, symbolUrlCustomized} : fetchStyle(hashAndStringify(style));
+            }).catch(() => {
+                return {...style, symbolUrlCustomized: require('../product/assets/symbols/symbolMissing.svg')};
             }) : new Promise((resolve) => {
                 resolve(style);
             });

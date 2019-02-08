@@ -807,6 +807,7 @@
             }
         },
         "annotations": {
+            "errorLoadingSymbols": "Si è verificato un problema durante il caricamento dell'elenco dei simboli. Per favore, contatta l'amministratore per verificare le opzioni di configurazione",
             "edit": "Modifica",
             "remove": "Rimuovi",
             "save": "Salva",

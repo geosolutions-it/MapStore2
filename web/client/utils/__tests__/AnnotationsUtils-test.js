@@ -461,10 +461,9 @@ describe('Test the AnnotationsUtils', () => {
         expect(getBaseCoord("LineString").length).toBe(0);
     });
     it('test validateText defaults', () => {
-        let components = [[1, 2]];
+        let components = [{lat: 4, lon: 4}];
         let textAnnot = {
             components,
-            isArrayFlag: true,
             properties: {
                 valueText: "valid"
             }
@@ -478,18 +477,13 @@ describe('Test the AnnotationsUtils', () => {
         textAnnot.components = [undefined, 4];
         expect(validateText(textAnnot)).toBe(false);
 
-        textAnnot.isArrayFlag = false;
-        textAnnot.components = [{lat: 4, lon: 4}];
-        expect(validateText(textAnnot)).toBe(true);
-
         textAnnot.components = [undefined, 4];
         expect(validateText(textAnnot)).toBe(false);
     });
     it('test validateCircle defaults', () => {
-        let components = [[1, 2]];
+        let components = [{lat: 4, lon: 4}];
         let textAnnot = {
             components,
-            isArrayFlag: true,
             properties: {
                 radius: 5
             }
@@ -504,43 +498,32 @@ describe('Test the AnnotationsUtils', () => {
         textAnnot.components = [undefined, 4];
         expect(validateCircle(textAnnot)).toBe(false);
 
-        textAnnot.isArrayFlag = false;
-        textAnnot.components = [{lat: 4, lon: 4}];
-        expect(validateCircle(textAnnot)).toBe(true);
-
         textAnnot.components = [undefined, 4];
         expect(validateCircle(textAnnot)).toBe(false);
     });
     it('test validateCoordinates defaults', () => {
-        let components = [[1, 2]];
+        let components = [{lat: 4, lon: 4}];
         let textAnnot = {
             components,
-            isArrayFlag: true,
             type: "Point"
         };
         expect(validateCoordinates({})).toBe(false);
         expect(validateCoordinates(textAnnot)).toBe(true);
-
         textAnnot.components = [[undefined, 4]];
         expect(validateCoordinates(textAnnot)).toBe(false);
-
-        textAnnot.isArrayFlag = false;
         textAnnot.components = [{lat: 4, lon: 4}];
         expect(validateCoordinates(textAnnot)).toBe(true);
-
         textAnnot.components = [[undefined, 4]];
         expect(validateCoordinates(textAnnot)).toBe(false);
     });
     it('test validateFeature defaults', () => {
-        let components = [[1, 2]];
+        let components = [{lat: 4, lon: 4}];
         let textAnnot = {
             components,
-            isArrayFlag: true,
             type: "Point"
         };
         expect(validateFeature({})).toBe(false);
         expect(validateFeature(textAnnot)).toBe(true);
-
     });
     it('test annotationsToPrint from featureCollection', () => {
         let fts = annotationsToPrint([featureCollection]);
@@ -548,7 +531,6 @@ describe('Test the AnnotationsUtils', () => {
         expect(fts.length).toBe(2);
         expect(fts[0].geometry.type).toBe("Point");
         expect(fts[1].geometry.type).toBe("LineString");
-
     });
     it('test annotationsToPrint from array of geometryCollection', () => {
         let fts = annotationsToPrint([feature]);

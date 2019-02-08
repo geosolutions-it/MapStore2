@@ -29,7 +29,6 @@ const {
     unsavedGeometrySelector,
     errorsSelector,
     configSelector,
-    annotationsInfoSelector,
     aeronauticalOptionsSelector,
     annotationSelector,
     annotationsListSelector,
@@ -541,19 +540,4 @@ describe('Test annotations selectors', () => {
         expect(isArray(retVal)).toBe(true);
         expect(retVal.length).toBe(symbolList.length);
     });
-    it('test annotationsInfoSelector', () => {
-        const retVal = annotationsInfoSelector(state);
-        expect(Object.keys(retVal).length).toBe(26);
-        const params = ["showEdit", "closing", "config", "drawing", "drawingText",
-        "errors", "editing", "coordinateEditorEnabled", "editedFields",
-        "mode", "removing", "selected", "featureType",
-        "showUnsavedChangesModal", "showUnsavedStyleModal",
-        "showUnsavedGeometryModal", "showDeleteFeatureModal",
-        "stylerType", "styling", "unsavedChanges", "unsavedStyle",
-        "unsavedGeometry", "format", "mouseHoverEvents", "aeronauticalOptions", "symbolList"];
-        Object.keys(retVal).forEach(r => {
-            expect(params.indexOf(r) !== -1).toBe(true);
-        });
-    });
-
 });

@@ -22,7 +22,8 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnot
     cancelCloseAnnotations, confirmCloseAnnotations, startDrawing, setUnsavedChanges, toggleUnsavedChangesModal,
     changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, download, loadAnnotations,
     changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected,
-    highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat, openEditor, updateSymbols, changePointType
+    highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat, openEditor, updateSymbols, changePointType,
+    setErrorSymbol
 } = require('../actions/annotations');
 
 const { zoomToExtent } = require('../actions/map');
@@ -31,6 +32,7 @@ const { annotationsInfoSelector, annotationsListSelector } = require('../selecto
 const { mapLayoutValuesSelector } = require('../selectors/maplayout');
 const commonEditorActions = {
     onUpdateSymbols: updateSymbols,
+    onSetErrorSymbol: setErrorSymbol,
     onEdit: editAnnotation,
     onCancelEdit: cancelEditAnnotation,
     onChangePointType: changePointType,

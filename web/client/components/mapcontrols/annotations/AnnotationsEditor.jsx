@@ -96,10 +96,12 @@ const bbox = require('@turf/bbox');
  * @prop {number} maxZoom max zoome the for annotation (default 18)
  * @prop {function} onDeleteFeature triggered when user click on trash icon of the coordinate editor
  * @prop {function} onUpdateSymbols triggered when user click on refresh icon of the symbols addon
+ * @prop {function} onSetErrorSymbol set a flag in the state to say if the default symbols exists
  * @prop {number} width of the annotation panel
  * @prop {string} pointType the type of the point, values are "marker" or "symbol"
  * @prop {object[]} lineDashOptions list of options for dashed lines
  * @prop {object[]} symbolList list of symbols
+ * @prop {string} defaultShape default shape for symbol
  * @prop {string} symbolsPath path to the svg folder
  *
  * In addition, as the Identify viewer interface mandates, every feature attribute is mapped as a component property (in addition to the feature object).
@@ -181,8 +183,11 @@ class AnnotationsEditor extends React.Component {
         pointType: PropTypes.string,
         symbolsPath: PropTypes.string,
         onUpdateSymbols: PropTypes.func,
+        onSetErrorSymbol: PropTypes.func,
+        symbolErrors: PropTypes.array,
         lineDashOptions: PropTypes.array,
-        symbolList: PropTypes.array
+        symbolList: PropTypes.array,
+        defaultShape: PropTypes.string
     };
 
     static defaultProps = {
@@ -458,8 +463,11 @@ class AnnotationsEditor extends React.Component {
             style={this.props.selected && this.props.selected.style || this.props.editing.style}
             width={this.props.width}
             symbolsPath={this.props.symbolsPath}
+            onSetErrorSymbol={this.props.onSetErrorSymbol}
+            symbolErrors={this.props.symbolErrors}
             onUpdateSymbols={this.props.onUpdateSymbols}
             symbolList={this.props.symbolList}
+            defaultShape={this.props.defaultShape}
             lineDashOptions={this.props.lineDashOptions}
             markersOptions={this.getConfig()}
             />);

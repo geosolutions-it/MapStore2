@@ -12,10 +12,11 @@ const {extraMarkers} = require('./MarkerUtils');
 const {geometryFunctions, fetchStyle, hashAndStringify} = require('./VectorStyleUtils');
 const {isCompletePolygon} = require('./DrawSupportUtils');
 const {set} = require('./ImmutableUtils');
-const {values, isNil, slice, head, castArray, last, isArray} = require('lodash');
+const {values, isNil, slice, head, castArray, last, isArray, findIndex} = require('lodash');
 const uuid = require('uuid');
 const turfCenter = require('@turf/center').default;
 const assign = require('object-assign');
+
 
 const STYLE_CIRCLE = {
     color: '#ffcc33',
@@ -481,9 +482,9 @@ const AnnotationsUtils = {
     validateCoordsArray: ([lon, lat] = []) => !isNaN(parseFloat(lat)) && !isNaN(parseFloat(lon)),
     validateCoord: (c) => !isNaN(parseFloat(c)),
     coordToArray: (c = {}) => [c.lon, c.lat],
-    validateCoordinates: ({components = [], remove = false, type, isArrayFlag = false } = {}) => {
+    validateCoordinates: ({components = [], remove = false, type } = {}) => {
         if (components && components.length) {
-            const validComponents = components.filter(AnnotationsUtils[isArrayFlag ? "validateCoordsArray" : "validateCoords"]);
+            const validComponents = components.filter(AnnotationsUtils.validateCoords);
 
             if (remove) {
                 return validComponents.length > AnnotationsUtils.COMPONENTS_VALIDATION[type].min && validComponents.length === components.length;
@@ -492,31 +493,31 @@ const AnnotationsUtils = {
         }
         return false;
     },
-    validateCircle: ({components = [], properties = {radius: 0}, isArrayFlag = false} = {}) => {
+    validateCircle: ({components = [], properties = {radius: 0}} = {}) => {
         if (components && components.length) {
             const cmp = head(components);
-            return !isNaN(parseFloat(properties.radius)) && (isArrayFlag ? AnnotationsUtils.validateCoordsArray(cmp) : AnnotationsUtils.validateCoords(cmp));
+            return !isNaN(parseFloat(properties.radius)) && AnnotationsUtils.validateCoords(cmp);
         }
         return false;
     },
-    validateText: ({components = [], properties = {valueText: ""}, isArrayFlag = false} = {}) => {
+    validateText: ({components = [], properties = {valueText: ""}} = {}) => {
         if (components && components.length) {
             const cmp = head(components);
-            return properties && !!properties.valueText && (isArrayFlag ? AnnotationsUtils.validateCoordsArray(cmp) : AnnotationsUtils.validateCoords(cmp));
+            return properties && !!properties.valueText && AnnotationsUtils.validateCoords(cmp);
         }
         return false;
     },
-    validateFeature: ({components = [[]], type, remove = false, properties = {}, isArrayFlag = false} = {}) => {
+    validateFeature: ({components = [[]], type, remove = false, properties = {}} = {}) => {
         if (isNil(type)) {
             return false;
         }
         if (type === "Text") {
-            return AnnotationsUtils.validateText({components, properties, isArrayFlag});
+            return AnnotationsUtils.validateText({components, properties});
         }
         if (type === "Circle") {
-            return AnnotationsUtils.validateCircle({components, properties, isArrayFlag});
+            return AnnotationsUtils.validateCircle({components, properties});
         }
-        return AnnotationsUtils.validateCoordinates({components, remove, type, isArrayFlag});
+        return AnnotationsUtils.validateCoordinates({components, remove, type});
     },
     getBaseCoord: (type) => {
         switch (type) {
@@ -534,7 +535,15 @@ const AnnotationsUtils = {
         }
         return ftColl;
     },
-    getStartEndPointsForLinestring
+    getStartEndPointsForLinestring,
+    DEFAULT_SHAPE: "flag",
+    DEFAULT_PATH: "product/assets/symbols/",
+    checkSymbolsError: (symbolErrors, error = "loading_symbols_path") => {
+        return symbolErrors.length && findIndex(symbolErrors, (s) => s === error) !== -1;
+    },
+    isAMissingSymbol: (style) => {
+        return style.symbolUrlCustomized === require('../product/assets/symbols/symbolMissing.svg');
+    }
 };
 
 module.exports = AnnotationsUtils;

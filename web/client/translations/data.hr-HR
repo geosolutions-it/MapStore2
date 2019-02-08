@@ -835,6 +835,7 @@
             "detailsNotes": "Bilješke"
         },
         "annotations": {
+            "errorLoadingSymbols": "There was a problem loading the symbol list. Please, contact the administrator in order to check the configuration options",
             "edit": "Uredi",
             "remove": "Izbriši",
             "save": "Spremi",

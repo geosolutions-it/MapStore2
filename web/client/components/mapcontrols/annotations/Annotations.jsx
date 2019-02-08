@@ -75,11 +75,14 @@ const defaultConfig = require('./AnnotationsConfig');
  * @prop {function} onDetail triggered when the user clicks on an annotation card
  * @prop {function} onFilter triggered when the user enters some text in the filtering widget
  * @prop {function} classNameSelector optional selector to assign custom a CSS class to annotations, based on
+ * @prop {function} onSetErrorSymbol set a flag in the state to say if the default symbols exists
  * @prop {function} onDownload triggered when the user clicks on the download annotations button
  * @prop {function} onUpdateSymbols triggered when user click on refresh icon of the symbols addon
+ * @prop {boolean} symbolErrors errors related to the symbols
  * @prop {object[]} lineDashOptions list of options for dashed lines
  * @prop {string} symbolsPath path to the svg folder
  * @prop {object[]} symbolList list of symbols
+ * @prop {string} defaultShape default Shape
  *
  * the annotation's attributes.
  */
@@ -121,8 +124,11 @@ class Annotations extends React.Component {
         onDownload: PropTypes.func,
         onLoadAnnotations: PropTypes.func,
         onUpdateSymbols: PropTypes.func,
+        onSetErrorSymbol: PropTypes.func,
+        symbolErrors: PropTypes.array,
         lineDashOptions: PropTypes.array,
         symbolList: PropTypes.array,
+        defaultShape: PropTypes.string,
         symbolsPath: PropTypes.string
     };
 
@@ -136,6 +142,7 @@ class Annotations extends React.Component {
         classNameSelector: () => '',
         toggleControl: () => {},
         onUpdateSymbols: () => {},
+        onSetErrorSymbol: () => {},
         onLoadAnnotations: () => {}
     };
     state = {
@@ -227,7 +234,10 @@ class Annotations extends React.Component {
         return this.props.editing && <Editor feature={annotation} id={this.props.editing.properties && this.props.editing.properties.id || uuidv1()} width={this.props.width} config={this.props.config} {...this.props.editing.properties} lineDashOptions={this.props.lineDashOptions}
         symbolsPath={this.props.symbolsPath}
         onUpdateSymbols={this.props.onUpdateSymbols}
+        onSetErrorSymbol={this.props.onSetErrorSymbol}
+        symbolErrors={this.props.symbolErrors}
         symbolList={this.props.symbolList}
+        defaultShape={this.props.defaultShape}
         />;
     };
 

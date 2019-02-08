@@ -636,6 +636,7 @@
             }
         },
         "annotations": {
+            "errorLoadingSymbols": "There was a problem loading the symbol list. Please, contact the administrator in order to check the configuration options",
             "edit": "Edit",
             "remove": "Delete",
             "save": "Save",

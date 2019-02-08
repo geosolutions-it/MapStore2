@@ -10,7 +10,7 @@ const React = require('react');
 const PropTypes = require('prop-types');
 const defaultIcon = require('../map/openlayers/img/marker-icon.png');
 
-const {createSvgUrl, isSymbolStyle, hashAndStringify, fetchStyle} = require('../../utils/VectorStyleUtils');
+const {createSvgUrl, isSymbolStyle} = require('../../utils/VectorStyleUtils');
 
 class StyleCanvas extends React.Component {
     static propTypes = {
@@ -33,6 +33,7 @@ class StyleCanvas extends React.Component {
 
     componentDidMount() {
         let context = this.refs.styleCanvas.getContext('2d');
+        context.clearRect(0, 0, this.props.width || 500, this.props.height || 500);
         this.paint(context);
     }
 
@@ -73,7 +74,6 @@ class StyleCanvas extends React.Component {
             }
             case 'Point': {
                 this.paintPoint(ctx, this.props.shapeStyle.markName);
-                this.paintPoint(ctx, this.props.shapeStyle.markName);
                 break;
             }
             case 'Circle': {
@@ -100,6 +100,7 @@ class StyleCanvas extends React.Component {
     };
 
     drawSymbol = (url, ctx) => {
+        ctx.clearRect(0, 0, 600, 600);
         let icon = new Image();
         let iconNotFound = new Image();
         iconNotFound.src = require('./vector/iconNotFound.png');
@@ -125,9 +126,9 @@ class StyleCanvas extends React.Component {
     }
     paintSymbol = (ctx) => {
         if (isSymbolStyle(this.props.originalStyle)) {
-            if (!fetchStyle(hashAndStringify(this.props.originalStyle))) {
+            if (!this.props.originalStyle.symbolUrlCustomized || !this.props.originalStyle.symbolUrl) {
                 createSvgUrl(this.props.originalStyle, this.props.originalStyle.symbolUrlCustomized || this.props.originalStyle.symbolUrl)
-                .then((url) => this.drawSymbol(url, ctx));
+                    .then((url) => this.drawSymbol(url, ctx));
             } else {
                 this.drawSymbol(this.props.originalStyle.symbolUrlCustomized, ctx);
             }
