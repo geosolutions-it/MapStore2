@@ -211,7 +211,7 @@ describe('Test the widgets reducer', () => {
         expect(wsLocked).toBe(ws);
     });
     it('widgets toggleTray', () => {
-        expect(widgets(undefined, {type: "NO_ACITION"}).tray).toBeFalsy();
+        expect(widgets(undefined, {type: "NO_ACTION"}).tray).toBeFalsy();
         const action = toggleTray(true);
         const state = widgets( undefined, action);
         expect(state).toExist();
