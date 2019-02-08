@@ -14,7 +14,10 @@ const { userSelector } = require('../../selectors/security');
 
 const accessRuleParser = require('../../components/misc/enhancers/security/accessRuleParser');
 
-// handle tools options and editing options
+/*
+ * Transforms the rules into the real flags.
+ * handle tools options and editing options
+ */
 module.exports = (...args) => compose(
         connect(
             createSelector(

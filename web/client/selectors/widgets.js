@@ -81,6 +81,8 @@ const getFloatingWidgetsCurrentLayout = state => get(state, `widgets.containers[
 
 const getDashboardWidgets = state => get(state, `widgets.containers[${DEFAULT_TARGET}].widgets`);
 
+const isTrayEnabled = state => get(state, "widgets.tray");
+
 module.exports = {
     getFloatingWidgets,
     getVisibleFloatingWidgets,
@@ -129,5 +131,6 @@ module.exports = {
     widgetsConfig: createStructuredSelector({
         widgets: getFloatingWidgets,
         layouts: getFloatingWidgetsLayout
-    })
+    }),
+    isTrayEnabled
 };

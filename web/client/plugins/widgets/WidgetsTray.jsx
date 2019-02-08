@@ -8,7 +8,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { connect } = require('react-redux');
-const { compose, withProps, withState, defaultProps } = require('recompose');
+const { compose, withProps, withState, defaultProps, lifecycle } = require('recompose');
 const { createSelector } = require('reselect');
 const { find, findIndex, sortBy } = require('lodash');
 const tooltip = require('../../components/misc/enhancers/tooltip');
@@ -16,7 +16,7 @@ const tooltip = require('../../components/misc/enhancers/tooltip');
 const { Glyphicon, Button: BButton } = require('react-bootstrap');
 const Button = tooltip(BButton);
 const { getFloatingWidgets, getVisibleFloatingWidgets, getFloatingWidgetsCurrentLayout, getCollapsedIds, getCollapsedState } = require('../../selectors/widgets');
-const { toggleCollapse, toggleCollapseAll } = require('../../actions/widgets');
+const { toggleCollapse, toggleCollapseAll, toggleTray } = require('../../actions/widgets');
 
 const BorderLayout = require('../../components/layout/BorderLayout');
 
@@ -171,7 +171,17 @@ module.exports = compose(
         (widgets = []) => ({
             hasTrayWidgets: widgets.length > 0
         })
-    )),
+    ), {
+        toggleTray
+    }),
+    lifecycle({
+        componentDidMount() {
+            if (this.props.toggleTray) this.props.toggleTray(true);
+        },
+        componentWillUnmount() {
+            if (this.props.toggleTray) this.props.toggleTray(false);
+        }
+    }),
     withProps(({ enabled, hasTrayWidgets }) => ({
         enabled: enabled && hasTrayWidgets
     }))

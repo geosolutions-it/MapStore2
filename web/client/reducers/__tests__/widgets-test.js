@@ -19,6 +19,7 @@ const {
     resetDependencies,
     loadDependencies,
     toggleCollapse,
+    toggleTray,
     DEFAULT_TARGET
 } = require('../../actions/widgets');
 const {configureMap} = require('../../actions/config');
@@ -208,5 +209,13 @@ describe('Test the widgets reducer', () => {
         const wsLocked = widgets(ws, lockedAction);
         // nothing changed
         expect(wsLocked).toBe(ws);
+    });
+    it('widgets toggleTray', () => {
+        expect(widgets(undefined, {type: "NO_ACITION"}).tray).toBeFalsy();
+        const action = toggleTray(true);
+        const state = widgets( undefined, action);
+        expect(state).toExist();
+        expect(state.tray).toBe(true);
+        expect(widgets(state, toggleTray(false)).tray).toBe(false);
     });
 });

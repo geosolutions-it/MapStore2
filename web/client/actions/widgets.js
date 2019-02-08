@@ -34,6 +34,7 @@ const WIDGETS_REGEX = /^widgets\["?([^"\]]*)"?\]\.?(.*)$/;
 
 const TOGGLE_COLLAPSE = "WIDGET:TOGGLE_COLLAPSE";
 const TOGGLE_COLLAPSE_ALL = "WIDGET:TOGGLE_COLLAPSE_ALL";
+const TOGGLE_TRAY = "WIDGET:TOGGLE_TRAY";
 
 /**
  * Intent to create a new Widgets
@@ -268,6 +269,12 @@ const toggleCollapseAll = (target = DEFAULT_TARGET) => ({
     target
 });
 
+/**
+ * Toggles the presence of the widgets tray.
+ * @param {boolean} value true the tray is present, false if it is not present
+ */
+const toggleTray = value => ({ type: TOGGLE_TRAY, value});
+
 module.exports = {
     NEW,
     INSERT,
@@ -318,5 +325,6 @@ module.exports = {
     DEFAULT_TARGET,
     WIDGETS_REGEX,
     toggleCollapse, TOGGLE_COLLAPSE,
-    toggleCollapseAll, TOGGLE_COLLAPSE_ALL
+    toggleCollapseAll, TOGGLE_COLLAPSE_ALL,
+    toggleTray, TOGGLE_TRAY
 };

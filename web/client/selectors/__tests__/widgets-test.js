@@ -19,7 +19,8 @@ const {
     getWidgetLayer,
     dependenciesSelector,
     availableDependenciesSelector,
-    returnToFeatureGridSelector
+    returnToFeatureGridSelector,
+    isTrayEnabled
 } = require('../widgets');
 const {set} = require('../../utils/ImmutableUtils');
 describe('widgets selectors', () => {
@@ -157,5 +158,17 @@ describe('widgets selectors', () => {
         expect(dependencies.e).toBe(state.widgets.containers[DEFAULT_TARGET].widgets[0].map.center);
         expect(dependencies.f).toBeFalsy();
         expect(dependencies.g).toBe(state.widgets.otherStateSlice);
+    });
+    it('isTrayEnabled', () => {
+        expect(isTrayEnabled({
+            widgets: {
+                tray: true
+            }
+        })).toBe(true);
+        expect(isTrayEnabled({
+            widgets: {
+                tray: false
+            }
+        })).toBe(false);
     });
 });

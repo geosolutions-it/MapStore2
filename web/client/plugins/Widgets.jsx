@@ -11,7 +11,7 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const { compose, defaultProps, withProps, withPropsOnChange} = require('recompose');
 const {mapIdSelector} = require('../selectors/map');
-const {getVisibleFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout} = require('../selectors/widgets');
+const { getVisibleFloatingWidgets, dependenciesSelector, getFloatingWidgetsLayout, isTrayEnabled} = require('../selectors/widgets');
 const { editWidget, updateWidgetProperty, deleteWidget, changeLayout, exportCSV, exportImage, toggleCollapse} = require('../actions/widgets');
 const editOptions = require('./widgets/editOptions');
 const autoDisableWidgets = require('./widgets/autoDisableWidgets');
@@ -45,7 +45,7 @@ compose(
             onLayoutChange: changeLayout
         }
     ),
-    // functionalities concerning autoresize, layout and style.
+    // functionalities concerning auto-resize, layout and style.
     compose(
         heightProvider({ debounceTime: 20, closest: true, querySelector: '.fill' }),
         C => props => <ContainerDimensions>{({ width } = {}) => <C width={width} {...props} />}</ContainerDimensions>,
@@ -76,14 +76,28 @@ compose(
     compose(
         defaultProps({
             toolsOptions: {
-                showPin: "user.role===ADMIN",
-                seeHidden: "user.role===ADMIN",
-                showHide: "user.role===ADMIN",
+                showPin: "user.role===ADMIN", // users can lock widgets to disable editing, move and collapse
+                seeHidden: "user.role===ADMIN", // users that can see the hidden widgets (hidden with hide tool, visible only to the users that has showHide = true)
+                showHide: false, // show the hide tool in menu
                 showCollapse: true
             }
         }),
         // allow to customize toolsOptions object, with rules. see accessRuleParser
         editOptions("toolsOptions", { asObject: true }),
+        // do not show collapse if tray is not present
+        compose(
+            connect(createSelector(isTrayEnabled, tray => ({ tray }))),
+            withPropsOnChange(
+                ["toolsOptions", "tray"],
+                ({toolsOptions, tray}) => ({
+                    toolsOptions: toolsOptions ? {
+                        ...toolsOptions,
+                        showCollapse: toolsOptions.showCollapse && tray
+                    } : toolsOptions
+                })
+            )
+        ),
+        // hide hidden widgets to user has not access to
         withPropsOnChange(
             ["widgets", "toolsOptions"],
             ({ widgets = [], toolsOptions = {}}) => ({
