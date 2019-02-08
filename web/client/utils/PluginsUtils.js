@@ -168,7 +168,7 @@ const isMorePrioritizedContainer = (pluginImpl, override, plugins, priority) => 
 
 const isValidConfiguration = (cfg) => {
     return cfg && isString(cfg) || (isObject(cfg) && cfg.name);
-}
+};
 
 const getPluginItems = (state, plugins, pluginsConfig, containerName, containerId, isDefault, loadedPlugins, filter) => {
     return Object.keys(plugins)
