@@ -7,7 +7,7 @@
  */
 const { compose, withPropsOnChange } = require('recompose');
 const { get } = require('lodash');
-const {editableWidget, withMenu, collapsibleWidget} = require('./tools');
+const {editableWidget, withHeaderTools, collapsibleWidget, defaultIcons} = require('./tools');
 /**
  * Enhances the table widget to connect to WFS and to update widget column size on resize.
  * Moreover enhances it to allow delete.
@@ -23,7 +23,7 @@ module.exports = compose(
         }
     })),
     require('./deleteWidget'),
-    collapsibleWidget(),
     editableWidget(),
-    withMenu()
+    defaultIcons(),
+    withHeaderTools(),
 );

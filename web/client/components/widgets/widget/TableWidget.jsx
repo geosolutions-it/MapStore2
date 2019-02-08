@@ -29,6 +29,7 @@ module.exports = ({
     loading,
     confirmDelete = false,
     headerStyle,
+    icons,
     topRightItems,
     toggleTableView = () => { },
     toggleDeleteConfirm = () => { },
@@ -50,6 +51,7 @@ module.exports = ({
         id={`widget-chart-${id}`}
         title={title}
         headerStyle={headerStyle}
+        icons={icons}
         topLeftItems={renderHeaderLeftTopItem({ loading, title, description, toggleTableView })}
         confirmDelete={confirmDelete}
         onDelete={onDelete}

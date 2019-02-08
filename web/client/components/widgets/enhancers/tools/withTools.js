@@ -6,10 +6,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const { compose, withPropsOnChange} = require('recompose');
+const { compose, withPropsOnChange } = require('recompose');
 const Toolbar = require('../../../misc/toolbar/Toolbar');
 
-const isTool = t => t.target === "top-left-items";
+const isTool = t => t.target === "tools";
 const hasTools = (tt = []) => tt.filter(isTool).length > 0;
 
 /**

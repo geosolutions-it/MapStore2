@@ -6,17 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Message = require('../../I18N/Message');
 const TableView = require('./TableView');
 const ChartView = require('./ChartView');
 const InfoPopover = require('./InfoPopover');
 
 const WidgetContainer = require('./WidgetContainer');
 const {
-     Glyphicon,
-     ButtonToolbar,
-     DropdownButton,
-     MenuItem
+     Glyphicon
 } = require('react-bootstrap');
 
 const renderHeaderLeftTopItem = ({title, description, showTable, toggleTableView = () => {}} = {}) => {
@@ -35,6 +31,7 @@ module.exports = ({
     data = [],
     series = [],
     loading,
+    icons,
     showTable,
     topRightItems,
     confirmDelete= false,
@@ -46,6 +43,7 @@ module.exports = ({
         id={`widget-chart-${id}`}
         headerStyle={headerStyle}
         title={title}
+        icons={icons}
         topLeftItems={renderHeaderLeftTopItem({loading, title, description, showTable, toggleTableView})}
         confirmDelete={confirmDelete}
         onDelete={onDelete}

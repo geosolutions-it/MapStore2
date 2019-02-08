@@ -17,19 +17,12 @@ compose(
             ...widgetTools,
             {
                 glyph: "pushpin",
-                active: dataGrid.static,
-                glyphClassName: dataGrid.static ? "pinned-icon" : undefined,
-                textId: dataGrid.static ? "widgets.widget.menu.unpin" : "widgets.widget.menu.pin",
-                target: 'menu',
-                style: {
-                    paddingLeft: 4,
-                    paddingRight: 4,
-                    color: !dataGrid.static ? "grey" : undefined,
-                    opacity: !dataGrid.static ? 0.5 : 1
-                },
+                bsStyle: dataGrid.static && "primary",
+                glyphClassName: dataGrid.static ? "active" : undefined,
+                tooltipId: dataGrid.static ? "widgets.widget.menu.unpin" : "widgets.widget.menu.pin",
+                target: 'icons',
                 onClick: () => updateProperty("dataGrid.static", !dataGrid.static)
-            }
-            ] : widgetTools,
+            }] : widgetTools,
         // locked tools can not be edited
         canEdit: canEdit && !dataGrid.static
     }))

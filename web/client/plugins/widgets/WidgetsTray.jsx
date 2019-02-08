@@ -8,7 +8,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { connect } = require('react-redux');
-const { compose, withProps, withState, defaultProps, lifecycle } = require('recompose');
+const { compose, withProps, withState, defaultProps, lifecycle, mapPropsStream } = require('recompose');
 const { createSelector } = require('reselect');
 const { find, findIndex, sortBy } = require('lodash');
 const tooltip = require('../../components/misc/enhancers/tooltip');
@@ -169,11 +169,13 @@ module.exports = compose(
     connect(createSelector(
         trayWidgets,
         (widgets = []) => ({
+            hasCollapsedWidgets: widgets.filter(({ collapsed } = {}) => collapsed).length > 0,
             hasTrayWidgets: widgets.length > 0
         })
     ), {
         toggleTray
     }),
+    // flag of plugin presence
     lifecycle({
         componentDidMount() {
             if (this.props.toggleTray) this.props.toggleTray(true);
@@ -182,6 +184,15 @@ module.exports = compose(
             if (this.props.toggleTray) this.props.toggleTray(false);
         }
     }),
+    // expand icons when one widget has been collapsed, collapse icons when no items collapsed anymore
+    mapPropsStream(props$ => props$
+        .merge(
+            props$
+                .distinctUntilKeyChanged('hasCollapsedWidgets')
+                .do(({ setExpanded = () => { }, hasCollapsedWidgets}) => setExpanded(hasCollapsedWidgets))
+                .ignoreElements()
+        )
+    ),
     withProps(({ enabled, hasTrayWidgets }) => ({
         enabled: enabled && hasTrayWidgets
     }))

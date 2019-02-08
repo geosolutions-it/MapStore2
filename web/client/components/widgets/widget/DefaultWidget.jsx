@@ -34,11 +34,11 @@ const ChartWidget = compose(
 
 const TextWidget = compose(
     deleteWidget,
-    withTools(),
     pinnableWidget(),
     collapsibleWidget(),
     editableWidget(),
     hidableWidget(),
+    withTools(),
     withMenu()
 )(require('./TextWidget'));
 
@@ -47,6 +47,7 @@ const MapWidget = compose(
     dependenciesToMapProp('center'),
     dependenciesToMapProp('zoom'),
     deleteWidget,
+    pinnableWidget(),
     collapsibleWidget(),
     editableWidget(),
     withMenu()
@@ -70,6 +71,7 @@ const CounterWidget = compose(
 const LegendWidget = compose(
     legendWidget,
     deleteWidget,
+    pinnableWidget(),
     collapsibleWidget(),
     editableWidget(),
     withMenu()

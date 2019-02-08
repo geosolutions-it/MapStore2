@@ -6,17 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const Message = require('../../I18N/Message');
 
 const CounterView = require('./CounterView');
 const InfoPopover = require('./InfoPopover');
 const WidgetContainer = require('./WidgetContainer');
-const {
-     Glyphicon,
-     ButtonToolbar,
-     DropdownButton,
-     MenuItem
-} = require('react-bootstrap');
+const {Glyphicon} = require('react-bootstrap');
 
 const renderHeaderLeftTopItem = ({title, description, showTable, toggleTableView = () => {}} = {}) => {
     if (showTable) {
@@ -36,6 +30,7 @@ module.exports = ({
     showTable,
     confirmDelete= false,
     headerStyle,
+    icons,
     topRightItems,
     toggleTableView= () => {},
     toggleDeleteConfirm= () => {},
@@ -45,6 +40,7 @@ module.exports = ({
         className="counter-widget"
         id={`widget-chart-${id}`}
         title={title}
+        icons={icons}
         topLeftItems={renderHeaderLeftTopItem({loading, title, description, showTable, toggleTableView})}
         confirmDelete={confirmDelete}
         onDelete={onDelete}

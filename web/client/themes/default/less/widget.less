@@ -70,6 +70,35 @@
                 font-size: 14px;
                 color: @ms2-color-primary;
             }
+            .widget-icons {
+                text-align: left;
+                position: absolute;
+                width: 100%;
+                top: 0;
+                left: 0;
+                overflow: visible;
+                height: 10px;
+                .btn-group {
+                    left: 0px;
+                    button {
+                        background: transparent;
+                        top: -8px;
+                        position: relative;
+                        padding-left:4px;
+                        padding-right:4px;
+                        // rotate pin icon
+                        .glyphicon.active::before {
+                            color: @ms2-color-primary;
+                            transform: rotate(45deg);
+                            display: inline-block;
+                        }
+                        .glyphicon:not(.active)  {
+                            opacity: .5;
+                            color: grey;
+                        }
+                    }
+                }
+            }
         }
         .mapstore-widget-default-content {
             margin: 10px 5%;
@@ -85,10 +114,6 @@
             color: @ms2-color-primary;
             right: 7px;
             top: 10px;
-            .pinned-icon::before {
-                transform: rotate(45deg);
-                display: inline-block;
-            }
         }
         .widget-menu {
             border: none;

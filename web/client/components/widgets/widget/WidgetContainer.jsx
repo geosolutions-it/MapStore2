@@ -18,6 +18,7 @@ module.exports = ({
     handle = "draggableHandle",
     toggleDeleteConfirm = () => {},
     onDelete=() => {},
+    icons,
     topLeftItems,
     topRightItems,
     headerStyle = {},
@@ -25,15 +26,16 @@ module.exports = ({
     }) =>
     (<div className="mapstore-widget-card" id={id}>
         <BorderLayout className={className} header={(<div style={headerStyle} className={`mapstore-widget-info ${handle ? handle : ""}`}>
-                    <div className="mapstore-widget-header">
-                        {topLeftItems}
-                        <span className="widget-title">{title}</span>
-                        <span className="mapstore-widget-options">
-                            {topRightItems}
-                        </span>
-                    </div>
-                </div>)}>
-                {children}
+                <div className="mapstore-widget-header">
+                    <span className="widget-icons">{icons}</span>
+                    {topLeftItems}
+                    <span className="widget-title">{title}</span>
+                    <span className="mapstore-widget-options">
+                        {topRightItems}
+                    </span>
+                </div>
+            </div>)}>
+            {children}
         </BorderLayout>
         {confirmDelete ? <ConfirmModal
             confirmText={<Message msgId="widgets.widget.menu.delete" />}

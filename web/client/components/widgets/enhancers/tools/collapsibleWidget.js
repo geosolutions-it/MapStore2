@@ -18,8 +18,8 @@ compose(
             ...widgetTools,
             {
                 glyph: "minus",
-                target: "menu",
-                textId: "widgets.widget.menu.collapse",
+                target: "icons",
+                tooltipId: "widgets.widget.menu.collapse",
                 // pinned can not be collapsed, hidden can not be collapsed because they do not appear in the tray
                 visible: !hide && !dataGrid.static,
                 onClick: () => toggleCollapse()
