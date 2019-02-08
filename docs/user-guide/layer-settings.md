@@ -23,7 +23,7 @@ On the second page, you can set the rendering options of the layer such as the i
 
 Style Form
 ----------
-On the third page, you can choose a style from the list and apply it on the layer.
+On the third page, you can choose a style from the list and apply it to the layer.
 
 <img src="../img/style.jpg" style="max-width:500px;"/>
 
@@ -37,7 +37,7 @@ If you have any *editing grants* on the styles' source, you can customize layers
 
 The Style Editor tool provides its functionalities on top of [GeoServer](http://geoserver.org/) REST APIs, so the styling
 functionalities are available only for those layers that are loaded in [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) from GeoServer.
-By default the GeoServer's REST APIs are available only for the GeoServer administrators, so a basic authentication form will appears in MapStore2 to enter the *Admin* credentials. Without Admin rights, the editing capabilities on styles are not available and only a list of the available styles will be shown in order to assign one of them to the selected layer. If the [users integration between GeoServer and MapStore2](https://github.com/geosolutions-it/MapStore2/wiki/MapStore2-users-GeoServer-integration-with-Authkey) is configured, the editing functionalities of the styles will be available according to the role of the authenticated user in MapStore2 in a more transparent way. 
+By default the GeoServer's REST APIs are available only for the GeoServer administrators, so a basic authentication form will appears in MapStore2 to enter the *Admin* credentials. Without Admin rights, the editing capabilities on styles are not available and only a list of the available styles will be shown in order to assign one of them to the selected layer. If the [users integration between GeoServer and MapStore2](https://github.com/geosolutions-it/MapStore2/wiki/MapStore2-users-GeoServer-integration-with-Authkey) is configured, the editing functionalities of the styles will be available according to the role of the authenticated user in MapStore2 in a more transparent way.
 <br>
 Once done these requirements' checks you can edit an existing style or create a new one from scratch.
 
@@ -97,7 +97,7 @@ On the fourth page, you can set the format of the extracted information from a f
 
 <img src="../img/feature-info-form.jpg" style="max-width:350px;"/>
 
-The Identify button, located in the [Side bar](side-bar.md), is enabled by default and allows you to query objects on the map by clicking on it. You can choose to get the info in Plain Text, HTML, Properties List or to customize your own template. As an example:
+The Identify button, located in the [Side bar](side-bar.md), is enabled by default and allows you to query objects on the map by clicking on it. You can choose to get the info in Plain Text, HTML, Properties List or to customize your own template. An example is shown below:
 
 * **Select** the HTML format, Then **Save** it.
 

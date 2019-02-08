@@ -17,7 +17,7 @@ The *Search Bar* of the portal allows you to find point of interests (POIs), str
 
 Burger Menu
 -----------
-The *Burger Menu* is the core of the *Menu Bar* and will be treated in details. It contains several options to add data from different sources to the map, perform measurments, and to save, print and share the created map.
+The *Burger Menu* is the core of the *Menu Bar* and it will be later addressed in details. It contains several options to add data from different sources to the map, to perform measurments and to save, print and share the created map.
 
 <img src="../img/menu-options.jpg" style="max-height:500px;" />
 

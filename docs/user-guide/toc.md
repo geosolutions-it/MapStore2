@@ -1,10 +1,10 @@
 # Table of Contents (TOC)
 ************************
-The Table of Contents, briefly TOC from now on, is a place where all layers on the map are kept. It shows what the features in each layer represent, allows you to manage the order and to set the visibility  of the added layers. Moreover, it contains several tools in order to make edits and analysis on the layers.
+The Table of Contents, briefly TOC from now on, is a place where all layers on the map are kept. It shows what the features in each layer represent and it allows you to manage the order and the visibility of the added layers. Moreover, it contains several tools in order to make edits and analysis on the layers.
 
 Adding Layers
 -------------
-* **Click** on the *Show Layers* icon <img src="../img/show-layers.jpg" style="max-width:30px;" /> situated on the top left corner of the map viewer. The TOC will open.
+* **Click** on the *Show Layers* icon <img src="../img/show-layers.jpg" style="max-width:30px;" /> on the top-left corner of the map viewer. The TOC will open.
 
 
    <img src="../img/toc.jpg" style="max-width:200px;" />
@@ -45,7 +45,7 @@ From the TOC, **Click** on the <span style="color:blue">*Default* </span> Layer 
 
 <img src="../img/group-settings.jpg" style="max-width:350px;"/>
 
-Here you can change the Title of the layer group, its translations in several languages and description.
+Here you can change the Title of the layer group, its translations in several languages and the description.
 
 * **Change** the *Title* from Default to USA.
 
@@ -67,7 +67,7 @@ As before, the catalog will open on the right side of the portal.
 
      <img src="../img/order-layers.jpg" style="max-width:500px;"/>
 
-* Now, **Click** on *North America sample imagery* to select it. A set of options will be shown and will be treated in detail shortly. For now **Click** the settings icon of the layer.
+* Now, **Click** on *North America sample imagery* to select it. A set of options will be shown, it will be addressed in details shortly. For now **Click** the settings icon of the layer.
 
      <img src="../img/imagery.jpg" style="max-width:350px;"/>
 
@@ -99,5 +99,3 @@ The remaining tools will be faced in detail in separate sections:
 *  <img src="../img/properties.jpg" /> [Layer Settings](layer-settings.md): allows you to manage the layers in groups, to set the display mode and the style of the layers, and to set the format of the feature info.
 *  <img src="../img/attributes-table.jpg" /> [Attribute Table](attributes-table.md): allows you to visualize, query, edit and analyze tabular data related to the layer.
 * <img src="../img/widgets.jpg" /> [Widgets](widgets.md): allows you to create charts, texts, tables widgets and add them to the map.
-
-

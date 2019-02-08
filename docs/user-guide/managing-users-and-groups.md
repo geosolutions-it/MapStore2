@@ -8,6 +8,6 @@ From the *Home Page*:
 
      <img src="../img/manager.jpg" style="max-width:600px;" />
 
-You will be addressed to a new page that contains mainly a <span style="color:red">Manage Users</span> and a <span style="color:blue">Manage Groups</span> pages which allow you to create new or to modify already existing users and groups.
+You will be addressed to a new page in which the <span style="color:red">Manage Users</span> and the <span style="color:blue">Manage Groups</span> sections allow you to create new users and groups or to modify them, if already existing.
 
  <img src="../img/manager-page.jpg" style="" />

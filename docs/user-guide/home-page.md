@@ -28,14 +28,14 @@ On the top of the page, you can find the *Main Menu bar* showing the following m
 
 
 !!! note
-    The *Accounts manager* is reserved to the *Administrator* where he can manage *Users* and *Groups*.
+    The *Accounts manager* section, where *Users* and *Groups* can be managed, is reserved to the *Administrator*.
 
 
 
 Search bar
 ------------
 
-Under the menu bar, you can use the *Search bar* to search stored maps and dashboards in [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/).
+Under the menu bar, you can use the *Search bar* to search maps and dashboards stored in [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/).
 
   <p align = "center" > <img src="../img/search-bar.jpg" style="max-width:500px;" /></p>
 
@@ -58,7 +58,7 @@ In this container the favorites maps and dashboards are stored and marked by a g
 
 Contents
 --------
-In this container new created maps will be saved under the <span style="color:red">*Maps* </span>container and new created dashboards will be saved under the <span style="color:blue">*Dashboards* </span>container.
+In this section new maps will be stored into the <span style="color:red">*Maps* </span>container and new dashboards into the <span style="color:blue">*Dashboards* </span>container.
 
 <img src="../img/contents.jpg" style="max-width:610px;" />
 
@@ -73,6 +73,6 @@ Depending on the permissions, the user can view and use the configuration icon b
 * <img src="../img/properties.jpg" /> allows you to edit the properties of the map or the dashboard such as the thumbnail, name, details and permissions.
 
 
-* <img src="../img/details.jpg" /> allows you to show the map or dashboard details.
+* <img src="../img/details.jpg" /> allows you to show the map or the dashboard details.
 
-* <img src="../img/add-featured.jpg" /> allows you to add the map or dashboard to *Featured*.
+* <img src="../img/add-featured.jpg" /> allows you to add the map or the dashboard to *Featured*.

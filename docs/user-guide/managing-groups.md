@@ -4,7 +4,7 @@ Creating New Group
 ------------------
 From the *Groups* page:
 
-* **Click** on *New Group* icon <img src="../img/new-group.jpg" style="width:60px;height:20px" />. A pop up form will open, **Fill** the first page of the form by assigning a *Group Name* and a *Description*.
+* **Click** on the *New Group* icon <img src="../img/new-group.jpg" style="width:60px;height:20px" />. A pop up form will open, **Fill** the first page of the form by assigning a *Group Name* and a *Description*.
 
     <img src="../img/popup-group.jpg" style="max-width:200px;" />
 
