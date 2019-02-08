@@ -12,6 +12,7 @@ const TextView = emptyTextState(({text} = {}) => <div className="mapstore-widget
 
 module.exports = ({
     toggleDeleteConfirm = () => {},
+    icons,
     topLeftItems,
     id, title, text,
     headerStyle,
@@ -20,6 +21,7 @@ module.exports = ({
     onDelete=() => {}
 } = {}) =>
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
+    icons={icons}
     topLeftItems={topLeftItems}
     topRightItems={topRightItems}
         >

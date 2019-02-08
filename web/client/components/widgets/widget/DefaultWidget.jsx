@@ -17,7 +17,7 @@ const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const dependenciesToOptions = require('../enhancers/dependenciesToOptions');
 const dependenciesToWidget = require('../enhancers/dependenciesToWidget');
 const dependenciesToMapProp = require('../enhancers/dependenciesToMapProp');
-const { pinnableWidget, hidableWidget, withTools, withMenu, editableWidget, collapsibleWidget} = require('../enhancers/tools');
+const { pinnableWidget, hidableWidget, defaultIcons, withHeaderTools, editableWidget, collapsibleWidget} = require('../enhancers/tools');
 
 /*
  * TODO: now tools in menu are added checking the same order the enhancers are applied to the components.
@@ -34,12 +34,10 @@ const ChartWidget = compose(
 
 const TextWidget = compose(
     deleteWidget,
-    pinnableWidget(),
-    collapsibleWidget(),
     editableWidget(),
     hidableWidget(),
-    withTools(),
-    withMenu()
+    defaultIcons(),
+    withHeaderTools()
 )(require('./TextWidget'));
 
 const MapWidget = compose(
@@ -47,10 +45,9 @@ const MapWidget = compose(
     dependenciesToMapProp('center'),
     dependenciesToMapProp('zoom'),
     deleteWidget,
-    pinnableWidget(),
-    collapsibleWidget(),
     editableWidget(),
-    withMenu()
+    defaultIcons(),
+    withHeaderTools()
 )(require('./MapWidget'));
 
 const TableWidget = compose(
@@ -71,10 +68,9 @@ const CounterWidget = compose(
 const LegendWidget = compose(
     legendWidget,
     deleteWidget,
-    pinnableWidget(),
-    collapsibleWidget(),
     editableWidget(),
-    withMenu()
+    defaultIcons(),
+    withHeaderTools()
 )(require("./LegendWidget"));
 
 module.exports = ({
