@@ -432,7 +432,7 @@ The default monitored state is:
 ### Container configuration
 Each plugin can define a list of supported containers, but it's the plugin system that decides which ones will be used at runtime based on:
  * container existance: if a container is not configured, it will not be used (obviously)
- * between the existing ones, the one with the highest priority property value will be chosen
+ * between the existing ones, the ones with the highest priority property value will be chosen; note that a plugin can be included in more than one container if they have the same priority
 
 #### Example
 ```javascript
