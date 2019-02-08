@@ -29,6 +29,11 @@ const epicTest = (epic, count, action, callback, state = {}) => {
         actions.next(action);
     }
 };
+
+const defaultState = () => {
+    return {};
+};
+
 describe('PluginsUtils', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
@@ -169,6 +174,177 @@ describe('PluginsUtils', () => {
     it('handleExpression', () => {
         expect(PluginsUtils.handleExpression({state1: "test1"}, {context1: "test2"}, "{state.state1 + ' ' + context.context1}")).toBe("test1 test2");
     });
+
+    it('getPluginItems', () => {
+        const plugins = {
+            Test1Plugin: {
+                Container1: {
+                    priority: 1
+                },
+                Container2: {
+                    priority: 1
+                }
+            },
+            Container1Plugin: {},
+            Container2Plugin: {}
+        };
+
+        const pluginsConfig = [{
+            name: "Test1"
+        }, "Container1", "Container2"];
+        const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+        expect(items1.length).toBe(1);
+        const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
+        expect(items2.length).toBe(1);
+    });
+
+    it('getPluginItems with showIn', () => {
+        const plugins = {
+            Test1Plugin: {
+                Container1: {
+                    priority: 1
+                },
+                Container2: {
+                    priority: 1
+                }
+            },
+            Container1Plugin: {},
+            Container2Plugin: {}
+        };
+
+        const pluginsConfig = [{
+            name: "Test1",
+            showIn: ['Container1']
+        }, "Container1", "Container2"];
+        const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+        expect(items1.length).toBe(1);
+        const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
+        expect(items2.length).toBe(0);
+    });
+
+    it('getPluginItems with hideFrom', () => {
+        const plugins = {
+            Test1Plugin: {
+                Container1: {
+                    priority: 1
+                },
+                Container2: {
+                    priority: 1
+                }
+            },
+            Container1Plugin: {},
+            Container2Plugin: {}
+        };
+
+        const pluginsConfig = [{
+            name: "Test1",
+            hideFrom: ['Container1']
+        }, "Container1", "Container2"];
+        const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+        expect(items1.length).toBe(0);
+        const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
+        expect(items2.length).toBe(1);
+    });
+
+    it('getPluginItems with priority', () => {
+        const plugins = {
+            Test1Plugin: {
+                Container1: {
+                    priority: 1
+                },
+                Container2: {
+                    priority: 2
+                }
+            },
+            Container1Plugin: {},
+            Container2Plugin: {}
+        };
+
+        const pluginsConfig = [{
+            name: "Test1"
+        }, "Container1", "Container2"];
+        const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+        expect(items1.length).toBe(0);
+        const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
+        expect(items2.length).toBe(1);
+    });
+
+    it('getPluginItems with overridden priority', () => {
+        const plugins = {
+            Test1Plugin: {
+                Container1: {
+                    priority: 1
+                },
+                Container2: {
+                    priority: 2
+                }
+            },
+            Container1Plugin: {},
+            Container2Plugin: {}
+        };
+
+        const pluginsConfig = [{
+            name: "Test1",
+            override: {
+                Container1: {
+                    priority: 3
+                }
+            }
+        }, "Container1", "Container2"];
+        const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+        expect(items1.length).toBe(1);
+        const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
+        expect(items2.length).toBe(0);
+    });
+
+    it('getPluginItems with disabled plugin', () => {
+        const plugins = {
+            Test1Plugin: {
+                Container1: {
+                    priority: 1
+                },
+                Container2: {
+                    priority: 2
+                }
+            },
+            Container1Plugin: {},
+            Container2Plugin: {}
+        };
+
+        const pluginsConfig = [{
+            name: "Test1",
+            disablePluginIf: "{true}"
+        }, "Container1", "Container2"];
+        const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
+        expect(items1.length).toBe(0);
+        const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, []);
+        expect(items2.length).toBe(0);
+    });
+
+    it('getPluginItems with filtered plugin', () => {
+        const plugins = {
+            Test1Plugin: {
+                Container1: {
+                    priority: 1
+                },
+                Container2: {
+                    priority: 2
+                }
+            },
+            Container1Plugin: {},
+            Container2Plugin: {}
+        };
+
+        const pluginsConfig = [{
+            name: "Test1",
+            disablePluginIf: "{true}"
+        }, "Container1", "Container2"];
+        const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, [], () => false);
+        expect(items1.length).toBe(0);
+        const items2 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container2", "Container2", true, [], () => false);
+        expect(items2.length).toBe(0);
+    });
+
     it('dispatch', () => {
         const expr = PluginsUtils.handleExpression(() => ({
             dispatch: (action) => action
