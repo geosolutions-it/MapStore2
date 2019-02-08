@@ -17,7 +17,7 @@ compose(
         widgetTools: !!toolsOptions.showCollapse ? [
             ...widgetTools,
             {
-                glyph: "1-bring-down",
+                glyph: "minus",
                 target: "menu",
                 textId: "widgets.widget.menu.collapse",
                 // pinned can not be collapsed, hidden can not be collapsed because they do not appear in the tray
