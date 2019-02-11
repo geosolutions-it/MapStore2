@@ -518,7 +518,7 @@ describe('Openlayers layer', () => {
         expect(layer).toExist();
         // count layers
         expect(map.getLayers().getLength()).toBe(1);
-        expect(map.getLayers().item(0).getSource().getTileGrid().getOrigin()).toEqual([-20037508.342789244, 20037508.342789244]);
+        expect(map.getLayers().item(0).getSource().getTileGrid().getOrigin()).toEqual([-20037508.342789244, -20037508.342789244]);
     });
     it('creates a wms layer with custom origin', () => {
         var options = {
