@@ -8,6 +8,7 @@
 
 MapStore 2 User Guide
 ------------------------
+* [Quick Start](quick-start.md)
 * [Home Page Overview](home-page.md)
 * [Managing Users and Groups](managing-users-and-groups.md)
 * [Exploring Maps](exploring-maps.md)

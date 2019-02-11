@@ -1,11 +1,15 @@
-# Introduction
+# Quick Start
+
+You can either choose to download a standalone binary package or a WAR file to quickly start playing with MapStore2.
+
+## Binary package
 The easiest way to try out MapStore2 is to download and extract the binary package available on MapStore2 [release page](https://github.com/geosolutions-it/MapStore2/releases/latest).
 Here you can find some preconfigured maps as well users and groups.
 The goal for this package is to ease all the requirements needed for you to take MapStore2 for a test-drive.
 
 We hope you enjoy MapStore2!
 
-# How to run
+### How to run
 Go to the location where you saved the zip file, unzip the contents and run:
 
 Windows: `mapstore2_startup.bat`
@@ -20,21 +24,36 @@ Windows: `mapstore2_shutdown.bat`
 
 Linux: `./mapstore2_shutdown.sh`
 
-# Package Contents
+### Package Contents
 * [MapStore2](https://github.com/geosolutions-it/MapStore2/releases/latest)
-* [Tomcat7](http://www.apache.org/dist/tomcat/tomcat-7/v7.0.75/)
-* [Java JRE (Win and Linux)](http://www.oracle.com/technetwork/java/javase/downloads/jre7-downloads-1880261.html)
+* [Tomcat7](http://tomcat.apache.org/)
+* [Java JRE (Win and Linux)](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
 
-# Demo Maps
+### Demo Maps
 * **Aerial Imagery** - Simple map demo showing some aerial imagery data
 * **WFS Query Map** - Demo map configured with MapStore2 built-in ability to query feature over WFS
 * **User Map and User1 Map** - Map only visible to *user* and *user1* respectively, to demonstrate MapStore2 capabilities on user/group management and permissions.
 
-# Demo accounts/groups
-
+### Demo accounts/groups
 | **Users**       | **Groups**            |
 |-----------------|-----------------------|
 | **admin/admin** | MyGroupAdmin,everyone |
 | guest           | everyone              |
 | user/user       | everyone              |
 | user1/user1     | everyone, MyGroup     |
+
+## WAR file
+
+Download the WAR file from the latest release [here](https://github.com/geosolutions-it/MapStore2/releases/latest).
+
+[All the releases](https://github.com/geosolutions-it/MapStore2/releases)
+
+After downloading the MapStore2 war file, install it in your java web container (e.g. Tomcat), with usual procedures for the container (normally you only need to copy the war file in the webapps subfolder).
+
+If you don't have a java web container you can download Apache Tomcat from [here](https://tomcat.apache.org/download-70.cgi) and install it. You will also need a Java7 [JRE](https://www.oracle.com/technetwork/java/javase/downloads/jre7-downloads-1880261.html).
+
+Then you can access MapStore2 using the following URL (assuming the web container is on the standard 8080 port):
+
+[http://localhost:8080/mapstore](http://localhost:8080/mapstore)
+
+Use the default credentials (admin / admin) to login and start creating your maps!

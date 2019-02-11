@@ -34,6 +34,7 @@ markdown_extensions:
   - admonition
 pages:
   - Introduction: 'index.md'
+  - Quick Start: 'quick-start.md'
   - Home Page Overview: 'home-page.md'
   - Managing Users and Groups:
     - Overview: 'managing-users-and-groups.md'
@@ -59,4 +60,3 @@ pages:
     - Timeline: 'timeline.md'
     - Footer: 'footer.md'
   - Exploring Dashboards: 'exploring-dashboards.md'
-  - Binary Package: 'binary-demo-package.md'
