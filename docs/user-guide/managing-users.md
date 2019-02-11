@@ -20,11 +20,11 @@ From the *Users* page:
 
 
 
-* On the second page, **Compile** the page by providing further informations about the user.
+* On the second page, **Compile** the form by providing further informations about the user.
 
     <img src="../img/info-user.jpg" style="max-width:200px;" />
 
-* On the third page, **Select** the groups in which the user will be a part of then **Click** on *Create*.
+* On the third page, **Select** the groups which the users will belong to, then **Click** on *Create*.
 
     <img src="../img/user-group.jpg" style="max-width:200px;" />
 

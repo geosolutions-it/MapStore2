@@ -1,8 +1,8 @@
 # Attribute Table
 *****************
-In GIS, the attribute table associated to a vector layer is a table that stores tabular informations related to the layer. The columns of the table are called fields and the rows are called records. Each record of the attribute table corrisponds to one feature geometry of the layer. This relation allows to find records in the table (informations) by selecting features on the map and viceversa.
+In GIS, the attribute table associated to a vector layer is a table that stores tabular informations related to the layer. The columns of the table are called fields and the rows are called records. Each record of the attribute table corresponds to one feature geometry of the layer. This relation allows to find records in the table (informations) by selecting features on the map and viceversa.
 
-In [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/), accessing the attribute table of a vector layer allows you to edit the tabular data or directly the geometries on the map, to perform spatial queries and filters, and to create widgets from the data.
+In [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/), accessing the attribute table of a vector layer allows you to edit the tabular data or to directly edit the geometries on the map, to perform spatial queries and filters and to create widgets from the data.
 
 !!! note
     Creating widgets for a layer is accessible from the *TOC* and the *Attribute Table* by clicking on this icon <img src="../img/widgets.jpg" style="max-width:20px;"/> and was already treated in the [Widgets](widgets.md) section.
@@ -88,7 +88,7 @@ If you want to update an existing feature, start an editing session by clicking 
 
 * If you need to do update the attributes values, **type** your new data into the input fields
 
-* If want to update the geometry shape, you can:
+* If you want to update the geometry shape, you can:
 
     * **move** the existing vertices to new positions
 
@@ -123,7 +123,7 @@ The filtering page will open showing *Filters Types*.
 
 ### Filtering by Attributes
 
-the *Attribute Filter* allows you to set conditions on the fields to perform **AND**/**OR** logic operations.
+The *Attribute Filter* allows you to set conditions on the fields to perform **AND**/**OR** logic operations.
 
 Since the following example is based on filtering the data with respect to the *Persons* and *Employed* filelds, let us first switch off the unnecessary fields for a better visualization. To do that:
 
@@ -149,22 +149,22 @@ The filtered records by persons will be shown in the attribute table.
 
 <p align = "center" ><img src="../img/attribute-filter-2.jpg" style="max-width:620px;"/></p>
 
-!!!note
-   We have got 13 items.
+!!! note
+    We have got 13 items.
 
-If you want to to see the filtered records also on the map.
+If you want to to see the filtered records also on the map, follow these steps:
 
 * **Click** on the <img src="../img/sync.jpg" style="max-width:20px;"/> icon to synchronize the map with the filter.
 
 <p align = "center" ><img src="../img/attribute-filter-3.jpg" style="max-width:620px;"/></p>
 
-Now let us add other conditions.
+Now let us add other conditions:
 
 * **Click** again on the *Advanced Search* icon <img src="../img/filter-icon.jpg" style="max-width:25px;" />.
 
 * **Click** on the <img src="../img/++.jpg" style="max-width:20px;"/> button to add a second condition.
 
-* **Set** the following condition, for example the employed persons between 2M and 5M; **Employed >< 2 000 000, 5 000 000**.
+* **Set** the following condition (for example the employed persons between 2M and 5M): **Employed >< 2 000 000, 5 000 000**.
 
 !!! note
     We are using *"Match any of the following conditions"* which is an **OR** logic operator.
@@ -173,11 +173,11 @@ Now let us add other conditions.
 
 * **Click** on the loop icon to search <img src="../img/loop.jpg" style="max-width:20px;"/>.
 
-The filter will return 20 records.
+As displayed in the picture below, the filter will return 20 records:
 
 <p align = "center" ><img src="../img/attribute-filter-6.jpg" style="max-width:620px;"/></p>
 
-In order to switch to an **AND** operator.
+In order to switch to an **AND** operator you have to follow these steps:
 
 * **Click** again on the *Advanced Search* icon <img src="../img/filter-icon.jpg" style="max-width:25px;" />.
 
@@ -187,8 +187,7 @@ In order to switch to an **AND** operator.
 
 * **Click** on the loop icon to search <img src="../img/loop.jpg" style="max-width:20px;"/>.
 
-The filter will return 7 records.
-
+The filter will return 7 records:
 
 <p align = "center" ><img src="../img/attribute-filter-8.jpg" style="max-width:620px;"/></p>
 

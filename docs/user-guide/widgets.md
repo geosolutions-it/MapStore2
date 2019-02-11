@@ -25,7 +25,7 @@ Creating Chart Widget
 
 <br>
 
-On the top of the page, you can find a set of options <img src="../img/widget-options.jpg" style="max-width:90px;"/> that allow you to switch back and forward the pages of the form, a connection button (highlighted in green which is active by default) that connects the chart to the viewport, and an advanced filter that allows you to plot only the filtered data.
+On the top of the page, you can find: a set of options <img src="../img/widget-options.jpg" style="max-width:90px;"/> that allow you to switch back and forward the pages of the form; a connection button (highlighted in green because it is active by default) that connects the chart to the viewport; an advanced filter that allows you to plot only the filtered data.
 
 * **Configure** the data you want to plot and the operation. Activating the *Advanced Options* you can customize the shape of the chart.
 

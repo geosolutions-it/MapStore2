@@ -17,3 +17,23 @@ a:hover {
     height: 63px;
     width: auto;
 }
+.md-footer-items {
+    margin-top: 10px;
+    margin-bottom: 10px;
+    text-align: center;
+    color: white;
+}
+.md-footer-brand-img {
+    margin-top: 40px;
+    max-height: 30px;
+}
+.md-footer-copyright, .md-footer-social {
+    width: 100%;
+    max-width: 100%;
+    text-align: center;
+    margin-left: 0px;
+    margin-right: 0px;
+}
+.md-footer-license {
+    margin-bottom: 40px;
+}
