@@ -43,7 +43,9 @@ const getPluginSimpleName = plugin => endsWith(plugin, 'Plugin') && plugin.subst
 
 const getPluginConfiguration = (cfg, plugin) => {
     const pluginName = getPluginSimpleName(plugin);
-    return head(cfg.filter((cfgObj) => cfgObj.name === pluginName || cfgObj === pluginName)) || {};
+    return head(cfg.filter((cfgObj) => cfgObj.name === pluginName || cfgObj === pluginName).map(cfgObj => isString(cfgObj) ? {
+        name: cfgObj
+    } : cfgObj)) || {};
 };
 
 /*eslint-disable */
@@ -206,7 +208,7 @@ const getPluginItems = (state, plugins, pluginsConfig, containerName, containerI
                         cfg: assign(
                             {},
                             pluginImpl.cfg || {},
-                            parsePluginConfig(state, plugins.requires, plugin.config || {}) || undefined
+                            parsePluginConfig(state, plugins.requires, plugin.config.cfg || {}) || undefined
                         )
                     },
                     {

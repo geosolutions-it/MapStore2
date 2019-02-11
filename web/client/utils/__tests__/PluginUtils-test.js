@@ -313,7 +313,9 @@ describe('PluginsUtils', () => {
 
         const pluginsConfig = [{
             name: "Test1",
-            disablePluginIf: "{true}"
+            "cfg": {
+                disablePluginIf: "{true}"
+            }
         }, "Container1", "Container2"];
         const items1 = PluginsUtils.getPluginItems(defaultState, plugins, pluginsConfig, "Container1", "Container1", true, []);
         expect(items1.length).toBe(0);
