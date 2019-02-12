@@ -9,7 +9,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Plugin from '../ZoomIn';
+import ZoomInPlugin from '../ZoomIn';
 import { getPluginForTest } from './pluginsTestUtils';
 
 const map = {
@@ -33,15 +33,15 @@ describe('ZoomIn Plugin', () => {
     });
 
     it('creates a ZoomIn plugin with default configuration', () => {
-        const ZoomInPlugin = getPluginForTest(Plugin, { map });
-        ReactDOM.render(<ZoomInPlugin.plugin />, document.getElementById("container"));
+        const { Plugin } = getPluginForTest(ZoomInPlugin, { map });
+        ReactDOM.render(<Plugin />, document.getElementById("container"));
         expect(document.getElementById('zoomin-btn')).toExist();
     });
 
     it('Checks ZoomIn supported containers', () => {
-        const ZoomInPlugin = getPluginForTest(Plugin, { map }, {
+        const { containers } = getPluginForTest(ZoomInPlugin, { map }, {
             ToolbarPlugin: {}
         });
-        expect(Object.keys(ZoomInPlugin.containers)).toContain('Toolbar');
+        expect(Object.keys(containers)).toContain('Toolbar');
     });
 });

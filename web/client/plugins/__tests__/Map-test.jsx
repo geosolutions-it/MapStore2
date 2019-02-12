@@ -9,7 +9,7 @@ import expect from 'expect';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import Plugin from '../Map';
+import MapPlugin from '../Map';
 import { getPluginForTest } from './pluginsTestUtils';
 
 import { INIT_MAP } from '../../actions/map';
@@ -36,27 +36,27 @@ describe('Map Plugin', () => {
     });
 
     it('creates a Map plugin with default configuration (leaflet)', () => {
-        const MapPlugin = getPluginForTest(Plugin, {map});
-        ReactDOM.render(<MapPlugin.plugin />, document.getElementById("container"));
+        const { Plugin } = getPluginForTest(MapPlugin, {map});
+        ReactDOM.render(<Plugin />, document.getElementById("container"));
         expect(document.getElementById('map')).toExist();
         expect(document.getElementsByClassName('leaflet-container').length).toBe(1);
     });
 
     it('creates a Map plugin with specified mapType configuration (openlayers)', () => {
-        const MapPlugin = getPluginForTest(Plugin, { map, maptype: {
+        const { Plugin } = getPluginForTest(MapPlugin, { map, maptype: {
             mapType: 'openlayers'
         } });
-        ReactDOM.render(<MapPlugin.plugin pluginCfg={{ shouldLoadFont: false }} />, document.getElementById("container"));
+        ReactDOM.render(<Plugin pluginCfg={{ shouldLoadFont: false }} />, document.getElementById("container"));
         expect(document.getElementById('map')).toExist();
         expect(document.getElementsByClassName('ol-viewport').length).toBe(1);
     });
 
     it('resetOnMapInit epic is activated by INIT_MAP action', () => {
-        const MapPlugin = getPluginForTest(Plugin, { map });
-        ReactDOM.render(<MapPlugin.plugin/>, document.getElementById("container"));
-        MapPlugin.store.dispatch({
+        const { Plugin, store, actions } = getPluginForTest(MapPlugin, { map });
+        ReactDOM.render(<Plugin/>, document.getElementById("container"));
+        store.dispatch({
             type: INIT_MAP
         });
-        expect(MapPlugin.actions.filter(action => action.type === RESET_CONTROLS).length).toBe(1);
+        expect(actions.filter(action => action.type === RESET_CONTROLS).length).toBe(1);
     });
 });
