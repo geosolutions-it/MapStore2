@@ -9,7 +9,7 @@ The goal for this package is to ease all the requirements needed for you to take
 
 We hope you enjoy MapStore2!
 
-### How to run
+## How to run
 Go to the location where you saved the zip file, unzip the contents and run:
 
 Windows: `mapstore2_startup.bat`
@@ -24,17 +24,17 @@ Windows: `mapstore2_shutdown.bat`
 
 Linux: `./mapstore2_shutdown.sh`
 
-### Package Contents
+## Package Contents
 * [MapStore2](https://github.com/geosolutions-it/MapStore2/releases/latest)
 * [Tomcat7](http://tomcat.apache.org/)
 * [Java JRE (Win and Linux)](https://www.oracle.com/technetwork/java/javase/downloads/index.html)
 
-### Demo Maps
+## Demo Maps
 * **Aerial Imagery** - Simple map demo showing some aerial imagery data
 * **WFS Query Map** - Demo map configured with MapStore2 built-in ability to query feature over WFS
 * **User Map and User1 Map** - Map only visible to *user* and *user1* respectively, to demonstrate MapStore2 capabilities on user/group management and permissions.
 
-### Demo accounts/groups
+## Demo accounts/groups
 | **Users**       | **Groups**            |
 |-----------------|-----------------------|
 | **admin/admin** | MyGroupAdmin,everyone |
