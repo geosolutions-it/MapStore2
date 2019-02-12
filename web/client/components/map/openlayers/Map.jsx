@@ -244,8 +244,20 @@ class OpenlayersMap extends React.Component {
             this.map.setTarget(null);
         }
     }
-
+    /**
+     * Calculates resolutions accordingly with default algorithm in GeoWebCache.
+     * See this: https://github.com/GeoWebCache/geowebcache/blob/5e913193ff50a61ef9dd63a87887189352fa6b21/geowebcache/core/src/main/java/org/geowebcache/grid/GridSetFactory.java#L196
+     * It allows to have the resolutions aligned to the default generated grid sets on server side.
+     * **NOTES**: this solution doesn't support:
+     * - custom grid sets with `alignTopLeft=true` (e.g. GlobalCRS84Pixel). Custom resolutions will need to be configured as `mapOptions.view.resolutions`
+     * - custom grid set with custom extent. You need to customize the projection definition extent to make it work.
+     * - custom grid set is partially supported by mapOptions.view.resolutions but this is not managed by projection change yet
+     * - custom tile sizes
+     *
+     */
     getResolutions = () => {
+        const tileWidth = 256; // TODO: pass as parameters
+        const tileHeight = 256; // TODO: pass as parameters - allow different from tileWidth
         if (this.props.mapOptions && this.props.mapOptions.view && this.props.mapOptions.view.resolutions) {
             return this.props.mapOptions.view.resolutions;
         }
@@ -263,14 +275,52 @@ class OpenlayersMap extends React.Component {
 
         const projection = this.map.getView().getProjection();
         const extent = projection.getExtent();
-        const size = !extent ?
-            // use the max width
-            360 * ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES] /
-                ol.proj.METERS_PER_UNIT[projection.getUnits()] :
-            ol.extent.getWidth(extent);
 
-        const defaultMaxResolution = size / 256 / Math.pow(
-            defaultZoomFactor, 0);
+        const extentWidth = !extent ? 360 * ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES] /
+            ol.proj.METERS_PER_UNIT[projection.getUnits()] :
+            ol.extent.getWidth(extent);
+        const extentHeight = !extent ? 360 * ol.proj.METERS_PER_UNIT[ol.proj.Units.DEGREES] /
+            ol.proj.METERS_PER_UNIT[projection.getUnits()] :
+            ol.extent.getHeight(extent);
+
+        let resX = extentWidth / tileWidth;
+        let resY = extentHeight / tileHeight;
+        let tilesWide;
+        let tilesHigh;
+        if (resX <= resY) {
+            // use one tile wide by N tiles high
+            tilesWide = 1;
+            tilesHigh = Math.round(resY / resX);
+            // previous resY was assuming 1 tile high, recompute with the actual number of tiles
+            // high
+            resY = resY / tilesHigh;
+        } else {
+            // use one tile high by N tiles wide
+            tilesHigh = 1;
+            tilesWide = Math.round(resX / resY);
+            // previous resX was assuming 1 tile wide, recompute with the actual number of tiles
+            // wide
+            resX = resX / tilesWide;
+        }
+        // the maximum of resX and resY is the one that adjusts better
+        const res = Math.max(resX, resY);
+
+        /*
+            // TODO: this is how GWC creates the bbox adjusted.
+            // We should calculate it to have the correct extent for a grid set
+            const adjustedExtentWidth = tilesWide * tileWidth * res;
+            const adjustedExtentHeight = tilesHigh * tileHeight * res;
+            BoundingBox adjExtent = new BoundingBox(extent);
+            adjExtent.setMaxX(adjExtent.getMinX() + adjustedExtentWidth);
+            // Do we keep the top or the bottom fixed?
+            if (alignTopLeft) {
+                adjExtent.setMinY(adjExtent.getMaxY() - adjustedExtentHeight);
+            } else {
+                adjExtent.setMaxY(adjExtent.getMinY() + adjustedExtentHeight);
+
+         */
+
+        const defaultMaxResolution = res;
 
         const defaultMinResolution = defaultMaxResolution / Math.pow(
             defaultZoomFactor, defaultMaxZoom - 0);
