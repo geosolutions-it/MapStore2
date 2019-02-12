@@ -86,10 +86,10 @@ const ConnectedSample = connect((state) => {
     return {
         zoom: get(state, 'map.present.zoom') // connected property
     };
-})
+})(SampleComponent);
 
 module.exports = {
-    ConnectedSamplePlugin: SampleComponent
+    ConnectedSamplePlugin: ConnectedSample
 };
 ```
 
@@ -113,10 +113,10 @@ const ConnectedSample = connect((state) => {
     };
 }, {
     onZoom: changeZoomLevel // connected action
-})
+})(SampleComponent);
 
 module.exports = {
-    ConnectedSamplePlugin: SampleComponent
+    ConnectedSamplePlugin: ConnectedSample
 };
 ```
 
@@ -177,7 +177,7 @@ const ConnectedSample = connect((state) => {
     };
 }, {
     onUpdate: updateSomething
-});
+})(SampleComponent);
 
 module.exports = {
     ConnectedSamplePlugin: ConnectedSample,
@@ -265,7 +265,7 @@ const ConnectedSample = connect((state) => {
     };
 }, {
     onLoad: loadData
-});
+})(SampleComponent);
 
 module.exports = {
     SideEffectSamplePlugin: ConnectedSample,
@@ -281,7 +281,7 @@ It is possible to define **Container** plugins, that are able to receive a list 
 
 ### ContainerComponent.jsx
 ```javascript
-const SampleContainer = ({items) => {
+const SampleContainer = ({items}) => {
     return items.map(item => {
         const Item = item.plugin; // item.plugin is the plugin ReactJS component
         return <Item id={item.id} name={item.name}/>;
@@ -309,7 +309,7 @@ const ConnectedSample = connect((state) => {
     return {
         text: get(state, 'sample.text')
     };
-});
+})(SampleComponent);
 
 module.exports = {
     ContainedSamplePlugin: ConnectedSample,
@@ -561,6 +561,82 @@ module.exports = {
 ```
 
 ## Testing plugins
+As we already mentioned a plugin is a collection of entities that should already have unit tests (components, reducers, actions, selectors, epics).
+We can limit plugins testing to testing the interactions between these different entities, for example:
+ * connection of the redux state to the plugins properties
+ * epics that are related to the plugin lifecycle
+ * containment relations between plugins
+
+To ease writing a plugin unit test, an helper is available (pluginsTestUtils) that can be used to:
+  * create a plugin connected with a redux store (**getPluginForTest**), initialized with plugin's defined reducers and epics, and with a given initial state
+  * get access to the redux store
+  * get access to the list of actions dispatched to the store
+  * get access to the list of containers plugins supported by the plugin (you can limit this list by passing your plugins definitions to getPluginForTest)
+
+### Examples
+
+```javascript
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+
+import MyPlugin from '../MyPlugin';
+import { getPluginForTest } from './pluginsTestUtils';
+
+import plugins from '<plugins_definition_file>';
+
+const initialState = {};
+
+describe('MyPlugin Test', () => {
+    beforeEach((done) => {
+        document.body.innerHTML = '<div id="container"></div>';
+        setTimeout(done);
+    });
+
+    afterEach((done) => {
+        ReactDOM.unmountComponentAtNode(document.getElementById("container"));
+        document.body.innerHTML = '';
+        setTimeout(done);
+    });
+
+    it('creates MyPlugin with default configuration', () => {
+        const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState, plugins);
+        ReactDOM.render(<Plugin />, document.getElementById("container"));
+        expect(document.getElementById('<my plugin id>')).toExist();
+        expect(...);
+    });
+    // use pluginCfg to override plugins properties
+    it('creates MyPlugin with custom configuration', () => {
+        const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState, plugins);
+        ReactDOM.render(<Plugin pluginCfg={{
+            property: 'value'
+        }}/>, document.getElementById("container"));
+        expect(document.getElementById('<my plugin id>')).toExist();
+        expect(...);
+    });
+
+    // test connected epics looking at the actions array
+    it('test plugin epics', () => {
+        const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState, plugins);
+        ReactDOM.render(<Plugin/>, document.getElementById("container"));
+        store.dispatch({
+            type: ACTION_CAPTURED_BY_AN_EPIC,
+            payload
+        });
+        expect(actions.filter(action => action.type === ACTION_LAUNCHED_BY_AN_EPIC).length).toBe(1);
+    });
+
+    // test supported containers
+    it('test containers', () => {
+        const {Plugin, store, actions, containers } = getPluginForTest(MyPlugin, initialState, {
+            MyContainerPlugin: {}
+        });
+        ReactDOM.render(<Plugin/>, document.getElementById("container"));
+        expect(Object.keys(containers)).toContain('MyContainer');
+    });
+});
+
+```
 
 ## General Guidelines
  * Components
