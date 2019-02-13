@@ -101,6 +101,11 @@
             }
         }
         .mapstore-widget-default-content {
+            // avoid editor defaults for text-widget
+            &.ql-editor {
+                height: auto;
+                padding: 0;
+            }
             margin: 10px 5%;
         }
         .mapstore-widget-description {

@@ -14,24 +14,17 @@ const loadingState = require('../../misc/enhancers/loadingState');
 const errorChartState = require('../enhancers/errorChartState');
 
 const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(require('../../data/featuregrid/FeatureGrid')));
-const InfoPopover = require('./InfoPopover');
 
 const WidgetContainer = require('./WidgetContainer');
-const renderHeaderLeftTopItem = ({ title, description }) => {
-    return title || description ? <InfoPopover placement="top" title={title} text={description} /> : null;
-};
-
 
 module.exports = ({
     id,
     title,
-    description,
     loading,
     confirmDelete = false,
     headerStyle,
     icons,
     topRightItems,
-    toggleTableView = () => { },
     toggleDeleteConfirm = () => { },
     onDelete = () => { },
     gridEvents = () => {},
@@ -52,7 +45,6 @@ module.exports = ({
         title={title}
         headerStyle={headerStyle}
         icons={icons}
-        topLeftItems={renderHeaderLeftTopItem({ loading, title, description, toggleTableView })}
         confirmDelete={confirmDelete}
         onDelete={onDelete}
         toggleDeleteConfirm={toggleDeleteConfirm}

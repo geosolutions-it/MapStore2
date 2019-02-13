@@ -6,11 +6,13 @@
   * LICENSE file in the root directory of this source tree.
   */
 const React = require('react');
+const {compose} = require('recompose');
 const Message = require('../../I18N/Message');
 
 const {Button, Glyphicon} = require('react-bootstrap');
 const Loader = require('../Loader');
 const tooltip = require('../enhancers/tooltip');
+const popover = require('../enhancers/popover');
 /**
  * Button for @see components.misc.toolbar.Toolbar. Exposes all the props of a react-bootstrap button, plus glyph and text
  * @class TooltipButton
@@ -19,7 +21,7 @@ const tooltip = require('../enhancers/tooltip');
  * @prop text [text] the text to display
  */
 
-module.exports = tooltip(({ glyph, loading, text = "", textId, glyphClassName="", loaderProps = {}, ...props} = {}) =>
+module.exports = compose(tooltip, popover)(({ glyph, loading, text = "", textId, glyphClassName="", loaderProps = {}, ...props} = {}) =>
     <Button {...props}>
         {glyph && !loading ? <Glyphicon glyph={glyph} className={glyphClassName}/> : null}
         {textId ? <Message msgId={textId} /> : text}

@@ -8,18 +8,16 @@
 const React = require('react');
 const TableView = require('./TableView');
 const ChartView = require('./ChartView');
-const InfoPopover = require('./InfoPopover');
 
 const WidgetContainer = require('./WidgetContainer');
 const {
      Glyphicon
 } = require('react-bootstrap');
 
-const renderHeaderLeftTopItem = ({title, description, showTable, toggleTableView = () => {}} = {}) => {
+const renderHeaderLeftTopItem = ({ showTable, toggleTableView = () => {}} = {}) => {
     if (showTable) {
         return <Glyphicon onClick={() => {toggleTableView(); }} glyph="arrow-left pull-left"/>;
     }
-    return title || description ? <InfoPopover placement="top" title={title} text={description}/> : null;
 };
 
 

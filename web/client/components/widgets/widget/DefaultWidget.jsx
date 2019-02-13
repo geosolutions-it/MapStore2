@@ -7,17 +7,22 @@
  */
 const React = require('react');
 const enhanceChartWidget = require('../enhancers/chartWidget');
+const enhanceCounter = require('../enhancers/counterWidget');
+
 const deleteWidget = require('../enhancers/deleteWidget');
 const enhanceTableWidget = require('../enhancers/tableWidget');
 const legendWidget = require('../enhancers/legendWidget');
+const textWidget = require('../enhancers/textWidget');
+const mapWidget = require('../enhancers/mapWidget');
 const wpsChart = require('../enhancers/wpsChart');
+const wpsCounter = require('../enhancers/wpsCounter');
 
 const {compose} = require('recompose');
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const dependenciesToOptions = require('../enhancers/dependenciesToOptions');
 const dependenciesToWidget = require('../enhancers/dependenciesToWidget');
 const dependenciesToMapProp = require('../enhancers/dependenciesToMapProp');
-const { pinnableWidget, hidableWidget, defaultIcons, withHeaderTools, editableWidget, collapsibleWidget} = require('../enhancers/tools');
+const { defaultIcons, withHeaderTools, editableWidget} = require('../enhancers/tools');
 
 /*
  * TODO: now tools in menu are added checking the same order the enhancers are applied to the components.
@@ -33,21 +38,14 @@ const ChartWidget = compose(
 )(require('./ChartWidget'));
 
 const TextWidget = compose(
-    deleteWidget,
-    editableWidget(),
-    hidableWidget(),
-    defaultIcons(),
-    withHeaderTools()
+    textWidget
 )(require('./TextWidget'));
 
 const MapWidget = compose(
     dependenciesToWidget,
     dependenciesToMapProp('center'),
     dependenciesToMapProp('zoom'),
-    deleteWidget,
-    editableWidget(),
-    defaultIcons(),
-    withHeaderTools()
+    mapWidget
 )(require('./MapWidget'));
 
 const TableWidget = compose(
@@ -57,20 +55,17 @@ const TableWidget = compose(
     enhanceTableWidget
 )(require('./TableWidget'));
 
-const enhanceCounter = require('../enhancers/counterWidget');
 const CounterWidget = compose(
     dependenciesToWidget,
     dependenciesToFilter,
     dependenciesToOptions,
+    wpsCounter,
     enhanceCounter
 )(require("./CounterWidget"));
 
 const LegendWidget = compose(
-    legendWidget,
-    deleteWidget,
-    editableWidget(),
-    defaultIcons(),
-    withHeaderTools()
+    dependenciesToWidget,
+    legendWidget
 )(require("./LegendWidget"));
 
 module.exports = ({

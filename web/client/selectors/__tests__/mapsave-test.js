@@ -26,7 +26,7 @@ const state = {
             }
         }
     }
-}
+};
 describe('Test mapsave selectors', () => {
     it('check widgets state is correctly selected', () => {
         const retVal = mapOptionsToSaveSelector(state);

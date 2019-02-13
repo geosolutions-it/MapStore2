@@ -7,31 +7,19 @@
  */
 const React = require('react');
 const WidgetContainer = require('./WidgetContainer');
-const InfoPopover = require('./InfoPopover');
 const { omit } = require('lodash');
-const Message = require('../../I18N/Message');
 const {withHandlers} = require('recompose');
 const MapView = withHandlers({
     onMapViewChanges: ({ updateProperty = () => { } }) => map => updateProperty('map', map)
 })(require('./MapView'));
 
-const {
-    Glyphicon,
-    ButtonToolbar,
-    DropdownButton,
-    MenuItem
-} = require('react-bootstrap');
-
-
-const renderHeaderLeftTopItem = ({ title, description } = {}) => {
-    return description ? <InfoPopover placement="top" title={title} text={description} /> : null;
-};
 
 module.exports = ({
     updateProperty = () => { },
     toggleDeleteConfirm = () => { },
-    id, title, loading, description,
+    id, title,
     map,
+    icons,
     mapStateSource,
     topRightItems,
     confirmDelete = false,
@@ -39,7 +27,7 @@ module.exports = ({
     headerStyle
 } = {}) =>
     (<WidgetContainer id={`widget-text-${id}`} title={title} confirmDelete={confirmDelete} onDelete={onDelete} toggleDeleteConfirm={toggleDeleteConfirm} headerStyle={headerStyle}
-        topLeftItems={renderHeaderLeftTopItem({ loading, title, description })}
+        icons={icons}
         topRightItems={topRightItems}
     >
         <MapView updateProperty={updateProperty} id={id} map={omit(map, 'mapStateSource')} mapStateSource={mapStateSource} layers={map && map.layers} options={{ style: { margin: 10, height: 'calc(100% - 20px)' }}}/>

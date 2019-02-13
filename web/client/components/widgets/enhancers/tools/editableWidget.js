@@ -11,18 +11,20 @@ const {withProps} = require('recompose');
  * Add the edit/delete items to the widget menu
  */
 module.exports = () =>
-    withProps(({ widgetTools = [], canEdit, onEdit = () => {}, toggleDeleteConfirm = () => {} }) => ({
+    withProps(({ widgetTools = [], dataGrid = {}, canEdit, onEdit = () => {}, toggleDeleteConfirm = () => {} }) => ({
     widgetTools: canEdit
             ? [
                 ...widgetTools,
                 {
                     glyph: "pencil",
                     target: "menu",
+                    visible: canEdit && !dataGrid.static, // unpin to edit. TODO: configurable pinned to be editable
                     textId: "widgets.widget.menu.edit",
                     onClick: () => onEdit()
                 }, {
                     glyph: "trash",
                     target: "menu",
+                    visible: canEdit && !dataGrid.static,
                     textId: "widgets.widget.menu.delete",
                     onClick: () => toggleDeleteConfirm(true)
                 }
