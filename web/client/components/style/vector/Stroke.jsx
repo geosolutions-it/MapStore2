@@ -36,11 +36,6 @@ class Stroke extends React.Component {
 
     static defaultProps = {
         style: {},
-        lineDashOptions: [
-            { value: "1, 0" },
-            { value: "10, 50, 20" },
-            { value: "30, 20" }
-        ],
         onChange: () => {}
     };
 

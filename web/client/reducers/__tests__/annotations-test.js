@@ -1500,20 +1500,4 @@ describe('Test the annotations reducer', () => {
         expect(annotationsState.editing.features[1].style[1].filtering).toBe(false);
         expect(annotationsState.editing.features[1].style[2].filtering).toBe(false);
     });
-    it('', () => {
-
-    });
-
-    /*
-    it('', () => {
-    });
-    it('', () => {
-    });
-    it('', () => {
-    });
-    it('', () => {
-    });
-    it('', () => {
-    });
-    */
 });

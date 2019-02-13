@@ -536,7 +536,7 @@ const AnnotationsUtils = {
         return ftColl;
     },
     getStartEndPointsForLinestring,
-    DEFAULT_SHAPE: "flag",
+    DEFAULT_SHAPE: "triangle",
     DEFAULT_PATH: "product/assets/symbols/",
     checkSymbolsError: (symbolErrors, error = "loading_symbols_path") => {
         return symbolErrors.length && findIndex(symbolErrors, (s) => s === error) !== -1;

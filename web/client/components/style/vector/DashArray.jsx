@@ -29,18 +29,12 @@ class DashArray extends React.Component {
     };
 
     static defaultProps = {
-        dashArray: [1, 0],
+        dashArray: ['1', '0'],
         menuPlacement: "top",
         clearable: false,
         onChange: () => {},
         // these should come from configuration
-        options: [{
-            value: '1 0'
-        }, {
-            value: '10 50 20'
-        }, {
-            value: '30 20'
-        }]
+        options: [{value: "1 0"}, {value: "10 50 30"}, {value: "6 6"}, {value: "20 20"}, {value: "30 30"}]
     };
 
     render() {
@@ -51,7 +45,7 @@ class DashArray extends React.Component {
                 clearable={this.props.clearable}
                 optionRenderer={this.props.optionRenderer || this.styleRenderer}
                 valueRenderer={this.props.valueRenderer || this.styleRenderer}
-                value={join(this.props.dashArray, ' ')}
+                value={join(this.props.dashArray || "1 0", ' ')}
                 onChange={({value}) => {
                     const dashArray = value.split(' ');
                     this.props.onChange(dashArray);
