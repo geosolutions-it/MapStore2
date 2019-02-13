@@ -116,11 +116,11 @@ const MapStore2 = {
      * @param {object} options set of options of the embedded app
      *  * The options object can contain the following properties, to configure the app UI and state:
      *  * **plugins**: list of plugins (and the related configuration) to be included in the app
-     *    look at [Plugins documentation](./plugins-documentation) for further details
-     *  * **config**: map configuration object for the application (look at [Map Configuration](./maps-configuration) for details)
-     *  * **configUrl**: map configuration url for the application (look at [Map Configuration](./maps-configuration) for details)
+     *    look at [Plugins documentation](https://mapstore2.readthedocs.io/en/latest/developer-guide/plugins-documentation/) for further details
+     *  * **config**: map configuration object for the application (look at [Map Configuration](https://mapstore2.readthedocs.io/en/latest/developer-guide/maps-configuration/) for details)
+     *  * **configUrl**: map configuration url for the application (look at [Map Configuration](https://mapstore2.readthedocs.io/en/latest/developer-guide/maps-configuration/) for details)
      *  * **originalUrl**: url of the original instance of MapStore. If present it will be linked inside the map using the "GoFull" plugin, present by default.
-     *  * **initialState**: allows setting the initial application state (look at [State Configuration](./app-state-configuration) for details)
+     *  * **initialState**: allows setting the initial application state (look at [State Configuration](https://mapstore2.readthedocs.io/en/latest/developer-guide/local-config/) for details)
      *
      * Styling can be configured either using a **theme**, or a complete custom **less stylesheet**, using the
      * following options properties:

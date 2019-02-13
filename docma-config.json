@@ -30,7 +30,7 @@
     "app": {
         "title": "MapStore documentation",
         "base": "/mapstore/docs",
-        "entrance": "content:site",
+        "entrance": "api:framework",
         "routing": { "method": "path", "caseSensitive": true }
     },
     "template": {
@@ -48,14 +48,9 @@
                     "iconClass": "ico-book",
                     "label": "Guides",
                     "items": [
-                        { "label": "Home", "href": "./" },
+                        { "label": "User Guide", "href": "https://mapstore2.readthedocs.io/en/latest/user-guide/home-page/" },
                         { "separator": true },
-                        { "label": "Developer's guide", "href": "developer-guide" },
-                        { "separator": true },
-                        { "label": "Plugins Architecture", "href": "plugins-architecture" },
-                        { "label": "Configuring Plugins", "href": "plugins-documentation" },
-                        { "separator": true },
-                        { "label": "Project Creation Script", "href": "project-creation-script" }
+                        { "label": "Developer's guide", "href": "https://mapstore2.readthedocs.io/en/latest/developer-guide/" }
                     ]
                 },
                 {
@@ -233,12 +228,6 @@
                 "web/client/plugins/ZoomIn.jsx",
                 "web/client/plugins/ZoomOut.jsx"
             ]
-        },
-        "./docs/**/*md",
-        {
-            "readme": "./README.md",
-            "developer-guide": "./docs/developer-guide/index.md",
-            "site": "./docs/index.md"
         }
     ]
 }

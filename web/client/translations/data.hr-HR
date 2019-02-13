@@ -158,9 +158,9 @@
         },
         "home":{
             "open": "Otvori",
-            "shortDescription": "Moderan webmapping pomoću OpenLayers, Leaflet i React<br/><small>pregledaj stranicu sa <a href=\"/mapstore/docs/\">dokumentacijom</a></small>",
+            "shortDescription": "Moderan webmapping pomoću OpenLayers, Leaflet i React<br/><small>pregledaj stranicu sa <a href=\"https://mapstore2.readthedocs.io/en/latest/\">dokumentacijom</a></small>",
             "forkMeOnGitHub": "Forkaj me na GitHub-u",
-            "description": "MapStore je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd.<br/>Posjetite <a href=\"/mapstore/docs/\">početnu stranicu</a> za više informacija.",
+            "description": "MapStore je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd.<br/>Posjetite <a href=\"https://mapstore2.readthedocs.io/en/latest/\">početnu stranicu</a> za više informacija.",
             "Applications": "Aplikacije",
             "Examples": "Primjeri",
             "LinkedinGroup": "Mapstore Linkedin grupa",
