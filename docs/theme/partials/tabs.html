@@ -1,0 +1,34 @@
+
+{% set class = "md-tabs" %}
+{% if page.ancestors | length > 0 %}
+  {% set class = "md-tabs md-tabs--active" %}
+{% endif %}
+<nav class="{{ class }}" data-md-component="tabs">
+  <div class="md-tabs__inner md-grid">
+    <ul class="md-tabs__list">
+      <li class="md-tabs__item">
+          <a href="/"
+            class="md-tabs__link">Home</a>
+      </li>
+      {% for nav_item in nav %}
+        {% include "partials/tabs-item.html" %}
+      {% endfor %}
+      <li class="md-tabs__item pull-right">
+          <a href="https://github.com/geosolutions-it/MapStore2/releases"
+            class="md-tabs__link" target="_blank">Downloads</a>
+      </li>
+      <li class="md-tabs__item pull-right">
+          <a href="https://mapstore2.geo-solutions.it/mapstore/docs/api/plugins"
+            class="md-tabs__link" target="_blank">Plugins</a>
+      </li>
+      <li class="md-tabs__item pull-right">
+          <a href="https://mapstore2.geo-solutions.it/mapstore/docs/api/jsapi"
+            class="md-tabs__link" target="_blank">JavaScript API</a>
+      </li>
+      <li class="md-tabs__item pull-right">
+          <a href="https://mapstore2.geo-solutions.it/mapstore/docs/api/framework"
+            class="md-tabs__link" target="_blank">Framework API</a>
+      </li>
+    </ul>
+  </div>
+</nav>

@@ -23,8 +23,6 @@ const PluginsUtils = require('../../utils/PluginsUtils');
 const General = require('../../components/TOC/fragments/settings/General');
 const Display = require('../../components/TOC/fragments/settings/Display');
 
-const WMSStyle = require('../../components/TOC/fragments/settings/WMSStyle');
-
 const Elevation = require('../../components/TOC/fragments/settings/Elevation');
 const FeatureInfoEditor = require('../../components/TOC/fragments/settings/FeatureInfoEditor');
 const LoadingView = require('../../components/misc/LoadingView');
@@ -34,6 +32,9 @@ const responses = {
     json: JSON.parse(require('raw-loader!./featureInfoPreviews/responseJSON.txt')),
     text: require('raw-loader!./featureInfoPreviews/responseText.txt')
 };
+
+const { StyleSelector } = require('../styleeditor/index');
+const StyleList = defaultProps({ readOnly: true })(StyleSelector);
 
 const formatCards = {
     TEXT: {
@@ -103,7 +104,6 @@ const FeatureInfo = defaultProps({
     defaultInfoFormat: MapInfoUtils.getAvailableInfoFormat()
 })(require('../../components/TOC/fragments/settings/FeatureInfo'));
 
-let settingsPlugins = null;
 const configuredPlugins = {};
 
 const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
@@ -120,10 +120,12 @@ const getConfiguredPlugin = (plugin, loaded, loadingComp) => {
     return plugin;
 };
 
+let settingsPlugins;
+
 module.exports = ({showFeatureInfoTab = true, ...props}, {plugins, pluginsConfig, loadedPlugins}) => {
     if (!settingsPlugins) {
         settingsPlugins = assign({}, (PluginsUtils.getPluginItems({}, plugins, pluginsConfig, "TOC", props.id, true, loadedPlugins, (p) => p.container === 'TOCItemSettings') || [])
-            .reduce((previoius, p) => ({[p.name]: p}), {}));
+            .reduce((previous, p) => ({...previous, [p.name]: p}), {}));
     }
 
     return [
@@ -148,13 +150,17 @@ module.exports = ({showFeatureInfoTab = true, ...props}, {plugins, pluginsConfig
             titleId: 'layerProperties.style',
             tooltipId: 'layerProperties.style',
             glyph: 'dropper',
+            onClose: () => settingsPlugins && settingsPlugins.StyleEditor && props.onToggleStyleEditor && props.onToggleStyleEditor(null, false),
+            onClick: () => settingsPlugins && settingsPlugins.StyleEditor && props.onToggleStyleEditor && props.onToggleStyleEditor(null, true),
             visible: props.settings.nodeType === 'layers' && props.element.type === "wms",
-            Component: props.activeTab === 'style' && props.element.thematic && settingsPlugins.ThematicLayer && getConfiguredPlugin(settingsPlugins.ThematicLayer, loadedPlugins, <LoadingView width={100} height={100} />) || WMSStyle,
+            Component: props.activeTab === 'style' && props.settings.options.thematic && settingsPlugins.ThematicLayer && getConfiguredPlugin(settingsPlugins.ThematicLayer, loadedPlugins, <LoadingView width={100} height={100} />)
+            || settingsPlugins.StyleEditor && getConfiguredPlugin({...settingsPlugins.StyleEditor, cfg: {...settingsPlugins.StyleEditor.cfg, active: true }}, loadedPlugins, <LoadingView width={100} height={100} />)
+            || StyleList,
             toolbar: [
                 {
                     glyph: 'list',
                     tooltipId: 'toc.thematic.classify',
-                    visible: settingsPlugins.ThematicLayer && props.isAdmin && !props.element.thematic && props.element.search || false,
+                    visible: settingsPlugins.ThematicLayer && props.isAdmin && !props.settings.options.thematic && props.element.search || false,
                     onClick: () => props.onUpdateParams && props.onUpdateParams({
                         thematic: {
                             unconfigured: true
@@ -164,12 +170,17 @@ module.exports = ({showFeatureInfoTab = true, ...props}, {plugins, pluginsConfig
                 {
                     glyph: 'trash',
                     tooltipId: 'toc.thematic.remove_thematic',
-                    visible: settingsPlugins.ThematicLayer && props.isAdmin && props.element.thematic || false,
+                    visible: settingsPlugins.ThematicLayer && props.isAdmin && props.settings.options.thematic || false,
                     onClick: () => props.onUpdateParams && props.onUpdateParams({
                         thematic: null
                     })
                 }
-            ]
+            ],
+            toolbarComponent: settingsPlugins && settingsPlugins.StyleEditor && settingsPlugins.StyleEditor.ToolbarComponent &&
+                (
+                    settingsPlugins.StyleEditor.cfg && defaultProps(settingsPlugins.StyleEditor.cfg)(settingsPlugins.StyleEditor.ToolbarComponent)
+                    || settingsPlugins.StyleEditor.ToolbarComponent
+                )
         },
         {
             id: 'feature',

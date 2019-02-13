@@ -31,6 +31,7 @@ const {head} = require('lodash');
 
 const {scalesSelector} = require('../selectors/map');
 const {currentLocaleSelector} = require('../selectors/locale');
+const {mapTypeSelector} = require('../selectors/maptype');
 
 const Message = require('../components/I18N/Message');
 
@@ -385,8 +386,9 @@ module.exports = {
                     layersSelector,
                     scalesSelector,
                     (state) => state.browser && (!state.browser.ie || state.browser.ie11),
-                    currentLocaleSelector
-                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale) => ({
+                    currentLocaleSelector,
+                    mapTypeSelector
+                ], (open, capabilities, printSpec, pdfUrl, error, map, layers, scales, usePreview, currentLocale, mapType) => ({
                     open,
                     capabilities,
                     printSpec,
@@ -396,7 +398,8 @@ module.exports = {
                     layers: layers.filter(l => !l.loadingError),
                     scales,
                     usePreview,
-                    currentLocale
+                    currentLocale,
+                    mapType
                 }));
 
                 const PrintPlugin = connect(selector, {

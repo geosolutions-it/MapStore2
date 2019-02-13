@@ -12,7 +12,7 @@
         "about_ul0_li0": "MapViewer je jednostavni preglednik predefiniranih karata (po izboru pohranjenih u bazi koristeći GeoStore)",
         "about_ul0_li1": "MapPublisher je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd. Za više informacija provjerite",
         "about_h20": "Licenca",
-        "about_p3": "MapStore je slobodan softver otvorenoga koda, baziran je na OpenLayers 3, Leaflet i ReactJS bibiliotekama i licenciran je pod Simplified BSD License.",
+        "about_p3": "MapStore je slobodan softver otvorenoga koda, baziran je na OpenLayers 3, Leaflet i ReactJS bibliotekama i licenciran je pod jednostavnom BSD licencom.",
         "about_p5-0": "Za više informacija posjetite",
         "about_a0": "ovu",
         "about_p5-1": "stranicu.",
@@ -103,7 +103,7 @@
             "tooltipActivate": "Uđi u 3D prikaz"
         },
         "cookie":{
-            "info": "Ova stranica koristi kolačiće za pružanje boljeg korisničkog iskustva i funkcionalnosti. Postavke kolačića mogu se kontrolirati i konfigurirati u vašem web pregledniku.",
+            "info": "Ova stranica koristi kolačiće za pružanje boljeg korisničkog iskustva i funkcionalnosti. Postavke kolačića mogu se kontrolirati i prilagoditi u vašem web pregledniku.",
             "moreDetailsButton": "Više detalja",
             "leave": "Napusti",
             "accept": "Prihvati"
@@ -158,9 +158,9 @@
         },
         "home":{
             "open": "Otvori",
-            "shortDescription": "Moderan webmapping pomoću OL3, Leaflet i React<br/><small>pregledaj stranicu sa <a href=\"/mapstore/docs/\">dokumentacijom</a></small>",
+            "shortDescription": "Moderan webmapping pomoću OpenLayers, Leaflet i React<br/><small>pregledaj stranicu sa <a href=\"https://mapstore2.readthedocs.io/en/latest/\">dokumentacijom</a></small>",
             "forkMeOnGitHub": "Forkaj me na GitHub-u",
-            "description": "MapStore je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd.<br/>Posjetite <a href=\"/mapstore/docs/\">početnu stranicu</a> za više informacija.",
+            "description": "MapStore je razvijen za jednostavno i intuitivno kreiranje, spremanje i dijeljenje karata i kombinacija podataka dobivenih odabirom sadržaja koji dolaze iz standardnih izvora kao što su Google Maps i OpenStreetMap ili putem servisa koje pružaju organizacije koristeći otvorene protokole kao što su OGC WMS, WFS, WMTS ili TMS itd.<br/>Posjetite <a href=\"https://mapstore2.readthedocs.io/en/latest/\">početnu stranicu</a> za više informacija.",
             "Applications": "Aplikacije",
             "Examples": "Primjeri",
             "LinkedinGroup": "Mapstore Linkedin grupa",
@@ -266,7 +266,7 @@
             "resource": {
                 "deleteResource": "Izbriši",
                 "editResource": "Uredi svojstva",
-                "addToFeatured": "Dodaj odabranome",
+                "addToFeatured": "Dodaj odabranom",
                 "removeFromFeatured": "Ukloni sa odabranoga",
                 "showDetails": "Prikaži detalje"
             },
@@ -288,7 +288,7 @@
             }
         },
         "map": {
-            "errorLoadingFont": "The font family {family} is not correctly loaded. Some elements (like symbols in markers) can have rendering problems",
+            "errorLoadingFont": "Grupa fontova {family} nije ispravno učitana. Neki elementi (poput simbola u markerima) mogu imati problema u prikazu",
             "loading": "Učitavanje...",
             "loadingSpinner": "Učitavanje karte",
             "loadingerror": "Greška prilikom učitavanja",
@@ -313,7 +313,7 @@
                 "errorDefault": "Mrežna greška"
             },
             "mapError": {
-                "errorTitle": "Cannot save current map",
+                "errorTitle": "Nije moguće spremiti trenutnu kartu",
                 "error403": "Nemate dozvole za ažuriranje karte",
                 "error404": "Došlo je do pogreške prilikom stvaranja karte",
                 "error409": "Karta sa tim imenom već postoji",
@@ -363,9 +363,9 @@
             "displayLegendAndTools": "Prikaži kazalo i alate",
             "zoomToLayerExtent": "Prikaži puni opseg sloja",
             "addLayer": "Dodaj sloj",
-            "toolZoomToLayerTooltip": "Prikaži puni opseg odabranog sloja",
+            "toolZoomToLayerTooltip": "Prikaži puni opseg odabranoga sloja",
             "toolZoomToLayersTooltip": "Prikaži puni opseg odabranih slojeva",
-            "toolLayerSettingsTooltip": "Svojstva odabranog sloja",
+            "toolLayerSettingsTooltip": "Svojstva odabranoga sloja",
             "toolGroupSettingsTooltip": "Svojstva odabrane grupe",
             "toolTrashLayerTooltip": "Ukloni odabrani sloj",
             "toolTrashLayersTooltip": "Ukloni odabrane slojeve",
@@ -374,7 +374,7 @@
             "noFilteredResults": "Nema rezultata",
             "filterPlaceholder": "Filtriraj slojeve",
             "clearFilter": "Očisti filter",
-            "toolReloadLayerTooltip": "Ponovno učitavanje odabranog sloja",
+            "toolReloadLayerTooltip": "Ponovno učitavanje odabranoga sloja",
             "toolReloadLayersTooltip": "Ponovno učitavanje odabranih slojeva",
             "statusIconOpen": "Zatvori grupu",
             "statusIconClose": "Otvori grupu",
@@ -487,7 +487,7 @@
         "expandtoolbar": {
             "tooltip": "Proširi / Suzi"
         },
-        "getFeatureInfoTitle": "Informacije o objekima",
+        "getFeatureInfoTitle": "Informacije o objektima",
         "identifyTitle": "Informacije o objektu",
         "identifyNoQueryableLayers": "Nema aktivnih slojeva za dohvat informacija",
         "identifyRevGeocodeHeader": "Koordinate",
@@ -530,7 +530,7 @@
         },
         "search":{
             "placeholder": "Pretraži po imenu lokacije ili koordinatama ...",
-            "searchservicesbutton": "Konfiguriraj servise preraživanja",
+            "searchservicesbutton": "Konfiguriraj servise pretraživanja",
             "configpaneltitle": "Kreiraj/izmijeni servis pretraživanja",
             "serviceslistlabel": "Dostupni servisi",
             "overriedservice": "Nadjačaj zadane servise",
@@ -668,7 +668,7 @@
             "scaleBox": "Ovo je pomoć za kontrolu mjerila",
             "zoomToMaxExtentButton": "Ovo je pomoć za kontrolu prikaza punog opsega",
             "zoomIn": "Ovo je pomoć za kontrolu približavanja",
-            "zoomOut": "Ovo je pomoć za kontrolu udaljivanja",
+            "zoomOut": "Ovo je pomoć za kontrolu udaljavanja",
             "searchBar": "Unesite adresu mjesta za pretragu npr. 'Ilica, Zagreb'. Možete također unijeti kordinate u ovom formatu: 43.87,10.20",
             "metadataexplorer": "Ovo je pomoć za kontrolu pregleda metapodataka",
             "settingsPanel": "Ovo je pomoć za kontrolu postavki",
@@ -957,7 +957,7 @@
             "type": "Tip",
             "serviceTitle": "Naslov",
             "serviceTitlePlaceholder": "unesi naslov",
-            "missingReference": "Neodstaju referentni OGC metapodaci",
+            "missingReference": "Nedostaju referentni OGC metapodaci",
             "showDescription": "Prikaži puni opis",
             "hideDescription": "Sakrij puni opis",
             "notification": {
@@ -1005,7 +1005,7 @@
                 "status": "Status",
                 "archive": "Arhiviraj",
                 "deleting": "Brisanje...",
-                "analyzing": "Provera paketa...",
+                "analyzing": "Provjera paketa...",
                 "applyingPreset": "Primjena prilagodbe..."
             },
             "task": {
@@ -1032,7 +1032,7 @@
                 "actions": "Radnje",
                 "options": "Postavke transformacije",
                 "overviewlevels": "Razine pregleda",
-                "delete": "Izbriši ovu trnsformaciju"
+                "delete": "Izbriši ovu transformaciju"
             }
         },
         "rasterstyler": {
@@ -1120,7 +1120,7 @@
             "errorSaving": "Došlo je do greške prilikom operacije spremanja",
             "errorProjFetch": "Greška u dohvatu proj4 izraza sa spatialreference.org. Alat ne može primijeniti prostorni filter.",
             "notSupportedGeometryTitle": "Tip geometrije nije podržan ",
-            "notSupportedGeometry": "Tip geometrije trenutnoga sloja nije podržan, međutim, možete ažurirati atribute",
+            "notSupportedGeometry": "Tip geometrije trenutnog sloja nije podržan, međutim, možete ažurirati atribute",
             "yesButton": "Da",
             "noButton": "Ne",
             "deleteButton": "Izbriši",
@@ -1398,7 +1398,7 @@
                     "notFound": "Kontrolna ploča nije pronađena",
                     "notAccessible": "Kontrolna ploča nije dostupna"
                 },
-                "resourceAlreadyExists": "Resurs sa ovim imenom već postoji. Pukušajte '{data}'"
+                "resourceAlreadyExists": "Resurs sa ovim imenom već postoji. Pokušajte '{data}'"
             },
             "editor": {
                 "save": "Spremi kontrolnu ploču",
@@ -1446,6 +1446,114 @@
             "paneltitle": "Stilizator",
             "layerlabel": "Sloj"
         },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filter styles by name, title or abstract",
+            "templateFilterPlaceholder": "Filter styles templates by title",
+            "createStyleFromTemplate": "Select a template to create a new style",
+            "titleRequired": "<div>Title is required!</div><div>Title and abstract must be alphanumeric</div>",
+            "titleSettings": "Title",
+            "titleSettingsplaceholder": "Enter title (alphanumeric)",
+            "abstractSettings": "Abstract",
+            "abstractSettingsplaceholder": "Enter abstract (alphanumeric)",
+            "createStyleModalTitle": "Create new style",
+            "filterMatchNotFound": "No styles match entered text filter",
+            "backToList": "Back to style list",
+            "createNewStyle": "Create new style",
+            "editSelectedStyle": "Edit selected style",
+            "saveCurrentStyle": "Save current style",
+            "addSelectedTemplate": "Add selected template to list of styles",
+            "deleteSelectedStyle": "Delete selected style",
+            "closeWithoutSaveAlertTitle": "Style has changed",
+            "closeWithoutSaveAlert": "You are quitting the style editor without save your changes",
+            "deleteStyleAlertTitle": "Delete style",
+            "deleteStyleAlert": "Selected style will be permanently delete",
+            "delete": "Delete",
+            "defaultStyle": "Default style",
+            "availableStyle": "Available style",
+            "styleNotFound": "Style not found",
+            "noPermission": "User cannot edit styles",
+            "deletedStyleSuccessTitle": "Delete style",
+            "deletedStyleSuccessMessage": "Style has been successfully deleted",
+            "deletedStyleErrorTitle": "Delete style error",
+            "deletedStyleErrorMessage": "Could not delete current style",
+            "savedStyleTitle": "Style saved",
+            "savedStyleMessage": "Style has been successfully saved",
+            "missingAvailableStyles": "Missing styles",
+	        "missingAvailableStylesMessage": "<ul><h4>Possible causes:</h4> <li>Selected layer is a layer group</li><li>Layer is not correctly configured server side</li></ul>",
+            "createTmpErrorTitle": "New Temporary Style",
+            "createTmpStyleErrorMessage": "Temporary style could not be created. This could due an unsupported style format on the style service",
+            "updateTmpErrorTitle": "Temporary Style Update",
+            "updateTmpStyleErrorMessage": "Temporary style could not be updated. This could be on unsupported style format or connection issue.",
+            "createStyleErrorTitle": "New Style",
+            "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
+            "updateStyleErrorTitle": "Edit Style",
+            "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
+            "genericValidationError": "Style is not valid and it could not be applied.",
+            "setDefaultStyle": "Set selected style as default for the current layer",
+            "setDefaultStyleSuccessTitle": "Success on set default style",
+            "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
+            "setDefaultStyleErrorTitle": "Error on set default style",
+            "setDefaultStyleErrorMessage": "It's not possible apply selected style as default"
+        },
+        "playback": {
+            "settings": {
+                "tooltip": "Settings",
+                "title": "Playback Settings",
+                "frameDuration": "Frame Duration",
+                "range": {
+                    "title": "Animation Range",
+                    "zoomTooltip": "Zoom to current animation range",
+                    "animationStart": "Animation start",
+                    "animationEnd": "Animation end",
+                    "zoomToCurrentPlayackRange": "Zoom to current playback range",
+                    "setToCurrentViewRange": "Set to current view range",
+                    "fitToSelectedLayerRange": "Fit to selected layer's range"
+                },
+                "step": {
+                    "tooltip": "When 'Snap to guide Layer' option is disabled, you can customize the animation step",
+                    "label": "Animation Step",
+                    "year": "{number, plural, =0 {Year} =1 {Year} other {Years}}",
+                    "week": "{number, plural, =0 {Week} =1 {Week} other {Weeks}}",
+                    "day": "{number, plural, =0 {Day} =1 {Day} other {Days}}",
+                    "hour": "{number, plural, =0 {Hour} =1 {Hour} other {Hours}}",
+                    "minute": "{number, plural, =0 {Minute} =1 {Minute} other {Minutes}}",
+                    "second": "{number, plural, =0 {Second} =1 {Second} other {Seconds}}"
+                },
+                "mode": {
+                    "title": "Mode",
+                    "following": "Follow the animation",
+                    "followingDescription": "When the animation is active, follow the cursor"
+                }
+            },
+            "backwardStep": "Step backward",
+            "forwardStep" : "Step forward",
+            "play": "Play",
+            "pause": "Pause",
+            "paused": "Play (paused)",
+            "stop": "Stop"
+        },
+        "timeline": {
+            "settings": {
+                "title": "Timeline Settings",
+                "snapToGuideLayer": "Snap to guide layer",
+                "snapToGuideLayerTooltip": "Forces the time cursor to snap to the selected layer's data. Disable this option to unlock the time cursors and enable the customization of animation step"
+            },
+            "currentTime": "Go to current time",
+            "rangeStart":"Go to the current time range",
+            "rangeEnd" : "Go to the current time range",
+            "hideLayerName" : "Hide layers names",
+            "showLayerName" : "Show layers names",
+            "enableRange": "Enable time range",
+            "disableRange": "Disable time range",
+            "enablePlayBack": "Enable playback controls",
+            "disablePlayBack": "Disable playback controls",
+            "expand" : "Expand time slider",
+            "collapse" : "Collapse time slider",
+            "errors": {
+                "multidim_error_title": "Backend service is not responding",
+                "multidim_error_message": "The required services for multidinensional support are not responding. Please try again later or contact the administrator."
+            }
+        },
         "rulesmanager": {
             "apply": "Primijeni",
             "remove": "Ukloni geometriju",
@@ -1471,7 +1579,7 @@
             "tooltip": {
                 "addT": "Dodaj pravilo",
                 "editT": "Izmijeni odabrano pravilo",
-                "addBeT": "Dodaj novo pravilo ispred odabranog",
+                "addBeT": "Dodaj novo pravilo ispred odabranoga",
                 "addAfT": "Dodaj novo pravilo iza odabranoga",
                 "deleteT": "Ukloni odabrano pravilo",
                 "cacheT": "Očisti predmemoriju",
@@ -1616,14 +1724,14 @@
             },
             "cesiumCompass": {
                 "title": "Busola",
-                "text": "Možete koristiti buslu za kruženje oko zemaljske kugle. Povuci za rotiranje karte"
+                "text": "Možete koristiti busolu za kruženje oko zemaljske kugle. Povuci za rotiranje karte"
             },
             "cesiumNavigation": {
                 "title": "Navigacija",
                 "text": "Ovdje možete naći dugmad za približavanje i udaljavanje sadržaja karte"
             },
             "dashboardIntro": {
-                "title": "Uputstva za kontrolnu ploču",
+                "title": "Upute za kontrolnu ploču",
                 "text": "Pregled mogućnosti kontrolne ploče"
             },
             "dashboardNav": {
@@ -1652,11 +1760,11 @@
             },
             "dashboardAddTable": {
                 "title": "Tablica",
-                "text": "<p>Dodaj atributnu tabelu koja sadrži podatke odabranog vektorskog sloja na ploču. Također, možete filtrirati podatke kako bi prilagodili tablicu.</p><p>Koraci:</p><p><ul><li>Odaberi vektorski sloj</li><li>Prilagodi podatke tablice</li><li>Spremi i dodaj na ploču</li></ul></p>"
+                "text": "<p>Dodaj atributnu tabelu koja sadrži podatke odabranoga vektorskog sloja na ploču. Također, možete filtrirati podatke kako bi prilagodili tablicu.</p><p>Koraci:</p><p><ul><li>Odaberi vektorski sloj</li><li>Prilagodi podatke tablice</li><li>Spremi i dodaj na ploču</li></ul></p>"
             },
             "dashboardAddCounter": {
                 "title": "Brojač",
-                "text": "<p>Dodaj novi brojač na ploču. Brojač će prikazivati agregirane brojčane vrijednosti iz odabranog vektorskog sloja.</p><p>Koraci:</p><p><ul><li>Odaberi vektorski sloj</li><li>Prilagodi podatke brojača</li><li>Spremi i dodaj na ploču</li></ul></p>"
+                "text": "<p>Dodaj novi brojač na ploču. Brojač će prikazivati agregirane brojčane vrijednosti iz odabranoga vektorskog sloja.</p><p>Koraci:</p><p><ul><li>Odaberi vektorski sloj</li><li>Prilagodi podatke brojača</li><li>Spremi i dodaj na ploču</li></ul></p>"
             },
             "dashboardAddMap": {
                 "title": "Karta",

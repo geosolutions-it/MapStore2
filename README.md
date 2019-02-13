@@ -13,7 +13,7 @@ MapStore 2 has several example applications:
  * MapViewer is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore)
  * MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents by server like OpenStreetMap, Google Maps, MapQuest or specific servers provided by your organization or third party.
 
-For more information check the [MapStore documentation](https://dev.mapstore2.geo-solutions.it/mapstore/docs/).
+For more information check the [MapStore documentation](https://mapstore2.readthedocs.io/en/latest/).
 
 Download
 ------------
@@ -54,7 +54,7 @@ Use the default credentials (admin / admin) to login and start creating your map
 
 Documentation
 -------------
-You can find more documentation about how to build, install or develop with MapStore 2 on the [documentation site](https://dev.mapstore2.geo-solutions.it/mapstore/docs/).
+You can find more documentation about how to build, install or develop with MapStore 2 on the [documentation site](https://mapstore2.readthedocs.io/en/latest/).
 
 License
 ------------
@@ -75,15 +75,11 @@ So, if you want to test latest features use DEV, if you are not that brave use S
 Start developing your custom app
 ------------
 
-Clone the repository with the --recursive option to automatically clone submodules:
+Clone the repository:
 
-`git clone --recursive https://github.com/geosolutions-it/MapStore2.git`
+`git clone https://github.com/geosolutions-it/MapStore2.git`
 
-Install NodeJS >= 7.10.0 , if needed, from [here](https://nodejs.org/en/download/releases/).
-
-Update npm to 3.x, using:
-
-`npm install -g npm@3`
+Install latest NodeJS, if needed, from [here](https://nodejs.org/en/download/releases/).( minimal versions: NodeJS >= 8, npm >= 5 )
 
 Install docma to build the documentation
 
@@ -109,7 +105,7 @@ Where version_identifier is an optional identifier of the generated war that wil
 
 Deploy the generated mapstore.war file (in web/target) to your favourite J2EE container (e.g. Tomcat).
 
-Read more on the [documentation site](https://dev.mapstore2.geo-solutions.it/mapstore/docs/).
+Read more on the [documentation site](https://mapstore2.readthedocs.io/en/latest/).
 
 Professional Support
 ---------------------

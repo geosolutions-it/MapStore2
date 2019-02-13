@@ -24,6 +24,7 @@ Replacing:
 NOTE: we don't use  github_changelog_generator anymore because it has some issues that may address issues to wrong milestone, accordingly to our current workflow.
 
 ## Release Checklist
+```
 - [ ] Create an issue with this checklist in the release milestone.
 - [ ] If major release (YYYY.XX.00), create a branch (**YYYY.XX.xx**)  (`xx` is really `xx`, example: 2018.01.xx)
 - [ ]  If major release,Change [QA Jenkins job](http://build.geo-solutions.it/jenkins/view/MapStore2/job/MapStore2-QA-Build/) to build the new branch, enable the job continuous deploy
@@ -46,4 +47,5 @@ NOTE: we don't use  github_changelog_generator anymore because it has some issue
 - [ ] Update the release procedure if needed.
 - [ ] Close this issue
 - [ ] Close the related milestone
+```
 

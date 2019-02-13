@@ -8,12 +8,10 @@
 const PropTypes = require('prop-types');
 const React = require('react');
 const {FormattedNumber} = require('react-intl');
-const { checkRounding } = require('../../utils/CoordinatesUtils');
 class NumberFormat extends React.Component {
     static propTypes = {
-        value: PropTypes.oneOf([PropTypes.object, PropTypes.number]),
-        numberParams: PropTypes.object,
-        roundingBehaviour: PropTypes.string
+        value: PropTypes.oneOfType([PropTypes.object, PropTypes.number]),
+        numberParams: PropTypes.object
     };
 
     static contextTypes = {
@@ -21,16 +19,11 @@ class NumberFormat extends React.Component {
     };
 
     static defaultProps = {
-        value: new Date(),
-        roundingBehaviour: "round"
+        value: new Date()
     };
 
     render() {
-        const {value, roundingBehaviour, numberParams} = this.props;
-        const {maximumFractionDigits} = numberParams;
-
-        const roundingOptions = {value, roundingBehaviour, maximumFractionDigits};
-        return this.context.intl ? <FormattedNumber value={checkRounding(roundingOptions)} {...numberParams}/> : <span>{value && value.toString() || ''}</span>;
+        return this.context.intl ? <FormattedNumber value={this.props.value} {...this.props.numberParams}/> : <span>{this.props.value && this.props.value.toString() || ''}</span>;
     }
 }
 
