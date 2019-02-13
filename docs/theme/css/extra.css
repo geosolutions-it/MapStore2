@@ -17,6 +17,13 @@ a:hover {
     height: 63px;
     width: auto;
 }
+.md-footer-nav {
+    background-color: rgba(21, 147, 93, 0.89) !important;
+}
+.md-footer-nav__link {
+    padding-top: 1rem;
+    padding-bottom: 0rem;
+}
 .md-footer-items {
     margin-top: 10px;
     margin-bottom: 10px;
@@ -24,8 +31,10 @@ a:hover {
     color: white;
 }
 .md-footer-brand-img {
-    margin-top: 40px;
+    /* margin-top: 40px; */
+    /* max-height: 30px; */
     max-height: 30px;
+    width: auto;
 }
 .md-footer-copyright, .md-footer-social {
     width: 100%;
@@ -35,7 +44,7 @@ a:hover {
     margin-right: 0px;
 }
 .md-footer-license {
-    margin-bottom: 40px;
+    /* margin-bottom: 40px; */
 }
 .md-container {
     padding-top: 80px;

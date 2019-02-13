@@ -1,5 +1,5 @@
 site_name: MapStore2
-site_url: 'https://mapstore.geo-solutions.it'
+site: 'https://mapstore.geo-solutions.it'
 theme:
   name: 'material'
   custom_dir: 'docs/theme'
