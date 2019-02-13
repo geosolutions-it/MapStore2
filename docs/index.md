@@ -7,7 +7,7 @@
 
 [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) has been designed from the beginning to provide users with a coherent and comprehensive experience across different devices, hence it should automatically adapt to different screen size as shown later.
 
-**MapStore 2 is based on OpenLayers, Leaflet and ReactJS, and is licensed under the GPLv3 license.**
+**MapStore 2 is based on OpenLayers, Leaflet and ReactJS, and is licensed under the Simplified BSD license.**
 
 ##Quick Start
 
