@@ -4,7 +4,7 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
 const TEXT_SEARCH_STARTED = 'TEXT_SEARCH_STARTED';
 const TEXT_SEARCH_RESULTS_LOADED = 'TEXT_SEARCH_RESULTS_LOADED';
 const TEXT_SEARCH_PERFORMED = 'TEXT_SEARCH_PERFORMED';
@@ -19,6 +19,35 @@ const TEXT_SEARCH_CANCEL_ITEM = 'TEXT_SEARCH_CANCEL_ITEM';
 const TEXT_SEARCH_ITEM_SELECTED = 'TEXT_SEARCH_ITEM_SELECTED';
 const TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE = 'TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE';
 const UPDATE_RESULTS_STYLE = 'UPDATE_RESULTS_STYLE';
+const CHANGE_SEARCH_TOOL = 'CHANGE_SEARCH_TOOL';
+const ZOOM_ADD_POINT = 'SEARCH:ZOOM_ADD_POINT';
+
+/**
+ * zoom to a specific point
+ * @param {object} pos as array [x, y] or object {x: ..., y:...}
+ * @param {number} zoom level to zoom to
+ * @param {string} crs of the point
+*/
+function zoomAndAddPoint(pos, zoom, crs) {
+    return {
+        type: ZOOM_ADD_POINT,
+        pos,
+        zoom,
+        crs
+    };
+}
+
+/**
+ * updates the active menu
+ * @memberof actions.search
+ * @param {string} activeSearchTool services intrested to use for the next search
+ */
+function changeActiveSearchTool(activeSearchTool) {
+    return {
+        type: CHANGE_SEARCH_TOOL,
+        activeSearchTool
+    };
+}
 
 /**
  * updates the results of the search result loaded
@@ -206,6 +235,8 @@ module.exports = {
     TEXT_SEARCH_CANCEL_ITEM,
     TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE,
     UPDATE_RESULTS_STYLE,
+    zoomAndAddPoint, ZOOM_ADD_POINT,
+    changeActiveSearchTool, CHANGE_SEARCH_TOOL,
     searchTextLoading,
     searchResultError,
     searchResultLoaded,

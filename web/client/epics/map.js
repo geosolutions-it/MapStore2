@@ -16,6 +16,7 @@ const {isSupportedLayer} = require('../utils/LayersUtils');
 const {warning} = require('../actions/notifications');
 const {resetControls} = require('../actions/controls');
 const {clearLayers} = require('../actions/layers');
+const {removeAllAdditionalLayer} = require('../actions/additionallayers');
 const {head} = require('lodash');
 
 const handleCreationBackgroundError = (action$, store) =>
@@ -68,7 +69,7 @@ const handleCreationLayerError = (action$, store) =>
     });
 
 const resetMapOnInit = action$ =>
-    action$.ofType(INIT_MAP).switchMap(() => Rx.Observable.of(resetControls(), clearLayers()));
+    action$.ofType(INIT_MAP).switchMap(() => Rx.Observable.of(removeAllAdditionalLayer(), resetControls(), clearLayers()));
 
 module.exports = {
     handleCreationLayerError,

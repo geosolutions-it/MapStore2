@@ -84,6 +84,8 @@
             "templateFormatInfoAlertExample": "id della feature è ${ properties }",
             "templatePreview": "Anteprima template"
         },
+        "longitude": "Longitudine",
+        "latitude": "Latitudine",
         "notification": {
             "update": "Aggiorna",
             "warning": "Attenzione",
@@ -529,7 +531,9 @@
             "showLabel": "Mostra etichetta di misurazione"
         },
         "search":{
-            "placeholder": "Cerca un indirizzo o inserisci coordinate...",
+            "zoomToPoint": "Zoom al punto",
+            "changeSearchInputField": "Cambia lo strumento di ricerca",
+            "placeholder": "Cerca un indirizzo",
             "searchservicesbutton": "Configura servizi di ricerca",
             "configpaneltitle": "Aggiungi/modifica un servizio di ricerca",
             "serviceslistlabel": "Servizi disponibili",

@@ -242,4 +242,20 @@ describe('Test the map reducer', () => {
         let state = mapConfig({}, action);
         expect(state.resize).toEqual(1);
     });
+
+    it('zoom to a point', () => {
+        const pos = {x: 1, y: 2};
+        const zoom = 12;
+        const crs = "EPSG:4326";
+        const action = {
+            type: 'ZOOM_TO_POINT',
+            pos,
+            zoom,
+            crs
+        };
+        let state = mapConfig({}, action);
+        expect(state.center).toEqual({...pos, srs: crs});
+        expect(state.zoom).toEqual(zoom);
+        expect(state.mapStateSource).toEqual(null);
+    });
 });

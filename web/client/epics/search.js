@@ -10,6 +10,7 @@ const {TEXT_SEARCH_STARTED,
     TEXT_SEARCH_RESULTS_PURGE,
     TEXT_SEARCH_RESET,
     TEXT_SEARCH_ITEM_SELECTED,
+    ZOOM_ADD_POINT,
     searchTextLoading,
     searchResultLoaded,
     searchResultError,
@@ -17,7 +18,14 @@ const {TEXT_SEARCH_STARTED,
     selectNestedService,
     searchTextChanged,
     resultsPurge
-    } = require('../actions/search');
+} = require('../actions/search');
+
+const {
+    updateAdditionalLayer
+} = require('../actions/additionallayers');
+const {
+    zoomToPoint
+} = require('../actions/map');
 
 const mapUtils = require('../utils/MapUtils');
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
@@ -149,11 +157,45 @@ const searchItemSelected = action$ =>
         return Rx.Observable.of(resultsPurge()).concat(itemSelectionStream, nestedServicesStream, searchTextStream);
     });
 
+
+/**
+ * Gets every `ZOOM_ADD_POINT` event.
+ * it creates/updates an additional layer for showing a marker for a given point
+ *
+*/
+const zoomAndAddPointEpic = action$ =>
+        action$.ofType(ZOOM_ADD_POINT)
+        .switchMap(action => {
+            const feature = {
+                type: "Feature",
+                geometry: {
+                    type: "Point",
+                    coordinates: [action.pos.x, action.pos.y]
+                }
+            };
+
+            return Rx.Observable.from([
+                updateAdditionalLayer("search", "search", 'overlay', {
+                    features: [feature],
+                    type: "vector",
+                    name: "searchPoints",
+                    id: "searchPoints",
+                    visibility: true,
+                    style: {
+                        iconGlyph: "comment",
+                        iconShape: "circle",
+                        iconColor: "green"
+                    }
+                }),
+                zoomToPoint(action.pos, action.zoom, action.crs)
+            ]);
+        });
     /**
      * Actions for search
      * @name epics.search
      */
 module.exports = {
+    zoomAndAddPointEpic,
     searchEpic,
     searchItemSelected
 };

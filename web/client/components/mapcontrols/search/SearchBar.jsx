@@ -8,12 +8,15 @@
 
 const PropTypes = require('prop-types');
 const React = require('react');
-const {FormControl, FormGroup, Glyphicon, Tooltip} = require('react-bootstrap');
-const OverlayTrigger = require('../../misc/OverlayTrigger');
+const {FormControl, FormGroup, Glyphicon, Row, Col} = require('react-bootstrap');
 const LocaleUtils = require('../../../utils/LocaleUtils');
+const DropdownToolbarOptions = require('../../misc/toolbar/DropdownToolbarOptions');
+const CoordinateEntry = require('../../mapcontrols/annotations/CoordinateEntry');
+const Toolbar = require('../../misc/toolbar/Toolbar');
 const Spinner = require('react-spinkit');
+const {isNumber} = require('lodash');
 const assign = require('object-assign');
-
+const Message = require('../../I18N/Message');
 
 const delay = (
     function() {
@@ -52,6 +55,12 @@ require('./searchbar.css');
  * @prop {boolean} loading if true, shows the loading tool
  * @prop {object} error if not null, an error icon will be display
  * @prop {object} style css style to apply to the component
+ * ************* menu options *************
+ * @prop {function} onChangeActiveSearchTool used to change the active option in the menu
+ * @prop {function} onZoomToPoint used to a specific point
+ * @prop {string} activeSearchTool used to highlight the selected search option in the menu
+ * @prop {number} defaultZoomLevel zoomlevel used to zoom to point
+ * @prop {bool} showOptions used to show search option addon
  * @prop {object} options to pass to the search event
  *
  */
@@ -71,6 +80,7 @@ class SearchBar extends React.Component {
         typeAhead: PropTypes.bool,
         searchText: PropTypes.string,
         removeIcon: PropTypes.string,
+        optionsIcon: PropTypes.string,
         searchIcon: PropTypes.string,
         selectedItems: PropTypes.array,
         autoFocusOnSelect: PropTypes.bool,
@@ -79,7 +89,15 @@ class SearchBar extends React.Component {
         loading: PropTypes.bool,
         error: PropTypes.object,
         style: PropTypes.object,
-        searchOptions: PropTypes.object
+        searchOptions: PropTypes.object,
+        // menuOptions
+        onZoomToPoint: PropTypes.func,
+        onChangeActiveSearchTool: PropTypes.func,
+        activeSearchTool: PropTypes.string,
+        defaultZoomLevel: PropTypes.number,
+        showOptions: PropTypes.bool,
+        aeronauticalOptions: PropTypes.object,
+        constraintsCoordEditor: PropTypes.object
     };
 
     static contextTypes = {
@@ -95,17 +113,46 @@ class SearchBar extends React.Component {
         selectedItems: [],
         placeholderMsgId: "search.placeholder",
         removeIcon: "1-close",
+        optionsIcon: "cog",
         searchIcon: "search",
         delay: 1000,
         blurResetDelay: 300,
         autoFocusOnSelect: true,
         splitTools: true,
-        isSearchClickable: false,
-        hideOnBlur: true,
+        isSearchClickable: true,
         typeAhead: true,
-        searchText: ""
+        searchText: "",
+        hideOnBlur: true,
+        // menuOptions
+        onChangeActiveSearchTool: () => {},
+        onZoomToPoint: () => {},
+        defaultZoomLevel: 12,
+        aeronauticalOptions: {
+            seconds: {
+                decimals: 4,
+                step: 0.0001
+            }
+        },
+        constraintsCoordEditor: {
+            decimal: {
+                lat: {
+                    min: -90,
+                    max: 90
+                },
+                lon: {
+                    min: -180,
+                    max: 180
+                }
+            }
+        },
+        activeSearchTool: "address",
+        showOptions: false
     };
 
+    state = {
+        lon: undefined,
+        lat: undefined
+    }
     componentDidUpdate(prevProps) {
         let shouldFocus = this.props.autoFocusOnSelect && this.props.selectedItems &&
             (
@@ -154,44 +201,145 @@ class SearchBar extends React.Component {
 
     getSpinnerStyle = () => {
         const nonSplittedStyle = {
-            right: "19px",
-            top: "7px"
+            right: "69px",
+            zIndex: 1,
+            top: "13px"
         };
         const splittedStyle = {
-            right: "16px",
-            top: "12px"
+            right: "69px",
+            zIndex: 1,
+            top: "13px"
         };
         return assign({}, {position: "absolute"}, this.props.splitTools ? {...splittedStyle} : {...nonSplittedStyle} );
     }
+    getGlyphicon = (glyph, key, onClick, className = "") => (<Glyphicon
+        glyph={glyph}
+        key={key}
+        onClick={onClick}
+        className={className}/>);
+
     renderAddonBefore = () => {
         return this.props.selectedItems && this.props.selectedItems.map((item, index) =>
             <span key={"selected-item" + index} className="input-group-addon"><div className="selectedItem-text">{item.text}</div></span>
         );
     };
 
-    renderAddonAfter = () => {
-        const searchProps = assign({}, {
-            key: "searchbar_search_glyphicon",
-            glyph: this.props.searchIcon,
-            className: this.props.isSearchClickable ? "magnifying-glass clickable" : "magnifying-glass"},
-            this.props.isSearchClickable ? { onClick: this.search } : {});
-        const search = <Glyphicon {...searchProps}/>;
+    renderSearchToolbar = () => {
+        // TODO FIX CLASSNAME, ONCLICK
+        return (
+            <span className="search-toolbar-options">
+                {this.props.loading && <Spinner style={this.getSpinnerStyle()} spinnerName="pulse" noFadeIn/>}
+                <Toolbar
+                    btnGroupProps = {{ className: 'btn-group-menu-options'}}
+                    transitionProps = {null}
+                    btnDefaultProps = {{ className: 'square-button-md', bsStyle: 'primary' }}
+                    buttons={[
+                        {
+                            glyph: this.props.removeIcon,
+                            className: "square-button-md no-border",
+                            bsStyle: "default",
+                            pullRight: true,
+                            visible: this.props.activeSearchTool === "address" && (this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0),
+                            onClick: this.clearSearch
+                        }, {
+                            glyph: this.props.searchIcon,
+                            className: "square-button-md no-border " + (this.props.isSearchClickable || this.props.activeSearchTool !== "address" ? "magnifying-glass clickable" : "magnifying-glass"),
+                            bsStyle: "default",
+                            pullRight: true,
+                            visible: this.props.activeSearchTool === "address" && (!(this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0) || !this.props.splitTools),
+                            onClick: () => {
+                                if (this.props.isSearchClickable || this.props.activeSearchTool !== "address") {
+                                    this.search();
+                                }
+                            }
+                        }, {
+                            tooltip: this.props.error && this.props.error.message || "null",
+                            tooltipPosition: "bottom",
+                            className: "square-button-md no-border",
+                            glyph: "warning-sign",
+                            bsStyle: "danger",
+                            glyphClassName: "searcherror",
+                            visible: !!this.props.error,
+                            onClick: this.clearSearch
+                        }, {
+                            glyph: "zoom-to",
+                            tooltipId: "search.zoomToPoint",
+                            tooltipPosition: "bottom",
+                            className: "square-button-md no-border",
+                            bsStyle: "default",
+                            pullRight: true,
+                            disabled: !this.areValidCoordinates(),
+                            visible: this.props.showOptions && this.props.activeSearchTool !== "address",
+                            onClick: () => { this.zoomToPoint(); }
+                        }, {
+                        buttonConfig: {
+                            title: <Glyphicon glyph="cog"/>,
+                            tooltipId: "search.changeSearchInputField",
+                            tooltipPosition: "bottom",
+                            className: "square-button-md no-border",
+                            pullRight: true
+                        },
+                        menuOptions: [
+                            {
+                                active: this.props.activeSearchTool === "address",
+                                onClick: () => { this.props.onChangeActiveSearchTool("address"); },
+                                text: "Default Search"
+                            }, {
+                                active: this.props.activeSearchTool === "decimal",
+                                onClick: () => { this.props.onChangeActiveSearchTool("decimal"); },
+                                text: "Decimal Coordinates"
+                            }, {
+                                active: this.props.activeSearchTool === "aeronautical",
+                                onClick: () => { this.props.onChangeActiveSearchTool("aeronautical"); },
+                                text: "Aeronautical Coordinates"
+                            }
+                        ],
+                        visible: this.props.showOptions,
+                        el: DropdownToolbarOptions
+                    }]}
+                    />
+            </span>);
+    }
 
-        const remove = <Glyphicon className="searchclear" glyph={this.props.removeIcon} onClick={this.clearSearch} key="searchbar_remove_glyphicon"/>;
-        const showRemove = this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0;
-        let addonAfter = showRemove ? (this.props.splitTools ? [remove] : [remove, search]) : [search];
-        if (this.props.loading) {
-            addonAfter = [<Spinner style={this.getSpinnerStyle()} spinnerName="pulse" noFadeIn/>, addonAfter];
-        }
-        if (this.props.error) {
-            let tooltip = <Tooltip id="tooltip">{this.props.error && this.props.error.message || null}</Tooltip>;
-            addonAfter.push(<OverlayTrigger placement="bottom" overlay={tooltip}><Glyphicon className="searcherror" glyph="warning-sign" onClick={this.clearSearch}/></OverlayTrigger>);
-        }
-        return <span className="input-group-addon">{addonAfter}</span>;
-    };
+    renderCoordinateTool = () => {
+        return this.props.activeSearchTool !== "address" &&
+            (<div className="coordinateEditor">
+            <Row className="entryRow">
+                <Col xs="3" className="coordinateLabel">
+                    <Message msgId="latitude"/>
+                </Col>
+                <Col xs="9">
+                    <CoordinateEntry
+                        format={this.props.activeSearchTool}
+                        aeronauticalOptions={this.props.aeronauticalOptions}
+                        coordinate="lat"
+                        idx={1}
+                        value={this.state.lat}
+                        constraints={this.props.constraintsCoordEditor}
+                        onChange={(dd) => this.changeCoord("lat", dd)}
+                    />
+                </Col>
+            </Row>
+            <Row className="entryRow">
+                <Col xs="3" className="coordinateLabel">
+                    <Message msgId="longitude"/>
+                </Col>
+                <Col xs="9">
+                    <CoordinateEntry
+                        format={this.props.activeSearchTool}
+                        aeronauticalOptions={this.props.aeronauticalOptions}
+                        coordinate="lon"
+                        idx={2}
+                        value={this.state.lon}
+                        constraints={this.props.constraintsCoordEditor}
+                        onChange={(dd) => this.changeCoord("lon", dd)}
+                    />
+                </Col>
+            </Row>
+        </div>);
+    }
 
-    render() {
-        //  const innerGlyphicon = <Button onClick={this.search}></Button>;
+    renderInputSearch = () => {
         let placeholder = "search.placeholder";
         if (!this.props.placeholder && this.context.messages) {
             let placeholderLocMessage = LocaleUtils.getMessageById(this.context.messages, this.props.placeholderMsgId || placeholder);
@@ -201,27 +349,33 @@ class SearchBar extends React.Component {
         } else {
             placeholder = this.props.placeholder;
         }
-
+        return this.props.activeSearchTool === "address" &&
+            <FormControl
+                className="searchInput"
+                key="search-input"
+                placeholder={placeholder}
+                type="text"
+                inputRef={ref => { this.input = ref; }}
+                style={{
+                    textOverflow: "ellipsis"
+                }}
+                value={this.props.searchText}
+                ref="input"
+                onKeyDown={this.onKeyDown}
+                onBlur={this.onBlur}
+                onFocus={this.onFocus}
+                onChange={this.onChange}
+            />;
+    }
+    render() {
         return (
             <div id="map-search-bar" style={this.props.style} className={"MapSearchBar" + (this.props.className ? " " + this.props.className : "")}>
                 <FormGroup>
                     <div className="input-group">
                         {this.renderAddonBefore()}
-                        <FormControl
-                        key="search-input"
-                        placeholder={placeholder}
-                        type="text"
-                        inputRef={ref => { this.input = ref; }}
-                        style={{
-                            textOverflow: "ellipsis"
-                        }}
-                        value={this.props.searchText}
-                        ref="input"
-                        onKeyDown={this.onKeyDown}
-                        onBlur={this.onBlur}
-                        onFocus={this.onFocus}
-                        onChange={this.onChange} />
-                        {this.renderAddonAfter()}
+                        {this.renderInputSearch()}
+                        {this.renderCoordinateTool()}
+                        {this.renderSearchToolbar()}
                         </div>
                 </FormGroup>
             </div>
@@ -235,8 +389,10 @@ class SearchBar extends React.Component {
         } else if (text !== undefined && text !== "") {
             this.props.onSearch(text, this.props.searchOptions);
         }
-
     };
+    zoomToPoint = () => {
+        this.props.onZoomToPoint({x: parseFloat(this.state.lon), y: parseFloat(this.state.lat)}, this.props.defaultZoomLevel, "EPSG:4326");
+    }
 
     focusToInput = () => {
         let node = this.input;
@@ -248,6 +404,14 @@ class SearchBar extends React.Component {
     clearSearch = () => {
         this.props.onSearchReset();
     };
+
+    changeCoord = (coord, value) => {
+        let val = isNaN(parseFloat(value)) ? undefined : parseFloat(value);
+        this.setState(() => ({
+            [coord]: val
+        }));
+    }
+    areValidCoordinates = () => (isNumber(this.state.lon) && isNumber(this.state.lat))
 }
 
 module.exports = SearchBar;

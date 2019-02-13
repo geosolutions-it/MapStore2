@@ -60,6 +60,8 @@
             "featureInfoFormatLbl": "确定响应格式",
             "legenderror": "图例不可用"
         },
+        "longitude": "Longitude",
+        "latitude": "Latitude",
         "notification": {
             "update": "更新",
             "warning": "警告",
@@ -373,7 +375,9 @@
             "bearingLabel": "方位角"
         },
         "search":{
-            "placeholder": "按地点名称或坐标搜索 ...",
+            "zoomToPoint": "Zoom to point",
+            "changeSearchInputField": "Change the search tool",
+            "placeholder": "按地点名称搜索",
             "searchservicesbutton": "配置搜索服务",
             "configpaneltitle": "创建/编辑搜索服务",
             "serviceslistlabel": "可用的服务",

@@ -62,6 +62,8 @@
             "featureInfoFormatLbl": "Informatie, formaat van het antwoord",
             "legenderror": "Het legende is niet berijkbaar"
         },
+        "longitude": "Longitude",
+        "latitude": "Latitude",
         "notification": {
             "update": "Bijwerken",
             "warning": "Waarschuwing",
@@ -369,8 +371,10 @@
             "areaLabel": "Afstand",
             "bearingLabel": "Richting"
         },
-        "search": {
-            "placeholder": "Zoeken op plaatsnaam of coördinaten...",
+        "search":{
+            "zoomToPoint": "Zoom to point",
+            "changeSearchInputField": "Change the search tool",
+            "placeholder": "Zoeken op locatienaam",
             "searchservicesbutton": "Opzoekservices configureren",
             "configpaneltitle": "Een opzoekservice aanmaken/wijzigen",
             "serviceslistlabel": "Beschikbare services",

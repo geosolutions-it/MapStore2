@@ -84,6 +84,8 @@
             "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
             "templatePreview": "Vorschau template"
         },
+        "longitude": "Länge",
+        "latitude": "Breite",
         "notification": {
             "update": "Update",
             "warning": "Warning",
@@ -529,7 +531,9 @@
             "showLabel": "Zeige Bezeichnungsetikett"
         },
         "search":{
-            "placeholder": "Suche nache einer Adresse oder gib Koordinaten ein ...",
+            "zoomToPoint": "Zoom auf Punkt",
+            "changeSearchInputField": "Ändern Sie das Suchwerkzeug",
+            "placeholder": "Suche nach Standortname",
             "searchservicesbutton": "Konfigurations-Suchdienste konfigurieren",
             "configpaneltitle": "Einen Suchdienst anlegen / bearbeiten",
             "serviceslistlabel": "Verfügbare Dienstleistungen",
