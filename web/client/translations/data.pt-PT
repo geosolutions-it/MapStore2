@@ -530,6 +530,9 @@
             "showLabel": "Mostrar etiqueta de distância"
         },
         "search":{
+            "defaultSearch": "Default Search",
+            "decimal": "Decimal Coordinates",
+            "aeronautical": "Aeronautical Coordinates",
             "zoomToPoint": "Zoom to point",
             "changeSearchInputField": "Change the search tool",
             "placeholder": "Pesquisar por nome de local",

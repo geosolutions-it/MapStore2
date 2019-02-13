@@ -531,6 +531,9 @@
             "showLabel": "Show measurement label"
         },
         "search":{
+            "defaultSearch": "Default Search",
+            "decimal": "Decimal Coordinates",
+            "aeronautical": "Aeronautical Coordinates",
             "zoomToPoint": "Zoom to point",
             "changeSearchInputField": "Change the search tool",
             "placeholder": "Search by location name",

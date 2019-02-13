@@ -375,6 +375,9 @@
             "bearingLabel": "方位角"
         },
         "search":{
+            "defaultSearch": "Default Search",
+            "decimal": "Decimal Coordinates",
+            "aeronautical": "Aeronautical Coordinates",
             "zoomToPoint": "Zoom to point",
             "changeSearchInputField": "Change the search tool",
             "placeholder": "按地点名称搜索",

@@ -531,6 +531,9 @@
             "showLabel": "Mostra etichetta di misurazione"
         },
         "search":{
+            "defaultSearch": "Ricerca per indirizzi",
+            "decimal": "Coordinate decimali",
+            "aeronautical": "Coordinate aeronautiche",
             "zoomToPoint": "Zoom al punto",
             "changeSearchInputField": "Cambia lo strumento di ricerca",
             "placeholder": "Cerca un indirizzo",

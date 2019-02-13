@@ -532,6 +532,9 @@
             "showLabel": "Afficher l'étiquette de mesure"
         },
         "search":{
+            "defaultSearch": "Recherche par défaut",
+            "decimal": "Coordonnées décimales",
+            "aeronautical": "Coordonnées aéronautiques",
             "zoomToPoint": "Zoom sur le point",
             "changeSearchInputField": "Changer l'outil de recherche",
             "placeholder": "Recherche par nom de lieu",

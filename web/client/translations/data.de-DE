@@ -531,6 +531,9 @@
             "showLabel": "Zeige Bezeichnungsetikett"
         },
         "search":{
+            "defaultSearch": "Standardsuche",
+            "decimal": "Dezimalkoordinaten",
+            "aeronautical": "Luftfahrtkoordinaten",
             "zoomToPoint": "Zoom auf Punkt",
             "changeSearchInputField": "Ändern Sie das Suchwerkzeug",
             "placeholder": "Suche nach Standortname",

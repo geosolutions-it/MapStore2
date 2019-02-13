@@ -283,15 +283,15 @@ class SearchBar extends React.Component {
                             {
                                 active: this.props.activeSearchTool === "address",
                                 onClick: () => { this.props.onChangeActiveSearchTool("address"); },
-                                text: "Default Search"
+                                text: <Message msgId="search.defaultSearch"/>
                             }, {
                                 active: this.props.activeSearchTool === "decimal",
                                 onClick: () => { this.props.onChangeActiveSearchTool("decimal"); },
-                                text: "Decimal Coordinates"
+                                text: <Message msgId="search.decimal"/>
                             }, {
                                 active: this.props.activeSearchTool === "aeronautical",
                                 onClick: () => { this.props.onChangeActiveSearchTool("aeronautical"); },
-                                text: "Aeronautical Coordinates"
+                                text: <Message msgId="search.aeronautical"/>
                             }
                         ],
                         visible: this.props.showOptions,
