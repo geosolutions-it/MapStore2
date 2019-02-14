@@ -16,7 +16,7 @@ All the arguments are mandatory:
  * **gitRepositoryUrl**: full url to the github repository where the project will be published
  * **outputFolder**: folder where the project will be created
 
-At the end of the script execution, the given outputFolder will be populated by all the configuration files needed to start working on the project. Moreover, the local git repo will be initialized and the MapStore2 submodule added and downloaded.
+At the end of the script execution, the given outputFolder will be populated by all the configuration files needed to start working on the project. Moreover, the local git repo will be initialized and the MapStore submodule added and downloaded.
 
 If you create a *standard* project, you can customize it editing **js/app.jsx**: look at the comments for hints and the MapStore documentation for more details.
 
