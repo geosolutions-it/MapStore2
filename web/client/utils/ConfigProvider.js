@@ -776,7 +776,10 @@ const CONFIGPROVIDER = {
             bounds: [
                 [48.0405018704, -1.65729160235],
                 [56.1105896442, 12.4317272654]
-            ]
+            ],
+            minZoom: 6,
+            maxZoom: 19,
+            maxNativeZoom: 19
         },
         variants: {
             brtachtergrondkaart: 'brtachtergrondkaart',
