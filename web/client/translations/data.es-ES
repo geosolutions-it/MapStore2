@@ -84,6 +84,8 @@
             "templateFormatInfoAlertExample": "La identificación de la función es ${ properties }",
             "templatePreview": "Vista previa de template"
         },
+        "longitude": "Longitud",
+        "latitude": "Latitud",
         "notification": {
             "update": "Update",
             "warning": "Warning",
@@ -529,7 +531,12 @@
             "showLabel": "Mostrar etiqueta de medición"
         },
         "search":{
-            "placeholder": "Búsqueda por toponimo o coordenadas...",
+            "defaultSearch": "Búsqueda predeterminada",
+            "decimal": "Coordenadas decimales",
+            "aeronautical": "Coordenadas aeronáuticas",
+            "zoomToPoint": "Zoom al punto",
+            "changeSearchInputField": "Cambiar la herramienta de búsqueda",
+            "placeholder": "Buscar por nombre de ubicación",
             "searchservicesbutton": "Configurar los servicios de búsqueda",
             "configpaneltitle": "Crear / modificar un sercio de búsqueda",
             "serviceslistlabel": "Servicios disponibles",

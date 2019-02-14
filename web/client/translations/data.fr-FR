@@ -85,6 +85,8 @@
             "templateFormatInfoAlertExample": "L'ID de la fonctionnalité est ${ properties }",
             "templatePreview": "Aperçu du template"
         },
+        "longitude": "Longitude",
+        "latitude": "Latitude",
         "notification": {
             "update": "Mise à jour",
             "warning": "Avertissement",
@@ -530,7 +532,12 @@
             "showLabel": "Afficher l'étiquette de mesure"
         },
         "search":{
-            "placeholder": "Recherche par toponyme ou coordonnées...",
+            "defaultSearch": "Recherche par défaut",
+            "decimal": "Coordonnées décimales",
+            "aeronautical": "Coordonnées aéronautiques",
+            "zoomToPoint": "Zoom sur le point",
+            "changeSearchInputField": "Changer l'outil de recherche",
+            "placeholder": "Recherche par nom de lieu",
             "searchservicesbutton": "Configurer les services de recherche",
             "configpaneltitle": "Créer / modifier un service de recherche",
             "serviceslistlabel": "Services disponibles",

@@ -7,7 +7,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const { UPDATE_ADDITIONAL_LAYER, REMOVE_ADDITIONAL_LAYER, UPDATE_OPTIONS_BY_OWNER } = require('../actions/additionallayers');
+const {
+    UPDATE_ADDITIONAL_LAYER,
+    REMOVE_ADDITIONAL_LAYER,
+    UPDATE_OPTIONS_BY_OWNER,
+    REMOVE_ALL_ADDITIONAL_LAYERS
+} = require('../actions/additionallayers');
 const { head, pickBy, identity, isObject, isArray } = require('lodash');
 
 function additionallayers(state = [], action) {
@@ -43,10 +48,12 @@ function additionallayers(state = [], action) {
             const {id, owner} = action;
             return owner ? state.filter(layerItem => layerItem.owner !== owner) : state.filter(layerItem => layerItem.id !== id);
         }
+        case REMOVE_ALL_ADDITIONAL_LAYERS: {
+            return [];
+        }
         default:
             return state;
     }
 }
 
 module.exports = additionallayers;
-

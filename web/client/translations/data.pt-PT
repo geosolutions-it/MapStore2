@@ -84,6 +84,8 @@
             "templateFormatInfoAlertExample": "O id do tema é ${ properties }",
             "templatePreview": "Preview do Template"
         },
+        "longitude": "Longitude",
+        "latitude": "Latitude",
         "notification": {
             "update": "Actualizar",
             "warning": "Aviso",
@@ -528,7 +530,12 @@
             "showLabel": "Mostrar etiqueta de distância"
         },
         "search":{
-            "placeholder": "Pesquisar localização por nome ou coordenadas ...",
+            "defaultSearch": "Default Search",
+            "decimal": "Decimal Coordinates",
+            "aeronautical": "Aeronautical Coordinates",
+            "zoomToPoint": "Zoom to point",
+            "changeSearchInputField": "Change the search tool",
+            "placeholder": "Pesquisar por nome de local",
             "searchservicesbutton": "Configure search services",
             "configpaneltitle": "Create/edit a search service",
             "serviceslistlabel": "Available services",

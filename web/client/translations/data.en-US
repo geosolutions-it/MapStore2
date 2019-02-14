@@ -84,6 +84,8 @@
             "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
             "templatePreview": "Template preview"
         },
+        "longitude": "Longitude",
+        "latitude": "Latitude",
         "notification": {
             "update": "Update",
             "warning": "Warning",
@@ -529,7 +531,12 @@
             "showLabel": "Show measurement label"
         },
         "search":{
-            "placeholder": "Search by location name or coordinates ...",
+            "defaultSearch": "Default Search",
+            "decimal": "Decimal Coordinates",
+            "aeronautical": "Aeronautical Coordinates",
+            "zoomToPoint": "Zoom to point",
+            "changeSearchInputField": "Change the search tool",
+            "placeholder": "Search by location name",
             "searchservicesbutton": "Configure search services",
             "configpaneltitle": "Create/edit a search service",
             "serviceslistlabel": "Available services",

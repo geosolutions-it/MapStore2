@@ -11,10 +11,22 @@ var expect = require('expect');
 
 const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
-const { textSearch, selectSearchItem, TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_LOADING, TEXT_SEARCH_ADD_MARKER, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_TEXT_CHANGE, UPDATE_RESULTS_STYLE } = require('../../actions/search');
-const {CHANGE_MAP_VIEW} = require('../../actions/map');
-const {searchEpic, searchItemSelected } = require('../search');
-const rootEpic = combineEpics(searchEpic, searchItemSelected);
+const {
+    textSearch,
+    selectSearchItem,
+    TEXT_SEARCH_RESULTS_LOADED,
+    TEXT_SEARCH_LOADING,
+    TEXT_SEARCH_ADD_MARKER,
+    TEXT_SEARCH_RESULTS_PURGE,
+    TEXT_SEARCH_NESTED_SERVICES_SELECTED,
+    TEXT_SEARCH_TEXT_CHANGE,
+    UPDATE_RESULTS_STYLE,
+    zoomAndAddPoint, ZOOM_ADD_POINT
+} = require('../../actions/search');
+const {CHANGE_MAP_VIEW, ZOOM_TO_POINT} = require('../../actions/map');
+const {UPDATE_ADDITIONAL_LAYER} = require('../../actions/additionallayers');
+const {searchEpic, searchItemSelected, zoomAndAddPointEpic } = require('../search');
+const rootEpic = combineEpics(searchEpic, searchItemSelected, zoomAndAddPointEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
@@ -146,6 +158,17 @@ describe('search Epics', () => {
             text: TEXT
         });
         expect(actions.filter(m => m.type === TEXT_SEARCH_TEXT_CHANGE)[0].searchText).toBe(TEXT);
+    });
+    it('zoomAndAddPointEpic ADD addiditonalLayer and zoom to point', () => {
+        let action = zoomAndAddPoint({x: 1, y: 0}, 10, "EPSG:4326");
+        store.dispatch( action );
+        let actions = store.getActions();
+        expect(actions.length).toBe(3);
+        let expectedActions = [ZOOM_ADD_POINT, UPDATE_ADDITIONAL_LAYER, ZOOM_TO_POINT ];
+        let actionsType = actions.map(a => a.type);
+        expectedActions.forEach((a) => {
+            expect(actionsType.indexOf(a)).toNotBe(-1);
+        });
     });
 
     it('geometry service', (done) => {

@@ -84,6 +84,8 @@
             "templateFormatInfoAlertExample": "Id objekta je ${ properties }",
             "templatePreview": "Pregled predloška"
         },
+        "longitude": "Longitude",
+        "latitude": "Latitude",
         "notification": {
             "update": "Ažuriranje",
             "warning": "Upozorenje",
@@ -529,7 +531,12 @@
             "showLabel": "Prikaži oznaku mjerenja"
         },
         "search":{
-            "placeholder": "Pretraži po imenu lokacije ili koordinatama ...",
+            "defaultSearch": "Default Search",
+            "decimal": "Decimal Coordinates",
+            "aeronautical": "Aeronautical Coordinates",
+            "zoomToPoint": "Zoom to point",
+            "changeSearchInputField": "Change the search tool",
+            "placeholder": "Traži po nazivu mjesta",
             "searchservicesbutton": "Konfiguriraj servise pretraživanja",
             "configpaneltitle": "Kreiraj/izmijeni servis pretraživanja",
             "serviceslistlabel": "Dostupni servisi",
