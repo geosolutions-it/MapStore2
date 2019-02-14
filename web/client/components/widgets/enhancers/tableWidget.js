@@ -9,11 +9,10 @@ const { compose, withPropsOnChange } = require('recompose');
 const { get } = require('lodash');
 const {editableWidget, withHeaderTools, defaultIcons} = require('./tools');
 /**
- * Enhances the table widget to connect to WFS and to update widget column size on resize.
+ * Update widget column size on resize. and add base icons and menus
  * Moreover enhances it to allow delete.
 */
 module.exports = compose(
-    require('./wfsTable'),
     withPropsOnChange(["gridEvents"], ({ gridEvents = {}, updateProperty = () => { } } = {}) => ({
         gridEvents: {
             ...gridEvents,

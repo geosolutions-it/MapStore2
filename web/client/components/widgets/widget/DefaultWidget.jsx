@@ -6,35 +6,36 @@
  * LICENSE file in the root directory of this source tree.
  */
 const React = require('react');
-const enhanceChartWidget = require('../enhancers/chartWidget');
-const enhanceCounter = require('../enhancers/counterWidget');
+const { compose } = require('recompose');
 
-const deleteWidget = require('../enhancers/deleteWidget');
-const enhanceTableWidget = require('../enhancers/tableWidget');
+// enhancers for base menus and functionalities
+const chartWidget = require('../enhancers/chartWidget');
+const counterWidget = require('../enhancers/counterWidget');
+const tableWidget = require('../enhancers/tableWidget');
 const legendWidget = require('../enhancers/legendWidget');
 const textWidget = require('../enhancers/textWidget');
 const mapWidget = require('../enhancers/mapWidget');
+
+// Enhancers for ajax support
 const wpsChart = require('../enhancers/wpsChart');
 const wpsCounter = require('../enhancers/wpsCounter');
+const wfsTable = require('../enhancers/wfsTable');
 
-const {compose} = require('recompose');
+
+// enhancers for dependencies management
 const dependenciesToFilter = require('../enhancers/dependenciesToFilter');
 const dependenciesToOptions = require('../enhancers/dependenciesToOptions');
 const dependenciesToWidget = require('../enhancers/dependenciesToWidget');
 const dependenciesToMapProp = require('../enhancers/dependenciesToMapProp');
-const { defaultIcons, withHeaderTools, editableWidget} = require('../enhancers/tools');
-
-/*
- * TODO: now tools in menu are added checking the same order the enhancers are applied to the components.
- * A better solution should be to add an attribute to the tool to sort entries in the menu.
- */
-
+//
+// connect widgets to dependencies, remote services and add base icons/tools
+//
 const ChartWidget = compose(
     dependenciesToWidget,
     dependenciesToFilter,
     dependenciesToOptions,
     wpsChart,
-    enhanceChartWidget
+    chartWidget
 )(require('./ChartWidget'));
 
 const TextWidget = compose(
@@ -52,7 +53,8 @@ const TableWidget = compose(
     dependenciesToWidget,
     dependenciesToOptions,
     dependenciesToFilter,
-    enhanceTableWidget
+    wfsTable,
+    tableWidget,
 )(require('./TableWidget'));
 
 const CounterWidget = compose(
@@ -60,7 +62,7 @@ const CounterWidget = compose(
     dependenciesToFilter,
     dependenciesToOptions,
     wpsCounter,
-    enhanceCounter
+    counterWidget
 )(require("./CounterWidget"));
 
 const LegendWidget = compose(
@@ -68,6 +70,9 @@ const LegendWidget = compose(
     legendWidget
 )(require("./LegendWidget"));
 
+/**
+ * Renders proper widget by widgetType, binding props and methods
+ */
 module.exports = ({
     dependencies,
     toggleCollapse = () => {},

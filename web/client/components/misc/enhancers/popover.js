@@ -22,6 +22,9 @@ const OverlayTrigger = require('../../misc/OverlayTrigger');
  * If present, as an object, can contain the properties to pass to th PopOver component (react-bootstrap),and the following props:
  * @prop {array[string]} popover.trigger trigger events array (see OverlayTrigger)
  * @prop {element} popover.text content of the popover
+ * @type {function}
+ * @name popover
+ * @memberof components.misc.enhancers
  *
 */
 module.exports = branch(
