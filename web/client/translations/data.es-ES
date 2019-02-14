@@ -348,6 +348,7 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Error al cargar el mapa",
                     "notFound": "Mapa no encontrado",
                     "notAccessible": "Mapa no accesible",
                     "unknownError": "<p> <small> Uno de los siguientes motivos podría ser la causa: </small> <ul><li> no tiene permiso para acceder </li> <li> está intentando acceder a un mapa que no existe </li> <li> el mapa se ha eliminado </li></ul> <p>"
@@ -558,16 +559,28 @@
             "serviceslistempty": "Ningún servicio personalizado definido"
         },
         "draw": {
-            "fill": "Relleno:",
-            "stroke": "Línea:",
-            "strokeWidth": "Ancho de línea:",
+            "fill": "Relleno",
+            "text": "Texto",
+            "fontTitle": "Font",
+            "color": "Color",
+            "lineDash": "Línea de guión",
+            "stroke": "Línea",
+            "opacity": "Opacidad",
+            "width": "Anchura",
             "font": {
-                "textColor": "color del texto",
-                "family": "font-family",
-                "size": "font-size",
-                "textAlign": "alineación del texto",
-                "style": "font-style",
-                "weight": "font-weight"
+                "textColor": "Color",
+                "family": "Familia",
+                "size": "Tamaño",
+                "style": "Estilo",
+                "weight": "Peso",
+                "textAlign": "Alineación"
+            },
+            "marker": {
+                "layout": "Diseño",
+                "shape": "Forma",
+                "size": "Tamaño",
+                "type": "Tipo",
+                "icon": "Icono"
             }
         },
         "drawLocal": {
@@ -794,11 +807,13 @@
             }
         },
         "annotations": {
+            "errorLoadingSymbols": "Hubo un problema al cargar la lista de símbolos. Por favor, contacte al administrador para verificar las opciones de configuración.",
             "edit": "Editar",
             "remove": "Borrar",
             "save": "Guardar",
             "cancel": "Cancelar",
             "back": "Espalda",
+            "applyStyle": "Aplicar estilo",
             "addMarker": "Agrega una geometría",
             "styleGeometry": "Cambia estilo",
             "deleteGeometry": "Eliminar todas las geometrías de anotación",

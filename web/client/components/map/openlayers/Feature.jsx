@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -6,12 +5,14 @@ const PropTypes = require('prop-types');
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-var React = require('react');
-var ol = require('openlayers');
-const {isEqual} = require('lodash');
-const VectorStyle = require('./VectorStyle');
+const PropTypes = require('prop-types');
+const React = require('react');
+const axios = require('axios');
+const ol = require('openlayers');
+const {isEqual, find, castArray} = require('lodash');
+const {parseStyles} = require('./VectorStyle');
 const {transformPolygonToCircle} = require('../../../utils/DrawSupportUtils');
+const {createStylesAsync} = require('../../../utils/VectorStyleUtils');
 
 class Feature extends React.Component {
     static propTypes = {
@@ -36,11 +37,13 @@ class Feature extends React.Component {
     }
 
     shouldComponentUpdate(nextProps) {
-        return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry) || !isEqual(nextProps.features, this.props.features) || !isEqual(nextProps.style, this.props.style);
+        // TODO check if shallow comparison is enough properties and geometry
+        return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry) || (nextProps.features !== this.props.features) || (nextProps.style !== this.props.style);
     }
 
     componentWillUpdate(newProps) {
-        if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || !isEqual(newProps.features, this.props.features) || !isEqual(newProps.style, this.props.style)) {
+        // TODO check if shallow comparison is enough properties and geometry
+        if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || (newProps.features !== this.props.features) || (newProps.style !== this.props.style)) {
             this.removeFromContainer();
             this.addFeatures(newProps);
         }
@@ -86,13 +89,32 @@ class Feature extends React.Component {
             }).forEach(
                 (f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
 
-            if (props.style && (props.style !== props.layerStyle)) {
-                this._feature.forEach((f) => { f.setStyle(VectorStyle.getStyle({style: {...props.style, type: f.getGeometry().getType()}, properties: f.getProperties()})); });
+            if (props.style && (props.style !== props.layerStyle)) { // TODO test this logic with other functionalities
+                this._feature.forEach((f) => {
+                    let promises = [];
+                    let geoJSONFeature = {};
+                    if ( props.type === "FeatureCollection") {
+                        geoJSONFeature = find(props.features, (ft) => ft.properties.id === f.getProperties().id);
+                        promises = createStylesAsync(castArray(geoJSONFeature.style));
+                    } else {
+                        // TODO Check if this works, it should be a normal geojson Feature
+                        promises = createStylesAsync(castArray(props.style));
+                        geoJSONFeature = {
+                            type: props.type,
+                            geometry: props.geometry,
+                            properties: props.properties,
+                            style: props.style
+                        };
+                    }
+
+                    axios.all(promises).then((styles) => {
+                        f.setStyle(() => parseStyles({...geoJSONFeature, style: styles}));
+                    });
+                });
             }
             props.container.getSource().addFeatures(this._feature);
         }
     };
-
 
     removeFromContainer = () => {
         if (this._feature) {

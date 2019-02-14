@@ -348,6 +348,7 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Fehler beim Laden der Karte",
                     "notFound": "Karte nicht gefunden",
                     "notAccessible": "Karte nicht zugänglich",
                     "unknownError": "<p> <small> Einer der folgenden Gründe könnte die Ursache sein: </small> <ul><li> Sie haben keine Zugriffsberechtigung </li> <li> Sie versuchen, auf eine nicht vorhandene Map zuzugreifen </li> <li> Die Karte wurde entfernt </li></ul> <p>"
@@ -558,16 +559,28 @@
             "serviceslistempty": "Keine benutzerdefinierten Services definiert"
         },
         "draw": {
-            "fill": "Füllung:",
-            "stroke": "Linie:",
-            "strokeWidth": "Linienbreite:",
+            "fill": "Füllung",
+            "text": "Text",
+            "fontTitle": "Font",
+            "color": "Farbe",
+            "lineDash": "Zeilenstrich",
+            "stroke": "Linie",
+            "opacity": "Opacity",
+            "width": "Linienbreite",
             "font": {
-                "textColor": "textfarbe",
-                "family": "font-family",
-                "size": "font-size",
-                "textAlign": "ausrichtung des Textes",
-                "style": "font-style",
-                "weight": "font-weight"
+                "textColor": "Farbe",
+                "family": "Familie",
+                "size": "Größe",
+                "style": "Stil",
+                "weight": "Gewicht",
+                "textAlign": "ausrichtung des Textes"
+            },
+            "marker": {
+                "layout": "Layout",
+                "shape": "Gestalten",
+                "size": "Größe",
+                "type": "Typ",
+                "icon": "Symbol"
             }
         },
         "drawLocal": {
@@ -794,11 +807,13 @@
             }
         },
         "annotations": {
+            "errorLoadingSymbols": "Beim Laden der Symbolliste ist ein Fehler aufgetreten. Bitte wenden Sie sich an den Administrator, um die Konfigurationsoptionen zu überprüfen",
             "edit": "Bearbeiten",
             "remove": "Löschen",
             "save": "Speichern",
             "cancel": "Abbrechen",
             "back": "Zurück",
+            "applyStyle": "Stil anwenden",
             "addMarker": "Fügen Sie eine Geometrie hinzu",
             "styleGeometry": "Stil ändern",
             "deleteGeometry": "Entfernen Sie alle Anmerkungsgeometrien",

@@ -17,7 +17,7 @@ class ColorSelector extends React.Component {
         color: PropTypes.shape({r: PropTypes.number, g: PropTypes.number, b: PropTypes.number, a: PropTypes.number}),
         checked: PropTypes.bool,
         line: PropTypes.bool,
-        width: PropTypes.number,
+        width: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         onChangeColor: PropTypes.func
     };
 

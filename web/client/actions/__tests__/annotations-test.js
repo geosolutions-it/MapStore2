@@ -35,7 +35,6 @@ const {
     addText, ADD_TEXT,
     CHANGE_FORMAT, changeFormat,
     changedProperties, CHANGED_PROPERTIES,
-    changeStyler, CHANGE_STYLER,
     toggleUnsavedStyleModal, TOGGLE_STYLE_MODAL,
     startDrawing, START_DRAWING,
     toggleUnsavedChangesModal, TOGGLE_CHANGES_MODAL,
@@ -67,14 +66,15 @@ const {
     CHANGED_SELECTED, changeSelected,
     SET_INVALID_SELECTED, setInvalidSelected,
     TOGGLE_GEOMETRY_MODAL, toggleUnsavedGeometryModal,
-    resetCoordEditor, RESET_COORD_EDITOR,
-    changeRadius, CHANGE_RADIUS,
-    changeText, CHANGE_TEXT,
+    RESET_COORD_EDITOR, resetCoordEditor,
+    CHANGE_RADIUS, changeRadius,
+    CHANGE_TEXT, changeText,
     CONFIRM_DELETE_FEATURE, confirmDeleteFeature,
     OPEN_EDITOR, openEditor,
     TOGGLE_DELETE_FT_MODAL, toggleDeleteFtModal,
     ADD_NEW_FEATURE, addNewFeature,
-    LOAD_ANNOTATIONS, loadAnnotations
+    LOAD_ANNOTATIONS, loadAnnotations,
+    UPDATE_SYMBOLS, updateSymbols
 } = require('../annotations');
 
 describe('Test correctness of the annotations actions', () => {
@@ -199,12 +199,7 @@ describe('Test correctness of the annotations actions', () => {
         const result = toggleUnsavedStyleModal();
         expect(result.type).toEqual(TOGGLE_STYLE_MODAL);
     });
-    it('changeStyler', () => {
-        const stylerType = "marker";
-        const result = changeStyler(stylerType);
-        expect(result.type).toEqual(CHANGE_STYLER);
-        expect(result.stylerType).toEqual(stylerType);
-    });
+
     it('save annotation', () => {
         const result = saveAnnotation('1', {
             name: 'changed'
@@ -333,6 +328,16 @@ describe('Test correctness of the annotations actions', () => {
     it('download  annotations', () => {
         const result = download();
         expect(result.type).toEqual(DOWNLOAD);
+    });
+    it('updateSymbols', () => {
+        const symbols = [{name: "symbol1"}, {name: "symbol2"}];
+        let result = updateSymbols(symbols);
+        expect(result.type).toEqual(UPDATE_SYMBOLS);
+        expect(result.symbols.length).toEqual(2);
+        expect(result.symbols[0].name).toEqual(symbols[0].name);
+
+        result = updateSymbols();
+        expect(result.symbols.length).toEqual(0);
     });
     it('load  annotations', () => {
         const result = loadAnnotations([]);

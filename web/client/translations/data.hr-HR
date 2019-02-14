@@ -347,6 +347,7 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Error loading map",
                     "notFound": "Karta nije pronađena",
                     "notAccessible": "Karta nije dostupna",
                     "unknownError": "<p><small>Jedan od slijedećih razloga može biti uzrok:</small> <ul><li>nemate dozvole za pristup</li> <li>pokušavate pristupiti karti koja ne postoji</li> <li>karta je uklonjena</li><ul><p>"
@@ -555,6 +556,31 @@
             "s_result_props_label": "Svojstva prikaza rezultata",
             "s_priority_info": "Koristi se za sortiranje rezultata pretrage, veće vrijednosti prvo. Nominatim razultati imaju prednost = 5",
             "serviceslistempty": "Nije definiran niti jedan servis"
+        },
+        "draw": {
+            "fill": "Fill",
+            "text": "Text",
+            "fontTitle": "Font",
+            "color": "Color",
+            "lineDash": "LineDash",
+            "stroke": "Stroke",
+            "opacity": "Opacity",
+            "width": "Width",
+            "font": {
+                "textColor": "Color",
+                "family": "Family",
+                "size": "Size",
+                "style": "Style",
+                "weight": "Weight",
+                "textAlign": "Align"
+            },
+            "marker": {
+                "layout": "Layout",
+                "shape": "Shape",
+                "size": "Size",
+                "type": "Type",
+                "icon": "Icon"
+            }
         },
         "drawLocal": {
             "draw": {
@@ -809,11 +835,13 @@
             "detailsNotes": "Bilješke"
         },
         "annotations": {
+            "errorLoadingSymbols": "There was a problem loading the symbol list. Please, contact the administrator in order to check the configuration options",
             "edit": "Uredi",
             "remove": "Izbriši",
             "save": "Spremi",
             "cancel": "Odustani",
             "back": "Natrag",
+            "applyStyle": "Apply Style",
             "addMarker": "Dodaj novu točku na karti",
             "styleGeometry": "Odaberi različiti stil za točke",
             "deleteGeometry": "Ukloni geometrije napomena",

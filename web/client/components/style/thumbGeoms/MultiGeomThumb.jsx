@@ -8,6 +8,7 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
+const markerIcon = require('../../map/openlayers/img/marker-icon.png');
 
 class MultiGeomThumb extends React.Component {
 
@@ -46,15 +47,26 @@ class MultiGeomThumb extends React.Component {
     }
     render() {
         let geoms = this.getGeoms();
-        let styleCircle = this.props.styleMultiGeom.Circle;
-        let styleLine = this.props.styleMultiGeom.MultiLineString || this.props.styleMultiGeom.LineString;
-        let stylePolygon = this.props.styleMultiGeom.MultiPolygon || this.props.styleMultiGeom.Polygon;
+        const stroke = {color: "#ffcc33", opacity: 1, weight: 2 };
+        const fill = {fillColor: "#FFFFFF", fillOpacity: 0 };
         let textPresent = geoms.Text;
         let circlePresent = geoms.Circle;
-        let styleText = textPresent ? this.props.styleMultiGeom.Text : {};
-
         let polygonPresent = geoms.Polygon || geoms.MultiPolygon;
         let lineStringPresent = geoms.LineString || geoms.MultiLineString;
+        let pointPresent = geoms.Point || geoms.MultiPoint; // this can be a symbol tho..
+
+        let styleLine = {...stroke};
+        let stylePolygon = {...stroke, ...fill};
+        let styleCircle = {...stroke, ...fill};
+        let styleText = textPresent ? {
+            fontStyle: 'normal',
+            fontSize: '14',
+            fontSizeUom: 'px',
+            fontFamily: 'Arial',
+            fontWeight: 'normal',
+            font: "14px Arial",
+            textAlign: 'center',
+            ...stroke, ...fill} : {};
         return (
             <div className="ms-thumb-geom">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox={"0 0 100 100"}>
@@ -79,6 +91,7 @@ class MultiGeomThumb extends React.Component {
                 {textPresent && <text x="10" y="40" fill={styleText.color}>T</text>}
                 {circlePresent && <circle cx="50" cy="50" r="25" stroke={styleCircle.color} opacity={styleCircle.opacity} strokeWidth={styleCircle.weight} fill={styleCircle.fillColor} fillOpacity={styleCircle.fillOpacity}/> }
             </svg>
+            {pointPresent && <img src={markerIcon} size={32} style={{position: "absolute"}}/>}
         </div>
         );
     }

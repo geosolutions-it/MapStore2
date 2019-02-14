@@ -239,7 +239,7 @@ describe("test the AnnotationsEditor Panel", () => {
             onCancelEdit={testHandlers.onCancelHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
 
-        let saveButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[4]);
+        let saveButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[3]);
 
         expect(saveButton).toExist();
         TestUtils.Simulate.click(saveButton);
@@ -301,7 +301,7 @@ describe("test the AnnotationsEditor Panel", () => {
            onError={testHandlers.onErrorHandler}/>, document.getElementById("container"));
         expect(viewer).toExist();
 
-        let saveButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[4]);
+        let saveButton = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithTag(viewer, "button")[3]);
 
         expect(saveButton).toExist();
         TestUtils.Simulate.click(saveButton);
@@ -397,18 +397,14 @@ describe("test the AnnotationsEditor Panel", () => {
         const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions} styling
             editing={{
                 properties: feature,
-                style: {
-                    "MultiPoint": {
-                        iconGlyph: 'comment',
-                        iconColor: 'red',
-                        iconShape: 'square'
-                    },
-                    type: "MultiPoint"
-                }
+                style: [{}]
             }}/>, document.getElementById("container"));
         expect(viewer).toExist();
         const viewerNode = ReactDOM.findDOMNode(viewer);
-        expect(viewerNode.className).toBe('mapstore-annotations-info-viewer-styler');
+        expect(viewerNode.className).toBe('mapstore-annotations-info-viewer');
+
+        const stylerPanel = TestUtils.findRenderedDOMComponentWithClass(viewer, "mapstore-annotations-info-viewer-styler");
+        expect(stylerPanel).toExist();
     });
 
     it('test styler click on marker', () => {
@@ -426,15 +422,29 @@ describe("test the AnnotationsEditor Panel", () => {
 
         const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions} editing={{
             properties: feature,
-            style: {
-                "MultiPoint": {
+            features: [{
+                type: "Feature",
+                geometry: {
+                    coordinates: [5, 5],
+                    type: "Point"
+                },
+                style: [{
                     iconGlyph: 'comment',
                     iconColor: 'red',
-                    iconShape: 'square'
-                },
-                type: "MultiPoint"
-            }
-        }} onSetStyle={testHandlers.onSetStyle} styling/>, document.getElementById("container"));
+                    iconShape: 'square',
+                    id: "73b7fd80-22df-11e9-9520-538e5b035d2e"
+                }]
+            }]
+        }}
+        selected = {{
+            style: [{
+                iconGlyph: 'comment',
+                iconColor: 'red',
+                iconShape: 'square',
+                id: "73b7fd80-22df-11e9-9520-538e5b035d2e"
+            }]
+        }}
+        onSetStyle={testHandlers.onSetStyle} styling/>, document.getElementById("container"));
         expect(viewer).toExist();
         let marker = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(viewer, "mapstore-annotations-info-viewer-marker")[0]);
 
@@ -460,15 +470,17 @@ describe("test the AnnotationsEditor Panel", () => {
 
         const viewer = ReactDOM.render(<AnnotationsEditor {...feature} {...actions} editing={{
             properties: feature,
-            style: {
-                "MultiPoint": {
-                    iconGlyph: 'comment',
-                    iconColor: 'red',
-                    iconShape: 'square'
-                },
-                type: "MultiPoint"
-            }
-        }} onSetStyle={testHandlers.onSetStyle} styling/>, document.getElementById("container"));
+            style: {}
+        }}
+        selected = {{
+            style: [{
+                iconGlyph: 'comment',
+                iconColor: 'red',
+                iconShape: 'square',
+                id: "73b7fd80-22df-11e9-9520-538e5b035d2e"
+            }]
+        }}
+        onSetStyle={testHandlers.onSetStyle} styling/>, document.getElementById("container"));
         expect(viewer).toExist();
 
         let select = ReactDOM.findDOMNode(TestUtils.scryRenderedDOMComponentsWithClass(viewer, "Select-control")[0]);

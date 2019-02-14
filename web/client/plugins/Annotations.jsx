@@ -19,10 +19,11 @@ const {createSelector} = require('reselect');
 const {cancelRemoveAnnotation, confirmRemoveAnnotation, editAnnotation, newAnnotation, removeAnnotation, cancelEditAnnotation,
     saveAnnotation, toggleAdd, validationError, removeAnnotationGeometry, toggleStyle, setStyle, restoreStyle,
     highlight, cleanHighlight, showAnnotation, cancelShowAnnotation, filterAnnotations, closeAnnotations,
-    cancelCloseAnnotations, confirmCloseAnnotations, startDrawing, changeStyler, setUnsavedChanges, toggleUnsavedChangesModal,
+    cancelCloseAnnotations, confirmCloseAnnotations, startDrawing, setUnsavedChanges, toggleUnsavedChangesModal,
     changedProperties, setUnsavedStyle, toggleUnsavedStyleModal, addText, download, loadAnnotations,
     changeSelected, resetCoordEditor, changeRadius, changeText, toggleUnsavedGeometryModal, addNewFeature, setInvalidSelected,
-    highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat, openEditor
+    highlightPoint, confirmDeleteFeature, toggleDeleteFtModal, changeFormat, openEditor, updateSymbols, changePointType,
+    setErrorSymbol
 } = require('../actions/annotations');
 
 const { zoomToExtent } = require('../actions/map');
@@ -30,9 +31,11 @@ const { zoomToExtent } = require('../actions/map');
 const { annotationsInfoSelector, annotationsListSelector } = require('../selectors/annotations');
 const { mapLayoutValuesSelector } = require('../selectors/maplayout');
 const commonEditorActions = {
+    onUpdateSymbols: updateSymbols,
+    onSetErrorSymbol: setErrorSymbol,
     onEdit: editAnnotation,
     onCancelEdit: cancelEditAnnotation,
-    onChangeStyler: changeStyler,
+    onChangePointType: changePointType,
     onChangeFormat: changeFormat,
     onConfirmDeleteFeature: confirmDeleteFeature,
     onCleanHighlight: cleanHighlight,

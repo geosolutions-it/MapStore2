@@ -346,6 +346,7 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Error loading map",
                     "notFound": "Mapa não encontrado",
                     "notAccessible": "Mapa não acessível",
                     "unknownError": "<p><small>Uma das seguintes razões poderá ser a causa:</small> <ul><li>não tem permissões de acesso</li> <li>está a tentar a aceder a um mapa não existente</li> <li>o mapa foi removido</li></ul><p>"
@@ -554,6 +555,31 @@
             "s_result_props_label": "Result display properties",
             "s_priority_info": "Used to sort search results, higher values first. Nominatim results have priority = 5",
             "serviceslistempty": "No custom services defined"
+        },
+        "draw": {
+            "fill": "Fill",
+            "text": "Text",
+            "fontTitle": "Font",
+            "color": "Color",
+            "lineDash": "LineDash",
+            "stroke": "Stroke",
+            "opacity": "Opacity",
+            "width": "Width",
+            "font": {
+                "textColor": "Color",
+                "family": "Family",
+                "size": "Size",
+                "style": "Style",
+                "weight": "Weight",
+                "textAlign": "Align"
+            },
+            "marker": {
+                "layout": "Layout",
+                "shape": "Shape",
+                "size": "Size",
+                "type": "Type",
+                "icon": "Icon"
+            }
         },
         "drawLocal": {
             "draw": {
@@ -808,11 +834,13 @@
             "detailsNotes": "Notes"
         },
         "annotations": {
+            "errorLoadingSymbols": "There was a problem loading the symbol list. Please, contact the administrator in order to check the configuration options",
             "edit": "Edit",
             "remove": "Delete",
             "save": "Save",
             "cancel": "Cancel",
             "back": "Back",
+            "applyStyle": "Apply Style",
             "addMarker": "Add a new point on the map",
             "styleGeometry": "Choose a different style for points",
             "deleteGeometry": "Remove existing points",
@@ -1161,7 +1189,7 @@
                 "downloadGridData": "Download grid data",
                 "hideShowColumns": "Hide/show columns",
                 "zoomAll": "Zoom to page extent",
-                "syncOnMap": "Sync map with fitler",
+                "syncOnMap": "Sync map with filter",
                 "createNewChart": "Create a chart for the selected layer"
             }
         },

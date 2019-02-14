@@ -22,18 +22,16 @@ describe("Test the LineThumb component", () => {
         expect(cmp).toExist();
     });
     it('create component with default style from annotation utils', () => {
-        const style = DEFAULT_ANNOTATIONS_STYLES;
-        const featureType = "MultiLineString";
-        const cmp = ReactDOM.render(<LineThumb styleRect={style[featureType]}/>, document.getElementById("container"));
+        const style = DEFAULT_ANNOTATIONS_STYLES.LineString;
+        const cmp = ReactDOM.render(<LineThumb styleRect={style}/>, document.getElementById("container"));
         expect(cmp).toExist();
         const path = TestUtils.findRenderedDOMComponentWithTag(cmp, 'path');
         expect(path).toExist();
         expect(path.attributes.d.value).toBe("M25 75 L50 50 L75 75 L100 75");
         expect(path.attributes["stroke-linecap"].value).toBe("round");
         expect(path.attributes["stroke-linejoin"].value).toBe("round");
-        expect(path.attributes["stroke-width"].value).toBe(style[featureType].weight.toString());
-        expect(path.attributes.stroke.value).toBe(style[featureType].color.toString());
-        expect(path.attributes.fill.value).toBe(style[featureType].fillColor.toString());
+        expect(path.attributes["stroke-width"].value).toBe(style.weight.toString());
+        expect(path.attributes.stroke.value).toBe(style.color.toString());
 
     });
 

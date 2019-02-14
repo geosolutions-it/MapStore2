@@ -13,7 +13,6 @@ const {TOGGLE_CONTROL, toggleControl, setControlProperty} = require('../actions/
 const {addLayer, updateNode, changeLayerProperties, removeLayer} = require('../actions/layers');
 const {hideMapinfoMarker, purgeMapInfoResults} = require('../actions/mapInfo');
 const {set} = require('../utils/ImmutableUtils');
-const {validateCoordsArray} = require('../utils/AnnotationsUtils');
 const {reprojectGeoJson} = require('../utils/CoordinatesUtils');
 const {error} = require('../actions/notifications');
 const {closeFeatureGrid} = require('../actions/featuregrid');
@@ -27,16 +26,17 @@ const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAd
     ADD_NEW_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR
 } = require('../actions/annotations');
 const {closeIdentify} = require('../actions/mapInfo');
+const uuidv1 = require('uuid/v1');
 
 const {FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE} = require('../actions/draw');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 
-const {head, findIndex} = require('lodash');
+const {head, findIndex, castArray, isArray} = require('lodash');
 const assign = require('object-assign');
 
 const {annotationsLayerSelector} = require('../selectors/annotations');
 
-const {normalizeAnnotation, removeDuplicate} = require('../utils/AnnotationsUtils');
+const {normalizeAnnotation, removeDuplicate, validateCoordsArray, getStartEndPointsForLinestring, DEFAULT_ANNOTATIONS_STYLES} = require('../utils/AnnotationsUtils');
 
 const { mapNameSelector} = require('../selectors/map');
 
@@ -57,9 +57,10 @@ const getSelectDrawStatus = (state) => {
         editEnabled: false,
         selectEnabled: true,
         drawEnabled: false,
+        translateEnabled: false,
         transformToFeatureCollection: true
     };
-    return changeDrawingStatus("drawOrEdit", feature.type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}));
+    return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}));
 };
 const getReadOnlyDrawStatus = (state) => {
     const feature = state.annotations.editing;
@@ -69,10 +70,28 @@ const getReadOnlyDrawStatus = (state) => {
         stopAfterDrawing: !multiGeom,
         editEnabled: false,
         selectEnabled: false,
+        translateEnabled: false,
         drawEnabled: false,
         transformToFeatureCollection: true
     };
-    return changeDrawingStatus("drawOrEdit", feature.type, "annotations", [feature], drawOptions, feature.style);
+    return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, "annotations", [feature], drawOptions, feature.style);
+};
+const getEditingGeomDrawStatus = (state) => {
+    const feature = state.annotations.editing;
+    const multiGeom = state.annotations.config.multiGeometry;
+    const drawOptions = {
+        featureProjection: "EPSG:4326",
+        stopAfterDrawing: !multiGeom,
+        editEnabled: true,
+        selectEnabled: false,
+        drawEnabled: false,
+        editFilter: (f) => f.getProperties().canEdit,
+        translateEnabled: false,
+        addClickCallback: true,
+        useSelectedStyle: true,
+        transformToFeatureCollection: true
+    };
+    return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, "annotations", [feature], drawOptions, feature.style);
 };
 const mergeGeometry = (features) => {
     if (features[0].type === "FeatureCollection") {
@@ -114,7 +133,7 @@ const toggleDrawOrEdit = (state, featureType) => {
         transformToFeatureCollection: true,
         addClickCallback: true
     };
-    return changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false})/* || {[type]: DEFAULT_ANNOTATIONS_STYLES[type]}*/);
+    return changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}));
 };
 
 const createNewFeature = (action) => {
@@ -126,13 +145,35 @@ const createNewFeature = (action) => {
     };
 };
 
+
 module.exports = (viewer) => ({
     addAnnotationsLayerEpic: (action$, store) => action$.ofType(MAP_CONFIG_LOADED)
         .switchMap(() => {
             const annotationsLayer = annotationsLayerSelector(store.getState());
             if (annotationsLayer) {
+                // parsing old style structure
+                let features = (annotationsLayer.features || []).map(ftColl => {
+                    return {...ftColl, style: {}, features: (ftColl.features || []).map(ft => {
+                        let styleType = ft.properties.isCircle && "Circle" || ft.properties.isText && "Text" || ft.geometry.type;
+                        let extraStyles = [];
+                        if (styleType === "Circle") {
+                            extraStyles.push({...DEFAULT_ANNOTATIONS_STYLES.Point, iconAnchor: [0.5, 0.5], type: "Point", title: "Center Style", filtering: false, geometry: "centerPoint"});
+                        }
+                        if (styleType === "LineString") {
+                            extraStyles.concat(getStartEndPointsForLinestring());
+                        }
+                        return {...ft,
+                        style: isArray(ft.style) ? ft.style.map(ftStyle => {
+                            const {symbolUrlCustomized, ...filteredStyle} = ftStyle;
+                            return filteredStyle;
+                        }) : [{...ftColl.style[styleType], id: ftColl.style[styleType].id || uuidv1(), symbolUrlCustomized: undefined}].concat(extraStyles)};
+                    })};
+                });
+
                 return Rx.Observable.of(updateNode('annotations', 'layer', {
-                    rowViewer: viewer
+                    rowViewer: viewer,
+                    features,
+                    style: {}
                 }));
             }
             return Rx.Observable.empty();
@@ -151,6 +192,7 @@ module.exports = (viewer) => ({
                 drawEnabled: false,
                 transformToFeatureCollection: true
             };
+            // parsing styles searching for missing symbols, therefore updating it with a missing symbol
             return Rx.Observable.from([
                 changeLayerProperties('annotations', {visibility: false}),
                 changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {
@@ -178,7 +220,7 @@ module.exports = (viewer) => ({
         .switchMap(() => {
             const isStylingActive = store.getState() && store.getState().annotations && store.getState().annotations.styling;
             return Rx.Observable.from([
-                isStylingActive ? getReadOnlyDrawStatus(store.getState()) : getSelectDrawStatus(store.getState())
+                isStylingActive ? getReadOnlyDrawStatus(store.getState()) : getEditingGeomDrawStatus(store.getState())
             ]);
         }),
     removeAnnotationEpic: (action$, store) => action$.ofType(CONFIRM_REMOVE_ANNOTATION)
@@ -303,10 +345,11 @@ module.exports = (viewer) => ({
         }),
     setStyleEpic: (action$, store) => action$.ofType(SET_STYLE)
         .switchMap( () => {
-            const {style, ...feature} = store.getState().annotations.editing;
+            // TODO verify if we need to override the style here or in the store
+            let feature = store.getState().annotations.editing;
             let projectedFeature = reprojectGeoJson(feature, "EPSG:4326", "EPSG:3857");
             return Rx.Observable.from([
-                changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [projectedFeature], {}, assign({}, style, {highlight: false}))
+                changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [projectedFeature], {}, assign({}, store.getState().annotations.selected.style, {highlight: false}))
             ]
             );
         }),
@@ -326,9 +369,11 @@ module.exports = (viewer) => ({
             return Rx.Observable.of(
                 updateNode('annotations', 'layer', {
                     features: annotationsLayerSelector(store.getState()).features.map(f => f.properties.id === action.id ? assign({}, f, {
-                        style: assign({}, f.style, {
-                            highlight: true
-                        })
+                        features: f.features && f.features.length && f.features.map(highlightedFt => assign({}, highlightedFt, {
+                            style: castArray(highlightedFt.style).map(s => assign({}, s, {
+                                highlight: true
+                            }))
+                        })) || []
                     }) : f)
                 })
             );
@@ -336,14 +381,15 @@ module.exports = (viewer) => ({
     cleanHighlightAnnotationEpic: (action$, store) => action$.ofType(CLEAN_HIGHLIGHT)
         .switchMap(() => {
             const annotationsLayer = annotationsLayerSelector(store.getState());
-            if (annotationsLayer && annotationsLayer.features) {
+            if (annotationsLayer && annotationsLayer.features && annotationsLayer.features.length) {
                 return Rx.Observable.of(
                     updateNode('annotations', 'layer', {
-                        features: annotationsLayer.features.map(f =>
-                        assign({}, f, {
-                            style: assign({}, f.style, {
-                                highlight: false
-                            })
+                        features: annotationsLayer.features.map(f => assign({}, f, {
+                            features: f.features && f.features.length && f.features.map(highlightedFt => assign({}, highlightedFt, {
+                                style: castArray(highlightedFt.style).map(s => assign({}, s, {
+                                    highlight: false
+                                }))
+                            })) || []
                         }))
                     })
                 );

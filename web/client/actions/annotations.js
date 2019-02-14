@@ -31,7 +31,6 @@ const CLOSE_ANNOTATIONS = 'ANNOTATIONS:CLOSE';
 const CONFIRM_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CONFIRM_CLOSE';
 const CANCEL_CLOSE_ANNOTATIONS = 'ANNOTATIONS:CANCEL_CLOSE';
 const START_DRAWING = 'ANNOTATIONS:START_DRAWING';
-const CHANGE_STYLER = 'ANNOTATIONS:CHANGE_STYLER';
 const UNSAVED_CHANGES = 'ANNOTATIONS:UNSAVED_CHANGES';
 const TOGGLE_CHANGES_MODAL = 'ANNOTATIONS:TOGGLE_CHANGES_MODAL';
 const TOGGLE_GEOMETRY_MODAL = 'ANNOTATIONS:TOGGLE_GEOMETRY_MODAL';
@@ -50,6 +49,17 @@ const HIGHLIGHT_POINT = 'ANNOTATIONS:HIGHLIGHT_POINT';
 const TOGGLE_DELETE_FT_MODAL = 'ANNOTATIONS:TOGGLE_DELETE_FT_MODAL';
 const CONFIRM_DELETE_FEATURE = 'ANNOTATIONS:CONFIRM_DELETE_FEATURE';
 const CHANGE_FORMAT = 'ANNOTATIONS:CHANGE_FORMAT';
+const UPDATE_SYMBOLS = 'ANNOTATIONS:UPDATE_SYMBOLS';
+const ERROR_SYMBOLS = 'ANNOTATIONS:ERROR_SYMBOLS';
+
+const updateSymbols = (symbols = []) => ({
+        type: UPDATE_SYMBOLS,
+        symbols
+    });
+const setErrorSymbol = (symbolErrors) => ({
+        type: ERROR_SYMBOLS,
+        symbolErrors
+    });
 
 function loadAnnotations(features, override = false) {
     return {
@@ -312,12 +322,7 @@ function changeRadius(radius, components) {
         components
     };
 }
-function changeStyler(stylerType) {
-    return {
-        type: CHANGE_STYLER,
-        stylerType
-    };
-}
+
 function changeText(text, components) {
     return {
         type: CHANGE_TEXT,
@@ -349,7 +354,6 @@ module.exports = {
     CONFIRM_CLOSE_ANNOTATIONS,
     CANCEL_CLOSE_ANNOTATIONS,
     START_DRAWING, startDrawing,
-    CHANGE_STYLER, changeStyler,
     UNSAVED_CHANGES, setUnsavedChanges,
     UNSAVED_STYLE, setUnsavedStyle,
     TOGGLE_CHANGES_MODAL, toggleUnsavedChangesModal,
@@ -391,5 +395,7 @@ module.exports = {
     TOGGLE_GEOMETRY_MODAL, toggleUnsavedGeometryModal,
     SET_INVALID_SELECTED, setInvalidSelected,
     CHANGE_FORMAT, changeFormat,
-    CHANGED_SELECTED, changeSelected
+    CHANGED_SELECTED, changeSelected,
+    UPDATE_SYMBOLS, updateSymbols,
+    ERROR_SYMBOLS, setErrorSymbol
 };

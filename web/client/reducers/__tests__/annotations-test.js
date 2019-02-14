@@ -30,13 +30,16 @@ const {
     REMOVE_ANNOTATION, CONFIRM_REMOVE_ANNOTATION, CANCEL_REMOVE_ANNOTATION,
     EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION, SAVE_ANNOTATION, TOGGLE_ADD,
     VALIDATION_ERROR, REMOVE_ANNOTATION_GEOMETRY,
-    TOGGLE_STYLE, SET_STYLE, NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION,
+    NEW_ANNOTATION, SHOW_ANNOTATION, CANCEL_SHOW_ANNOTATION,
     FILTER_ANNOTATIONS, CLOSE_ANNOTATIONS, CONFIRM_CLOSE_ANNOTATIONS, CANCEL_CLOSE_ANNOTATIONS,
     toggleDeleteFtModal, confirmDeleteFeature,
-    changeStyler, addText, setUnsavedChanges, setUnsavedStyle,
+    addText, setUnsavedChanges, setUnsavedStyle,
     toggleUnsavedChangesModal, toggleUnsavedGeometryModal, toggleUnsavedStyleModal, changedProperties,
     setInvalidSelected, addNewFeature, resetCoordEditor, changeText, changeRadius, changeSelected,
-    highlightPoint, changeFormat
+    highlightPoint, changeFormat,
+    toggleStyle,
+    setStyle,
+    updateSymbols
  } = require('../../actions/annotations');
 const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
 const {drawingFeatures, selectFeatures} = require('../../actions/draw');
@@ -101,10 +104,7 @@ describe('Test the annotations reducer', () => {
         }, confirmDeleteFeature());
         expect(state.editing.features.length).toBe(0);
     });
-    it('change styler', () => {
-        const state = annotations({}, changeStyler("marker"));
-        expect(state.stylerType).toBe("marker");
-    });
+
     it('add Text annotation', () => {
         const state = annotations({drawingText: {
             show: true
@@ -285,7 +285,6 @@ describe('Test the annotations reducer', () => {
             });
         expect(state.coordinateEditorEnabled).toBe(true);
         expect(state.stylerType).toBe("text");
-        expect(state.editing.style.type).toBe("FeatureCollection");
         expect(state.featureType).toBe("Text");
         expect(state.drawing).toBe(true);
     });
@@ -305,24 +304,69 @@ describe('Test the annotations reducer', () => {
         expect(state.removing).toBe('geometry');
         expect(state.unsavedChanges).toBe(true);
     });
-    it('toggle style off ', () => {
-        const state = annotations({styling: true}, {
-            type: TOGGLE_STYLE
+    it('toggle style off', () => {
+        const selected = {
+            properties: {
+                isText: true,
+                canEdit: true,
+                valueText: "text",
+                id: '1'
+            },
+            geometry: {
+                type: "LineString",
+                coordinates: [1, 1]
+            },
+            style: [
+                {...DEFAULT_ANNOTATIONS_STYLES.LineString, highlight: false},
+                {...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: false},
+                {...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: false}
+            ]
+        };
+        const annotationsState = annotations({
+            styling: true,
+            selected: selected,
+            editing: {
+                features: [selected]
+        }}, toggleStyle());
+        expect(annotationsState.styling).toBe(false);
+        annotationsState.selected.style.map(s => {
+            expect(s.highlight).toBe(true);
         });
-        expect(state.styling).toBe(false);
+        annotationsState.editing.features[0].style.map(s => {
+            expect(s.highlight).toBe(true);
+        });
     });
-    it('toggle style on ', () => {
-        const state = annotations({styling: false, editing: {}}, {
-            type: TOGGLE_STYLE
+    it('toggle style on', () => {
+        const selected = {
+            properties: {
+                isText: true,
+                canEdit: true,
+                valueText: "text",
+                id: '1'
+            },
+            geometry: {
+                type: "LineString",
+                coordinates: [1, 1]
+            },
+            style: [
+                {...DEFAULT_ANNOTATIONS_STYLES.LineString, highlight: true},
+                {...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true},
+                {...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true}
+            ]
+        };
+        const annotationsState = annotations({
+            styling: false,
+            selected: selected,
+            editing: {
+                features: [selected]
+        }}, toggleStyle());
+        expect(annotationsState.styling).toBe(true);
+        annotationsState.selected.style.map(s => {
+            expect(s.highlight).toBe(false);
         });
-        expect(state.styling).toBe(true);
-    });
-    it('set style ', () => {
-        const state = annotations({styling: false, editing: { style: { type: "MultiPolygon"}}}, {
-            type: SET_STYLE,
-            style: DEFAULT_ANNOTATIONS_STYLES
+        annotationsState.editing.features[0].style.map(s => {
+            expect(s.highlight).toBe(false);
         });
-        expect(state.editing.style).toExist();
     });
     it('new annotation', () => {
         const state = annotations({editing: null}, {
@@ -412,8 +456,7 @@ describe('Test the annotations reducer', () => {
         expect(state.selected.properties.isCircle).toBe(true);
         expect(state.selected.properties.isValidFeature).toBe(false);
         expect(state.selected.properties.canEdit).toBe(true);
-        expect(state.editing.style.type).toBe("Circle");
-        expect(state.editing.features.length).toBe(1); // circle is not added to editing features
+        expect(state.editing.features.length).toBe(2); // circle is added to editing features
         expect(state.featureType).toBe("Circle");
         expect(state.drawing).toBe(true);
     });
@@ -441,7 +484,6 @@ describe('Test the annotations reducer', () => {
         expect(state.selected.properties.isText).toBe(true);
         expect(state.selected.properties.isValidFeature).toBe(false);
         expect(state.selected.properties.canEdit).toBe(true);
-        expect(state.editing.style.type).toBe("FeatureCollection");
         expect(state.editing.features.length).toBe(2); // text is added to editing features
         expect(state.editing.features[1].properties.isText).toBe(true);
         expect(state.featureType).toBe("Text");
@@ -1334,6 +1376,128 @@ describe('Test the annotations reducer', () => {
         expect(state.featureType).toBe("Text");
         expect(state.selected.geometry.coordinates[0]).toBe(1);
         expect(state.selected.geometry.coordinates[1]).toBe(1);
+    });
+    it('UPDATE_SYMBOLS', () => {
+        let annotationsState = annotations({}, updateSymbols());
+        expect(annotationsState.symbolList.length).toBe(0);
 
+        annotationsState = annotations({}, updateSymbols([{
+            value: "pink",
+            name: "pink",
+            symbolUrl: "path/pink.svg"
+        }]));
+        expect(annotationsState.symbolList.length).toBe(1);
+        expect(annotationsState.symbolList[0].value).toBe("pink");
+
+        annotationsState = annotations({
+            symbolList: [{
+                value: "circle",
+                name: "circle",
+                symbolUrl: "path/circle.svg"
+            }]
+        }, updateSymbols([{
+            value: "exagon",
+            name: "exagon",
+            symbolUrl: "path/exagon.svg"
+        }]));
+        expect(annotationsState.symbolList.length).toBe(1);
+        expect(annotationsState.symbolList[0].value).toBe("exagon");
+    });
+    it('UPDATE_SYMBOLS', () => {
+        let annotationsState = annotations({}, updateSymbols());
+        expect(annotationsState.symbolList.length).toBe(0);
+
+        annotationsState = annotations({}, updateSymbols([{
+            value: "pink",
+            name: "pink",
+            symbolUrl: "path/pink.svg"
+        }]));
+        expect(annotationsState.symbolList.length).toBe(1);
+        expect(annotationsState.symbolList[0].value).toBe("pink");
+
+        annotationsState = annotations({
+            symbolList: [{
+                value: "circle",
+                name: "circle",
+                symbolUrl: "path/circle.svg"
+            }]
+        }, updateSymbols([{
+            value: "exagon",
+            name: "exagon",
+            symbolUrl: "path/exagon.svg"
+        }]));
+        expect(annotationsState.symbolList.length).toBe(1);
+        expect(annotationsState.symbolList[0].value).toBe("exagon");
+    });
+
+    it('TOGGLE_CONTROL, not annotations', () => {
+        // original state returned
+        let annotationsState = annotations({
+            editing: null,
+            selected: null
+        }, toggleControl("queryform"));
+        expect(annotationsState.editing).toBe(null);
+        expect(annotationsState.selected).toBe(null);
+    });
+    it('SET_STYLE updating selected feature', () => {
+        let annotationsState = annotations({
+            editing: null,
+            selected: {
+                properties: {
+                    isText: true,
+                    canEdit: true,
+                    valueText: "text",
+                    id: '1'
+                },
+                geometry: {
+                    type: "LineString",
+                    coordinates: [1, 1]
+                },
+                style: [
+                    {...DEFAULT_ANNOTATIONS_STYLES.LineString},
+                    {...DEFAULT_ANNOTATIONS_STYLES.Point, filtering: false},
+                    {...DEFAULT_ANNOTATIONS_STYLES.Point, filtering: false}
+                ]
+            }
+        }, setStyle([
+            {...DEFAULT_ANNOTATIONS_STYLES.LineString},
+            {...DEFAULT_ANNOTATIONS_STYLES.Point, filtering: true},
+            {...DEFAULT_ANNOTATIONS_STYLES.Point, filtering: false}]
+        ));
+        expect(annotationsState.selected.style[1].filtering).toBe(true);
+    });
+    it('SET_STYLE updating selected feature and the one in the editing fcoll', () => {
+        const selected = {
+            properties: {
+                isText: true,
+                canEdit: true,
+                valueText: "text",
+                id: '1'
+            },
+            geometry: {
+                type: "LineString",
+                coordinates: [1, 1]
+            },
+            style: [
+                {...DEFAULT_ANNOTATIONS_STYLES.LineString},
+                {...DEFAULT_ANNOTATIONS_STYLES.Point, filtering: false},
+                {...DEFAULT_ANNOTATIONS_STYLES.Point, filtering: false}
+            ]
+        };
+        let annotationsState = annotations({
+            editing: {
+                features: [selected, {...selected, properties: {...selected.properties, id: "2"}}]
+            },
+            selected
+        }, setStyle([
+            {...DEFAULT_ANNOTATIONS_STYLES.LineString},
+            {...DEFAULT_ANNOTATIONS_STYLES.Point, filtering: true},
+            {...DEFAULT_ANNOTATIONS_STYLES.Point, filtering: false}]
+        ));
+        expect(annotationsState.selected.style[1].filtering).toBe(true);
+        expect(annotationsState.editing.features[0].style[1].filtering).toBe(true);
+        expect(annotationsState.editing.features[0].style[2].filtering).toBe(false);
+        expect(annotationsState.editing.features[1].style[1].filtering).toBe(false);
+        expect(annotationsState.editing.features[1].style[2].filtering).toBe(false);
     });
 });

@@ -8,10 +8,12 @@
 
 const PropTypes = require('prop-types');
 const React = require('react');
-const {isEqual} = require('lodash');
+const {isEqual, isArray, castArray} = require('lodash');
 const assign = require('object-assign');
+const axios = require('axios');
 
 const {geometryToLayer} = require('../../../utils/leaflet/Vector');
+const {createStylesAsync} = require('../../../utils/VectorStyleUtils');
 
 class Feature extends React.Component {
     static propTypes = {
@@ -34,14 +36,16 @@ class Feature extends React.Component {
     }
 
     componentWillReceiveProps(newProps) {
-        if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || !isEqual(newProps.style, this.props.style)) {
-            this.props.container.removeLayer(this._layer);
+        // TODO check if shallow comparison is enough properties and geometry
+        if (isEqual(newProps.properties, this.props.properties) || isEqual(newProps.geometry, this.props.geometry) || (newProps.features !== this.props.features) || (newProps.style !== this.props.style)) {
+            newProps.container.removeLayer(this._layer);
             this.createLayer(newProps);
         }
     }
 
     shouldComponentUpdate(nextProps) {
-        return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry);
+        // TODO check if shallow comparison is enough properties and geometry
+        return isEqual(nextProps.properties, this.props.properties) || isEqual(nextProps.geometry, this.props.geometry) || (nextProps.features !== this.props.features);
     }
 
     componentWillUnmount() {
@@ -56,7 +60,7 @@ class Feature extends React.Component {
 
     createLayer = (props) => {
         if (props.geometry) {
-            this.addFeature(props);
+            this.addFeature({...props, style: props.style && castArray(props.style) || undefined});
         }
         if (props.features) {
             // supporting FeatureCollection
@@ -64,6 +68,7 @@ class Feature extends React.Component {
                 let newProps = assign({}, props, {
                     type: f.type,
                     geometry: f.geometry,
+                    style: f.style && castArray(f.style) || undefined,
                     properties: f.properties
                 });
                 this.addFeature(newProps);
@@ -72,6 +77,16 @@ class Feature extends React.Component {
     };
 
     addFeature(props) {
+        if (isArray(props.style)) {
+            let promises = createStylesAsync(props.style);
+            axios.all(promises).then((styles) => {
+                this.addLayer(props, styles);
+            });
+        } else {
+            this.addLayer(props, props.style);
+        }
+    }
+    addLayer(props, styles) {
         this._layer = geometryToLayer({
             type: props.type,
             geometry: props.geometry,
@@ -79,7 +94,7 @@ class Feature extends React.Component {
             properties: props.properties,
             msId: props.msId
         }, {
-            style: props.style
+            style: styles
         });
         props.container.addLayer(this._layer);
         this._layer.on('click', (event) => {

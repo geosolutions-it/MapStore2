@@ -15,7 +15,10 @@ const {getAvailableStyler, getRelativeStyler, convertGeoJSONToInternalModel,
     formatCoordinates, getComponents, addIds, validateCoords, validateCoordsArray,
     validateCoord, getBaseCoord, validateText, validateCircle, validateCoordinates,
     coordToArray, validateFeature, fromTextToPoint, fromCircleToPolygon,
-    fromAnnotationToGeoJson, annotationsToPrint
+    fromAnnotationToGeoJson, annotationsToPrint,
+    getStartEndPointsForLinestring,
+    createGeometryFromGeomFunction,
+    updateAllStyles
 } = require('../AnnotationsUtils');
 
 const featureCollection = {
@@ -137,18 +140,21 @@ describe('Test the AnnotationsUtils', () => {
         expect(numStyles.length).toBe(8);
 
         const textParams = Object.keys(DEFAULT_ANNOTATIONS_STYLES.Text);
-        expect(textParams.length).toBe(9);
+        expect(textParams.length).toBe(11);
 
-        const {font, color, opacity, fontStyle, fontSize, fontSizeUom, textAlign, fontFamily, fontWeight} = DEFAULT_ANNOTATIONS_STYLES.Text;
+        const {font, color, opacity, fontStyle, fontSize, fontSizeUom, textAlign, fontFamily, fontWeight, fillColor, fillOpacity} = DEFAULT_ANNOTATIONS_STYLES.Text;
         expect(font).toBe("14px Arial");
-        expect(color).toBe("#000000");
         expect(fontStyle).toBe("normal");
         expect(fontWeight).toBe("normal");
         expect(fontSize).toBe("14");
         expect(fontFamily).toBe("Arial");
         expect(fontSizeUom).toBe("px");
         expect(textAlign).toBe("center");
+
+        expect(color).toBe("#000000");
         expect(opacity).toBe(1);
+        expect(fillColor).toBe("#000000");
+        expect(fillOpacity).toBe(1);
     });
     it('default styles Point', () => {
         let {iconGlyph, iconShape, iconColor} = DEFAULT_ANNOTATIONS_STYLES.Point;
@@ -163,29 +169,24 @@ describe('Test the AnnotationsUtils', () => {
         expect(iconColor).toBe("blue");
     });
     it('default styles LineString', () => {
-        let {color, opacity, weight, fillColor, fillOpacity} = DEFAULT_ANNOTATIONS_STYLES.LineString;
+        let {color, opacity, weight} = DEFAULT_ANNOTATIONS_STYLES.LineString;
         expect(color).toBe("#ffcc33");
         expect(opacity).toBe(1);
         expect(weight).toBe(3);
-        expect(fillColor).toBe("#ffffff");
-        expect(fillOpacity).toBe(0.2);
     });
     it('default styles Circle', () => {
-        let {color, opacity, weight, fillColor, fillOpacity, radius} = DEFAULT_ANNOTATIONS_STYLES.Circle;
+        let {color, opacity, weight, fillColor, fillOpacity} = DEFAULT_ANNOTATIONS_STYLES.Circle;
         expect(color).toBe("#ffcc33");
         expect(opacity).toBe(1);
         expect(weight).toBe(3);
-        expect(radius).toBe(10);
         expect(fillColor).toBe("#ffffff");
         expect(fillOpacity).toBe(0.2);
     });
     it('default styles MultiLineString', () => {
-        let {color, opacity, weight, fillColor, fillOpacity} = DEFAULT_ANNOTATIONS_STYLES.MultiLineString;
+        let {color, opacity, weight} = DEFAULT_ANNOTATIONS_STYLES.MultiLineString;
         expect(color).toBe("#ffcc33");
         expect(opacity).toBe(1);
         expect(weight).toBe(3);
-        expect(fillColor).toBe("#ffffff");
-        expect(fillOpacity).toBe(0.2);
     });
     it('default styles Polygon', () => {
         let {color, opacity, weight, fillColor, fillOpacity} = DEFAULT_ANNOTATIONS_STYLES.Polygon;
@@ -332,6 +333,23 @@ describe('Test the AnnotationsUtils', () => {
         expect(ft.properties).toExist();
         expect(ft.properties.ms_style).toExist();
     });
+    it('fromAnnotationToGeoJson with a LineString in origin, but with a style of a startPoint', () => {
+        const f = {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: [[0, 0], [1, 1], [3, 3], [5, 5]]
+            },
+            style: getStartEndPointsForLinestring()[0]
+        };
+        const ft = fromAnnotationToGeoJson(f);
+        expect(ft.type).toBe("Feature");
+        expect(ft.geometry.type).toBe("Point");
+        expect(ft.geometry.coordinates[0]).toBe(0);
+        expect(ft.geometry.coordinates[1]).toBe(0);
+        expect(ft.properties).toExist();
+        expect(ft.properties.ms_style).toExist();
+    });
     it('flattenGeometryCollection', () => {
         const fts = flattenGeometryCollection(feature);
         expect(fts).toExist();
@@ -443,10 +461,9 @@ describe('Test the AnnotationsUtils', () => {
         expect(getBaseCoord("LineString").length).toBe(0);
     });
     it('test validateText defaults', () => {
-        let components = [[1, 2]];
+        let components = [{lat: 4, lon: 4}];
         let textAnnot = {
             components,
-            isArray: true,
             properties: {
                 valueText: "valid"
             }
@@ -460,18 +477,13 @@ describe('Test the AnnotationsUtils', () => {
         textAnnot.components = [undefined, 4];
         expect(validateText(textAnnot)).toBe(false);
 
-        textAnnot.isArray = false;
-        textAnnot.components = [{lat: 4, lon: 4}];
-        expect(validateText(textAnnot)).toBe(true);
-
         textAnnot.components = [undefined, 4];
         expect(validateText(textAnnot)).toBe(false);
     });
     it('test validateCircle defaults', () => {
-        let components = [[1, 2]];
+        let components = [{lat: 4, lon: 4}];
         let textAnnot = {
             components,
-            isArray: true,
             properties: {
                 radius: 5
             }
@@ -486,43 +498,32 @@ describe('Test the AnnotationsUtils', () => {
         textAnnot.components = [undefined, 4];
         expect(validateCircle(textAnnot)).toBe(false);
 
-        textAnnot.isArray = false;
-        textAnnot.components = [{lat: 4, lon: 4}];
-        expect(validateCircle(textAnnot)).toBe(true);
-
         textAnnot.components = [undefined, 4];
         expect(validateCircle(textAnnot)).toBe(false);
     });
     it('test validateCoordinates defaults', () => {
-        let components = [[1, 2]];
+        let components = [{lat: 4, lon: 4}];
         let textAnnot = {
             components,
-            isArray: true,
             type: "Point"
         };
         expect(validateCoordinates({})).toBe(false);
         expect(validateCoordinates(textAnnot)).toBe(true);
-
         textAnnot.components = [[undefined, 4]];
         expect(validateCoordinates(textAnnot)).toBe(false);
-
-        textAnnot.isArray = false;
         textAnnot.components = [{lat: 4, lon: 4}];
         expect(validateCoordinates(textAnnot)).toBe(true);
-
         textAnnot.components = [[undefined, 4]];
         expect(validateCoordinates(textAnnot)).toBe(false);
     });
     it('test validateFeature defaults', () => {
-        let components = [[1, 2]];
+        let components = [{lat: 4, lon: 4}];
         let textAnnot = {
             components,
-            isArray: true,
             type: "Point"
         };
         expect(validateFeature({})).toBe(false);
         expect(validateFeature(textAnnot)).toBe(true);
-
     });
     it('test annotationsToPrint from featureCollection', () => {
         let fts = annotationsToPrint([featureCollection]);
@@ -530,7 +531,6 @@ describe('Test the AnnotationsUtils', () => {
         expect(fts.length).toBe(2);
         expect(fts[0].geometry.type).toBe("Point");
         expect(fts[1].geometry.type).toBe("LineString");
-
     });
     it('test annotationsToPrint from array of geometryCollection', () => {
         let fts = annotationsToPrint([feature]);
@@ -545,5 +545,146 @@ describe('Test the AnnotationsUtils', () => {
         expect(fts[6].geometry.type).toBe("MultiPolygon");
         expect(fts[7].geometry.type).toBe("MultiPoint");
         expect(fts[8].geometry.type).toBe("MultiPoint");
+    });
+    it('test annotationsToPrint from a lineString', () => {
+        const f = {
+            type: "FeatureCollection",
+            features: [{
+                type: "Feature",
+                geometry: {
+                    type: "LineString",
+                    coordinates: [[0, 0], [1, 1], [3, 3], [5, 5]]
+                },
+                style: [{
+                    color: "#FF0000"
+                }].concat(getStartEndPointsForLinestring())
+            }]
+        };
+        let fts = annotationsToPrint([f]);
+        expect(fts).toExist();
+        expect(fts.length).toBe(3);
+    });
+    it('getStartEndPointsForLinestring, defaults', () => {
+        const styles = getStartEndPointsForLinestring();
+        expect(styles.length).toBe(2);
+        expect(styles[0].iconShape).toBe("square");
+        expect(styles[0].iconGlyph).toBe("comment");
+        expect(styles[0].iconColor).toBe("blue");
+        expect(typeof styles[0].id).toBe("string");
+        expect(styles[0].geometry).toBe("startPoint");
+        expect(styles[0].filtering).toBe(false);
+        expect(styles[0].highlight).toBe(true);
+        expect(styles[0].iconAnchor.length).toBe(2);
+        expect(styles[0].iconAnchor[0]).toBe(0.5);
+        expect(styles[0].iconAnchor[1]).toBe(0.5);
+        expect(styles[0].type).toBe("Point");
+        expect(styles[0].title).toBe("StartPoint Style");
+
+        expect(styles[1].iconShape).toBe("square");
+        expect(styles[1].iconGlyph).toBe("comment");
+        expect(styles[1].iconColor).toBe("blue");
+        expect(typeof styles[1].id).toBe("string");
+        expect(styles[1].geometry).toBe("endPoint");
+        expect(styles[1].filtering).toBe(false);
+        expect(styles[1].highlight).toBe(true);
+        expect(styles[1].iconAnchor.length).toBe(2);
+        expect(styles[1].iconAnchor[0]).toBe(0.5);
+        expect(styles[1].iconAnchor[1]).toBe(0.5);
+        expect(styles[1].type).toBe("Point");
+        expect(styles[1].title).toBe("EndPoint Style");
+    });
+    it('createGeometryFromGeomFunction startPoint', () => {
+        // feature with start point style but with a linestring ad geom
+        const f = {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: [[0, 0], [1, 1], [3, 3], [5, 5]]
+            },
+            style: getStartEndPointsForLinestring()[0]
+        };
+        const newGeom = createGeometryFromGeomFunction(f);
+        expect(newGeom.type).toBe("Point");
+        expect(newGeom.coordinates[0]).toBe(0);
+        expect(newGeom.coordinates[0]).toBe(0);
+    });
+    it('createGeometryFromGeomFunction startPoint', () => {
+        // feature with end point style but with a linestring ad geom
+        const f = {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: [[0, 0], [1, 1], [3, 3], [5, 5]]
+            },
+            style: getStartEndPointsForLinestring()[1]
+        };
+        const newGeom = createGeometryFromGeomFunction(f);
+        expect(newGeom.type).toBe("Point");
+        expect(newGeom.coordinates[0]).toBe(5);
+        expect(newGeom.coordinates[0]).toBe(5);
+    });
+    it('createGeometryFromGeomFunction centerPoint', () => {
+        // feature with end point style but with a linestring ad geom
+        const f = {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: [[0, 0], [5, 5]]
+            },
+            style: {...getStartEndPointsForLinestring()[1], geometry: "centerPoint"}
+        };
+        const newGeom = createGeometryFromGeomFunction(f);
+        expect(newGeom.type).toBe("Point");
+        expect(newGeom.coordinates[0]).toBe(2.5);
+        expect(newGeom.coordinates[0]).toBe(2.5);
+    });
+    it('createGeometryFromGeomFunction lineString', () => {
+        // feature with end point style but with a linestring ad geom
+        const f = {
+            type: "Feature",
+            geometry: {
+                type: "LineString",
+                coordinates: [[0, 0], [1, 1], [3, 3], [5, 5]]
+            },
+            style: {
+                color: "#FF0000"
+            }
+        };
+        const newGeom = createGeometryFromGeomFunction(f);
+        expect(newGeom.type).toBe("LineString");
+        expect(newGeom.coordinates[0][0]).toBe(0);
+        expect(newGeom.coordinates[0][1]).toBe(0);
+        expect(newGeom.coordinates[3][0]).toBe(5);
+        expect(newGeom.coordinates[3][1]).toBe(5);
+    });
+    it('updateAllStyles, defaults', () => {
+        const f = {
+            type: "FeatureCollection",
+            features: []
+        };
+        const newFcoll = updateAllStyles(f);
+        expect(newFcoll.features.length).toBe(0);
+    });
+    it('updateAllStyles, with new props', () => {
+        const f = {
+            type: "FeatureCollection",
+            features: [{
+                type: "Feature",
+                geometry: {
+                    type: "LineString",
+                    coordinates: [[0, 0], [1, 1], [3, 3], [5, 5]]
+                },
+                style: [{
+                    color: "#FF0000"
+                }].concat(getStartEndPointsForLinestring())
+            }]
+        };
+        const newFcoll = updateAllStyles(f, {highlight: true});
+        expect(newFcoll.features.length).toBe(1);
+        newFcoll.features.map(ft => {
+            ft.style.map(s => {
+                expect(s.highlight).toBe(true);
+            });
+        });
     });
 });

@@ -348,6 +348,7 @@
             },
             "errors": {
                 "loading": {
+                    "title": "Errore di caricamento della mappa",
                     "notFound": "Mappa non trovata",
                     "notAccessible": "Mappa non accessibile",
                     "unknownError": "<p> <small> Uno dei seguenti motivi potrebbe essere la causa: </small> <ul><li> non hai il permesso di accedere </li> <li> stai cercando di accedere a una mappa che non esiste </li> <li> la mappa è stata rimossa </li></ul> <p>"
@@ -558,16 +559,28 @@
             "serviceslistempty": "Nessun servizio definito"
         },
         "draw": {
-            "fill": "Riempimento:",
-            "stroke": "Linea:",
-            "strokeWidth": "Larghezza Linea:",
+            "fill": "Riempimento",
+            "text": "Testo",
+            "fontTitle": "Font",
+            "color": "Colore",
+            "lineDash": "Tratteggio",
+            "stroke": "Linea",
+            "opacity": "Opacità",
+            "width": "Larghezza",
             "font": {
-                "textColor": "colore del testo",
-                "family": "font-family",
-                "size": "font-size",
-                "textAlign": "allineamento del testo",
-                "style": "font-style",
-                "weight": "font-weight"
+                "textColor": "Colore",
+                "family": "Famiglia",
+                "size": "Taglia",
+                "style": "Stile",
+                "weight": "Peso",
+                "textAlign": "Allineamento"
+            },
+            "marker": {
+                "layout": "Layout",
+                "shape": "Forma",
+                "size": "Grandezza",
+                "type": "Tipo",
+                "icon": "Icona"
             }
         },
         "drawLocal": {
@@ -794,11 +807,13 @@
             }
         },
         "annotations": {
+            "errorLoadingSymbols": "Si è verificato un problema durante il caricamento dell'elenco dei simboli. Per favore, contatta l'amministratore per verificare le opzioni di configurazione",
             "edit": "Modifica",
             "remove": "Rimuovi",
             "save": "Salva",
             "cancel": "Annulla",
             "back": "Indietro",
+            "applyStyle": "Applica stile",
             "addMarker": "Aggiungi una geometria",
             "styleGeometry": "Cambia stile",
             "deleteGeometry": "Rimuovi tutte le feature",
