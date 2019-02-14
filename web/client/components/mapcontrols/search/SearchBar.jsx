@@ -295,7 +295,7 @@ class SearchBar extends React.Component {
                             }
                         ],
                         visible: this.props.showOptions,
-                        el: DropdownToolbarOptions
+                        Element: DropdownToolbarOptions
                     }]}
                     />
             </span>);

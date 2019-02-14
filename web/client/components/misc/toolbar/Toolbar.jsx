@@ -16,7 +16,7 @@ const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 * @memberof components.misc.toolbar
 * @param  {Array}  [buttons=[]]       Array of buttons. Button objects support the following properties:
 *  - *visible*: true by default, set to `false` to make the button disappear
-*  - *el*: a component to render instead of the ToolbarButton, it can be a DropdownToolbarOptions
+*  - *Element*: a component to render instead of the ToolbarButton, it can be a DropdownToolbarOptions
 *  - All the react-bootstrap buttons properties.
 *  - All the properties for @see components.misc.enhancers
 *  . All properties for @see components.misc.toolbar.ToolbarButton and react-bootstrap button
@@ -34,8 +34,8 @@ module.exports = ({
        transitionLeaveTimeout: 300
    }} = {}) => {
        const renderButtons = () => buttons.map(
-           ({ visible = true, el, ...props }, index) => visible
-               ? (el && <el key={props.key || index} {...props} /> || <ToolbarButton key={props.key || index} {...btnDefaultProps} {...props} />)
+           ({ visible = true, Element, ...props }, index) => visible
+               ? (Element && <Element key={props.key || index} {...props} /> || <ToolbarButton key={props.key || index} {...btnDefaultProps} {...props} />)
                : null
        );
        return (<ButtonGroup {...btnGroupProps}>
