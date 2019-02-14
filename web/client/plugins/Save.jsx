@@ -23,11 +23,14 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
-
+const {mapInfoConfigurationSelector} = require('../selectors/mapinfo');
 const MapUtils = require('../utils/MapUtils');
 const showSelector = state => state.controls && state.controls.save && state.controls.save.enabled;
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
-const selector = createSelector(mapSelector, mapOptionsToSaveSelector, layersSelector, groupsSelector, showSelector, textSearchConfigSelector, (map, additionalOptions, layers, groups, show, textSearchConfig) => ({
+
+const selector = createSelector(
+    mapSelector, mapOptionsToSaveSelector, layersSelector, groupsSelector, showSelector, textSearchConfigSelector, mapInfoConfigurationSelector,
+    (map, additionalOptions, layers, groups, show, textSearchConfig, mapInfoConfiguration) => ({
     currentZoomLvl: map && map.zoom,
     show,
     map,
@@ -35,7 +38,8 @@ const selector = createSelector(mapSelector, mapOptionsToSaveSelector, layersSel
     mapId: map && map.mapId,
     layers,
     textSearchConfig,
-    groups
+    groups,
+    mapInfoConfiguration
 }));
 
 class Save extends React.Component {
@@ -49,6 +53,7 @@ class Save extends React.Component {
         map: PropTypes.object,
         layers: PropTypes.array,
         groups: PropTypes.array,
+        mapInfoConfiguration: PropTypes.object,
         params: PropTypes.object,
         textSearchConfig: PropTypes.object
     };
@@ -90,7 +95,7 @@ class Save extends React.Component {
     goForTheUpdate = () => {
         if (this.props.mapId) {
             if (this.props.map && this.props.layers) {
-                const resultingmap = MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions);
+                const resultingmap = MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions, this.props.mapInfoConfiguration);
                 const {name, description} = this.props.map.info;
                 this.props.onMapSave({id: this.props.mapId, data: resultingmap, metadata: {name, description}, category: "MAP"});
                 this.props.onClose();

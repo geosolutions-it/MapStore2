@@ -23,8 +23,12 @@ const {
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
     TOGGLE_MAPINFO_STATE,
-    UPDATE_CENTER_TO_MARKER
+    UPDATE_CENTER_TO_MARKER,
+    TOGGLE_EMPTY_MESSAGE_GFI
 } = require('../actions/mapInfo');
+const {
+    MAP_CONFIG_LOADED
+} = require('../actions/config');
 const {RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
@@ -44,7 +48,10 @@ function receiveResponse(state, action, type) {
     }
     return state;
 }
-const initState = {enabled: true};
+const initState = {
+    enabled: true,
+    configuration: {}
+};
 
 function mapInfo(state = initState, action) {
     switch (action.type) {
@@ -92,9 +99,13 @@ function mapInfo(state = initState, action) {
         });
     }
     case CHANGE_MAPINFO_FORMAT: {
-        return assign({}, state, {
-            infoFormat: action.infoFormat
-        });
+        return {...state,
+            infoFormat: action.infoFormat,
+            configuration: {
+                ...state.configuration,
+                infoFormat: action.infoFormat
+            }
+        };
     }
     case SHOW_MAPINFO_MARKER: {
         return assign({}, state, {
@@ -190,6 +201,18 @@ function mapInfo(state = initState, action) {
         return assign({}, state, {
             centerToMarker: action.status
         });
+    }
+    case TOGGLE_EMPTY_MESSAGE_GFI: {
+        return {...state, configuration: {
+            ...state.configuration, showEmptyMessageGFI: !state.configuration.showEmptyMessageGFI
+            }
+        };
+    }
+    case MAP_CONFIG_LOADED: {
+        return {...state,
+            configuration: action.config.mapInfoConfiguration,
+            infoFormat: action.config.mapInfoConfiguration.infoFormat
+        };
     }
     default:
         return state;

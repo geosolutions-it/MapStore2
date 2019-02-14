@@ -51,7 +51,8 @@ module.exports = props => {
         setIndex,
         warning,
         clearWarning,
-        zIndex
+        zIndex,
+        showEmptyMessageGFI
     } = props;
 
     const latlng = point && point.latlng || null;
@@ -105,6 +106,7 @@ module.exports = props => {
                     format={format}
                     missingResponses={missingResponses}
                     responses={responses}
+                    showEmptyMessageGFI={showEmptyMessageGFI}
                     {...viewerOptions}/>
             </DockablePanel>
             <Portal>

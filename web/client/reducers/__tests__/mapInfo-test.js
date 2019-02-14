@@ -8,7 +8,8 @@
 
 const expect = require('expect');
 const mapInfo = require('../mapInfo');
-const { featureInfoClick } = require('../../actions/mapInfo');
+const { featureInfoClick, toggleEmptyMessageGFI } = require('../../actions/mapInfo');
+const { MAP_CONFIG_LOADED } = require('../../actions/config');
 const assign = require('object-assign');
 
 require('babel-polyfill');
@@ -1424,6 +1425,34 @@ describe('Test the mapInfo reducer', () => {
         expect(state.responses[0].layerMetadata.fields.length).toBe(2);
         expect(state.responses[0].layerMetadata.title).toBe("Annotations");
         expect(state.responses[0].layerMetadata.buffer).toBe(2);
+    });
+
+    it('TOGGLE_EMPTY_MESSAGE_GFI', () => {
+        let state = mapInfo({
+            infoFormat: "text/html",
+            configuration: {}
+        }, toggleEmptyMessageGFI());
+        expect(state.configuration.showEmptyMessageGFI).toBe(true);
+        state = mapInfo(state, toggleEmptyMessageGFI());
+        expect(state.configuration.showEmptyMessageGFI).toBe(false);
+    });
+    it('MAP_CONFIG_LOADED', () => {
+        const oldInfoFormat = "text/html";
+        const newInfoFormat = "application/json";
+        let state = mapInfo({
+            infoFormat: oldInfoFormat,
+            configuration: {}
+        }, {
+            type: MAP_CONFIG_LOADED,
+            config: {
+                mapInfoConfiguration: {
+                    infoFormat: newInfoFormat,
+                    showEmptyMessageGFI: true
+                }
+            }
+        });
+        expect(state.configuration.showEmptyMessageGFI).toBe(true);
+        expect(state.configuration.infoFormat).toBe(newInfoFormat);
     });
 
 });

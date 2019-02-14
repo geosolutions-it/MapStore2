@@ -20,6 +20,7 @@ var {
     GET_VECTOR_INFO,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
+    TOGGLE_EMPTY_MESSAGE_GFI, toggleEmptyMessageGFI,
     getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
@@ -205,5 +206,9 @@ describe('Test correctness of the map actions', () => {
         const retval = updateCenterToMarker('enabled');
         expect(retval.type).toBe(UPDATE_CENTER_TO_MARKER);
         expect(retval.status).toBe('enabled');
+    });
+    it('toggleEmptyMessageGFI', () => {
+        const retval = toggleEmptyMessageGFI();
+        expect(retval.type).toBe(TOGGLE_EMPTY_MESSAGE_GFI);
     });
 });

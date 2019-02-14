@@ -15,9 +15,9 @@ const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 
-const {getFeatureInfo, getVectorInfo, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState} = require('../actions/mapInfo');
+const {getFeatureInfo, getVectorInfo, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults} = require('../actions/mapInfo');
 const {changeMousePointer} = require('../actions/map');
-const {changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults} = require('../actions/mapInfo');
+const {showEmptyMessageGFISelector} = require('../selectors/mapInfo');
 const {currentLocaleSelector} = require('../selectors/locale');
 
 const {compose, defaultProps} = require('recompose');
@@ -46,9 +46,10 @@ const selector = createSelector([
     (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
     (state) => state.mapInfo && state.mapInfo.warning,
     currentLocaleSelector,
-    state => mapLayoutValuesSelector(state, {height: true})
-], (enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle) => ({
-    enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle
+    state => mapLayoutValuesSelector(state, {height: true}),
+    state => showEmptyMessageGFISelector(state)
+], (enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, showEmptyMessageGFI) => ({
+    enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, showEmptyMessageGFI
 }));
 // result panel
 

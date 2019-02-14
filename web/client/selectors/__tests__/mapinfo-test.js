@@ -8,7 +8,14 @@
 
 
 const expect = require('expect');
-const {mapInfoRequestsSelector, generalInfoFormatSelector, stopGetFeatureInfoSelector, isMapInfoOpen} = require('../mapinfo');
+const {
+    mapInfoRequestsSelector,
+    generalInfoFormatSelector,
+    stopGetFeatureInfoSelector,
+    isMapInfoOpen,
+    mapInfoConfigurationSelector,
+    showEmptyMessageGFISelector
+} = require('../mapinfo');
 
 describe('Test mapinfo selectors', () => {
     it('test generalInfoFormatSelector default value', () => {
@@ -108,6 +115,31 @@ describe('Test mapinfo selectors', () => {
             }
         });
         expect(props).toEqual(true);
+    });
+    it('test mapInfoConfigurationSelector', () => {
+        const infoFormat = "text/html";
+        const showEmptyMessageGFI = true;
+        const props = mapInfoConfigurationSelector({
+            mapInfo: {
+                configuration: {
+                    infoFormat,
+                    showEmptyMessageGFI
+                }
+            }
+        });
+        expect(props.infoFormat).toEqual(infoFormat);
+        expect(props.showEmptyMessageGFI).toEqual(showEmptyMessageGFI);
+    });
+    it('test showEmptyMessageGFISelector', () => {
+        const showEmptyMessageGFI = true;
+        const props = showEmptyMessageGFISelector({
+            mapInfo: {
+                configuration: {
+                    showEmptyMessageGFI
+                }
+            }
+        });
+        expect(props).toEqual(showEmptyMessageGFI);
     });
 
 });

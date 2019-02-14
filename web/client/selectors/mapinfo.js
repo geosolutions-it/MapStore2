@@ -37,6 +37,9 @@ const isMapInfoOpen = state => !!mapInfoRequestsSelector(state) && mapInfoReques
  */
 const generalInfoFormatSelector = (state) => get(state, "mapInfo.infoFormat", "text/plain");
 
+const showEmptyMessageGFISelector = (state) => get(state, "mapInfo.configuration.showEmptyMessageGFI", true); // verify if we need to remove this default in austrocontrol
+const mapInfoConfigurationSelector = (state) => get(state, "mapInfo.configuration", {});
+
 const measureActiveSelector = (state) => get(state, "measurement.lineMeasureEnabled") || get(state, "measurement.areaMeasureEnabled") || get(state, "measurement.bearingMeasureEnabled");
 const drawSupportActiveSelector = (state) => {
     const drawStatus = get(state, "draw.drawStatus", false);
@@ -73,5 +76,7 @@ module.exports = {
     isMapInfoOpen,
     generalInfoFormatSelector,
     mapInfoRequestsSelector,
-    stopGetFeatureInfoSelector
+    stopGetFeatureInfoSelector,
+    showEmptyMessageGFISelector,
+    mapInfoConfigurationSelector
 };
