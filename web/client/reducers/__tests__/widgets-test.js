@@ -19,6 +19,7 @@ const {
     resetDependencies,
     loadDependencies,
     toggleCollapse,
+    toggleCollapseAll,
     toggleTray,
     DEFAULT_TARGET
 } = require('../../actions/widgets');
@@ -142,7 +143,7 @@ describe('Test the widgets reducer', () => {
         expect(state.containers[DEFAULT_TARGET].widgets).toExist();
         expect(state.containers[DEFAULT_TARGET].widgets.length).toBe(1);
     });
-    it('widgets toggleCollapse', () => {
+    it('widgets toggleCollapse and toggleCollapseAll', () => {
         const {initialState, changeLayoutAction} = require('../../test-resources/widgets/layout-state-collapse.js');
         const widgetToCollapse = getFloatingWidgets({
             widgets: initialState
@@ -201,14 +202,21 @@ describe('Test the widgets reducer', () => {
         // verify also selector
         expect(getVisibleFloatingWidgets({ widgets: ws }).length).toBe(3);
 
-        // check locked widget do not collapse
-        const locked = getFloatingWidgets({
+        // check static (pinned) widget do not collapse
+        const staticState = getFloatingWidgets({
             widgets: initialState
         })[2];
-        const lockedAction = toggleCollapse(locked);
-        const wsLocked = widgets(ws, lockedAction);
+        const staticAction = toggleCollapse(staticState);
+        const wsStatic = widgets(ws, staticAction);
         // nothing changed
-        expect(wsLocked).toBe(ws);
+        expect(wsStatic).toBe(ws);
+        expect(getVisibleFloatingWidgets({ widgets: wsStatic }).length).toBe(3);
+        // check collapse all
+        const collapseAllState = widgets(wsStatic, toggleCollapseAll());
+        // collapse all widgets
+        expect(Object.keys(collapseAllState.containers[DEFAULT_TARGET].collapsed).length).toBe(2);
+        // except static (pinned)
+        expect(getVisibleFloatingWidgets({ widgets: collapseAllState }).length).toBe(1);
     });
     it('widgets toggleTray', () => {
         expect(widgets(undefined, {type: "NO_ACTION"}).tray).toBeFalsy();
