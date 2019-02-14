@@ -13,7 +13,7 @@ const {
     updateAdditionalLayer,
     updateOptionsByOwner,
     removeAdditionalLayer,
-    removeAllAdditionalLayer
+    removeAllAdditionalLayers
 } = require('../../actions/additionallayers');
 
 const additionallayers = require('../additionallayers');
@@ -145,7 +145,7 @@ describe('Test additional layers reducer', () => {
                 options: {}
             }
         ];
-        const state = additionallayers(initialState, removeAllAdditionalLayer());
+        const state = additionallayers(initialState, removeAllAdditionalLayers());
         expect(state).toEqual([]);
     });
 
