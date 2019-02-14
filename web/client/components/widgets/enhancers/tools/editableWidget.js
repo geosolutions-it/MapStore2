@@ -8,7 +8,7 @@
 const {withProps} = require('recompose');
 
 /**
- * Add the edit/delete items to the widget menu
+ * Add the edit/delete items to the menu. @see withMenu
  */
 module.exports = () =>
     withProps(({ widgetTools = [], dataGrid = {}, canEdit, onEdit = () => {}, toggleDeleteConfirm = () => {} }) => ({

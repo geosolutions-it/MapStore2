@@ -8,8 +8,7 @@
 const {compose, withProps} = require('recompose');
 
 /**
- * Support widget collapse function. Add the collapse button to the menu.
- *
+ * Support widget collapse function, adding the collapse button to the tools. @see withIcons
  */
 module.exports = () =>
 compose(

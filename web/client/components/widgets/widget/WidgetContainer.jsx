@@ -10,6 +10,18 @@ const Message = require('../../I18N/Message');
 const BorderLayout = require('../../layout/BorderLayout');
 const ConfirmModal = require('../../maps/modals/ConfirmModal');
 
+/**
+ * Base container for widgets.
+ * Supports  to display icons, left and right menu, (draggable) header, delete confirm.
+ * @prop {string} id of the widget
+ * @prop {string} title the title to display in the widget
+ * @prop {string} className the class to apply to the main contained object (inside the div `mapstore-widget-card`)
+ * @prop {element} icons icons to use as icons
+ * @prop {element} topLeftItems items to show at the left of the header
+ * @prop {element} topRightItems items to show at the right of the icons
+ * @prop {function} toggleDeleteConfirm method triggered on delete confirm
+ * @prop {function} onDelete function to call when user confirms delete
+ */
 module.exports = ({
     id,
     title,

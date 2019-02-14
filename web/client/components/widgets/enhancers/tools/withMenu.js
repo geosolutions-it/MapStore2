@@ -21,7 +21,7 @@ const {
 } = require('react-bootstrap');
 const MenuItem = tooltip(MenuItemBS);
 /**
- * transform widgetTools into a right menu
+ * transform `widgetTools` property items with `target` = `menu` into a DropDown button to put in `topRightItems` for WidgetContainer, as a menu
  */
 module.exports = ({ className = "widget-menu", menuIcon = "option-vertical"} = {}) =>
     withProps(({ widgetTools, topRightItems = []}) => ({

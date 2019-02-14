@@ -15,4 +15,4 @@ module.exports = compose(
     editableWidget(),
     defaultIcons(),
     withHeaderTools()
-)
+);

@@ -8,7 +8,8 @@
 const {compose, withProps} = require('recompose');
 
 /**
- * Support widget hiding. Add the hide button to the widget menu.
+ * Support widget hiding. Add the `hide` button to the widget menu if `toolsOptions.showHide` is true.
+ * Widgets `hide` property hides the widget and it is typically used to hide the widget to certain users.
  */
 module.exports = () =>
 compose(

@@ -15,13 +15,16 @@ const tooltip = require('../enhancers/tooltip');
 const popover = require('../enhancers/popover');
 /**
  * Button for @see components.misc.toolbar.Toolbar. Exposes all the props of a react-bootstrap button, plus glyph and text
- * Has tooltip and popover enhancers, so you can add properties like `popover`, `tooltip`, `tooltipId` and so on.
- * @see components.misc.enhancers.tooltip and @see components.misc.enhancers.popover
+ * Has tooltip and popover HOCs, so you can add properties like `popover`, `tooltip`, `tooltipId` and so on...
+ * @see components.misc.enhancers.tooltip and @see components.misc.enhancers.popover.
  * @class TooltipButton
  * @memberof components.misc.toolbar
- * @implements ma
  * @prop {string} [glyph] the icon to use
  * @prop {element} [text] the text to display
+ * @prop {string} [textId] if present, has higher priority of `text` and uses the string as key to localize the toolbar button text
+ * @prop {object} [popover] @see components.misc.enhancers.popover
+ * @prop {element} [tooltip] @see components.misc.enhancers.tooltip
+ * @prop {string} [tooltipId] @see components.misc.enhancers.tooltip
  */
 
 module.exports = compose(tooltip, popover)(({ glyph, loading, text = "", textId, glyphClassName="", loaderProps = {}, ...props} = {}) =>

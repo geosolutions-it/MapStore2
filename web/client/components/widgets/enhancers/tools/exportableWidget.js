@@ -8,7 +8,7 @@
 const { withProps } = require('recompose');
 
 /**
- * Add widget tools (menu items) needed to export widgets
+ * Add widget tools (menu items) needed to export widgets. @see withMenu
  */
 module.exports = () =>
     withProps(({ widgetTools = [], data, id, title, exportCSV = () => { }, exportImage = () => { } }) => ({

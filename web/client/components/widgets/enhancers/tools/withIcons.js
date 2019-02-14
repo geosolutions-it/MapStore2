@@ -13,7 +13,7 @@ const isIcon = t => t.target === "icons";
 const hasIcons = (tt = []) => tt.filter(isIcon).length > 0;
 
 /**
- * Transforms widgetTools into leftItems for the widget.
+ * Transforms `widgetTools` with target `icons` into `icons` for the WidgetContainer
  */
 module.exports = () =>
     compose(

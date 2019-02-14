@@ -13,6 +13,10 @@ const {editableWidget, defaultIcons, withHeaderTools} = require('./tools');
 
 const {getScales} = require('../../../utils/MapUtils');
 
+/**
+ * map dependencies to layers, scales and current zoom level to show legend items for current zoom.
+ * Add also base tools and menu to the widget
+ */
 module.exports = compose(
     withProps(({ dependencies = {} }) => ({
         layers: dependencies.layers || [],

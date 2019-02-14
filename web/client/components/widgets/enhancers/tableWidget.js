@@ -9,7 +9,7 @@ const { compose, withPropsOnChange } = require('recompose');
 const { get } = require('lodash');
 const {editableWidget, withHeaderTools, defaultIcons} = require('./tools');
 /**
- * Update widget column size on resize. and add base icons and menus
+ * enhancer that updates widget column size on resize. and add base icons and menus
  * Moreover enhances it to allow delete.
 */
 module.exports = compose(

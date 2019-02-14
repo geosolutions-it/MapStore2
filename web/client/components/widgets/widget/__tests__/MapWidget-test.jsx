@@ -12,9 +12,11 @@ const {compose, defaultProps} = require('recompose');
 const expect = require('expect');
 const mapWidget = require('../../enhancers/mapWidget');
 
-const MapWidget = compose(defaultProps({
-    canEdit: true
-}),mapWidget)(require('../MapWidget'));
+const MapWidget = compose(
+    defaultProps({
+        canEdit: true
+    }),
+    mapWidget)(require('../MapWidget'));
 describe('MapWidget component', () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
