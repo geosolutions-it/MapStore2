@@ -1,5 +1,5 @@
 # Code conventions
-In order to preserve quality, maintainability and testability when you develop in MapStore 2  you should follow the following rules and best practices. 
+In order to preserve quality, maintainability and testability when you develop in MapStore  you should follow the following rules and best practices. 
 
 # TL;DR
  - Access to the state using state selectors

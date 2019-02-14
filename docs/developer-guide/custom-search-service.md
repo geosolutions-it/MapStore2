@@ -1,5 +1,5 @@
 # Custom search service
-MapStore2 Searchbox uses [OpenStreetMap Nominatim](https://wiki.openstreetmap.org/wiki/Nominatim) service but you can set it up to use your own WFS service.  
+MapStore Searchbox uses [OpenStreetMap Nominatim](https://wiki.openstreetmap.org/wiki/Nominatim) service but you can set it up to use your own WFS service.  
 The results will be fetched from every service you set, plus OSM Nominatim, and displayed in the order you specified.
 
 ## How to use

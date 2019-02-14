@@ -1,5 +1,5 @@
-Writing a new MapStore2 based application can be done following these steps:
- * create a new folder for the application, inside the MapStore2 directory tree (e.g. web/client/examples/myapp), and the following folder structure:
+Writing a new MapStore based application can be done following these steps:
+ * create a new folder for the application, inside the MapStore directory tree (e.g. web/client/examples/myapp), and the following folder structure:
 
 ```
 +-- myapp
@@ -219,7 +219,7 @@ module.exports = {
 
 ```
 
-Now the application is ready, to launch it in development mode, you can use the following command (launch it from the MapStore2 main folder):
+Now the application is ready, to launch it in development mode, you can use the following command (launch it from the MapStore main folder):
 
 ```
 ./node_modules/.bin/webpack-dev-server --config web/client/examples/myapp/webpack.config.js --progress --colors --port 8081 --content-base web/client/examples/myapp
