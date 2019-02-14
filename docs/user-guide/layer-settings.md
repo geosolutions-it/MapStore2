@@ -36,8 +36,8 @@ If you have any *editing grants* on the styles' source, you can customize layers
 <img src="../img/style_editor.jpg" alt="style_editor"/>
 
 The Style Editor tool provides its functionalities on top of [GeoServer](http://geoserver.org/) REST APIs, so the styling
-functionalities are available only for those layers that are loaded in [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) from GeoServer.
-By default the GeoServer's REST APIs are available only for the GeoServer administrators, so a basic authentication form will appears in MapStore2 to enter the *Admin* credentials. Without Admin rights, the editing capabilities on styles are not available and only a list of the available styles will be shown in order to assign one of them to the selected layer. If the [users integration between GeoServer and MapStore2](https://github.com/geosolutions-it/MapStore2/wiki/MapStore2-users-GeoServer-integration-with-Authkey) is configured, the editing functionalities of the styles will be available according to the role of the authenticated user in MapStore2 in a more transparent way.
+functionalities are available only for those layers that are loaded in [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) from GeoServer.
+By default the GeoServer's REST APIs are available only for the GeoServer administrators, so a basic authentication form will appears in MapStore to enter the *Admin* credentials. Without Admin rights, the editing capabilities on styles are not available and only a list of the available styles will be shown in order to assign one of them to the selected layer. If the [users integration between GeoServer and MapStore](https://github.com/geosolutions-it/MapStore2/wiki/MapStore2-users-GeoServer-integration-with-Authkey) is configured, the editing functionalities of the styles will be available according to the role of the authenticated user in MapStore in a more transparent way.
 <br>
 Once done these requirements' checks you can edit an existing style or create a new one from scratch.
 
@@ -52,7 +52,7 @@ Once done these requirements' checks you can edit an existing style or create a 
 
 ***Create new styles***
 
-* **Click** on the **Create new style** button <img src="../img/style_editor_new_style_button.jpg" style="max-width:25px;" alt="style_editor_new_style_button"/> if you want to create your style from scratch.   [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) shows you some style templates from which you can start your customization. Those templates can be:
+* **Click** on the **Create new style** button <img src="../img/style_editor_new_style_button.jpg" style="max-width:25px;" alt="style_editor_new_style_button"/> if you want to create your style from scratch.   [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) shows you some style templates from which you can start your customization. Those templates can be:
 
     * ***CSS - Cascading Style Sheet*** (a language used for describing the presentation of a document written in a markup language like the HTML)
 

@@ -2,7 +2,7 @@
 
 Your pull request must:
 
- * Follow MapStore 2's coding style.
+ * Follow MapStore's coding style.
 
  * The new components have to be tested.
 
@@ -19,9 +19,9 @@ Your pull request must:
  * Be possible to merge automatically.
 
 
-### Follow MapStore 2's coding style
+### Follow MapStore's coding style
 
-MapStore 2 follows a strict coding style, enforced by [ESLint](http://eslint.org/) rules.
+MapStore follows a strict coding style, enforced by [ESLint](http://eslint.org/) rules.
 
 The set of used rules can be found in the [.eslintrc](https://github.com/geosolutions-it/MapStore2/blob/master/.eslintrc) file, in the root folder of the project.
 
@@ -66,7 +66,7 @@ http://editorconfig.org/#download) site links to plugins for various editors.
 ### Pass the integration tests run automatically by the Travis CI system
 
 The integration tests contain a number of automated checks to ensure that the
-code follows the MapStore 2 style and does not break tests or examples.  You
+code follows the MapStore style and does not break tests or examples.  You
 can run the integration tests locally using the `test` target:
 
     $ npm test
