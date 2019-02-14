@@ -7,7 +7,7 @@
 
 MapStore 2
 ==========
-MapStore 2 is a framework to build *web mapping* applications using standard mapping libraries, such as [OpenLayers 3](http://openlayers.org/) and [Leaflet](http://leafletjs.com/).
+MapStore 2 is a framework to build *web mapping* applications using standard mapping libraries, such as [OpenLayers](http://openlayers.org/) and [Leaflet](http://leafletjs.com/).
 
 MapStore 2 has several example applications:
  * MapViewer is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore)
@@ -58,7 +58,7 @@ You can find more documentation about how to build, install or develop with MapS
 
 License
 ------------
-MapStore 2 is Free and Open Source software, it is based on OpenLayers 3, Leaflet and [ReactJS](https://facebook.github.io/react/), and is licensed under the Simplified BSD License.
+MapStore 2 is Free and Open Source software, it is based on OpenLayers, Leaflet and [ReactJS](https://facebook.github.io/react/), and is licensed under the Simplified BSD License.
 
 
 Demo Instances
