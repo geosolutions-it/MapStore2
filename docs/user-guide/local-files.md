@@ -1,7 +1,7 @@
 # Adding Local Vector Files
 ***************************
 
-In [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) you can add local vector files from your machine to the map.
+In [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) you can add local vector files from your machine to the map.
 
 Starting from a new map or an already existing map:
 

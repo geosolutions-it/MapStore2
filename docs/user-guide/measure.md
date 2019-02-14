@@ -1,7 +1,7 @@
 # Performing Measurements
 *************************
 
-Measure tools in [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) allow the user to perform distance, area and bearing measurments on the map.
+Measure tools in [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) allow the user to perform distance, area and bearing measurments on the map.
 
 Starting from a new map or an already existing map:
 
@@ -15,7 +15,7 @@ A pop-up page will open showing the measurement tools to use.
 Measuring Distances
 -------------------
 
-Since [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) works in geographic coordinates, the measured distances are geodesic. You can draw a segment line or multi-segments line.
+Since [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) works in geographic coordinates, the measured distances are geodesic. You can draw a segment line or multi-segments line.
 
 * **Click** on *Measure Distance* <img src="../img/measure-distance.jpg" style="max-width:90px;" />.
 

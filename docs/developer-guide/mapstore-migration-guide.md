@@ -72,9 +72,9 @@ const appConfig = {
 ## Migration from 2017.05.00 to 2017.03.00 and previews
 In **2017.03.00** the `createProject.js` script created only a custom project. From version 2017.04.00 we changed the script to generate 2 kind of projects:
  - **custom**: the previous version
- - **standard**: mapstore2 standard
+ - **standard**: mapstore standard
 
-Standard project wants to help to generate a project that is basically the MapStore2 product, where you can add your own plugins and customize your theme (before this you had to create a project similar to MapStore2 on your own)
+Standard project wants to help to generate a project that is basically the MapStore product, where you can add your own plugins and customize your theme (before this you had to create a project similar to MapStore on your own)
 Depending on our usage of custom project, this may introduce some breaking changes.
 If you previously included some file from `product` folder, now `app.jsx` has been changed to call `main.jsx`. Please take a look on how the main product uses this to migrate your changes inside your custom project.
 
@@ -95,7 +95,7 @@ We suggest you to:
 
 ### Side Effect Management - Introduced redux-observable
 To manage complex asynchronous operations the thunk middleware is not enough.
-When we started with MapStore 2 there was no alternative to thunk. Now we have some options. After a spike (results available [here](https://github.com/geosolutions-it/MapStore2/issues/1420)) we chose to use redux-observable.
+When we started with MapStore there was no alternative to thunk. Now we have some options. After a spike (results available [here](https://github.com/geosolutions-it/MapStore2/issues/1420)) we chose to use redux-observable.
 For the future, we strongly recommend to use this library to perform asynchronous tasks.
 
 Introducing this library will allow to :

@@ -1,6 +1,6 @@
-# Developing with MapStore2
+# Developing with MapStore
 
-This section is about developing your own application using the MapStore2 framework.
+This section is about developing your own application using the MapStore framework.
 
  * [Project Structure](../project-structure)
  * [Front-end Technologies](../reactjs-and-redux-introduction)
@@ -18,11 +18,11 @@ This section is about developing your own application using the MapStore2 framew
 
 ## Useful references
 
-If you want to create an application based on MapStore2 you can use the [Project Creation Script](project-creation-script).
+If you want to create an application based on MapStore you can use the [Project Creation Script](project-creation-script).
 
-If you want to learn how to develop a simple MapStore2 based application you can follow the [tutorial](application-tutorial)
+If you want to learn how to develop a simple MapStore based application you can follow the [tutorial](application-tutorial)
 
-If you want to learn how to develop a plug-in based MapStore2 based application you can follow the [plugins tutorial](../plugins-architecture#building-an-application-using-plugins)
+If you want to learn how to develop a plug-in based MapStore based application you can follow the [plugins tutorial](../plugins-architecture#building-an-application-using-plugins)
 
 ## Other references
 

@@ -1,4 +1,4 @@
-site_name: MapStore2
+site_name: MapStore
 site: 'https://mapstore.geo-solutions.it'
 theme:
   name: 'material'
@@ -64,7 +64,7 @@ pages:
   - Developer Guide:
     - Dev Setup and Run: 'developer-guide/index.md'
     - Infrastructure: 'developer-guide/infrastructure-and-general-architecture.md'
-    - Developing with MapStore2: 'developer-guide/developing-with-mapstore-2-intro.md'
+    - Developing with MapStore: 'developer-guide/developing-with-mapstore-2-intro.md'
     - Configuration: 'developer-guide/configuration-files.md'
     - Migration: 'developer-guide/mapstore-migration-guide.md'
     - How to Release: 'developer-guide/release.md'
