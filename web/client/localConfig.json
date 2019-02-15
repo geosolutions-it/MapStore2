@@ -281,7 +281,7 @@
             },
             "Tutorial", "MapFooter", {
                 "name": "Measure"
-            }, "Print", "ShapeFile", "Timeline", "Playback", {
+            }, "Print", "MapImport", "MapExport", "Timeline", "Playback", {
                 "name": "Settings",
                 "cfg": {
                     "wrap": true

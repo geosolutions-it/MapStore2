@@ -12,6 +12,7 @@ const LOADING = 'IMPORT::LOADING';
 const ON_LAYER_ADDED = 'IMPORT::ON_LAYER_ADDED';
 const UPDATE_BBOX = 'IMPORT::UPDATE_BBOX';
 const ON_SUCCESS = 'IMPORT::ON_SUCCESS';
+const ON_SHAPE_ERROR = 'ON_SHAPE_ERROR';
 
 function setLayers(layers, errors) {
     return {
@@ -56,6 +57,12 @@ function onSuccess(message) {
         message
     };
 }
+function onShapeError(message) {
+    return {
+        type: ON_SHAPE_ERROR,
+        message
+    };
+}
 
 module.exports = {
     SET_LAYERS,
@@ -65,6 +72,8 @@ module.exports = {
     ON_LAYER_ADDED,
     UPDATE_BBOX,
     ON_SUCCESS,
+    ON_SHAPE_ERROR,
+    onShapeError,
     setLayers,
     onError,
     setLoading,

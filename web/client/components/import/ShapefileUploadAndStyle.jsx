@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /**
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
@@ -8,7 +7,7 @@ const PropTypes = require('prop-types');
  */
 
 const React = require('react');
-
+const PropTypes = require('prop-types');
 const Message = require('../../components/I18N/Message');
 const LayersUtils = require('../../utils/LayersUtils');
 const LocaleUtils = require('../../utils/LocaleUtils');
@@ -16,11 +15,8 @@ const FileUtils = require('../../utils/FileUtils');
 let StyleUtils;
 const {Grid, Row, Col, Button} = require('react-bootstrap');
 const {isString} = require('lodash');
-
 const Combobox = require('react-widgets').DropdownList;
-
 const SelectShape = require('./SelectShape');
-
 const {Promise} = require('es6-promise');
 
 class ShapeFileUploadAndStyle extends React.Component {

@@ -7,18 +7,18 @@
 */
 const {connect} = require('react-redux');
 
-const {onShapeError} = require('../../actions/shapefile');
+const {onShapeError} = require('../../actions/mapimport');
 const {setStyleParameter} = require('../../actions/style');
 
 const ShapeFileUploadAndStyle = connect((state) => (
     {
         uploadOptions: {
-            error: state.shapefile && state.shapefile.error || null,
-            loading: state.shapefile && state.shapefile.loading || false }
+            error: state.mapimport && state.mapimport.error || null,
+            loading: state.mapimport && state.mapimport.loading || false }
     }
         ), {
             onShapeError: onShapeError
-        })(require('../../components/shapefile/ShapefileUploadAndStyle'));
+        })(require('../../components/import/ShapefileUploadAndStyle'));
 
 const StylePolygon = connect((state) => (
     {
