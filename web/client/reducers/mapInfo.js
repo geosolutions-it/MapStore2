@@ -209,9 +209,10 @@ function mapInfo(state = initState, action) {
         };
     }
     case MAP_CONFIG_LOADED: {
-        return {...state,
-            configuration: action.config.mapInfoConfiguration,
-            infoFormat: action.config.mapInfoConfiguration.infoFormat
+        return {
+            ...state,
+            configuration: action.config.mapInfoConfiguration || {},
+            infoFormat: action.config.mapInfoConfiguration.infoFormat || "text/plain"
         };
     }
     default:
