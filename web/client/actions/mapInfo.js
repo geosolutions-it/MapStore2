@@ -30,6 +30,9 @@ const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
 const CLOSE_IDENTIFY = 'IDENTIFY:CLOSE_IDENTIFY';
 
+const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
+const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
+
 /**
  * Private
  * @return a LOAD_FEATURE_INFO action with the response data to a wms GetFeatureInfo
@@ -240,6 +243,7 @@ module.exports = {
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
     CLOSE_IDENTIFY,
+    TOGGLE_EMPTY_MESSAGE_GFI, toggleEmptyMessageGFI,
     closeIdentify,
     getFeatureInfo,
     changeMapInfoState,

@@ -12,12 +12,13 @@ const {EXPORT_MAP} = require('../actions/mapexport');
 const { setControlProperty } = require('../actions/controls');
 
 const { mapSelector } = require('../selectors/map');
+const { mapInfoConfigurationSelector } = require('../selectors/mapInfo');
 const { layersSelector, groupsSelector } = require('../selectors/layers');
 const { mapOptionsToSaveSelector } = require('../selectors/mapsave');
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
 
 const PersistMap = {
-    mapstore2: (state) => JSON.stringify(MapUtils.saveMapConfiguration(mapSelector(state), layersSelector(state), groupsSelector(state), textSearchConfigSelector(state), mapOptionsToSaveSelector(state)))
+    mapstore2: (state) => JSON.stringify(MapUtils.saveMapConfiguration(mapSelector(state), layersSelector(state), groupsSelector(state), textSearchConfigSelector(state), mapOptionsToSaveSelector(state), mapInfoConfigurationSelector(state)))
 };
 
 

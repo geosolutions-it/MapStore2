@@ -35,7 +35,9 @@ const isMapInfoOpen = state => !!mapInfoRequestsSelector(state) && mapInfoReques
  * @param  {object} state the state
  * @return {string}       the maptype in the state
  */
-const generalInfoFormatSelector = (state) => get(state, "mapInfo.infoFormat", "text/plain");
+const generalInfoFormatSelector = (state) => get(state, "mapInfo.configuration.infoFormat", "text/plain");
+const showEmptyMessageGFISelector = (state) => get(state, "mapInfo.configuration.showEmptyMessageGFI", true);
+const mapInfoConfigurationSelector = (state) => get(state, "mapInfo.configuration", {});
 
 const measureActiveSelector = (state) => get(state, "measurement.lineMeasureEnabled") || get(state, "measurement.areaMeasureEnabled") || get(state, "measurement.bearingMeasureEnabled");
 const drawSupportActiveSelector = (state) => {
@@ -73,5 +75,7 @@ module.exports = {
     isMapInfoOpen,
     generalInfoFormatSelector,
     mapInfoRequestsSelector,
-    stopGetFeatureInfoSelector
+    stopGetFeatureInfoSelector,
+    showEmptyMessageGFISelector,
+    mapInfoConfigurationSelector
 };

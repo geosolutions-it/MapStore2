@@ -8,7 +8,14 @@
 
 
 const expect = require('expect');
-const {mapInfoRequestsSelector, generalInfoFormatSelector, stopGetFeatureInfoSelector, isMapInfoOpen} = require('../mapinfo');
+const {
+    mapInfoRequestsSelector,
+    generalInfoFormatSelector,
+    stopGetFeatureInfoSelector,
+    isMapInfoOpen,
+    mapInfoConfigurationSelector,
+    showEmptyMessageGFISelector
+} = require('../mapinfo');
 
 describe('Test mapinfo selectors', () => {
     it('test generalInfoFormatSelector default value', () => {
@@ -16,12 +23,11 @@ describe('Test mapinfo selectors', () => {
         expect(mapinfo).toBe("text/plain");
     });
     it('test generalInfoFormatSelector infoFormat: undefined', () => {
-        const mapinfo = generalInfoFormatSelector({mapInfo: {infoFormat: undefined}});
+        const mapinfo = generalInfoFormatSelector({mapInfo: {configuration: {infoFormat: undefined}}});
         expect(mapinfo).toBe("text/plain");
     });
     it('test generalInfoFormatSelector ', () => {
-        const mapinfo = generalInfoFormatSelector({mapInfo: {infoFormat: "text/html"}});
-
+        const mapinfo = generalInfoFormatSelector({mapInfo: {configuration: {infoFormat: "text/html"}}});
         expect(mapinfo).toExist();
         expect(mapinfo).toBe("text/html");
     });
@@ -106,6 +112,35 @@ describe('Test mapinfo selectors', () => {
             featuregrid: {
                 mode: "EDIT"
             }
+        });
+        expect(props).toEqual(true);
+    });
+    it('test mapInfoConfigurationSelector', () => {
+        const infoFormat = "text/html";
+        const showEmptyMessageGFI = true;
+        const props = mapInfoConfigurationSelector({
+            mapInfo: {
+                configuration: {
+                    infoFormat,
+                    showEmptyMessageGFI
+                }
+            }
+        });
+        expect(props.infoFormat).toEqual(infoFormat);
+        expect(props.showEmptyMessageGFI).toEqual(showEmptyMessageGFI);
+    });
+    it('test showEmptyMessageGFISelector true', () => {
+        const showEmptyMessageGFI = false;
+        let props = showEmptyMessageGFISelector({
+            mapInfo: {
+                configuration: {
+                    showEmptyMessageGFI
+                }
+            }
+        });
+        expect(props).toEqual(showEmptyMessageGFI);
+        props = showEmptyMessageGFISelector({
+            mapInfo: {}
         });
         expect(props).toEqual(true);
     });

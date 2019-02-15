@@ -20,6 +20,7 @@ const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('.
 const {mapSelector} = require('../selectors/map');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
+const {mapInfoConfigurationSelector} = require('../selectors/mapInfo');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {indexOf} = require('lodash');
 const uuid = require('uuid/v1');
@@ -41,13 +42,15 @@ const selector = createSelector(
         groupsSelector,
         mapOptionsToSaveSelector,
         saveAsStateSelector,
-        (map, layers, groups, additionalOptions, saveAsState) => ({
+        mapInfoConfigurationSelector,
+        (map, layers, groups, additionalOptions, saveAsState, mapInfoConfiguration) => ({
     currentZoomLvl: map && map.zoom,
     map,
     layers,
     groups,
     additionalOptions,
-    ...saveAsState
+    ...saveAsState,
+    mapInfoConfiguration
 }));
 
 class SaveAs extends React.Component {
@@ -75,7 +78,8 @@ class SaveAs extends React.Component {
         metadataChanged: PropTypes.func,
         onMapSave: PropTypes.func,
         loadMapInfo: PropTypes.func,
-        textSearchConfig: PropTypes.object
+        textSearchConfig: PropTypes.object,
+        mapInfoConfiguration: PropTypes.object
     };
 
     static contextTypes = {
@@ -140,7 +144,7 @@ class SaveAs extends React.Component {
 
     // this method creates the content for the Map Resource
     createV2Map = () => {
-        return MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions);
+        return MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions, this.props.mapInfoConfiguration);
     };
 
     saveMap = (id, name, description) => {
