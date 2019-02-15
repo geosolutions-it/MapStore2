@@ -97,7 +97,8 @@ const CollapseTrayButton = ({ expanded, onClick = () => { } } = {}) =>
     (<Button
         tooltipId={expanded ? "widgets.tray.collapseTray" : "widgets.tray.expandTray"}
         bsSize="xsmall"
-        bsStyle="primary"
+        bsStyle="default"
+        style={{ borderColor: 'transparent' }}
         onClick={onClick}>
         <Glyphicon glyph={expanded ? "chevron-right" : "chevron-left"} />
     </Button>);
@@ -118,7 +119,7 @@ const CollapseAllButton = connect(
 )(({ onClick = () => { }, shouldExpand = false } = {}) =>
     (<Button
         tooltipId={shouldExpand ? "widgets.tray.expandAll" : "widgets.tray.collapseAll"}
-        bsStyle={shouldExpand ? "primary" : undefined}
+        bsStyle={shouldExpand ? "primary" : "success active"}
 
         bsSize="xsmall"
         onClick={onClick}>
@@ -147,7 +148,7 @@ class WidgetsTray extends React.Component {
         return this.props.enabled
             ? (<div className="widgets-tray"
                 style={{
-                    marginBottom: 31,
+                    marginBottom: 34,
                     marginRight: 60,
                     bottom: 0,
                     right: 0,

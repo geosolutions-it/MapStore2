@@ -45,7 +45,7 @@ module.exports = compose(
             buttons: widgets.map(w => ({
                 glyph: getWidgetIcon(w),
                 tooltip: w.title,
-                bsStyle: w.collapsed ? "primary" : "normal",
+                className: w.collapsed ? "btn-tray" : "btn-tray active",
                 onClick: () => onClick(w)
             }))
         })
