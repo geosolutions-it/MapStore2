@@ -44,7 +44,7 @@ const filterOnMatrix = (SRS, matrixIds) => {
 const getThumb = (dc) => {
     let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
     return head([].filter.call( refs, (ref) => {
-        return ref.scheme === "WWW:LINK-1.0-http--image-thumbnail" || ref.scheme === "thumbnail" || (ref.scheme === "WWW:DOWNLOAD-1.0-http--download" && (ref.value || "").indexOf(`${dc.identifier || ""}-thumb`) !== -1);
+        return ref.scheme === "WWW:LINK-1.0-http--image-thumbnail" || ref.scheme === "thumbnail" || (ref.scheme === "WWW:DOWNLOAD-1.0-http--download" && (ref.value || "").indexOf(`${dc.identifier || ""}-thumb`) !== -1) || (ref.scheme === "WWW:DOWNLOAD-REST_MAP" && (ref.value || "").indexOf(`${dc.identifier || ""}-thumb`) !== -1);
     }));
 };
 
@@ -57,6 +57,7 @@ const converters = {
                 let dc = record.dc;
                 let thumbURL;
                 let wms;
+                let esri;
                 // look in URI objects for wms and thumbnail
                 if (dc && dc.URI) {
                     const URI = isArray(dc.URI) ? dc.URI : (dc.URI && [dc.URI] || []);
@@ -72,6 +73,14 @@ const converters = {
                         let urlObj = urlUtil.parse(wms.value, true);
                         let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
                         wms = assign({}, wms, {name: layerName} );
+                    }
+                }// checks for esri arcgis in geonode csw
+                if (!wms && dc && dc.references && dc.references.length) {
+                    let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
+                    esri = head([].filter.call(refs, (ref) => { return ref.scheme && ref.scheme === "WWW:DOWNLOAD-REST_MAP"; }));
+                    if (esri) {
+                        let layerName = dc.alternative;
+                        esri = assign({}, esri, {name: layerName} );
                     }
                 }
                 if (!thumbURL && dc && dc.references) {
@@ -117,6 +126,18 @@ const converters = {
                     };
                     references.push(wmsReference);
                 }
+                if (esri && esri.name) {
+                    let esriReference = {
+                        type: 'arcgis',
+                        url: esri.value,
+                        SRS: [],
+                        params: {
+                            name: esri.name
+                        }
+                    };
+                    references.push(esriReference);
+                }
+
                 if (thumbURL) {
                     let absolute = (thumbURL.indexOf("http") === 0);
                     if (!absolute) {
@@ -150,8 +171,23 @@ const converters = {
                 service: records.service,
                 boundingBox: WMS.getBBox(record),
                 dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
-                    values: dim._ && dim._.split(',') || []
-                }, dim.$ || {})),
+                        values: dim._ && dim._.split(',') || []
+                    }, dim.$ || {}))
+                    // TODO: re-enable when support to inline values is full (now timeline miss snap, auto-select and forward-backward buttons enabled/disabled for this kind of values)
+                    // TODO: replace with capabilities URL service. something like this:
+                    /*
+                    .map(dim => dim && dim.name !== "time" ? dim : {
+                        ...dim,
+                        values: undefined, <-- remove values (they can be removed from dimension's epic instead, using them as initial value)
+                        source: { <-- add the source
+                            type: "wms-capabilities",
+                            url: options.url
+                        }
+                    })
+                    */
+                    // excludes time from dimensions. TODO: remove when time from WMS capabilities is supported
+                    .filter(dim => dim && dim.name !== "time"),
+
                 references: [{
                     type: "OGC:WMS",
                     url: options && options.url,
@@ -248,6 +284,10 @@ const extractOGCServicesReferences = (record = { references: [] }) => ({
     wmts: head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMTS"
         || reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-map") > -1)))
 });
+const extractEsriReferences = (record = { references: [] }) => ({
+    esri: head(record.references.filter(reference => reference.type && (reference.type === "ESRI:SERVER"
+        || reference.type === "arcgis" )))
+});
 const getRecordLinks = (record) => {
     let wmsGetCap = head(record.references.filter(reference => reference.type &&
         reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-capabilities") > -1));
@@ -288,6 +328,7 @@ const CatalogUtils = {
     removeParameters,
     getRecordLinks,
     extractOGCServicesReferences,
+    extractEsriReferences,
     /**
      * Convert a record into a MS2 layer
      * @param  {Object} record            The record
@@ -335,6 +376,31 @@ const CatalogUtils = {
     },
     getCatalogRecords: (format, records, options) => {
         return converters[format] && converters[format](records, options) || null;
+    },
+    esriToLayer: (record) => {
+        if (!record || !record.references) {
+            // we don't have a valid record so no buttons to add
+            return null;
+        }
+        // let's extract the references we need
+        const {esri} = extractEsriReferences(record);
+        return {
+            type: esri.type,
+            url: esri.url,
+            visibility: true,
+            dimensions: record.dimensions || [],
+            name: esri.params && esri.params.name,
+            bbox: {
+                crs: record.boundingBox.crs,
+                bounds: {
+                    minx: record.boundingBox.extent[0],
+                    miny: record.boundingBox.extent[1],
+                    maxx: record.boundingBox.extent[2],
+                    maxy: record.boundingBox.extent[3]
+                }
+            }
+        };
+
     }
 };
 module.exports = CatalogUtils;

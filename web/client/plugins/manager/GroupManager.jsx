@@ -28,6 +28,7 @@ class GroupManager extends React.Component {
         typeAhead: PropTypes.bool,
         splitTools: PropTypes.bool,
         isSearchClickable: PropTypes.bool,
+        showOptions: PropTypes.bool,
         searchText: PropTypes.string,
         onSearch: PropTypes.func,
         onSearchReset: PropTypes.func,
@@ -43,6 +44,7 @@ class GroupManager extends React.Component {
         splitTools: false,
         placeholderMsgId: "usergroups.searchGroups",
         typeAhead: false,
+        showOptions: false,
         searchText: "",
         start: 0,
         limit: 20,
@@ -61,6 +63,7 @@ class GroupManager extends React.Component {
             <SearchBar
                 className={this.props.className}
                 splitTools={this.props.splitTools}
+                showOptions={this.props.showOptions}
                 isSearchClickable={this.props.isSearchClickable}
                 hideOnBlur={this.props.hideOnBlur}
                 placeholderMsgId ={this.props.placeholderMsgId}

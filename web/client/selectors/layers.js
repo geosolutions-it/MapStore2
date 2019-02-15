@@ -25,6 +25,8 @@ const geoColderSelector = state => state.search && state.search;
 // to avoid this separate loading from the layer object
 
 const centerToMarkerSelector = (state) => get(state, "mapInfo.centerToMarker", '');
+const additionalLayersSelector = state => get(state, "additionallayers", []);
+
 const defaultIconStyle = {
     iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
@@ -35,9 +37,18 @@ const defaultIconStyle = {
 };
 
 const layerSelectorWithMarkers = createSelector(
-    [layersSelector, markerSelector, geoColderSelector, centerToMarkerSelector, highlightPointSelector],
-    (layers = [], markerPosition, geocoder, centerToMarker, highlightPoint) => {
-        let newLayers = [...layers];
+
+    [layersSelector, markerSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector, highlightPointSelector],
+    (layers = [], markerPosition, geocoder, centerToMarker, additionalLayers, highlightPoint) => {
+
+        // Perform an override action on the layers using options retrieved from additional layers
+        const overrideLayers = additionalLayers.filter(({actionType}) => actionType === 'override');
+        const overlayLayers = additionalLayers.filter(({actionType}) => actionType === 'overlay').map(l => l.options);
+        let newLayers = layers.map(layer => {
+            const { options } = head(overrideLayers.filter(overrideLayer => overrideLayer.id === layer.id)) || {};
+            return options ? {...layer, ...options} : {...layer};
+        });
+        newLayers = newLayers.concat(overlayLayers);
         if ( markerPosition ) {
             const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
             newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", coords));

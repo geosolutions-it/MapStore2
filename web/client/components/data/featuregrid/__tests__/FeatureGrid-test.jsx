@@ -41,7 +41,7 @@ describe('Test for FeatureGrid component', () => {
             key: "test_tool",
             name: '',
             width: 35,
-            locked: true,
+            frozen: true,
             events: {
                 onClick: () => {}
             },

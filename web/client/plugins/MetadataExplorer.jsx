@@ -13,14 +13,13 @@ const assign = require('object-assign');
 const {createSelector} = require("reselect");
 const {Glyphicon, Panel} = require('react-bootstrap');
 const ContainerDimensions = require('react-container-dimensions').default;
-const Dock = require('react-dock').default;
 
 const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
     changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
     addLayer, addLayerError, resetCatalog, focusServicesList, changeText} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
 const {currentLocaleSelector} = require("../selectors/locale");
-const {setControlProperty, toggleControl} = require("../actions/controls");
+const {setControlProperty} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
     servicesSelector, formatsSelector, loadingErrorSelector, selectedServiceSelector,
@@ -30,6 +29,7 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const Message = require("../components/I18N/Message");
+const DockPanel = require("../components/misc/panels/DockPanel");
 require('./metadataexplorer/css/style.css');
 
 const CatalogUtils = require('../utils/CatalogUtils');
@@ -115,8 +115,7 @@ class MetadataExplorerComponent extends React.Component {
         width: 660,
         dockProps: {
             dimMode: "none",
-            size: 0.30,
-            fluid: true,
+            fluid: false,
             position: "right",
             zIndex: 1030
         },
@@ -125,18 +124,25 @@ class MetadataExplorerComponent extends React.Component {
 
     render() {
         const panel = <Catalog zoomToLayer={this.props.zoomToLayer} searchOnStartup={this.props.searchOnStartup} active={this.props.active} {...this.props}/>;
-        const panelHeader = (<span><Glyphicon glyph="folder-open"/> <span className="metadataexplorer-panel-title"><Message msgId="catalog.title"/></span><span className="shapefile-panel-close panel-close" onClick={ toggleControl.bind(null, 'styler', null)}></span><button onClick={this.props.toggleControl} className="catalog-close close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph} /> : <span>×</span>}</button></span>);
-        return this.props.active ? (
-            <ContainerDimensions>
-            { ({ width }) =>
-                <Dock dockStyle={this.props.dockStyle} {...this.props.dockProps} isVisible={this.props.active} size={this.props.width / width > 1 ? 1 : this.props.width / width} >
-                    <Panel id={this.props.id} header={panelHeader} style={this.props.panelStyle} className={this.props.panelClassName}>
-                        {panel}
-                    </Panel>
-                </Dock>
-            }
-            </ContainerDimensions>
-        ) : null;
+        return (
+            <div style={{width: '100%', height: '100%', pointerEvents: 'none'}}>
+                <ContainerDimensions>
+                    {({ width }) => (<DockPanel
+                        open={this.props.active}
+                        size={this.props.width / width > 1 ? width : this.props.width}
+                        position="right"
+                        bsStyle="primary"
+                        title={<Message msgId="catalog.title"/>}
+                        onClose={() => this.props.toggleControl()}
+                        glyph="folder-open"
+                        style={this.props.dockStyle}>
+                        <Panel id={this.props.id} style={this.props.panelStyle} className={this.props.panelClassName}>
+                            {panel}
+                        </Panel>
+                    </DockPanel>)}
+                </ContainerDimensions>
+            </div>
+        );
     }
 }
 

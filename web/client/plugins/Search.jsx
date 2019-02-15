@@ -1,24 +1,31 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
-
+*/
+const PropTypes = require('prop-types');
 const React = require('react');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
-
 const assign = require('object-assign');
-
 const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('./locale/Message');
-
 const {get, isArray} = require('lodash');
+const {searchEpic, searchItemSelected, zoomAndAddPointEpic} = require('../epics/search');
 
-const {resultsPurge, resetSearch, addMarker, searchTextChanged, textSearch, selectSearchItem, cancelSelectedItem} = require("../actions/search");
+const {
+    resultsPurge,
+    resetSearch,
+    addMarker,
+    searchTextChanged,
+    textSearch,
+    selectSearchItem,
+    cancelSelectedItem,
+    changeActiveSearchTool,
+    zoomAndAddPoint
+} = require("../actions/search");
 
 const searchSelector = createSelector([
     state => state.search || null
@@ -26,12 +33,15 @@ const searchSelector = createSelector([
     error: searchState && searchState.error,
     loading: searchState && searchState.loading,
     searchText: searchState ? searchState.searchText : "",
+    activeSearchTool: get(searchState, "activeSearchTool", "address"),
     selectedItems: searchState && searchState.selectedItems
 }));
 
 const SearchBar = connect(searchSelector, {
     // ONLY FOR SAMPLE - The final one will get from state and simply call textSearch
     onSearch: textSearch,
+    onChangeActiveSearchTool: changeActiveSearchTool,
+    onZoomToPoint: zoomAndAddPoint,
     onPurgeResults: resultsPurge,
     onSearchReset: resetSearch,
     onSearchTextChange: searchTextChanged,
@@ -157,6 +167,7 @@ const SearchPlugin = connect((state) => ({
 class extends React.Component {
     static propTypes = {
         splitTools: PropTypes.bool,
+        showOptions: PropTypes.bool,
         isSearchClickable: PropTypes.bool,
         fitResultsToMapSize: PropTypes.bool,
         searchOptions: PropTypes.object,
@@ -175,6 +186,7 @@ class extends React.Component {
         },
         isSearchClickable: false,
         splitTools: true,
+        showOptions: true,
         resultsStyle: {
             color: '#3388ff',
             weight: 4,
@@ -207,7 +219,7 @@ class extends React.Component {
 
     getSearchAndToggleButton = () => {
         const search = (<SearchBar
-            key="seachBar"
+            key="searchBar"
             {...this.props}
             searchOptions={this.getCurrentServices()}
             placeholder={this.getServiceOverrides("placeholder")}
@@ -248,7 +260,6 @@ class extends React.Component {
         ;
     }
 });
-const {searchEpic, searchItemSelected} = require('../epics/search');
 
 module.exports = {
     SearchPlugin: assign(SearchPlugin, {
@@ -259,7 +270,7 @@ module.exports = {
             priority: 1
         }
     }),
-    epics: {searchEpic, searchItemSelected},
+    epics: {searchEpic, searchItemSelected, zoomAndAddPointEpic},
     reducers: {
         search: require('../reducers/search'),
         mapInfo: require('../reducers/mapInfo')

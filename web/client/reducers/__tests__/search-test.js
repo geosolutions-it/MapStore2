@@ -7,7 +7,16 @@
  */
 var expect = require('expect');
 var search = require('../search');
-const {TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_LOADING, TEXT_SEARCH_ERROR, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_CANCEL_ITEM, UPDATE_RESULTS_STYLE} = require('../../actions/search');
+const {
+    TEXT_SEARCH_RESULTS_LOADED,
+    TEXT_SEARCH_LOADING,
+    TEXT_SEARCH_ERROR,
+    TEXT_SEARCH_RESULTS_PURGE,
+    TEXT_SEARCH_NESTED_SERVICES_SELECTED,
+    TEXT_SEARCH_CANCEL_ITEM,
+    UPDATE_RESULTS_STYLE,
+    changeActiveSearchTool
+} = require('../../actions/search');
 
 describe('Test the search reducer', () => {
     it('search results loading', () => {
@@ -118,5 +127,10 @@ describe('Test the search reducer', () => {
             style
         });
         expect(state.style).toEqual(style);
+    });
+    it('update active search tool', () => {
+        const activeSearchTool = "decimal";
+        const state = search({}, changeActiveSearchTool(activeSearchTool));
+        expect(state.activeSearchTool).toEqual(activeSearchTool);
     });
 });
