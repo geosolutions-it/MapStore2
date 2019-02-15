@@ -352,4 +352,10 @@ NLS.OS_npe
 NLS.OS_7th
 NLS.OS_London
 NLS.GSGS_Ireland
+PDOK.brtachtergrondkaart
+PDOK.brtachtergrondkaartgrijs
+PDOK.brtachtergrondkaartpastel
+PDOK.brtachtergrondkaartwater
+PDOK.luchtfotoRGB
+PDOK.luchtfotoIR
 ```
