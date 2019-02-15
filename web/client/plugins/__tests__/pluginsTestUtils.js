@@ -12,6 +12,16 @@ import {Provider} from 'react-redux';
 import { createStore, combineReducers, applyMiddleware } from 'redux';
 import { combineEpics, createEpicMiddleware } from 'redux-observable';
 
+import map from '../../reducers/layers';
+import layers from '../../reducers/layers';
+
+// StandardStore add by default current reducers
+const rootReducers = {
+    map,
+    layers,
+    mapInitialConfig: map
+};
+
 const createRegisterActionsMiddleware = (actions) => {
     return () => next => action => {
         actions.push(action);
@@ -47,7 +57,7 @@ export const getPluginForTest = (pluginDef, storeState, plugins) => {
         .reduce((previous, key) => {
             return { ...previous, [key]: PluginImpl[key]};
         }, {});
-    const reducer = combineReducers(pluginDef.reducers || {});
+    const reducer = combineReducers({ ...pluginDef.reducers, ...rootReducers } || {});
 
     const rootEpic = combineEpics.apply(null, Object.keys(pluginDef.epics || {}).map(key => pluginDef.epics[key]) || []);
     const epicMiddleware = createEpicMiddleware(rootEpic);

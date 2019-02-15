@@ -400,7 +400,6 @@ module.exports = {
         onFontError: errorLoadingFont
     })(MapPlugin),
     reducers: {
-        layers: require('../reducers/layers'),
         draw: require('../reducers/draw'),
         highlight: require('../reducers/highlight'),
         maptype: require('../reducers/maptype'),
