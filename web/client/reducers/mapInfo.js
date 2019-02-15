@@ -100,7 +100,6 @@ function mapInfo(state = initState, action) {
     }
     case CHANGE_MAPINFO_FORMAT: {
         return {...state,
-            infoFormat: action.infoFormat,
             configuration: {
                 ...state.configuration,
                 infoFormat: action.infoFormat
@@ -211,8 +210,7 @@ function mapInfo(state = initState, action) {
     case MAP_CONFIG_LOADED: {
         return {
             ...state,
-            configuration: action.config.mapInfoConfiguration || {},
-            infoFormat: action.config.mapInfoConfiguration.infoFormat || "text/plain"
+            configuration: action.config.mapInfoConfiguration || state.configuration || {}
         };
     }
     default:

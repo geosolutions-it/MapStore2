@@ -218,11 +218,11 @@ describe('Test the mapInfo reducer', () => {
     it('change mapinfo format', () => {
         let state = mapInfo({}, {type: 'CHANGE_MAPINFO_FORMAT', infoFormat: "testFormat"});
         expect(state).toExist();
-        expect(state.infoFormat).toBe("testFormat");
+        expect(state.configuration.infoFormat).toBe("testFormat");
 
-        state = mapInfo({infoFormat: 'oldFormat'}, {type: 'CHANGE_MAPINFO_FORMAT', infoFormat: "newFormat"});
+        state = mapInfo({configuration: {infoFormat: 'oldFormat'}}, {type: 'CHANGE_MAPINFO_FORMAT', infoFormat: "newFormat"});
         expect(state).toExist();
-        expect(state.infoFormat).toBe('newFormat');
+        expect(state.configuration.infoFormat).toBe('newFormat');
     });
 
     it('show reverese geocode', () => {

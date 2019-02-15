@@ -17,7 +17,7 @@ const {layersSelector} = require('../selectors/layers');
 
 const {getFeatureInfo, getVectorInfo, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults} = require('../actions/mapInfo');
 const {changeMousePointer} = require('../actions/map');
-const {showEmptyMessageGFISelector} = require('../selectors/mapInfo');
+const {showEmptyMessageGFISelector, generalInfoFormatSelector} = require('../selectors/mapInfo');
 const {currentLocaleSelector} = require('../selectors/locale');
 
 const {compose, defaultProps} = require('recompose');
@@ -37,7 +37,7 @@ const selector = createSelector([
     (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
     (state) => state.mapInfo && state.mapInfo.responses || [],
     (state) => state.mapInfo && state.mapInfo.requests || [],
-    (state) => state.mapInfo && state.mapInfo.infoFormat,
+    (state) => generalInfoFormatSelector(state),
     mapSelector,
     layersSelector,
     (state) => state.mapInfo && state.mapInfo.clickPoint,
@@ -160,6 +160,18 @@ const identifyDefaultProps = defaultProps({
  *       }
  *    }
  * }
+ *
+ * If you want ot configure the showEmptyMessageGFI you need to update the "initialState.defaultState"
+ * @example
+ * ```
+ * "mapInfo": {
+ *   "enabled": true,
+ *   "configuration": {
+ *     "showEmptyMessageGFI": false
+ *   }
+ * }
+ * ```
+
  */
 
 const IdentifyPlugin = compose(
@@ -185,7 +197,7 @@ const IdentifyPlugin = compose(
 
 // configuration UI
 const FeatureInfoFormatSelector = connect((state) => ({
-    infoFormat: state.mapInfo && state.mapInfo.infoFormat
+    infoFormat: generalInfoFormatSelector(state)
 }), {
     onInfoFormatChange: changeMapInfoFormat
 })(require("../components/misc/FeatureInfoFormatSelector"));

@@ -12,15 +12,12 @@ const PropTypes = require('prop-types');
     to the clipboard
 */
 
-// components required
 const React = require('react');
 const CopyToClipboard = require('react-copy-to-clipboard');
 const Message = require('../../components/I18N/Message');
 const {Glyphicon, Col, Grid, Row, Tooltip, Button, Checkbox} = require('react-bootstrap');
 const OverlayTrigger = require('../misc/OverlayTrigger');
-
 const url = require('url');
-// css required
 require('./share.css');
 
 class ShareEmbed extends React.Component {

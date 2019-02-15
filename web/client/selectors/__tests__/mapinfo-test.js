@@ -23,12 +23,11 @@ describe('Test mapinfo selectors', () => {
         expect(mapinfo).toBe("text/plain");
     });
     it('test generalInfoFormatSelector infoFormat: undefined', () => {
-        const mapinfo = generalInfoFormatSelector({mapInfo: {infoFormat: undefined}});
+        const mapinfo = generalInfoFormatSelector({mapInfo: {configuration: {infoFormat: undefined}}});
         expect(mapinfo).toBe("text/plain");
     });
     it('test generalInfoFormatSelector ', () => {
-        const mapinfo = generalInfoFormatSelector({mapInfo: {infoFormat: "text/html"}});
-
+        const mapinfo = generalInfoFormatSelector({mapInfo: {configuration: {infoFormat: "text/html"}}});
         expect(mapinfo).toExist();
         expect(mapinfo).toBe("text/html");
     });
@@ -130,9 +129,9 @@ describe('Test mapinfo selectors', () => {
         expect(props.infoFormat).toEqual(infoFormat);
         expect(props.showEmptyMessageGFI).toEqual(showEmptyMessageGFI);
     });
-    it('test showEmptyMessageGFISelector', () => {
-        const showEmptyMessageGFI = true;
-        const props = showEmptyMessageGFISelector({
+    it('test showEmptyMessageGFISelector true', () => {
+        const showEmptyMessageGFI = false;
+        let props = showEmptyMessageGFISelector({
             mapInfo: {
                 configuration: {
                     showEmptyMessageGFI
@@ -140,6 +139,10 @@ describe('Test mapinfo selectors', () => {
             }
         });
         expect(props).toEqual(showEmptyMessageGFI);
+        props = showEmptyMessageGFISelector({
+            mapInfo: {}
+        });
+        expect(props).toEqual(true);
     });
 
 });
