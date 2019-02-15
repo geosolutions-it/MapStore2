@@ -1,6 +1,6 @@
 # Quick Start
 
-You can either choose to download a standalone binary package or a WAR file to quickly start playing with MapStore2.
+You can either choose to download a standalone binary package or a WAR file to quickly start playing with MapStore.
 
 ## Binary package
 The easiest way to try out MapStore is to download and extract the binary package available on MapStore [release page](https://github.com/geosolutions-it/MapStore2/releases/latest).
