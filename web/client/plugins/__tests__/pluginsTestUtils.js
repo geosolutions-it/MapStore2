@@ -18,8 +18,7 @@ import layers from '../../reducers/layers';
 // StandardStore add by default current reducers
 const rootReducers = {
     map,
-    layers,
-    mapInitialConfig: map
+    layers
 };
 
 const createRegisterActionsMiddleware = (actions) => {
