@@ -216,7 +216,7 @@ All new front-end technologies, development procedures, best practices and guide
 
 Both for Developer and User guides, the documentation is built on the [Read the Docs](https://docs.readthedocs.io/en/latest/index.html#) documentation hosting platform. The MapStore's documentation files are available in the [docs/](https://github.com/geosolutions-it/MapStore2/tree/master/docs) section of this repository; [Mkdocs](https://docs.readthedocs.io/en/latest/intro/getting-started-with-mkdocs.html) is used in MapStore as documentation generator, you can look at the available [online documentation](https://docs.readthedocs.io/en/latest/intro/getting-started-with-mkdocs.html#getting-started-with-mkdocs) for more information on how to use it (MapStore uses his own customized [MkDocs Material theme](https://squidfunk.github.io/mkdocs-material/) for User and Developer documentations).
 
-Thank you for every contribution that helps to keep updating the MapStore's documentation.
+Thank you for every contribution that helps to keep updated the MapStore's documentation.
    
 
 ## Thank You
