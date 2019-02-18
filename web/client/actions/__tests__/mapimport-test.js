@@ -53,10 +53,10 @@ describe('map import actions', () => {
         expect(action.error).toBe("message");
     });
     it('onSelectLayer', () => {
-        const action = onSelectLayer("message");
+        const action = onSelectLayer("layer");
         expect(action).toExist();
         expect(action.type).toBe(ON_SELECT_LAYER);
-        expect(action.message).toBe("message");
+        expect(action.layer).toBe("layer");
     });
     it('setLoading', () => {
         const action = setLoading(true);

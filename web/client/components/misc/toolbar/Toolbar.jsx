@@ -8,7 +8,6 @@
 const React = require('react');
 const { ButtonGroup} = require('react-bootstrap');
 const ToolbarButton = require('./ToolbarButton');
-const {isFunction} = require('lodash');
 
 const ReactCSSTransitionGroup = require('react-addons-css-transition-group');
 /**
