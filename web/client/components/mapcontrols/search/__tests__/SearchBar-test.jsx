@@ -88,7 +88,7 @@ describe("test the SearchBar", () => {
         let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-1-close");
         expect(reset).toExist();
         let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search")[0];
-        expect(search).toBe(undefined);
+        expect(search).toExist();
         TestUtils.Simulate.click(reset);
         expect(spyReset.calls.length).toEqual(1);
         expect(input.value).toEqual("");
@@ -209,9 +209,10 @@ describe("test the SearchBar", () => {
     it('test search and reset buttons both present, splitTools=false', () => {
         const tb = ReactDOM.render(<SearchBar splitTools={false} searchText={"some val"} delay={0} typeAhead={false} />, document.getElementById("container"));
         let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-1-close");
-        let search = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-search");
+        let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search");
         expect(reset).toExist();
         expect(search).toExist();
+        expect(search.length).toBe(2);
     });
     it('test only search present, splitTools=false', () => {
         const tb = ReactDOM.render(<SearchBar splitTools={false} searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));
@@ -237,7 +238,7 @@ describe("test the SearchBar", () => {
         let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-1-close");
         let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search");
         expect(reset).toExist();
-        expect(search.length).toBe(0);
+        expect(search.length).toBe(1);
     });
     it('test zoomToPoint and reset, with decimal, with reset', () => {
         const tb = ReactDOM.render(<SearchBar format="decimal" coordinate={{"lat": 2, "lon": 2}} activeSearchTool="coordinatesSearch" showOptions searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
