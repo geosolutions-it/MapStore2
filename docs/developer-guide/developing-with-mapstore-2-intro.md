@@ -15,10 +15,10 @@ This section is about developing your own application using the MapStore framewo
 
  * [Plugins architecture](../plugins-architecture)
  * [Plugins documentation](../plugins-documentation)
- 
+
 ## Documentation guidelinees
 
-Each new feature/tool in MapStore should be documented in the [User Guide](https://mapstore2.readthedocs.io/en/latest/user-guide/home-page/) in order to explain the involved functionalities and illustrate how it works. 
+Each new feature/tool in MapStore should be documented in the [User Guide](https://mapstore2.readthedocs.io/en/latest/user-guide/home-page/) in order to explain the involved functionalities and illustrate how it works.
 
 All new front-end technologies, development procedures, best practices and guidelinees on the involved components in MapStore should be properly documented too: the [Developers Guide](https://mapstore2.readthedocs.io/en/latest/developer-guide/) must be kept up-to-date for this.
 
@@ -26,9 +26,9 @@ Both for Developer and User guides, the documentation is built on the [Read the 
 
 ## Useful references
 
-If you want to create an application based on MapStore you can use the [Project Creation Script](project-creation-script).
+If you want to create an application based on MapStore you can use the [Project Creation Script](../project-creation-script).
 
-If you want to learn how to develop a simple MapStore based application you can follow the [tutorial](application-tutorial)
+If you want to learn how to develop a simple MapStore based application you can follow the [tutorial](../application-tutorial)
 
 If you want to learn how to develop a plug-in based MapStore based application you can follow the [plugins tutorial](../plugins-architecture#building-an-application-using-plugins)
 
