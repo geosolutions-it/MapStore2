@@ -6,11 +6,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const SharePanel = require('../SharePanel');
-const ReactTestUtils = require('react-dom/test-utils');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import SharePanel from '../SharePanel';
+import ReactTestUtils from 'react-dom/test-utils';
 
 describe("The SharePanel component", () => {
     beforeEach((done) => {
@@ -54,11 +54,11 @@ describe("The SharePanel component", () => {
     it('test showAPI flag', () => {
         let cmpSharePanel = ReactDOM.render(<SharePanel showAPI={false} getCount={()=>0} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
         expect(cmpSharePanel).toExist();
-        let textareaEmbed = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "textarea");
-        expect(textareaEmbed.length).toBe(1);
+        let codeEmbed = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code");
+        expect(codeEmbed.length).toBe(1);
         cmpSharePanel = ReactDOM.render(<SharePanel showAPI getCount={()=>0} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
-        textareaEmbed = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "textarea");
-        expect(textareaEmbed.length).toBe(2);
+        codeEmbed = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code");
+        expect(codeEmbed.length).toBe(2);
     });
 
 
