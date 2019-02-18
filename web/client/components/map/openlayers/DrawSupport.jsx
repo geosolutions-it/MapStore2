@@ -269,7 +269,16 @@ class DrawSupport extends React.Component {
             if (newProps.style) {
                 this.drawLayer.setStyle((ftOl) => {
                     let originalFeature = find(head(newProps.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
-                    return parseStyles(originalFeature);
+                    if (originalFeature) {
+                        let promises = createStylesAsync(castArray(originalFeature.style));
+                        axios.all(promises).then((styles) => {
+                            ftOl.setStyle(() => parseStyles({...originalFeature, style: styles}));
+                        });
+                    } else {
+                        const styleType = this.convertGeometryTypeToStyleType(newProps.drawMethod);
+                        // if the styles is not present in the feature it uses a default one based on the drawMethod basically
+                        return parseStyles({style: VectorStyle.defaultStyles[styleType]});
+                    }
                 });
             }
         }

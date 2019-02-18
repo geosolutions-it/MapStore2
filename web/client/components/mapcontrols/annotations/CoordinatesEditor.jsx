@@ -10,7 +10,7 @@ const Toolbar = require('../../misc/toolbar/Toolbar');
 const draggableContainer = require('../../misc/enhancers/draggableContainer');
 const Message = require('../../I18N/Message');
 const {validateCoords, coordToArray} = require('../../../utils/AnnotationsUtils');
-const CoordinatesRow = require('./CoordinatesRow');
+const CoordinatesRow = require('../../misc/coordinateeditors/CoordinatesRow');
 const MeasureEditor = require('./MeasureEditor');
 
 /**
@@ -162,7 +162,7 @@ class CoordinateEditor extends React.Component {
                 tooltipId: validationCompleteButton ? 'annotations.editor.valid' : componentsValidation[type].notValid,
                 visible: true
             }, {
-            el: () => (
+            Element: () => (
                 <DropdownButton
                     noCaret
                     title={<Glyphicon glyph="cog"/>}

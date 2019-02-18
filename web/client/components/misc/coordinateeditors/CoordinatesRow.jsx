@@ -1,8 +1,8 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const {Row, Col, Glyphicon} = require('react-bootstrap');
-const Toolbar = require('../../misc/toolbar/Toolbar');
-const draggableComponent = require('../../misc/enhancers/draggableComponent');
+const Toolbar = require('../toolbar/Toolbar');
+const draggableComponent = require('../enhancers/draggableComponent');
 const CoordinateEntry = require('./CoordinateEntry');
 
 /**
