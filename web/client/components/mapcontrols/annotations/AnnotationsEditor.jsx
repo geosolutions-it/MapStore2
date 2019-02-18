@@ -308,7 +308,7 @@ class AnnotationsEditor extends React.Component {
                             }
                         }, {
                             glyph: "pencil-add",
-                            el: DropdownFeatureType,
+                            Element: DropdownFeatureType,
                             tooltipId: "annotations.addMarker",
                             visible: true,
                             onClick: this.props.onAddGeometry,

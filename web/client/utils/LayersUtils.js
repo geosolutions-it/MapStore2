@@ -74,7 +74,7 @@ const isSupportedLayer = (layer, maptype) => {
      * previously was checking for types
     */
     if (layer.type === 'empty') {
-        return maptype === 'openlayers' || maptype === 'leaflet';
+        return true;
     }
     return Layers.isSupported(layer.type) && !layer.invalid;
 };

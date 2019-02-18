@@ -59,10 +59,16 @@ describe("test the SearchBar", () => {
     });
 
     it('test search and reset buttons', () => {
-        var tb;
-
+        let tb;
         const renderSearchBar = (testHandlers, text) => {
-            return ReactDOM.render(<SearchBar searchText={text} delay={0} typeAhead={false} onSearch={testHandlers.onSearchHandler} onSearchReset={testHandlers.onSearchResetHandler} onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
+            return ReactDOM.render(
+                <SearchBar
+                searchText={text}
+                delay={0}
+                typeAhead={false}
+                onSearch={testHandlers.onSearchHandler}
+                onSearchReset={testHandlers.onSearchResetHandler}
+                onSearchTextChange={testHandlers.onSearchTextChangeHandler}/>, document.getElementById("container"));
         };
 
         const testHandlers = {
@@ -79,8 +85,10 @@ describe("test the SearchBar", () => {
         expect(input).toExist();
         input.value = "test";
         TestUtils.Simulate.change(input);
-        let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "searchclear");
+        let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-1-close");
         expect(reset).toExist();
+        let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search")[0];
+        expect(search).toBe(undefined);
         TestUtils.Simulate.click(reset);
         expect(spyReset.calls.length).toEqual(1);
         expect(input.value).toEqual("");
@@ -200,14 +208,14 @@ describe("test the SearchBar", () => {
 
     it('test search and reset buttons both present, splitTools=false', () => {
         const tb = ReactDOM.render(<SearchBar splitTools={false} searchText={"some val"} delay={0} typeAhead={false} />, document.getElementById("container"));
-        let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "searchclear");
-        let search = TestUtils.findRenderedDOMComponentWithClass(tb, "magnifying-glass");
+        let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-1-close");
+        let search = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-search");
         expect(reset).toExist();
         expect(search).toExist();
     });
     it('test only search present, splitTools=false', () => {
         const tb = ReactDOM.render(<SearchBar splitTools={false} searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));
-        let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "searchclear");
+        let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-1-close");
         expect(reset.length).toBe(0);
 
         let search = TestUtils.findRenderedDOMComponentWithClass(tb, "magnifying-glass");
@@ -217,7 +225,7 @@ describe("test the SearchBar", () => {
 
     it('test only search present, splitTools=true', () => {
         const tb = ReactDOM.render(<SearchBar splitTools searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));
-        let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "searchclear");
+        let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-1-close");
         expect(reset.length).toBe(0);
 
         let search = TestUtils.findRenderedDOMComponentWithClass(tb, "magnifying-glass");
@@ -226,10 +234,43 @@ describe("test the SearchBar", () => {
 
     it('test only reset present, splitTools=true', () => {
         const tb = ReactDOM.render(<SearchBar splitTools searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
-        let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "searchclear");
+        let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-1-close");
+        let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search");
         expect(reset).toExist();
-
-        let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "magnifying-glass");
         expect(search.length).toBe(0);
+    });
+    it('test zoomToPoint and reset, with decimal', () => {
+        const tb = ReactDOM.render(<SearchBar activeSearchTool="decimal" showOptions searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
+        let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-1-close");
+        let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search");
+        let cog = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-cog");
+        let zoom = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-zoom-to");
+        expect(cog.length).toBe(1);
+        expect(reset.length).toBe(0);
+        expect(search.length).toBe(0);
+        expect(zoom.length).toBe(1);
+    });
+
+    it('test zoomToPoint and reset, with aeronautical', () => {
+        const tb = ReactDOM.render(<SearchBar activeSearchTool="aeronautical" showOptions searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
+        let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-1-close");
+        let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search");
+        let zoom = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-zoom-to");
+        let cog = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-cog");
+        expect(cog.length).toBe(1);
+        expect(reset.length).toBe(0);
+        expect(search.length).toBe(0);
+        expect(zoom.length).toBe(1);
+
+        // check for 8 input fields
+    });
+    it('test showOptions false, only address tool visible', () => {
+        const tb = ReactDOM.render(<SearchBar showOptions={false} searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));
+        let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-search");
+        let cog = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-cog");
+        let zoom = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-zoom-to");
+        expect(reset).toExist();
+        expect(cog.length).toBe(0);
+        expect(zoom.length).toBe(0);
     });
 });

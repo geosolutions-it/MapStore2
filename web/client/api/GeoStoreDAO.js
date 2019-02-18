@@ -105,12 +105,12 @@ const Api = {
     login: function(username, password, options) {
         const url = "session/login";
         let authData;
-        return axios.post(url, null, this.addBaseUrl(_.merge({
+        return axios.post(url, null, this.addBaseUrl(_.merge((username && password) ? {
             auth: {
                 username: username,
                 password: password
             }
-        }, options))).then((response) => {
+        } : {}, options))).then((response) => {
             authData = response.data;
             return axios.get("users/user/details", this.addBaseUrl(_.merge({
                 headers: {

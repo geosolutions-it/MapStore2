@@ -5,15 +5,15 @@
 [![Inline docs](http://inch-ci.org/github/geosolutions-it/MapStore2.svg?branch=master)](http://inch-ci.org/github/geosolutions-it/MapStore2)
 [![Twitter URL](https://img.shields.io/twitter/url/https/twitter.com/fold_left.svg?style=social&label=Follow%20%40mapstore2)](https://twitter.com/mapstore2)
 
-MapStore 2
-==========
-MapStore 2 is a framework to build *web mapping* applications using standard mapping libraries, such as [OpenLayers 3](http://openlayers.org/) and [Leaflet](http://leafletjs.com/).
+MapStore
+========
+MapStore is a framework to build *web mapping* applications using standard mapping libraries, such as [OpenLayers](http://openlayers.org/) and [Leaflet](http://leafletjs.com/).
 
-MapStore 2 has several example applications:
+MapStore has several example applications:
  * MapViewer is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore)
  * MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents by server like OpenStreetMap, Google Maps, MapQuest or specific servers provided by your organization or third party.
 
-For more information check the [MapStore documentation](https://dev.mapstore2.geo-solutions.it/mapstore/docs/).
+For more information check the [MapStore documentation](https://mapstore2.readthedocs.io/en/latest/).
 
 Download
 ------------
@@ -24,7 +24,7 @@ You can download the WAR file from the latest release [here](https://github.com/
 Quick Start
 ------------
 
-There are two quick ways to test out MapStore2. Either using [Docker](https://www.docker.com/) or a local java web container like [Apache Tomcat](http://tomcat.apache.org/)
+There are two quick ways to test out MapStore. Either using [Docker](https://www.docker.com/) or a local java web container like [Apache Tomcat](http://tomcat.apache.org/)
 
 ### Using Docker
 
@@ -34,7 +34,7 @@ Pull the latest image from Docker Hub:
 
 `docker run --name mapstore -p8080:8080  geosolutionsit/mapstore2`
 
-Then you can access MapStore2 using the following URL:
+Then you can access MapStore using the following URL:
 
 [http://localhost:8080/mapstore](http://localhost:8080/mapstore)
 
@@ -42,11 +42,11 @@ Use the default credentials (admin / admin) to login and start creating your map
 
 ### Using the Web Archive (WAR file)
 
-After downloading the MapStore2 war file, install it in your java web container (e.g. Tomcat), with usual procedures for the container (normally you only need to copy the war file in the webapps subfolder).
+After downloading the MapStore war file, install it in your java web container (e.g. Tomcat), with usual procedures for the container (normally you only need to copy the war file in the webapps subfolder).
 
 If you don't have a java web container you can download Apache Tomcat from [here](https://tomcat.apache.org/download-70.cgi) and install it. You will also need a Java7 [JRE](http://www.oracle.com/technetwork/java/javase/downloads/jre7-downloads-1880261.html)
 
-Then you can access MapStore2 using the following URL (assuming the web container is on the standard 8080 port):
+Then you can access MapStore using the following URL (assuming the web container is on the standard 8080 port):
 
 [http://localhost:8080/mapstore](http://localhost:8080/mapstore)
 
@@ -54,11 +54,11 @@ Use the default credentials (admin / admin) to login and start creating your map
 
 Documentation
 -------------
-You can find more documentation about how to build, install or develop with MapStore 2 on the [documentation site](https://dev.mapstore2.geo-solutions.it/mapstore/docs/).
+You can find more documentation about how to build, install or develop with MapStore on the [documentation site](https://mapstore2.readthedocs.io/en/latest/).
 
 License
 ------------
-MapStore 2 is Free and Open Source software, it is based on OpenLayers 3, Leaflet and [ReactJS](https://facebook.github.io/react/), and is licensed under the Simplified BSD License.
+MapStore is Free and Open Source software, it is based on OpenLayers, Leaflet and [ReactJS](https://facebook.github.io/react/), and is licensed under the Simplified BSD License.
 
 
 Demo Instances
@@ -75,15 +75,11 @@ So, if you want to test latest features use DEV, if you are not that brave use S
 Start developing your custom app
 ------------
 
-Clone the repository with the --recursive option to automatically clone submodules:
+Clone the repository:
 
-`git clone --recursive https://github.com/geosolutions-it/MapStore2.git`
+`git clone https://github.com/geosolutions-it/MapStore2.git`
 
-Install NodeJS >= 7.10.0 , if needed, from [here](https://nodejs.org/en/download/releases/).
-
-Update npm to 3.x, using:
-
-`npm install -g npm@3`
+Install latest NodeJS, if needed, from [here](https://nodejs.org/en/download/releases/).( minimal versions: NodeJS >= 8, npm >= 5 )
 
 Install docma to build the documentation
 
@@ -109,11 +105,11 @@ Where version_identifier is an optional identifier of the generated war that wil
 
 Deploy the generated mapstore.war file (in web/target) to your favourite J2EE container (e.g. Tomcat).
 
-Read more on the [documentation site](https://dev.mapstore2.geo-solutions.it/mapstore/docs/).
+Read more on the [documentation site](https://mapstore2.readthedocs.io/en/latest/).
 
 Professional Support
 ---------------------
-MapStore 2 is being developed by [GeoSolutions](http://www.geo-solutions.it/) hence you can talk to us for professional support. Anyway the project is a real Open Source project hence you can contribute to it (see section below).
+MapStore is being developed by [GeoSolutions](http://www.geo-solutions.it/) hence you can talk to us for professional support. Anyway the project is a real Open Source project hence you can contribute to it (see section below).
 
 Communication
 ---------------------

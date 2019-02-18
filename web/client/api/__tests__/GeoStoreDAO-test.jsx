@@ -8,6 +8,11 @@
 
 const expect = require('expect');
 const API = require('../GeoStoreDAO');
+const axios = require("../../libs/ajax");
+const MockAdapter = require("axios-mock-adapter");
+
+let mockAxios;
+
 const SAMPLE_RULES = {
    "SecurityRuleList": {
       "SecurityRule": [
@@ -67,6 +72,16 @@ const SAMPLE_XML_RULES = "<SecurityRuleList>"
 
 describe('Test correctness of the GeoStore APIs', () => {
 
+    beforeEach(done => {
+        mockAxios = new MockAdapter(axios);
+        setTimeout(done);
+    });
+
+    afterEach(done => {
+        mockAxios.restore();
+        setTimeout(done);
+    });
+
     it('check the utility functions', () => {
         const result = API.addBaseUrl(null);
         expect(result).toIncludeKey("baseURL");
@@ -107,5 +122,27 @@ describe('Test correctness of the GeoStore APIs', () => {
     it('test generate meatadata', () => {
         const payload = API.generateMetadata("Special & chars", "&<>'\"");
         expect(payload).toBe('<description><![CDATA[&<>\'"]]></description><metadata></metadata><name><![CDATA[Special & chars]]></name>');
+    });
+
+    it('test login without credentials', (done) => {
+        mockAxios.onPost().reply(200, {
+            "access_token": "token"
+        });
+        mockAxios.onGet().reply(200);
+        API.login().then(() => {
+            expect(mockAxios.history.post[0].auth).toNotExist();
+            done();
+        });
+    });
+
+    it("test login with credentials", done => {
+        mockAxios.onPost().reply(200, { access_token: "token" });
+        mockAxios.onGet().reply(200);
+        API.login("user", "password").then(() => {
+            expect(mockAxios.history.post[0].auth).toExist();
+            expect(mockAxios.history.post[0].auth.username).toBe('user');
+            expect(mockAxios.history.post[0].auth.password).toBe("password");
+            done();
+        });
     });
 });

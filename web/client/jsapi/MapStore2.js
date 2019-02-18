@@ -109,17 +109,18 @@ const getInitialActions = (options) => {
 const MapStore2 = {
     /**
      * Instantiates an embedded MapStore2 application in the given container.
+     * MapStore2 api doesn't use StandardRouter but It relies on StandardContainer
      * @memberof MapStore2
      * @static
      * @param {string} container id of the DOM element that should contain the embedded MapStore2
      * @param {object} options set of options of the embedded app
      *  * The options object can contain the following properties, to configure the app UI and state:
      *  * **plugins**: list of plugins (and the related configuration) to be included in the app
-     *    look at [Plugins documentation](./plugins-documentation) for further details
-     *  * **config**: map configuration object for the application (look at [Map Configuration](./maps-configuration) for details)
-     *  * **configUrl**: map configuration url for the application (look at [Map Configuration](./maps-configuration) for details)
+     *    look at [Plugins documentation](https://mapstore2.readthedocs.io/en/latest/developer-guide/plugins-documentation/) for further details
+     *  * **config**: map configuration object for the application (look at [Map Configuration](https://mapstore2.readthedocs.io/en/latest/developer-guide/maps-configuration/) for details)
+     *  * **configUrl**: map configuration url for the application (look at [Map Configuration](https://mapstore2.readthedocs.io/en/latest/developer-guide/maps-configuration/) for details)
      *  * **originalUrl**: url of the original instance of MapStore. If present it will be linked inside the map using the "GoFull" plugin, present by default.
-     *  * **initialState**: allows setting the initial application state (look at [State Configuration](./app-state-configuration) for details)
+     *  * **initialState**: allows setting the initial application state (look at [State Configuration](https://mapstore2.readthedocs.io/en/latest/developer-guide/local-config/) for details)
      *
      * Styling can be configured either using a **theme**, or a complete custom **less stylesheet**, using the
      * following options properties:
@@ -166,21 +167,17 @@ const MapStore2 = {
         const {versionSelector} = require('../selectors/version');
         const {loadAfterThemeSelector} = require('../selectors/config');
 
-        const pages = [{
-            name: "embedded",
-            path: "/",
-            component: component || embedded,
-            pageConfig: {
-                pluginsConfig: options.plugins || defaultPlugins
-            }
-        }];
-
-        const StandardRouter = connect((state) => ({
+        const StandardContainer = connect((state) => ({
             locale: state.locale || {},
-            pages,
+            componentConfig: {
+                component: component || embedded,
+                config: {
+                    pluginsConfig: options.plugins || defaultPlugins
+                }
+            },
             version: versionSelector(state),
             loadAfterTheme: loadAfterThemeSelector(state)
-        }))(require('../components/app/StandardRouter'));
+        }))(require('../components/app/StandardContainer'));
         const actionTrigger = generateActionTrigger(options.startAction || "CHANGE_MAP_VIEW");
         triggerAction = actionTrigger.trigger;
         const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {
@@ -194,7 +191,7 @@ const MapStore2 = {
             appStore,
             pluginsDef,
             initialActions,
-            appComponent: StandardRouter,
+            appComponent: StandardContainer,
             printingEnabled: options.printingEnabled || false
         };
         if (options.style) {

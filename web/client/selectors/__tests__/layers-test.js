@@ -150,6 +150,88 @@ describe('Test layers selectors', () => {
         expect(props[1].style).toEqual({...defaultIconStyle, ...style});
     });
 
+
+    it('test layerSelectorWithMarkers with override layers from additionallayers', () => {
+        const state = {
+            additionallayers: [
+                 {
+                     id: 'layer_001',
+                     owner: 'styleeditor',
+                     actionType: 'override',
+                     settings: {
+                         name: 'workspace:layer_001',
+                         properties: {
+                             pop: 500000
+                         }
+                     },
+                     options: {
+                        style: 'generic'
+                     }
+                 }
+             ],
+             layers: {
+                 flat: [
+                    {
+                        type: 'wms',
+                        id: 'layer_001',
+                        style: ''
+                    }
+                ]
+            }
+         };
+        const props = layerSelectorWithMarkers(state);
+        expect(props.length).toBe(1);
+        expect(props[0]).toEqual({
+            type: 'wms',
+            id: 'layer_001',
+            style: 'generic'
+        });
+    });
+    it('test layerSelectorWithMarkers with overlay layers from additionallayers', () => {
+        const state = {
+            additionallayers: [
+                 {
+                     id: 'layer_002',
+                     owner: 'styleeditor',
+                     actionType: 'overlay',
+                     settings: {
+                         name: 'workspace:layer_001',
+                         properties: {
+                             pop: 500000
+                         }
+                     },
+                     options: {
+                        type: "vector",
+                        name: 'layer_002',
+                        id: 'layer_002',
+                        style: 'generic'
+                     }
+                 }
+             ],
+             layers: {
+                 flat: [
+                    {
+                        type: 'wms',
+                        id: 'layer_001',
+                        style: ''
+                    }
+                ]
+            }
+         };
+        const props = layerSelectorWithMarkers(state);
+        expect(props.length).toBe(2);
+        expect(props[0]).toEqual({
+            type: 'wms',
+            id: 'layer_001',
+            style: ''
+        });
+        expect(props[1]).toEqual({
+            type: "vector",
+            name: 'layer_002',
+            id: 'layer_002',
+            style: 'generic'
+        });
+    });
     it('test groupsSelector from layers flat one group', () => {
         const props = groupsSelector({layers: {
             flat: [{type: "osm", id: "layer1", group: "group1"}, {type: "wms", id: "layer2", group: "group1"}],

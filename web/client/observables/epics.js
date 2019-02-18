@@ -16,7 +16,7 @@ const start = (stream$, actions = []) => stream$
  * @memberof observables.epics
  * @param {object|object[]} startAction start action(s)
  * @param {object|object[]} endAction end action(s)
- * @param {Observable} exceptionStream$ an optional stream for exception.
+ * @param {function} exception an optional function that returns the stream for exceptions
  */
 const wrapStartStop = (startAction, endAction, exceptionStream$) => stream$ =>
 (exceptionStream$ ?

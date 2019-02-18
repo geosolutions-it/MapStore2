@@ -265,6 +265,52 @@ describe('FilterUtils', () => {
         let filterParts = FilterUtils.toOGCFilterParts(objFilter, versionOGC, nsplaceholder);
         expect(filterParts[0]).toEqual('<ogc:PropertyIsEqualTo><ogc:PropertyName>prop</ogc:PropertyName><ogc:Literal>value</ogc:Literal></ogc:PropertyIsEqualTo>');
     });
+    it('Check date field >< operator', () => {
+        const versionOGC = "1.1.0";
+        const nsplaceholder = "ogc";
+        const startDate = "2000-01-01T00:00:00.000Z";
+        const endDate = "3000-01-01T00:00:00.000Z";
+        const objFilter = {
+            featureTypeName: "topp:states",
+            groupFields: [{
+                id: 1,
+                logic: "OR",
+                index: 0
+            }],
+            filterFields: [{
+                attribute: "attributeEmpty",
+                groupId: 1,
+                exception: null,
+                operator: "><",
+                rowId: "1",
+                type: "date",
+                value: {
+                    startDate: new Date(startDate),
+                    endDate: new Date(endDate)
+                }
+            }],
+            spatialField: {
+                method: null,
+                operation: "INTERSECTS",
+                geometry: null,
+                attribute: "the_geom"
+            },
+            pagination: {
+                startIndex: 0,
+                maxFeatures: 20
+            },
+            filterType: "OGC",
+            ogcVersion: "1.1.0",
+            sortOptions: null
+        };
+
+        let filterParts = FilterUtils.toOGCFilterParts(objFilter, versionOGC, nsplaceholder);
+        expect(filterParts[0]).toEqual('<ogc:Or><ogc:PropertyIsBetween>'
+            + '<ogc:PropertyName>attributeEmpty</ogc:PropertyName>'
+                + '<ogc:LowerBoundary><ogc:Literal>' + startDate + '</ogc:Literal></ogc:LowerBoundary>'
+                + '<ogc:UpperBoundary><ogc:Literal>' + endDate + '</ogc:Literal></ogc:UpperBoundary>'
+            + '</ogc:PropertyIsBetween></ogc:Or>');
+    });
     it('Check  for options.cqlFilter are merged with existing fields', () => {
         const versionOGC = "1.1.0";
         const nsplaceholder = "ogc";
@@ -1128,6 +1174,144 @@ describe('FilterUtils', () => {
         let filter = FilterUtils.toCQLFilter(filterObj);
         expect(filter).toExist();
         expect(filter).toBe("(\"attribute3\" LIKE \'%val%\')");
+    });
+    it('Calculate one single sub group CQL filter', () => {
+        const filterObject = {
+            "featureTypeName": "topp:states",
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "OR",
+                    "index": 0
+                },
+                {
+                    "id": 1545410762560,
+                    "logic": "OR",
+                    "groupId": 1,
+                    "index": 1
+                }
+            ],
+            "filterFields": [
+                {
+                    "rowId": 1545410763916,
+                    "groupId": 1545410762560,
+                    "attribute": "STATE_NAME",
+                    "operator": "=",
+                    "value": "Alabama",
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null,
+                    "openAutocompleteMenu": false,
+                    "loading": false,
+                    "options": {
+                        "STATE_NAME": []
+                    }
+                }
+            ],
+            "spatialField": {
+                "method": null,
+                "operation": "INTERSECTS",
+                "geometry": null,
+                "attribute": "the_geom"
+            },
+            "pagination": null,
+            "filterType": "OGC",
+            "ogcVersion": "1.1.0",
+            "sortOptions": null,
+            "crossLayerFilter": null,
+            "hits": false
+        };
+        expect(FilterUtils.toCQLFilter(filterObject)).toBe('(("STATE_NAME"=\'Alabama\'))');
+    });
+    it('Calculate multiple sub group CQL filter', () => {
+        const filterObject = {
+            "featureTypeName": "topp:states",
+            "groupFields": [
+                {
+                    "id": 1,
+                    "logic": "OR",
+                    "index": 0
+                },
+                {
+                    "id": 1545411893128,
+                    "logic": "OR",
+                    "groupId": 1,
+                    "index": 1
+                }
+            ],
+            "filterFields": [
+                {
+                    "rowId": 1545411885028,
+                    "groupId": 1,
+                    "attribute": "STATE_NAME",
+                    "operator": "=",
+                    "value": "Alabama",
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null,
+                    "openAutocompleteMenu": false,
+                    "loading": false,
+                    "options": {
+                        "STATE_NAME": []
+                    }
+                },
+                {
+                    "rowId": 1545411894600,
+                    "groupId": 1545411893128,
+                    "attribute": "STATE_NAME",
+                    "operator": "=",
+                    "value": "Arizona",
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null,
+                    "openAutocompleteMenu": false,
+                    "loading": false,
+                    "options": {
+                        "STATE_NAME": []
+                    }
+                },
+                {
+                    "rowId": 1545411900160,
+                    "groupId": 1545411893128,
+                    "attribute": "STATE_NAME",
+                    "operator": "=",
+                    "value": "Arkansas",
+                    "type": "string",
+                    "fieldOptions": {
+                        "valuesCount": 0,
+                        "currentPage": 1
+                    },
+                    "exception": null,
+                    "loading": false,
+                    "openAutocompleteMenu": false,
+                    "options": {
+                        "STATE_NAME": []
+                    }
+                }
+            ],
+            "spatialField": {
+                "method": null,
+                "operation": "INTERSECTS",
+                "geometry": null,
+                "attribute": "the_geom"
+            },
+            "pagination": null,
+            "filterType": "OGC",
+            "ogcVersion": "1.1.0",
+            "sortOptions": null,
+            "crossLayerFilter": null,
+            "hits": false
+        };
+        expect(FilterUtils.toCQLFilter(filterObject)).toBe("(\"STATE_NAME\"='Alabama' OR (\"STATE_NAME\"='Arizona' OR \"STATE_NAME\"='Arkansas'))");
     });
     it('getCrossLayerCqlFilter', () => {
         const filter = FilterUtils.getCrossLayerCqlFilter({

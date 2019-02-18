@@ -13,7 +13,8 @@ const {
     LOADING,
     ON_LAYER_ADDED,
     UPDATE_BBOX,
-    ON_SUCCESS
+    ON_SUCCESS,
+    ON_SHAPE_ERROR
 } = require('../actions/mapimport');
 const {uniqWith} = require('lodash');
 const {TOGGLE_CONTROL} = require('../actions/controls');
@@ -30,6 +31,9 @@ const initialState = {
 
 function mapimport(state = initialState, action) {
     switch (action.type) {
+        case ON_SHAPE_ERROR: {
+            return assign({}, state, {error: action.message, success: null});
+        }
         case SET_LAYERS: {
             let selected = action.layers && action.layers[0] ? action.layers[0] : null;
             const errors = action.layers ? action.errors : null;
@@ -64,6 +68,7 @@ function mapimport(state = initialState, action) {
             return assign({}, state, {success: action.message, errors: null});
         }
         case TOGGLE_CONTROL: {
+            // TODO check this. if it must remain
             if (action.control === 'shapefile') {
                 return assign({}, state, {errors: null, success: null});
             }

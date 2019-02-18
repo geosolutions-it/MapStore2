@@ -11,7 +11,7 @@ const React = require('react');
 
 const Message = require('../locale/Message');
 
-const {StylePolygon, StylePolyline, StylePoint} = require('../shapefile/index');
+const {StylePolygon, StylePolyline, StylePoint} = require('./index');
 const StylePanel = require('../../components/import/style/StylePanel');
 
 const Dialog = require('../../components/misc/StandardDialog');

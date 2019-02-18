@@ -58,11 +58,25 @@ describe("test DockPanel", () => {
     });
 
     it('test fullscreen', () => {
-        ReactDOM.render(<DockPanel showFullscreen/>, document.getElementById("container"));
+        ReactDOM.render(<DockPanel showFullscreen onClose={() => {}}/>, document.getElementById("container"));
         const buttons = document.getElementsByClassName('square-button');
         expect(buttons.length).toBe(2);
         expect(buttons[0].children[0].getAttribute('class')).toBe('glyphicon glyphicon-chevron-left');
         TestUtils.Simulate.click(buttons[0]);
         expect(buttons[0].children[0].getAttribute('class')).toBe('glyphicon glyphicon-chevron-right');
+    });
+
+    it('hide header', () => {
+        ReactDOM.render(
+            <DockPanel
+                open
+                hideHeader
+                header={<div className="my-custom-head-row"/>}
+                footer={<div className="my-custom-footer"/>}>
+                <div className="my-custom-body-child"/>
+            </DockPanel>, document.getElementById("container"));
+
+        const header = document.getElementsByClassName('my-custom-head-row');
+        expect(header.length).toBe(0);
     });
 });

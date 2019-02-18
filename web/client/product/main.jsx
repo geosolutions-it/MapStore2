@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = (config, pluginsDef) => {
+module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
     const React = require('react');
     const ReactDOM = require('react-dom');
     const {connect} = require('react-redux');
@@ -44,7 +44,7 @@ module.exports = (config, pluginsDef) => {
             loadVersion
         ];
 
-        const appConfig = {
+        const appConfig = overrideConfig({
             storeOpts,
             appEpics,
             appStore,
@@ -53,7 +53,7 @@ module.exports = (config, pluginsDef) => {
             appComponent: StandardRouter,
             printingEnabled: true,
             themeCfg
-        };
+        });
 
         ReactDOM.render(
             <StandardApp {...appConfig}/>,
