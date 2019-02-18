@@ -531,12 +531,11 @@
             "showLabel": "Mostra etichetta di misurazione"
         },
         "search":{
-            "defaultSearch": "Ricerca per indirizzi",
-            "decimal": "Coordinate decimali",
-            "aeronautical": "Coordinate aeronautiche",
-            "zoomToPoint": "Zoom al punto",
+            "decimal": "Decimali",
+            "aeronautical": "Aeronautiche",
             "changeSearchInputField": "Cambia lo strumento di ricerca",
-            "placeholder": "Cerca un indirizzo",
+            "addressSearch": "Cerca un indirizzo",
+            "coordinatesSearch": "Cerca per coordinate",
             "searchservicesbutton": "Configura servizi di ricerca",
             "configpaneltitle": "Aggiungi/modifica un servizio di ricerca",
             "serviceslistlabel": "Servizi disponibili",

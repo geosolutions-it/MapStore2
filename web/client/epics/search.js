@@ -182,9 +182,13 @@ const zoomAndAddPointEpic = action$ =>
                     id: "searchPoints",
                     visibility: true,
                     style: {
-                        iconGlyph: "comment",
-                        iconShape: "circle",
-                        iconColor: "green"
+                        color: '#3388ff',
+                        weight: 4,
+                        dashArray: '',
+                        fillColor: '#3388ff',
+                        fillOpacity: 0.2,
+                        iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+                        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png"
                     }
                 }),
                 zoomToPoint(action.pos, action.zoom, action.crs)

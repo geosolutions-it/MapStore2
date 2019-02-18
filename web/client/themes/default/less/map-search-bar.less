@@ -116,13 +116,13 @@ div.MapSearchBar .input-group-addon {
 .MapSearchBar .input-group {
     background-color: @ms2-color-background;
     .searchInput {
-        width: 80%;
+        width: 75%;
         height: @square-btn-size !important;
         border: none;
         outline: none !important;
     }
     .coordinateEditor {
-        width: 80%;
+        width: 75%;
         align-items: center;
         box-sizing: border-box;
         margin: 8px 15px !important;
@@ -149,9 +149,10 @@ div.MapSearchBar .input-group-addon {
                 pointer-events: auto
             }
         }
-        width: 20%;
+        width: 25%;
         padding: 0;
-        .dropdown-menu > .active > a {
+        .dropdown-menu > .active > a,
+        .dropdown-menu > .active > a .glyphicon {
           &,
           &:hover,
           &:focus {

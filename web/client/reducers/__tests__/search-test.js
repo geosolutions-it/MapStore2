@@ -15,6 +15,8 @@ const {
     TEXT_SEARCH_NESTED_SERVICES_SELECTED,
     TEXT_SEARCH_CANCEL_ITEM,
     UPDATE_RESULTS_STYLE,
+    changeFormat,
+    changeCoord,
     changeActiveSearchTool
 } = require('../../actions/search');
 
@@ -129,8 +131,19 @@ describe('Test the search reducer', () => {
         expect(state.style).toEqual(style);
     });
     it('update active search tool', () => {
-        const activeSearchTool = "decimal";
+        const activeSearchTool = "coordinateSearch";
         const state = search({}, changeActiveSearchTool(activeSearchTool));
         expect(state.activeSearchTool).toEqual(activeSearchTool);
+    });
+    it('CHANGE_FORMAT', () => {
+        const format = "decimal";
+        const state = search({}, changeFormat(format));
+        expect(state.format).toEqual(format);
+    });
+    it('CHANGE_COORD', () => {
+        const coordinate = "lat";
+        const val = 2;
+        const state = search({}, changeCoord(coordinate, val));
+        expect(state.coordinate).toEqual({[coordinate]: val});
     });
 });

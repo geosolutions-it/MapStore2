@@ -24,23 +24,39 @@ const {
     selectSearchItem,
     cancelSelectedItem,
     changeActiveSearchTool,
-    zoomAndAddPoint
+    zoomAndAddPoint,
+    changeFormat,
+    changeCoord
 } = require("../actions/search");
+const {
+    toggleControl
+} = require("../actions/controls");
+const {
+    removeAdditionalLayer
+} = require("../actions/additionallayers");
 
 const searchSelector = createSelector([
-    state => state.search || null
-], (searchState) => ({
+    state => state.search || null,
+    state => state .controls && state.controls.searchservicesconfig || null
+], (searchState, searchservicesconfigControl) => ({
+    enabledSearchServicesConfig: searchservicesconfigControl && searchservicesconfigControl.enabled || false,
     error: searchState && searchState.error,
+    coordinate: searchState && searchState.coordinate || {},
     loading: searchState && searchState.loading,
     searchText: searchState ? searchState.searchText : "",
-    activeSearchTool: get(searchState, "activeSearchTool", "address"),
+    activeSearchTool: get(searchState, "activeSearchTool", "addressSearch"),
+    format: get(searchState, "format", "decimal"),
     selectedItems: searchState && searchState.selectedItems
 }));
 
 const SearchBar = connect(searchSelector, {
     // ONLY FOR SAMPLE - The final one will get from state and simply call textSearch
     onSearch: textSearch,
+    onChangeCoord: changeCoord,
     onChangeActiveSearchTool: changeActiveSearchTool,
+    onClearCoordinatesSearch: removeAdditionalLayer,
+    onChangeFormat: changeFormat,
+    onToggleControl: toggleControl,
     onZoomToPoint: zoomAndAddPoint,
     onPurgeResults: resultsPurge,
     onSearchReset: resetSearch,

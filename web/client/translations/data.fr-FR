@@ -532,12 +532,11 @@
             "showLabel": "Afficher l'étiquette de mesure"
         },
         "search":{
-            "defaultSearch": "Recherche par défaut",
-            "decimal": "Coordonnées décimales",
-            "aeronautical": "Coordonnées aéronautiques",
-            "zoomToPoint": "Zoom sur le point",
+            "decimal": "Décimal",
+            "aeronautical": "Aéronautique",
             "changeSearchInputField": "Changer l'outil de recherche",
-            "placeholder": "Recherche par nom de lieu",
+            "addressSearch": "Recherche par nom de lieu",
+            "coordinatesSearch": "Rechercher par coordonnées",
             "searchservicesbutton": "Configurer les services de recherche",
             "configpaneltitle": "Créer / modifier un service de recherche",
             "serviceslistlabel": "Services disponibles",
