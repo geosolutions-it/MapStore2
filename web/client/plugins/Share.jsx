@@ -21,6 +21,7 @@ import { createSelector } from 'reselect';
 import { mapSelector } from '../selectors/map';
 import { reprojectBbox, getViewportGeometry } from '../utils/CoordinatesUtils';
 import { get } from 'lodash';
+import controls from '../reducers/controls';
 
 /**
  * Get wider and valid extent in viewport
@@ -90,4 +91,5 @@ export const SharePlugin = assign(Share, {
     }
 });
 
+export const reducers = { controls };
 export const epics = shareEpics;
