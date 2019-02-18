@@ -202,7 +202,6 @@ class extends React.Component {
         },
         isSearchClickable: false,
         splitTools: true,
-        showOptions: true,
         resultsStyle: {
             color: '#3388ff',
             weight: 4,

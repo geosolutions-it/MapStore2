@@ -167,7 +167,7 @@ class SearchBar extends React.Component {
         },
         activeSearchTool: "addressSearch",
         format: "decimal",
-        showOptions: false,
+        showOptions: true,
         enabledSearchServicesConfig: false
     };
 
