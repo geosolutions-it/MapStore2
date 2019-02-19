@@ -34,18 +34,21 @@ describe('Share Plugin', () => {
         expect(document.getElementById('share-panel-dialog')).toNotExist();
     });
 
-    it('creates a Share plugin with share control enabled', () => {
+    it('creates a Share plugin with share control enabled', (done) => {
         const controls = {
             share: {
                 enabled: true
             }
         };
         const { Plugin } = getPluginForTest(SharePlugin, { controls });
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('share-panel-dialog')).toExist();
+        setTimeout(() => {
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            expect(document.getElementById('share-panel-dialog')).toExist();
+            done();
+        }, 100);
     });
 
-    it('test Share plugin on close', () => {
+    it('test Share plugin on close', (done) => {
         const controls = {
             share: {
                 enabled: true
@@ -59,39 +62,48 @@ describe('Share Plugin', () => {
         expect(actions[0].type).toBe(TOGGLE_CONTROL);
         setTimeout(() => {
             expect(document.getElementById('share-panel-dialog')).toNotExist();
+            done();
         }, 100);
     });
 
-    it('test Share plugin bbox params, EPSG:4326', () => {
-        const controls = {
-            share: {
-                enabled: true,
-                settings: {
-                    bboxEnabled: true
+    it('test Share plugin bbox params, EPSG:4326', (done) => {
+        try {
+            const controls = {
+                share: {
+                    enabled: true,
+                    settings: {
+                        bboxEnabled: true
+                    }
                 }
-            }
-        };
-        const map = {
-            bbox: {
-                bounds: {
-                    minx: 9,
-                    miny: 45,
-                    maxx: 10,
-                    maxy: 46
-                },
-                crs: 'EPSG:4326'
-            }
-        };
-        const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
-        ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('share-panel-dialog')).toExist();
-        const inputLink = document.querySelector('input[type=\'text\']');
-        const shareUrl = inputLink.value;
-        const { query } = url.parse(shareUrl);
-        expect(query).toBe('bbox=9,45,10,46');
+            };
+            const map = {
+                bbox: {
+                    bounds: {
+                        minx: 9,
+                        miny: 45,
+                        maxx: 10,
+                        maxy: 46
+                    },
+                    crs: 'EPSG:4326'
+                }
+            };
+            const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
+            ReactDOM.render(<Plugin />, document.getElementById("container"));
+            setTimeout(() => {
+                expect(document.getElementById('share-panel-dialog')).toExist();
+                const inputLink = document.querySelector('input[type=\'text\']');
+                const shareUrl = inputLink.value;
+                const splitUrl = shareUrl.split('?');
+                const query = splitUrl[splitUrl.length - 1];
+                expect(query).toBe('bbox=9,45,10,46');
+                done();
+            }, 100);
+        } catch(e) {
+            done(e);
+        }
     });
 
-    it('test Share plugin bbox params, EPSG:3857', () => {
+    it('test Share plugin bbox params, EPSG:3857', (done) => {
         const controls = {
             share: {
                 enabled: true,
@@ -113,18 +125,25 @@ describe('Share Plugin', () => {
         };
         const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('share-panel-dialog')).toExist();
-        const inputLink = document.querySelector('input[type=\'text\']');
-        const shareUrl = inputLink.value;
-        const { query } = url.parse(shareUrl, true);
-        const extent = query.bbox.split(',').map((val) => Math.floor(parseFloat(val)));
-        expect(extent[0]).toBe(-8);
-        expect(extent[1]).toBe(35);
-        expect(extent[2]).toBe(24);
-        expect(extent[3]).toBe(50);
+
+        setTimeout(() => {
+            expect(document.getElementById('share-panel-dialog')).toExist();
+            const inputLink = document.querySelector('input[type=\'text\']');
+            const shareUrl = inputLink.value;
+            const splitUrl = shareUrl.split('?');
+            const query = splitUrl[splitUrl.length - 1];
+            const { query: hashQuery } = url.parse(`?${query}`, true);
+            const extent = hashQuery.bbox.split(',').map((val) => Math.floor(parseFloat(val)));
+            expect(extent[0]).toBe(-8);
+            expect(extent[1]).toBe(35);
+            expect(extent[2]).toBe(24);
+            expect(extent[3]).toBe(50);
+            done();
+        }, 100);
+
     });
 
-    it('test Share plugin bbox params on IDL, get wider bbox on screen, EPSG:4326', () => {
+    it('test Share plugin bbox params on IDL, get wider bbox on screen, EPSG:4326', (done) => {
 
         const splitExtentLeftScreen = [
             -200,
@@ -159,11 +178,15 @@ describe('Share Plugin', () => {
         };
         const { Plugin } = getPluginForTest(SharePlugin, { controls, map });
         ReactDOM.render(<Plugin />, document.getElementById("container"));
-        expect(document.getElementById('share-panel-dialog')).toExist();
-        const inputLink = document.querySelector('input[type=\'text\']');
-        const shareUrl = inputLink.value;
-        const { query } = url.parse(shareUrl);
-        expect(query).toBe(`bbox=${join(splitExtentRightScreen, ',')}`);
+        setTimeout(() => {
+            expect(document.getElementById('share-panel-dialog')).toExist();
+            const inputLink = document.querySelector('input[type=\'text\']');
+            const shareUrl = inputLink.value;
+            const splitUrl = shareUrl.split('?');
+            const query = splitUrl[splitUrl.length - 1];
+            expect(query).toBe(`bbox=${join(splitExtentRightScreen, ',')}`);
+            done();
+        }, 100);
     });
 
 });

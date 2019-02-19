@@ -58,7 +58,8 @@ class SharePanel extends React.Component {
         bbox: PropTypes.object,
         hideAdvancedSettings: PropTypes.bool,
         settings: PropTypes.object,
-        onUpdateSettings: PropTypes.func
+        onUpdateSettings: PropTypes.func,
+        selectedTab: PropTypes.string
     };
 
     static defaultProps = {
@@ -73,12 +74,20 @@ class SharePanel extends React.Component {
         onUpdateSettings: () => {}
     };
 
-    state = {};
+    state = {
+        eventKey: 1
+    };
 
     componentWillMount() {
+        const tabs = {
+            link: 1,
+            social: 2,
+            embed: 3
+        };
         const bbox = join(this.props.bbox, ',');
         this.setState({
-            bbox
+            bbox,
+            eventKey: tabs[this.props.selectedTab] || 1
         });
     }
 
@@ -123,10 +132,10 @@ class SharePanel extends React.Component {
         const code = (<div><ShareEmbed shareUrl={shareEmbeddedUrl} {...this.props.embedOptions} />
         {this.props.showAPI ? <ShareApi baseUrl={shareApiUrl} shareUrl={shareUrl} shareConfigUrl={this.props.shareConfigUrl} version={this.props.version}/> : null}</div>);
 
-        const tabs = (<Tabs defaultActiveKey={1} id="sharePanel-tabs">
-            <Tab eventKey={1} title={<Message msgId="share.direct" />}>{direct}</Tab>
-            <Tab eventKey={2} title={<Message msgId="share.social" />}>{social}</Tab>
-            <Tab eventKey={3} title={<Message msgId="share.code" />}>{code}</Tab>
+        const tabs = (<Tabs defaultActiveKey={this.state.eventKey} id="sharePanel-tabs" onSelect={(eventKey) => this.setState({ eventKey })}>
+            <Tab eventKey={1} title={<Message msgId="share.direct" />}>{this.state.eventKey === 1 && direct}</Tab>
+            <Tab eventKey={2} title={<Message msgId="share.social" />}>{this.state.eventKey === 2 && social}</Tab>
+            <Tab eventKey={3} title={<Message msgId="share.code" />}>{this.state.eventKey === 3 && code}</Tab>
           </Tabs>);
 
         let sharePanel =

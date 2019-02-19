@@ -46,13 +46,13 @@ describe("The SharePanel component", () => {
         expect(cmpSharePanelDom).toBeFalsy();
     });
     it('test regex parsing for shareEmbeddedUrl generation', () => {
-        const cmpSharePanel = ReactDOM.render(<SharePanel getCount={()=>0} shareUrlRegex=".*" shareUrlReplaceString="ABC" shareUrl="www.geo-solutions.it" isVisible={false} />, document.getElementById("container"));
+        const cmpSharePanel = ReactDOM.render(<SharePanel selectedTab="embed" getCount={()=>0} shareUrlRegex=".*" shareUrlReplaceString="ABC" shareUrl="www.geo-solutions.it" isVisible={false} />, document.getElementById("container"));
         expect(cmpSharePanel).toExist();
         const parsed = cmpSharePanel.generateUrl("TEST", "(TE)ST", "$1");
         expect(parsed).toBe("TE");
     });
     it('test showAPI flag', () => {
-        let cmpSharePanel = ReactDOM.render(<SharePanel showAPI={false} getCount={()=>0} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
+        let cmpSharePanel = ReactDOM.render(<SharePanel selectedTab="embed" showAPI={false} getCount={()=>0} shareUrl="www.geo-solutions.it" isVisible />, document.getElementById("container"));
         expect(cmpSharePanel).toExist();
         let codeEmbed = ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code");
         expect(codeEmbed.length).toBe(1);
