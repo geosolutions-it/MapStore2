@@ -14,6 +14,7 @@ const HelpWrapper = require('./help/HelpWrapper');
 const Message = require('./locale/Message');
 const {get, isArray} = require('lodash');
 const {searchEpic, searchItemSelected, zoomAndAddPointEpic} = require('../epics/search');
+const {defaultIconStyle} = require('../utils/SearchUtils');
 
 const {
     resultsPurge,
@@ -217,7 +218,7 @@ class extends React.Component {
     };
 
     componentDidMount() {
-        this.props.onUpdateResultsStyle(this.props.resultsStyle);
+        this.props.onUpdateResultsStyle({...defaultIconStyle, ...this.props.resultsStyle});
     }
 
     getServiceOverrides = (propSelector) => {
