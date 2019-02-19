@@ -6,7 +6,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 const deleteWidget = require('./deleteWidget');
+const {compose} = require('recompose');
+const {editableWidget, hidableWidget, defaultIcons, withHeaderTools} = require('./tools');
+
 /**
  * enhancers for the text widget
  */
-module.exports = deleteWidget;
+module.exports = compose(
+    deleteWidget,
+    editableWidget(),
+    hidableWidget(),
+    defaultIcons(),
+    withHeaderTools()
+);

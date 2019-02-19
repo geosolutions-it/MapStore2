@@ -1282,9 +1282,16 @@
                     "showChartData": "Mostra dati del grafico",
                     "edit": "Modifica",
                     "delete": "Elimina",
+                    "collapse": "Minimizza",
                     "confirmDelete": "Sei sicuro?",
                     "downloadData": "Scarica dati",
-                    "exportImage": "Esporta Immagine"
+                    "exportImage": "Esporta immagine",
+                    "pin": "Blocca",
+                    "unpin": "Sblocca",
+                    "hide": "Nascondi",
+                    "hideDescription": "Nascondi questo widget per altri utenti",
+                    "unhide": "Mostra",
+                    "unhideDescription": "Mostra il widget ad altri utenti"
                 }
             },
             "chartType": {
@@ -1375,6 +1382,13 @@
             "advancedOptions":{
                 "line": "Opzioni avanzate",
                 "bar": "Opzioni avanzate"
+            },
+            "tray": {
+                "title": "widget",
+                "expandTray": "Espandi il vassoio dei widget",
+                "collapseTray": "Minimizza vassoio dei widget",
+                "expandAll": "Espandi tutti i widget",
+                "collapseAll": "Minimizza tutti i widget"
             }
         },
         "dashboard": {

@@ -6,12 +6,18 @@
  * LICENSE file in the root directory of this source tree.
  */
 const {compose, withProps} = require('recompose');
-const dependenciesToWidget = require('./dependenciesToWidget');
 const {get} = require('lodash');
+const deleteWidget = require('./deleteWidget');
+
+const {editableWidget, defaultIcons, withHeaderTools} = require('./tools');
+
 const {getScales} = require('../../../utils/MapUtils');
 
+/**
+ * map dependencies to layers, scales and current zoom level to show legend items for current zoom.
+ * Add also base tools and menu to the widget
+ */
 module.exports = compose(
-    dependenciesToWidget,
     withProps(({ dependencies = {} }) => ({
         layers: dependencies.layers || [],
         scales: getScales(
@@ -25,4 +31,8 @@ module.exports = compose(
     withProps(
         ({ layers = [] }) => ({ layers: layers.filter((l = {}) => l.group !== "background" && l.visibility !== false && l.type !== "vector")})
     ),
+    deleteWidget,
+    editableWidget(),
+    defaultIcons(),
+    withHeaderTools()
 );

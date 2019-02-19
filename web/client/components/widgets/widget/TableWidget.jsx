@@ -14,32 +14,18 @@ const loadingState = require('../../misc/enhancers/loadingState');
 const errorChartState = require('../enhancers/errorChartState');
 
 const FeatureGrid = errorChartState(loadingState(({ describeFeatureType }) => !describeFeatureType)(require('../../data/featuregrid/FeatureGrid')));
-const InfoPopover = require('./InfoPopover');
 
 const WidgetContainer = require('./WidgetContainer');
-const {
-    Glyphicon,
-    ButtonToolbar,
-    DropdownButton,
-    MenuItem
-} = require('react-bootstrap');
-
-const renderHeaderLeftTopItem = ({ title, description }) => {
-    return title || description ? <InfoPopover placement="top" title={title} text={description} /> : null;
-};
-
 
 module.exports = ({
     id,
     title,
-    description,
     loading,
     confirmDelete = false,
     headerStyle,
-    canEdit = true,
-    toggleTableView = () => { },
+    icons,
+    topRightItems,
     toggleDeleteConfirm = () => { },
-    onEdit = () => { },
     onDelete = () => { },
     gridEvents = () => {},
     pageEvents = {
@@ -58,16 +44,11 @@ module.exports = ({
         id={`widget-chart-${id}`}
         title={title}
         headerStyle={headerStyle}
-        topLeftItems={renderHeaderLeftTopItem({ loading, title, description, toggleTableView })}
+        icons={icons}
         confirmDelete={confirmDelete}
         onDelete={onDelete}
         toggleDeleteConfirm={toggleDeleteConfirm}
-        topRightItems={<ButtonToolbar>
-            {canEdit ? (<DropdownButton pullRight bsStyle="default" className="widget-menu" title={<Glyphicon glyph="option-vertical" />} noCaret id="dropdown-no-caret">
-                <MenuItem onClick={() => onEdit()} eventKey="3"><Glyphicon glyph="pencil" />&nbsp;<Message msgId="widgets.widget.menu.edit" /></MenuItem>
-                <MenuItem onClick={() => toggleDeleteConfirm(true)} eventKey="2"><Glyphicon glyph="trash" />&nbsp;<Message msgId="widgets.widget.menu.delete" /></MenuItem>
-            </DropdownButton>) : null}
-        </ButtonToolbar>}>
+        topRightItems={topRightItems}>
         <BorderLayout
             footer={pagination.totalFeatures ? (
                     <div style={{ height: "30px", overflow: "hidden"}}>
