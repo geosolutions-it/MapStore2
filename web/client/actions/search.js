@@ -21,7 +21,19 @@ const TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE = 'TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE
 const UPDATE_RESULTS_STYLE = 'UPDATE_RESULTS_STYLE';
 const CHANGE_SEARCH_TOOL = 'CHANGE_SEARCH_TOOL';
 const ZOOM_ADD_POINT = 'SEARCH:ZOOM_ADD_POINT';
+const CHANGE_FORMAT = 'SEARCH:CHANGE_FORMAT';
+const CHANGE_COORD = 'SEARCH:CHANGE_COORD';
 
+/**
+ * change the formato for coordinate editor tool
+ * @param {string} format (decimal or aeronautical)
+*/
+function changeFormat(format) {
+    return {
+        type: CHANGE_FORMAT,
+        format
+    };
+}
 /**
  * zoom to a specific point
  * @param {object} pos as array [x, y] or object {x: ..., y:...}
@@ -217,6 +229,19 @@ function updateResultsStyle(style) {
 }
 
 /**
+ * Change coordinate
+ * @memberof actions.search
+ * @param {object} coordinate
+ */
+function changeCoord(coord, val) {
+    return {
+        type: CHANGE_COORD,
+        coord,
+        val
+    };
+}
+
+/**
  * Actions for search
  * @name actions.search
  */
@@ -237,6 +262,8 @@ module.exports = {
     UPDATE_RESULTS_STYLE,
     zoomAndAddPoint, ZOOM_ADD_POINT,
     changeActiveSearchTool, CHANGE_SEARCH_TOOL,
+    changeFormat, CHANGE_FORMAT,
+    changeCoord, CHANGE_COORD,
     searchTextLoading,
     searchResultError,
     searchResultLoaded,

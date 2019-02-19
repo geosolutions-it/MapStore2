@@ -531,12 +531,11 @@
             "showLabel": "Prikaži oznaku mjerenja"
         },
         "search":{
-            "defaultSearch": "Default Search",
-            "decimal": "Decimal Coordinates",
-            "aeronautical": "Aeronautical Coordinates",
-            "zoomToPoint": "Zoom to point",
+            "decimal": "Decimal",
+            "aeronautical": "Aeronautical",
             "changeSearchInputField": "Change the search tool",
-            "placeholder": "Traži po nazivu mjesta",
+            "addressSearch": "Traži po nazivu mjesta",
+            "coordinatesSearch": "Pretraživanje po koordinatama",
             "searchservicesbutton": "Konfiguriraj servise pretraživanja",
             "configpaneltitle": "Kreiraj/izmijeni servis pretraživanja",
             "serviceslistlabel": "Dostupni servisi",

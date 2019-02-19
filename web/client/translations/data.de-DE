@@ -531,12 +531,11 @@
             "showLabel": "Zeige Bezeichnungsetikett"
         },
         "search":{
-            "defaultSearch": "Standardsuche",
-            "decimal": "Dezimalkoordinaten",
-            "aeronautical": "Luftfahrtkoordinaten",
-            "zoomToPoint": "Zoom auf Punkt",
+            "decimal": "Dezimal",
+            "aeronautical": "Luftfahrt",
             "changeSearchInputField": "Ändern Sie das Suchwerkzeug",
-            "placeholder": "Suche nach Standortname",
+            "addressSearch": "Suche nach Standortname",
+            "coordinatesSearch": "Suche nach Koordinaten",
             "searchservicesbutton": "Konfigurations-Suchdienste konfigurieren",
             "configpaneltitle": "Einen Suchdienst anlegen / bearbeiten",
             "serviceslistlabel": "Verfügbare Dienstleistungen",
