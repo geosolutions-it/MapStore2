@@ -56,7 +56,7 @@ export const getPluginForTest = (pluginDef, storeState, plugins) => {
         .reduce((previous, key) => {
             return { ...previous, [key]: PluginImpl[key]};
         }, {});
-    const reducer = combineReducers({ ...pluginDef.reducers, ...rootReducers } || {});
+    const reducer = combineReducers({ ...(pluginDef.reducers || {}), ...rootReducers });
 
     const rootEpic = combineEpics.apply(null, Object.keys(pluginDef.epics || {}).map(key => pluginDef.epics[key]) || []);
     const epicMiddleware = createEpicMiddleware(rootEpic);
