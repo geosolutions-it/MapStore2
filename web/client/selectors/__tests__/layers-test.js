@@ -111,14 +111,9 @@ describe('Test layers selectors', () => {
         }});
         expect(props.length).toBe(2);
         expect(props[1].type).toBe("vector");
-        expect(props[1].style).toEqual({
-            iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
+        const {defaultIconStyle} = require('../../utils/SearchUtils');
+
+        expect(props[1].style).toEqual(defaultIconStyle);
     });
 
     it('test layerSelectorWithMarkers with custom style', () => {
@@ -126,14 +121,7 @@ describe('Test layers selectors', () => {
             color: '#ff0000'
         };
 
-        const defaultIconStyle = {
-            iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        };
+        const {defaultIconStyle} = require('../../utils/SearchUtils');
 
         const props = layerSelectorWithMarkers({config: {layers: [{type: "osm"}]}, search: {
             markerPosition: {

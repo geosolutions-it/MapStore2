@@ -88,7 +88,7 @@ describe("test the SearchBar", () => {
         let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-1-close");
         expect(reset).toExist();
         let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search")[0];
-        expect(search).toBe(undefined);
+        expect(search).toExist();
         TestUtils.Simulate.click(reset);
         expect(spyReset.calls.length).toEqual(1);
         expect(input.value).toEqual("");
@@ -209,9 +209,10 @@ describe("test the SearchBar", () => {
     it('test search and reset buttons both present, splitTools=false', () => {
         const tb = ReactDOM.render(<SearchBar splitTools={false} searchText={"some val"} delay={0} typeAhead={false} />, document.getElementById("container"));
         let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-1-close");
-        let search = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-search");
+        let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search");
         expect(reset).toExist();
         expect(search).toExist();
+        expect(search.length).toBe(2);
     });
     it('test only search present, splitTools=false', () => {
         const tb = ReactDOM.render(<SearchBar splitTools={false} searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));
@@ -237,32 +238,28 @@ describe("test the SearchBar", () => {
         let reset = TestUtils.findRenderedDOMComponentWithClass(tb, "glyphicon-1-close");
         let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search");
         expect(reset).toExist();
-        expect(search.length).toBe(0);
+        expect(search.length).toBe(1);
     });
-    it('test zoomToPoint and reset, with decimal', () => {
-        const tb = ReactDOM.render(<SearchBar activeSearchTool="decimal" showOptions searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
+    it('test zoomToPoint and reset, with decimal, with reset', () => {
+        const tb = ReactDOM.render(<SearchBar format="decimal" coordinate={{"lat": 2, "lon": 2}} activeSearchTool="coordinatesSearch" showOptions searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
         let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-1-close");
         let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search");
         let cog = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-cog");
-        let zoom = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-zoom-to");
-        expect(cog.length).toBe(1);
-        expect(reset.length).toBe(0);
-        expect(search.length).toBe(0);
-        expect(zoom.length).toBe(1);
+        expect(reset.length).toBe(1);
+        expect(search.length).toBe(1);
+        expect(cog.length).toBe(2);
     });
 
     it('test zoomToPoint and reset, with aeronautical', () => {
-        const tb = ReactDOM.render(<SearchBar activeSearchTool="aeronautical" showOptions searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
+        const tb = ReactDOM.render(<SearchBar format="aeronautical" activeSearchTool="coordinatesSearch" showOptions searchText={"va"} delay={0} typeAhead={false} />, document.getElementById("container"));
         let reset = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-1-close");
         let search = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-search");
-        let zoom = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-zoom-to");
         let cog = TestUtils.scryRenderedDOMComponentsWithClass(tb, "glyphicon-cog");
-        expect(cog.length).toBe(1);
+        let inputs = TestUtils.scryRenderedDOMComponentsWithTag(tb, "input");
         expect(reset.length).toBe(0);
-        expect(search.length).toBe(0);
-        expect(zoom.length).toBe(1);
-
-        // check for 8 input fields
+        expect(search.length).toBe(1);
+        expect(cog.length).toBe(2);
+        expect(inputs.length).toBe(6);
     });
     it('test showOptions false, only address tool visible', () => {
         const tb = ReactDOM.render(<SearchBar showOptions={false} searchText={""} delay={0} typeAhead={false} />, document.getElementById("container"));

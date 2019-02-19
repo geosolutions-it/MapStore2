@@ -533,12 +533,11 @@
             "showLabel": "Mostra etichetta di misurazione"
         },
         "search":{
-            "defaultSearch": "Ricerca per indirizzi",
-            "decimal": "Coordinate decimali",
-            "aeronautical": "Coordinate aeronautiche",
-            "zoomToPoint": "Zoom al punto",
+            "decimal": "Decimali",
+            "aeronautical": "Aeronautiche",
             "changeSearchInputField": "Cambia lo strumento di ricerca",
-            "placeholder": "Cerca un indirizzo",
+            "addressSearch": "Cerca un indirizzo",
+            "coordinatesSearch": "Cerca per coordinate",
             "searchservicesbutton": "Configura servizi di ricerca",
             "configpaneltitle": "Aggiungi/modifica un servizio di ricerca",
             "serviceslistlabel": "Servizi disponibili",
@@ -1374,9 +1373,16 @@
                     "showChartData": "Mostra dati del grafico",
                     "edit": "Modifica",
                     "delete": "Elimina",
+                    "collapse": "Minimizza",
                     "confirmDelete": "Sei sicuro?",
                     "downloadData": "Scarica dati",
-                    "exportImage": "Esporta Immagine"
+                    "exportImage": "Esporta immagine",
+                    "pin": "Blocca",
+                    "unpin": "Sblocca",
+                    "hide": "Nascondi",
+                    "hideDescription": "Nascondi questo widget per altri utenti",
+                    "unhide": "Mostra",
+                    "unhideDescription": "Mostra il widget ad altri utenti"
                 }
             },
             "chartType": {
@@ -1467,6 +1473,13 @@
             "advancedOptions":{
                 "line": "Opzioni avanzate",
                 "bar": "Opzioni avanzate"
+            },
+            "tray": {
+                "title": "widget",
+                "expandTray": "Espandi il vassoio dei widget",
+                "collapseTray": "Minimizza vassoio dei widget",
+                "expandAll": "Espandi tutti i widget",
+                "collapseAll": "Minimizza tutti i widget"
             }
         },
         "dashboard": {

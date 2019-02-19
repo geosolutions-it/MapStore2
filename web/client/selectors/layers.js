@@ -10,6 +10,7 @@ const {createSelector} = require('reselect');
 
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
+const {defaultIconStyle} = require('../utils/SearchUtils');
 const {getNormalizedLatLon} = require('../utils/CoordinatesUtils');
 const {get, head, isEmpty, find, isObject, isArray, castArray} = require('lodash');
 
@@ -27,14 +28,6 @@ const geoColderSelector = state => state.search && state.search;
 const centerToMarkerSelector = (state) => get(state, "mapInfo.centerToMarker", '');
 const additionalLayersSelector = state => get(state, "additionallayers", []);
 
-const defaultIconStyle = {
-    iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-};
 
 const layerSelectorWithMarkers = createSelector(
 
@@ -58,10 +51,11 @@ const layerSelectorWithMarkers = createSelector(
             newLayers.push(MapInfoUtils.getMarkerLayer("Annotations", coords));
         }
         if (geocoder && geocoder.markerPosition) {
+            let geocoderStyle = isObject(geocoder.style) && geocoder.style || {};
             newLayers.push(MapInfoUtils.getMarkerLayer("GeoCoder", geocoder.markerPosition, "marker",
                 {
                     overrideOLStyle: true,
-                    style: isObject(geocoder.style) && !isEmpty(geocoder.style) && {...defaultIconStyle, ...geocoder.style} || defaultIconStyle
+                    style: {...defaultIconStyle, ...geocoderStyle}
                 }, geocoder.markerLabel
             ));
         }

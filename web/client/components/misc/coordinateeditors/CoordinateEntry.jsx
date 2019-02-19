@@ -17,7 +17,8 @@ class CoordinateEntry extends React.Component {
         format: PropTypes.string,
         aeronauticalOptions: PropTypes.object,
         coordinate: PropTypes.string,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        onKeyDown: PropTypes.func
     };
     defaultProps = {
         format: "decimal",

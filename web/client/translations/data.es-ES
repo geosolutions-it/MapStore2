@@ -533,12 +533,11 @@
             "showLabel": "Mostrar etiqueta de medición"
         },
         "search":{
-            "defaultSearch": "Búsqueda predeterminada",
-            "decimal": "Coordenadas decimales",
-            "aeronautical": "Coordenadas aeronáuticas",
-            "zoomToPoint": "Zoom al punto",
+            "decimal": "Decimal",
+            "aeronautical": "Aeronáutica",
             "changeSearchInputField": "Cambiar la herramienta de búsqueda",
-            "placeholder": "Buscar por nombre de ubicación",
+            "addressSearch": "Buscar por nombre de ubicación",
+            "coordinatesSearch": "buscar por coordenadas",
             "searchservicesbutton": "Configurar los servicios de búsqueda",
             "configpaneltitle": "Crear / modificar un sercio de búsqueda",
             "serviceslistlabel": "Servicios disponibles",
@@ -1374,9 +1373,16 @@
                     "showChartData": "Mostrar datos de gráfico",
                     "edit": "Editar",
                     "delete": "Borrar",
+                    "collapse": "Contraer",
                     "confirmDelete": "Está seguro?",
                     "downloadData": "Descargar datos",
-                    "exportImage": "Exportar imagen"
+                    "exportImage": "Exportar imagen",
+                    "pin": "Alfiler",
+                    "unpin": "Desprender",
+                    "hide": "Esconder",
+                    "hideDescription": "Ocultar este widget a otros usuarios",
+                    "unhide": "Ocultar",
+                    "unhideDescription": "Mostrar el widget a otros usuarios"
                 }
             },
             "chartType": {
@@ -1467,6 +1473,13 @@
             "advancedOptions":{
                 "line": "Opciones avanzadas",
                 "bar": "Opciones avanzadas"
+            },
+            "tray": {
+                "title": "Widgets",
+                "expandTray": "Expandir la bandeja de widgets",
+                "collapseTray": "Contraer la bandeja de widgets",
+                "expandAll": "Expandir todos los widgets",
+                "collapseAll": "Contraer todos los widgets"
             }
         },
         "dashboard": {

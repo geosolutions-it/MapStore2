@@ -18,6 +18,8 @@ var {
     UPDATE_RESULTS_STYLE,
     changeActiveSearchTool, CHANGE_SEARCH_TOOL,
     zoomAndAddPoint, ZOOM_ADD_POINT,
+    changeFormat, CHANGE_FORMAT,
+    changeCoord, CHANGE_COORD,
     searchResultLoaded,
     searchTextLoading,
     searchResultError,
@@ -106,5 +108,21 @@ describe('Test correctness of the search actions', () => {
         expect(retval.pos).toEqual(pos);
         expect(retval.zoom).toEqual(zoom);
         expect(retval.crs).toEqual(crs);
+    });
+    it('change coordinate', () => {
+        const coord = "lat";
+        const val = 12;
+        const retval = changeCoord(coord, val);
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_COORD);
+        expect(retval.coord).toEqual(coord);
+        expect(retval.val).toEqual(val);
+    });
+    it('change format', () => {
+        const format = "decimal";
+        const retval = changeFormat(format);
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_FORMAT);
+        expect(retval.format).toEqual(format);
     });
 });

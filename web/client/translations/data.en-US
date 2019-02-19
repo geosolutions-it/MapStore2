@@ -533,12 +533,11 @@
             "showLabel": "Show measurement label"
         },
         "search":{
-            "defaultSearch": "Default Search",
-            "decimal": "Decimal Coordinates",
-            "aeronautical": "Aeronautical Coordinates",
-            "zoomToPoint": "Zoom to point",
+            "decimal": "Decimal",
+            "aeronautical": "Aeronautical",
             "changeSearchInputField": "Change the search tool",
-            "placeholder": "Search by location name",
+            "addressSearch": "Search by location name",
+            "coordinatesSearch": "Search by coordinates",
             "searchservicesbutton": "Configure search services",
             "configpaneltitle": "Create/edit a search service",
             "serviceslistlabel": "Available services",
@@ -1374,9 +1373,16 @@
                     "showChartData": "Show chart data",
                     "edit": "Edit",
                     "delete": "Delete",
+                    "collapse": "Collapse",
                     "confirmDelete": "Are you sure?",
                     "downloadData": "Download Data",
-                    "exportImage": "Export Image"
+                    "exportImage": "Export Image",
+                    "pin": "Pin",
+                    "unpin": "Unpin",
+                    "hide": "Hide",
+                    "hideDescription": "Hide this widget to other users",
+                    "unhide": "Unhide",
+                    "unhideDescription": "Unhide the widget to other users"
                 }
             },
             "chartType": {
@@ -1468,6 +1474,13 @@
             "advancedOptions":{
                 "line": "Advanced Options",
                 "bar": "Advanced Options"
+            },
+            "tray": {
+                "title": "Widgets",
+                "expandTray": "Expand widgets tray",
+                "collapseTray": "Collapse widgets tray",
+                "expandAll": "Expand all widgets",
+                "collapseAll": "Collapse all widgets"
             }
         },
         "dashboard": {
