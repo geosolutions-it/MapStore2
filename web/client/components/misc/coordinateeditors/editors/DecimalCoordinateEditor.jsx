@@ -14,11 +14,13 @@ class DecimalCoordinateEditor extends React.Component {
         constraints: PropTypes.object,
         format: PropTypes.string,
         coordinate: PropTypes.string,
-        onChange: PropTypes.func
+        onChange: PropTypes.func,
+        onKeyDown: PropTypes.func
     };
     defaultProps = {
         format: "decimal",
         coordinate: "lat",
+        onKeyDown: () => {},
         constraints: {
             decimal: {
                 lat: {
@@ -52,6 +54,7 @@ class DecimalCoordinateEditor extends React.Component {
                             onChange(e.target.value);
                         }
                     }}
+                    onKeyDown={this.props.onKeyDown}
                     step={1}
                     type="number"/>
             </FormGroup>

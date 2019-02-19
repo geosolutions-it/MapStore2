@@ -19,6 +19,7 @@ const {TEXT_SEARCH_STARTED,
     searchTextChanged,
     resultsPurge
 } = require('../actions/search');
+const {defaultIconStyle} = require('../utils/SearchUtils');
 
 const {
     updateAdditionalLayer
@@ -35,7 +36,6 @@ const {changeMapView} = require('../actions/map');
 const toBbox = require('turf-bbox');
 const {generateTemplateString} = require('../utils/TemplateUtils');
 const assign = require('object-assign');
-const {updateResultsStyle} = require('../actions/search');
 
 const {get} = require('lodash');
 
@@ -116,7 +116,6 @@ const searchItemSelected = action$ =>
                 // center by the max. extent defined in the map's config
                 let newCenter = mapUtils.getCenterForExtent(bbox, "EPSG:4326");
                 let actions = [
-                    updateResultsStyle(action.resultsStyle || null),
                     changeMapView(newCenter, newZoom, {
                         bounds: {
                             minx: bbox[0],
@@ -163,7 +162,7 @@ const searchItemSelected = action$ =>
  * it creates/updates an additional layer for showing a marker for a given point
  *
 */
-const zoomAndAddPointEpic = action$ =>
+const zoomAndAddPointEpic = (action$, store) =>
         action$.ofType(ZOOM_ADD_POINT)
         .switchMap(action => {
             const feature = {
@@ -174,6 +173,7 @@ const zoomAndAddPointEpic = action$ =>
                 }
             };
 
+            const state = store.getState();
             return Rx.Observable.from([
                 updateAdditionalLayer("search", "search", 'overlay', {
                     features: [feature],
@@ -181,11 +181,7 @@ const zoomAndAddPointEpic = action$ =>
                     name: "searchPoints",
                     id: "searchPoints",
                     visibility: true,
-                    style: {
-                        iconGlyph: "comment",
-                        iconShape: "circle",
-                        iconColor: "green"
-                    }
+                    style: state.search && state.search.style || defaultIconStyle
                 }),
                 zoomToPoint(action.pos, action.zoom, action.crs)
             ]);

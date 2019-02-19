@@ -24,23 +24,39 @@ const {
     selectSearchItem,
     cancelSelectedItem,
     changeActiveSearchTool,
-    zoomAndAddPoint
+    zoomAndAddPoint,
+    changeFormat,
+    changeCoord,
+    updateResultsStyle
 } = require("../actions/search");
+const {
+    toggleControl
+} = require("../actions/controls");
+const {
+    removeAdditionalLayer
+} = require("../actions/additionallayers");
 
 const searchSelector = createSelector([
-    state => state.search || null
-], (searchState) => ({
+    state => state.search || null,
+    state => state .controls && state.controls.searchservicesconfig || null
+], (searchState, searchservicesconfigControl) => ({
+    enabledSearchServicesConfig: searchservicesconfigControl && searchservicesconfigControl.enabled || false,
     error: searchState && searchState.error,
+    coordinate: searchState && searchState.coordinate || {},
     loading: searchState && searchState.loading,
     searchText: searchState ? searchState.searchText : "",
-    activeSearchTool: get(searchState, "activeSearchTool", "address"),
+    activeSearchTool: get(searchState, "activeSearchTool", "addressSearch"),
+    format: get(searchState, "format", "decimal"),
     selectedItems: searchState && searchState.selectedItems
 }));
 
 const SearchBar = connect(searchSelector, {
-    // ONLY FOR SAMPLE - The final one will get from state and simply call textSearch
     onSearch: textSearch,
+    onChangeCoord: changeCoord,
     onChangeActiveSearchTool: changeActiveSearchTool,
+    onClearCoordinatesSearch: removeAdditionalLayer,
+    onChangeFormat: changeFormat,
+    onToggleControl: toggleControl,
     onZoomToPoint: zoomAndAddPoint,
     onPurgeResults: resultsPurge,
     onSearchReset: resetSearch,
@@ -163,7 +179,9 @@ const SearchPlugin = connect((state) => ({
     selectedServices: state && state.search && state.search.selectedServices,
     selectedItems: state && state.search && state.search.selectedItems,
     textSearchConfig: state && state.searchconfig && state.searchconfig.textSearchConfig
-}))(
+}), {
+    onUpdateResultsStyle: updateResultsStyle
+})(
 class extends React.Component {
     static propTypes = {
         splitTools: PropTypes.bool,
@@ -186,7 +204,6 @@ class extends React.Component {
         },
         isSearchClickable: false,
         splitTools: true,
-        showOptions: false,
         resultsStyle: {
             color: '#3388ff',
             weight: 4,
@@ -198,6 +215,10 @@ class extends React.Component {
         withToggle: false,
         enabled: true
     };
+
+    componentDidMount() {
+        this.props.onUpdateResultsStyle(this.props.resultsStyle);
+    }
 
     getServiceOverrides = (propSelector) => {
         return this.props.selectedItems && this.props.selectedItems[this.props.selectedItems.length - 1] && get(this.props.selectedItems[this.props.selectedItems.length - 1], propSelector);
@@ -250,12 +271,12 @@ class extends React.Component {
                 key="seachBar-help"
                 helpText={<Message msgId="helptexts.searchBar"/>}>
                     {this.getSearchAndToggleButton()}
-            </HelpWrapper>
-            <SearchResultList
-                fitToMapSize={this.props.fitResultsToMapSize}
-                searchOptions={this.props.searchOptions}
-                resultsStyle={this.props.resultsStyle}
-                key="nominatimresults"/>
+                </HelpWrapper>
+                <SearchResultList
+                    fitToMapSize={this.props.fitResultsToMapSize}
+                    searchOptions={this.props.searchOptions}
+                    onUpdateResultsStyle={this.props.onUpdateResultsStyle}
+                    key="nominatimresults"/>
             </span>)
         ;
     }

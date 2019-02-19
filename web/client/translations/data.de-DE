@@ -533,12 +533,11 @@
             "showLabel": "Zeige Bezeichnungsetikett"
         },
         "search":{
-            "defaultSearch": "Standardsuche",
-            "decimal": "Dezimalkoordinaten",
-            "aeronautical": "Luftfahrtkoordinaten",
-            "zoomToPoint": "Zoom auf Punkt",
+            "decimal": "Dezimal",
+            "aeronautical": "Luftfahrt",
             "changeSearchInputField": "Ändern Sie das Suchwerkzeug",
-            "placeholder": "Suche nach Standortname",
+            "addressSearch": "Suche nach Standortname",
+            "coordinatesSearch": "Suche nach Koordinaten",
             "searchservicesbutton": "Konfigurations-Suchdienste konfigurieren",
             "configpaneltitle": "Einen Suchdienst anlegen / bearbeiten",
             "serviceslistlabel": "Verfügbare Dienstleistungen",
@@ -1374,9 +1373,16 @@
                     "showChartData": "Diagrammdaten anzeigen",
                     "edit": "Bearbeiten",
                     "delete": "Löschen",
+                    "collapse": "Reduzieren",
                     "confirmDelete": "Bist du sicher?",
                     "downloadData": "Daten herunterladen",
-                    "exportImage": "Bild exportieren"
+                    "exportImage": "Bild exportieren",
+                    "pin": "Pin",
+                    "unpin": "Unpin",
+                    "hide": "Verbergen",
+                    "hideDescription": "Verstecken Sie dieses Widget für andere Benutzer",
+                    "unhide": "Einblenden",
+                    "unhideDescription": "Blenden Sie das Widget für andere Benutzer ein"
                 }
             },
             "chartType": {
@@ -1467,6 +1473,13 @@
             "advancedOptions":{
                 "line": "Erweiterte Optione",
                 "bar": "Erweiterte Optione"
+            },
+            "tray": {
+                "title": "Widgets",
+                "expandTray": "Widgetsleiste erweitern",
+                "collapseTray": "Widgets-Fach ausblenden",
+                "expandAll": "Erweitern Sie alle Widgets",
+                "collapseAll": "Reduzieren Sie alle Widgets"
             }
         },
         "dashboard": {

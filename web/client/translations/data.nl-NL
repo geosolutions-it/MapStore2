@@ -373,12 +373,11 @@
             "bearingLabel": "Richting"
         },
         "search":{
-            "defaultSearch": "Default Search",
-            "decimal": "Decimal Coordinates",
-            "aeronautical": "Aeronautical Coordinates",
-            "zoomToPoint": "Zoom to point",
+            "decimal": "Decimal",
+            "aeronautical": "Aeronautical",
             "changeSearchInputField": "Change the search tool",
-            "placeholder": "Zoeken op locatienaam",
+            "addressSearch": "Zoeken op locatienaam",
+            "coordinatesSearch": "Zoeken op coördinaten",
             "searchservicesbutton": "Opzoekservices configureren",
             "configpaneltitle": "Een opzoekservice aanmaken/wijzigen",
             "serviceslistlabel": "Beschikbare services",

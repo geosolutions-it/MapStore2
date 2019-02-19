@@ -18,7 +18,9 @@ const {
     TEXT_SEARCH_CANCEL_ITEM,
     TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE,
     UPDATE_RESULTS_STYLE,
-    CHANGE_SEARCH_TOOL
+    CHANGE_SEARCH_TOOL,
+    CHANGE_FORMAT,
+    CHANGE_COORD
 } = require('../actions/search');
 const {RESET_CONTROLS} = require('../actions/controls');
 
@@ -106,6 +108,7 @@ function search(state = null, action) {
     case TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE:
         return assign({}, state, {highlightedFeature: action.highlightedFeature});
     case TEXT_SEARCH_RESET:
+        return { style: state.style || {} };
     case RESET_CONTROLS:
         return null;
     case TEXT_SEARCH_NESTED_SERVICES_SELECTED:
@@ -123,6 +126,10 @@ function search(state = null, action) {
         return assign({}, state, {style: action.style});
     case CHANGE_SEARCH_TOOL:
         return {...state, activeSearchTool: action.activeSearchTool};
+    case CHANGE_FORMAT:
+        return {...state, format: action.format};
+    case CHANGE_COORD:
+        return {...state, coordinate: {...state.coordinate, [action.coord]: action.val}};
     default:
         return state;
     }
