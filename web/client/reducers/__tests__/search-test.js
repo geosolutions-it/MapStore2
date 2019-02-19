@@ -15,10 +15,14 @@ const {
     TEXT_SEARCH_NESTED_SERVICES_SELECTED,
     TEXT_SEARCH_CANCEL_ITEM,
     UPDATE_RESULTS_STYLE,
+    resetSearch,
     changeFormat,
     changeCoord,
     changeActiveSearchTool
 } = require('../../actions/search');
+const {
+    resetControls
+} = require('../../actions/controls');
 
 describe('Test the search reducer', () => {
     it('search results loading', () => {
@@ -145,5 +149,29 @@ describe('Test the search reducer', () => {
         const val = 2;
         const state = search({}, changeCoord(coordinate, val));
         expect(state.coordinate).toEqual({[coordinate]: val});
+    });
+    it('TEXT_SEARCH_RESET', () => {
+        // reset maintains only the style
+        let state = search({
+            style: {
+                color: "#ff0000"
+            },
+            searchText: "Rome",
+            results: []
+        }, resetSearch());
+        expect(state).toEqual({style: {
+            color: "#ff0000"
+        }});
+
+        // or it keeps one empty
+        state = search({}, resetSearch());
+        expect(state).toEqual({style: {}});
+    });
+    it('RESET_CONTROLS', () => {
+
+        const state = search({style: {
+            color: "#ff0000"
+        }}, resetControls());
+        expect(state).toBe(null);
     });
 });

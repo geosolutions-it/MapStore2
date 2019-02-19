@@ -26,7 +26,8 @@ const {
     changeActiveSearchTool,
     zoomAndAddPoint,
     changeFormat,
-    changeCoord
+    changeCoord,
+    updateResultsStyle
 } = require("../actions/search");
 const {
     toggleControl
@@ -50,7 +51,6 @@ const searchSelector = createSelector([
 }));
 
 const SearchBar = connect(searchSelector, {
-    // ONLY FOR SAMPLE - The final one will get from state and simply call textSearch
     onSearch: textSearch,
     onChangeCoord: changeCoord,
     onChangeActiveSearchTool: changeActiveSearchTool,
@@ -179,7 +179,9 @@ const SearchPlugin = connect((state) => ({
     selectedServices: state && state.search && state.search.selectedServices,
     selectedItems: state && state.search && state.search.selectedItems,
     textSearchConfig: state && state.searchconfig && state.searchconfig.textSearchConfig
-}))(
+}), {
+    onUpdateResultsStyle: updateResultsStyle
+})(
 class extends React.Component {
     static propTypes = {
         splitTools: PropTypes.bool,
@@ -213,6 +215,10 @@ class extends React.Component {
         withToggle: false,
         enabled: true
     };
+
+    componentDidMount() {
+        this.props.onUpdateResultsStyle(this.props.resultsStyle);
+    }
 
     getServiceOverrides = (propSelector) => {
         return this.props.selectedItems && this.props.selectedItems[this.props.selectedItems.length - 1] && get(this.props.selectedItems[this.props.selectedItems.length - 1], propSelector);
@@ -266,7 +272,11 @@ class extends React.Component {
                     helpText={<Message msgId="helptexts.searchBar"/>}>
                     {this.getSearchAndToggleButton()}
                 </HelpWrapper>
-                <SearchResultList fitToMapSize={this.props.fitResultsToMapSize} searchOptions={this.props.searchOptions} resultsStyle={this.props.resultsStyle} key="nominatimresults"/>
+                <SearchResultList
+                    fitToMapSize={this.props.fitResultsToMapSize}
+                    searchOptions={this.props.searchOptions}
+                    onUpdateResultsStyle={this.props.onUpdateResultsStyle}
+                    key="nominatimresults"/>
             </span>)
         ;
     }

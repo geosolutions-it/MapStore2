@@ -108,6 +108,7 @@ function search(state = null, action) {
     case TEXT_SEARCH_SET_HIGHLIGHTED_FEATURE:
         return assign({}, state, {highlightedFeature: action.highlightedFeature});
     case TEXT_SEARCH_RESET:
+        return { style: state.style || {} };
     case RESET_CONTROLS:
         return null;
     case TEXT_SEARCH_NESTED_SERVICES_SELECTED:

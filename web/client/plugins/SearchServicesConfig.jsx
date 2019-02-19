@@ -8,7 +8,6 @@
 
 const React = require('react');
 const {connect} = require('react-redux');
-const assign = require('object-assign');
 const {Glyphicon, Button} = require('react-bootstrap');
 const ConfirmButton = require('../components/buttons/ConfirmButton');
 const Dialog = require('../components//misc/Dialog');
@@ -215,7 +214,7 @@ const SearchServicesPlugin = connect(({controls = {}, searchconfig = {}}) => ({
         updateService})(SearchServicesConfigPanel);
 
 module.exports = {
-    SearchServicesConfigPlugin: assign(SearchServicesPlugin),
+    SearchServicesConfigPlugin: SearchServicesPlugin,
     reducers: {
         searchconfig: require('../reducers/searchconfig')
     }
