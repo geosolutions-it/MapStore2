@@ -5,7 +5,7 @@
     cursor: -ms-grab;
     cursor: grab;
 }
-.no-drag .draggableHandle {
+.no-drag .draggableHandle, .static .draggableHandle {
     cursor: inherit;
 }
 .widget-container {
@@ -31,7 +31,7 @@
         }
     }
     &.no-drag .mapstore-widget-card {
-         -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.2);
+        -webkit-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.2);
         -moz-box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.2);
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2), 0 2px 8px rgba(0, 0, 0, 0.2);
     }
@@ -70,8 +70,42 @@
                 font-size: 14px;
                 color: @ms2-color-primary;
             }
+            .widget-icons {
+                text-align: left;
+                position: absolute;
+                width: 100%;
+                top: 0;
+                left: 0;
+                overflow: visible;
+                height: 10px;
+                .btn-group {
+                    left: 0px;
+                    button {
+                        background: transparent;
+                        top: -8px;
+                        position: relative;
+                        padding-left:4px;
+                        padding-right:4px;
+                        // rotate pin icon
+                        .glyphicon.active::before {
+                            color: @ms2-color-primary;
+                            transform: rotate(45deg);
+                            display: inline-block;
+                        }
+                        .glyphicon:not(.active)  {
+                            opacity: .5;
+                            color: grey;
+                        }
+                    }
+                }
+            }
         }
         .mapstore-widget-default-content {
+            // avoid editor defaults for text-widget
+            &.ql-editor {
+                height: auto;
+                padding: 0;
+            }
             margin: 10px 5%;
         }
         .mapstore-widget-description {
@@ -224,7 +258,24 @@
 	box-shadow: 0 -3px 6px rgba(0, 0, 0, 0.06), 0 -4px 8px rgba(0, 0, 0, 0.12);
 }
 
-
+.widgets-tray {
+    .shadow-soft;
+    background-color: @ms2-color-background;
+    padding: 4px;
+    z-index: 1000;
+    .widgets-bar {
+        > span {
+            button.btn {
+                + button.btn {
+                    margin-left: 4px;
+                }
+            }
+            padding-right: 8px;
+            margin-right: 6px; 
+            border-right: 1px solid @ms2-color-shade-lighter;
+        }
+    }
+}
 
 .mapstore-chart-advance-options {
     z-index: 20;
