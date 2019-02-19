@@ -15,7 +15,7 @@ const {
     isMapInfoOpen,
     mapInfoConfigurationSelector,
     showEmptyMessageGFISelector
-} = require('../mapinfo');
+} = require('../mapInfo');
 
 describe('Test mapinfo selectors', () => {
     it('test generalInfoFormatSelector default value', () => {
