@@ -21,7 +21,7 @@ const {groupsSelector, layersSelector, selectedNodesSelector, layerFilterSelecto
 const {mapSelector, mapNameSelector} = require('../selectors/map');
 const {currentLocaleSelector} = require("../selectors/locale");
 const {widgetBuilderAvailable} = require('../selectors/controls');
-const {generalInfoFormatSelector} = require("../selectors/mapinfo");
+const {generalInfoFormatSelector} = require("../selectors/mapInfo");
 
 const LayersUtils = require('../utils/LayersUtils');
 const mapUtils = require('../utils/MapUtils');

@@ -151,7 +151,7 @@
             "web/client/selectors/featuregrid.js",
             "web/client/selectors/floatinglegend.js",
             "web/client/selectors/map.js",
-            "web/client/selectors/mapinfo.js",
+            "web/client/selectors/mapInfo.js",
             "web/client/selectors/maplayout.js",
             "web/client/selectors/maptype.js",
             "web/client/selectors/tutorial.js",

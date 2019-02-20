@@ -12,7 +12,7 @@ const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID} = require('../actions/featuregrid');
 const {CLOSE_IDENTIFY, ERROR_FEATURE_INFO, TOGGLE_MAPINFO_STATE, LOAD_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO, PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 const {SHOW_SETTINGS, HIDE_SETTINGS} = require('../actions/layers');
-const {isMapInfoOpen} = require('../selectors/mapinfo');
+const {isMapInfoOpen} = require('../selectors/mapInfo');
 
 
 /**

@@ -23,7 +23,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
-const {mapInfoConfigurationSelector} = require('../selectors/mapinfo');
+const {mapInfoConfigurationSelector} = require('../selectors/mapInfo');
 const MapUtils = require('../utils/MapUtils');
 const showSelector = state => state.controls && state.controls.save && state.controls.save.enabled;
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
