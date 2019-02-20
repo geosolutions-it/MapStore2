@@ -101,6 +101,7 @@
           "framework": [
             "web/client/api/SLDService.js",
             "web/client/components/index.jsdoc",
+            "web/client/components/app/StandardApp.jsx",
             "web/client/components/buttons/FullScreenButton.jsx",
             "web/client/components/buttons/GlobeViewSwitcherButton.jsx",
             "web/client/components/buttons/GoFullButton.jsx",
