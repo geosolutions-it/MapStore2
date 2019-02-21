@@ -492,6 +492,8 @@
         "identifyTitle": "Informação do elemento",
         "identifyNoQueryableLayers": "No active queryable layer",
         "identifyRevGeocodeHeader": "Coordenadas",
+        "identifyShowCoordinateEditor": "Show coordinate editor",
+        "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyRevGeocodeModalTitle": "Endereço",
         "identifyRevGeocodeSubmitText": "Mais informação",
         "identifyRevGeocodeCloseText": "Fechar",

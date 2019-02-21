@@ -493,6 +493,8 @@
         "identifyTitle": "Feature Info",
         "identifyNoQueryableLayers": "No active queryable layer",
         "identifyRevGeocodeHeader": "Coordinates",
+        "identifyShowCoordinateEditor": "Show coordinate editor",
+        "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyRevGeocodeModalTitle": "Address",
         "identifyRevGeocodeSubmitText": "More Info",
         "identifyRevGeocodeCloseText": "Close",

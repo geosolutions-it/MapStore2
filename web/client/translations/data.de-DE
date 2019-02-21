@@ -493,6 +493,8 @@
         "identifyTitle": "Feature Info",
         "identifyNoQueryableLayers": "Keine aktive abrufbare Ebene",
         "identifyRevGeocodeHeader": "Koordinaten",
+        "identifyShowCoordinateEditor": "Koordinateneditor anzeigen",
+        "identifyHideCoordinateEditor": "Koordinateneditor ausblenden",
         "identifyRevGeocodeModalTitle": "Addresse",
         "identifyRevGeocodeSubmitText": "Mehr Informationen",
         "identifyRevGeocodeCloseText": "Schliessen",

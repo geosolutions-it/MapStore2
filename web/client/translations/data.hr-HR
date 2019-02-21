@@ -493,6 +493,8 @@
         "identifyTitle": "Informacije o objektu",
         "identifyNoQueryableLayers": "Nema aktivnih slojeva za dohvat informacija",
         "identifyRevGeocodeHeader": "Koordinate",
+        "identifyShowCoordinateEditor": "Show coordinate editor",
+        "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyRevGeocodeModalTitle": "Adresa",
         "identifyRevGeocodeSubmitText": "Više informacija",
         "identifyRevGeocodeCloseText": "Zatvori",

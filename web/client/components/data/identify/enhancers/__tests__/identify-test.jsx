@@ -455,4 +455,48 @@ describe("test identify enhancers", () => {
         expect(spyHideMarker).toHaveBeenCalled();
     });
 
+    it("test identifyLifecycle onChangeFormat", () => {
+        const testHandlers = {
+            onChangeFormat: () => {}
+        };
+        const spyChangeFormat = expect.spyOn(testHandlers, 'onChangeFormat');
+        const Component = identifyLifecycle(({onChangeFormat = () => {}}) => <div id="test-component" onClick={() => onChangeFormat("format")}></div>);
+        ReactDOM.render(
+            <Component
+                enabled
+                showCoordinateEditor
+                enabledCoordEditorButton
+                formatCoord="decimal"
+                responses={[{}]}
+                onChangeFormat={testHandlers.onChangeFormat}
+            />,
+            document.getElementById("container")
+        );
+        const testComponent = document.getElementById('test-component');
+        TestUtils.Simulate.click(testComponent);
+        expect(spyChangeFormat).toHaveBeenCalled();
+    });
+    it("test identifyLifecycle onChangeClickPoint", () => {
+        const testHandlers = {
+            onChangeClickPoint: () => {}
+        };
+        const spyOnChangeClickPoint = expect.spyOn(testHandlers, 'onChangeClickPoint');
+        const Component = identifyLifecycle(({onChangeClickPoint = () => {}}) => <div id="test-component" onClick={() => onChangeClickPoint("lat", "4")}></div>);
+        ReactDOM.render(
+            <Component
+                enabled
+                showCoordinateEditor
+                enabledCoordEditorButton
+                formatCoord="decimal"
+                responses={[{}]}
+                onChangeClickPoint={testHandlers.onChangeClickPoint}
+            />,
+            document.getElementById("container")
+        );
+        const testComponent = document.getElementById('test-component');
+        TestUtils.Simulate.click(testComponent);
+        expect(spyOnChangeClickPoint).toHaveBeenCalled();
+    });
+
+
 });
