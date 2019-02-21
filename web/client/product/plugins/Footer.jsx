@@ -45,19 +45,22 @@ class Footer extends React.Component {
 
     render() {
         const { href, ...logo } = this.props.logo || {};
+        const image = (
+            <img
+                src={logo.src}
+                width={logo.width || 'auto'}
+                height={logo.height || 'auto'}
+                title={logo.title || ''}
+                alt={logo.alt || ''} />
+        );
         return (
             <Grid>
                 {logo && logo.src && <Row>
                     <Col xs={12} className="text-center">
                         <div>
-                            <a target="_blank" href={href || ''}>
-                                <img
-                                    src={logo.src}
-                                    width={logo.width || 'auto'}
-                                    height={logo.height || 'auto'}
-                                    title={logo.title || ''}
-                                    alt={logo.alt || ''} />
-                            </a>
+                            {href ? <a target="_blank" href={href}>
+                                {image}
+                            </a> : image}
                         </div>
                     </Col>
                 </Row>}
