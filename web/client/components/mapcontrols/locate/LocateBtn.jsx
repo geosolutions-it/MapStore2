@@ -133,7 +133,7 @@ class LocateBtn extends React.Component {
     getBtnStyle = () => {
         let style = this.props.bsStyle;
         if (this.props.locate === "FOLLOWING") {
-            style = "success";
+            style = "success active";
         } else if (this.props.locate === "ENABLED") {
             style = "info";
         }
