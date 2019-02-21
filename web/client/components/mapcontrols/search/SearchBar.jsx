@@ -240,6 +240,10 @@ class SearchBar extends React.Component {
         onClick={onClick}
         className={className}/>);
 
+
+/**
+ * if one tool is disabled the other one is enabled
+*/
     getActiveTool = () => {
         let activeTool = this.props.activeSearchTool;
         if (this.props.showAddressSearchOption && !this.props.showCoordinatesSearchOption) {
