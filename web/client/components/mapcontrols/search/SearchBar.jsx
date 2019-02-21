@@ -109,6 +109,8 @@ class SearchBar extends React.Component {
         activeSearchTool: PropTypes.string,
         defaultZoomLevel: PropTypes.number,
         showOptions: PropTypes.bool,
+        showAddressSearchOption: PropTypes.bool,
+        showCoordinatesSearchOption: PropTypes.bool,
         enabledSearchServicesConfig: PropTypes.bool,
         aeronauticalOptions: PropTypes.object,
         constraintsCoordEditor: PropTypes.object,
@@ -168,6 +170,8 @@ class SearchBar extends React.Component {
         activeSearchTool: "addressSearch",
         format: "decimal",
         showOptions: true,
+        showCoordinatesSearchOption: true,
+        showAddressSearchOption: true,
         enabledSearchServicesConfig: false
     };
 
@@ -236,6 +240,16 @@ class SearchBar extends React.Component {
         onClick={onClick}
         className={className}/>);
 
+    getActiveTool = () => {
+        let activeTool = this.props.activeSearchTool;
+        if (this.props.showAddressSearchOption && !this.props.showCoordinatesSearchOption) {
+            activeTool = "addressSearch";
+        }
+        if (!this.props.showAddressSearchOption && this.props.showCoordinatesSearchOption) {
+            activeTool = "coordinatesSearch";
+        }
+        return activeTool;
+    }
     renderAddonBefore = () => {
         return this.props.selectedItems && this.props.selectedItems.map((item, index) =>
             <span key={"selected-item" + index} className="input-group-addon"><div className="selectedItem-text">{item.text}</div></span>
@@ -243,7 +257,31 @@ class SearchBar extends React.Component {
     };
 
     renderSearchToolbar = () => {
-        // TODO FIX CLASSNAME, ONCLICK
+        let activeTool = this.getActiveTool();
+
+        let searchMenuOptions = [];
+        if (this.props.showAddressSearchOption && this.props.showCoordinatesSearchOption) {
+            searchMenuOptions.push({
+                active: activeTool === "addressSearch",
+                onClick: () => {
+                    this.props.onClearCoordinatesSearch({owner: "search"});
+                    this.props.onChangeActiveSearchTool("addressSearch");
+                },
+                glyph: this.props.searchIcon,
+                text: <Message msgId="search.addressSearch"/>
+            });
+            searchMenuOptions.push({
+                active: activeTool === "coordinatesSearch",
+                onClick: () => {
+                    if (this.props.searchText !== undefined && this.props.searchText !== "") {
+                        this.clearSearch();
+                    }
+                    this.props.onChangeActiveSearchTool("coordinatesSearch");
+                },
+                glyph: "search-coords",
+                text: <Message msgId="search.coordinatesSearch"/>
+            });
+        }
         return (
             <span className="search-toolbar-options">
                 {this.props.loading && <Spinner style={this.getSpinnerStyle()} spinnerName="pulse" noFadeIn/>}
@@ -257,9 +295,9 @@ class SearchBar extends React.Component {
                             className: "square-button-md no-border",
                             bsStyle: "default",
                             pullRight: true,
-                            visible: this.props.activeSearchTool === "addressSearch" && (this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0) || this.props.activeSearchTool === "coordinatesSearch" && (!!this.props.coordinate.lon || !!this.props.coordinate.lat),
+                            visible: activeTool === "addressSearch" && (this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0) || activeTool === "coordinatesSearch" && (!!this.props.coordinate.lon || !!this.props.coordinate.lat),
                             onClick: () => {
-                                if (this.props.activeSearchTool === "addressSearch") {
+                                if (activeTool === "addressSearch") {
                                     this.clearSearch();
                                 } else {
                                     this.clearCoordinates();
@@ -267,12 +305,12 @@ class SearchBar extends React.Component {
                             }
                         }, {
                             glyph: this.props.searchIcon,
-                            className: "square-button-md no-border " + (this.props.isSearchClickable || this.props.activeSearchTool !== "addressSearch" ? "magnifying-glass clickable" : "magnifying-glass"),
+                            className: "square-button-md no-border " + (this.props.isSearchClickable || activeTool !== "addressSearch" ? "magnifying-glass clickable" : "magnifying-glass"),
                             bsStyle: "default",
                             pullRight: true,
-                            visible: this.props.activeSearchTool === "addressSearch" && (!(this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0) || !this.props.splitTools),
+                            visible: activeTool === "addressSearch" && (!(this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0) || !this.props.splitTools),
                             onClick: () => {
-                                if (this.props.isSearchClickable || this.props.activeSearchTool !== "addressSearch") {
+                                if (this.props.isSearchClickable || activeTool !== "addressSearch") {
                                     this.search();
                                 }
                             }
@@ -304,7 +342,7 @@ class SearchBar extends React.Component {
                                 text: <Message msgId="search.aeronautical"/>
                             }
                         ],
-                        visible: this.props.showOptions && this.props.activeSearchTool === "coordinatesSearch",
+                        visible: this.props.showOptions && activeTool === "coordinatesSearch",
                         Element: DropdownToolbarOptions
                     }, {
                         buttonConfig: {
@@ -315,25 +353,7 @@ class SearchBar extends React.Component {
                             pullRight: true
                         },
                         menuOptions: [
-                            {
-                                active: this.props.activeSearchTool === "addressSearch",
-                                onClick: () => {
-                                    this.props.onClearCoordinatesSearch({owner: "search"});
-                                    this.props.onChangeActiveSearchTool("addressSearch");
-                                },
-                                glyph: this.props.searchIcon,
-                                text: <Message msgId="search.addressSearch"/>
-                            }, {
-                                active: this.props.activeSearchTool === "coordinatesSearch",
-                                onClick: () => {
-                                    if (this.props.searchText !== undefined && this.props.searchText !== "") {
-                                        this.clearSearch();
-                                    }
-                                    this.props.onChangeActiveSearchTool("coordinatesSearch");
-                                },
-                                glyph: "search-coords",
-                                text: <Message msgId="search.coordinatesSearch"/>
-                            }, {
+                            ...searchMenuOptions, {
                                 onClick: () => {
                                     if (!this.props.enabledSearchServicesConfig) {
                                         this.props.onToggleControl("searchservicesconfig");
@@ -351,7 +371,8 @@ class SearchBar extends React.Component {
     }
 
     renderCoordinateTool = () => {
-        return this.props.activeSearchTool !== "addressSearch" &&
+        let activeTool = this.getActiveTool();
+        return activeTool !== "addressSearch" && this.props.showCoordinatesSearchOption &&
             (<div className="coordinateEditor">
             <Row className="entryRow">
                 <Col xs="3" className="coordinateLabel">
@@ -399,6 +420,8 @@ class SearchBar extends React.Component {
     }
 
     renderInputSearch = () => {
+        let activeTool = this.getActiveTool();
+
         let placeholder = "search.addressSearch";
         if (!this.props.placeholder && this.context.messages) {
             let placeholderLocMessage = LocaleUtils.getMessageById(this.context.messages, this.props.placeholderMsgId || placeholder);
@@ -408,7 +431,7 @@ class SearchBar extends React.Component {
         } else {
             placeholder = this.props.placeholder;
         }
-        return this.props.activeSearchTool === "addressSearch" &&
+        return activeTool === "addressSearch" &&
             <FormControl
                 className="searchInput"
                 key="search-input"
