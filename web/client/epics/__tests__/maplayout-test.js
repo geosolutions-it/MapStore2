@@ -10,10 +10,10 @@ const expect = require('expect');
 
 const {toggleControl} = require('../../actions/controls');
 const {UPDATE_MAP_LAYOUT} = require('../../actions/maplayout');
-const {closeIdentify} = require('../../actions/mapInfo');
+const {closeIdentify, purgeMapInfoResults} = require('../../actions/mapInfo');
 
 const {updateMapLayoutEpic} = require('../maplayout');
-const {testEpic} = require('./epicTestUtils');
+const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
 
 describe('map layout epics', () => {
     it('tests layout', (done) => {
@@ -70,5 +70,22 @@ describe('map layout epics', () => {
         };
         const state = {};
         testEpic(updateMapLayoutEpic, 1, closeIdentify(), epicResult, state);
+    });
+    // avoid glitches with mouse click and widgets. See #3138
+    it('purge map info should not trigger layout update', (done) => {
+        const epicResult = actions => {
+            try {
+                expect(actions.length).toBe(1);
+                actions.map((action) => {
+                    expect(action.type).toBe(TEST_TIMEOUT);
+                });
+            } catch (e) {
+                done(e);
+            }
+            done();
+        };
+        const state = {};
+        testEpic(addTimeoutEpic(updateMapLayoutEpic, 10), 1, purgeMapInfoResults(), epicResult, state);
+
     });
 });
