@@ -103,6 +103,7 @@ class DrawSupport extends React.Component {
                 case "drawOrEdit": this.addDrawOrEditInteractions(newProps); break;
                 case "stop": /* only stops draw*/ this.removeDrawInteraction(); break;
                 case "replace": this.replaceFeatures(newProps); break;
+                case "updateStyle": this.updateOnlyFeatureStyles(newProps); break;
                 case "clean": this.clean(); break;
                 case "cleanAndContinueDrawing": this.clean(true); break;
                 case "endDrawing": this.endDrawing(newProps); break;
@@ -135,6 +136,24 @@ class DrawSupport extends React.Component {
             });
         }
     };
+
+    updateOnlyFeatureStyles = (newProps) => {
+        if (this.drawLayer) {
+            this.drawLayer.getSource().getFeatures().forEach(ftOl => {
+                let originalGeoJsonFeature = find(head(newProps.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
+                if (originalGeoJsonFeature) {
+                    let promises = createStylesAsync(castArray(originalGeoJsonFeature.style));
+                    axios.all(promises).then((styles) => {
+                        ftOl.setStyle(() => parseStyles({...originalGeoJsonFeature, style: styles}));
+                    });
+                } else {
+                    const styleType = this.convertGeometryTypeToStyleType(newProps.drawMethod);
+                    // if the styles is not present in the feature it uses a default one based on the drawMethod basically
+                    return parseStyles({style: VectorStyle.defaultStyles[styleType]});
+                }
+            });
+        }
+    }
 
     addLayer = (newProps, addInteraction) => {
         let layerStyle = null;
@@ -264,22 +283,27 @@ class DrawSupport extends React.Component {
         if (!this.drawLayer) {
             feature = this.addLayer(newProps, newProps.options && newProps.options.drawEnabled || false);
         } else {
-            this.drawSource.clear();
-            feature = this.addFeatures(newProps);
-            if (newProps.style) {
-                this.drawLayer.setStyle((ftOl) => {
-                    let originalFeature = find(head(newProps.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
-                    if (originalFeature) {
-                        let promises = createStylesAsync(castArray(originalFeature.style));
-                        axios.all(promises).then((styles) => {
-                            ftOl.setStyle(() => parseStyles({...originalFeature, style: styles}));
-                        });
-                    } else {
-                        const styleType = this.convertGeometryTypeToStyleType(newProps.drawMethod);
-                        // if the styles is not present in the feature it uses a default one based on the drawMethod basically
-                        return parseStyles({style: VectorStyle.defaultStyles[styleType]});
-                    }
-                });
+            if (newProps.drawOwner === "annotations") {
+                this.updateOnlyFeatureStyles(newProps);
+            } else {
+                this.drawSource.clear();
+                feature = this.addFeatures(newProps);
+                if (newProps.style) {
+                    this.drawLayer.setStyle((ftOl) => {
+                        let originalFeature = find(head(newProps.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
+                        // let originalFeatureOLD = find(head(this.props.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
+                        if (originalFeature) {
+                            let promises = createStylesAsync(castArray(originalFeature.style));
+                            axios.all(promises).then((styles) => {
+                                ftOl.setStyle(() => parseStyles({...originalFeature, style: styles}));
+                            });
+                        } else {
+                            const styleType = this.convertGeometryTypeToStyleType(newProps.drawMethod);
+                            // if the styles is not present in the feature it uses a default one based on the drawMethod basically
+                            return parseStyles({style: VectorStyle.defaultStyles[styleType]});
+                        }
+                    });
+                }
             }
         }
         return feature;
