@@ -432,6 +432,7 @@
             }, {
                 "name": "Search",
                 "cfg": {
+                  "showOptions": false,
                   "withToggle": ["max-width: 768px", "min-width: 768px"]
                 }
             }, {
