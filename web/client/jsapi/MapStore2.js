@@ -94,7 +94,7 @@ let stateChangeListeners = [];
 const getInitialActions = (options) => {
     if (!options.initialState || !options.initialState.defaultState.map) {
         if (options.configUrl) {
-            return [initMap.bind(null), loadMapConfig.bind(null, options.configUrl || defaultConfig, options.mapId)];
+            return [initMap, loadMapConfig.bind(null, options.configUrl || defaultConfig, options.mapId)];
         }
         return [configureMap.bind(null, options.config || defaultConfig, options.mapId)];
     }
