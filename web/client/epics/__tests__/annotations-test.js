@@ -10,23 +10,23 @@ const expect = require('expect');
 
 const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
-const {ADD_LAYER, UPDATE_NODE, CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
-const {CHANGE_DRAWING_STATUS, geometryChanged} = require('../../actions/draw');
-const {HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
-const {configureMap} = require('../../actions/config');
-const {editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation, setStyle, highlight, cleanHighlight,
-    toggleAdd, UPDATE_ANNOTATION_GEOMETRY} = require('../../actions/annotations');
+const { ADD_LAYER, UPDATE_NODE, CHANGE_LAYER_PROPERTIES } = require('../../actions/layers');
+const { CHANGE_DRAWING_STATUS, geometryChanged } = require('../../actions/draw');
+const { HIDE_MAPINFO_MARKER, PURGE_MAPINFO_RESULTS, CLOSE_IDENTIFY } = require('../../actions/mapInfo');
+const { configureMap } = require('../../actions/config');
+const { editAnnotation, confirmRemoveAnnotation, saveAnnotation, cancelEditAnnotation, setStyle, highlight, cleanHighlight,
+    toggleAdd, UPDATE_ANNOTATION_GEOMETRY } = require('../../actions/annotations');
 
-const {addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
+const { addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
     cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic, setStyleEpic, restoreStyleEpic, highlighAnnotationEpic,
-    cleanHighlightAnnotationEpic} = require('../annotations')({});
+    cleanHighlightAnnotationEpic } = require('../annotations')({});
 const rootEpic = combineEpics(addAnnotationsLayerEpic, editAnnotationEpic, removeAnnotationEpic, saveAnnotationEpic,
     setStyleEpic, cancelEditAnnotationEpic, startDrawMarkerEpic, endDrawMarkerEpic, restoreStyleEpic, highlighAnnotationEpic,
     cleanHighlightAnnotationEpic);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
 
-const {testEpic, addTimeoutEpic, TEST_TIMEOUT} = require('./epicTestUtils');
+const { testEpic, addTimeoutEpic, TEST_TIMEOUT } = require('./epicTestUtils');
 
 describe('annotations Epics', () => {
     let store;
@@ -111,10 +111,12 @@ describe('annotations Epics', () => {
     it('remove annotation', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
-            if (actions.length >= 8) {
+            if (actions.length > 10) {
                 expect(actions[5].type).toBe(UPDATE_NODE);
                 expect(actions[6].type).toBe(HIDE_MAPINFO_MARKER);
                 expect(actions[7].type).toBe(PURGE_MAPINFO_RESULTS);
+                // ensure it triggers identify
+                expect(actions.filter(({type}) => type === CLOSE_IDENTIFY).length).toBe(1);
                 done();
             }
         });
