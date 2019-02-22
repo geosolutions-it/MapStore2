@@ -24,7 +24,7 @@ var warningFilterKey = function(warning) {
 var DebugUtils = {
     createDebugStore: function(reducer, initialState, userMiddlewares, enhancer) {
         let finalCreateStore;
-        if (__DEVTOOLS__ && urlQuery.debug) {
+        if (urlQuery && urlQuery.debug && __DEVTOOLS__) {
             let logger = require('redux-logger')();
             let immutable = require('redux-immutable-state-invariant')();
             let middlewares = [immutable, thunkMiddleware, logger].concat(userMiddlewares || []);

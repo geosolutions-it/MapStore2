@@ -14,6 +14,7 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const {connect} = require('react-redux');
 
 const {configureMap, loadMapConfig} = require('../actions/config');
+const { initMap } = require('../actions/map');
 const {generateActionTrigger} = require('../epics/jsapi');
 
 const url = require('url');
@@ -93,7 +94,7 @@ let stateChangeListeners = [];
 const getInitialActions = (options) => {
     if (!options.initialState || !options.initialState.defaultState.map) {
         if (options.configUrl) {
-            return [loadMapConfig.bind(null, options.configUrl || defaultConfig, options.mapId)];
+            return [initMap.bind(null), loadMapConfig.bind(null, options.configUrl || defaultConfig, options.mapId)];
         }
         return [configureMap.bind(null, options.config || defaultConfig, options.mapId)];
     }
@@ -183,7 +184,8 @@ const MapStore2 = {
         const appStore = require('../stores/StandardStore').bind(null, initialState || {}, {
             version: require('../reducers/version')
         }, {
-            jsAPIEpic: actionTrigger.epic
+            jsAPIEpic: actionTrigger.epic,
+            ...(options.epics || {})
         });
         const initialActions = [...getInitialActions(options), loadVersion.bind(null, options.versionURL)];
         const appConfig = {
