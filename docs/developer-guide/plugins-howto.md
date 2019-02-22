@@ -570,7 +570,6 @@ module.exports = {
     * define your own state fragment (and related actions and reducers) to handle internal state, and use existing actions and state fragments from MapStore2 to interact with the framework
  * Selectors
     * use existing selectors when possible to connect the state, eventually using reselect to compose them together or with your own selectors
-    * define new selectors only if you use them more than once and move them to a selectors JS file
  * Avoid as much as possible direct interactions between different plugins; plugins are meant to be independent modules, so they should be able to work if other plugins appear / disappear from the application configuration
    * interact with other plugins and the application itself using actions and state sharing
    * creating side effects to make plugins interact in more strict ways should not be done at the plugin level, orchestrating different plugins should be delegated at the top (application) level
