@@ -47,11 +47,6 @@ class StyleCanvas extends React.Component {
         return <canvas ref="styleCanvas" style={this.props.style} width={this.props.width} height={this.props.height} />;
     }
 
-    componentShouldUpdate(props, nexProps) {
-        // not sure why this is wrongly called.
-        // fixing the name rises some problems.
-        return props.shapeStyle !== nexProps.shapeStyle || props.width !== nexProps.width || props.height !== nexProps.height || props.geomType !== nexProps.geomType;
-    }
     paint = (ctx) => {
         ctx.save();
         ctx.beginPath();
