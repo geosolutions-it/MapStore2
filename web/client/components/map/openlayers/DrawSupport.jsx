@@ -283,27 +283,23 @@ class DrawSupport extends React.Component {
         if (!this.drawLayer) {
             feature = this.addLayer(newProps, newProps.options && newProps.options.drawEnabled || false);
         } else {
-            if (newProps.drawOwner === "annotations") {
-                this.updateOnlyFeatureStyles(newProps);
-            } else {
-                this.drawSource.clear();
-                feature = this.addFeatures(newProps);
-                if (newProps.style) {
-                    this.drawLayer.setStyle((ftOl) => {
-                        let originalFeature = find(head(newProps.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
-                        // let originalFeatureOLD = find(head(this.props.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
-                        if (originalFeature) {
-                            let promises = createStylesAsync(castArray(originalFeature.style));
-                            axios.all(promises).then((styles) => {
-                                ftOl.setStyle(() => parseStyles({...originalFeature, style: styles}));
-                            });
-                        } else {
-                            const styleType = this.convertGeometryTypeToStyleType(newProps.drawMethod);
-                            // if the styles is not present in the feature it uses a default one based on the drawMethod basically
-                            return parseStyles({style: VectorStyle.defaultStyles[styleType]});
-                        }
-                    });
-                }
+            this.drawSource.clear();
+            feature = this.addFeatures(newProps);
+            if (newProps.style) {
+                this.drawLayer.setStyle((ftOl) => {
+                    let originalFeature = find(head(newProps.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
+                    // let originalFeatureOLD = find(head(this.props.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
+                    if (originalFeature) {
+                        let promises = createStylesAsync(castArray(originalFeature.style));
+                        axios.all(promises).then((styles) => {
+                            ftOl.setStyle(() => parseStyles({...originalFeature, style: styles}));
+                        });
+                    } else {
+                        const styleType = this.convertGeometryTypeToStyleType(newProps.drawMethod);
+                        // if the styles is not present in the feature it uses a default one based on the drawMethod basically
+                        return parseStyles({style: VectorStyle.defaultStyles[styleType]});
+                    }
+                });
             }
         }
         return feature;

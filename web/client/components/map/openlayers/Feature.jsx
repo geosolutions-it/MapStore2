@@ -89,7 +89,7 @@ class Feature extends React.Component {
             }).forEach(
                 (f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
 
-            if (props.style && props.style !== props.layerStyles) { // TODO test this logic with other functionalities
+            if (props.style && (props.style !== props.layerStyle)) {
                 this._feature.forEach((f) => {
                     let promises = [];
                     let geoJSONFeature = {};
