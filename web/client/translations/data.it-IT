@@ -494,6 +494,8 @@
         "identifyTitle": "Informazioni Sulle Feature",
         "identifyNoQueryableLayers": "Nessun livello interrogabile attivo",
         "identifyRevGeocodeHeader": "Coordinate",
+        "identifyShowCoordinateEditor": "Mostra l'editor",
+        "identifyHideCoordinateEditor": "Nascondi l'editor",
         "identifyRevGeocodeModalTitle": "Indirizzo",
         "identifyRevGeocodeSubmitText": "Più informazioni",
         "identifyRevGeocodeCloseText": "Chiudi",

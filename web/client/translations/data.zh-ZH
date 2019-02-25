@@ -345,6 +345,8 @@
         "identifyTitle": "特征信息",
         "identifyNoQueryableLayers": "没有有效的可查询层",
         "identifyRevGeocodeHeader": "坐标",
+        "identifyShowCoordinateEditor": "Show coordinate editor",
+        "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyRevGeocodeModalTitle": "地址",
         "identifyRevGeocodeSubmitText": "更多信息",
         "identifyRevGeocodeCloseText": "关闭",
