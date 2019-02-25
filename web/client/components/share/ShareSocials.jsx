@@ -19,7 +19,6 @@ const {
 // components of the socialnetworks grouped in a bigger container aka ShareSocials
 const {
   FacebookShareButton,
-  GooglePlusShareButton,
   LinkedinShareButton,
   TwitterShareButton
 } = ShareButtons;
@@ -27,14 +26,12 @@ const {
 // counter for counting the number of map-sharing on a given social network
 const {
   FacebookShareCount,
-  GooglePlusShareCount,
   LinkedinShareCount
 } = ShareCounts;
 
 // icons of the social network
 const FacebookIcon = generateShareIcon('facebook');
 const TwitterIcon = generateShareIcon('twitter');
-const GooglePlusIcon = generateShareIcon('google');
 const LinkedinIcon = generateShareIcon('linkedin');
 const Message = require('../../components/I18N/Message');
 require('./share.css');
@@ -97,23 +94,6 @@ class ShareSocials extends React.Component {
                 <div className="share-twitter-count">
                   &nbsp;
                 </div>
-              </div>
-
-
-              <div className="social-box google">
-                <GooglePlusShareButton
-                  url={this.props.shareUrl}
-                  className="share-google-count">
-                  <GooglePlusIcon
-                    size={32}
-                    round />
-                </GooglePlusShareButton>
-                <GooglePlusShareCount
-                  url={this.props.shareUrl}
-                  {...countProps}
-                  className="share-google-count">
-                  {count => count}
-                </GooglePlusShareCount>
               </div>
 
               <div className="social-box linkedin">
