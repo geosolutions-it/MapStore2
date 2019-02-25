@@ -132,9 +132,9 @@
         },
         "home":{
             "open": "Openen",
-            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and React<br/><small>visit the <a href=\"https://mapstore2.readthedocs.io/en/latest/\">documentation</a> page</small>",
+            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and React<br/><small>visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. <br/>Bezoek onze <a href=\"https://mapstore2.readthedocs.io/en/latest/\">homepage</a> voor meer detail.",
+            "description": "MapStore is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. <br/>Bezoek onze <a href=\"https://mapstore.readthedocs.io/en/latest/\">homepage</a> voor meer detail.",
             "Applications": "Toepassingen",
             "Examples": "Voorbeelden",
             "LinkedinGroup": "Mapstore Linkedin groep",
