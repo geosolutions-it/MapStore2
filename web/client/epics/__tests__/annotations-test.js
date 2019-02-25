@@ -46,6 +46,7 @@ const ft = {
         id: "is a point"
     }
 };
+
 describe('annotations Epics', () => {
     let store;
     const defaultState = {
@@ -154,10 +155,12 @@ describe('annotations Epics', () => {
     it('remove annotation', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
-            if (actions.length >= 6) {
-                expect(actions[3].type).toBe(UPDATE_NODE);
-                expect(actions[4].type).toBe(HIDE_MAPINFO_MARKER);
-                expect(actions[5].type).toBe(PURGE_MAPINFO_RESULTS);
+            if (actions.length > 10) {
+                expect(actions[5].type).toBe(UPDATE_NODE);
+                expect(actions[6].type).toBe(HIDE_MAPINFO_MARKER);
+                expect(actions[7].type).toBe(PURGE_MAPINFO_RESULTS);
+                // ensure it triggers identify
+                expect(actions.filter(({type}) => type === CLOSE_IDENTIFY).length).toBe(1);
                 done();
             }
         });
@@ -200,17 +203,6 @@ describe('annotations Epics', () => {
         const action = cancelEditAnnotation();
         store.dispatch(action);
     });
-    /*it('start drawing marker', (done) => {
-        store.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 2) {
-                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
-                done();
-            }
-        });
-        const action = toggleAdd();
-        store.dispatch(action);
-    });*/
     it('highlight', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();

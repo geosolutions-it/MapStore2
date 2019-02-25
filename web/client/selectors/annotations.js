@@ -33,7 +33,6 @@ const drawingSelector = (state) => !!get(state, "annotations.drawing");
 const stylerTypeSelector = (state) => get(state, "annotations.stylerType");
 const drawingTextSelector = (state) => get(state, "annotations.drawingText");
 const currentSelector = (state) => get(state, "annotations.current");
-const modeSelector = (state) => editingSelector(state) && 'editing' || currentSelector(state) && 'detail' || 'list';
 const editedFieldsSelector = (state) => get(state, "annotations.editedFields", {});
 const stylingSelector = (state) => !!get(state, "annotations.styling");
 const selectedSelector = (state) => get(state, "annotations.selected", null);
@@ -44,6 +43,7 @@ const errorsSelector = (state) => get(state, "annotations.validationErrors", {})
 const configSelector = (state) => get(state, "annotations.config", {});
 const symbolListSelector = (state) => get(state, "annotations.symbolList", []);
 const symbolErrorsSelector = (state) => get(state, "annotations.symbolErrors", []);
+const modeSelector = (state) => editingSelector(state) && 'editing' || annotationsLayerSelector(state) && currentSelector(state) && 'detail' || 'list';
 
 const annotationsInfoSelector = (state) => (assign({}, {
     symbolErrors: symbolErrorsSelector(state),
@@ -82,8 +82,9 @@ const annotationsSelector = (state) => ({
 const annotationsListSelector = createSelector([
     annotationsInfoSelector,
     annotationsSelector,
-    annotationsLayerSelector
-], (info, annotations, layer) => (assign({}, {
+    annotationsLayerSelector,
+    modeSelector
+], (info, annotations, layer, mode) => (assign({}, {
     format: annotations.format,
     aeronauticalOptions: annotations.aeronauticalOptions,
     removing: annotations.removing,
@@ -92,7 +93,7 @@ const annotationsListSelector = createSelector([
     showUnsavedStyleModal: annotations.showUnsavedStyleModal,
     showDeleteFeatureModal: annotations.showDeleteFeatureModal,
     closing: !!annotations.closing,
-    mode: annotations.editing && 'editing' || annotations.current && 'detail' || 'list',
+    mode,
     annotations: layer && layer.features || [],
     current: annotations.current || null,
     editing: info.editing,
@@ -110,6 +111,7 @@ const annotationSelector = createSelector([annotationsListSelector], (annotation
 
 module.exports = {
     symbolErrorsSelector,
+    modeSelector,
     annotationsLayerSelector,
     annotationsInfoSelector,
     aeronauticalOptionsSelector,
@@ -125,7 +127,6 @@ module.exports = {
     stylerTypeSelector,
     drawingTextSelector,
     currentSelector,
-    modeSelector,
     editedFieldsSelector,
     stylingSelector,
     unsavedChangesSelector,

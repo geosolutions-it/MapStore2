@@ -11,13 +11,14 @@ const {saveAs} = require('file-saver');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {TOGGLE_CONTROL, toggleControl, setControlProperty} = require('../actions/controls');
 const {addLayer, updateNode, changeLayerProperties, removeLayer} = require('../actions/layers');
-const {hideMapinfoMarker, purgeMapInfoResults} = require('../actions/mapInfo');
 const {set} = require('../utils/ImmutableUtils');
 const {reprojectGeoJson} = require('../utils/CoordinatesUtils');
 const {error} = require('../actions/notifications');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {isFeatureGridOpen} = require('../selectors/featuregrid');
 const {queryPanelSelector, measureSelector} = require('../selectors/controls');
+const { hideMapinfoMarker, purgeMapInfoResults, closeIdentify} = require('../actions/mapInfo');
+
 const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAdd,
     showAnnotation, editAnnotation,
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
@@ -25,21 +26,17 @@ const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAd
     CANCEL_CLOSE_TEXT, SAVE_TEXT, DOWNLOAD, LOAD_ANNOTATIONS, CHANGED_SELECTED, RESET_COORD_EDITOR, CHANGE_RADIUS,
     ADD_NEW_FEATURE, CHANGE_TEXT, NEW_ANNOTATION, TOGGLE_STYLE, CONFIRM_DELETE_FEATURE, OPEN_EDITOR
 } = require('../actions/annotations');
-const {closeIdentify} = require('../actions/mapInfo');
-const uuidv1 = require('uuid/v1');
 
+const uuidv1 = require('uuid/v1');
 const {FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE} = require('../actions/draw');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 
 const {head, findIndex, castArray, isArray, find} = require('lodash');
 const assign = require('object-assign');
-
 const {annotationsLayerSelector} = require('../selectors/annotations');
-
 const {normalizeAnnotation, removeDuplicate, validateCoordsArray, getStartEndPointsForLinestring, DEFAULT_ANNOTATIONS_STYLES} = require('../utils/AnnotationsUtils');
 
-const { mapNameSelector} = require('../selectors/map');
-
+const {mapNameSelector} = require('../selectors/map');
 const {changeDrawingStatus} = require('../actions/draw');
 
    /**
@@ -237,7 +234,9 @@ module.exports = (viewer) => ({
                     features: newFeatures
                 }),
                 hideMapinfoMarker(),
-                purgeMapInfoResults()
+                // TODO: not sure if necessary to purge also results. closeIdentify may purge automatically if annotations are disabled
+                purgeMapInfoResults(),
+                closeIdentify()
             ].concat(newFeatures.length === 0 ? [removeLayer('annotations')] : []));
         }),
     openEditorEpic: action$ => action$.ofType(OPEN_EDITOR)

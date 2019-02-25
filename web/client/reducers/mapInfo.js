@@ -24,7 +24,9 @@ const {
     FEATURE_INFO_CLICK,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
-    TOGGLE_EMPTY_MESSAGE_GFI
+    TOGGLE_EMPTY_MESSAGE_GFI,
+    CHANGE_FORMAT,
+    TOGGLE_SHOW_COORD_EDITOR
 } = require('../actions/mapInfo');
 const {
     MAP_CONFIG_LOADED
@@ -211,6 +213,18 @@ function mapInfo(state = initState, action) {
         return {
             ...state,
             configuration: action.config.mapInfoConfiguration || state.configuration || {}
+        };
+    }
+    case CHANGE_FORMAT: {
+        return {
+            ...state,
+            formatCoord: action.format
+        };
+    }
+    case TOGGLE_SHOW_COORD_EDITOR: {
+        return {
+            ...state,
+            showCoordinateEditor: !action.showCoordinateEditor
         };
     }
     default:

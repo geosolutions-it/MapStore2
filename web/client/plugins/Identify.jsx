@@ -15,9 +15,10 @@ const {createSelector} = require('reselect');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
 
-const {getFeatureInfo, getVectorInfo, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults} = require('../actions/mapInfo');
+const {getFeatureInfo, getVectorInfo, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor} = require('../actions/mapInfo');
 const {changeMousePointer} = require('../actions/map');
 const {showEmptyMessageGFISelector, generalInfoFormatSelector} = require('../selectors/mapInfo');
+
 const {currentLocaleSelector} = require('../selectors/locale');
 
 const {compose, defaultProps} = require('recompose');
@@ -47,9 +48,11 @@ const selector = createSelector([
     (state) => state.mapInfo && state.mapInfo.warning,
     currentLocaleSelector,
     state => mapLayoutValuesSelector(state, {height: true}),
+    (state) => state.mapInfo && state.mapInfo.formatCoord,
+    (state) => state.mapInfo && state.mapInfo.showCoordinateEditor,
     state => showEmptyMessageGFISelector(state)
-], (enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, showEmptyMessageGFI) => ({
-    enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, showEmptyMessageGFI
+], (enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, formatCoord, showCoordinateEditor, showEmptyMessageGFI) => ({
+    enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, formatCoord, showCoordinateEditor, showEmptyMessageGFI
 }));
 // result panel
 
@@ -62,6 +65,7 @@ const DefaultViewer = compose(
 )(require('../components/data/identify/DefaultViewer'));
 
 const identifyDefaultProps = defaultProps({
+    formatCoord: "decimal",
     enabled: false,
     draggable: true,
     collapsible: false,
@@ -85,6 +89,8 @@ const identifyDefaultProps = defaultProps({
     containerProps: {
         continuous: false
     },
+    enabledCoordEditorButton: true,
+    showCoordinateEditor: false,
     showModalReverse: false,
     reverseGeocodeData: {},
     enableRevGeocode: true,
@@ -180,6 +186,9 @@ const IdentifyPlugin = compose(
         localRequest: getVectorInfo,
         purgeResults: purgeMapInfoResults,
         closeIdentify,
+        onChangeClickPoint: featureInfoClick,
+        onToggleShowCoordinateEditor: toggleShowCoordinateEditor,
+        onChangeFormat: changeFormat,
         changeMousePointer,
         showMarker: showMapinfoMarker,
         noQueryableLayers,
