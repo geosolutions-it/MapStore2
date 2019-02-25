@@ -62,3 +62,8 @@ a:hover {
 li.md-tabs__item:hover{
   background: rgba(157, 204, 242, 0.2);
 }
+
+/* exclude rtd menu not working items */
+.rst-other-versions dl:nth-child(3), .rst-other-versions dl:nth-child(4) {
+    display: none;
+}
