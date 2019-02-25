@@ -288,7 +288,6 @@ class DrawSupport extends React.Component {
             if (newProps.style) {
                 this.drawLayer.setStyle((ftOl) => {
                     let originalFeature = find(head(newProps.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
-                    // let originalFeatureOLD = find(head(this.props.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
                     if (originalFeature) {
                         let promises = createStylesAsync(castArray(originalFeature.style));
                         axios.all(promises).then((styles) => {

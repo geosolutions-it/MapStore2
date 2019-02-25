@@ -343,7 +343,7 @@ module.exports = (viewer) => ({
                 }, assign({}, style, {highlight: false}))
             ]);
         }),
-    setStyleEpic: (action$, store) => action$.ofType(SET_STYLE)
+    setAnnotationStyleEpic: (action$, store) => action$.ofType(SET_STYLE)
         .switchMap( () => {
             // TODO verify if we need to override the style here or in the store
             const features = store.getState().annotations.editing.features;
