@@ -48,9 +48,9 @@
                     "iconClass": "ico-book",
                     "label": "Guides",
                     "items": [
-                        { "label": "User Guide", "href": "https://mapstore2.readthedocs.io/en/latest/user-guide/home-page/" },
+                        { "label": "User Guide", "href": "https://mapstore.readthedocs.io/en/latest/user-guide/home-page/" },
                         { "separator": true },
-                        { "label": "Developer's guide", "href": "https://mapstore2.readthedocs.io/en/latest/developer-guide/" }
+                        { "label": "Developer's guide", "href": "https://mapstore.readthedocs.io/en/latest/developer-guide/" }
                     ]
                 },
                 {

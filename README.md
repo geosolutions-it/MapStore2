@@ -13,7 +13,7 @@ MapStore has several example applications:
  * MapViewer is a simple viewer of preconfigured maps (optionally stored in a database using GeoStore)
  * MapPublisher has been developed to create, save and share in a simple and intuitive way maps and mashups created selecting contents by server like OpenStreetMap, Google Maps, MapQuest or specific servers provided by your organization or third party.
 
-For more information check the [MapStore documentation](https://mapstore2.readthedocs.io/en/latest/).
+For more information check the [MapStore documentation](https://mapstore.readthedocs.io/en/latest/).
 
 Download
 ------------
@@ -54,7 +54,7 @@ Use the default credentials (admin / admin) to login and start creating your map
 
 Documentation
 -------------
-You can find more documentation about how to build, install or develop with MapStore on the [documentation site](https://mapstore2.readthedocs.io/en/latest/).
+You can find more documentation about how to build, install or develop with MapStore on the [documentation site](https://mapstore.readthedocs.io/en/latest/).
 
 License
 ------------
@@ -105,7 +105,7 @@ Where version_identifier is an optional identifier of the generated war that wil
 
 Deploy the generated mapstore.war file (in web/target) to your favourite J2EE container (e.g. Tomcat).
 
-Read more on the [documentation site](https://mapstore2.readthedocs.io/en/latest/).
+Read more on the [documentation site](https://mapstore.readthedocs.io/en/latest/).
 
 Professional Support
 ---------------------

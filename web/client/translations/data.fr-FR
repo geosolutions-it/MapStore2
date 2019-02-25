@@ -161,9 +161,9 @@
         },
         "home":{
             "open": "Ouvrir",
-            "shortDescription": "Modern webmapping avec OpenLayers, Leaflet et React<br/><small>consultez la page <a href=\"https://mapstore2.readthedocs.io/en/latest/\"> documentation </a> </ small>",
+            "shortDescription": "Modern webmapping avec OpenLayers, Leaflet et React<br/><small>consultez la page <a href=\"https://mapstore.readthedocs.io/en/latest/\"> documentation </a> </ small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore est développé pour créer, sauvegarder et partager de façon simple et intuitive cartes et assemblages créés à partir du contenu de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce.<br/>Visitez notre <a href=\"https://mapstore2.readthedocs.io/en/latest/\">page d'accueil</a> pour plus de détails.",
+            "description": "MapStore est développé pour créer, sauvegarder et partager de façon simple et intuitive cartes et assemblages créés à partir du contenu de serveurs tel que OpenStreetMap, Google Maps, MapQuest ou tout autre serveur spécifique fourni par votre organisation ou une organisation tierce.<br/>Visitez notre <a href=\"https://mapstore.readthedocs.io/en/latest/\">page d'accueil</a> pour plus de détails.",
             "Applications": "Applications",
             "Examples": "Exemples",
             "LinkedinGroup": "Groupe Linkedin Mapstore",
