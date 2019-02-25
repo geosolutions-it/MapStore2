@@ -140,16 +140,16 @@ class DrawSupport extends React.Component {
     updateOnlyFeatureStyles = (newProps) => {
         if (this.drawLayer) {
             this.drawLayer.getSource().getFeatures().forEach(ftOl => {
-                let originalGeoJsonFeature = find(head(newProps.features).features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
+
+                let features = head(newProps.features).features || newProps.features; // checking FeatureCollection or an array of simple features
+
+                let originalGeoJsonFeature = find(features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
                 if (originalGeoJsonFeature) {
+                    // only if it finds a feature drawn then update its style
                     let promises = createStylesAsync(castArray(originalGeoJsonFeature.style));
                     axios.all(promises).then((styles) => {
                         ftOl.setStyle(() => parseStyles({...originalGeoJsonFeature, style: styles}));
                     });
-                } else {
-                    const styleType = this.convertGeometryTypeToStyleType(newProps.drawMethod);
-                    // if the styles is not present in the feature it uses a default one based on the drawMethod basically
-                    return parseStyles({style: VectorStyle.defaultStyles[styleType]});
                 }
             });
         }

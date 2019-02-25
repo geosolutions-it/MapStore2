@@ -1842,4 +1842,93 @@ describe('Test DrawSupport', () => {
 
         expect(spyonEndDrawing).toNotHaveBeenCalled();
     });
+    it('edit a feature, then update its style', (done) => {
+        const fakeMap = {
+            addLayer: () => {},
+            removeLayer: () => {},
+            disableEventListener: () => {},
+            enableEventListener: () => {},
+            addInteraction: () => {},
+            updateOnlyFeatureStyles: () => {},
+            on: () => {},
+            removeInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Polygon',
+                coordinates: [[
+                  [13, 43],
+                  [15, 43],
+                  [15, 44],
+                  [13, 44]
+                ]]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id"
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                opacity: 1,
+                fillColor: "#0000FF",
+                fillOpacity: 1
+            }]
+        };
+
+        const support = ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport
+                features={[feature]}
+                map={fakeMap}
+                drawStatus="drawOrEdit"
+                drawMethod="Polygon"
+                options={{
+                    drawEnabled: false,
+                    editEnabled: true
+                }}
+            />, document.getElementById("container"));
+
+        ReactDOM.render(
+            <DrawSupport
+                features={[{
+                    ...feature,
+                style: [{
+                    id: "style-id",
+                    color: "#FFFFFF",
+                    opacity: 0.5,
+                    fillColor: "#FFFFFF",
+                    fillOpacity: 0.5
+                }]}]}
+                map={fakeMap}
+                drawStatus="updateStyle"
+                drawMethod="Polygon"
+                options={{
+                    drawEnabled: false,
+                    editEnabled: true
+                }}
+        />, document.getElementById("container"));
+
+        setTimeout( () => {
+            const drawnFt = support.drawLayer.getSource().getFeatures()[0];
+            expect(drawnFt.getStyle()).toExist();
+            expect(drawnFt.getStyle()()).toExist();
+            expect(drawnFt.getStyle()()[0].getStroke().getColor()).toEqual("rgba(255, 255, 255, 0.5)");
+            expect(drawnFt.getStyle()()[0].getFill().getColor()).toEqual("rgba(255, 255, 255, 0.5)");
+            done();
+        }, 100);
+    });
+
 });
