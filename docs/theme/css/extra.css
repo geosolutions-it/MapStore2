@@ -64,6 +64,6 @@ li.md-tabs__item:hover{
 }
 
 /* exclude rtd menu not working items */
-.rst-other-versions dl:p:nth-child(3), .rst-other-versions dl:p:nth-child(4) {
+.rst-other-versions dl:nth-child(3), .rst-other-versions dl:nth-child(4) {
     display: none;
 }
