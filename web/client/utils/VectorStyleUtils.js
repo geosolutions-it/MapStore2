@@ -311,13 +311,13 @@ const createSvgUrl = (style = {}, url) => {
 
 const createStylesAsync = (styles = []) => {
     return styles.map(style => {
-        return isSymbolStyle(style) ? createSvgUrl(style, style.symbolUrl || style.symbolUrlCustomized)
+        return isSymbolStyle(style) && !fetchStyle(hashAndStringify(style)) ? createSvgUrl(style, style.symbolUrl || style.symbolUrlCustomized)
             .then(symbolUrlCustomized => {
                 return symbolUrlCustomized ? {...style, symbolUrlCustomized} : fetchStyle(hashAndStringify(style));
             }).catch(() => {
                 return {...style, symbolUrlCustomized: require('../product/assets/symbols/symbolMissing.svg')};
             }) : new Promise((resolve) => {
-                resolve(style);
+                resolve(isSymbolStyle(style) ? fetchStyle(hashAndStringify(style)) : style);
             });
     });
 };

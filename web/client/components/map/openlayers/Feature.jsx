@@ -41,11 +41,11 @@ class Feature extends React.Component {
         return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry) || (nextProps.features !== this.props.features) || (nextProps.style !== this.props.style);
     }
 
-    componentWillUpdate(newProps) {
+    componentWillUpdate(nextProps) {
         // TODO check if shallow comparison is enough properties and geometry
-        if (!isEqual(newProps.properties, this.props.properties) || !isEqual(newProps.geometry, this.props.geometry) || (newProps.features !== this.props.features) || (newProps.style !== this.props.style)) {
+        if (!isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry) || (nextProps.features !== this.props.features) || (nextProps.style !== this.props.style)) {
             this.removeFromContainer();
-            this.addFeatures(newProps);
+            this.addFeatures(nextProps);
         }
     }
 
@@ -89,7 +89,7 @@ class Feature extends React.Component {
             }).forEach(
                 (f) => f.getGeometry().transform(props.featuresCrs, props.crs || 'EPSG:3857'));
 
-            if (props.style && (props.style !== props.layerStyle)) { // TODO test this logic with other functionalities
+            if (props.style && (props.style !== props.layerStyle)) {
                 this._feature.forEach((f) => {
                     let promises = [];
                     let geoJSONFeature = {};

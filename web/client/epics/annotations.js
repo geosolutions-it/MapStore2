@@ -31,7 +31,7 @@ const uuidv1 = require('uuid/v1');
 const {FEATURES_SELECTED, GEOMETRY_CHANGED, DRAWING_FEATURE} = require('../actions/draw');
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 
-const {head, findIndex, castArray, isArray} = require('lodash');
+const {head, findIndex, castArray, isArray, find} = require('lodash');
 const assign = require('object-assign');
 
 const {annotationsLayerSelector} = require('../selectors/annotations');
@@ -343,13 +343,15 @@ module.exports = (viewer) => ({
                 }, assign({}, style, {highlight: false}))
             ]);
         }),
-    setStyleEpic: (action$, store) => action$.ofType(SET_STYLE)
+    setAnnotationStyleEpic: (action$, store) => action$.ofType(SET_STYLE)
         .switchMap( () => {
             // TODO verify if we need to override the style here or in the store
-            let feature = store.getState().annotations.editing;
-            let projectedFeature = reprojectGeoJson(feature, "EPSG:4326", "EPSG:3857");
+            const features = store.getState().annotations.editing.features;
+            const selected = store.getState().annotations.selected;
+            let ftChanged = find(features, f => f.properties.id === selected.properties.id); // can use also selected.style
+            let projectedFeature = reprojectGeoJson(ftChanged, "EPSG:4326", "EPSG:3857");
             return Rx.Observable.from([
-                changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [projectedFeature], {}, assign({}, store.getState().annotations.selected.style, {highlight: false}))
+                changeDrawingStatus("updateStyle", store.getState().annotations.featureType, "annotations", [projectedFeature], {}, assign({}, selected.style, {highlight: false}))
             ]
             );
         }),

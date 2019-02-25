@@ -103,6 +103,7 @@ class DrawSupport extends React.Component {
                 case "drawOrEdit": this.addDrawOrEditInteractions(newProps); break;
                 case "stop": /* only stops draw*/ this.removeDrawInteraction(); break;
                 case "replace": this.replaceFeatures(newProps); break;
+                case "updateStyle": this.updateOnlyFeatureStyles(newProps); break;
                 case "clean": this.clean(); break;
                 case "cleanAndContinueDrawing": this.clean(true); break;
                 case "endDrawing": this.endDrawing(newProps); break;
@@ -135,6 +136,24 @@ class DrawSupport extends React.Component {
             });
         }
     };
+
+    updateOnlyFeatureStyles = (newProps) => {
+        if (this.drawLayer) {
+            this.drawLayer.getSource().getFeatures().forEach(ftOl => {
+
+                let features = head(newProps.features).features || newProps.features; // checking FeatureCollection or an array of simple features
+
+                let originalGeoJsonFeature = find(features, ftTemp => ftTemp.properties.id === ftOl.getProperties().id);
+                if (originalGeoJsonFeature) {
+                    // only if it finds a feature drawn then update its style
+                    let promises = createStylesAsync(castArray(originalGeoJsonFeature.style));
+                    axios.all(promises).then((styles) => {
+                        ftOl.setStyle(() => parseStyles({...originalGeoJsonFeature, style: styles}));
+                    });
+                }
+            });
+        }
+    }
 
     addLayer = (newProps, addInteraction) => {
         let layerStyle = null;
