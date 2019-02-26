@@ -149,18 +149,15 @@ describe('annotations Epics', () => {
                 done();
             }
         });
-        const action = editAnnotation('1')(store.dispatch, store.getState);
-        store.dispatch(action);
+        editAnnotation('1')(store.dispatch, store.getState);
     });
     it('remove annotation', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
-            if (actions.length > 10) {
-                expect(actions[5].type).toBe(UPDATE_NODE);
-                expect(actions[6].type).toBe(HIDE_MAPINFO_MARKER);
-                expect(actions[7].type).toBe(PURGE_MAPINFO_RESULTS);
-                // ensure it triggers identify
-                expect(actions.filter(({type}) => type === CLOSE_IDENTIFY).length).toBe(1);
+            if (actions.length >= 6) {
+                expect(actions[3].type).toBe(UPDATE_NODE);
+                expect(actions[4].type).toBe(HIDE_MAPINFO_MARKER);
+                expect(actions[5].type).toBe(PURGE_MAPINFO_RESULTS);
                 done();
             }
         });
@@ -600,4 +597,5 @@ describe('annotations Epics', () => {
 
         store.dispatch(action);
     });
+
 });
