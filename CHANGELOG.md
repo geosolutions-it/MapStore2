@@ -1,6 +1,6 @@
 # Change Log
 
-## [2019.01.00](https://github.com/geosolutions-it/MapStore2/tree/2019.01.00) (2019-02-26)
+## [2019.01.00](https://github.com/geosolutions-it/MapStore2/tree/v2019.01.00) (2019-02-26)
 
  - **[Full Changelog](https://github.com/geosolutions-it/MapStore2/compare/tv2019.01.00...v2019.01.00)**
 
