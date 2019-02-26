@@ -8,7 +8,7 @@
 
 const expect = require('expect');
 const mapInfo = require('../mapInfo');
-const { featureInfoClick, toggleEmptyMessageGFI } = require('../../actions/mapInfo');
+const { featureInfoClick, toggleEmptyMessageGFI, toggleShowCoordinateEditor, changeFormat} = require('../../actions/mapInfo');
 const { MAP_CONFIG_LOADED } = require('../../actions/config');
 const assign = require('object-assign');
 
@@ -1455,4 +1455,16 @@ describe('Test the mapInfo reducer', () => {
         expect(state.configuration.infoFormat).toBe(newInfoFormat);
     });
 
+    it('toggleShowCoordinateEditor', () => {
+        let state = mapInfo({}, toggleShowCoordinateEditor(true));
+        expect(state).toExist();
+        expect(state.showCoordinateEditor).toBe(false);
+    });
+    it('changeFormat', () => {
+        let state = mapInfo({
+            formatCoord: "aeronautical"
+        }, changeFormat("decimal"));
+        expect(state).toExist();
+        expect(state.formatCoord).toBe("decimal");
+    });
 });

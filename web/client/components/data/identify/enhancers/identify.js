@@ -8,7 +8,8 @@
 
 const {lifecycle, withHandlers, branch, withState, compose, defaultProps} = require('recompose');
 const MapInfoUtils = require('../../../../utils/MapInfoUtils');
-const {isEqual, isArray} = require('lodash');
+const {set} = require('../../../../utils/ImmutableUtils');
+const {isEqual, isArray, isNil} = require('lodash');
 
 /**
  * Enhancer to enable set index only if Component has not header in viewerOptions props
@@ -26,6 +27,7 @@ const switchControlledIdentify = branch(
  * Enhancer to enable set index only if Component has header
  * - needsRefresh: check if current selected point if different of next point, if so return true
  * - onClose: delete results, close identify panel and hide the marker on map
+ * - onChange: changed the coords OF GFI coord editor from the UI
  * @memberof enhancers.identifyHandlers
  * @class
  */
@@ -34,6 +36,7 @@ const identifyHandlers = withHandlers({
         if (newProps.enabled && newProps.point && newProps.point.pixel) {
             if (!props.point || !props.point.pixel ||
                 props.point.pixel.x !== newProps.point.pixel.x ||
+                props.point.latlng !== newProps.point.latlng ||
                 props.point.pixel.y !== newProps.point.pixel.y ) {
                 return true;
             }
@@ -47,6 +50,19 @@ const identifyHandlers = withHandlers({
         hideMarker();
         purgeResults();
         closeIdentify();
+    },
+    onChangeClickPoint: ({
+        onChangeClickPoint = () => {},
+        point
+    }) => (coord, val) => {
+        let changedCoord = coord === "lat" ? "lat" : "lng";
+        let newPoint = set(`latlng.${changedCoord}`, !isNil(val) ? parseFloat(val) : 0, point);
+        onChangeClickPoint(newPoint);
+    },
+    onChangeFormat: ({
+        onChangeFormat = () => {}
+    }) => (format) => {
+        onChangeFormat(format);
     }
 });
 

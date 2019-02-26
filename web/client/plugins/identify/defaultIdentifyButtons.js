@@ -25,6 +25,15 @@ module.exports = props => [
         }
     },
     {
+        glyph: 'search-coords',
+        tooltipId: props.showCoordinateEditor ? 'identifyHideCoordinateEditor' : 'identifyShowCoordinateEditor',
+        visible: props.enabledCoordEditorButton,
+        bsStyle: (props.showCoordinateEditor) ? "success" : "primary",
+        onClick: () => {
+            props.onToggleShowCoordinateEditor(props.showCoordinateEditor);
+        }
+    },
+    {
         glyph: 'arrow-right',
         tooltipId: 'wizard.next',
         visible: !props.viewerOptions.header && props.validResponses.length > 1 && props.index < props.validResponses.length - 1,

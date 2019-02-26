@@ -24,6 +24,8 @@ extra:
       link: 'https://twitter.com/geosolutions_it'
     - type: 'linkedin'
       link: 'https://it.linkedin.com/company/geosolutions-s-a-s-'
+extra_javascript:
+  - 'https://code.jquery.com/jquery-3.3.1.min.js'
 extra_css:
   - 'theme/css/extra.css'
 repo_name: 'geosolutions-it/MapStore2'

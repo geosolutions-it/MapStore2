@@ -4,36 +4,59 @@ const {Row, Col, Glyphicon} = require('react-bootstrap');
 const Toolbar = require('../toolbar/Toolbar');
 const draggableComponent = require('../enhancers/draggableComponent');
 const CoordinateEntry = require('./CoordinateEntry');
+const Message = require('../../I18N/Message');
+const DropdownToolbarOptions = require('../toolbar/DropdownToolbarOptions');
 
 /**
 
 */
-class CoordinatesRowComponent extends React.Component {
-
+class CoordinatesRow extends React.Component {
     static propTypes = {
         idx: PropTypes.number,
         component: PropTypes.object,
         onRemove: PropTypes.func,
         onChange: PropTypes.func,
+        onChangeFormat: PropTypes.func,
         onMouseEnter: PropTypes.func,
         format: PropTypes.string,
         type: PropTypes.string,
         onMouseLeave: PropTypes.func,
         connectDragSource: PropTypes.func,
         aeronauticalOptions: PropTypes.object,
+        customClassName: PropTypes.string,
         isDraggable: PropTypes.bool,
+        showLabels: PropTypes.bool,
         removeVisible: PropTypes.bool,
+        formatVisible: PropTypes.bool,
         removeEnabled: PropTypes.bool
     };
+    defaultProps = {
+        showLabels: false,
+        formatVisible: false
+    }
+
+    getColsSize = () => {
+        let colsSize = [
+            this.props.isDraggable && !(this.props.removeVisible || this.props.formatVisible) ? 2 : (this.props.removeVisible || this.props.formatVisible ? 0 : 1),
+            this.props.isDraggable || this.props.removeVisible || this.props.formatVisible ? 5 : 6,
+            this.props.isDraggable || this.props.removeVisible || this.props.formatVisible ? 5 : 6,
+            (this.props.removeVisible || this.props.formatVisible) && !this.props.isDraggable ? 2 : (this.props.isDraggable ? 0 : 1)
+        ];
+        return colsSize;
+    }
+
     render() {
         const {idx} = this.props;
         const rowStyle = {marginLeft: -5, marginRight: -5};
+        const colsSize = this.getColsSize();
         return (
-            <Row className="coordinateRow" style={rowStyle} onMouseEnter={() => {
-                this.props.onMouseEnter(this.props.component);
+            <Row className={`coordinateRow ${this.props.customClassName}`} style={!this.props.customClassName ? rowStyle : {}} onMouseEnter={() => {
+                if (this.props.onMouseEnter) {
+                    this.props.onMouseEnter(this.props.component);
+                }
             }} onMouseLeave={this.props.onMouseLeave}>
-                <Col xs={1}>
-                    {this.props.connectDragSource(<div
+                <Col xs={colsSize[0]}>
+                    {this.props.isDraggable && this.props.connectDragSource(<div
                         className="square-button-md no-border btn btn-default"
                         style={{display: "flex" /*workaround for firefox*/}}
                         >
@@ -43,7 +66,8 @@ class CoordinatesRowComponent extends React.Component {
                         style={{pointerEvents: !this.props.isDraggable ? "none" : "auto"}}
                     /></div>)}
                 </Col>
-                <Col xs={5}>
+                <Col xs={colsSize[1]}>
+                    {this.props.showLabels && <span><Message msgId="latitude"/></span>}
                     <CoordinateEntry
                         format={this.props.format}
                         aeronauticalOptions={this.props.aeronauticalOptions}
@@ -65,7 +89,8 @@ class CoordinatesRowComponent extends React.Component {
                         }}
                     />
                 </Col>
-                <Col xs={5}>
+                <Col xs={colsSize[2]}>
+                    {this.props.showLabels && <span><Message msgId="longitude"/></span>}
                     <CoordinateEntry
                         format={this.props.format}
                         aeronauticalOptions={this.props.aeronauticalOptions}
@@ -87,7 +112,7 @@ class CoordinatesRowComponent extends React.Component {
                         }}
                     />
                 </Col>
-                <Col xs={1}>
+                <Col xs={colsSize[3]}>
                     <Toolbar
                         btnGroupProps={{ className: 'pull-right' }}
                         btnDefaultProps={{ className: 'square-button-md no-border'}}
@@ -100,6 +125,26 @@ class CoordinatesRowComponent extends React.Component {
                                 onClick: () => {
                                     this.props.onRemove(idx);
                                 }
+                            },
+                            {
+                                buttonConfig: {
+                                    title: <Glyphicon glyph="cog"/>,
+                                    className: "square-button-md no-border",
+                                    pullRight: true
+                                },
+                                menuOptions: [
+                                    {
+                                        active: this.props.format === "decimal",
+                                        onClick: () => { this.props.onChangeFormat("decimal"); },
+                                        text: <Message msgId="search.decimal"/>
+                                    }, {
+                                        active: this.props.format === "aeronautical",
+                                        onClick: () => { this.props.onChangeFormat("aeronautical"); },
+                                        text: <Message msgId="search.aeronautical"/>
+                                    }
+                                ],
+                                visible: this.props.formatVisible,
+                                Element: DropdownToolbarOptions
                             }
                         ]
                     }/>
@@ -109,4 +154,4 @@ class CoordinatesRowComponent extends React.Component {
     }
 }
 
-module.exports = draggableComponent(CoordinatesRowComponent);
+module.exports = draggableComponent(CoordinatesRow);

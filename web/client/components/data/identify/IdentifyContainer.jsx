@@ -17,7 +17,7 @@ const ResizableModal = require('../../misc/ResizableModal');
 const Portal = require('../../misc/Portal');
 
 /**
- * Component for rendering Identify Container inside a Dockable contanier
+ * Component for rendering Identify Container inside a Dockable container
  * @memberof components.data.identify
  * @name IdentifyContainer
  * @class
@@ -26,6 +26,8 @@ const Portal = require('../../misc/Portal');
  * @prop {object} viewerOptions options to use with the viewer, eg { header: MyHeader, container: MyContainer }
  * @prop {function} getButtons must return an array of object representing the toolbar buttons, eg (props) => [{ glyph: 'info-sign', tooltip: 'hello!'}]
  */
+
+const CoordinatesEditor = require('../../../plugins/identify/CoordinatesEditor');
 
 module.exports = props => {
     const {
@@ -52,7 +54,13 @@ module.exports = props => {
         warning,
         clearWarning,
         zIndex,
-        showEmptyMessageGFI
+        showEmptyMessageGFI,
+        // coord editor props
+        enabledCoordEditorButton,
+        showCoordinateEditor,
+        onChangeClickPoint,
+        onChangeFormat,
+        formatCoord
     } = props;
 
     const latlng = point && point.latlng || null;
@@ -72,7 +80,7 @@ module.exports = props => {
     const buttons = getButtons({...props, lngCorrected, validResponses, latlng});
     const missingResponses = requests.length - responses.length;
     const revGeocodeDisplayName = reverseGeocodeData.error ? <Message msgId="identifyRevGeocodeError"/> : reverseGeocodeData.display_name;
-
+    const CoordEditor = enabledCoordEditorButton && showCoordinateEditor ? CoordinatesEditor : null;
     return (
         <div>
             <DockablePanel
@@ -89,7 +97,15 @@ module.exports = props => {
                 style={dockStyle}
                 showFullscreen={showFullscreen}
                 zIndex={zIndex}
-                header={[
+                header={[ CoordEditor &&
+                    <CoordEditor
+                        isDraggable={false}
+                        removeVisible={false}
+                        formatCoord={formatCoord}
+                        coordinate={point.latlng ? {lat: point.latlng.lat, lon: lngCorrected } : {lat: "", lon: ""}}
+                        onChange={onChangeClickPoint}
+                        onChangeFormat={onChangeFormat}
+                    /> || null,
                     <GeocodeViewer latlng={latlng} revGeocodeDisplayName={revGeocodeDisplayName} {...props}/>,
                     buttons.length > 0 ? (
                     <Row className="text-center">

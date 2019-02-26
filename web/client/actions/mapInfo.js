@@ -29,6 +29,8 @@ const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
 const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
 const CLOSE_IDENTIFY = 'IDENTIFY:CLOSE_IDENTIFY';
+const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
+const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
 
 const TOGGLE_EMPTY_MESSAGE_GFI = "IDENTIFY:TOGGLE_EMPTY_MESSAGE_GFI";
 const toggleEmptyMessageGFI = () => ({type: TOGGLE_EMPTY_MESSAGE_GFI});
@@ -224,6 +226,24 @@ const closeIdentify = () => ({
     type: CLOSE_IDENTIFY
 });
 
+/**
+ * change format of coordinate editor
+ * @prop {string} format
+*/
+const changeFormat = (format) => ({
+    type: CHANGE_FORMAT,
+    format
+});
+
+/**
+ * action for toggling the state of the showCoordinateEditor flag
+ * @prop {boolean} showCoordinateEditor
+*/
+const toggleShowCoordinateEditor = (showCoordinateEditor) => ({
+    type: TOGGLE_SHOW_COORD_EDITOR,
+    showCoordinateEditor
+});
+
 module.exports = {
     ERROR_FEATURE_INFO,
     EXCEPTIONS_FEATURE_INFO,
@@ -244,6 +264,8 @@ module.exports = {
     UPDATE_CENTER_TO_MARKER,
     CLOSE_IDENTIFY,
     TOGGLE_EMPTY_MESSAGE_GFI, toggleEmptyMessageGFI,
+    TOGGLE_SHOW_COORD_EDITOR, toggleShowCoordinateEditor,
+    CHANGE_FORMAT, changeFormat,
     closeIdentify,
     getFeatureInfo,
     changeMapInfoState,

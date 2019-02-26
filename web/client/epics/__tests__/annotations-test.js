@@ -46,6 +46,7 @@ const ft = {
         id: "is a point"
     }
 };
+
 describe('annotations Epics', () => {
     let store;
     const defaultState = {
@@ -148,16 +149,23 @@ describe('annotations Epics', () => {
                 done();
             }
         });
-        const action = editAnnotation('1')(store.dispatch, store.getState);
-        store.dispatch(action);
+        editAnnotation('1')(store.dispatch, store.getState);
     });
+    /**
+    TOFIX:
+        . some previous test seems to break this test, uncomment the following check about CLOSE_IDENTIFY when solved.
+        . update the actions.length check to the proper number.
+        . there are 2 CHANGE_DRAWING_STATUS actions that come between CONFIRM_REMOVE_ANNOTATION and UPDATE_NODE
+    */
     it('remove annotation', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
             if (actions.length >= 6) {
-                expect(actions[3].type).toBe(UPDATE_NODE);
+                expect(actions[3].type).toBe(UPDATE_NODE); // if the previous test are commented out this is the first actions
                 expect(actions[4].type).toBe(HIDE_MAPINFO_MARKER);
                 expect(actions[5].type).toBe(PURGE_MAPINFO_RESULTS);
+                // ensure it triggers identify
+                // expect(actions.filter(({type}) => type === CLOSE_IDENTIFY).length).toBe(1);
                 done();
             }
         });
@@ -200,17 +208,6 @@ describe('annotations Epics', () => {
         const action = cancelEditAnnotation();
         store.dispatch(action);
     });
-    /*it('start drawing marker', (done) => {
-        store.subscribe(() => {
-            const actions = store.getActions();
-            if (actions.length >= 2) {
-                expect(actions[1].type).toBe(CHANGE_DRAWING_STATUS);
-                done();
-            }
-        });
-        const action = toggleAdd();
-        store.dispatch(action);
-    });*/
     it('highlight', (done) => {
         store.subscribe(() => {
             const actions = store.getActions();
@@ -608,4 +605,5 @@ describe('annotations Epics', () => {
 
         store.dispatch(action);
     });
+
 });
