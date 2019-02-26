@@ -343,7 +343,6 @@
                 }
             },
             "OmniBar", "Login", "Save", "SaveAs", "BurgerMenu", "Expander", "Undo", "Redo", "FullScreen", "GlobeViewSwitcher", "SearchServicesConfig", "WidgetsBuilder", "Widgets",
-            "FloatingLegend",
             "FeedbackMask",
             "StyleEditor"
         ],
