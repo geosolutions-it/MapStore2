@@ -11,7 +11,9 @@ const {
     CHANGE_MEASUREMENT_STATE,
     CHANGE_UOM,
     RESET_GEOMETRY,
-    CHANGED_GEOMETRY
+    CHANGED_GEOMETRY,
+    CHANGE_FORMAT,
+    CHANGE_COORDINATES
 } = require('../actions/measurement');
 const {set} = require('../utils/ImmutableUtils');
 
@@ -19,7 +21,8 @@ const {TOGGLE_CONTROL, RESET_CONTROLS} = require('../actions/controls');
 
 const assign = require('object-assign');
 const defaultState = {
-    lineMeasureEnabled: false,
+    lineMeasureEnabled: true,
+    geomType: "LineString",
     areaMeasureEnabled: false,
     bearingMeasureEnabled: false,
     customStartEndPoint: {
@@ -119,14 +122,17 @@ function measurement(state = defaultState, action) {
             len: 0,
             area: 0,
             bearing: 0,
-            lineMeasureEnabled: false,
-            areaMeasureEnabled: false,
-            bearingMeasureEnabled: false,
             feature: { properties: {
                 disabled: true
-            }},
-            geomType: ""
+            }}
         };
+    }
+    case CHANGE_FORMAT: {
+        return {...state, format: action.format};
+    }
+    case CHANGE_COORDINATES: {
+        let coordinates = action.coordinates.map(c => ([c.lon, c.lat]));
+        return set("feature.geometry.coordinates", state.areaMeasureEnabled ? [coordinates] : coordinates, state);
     }
     default:
         return state;

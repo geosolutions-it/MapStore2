@@ -21,3 +21,7 @@
     vertical-align: -webkit-baseline-middle!important;
     vertical-align: -moz-middle-with-baseline !important;
 }
+
+#measure-bearing-res {
+    font-family: Menlo, Monaco, Consolas, Courier New, monospace;
+}

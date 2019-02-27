@@ -227,6 +227,7 @@ class CoordinateEditor extends React.Component {
                         sortId={idx}
                         key={idx + " key"}
                         isDraggable={this.props.isDraggable && componentsValidation[type].remove && this[componentsValidation[type].validation]()}
+                        formatVisible={false}
                         removeVisible={componentsValidation[type].remove}
                         removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove)}
                         onChange={this.change}
