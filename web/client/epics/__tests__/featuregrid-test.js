@@ -54,7 +54,7 @@ const {CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
 
 const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
-
+const {LOAD_FILTER} = require('../../actions/queryform');
 
 const {
     setHighlightFeaturesPath,
@@ -1479,18 +1479,24 @@ describe('featuregrid Epics', () => {
         }, newState);
     });
 
-    it('test onOpenAdvancedSearch to throw drawstatechange if drawStatus is not clean on queryPanel close', (done) => {
+    it('test onOpenAdvancedSearch', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
                 open: true,
-                selectedLayer: "TEST__6",
+                // layer id with `.` and `:`
+                selectedLayer: "TEST:A.LAYER__6",
                 mode: 'EDIT',
                 select: [{id: 'polygons.1', _new: 'polygons._new'}],
-                changes: []
+                changes: [],
+                advancedFilters: {
+                    "TEST:A.LAYER__6": {
+                        "someFilter": "something"
+                    }
+                }
             },
             layers: {
                 flat: [{
-                    id: "TEST__6",
+                    id: "TEST:A.LAYER__6",
                     name: "V_TEST",
                     title: "V_TEST",
                     filterObj,
@@ -1508,7 +1514,12 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(4);
             actions.map((action) => {
                 switch (action.type) {
+                    case LOAD_FILTER:
+                        // load filter, if present
+                        expect(action.filter).toExist();
+                        break;
                     case CHANGE_DRAWING_STATUS:
+                        //  throw drawstatechange if drawStatus is not clean on queryPanel close
                         expect(action.status).toBe('clean');
                         break;
                     default:
