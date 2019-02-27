@@ -18,12 +18,13 @@ const {
     featureLoadingSelector,
     isDescribeLoaded,
     describeSelector,
+    featureTypeSelectorCreator,
     getFeatureById,
     attributesSelector,
     isSyncWmsActive,
     isFilterActive
 } = require('../query');
-
+const STRANGE_LAYER_NAME = "test.workspace:test.layer";
 const idFt1 = "idFt1";
 const idFt2 = "idFt2";
 const modeEdit = "edit";
@@ -53,7 +54,7 @@ let feature2 = {
 const initialState = {
     query: {
     featureTypes: {
-      'editing:polygons': {
+      'editing:polygons.layer': {
         geometry: [
           {
             label: 'geometry',
@@ -258,7 +259,8 @@ const initialState = {
     open: true,
     isNew: false,
     filterObj: {
-      featureTypeName: 'editing:polygons',
+      // name with point and strange chars
+      featureTypeName: 'editing:polygons.layer',
       groupFields: [
         {
           id: 1,
@@ -283,7 +285,7 @@ const initialState = {
       hits: false
     },
     searchUrl: 'http://localhost:8081/geoserver/wfs?',
-    typeName: 'editing:polygons',
+    typeName: 'editing:polygons.layer',
     syncWmsFilter: true,
     url: 'http://localhost:8081/geoserver/wfs?',
     featureLoading: false
@@ -312,7 +314,7 @@ describe('Test query selectors', () => {
     it('test typeNameSelector selector', () => {
         const typename = typeNameSelector(initialState);
         expect(typename).toExist();
-        expect(typename).toBe("editing:polygons");
+        expect(typename).toBe("editing:polygons.layer");
     });
     it('test isSyncWmsActive selector', () => {
         const sync = isSyncWmsActive(initialState);
@@ -322,7 +324,7 @@ describe('Test query selectors', () => {
     it('test wfsFilter selector', () => {
         const filterObj = wfsFilter(initialState);
         expect(filterObj).toExist();
-        expect(filterObj.featureTypeName).toBe("editing:polygons");
+        expect(filterObj.featureTypeName).toBe("editing:polygons.layer");
     });
     it('test resultsSelector selector', () => {
         const res = resultsSelector(initialState);
@@ -354,7 +356,7 @@ describe('Test query selectors', () => {
         expect(describe.elementFormDefault).toBe("qualified");
     });
     it('test isDescribeLoaded', () => {
-        const isLoaded = isDescribeLoaded(initialState, "editing:polygons");
+        const isLoaded = isDescribeLoaded(initialState, "editing:polygons.layer");
         expect(isLoaded).toBe(true);
     });
     it('test isDescribeLoaded with missing describe', () => {
@@ -365,13 +367,24 @@ describe('Test query selectors', () => {
         const isLoaded = isDescribeLoaded({
             query: {
                 featureTypes: {
-                    "editing:polygons": {
+                    "editing:polygons.layer": {
                         error: "500 internal server error"
                     }
                 }
             }
-        }, "editing:polygons");
+        }, "editing:polygons.layer");
         expect(isLoaded).toBe(false);
+    });
+    it('featureTypeSelectorCreator', () => {
+        expect(featureTypeSelectorCreator("editing:polygons.layer")(initialState)).toExist();
+    });
+    it('featureTypeSelectorCreator works with layer names with points', () => {
+        expect(featureTypeSelectorCreator(STRANGE_LAYER_NAME)({
+            query: {
+                featureTypes: { [STRANGE_LAYER_NAME]: {
+                something: "insideThis"
+            }}}
+        })).toExist();
     });
     it('test getFeatureById selector', () => {
         const ft = getFeatureById(initialState, "poligoni.7");
@@ -380,6 +393,22 @@ describe('Test query selectors', () => {
     });
     it('test attributesSelector selector', () => {
         const attr = attributesSelector(initialState);
+        expect(attr).toExist();
+        expect(attr.length).toBe(1);
+        expect(attr[0].label).toBe("name");
+        expect(attr[0].valueId).toBe("id");
+    });
+    it('test attributesSelector work with featureType names', () => {
+        const attr = attributesSelector({
+            query: {
+                featureTypes: {
+                    [STRANGE_LAYER_NAME]: {
+                        attributes: [{label: "name", valueId: "id"}]
+                    }
+                },
+                filterObj: {featureTypeName: STRANGE_LAYER_NAME}
+            }
+        });
         expect(attr).toExist();
         expect(attr.length).toBe(1);
         expect(attr[0].label).toBe("name");

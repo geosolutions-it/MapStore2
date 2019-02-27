@@ -18,14 +18,14 @@ const getTitle = (layer = {}) => layer.title || layer.name;
 const selectedLayerIdSelector = state => get(state, "featuregrid.selectedLayer");
 const chartDisabledSelector = state => get(state, "featuregrid.chartDisabled", false);
 const getCustomAttributeSettings = (state, att) => get(state, `featuregrid.attributes[${att.name || att.attribute}]`);
-const {attributesSelector} = require('./query');
+const { attributesSelector, describeSelector } = require('./query');
 const selectedFeaturesSelector = state => state && state.featuregrid && state.featuregrid.select;
 const changesSelector = state => state && state.featuregrid && state.featuregrid.changes;
 const newFeaturesSelector = state => state && state.featuregrid && state.featuregrid.newFeatures;
 const selectedFeatureSelector = state => head(selectedFeaturesSelector(state));
 
 const geomTypeSelectedFeatureSelector = state => {
-    let desc = get(state, `query.featureTypes.${get(state, "query.filterObj.featureTypeName")}.original`);
+    let desc = describeSelector(state);
     if (desc) {
         const geomDesc = findGeometryProperty(desc);
         return geomDesc && geomDesc.localType;
