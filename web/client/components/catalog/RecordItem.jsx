@@ -10,7 +10,7 @@ const PropTypes = require('prop-types');
 const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button: ButtonRB, Glyphicon} = require('react-bootstrap');
-const {isObject} = require('lodash');
+const { isObject, castArray, head } = require('lodash');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const ContainerDimensions = require('react-container-dimensions').default;
@@ -205,7 +205,7 @@ class RecordItem extends React.Component {
 
     addLayer = (wms) => {
         const removeParams = ["request", "layer", "layers", "service", "version"].concat(this.props.authkeyParamNames);
-        const { url } = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wms.url), removeParams );
+        const url = head(castArray(wms.url).map(u => removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(u), removeParams )).map(v => v.url));
         const allowedSRS = buildSRSMap(wms.SRS);
         if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
@@ -226,7 +226,8 @@ class RecordItem extends React.Component {
 
     addwmtsLayer = (wmts) => {
         const removeParams = ["request", "layer"].concat(this.props.authkeyParamNames);
-        const { url } = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wmts.url), removeParams);
+        // TODO: multiple URLs (WMTS support it)
+        const url = head(castArray(wmts.url).map(u => removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(u), removeParams)).map(v => v.url));
         const allowedSRS = buildSRSMap(wmts.SRS);
         if (wmts.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');

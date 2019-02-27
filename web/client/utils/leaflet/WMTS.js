@@ -128,7 +128,15 @@ var WMTS = L.TileLayer.extend({
         if (this._urlsIndex === this._urls.length) {
             this._urlsIndex = 0;
         }
-        const url = L.Util.template(this._urls[this._urlsIndex], {s: this._getSubdomain(tilePoint)});
+        const url = L.Util.template(this._urls[this._urlsIndex], {
+            s: this._getSubdomain(tilePoint),
+            // "https://maps1.wien.gv.at/basemap/geolandbasemap/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png"
+            TileRow: params.tilerow,
+            TileCol: params.tilecol,
+            TileMatrixSet: this.matrixSet,
+            TileMatrix: params.ident,
+            Style: this.options.style
+        });
         return url + L.Util.getParamString(this.wmtsParams, url, true) + "&tilematrix=" + params.ident + "&tilerow=" + params.tilerow + "&tilecol=" + params.tilecol;
     },
     getMatrix: function(matrix, options) {

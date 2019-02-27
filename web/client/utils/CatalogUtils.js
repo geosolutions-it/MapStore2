@@ -203,8 +203,10 @@ const converters = {
     wmts: (records, options) => {
         if (records && records.records) {
             return records.records.map((record) => {
+                const urls = castArray(WMTSUtils.getWmtsURL(record) || (options && options.url));
+
                 const matrixIds = castArray(record.TileMatrixSetLink || []).reduce((previous, current) => {
-                    const tileMatrix = head((record.TileMatrixSet || []).filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
+                    const tileMatrix = head((record.TileMatrixSet && castArray(record.TileMatrixSet) || []).filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
                     const tileMatrixSRS = tileMatrix && CoordinatesUtils.getEPSGCode(tileMatrix["ows:SupportedCRS"]);
                     const levels = current.TileMatrixSetLimits && (current.TileMatrixSetLimits.TileMatrixLimits || []).map((limit) => ({
                         identifier: limit.TileMatrix,
@@ -233,6 +235,8 @@ const converters = {
                 description: getNodeText(record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"]),
                 identifier: getNodeText(record["ows:Identifier"]),
                 tags: "",
+                style: record.style,
+                requestEncoding: record.requestEncoding,
                 tileMatrixSet: record.TileMatrixSet,
                 matrixIds,
                 TileMatrixSetLink: castArray(record.TileMatrixSetLink),
@@ -247,7 +251,7 @@ const converters = {
                 },
                 references: [{
                     type: "OGC:WMTS",
-                    url: record.GetTileUrl || (options && options.url),
+                    url: head(urls), // TODO: multi-URL support
                     SRS: filterOnMatrix(record.SRS || [], matrixIds),
                     params: {
                         name: record["ows:Identifier"]
@@ -333,7 +337,7 @@ const CatalogUtils = {
      * Convert a record into a MS2 layer
      * @param  {Object} record            The record
      * @param  {String} [type="wms"]      The layer type
-     * @param  {Object} options an object with additinal options.
+     * @param  {Object} options an object with additional options.
      *  - `catalogURL` to attach to the layer
      *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
      *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
@@ -351,6 +355,8 @@ const CatalogUtils = {
         const allowedSRS = buildSRSMap(ogcServiceReference.SRS);
         return {
             type: type,
+            requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
+            style: record.style,
             url: url || originalUrl,
             visibility: true,
             dimensions: record.dimensions || [],
