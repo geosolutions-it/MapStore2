@@ -1,6 +1,25 @@
 const {isNil, get, head} = require('lodash');
 
 /**
+ * Selects the featureType name of the query filterObject
+ * @param {object} state
+ */
+const queryFeatureTypeName = state => get(state, "query.filterObj.featureTypeName");
+/**
+ * Create a selector for the featureType data (attributes and so on) for the featureType provided as parameter
+ * @param {string} featureTypeName
+ * @return {function} a selector to get the featureType data
+ */
+const featureTypeSelectorCreator = (featureTypeName) => state => get(state, `query.featureTypes["${featureTypeName}"]`);
+
+/**
+ * Returns the original DescribeFeature JSON object of the passed featureType from the state
+ * @param {object} state the application state
+ * @param {string} featureTypeName the featureType name
+ */
+const layerDescribeSelector = (state, featureTypeName) => get(featureTypeSelectorCreator(featureTypeName)(state), 'original');
+
+/**
  * selects query state
  * @name query
  * @memberof selectors
@@ -11,7 +30,7 @@ module.exports = {
     wfsURL: state => state && state.query && state.query.searchUrl,
     wfsURLSelector: state => state && state.query && state.query.url,
     wfsFilter: state => state && state.query && state.query.filterObj,
-    attributesSelector: state => get(state, `query.featureTypes.${get(state, "query.filterObj.featureTypeName")}.attributes`),
+    attributesSelector: state => get(featureTypeSelectorCreator(queryFeatureTypeName(state))(state), `attributes`),
     typeNameSelector: state => get(state, "query.typeName"),
     resultsSelector: (state) => get(state, "query.result.features"),
     featureCollectionResultSelector: state => {
@@ -32,14 +51,15 @@ module.exports = {
         totalFeatures: (state) => get(state, "query.result.totalFeatures")
     },
     isDescribeLoaded: (state, name) => {
-        const ft = get(state, `query.featureTypes.${name}`);
+        const ft = featureTypeSelectorCreator(name)(state);
         if (ft && ft.attributes && ft.geometry && ft.original) {
             return true;
         }
         return false;
     },
-    describeSelector: (state) => get(state, `query.featureTypes.${get(state, "query.filterObj.featureTypeName")}.original`),
-    layerDescribeSelector: (state, featureTypeName) =>get(state, `query.featureTypes.[${featureTypeName}].original`),
+    describeSelector: (state) => layerDescribeSelector(state, queryFeatureTypeName(state)),
+    featureTypeSelectorCreator,
+    layerDescribeSelector,
     featureLoadingSelector: (state) => get(state, "query.featureLoading"),
     isSyncWmsActive: (state) => get(state, "query.syncWmsFilter", false),
     /**
