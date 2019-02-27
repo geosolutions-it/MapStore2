@@ -171,7 +171,7 @@ const createLoadPageFlow = (store) => ({page, size} = {}) => {
 };
 
 const createInitialQueryFlow = (action$, store, {url, name, id} = {}) => {
-    const filterObj = get(store.getState(), `featuregrid.advancedFilters.${id}`);
+    const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
     const createInitialQuery = () => createQuery(url, filterObj || {
         featureTypeName: name,
         filterType: 'OGC',
@@ -606,7 +606,7 @@ module.exports = {
     onOpenAdvancedSearch: (action$, store) =>
         action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
             return Rx.Observable.of(
-                loadFilter(get(store.getState(), `featuregrid.advancedFilters.${selectedLayerIdSelector(store.getState())}`)),
+                loadFilter(get(store.getState(), `featuregrid.advancedFilters["${selectedLayerIdSelector(store.getState())}"]`)),
                 closeFeatureGrid(),
                 setControlProperty('queryPanel', "enabled", true)
             )
