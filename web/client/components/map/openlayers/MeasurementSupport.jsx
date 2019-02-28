@@ -8,12 +8,13 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {round, isEqual} = require('lodash');
+const {round, isEqual, head, isNaN, dropRight, isArray} = require('lodash');
 const assign = require('object-assign');
 const ol = require('openlayers');
 const wgs84Sphere = new ol.Sphere(6378137);
 const {reprojectGeoJson, reproject, calculateAzimuth, calculateDistance, transformLineToArcs} = require('../../../utils/CoordinatesUtils');
 const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
+const {set} = require('../../../utils/ImmutableUtils');
 const {startEndPolylineStyle} = require('./VectorStyle');
 const {getMessageById} = require('../../../utils/LocaleUtils');
 
@@ -62,22 +63,32 @@ class MeasurementSupport extends React.Component {
         if (!newProps.measurement.geomType) {
             this.removeDrawInteraction();
         }
-
+        /**
+         * TODO if invalid coords are sent here just clear the source or draw only those are valid ?
+         */
+        if (newProps.measurement.feature && newProps.measurement.feature.geometry && !this.isValidGeometry(newProps.measurement.feature.geometry)) {
+            this.source.clear();
+        }
         /**
          * this is needed to update the feature drawn by this tool and recalculate the measures,
          * although the recalculation should be moved in the reducer. so we can avoid to to weird stuff here if there is another plugin / component
          * that is going to update the coordinates via UI or any other action
          */
-        if (!isEqual(this.props.measurement.feature, newProps.measurement.feature)) {
-            this.replaceFeatures([newProps.measurement.feature]);
-            this.sketchFeature = this.source.getFeatures()[0];
+        if (!isEqual(this.props.measurement.feature, newProps.measurement.feature) && newProps.measurement.feature && newProps.measurement.feature.geometry && this.isValidGeometry(newProps.measurement.feature.geometry) && newProps.measurement.updatedByUI) {
+            let ft = newProps.measurement.feature;
+            if (this.props.measurement.lineMeasureEnabled) {
+                let newCoords = transformLineToArcs(newProps.measurement.feature.geometry.coordinates);
+                ft = set("geometry.coordinates", newCoords, ft);
+            }
+            this.replaceFeatures([ft]);
+            // TODO REMOVE THIS this.sketchFeature = this.source.getFeatures()[0];
 
             if (newProps.measurement.showLabel) {
                 this.removeMeasureTooltips();
                 this.measureTooltipElement = document.createElement("div");
                 this.measureTooltipElement.className = this.drawing ? "tooltip tooltip-measure" : "tooltip tooltip-static";
 
-                let geom = this.sketchFeature.getGeometry();
+                let geom = this.source.getFeatures()[0].getGeometry();
                 let output;
                 if (geom instanceof ol.geom.Polygon) {
                     output = this.formatArea(geom);
@@ -93,20 +104,24 @@ class MeasurementSupport extends React.Component {
                 });
                 this.measureTooltip.setPosition(geom.getLastCoordinate());
                 newProps.map.addOverlay(this.measureTooltip);
-                // if (this.drawing) --> trigger event draw start
+                /* TODO REMOVE THIS
                 if (this.drawing) {
-                    /*if (this.features) {
+                    this.drawInteraction.sketchCoords_ = this.sketchFeature.getGeometry().getCoordinates();
+                    this.drawInteraction.source_ = this.source;
+                    this.drawInteraction.sketchFeature_ = this.sketchFeature;
+
+                    if (this.features) {
                         this.features.clear();
                         this.features.push(this.sketchFeature);
-                    }*/
-                    // this.drawInteraction.dispatchEvent({type: "drawstart", feature: this.sketchFeature, target: this.drawInteraction, doClear: true});
-                    // this.drawInteraction.dispatchEvent({type: "drawstart", feature: this.sketchFeature, target: this.drawInteraction});
-                    // this.source.dispatchEvent({type: "changefeature", feature: this.sketchFeature, target: this.source});
+                    }
+                    this.drawInteraction.dispatchEvent({type: "drawstart", feature: this.sketchFeature, target: this.drawInteraction, doClear: true});
+                    this.drawInteraction.dispatchEvent({type: "drawstart", feature: this.sketchFeature, target: this.drawInteraction});
+                    this.source.dispatchEvent({type: "changefeature", feature: this.sketchFeature, target: this.source});
                 }
-
+                */
             }
 
-            this.updateMeasurementResults(newProps);
+            this.updateMeasurementResults(newProps, this.source.getFeatures()[0]);
         }
     }
 
@@ -118,6 +133,14 @@ class MeasurementSupport extends React.Component {
         return null;
     }
 
+    isValidGeometry = ({coordinates, type}) => {
+        if (!type || !coordinates || coordinates && isArray(coordinates) && coordinates.length === 0) {
+            return false;
+        }
+        let coords = type === "Polygon" ? head(coordinates) : coordinates;
+        let filteredCoords = coords.filter(c => !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1])));
+        return filteredCoords.length > 0 && filteredCoords.length === coords.length;
+    }
     clearReplaceFeatures = (features) => {
         this.source.clear();
         this.source.refresh();
@@ -234,14 +257,14 @@ class MeasurementSupport extends React.Component {
             })
         });
 
-        this.props.map.on('click', () => this.updateMeasurementResults(this.props), this);
+        this.clickListener = this.props.map.on('click', () => this.updateMeasurementResults(this.props), this);
         if (this.props.updateOnMouseMove) {
             this.props.map.on('pointermove', () => this.updateMeasurementResults(this.props), this);
         }
 
         this.props.map.on('pointermove', this.pointerMoveHandler, this);
 
-        draw.on('drawstart', (evt) => {
+        draw.on('drawstart', function(evt) {
             // preserve the sketch feature of the draw controller
             // to update length/area on drawing a new vertex
             this.sketchFeature = evt.feature;
@@ -255,9 +278,7 @@ class MeasurementSupport extends React.Component {
                 this.createMeasureTooltip();
             }
             // clear previous measurements, but only if the event is dispatch by the click event not by ui
-            if (!evt.doClear) {
-                this.source.clear();
-            }
+            this.source.clear();
             this.listener = this.sketchFeature.getGeometry().on('change', (e) => {
                 let geom = e.target;
                 let output;
@@ -275,7 +296,7 @@ class MeasurementSupport extends React.Component {
             }, this);
             this.props.resetGeometry();
         }, this);
-        draw.on('drawend', (evt) => {
+        draw.on('drawend', function(evt) {
             this.drawing = false;
             const geojsonFormat = new ol.format.GeoJSON();
             let newFeature = reprojectGeoJson(geojsonFormat.writeFeatureObject(evt.feature.clone()), this.props.map.getView().getProjection().getCode(), "EPSG:4326");
@@ -283,10 +304,7 @@ class MeasurementSupport extends React.Component {
             if (this.props.measurement.lineMeasureEnabled) {
                 // Calculate arc
                 let newCoords = transformLineToArcs(newFeature.geometry.coordinates);
-                const ft = assign({}, newFeature, {
-                    geometry: assign({}, newFeature.geometry,
-                        {coordinates: newCoords})
-                    });
+                const ft = set("geometry.coordinates", newCoords, newFeature);
                 this.replaceFeatures([ft]);
             }
             if (this.props.measurement.showLabel) {
@@ -315,6 +333,7 @@ class MeasurementSupport extends React.Component {
             this.props.map.removeLayer(this.measureLayer);
             this.sketchFeature = null;
             this.props.map.un('click', () => this.updateMeasurementResults(this.props), this);
+            ol.Observable.unByKey(this.clickListener);
             if (this.props.updateOnMouseMove) {
                 this.props.map.un('pointermove', () => this.updateMeasurementResults(this.props), this);
             }
@@ -346,44 +365,47 @@ class MeasurementSupport extends React.Component {
         this.helpTooltipElement.classList.remove('hidden');
     };
 
-    updateMeasurementResults = (props) => {
+    updateMeasurementResults = (props, featureUpdateByUI) => {
+        let featureToUse = this.sketchFeature;
         if (!this.sketchFeature) {
             return;
         }
+        if (featureUpdateByUI) {
+            featureToUse = featureUpdateByUI;
+        }
         let bearing = 0;
-        let sketchCoords = this.sketchFeature.getGeometry().getCoordinates();
+        let sketchCoords = featureToUse.getGeometry().getCoordinates();
 
         if (props.measurement.geomType === 'Bearing' && sketchCoords.length > 1) {
             // calculate the azimuth as base for bearing information
             bearing = calculateAzimuth(sketchCoords[0], sketchCoords[1], props.projection);
             if (sketchCoords.length > 2) {
                 this.drawInteraction.sketchCoords_ = [sketchCoords[0], sketchCoords[1], sketchCoords[0]];
+                featureToUse.getGeometry().setCoordinates([sketchCoords[0], sketchCoords[1]]);
+                this.drawInteraction.sketchFeature_ = featureToUse;
                 this.drawInteraction.finishDrawing();
             }
         }
         const geojsonFormat = new ol.format.GeoJSON();
-        let feature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), props.map.getView().getProjection().getCode(), "EPSG:4326");
-        if (props.measurement.geomType === 'LineString') {
-            feature = assign({}, feature, {
-                geometry: assign({}, feature.geometry, {
-                    coordinates: transformLineToArcs(feature.geometry.coordinates)
-                })
-            });
-        }
-
+        let feature = reprojectGeoJson(geojsonFormat.writeFeatureObject(featureToUse.clone()), props.map.getView().getProjection().getCode(), "EPSG:4326");
+        // it will no longer create 100 points for arcs to put in the state
         let newMeasureState = assign({}, props.measurement,
             {
                 point: props.measurement.geomType === 'Point' ?
-                    this.getPointCoordinate(sketchCoords) : null,
+                this.getPointCoordinate(sketchCoords) : null,
                 len: props.measurement.geomType === 'LineString' ? calculateDistance(this.reprojectedCoordinates(sketchCoords), props.measurement.lengthFormula) : 0,
                 area: props.measurement.geomType === 'Polygon' ?
-                    this.calculateGeodesicArea(this.sketchFeature.getGeometry().getLinearRing(0).getCoordinates()) : 0,
+                this.calculateGeodesicArea(featureToUse.getGeometry().getLinearRing(0).getCoordinates()) : 0,
                 bearing: props.measurement.geomType === 'Bearing' ? bearing : 0,
                 lenUnit: props.measurement.lenUnit,
                 areaUnit: props.measurement.areaUnit,
-                feature
-            }
+                updatedByUI: !!featureUpdateByUI
+            },
+            // this should not change if the changes comes from ui i.e. featureUpdateByUI
+            !featureUpdateByUI ? {
+                feature: set("geometry.coordinates", this.drawing ? props.measurement.geomType === 'Polygon' ? [dropRight(feature.geometry.coordinates[0], feature.geometry.coordinates[0].length <= 2 ? 0 : 1)] : dropRight(feature.geometry.coordinates) : feature.geometry.coordinates, feature)} : {}
         );
+
         this.props.changeMeasurementState(newMeasureState);
     };
 

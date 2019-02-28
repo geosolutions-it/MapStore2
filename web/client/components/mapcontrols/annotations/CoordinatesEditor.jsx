@@ -62,6 +62,7 @@ class CoordinateEditor extends React.Component {
         onChangeText: () => {},
         onSetInvalidSelected: () => {},
         componentsValidation: {
+            "Bearing": {min: 2, max: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
             "Polygon": {min: 3, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
             "LineString": {min: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
             "Point": {min: 1, add: false, remove: false, validation: "validateCoordinates", notValid: "annotations.editor.notValidMarker"},
@@ -179,7 +180,7 @@ class CoordinateEditor extends React.Component {
             {
                 glyph: 'plus',
                 tooltipId: 'annotations.editor.add',
-                visible: componentsValidation[type].add,
+                visible: componentsValidation[type].add && componentsValidation[type].max ? this.props.components.length !== componentsValidation[type].max : true,
                 onClick: () => {
                     let tempComps = [...this.props.components];
                     tempComps = tempComps.concat([{lat: "", lon: ""}]);

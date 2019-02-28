@@ -115,6 +115,13 @@ function measurement(state = defaultState, action) {
                     geomType: ""
                 };
             }
+            return {
+                ...state,
+                geomType: "",
+                lineMeasureEnabled: false,
+                areaMeasureEnabled: false,
+                bearingMeasureEnabled: false
+            };
         }
     case RESET_CONTROLS: {
         return {
@@ -132,7 +139,10 @@ function measurement(state = defaultState, action) {
     }
     case CHANGE_COORDINATES: {
         let coordinates = action.coordinates.map(c => ([c.lon, c.lat]));
-        return set("feature.geometry.coordinates", state.areaMeasureEnabled ? [coordinates] : coordinates, state);
+        let newState = set("feature.geometry.coordinates", state.areaMeasureEnabled ? [coordinates] : coordinates, state);
+        newState = set("feature.type", "Feature", newState);
+        newState = set("updatedByUI", true, newState);
+        return set("feature.geometry.type", newState.bearingMeasureEnabled ? "LineString" : newState.geomType, newState);
     }
     default:
         return state;

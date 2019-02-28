@@ -4,7 +4,8 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
+*/
+
 const React = require('react');
 const {connect} = require('react-redux');
 const {Glyphicon} = require('react-bootstrap');
@@ -13,8 +14,9 @@ const Message = require('./locale/Message');
 
 const assign = require('object-assign');
 const {createSelector} = require('reselect');
-const {changeMeasurement, changeUom} = require('../actions/measurement');
-const {toggleControl} = require('../actions/controls');
+const {changeMeasurement, changeUom, changeFormatMeasurement, changeCoordinates} = require('../actions/measurement');
+
+const {toggleControl, setControlProperty} = require('../actions/controls');
 const {MeasureDialog} = require('./measure/index');
 
 const selector = (state) => {
@@ -24,9 +26,10 @@ const selector = (state) => {
             length: {unit: 'm', label: 'm'},
             area: {unit: 'sqm', label: 'm²'}
         },
-        lineMeasureEnabled: state.measurement && state.measurement.lineMeasureEnabled || false,
-        areaMeasureEnabled: state.measurement && state.measurement.areaMeasureEnabled || false,
-        bearingMeasureEnabled: state.measurement && state.measurement.bearingMeasureEnabled || false
+        lineMeasureEnabled: state.measurement && state.measurement.lineMeasureEnabled,
+        areaMeasureEnabled: state.measurement && state.measurement.areaMeasureEnabled,
+        bearingMeasureEnabled: state.measurement && state.measurement.bearingMeasureEnabled,
+        format: state.measurement && state.measurement.format || "decimal"
     };
 };
 const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
@@ -51,6 +54,8 @@ const Measure = connect(
     {
         toggleMeasure: changeMeasurement,
         onChangeUom: changeUom,
+        onChangeFormat: changeFormatMeasurement,
+        onChangeCoordinates: changeCoordinates,
         onClose: toggleMeasureTool
     }, null, {pure: false})(MeasureDialog);
 
@@ -65,7 +70,7 @@ module.exports = {
             tooltip: "measureComponent.tooltip",
             text: <Message msgId="measureComponent.Measure"/>,
             icon: <Glyphicon glyph="1-ruler"/>,
-            action: toggleMeasureTool
+            action: () => setControlProperty("measure", "enabled", true)
         }
     }),
     reducers: {measurement: require('../reducers/measurement')}

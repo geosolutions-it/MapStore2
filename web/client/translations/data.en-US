@@ -867,6 +867,7 @@
                 "decimal": "Decimal",
                 "aeronautical": "Aeronautical",
                 "title": {
+                    "Bearing": "Bearing editor",
                     "Polygon": "Polygon editor",
                     "LineString": "LineString editor",
                     "Circle": "Circle editor",
