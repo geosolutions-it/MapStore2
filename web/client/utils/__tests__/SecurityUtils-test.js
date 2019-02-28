@@ -69,6 +69,9 @@ const authenticationRules = [
 ];
 
 describe('Test security utils methods', () => {
+    afterEach(() => {
+        expect.restoreSpies();
+    });
 
     it('test getting user attributes', () => {
         // test a null user
