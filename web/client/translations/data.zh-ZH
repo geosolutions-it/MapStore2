@@ -21,6 +21,8 @@
         "enable": "启用",
         "layers": "图层",
         "warning": "警告",
+        "errorTitleDefault": "Error",
+        "errorDefault": "An error occurred",
         "pageInfoShowMore": "Results {count} of {total}",
         "showMore": "Show more...",
         "version": {
@@ -31,6 +33,19 @@
             "updating": "更新...",
             "layers": "图层"
         },
+        "localeErrors": {
+            "404": "Vertaalbestand niet gevonden"
+        },
+        "details": {
+            "title": "About this map"
+        },
+        "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
+        "measureComponent": {
+            "addAsAnnotaion": "Add as annotation",
+            "newMeasure": "New annotation",
+            "selectTool": "Select a measurement tool"
+        },
+        "remove": "Delete",
         "layerProperties": {
             "windowTitle": "图层属性",
             "title": "标题",

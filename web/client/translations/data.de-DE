@@ -39,6 +39,12 @@
         "details": {
             "title": "Infos zu dieser Karte"
         },
+        "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
+        "measureComponent": {
+            "addAsAnnotaion": "Als Anmerkung hinzufügen",
+            "newMeasure": "Neue Anmerkung",
+            "selectTool": "Wählen Sie ein Messwerkzeug aus"
+        },
         "remove": "Löschen",
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",

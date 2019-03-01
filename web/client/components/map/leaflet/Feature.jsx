@@ -37,7 +37,11 @@ class Feature extends React.Component {
 
     componentWillReceiveProps(newProps) {
         // TODO check if shallow comparison is enough properties and geometry
-        if (isEqual(newProps.properties, this.props.properties) || isEqual(newProps.geometry, this.props.geometry) || (newProps.features !== this.props.features) || (newProps.style !== this.props.style)) {
+        if (
+            !isEqual(newProps.properties, this.props.properties) ||
+            !isEqual(newProps.geometry, this.props.geometry) ||
+            (newProps.features !== this.props.features) ||
+            (newProps.style !== this.props.style)) {
             newProps.container.removeLayer(this._layer);
             this.createLayer(newProps);
         }
@@ -45,7 +49,7 @@ class Feature extends React.Component {
 
     shouldComponentUpdate(nextProps) {
         // TODO check if shallow comparison is enough properties and geometry
-        return isEqual(nextProps.properties, this.props.properties) || isEqual(nextProps.geometry, this.props.geometry) || (nextProps.features !== this.props.features);
+        return !isEqual(nextProps.properties, this.props.properties) || !isEqual(nextProps.geometry, this.props.geometry) || (nextProps.features !== this.props.features);
     }
 
     componentWillUnmount() {

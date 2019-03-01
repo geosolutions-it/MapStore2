@@ -40,6 +40,12 @@
         "details": {
             "title": "Info sur cette carte"
         },
+        "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GFI",
+        "measureComponent": {
+            "addAsAnnotaion": "Ajouter comme annotation",
+            "newMeasure": "Nouvelle annotation",
+            "selectTool": "Sélectionnez un outil de mesure"
+        },
         "remove": "Effacer",
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",

@@ -39,6 +39,12 @@
         "details": {
             "title": "Info su questa mappa"
         },
+        "showEmptyMessageGFI": "Mostra il messaggio: Nessuna feature per gli altri layer",
+        "measureComponent": {
+            "addAsAnnotaion": "Aggiungi come annotazione",
+            "newMeasure": "Nuova annotazione",
+            "selectTool": "Seleziona uno strumento di misura"
+        },
         "remove": "Rimuovi",
         "layerProperties": {
             "windowTitle": "Proprietà del livello",

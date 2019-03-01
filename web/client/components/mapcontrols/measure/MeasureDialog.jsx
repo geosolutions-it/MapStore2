@@ -1,4 +1,3 @@
-const PropTypes = require('prop-types');
 /*
  * Copyright 2017, GeoSolutions Sas.
  * All rights reserved.
@@ -7,23 +6,26 @@ const PropTypes = require('prop-types');
  * LICENSE file in the root directory of this source tree.
  */
 
+const PropTypes = require('prop-types');
 const React = require('react');
-const {Glyphicon} = require('react-bootstrap');
 const MeasureComponent = require('./MeasureComponent');
-const Message = require('../../I18N/Message');
-const Dialog = require('../../misc/Dialog');
-
+const DockablePanel = require('../../misc/panels/DockablePanel');
 
 class MeasureDialog extends React.Component {
     static propTypes = {
         show: PropTypes.bool,
         closeGlyph: PropTypes.string,
-        onClose: PropTypes.func
+        onClose: PropTypes.func,
+        style: PropTypes.object
     };
 
     static defaultProps = {
         show: false,
-        closeGlyph: "1-close"
+        closeGlyph: "1-close",
+        style: {
+            // Needs map layout selector see Identify Plugin
+            height: 'calc(100% - 30px)'
+        }
     };
 
     onClose = () => {
@@ -31,17 +33,20 @@ class MeasureDialog extends React.Component {
     };
 
     render() {
-        return this.props.show ? <Dialog>
-            <div key="header" role="header">
-                <Glyphicon glyph="1-ruler"/>&nbsp;<Message key="title" msgId="measureComponent.Measure"/>
-                <button key="close" onClick={this.onClose} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
-            </div>
-            <div key="body" className="panel-body" role="body">
-            <MeasureComponent id="measure-panel" style={{
-                minWidth: "500px"
-            }}{...this.props}/>
-            </div>
-        </Dialog> : null;
+        return this.props.show ? (
+            <DockablePanel
+            dock
+            bsStyle="primary"
+            position="right"
+            title="Measure"
+            glyph="1-ruler"
+            size={660}
+            open={this.props.show}
+            onClose={this.onClose}
+            style={this.props.style}>
+                <MeasureComponent id="measure-panel" {...this.props}/>
+            </DockablePanel>
+        ) : null;
     }
 }
 

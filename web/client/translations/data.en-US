@@ -39,6 +39,12 @@
         "details": {
             "title": "About this map"
         },
+        "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
+        "measureComponent": {
+            "addAsAnnotaion": "Add as annotation",
+            "newMeasure": "New annotation",
+            "selectTool": "Select a measurement tool"
+        },
         "remove": "Delete",
         "layerProperties": {
             "windowTitle": "Layer Properties",

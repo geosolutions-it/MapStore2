@@ -39,6 +39,12 @@
         "details": {
             "title": "O karti"
         },
+        "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
+        "measureComponent": {
+            "addAsAnnotaion": "Add as annotation",
+            "newMeasure": "New annotation",
+            "selectTool": "Select a measurement tool"
+        },
         "layerProperties": {
             "windowTitle": "Svojstva sloja",
             "title": "Naslov",

@@ -39,6 +39,12 @@
         "details": {
             "title": "Información en este mapa"
         },
+        "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
+        "measureComponent": {
+            "addAsAnnotaion": "Añadir como anotación",
+            "newMeasure": "Nueva anotación",
+            "selectTool": "Seleccione una herramienta de medición"
+        },
         "remove": "Borrar",
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
