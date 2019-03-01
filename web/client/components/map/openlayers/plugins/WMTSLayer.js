@@ -8,7 +8,7 @@
 
 var Layers = require('../../../../utils/openlayers/Layers');
 var ol = require('openlayers');
-const {isArray, head, isEmpty} = require('lodash');
+const {castArray, head, isEmpty} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const WMTSUtils = require('../../../../utils/WMTSUtils');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
@@ -21,7 +21,8 @@ function getWMSURLs( urls ) {
 }
 
 const createLayer = options => {
-    const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
+    // options.urls is an alternative name of URL.
+    const urls = getWMSURLs(castArray(options.url));
     const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
     const tilMatrixSetName = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
     const tileMatrixSet = head(options.tileMatrixSet.filter(tM => tM['ows:Identifier'] === tilMatrixSetName));
@@ -87,7 +88,7 @@ const createLayer = options => {
     const maxResolution = resolutions[0]; // exclusive
     const minResolution = resolutions[resolutions.length - 1]; // inclusive
 
-    // WMTS Capabilities has "RESTful"/"KVP", Open uses "REST"/"KVP";
+    // WMTS Capabilities has "RESTful"/"KVP", OpenLayers uses "REST"/"KVP";
     let requestEncoding = options.requestEncoding === "RESTful" ? "REST" : options.requestEncoding;
 
     return new ol.layer.Tile({

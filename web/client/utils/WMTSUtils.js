@@ -68,11 +68,23 @@ const WMTSUtils = {
             .map((request) => request.$["xlink:href"])
         );
     },
-    getWmtsURL: record => {
+    /**
+     * Returns the GetTile Url from the record. This allows to get to get the proper
+     * url template.
+     * If ResourceURL is not present it uses GetTileURL
+     */
+    getGetTileURL: (record = {}) => {
         return record.ResourceURL
                 // TODO: support for multiple URLs
                 && castArray(record.ResourceURL).map(({$ = {}}) => $.template || $.value)
-                || record.GetTileUrl;
+                || record.GetTileURL;
+    },
+    /**
+     * Returns the the original capabilities. if not present, try returns the GetTileURL.
+     * This is also a useful identifier for the source.
+     */
+    getCapabilitiesURL: (record = {}) => {
+        return head(castArray(record.capabilitiesURL || record.GetTileURL));
     },
     /**
      * Gets the default style for the WMTS Capabilities Layer entry

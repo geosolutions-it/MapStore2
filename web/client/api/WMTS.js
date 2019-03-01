@@ -36,7 +36,7 @@ const flatLayers = (root) => {
     }, []) : root.ows.Title && [root] || [];
 };
 
-const searchAndPaginate = (json, startPosition, maxRecords, text) => {
+const searchAndPaginate = (json, startPosition, maxRecords, text, url) => {
     const root = json.Capabilities.Contents;
     const operations = getOperations(json);
     const requestEncoding = getRequestEncoding(json);
@@ -62,8 +62,9 @@ const searchAndPaginate = (json, startPosition, maxRecords, text) => {
                 requestEncoding: requestEncoding,
                 style: getDefaultStyleIdentifier(layer), // it must be collected because it can be used in RESTful version to create the path
                 format: getDefaultFormat(layer),
-                GetTileUrl: getOperation(operations, "GetTile", requestEncoding)}
-            ))
+                GetTileURL: getOperation(operations, "GetTile", requestEncoding),
+                capabilitiesURL: url
+            }))
     };
 };
 
@@ -73,7 +74,7 @@ const Api = {
         const cached = capabilitiesCache[url];
         if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
             return new Promise((resolve) => {
-                resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text));
+                resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text, url));
             });
         }
         return axios.get(parseUrl(url)).then((response) => {
@@ -85,7 +86,7 @@ const Api = {
                 timestamp: new Date().getTime(),
                 data: json
             };
-            return searchAndPaginate(json, startPosition, maxRecords, text);
+            return searchAndPaginate(json, startPosition, maxRecords, text, url);
         });
     },
     textSearch: function(url, startPosition, maxRecords, text) {

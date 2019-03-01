@@ -203,8 +203,8 @@ const converters = {
     wmts: (records, options) => {
         if (records && records.records) {
             return records.records.map((record) => {
-                const urls = castArray(WMTSUtils.getWmtsURL(record) || (options && options.url));
-
+                const urls = castArray(WMTSUtils.getGetTileURL(record) || (options && options.url));
+                const capabilitiesURL = WMTSUtils.getCapabilitiesURL(record);
                 const matrixIds = castArray(record.TileMatrixSetLink || []).reduce((previous, current) => {
                     const tileMatrix = head((record.TileMatrixSet && castArray(record.TileMatrixSet) || []).filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
                     const tileMatrixSRS = tileMatrix && CoordinatesUtils.getEPSGCode(tileMatrix["ows:SupportedCRS"]);
@@ -236,6 +236,7 @@ const converters = {
                 identifier: getNodeText(record["ows:Identifier"]),
                 tags: "",
                 style: record.style,
+                capabilitiesURL: capabilitiesURL,
                 requestEncoding: record.requestEncoding,
                 tileMatrixSet: record.TileMatrixSet,
                 matrixIds,
@@ -251,7 +252,7 @@ const converters = {
                 },
                 references: [{
                     type: "OGC:WMTS",
-                    url: head(urls), // TODO: multi-URL support
+                    url: urls,
                     SRS: filterOnMatrix(record.SRS || [], matrixIds),
                     params: {
                         name: record["ows:Identifier"]
@@ -350,14 +351,35 @@ const CatalogUtils = {
         // let's extract the references we need
         const {wms, wmts} = extractOGCServicesReferences(record);
         const ogcServiceReference = wms || wmts;
+
         // typically you should remove authkey parameters
-        const {url: originalUrl, params} = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(ogcServiceReference.url), ["request", "layer", "service", "version"].concat(removeParams));
+        const cleanURL = URL => removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(URL), ["request", "layer", "layers", "service", "version"].concat(removeParams));
+        let originalUrl;
+        let params;
+        const urls = ogcServiceReference.url;
+
+        // extract additional parameters and alternative URLs.
+        if (isArray(urls)) {
+            originalUrl = urls.map( u => cleanURL(u)).map( ({url: u}) => u);
+            params = urls.map(u => cleanURL(u)).map(({params: p}) => p).reduce( (prev, cur) => ({...prev, ...cur}), {});
+        } else {
+            const { url: uu, params: pp } = cleanURL(urls);
+            originalUrl = uu;
+            params = pp;
+        }
+
+        // calculate and normalize URL
+        // if array of 1 element, take simply the string
+        const toLayerURL = u => isArray(u) && u.length === 1 ? u[0] : u;
+        const layerURL = toLayerURL(url || originalUrl);
+
         const allowedSRS = buildSRSMap(ogcServiceReference.SRS);
         return {
             type: type,
             requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
             style: record.style,
-            url: url || originalUrl,
+            url: layerURL,
+            capabilitiesURL: record.capabilitiesURL,
             visibility: true,
             dimensions: record.dimensions || [],
             name: ogcServiceReference.params && ogcServiceReference.params.name,
