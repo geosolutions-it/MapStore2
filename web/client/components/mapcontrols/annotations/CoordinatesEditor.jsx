@@ -25,6 +25,8 @@ const MeasureEditor = require('./MeasureEditor');
  * @prop {function} onHighlightPoint triggered on mouse enter and leave and if polygons or linestring editor is opened
  * @prop {function} onChangeRadius triggered every radius change
  * @prop {function} onChangeFormat triggered every format change
+ * @prop {boolean} isMouseEnterEnabled Flag used to run actions on mouseEnter the coord row
+ * @prop {boolean} isMouseLeaveEnabled Flag used to run actions on mouseLeave the coord row
  * @prop {string} format decimal or aeronautical degree for coordinates
  * @prop {object} componentsValidation it contains parameters for validation of the form based on the types
  * @prop {object} transitionProps properties of the transition for drag component
@@ -49,7 +51,9 @@ class CoordinateEditor extends React.Component {
         transitionProps: PropTypes.object,
         properties: PropTypes.object,
         type: PropTypes.string,
-        isDraggable: PropTypes.bool
+        isDraggable: PropTypes.bool,
+        isMouseEnterEnabled: PropTypes.bool,
+        isMouseLeaveEnabled: PropTypes.bool
     };
 
     static defaultProps = {
@@ -75,6 +79,8 @@ class CoordinateEditor extends React.Component {
             transitionLeaveTimeout: 300
         },
         isDraggable: true,
+        isMouseEnterEnabled: false,
+        isMouseLeaveEnabled: false,
         properties: {}
     };
 
@@ -233,12 +239,12 @@ class CoordinateEditor extends React.Component {
                         removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove)}
                         onChange={this.change}
                         onMouseEnter={(val) => {
-                            if (this.props.type === "LineString" || this.props.type === "Polygon") {
+                            if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon") {
                                 this.props.onHighlightPoint(val);
                             }
                         }}
                         onMouseLeave={() => {
-                            if (this.props.type === "LineString" || this.props.type === "Polygon") {
+                            if (this.props.isMouseLeaveEnabled || this.props.type === "LineString" || this.props.type === "Polygon") {
                                 this.props.onHighlightPoint(null);
                             }
                         }}
@@ -280,7 +286,10 @@ class CoordinateEditor extends React.Component {
                             }
                         }}/>)}
                 </Row>
-                 {(!this.props.components || this.props.components.length === 0) && <Row><Col xs={12} className="text-center" style={{padding: 15, paddingBottom: 30}}><i>Add new coordinates by clicking the plus button or on the map </i></Col></Row>}
+                 {(!this.props.components || this.props.components.length === 0) &&
+                     <Row><Col xs={12} className="text-center" style={{padding: 15, paddingBottom: 30}}>
+                         <i><Message msgId="annotations.editor.addByClick"/></i>
+                     </Col></Row>}
             </Grid>
         );
     }

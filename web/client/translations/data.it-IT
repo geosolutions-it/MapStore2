@@ -874,6 +874,7 @@
                     "Text": "Editor del testo"
                 },
                 "add": "Aggiungi una nuova coordinata",
+                "addByClick": "Aggiungi nuove coordinate cliccando sul pulsante + o sulla mappa",
                 "valid": "La geometria è valida",
                 "radius": "Raggio",
                 "text": "Testo",

@@ -891,6 +891,7 @@
                     "Text": "Text editor"
                 },
                 "add": "Add new coordinates",
+                "addByClick": "Add new coordinates by clicking the plus button or on the map",
                 "valid": "Geometry is valid",
                 "radius": "Radius",
                 "text": "Text",

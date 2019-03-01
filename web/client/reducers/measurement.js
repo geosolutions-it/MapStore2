@@ -75,7 +75,12 @@ function measurement(state = defaultState, action) {
             feature: set("properties.disabled", state.feature.properties.disabled, action.feature)
         });
     case RESET_GEOMETRY: {
-        return set("feature.properties.disabled", true, state);
+        let newState = set("feature.properties.disabled", true, state);
+        return {
+            ...newState,
+            isDrawing: true,
+            updatedByUI: false
+        };
     }
     case CHANGE_UOM: {
         const prop = action.uom === "length" ? "lenUnit" : "lenArea";
@@ -87,15 +92,19 @@ function measurement(state = defaultState, action) {
                     unit: value,
                     label
                 }
-            })
+            }),
+            updatedByUI: true
         });
     }
     case CHANGED_GEOMETRY: {
         let {feature} = action;
         feature = set("properties.disabled", false, feature);
-        return assign({}, state, {
-            feature
-        });
+        return {
+            ...state,
+            feature,
+            updatedByUI: false,
+            isDrawing: false
+        };
     }
     case TOGGLE_CONTROL:
         {
@@ -141,6 +150,12 @@ function measurement(state = defaultState, action) {
         let coordinates = action.coordinates.map(c => ([c.lon, c.lat]));
         let newState = set("feature.geometry.coordinates", state.areaMeasureEnabled ? [coordinates] : coordinates, state);
         newState = set("feature.type", "Feature", newState);
+        newState = set("feature.properties.disabled", coordinates
+            .filter((c) => {
+                const isValid = !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1]));
+                return isValid;
+            }
+        ).length !== coordinates.length, newState);
         newState = set("updatedByUI", true, newState);
         return set("feature.geometry.type", newState.bearingMeasureEnabled ? "LineString" : newState.geomType, newState);
     }

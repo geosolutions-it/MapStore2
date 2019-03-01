@@ -874,6 +874,7 @@
                     "Text": "Text-Editor"
                 },
                 "add": "Fügen Sie neue Koordinaten hinzu",
+                "addByClick": "Fügen Sie neue Koordinaten hinzu, indem Sie auf die Plus-Schaltfläche oder auf die Karte klicken",
                 "valid": "Geometrie ist gültig",
                 "radius": "Radius",
                 "text": "Text",

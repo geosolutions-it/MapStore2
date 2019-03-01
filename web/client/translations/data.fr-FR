@@ -875,6 +875,7 @@
                     "Text": "Éditeur de texte"
                 },
                 "add": "Ajouter de nouvelles coordonnées",
+                "addByClick": "Ajouter de nouvelles coordonnées en cliquant sur le bouton plus ou sur la carte",
                 "valid": "La géométrie est valide",
                 "radius": "Rayon",
                 "text": "Texte",

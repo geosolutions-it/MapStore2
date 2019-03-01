@@ -874,6 +874,7 @@
                     "Text": "Editor de texto"
                 },
                 "add": "Agregar nuevas coordenadas",
+                "addByClick": "Agregue nuevas coordenadas haciendo clic en el botón más o en el mapa",
                 "valid": "La geometría es válida",
                 "radius": "Radio",
                 "text": "Texto",

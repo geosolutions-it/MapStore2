@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
 */
 
-
+const {isArray, head, isNaN} = require('lodash');
 function degToDms(deg) {
     // convert decimal deg to minutes and seconds
     var d = Math.floor(deg);
@@ -141,7 +141,17 @@ function convertUom(value, source = "m", dest = "m") {
     return value;
 }
 
+const isValidGeometry = ({coordinates, type}) => {
+    if (!type || !coordinates || coordinates && isArray(coordinates) && coordinates.length === 0) {
+        return false;
+    }
+    let coords = type === "Polygon" ? head(coordinates) : coordinates;
+    let filteredCoords = coords.filter(c => !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1])));
+    return filteredCoords.length > 0 && filteredCoords.length === coords.length;
+};
+
 module.exports = {
+    isValidGeometry,
     convertUom,
     getFormattedBearingValue,
     degToDms

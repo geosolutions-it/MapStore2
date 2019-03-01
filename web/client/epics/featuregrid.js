@@ -423,6 +423,7 @@ module.exports = {
                 return Rx.Observable.from(
                     [setControlProperty('metadataexplorer', 'enabled', false),
                     setControlProperty('annotations', 'enabled', false),
+                    setControlProperty('measure', 'enabled', false),
                     setControlProperty('details', 'enabled', false)]);
             }),
     /**

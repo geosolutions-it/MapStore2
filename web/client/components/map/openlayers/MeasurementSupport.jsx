@@ -8,12 +8,12 @@
 
 const React = require('react');
 const PropTypes = require('prop-types');
-const {round, isEqual, head, isNaN, dropRight, isArray} = require('lodash');
+const {round, isEqual, dropRight, slice} = require('lodash');
 const assign = require('object-assign');
 const ol = require('openlayers');
 const wgs84Sphere = new ol.Sphere(6378137);
 const {reprojectGeoJson, reproject, calculateAzimuth, calculateDistance, transformLineToArcs} = require('../../../utils/CoordinatesUtils');
-const {convertUom, getFormattedBearingValue} = require('../../../utils/MeasureUtils');
+const {convertUom, getFormattedBearingValue, isValidGeometry} = require('../../../utils/MeasureUtils');
 const {set} = require('../../../utils/ImmutableUtils');
 const {startEndPolylineStyle} = require('./VectorStyle');
 const {getMessageById} = require('../../../utils/LocaleUtils');
@@ -51,6 +51,7 @@ class MeasurementSupport extends React.Component {
     };
 
     componentWillReceiveProps(newProps) {
+        this.invalidCoordinates = [];
         if (newProps.measurement.geomType && newProps.measurement.geomType !== this.props.measurement.geomType ||
             /* check also when a default is set
              * if so the first condition does not match
@@ -66,62 +67,32 @@ class MeasurementSupport extends React.Component {
         /**
          * TODO if invalid coords are sent here just clear the source or draw only those are valid ?
          */
-        if (newProps.measurement.feature && newProps.measurement.feature.geometry && !this.isValidGeometry(newProps.measurement.feature.geometry)) {
-            this.source.clear();
+        let ft = newProps.measurement.feature;
+        if (ft && ft.geometry && !isEqual(ft.geometry, this.props.measurement.feature.geometry) && !isValidGeometry(ft.geometry)) {
+            // filtering out the invalid coords
+            let props = set("measurement.feature.geometry.coordinates", (ft.geometry.type === "Polygon" ? ft.geometry.coordinates[0] : ft.geometry.coordinates)
+                .filter((c, i) => {
+                    const isValid = !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1]));
+                    if (!isValid) {
+                        this.invalidCoordinates.push({coord: c, index: i});
+                    }
+                    return isValid;
+                }
+            ), newProps);
+            if (ft.geometry.type === "Polygon") {
+                props = set("measurement.feature.geometry.coordinates", [props.measurement.feature.geometry.coordinates], props);
+            }
+            this.updateFeatures(props);
         }
         /**
          * this is needed to update the feature drawn by this tool and recalculate the measures,
          * although the recalculation should be moved in the reducer. so we can avoid to to weird stuff here if there is another plugin / component
          * that is going to update the coordinates via UI or any other action
          */
-        if (!isEqual(this.props.measurement.feature, newProps.measurement.feature) && newProps.measurement.feature && newProps.measurement.feature.geometry && this.isValidGeometry(newProps.measurement.feature.geometry) && newProps.measurement.updatedByUI) {
-            let ft = newProps.measurement.feature;
-            if (this.props.measurement.lineMeasureEnabled) {
-                let newCoords = transformLineToArcs(newProps.measurement.feature.geometry.coordinates);
-                ft = set("geometry.coordinates", newCoords, ft);
-            }
-            this.replaceFeatures([ft]);
-            // TODO REMOVE THIS this.sketchFeature = this.source.getFeatures()[0];
+        if (!isEqual(this.props.measurement.feature, ft) && ft && ft.geometry && isValidGeometry(ft.geometry) && newProps.measurement.updatedByUI ||
+        !isEqual(this.props.uom, newProps.uom) && ft && ft.geometry && isValidGeometry(ft.geometry) && newProps.measurement.updatedByUI) {
 
-            if (newProps.measurement.showLabel) {
-                this.removeMeasureTooltips();
-                this.measureTooltipElement = document.createElement("div");
-                this.measureTooltipElement.className = this.drawing ? "tooltip tooltip-measure" : "tooltip tooltip-static";
-
-                let geom = this.source.getFeatures()[0].getGeometry();
-                let output;
-                if (geom instanceof ol.geom.Polygon) {
-                    output = this.formatArea(geom);
-                    this.tooltipCoord = geom.getInteriorPoint().getCoordinates();
-                } else if (geom instanceof ol.geom.LineString) {
-                    output = this.formatLength(geom);
-                }
-                this.measureTooltipElement.innerHTML = output;
-                this.measureTooltip = new ol.Overlay({
-                    element: this.measureTooltipElement,
-                    offset: [0, -7],
-                    positioning: 'bottom-center'
-                });
-                this.measureTooltip.setPosition(geom.getLastCoordinate());
-                newProps.map.addOverlay(this.measureTooltip);
-                /* TODO REMOVE THIS
-                if (this.drawing) {
-                    this.drawInteraction.sketchCoords_ = this.sketchFeature.getGeometry().getCoordinates();
-                    this.drawInteraction.source_ = this.source;
-                    this.drawInteraction.sketchFeature_ = this.sketchFeature;
-
-                    if (this.features) {
-                        this.features.clear();
-                        this.features.push(this.sketchFeature);
-                    }
-                    this.drawInteraction.dispatchEvent({type: "drawstart", feature: this.sketchFeature, target: this.drawInteraction, doClear: true});
-                    this.drawInteraction.dispatchEvent({type: "drawstart", feature: this.sketchFeature, target: this.drawInteraction});
-                    this.source.dispatchEvent({type: "changefeature", feature: this.sketchFeature, target: this.source});
-                }
-                */
-            }
-
-            this.updateMeasurementResults(newProps, this.source.getFeatures()[0]);
+            this.updateFeatures(newProps);
         }
     }
 
@@ -133,32 +104,56 @@ class MeasurementSupport extends React.Component {
         return null;
     }
 
-    isValidGeometry = ({coordinates, type}) => {
-        if (!type || !coordinates || coordinates && isArray(coordinates) && coordinates.length === 0) {
-            return false;
-        }
-        let coords = type === "Polygon" ? head(coordinates) : coordinates;
-        let filteredCoords = coords.filter(c => !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1])));
-        return filteredCoords.length > 0 && filteredCoords.length === coords.length;
+    isPolygon = (feature) => {
+        return feature.geometry.type === "Polygon";
     }
-    clearReplaceFeatures = (features) => {
-        this.source.clear();
-        this.source.refresh();
-        features.forEach((geoJSON) => {
-            let geometry = reprojectGeoJson(geoJSON, "EPSG:4326", this.props.map.getView().getProjection().getCode()).geometry;
-            const feature = new ol.Feature({
-                    geometry: this.createOLGeometry(geometry)
-                });
-            this.source.addFeature(feature);
-        });
-    };
+    updateFeatures = (props) => {
+        let ft = props.measurement.feature;
+        if (props.measurement.lineMeasureEnabled) {
+            let newCoords = transformLineToArcs(props.measurement.feature.geometry.coordinates);
+            ft = set("geometry.coordinates", newCoords, ft);
+        }
+        this.replaceFeatures([ft]);
+
+        if (props.measurement.showLabel) {
+            this.removeMeasureTooltips();
+            this.measureTooltipElement = document.createElement("div");
+            this.measureTooltipElement.className = this.drawing ? "tooltip tooltip-measure" : "tooltip tooltip-static";
+
+            let geom = this.source.getFeatures()[0].getGeometry();
+            let output;
+            if (geom instanceof ol.geom.Polygon) {
+                output = this.formatArea(geom, props);
+                this.tooltipCoord = geom.getInteriorPoint().getCoordinates();
+            } else if (geom instanceof ol.geom.LineString) {
+                output = this.formatLength(geom, props);
+                this.tooltipCoord = geom.getLastCoordinate();
+            }
+            this.measureTooltipElement.innerHTML = output;
+            this.measureTooltip = new ol.Overlay({
+                element: this.measureTooltipElement,
+                offset: [0, -7],
+                positioning: 'bottom-center'
+            });
+            this.measureTooltip.setPosition(this.tooltipCoord);
+            props.map.addOverlay(this.measureTooltip);
+        }
+        this.updateMeasurementResults(props, this.source.getFeatures()[0]);
+    }
+
     replaceFeatures = (features) => {
         this.source = new ol.source.Vector();
         features.forEach((geoJSON) => {
-            let geometry = reprojectGeoJson(geoJSON, "EPSG:4326", this.props.map.getView().getProjection().getCode()).geometry;
+            let geoJSONFT = geoJSON;
+            if (geoJSONFT.geometry.type === "Polygon" && geoJSONFT.geometry.coordinates[0].length >= 3) {
+                if (!isEqual(geoJSONFT.geometry.coordinates[0][0], geoJSONFT.geometry.coordinates[0][geoJSONFT.geometry.coordinates[0].length - 1])) {
+                    geoJSONFT = set("geometry.coordinates", [geoJSONFT.geometry.coordinates[0].concat([geoJSONFT.geometry.coordinates[0][0]])], geoJSONFT);
+                }
+            }
+            let geometry = reprojectGeoJson(geoJSONFT, "EPSG:4326", this.props.map.getView().getProjection().getCode()).geometry;
             const feature = new ol.Feature({
-                    geometry: this.createOLGeometry(geometry)
-                });
+                geometry: this.createOLGeometry(geometry)
+            });
             this.source.addFeature(feature);
         });
         this.measureLayer.setSource(this.source);
@@ -221,7 +216,6 @@ class MeasurementSupport extends React.Component {
         vector = new ol.layer.Vector({
             source: this.source,
             zIndex: 1000000,
-            updateWhileInteracting: true,
             style: [...styles, ...startEndPointStyles]
         });
 
@@ -283,10 +277,10 @@ class MeasurementSupport extends React.Component {
                 let geom = e.target;
                 let output;
                 if (geom instanceof ol.geom.Polygon) {
-                    output = this.formatArea(geom);
+                    output = this.formatArea(geom, this.props);
                     this.tooltipCoord = geom.getInteriorPoint().getCoordinates();
                 } else if (geom instanceof ol.geom.LineString) {
-                    output = this.formatLength(geom);
+                    output = this.formatLength(geom, this.props);
                     this.tooltipCoord = geom.getLastCoordinate();
                 }
                 if (this.props.measurement.showLabel) {
@@ -304,9 +298,9 @@ class MeasurementSupport extends React.Component {
             if (this.props.measurement.lineMeasureEnabled) {
                 // Calculate arc
                 let newCoords = transformLineToArcs(newFeature.geometry.coordinates);
-                const ft = set("geometry.coordinates", newCoords, newFeature);
-                this.replaceFeatures([ft]);
+                newFeature = set("geometry.coordinates", newCoords, newFeature);
             }
+            this.replaceFeatures([newFeature]);
             if (this.props.measurement.showLabel) {
                 this.measureTooltipElement.className = 'tooltip tooltip-static';
                 this.measureTooltip.setOffset([0, -7]);
@@ -365,29 +359,31 @@ class MeasurementSupport extends React.Component {
         this.helpTooltipElement.classList.remove('hidden');
     };
 
-    updateMeasurementResults = (props, featureUpdateByUI) => {
-        let featureToUse = this.sketchFeature;
+    updateMeasurementResults = (props, olFeatureUpdateByUI) => {
+        let olFeatureToUse = this.sketchFeature;
         if (!this.sketchFeature) {
             return;
         }
-        if (featureUpdateByUI) {
-            featureToUse = featureUpdateByUI;
+        if (olFeatureUpdateByUI) {
+            olFeatureToUse = olFeatureUpdateByUI;
+            this.sketchFeature = olFeatureUpdateByUI;
         }
         let bearing = 0;
-        let sketchCoords = featureToUse.getGeometry().getCoordinates();
+        let sketchCoords = olFeatureToUse.getGeometry().getCoordinates();
 
         if (props.measurement.geomType === 'Bearing' && sketchCoords.length > 1) {
             // calculate the azimuth as base for bearing information
             bearing = calculateAzimuth(sketchCoords[0], sketchCoords[1], props.projection);
             if (sketchCoords.length > 2) {
                 this.drawInteraction.sketchCoords_ = [sketchCoords[0], sketchCoords[1], sketchCoords[0]];
-                featureToUse.getGeometry().setCoordinates([sketchCoords[0], sketchCoords[1]]);
-                this.drawInteraction.sketchFeature_ = featureToUse;
+                olFeatureToUse.getGeometry().setCoordinates([sketchCoords[0], sketchCoords[1]]);
+                this.drawInteraction.sketchFeature_ = olFeatureToUse;
                 this.drawInteraction.finishDrawing();
             }
         }
         const geojsonFormat = new ol.format.GeoJSON();
-        let feature = reprojectGeoJson(geojsonFormat.writeFeatureObject(featureToUse.clone()), props.map.getView().getProjection().getCode(), "EPSG:4326");
+        let feature = reprojectGeoJson(geojsonFormat.writeFeatureObject(olFeatureToUse.clone()), props.map.getView().getProjection().getCode(), "EPSG:4326");
+
         // it will no longer create 100 points for arcs to put in the state
         let newMeasureState = assign({}, props.measurement,
             {
@@ -395,17 +391,33 @@ class MeasurementSupport extends React.Component {
                 this.getPointCoordinate(sketchCoords) : null,
                 len: props.measurement.geomType === 'LineString' ? calculateDistance(this.reprojectedCoordinates(sketchCoords), props.measurement.lengthFormula) : 0,
                 area: props.measurement.geomType === 'Polygon' ?
-                this.calculateGeodesicArea(featureToUse.getGeometry().getLinearRing(0).getCoordinates()) : 0,
+                this.calculateGeodesicArea(olFeatureToUse.getGeometry().getLinearRing(0).getCoordinates()) : 0,
                 bearing: props.measurement.geomType === 'Bearing' ? bearing : 0,
                 lenUnit: props.measurement.lenUnit,
                 areaUnit: props.measurement.areaUnit,
-                updatedByUI: !!featureUpdateByUI
+                updatedByUI: !!olFeatureUpdateByUI
             },
-            // this should not change if the changes comes from ui i.e. featureUpdateByUI
-            !featureUpdateByUI ? {
+            // this should not change if the changes comes from ui i.e. olFeatureUpdateByUI
+            !olFeatureUpdateByUI ? {
                 feature: set("geometry.coordinates", this.drawing ? props.measurement.geomType === 'Polygon' ? [dropRight(feature.geometry.coordinates[0], feature.geometry.coordinates[0].length <= 2 ? 0 : 1)] : dropRight(feature.geometry.coordinates) : feature.geometry.coordinates, feature)} : {}
         );
+        // checks for invalid coords that needs to be re-added
+        if (this.invalidCoordinates.length) {
+            let newCoords;
+            this.invalidCoordinates.forEach(c => {
+                let coords = props.measurement.geomType === 'Polygon' ? newMeasureState.feature.geometry.coordinates[0] : newMeasureState.feature.geometry.coordinates;
+                newCoords = slice(coords, 0, c.index);
+                newCoords = newCoords.concat([c.coord]);
+                newCoords = newCoords.concat(slice(coords, c.index, coords.length));
+                newMeasureState = set("feature.geometry.coordinates", props.measurement.geomType === 'Polygon' ? [newCoords] : newCoords, newMeasureState);
+            });
 
+            if (props.measurement.geomType === 'Polygon' && (!isEqual(newCoords[0], newCoords[newCoords.length - 1]))) {
+                newCoords = newCoords.concat([newCoords[0]]);
+                newMeasureState = set("feature.geometry.coordinates", [newCoords], newMeasureState);
+            }
+        }
+        this.invalidCoordinates = [];
         this.props.changeMeasurementState(newMeasureState);
     };
 
@@ -454,16 +466,16 @@ class MeasurementSupport extends React.Component {
        * @param {ol.geom.LineString} line The line.
        * @return {string} The formatted length with uom chosen.
        */
-    formatLength = (line) => {
+    formatLength = (line, props) => {
         const sketchCoords = line.getCoordinates();
-        if (this.props.measurement.geomType === 'Bearing' && sketchCoords.length > 1) {
+        if (props.measurement.geomType === 'Bearing' && sketchCoords.length > 1) {
             // calculate the azimuth as base for bearing information
-            const bearing = calculateAzimuth(sketchCoords[0], sketchCoords[1], this.props.projection);
+            const bearing = calculateAzimuth(sketchCoords[0], sketchCoords[1], props.projection);
             return getFormattedBearingValue(bearing);
         }
         const reprojectedCoords = this.reprojectedCoordinates(sketchCoords);
-        const length = calculateDistance(reprojectedCoords, this.props.measurement.lengthFormula);
-        const {label, unit} = this.props.uom && this.props.uom.length;
+        const length = calculateDistance(reprojectedCoords, props.measurement.lengthFormula);
+        const {label, unit} = props.uom && props.uom.length;
         const output = round(convertUom(length, "m", unit), 2);
         return output + " " + (label);
     };
@@ -473,9 +485,9 @@ class MeasurementSupport extends React.Component {
      * @param {ol.geom.Polygon} polygon The polygon.
      * @return {string} Formatted area.
      */
-    formatArea = (polygon) => {
+    formatArea = (polygon, props) => {
         const area = this.calculateGeodesicArea(polygon.getLinearRing(0).getCoordinates());
-        const {label, unit} = this.props.uom && this.props.uom.area;
+        const {label, unit} = props.uom && props.uom.area;
         const output = round(convertUom(area, "sqm", unit), 2);
 
         return output + " " + label;
