@@ -7,6 +7,7 @@
  */
 var React = require('react');
 var ReactDOM = require('react-dom');
+const { castArray } = require('lodash');
 var CesiumLayer = require('../Layer.jsx');
 var expect = require('expect');
 var Cesium = require('../../../../libs/cesium');
@@ -49,7 +50,6 @@ describe('Cesium layer', () => {
         document.body.innerHTML = '';
         setTimeout(done);
     });
-
     it('missing layer', () => {
         var source = {
             "P_TYPE": "wrong ptype key"
@@ -234,6 +234,37 @@ describe('Cesium layer', () => {
         expect(map.imageryLayers.length).toBe(1);
         expect(map.imageryLayers._layers[0]._imageryProvider._url).toExist();
         expect(map.imageryLayers._layers[0]._imageryProvider.proxy.proxy).toExist();
+    });
+    it('custom name tile set', () => {
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "tileMatrixSet": "test_tile_set",
+            "matrixIds": {
+                "test_tile_set": [{
+                    "identifier": "0",
+                    ranges: {
+                        cols: {max: 0, min: 0},
+                        rows: {max: 0, min: 0}
+                    }
+                }]
+            },
+            "url": "http://sample.server/geoserver/gwc/service/wmts"
+        };
+        // create layers
+        var layer = ReactDOM.render(
+            <CesiumLayer type="wmts"
+                 options={options} map={map}/>, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.imageryLayers.length).toBe(1);
+        expect(map.imageryLayers._layers[0]._imageryProvider._tileMatrixLabels).toExist();
+        expect(map.imageryLayers._layers[0]._imageryProvider._tileMatrixLabels[0]).toBe("0");
     });
     it('check a wmts layer skips proxy config', () => {
         var options = {
@@ -644,7 +675,7 @@ describe('Cesium layer', () => {
 
         expect(layer).toExist();
 
-        let url = decodeURIComponent(layer.layer._url[0]);
+        let url = decodeURIComponent(castArray(layer.layer._url)[0]);
         expect(url.match(/ms2-authkey=########-####-####-####-###########/g).length).toBe(1);
 
         layer = ReactDOM.render(<CesiumLayer
@@ -653,7 +684,7 @@ describe('Cesium layer', () => {
             map={map}
             securityToken=""/>, document.getElementById("container"));
 
-        url = decodeURIComponent(layer.layer._url[0]);
+        url = decodeURIComponent(castArray(layer.layer._url)[0]);
         expect(url.match(/ms2-authkey/g)).toBe(null);
 
         layer = ReactDOM.render(<CesiumLayer
@@ -662,7 +693,7 @@ describe('Cesium layer', () => {
             map={map}
             securityToken="########-####-$$$$-####-###########"/>, document.getElementById("container"));
 
-        url = decodeURIComponent(layer.layer._url[0]);
+        url = decodeURIComponent(castArray(layer.layer._url)[0]);
         expect(url.match(/ms2-authkey=########-####-\$\$\$\$-####-###########/g).length).toBe(1);
 
     });

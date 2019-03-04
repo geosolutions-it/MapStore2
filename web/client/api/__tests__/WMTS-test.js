@@ -18,6 +18,7 @@ describe('Test correctness of the WMTS APIs', () => {
                 expect(result.records[0].style).toBe("");
                 result.records.map(record => {
                     expect(record.requestEncoding).toBe('KVP');
+                    expect(record.queryable).toBe(true);
                     expect(record.GetTileURL).toBe("http://sample.server/geoserver/gwc/service/wmts?");
                 });
 
@@ -36,6 +37,7 @@ describe('Test correctness of the WMTS APIs', () => {
                 // all records should be RESTful with same GetTileURL
                 result.records.map(record => {
                     expect(record.requestEncoding).toBe('RESTful');
+                    expect(record.queryable).toBe(false);
                     expect(record.GetTileURL).toBe('https://maps.sampleServer.org/basemap');
                 });
                 expect(result.records[0].style).toBe("normal");
