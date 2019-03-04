@@ -120,8 +120,6 @@ var WMTS = L.TileLayer.extend({
 
         const params = this.getWMTSParams([...this.matrixSet], [...this.matrixIds], tilePoint.z, nw, tilewidth);
 
-        // find out if tile is in limits
-
         if (!params) {
             return "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         }
