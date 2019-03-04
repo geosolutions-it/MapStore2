@@ -203,7 +203,10 @@ const converters = {
     wmts: (records, options) => {
         if (records && records.records) {
             return records.records.map((record) => {
-                const urls = castArray(WMTSUtils.getGetTileURL(record) || (options && options.url));
+                let urls = castArray(WMTSUtils.getGetTileURL(record) || (options && options.url));
+                if (urls.length === 1) {
+                    urls = urls[0];
+                }
                 const capabilitiesURL = WMTSUtils.getCapabilitiesURL(record);
                 const matrixIds = castArray(record.TileMatrixSetLink || []).reduce((previous, current) => {
                     const tileMatrix = head((record.TileMatrixSet && castArray(record.TileMatrixSet) || []).filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
