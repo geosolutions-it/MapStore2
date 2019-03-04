@@ -895,7 +895,11 @@
             "QRCodeLinkTitle": "código qr",
             "msgCopiedUrl": "Url Copiada",
             "msgToCopyUrl": "Pinche para copiar",
-            "sharedTitle": "Mira mi nuevo mapa: "
+            "sharedTitle": "Mira mi nuevo mapa: ",
+            "advancedOptions": "Opciones avanzadas",
+            "addBboxParam": "Añadir bbox param al enlace de compartir",
+            "wrongBboxParamTitle": "Bbox no válido",
+            "wrongBboxParamMessage": "bbox params debe estar en EPSG:4326 y escrito como bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Previsualisación de la captura del mapa",

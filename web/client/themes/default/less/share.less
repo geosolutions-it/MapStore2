@@ -1,10 +1,56 @@
-#share-panel-dialog {
-    .buttonCopy,
-    .buttonCopyTextArea {
-        padding: 0;
+.share-win {
+    border: none;
+    @media (min-width: 768px) {
+        & {
+            width: 400px;
+        }
     }
-}
-
-#sharePanel-tabs {
-    border-top: none !important;
+    .input-link {
+        .input-link-head {
+            padding: 8px 0;
+            display: flex;
+            align-items: center;
+            & > h4 {
+                flex: 1;
+                margin: 0;
+            }
+        }
+        pre {
+            max-height: 150px;
+            input {
+                width: 100%;
+                background-color: unset;
+                box-shadow: unset;
+                border: unset;
+                font-size: @font-size-small;
+            }
+        }
+        + .input-link {
+            border-top: 1px solid @ms2-color-shade-lighter;
+        }
+    }
+    .social-links {
+        text-align: center;
+        .social-links-list {
+            display: flex;
+            .social-box  {
+                margin: 0 8px;
+                &:first-child {
+                    margin-left: auto;
+                }
+                &:last-child {
+                    margin-right: auto;
+                }
+            }
+        }
+    }
+    .qr-code {
+        text-align: center;
+    }
+    .mapstore-switch-panel {
+        margin: 8px 0;
+        padding: 0 8px;
+        border: 1px solid transparent;
+        .shadow-soft;
+    }
 }

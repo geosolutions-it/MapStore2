@@ -6,12 +6,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const expect = require('expect');
-const React = require('react');
-const ReactDOM = require('react-dom');
-const ShareEmbed = require('../ShareEmbed');
-const {head} = require('lodash');
-const ReactTestUtils = require('react-dom/test-utils');
+import expect from 'expect';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import ShareEmbed from '../ShareEmbed';
+import {head} from 'lodash';
+import ReactTestUtils from 'react-dom/test-utils';
 
 describe("The ShareEmbed component", () => {
     beforeEach((done) => {
@@ -37,9 +37,9 @@ describe("The ShareEmbed component", () => {
         const cmpSharePanel = ReactDOM.render(<ShareEmbed shareUrl={url}/>, document.getElementById("container"));
         expect(cmpSharePanel).toExist();
 
-        const textareaEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "textarea")[0]);
-        expect(textareaEmbed).toExist();
-        expect(textareaEmbed.value).toEqual(iFrameStr);
+        const codeEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code")[0]);
+        expect(codeEmbed).toExist();
+        expect(codeEmbed.innerText).toEqual(iFrameStr);
 
     });
     it('test forceDrawer', () => {
@@ -52,10 +52,10 @@ describe("The ShareEmbed component", () => {
         let checkbox = head(inputs.filter(i => i.type === "checkbox"));
         expect(checkbox.checked).toBe(false);
         ReactTestUtils.Simulate.change(checkbox);
-        const textareaEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "textarea")[0]);
+        const codeEmbed = ReactDOM.findDOMNode(ReactTestUtils.scryRenderedDOMComponentsWithTag(cmpSharePanel, "code")[0]);
         expect(checkbox.checked).toBe(true);
-        expect(textareaEmbed).toExist();
-        expect(textareaEmbed.value).toEqual(iFrameStr);
+        expect(codeEmbed).toExist();
+        expect(codeEmbed.innerText).toEqual(iFrameStr);
     });
     it('test showTOCToggle prop', () => {
         const host = "http://localhost:8081/";
