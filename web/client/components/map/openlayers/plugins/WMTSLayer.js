@@ -114,6 +114,7 @@ const createLayer = options => {
                 extent: extent,
                 resolutions: paramResolutions,
                 sizes,
+                // TODO: matrixLimits from ranges
                 matrixIds: paramMatrixIds,
                 tileSize: options.tileSize || [256, 256]
             }),

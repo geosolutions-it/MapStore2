@@ -61,9 +61,12 @@ const WMTSUtils = {
      * gets the first operation of the type and with the name provided from the 'Operations' array of the WMTS Capabilities json parsed object
      */
     getOperation: (operations, name, type) => {
-        return head(head(operations
-            .filter((operation) => operation.$.name === name)
-            .map((operation) => castArray(operation["ows:DCP"]["ows:HTTP"]["ows:Get"])))
+        return head(
+            castArray(head(
+                operations
+                    .filter((operation) => operation.$.name === name)
+                    .map((operation) => castArray(operation["ows:DCP"]["ows:HTTP"]["ows:Get"]))
+            ) || [])
             .filter((request) => (request["ows:Constraint"] && request["ows:Constraint"]["ows:AllowedValues"]["ows:Value"]) === type)
             .map((request) => request.$["xlink:href"])
         );

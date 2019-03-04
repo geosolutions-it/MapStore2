@@ -10,12 +10,11 @@ const PropTypes = require('prop-types');
 const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button: ButtonRB, Glyphicon} = require('react-bootstrap');
-const { isObject, castArray, head } = require('lodash');
+const { isObject } = require('lodash');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const ContainerDimensions = require('react-container-dimensions').default;
-const ConfigUtils = require('../../utils/ConfigUtils');
-const {getRecordLinks, recordToLayer, extractOGCServicesReferences, buildSRSMap, removeParameters, extractEsriReferences, esriToLayer} = require('../../utils/CatalogUtils');
+const {getRecordLinks, recordToLayer, extractOGCServicesReferences, buildSRSMap, extractEsriReferences, esriToLayer} = require('../../utils/CatalogUtils');
 
 const tooltip = require('../misc/enhancers/tooltip');
 const Button = tooltip(ButtonRB);

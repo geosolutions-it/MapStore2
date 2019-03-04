@@ -120,9 +120,12 @@ var WMTS = L.TileLayer.extend({
 
         const params = this.getWMTSParams([...this.matrixSet], [...this.matrixIds], tilePoint.z, nw, tilewidth);
 
+        // find out if tile is in limits
+
         if (!params) {
             return "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
         }
+
 
         this._urlsIndex++;
         if (this._urlsIndex === this._urls.length) {
@@ -130,13 +133,15 @@ var WMTS = L.TileLayer.extend({
         }
         const url = L.Util.template(this._urls[this._urlsIndex], {
             s: this._getSubdomain(tilePoint),
-            // "https://maps1.wien.gv.at/basemap/geolandbasemap/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png"
             TileRow: params.tilerow,
             TileCol: params.tilecol,
-            TileMatrixSet: this.matrixSet,
+            TileMatrixSet: this.options.tileMatrixSet,
             TileMatrix: params.ident,
             Style: this.options.style
         });
+        if (this.options.requestEncoding === "RESTful") {
+            return url;
+        }
         return url + L.Util.getParamString(this.wmtsParams, url, true) + "&tilematrix=" + params.ident + "&tilerow=" + params.tilerow + "&tilecol=" + params.tilecol;
     },
     getMatrix: function(matrix, options) {

@@ -452,6 +452,7 @@ const LayersUtils = {
             maxNativeZoom: layer.maxNativeZoom,
             hideLoading: layer.hideLoading || false,
             handleClickOnLayer: layer.handleClickOnLayer || false,
+            queryable: layer.queryable,
             featureInfo: layer.featureInfo,
             catalogURL: layer.catalogURL,
             capabilitiesURL: layer.capabilitiesURL,

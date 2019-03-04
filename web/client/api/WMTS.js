@@ -59,6 +59,8 @@ const searchAndPaginate = (json, startPosition, maxRecords, text, url) => {
             .map((layer) => assign({}, layer, {
                 SRS: SRSList,
                 TileMatrixSet,
+                // Only KVP is supported by MapInfo, for the moment. TODO: Support single layer's InfoFormat
+                queryable: !!getOperation(operations, "GetFeatureInfo", "KVP"),
                 requestEncoding: requestEncoding,
                 style: getDefaultStyleIdentifier(layer), // it must be collected because it can be used in RESTful version to create the path
                 format: getDefaultFormat(layer),
