@@ -29,6 +29,7 @@ describe('Test the WMTSUtils', () => {
         expect(ids.length).toBe(1);
         expect(ids[0]).toBe('EPSG:4326');
     });
+
     it('wmts kvp', (done) => {
         xml2js.parseString(kvpCapabilities, { explicitArray: false }, (ignore, json) => {
             const operations = WMTSUtils.getOperations(json);
@@ -45,7 +46,10 @@ describe('Test the WMTSUtils', () => {
             const kvpOperation = WMTSUtils.getOperation(operations, "GetTile", "KVP");
             expect(kvpOperation).toNotExist();
             expect(WMTSUtils.getOperation(operations, "GetTile", "RESTful")).toBe("https://maps.sampleServer.org/basemap");
-            expect(WMTSUtils.getRequestEncoding(json)).toBe("RESTful");
+            const tileURLs = WMTSUtils.getGetTileURL(json.Capabilities.Contents.Layer[0]);
+            expect(tileURLs).toExist();
+            expect(tileURLs.length).toBe(5);
+            expect(tileURLs[0]).toBe("https://maps1.sampleServer.org/basemap/geolandbasemap/{Style}/{TileMatrixSet}/{TileMatrix}/{TileRow}/{TileCol}.png");
             done();
         });
     });
