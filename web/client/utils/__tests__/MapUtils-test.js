@@ -26,7 +26,6 @@ var {
     getBbox,
     getCurrentResolution,
     saveMapConfiguration,
-    extractTileMatrixSetFromLayers,
     getIdFromUri,
     parseLayoutValue
 } = require('../MapUtils');
@@ -248,11 +247,13 @@ describe('Test the MapUtils', () => {
                     thumbURL: "THUMB_URL",
                     availableStyles: undefined,
                     bbox: {},
+                    requestEncoding: undefined,
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
                     nativeCrs: undefined,
                     features: undefined,
+                    queryable: undefined,
                     featureInfo: undefined,
                     format: undefined,
                     group: undefined,
@@ -290,11 +291,13 @@ describe('Test the MapUtils', () => {
                     thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
+                    requestEncoding: undefined,
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
                     nativeCrs: undefined,
                     features: undefined,
+                    queryable: undefined,
                     featureInfo: undefined,
                     format: undefined,
                     group: undefined,
@@ -332,11 +335,13 @@ describe('Test the MapUtils', () => {
                     thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
+                    requestEncoding: undefined,
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
                     nativeCrs: undefined,
                     features: undefined,
+                    queryable: undefined,
                     featureInfo: undefined,
                     format: undefined,
                     group: undefined,
@@ -374,11 +379,13 @@ describe('Test the MapUtils', () => {
                     thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
+                    requestEncoding: undefined,
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
                     nativeCrs: undefined,
                     features: undefined,
+                    queryable: undefined,
                     featureInfo: undefined,
                     format: undefined,
                     group: undefined,
@@ -538,11 +545,13 @@ describe('Test the MapUtils', () => {
                     thumbURL: "THUMB_URL",
                     availableStyles: undefined,
                     bbox: {},
+                    requestEncoding: undefined,
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
                     nativeCrs: undefined,
                     features: undefined,
+                    queryable: undefined,
                     featureInfo: undefined,
                     format: undefined,
                     group: undefined,
@@ -580,11 +589,13 @@ describe('Test the MapUtils', () => {
                     thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
+                    requestEncoding: undefined,
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
                     nativeCrs: undefined,
                     features: undefined,
+                    queryable: undefined,
                     featureInfo: undefined,
                     format: undefined,
                     group: undefined,
@@ -622,11 +633,13 @@ describe('Test the MapUtils', () => {
                     thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
+                    requestEncoding: undefined,
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
                     nativeCrs: undefined,
                     features: undefined,
+                    queryable: undefined,
                     featureInfo: undefined,
                     format: undefined,
                     group: undefined,
@@ -804,11 +817,13 @@ describe('Test the MapUtils', () => {
                     thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
+                    requestEncoding: undefined,
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
                     nativeCrs: undefined,
                     features: undefined,
+                    queryable: undefined,
                     featureInfo: undefined,
                     format: undefined,
                     group: undefined,
@@ -846,11 +861,13 @@ describe('Test the MapUtils', () => {
                     thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
+                    requestEncoding: undefined,
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
                     nativeCrs: undefined,
                     features: undefined,
+                    queryable: undefined,
                     featureInfo: undefined,
                     format: undefined,
                     group: undefined,
@@ -888,11 +905,13 @@ describe('Test the MapUtils', () => {
                     thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
+                    requestEncoding: undefined,
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
                     nativeCrs: undefined,
                     features: undefined,
+                    queryable: undefined,
                     featureInfo: undefined,
                     format: undefined,
                     group: undefined,
@@ -949,304 +968,7 @@ describe('Test the MapUtils', () => {
         });
     });
 
-    it('extract TileMatrixSet from layers without sources and grouped layers', () => {
-        expect(extractTileMatrixSetFromLayers()).toEqual({});
-    });
 
-    it('extract TileMatrixSet from layers without sources and empty grouped layers', () => {
-        expect(extractTileMatrixSetFromLayers({})).toEqual({});
-    });
-
-    it('extract TileMatrixSet from layers with sources and empty grouped layers', () => {
-        expect(extractTileMatrixSetFromLayers(null, {data: 'data'})).toEqual({data: 'data'});
-    });
-
-    it('extract TileMatrixSet from layers without sources', () => {
-
-        const groupedLayersByUrl = {
-            'http:url001': [
-                {
-                    id: "layer001",
-                    matrixIds: {
-                        'EPSG:4326': [{
-                            identifier: 'EPSG:4326:0'
-                        }]
-                    },
-                    tileMatrixSet: [{
-                        TileMatrix: [{
-                            'ows:Identifier': 'EPSG:4326:0'
-                        }],
-                        'ows:Identifier': "EPSG:4326",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
-                    }, {
-                        TileMatrix: [{
-                            'ows:Identifier': 'custom:0'
-                        }],
-                        'ows:Identifier': "custom",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
-                    }]
-                },
-                {
-                    id: "layer003",
-                    matrixIds: {
-                        'custom': [{
-                            identifier: 'custom'
-                        }]
-                    },
-                    tileMatrixSet: [{
-                        TileMatrix: [{
-                            'ows:Identifier': 'EPSG:4326:0'
-                        }],
-                        'ows:Identifier': "EPSG:4326",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
-                    }, {
-                        TileMatrix: [{
-                            'ows:Identifier': 'custom:0'
-                        }],
-                        'ows:Identifier': "custom",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
-                    }]
-                }
-            ],
-            'http:url002': [
-                {
-                    id: "layer002",
-                    matrixIds: {
-                        'custom': [
-                            {
-                                identifier: 'custom:0',
-                                ranges: {
-                                    cols: {
-                                        min: 0,
-                                        max: 1
-                                    },
-                                    rows: {
-                                        min: 0,
-                                        max: 1
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    tileMatrixSet: [{
-                        TileMatrix: [{
-                            'ows:Identifier': 'EPSG:4326:0'
-                        }],
-                        'ows:Identifier': "EPSG:4326",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
-                    }, {
-                        TileMatrix: [{
-                            'ows:Identifier': 'custom:0'
-                        }],
-                        'ows:Identifier': "custom",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
-                    }]
-                }
-            ]
-        };
-
-        const newSources = extractTileMatrixSetFromLayers(groupedLayersByUrl);
-
-        expect(newSources).toEqual({
-            'http:url001': {
-                tileMatrixSet: {
-                    'EPSG:4326': {
-                        TileMatrix: [{
-                            'ows:Identifier': 'EPSG:4326:0'
-                        }],
-                        'ows:Identifier': "EPSG:4326",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
-                    },
-                    'custom': {
-                        TileMatrix: [{
-                            'ows:Identifier': 'custom:0'
-                        }],
-                        'ows:Identifier': "custom",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
-                    }
-                }
-            },
-            'http:url002': {
-                tileMatrixSet: {
-                    'custom': {
-                        TileMatrix: [{
-                            'ows:Identifier': 'custom:0',
-                            ranges: {
-                                cols: {
-                                    min: 0,
-                                    max: 1
-                                },
-                                rows: {
-                                    min: 0,
-                                    max: 1
-                                }
-                            }
-                        }],
-                        'ows:Identifier': "custom",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
-                    }
-                }
-            }
-        });
-
-    });
-
-    it('extract TileMatrixSet from layers with sources', () => {
-
-        const groupedLayersByUrl = {
-            'http:url001': [
-                {
-                    id: "layer001",
-                    matrixIds: {
-                        'EPSG:4326': [{
-                            identifier: 'EPSG:4326:0'
-                        }]
-                    },
-                    tileMatrixSet: [{
-                        TileMatrix: [{
-                            'ows:Identifier': 'EPSG:4326:0'
-                        }],
-                        'ows:Identifier': "EPSG:4326",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
-                    }, {
-                        TileMatrix: [{
-                            'ows:Identifier': 'custom:0'
-                        }],
-                        'ows:Identifier': "custom",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
-                    }]
-                },
-                {
-                    id: "layer003",
-                    matrixIds: {
-                        'custom': [{
-                            identifier: 'custom'
-                        }]
-                    },
-                    tileMatrixSet: [{
-                        TileMatrix: [{
-                            'ows:Identifier': 'EPSG:4326:0'
-                        }],
-                        'ows:Identifier': "EPSG:4326",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
-                    }, {
-                        TileMatrix: [{
-                            'ows:Identifier': 'custom:0'
-                        }],
-                        'ows:Identifier': "custom",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
-                    }]
-                }
-            ],
-            'http:url002': [
-                {
-                    id: "layer002",
-                    matrixIds: {
-                        'custom': [
-                            {
-                                identifier: 'custom:0',
-                                ranges: {
-                                    cols: {
-                                        min: 0,
-                                        max: 1
-                                    },
-                                    rows: {
-                                        min: 0,
-                                        max: 1
-                                    }
-                                }
-                            }
-                        ]
-                    },
-                    tileMatrixSet: [{
-                        TileMatrix: [{
-                            'ows:Identifier': 'EPSG:4326:0'
-                        }],
-                        'ows:Identifier': "EPSG:4326",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
-                    }, {
-                        TileMatrix: [{
-                            'ows:Identifier': 'custom:0'
-                        }],
-                        'ows:Identifier': "custom",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
-                    }]
-                }
-            ]
-        };
-
-        const sources = {
-            'http:url003': {
-                data: 'data'
-            },
-            'http:url002': {
-                tileMatrixSet: {
-                    'fromsources': {
-                        TileMatrix: [{
-                            'ows:Identifier': 'fromsources:0'
-                        }],
-                        'ows:Identifier': "fromsources",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
-                    }
-                }
-            }
-        };
-
-        const newSources = extractTileMatrixSetFromLayers(groupedLayersByUrl, sources);
-
-        expect(newSources).toEqual({
-            'http:url001': {
-                tileMatrixSet: {
-                    'EPSG:4326': {
-                        TileMatrix: [{
-                            'ows:Identifier': 'EPSG:4326:0'
-                        }],
-                        'ows:Identifier': "EPSG:4326",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::4326"
-                    },
-                    'custom': {
-                        TileMatrix: [{
-                            'ows:Identifier': 'custom:0'
-                        }],
-                        'ows:Identifier': "custom",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
-                    }
-                }
-            },
-            'http:url002': {
-                tileMatrixSet: {
-                    'custom': {
-                        TileMatrix: [{
-                            'ows:Identifier': 'custom:0',
-                            ranges: {
-                                cols: {
-                                    min: 0,
-                                    max: 1
-                                },
-                                rows: {
-                                    min: 0,
-                                    max: 1
-                                }
-                            }
-                        }],
-                        'ows:Identifier': "custom",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
-                    },
-                    'fromsources': {
-                        TileMatrix: [{
-                            'ows:Identifier': 'fromsources:0'
-                        }],
-                        'ows:Identifier': "fromsources",
-                        'ows:SupportedCRS': "urn:ogc:def:crs:EPSG::900913"
-                    }
-                }
-            },
-            'http:url003': {
-                data: 'data'
-            }
-        });
-
-    });
     it('test getIdFromUri ', () => {
         // /mapstore2/rest/geostore/data/578/raw?decode=datauri
         expect(getIdFromUri('%2Fmapstore2%2Frest%2Fgeostore%2Fdata%2F578%2Fraw%3Fdecode%3Ddatauri')).toBe('578');
