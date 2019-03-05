@@ -10,17 +10,26 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const MeasureComponent = require('./MeasureComponent');
 const DockablePanel = require('../../misc/panels/DockablePanel');
+const Message = require('../../I18N/Message');
+const Dialog = require('../../misc/Dialog');
+const {Glyphicon} = require('react-bootstrap');
 
 class MeasureDialog extends React.Component {
     static propTypes = {
         show: PropTypes.bool,
         closeGlyph: PropTypes.string,
         onClose: PropTypes.func,
+        onMount: PropTypes.func,
+        onInitReducer: PropTypes.func,
+        showCoordinateEditor: PropTypes.bool,
+        defaultOptions: PropTypes.object,
         style: PropTypes.object
     };
 
     static defaultProps = {
         show: false,
+        showCoordinateEditor: false,
+        showAddAsAnnotation: false,
         closeGlyph: "1-close",
         style: {
             // Needs map layout selector see Identify Plugin
@@ -32,8 +41,20 @@ class MeasureDialog extends React.Component {
         this.props.onClose(false);
     };
 
+    componentWillMount() {
+        /* this is used to set up defaults instead of putting them in the initial state,
+         * beacuse in measurement state is updated when controls are updates
+        */
+        const {showCoordinateEditor, ...otherDefaultOptions} = this.props.defaultOptions;
+        this.props.onMount(showCoordinateEditor || this.props.showCoordinateEditor);
+        this.props.toggleMeasure({
+            geomType: otherDefaultOptions.geomType || "LineString"
+        });
+        this.props.onInitReducer(otherDefaultOptions);
+    }
     render() {
         return this.props.show ? (
+            this.props.showCoordinateEditor ?
             <DockablePanel
             dock
             bsStyle="primary"
@@ -46,6 +67,15 @@ class MeasureDialog extends React.Component {
             style={this.props.style}>
                 <MeasureComponent id="measure-panel" {...this.props}/>
             </DockablePanel>
+        : (<Dialog id="measure">
+            <div key="header" role="header">
+                <Glyphicon glyph="1-ruler"/>&nbsp;<Message key="title" msgId="measureComponent.Measure"/>
+                <button key="close" onClick={this.onClose} className="close">{this.props.closeGlyph ? <Glyphicon glyph={this.props.closeGlyph}/> : <span>×</span>}</button>
+            </div>
+            <div key="body" role="body">
+                <MeasureComponent id="measure-panel" style={{minWidth: "500px"}}{...this.props}/>
+            </div>
+        </Dialog>)
         ) : null;
     }
 }

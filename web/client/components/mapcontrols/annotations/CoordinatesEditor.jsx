@@ -275,7 +275,7 @@ class CoordinateEditor extends React.Component {
                             const components = this.props.components.filter((cmp, i) => i !== idx);
                             if (this.isValid(components)) {
                                 const validComponents = this.addCoordPolygon(components);
-                                if (this.props.type === "LineString" && idx !== components.length || this.props.type === "Polygon") {
+                                if (this.props.isMouseEnterEnabled || this.props.type === "LineString" && idx !== components.length || this.props.type === "Polygon") {
                                     this.props.onHighlightPoint(components[idx]);
                                 } else {
                                     this.props.onHighlightPoint(null);
@@ -334,12 +334,12 @@ class CoordinateEditor extends React.Component {
         let validComponents = this.addCoordPolygon(tempComps);
         this.props.onChange(validComponents, this.props.properties.radius, this.props.properties.valueText);
         if (!this.isValid(tempComps)) {
-            if (this.props.type === "LineString" || this.props.type === "Polygon") {
+            if (this.props.isMouseLeaveEnabled || this.props.type === "LineString" || this.props.type === "Polygon") {
                 this.props.onHighlightPoint(null);
             }
             this.props.onSetInvalidSelected("coords", tempComps.map(coordToArray));
         } else {
-            if (this.props.type === "LineString" || this.props.type === "Polygon") {
+            if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon") {
                 this.props.onHighlightPoint(tempComps[id]);
             }
         }

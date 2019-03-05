@@ -14,10 +14,11 @@ const assign = require('object-assign');
 const uuid = require('uuid');
 const axios = require('axios');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
-const {reprojectGeoJson, calculateDistance, reproject} = require('../../../utils/CoordinatesUtils');
+const {reprojectGeoJson, calculateDistance, reproject, transformLineToArcs} = require('../../../utils/CoordinatesUtils');
 const {createStylesAsync} = require('../../../utils/VectorStyleUtils');
 const wgs84Sphere = new ol.Sphere(6378137);
 const {transformPolygonToCircle, isCompletePolygon} = require('../../../utils/DrawSupportUtils');
+const {set} = require('../../../utils/ImmutableUtils');
 const VectorStyle = require('./VectorStyle');
 const {parseStyles} = require('./VectorStyle');
 const geojsonFormat = new ol.format.GeoJSON();
@@ -839,6 +840,12 @@ class DrawSupport extends React.Component {
         if (newFeature && newFeature.features && newFeature.features.length) {
             // filtering circles features only when drawing
 
+            // check for geodesic lines
+        /*    let newFeatureCollFeatures = head(newProps.features).features.map(f => {
+                return f.geometry.type === "LineString" ? set("geometry.coordinates", f.properties.useGeodesicLines ? transformLineToArcs(f.geometry.coordinates) : f.geometry.coordinates, f) : f;
+            });
+
+            newFeature = reprojectGeoJson({...head(newProps.features), features: newFeatureCollFeatures}, newProps.options.featureProjection, this.getMapCrs());*/
             props = assign({}, newProps, {features: [newFeature]});
         } else {
             if (newFeature && newFeature.properties && newFeature.properties.isCircle) {
@@ -1178,6 +1185,9 @@ class DrawSupport extends React.Component {
             features: this.modifyFeatureColl,
             condition: (e) => {
                 return ol.events.condition.primaryAction(e) && !ol.events.condition.altKeyOnly(e);
+            },
+            insertVertexCondition: (e) => {
+                return ol.events.condition.shiftKeyOnly(e);
             }
         });
 

@@ -12,7 +12,7 @@ const {Glyphicon} = require('react-bootstrap');
 const assign = require('object-assign');
 const {createSelector} = require('reselect');
 const Message = require('./locale/Message');
-const {changeMeasurement, changeUom, changeFormatMeasurement, changeCoordinates, addAnnotation} = require('../actions/measurement');
+const {changeMeasurement, changeUom, changeFormatMeasurement, changeCoordinates, addAnnotation, initReducer} = require('../actions/measurement');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {MeasureDialog} = require('./measure/index');
 
@@ -26,6 +26,8 @@ const {cancelRemoveAnnotation, confirmRemoveAnnotation, openEditor, removeAnnota
 const { zoomToExtent } = require('../actions/map');
 const { annotationsInfoSelector } = require('../selectors/annotations');
 const { isOpenlayers } = require('../selectors/maptype');
+const { isCoordinateEditorEnabledSelector, showAddAsAnnotationSelector } = require('../selectors/measurement');
+const { showCoordinateEditorSelector, measureSelector } = require('../selectors/controls');
 
 const commonEditorActions = {
     onEdit: openEditor,
@@ -84,9 +86,10 @@ const selector = (state) => {
         },
         lineMeasureEnabled: state.measurement && state.measurement.lineMeasureEnabled,
         areaMeasureEnabled: state.measurement && state.measurement.areaMeasureEnabled,
-        showCoordinateEditor: isOpenlayers(state),
-        showAddAsAnnotation: isOpenlayers(state),
         bearingMeasureEnabled: state.measurement && state.measurement.bearingMeasureEnabled,
+        isCoordinateEditorEnabled: isCoordinateEditorEnabledSelector(state),
+        showCoordinateEditor: showCoordinateEditorSelector(state),
+        showAddAsAnnotation: showAddAsAnnotationSelector(state) && isOpenlayers(state),
         isCoordEditorEnabled: state.measurement && !state.measurement.isDrawing,
         geomType: state.measurement && state.measurement.geomType,
         format: state.measurement && state.measurement.format || "decimal"
@@ -104,7 +107,7 @@ const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
 const Measure = connect(
     createSelector([
         selector,
-        (state) => state && state.controls && state.controls.measure && state.controls.measure.enabled
+        (state) => measureSelector(state)
     ],
         (measure, show) => ({
             show,
@@ -117,8 +120,10 @@ const Measure = connect(
         onChangeUom: changeUom,
         onHighlightPoint: highlightPoint,
         onChangeFormat: changeFormatMeasurement,
+        onInitReducer: initReducer,
         onChangeCoordinates: changeCoordinates,
-        onClose: toggleMeasureTool
+        onClose: toggleMeasureTool,
+        onMount: (showCoordinateEditor) => setControlProperty("measure", "showCoordinateEditor", showCoordinateEditor)
     }, null, {pure: false})(MeasureDialog);
 
 module.exports = {

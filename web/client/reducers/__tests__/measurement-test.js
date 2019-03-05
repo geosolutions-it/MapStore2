@@ -12,7 +12,8 @@ const {
     changeMeasurementState,
     changeUom,
     resetGeometry,
-    changeGeometry
+    changeGeometry,
+    initReducer
 } = require('../../actions/measurement');
 const {RESET_CONTROLS} = require('../../actions/controls');
 const feature = {
@@ -109,6 +110,10 @@ describe('Test the measurement reducer', () => {
         expect(state.lineMeasureEnabled).toBe(false);
         expect(state.areaMeasureEnabled).toBe(false);
         expect(state.bearingMeasureEnabled).toBe(false);
+    });
+    it('INIT_REDUCER', () => {
+        let state = measurement( {feature: {}}, initReducer({showAddAsAnnotation: true}));
+        expect(state.showAddAsAnnotation).toBe(true);
     });
 
 });

@@ -13,6 +13,7 @@ const {SIZE_CHANGE, CLOSE_FEATURE_GRID, OPEN_FEATURE_GRID} = require('../actions
 const {CLOSE_IDENTIFY, ERROR_FEATURE_INFO, TOGGLE_MAPINFO_STATE, LOAD_FEATURE_INFO, EXCEPTIONS_FEATURE_INFO} = require('../actions/mapInfo');
 const {SHOW_SETTINGS, HIDE_SETTINGS} = require('../actions/layers');
 const {isMapInfoOpen} = require('../selectors/mapInfo');
+const {showCoordinateEditorSelector} = require('../selectors/controls');
 
 /**
  * Epìcs for feature grid
@@ -72,7 +73,7 @@ const updateMapLayoutEpic = (action$, store) =>
                 get(state, "controls.details.enabled") && {right: mapLayout.right.md} || null,
                 get(state, "controls.annotations.enabled") && {right: mapLayout.right.md} || null,
                 get(state, "controls.metadataexplorer.enabled") && {right: mapLayout.right.md} || null,
-                get(state, "controls.measure.enabled") && {right: mapLayout.right.md} || null,
+                get(state, "controls.measure.enabled") && showCoordinateEditorSelector(state) && {right: mapLayout.right.md} || null,
                 get(state, "mapInfo.enabled") && isMapInfoOpen(state) && {right: mapLayout.right.md} || null
             ].filter(panel => panel)) || {right: 0};
 

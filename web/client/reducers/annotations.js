@@ -8,7 +8,7 @@
 
 const assign = require('object-assign');
 const ol = require('openlayers');
-const {reproject, reprojectGeoJson} = require('../utils/CoordinatesUtils');
+const {reproject, reprojectGeoJson/*, transformArcsToLine*/} = require('../utils/CoordinatesUtils');
 
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 const {TOGGLE_CONTROL} = require('../actions/controls');
@@ -149,6 +149,10 @@ function annotations(state = { validationErrors: {} }, action) {
                 selected = set("geometry.type", "Text", selected);
             }
 
+            /*if (selected.properties.useGeodesicLines && selected.geometry.type === "LineString") {
+                selected = set("geometry.coordinates", transformArcsToLine(selected.geometry.coordinates), selected);
+            }*/
+
             let ftChangedIndex = findIndex(state.editing.features, (f) => f.properties.id === selected.properties.id);
             let selectedGeoJSON = selected;
             if (selected && selected.properties && selected.properties.isCircle) {
@@ -185,6 +189,9 @@ function annotations(state = { validationErrors: {} }, action) {
             } else if (selected && selected.properties && selected.properties.isText) {
                 selected = set("geometry.type", "Text", selected);
             }
+            /*if (selected.properties.useGeodesicLines && selected.geometry.type === "LineString") {
+                selected = set("geometry.coordinates", transformArcsToLine(selected.geometry.coordinates), selected);
+            }*/
             selected = set("properties.isValidFeature", validateFeature({
                 properties: selected.properties,
                 components: getComponents(selected.geometry),

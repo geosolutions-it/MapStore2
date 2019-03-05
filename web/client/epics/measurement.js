@@ -20,6 +20,7 @@ const uuidv1 = require('uuid/v1');
 const assign = require('object-assign');
 const {head, last, round} = require('lodash');
 const {annotationsLayerSelector} = require('../selectors/annotations');
+const {showCoordinateEditorSelector} = require('../selectors/controls');
 const {editAnnotation} = require('../actions/annotations');
 
 const formattedValue = (uom, value) => ({
@@ -57,12 +58,14 @@ const convertMeasureToGeoJSON = (measureGeometry, value, uom, id, measureTool, s
                 geometry: measureGeometry,
                 properties: {
                     isValidFeature: true,
+                    useGeodesicLines: measureGeometry.type === "LineString",
                     id: uuidv1()
                 },
                 style: [{
                     ...DEFAULT_ANNOTATIONS_STYLES[measureGeometry.type],
                     type: measureGeometry.type,
                     id: uuidv1(),
+                    geometry: "lineToArc",
                     title: `${measureGeometry.type} Style`,
                     filtering: true
                 }].concat(measureGeometry.type === "LineString" ? getStartEndPointsForLinestring() : [])
@@ -109,9 +112,9 @@ module.exports = (viewer) => ({
                 editAnnotation(id)
             ])).startWith(toggleControl("annotations"));
         }),
-    openMeasureEpic: (action$) =>
+    openMeasureEpic: (action$, store) =>
         action$.ofType(SET_CONTROL_PROPERTY)
-        .filter((action) => action.control === "measure" && action.value)
+        .filter((action) => action.control === "measure" && action.value && showCoordinateEditorSelector(store.getState()))
         .switchMap(() => {
             return Rx.Observable.of(closeFeatureGrid(), purgeMapInfoResults(), hideMapinfoMarker());
         })

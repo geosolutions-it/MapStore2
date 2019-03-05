@@ -682,4 +682,8 @@ describe('CoordinatesUtils', () => {
         const res = CoordinatesUtils.roundCoord(roundingOptions);
         expect(res).toBe(28.55);
     });
+    it("transformArcsToLine every 2 points", () => {
+        const res = CoordinatesUtils.transformArcsToLine([[1, 1], [2, 2], [3, 3], [4, 4]], 2);
+        expect(res).toEqual([[1, 1], [3, 3], [4, 4]]);
+    });
 });
