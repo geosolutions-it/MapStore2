@@ -87,7 +87,7 @@ const VectorUtils = {
     * Thus we need to recreate a GeometryCollection and also multi-geometry instead of FeatureCollections
     * @return {object} a valid geoJSON
     */
-    toValidGeoJSON: (layer) => {
+    toValidGeoJSON: () => {
         // TODO
     },
     /**
