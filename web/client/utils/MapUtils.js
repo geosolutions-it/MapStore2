@@ -332,7 +332,7 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
         version: 2,
         // layers are defined inside the map object
         map: assign({}, map, {layers: formattedLayers, groups, text_serch_config: textSearchConfig}, !isEmpty(sources) && {sources} || {}),
-        ...additionalOptions, mapInfoConfiguration
+        ...additionalOptions
     };
 }
 

@@ -81,17 +81,14 @@ const VectorUtils = {
         });
     },
     /**
-    * This method creates a valid geoJSON for layer creatd from GeometryCollection
+    * This method creates a valid geoJSON for layer created from GeometryCollection
     * The leaflet toGeoJSON transforms the layer created by VectorUtils.geometryToLayer in a
-    * featureCollection of FeatureCollections in that case becuse for each L.FeatureGroup it creates a FeatureCollection.
-    * Thus we need to recreate a GeometryCollection and also Multi geoms instead of FeatureCollections
+    * featureCollection of FeatureCollections in that case because for each L.FeatureGroup it creates a FeatureCollection.
+    * Thus we need to recreate a GeometryCollection and also multi-geometry instead of FeatureCollections
     * @return {object} a valid geoJSON
     */
     toValidGeoJSON: (layer) => {
-        const invalidGeojson = layer.toGeoJSON();
-        invalidGeojson.features.map(f => {
-            console.log(f);
-        });
+        // TODO
     },
     /**
      * create point or text layer
