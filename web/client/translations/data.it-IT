@@ -40,11 +40,6 @@
             "title": "Info su questa mappa"
         },
         "showEmptyMessageGFI": "Mostra il messaggio: Nessuna feature per gli altri layer",
-        "measureComponent": {
-            "addAsAnnotaion": "Aggiungi come annotazione",
-            "newMeasure": "Nuova annotazione",
-            "selectTool": "Seleziona uno strumento di misura"
-        },
         "remove": "Rimuovi",
         "layerProperties": {
             "windowTitle": "Proprietà del livello",
@@ -539,7 +534,10 @@
             "areaLabel": "Area",
             "bearingLabel": "Direzione",
             "formula": "Formula per il calcolo della distanza",
-            "showLabel": "Mostra etichetta di misurazione"
+            "showLabel": "Mostra etichetta di misurazione",
+            "addAsAnnotation": "Aggiungi come annotazione",
+            "newMeasure": "Nuova annotazione",
+            "selectTool": "Seleziona uno strumento di misura"
         },
         "search":{
             "decimal": "Decimali",
@@ -877,6 +875,7 @@
                     "LineString": "Editor della linea",
                     "Circle": "Editor del cerchio",
                     "Point": "Editor del marker",
+                    "MultiPoint": "Editor della linea",
                     "Text": "Editor del testo"
                 },
                 "add": "Aggiungi una nuova coordinata",

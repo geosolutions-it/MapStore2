@@ -40,11 +40,6 @@
             "title": "O karti"
         },
         "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
-        "measureComponent": {
-            "addAsAnnotaion": "Add as annotation",
-            "newMeasure": "New annotation",
-            "selectTool": "Select a measurement tool"
-        },
         "layerProperties": {
             "windowTitle": "Svojstva sloja",
             "title": "Naslov",
@@ -538,7 +533,10 @@
             "areaLabel": "Površina",
             "bearingLabel": "Azimut",
             "formula": "Formula za izračun udaljenosti",
-            "showLabel": "Prikaži oznaku mjerenja"
+            "showLabel": "Prikaži oznaku mjerenja",
+            "addAsAnnotation": "Add as annotation",
+            "newMeasure": "New annotation",
+            "selectTool": "Select a measurement tool"
         },
         "search":{
             "decimal": "Decimal",
@@ -894,6 +892,7 @@
                     "LineString": "LineString Editor",
                     "Circle": "Circle editor",
                     "Point": "Marker editor",
+                    "MultiPoint": "LineString editor",
                     "Text": "Text editor"
                 },
                 "add": "Add new coordinates",

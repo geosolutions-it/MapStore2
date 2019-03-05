@@ -13,7 +13,7 @@ const ReactTestUtils = require('react-dom/test-utils');
 var MeasureDialog = require('../MeasureDialog');
 
 
-describe("test the MeasureComponent", () => {
+describe("test the MeasureDialog", () => {
     beforeEach((done) => {
         document.body.innerHTML = '<div id="container"></div>';
         setTimeout(done);
@@ -44,4 +44,25 @@ describe("test the MeasureComponent", () => {
         ReactTestUtils.Simulate.click(closeBtn);
         expect(spy.calls.length).toBe(1);
     });
+    it('test default, render a modal', () => {
+        let measurement = {};
+        const mc = ReactDOM.render(<MeasureDialog show measurement={measurement}/>, document.getElementById("container"));
+        expect(mc).toExist();
+        const dialog = document.getElementById('measure');
+        expect(dialog).toExist();
+
+    });
+    it('test render as side panel', () => {
+        let measurement = {};
+        const mc = ReactDOM.render(<MeasureDialog show showCoordinateEditor measurement={measurement}/>, document.getElementById("container"));
+        expect(mc).toExist();
+        const dom = ReactDOM.findDOMNode(mc);
+        const btnGroups = dom.getElementsByClassName('btn-group');
+        expect(btnGroups.length).toBe(2);
+
+        const dialog = document.getElementById('measure');
+        expect(dialog).toNotExist();
+
+    });
+
 });

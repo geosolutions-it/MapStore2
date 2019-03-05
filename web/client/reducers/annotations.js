@@ -32,7 +32,7 @@ const uuid = require('uuid');
 const fixCoordinates = (coords, type) => {
     switch (type) {
         case "Polygon": return [coords];
-        case "LineString": return coords;
+        case "LineString": case "MultiPoint": return coords;
         default: return coords[0];
     }
 };
@@ -61,7 +61,7 @@ function annotations(state = { validationErrors: {} }, action) {
                                 coordinates: fixCoordinates(validCoordinates, ftChanged.geometry.type)
                             })
                         }); break;
-                    case "LineString": ftChanged = assign({}, ftChanged, {
+                    case "LineString": case "MultiPoint": ftChanged = assign({}, ftChanged, {
                         geometry: assign({}, ftChanged.geometry, {
                              coordinates: fixCoordinates(validCoordinates, ftChanged.geometry.type)
                         })

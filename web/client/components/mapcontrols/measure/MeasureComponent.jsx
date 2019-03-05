@@ -306,7 +306,7 @@ class MeasureComponent extends React.Component {
                                    },
                                    {
                                        glyph: 'comment',
-                                       tooltip: <Message msgId="measureComponent.addAsAnnotaion"/>,
+                                       tooltip: <Message msgId="measureComponent.addAsAnnotation"/>,
                                        onClick: () => this.addAsAnnotation(),
                                        disabled: !!(this.props.measurement.feature && this.props.measurement.feature.properties && this.props.measurement.feature.properties.disabled),
                                        visible: !!(this.props.bearingMeasureEnabled || this.props.areaMeasureEnabled || this.props.lineMeasureEnabled) && this.props.showAddAsAnnotation

@@ -40,11 +40,6 @@
             "title": "About this map"
         },
         "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
-        "measureComponent": {
-            "addAsAnnotaion": "Add as annotation",
-            "newMeasure": "New annotation",
-            "selectTool": "Select a measurement tool"
-        },
         "remove": "Delete",
         "layerProperties": {
             "windowTitle": "图层属性",
@@ -391,7 +386,12 @@
             "resetButtonText": "重置",
             "lengthLabel": "长度",
             "areaLabel": "面积",
-            "bearingLabel": "方位角"
+            "bearingLabel": "方位角",
+            "formula": "Formula for distance calculation",
+            "showLabel": "Show measurement label",
+            "addAsAnnotation": "Add as annotation",
+            "newMeasure": "New annotation",
+            "selectTool": "Select a measurement tool"
         },
         "search":{
             "decimal": "十进制",
@@ -728,6 +728,7 @@
                     "LineString": "LineString editor",
                     "Circle": "Circle editor",
                     "Point": "Marker editor",
+                    "MultiPoint": "LineString editor",
                     "Text": "Text editor"
                 },
                 "add": "Add new coordinates",

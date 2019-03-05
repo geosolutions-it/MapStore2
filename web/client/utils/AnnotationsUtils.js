@@ -457,7 +457,7 @@ const AnnotationsUtils = {
             case "Polygon": {
                 return isCompletePolygon(coordinates) ? AnnotationsUtils.formatCoordinates(slice(coordinates[0], 0, coordinates[0].length - 1)) : AnnotationsUtils.formatCoordinates(coordinates[0]);
             }
-            case "LineString": {
+            case "LineString": case "MultiPoint": {
                 return AnnotationsUtils.formatCoordinates(coordinates);
             }
             default: return AnnotationsUtils.formatCoordinates([coordinates]);
@@ -473,6 +473,7 @@ const AnnotationsUtils = {
     },
     COMPONENTS_VALIDATION: {
         "Point": {min: 1, add: false, remove: false, validation: "validateCoordinates", notValid: "Add a valid coordinate to complete the Point"},
+        "MultiPoint": {min: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "Add 2 valid coordinates to complete the Polyline"},
         "Polygon": {min: 3, add: true, remove: true, validation: "validateCoordinates", notValid: "Add 3 valid coordinates to complete the Polygon"},
         "LineString": {min: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "Add 2 valid coordinates to complete the Polyline"},
         "Circle": {add: false, remove: false, validation: "validateCircle", notValid: "Add a valid coordinate and a radius (m) to complete the Circle"},
@@ -521,7 +522,7 @@ const AnnotationsUtils = {
     },
     getBaseCoord: (type) => {
         switch (type) {
-            case "Polygon": case "LineString": return [];
+            case "Polygon": case "LineString": case "MultiPoint": return [];
             default: return [[]];
         }
     },

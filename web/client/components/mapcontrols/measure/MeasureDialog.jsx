@@ -28,6 +28,10 @@ class MeasureDialog extends React.Component {
 
     static defaultProps = {
         show: false,
+        defaultOptions: {},
+        onMount: () => {},
+        onInitReducer: () => {},
+        toggleMeasure: () => {},
         showCoordinateEditor: false,
         showAddAsAnnotation: false,
         closeGlyph: "1-close",
@@ -53,6 +57,7 @@ class MeasureDialog extends React.Component {
         this.props.onInitReducer(otherDefaultOptions);
     }
     render() {
+        // TODO FIX TRANSALATIONS TITLE
         return this.props.show ? (
             this.props.showCoordinateEditor ?
             <DockablePanel

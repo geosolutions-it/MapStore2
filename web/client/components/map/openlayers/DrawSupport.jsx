@@ -14,14 +14,56 @@ const assign = require('object-assign');
 const uuid = require('uuid');
 const axios = require('axios');
 const {isSimpleGeomType, getSimpleGeomType} = require('../../../utils/MapUtils');
-const {reprojectGeoJson, calculateDistance, reproject, transformLineToArcs} = require('../../../utils/CoordinatesUtils');
+const {reprojectGeoJson, calculateDistance, reproject/*, transformLineToArcs*/} = require('../../../utils/CoordinatesUtils');
 const {createStylesAsync} = require('../../../utils/VectorStyleUtils');
 const wgs84Sphere = new ol.Sphere(6378137);
 const {transformPolygonToCircle, isCompletePolygon} = require('../../../utils/DrawSupportUtils');
-const {set} = require('../../../utils/ImmutableUtils');
+// const {set} = require('../../../utils/ImmutableUtils');
 const VectorStyle = require('./VectorStyle');
 const {parseStyles} = require('./VectorStyle');
 const geojsonFormat = new ol.format.GeoJSON();
+/*const arcSegmentWriter = function(feature, geometry) {
+    /*if (useGeodesicLines) {
+        coordinates = transformLineToArcs(coordinates.map(c => {
+            const point = reproject(c, "EPSG:3857", "EPSG:4326");
+            return [point.x, point .y];
+        }));
+        coordinates = coordinates.map(c => {
+            const point = reproject(c, "EPSG:4326", "EPSG:3857");
+            return [point.x, point .y];
+        });
+    }
+    let i;
+    let ii;
+    let segment;
+    let segmentData;
+    for (i = 0, ii = coordinates.length - 1; i < ii; ++i) {
+        segment = coordinates.slice(i, i + 2);
+        segmentData = /** @type {ol.ModifySegmentDataType}  ({
+            feature: feature,
+            geometry: newMultiPoint,
+            index: i,
+            segment: segment
+        });
+        this.rBush_.insert(ol.extent.boundingExtent(segment), segmentData);
+    }
+    let points = geometry.getCoordinates();
+    let coordinates;
+    let i;
+    let ii;
+    let segmentData;
+    for (i = 0, ii = points.length; i < ii; ++i) {
+        coordinates = points[i];
+        segmentData = ({
+            feature: feature,
+            geometry: geometry,
+            depth: [i],
+            index: i,
+            segment: [coordinates, coordinates]
+        });
+        this.rBush_.insert(geometry.getExtent(), segmentData);
+    }
+};*/
 
 /**
  * Component that allows to draw and edit geometries as (Point, LineString, Polygon, Rectangle, Circle, MultiGeometries)
@@ -723,6 +765,8 @@ class DrawSupport extends React.Component {
                     return ol.events.condition.primaryAction(e) && !ol.events.condition.altKeyOnly(e);
                 }
             });
+            /** managin editing for arcs*/
+
 
             this.props.map.addInteraction(this.modifyInteraction);
         }
@@ -735,6 +779,7 @@ class DrawSupport extends React.Component {
         let evtKey = this.props.map.on('singleclick', singleclickCallback);
         return evtKey;
     };
+
 
     addDrawOrEditInteractions = (newProps) => {
         if (this.state && this.state.keySingleClickCallback) {
@@ -775,7 +820,7 @@ class DrawSupport extends React.Component {
                         olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
                         break;
                     }
-                    case "LineString": {
+                    case "LineString": case "MultiPoint": {
                         actualCoords = previousCoords.length ? [...previousCoords, e.coordinate] : [e.coordinate];
                         olFt = this.getNewFeature(newDrawMethod, actualCoords);
                         olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
@@ -1181,17 +1226,117 @@ class DrawSupport extends React.Component {
         */
         const editFilter = props && props.options && props.options.editFilter;
         this.modifyFeatureColl = new ol.Collection(filter(this.drawLayer.getSource().getFeatures(), editFilter));
+
+        /*ol.interaction.Modify.prototype.addFeature_ = function(feature) {
+            let useGeodesicLines = feature.getProperties().useGeodesicLines;
+            let geometry = feature.getGeometry();
+            if (geometry && geometry.getType() in this.SEGMENT_WRITERS_) {
+                if (useGeodesicLines) {
+                    arcSegmentWriter.call(this, feature, geometry);
+                } else {
+                    this.SEGMENT_WRITERS_[geometry.getType()].call(this, feature, geometry);
+                }
+
+            }
+            let map = this.getMap();
+            if (map && map.isRendered() && this.getActive()) {
+                this.handlePointerAtPixel_(this.lastPixel_, map);
+            }
+            ol.events.listen(feature, ol.events.EventType.CHANGE, this.handleFeatureChange_, this);
+        };*/
+
         this.modifyInteraction = new ol.interaction.Modify({
             features: this.modifyFeatureColl,
             condition: (e) => {
                 return ol.events.condition.primaryAction(e) && !ol.events.condition.altKeyOnly(e);
             },
             insertVertexCondition: (e) => {
-                return ol.events.condition.shiftKeyOnly(e);
+                if (this.modifyFeatureColl.getArray().filter(f => f.getProperties().useGeodesicLines).length) {
+                    return ol.events.condition.never(e);
+                }
+                return ol.events.condition.always(e);
             }
         });
 
+/*
+        this.modifyInteraction.handleDragEvent_ = function(evt) {
+            this.ignoreNextSingleClick_ = false;
+            this.willModifyFeatures_(evt);
 
+            let vertex = evt.coordinate;
+            for (let i = 0, ii = this.dragSegments_.length; i < ii; ++i) {
+                let dragSegment = this.dragSegments_[i];
+                let segmentData = dragSegment[0];
+                let depth = segmentData.depth;
+                let geometry = segmentData.geometry;
+                let coordinates;
+                let segment = segmentData.segment;
+                let index = dragSegment[1];
+
+                while (vertex.length < geometry.getStride()) {
+                    vertex.push(segment[index][vertex.length]);
+                }
+
+                switch (geometry.getType()) {
+                    case ol.geom.GeometryType.POINT:
+                        coordinates = vertex;
+                        segment[0] = segment[1] = vertex;
+                        break;
+                    case ol.geom.GeometryType.MULTI_POINT:
+                        coordinates = geometry.getCoordinates();
+                        coordinates[segmentData.index] = vertex;
+                        segment[0] = segment[1] = vertex;
+                        break;
+                    case ol.geom.GeometryType.LINE_STRING:
+                        coordinates = geometry.getCoordinates();
+                        /*if (segmentData.feature.getProperties().useGeodesicLines) {
+                            // FIX MULTI POINT CASE
+                            coordinates[index] = vertex;
+                        } else {
+                            coordinates[segmentData.index + index] = vertex;
+                        }
+                        coordinates[segmentData.index + index] = vertex;
+
+                        segment[index] = vertex;
+                        break;
+                    case ol.geom.GeometryType.MULTI_LINE_STRING:
+                        coordinates = geometry.getCoordinates();
+                        coordinates[depth[0]][segmentData.index + index] = vertex;
+                        segment[index] = vertex;
+                        break;
+                    case ol.geom.GeometryType.POLYGON:
+                        coordinates = geometry.getCoordinates();
+                        coordinates[depth[0]][segmentData.index + index] = vertex;
+                        segment[index] = vertex;
+                        break;
+                    case ol.geom.GeometryType.MULTI_POLYGON:
+                        coordinates = geometry.getCoordinates();
+                        coordinates[depth[1]][depth[0]][segmentData.index + index] = vertex;
+                        segment[index] = vertex;
+                        break;
+                    case ol.geom.GeometryType.CIRCLE:
+                        segment[0] = segment[1] = vertex;
+                        if (segmentData.index === ol.interaction.Modify.MODIFY_SEGMENT_CIRCLE_CENTER_INDEX) {
+                            this.changingFeature_ = true;
+                            geometry.setCenter(vertex);
+                            this.changingFeature_ = false;
+                        } else { // We're dragging the circle's circumference:
+                            this.changingFeature_ = true;
+                            geometry.setRadius(ol.coordinate.distance(geometry.getCenter(), vertex));
+                            this.changingFeature_ = false;
+                        }
+                        break;
+                    default:
+                    // pass
+                }
+
+                if (coordinates) {
+                    this.setGeometryCoordinates_(geometry, coordinates);
+                }
+            }
+            this.createOrUpdateVertexFeature_(vertex);
+        };
+*/
         this.modifyInteraction.on('modifyend', (e) => {
 
 

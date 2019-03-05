@@ -55,17 +55,17 @@ const convertMeasureToGeoJSON = (measureGeometry, value, uom, id, measureTool, s
             },
             {
                 type: "Feature",
-                geometry: measureGeometry,
+                geometry: {...measureGeometry, type: state.measurement.geomType === "LineString" ? "MultiPoint" : measureGeometry.type},
                 properties: {
                     isValidFeature: true,
-                    useGeodesicLines: measureGeometry.type === "LineString",
+                    useGeodesicLines: state.measurement.geomType === "LineString",
                     id: uuidv1()
                 },
                 style: [{
                     ...DEFAULT_ANNOTATIONS_STYLES[measureGeometry.type],
                     type: measureGeometry.type,
                     id: uuidv1(),
-                    geometry: "lineToArc",
+                    geometry: state.measurement.geomType === "LineString" ? "lineToArc" : null,
                     title: `${measureGeometry.type} Style`,
                     filtering: true
                 }].concat(measureGeometry.type === "LineString" ? getStartEndPointsForLinestring() : [])

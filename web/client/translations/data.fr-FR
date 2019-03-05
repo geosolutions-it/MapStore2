@@ -41,11 +41,6 @@
             "title": "Info sur cette carte"
         },
         "showEmptyMessageGFI": "Afficher un message de résultat vide dans le panneau GFI",
-        "measureComponent": {
-            "addAsAnnotaion": "Ajouter comme annotation",
-            "newMeasure": "Nouvelle annotation",
-            "selectTool": "Sélectionnez un outil de mesure"
-        },
         "remove": "Effacer",
         "layerProperties": {
             "windowTitle": "Propriétés de la couche",
@@ -540,7 +535,10 @@
             "areaLabel": "Surface",
             "bearingLabel": "Direction",
             "formula": "Formule pour le calcul de la distance",
-            "showLabel": "Afficher l'étiquette de mesure"
+            "showLabel": "Afficher l'étiquette de mesure",
+            "addAsAnnotaion": "Ajouter comme annotation",
+            "newMeasure": "Nouvelle annotation",
+            "selectTool": "Sélectionnez un outil de mesure"
         },
         "search":{
             "decimal": "Décimal",
@@ -878,6 +876,7 @@
                     "LineString": "Éditeur LineString",
                     "Circle": "Éditeur de cercle",
                     "Point": "Éditeur de marqueur",
+                    "MultiPoint": "Éditeur LineString",
                     "Text": "Éditeur de texte"
                 },
                 "add": "Ajouter de nouvelles coordonnées",
