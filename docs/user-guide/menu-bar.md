@@ -35,7 +35,7 @@ Click on the following links to learn more about the main options:
 Custom WFS Searches
 -------------------
 
-When you search a place, you might want to extend the default OSM results through additional *WFS Search Services*. The **Configure search services** option of [MapStore2](https://mapstore2.geo-solutions.it/mapstore/#/) allows you to do that.
+When you search a place, you might want to extend the default OSM results through additional *WFS Search Services*. The **Configure search services** option of [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) allows you to do that.
 <br>
 The following example shows the steps required to set up a custom service.
 <br>

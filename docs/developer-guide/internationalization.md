@@ -1,18 +1,18 @@
 # Introduction
-MapStore2 offers the support for internationalization (I18N). To provide this functionality MapStore2 uses [react-intl](https://github.com/yahoo/react-intl).
+MapStore offers the support for internationalization (I18N). To provide this functionality MapStore uses [react-intl](https://github.com/yahoo/react-intl).
 In this section you can find which configuration and JS files are involved in the I18N system.
 
-## How MapStore2 chooses the current language
-MapStore2 first checks the browser's language. If it is not supported, MapStore2 will be visible in english, if present, or the first language available.
+## How MapStore chooses the current language
+MapStore first checks the browser's language. If it is not supported, MapStore will be visible in english, if present, or the first language available.
 Anyway the locale can be forced using a flag locale=codeLang where codeLang can be one en,it,de...
 e.g.
 ```
 localhost:8081/?locale=en#/
 ```
-A user can change the selected language from UI. MapStore2 will load the proper files to update the page localized in the selected language.
+A user can change the selected language from UI. MapStore will load the proper files to update the page localized in the selected language.
 
 ## Configuration files
-To provide support to a specific language MapStore2 need to have the necessary setup in the LocaleUtils.js file (see below [section for details about to configure this file]).
+To provide support to a specific language MapStore need to have the necessary setup in the LocaleUtils.js file (see below [section for details about to configure this file]).
 In addition you need the proper translations files.
 
 Let's imagine that the variable code is 'en', CODE is 'EN' standing for english. For each language you need to have **messages file** containing the localized strings, a **flag image** to identify the language and some **html fragments** (optional) for some specific plugins.
@@ -20,8 +20,8 @@ Let's imagine that the variable code is 'en', CODE is 'EN' standing for english.
  - Flags: located in `web\client\components\I18N\images\flags` folder. For each language flag image named code-CODE.png of 16px x 11px is required.
  - Fragments: actually only for cookies policy ....  (required only if the Cookie plugin is present) located in `web\client\translations\fragments\cookie` folder and named cookieDetails-code-CODE.html. We recommend to add it for any language you want to support at least by copying the english version.
 
-# How to configure supported languages in MapStore2
-You can configure MapStore2 to provide to the user only a restricted list of selectable languages by setting "initialState.defaultState.locales" variable in `localConfig.json`. e.g :
+# How to configure supported languages in MapStore
+You can configure MapStore to provide to the user only a restricted list of selectable languages by setting "initialState.defaultState.locales" variable in `localConfig.json`. e.g :
 ```
 "defaultState":
 {
@@ -45,7 +45,7 @@ You can customize the messages by editing the data.code-CODE files.
 
 # How to add a new language
 Let's say we want to add the russian language.
-In order to add a new language to MapStore2 you need to follow these steps:
+In order to add a new language to MapStore you need to follow these steps:
 
 1. Update the localConfig.json file in `web\client` folder adding the new language entry
  - add the following in the "initialState.defaultState.locales" object

@@ -35,7 +35,7 @@ On the top of the page, you can find the *Main Menu bar* showing the following m
 Search bar
 ------------
 
-Under the menu bar, you can use the *Search bar* to search maps and dashboards stored in [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/).
+Under the menu bar, you can use the *Search bar* to search maps and dashboards stored in [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/).
 
   <p align = "center" > <img src="../img/search-bar.jpg" style="max-width:500px;" /></p>
 

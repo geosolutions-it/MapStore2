@@ -17,7 +17,7 @@ The Geolocation tool allows you to locate your real position on the map.
 Zooming tools
 -------------
 
-[MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) provides several tools to zoom in and out, and to switch the map extent.
+[MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) provides several tools to zoom in and out, and to switch the map extent.
 
 * You can increase the map zoom by using the zoom in icon <img src="../img/zoom-in.jpg" style="max-width:18px;"/>.
 
@@ -29,7 +29,7 @@ Zooming tools
 
 3D Navigation
 -------------
-Based on CesiumJS, a 3D Navigator is implemented in [MapStore 2](https://mapstore2.geo-solutions.it/mapstore/#/) that allows you to display the map contents in 3D mode, particularly the layers will be overlaid on the globe.
+Based on CesiumJS, a 3D Navigator is implemented in [MapStore](https://mapstore2.geo-solutions.it/mapstore/#/) that allows you to display the map contents in 3D mode, particularly the layers will be overlaid on the globe.
 
 * **Open** a new map then **Add** a layer.
 * **Click** on the 3D icon <img src="../img/3D-icon.jpg" style="max-width:22px;"/> in the *Sidebar*.
