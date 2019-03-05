@@ -895,7 +895,11 @@
             "QRCodeLinkTitle": "Usando il QR Code",
             "msgCopiedUrl": "Copiato",
             "msgToCopyUrl": "Clicca per copiare",
-            "sharedTitle": "Guarda la mia nuova mappa: "
+            "sharedTitle": "Guarda la mia nuova mappa: ",
+            "advancedOptions": "Opzioni avanzate",
+            "addBboxParam": "Aggiungi il parametro bbox al link di condivisione",
+            "wrongBboxParamTitle": "Parametro bbox non valido",
+            "wrongBboxParamMessage": "i parametri bbox devono essere in EPSG:4326 e scritti come segue bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Istantanea",

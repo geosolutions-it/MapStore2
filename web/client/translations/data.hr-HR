@@ -895,7 +895,11 @@
             "QRCodeLinkTitle": "QR kod",
             "msgCopiedUrl": "Kopirano",
             "msgToCopyUrl": "Klikni za kopiranje",
-            "sharedTitle": "Posjeti moju novu kartu: "
+            "sharedTitle": "Posjeti moju novu kartu: ",
+            "advancedOptions": "Advanced Options",
+            "addBboxParam": "Add bbox param to sharing link",
+            "wrongBboxParamTitle": "Invalid bbox param",
+            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Pregled snimke",

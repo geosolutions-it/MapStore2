@@ -694,7 +694,11 @@
             "code": "Embed",
             "QRCodeLinkTitle": "qr code",
             "msgCopiedUrl":"Gekopieerd",
-            "msgToCopyUrl":"Klik om te kopiëren"
+            "msgToCopyUrl":"Klik om te kopiëren",
+            "advancedOptions": "Advanced Options",
+            "addBboxParam": "Add bbox param to sharing link",
+            "wrongBboxParamTitle": "Invalid bbox param",
+            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Preview van de vastgelegde kaart",

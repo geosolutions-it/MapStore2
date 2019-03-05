@@ -896,7 +896,11 @@
             "QRCodeLinkTitle": "Code QR",
             "msgCopiedUrl":"Copié",
             "msgToCopyUrl":"Cliquer pour copier",
-            "sharedTitle": "Regardez ma nouvelle carte: "
+            "sharedTitle": "Regardez ma nouvelle carte: ",
+            "advancedOptions": "Options avancées",
+            "addBboxParam": "Ajouter un paramètre bbox au lien de partage",
+            "wrongBboxParamTitle": "Param bbox invalide",
+            "wrongBboxParamMessage": "Les paramètres bbox doivent être en EPSG:4326 et écrit comme bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Prévisualisation de la capture de la carte",
