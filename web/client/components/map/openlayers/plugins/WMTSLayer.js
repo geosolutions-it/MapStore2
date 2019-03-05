@@ -8,7 +8,7 @@
 
 var Layers = require('../../../../utils/openlayers/Layers');
 var ol = require('openlayers');
-const {isArray, head, isEmpty} = require('lodash');
+const {castArray, head, isEmpty} = require('lodash');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const WMTSUtils = require('../../../../utils/WMTSUtils');
 const CoordinatesUtils = require('../../../../utils/CoordinatesUtils');
@@ -21,7 +21,8 @@ function getWMSURLs( urls ) {
 }
 
 const createLayer = options => {
-    const urls = getWMSURLs(isArray(options.url) ? options.url : [options.url]);
+    // options.urls is an alternative name of URL.
+    const urls = getWMSURLs(castArray(options.url));
     const srs = CoordinatesUtils.normalizeSRS(options.srs || 'EPSG:3857', options.allowedSRS);
     const tilMatrixSetName = WMTSUtils.getTileMatrixSet(options.tileMatrixSet, srs, options.allowedSRS, options.matrixIds);
     const tileMatrixSet = head(options.tileMatrixSet.filter(tM => tM['ows:Identifier'] === tilMatrixSetName));
@@ -50,11 +51,12 @@ const createLayer = options => {
 
     /* calculate bbox from tile matrix set to avoid tile errors when fit world bounds*/
     if (!isEmpty(origin) && origin.x && options.bbox && options.bbox.bounds
-    && parseFloat(options.bbox.bounds.minx) === -180 && parseFloat(options.bbox.bounds.miny) === -90
-    && parseFloat(options.bbox.bounds.maxx) === 180 && parseFloat(options.bbox.bounds.maxy) === 90
-    && tileMatrixSet && tileMatrixSet.TileMatrix[1] && tileMatrixSet.TileMatrix[1].ScaleDenominator
-    && tileMatrixSet.TileMatrix[1].MatrixWidth && tileMatrixSet.TileMatrix[1].MatrixHeight
-    && tileMatrixSet.TileMatrix[1].TileWidth && tileMatrixSet.TileMatrix[1].TileHeight) {
+            && parseFloat(options.bbox.bounds.minx) === -180 && parseFloat(options.bbox.bounds.miny) === -90
+            && parseFloat(options.bbox.bounds.maxx) === 180 && parseFloat(options.bbox.bounds.maxy) === 90
+            && tileMatrixSet && tileMatrixSet.TileMatrix[1] && tileMatrixSet.TileMatrix[1].ScaleDenominator
+            && tileMatrixSet.TileMatrix[1].MatrixWidth && tileMatrixSet.TileMatrix[1].MatrixHeight
+            && tileMatrixSet.TileMatrix[1].TileWidth && tileMatrixSet.TileMatrix[1].TileHeight
+        ) {
         const res = mapUtils.getResolutionsForScales([tileMatrixSet.TileMatrix[1].ScaleDenominator], srs, 96);
         bbox = {
             bounds: {
@@ -74,13 +76,20 @@ const createLayer = options => {
     /* remove matrix 0, it doesn't happear correctly on map  */
     const paramResolutions = resolutions.filter((r, i) => i > 0);
     const paramMatrixIds = matrixIds.filter((r, i) => i > 0);
-
+    const sizes = tileMatrixSet
+        && tileMatrixSet.TileMatrix
+        && tileMatrixSet.TileMatrix
+        .filter(({ "ows:Identifier": id } = {}) => paramMatrixIds.indexOf(id) >= 0 )
+        .map(({ MatrixWidth, MatrixHeight } = {}) => [MatrixWidth, MatrixHeight]);
     let queryParameters = {};
     urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, options.securityToken));
     const queryParametersString = urlParser.format({ query: {...queryParameters}});
 
     const maxResolution = resolutions[0]; // exclusive
     const minResolution = resolutions[resolutions.length - 1]; // inclusive
+
+    // WMTS Capabilities has "RESTful"/"KVP", OpenLayers uses "REST"/"KVP";
+    let requestEncoding = options.requestEncoding === "RESTful" ? "REST" : options.requestEncoding;
 
     return new ol.layer.Tile({
         opacity: options.opacity !== undefined ? options.opacity : 1,
@@ -90,11 +99,13 @@ const createLayer = options => {
         maxResolution,
         minResolution,
         source: new ol.source.WMTS(assign({
+            requestEncoding,
             urls: urls.map(u => u + queryParametersString),
             layer: options.name,
             version: options.version || "1.0.0",
             matrixSet: tilMatrixSetName,
             format: options.format || 'image/png',
+            style: options.style,
             tileGrid: new ol.tilegrid.WMTS({
                 origin: [
                     origin.lng || origin.x || options.originX || -20037508.3428,
@@ -102,10 +113,11 @@ const createLayer = options => {
                 ],
                 extent: extent,
                 resolutions: paramResolutions,
+                sizes,
+                // TODO: matrixLimits from ranges
                 matrixIds: paramMatrixIds,
                 tileSize: options.tileSize || [256, 256]
             }),
-            style: options.style || '',
             wrapX: true
         }))
     });
