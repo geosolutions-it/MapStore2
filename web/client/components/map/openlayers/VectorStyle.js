@@ -184,8 +184,8 @@ const centerPoint = (feature) => {
     return new ol.geom.Point(center);
 };
 const lineToArc = (feature) => {
-    const coords = feature.getGeometry().getCoordinates();
-    const coordinates = transformLineToArcs(coords.map(c => {
+    let coordinates = feature.getGeometry().getCoordinates();
+    coordinates = transformLineToArcs(coordinates.map(c => {
         const point = reproject(c, "EPSG:3857", "EPSG:4326");
         return [point.x, point .y];
     }));
@@ -234,7 +234,6 @@ const getFilter = (style = {}) => {
 
 const parseStyleToOl = (feature = {properties: {}}, style = {}, tempStyles = []) => {
     const filtering = getFilter(style, feature);
-    let straightLineStyle = null;
     if (filtering) {
         const stroke = getStrokeStyle(style);
         const fill = getFillStyle(style);
@@ -246,7 +245,6 @@ const parseStyleToOl = (feature = {properties: {}}, style = {}, tempStyles = [])
                 return s;
             });
         }
-        // TODO fix this
         if (isSymbolStyle(style)) {
             return Icons.standard.getIcon({style}).map(s => {
                 s.setGeometry(getGeometryTrasformation(style));
@@ -265,16 +263,7 @@ const parseStyleToOl = (feature = {properties: {}}, style = {}, tempStyles = [])
             fill: !text && !image && fill || null,
             zIndex
         });
-        /*if (style.geometry === "lineToArc") {
-            straightLineStyle = new ol.style.Style({
-                image,
-                text,
-                stroke: !text && !image && stroke || null,
-                fill: !text && !image && fill || null,
-                zIndex
-            });
-        }*/
-        return [finalStyle].concat(feature && feature.properties && feature.properties.canEdit && !feature.properties.isCircle ? addDefaultStartEndPoints(tempStyles) : []).concat(straightLineStyle ? [straightLineStyle] : []);
+        return [finalStyle].concat(feature && feature.properties && feature.properties.canEdit && !feature.properties.isCircle ? addDefaultStartEndPoints(tempStyles) : []);
     }
     return new ol.style.Style({});
     // if not do not return anything

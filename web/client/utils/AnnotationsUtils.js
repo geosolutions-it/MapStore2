@@ -370,6 +370,16 @@ const AnnotationsUtils = {
         return {type: "Feature", geometry, properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle("Text", style, properties.valueText)}};
     },
     /**
+    * Transform LineString to geodesic LineString (with more points)
+    * @param {object} geometry
+    * @param {object} properties
+    * @param {object} style
+    * @return {object} feature
+    */
+    fromLineStringToGeodesicLineString: (properties, style = STYLE_LINE) => {
+        return {type: "Feature", geometry: properties.geometryGeodesic, properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle("LineString", style)}};
+    },
+    /**
     * Flatten text point to single point with style
     * @param {object} geometry
     * @param {object} properties
@@ -423,6 +433,9 @@ const AnnotationsUtils = {
         }
         if (properties.isText) {
             return AnnotationsUtils.fromTextToPoint(geometry, properties, style);
+        }
+        if (properties.useGeodesicLines) {
+            return AnnotationsUtils.fromLineStringToGeodesicLineString(properties, style);
         }
         return {
             type: "Feature",

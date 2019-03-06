@@ -12,7 +12,7 @@ const {
     changeMeasurementState, CHANGE_MEASUREMENT_STATE,
     resetGeometry, RESET_GEOMETRY,
     changeUom, CHANGE_UOM,
-    initReducer, INIT_REDUCER,
+    init, INIT,
     changeGeometry, CHANGED_GEOMETRY
 } = require('../measurement');
 const feature = {type: "Feature", geometry: {
@@ -65,11 +65,11 @@ describe('Test correctness of measurement actions', () => {
         expect(retval.type).toBe(CHANGE_MEASUREMENT_STATE);
         expect(retval.feature.geometry.type).toBe("LineString");
     });
-    it('Test initReducer action creator', () => {
+    it('Test init action creator', () => {
         let defaultOptions = { showAddAsAnnotation: true};
-        const retval = initReducer(defaultOptions);
+        const retval = init(defaultOptions);
         expect(retval).toExist();
-        expect(retval.type).toBe(INIT_REDUCER);
+        expect(retval.type).toBe(INIT);
         expect(retval.defaultOptions).toEqual(defaultOptions);
     });
 

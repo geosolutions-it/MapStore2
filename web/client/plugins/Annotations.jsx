@@ -189,7 +189,11 @@ const conditionalToggle = on.bind(null, toggleControl('annotations', null), (sta
   * Annotations are geometries (currently only markers are supported) with a set of properties. By default a title and
   * a description are managed, but you can configure a different set of fields, and other stuff in localConfig.json.
   * Look at {@link #components.mapControls.annotations.AnnotationsConfig} for more documentation on configuration options
-  *
+  * @prop {object[]} lineDashOptions [{value: [line1 gap1 line2 gap2 line3...]}, {...}] defines how dahsed lines are displayed
+  * if an odd number of values is inserted then they are added again to reach an even number of values
+  * for more informatio see [this page](https://developer.mozilla.org/en-US/docs/Web/SVG/Attribute/stroke-dasharray)
+  * @prop {string} symbolsPath the relative path to the symbols folder where symbols.json and SVGs are located (starting from the index.html folder, i.e. the root)
+  * @prop {string} defaultShape the default symbol used when switching to the symbol styler from marker styler
   * @class Annotations
   * @memberof plugins
   * @static

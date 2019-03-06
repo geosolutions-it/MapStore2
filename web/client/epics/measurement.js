@@ -15,7 +15,7 @@ const {addLayer, updateNode} = require('../actions/layers');
 const {toggleControl, SET_CONTROL_PROPERTY} = require('../actions/controls');
 const {closeFeatureGrid} = require('../actions/featuregrid');
 const {purgeMapInfoResults, hideMapinfoMarker} = require('../actions/mapInfo');
-
+const {transformLineToArcs} = require('../utils/CoordinatesUtils');
 const uuidv1 = require('uuid/v1');
 const assign = require('object-assign');
 const {head, last, round} = require('lodash');
@@ -28,6 +28,10 @@ const formattedValue = (uom, value) => ({
     "area": round(convertUom(value, "sqm", uom) || 0, 2) + " " + uom,
     "bearing": getFormattedBearingValue(round(value || 0, 6)).toString()
 });
+const isLineString = (state) => {
+    return state.measurement.geomType === "LineString";
+};
+
 const convertMeasureToGeoJSON = (measureGeometry, value, uom, id, measureTool, state) => {
     const title = LocaleUtils.getMessageById(state.locale.messages, "measureComponent.newMeasure");
     return assign({}, {
@@ -55,17 +59,18 @@ const convertMeasureToGeoJSON = (measureGeometry, value, uom, id, measureTool, s
             },
             {
                 type: "Feature",
-                geometry: {...measureGeometry, type: state.measurement.geomType === "LineString" ? "MultiPoint" : measureGeometry.type},
+                geometry: {...measureGeometry, type: isLineString(state) ? "MultiPoint" : measureGeometry.type},
                 properties: {
                     isValidFeature: true,
-                    useGeodesicLines: state.measurement.geomType === "LineString",
-                    id: uuidv1()
+                    useGeodesicLines: isLineString(state), // this is reduntant? remove it, check in the codebase where is used and use the geom dta instad
+                    id: uuidv1(),
+                    geometryGeodesic: isLineString(state) ? {type: "LineString", coordinates: transformLineToArcs(measureGeometry.coordinates)} : null
                 },
                 style: [{
                     ...DEFAULT_ANNOTATIONS_STYLES[measureGeometry.type],
                     type: measureGeometry.type,
                     id: uuidv1(),
-                    geometry: state.measurement.geomType === "LineString" ? "lineToArc" : null,
+                    geometry: isLineString(state) ? "lineToArc" : null,
                     title: `${measureGeometry.type} Style`,
                     filtering: true
                 }].concat(measureGeometry.type === "LineString" ? getStartEndPointsForLinestring() : [])

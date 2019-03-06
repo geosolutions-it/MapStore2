@@ -54,7 +54,26 @@ describe("test the MeasureDialog", () => {
     });
     it('test render as side panel', () => {
         let measurement = {};
-        const mc = ReactDOM.render(<MeasureDialog show showCoordinateEditor measurement={measurement}/>, document.getElementById("container"));
+        const handlers = {
+            onMount: () => {},
+            onInit: () => {},
+            toggleMeasure: () => {}
+        };
+        let spyMount = expect.spyOn(handlers, "onMount");
+        let spyInit = expect.spyOn(handlers, "onInit");
+        let spyToggleMeasure = expect.spyOn(handlers, "toggleMeasure");
+
+        const showCoordinateEditor = true;
+        const defaultOptions = {showAddAsAnnotation: true};
+        const mc = ReactDOM.render(
+            <MeasureDialog
+            show
+            showCoordinateEditor={showCoordinateEditor}
+            defaultOptions={defaultOptions}
+            onMount={handlers.onMount}
+            onInit={handlers.onInit}
+            toggleMeasure={handlers.toggleMeasure}
+            measurement={measurement}/>, document.getElementById("container"));
         expect(mc).toExist();
         const dom = ReactDOM.findDOMNode(mc);
         const btnGroups = dom.getElementsByClassName('btn-group');
@@ -62,7 +81,51 @@ describe("test the MeasureDialog", () => {
 
         const dialog = document.getElementById('measure');
         expect(dialog).toNotExist();
+        expect(spyMount.calls.length).toBe(1);
+        expect(spyMount).toHaveBeenCalledWith(showCoordinateEditor);
+        expect(spyToggleMeasure.calls.length).toBe(1);
+        expect(spyToggleMeasure).toHaveBeenCalledWith({geomType: "LineString"});
+        expect(spyInit.calls.length).toBe(1);
+        expect(spyInit).toHaveBeenCalledWith(defaultOptions);
+    });
 
+    it('test render as side panel with Bearing as default tool', () => {
+        let measurement = {};
+        const handlers = {
+            onMount: () => {},
+            onInit: () => {},
+            toggleMeasure: () => {}
+        };
+        let spyMount = expect.spyOn(handlers, "onMount");
+        let spyInit = expect.spyOn(handlers, "onInit");
+        let spyToggleMeasure = expect.spyOn(handlers, "toggleMeasure");
+
+        const showCoordinateEditor = true;
+        const defaultOptions = {
+            showAddAsAnnotation: true,
+            geomType: "Bearing",
+            bearingMeasureEnabled: true};
+        const mc = ReactDOM.render(
+            <MeasureDialog
+            show
+            showCoordinateEditor={showCoordinateEditor}
+            defaultOptions={defaultOptions}
+            onMount={handlers.onMount}
+            onInit={handlers.onInit}
+            toggleMeasure={handlers.toggleMeasure}
+            measurement={measurement}/>, document.getElementById("container"));
+        expect(mc).toExist();
+        const dom = ReactDOM.findDOMNode(mc);
+        const btnGroups = dom.getElementsByClassName('btn-group');
+        expect(btnGroups.length).toBe(2);
+
+        const dialog = document.getElementById('measure');
+        expect(dialog).toNotExist();
+        expect(spyMount.calls.length).toBe(1);
+        expect(spyToggleMeasure.calls.length).toBe(1);
+        expect(spyToggleMeasure).toHaveBeenCalledWith({geomType: "Bearing"});
+        expect(spyInit.calls.length).toBe(1);
+        expect(spyInit).toHaveBeenCalledWith(defaultOptions);
     });
 
 });

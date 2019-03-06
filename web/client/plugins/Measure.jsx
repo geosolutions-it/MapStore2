@@ -12,7 +12,7 @@ const {Glyphicon} = require('react-bootstrap');
 const assign = require('object-assign');
 const {createSelector} = require('reselect');
 const Message = require('./locale/Message');
-const {changeMeasurement, changeUom, changeFormatMeasurement, changeCoordinates, addAnnotation, initReducer} = require('../actions/measurement');
+const {changeMeasurement, changeUom, changeFormatMeasurement, changeCoordinates, addAnnotation, init} = require('../actions/measurement');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {MeasureDialog} = require('./measure/index');
 
@@ -103,6 +103,11 @@ const toggleMeasureTool = toggleControl.bind(null, 'measure', null);
  * @name Measure
  * @memberof plugins
  * @prop {boolean} showResults shows the measure in the panel itself.
+ * @prop {object} defaultOptions these are the options used to initialize the state of the Measure plugin, defaulti is {}
+ * @prop {boolean} defaultOptions.showCoordinateEditor if true, tells the component to render the CoordinateEditor in a side panel otherwise it will render a modal without it, default is false
+ * @prop {boolean} defaultOptions.showAddAsAnnotation if true, shows the button addAsAnnotation in the toolbar
+ * @prop {boolean} defaultOptions.geomType geomType for the measure tool, can be "LineString" or "Bearing" or "Polygon", default is "LineString"
+ * @prop {boolean} defaultOptions.format "decimal" of "aeronautical" format used for coordinate editor, default is "decimal"
   */
 const Measure = connect(
     createSelector([
@@ -120,7 +125,7 @@ const Measure = connect(
         onChangeUom: changeUom,
         onHighlightPoint: highlightPoint,
         onChangeFormat: changeFormatMeasurement,
-        onInitReducer: initReducer,
+        onInit: init,
         onChangeCoordinates: changeCoordinates,
         onClose: toggleMeasureTool,
         onMount: (showCoordinateEditor) => setControlProperty("measure", "showCoordinateEditor", showCoordinateEditor)

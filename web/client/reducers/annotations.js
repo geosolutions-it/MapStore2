@@ -8,7 +8,7 @@
 
 const assign = require('object-assign');
 const ol = require('openlayers');
-const {reproject, reprojectGeoJson/*, transformArcsToLine*/} = require('../utils/CoordinatesUtils');
+const {reproject, reprojectGeoJson, transformLineToArcs} = require('../utils/CoordinatesUtils');
 
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 const {TOGGLE_CONTROL} = require('../actions/controls');
@@ -337,6 +337,9 @@ function annotations(state = { validationErrors: {} }, action) {
             }
             if (selected.properties && selected.properties.isText) {
                 selected = set("geometry.type", "Point", selected);
+            }
+            if (selected.properties && selected.properties.useGeodesicLines) {
+                selected = set("properties.geometryGeodesic", {type: "LineString", coordinates: transformLineToArcs(selected.geometry.coordinates)}, selected);
             }
             selected = set("properties.canEdit", false, selected);
 

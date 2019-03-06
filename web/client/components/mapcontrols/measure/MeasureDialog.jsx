@@ -20,17 +20,21 @@ class MeasureDialog extends React.Component {
         closeGlyph: PropTypes.string,
         onClose: PropTypes.func,
         onMount: PropTypes.func,
-        onInitReducer: PropTypes.func,
+        onInit: PropTypes.func,
         showCoordinateEditor: PropTypes.bool,
         defaultOptions: PropTypes.object,
         style: PropTypes.object
+    };
+
+    static contextTypes = {
+        messages: PropTypes.object
     };
 
     static defaultProps = {
         show: false,
         defaultOptions: {},
         onMount: () => {},
-        onInitReducer: () => {},
+        onInit: () => {},
         toggleMeasure: () => {},
         showCoordinateEditor: false,
         showAddAsAnnotation: false,
@@ -54,7 +58,7 @@ class MeasureDialog extends React.Component {
         this.props.toggleMeasure({
             geomType: otherDefaultOptions.geomType || "LineString"
         });
-        this.props.onInitReducer(otherDefaultOptions);
+        this.props.onInit(otherDefaultOptions);
     }
     render() {
         // TODO FIX TRANSALATIONS TITLE
@@ -64,7 +68,7 @@ class MeasureDialog extends React.Component {
             dock
             bsStyle="primary"
             position="right"
-            title="Measure"
+            title={<Message key="title" msgId="measureComponent.Measure"/>}
             glyph="1-ruler"
             size={660}
             open={this.props.show}

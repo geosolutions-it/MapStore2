@@ -14,7 +14,7 @@ const {
     CHANGED_GEOMETRY,
     CHANGE_FORMAT,
     CHANGE_COORDINATES,
-    INIT_REDUCER
+    INIT
 } = require('../actions/measurement');
 const {set} = require('../utils/ImmutableUtils');
 
@@ -165,7 +165,7 @@ function measurement(state = defaultState, action) {
     case CHANGE_FORMAT: {
         return {...state, format: action.format};
     }
-    case INIT_REDUCER: {
+    case INIT: {
         return {...state, ...action.defaultOptions};
     }
     case CHANGE_COORDINATES: {

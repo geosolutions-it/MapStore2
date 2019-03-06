@@ -13,7 +13,7 @@ const RESET_GEOMETRY = 'MEASUREMENT:RESET_GEOMETRY';
 const CHANGE_FORMAT = 'MEASUREMENT:CHANGE_FORMAT';
 const CHANGE_COORDINATES = 'MEASUREMENT:CHANGE_COORDINATES';
 const ADD_MEASURE_AS_ANNOTATION = 'MEASUREMENT:ADD_MEASURE_AS_ANNOTATION';
-const INIT_REDUCER = 'MEASUREMENT:INIT_REDUCER';
+const INIT = 'MEASUREMENT:INIT';
 
 /**
  * trigger the epic to add the measure feature into an annotation.
@@ -96,9 +96,9 @@ function changeMeasurementState(measureState) {
         feature: measureState.feature
     };
 }
-function initReducer(defaultOptions = {}) {
+function init(defaultOptions = {}) {
     return {
-        type: INIT_REDUCER,
+        type: INIT,
         defaultOptions
     };
 }
@@ -112,7 +112,7 @@ module.exports = {
     changeCoordinates, CHANGE_COORDINATES,
     resetGeometry, RESET_GEOMETRY,
     addAnnotation, ADD_MEASURE_AS_ANNOTATION,
-    initReducer, INIT_REDUCER,
+    init, INIT,
     changeMeasurement,
     toggleMeasurement,
     changeMeasurementState

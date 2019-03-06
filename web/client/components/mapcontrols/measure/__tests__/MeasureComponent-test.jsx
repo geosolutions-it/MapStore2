@@ -10,7 +10,6 @@ var expect = require('expect');
 var React = require('react');
 var ReactDOM = require('react-dom');
 var MeasureComponent = require('../MeasureComponent');
-var NumberFormat = require('../../../I18N/Number');
 
 const assign = require('object-assign');
 
@@ -43,16 +42,6 @@ describe("test the MeasureComponent", () => {
         expect(domButtons.length).toBe(3);
     });
 
-    it('test creation of button UIs useButtonGroup option ', () => {
-        let measurement = {};
-        const mc = ReactDOM.render(<MeasureComponent useButtonGroup measurement={measurement}/>, document.getElementById("container"));
-        expect(mc).toExist();
-        const domNode = ReactDOM.findDOMNode(mc);
-        expect(domNode).toExist();
-        const domButtons = domNode.getElementsByClassName('btn-block');
-        expect(domButtons).toExist();
-        expect(domButtons.length).toBe(1);
-    });
 
     it('test creation of measurement result panel UI ', () => {
         let measurement = {};
@@ -190,7 +179,7 @@ describe("test the MeasureComponent", () => {
             bearing: 0
         };
         let cmp = ReactDOM.render(
-            <MeasureComponent measurement={measurement}/>, document.getElementById("container")
+            <MeasureComponent measurement={measurement} bearingMeasureEnabled/>, document.getElementById("container")
         );
         expect(cmp).toExist();
 
@@ -198,24 +187,24 @@ describe("test the MeasureComponent", () => {
         expect(bearingSpan).toExist();
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 45})}/>, document.getElementById("container")
+            <MeasureComponent measurement={{...measurement, bearing: 45}} bearingMeasureEnabled/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("N 45° 0' 0'' E");
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>N 45° 0' 0'' E</strong></h3>");
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 135})}/>, document.getElementById("container")
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 135})} bearingMeasureEnabled/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("S 45° 0' 0'' E");
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>S 45° 0' 0'' E</strong></h3>");
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 225})}/>, document.getElementById("container")
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 225})} bearingMeasureEnabled/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("S 45° 0' 0'' W");
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>S 45° 0' 0'' W</strong></h3>");
 
         cmp = ReactDOM.render(
-            <MeasureComponent measurement={assign({}, measurement, {bearing: 315})}/>, document.getElementById("container")
+            <MeasureComponent measurement={assign({}, measurement, {bearing: 315})} bearingMeasureEnabled/>, document.getElementById("container")
         );
-        expect(bearingSpan.innerHTML).toBe("N 45° 0' 0'' W");
+        expect(bearingSpan.innerHTML).toBe("<h3><strong>N 45° 0' 0'' W</strong></h3>");
     });
     it('test uom format area and lenght', () => {
         let measurement = {
@@ -227,12 +216,15 @@ describe("test the MeasureComponent", () => {
             area: 0,
             bearing: 0
         };
-        let decimalFormat = {style: "decimal", minimumIntegerDigits: 1, maximumFractionDigits: 2, minimumFractionDigits: 2};
         let cmp = ReactDOM.render(
-            <MeasureComponent uom={{
-                length: {unit: 'km', label: 'km'},
-                area: {unit: 'sqkm', label: 'km²'}
-            }} measurement={measurement}/>, document.getElementById("container")
+            <MeasureComponent
+                uom={{
+                    length: {unit: 'km', label: 'km'},
+                    area: {unit: 'sqkm', label: 'km²'}
+                }}
+                measurement={measurement}
+                lineMeasureEnabled
+            />, document.getElementById("container")
         );
         expect(cmp).toExist();
 
@@ -241,26 +233,29 @@ describe("test the MeasureComponent", () => {
 
         let testDiv = document.createElement("div");
         document.body.appendChild(testDiv);
-        let val = ReactDOM.findDOMNode(ReactDOM.render(<span><NumberFormat key="len" numberParams={decimalFormat} value={10} />km</span>, testDiv));
-        cmp = ReactDOM.render(
-            <MeasureComponent uom={{
-                length: {unit: 'km', label: 'km'},
-                area: {unit: 'sqkm', label: 'km²'}
-            }} measurement={assign({}, measurement, {len: 10000})}/>, document.getElementById("container")
-        );
-        expect(lenSpan.firstChild.innerHTML).toBe(val.firstChild.innerHTML);
-        expect(lenSpan.lastChild.innerHTML).toBe(val.lastChild.innerHTML);
 
-        const areaSpan = document.getElementById('measure-area-res');
-        expect(areaSpan).toExist();
-        val = ReactDOM.findDOMNode(ReactDOM.render(<span><NumberFormat key="len" numberParams={decimalFormat} value={1} />km²</span>, testDiv));
         cmp = ReactDOM.render(
-            <MeasureComponent uom={{
+            <MeasureComponent
+                lengthLabel="Length"
+                lineMeasureEnabled
+                uom={{
+                    length: {unit: 'km', label: 'km'},
+                    area: {unit: 'sqkm', label: 'km²'}
+                }}
+                measurement={assign({}, measurement, {len: 10000})}/>, document.getElementById("container")
+        );
+        expect(lenSpan.firstChild.firstChild.firstChild.innerHTML).toBe("10");
+
+        cmp = ReactDOM.render(
+            <MeasureComponent
+                areaMeasureEnabled
+                uom={{
                 length: {unit: 'km', label: 'km'},
                 area: {unit: 'sqkm', label: 'km²'}
             }} measurement={assign({}, measurement, {geomType: 'Polygon', area: 1000000})}/>, document.getElementById("container")
         );
-        expect(areaSpan.firstChild.innerHTML).toBe(val.firstChild.innerHTML);
-        expect(areaSpan.lastChild.innerHTML).toBe(val.lastChild.innerHTML);
+        const areaSpan = document.getElementById('measure-area-res');
+        expect(areaSpan).toExist();
+        expect(areaSpan.firstChild.firstChild.firstChild.innerHTML).toBe("1");
     });
 });

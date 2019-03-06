@@ -171,7 +171,13 @@ function mapInfo(state = initState, action) {
 
                             if (feature.type === "FeatureCollection" && feature.features && feature.features.length) {
                                 return feature.features.reduce((p, c) => {
-                                    return p || intersect(bufferedPoint, resolution && action.metadata.buffer && unit ? buffer(c, 1, "meters") : c);
+                                    let ft = c;
+                                    if (c.properties.useGeodesicLines && c.properties.geometryGeodesic) {
+                                        ft = {...c,
+                                            geometry: c.properties.geometryGeodesic
+                                        };
+                                    }
+                                    return p || intersect(bufferedPoint, resolution && action.metadata.buffer && unit ? buffer(ft, 1, "meters") : ft);
                                 }, false);
                             }
                             return intersect(bufferedPoint, resolution && action.metadata.buffer && unit ? buffer(feature, 1, "meters") : feature);
