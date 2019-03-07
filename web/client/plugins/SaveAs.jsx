@@ -20,7 +20,6 @@ const {editMap, updateCurrentMap, errorCurrentMap, resetCurrentMap} = require('.
 const {mapSelector} = require('../selectors/map');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
-const {mapInfoConfigurationSelector} = require('../selectors/mapInfo');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {indexOf} = require('lodash');
 const uuid = require('uuid/v1');
