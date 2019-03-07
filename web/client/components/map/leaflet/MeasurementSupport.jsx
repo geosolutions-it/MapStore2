@@ -208,7 +208,7 @@ class MeasurementSupport extends React.Component {
         if (newProps.measurement.geomType && newProps.measurement.geomType !== this.props.measurement.geomType ||
             /* check also when a default is set
              * if so the first condition does not match
-             * because the old geomType is not changed (it was laready defined as default)
+             * because the old geomType is not changed (it was already defined as default)
              * and the measure tool is getting enabled
             */
             (newProps.measurement.geomType && this.props.measurement.geomType && (newProps.measurement.lineMeasureEnabled || newProps.measurement.areaMeasureEnabled || newProps.measurement.bearingMeasureEnabled) && !this.props.enabled && newProps.enabled) ) {
