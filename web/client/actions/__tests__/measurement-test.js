@@ -12,8 +12,11 @@ const {
     changeMeasurementState, CHANGE_MEASUREMENT_STATE,
     resetGeometry, RESET_GEOMETRY,
     changeUom, CHANGE_UOM,
+    changeFormatMeasurement, CHANGE_FORMAT,
     init, INIT,
-    changeGeometry, CHANGED_GEOMETRY
+    changeGeometry, CHANGED_GEOMETRY,
+    changeCoordinates, CHANGE_COORDINATES,
+    addAnnotation, ADD_MEASURE_AS_ANNOTATION
 } = require('../measurement');
 const feature = {type: "Feature", geometry: {
     coordinates: [],
@@ -66,11 +69,48 @@ describe('Test correctness of measurement actions', () => {
         expect(retval.feature.geometry.type).toBe("LineString");
     });
     it('Test init action creator', () => {
-        let defaultOptions = { showAddAsAnnotation: true};
+        const defaultOptions = { showAddAsAnnotation: true};
         const retval = init(defaultOptions);
         expect(retval).toExist();
         expect(retval.type).toBe(INIT);
         expect(retval.defaultOptions).toEqual(defaultOptions);
     });
-
+    it('Test changeFormatMeasurement action creator', () => {
+        const format = "decimal";
+        const retval = changeFormatMeasurement(format);
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_FORMAT);
+        expect(retval.format).toEqual(format);
+    });
+    it('Test addAnnotation action creator', () => {
+        const ft = {
+            type: "Feature",
+            gometry: {
+                type: "LineString",
+                coordinates: [[1, 2], [2, 5]]
+            },
+            properties: {}
+        };
+        const value = "4";
+        const uom = "km";
+        const measureTool = "LineString";
+        const retval = addAnnotation(
+            ft,
+            value,
+            uom,
+            measureTool);
+        expect(retval).toExist();
+        expect(retval.type).toBe(ADD_MEASURE_AS_ANNOTATION);
+        expect(retval.feature).toEqual(ft);
+        expect(retval.value).toEqual(value);
+        expect(retval.uom).toEqual(uom);
+        expect(retval.measureTool).toEqual(measureTool);
+    });
+    it('Test addAnnotation action creator', () => {
+        const coordinates = [[1, 2], [2, 5]];
+        const retval = changeCoordinates(coordinates);
+        expect(retval).toExist();
+        expect(retval.type).toBe(CHANGE_COORDINATES);
+        expect(retval.coordinates).toEqual(coordinates);
+    });
 });

@@ -184,15 +184,19 @@ const centerPoint = (feature) => {
     return new ol.geom.Point(center);
 };
 const lineToArc = (feature) => {
-    let coordinates = feature.getGeometry().getCoordinates();
-    coordinates = transformLineToArcs(coordinates.map(c => {
-        const point = reproject(c, "EPSG:3857", "EPSG:4326");
-        return [point.x, point .y];
-    }));
-    return new ol.geom.LineString(coordinates.map(c => {
-        const point = reproject(c, "EPSG:4326", "EPSG:3857");
-        return [point.x, point .y];
-    }));
+    const type = feature.getGeometry().getType();
+    if (type === "LineString" || type === "MultiPoint") {
+        let coordinates = feature.getGeometry().getCoordinates();
+        coordinates = transformLineToArcs(coordinates.map(c => {
+            const point = reproject(c, "EPSG:3857", "EPSG:4326");
+            return [point.x, point .y];
+        }));
+        return new ol.geom.LineString(coordinates.map(c => {
+            const point = reproject(c, "EPSG:4326", "EPSG:3857");
+            return [point.x, point .y];
+        }));
+    }
+    return feature.getGeometry();
 };
 const startPoint = (feature) => {
     const geom = feature.getGeometry();

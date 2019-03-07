@@ -240,12 +240,12 @@ class CoordinateEditor extends React.Component {
                         removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove)}
                         onChange={this.change}
                         onMouseEnter={(val) => {
-                            if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon") {
+                            if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
                                 this.props.onHighlightPoint(val);
                             }
                         }}
                         onMouseLeave={() => {
-                            if (this.props.isMouseLeaveEnabled || this.props.type === "LineString" || this.props.type === "Polygon") {
+                            if (this.props.isMouseLeaveEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
                                 this.props.onHighlightPoint(null);
                             }
                         }}

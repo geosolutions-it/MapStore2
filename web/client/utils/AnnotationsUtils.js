@@ -377,7 +377,7 @@ const AnnotationsUtils = {
     * @return {object} feature
     */
     fromLineStringToGeodesicLineString: (properties, style = STYLE_LINE) => {
-        return {type: "Feature", geometry: properties.geometryGeodesic, properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle("LineString", style)}};
+        return {type: "Feature", geometry: properties.geometryGeodesic, properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle(properties.geometryGeodesic.type, style)}};
     },
     /**
     * Flatten text point to single point with style

@@ -65,7 +65,7 @@ class MeasurementSupport extends React.Component {
             this.removeDrawInteraction();
         }
         /**
-         * TODO if invalid coords are sent here just clear the source or draw only those are valid ?
+         * if invalid coords are sent here just or draw only valid ones
          */
         let ft = newProps.measurement.feature;
         if (ft && ft.geometry && !isEqual(ft.geometry, this.props.measurement.feature.geometry) && !isValidGeometry(ft.geometry)) {

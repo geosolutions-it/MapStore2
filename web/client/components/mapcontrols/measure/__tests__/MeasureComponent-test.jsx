@@ -4,12 +4,13 @@
  *
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
- */
-var expect = require('expect');
+*/
+const expect = require('expect');
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var MeasureComponent = require('../MeasureComponent');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const MeasureComponent = require('../MeasureComponent');
+const TestUtils = require('react-dom/test-utils');
 
 const assign = require('object-assign');
 
@@ -257,5 +258,41 @@ describe("test the MeasureComponent", () => {
         const areaSpan = document.getElementById('measure-area-res');
         expect(areaSpan).toExist();
         expect(areaSpan.firstChild.firstChild.firstChild.innerHTML).toBe("1");
+    });
+
+    it('test showing coordinate editor', () => {
+        let measurement = {
+            lineMeasureEnabled: true,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false,
+            geomType: 'LineString',
+            feature: {
+                type: "Feature",
+                geometry: {
+                    type: "LineString",
+                    coordinates: [[1, 2], [2, 5]]
+                },
+                properties: {}
+            },
+            len: 0,
+            area: 0,
+            bearing: 0
+        };
+        let cmp = ReactDOM.render(
+            <MeasureComponent
+                uom={{
+                    length: {unit: 'km', label: 'km'},
+                    area: {unit: 'sqkm', label: 'km²'}
+                }}
+                measurement={measurement}
+                showCoordinateEditor
+                format="decimal"
+                isDraggable
+                lineMeasureEnabled
+            />, document.getElementById("container")
+        );
+        expect(cmp).toExist();
+        const coordEditorPanel = TestUtils.findRenderedDOMComponentWithClass(cmp, 'ms2-border-layout-body');
+        expect(coordEditorPanel).toExist();
     });
 });

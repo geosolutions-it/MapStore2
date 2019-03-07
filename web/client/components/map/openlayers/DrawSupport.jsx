@@ -18,52 +18,9 @@ const {reprojectGeoJson, calculateDistance, reproject/*, transformLineToArcs*/} 
 const {createStylesAsync} = require('../../../utils/VectorStyleUtils');
 const wgs84Sphere = new ol.Sphere(6378137);
 const {transformPolygonToCircle, isCompletePolygon} = require('../../../utils/DrawSupportUtils');
-// const {set} = require('../../../utils/ImmutableUtils');
 const VectorStyle = require('./VectorStyle');
 const {parseStyles} = require('./VectorStyle');
 const geojsonFormat = new ol.format.GeoJSON();
-/*const arcSegmentWriter = function(feature, geometry) {
-    /*if (useGeodesicLines) {
-        coordinates = transformLineToArcs(coordinates.map(c => {
-            const point = reproject(c, "EPSG:3857", "EPSG:4326");
-            return [point.x, point .y];
-        }));
-        coordinates = coordinates.map(c => {
-            const point = reproject(c, "EPSG:4326", "EPSG:3857");
-            return [point.x, point .y];
-        });
-    }
-    let i;
-    let ii;
-    let segment;
-    let segmentData;
-    for (i = 0, ii = coordinates.length - 1; i < ii; ++i) {
-        segment = coordinates.slice(i, i + 2);
-        segmentData = /** @type {ol.ModifySegmentDataType}  ({
-            feature: feature,
-            geometry: newMultiPoint,
-            index: i,
-            segment: segment
-        });
-        this.rBush_.insert(ol.extent.boundingExtent(segment), segmentData);
-    }
-    let points = geometry.getCoordinates();
-    let coordinates;
-    let i;
-    let ii;
-    let segmentData;
-    for (i = 0, ii = points.length; i < ii; ++i) {
-        coordinates = points[i];
-        segmentData = ({
-            feature: feature,
-            geometry: geometry,
-            depth: [i],
-            index: i,
-            segment: [coordinates, coordinates]
-        });
-        this.rBush_.insert(geometry.getExtent(), segmentData);
-    }
-};*/
 
 /**
  * Component that allows to draw and edit geometries as (Point, LineString, Polygon, Rectangle, Circle, MultiGeometries)
@@ -765,8 +722,6 @@ class DrawSupport extends React.Component {
                     return ol.events.condition.primaryAction(e) && !ol.events.condition.altKeyOnly(e);
                 }
             });
-            /** managin editing for arcs*/
-
 
             this.props.map.addInteraction(this.modifyInteraction);
         }
@@ -885,16 +840,10 @@ class DrawSupport extends React.Component {
         if (newFeature && newFeature.features && newFeature.features.length) {
             // filtering circles features only when drawing
 
-            // check for geodesic lines
-        /*    let newFeatureCollFeatures = head(newProps.features).features.map(f => {
-                return f.geometry.type === "LineString" ? set("geometry.coordinates", f.properties.useGeodesicLines ? transformLineToArcs(f.geometry.coordinates) : f.geometry.coordinates, f) : f;
-            });
-
-            newFeature = reprojectGeoJson({...head(newProps.features), features: newFeatureCollFeatures}, newProps.options.featureProjection, this.getMapCrs());*/
             props = assign({}, newProps, {features: [newFeature]});
         } else {
             if (newFeature && newFeature.properties && newFeature.properties.isCircle) {
-                props = assign({}, newProps, {features: []}); // TODO verify this
+                props = assign({}, newProps, {features: []});
             } else {
                 props = assign({}, newProps, {features: newFeature.geometry ? [{...newFeature.geometry, properties: newFeature.properties}] : []});
             }
@@ -918,7 +867,7 @@ class DrawSupport extends React.Component {
                 this.setState({keySingleClickCallback: this.addSingleClickListener(singleClickCallback)});
             }
         }
-        if (newProps.options && newProps.options.selectEnabled/* && (newProps.drawMethod !== "Point" && newProps.drawMethod !== "Text")*/) { // TODO fix all call to this which are missing "selectEnabled" flag
+        if (newProps.options && newProps.options.selectEnabled) {
             this.addSelectInteraction(newProps.options && newProps.options.selected, newProps);
 
         }
@@ -1227,118 +1176,15 @@ class DrawSupport extends React.Component {
         const editFilter = props && props.options && props.options.editFilter;
         this.modifyFeatureColl = new ol.Collection(filter(this.drawLayer.getSource().getFeatures(), editFilter));
 
-        /*ol.interaction.Modify.prototype.addFeature_ = function(feature) {
-            let useGeodesicLines = feature.getProperties().useGeodesicLines;
-            let geometry = feature.getGeometry();
-            if (geometry && geometry.getType() in this.SEGMENT_WRITERS_) {
-                if (useGeodesicLines) {
-                    arcSegmentWriter.call(this, feature, geometry);
-                } else {
-                    this.SEGMENT_WRITERS_[geometry.getType()].call(this, feature, geometry);
-                }
-
-            }
-            let map = this.getMap();
-            if (map && map.isRendered() && this.getActive()) {
-                this.handlePointerAtPixel_(this.lastPixel_, map);
-            }
-            ol.events.listen(feature, ol.events.EventType.CHANGE, this.handleFeatureChange_, this);
-        };*/
 
         this.modifyInteraction = new ol.interaction.Modify({
             features: this.modifyFeatureColl,
             condition: (e) => {
                 return ol.events.condition.primaryAction(e) && !ol.events.condition.altKeyOnly(e);
-            },
-            insertVertexCondition: (e) => {
-                if (this.modifyFeatureColl.getArray().filter(f => f.getProperties().useGeodesicLines).length) {
-                    return ol.events.condition.never(e);
-                }
-                return ol.events.condition.always(e);
             }
         });
 
-/*
-        this.modifyInteraction.handleDragEvent_ = function(evt) {
-            this.ignoreNextSingleClick_ = false;
-            this.willModifyFeatures_(evt);
-
-            let vertex = evt.coordinate;
-            for (let i = 0, ii = this.dragSegments_.length; i < ii; ++i) {
-                let dragSegment = this.dragSegments_[i];
-                let segmentData = dragSegment[0];
-                let depth = segmentData.depth;
-                let geometry = segmentData.geometry;
-                let coordinates;
-                let segment = segmentData.segment;
-                let index = dragSegment[1];
-
-                while (vertex.length < geometry.getStride()) {
-                    vertex.push(segment[index][vertex.length]);
-                }
-
-                switch (geometry.getType()) {
-                    case ol.geom.GeometryType.POINT:
-                        coordinates = vertex;
-                        segment[0] = segment[1] = vertex;
-                        break;
-                    case ol.geom.GeometryType.MULTI_POINT:
-                        coordinates = geometry.getCoordinates();
-                        coordinates[segmentData.index] = vertex;
-                        segment[0] = segment[1] = vertex;
-                        break;
-                    case ol.geom.GeometryType.LINE_STRING:
-                        coordinates = geometry.getCoordinates();
-                        /*if (segmentData.feature.getProperties().useGeodesicLines) {
-                            // FIX MULTI POINT CASE
-                            coordinates[index] = vertex;
-                        } else {
-                            coordinates[segmentData.index + index] = vertex;
-                        }
-                        coordinates[segmentData.index + index] = vertex;
-
-                        segment[index] = vertex;
-                        break;
-                    case ol.geom.GeometryType.MULTI_LINE_STRING:
-                        coordinates = geometry.getCoordinates();
-                        coordinates[depth[0]][segmentData.index + index] = vertex;
-                        segment[index] = vertex;
-                        break;
-                    case ol.geom.GeometryType.POLYGON:
-                        coordinates = geometry.getCoordinates();
-                        coordinates[depth[0]][segmentData.index + index] = vertex;
-                        segment[index] = vertex;
-                        break;
-                    case ol.geom.GeometryType.MULTI_POLYGON:
-                        coordinates = geometry.getCoordinates();
-                        coordinates[depth[1]][depth[0]][segmentData.index + index] = vertex;
-                        segment[index] = vertex;
-                        break;
-                    case ol.geom.GeometryType.CIRCLE:
-                        segment[0] = segment[1] = vertex;
-                        if (segmentData.index === ol.interaction.Modify.MODIFY_SEGMENT_CIRCLE_CENTER_INDEX) {
-                            this.changingFeature_ = true;
-                            geometry.setCenter(vertex);
-                            this.changingFeature_ = false;
-                        } else { // We're dragging the circle's circumference:
-                            this.changingFeature_ = true;
-                            geometry.setRadius(ol.coordinate.distance(geometry.getCenter(), vertex));
-                            this.changingFeature_ = false;
-                        }
-                        break;
-                    default:
-                    // pass
-                }
-
-                if (coordinates) {
-                    this.setGeometryCoordinates_(geometry, coordinates);
-                }
-            }
-            this.createOrUpdateVertexFeature_(vertex);
-        };
-*/
         this.modifyInteraction.on('modifyend', (e) => {
-
 
             let features = e.features.getArray().map((f) => {
                 // transform back circles in polygons
@@ -1357,9 +1203,7 @@ class DrawSupport extends React.Component {
                 return reprojectGeoJson(geojsonFormat.writeFeatureObject(newFt), this.getMapCrs(), "EPSG:4326");
             });
             if (this.props.options.transformToFeatureCollection) {
-                // this.props.onGeometryChanged([{type: "FeatureCollection", features}], this.props.drawOwner, false, "editing", "editing"); // TODO CHECK IF THIS IS NEEDED
                 this.props.onDrawingFeatures(features);
-                // this.addModifyInteraction();
             } else {
                 this.props.onGeometryChanged(features, this.props.drawOwner, false, "editing", "editing"); // TODO FIX THIS
             }

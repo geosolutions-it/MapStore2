@@ -708,6 +708,310 @@ describe('Test the MapUtils', () => {
         });
     });
 
+    it('save map configuration with annotations with geodeisc lines', () => {
+        const flat = [
+            {
+                allowedSRS: {},
+                bbox: {},
+                dimensions: [],
+                id: "layer001",
+                loading: true,
+                name: "layer001",
+                params: {},
+                search: {},
+                singleTile: false,
+                thumbURL: "THUMB_URL",
+                title: "layer001",
+                type: "wms",
+                url: "",
+                visibility: true,
+                catalogURL: "url"
+            },
+            {
+                allowedSRS: {},
+                bbox: {},
+                dimensions: [],
+                id: "layer002",
+                loading: true,
+                name: "layer002",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "layer002",
+                type: "wms",
+                url: "",
+                visibility: true,
+                catalogURL: "url"
+            },
+            {
+                allowedSRS: {},
+                bbox: {},
+                dimensions: [],
+                id: "annotations",
+                loading: true,
+                name: "annotations",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "annotations",
+                type: "vector",
+                url: "",
+                features: [{
+                    type: "FeatureCollection",
+                    features: [{
+                        type: "Feature",
+                        geometry: {
+                            type: "MultiPoint",
+                            coordinates: [[1, 1], [2, 2]]
+                        },
+                        properties: {
+                            geometryGeodesic: {
+                                type: "LineString",
+                                coordinates: [[1, 1], [2, 2], [1, 1], [2, 2], [1, 1], [2, 2], [1, 1], [2, 2], [1, 1], [2, 2], [1, 1], [2, 2]]
+                            },
+                            useGeodesicLines: true
+                        }
+                    }]
+                }],
+                visibility: true,
+                catalogURL: "url"
+            }
+        ];
+
+        const groups = [
+            { expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002'] },
+            {
+                expanded: false, id: 'custom', name: 'custom', title: 'custom',
+                nodes: [{ expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003'] }
+                ]
+            }
+        ];
+
+        const mapConfig = {
+            center: { x: 0, y: 0, crs: 'EPSG:4326' },
+            maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            projection: 'EPSG:900913',
+            units: 'm',
+            zoom: 10,
+            mapOptions: {
+                view: {
+                    resolutions: [
+                        84666.66666666688,
+                        42333.33333333344,
+                        21166.66666666672,
+                        10583.33333333336,
+                        5291.66666666668,
+                        2645.83333333334,
+                        1322.91666666667,
+                        661.458333333335000,
+                        529.166666666668000,
+                        396.875000000001000,
+                        264.583333333334000,
+                        132.291666666667000,
+                        66.145833333333500,
+                        39.687500000000100,
+                        26.458333333333400,
+                        13.229166666666700,
+                        6.614583333333350,
+                        3.968750000000010,
+                        2.645833333333340,
+                        1.322916666666670,
+                        0.661458333333335
+                    ]
+                }
+            }
+        };
+
+        const saved = saveMapConfiguration(mapConfig, flat, groups, '', {});
+        expect(saved).toEqual({
+            map: {
+                center: { crs: 'EPSG:4326', x: 0, y: 0 },
+                groups: [{
+                    id: 'Default',
+                    expanded: true
+                }, {
+                    id: 'custom',
+                    expanded: false
+                }, {
+                    id: 'custom.nested001',
+                    expanded: true
+                    }],
+                layers: [{
+                    allowedSRS: {},
+                    thumbURL: "THUMB_URL",
+                    availableStyles: undefined,
+                    bbox: {},
+                    capabilitiesURL: undefined,
+                    description: undefined,
+                    dimensions: [],
+                    nativeCrs: undefined,
+                    features: undefined,
+                    featureInfo: undefined,
+                    format: undefined,
+                    group: undefined,
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    id: "layer001",
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer001",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "layer001",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false,
+                    origin: undefined,
+                    thematic: undefined
+                },
+                {
+                    allowedSRS: {},
+                    thumbURL: undefined,
+                    availableStyles: undefined,
+                    bbox: {},
+                    capabilitiesURL: undefined,
+                    description: undefined,
+                    dimensions: [],
+                    nativeCrs: undefined,
+                    features: undefined,
+                    featureInfo: undefined,
+                    format: undefined,
+                    group: undefined,
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    id: "layer002",
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "layer002",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "layer002",
+                    transparent: undefined,
+                    type: "wms",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false,
+                    origin: undefined,
+                    thematic: undefined
+                },
+                {
+                    allowedSRS: {},
+                    thumbURL: undefined,
+                    availableStyles: undefined,
+                    bbox: {},
+                    capabilitiesURL: undefined,
+                    description: undefined,
+                    dimensions: [],
+                    nativeCrs: undefined,
+                    features: [{
+                        type: "FeatureCollection",
+                        features: [{
+                            type: "Feature",
+                            geometry: {
+                                type: "MultiPoint",
+                                coordinates: [[1, 1], [2, 2]]
+                            },
+                            properties: {
+                                geometryGeodesic: null,
+                                useGeodesicLines: true
+                            }
+                        }]
+                    }],
+                    featureInfo: undefined,
+                    format: undefined,
+                    group: undefined,
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    id: "annotations",
+                    matrixIds: undefined,
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    name: "annotations",
+                    opacity: undefined,
+                    params: {},
+                    provider: undefined,
+                    search: {},
+                    singleTile: false,
+                    source: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    styles: undefined,
+                    tileMatrixSet: undefined,
+                    tiled: undefined,
+                    title: "annotations",
+                    transparent: undefined,
+                    type: "vector",
+                    url: "",
+                    visibility: true,
+                    catalogURL: "url",
+                    hidden: false,
+                    useForElevation: false,
+                    origin: undefined,
+                    thematic: undefined
+                }],
+                mapOptions: {
+                    view: {
+                        resolutions: [
+                            84666.66666666688,
+                            42333.33333333344,
+                            21166.66666666672,
+                            10583.33333333336,
+                            5291.66666666668,
+                            2645.83333333334,
+                            1322.91666666667,
+                            661.458333333335000,
+                            529.166666666668000,
+                            396.875000000001000,
+                            264.583333333334000,
+                            132.291666666667000,
+                            66.145833333333500,
+                            39.687500000000100,
+                            26.458333333333400,
+                            13.229166666666700,
+                            6.614583333333350,
+                            3.968750000000010,
+                            2.645833333333340,
+                            1.322916666666670,
+                            0.661458333333335
+                        ]
+                    }
+                },
+                maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+                projection: 'EPSG:900913',
+                text_serch_config: '',
+                units: 'm',
+                zoom: 10
+            },
+            mapInfoConfiguration: undefined,
+            version: 2
+        });
+    });
     it('save map configuration with tile matrix', () => {
 
         const flat = [
