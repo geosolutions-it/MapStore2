@@ -873,6 +873,7 @@
                 "title": {
                     "Polygon": "Editor del poligono",
                     "LineString": "Editor della linea",
+                    "Bearing": "Editor della direzione",
                     "Circle": "Editor del cerchio",
                     "Point": "Editor del marker",
                     "MultiPoint": "Editor della linea",

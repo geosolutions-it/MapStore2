@@ -873,6 +873,7 @@
                 "title": {
                     "Polygon": "Polygon-Editor",
                     "LineString": "LineString-Editor",
+                    "Bearing": "Bearing-Editor",
                     "Circle": "Kreis-Editor",
                     "Point": "Marker-Editor",
                     "MultiPoint": "LineString-Editor",

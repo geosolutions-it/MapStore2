@@ -535,7 +535,7 @@
             "bearingLabel": "Rumbo",
             "formula": "Fórmula para cálculo de distancia",
             "showLabel": "Mostrar etiqueta de medición",
-            "addAsAnnotaion": "Añadir como anotación",
+            "addAsAnnotation": "Añadir como anotación",
             "newMeasure": "Nueva anotación",
             "selectTool": "Seleccione una herramienta de medición"
         },
@@ -873,6 +873,7 @@
                 "title": {
                     "Polygon": "Editor de polígonos",
                     "LineString": "Editor LineString",
+                    "Bearing": "Editor de rodamientos",
                     "Circle": "Editor de círculos",
                     "Point": "Editor de marcadores",
                     "MultiPoint": "Editor LineString",

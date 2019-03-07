@@ -536,7 +536,7 @@
             "bearingLabel": "Direction",
             "formula": "Formule pour le calcul de la distance",
             "showLabel": "Afficher l'étiquette de mesure",
-            "addAsAnnotaion": "Ajouter comme annotation",
+            "addAsAnnotation": "Ajouter comme annotation",
             "newMeasure": "Nouvelle annotation",
             "selectTool": "Sélectionnez un outil de mesure"
         },
@@ -873,10 +873,11 @@
                 "aeronautical": "Aéronautique",
                 "title": {
                     "Polygon": "Éditeur de polygone",
-                    "LineString": "Éditeur LineString",
+                    "LineString": "Éditeur de ligne",
+                    "Bearing": "éditeur de relèvement",
                     "Circle": "Éditeur de cercle",
                     "Point": "Éditeur de marqueur",
-                    "MultiPoint": "Éditeur LineString",
+                    "MultiPoint": "Éditeur de ligne",
                     "Text": "Éditeur de texte"
                 },
                 "add": "Ajouter de nouvelles coordonnées",
