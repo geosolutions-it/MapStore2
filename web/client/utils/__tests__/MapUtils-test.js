@@ -435,7 +435,6 @@ describe('Test the MapUtils', () => {
                 units: 'm',
                 zoom: 10
             },
-            mapInfoConfiguration: undefined,
             version: 2
         });
     });
@@ -716,7 +715,6 @@ describe('Test the MapUtils', () => {
                 units: 'm',
                 zoom: 10
             },
-            mapInfoConfiguration: undefined,
             version: 2
         });
     });
@@ -976,7 +974,6 @@ describe('Test the MapUtils', () => {
                     }
                 }
             },
-            mapInfoConfiguration: undefined,
             version: 2
         });
     });
@@ -1031,7 +1028,7 @@ describe('Test the MapUtils', () => {
             units: 'm',
             zoom: 10
         };
-        const saved = saveMapConfiguration(mapConfig, flat, groups, '', {}, {infoFormat: "text/html", showEmptyMessageGFI: false});
+        const saved = saveMapConfiguration(mapConfig, flat, groups, '', { mapInfoConfiguration: {infoFormat: "text/html", showEmptyMessageGFI: false}});
         expect(saved).toEqual({
             map: {
                 center: {crs: 'EPSG:4326', x: 0, y: 0},
@@ -1050,11 +1047,13 @@ describe('Test the MapUtils', () => {
                     thumbURL: undefined,
                     availableStyles: undefined,
                     bbox: {},
+                    requestEncoding: undefined,
                     capabilitiesURL: undefined,
                     description: undefined,
                     dimensions: [],
                     nativeCrs: undefined,
                     features: undefined,
+                    queryable: undefined,
                     featureInfo: undefined,
                     format: undefined,
                     group: undefined,
@@ -1106,7 +1105,8 @@ describe('Test the MapUtils', () => {
                         }
                     }
                 }
-            }, mapInfoConfiguration: {
+            },
+            mapInfoConfiguration: {
                 infoFormat: "text/html",
                 showEmptyMessageGFI: false
             },
