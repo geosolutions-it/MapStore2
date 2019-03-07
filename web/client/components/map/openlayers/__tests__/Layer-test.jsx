@@ -25,6 +25,126 @@ require('../plugins/OverlayLayer');
 const SecurityUtils = require('../../../../utils/SecurityUtils');
 const ConfigUtils = require('../../../../utils/ConfigUtils');
 
+const sampleTileMatrixConfig900913 = {
+    "matrixIds": {
+        'EPSG:900913': [
+            {
+                identifier: "EPSG:900913:0",
+                ranges: {
+                    cols: { min: "0", max: "0" },
+                    rows: { min: "0", max: "0" }
+                }
+
+            },
+            {
+                identifier: "EPSG:900913:1",
+                ranges: {
+                    cols: { min: "0", max: "1" },
+                    rows: { min: "0", max: "1" }
+                }
+
+            },
+            {
+                identifier: "EPSG:900913:2",
+                ranges: {
+                    cols: { min: "0", max: "3" },
+                    rows: { min: "1", max: "2" }
+                }
+
+            }
+        ]
+
+    },
+
+    "tileMatrixSet": [
+        {
+            "TileMatrix": [
+                {
+                    "MatrixHeight": "1",
+                    "MatrixWidth": "1",
+                    "ScaleDenominator": "5.590822639508929E8",
+                    "TileHeight": "256",
+                    "TileWidth": "256",
+                    "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                    "ows:Identifier": "EPSG:900913:0"
+                },
+                {
+                    "MatrixHeight": "2",
+                    "MatrixWidth": "2",
+                    "ScaleDenominator": "2.7954113197544646E8",
+                    "TileHeight": "256",
+                    "TileWidth": "256",
+                    "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                    "ows:Identifier": "EPSG:900913:1"
+                },
+                {
+                    "MatrixHeight": "4",
+                    "MatrixWidth": "4",
+                    "ScaleDenominator": "1.3977056598772323E8",
+                    "TileHeight": "256",
+                    "TileWidth": "256",
+                    "TopLeftCorner": "-2.003750834E7 2.0037508E7",
+                    "ows:Identifier": "EPSG:900913:2"
+                }
+            ],
+            "ows:Identifier": "EPSG:900913",
+            "ows:SupportedCRS": "urn:ogc:def:crs:EPSG:900913"
+        }
+    ]
+};
+
+const lowResGridset = {
+    "matrixIds": {
+        'SPHMERC_900913_CoFi': [
+            {
+                identifier: "SPHMERC_900913_CoFi:0",
+                ranges: {
+                    cols: { min: "0", max: "0" },
+                    rows: { min: "0", max: "0" }
+                }
+
+            },
+            {
+                identifier: "SPHMERC_900913_CoFi:1",
+                ranges: {
+                    cols: { min: "0", max: "1" },
+                    rows: { min: "0", max: "1" }
+                }
+
+            }
+        ]
+
+    },
+    "tileMatrixSet": [
+        {
+            "ows:Identifier": "SPHMERC_900913_CoFi",
+            "ows:SupportedCRS": "urn:ogc:def:crs:EPSG::900913",
+            "TileMatrix": [
+                {
+                    "ows:Abstract": "The grid was not well-defined, the scale therefore assumes 1m per map unit.",
+                    "ows:Identifier": "SPHMERC_900913_CoFi:0",
+                    "ScaleDenominator": "272989.38669477194",
+                    "TopLeftCorner": "1232776.0 5459439.0",
+                    "TileWidth": "256",
+                    "TileHeight": "256",
+                    "MatrixWidth": "2",
+                    "MatrixHeight": "2"
+                },
+                {
+                    "ows:Abstract": "The grid was not well-defined, the scale therefore assumes 1m per map unit.",
+                    "ows:Identifier": "SPHMERC_900913_CoFi:1",
+                    "ScaleDenominator": "136494.69334738597",
+                    "TopLeftCorner": "1232776.0 5449655.0",
+                    "TileWidth": "256",
+                    "TileHeight": "256",
+                    "MatrixWidth": "4",
+                    "MatrixHeight": "3"
+                }
+            ]
+        }
+    ]
+};
+
 describe('Openlayers layer', () => {
     document.body.innerHTML = '<div id="map"></div>';
     let map;
@@ -51,7 +171,6 @@ describe('Openlayers layer', () => {
         map.setTarget(null);
         document.body.innerHTML = '';
     });
-
     it('missing layer', () => {
         var source = {
             "P_TYPE": "wrong ptype key"
@@ -260,79 +379,14 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(1);
         expect(map.getLayers().item(0).getSource().urls.length).toBe(1);
     });
-
-    it('test wmts max and min resolutions', () => {
+    it('test wmts resolutions, maxResolutions and minResolutions', () => {
         var options = {
             "type": "wmts",
             "visibility": true,
             "name": "nurc:Arc_Sample",
             "group": "Meteo",
             "format": "image/png",
-            "matrixIds": {
-                'EPSG:900913': [
-                    {
-                        identifier: "EPSG:900913:0",
-                        ranges: {
-                            cols: {min: "0", max: "0"},
-                            rows: {min: "0", max: "0"}
-                        }
-
-                    },
-                    {
-                        identifier: "EPSG:900913:1",
-                        ranges: {
-                            cols: {min: "0", max: "1"},
-                            rows: {min: "0", max: "1"}
-                        }
-
-                    },
-                    {
-                        identifier: "EPSG:900913:2",
-                        ranges: {
-                            cols: {min: "0", max: "3"},
-                            rows: {min: "1", max: "2"}
-                        }
-
-                    }
-                ]
-
-            },
-
-            "tileMatrixSet": [
-                {
-                    "TileMatrix": [
-                        {
-                            "MatrixHeight": "1",
-                            "MatrixWidth": "1",
-                            "ScaleDenominator": "5.590822639508929E8",
-                            "TileHeight": "256",
-                            "TileWidth": "256",
-                            "TopLeftCorner": "-2.003750834E7 2.0037508E7",
-                            "ows:Identifier": "EPSG:900913:0"
-                        },
-                        {
-                            "MatrixHeight": "2",
-                            "MatrixWidth": "2",
-                            "ScaleDenominator": "2.7954113197544646E8",
-                            "TileHeight": "256",
-                            "TileWidth": "256",
-                            "TopLeftCorner": "-2.003750834E7 2.0037508E7",
-                            "ows:Identifier": "EPSG:900913:1"
-                        },
-                        {
-                            "MatrixHeight": "4",
-                            "MatrixWidth": "4",
-                            "ScaleDenominator": "1.3977056598772323E8",
-                            "TileHeight": "256",
-                            "TileWidth": "256",
-                            "TopLeftCorner": "-2.003750834E7 2.0037508E7",
-                            "ows:Identifier": "EPSG:900913:2"
-                        }
-                    ],
-                    "ows:Identifier": "EPSG:900913",
-                    "ows:SupportedCRS": "urn:ogc:def:crs:EPSG:900913"
-                }
-            ],
+            ...sampleTileMatrixConfig900913,
             "url": "http://sample.server/geoserver/gwc/service/wmts"
         };
         // create layers
@@ -346,8 +400,34 @@ describe('Openlayers layer', () => {
         expect(map.getLayers().getLength()).toBe(1);
 
         const wmtsLayer = map.getLayers().item(0);
-        expect(Math.round(wmtsLayer.getMinResolution())).toBe(39136);
-        expect(Math.round(wmtsLayer.getMaxResolution())).toBe(156543);
+        const expectedResolutions = sampleTileMatrixConfig900913.tileMatrixSet[0].TileMatrix.map( e => e.ScaleDenominator * 0.28E-3);
+        wmtsLayer.getSource().getTileGrid().getResolutions().map((v, i) => expect(v).toBe(expectedResolutions[i]));
+    });
+    it('test fix for OL draw image (remove when OL > 5.3.0) ', () => {
+        // see https://github.com/openlayers/openlayers/issues/8700
+        var options = {
+            "type": "wmts",
+            "visibility": true,
+            "name": "nurc:Arc_Sample",
+            "group": "Meteo",
+            "format": "image/png",
+            "url": "http://sample.server/geoserver/gwc/service/wmts",
+            ...lowResGridset
+        };
+        // create layers
+        const layer = ReactDOM.render(
+            <OpenlayersLayer type="wmts"
+                options={options} map={map} />, document.getElementById("container"));
+
+
+        expect(layer).toExist();
+        // count layers
+        expect(map.getLayers().getLength()).toBe(1);
+
+        const wmtsLayer = map.getLayers().item(0);
+        const expectedResolutions = lowResGridset.tileMatrixSet[0].TileMatrix.map(e => e.ScaleDenominator * 0.28E-3);
+        wmtsLayer.getSource().getTileGrid().getResolutions().map((v, i) => expect(v).toBe(expectedResolutions[i]));
+        expect(wmtsLayer.getMaxResolution()).toBeMoreThan(wmtsLayer.getSource().getTileGrid().getResolutions()[0]);
     });
 
     it('creates a wmts layer with multiple urls for openlayers map', () => {
