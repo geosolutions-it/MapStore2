@@ -58,14 +58,14 @@ describe('collapsibleWidget enhancer', () => {
         }));
         ReactDOM.render(<Sink dataGrid={{"static": true}} />, document.getElementById("container"));
     });
-    it('hide when hidden (hide = true hides the tool for certain types of users )', (done) => {
+    it('show when hidden (hide = true hides the tool for certain types of users )', (done) => {
         const Sink = collapsible(createSink(props => {
             expect(props).toExist();
             expect(props.widgetTools.length).toBe(1);
-            expect(props.widgetTools[0].visible).toBe(false);
+            expect(props.widgetTools[0].visible).toBe(true);
             done();
         }));
-        ReactDOM.render(<Sink hide dataGrid={{ "static": true }} />, document.getElementById("container"));
+        ReactDOM.render(<Sink hide />, document.getElementById("container"));
     });
     it('toggleCollapse callback', () => {
         const actions = {
