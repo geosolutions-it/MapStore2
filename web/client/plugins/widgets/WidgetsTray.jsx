@@ -150,12 +150,14 @@ const CollapseAllButton = compose(
 /**
  * Main component of the widgets tray.
  * @prop {boolean} enabled if true, the component is enabled and visible
+ * @prop {object} toolsOptions object that contains `showHidden` property rules to apply. see Widgets plugin configuration
  * @prop {boolean} expanded if true, it shows the list of widgets
  * @prop {function} setExpanded handler to toggle expand/collapse the tray
  */
 class WidgetsTray extends React.Component {
     static propTypes = {
         enabled: PropTypes.bool,
+        toolsOptions: PropTypes.object,
         expanded: PropTypes.bool,
         setExpanded: PropTypes.fun
     };
@@ -176,10 +178,10 @@ class WidgetsTray extends React.Component {
                 }}>
                 <BorderLayout
                     columns={[
-                        <CollapseTrayButton expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />,
-                        <CollapseAllButton />
+                        <CollapseTrayButton toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />,
+                        <CollapseAllButton toolsOptions={this.props.toolsOptions} />
                     ]}
-                >{this.props.expanded ? <WidgetsBar /> : null}
+                >{this.props.expanded ? <WidgetsBar toolsOptions={this.props.toolsOptions} /> : null}
                 </BorderLayout>
             </div>)
             : null;
