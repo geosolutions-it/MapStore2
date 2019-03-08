@@ -23,7 +23,7 @@ const {get} = require('lodash');
  * @function
  * @memberof selectors.map
  * @param  {object} state the state
- * @return {object} the map configruation
+ * @return {object} the map configuration
  */
 const mapSelector = (state) => state.map && state.map.present || state.map || state.config && state.config.map || null;
 const projectionDefsSelector = (state) => state.localConfig && state.localConfig.projectionDefs || [];

@@ -384,6 +384,16 @@ describe('Test the CatalogUtils', () => {
         expect(records.length).toBe(1);
         expect(records[0].references[0].url).toBe(undefined);
     });
+    it('wmts capabilities url', () => {
+        const wmtsRecords = [{ GetTileURL: "tileURL"}];
+        const records = CatalogUtils.getCatalogRecords('wmts', { records: wmtsRecords });
+        expect(records.length).toBe(1);
+        expect(records[0].capabilitiesURL).toBe("tileURL");
+        const wmtsRecords2 = [{ GetTileURL: "tileURL", capabilitiesURL: "capURL" }];
+        const records2 = CatalogUtils.getCatalogRecords('wmts', { records: wmtsRecords2 });
+        expect(records2.length).toBe(1);
+        expect(records2[0].capabilitiesURL).toBe("capURL");
+    });
     it('csw correctly retrive layer name and thumb from pycsw', () => {
         const records = CatalogUtils.getCatalogRecords('csw', {
             records: [{

@@ -367,5 +367,11 @@ describe('ConfigUtils', () => {
         let shrinkedUrl = ConfigUtils.filterUrlParams(match, ["authkey", "service", "otherparam"]);
         expect(shrinkedUrl).toBe(null);
     });
+    it('replacePlaceholders', () => {
+        ConfigUtils.setConfigProp("TEST_PLACEHOLDER", "MY_URL_PARAM");
+        expect(ConfigUtils.replacePlaceholders("{TEST_PLACEHOLDER}")).toBe("MY_URL_PARAM");
+        // do not replace parameters that do not exist (some URL templates should not be replaced)
+        expect(ConfigUtils.replacePlaceholders("{OTHER_PLACEHOLDER}")).toBe("{OTHER_PLACEHOLDER}");
+    });
 
 });

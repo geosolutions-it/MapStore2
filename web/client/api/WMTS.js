@@ -15,10 +15,10 @@ const xml2js = require('xml2js');
 
 const capabilitiesCache = {};
 
-const {isArray, head, castArray} = require('lodash');
+const {isArray, castArray} = require('lodash');
 
 const CoordinatesUtils = require('../utils/CoordinatesUtils');
-
+const { getOperations, getOperation, getRequestEncoding, getDefaultStyleIdentifier, getDefaultFormat} = require('../utils/WMTSUtils');
 const parseUrl = (url) => {
     const parsed = urlUtil.parse(url, true);
     return urlUtil.format(assign({}, parsed, {search: null}, {
@@ -36,19 +36,11 @@ const flatLayers = (root) => {
     }, []) : root.ows.Title && [root] || [];
 };
 
-const getOperation = (operations, name, type) => {
-    return head(head(operations
-            .filter((operation) => operation.$.name === name)
-            .map((operation) => castArray(operation["ows:DCP"]["ows:HTTP"]["ows:Get"])))
-            .filter((request) => (request["ows:Constraint"] && request["ows:Constraint"]["ows:AllowedValues"]["ows:Value"]) === type)
-            .map((request) => request.$["xlink:href"])
-        );
-};
-
-const searchAndPaginate = (json, startPosition, maxRecords, text) => {
+const searchAndPaginate = (json, startPosition, maxRecords, text, url) => {
     const root = json.Capabilities.Contents;
-    const operations = castArray(json.Capabilities["ows:OperationsMetadata"]["ows:Operation"]);
-    const TileMatrixSet = root.TileMatrixSet || [];
+    const operations = getOperations(json);
+    const requestEncoding = getRequestEncoding(json);
+    const TileMatrixSet = root.TileMatrixSet && castArray(root.TileMatrixSet) || [];
     let SRSList = [];
     let len = TileMatrixSet.length;
     for (let i = 0; i < len; i++) {
@@ -64,7 +56,17 @@ const searchAndPaginate = (json, startPosition, maxRecords, text) => {
         nextRecord: startPosition + Math.min(maxRecords, filteredLayers.length) + 1,
         records: filteredLayers
             .filter((layer, index) => index >= startPosition - 1 && index < startPosition - 1 + maxRecords)
-            .map((layer) => assign({}, layer, {SRS: SRSList, TileMatrixSet, GetTileUrl: getOperation(operations, "GetTile", "KVP")}))
+            .map((layer) => assign({}, layer, {
+                SRS: SRSList,
+                TileMatrixSet,
+                // Only KVP is supported by MapInfo, for the moment. TODO: Support single layer's InfoFormat
+                queryable: !!getOperation(operations, "GetFeatureInfo", "KVP"),
+                requestEncoding: requestEncoding,
+                style: getDefaultStyleIdentifier(layer), // it must be collected because it can be used in RESTful version to create the path
+                format: getDefaultFormat(layer),
+                GetTileURL: getOperation(operations, "GetTile", requestEncoding),
+                capabilitiesURL: url
+            }))
     };
 };
 
@@ -74,7 +76,7 @@ const Api = {
         const cached = capabilitiesCache[url];
         if (cached && new Date().getTime() < cached.timestamp + (ConfigUtils.getConfigProp('cacheExpire') || 60) * 1000) {
             return new Promise((resolve) => {
-                resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text));
+                resolve(searchAndPaginate(cached.data, startPosition, maxRecords, text, url));
             });
         }
         return axios.get(parseUrl(url)).then((response) => {
@@ -86,7 +88,7 @@ const Api = {
                 timestamp: new Date().getTime(),
                 data: json
             };
-            return searchAndPaginate(json, startPosition, maxRecords, text);
+            return searchAndPaginate(json, startPosition, maxRecords, text, url);
         });
     },
     textSearch: function(url, startPosition, maxRecords, text) {
