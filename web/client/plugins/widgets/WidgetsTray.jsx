@@ -127,7 +127,7 @@ const CollapseAllButton = compose(
         createSelector(
             getVisibleFloatingWidgets,
             (widgets = []) => ({widgets})
-        ), // TODO: get all collapsed
+        ), // get all visible widgets
         {
             onClick: () => toggleCollapseAll()
         }
