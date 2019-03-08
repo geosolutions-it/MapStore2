@@ -131,7 +131,7 @@ class Widgets extends React.Component {
  *       {showPin: ["__OR__", "user.role===ADMIN", "mapInfo.canEdit"]}
  *       ```
  * @prop {boolean|string|array} [toolsOptions.showPin] show lock tool. By default is visible only to the admin
- * @prop {boolean|string|array} [toolsOptions.showHide] show the "hide tool" for the widget (the tool allows to hide the widget to users that have `seeHidden=false` ). By default is false, in the most common case it should be the same of `seeHidden`. 
+ * @prop {boolean|string|array} [toolsOptions.showHide] show the "hide tool" for the widget (the tool allows to hide the widget to users that have `seeHidden=false` ). By default is false, in the most common case it should be the same of `seeHidden`.
  * @prop {boolean|string|array} [toolsOptions.seeHidden] hides the widgets under particular conditions
  *
  */
