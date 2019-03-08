@@ -150,7 +150,7 @@ const CollapseAllButton = compose(
 /**
  * Main component of the widgets tray.
  * @prop {boolean} enabled if true, the component is enabled and visible
- * @prop {object} toolsOptions object that contains `showHidden` property rules to apply. see Widgets plugin configuration
+ * @prop {object} toolsOptions object that contains `seeHidden` property rules to apply. see Widgets plugin configuration
  * @prop {boolean} expanded if true, it shows the list of widgets
  * @prop {function} setExpanded handler to toggle expand/collapse the tray
  */
