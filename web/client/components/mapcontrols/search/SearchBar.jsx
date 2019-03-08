@@ -299,7 +299,7 @@ class SearchBar extends React.Component {
                             className: "square-button-md no-border",
                             bsStyle: "default",
                             pullRight: true,
-                            visible: activeTool === "addressSearch" && (this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0) || activeTool === "coordinatesSearch" && (!!this.props.coordinate.lon || !!this.props.coordinate.lat),
+                            visible: activeTool === "addressSearch" && (this.props.searchText !== "" || this.props.selectedItems && this.props.selectedItems.length > 0) || activeTool === "coordinatesSearch" && (isNumber(this.props.coordinate.lon) || isNumber(this.props.coordinate.lat)),
                             onClick: () => {
                                 if (activeTool === "addressSearch") {
                                     this.clearSearch();

@@ -31,11 +31,16 @@ class Stroke extends React.Component {
         style: PropTypes.object,
         lineDashOptions: PropTypes.array,
         onChange: PropTypes.func,
-        width: PropTypes.number
+        width: PropTypes.number,
+        constraints: PropTypes.object
     };
 
     static defaultProps = {
         style: {},
+        constraints: {
+            maxWidth: 15,
+            minWidth: 1
+        },
         onChange: () => {}
     };
 
@@ -106,7 +111,10 @@ class Stroke extends React.Component {
                                 from: value => Math.round(value),
                                 to: value => Math.round(value) + ' px'
                             }}
-                            range={{min: 1, max: 15}}
+                            range={{
+                                min: isNil(this.props.constraints && this.props.constraints.minWidth) ? 1 : this.props.constraints.maxWidth,
+                                max: this.props.constraints && this.props.constraints.maxWidth || 15
+                            }}
                             onChange={(values) => {
                                 const weight = parseInt(values[0].replace(' px', ''), 10);
                                 this.props.onChange(style.id, {weight});

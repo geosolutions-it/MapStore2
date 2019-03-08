@@ -1,9 +1,12 @@
 
 const {compose, withHandlers, withProps} = require('recompose');
-const {round} = require('lodash');
+const {round, isNaN} = require('lodash');
 
 const convertDDToDMS = (D, lng, {seconds} = {seconds: {decimals: 4}}) => {
-    let d = parseInt(D, 10);
+
+    // if the values is very little (2.77777e-8) the parseInt has some trobule and returns 2 instead of 0
+    let d = D >= 0 ? Math.floor(D) : Math.ceil(D);
+
     let minFloat = Math.abs((D - d) * 60);
     let m = Math.floor(minFloat);
     let secFloat = (minFloat - m) * 60;
@@ -19,12 +22,23 @@ const convertDDToDMS = (D, lng, {seconds} = {seconds: {decimals: 4}}) => {
         m = 0;
     }
 
-    return {
+    if (isNaN(d) || D === "") {
+        // this is needed in order to reset completely the inputs
+        return {
+            degrees: "",
+            minutes: "",
+            seconds: "",
+            direction: lng ? 'W' : 'N' // let's chose some default direction if coord is 0
+        };
+    }
+    let values = {
         degrees: d,
-        direction: D < 0 ? lng ? 'W' : 'S' : lng ? 'E' : 'N',
         minutes: m,
-        seconds: s
+        seconds: s,
+        direction: D < 0 ? lng ? 'W' : 'S' : lng ? 'E' : 'N'
     };
+
+    return values;
 };
 
 module.exports = compose(

@@ -99,7 +99,12 @@ const VectorUtils = {
     createTextPointMarkerLayer: ({pointToLayer, geojson, latlng, options, style = {}, highlight = false} = {}) => {
         if (geojson.properties && geojson.properties.isText) {
             // this is a Text Feature
-            let myIcon = L.divIcon({html: geojson.properties.valueText, className: ''});
+            // TODO: improve management for stroke-width because 5px it was not the same as in ol width:5 for ol.style.Stroke
+            let myIcon = L.divIcon({html: `<span style="
+                font:${style.font};
+                color:${style.fillColor};
+                -webkit-text-stroke-width:${1}px;
+                -webkit-text-stroke-color:${style.color};">${geojson.properties.valueText}</span>`, className: ''});
             return new L.Marker(latlng, {icon: myIcon});
         }
         return VectorUtils.getPointLayer(pointToLayer, geojson, latlng, {...options, style, highlight});
