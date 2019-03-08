@@ -53,12 +53,12 @@ class MeasurementSupport extends React.Component {
     componentWillReceiveProps(newProps) {
         this.invalidCoordinates = [];
         if (newProps.measurement.geomType && newProps.measurement.geomType !== this.props.measurement.geomType ||
-            /* check also when a default is set
+            /* check also when a measure tool is enabled
              * if so the first condition does not match
-             * because the old geomType is not changed (it was laready defined as default)
+             * because the old geomType is not changed (it was already defined as default)
              * and the measure tool is getting enabled
             */
-            (newProps.measurement.geomType && this.props.measurement.geomType && (newProps.measurement.lineMeasureEnabled || newProps.measurement.areaMeasureEnabled || newProps.measurement.bearingMeasureEnabled) && !this.props.enabled && newProps.enabled) ) {
+            (newProps.measurement.geomType && (newProps.measurement.lineMeasureEnabled || newProps.measurement.areaMeasureEnabled || newProps.measurement.bearingMeasureEnabled) && !this.props.enabled && newProps.enabled) ) {
             this.addDrawInteraction(newProps);
         }
         if (!newProps.measurement.geomType) {
@@ -68,12 +68,15 @@ class MeasurementSupport extends React.Component {
          * if invalid coords are sent here just or draw only valid ones
          */
         let ft = newProps.measurement.feature;
-        if (ft && ft.geometry && !isEqual(ft.geometry, this.props.measurement.feature.geometry) && !isValidGeometry(ft.geometry)) {
-            // filtering out the invalid coords
+        let oldFt = this.props.measurement.feature;
+        let isNewGeomPresent = ft && ft.geometry;
+        if (isNewGeomPresent && !isEqual(ft.geometry, oldFt.geometry) && !isValidGeometry(ft.geometry)) {
+            // filtering out the invalid coords because causing errors/crash when reprojecting
             let props = set("measurement.feature.geometry.coordinates", (ft.geometry.type === "Polygon" ? ft.geometry.coordinates[0] : ft.geometry.coordinates)
                 .filter((c, i) => {
                     const isValid = !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1]));
                     if (!isValid) {
+                        // if some coords are invalid we then need to add it to the feature before updating the state
                         this.invalidCoordinates.push({coord: c, index: i});
                     }
                     return isValid;
@@ -89,9 +92,7 @@ class MeasurementSupport extends React.Component {
          * although the recalculation should be moved in the reducer. so we can avoid to to weird stuff here if there is another plugin / component
          * that is going to update the coordinates via UI or any other action
          */
-        if (!isEqual(this.props.measurement.feature, ft) && ft && ft.geometry && isValidGeometry(ft.geometry) && newProps.measurement.updatedByUI ||
-        !isEqual(this.props.uom, newProps.uom) && ft && ft.geometry && isValidGeometry(ft.geometry) && newProps.measurement.updatedByUI) {
-
+        if (isNewGeomPresent && isValidGeometry(ft.geometry) && newProps.measurement.updatedByUI && (!isEqual(oldFt, ft) || !isEqual(this.props.uom, newProps.uom))) {
             this.updateFeatures(newProps);
         }
     }
@@ -107,14 +108,15 @@ class MeasurementSupport extends React.Component {
     isPolygon = (feature) => {
         return feature.geometry.type === "Polygon";
     }
+    /**
+     * This method takes the feature from properties and
+     * it updated the drawn feature and its measure tooltip
+     * It must receive only valid coordinates
+    */
     updateFeatures = (props) => {
-        let ft = props.measurement.feature;
-        if (props.measurement.lineMeasureEnabled) {
-            let newCoords = transformLineToArcs(props.measurement.feature.geometry.coordinates);
-            ft = set("geometry.coordinates", newCoords, ft);
-        }
-        this.replaceFeatures([ft]);
+        this.replaceFeatures([props.measurement.feature], props);
 
+        // update measure tooltip
         if (props.measurement.showLabel) {
             this.removeMeasureTooltips();
             this.measureTooltipElement = document.createElement("div");
@@ -141,10 +143,22 @@ class MeasurementSupport extends React.Component {
         this.updateMeasurementResults(props, this.source.getFeatures()[0]);
     }
 
-    replaceFeatures = (features) => {
+    /**
+     * takes features form props and
+     * it adds it to the measure vector layer
+    */
+    replaceFeatures = (features, props) => {
+        let featuresToReplace = features;
+        if (props.measurement.lineMeasureEnabled) {
+            // creatin arcs for distance measure
+            let newCoords = transformLineToArcs(props.measurement.feature.geometry.coordinates);
+            let ft = set("geometry.coordinates", newCoords, features[0]);
+            featuresToReplace = [ft];
+        }
         this.source = new ol.source.Vector();
-        features.forEach((geoJSON) => {
+        featuresToReplace.forEach((geoJSON) => {
             let geoJSONFT = geoJSON;
+            // polygons must have at least 4 points where the first being equal to the last
             if (geoJSONFT.geometry.type === "Polygon" && geoJSONFT.geometry.coordinates[0].length >= 3) {
                 if (!isEqual(geoJSONFT.geometry.coordinates[0][0], geoJSONFT.geometry.coordinates[0][geoJSONFT.geometry.coordinates[0].length - 1])) {
                     geoJSONFT = set("geometry.coordinates", [geoJSONFT.geometry.coordinates[0].concat([geoJSONFT.geometry.coordinates[0][0]])], geoJSONFT);
@@ -300,7 +314,7 @@ class MeasurementSupport extends React.Component {
                 let newCoords = transformLineToArcs(newFeature.geometry.coordinates);
                 newFeature = set("geometry.coordinates", newCoords, newFeature);
             }
-            this.replaceFeatures([newFeature]);
+            this.replaceFeatures([newFeature], this.props);
             if (this.props.measurement.showLabel) {
                 this.measureTooltipElement.className = 'tooltip tooltip-static';
                 this.measureTooltip.setOffset([0, -7]);
@@ -387,11 +401,9 @@ class MeasurementSupport extends React.Component {
         // it will no longer create 100 points for arcs to put in the state
         let newMeasureState = assign({}, props.measurement,
             {
-                point: props.measurement.geomType === 'Point' ?
-                this.getPointCoordinate(sketchCoords) : null,
+                point: props.measurement.geomType === 'Point' ? this.getPointCoordinate(sketchCoords) : null,
                 len: props.measurement.geomType === 'LineString' ? calculateDistance(this.reprojectedCoordinates(sketchCoords), props.measurement.lengthFormula) : 0,
-                area: props.measurement.geomType === 'Polygon' ?
-                this.calculateGeodesicArea(olFeatureToUse.getGeometry().getLinearRing(0).getCoordinates()) : 0,
+                area: props.measurement.geomType === 'Polygon' ? this.calculateGeodesicArea(olFeatureToUse.getGeometry().getLinearRing(0).getCoordinates()) : 0,
                 bearing: props.measurement.geomType === 'Bearing' ? bearing : 0,
                 lenUnit: props.measurement.lenUnit,
                 areaUnit: props.measurement.areaUnit,
