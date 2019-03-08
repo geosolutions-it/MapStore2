@@ -74,7 +74,7 @@ const parseRules = ({accessInfo, postProcessValue, reduceFun}) => rawRules => {
  * @param {Object} options - The options to generate the enhancer
  * @param {string} [options.asObject = false] if true, the property is intended to be an object. The rules will be applied on each key of the object.
  *        If not defined, at propToMap have to be defined. Otherwise the rule will be applied only to the property. Useful if you have more than one flag to set.
- * @param {function} [options.postProcessValue = identity] process the value get from a rule to return. The function has the rule as second argument. Example of custom postProcesValue function is: `(v, rule) => rule == "_ALWAYS_FALSE_" ? false : v * 2
+ * @param {function} [options.postProcessValue = identity] process the value get from a rule to return. The function has the rule as second argument. Example of custom postProcessValue function is: `(v, rule) => rule == "_ALWAYS_FALSE_" ? false : v * 2
  * @param {function} [options.reduceFun = AND]. An Array.reduce function to accumulate the rules, useful if you want to transform the variable in a different thing that a flag, or you want to use OR condition.
  * @param {object} [options.accessInfo="accessInfo"]: the property name of the property to use to retrieve data
  */

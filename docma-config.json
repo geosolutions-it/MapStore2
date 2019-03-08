@@ -120,6 +120,7 @@
             "web/client/components/misc/cardgrids/SideGrid.jsx",
             "web/client/components/misc/enhancers/emptyState.jsx",
             "web/client/components/misc/enhancers/tooltip.jsx",
+            "web/client/components/misc/enhancers/security/accessRuleParser.jsx",
             "web/client/components/misc/panels/Accordion.jsx",
             "web/client/components/misc/panels/DockablePanel.jsx",
             "web/client/components/misc/panels/DockPanel.jsx",
@@ -225,6 +226,8 @@
                 "web/client/plugins/TOC.jsx",
                 "web/client/plugins/ThematicLayer.jsx",
                 "web/client/plugins/WFSDownload.jsx",
+                "web/client/plugins/Widgets.jsx",
+                "web/client/plugins/WidgetsTray.jsx",
                 "web/client/plugins/ZoomIn.jsx",
                 "web/client/plugins/ZoomOut.jsx"
             ]
