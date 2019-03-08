@@ -36,7 +36,7 @@ require('./appPolyfill');
  * @prop {object} pluginsDef plugins definition object (e.g. as loaded from plugins.js)
  * @prop {object} storeOpts options for the store
  * @prop {array} initialActions list of actions to be dispatched on startup
- * @prop {function/object} appComponent root component for the application
+ * @prop {function|object} appComponent root component for the application
  * @prop {bool} printingEnabled initializes printing environment based on mapfish-print
  * @prop {function} onStoreInit optional callback called just after store creation
  * @prop {function} onInit optional callback called before first rendering, can delay first rendering

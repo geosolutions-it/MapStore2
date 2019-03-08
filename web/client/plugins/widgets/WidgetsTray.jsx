@@ -8,10 +8,11 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const { connect } = require('react-redux');
-const { compose, withProps, withState, defaultProps, lifecycle, mapPropsStream } = require('recompose');
+const { compose, defaultProps, withProps, withState, lifecycle, mapPropsStream } = require('recompose');
 const { createSelector } = require('reselect');
 const { find, findIndex, sortBy } = require('lodash');
 const tooltip = require('../../components/misc/enhancers/tooltip');
+const editOptions = require('./editOptions');
 
 const { Glyphicon, Button: BButton } = require('react-bootstrap');
 const Button = tooltip(BButton);
@@ -24,7 +25,21 @@ const BorderLayout = require('../../components/layout/BorderLayout');
  * Only widgets that are not hidden (to some users) or pinned (static) can be in tray
  * @param {object} widget the widget configuration
  */
-const noHiddenOrStaticWidgets = w => !w.hide && (!w.dataGrid || !w.dataGrid.static);
+const noHiddenOrStaticWidgets = w => !w.dataGrid || !w.dataGrid.static;
+
+// hide hidden widgets in tray for users has not access to them
+const filterHiddenWidgets = compose(
+    defaultProps({
+        "toolsOptions": {
+            "seeHidden": "user.role===ADMIN"
+        }
+    }),
+    // allow to customize toolsOptions object, with rules. see accessRuleParser
+    editOptions("toolsOptions", { asObject: true }),
+    withProps(({ widgets, toolsOptions = { seeHidden: false } }) => ({
+        widgets: toolsOptions.seeHidden ? widgets : widgets.filter(w => !w.hide)
+    }))
+);
 
 /**
  * A selector that retrieves widgets to display in the tray area
@@ -77,6 +92,7 @@ const WidgetsBar = compose(
             style: { marginLeft: 2, marginRight: 2 }
         }
     }),
+    filterHiddenWidgets,
     withProps(({ btnGroupProps = {}, btnDefaultProps = {} }) => ({
         btnGroupProps: {
             bsSize: "xsmall",
@@ -106,16 +122,20 @@ const CollapseTrayButton = ({ expanded, onClick = () => { } } = {}) =>
 /**
  * Button to collapse/expand all widgets
  */
-const CollapseAllButton = connect(
-    createSelector(
-        getVisibleFloatingWidgets,
-        (visible = []) => ({
-            shouldExpand: visible.filter(noHiddenOrStaticWidgets).length === 0
-        })
-    ), // TODO: get all collapsed
-    {
-        onClick: () => toggleCollapseAll()
-    }
+const CollapseAllButton = compose(
+    connect(
+        createSelector(
+            getVisibleFloatingWidgets,
+            (widgets = []) => ({widgets})
+        ), // get all visible widgets
+        {
+            onClick: () => toggleCollapseAll()
+        }
+    ),
+    filterHiddenWidgets,
+    withProps(({widgets = []}) => ({
+        shouldExpand: widgets.length === 0
+    }))
 )(({ onClick = () => { }, shouldExpand = false } = {}) =>
     (<Button
         tooltipId={shouldExpand ? "widgets.tray.expandAll" : "widgets.tray.collapseAll"}
@@ -130,12 +150,14 @@ const CollapseAllButton = connect(
 /**
  * Main component of the widgets tray.
  * @prop {boolean} enabled if true, the component is enabled and visible
+ * @prop {object} toolsOptions object that contains `seeHidden` property rules to apply. see Widgets plugin configuration
  * @prop {boolean} expanded if true, it shows the list of widgets
  * @prop {function} setExpanded handler to toggle expand/collapse the tray
  */
 class WidgetsTray extends React.Component {
     static propTypes = {
         enabled: PropTypes.bool,
+        toolsOptions: PropTypes.object,
         expanded: PropTypes.bool,
         setExpanded: PropTypes.fun
     };
@@ -156,10 +178,10 @@ class WidgetsTray extends React.Component {
                 }}>
                 <BorderLayout
                     columns={[
-                        <CollapseTrayButton expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />,
-                        <CollapseAllButton />
+                        <CollapseTrayButton toolsOptions={this.props.toolsOptions} expanded={this.props.expanded} onClick={() => this.props.setExpanded(!this.props.expanded)} />,
+                        <CollapseAllButton toolsOptions={this.props.toolsOptions} />
                     ]}
-                >{this.props.expanded ? <WidgetsBar /> : null}
+                >{this.props.expanded ? <WidgetsBar toolsOptions={this.props.toolsOptions} /> : null}
                 </BorderLayout>
             </div>)
             : null;
@@ -169,13 +191,15 @@ module.exports = compose(
     withState("expanded", "setExpanded", false),
     connect(createSelector(
         trayWidgets,
-        (widgets = []) => ({
-            hasCollapsedWidgets: widgets.filter(({ collapsed } = {}) => collapsed).length > 0,
-            hasTrayWidgets: widgets.length > 0
-        })
+        (widgets = []) => ({widgets})
     ), {
         toggleTray
     }),
+    filterHiddenWidgets,
+    withProps(({widgets = []}) => ({
+        hasCollapsedWidgets: widgets.filter(({ collapsed } = {}) => collapsed).length > 0,
+        hasTrayWidgets: widgets.length > 0
+    })),
     // flag of plugin presence
     lifecycle({
         componentDidMount() {

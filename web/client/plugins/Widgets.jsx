@@ -124,15 +124,15 @@ class Widgets extends React.Component {
  * @memberof plugins
  * @name Widgets
  * @class
- * @prop object [toolsOptions] options to show and manage widgets tools. Widget tools are buttons available in some widgets. Any entry of this object can be configured using accessRules.
+ * @prop {object} [toolsOptions] options to show and manage widgets tools. Widget tools are buttons available in some widgets. Any entry of this object can be configured using accessRules.
  *       Access rules can be defined using the syntax (@see components.misc.enhancers.security.accessRuleParser).
  *       The accessible parts of the state are `{mapInfo: {canEdit, canDelete...}, user: {role: "USER"}}`. So you can define rules like this:
  *       ```
  *       {showPin: ["__OR__", "user.role===ADMIN", "mapInfo.canEdit"]}
  *       ```
- * @prop {boolean|string|array} [showPin] show lock tool. By default is visible only to the admin
- * @prop {boolean|string|array} [showHide] show hide tool. Allow to hide the tool when hide is false.
- * @prop {boolean|string|array} [seeHidden] hides the widgets under particular conditions
+ * @prop {boolean|string|array} [toolsOptions.showPin] show lock tool. By default is visible only to the admin
+ * @prop {boolean|string|array} [toolsOptions.showHide] show the "hide tool" for the widget (the tool allows to hide the widget to users that have `seeHidden=false` ). By default is false, in the most common case it should be the same of `seeHidden`.
+ * @prop {boolean|string|array} [toolsOptions.seeHidden] hides the widgets under particular conditions
  *
  */
 const WidgetsPlugin = autoDisableWidgets(Widgets);

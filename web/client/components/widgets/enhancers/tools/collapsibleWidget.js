@@ -12,7 +12,7 @@ const {compose, withProps} = require('recompose');
  */
 module.exports = () =>
 compose(
-    withProps(({ widgetTools = [], dataGrid = {}, hide, toggleCollapse = () => {}, toolsOptions = {}}) => ({
+    withProps(({ widgetTools = [], dataGrid = {}, toggleCollapse = () => {}, toolsOptions = {}}) => ({
         widgetTools: !!toolsOptions.showCollapse ? [
             ...widgetTools,
             {
@@ -20,7 +20,7 @@ compose(
                 target: "icons",
                 tooltipId: "widgets.widget.menu.collapse",
                 // pinned can not be collapsed, hidden can not be collapsed because they do not appear in the tray
-                visible: !hide && !dataGrid.static,
+                visible: !dataGrid.static,
                 onClick: () => toggleCollapse()
             }
         ] : widgetTools
