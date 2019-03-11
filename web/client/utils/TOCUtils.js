@@ -44,7 +44,7 @@ const TOCUtils = {
         return TOCUtils.getTooltipText("title", node, currentLocale);
     },
     /**
-     * it fetch the fragment to compose the tooltip
+     * gets the fragment for the tooltip.
      * @param {object} fragment in the node
      * @param {object} node layer or group
      * @param {string} currentLocale
