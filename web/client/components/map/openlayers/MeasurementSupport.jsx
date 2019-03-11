@@ -140,7 +140,8 @@ class MeasurementSupport extends React.Component {
             this.measureTooltip.setPosition(this.tooltipCoord);
             props.map.addOverlay(this.measureTooltip);
         }
-        this.updateMeasurementResults(props, this.source.getFeatures()[0]);
+        this.sketchFeature = this.source.getFeatures()[0];
+        this.updateMeasurementResults(props, true);
     }
 
     /**
@@ -374,36 +375,31 @@ class MeasurementSupport extends React.Component {
     };
 
     updateMeasurementResults = (props, olFeatureUpdateByUI) => {
-        let olFeatureToUse = this.sketchFeature;
         if (!this.sketchFeature) {
             return;
         }
-        if (olFeatureUpdateByUI) {
-            olFeatureToUse = olFeatureUpdateByUI;
-            this.sketchFeature = olFeatureUpdateByUI;
-        }
         let bearing = 0;
-        let sketchCoords = olFeatureToUse.getGeometry().getCoordinates();
+        let sketchCoords = this.sketchFeature.getGeometry().getCoordinates();
 
         if (props.measurement.geomType === 'Bearing' && sketchCoords.length > 1) {
             // calculate the azimuth as base for bearing information
             bearing = calculateAzimuth(sketchCoords[0], sketchCoords[1], props.projection);
             if (sketchCoords.length > 2) {
                 this.drawInteraction.sketchCoords_ = [sketchCoords[0], sketchCoords[1], sketchCoords[0]];
-                olFeatureToUse.getGeometry().setCoordinates([sketchCoords[0], sketchCoords[1]]);
-                this.drawInteraction.sketchFeature_ = olFeatureToUse;
+                this.sketchFeature.getGeometry().setCoordinates([sketchCoords[0], sketchCoords[1]]);
+                this.drawInteraction.sketchFeature_ = this.sketchFeature;
                 this.drawInteraction.finishDrawing();
             }
         }
         const geojsonFormat = new ol.format.GeoJSON();
-        let feature = reprojectGeoJson(geojsonFormat.writeFeatureObject(olFeatureToUse.clone()), props.map.getView().getProjection().getCode(), "EPSG:4326");
+        let feature = reprojectGeoJson(geojsonFormat.writeFeatureObject(this.sketchFeature.clone()), props.map.getView().getProjection().getCode(), "EPSG:4326");
 
         // it will no longer create 100 points for arcs to put in the state
         let newMeasureState = assign({}, props.measurement,
             {
                 point: props.measurement.geomType === 'Point' ? this.getPointCoordinate(sketchCoords) : null,
                 len: props.measurement.geomType === 'LineString' ? calculateDistance(this.reprojectedCoordinates(sketchCoords), props.measurement.lengthFormula) : 0,
-                area: props.measurement.geomType === 'Polygon' ? this.calculateGeodesicArea(olFeatureToUse.getGeometry().getLinearRing(0).getCoordinates()) : 0,
+                area: props.measurement.geomType === 'Polygon' ? this.calculateGeodesicArea(this.sketchFeature.getGeometry().getLinearRing(0).getCoordinates()) : 0,
                 bearing: props.measurement.geomType === 'Bearing' ? bearing : 0,
                 lenUnit: props.measurement.lenUnit,
                 areaUnit: props.measurement.areaUnit,
@@ -411,7 +407,8 @@ class MeasurementSupport extends React.Component {
             },
             // this should not change if the changes comes from ui i.e. olFeatureUpdateByUI
             !olFeatureUpdateByUI ? {
-                feature: set("geometry.coordinates", this.drawing ? props.measurement.geomType === 'Polygon' ? [dropRight(feature.geometry.coordinates[0], feature.geometry.coordinates[0].length <= 2 ? 0 : 1)] : dropRight(feature.geometry.coordinates) : feature.geometry.coordinates, feature)} : {}
+                feature: set("geometry.coordinates", this.drawing ? props.measurement.geomType === 'Polygon' ? [dropRight(feature.geometry.coordinates[0], feature.geometry.coordinates[0].length <= 2 ? 0 : 1)] : dropRight(feature.geometry.coordinates) : feature.geometry.coordinates, feature)
+            } : {}
         );
         // checks for invalid coords that needs to be re-added
         if (this.invalidCoordinates.length) {

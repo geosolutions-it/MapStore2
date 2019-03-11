@@ -708,7 +708,7 @@ describe('Test the MapUtils', () => {
         });
     });
 
-    it('save map configuration with annotations with geodeisc lines', () => {
+    it('save map configuration with annotations with geodesic lines', () => {
         const flat = [
             {
                 allowedSRS: {},
