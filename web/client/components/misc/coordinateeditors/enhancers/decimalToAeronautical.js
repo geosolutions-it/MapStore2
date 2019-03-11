@@ -4,7 +4,7 @@ const {round, isNaN} = require('lodash');
 
 const convertDDToDMS = (D, lng, {seconds} = {seconds: {decimals: 4}}) => {
 
-    // if the values is very little (2.77777e-8) the parseInt has some trobule and returns 2 instead of 0
+    // round to the smaller absolute integer value
     let d = D >= 0 ? Math.floor(D) : Math.ceil(D);
 
     let minFloat = Math.abs((D - d) * 60);
