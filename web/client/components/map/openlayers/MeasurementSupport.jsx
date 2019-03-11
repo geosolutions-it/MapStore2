@@ -374,7 +374,7 @@ class MeasurementSupport extends React.Component {
         this.helpTooltipElement.classList.remove('hidden');
     };
 
-    updateMeasurementResults = (props, olFeatureUpdateByUI) => {
+    updateMeasurementResults = (props, updatedByUI) => {
         if (!this.sketchFeature) {
             return;
         }
@@ -403,10 +403,10 @@ class MeasurementSupport extends React.Component {
                 bearing: props.measurement.geomType === 'Bearing' ? bearing : 0,
                 lenUnit: props.measurement.lenUnit,
                 areaUnit: props.measurement.areaUnit,
-                updatedByUI: !!olFeatureUpdateByUI
+                updatedByUI
             },
             // this should not change if the changes comes from ui i.e. olFeatureUpdateByUI
-            !olFeatureUpdateByUI ? {
+            !updatedByUI ? {
                 feature: set("geometry.coordinates", this.drawing ? props.measurement.geomType === 'Polygon' ? [dropRight(feature.geometry.coordinates[0], feature.geometry.coordinates[0].length <= 2 ? 0 : 1)] : dropRight(feature.geometry.coordinates) : feature.geometry.coordinates, feature)
             } : {}
         );
