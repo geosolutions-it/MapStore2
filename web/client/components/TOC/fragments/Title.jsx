@@ -8,9 +8,9 @@
 
 const PropTypes = require('prop-types');
 const React = require('react');
-const {isObject} = require('lodash');
 const {Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
+const {getTooltipText, getTooltip} = require('../../../utils/TOCUtils');
 require("./css/toctitle.css");
 
 class Title extends React.Component {
@@ -20,7 +20,8 @@ class Title extends React.Component {
         onContextMenu: PropTypes.func,
         currentLocale: PropTypes.string,
         filterText: PropTypes.string,
-        tooltip: PropTypes.bool
+        tooltip: PropTypes.bool,
+        tooltipOptions: PropTypes.object
     };
 
     static defaultProps = {
@@ -28,7 +29,8 @@ class Title extends React.Component {
         onContextMenu: () => {},
         currentLocale: 'en-US',
         filterText: '',
-        tooltip: false
+        tooltip: false,
+        tooltipOptions: null
     };
 
     getFilteredTitle = (title) => {
@@ -43,10 +45,10 @@ class Title extends React.Component {
     }
 
     render() {
-        const translation = isObject(this.props.node.title) ? this.props.node.title[this.props.currentLocale] || this.props.node.title.default : this.props.node.title;
-        const title = translation || this.props.node.name;
+        const title = getTooltipText("title", this.props.node, this.props.currentLocale);
+        const tooltipText = getTooltip(this.props.tooltipOptions, this.props.node, this.props.currentLocale);
         return this.props.tooltip ? (
-            <OverlayTrigger placement="top" overlay={(<Tooltip id={"tooltip-layer-title"}>{title}</Tooltip>)}>
+            <OverlayTrigger placement="top" overlay={(<Tooltip id={"tooltip-layer-title"}>{tooltipText}</Tooltip>)}>
                 <div className="toc-title" onClick={this.props.onClick ? (e) => this.props.onClick(this.props.node.id, 'layer', e.ctrlKey) : () => {}} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>
                     {this.getFilteredTitle(title)}
                 </div>
@@ -60,5 +62,6 @@ class Title extends React.Component {
         );
     }
 }
+
 
 module.exports = Title;

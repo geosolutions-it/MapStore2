@@ -9,9 +9,9 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const StatusIcon = require('./StatusIcon');
-const {isObject} = require('lodash');
 const {Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
+const {getTooltipText, getTooltip} = require('../../../utils/TOCUtils');
 
 class GroupTitle extends React.Component {
     static propTypes = {
@@ -20,7 +20,8 @@ class GroupTitle extends React.Component {
         onSelect: PropTypes.func,
         style: PropTypes.object,
         currentLocale: PropTypes.string,
-        tooltip: PropTypes.bool
+        tooltip: PropTypes.bool,
+        tooltipOptions: PropTypes.object
     };
 
     static inheritedPropTypes = ['node'];
@@ -37,9 +38,10 @@ class GroupTitle extends React.Component {
 
     render() {
         let expanded = this.props.node.expanded !== undefined ? this.props.node.expanded : true;
-        const groupTitle = isObject(this.props.node.title) ? this.props.node.title[this.props.currentLocale] || this.props.node.title.default || this.props.node.name : this.props.node.title || this.props.node.name;
+        const groupTitle = getTooltipText("title", this.props.node, this.props.currentLocale);
+        const tooltipText = getTooltip(this.props.tooltipOptions, this.props.node, this.props.currentLocale);
         return this.props.tooltip ? (
-            <OverlayTrigger placement="top" overlay={(<Tooltip id={"tooltip-layer-group"}>{groupTitle}</Tooltip>)}>
+            <OverlayTrigger placement="top" overlay={(<Tooltip id={"tooltip-layer-group"}>{tooltipText}</Tooltip>)}>
                 <div style={this.props.style}>
                     <span className="toc-group-title" onClick={ this.props.onSelect ? (e) => this.props.onSelect(this.props.node.id, 'group', e.ctrlKey) : () => {}}>{groupTitle}</span><StatusIcon onClick={() => this.props.onClick(this.props.node.id, expanded)} expanded={expanded} node={this.props.node}/>
                 </div>
