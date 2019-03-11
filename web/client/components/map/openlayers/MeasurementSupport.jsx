@@ -374,6 +374,11 @@ class MeasurementSupport extends React.Component {
         this.helpTooltipElement.classList.remove('hidden');
     };
 
+    /** trigger the action for updating the state.
+     * if invalid coords are passed to this they needs to be repushed to the state.
+     * @param {object} props to be used for calculating measures and other info
+     * @param {boolean} updatedByUI used for updating the state
+    */
     updateMeasurementResults = (props, updatedByUI) => {
         if (!this.sketchFeature) {
             return;
@@ -405,9 +410,11 @@ class MeasurementSupport extends React.Component {
                 areaUnit: props.measurement.areaUnit,
                 updatedByUI
             },
-            // this should not change if the changes comes from ui i.e. olFeatureUpdateByUI
+            // feature should not change if the changes comes from ui
             !updatedByUI ? {
-                feature: set("geometry.coordinates", this.drawing ? props.measurement.geomType === 'Polygon' ? [dropRight(feature.geometry.coordinates[0], feature.geometry.coordinates[0].length <= 2 ? 0 : 1)] : dropRight(feature.geometry.coordinates) : feature.geometry.coordinates, feature)
+                feature: set("geometry.coordinates", this.drawing ?
+                    props.measurement.geomType === 'Polygon' ? [dropRight(feature.geometry.coordinates[0], feature.geometry.coordinates[0].length <= 2 ? 0 : 1)] : dropRight(feature.geometry.coordinates) :
+                    feature.geometry.coordinates, feature)
             } : {}
         );
         // checks for invalid coords that needs to be re-added
