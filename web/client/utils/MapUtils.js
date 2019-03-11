@@ -30,11 +30,12 @@ const COMPUTE_BBOX_HOOK = 'COMPUTE_BBOX_HOOK';
 const GET_PIXEL_FROM_COORDINATES_HOOK = 'GET_PIXEL_FROM_COORDINATES_HOOK';
 const GET_COORDINATES_FROM_PIXEL_HOOK = 'GET_COORDINATES_FROM_PIXEL_HOOK';
 
-var hooks = {};
-var CoordinatesUtils = require('./CoordinatesUtils');
+let hooks = {};
+let CoordinatesUtils = require('./CoordinatesUtils');
+let {set} = require('./ImmutableUtils');
 const LayersUtils = require('./LayersUtils');
 const assign = require('object-assign');
-const {isObject, head, isEmpty} = require('lodash');
+const {isObject, head, isEmpty, findIndex} = require('lodash');
 
 function registerHook(name, hook) {
     hooks[name] = hook;
@@ -327,6 +328,28 @@ function saveMapConfiguration(currentMap, currentLayers, currentGroups, textSear
     const formattedLayers = layers.map(l => {
         return assign({}, l, {tileMatrixSet: l.tileMatrixSet && l.tileMatrixSet.length > 0, matrixIds: l.matrixIds && Object.keys(l.matrixIds)});
     });
+
+    /* removes the geometryGeodesic property from the features in the annotations layer*/
+    let annotationsLayerIndex = findIndex(formattedLayers, layer => layer.id === "annotations");
+    if (annotationsLayerIndex !== -1) {
+        let featuresLayer = formattedLayers[annotationsLayerIndex].features.map(feature => {
+            if (feature.type === "FeatureCollection") {
+                return {
+                    ...feature,
+                    features: feature.features.map(f => {
+                        if (f.properties.geometryGeodesic) {
+                            return set("properties.geometryGeodesic", null, f);
+                        }
+                        return f;
+                    })
+                };
+            }
+            if (feature.properties.geometryGeodesic) {
+                return set("properties.geometryGeodesic", null, feature);
+            }
+        });
+        formattedLayers[annotationsLayerIndex] = set("features", featuresLayer, formattedLayers[annotationsLayerIndex]);
+    }
 
     return {
         version: 2,

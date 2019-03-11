@@ -84,6 +84,11 @@ describe('Test mapinfo selectors', () => {
     });
     it('test stopGetFeatureInfoSelector with measurement active', () => {
         const props = stopGetFeatureInfoSelector({
+            controls: {
+                measure: {
+                    enabled: true
+                }
+            },
             mapInfo: {
                 enabled: true
             },

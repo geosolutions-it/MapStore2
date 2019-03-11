@@ -119,6 +119,10 @@ let geometryFunctions = {
         type: "Point",
         func: () => {}
     },
+    "lineToArc": {
+        type: "LineString",
+        func: () => {}
+    },
     "startPoint": {
         type: "Point",
         func: () => {}
@@ -130,7 +134,7 @@ let geometryFunctions = {
 };
 
 /**
-* getdta relative to geometry function in the local cache
+* getdata relative to geometry function in the local cache
 * @param {string} functionName the function name
 * @param {string} item to be returned
 * @return {string|function} the geometry function or the type

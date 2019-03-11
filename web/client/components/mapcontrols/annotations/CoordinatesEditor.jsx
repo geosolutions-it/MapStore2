@@ -25,6 +25,8 @@ const MeasureEditor = require('./MeasureEditor');
  * @prop {function} onHighlightPoint triggered on mouse enter and leave and if polygons or linestring editor is opened
  * @prop {function} onChangeRadius triggered every radius change
  * @prop {function} onChangeFormat triggered every format change
+ * @prop {boolean} isMouseEnterEnabled Flag used to run actions on mouseEnter the coord row
+ * @prop {boolean} isMouseLeaveEnabled Flag used to run actions on mouseLeave the coord row
  * @prop {string} format decimal or aeronautical degree for coordinates
  * @prop {object} componentsValidation it contains parameters for validation of the form based on the types
  * @prop {object} transitionProps properties of the transition for drag component
@@ -49,7 +51,9 @@ class CoordinateEditor extends React.Component {
         transitionProps: PropTypes.object,
         properties: PropTypes.object,
         type: PropTypes.string,
-        isDraggable: PropTypes.bool
+        isDraggable: PropTypes.bool,
+        isMouseEnterEnabled: PropTypes.bool,
+        isMouseLeaveEnabled: PropTypes.bool
     };
 
     static defaultProps = {
@@ -62,8 +66,10 @@ class CoordinateEditor extends React.Component {
         onChangeText: () => {},
         onSetInvalidSelected: () => {},
         componentsValidation: {
+            "Bearing": {min: 2, max: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
             "Polygon": {min: 3, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
             "LineString": {min: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
+            "MultiPoint": {min: 2, add: true, remove: true, validation: "validateCoordinates", notValid: "annotations.editor.notValidPolyline"},
             "Point": {min: 1, add: false, remove: false, validation: "validateCoordinates", notValid: "annotations.editor.notValidMarker"},
             "Circle": {add: false, remove: false, validation: "validateCircle", notValid: "annotations.editor.notValidCircle"},
             "Text": {add: false, remove: false, validation: "validateText", notValid: "annotations.editor.notValidText"}
@@ -74,6 +80,8 @@ class CoordinateEditor extends React.Component {
             transitionLeaveTimeout: 300
         },
         isDraggable: true,
+        isMouseEnterEnabled: false,
+        isMouseLeaveEnabled: false,
         properties: {}
     };
 
@@ -179,7 +187,7 @@ class CoordinateEditor extends React.Component {
             {
                 glyph: 'plus',
                 tooltipId: 'annotations.editor.add',
-                visible: componentsValidation[type].add,
+                visible: componentsValidation[type].add && componentsValidation[type].max ? this.props.components.length !== componentsValidation[type].max : true,
                 onClick: () => {
                     let tempComps = [...this.props.components];
                     tempComps = tempComps.concat([{lat: "", lon: ""}]);
@@ -232,12 +240,12 @@ class CoordinateEditor extends React.Component {
                         removeEnabled={this[componentsValidation[type].validation](this.props.components, componentsValidation[type].remove)}
                         onChange={this.change}
                         onMouseEnter={(val) => {
-                            if (this.props.type === "LineString" || this.props.type === "Polygon") {
+                            if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
                                 this.props.onHighlightPoint(val);
                             }
                         }}
                         onMouseLeave={() => {
-                            if (this.props.type === "LineString" || this.props.type === "Polygon") {
+                            if (this.props.isMouseLeaveEnabled || this.props.type === "LineString" || this.props.type === "Polygon" || this.props.type === "MultiPoint") {
                                 this.props.onHighlightPoint(null);
                             }
                         }}
@@ -268,7 +276,7 @@ class CoordinateEditor extends React.Component {
                             const components = this.props.components.filter((cmp, i) => i !== idx);
                             if (this.isValid(components)) {
                                 const validComponents = this.addCoordPolygon(components);
-                                if (this.props.type === "LineString" && idx !== components.length || this.props.type === "Polygon") {
+                                if (this.props.isMouseEnterEnabled || this.props.type === "LineString" && idx !== components.length || this.props.type === "Polygon") {
                                     this.props.onHighlightPoint(components[idx]);
                                 } else {
                                     this.props.onHighlightPoint(null);
@@ -279,7 +287,10 @@ class CoordinateEditor extends React.Component {
                             }
                         }}/>)}
                 </Row>
-                 {(!this.props.components || this.props.components.length === 0) && <Row><Col xs={12} className="text-center" style={{padding: 15, paddingBottom: 30}}><i>Add new coordinates by clicking the plus button or on the map </i></Col></Row>}
+                 {(!this.props.components || this.props.components.length === 0) &&
+                     <Row><Col xs={12} className="text-center" style={{padding: 15, paddingBottom: 30}}>
+                         <i><Message msgId="annotations.editor.addByClick"/></i>
+                     </Col></Row>}
             </Grid>
         );
     }
@@ -324,12 +335,12 @@ class CoordinateEditor extends React.Component {
         let validComponents = this.addCoordPolygon(tempComps);
         this.props.onChange(validComponents, this.props.properties.radius, this.props.properties.valueText);
         if (!this.isValid(tempComps)) {
-            if (this.props.type === "LineString" || this.props.type === "Polygon") {
+            if (this.props.isMouseLeaveEnabled || this.props.type === "LineString" || this.props.type === "Polygon") {
                 this.props.onHighlightPoint(null);
             }
             this.props.onSetInvalidSelected("coords", tempComps.map(coordToArray));
         } else {
-            if (this.props.type === "LineString" || this.props.type === "Polygon") {
+            if (this.props.isMouseEnterEnabled || this.props.type === "LineString" || this.props.type === "Polygon") {
                 this.props.onHighlightPoint(tempComps[id]);
             }
         }

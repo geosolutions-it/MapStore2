@@ -89,10 +89,9 @@ class Feature extends React.Component {
             this.addLayer(props, props.style);
         }
     }
+
     addLayer(props, styles) {
-        /* remove the current layer
-        * to avoid multiple features to overlap
-        */
+        /* remove the current layer to avoid multiple features to overlap */
         this.removeLayer(props);
         this._layer = geometryToLayer({
             type: props.type,

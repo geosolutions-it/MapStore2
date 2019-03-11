@@ -18,7 +18,8 @@ const {getAvailableStyler, getRelativeStyler, convertGeoJSONToInternalModel,
     fromAnnotationToGeoJson, annotationsToPrint,
     getStartEndPointsForLinestring,
     createGeometryFromGeomFunction,
-    updateAllStyles
+    updateAllStyles,
+    fromLineStringToGeodesicLineString
 } = require('../AnnotationsUtils');
 
 const featureCollection = {
@@ -686,5 +687,17 @@ describe('Test the AnnotationsUtils', () => {
                 expect(s.highlight).toBe(true);
             });
         });
+    });
+    it('fromLineStringToGeodesicLineString', () => {
+        const geometryGeodesic = {
+            type: "LineString",
+            coordinates: [[1, 1], [2, 2]]
+        };
+        const properties = {
+            geometryGeodesic
+        };
+        const f = fromLineStringToGeodesicLineString(properties, {color: "#12233"});
+        expect(f.geometry).toEqual(geometryGeodesic);
+        expect(f.type).toEqual("Feature");
     });
 });

@@ -38,6 +38,16 @@ class CoordinatesRow extends React.Component {
     render() {
         const {idx} = this.props;
         const rowStyle = {marginLeft: -5, marginRight: -5};
+        const dragButton = (<div
+            className="square-button-md no-border btn btn-default"
+            style={{display: "flex" /*workaround for firefox*/}}
+            >
+            <Glyphicon
+            glyph="menu-hamburger"
+            disabled={!this.props.isDraggable}
+            style={{pointerEvents: !this.props.isDraggable ? "none" : "auto"}}
+        /></div>);
+
         return (
             <Row className={`coordinateRow ${this.props.customClassName || ""}`} style={!this.props.customClassName ? rowStyle : {}} onMouseEnter={() => {
                 if (this.props.onMouseEnter) {
@@ -45,15 +55,7 @@ class CoordinatesRow extends React.Component {
                 }
             }} onMouseLeave={this.props.onMouseLeave}>
                 <Col xs={1}>
-                    {this.props.isDraggable && this.props.connectDragSource(<div
-                        className="square-button-md no-border btn btn-default"
-                        style={{display: "flex" /*workaround for firefox*/}}
-                        >
-                        <Glyphicon
-                        glyph="menu-hamburger"
-                        disabled={!this.props.isDraggable}
-                        style={{pointerEvents: !this.props.isDraggable ? "none" : "auto"}}
-                    /></div>)}
+                    {this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton}
                 </Col>
                 <Col xs={5}>
                     {this.props.showLabels && <span><Message msgId="latitude"/></span>}

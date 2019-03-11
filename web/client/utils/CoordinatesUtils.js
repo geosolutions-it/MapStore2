@@ -11,10 +11,9 @@ const Proj4js = require('proj4').default;
 const proj4 = Proj4js;
 const axios = require('../libs/ajax');
 const assign = require('object-assign');
-const {isArray, flattenDeep, chunk, cloneDeep} = require('lodash');
+const {isArray, flattenDeep, chunk, cloneDeep, slice, head, last} = require('lodash');
 const lineIntersect = require('@turf/line-intersect');
 const polygonToLinestring = require('@turf/polygon-to-linestring');
-const {head} = require('lodash');
 const greatCircle = require('@turf/great-circle').default;
 const toPoint = require('turf-point');
 
@@ -565,6 +564,14 @@ const CoordinatesUtils = {
             }
         }
         return arcs;
+    },
+    transformArcsToLine: (coordinates, npoints = 100) => {
+        if (coordinates.length <= npoints) {
+            return [head(coordinates), last(coordinates)];
+        } else if (coordinates.length > npoints) {
+            return [head(coordinates)].concat(CoordinatesUtils.transformArcsToLine(slice(coordinates, npoints)));
+        }
+        return [];
     },
     coordsOLtoLeaflet: ({coordinates, type}) => {
         switch (type) {

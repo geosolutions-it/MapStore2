@@ -8,6 +8,7 @@
 const ol = require('openlayers');
 const {isNil, trim, isString, isArray, castArray, head, last, find, isObject} = require('lodash');
 const {colorToRgbaStr} = require('../../../utils/ColorUtils');
+const {reproject, transformLineToArcs} = require('../../../utils/CoordinatesUtils');
 const Icons = require('../../../utils/openlayers/Icons');
 const {
     isMarkerStyle, isTextStyle, isStrokeStyle, isFillStyle, isCircleStyle, isSymbolStyle,
@@ -182,6 +183,21 @@ const centerPoint = (feature) => {
     let center = geometry.getCenter && geometry.getCenter() || [extent[2] - extent[0], extent[3] - extent[1]];
     return new ol.geom.Point(center);
 };
+const lineToArc = (feature) => {
+    const type = feature.getGeometry().getType();
+    if (type === "LineString" || type === "MultiPoint") {
+        let coordinates = feature.getGeometry().getCoordinates();
+        coordinates = transformLineToArcs(coordinates.map(c => {
+            const point = reproject(c, "EPSG:3857", "EPSG:4326");
+            return [point.x, point .y];
+        }));
+        return new ol.geom.LineString(coordinates.map(c => {
+            const point = reproject(c, "EPSG:4326", "EPSG:3857");
+            return [point.x, point .y];
+        }));
+    }
+    return feature.getGeometry();
+};
 const startPoint = (feature) => {
     const geom = feature.getGeometry();
     const type = geom.getType();
@@ -197,6 +213,7 @@ const endPoint = (feature) => {
 };
 
 registerGeometryFunctions("centerPoint", centerPoint, "Point");
+registerGeometryFunctions("lineToArc", lineToArc, "LineString");
 registerGeometryFunctions("startPoint", startPoint, "Point");
 registerGeometryFunctions("endPoint", endPoint, "Point");
 
@@ -232,7 +249,6 @@ const parseStyleToOl = (feature = {properties: {}}, style = {}, tempStyles = [])
                 return s;
             });
         }
-        // TODO fix this
         if (isSymbolStyle(style)) {
             return Icons.standard.getIcon({style}).map(s => {
                 s.setGeometry(getGeometryTrasformation(style));

@@ -12,6 +12,21 @@ const CHANGED_GEOMETRY = 'MEASUREMENT:CHANGED_GEOMETRY';
 const RESET_GEOMETRY = 'MEASUREMENT:RESET_GEOMETRY';
 const CHANGE_FORMAT = 'MEASUREMENT:CHANGE_FORMAT';
 const CHANGE_COORDINATES = 'MEASUREMENT:CHANGE_COORDINATES';
+const ADD_MEASURE_AS_ANNOTATION = 'MEASUREMENT:ADD_MEASURE_AS_ANNOTATION';
+const INIT = 'MEASUREMENT:INIT';
+
+/**
+ * trigger the epic to add the measure feature into an annotation.
+*/
+function addAnnotation(feature, value, uom, measureTool) {
+    return {
+        type: ADD_MEASURE_AS_ANNOTATION,
+        feature,
+        value,
+        uom,
+        measureTool
+    };
+}
 
 // TODO: the measurement control should use the "controls" state
 function toggleMeasurement(measurement) {
@@ -81,6 +96,12 @@ function changeMeasurementState(measureState) {
         feature: measureState.feature
     };
 }
+function init(defaultOptions = {}) {
+    return {
+        type: INIT,
+        defaultOptions
+    };
+}
 
 module.exports = {
     CHANGE_MEASUREMENT_TOOL,
@@ -90,6 +111,8 @@ module.exports = {
     changeFormatMeasurement, CHANGE_FORMAT,
     changeCoordinates, CHANGE_COORDINATES,
     resetGeometry, RESET_GEOMETRY,
+    addAnnotation, ADD_MEASURE_AS_ANNOTATION,
+    init, INIT,
     changeMeasurement,
     toggleMeasurement,
     changeMeasurementState

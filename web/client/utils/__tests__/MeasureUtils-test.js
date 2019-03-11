@@ -9,7 +9,8 @@ const expect = require('expect');
 const {
     getFormattedBearingValue,
     degToDms,
-    convertUom
+    convertUom,
+    isValidGeometry
 } = require('../MeasureUtils');
 
 
@@ -86,6 +87,22 @@ describe('MeasureUtils', () => {
         expect(val).toBe("S 1° 6' 39'' W");
         val = getFormattedBearingValue(281.111);
         expect(val).toBe("N 78° 53' 20'' W");
+    });
+    it('isValidGeometry with a valid geom', () => {
+        const geometry = {
+            type: "LineString",
+            coordinates: [[1, 1], [2, 2]]
+        };
+        const isValid = isValidGeometry(geometry);
+        expect(isValid).toBe(true);
+    });
+    it('isValidGeometry with an invalid geom', () => {
+        const geometry = {
+            type: "LineString",
+            coordinates: [[1, 1], [2, 2], ["", 2]]
+        };
+        const isValid = isValidGeometry(geometry);
+        expect(isValid).toBe(false);
     });
 
 });

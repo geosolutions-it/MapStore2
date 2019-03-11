@@ -21,6 +21,8 @@
         "enable": "启用",
         "layers": "图层",
         "warning": "警告",
+        "errorTitleDefault": "Error",
+        "errorDefault": "An error occurred",
         "pageInfoShowMore": "Results {count} of {total}",
         "showMore": "Show more...",
         "version": {
@@ -31,6 +33,14 @@
             "updating": "更新...",
             "layers": "图层"
         },
+        "localeErrors": {
+            "404": "Vertaalbestand niet gevonden"
+        },
+        "details": {
+            "title": "About this map"
+        },
+        "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
+        "remove": "Delete",
         "layerProperties": {
             "windowTitle": "图层属性",
             "title": "标题",
@@ -376,7 +386,12 @@
             "resetButtonText": "重置",
             "lengthLabel": "长度",
             "areaLabel": "面积",
-            "bearingLabel": "方位角"
+            "bearingLabel": "方位角",
+            "formula": "Formula for distance calculation",
+            "showLabel": "Show measurement label",
+            "addAsAnnotation": "Add as annotation",
+            "newMeasure": "New annotation",
+            "selectTool": "Select a measurement tool"
         },
         "search":{
             "decimal": "十进制",
@@ -711,11 +726,14 @@
                 "title": {
                     "Polygon": "Polygon editor",
                     "LineString": "LineString editor",
+                    "Bearing": "Bearing editor",
                     "Circle": "Circle editor",
                     "Point": "Marker editor",
+                    "MultiPoint": "LineString editor",
                     "Text": "Text editor"
                 },
                 "add": "Add new coordinates",
+                "addByClick": "Add new coordinates by clicking the plus button or on the map",
                 "valid": "Geometry is valid",
                 "radius": "Radius",
                 "text": "Text",
@@ -1096,13 +1114,53 @@
             }
         },
         "widgets": {
+            "types": {
+                "map": {
+                    "title": "Map",
+                    "caption": "add a map"
+                },
+                "legend": {
+                    "title": "Legend",
+                    "caption": "add a legend"
+                },
+                "chart": {
+                    "title": "Chart",
+                    "caption": "add a chart"
+                },
+                "text": {
+                    "title": "Text",
+                    "caption": "add a text area"
+                },
+                "table": {
+                    "title": "Table",
+                    "caption": "add a table"
+                },
+                "counter": {
+                    "title": "Counter",
+                    "caption": "add a counter"
+                }
+            },
+            "selectWidgetType": "Select the widget type",
             "selectChartType": {
                 "title": "Select the widget type"
+            },
+            "selectMap": {
+                "TOC": {
+                    "noLayerTitle": "No Layers",
+                    "noLayerDescription": "There are no layers in the map. If you want to add a layer from the catalog click on the '+' button in the toolbar on top"
+                },
+                "emptyMap": {
+                    "title": "Empty Map",
+                    "description": "Start from an empty map"
+                }
             },
             "title": "Title",
             "description": "Description",
             "errors": {
+                "notext": "No text available",
                 "nodata": "No data available for the selected layer/filter",
+                "noLegend": "No legend items to show",
+                "noLegendDescription": "The connected map has no layers to show in legend",
                 "nodatainviewport": "No data in the current viewport",
                 "timeoutExpired": "The service took too much time to respond. Maybe the query is too complex or the server is busy",
                 "genericError": "There was an error during data retrival"
@@ -1112,16 +1170,42 @@
                     "title": "Widget"
                 },
                 "wizard": {
-                    "backToTypeSelection": "Back to type selection",
+                    "backToTypeSelection": "Back to chart type selection",
+                    "backToWidgetTypeSelection": "Back to widget type selection",
+                    "backToFeatureGrid": "Back to the feature grid",
+                    "backToLayerSelection": "Back to layer selection",
+                    "backToMapSelection": "Back to map selection",
+                    "backToPreview": "Back to Preview",
                     "backToChartOptions": "Back to chart options",
+                    "selectALayer": "Select a layer",
+                    "selectAMap": "Select a map",
                     "configureChartOptions": "Configure chart options",
                     "configureWidgetOptions": "Configure widget options",
+                    "backToTableOptions": "Back to table options",
+                    "configureTableOptions": "Configure table options",
+                    "resetColumnsSizes": "Reset all changes to the column sizes",
                     "updateWidget": "Update the widget",
-                    "addTheWidget": "Add the widget"
+                    "addTheWidget": "Add the widget",
+                    "titlePlaceholder": "Insert title...",
+                    "textPlaceholder": "Insert text...",
+                    "useThisMap": "Use this map",
+                    "configureMapOptions": "Configure map options",
+                    "preview": "Preview",
+                    "addLayer": "Add a layer to the map",
+                    "useTheSelectedLayer": "Use the selected layer",
+                    "connectToAMap": "Connect to a map",
+                    "connectToTheMap": "Connect to the map",
+                    "selectMapToConnect": "Select the map to connect",
+                    "clearConnection": "Clear connection"
                 },
                 "errors": {
-                    "noWidgetsAvailableTitle": "No Widgets available",
-                    "noWidgetsAvailableDescription": "<p>You can't create any widgets for the selected layer. This is probably because the layer is not suitable for the available widgets or the server doesn't expose all the needed services or information to generate widget. Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li>gs:aggregate process is not available</li></ul> )<p>"
+                    "noAttributesTitle": "No attributes to show",
+                    "noAttributesDescription": "The selected layer has no attributes to show. Please select another widget type or layer",
+                    "noWidgetsAvailableTitle": "Can not create the widget for the selected layer",
+                    "noWidgetsAvailableDescription": "<p><strong>Please try to select another layer or widget type</strong></p><p>The server doesn't provide the needed services for the layer and the widget type selected</p><p>Possible causes are: <ul><li>The selected layer is a raster layer</li><li>WFS service is not available</li><li>The WPS process <code>gs:aggregate</code> is not available</li></ul></p>",
+                    "checkAtLeastOneAttribute": "You must select at least one column",
+                    "noMapAvailableForLegend": "No map available",
+                    "noMapAvailableForLegendDescription": "You need at least one map widget to create the legend"
                 },
                 "setupFilter": "Configure a filter for the widget data"
             },
@@ -1130,9 +1214,16 @@
                     "showChartData": "Show chart data",
                     "edit": "Edit",
                     "delete": "Delete",
+                    "collapse": "Collapse",
                     "confirmDelete": "Are you sure?",
                     "downloadData": "Download Data",
-                    "exportImage": "Export Image"
+                    "exportImage": "Export Image",
+                    "pin": "Pin",
+                    "unpin": "Unpin",
+                    "hide": "Hide",
+                    "hideDescription": "Hide this widget to other users",
+                    "unhide": "Unhide",
+                    "unhideDescription": "Unhide the widget to other users"
                 }
             },
             "chartType": {
@@ -1166,7 +1257,9 @@
                 "line": "X Attribute",
                 "pie": "Group By",
                 "bar": "X Attribute",
-                "gauge": "Group By"
+                "gauge": "Group By",
+                "counter": "Group By",
+                "default": "Group By"
             },
             "aggregationAttribute": {
                 "line": "Y Attribute",
@@ -1180,13 +1273,25 @@
                 "line": "Operation",
                 "pie": "Operation",
                 "bar": "Operation",
-                "gauge": "Operation"
+                "gauge": "Operation",
+                "counter": "Operation",
+                "default": "Operation"
             },
             "colorRamp": {
                 "line": "Color",
                 "pie": "Color Ramp",
                 "bar": "Color",
-                "gauge": "Color"
+                "gauge": "Color",
+                "counter": "Color",
+                "default": "Color"
+            },
+            "uom": {
+                "line": "Unit of measure",
+                "pie": "Unit of measure",
+                "bar": "Unit of measure",
+                "gauge": "Unit of measure",
+                "counter": "Unit of measure",
+                "default": "Unit of measure"
             },
             "mapSync": "Live Filter by viewport",
             "displayLegend": {
@@ -1209,6 +1314,13 @@
             "advancedOptions":{
                 "line": "Advanced Options",
                 "bar": "Advanced Options"
+            },
+            "tray": {
+                "title": "Widgets",
+                "expandTray": "Expand widgets tray",
+                "collapseTray": "Collapse widgets tray",
+                "expandAll": "Expand all widgets",
+                "collapseAll": "Collapse all widgets"
             }
         },
         "dashboard": {
@@ -1392,13 +1504,54 @@
             }
         },
         "rulesmanager": {
+            "apply": "Apply",
+            "remove": "Remove geometry",
+            "resetconstraints": "Resets Constraints",
+            "constraintsmsg": "Changing grant, workspace or layer, the details will be deleted. Are you sure you want to do that?",
+            "defstyle": "Default Style",
+            "avstyle": "Available Styles",
+            "clearbtn": "Clear All",
+            "selectbtn": "Select All",
             "placeholders": {
-                "filter": "Search..."
+                "role": "Type to search Roles",
+                "user": "Type to search Users",
+                "service": "Type to search Services",
+                "request": "Type to search Requests",
+                "workspace": "Type to search Workspaces",
+                "layer": "Type to search Layers",
+                "access": "Type to search Access",
+                "ip": "###.###.###.###/##",
+                "priority": "Select Priority",
+                "filter": "Filter styles..."
             },
             "menutitle": "Manage GeoFence Rules",
+            "tooltip": {
+                "addT": "Add a rule",
+                "editT": "Edit selected rule",
+                "addBeT": "Add new rule before selected",
+                "addAfT": "Add new rule after selected",
+                "deleteT": "Remove selected rules",
+                "cacheT": "Clear cache",
+                "save": "Save current rule",
+                "close": "Exit from create rule"
+            },
+            "navItems": {
+                "main": "General Rule",
+                "style": "Style",
+                "filter": "Filters",
+                "attribute": "Attributes Rule"
+            },
+            "rule": "Rule",
+            "cachetitle": "Clear Cache",
+            "cachemsg": "Are you sure to clear the GeoFence cache?",
+            "deltitle": "Delete Rule",
+            "delmsg": "Do you really want to delete this rule?",
+            "invalidForm": "The form is invalid check fields values",
+            "ip": "IP",
             "title": "访问规则",
             "role": "角色",
             "user": "用户",
+            "priority": "Priority",
             "service": "服务",
             "request": "请求",
             "workspace": "工作空间",
@@ -1413,6 +1566,10 @@
             "close": "关闭",
             "previous": "上个",
             "next": "下一个",
+            "cacheCleaned": "Cache successfully cleaned",
+            "errorTitle": "Geofence",
+            "errorCQL": "Geometry not valid!",
+            "errorCleaningCache": "Error cleaning geofence cache.",
             "errorLoadingRoles": "加载角色时出错.",
             "errorLoadingUsers": "加载用户时出错.",
             "errorLoadingWorkspaces": "加载工作区时出错.",
@@ -1422,10 +1579,16 @@
             "errorDeletingRules": "删除规则时出错.",
             "errorAddingRule": "添加规则时出错.",
             "errorUpdatingRule": "更新规则时出错.",
+            "errorDuplicateRule": "Duplicated rule.",
+            "errorLoading": "Error loading",
             "deleteModal": "删除规则",
             "selectedRulesDelete": "删除选中的规则 ?",
             "deleteButton": "删除",
-            "cancelButton": "取消"
+            "cancelButton": "取消",
+            "cqlRead": "CQL Filter Read Rules",
+            "cqlWrite": "CQL Filter Write Rules",
+            "missingconfig": "Rules manager misses the configuration. Access denied!",
+            "selectworkspace": "You need to select the workspace to enable advanced options"
         },
         "tutorial": {
             "title": "教程",

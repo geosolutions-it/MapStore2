@@ -13,11 +13,12 @@ const {
     RESET_GEOMETRY,
     CHANGED_GEOMETRY,
     CHANGE_FORMAT,
-    CHANGE_COORDINATES
+    CHANGE_COORDINATES,
+    INIT
 } = require('../actions/measurement');
 const {set} = require('../utils/ImmutableUtils');
 
-const {TOGGLE_CONTROL, RESET_CONTROLS} = require('../actions/controls');
+const {TOGGLE_CONTROL, RESET_CONTROLS, SET_CONTROL_PROPERTY} = require('../actions/controls');
 
 const assign = require('object-assign');
 const defaultState = {
@@ -75,7 +76,12 @@ function measurement(state = defaultState, action) {
             feature: set("properties.disabled", state.feature.properties.disabled, action.feature)
         });
     case RESET_GEOMETRY: {
-        return set("feature.properties.disabled", true, state);
+        let newState = set("feature.properties.disabled", true, state);
+        return {
+            ...newState,
+            isDrawing: true,
+            updatedByUI: false
+        };
     }
     case CHANGE_UOM: {
         const prop = action.uom === "length" ? "lenUnit" : "lenArea";
@@ -87,52 +93,93 @@ function measurement(state = defaultState, action) {
                     unit: value,
                     label
                 }
-            })
+            }),
+            updatedByUI: true
         });
     }
     case CHANGED_GEOMETRY: {
         let {feature} = action;
         feature = set("properties.disabled", false, feature);
-        return assign({}, state, {
-            feature
-        });
+        return {
+            ...state,
+            feature,
+            updatedByUI: false,
+            isDrawing: false
+        };
     }
-    case TOGGLE_CONTROL:
-        {
-            // TODO: remove this when the controls will be able to be mutually exclusive
-            if (action.control === 'info') {
-                return {
-                    ...state,
-                    len: 0,
-                    area: 0,
-                    bearing: 0,
-                    lineMeasureEnabled: false,
-                    areaMeasureEnabled: false,
-                    bearingMeasureEnabled: false,
-                    feature: { properties: {
-                        disabled: true
-                    }},
-                    geomType: ""
-                };
-            }
+    case TOGGLE_CONTROL: {
+        // TODO: remove this when the controls will be able to be mutually exclusive
+        if (action.control === 'info') {
+            return {
+                ...state,
+                len: 0,
+                area: 0,
+                bearing: 0,
+                lineMeasureEnabled: false,
+                areaMeasureEnabled: false,
+                bearingMeasureEnabled: false,
+                feature: { properties: {
+                    disabled: true
+                }},
+                geomType: ""
+            };
         }
+        if (action.control === 'measure') {
+            return {
+                ...state,
+                geomType: "",
+                lineMeasureEnabled: false,
+                areaMeasureEnabled: false,
+                bearingMeasureEnabled: false
+            };
+        }
+        return state;
+    }
+    case SET_CONTROL_PROPERTY: {
+        if (action.control === 'measure' && action.value === false) {
+            return {
+                ...state,
+                geomType: "",
+                lineMeasureEnabled: false,
+                areaMeasureEnabled: false,
+                bearingMeasureEnabled: false
+            };
+        }
+        return state;
+    }
     case RESET_CONTROLS: {
         return {
             ...state,
             len: 0,
             area: 0,
             bearing: 0,
+            lineMeasureEnabled: false,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false,
             feature: { properties: {
                 disabled: true
-            }}
+            }},
+            geomType: ""
         };
     }
     case CHANGE_FORMAT: {
         return {...state, format: action.format};
     }
+    case INIT: {
+        return {...state, ...action.defaultOptions};
+    }
     case CHANGE_COORDINATES: {
         let coordinates = action.coordinates.map(c => ([c.lon, c.lat]));
-        return set("feature.geometry.coordinates", state.areaMeasureEnabled ? [coordinates] : coordinates, state);
+        let newState = set("feature.geometry.coordinates", state.areaMeasureEnabled ? [coordinates] : coordinates, state);
+        newState = set("feature.type", "Feature", newState);
+        newState = set("feature.properties.disabled", coordinates
+            .filter((c) => {
+                const isValid = !isNaN(parseFloat(c[0])) && !isNaN(parseFloat(c[1]));
+                return isValid;
+            }
+        ).length !== coordinates.length, newState);
+        newState = set("updatedByUI", true, newState);
+        return set("feature.geometry.type", newState.bearingMeasureEnabled ? "LineString" : newState.geomType, newState);
     }
     default:
         return state;
