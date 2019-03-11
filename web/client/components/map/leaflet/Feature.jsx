@@ -90,7 +90,7 @@ class Feature extends React.Component {
         }
     }
     addLayer(props, styles) {
-        /* it was not removing correctly the layer and it was adding to the
+        /* remove the current layer
         * map more feature causing the fillOpacity to be summed up
         */
         this.removeLayer(props);
