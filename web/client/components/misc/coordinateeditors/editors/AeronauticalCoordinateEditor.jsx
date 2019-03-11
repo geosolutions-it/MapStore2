@@ -101,7 +101,7 @@ class AeronauticalCoordinateEditor extends React.Component {
 
     render() {
         const inputStyle = { padding: 0, textAlign: "center", borderRight: 'none' };
-        const degreesInvalidStyle = this.getInvalidStyle(this.props.degrees);
+        const degreesInvalidStyle = this.getInputStyle(this.props.degrees);
         const minutesInvalidStyle = this.getInputStyle(this.props.minutes);
         const secondsInvalidStyle = this.getInputStyle(this.props.seconds);
         const labelStyle = {
