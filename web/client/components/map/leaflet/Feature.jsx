@@ -91,7 +91,7 @@ class Feature extends React.Component {
     }
     addLayer(props, styles) {
         /* remove the current layer
-        * map more feature causing the fillOpacity to be summed up
+        * to avoid multiple features to overlap
         */
         this.removeLayer(props);
         this._layer = geometryToLayer({
