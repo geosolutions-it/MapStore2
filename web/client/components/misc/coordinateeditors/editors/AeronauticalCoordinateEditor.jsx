@@ -95,7 +95,7 @@ class AeronauticalCoordinateEditor extends React.Component {
                 : 0;
 
     }
-    getInvalidStyle = (val) => {
+    getInputStyle = (val) => {
         return (isNaN(val) || val === "") ? {borderColor: "#a94442"} : {};
     }
 
