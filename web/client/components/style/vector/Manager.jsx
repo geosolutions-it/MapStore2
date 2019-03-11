@@ -135,7 +135,7 @@ class Manager extends React.Component {
         const stroke = isStrokeStyle(style) && isSymbolStyle(style) &&
             (checkSymbolsError(this.props.symbolErrors) ||
              checkSymbolsError(this.props.symbolErrors, "loading_symbol" + style.shape))
-            ? null : isStrokeStyle(style) ? <Stroke {...stylerProps} lineDashOptions={this.props.lineDashOptions} key={"stroke" + i}/> : null;
+            ? null : isStrokeStyle(style) ? <Stroke {...stylerProps} lineDashOptions={this.props.lineDashOptions} constraints={{maxWidth: isSymbolStyle(style) ? 5 : 15}} key={"stroke" + i}/> : null;
         const fill = isFillStyle(style) && isSymbolStyle(style) &&
         (checkSymbolsError(this.props.symbolErrors) ||
         checkSymbolsError(this.props.symbolErrors, "loading_symbol" + style.shape))
