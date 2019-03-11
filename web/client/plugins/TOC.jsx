@@ -459,6 +459,7 @@ class LayerTree extends React.Component {
  * @prop {object} cfg.layerOptions: options to pass to the layer.
  * @prop {boolean} cfg.showFullTitleOnExpand shows full length title in the legend. default `false`.
  * @prop {boolean} cfg.hideOpacityTooltip hide toolip on opacity sliders
+ *
  * Some of the layerOptions are: `legendContainerStyle`, `legendStyle`. These 2 allow to customize the legend:
  * For instance you can pass some styling props to the legend.
  * this example is to make the legend scrollable horizontally
@@ -474,7 +475,7 @@ class LayerTree extends React.Component {
  *   }
  *  }
  * ```
- * Another layerOptionS entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
+ * Another layerOptions entry can be `indicators`. `indicators` is an array of icons to add to the TOC. They must satisfy a condition to be shown in the TOC.
  * For the moment only indicators of type `dimension` are supported.
  * example :
  * ```
@@ -495,6 +496,16 @@ class LayerTree extends React.Component {
  *      }
  *  }]
  * ```
+ *
+ * Another layerOptions is `tooltipOptions` which contains the custom tooltips fragment for nodes in the TOC
+ * structure is {"nodeID": ["prop1", "prop2"], "joinsStr": " - "}, it will display the fragment in the order are written
+ * for example
+ * ```
+ * "tooltipOptions": {
+ *     "id_of_the_layer": ["title", "description"]
+ * }
+ * ```
+ * it can contain also the "joinStr" property to be used for joining tooltips fragments, default is " - "
  */
 const TOCPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
