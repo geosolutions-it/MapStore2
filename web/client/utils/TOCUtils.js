@@ -25,7 +25,7 @@ const TOCUtils = {
         return {label: search, value: val};
     },
     /**
-     * it fetches and joins the fragments for tooltips for node component in the TOC
+     * gets and joins the fragments for tooltips of the node component in the TOC
      * @param {object} tooltipOptions
      * @param {object} node layer or group
      * @param {string} currentLocale
