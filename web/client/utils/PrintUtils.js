@@ -7,6 +7,7 @@
  */
 
 const CoordinatesUtils = require('./CoordinatesUtils');
+const SecurityUtils = require('./SecurityUtils');
 const MapUtils = require('./MapUtils');
 const AnnotationsUtils = require("./AnnotationsUtils");
 const {colorToHexStr} = require("./ColorUtils");
@@ -196,12 +197,12 @@ const PrintUtils = {
                 "styles": [
                     layer.style || ''
                 ],
-                "customParams": assign({
+                "customParams": SecurityUtils.addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), assign({
                     "TRANSPARENT": true,
                     "TILED": true,
                     "EXCEPTIONS": "application/vnd.ogc.se_inimage",
                     "scaleMethod": "accurate"
-                }, layer.baseParams || {}, layer.params || {})
+                }, layer.baseParams || {}, layer.params || {}))
             }),
             legend: (layer, spec) => ({
                 "name": layer.title || layer.name,
@@ -210,7 +211,7 @@ const PrintUtils = {
                       "name": "",
                       "icons": [
                          PrintUtils.normalizeUrl(layer.url) + url.format({
-                             query: {
+                             query: SecurityUtils.addAuthenticationParameter(PrintUtils.normalizeUrl(layer.url), {
                                  TRANSPARENT: true,
                                  EXCEPTIONS: "application/vnd.ogc.se_xml",
                                  VERSION: "1.1.1",
@@ -225,7 +226,7 @@ const PrintUtils = {
                                  LEGEND_OPTIONS: "forceLabels:" + (spec.forceLabels ? "on" : "") + ";fontAntialiasing:" + spec.antiAliasing + ";dpi:" + spec.legendDpi + ";fontStyle:" + (spec.bold && "bold" || (spec.italic && "italic") || '') + ";fontName:" + spec.fontFamily + ";fontSize:" + spec.fontSize,
                                  format: "image/png",
                                  ...assign({}, layer.params)
-                             }
+                             })
                          })
                       ]
                    }

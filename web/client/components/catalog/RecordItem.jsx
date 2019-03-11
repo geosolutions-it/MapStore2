@@ -10,12 +10,11 @@ const PropTypes = require('prop-types');
 const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button: ButtonRB, Glyphicon} = require('react-bootstrap');
-const {isObject} = require('lodash');
+const { isObject } = require('lodash');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const ContainerDimensions = require('react-container-dimensions').default;
-const ConfigUtils = require('../../utils/ConfigUtils');
-const {getRecordLinks, recordToLayer, extractOGCServicesReferences, buildSRSMap, removeParameters, extractEsriReferences, esriToLayer} = require('../../utils/CatalogUtils');
+const {getRecordLinks, recordToLayer, extractOGCServicesReferences, buildSRSMap, extractEsriReferences, esriToLayer} = require('../../utils/CatalogUtils');
 
 const tooltip = require('../misc/enhancers/tooltip');
 const Button = tooltip(ButtonRB);
@@ -204,16 +203,13 @@ class RecordItem extends React.Component {
     };
 
     addLayer = (wms) => {
-        const removeParams = ["request", "layer", "layers", "service", "version"].concat(this.props.authkeyParamNames);
-        const { url } = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wms.url), removeParams );
         const allowedSRS = buildSRSMap(wms.SRS);
         if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
         } else {
             this.props.onLayerAdd(
                 recordToLayer(this.props.record, "wms", {
-                    removeParams,
-                    url,
+                    removeParams: this.props.authkeyParamNames,
                     catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ? this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier : null
                 }));
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
@@ -225,15 +221,12 @@ class RecordItem extends React.Component {
     };
 
     addwmtsLayer = (wmts) => {
-        const removeParams = ["request", "layer"].concat(this.props.authkeyParamNames);
-        const { url } = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wmts.url), removeParams);
         const allowedSRS = buildSRSMap(wmts.SRS);
         if (wmts.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
         } else {
             this.props.onLayerAdd(recordToLayer(this.props.record, "wmts", {
-                removeParams,
-                url
+                removeParams: this.props.authkeyParamNames
             }));
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
