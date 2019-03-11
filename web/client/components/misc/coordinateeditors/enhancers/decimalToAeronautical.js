@@ -23,7 +23,7 @@ const convertDDToDMS = (D, lng, {seconds} = {seconds: {decimals: 4}}) => {
     }
 
     if (isNaN(d) || D === "") {
-        // this is needed in order to reset completely the inputs
+        // reset the inputs
         return {
             degrees: "",
             minutes: "",
