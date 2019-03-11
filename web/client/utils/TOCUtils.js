@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const {isObject, find, isNil} = require('lodash');
 
 const TOCUtils = {
     createFromSearch: function(options, search) {
@@ -22,6 +23,43 @@ const TOCUtils = {
 
         const val = search.replace(/\./g, '${dot}').replace(/\//g, '.');
         return {label: search, value: val};
+    },
+    /**
+     * gets and joins the fragments for tooltips of the node component in the TOC
+     * @param {object} tooltipOptions
+     * @param {object} node layer or group
+     * @param {string} currentLocale
+     * @return {string} tooltip text
+     */
+    getTooltip: (tooltipOptions, node, currentLocale) => {
+        // if this node is present in the tooltipOptions then use those keys to create the text for the tooltip
+        let tooltips = tooltipOptions && find(Object.keys(tooltipOptions), id => id === node.id);
+        if (tooltips) {
+            // if you specify a joinsStr it uses it for concatenating the various fields
+            return tooltipOptions[tooltips]
+                    .map(t => TOCUtils.getTooltipText(t, node, currentLocale))
+                    .filter(t => !isNil(t))
+                    .join(tooltipOptions.joinStr || " - ");
+        }
+        return TOCUtils.getTooltipText("title", node, currentLocale);
+    },
+    /**
+     * gets the fragment for the tooltip.
+     * @param {object} fragment in the node
+     * @param {object} node layer or group
+     * @param {string} currentLocale
+     * @return {string} tooltip fragment
+     */
+    getTooltipText: (fragment, node, currentLocale) => {
+        switch (fragment) {
+            case "title": {
+                const translation = isObject(node.title) ? node.title[currentLocale] || node.title.default : node.title;
+                const title = translation || node.name;
+                return title;
+            }
+            // default is the name of the property passed
+            default: return node[fragment];
+        }
     }
 };
 
