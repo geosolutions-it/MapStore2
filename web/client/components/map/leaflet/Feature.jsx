@@ -118,7 +118,6 @@ class Feature extends React.Component {
     }
     /* it removes the layer from a container otherwise we would create and add more
      * layer with same features causing some unintended style override
-     * see https://github.com/geosolutions-it/austrocontrol-C125/issues/99#issuecomment-470535250
     */
     removeLayer = (props) => {
         if (this._layer) {
