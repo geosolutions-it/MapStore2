@@ -8,7 +8,7 @@
 
 const assign = require('object-assign');
 const ol = require('openlayers');
-const {reproject, reprojectGeoJson} = require('../utils/CoordinatesUtils');
+const {reproject, reprojectGeoJson, transformLineToArcs} = require('../utils/CoordinatesUtils');
 
 const {PURGE_MAPINFO_RESULTS} = require('../actions/mapInfo');
 const {TOGGLE_CONTROL} = require('../actions/controls');
@@ -32,7 +32,7 @@ const uuid = require('uuid');
 const fixCoordinates = (coords, type) => {
     switch (type) {
         case "Polygon": return [coords];
-        case "LineString": return coords;
+        case "LineString": case "MultiPoint": return coords;
         default: return coords[0];
     }
 };
@@ -61,7 +61,7 @@ function annotations(state = { validationErrors: {} }, action) {
                                 coordinates: fixCoordinates(validCoordinates, ftChanged.geometry.type)
                             })
                         }); break;
-                    case "LineString": ftChanged = assign({}, ftChanged, {
+                    case "LineString": case "MultiPoint": ftChanged = assign({}, ftChanged, {
                         geometry: assign({}, ftChanged.geometry, {
                              coordinates: fixCoordinates(validCoordinates, ftChanged.geometry.type)
                         })
@@ -330,6 +330,9 @@ function annotations(state = { validationErrors: {} }, action) {
             }
             if (selected.properties && selected.properties.isText) {
                 selected = set("geometry.type", "Point", selected);
+            }
+            if (selected.properties && selected.properties.useGeodesicLines) {
+                selected = set("properties.geometryGeodesic", {type: "LineString", coordinates: transformLineToArcs(selected.geometry.coordinates)}, selected);
             }
             selected = set("properties.canEdit", false, selected);
 

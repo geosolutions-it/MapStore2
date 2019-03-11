@@ -470,6 +470,10 @@ describe('CoordinatesUtils', () => {
         expect(CoordinatesUtils.transformLineToArcs([[1, 1], [1, 1]] )).toNotBe(null);
         expect(CoordinatesUtils.transformLineToArcs([[1, 1], [1, 1]] ).length).toBe(0);
     });
+    it('test transformArcsToLine', () => {
+        expect(CoordinatesUtils.transformArcsToLine(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] ))).toNotBe(null);
+        expect(CoordinatesUtils.transformArcsToLine(CoordinatesUtils.transformLineToArcs([[1, 1], [2, 2]] )).length).toBe(2);
+    });
     it('test getNormalizedLatLon', () => {
 
         let normalizedCoords = CoordinatesUtils.getNormalizedLatLon({lat: 45, lng: 9});
@@ -681,5 +685,9 @@ describe('CoordinatesUtils', () => {
         const roundingOptions = {value, roundingBehaviour, maximumFractionDigits};
         const res = CoordinatesUtils.roundCoord(roundingOptions);
         expect(res).toBe(28.55);
+    });
+    it("transformArcsToLine every 2 points", () => {
+        const res = CoordinatesUtils.transformArcsToLine([[1, 1], [2, 2], [3, 3], [4, 4]], 2);
+        expect(res).toEqual([[1, 1], [3, 3], [4, 4]]);
     });
 });

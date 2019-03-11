@@ -977,6 +977,172 @@ describe('Test the MapUtils', () => {
             version: 2
         });
     });
+    it('save map configuration with annotations with geodesic lines', () => {
+        const flat = [
+            {
+                allowedSRS: {},
+                bbox: {},
+                dimensions: [],
+                id: "annotations",
+                loading: true,
+                name: "annotations",
+                params: {},
+                search: {},
+                singleTile: false,
+                title: "annotations",
+                type: "vector",
+                url: "",
+                features: [{
+                    type: "FeatureCollection",
+                    features: [{
+                        type: "Feature",
+                        geometry: {
+                            type: "MultiPoint",
+                            coordinates: [[1, 1], [2, 2]]
+                        },
+                        properties: {
+                            geometryGeodesic: {
+                                type: "LineString",
+                                coordinates: [[1, 1], [2, 2], [1, 1], [2, 2], [1, 1], [2, 2], [1, 1], [2, 2], [1, 1], [2, 2], [1, 1], [2, 2]]
+                            },
+                            useGeodesicLines: true
+                        }
+                    }]
+                }],
+                visibility: true,
+                catalogURL: "url"
+            }
+        ];
+
+        const groups = [
+            { expanded: true, id: 'Default', name: 'Default', title: 'Default', nodes: ['layer001', 'layer002'] },
+            {
+                expanded: false, id: 'custom', name: 'custom', title: 'custom',
+                nodes: [{ expanded: true, id: 'custom.nested001', name: 'nested001', title: 'nested001', nodes: ['layer003'] }
+                ]
+            }
+        ];
+
+        const mapConfig = {
+            center: { x: 0, y: 0, crs: 'EPSG:4326' },
+            maxExtent: [-20037508.34, -20037508.34, 20037508.34, 20037508.34],
+            projection: 'EPSG:900913',
+            units: 'm',
+            zoom: 10,
+            mapOptions: {
+                view: {
+                    resolutions: [
+                        84666.66666666688,
+                        42333.33333333344,
+                        21166.66666666672,
+                        10583.33333333336,
+                        5291.66666666668,
+                        2645.83333333334,
+                        1322.91666666667,
+                        661.458333333335000,
+                        529.166666666668000,
+                        396.875000000001000,
+                        264.583333333334000,
+                        132.291666666667000,
+                        66.145833333333500,
+                        39.687500000000100,
+                        26.458333333333400,
+                        13.229166666666700,
+                        6.614583333333350,
+                        3.968750000000010,
+                        2.645833333333340,
+                        1.322916666666670,
+                        0.661458333333335
+                    ]
+                }
+            }
+        };
+
+        const saved = saveMapConfiguration(mapConfig, flat, groups, '', {});
+        expect(saved).toEqual({
+            version: 2,
+            map: {
+                center: {
+                    x: 0,
+                    y: 0,
+                    crs: 'EPSG:4326'
+                },
+                maxExtent: [ -20037508.34, -20037508.34, 20037508.34, 20037508.34 ],
+                projection: 'EPSG:900913',
+                units: 'm',
+                zoom: 10,
+                mapOptions: {
+                    view: {
+                        resolutions: [ 84666.66666666688, 42333.33333333344, 21166.66666666672, 10583.33333333336, 5291.66666666668, 2645.83333333334, 1322.91666666667, 661.458333333335, 529.166666666668, 396.875000000001, 264.583333333334, 132.291666666667, 66.1458333333335, 39.6875000000001, 26.4583333333334, 13.2291666666667, 6.61458333333335, 3.96875000000001, 2.64583333333334, 1.32291666666667, 0.661458333333335 ]
+                    }
+                },
+                layers: [{
+                    id: 'annotations',
+                    features: [ {
+                        type: "FeatureCollection",
+                        features: [{
+                            type: "Feature",
+                            geometry: {
+                                type: "MultiPoint",
+                                coordinates: [[1, 1], [2, 2]]
+                            },
+                            properties: {
+                                geometryGeodesic: null,
+                                useGeodesicLines: true
+                            }
+                        }]
+                    }],
+                    format: undefined,
+                    thumbURL: undefined,
+                    group: undefined,
+                    search: {},
+                    source: undefined,
+                    name: 'annotations',
+                    opacity: undefined,
+                    provider: undefined,
+                    description: undefined,
+                    styles: undefined,
+                    style: undefined,
+                    styleName: undefined,
+                    availableStyles: undefined,
+                    title: 'annotations',
+                    transparent: undefined,
+                    tiled: undefined,
+                    type: 'vector',
+                    url: '',
+                    bbox: {},
+                    nativeCrs: undefined,
+                    visibility: true,
+                    singleTile: false,
+                    allowedSRS: {},
+                    matrixIds: undefined,
+                    tileMatrixSet: undefined,
+                    requestEncoding: undefined,
+                    dimensions: [],
+                    maxZoom: undefined,
+                    maxNativeZoom: undefined,
+                    hideLoading: false,
+                    handleClickOnLayer: false,
+                    queryable: undefined,
+                    featureInfo: undefined,
+                    catalogURL: 'url',
+                    capabilitiesURL: undefined,
+                    useForElevation: false,
+                    hidden: false,
+                    origin: undefined,
+                    thematic: undefined,
+                    params: {} } ],
+                groups: [ {
+                    id: 'Default', expanded: true
+                }, {
+                    id: 'custom', expanded: false
+                }, {
+                    id: 'custom.nested001', expanded: true
+                } ],
+            text_serch_config: '' }
+        });
+    });
+
     it('save map configuration with tile matrix and map info configuration', () => {
         const flat = [
             {

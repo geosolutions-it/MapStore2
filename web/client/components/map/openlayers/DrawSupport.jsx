@@ -735,6 +735,7 @@ class DrawSupport extends React.Component {
         return evtKey;
     };
 
+
     addDrawOrEditInteractions = (newProps) => {
         if (this.state && this.state.keySingleClickCallback) {
             ol.Observable.unByKey(this.state.keySingleClickCallback);
@@ -774,7 +775,7 @@ class DrawSupport extends React.Component {
                         olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
                         break;
                     }
-                    case "LineString": {
+                    case "LineString": case "MultiPoint": {
                         actualCoords = previousCoords.length ? [...previousCoords, e.coordinate] : [e.coordinate];
                         olFt = this.getNewFeature(newDrawMethod, actualCoords);
                         olFt.setProperties(omit(previousFt && previousFt.getProperties() || {}, "geometry"));
@@ -842,7 +843,7 @@ class DrawSupport extends React.Component {
             props = assign({}, newProps, {features: [newFeature]});
         } else {
             if (newFeature && newFeature.properties && newFeature.properties.isCircle) {
-                props = assign({}, newProps, {features: []}); // TODO verify this
+                props = assign({}, newProps, {features: []});
             } else {
                 props = assign({}, newProps, {features: newFeature.geometry ? [{...newFeature.geometry, properties: newFeature.properties}] : []});
             }
@@ -866,7 +867,7 @@ class DrawSupport extends React.Component {
                 this.setState({keySingleClickCallback: this.addSingleClickListener(singleClickCallback)});
             }
         }
-        if (newProps.options && newProps.options.selectEnabled/* && (newProps.drawMethod !== "Point" && newProps.drawMethod !== "Text")*/) { // TODO fix all call to this which are missing "selectEnabled" flag
+        if (newProps.options && newProps.options.selectEnabled) {
             this.addSelectInteraction(newProps.options && newProps.options.selected, newProps);
 
         }
@@ -1174,6 +1175,8 @@ class DrawSupport extends React.Component {
         */
         const editFilter = props && props.options && props.options.editFilter;
         this.modifyFeatureColl = new ol.Collection(filter(this.drawLayer.getSource().getFeatures(), editFilter));
+
+
         this.modifyInteraction = new ol.interaction.Modify({
             features: this.modifyFeatureColl,
             condition: (e) => {
@@ -1181,9 +1184,7 @@ class DrawSupport extends React.Component {
             }
         });
 
-
         this.modifyInteraction.on('modifyend', (e) => {
-
 
             let features = e.features.getArray().map((f) => {
                 // transform back circles in polygons
@@ -1202,9 +1203,7 @@ class DrawSupport extends React.Component {
                 return reprojectGeoJson(geojsonFormat.writeFeatureObject(newFt), this.getMapCrs(), "EPSG:4326");
             });
             if (this.props.options.transformToFeatureCollection) {
-                // this.props.onGeometryChanged([{type: "FeatureCollection", features}], this.props.drawOwner, false, "editing", "editing"); // TODO CHECK IF THIS IS NEEDED
                 this.props.onDrawingFeatures(features);
-                // this.addModifyInteraction();
             } else {
                 this.props.onGeometryChanged(features, this.props.drawOwner, false, "editing", "editing"); // TODO FIX THIS
             }

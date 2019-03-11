@@ -39,6 +39,7 @@
         "details": {
             "title": "Información en este mapa"
         },
+        "showEmptyMessageGFI": "Mostrar mensaje de resultados vacío en el panel de GFI",
         "remove": "Borrar",
         "layerProperties": {
             "windowTitle": "Propiedades de la capa",
@@ -533,7 +534,10 @@
             "areaLabel": "Área",
             "bearingLabel": "Rumbo",
             "formula": "Fórmula para cálculo de distancia",
-            "showLabel": "Mostrar etiqueta de medición"
+            "showLabel": "Mostrar etiqueta de medición",
+            "addAsAnnotation": "Añadir como anotación",
+            "newMeasure": "Nueva anotación",
+            "selectTool": "Seleccione una herramienta de medición"
         },
         "search":{
             "decimal": "Decimal",
@@ -869,11 +873,14 @@
                 "title": {
                     "Polygon": "Editor de polígonos",
                     "LineString": "Editor LineString",
+                    "Bearing": "Editor de rodamientos",
                     "Circle": "Editor de círculos",
                     "Point": "Editor de marcadores",
+                    "MultiPoint": "Editor LineString",
                     "Text": "Editor de texto"
                 },
                 "add": "Agregar nuevas coordenadas",
+                "addByClick": "Agregue nuevas coordenadas haciendo clic en el botón más o en el mapa",
                 "valid": "La geometría es válida",
                 "radius": "Radio",
                 "text": "Texto",

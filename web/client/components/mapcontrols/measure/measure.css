@@ -21,3 +21,14 @@
     vertical-align: -webkit-baseline-middle!important;
     vertical-align: -moz-middle-with-baseline !important;
 }
+
+.measure-value {
+    font-family: Menlo, Monaco, Consolas, Courier New, monospace;
+}
+{
+/* this is necessary to show the uom list correctly,
+ * otherwise the list will be hidden since it exceeds the modal
+ */}
+#measure .modal-body > div[role="body"] > div {
+    overflow: visible!important;
+}

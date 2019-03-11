@@ -39,6 +39,7 @@
         "details": {
             "title": "About this map"
         },
+        "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
         "remove": "Delete",
         "layerProperties": {
             "windowTitle": "Layer Properties",
@@ -533,7 +534,10 @@
             "areaLabel": "Area",
             "bearingLabel": "Bearing",
             "formula": "Formula for distance calculation",
-            "showLabel": "Show measurement label"
+            "showLabel": "Show measurement label",
+            "addAsAnnotation": "Add as annotation",
+            "newMeasure": "New annotation",
+            "selectTool": "Select a measurement tool"
         },
         "search":{
             "decimal": "Decimal",
@@ -869,11 +873,14 @@
                 "title": {
                     "Polygon": "Polygon editor",
                     "LineString": "LineString editor",
+                    "Bearing": "Bearing editor",
                     "Circle": "Circle editor",
                     "Point": "Marker editor",
+                    "MultiPoint": "LineString editor",
                     "Text": "Text editor"
                 },
                 "add": "Add new coordinates",
+                "addByClick": "Add new coordinates by clicking the plus button or on the map",
                 "valid": "Geometry is valid",
                 "radius": "Radius",
                 "text": "Text",

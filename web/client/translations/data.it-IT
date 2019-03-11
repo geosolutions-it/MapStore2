@@ -39,6 +39,7 @@
         "details": {
             "title": "Info su questa mappa"
         },
+        "showEmptyMessageGFI": "Mostra il messaggio: Nessuna feature per gli altri layer",
         "remove": "Rimuovi",
         "layerProperties": {
             "windowTitle": "Proprietà del livello",
@@ -533,7 +534,10 @@
             "areaLabel": "Area",
             "bearingLabel": "Direzione",
             "formula": "Formula per il calcolo della distanza",
-            "showLabel": "Mostra etichetta di misurazione"
+            "showLabel": "Mostra etichetta di misurazione",
+            "addAsAnnotation": "Aggiungi come annotazione",
+            "newMeasure": "Nuova annotazione",
+            "selectTool": "Seleziona uno strumento di misura"
         },
         "search":{
             "decimal": "Decimali",
@@ -869,11 +873,14 @@
                 "title": {
                     "Polygon": "Editor del poligono",
                     "LineString": "Editor della linea",
+                    "Bearing": "Editor della direzione",
                     "Circle": "Editor del cerchio",
                     "Point": "Editor del marker",
+                    "MultiPoint": "Editor della linea",
                     "Text": "Editor del testo"
                 },
                 "add": "Aggiungi una nuova coordinata",
+                "addByClick": "Aggiungi nuove coordinate cliccando sul pulsante + o sulla mappa",
                 "valid": "La geometria è valida",
                 "radius": "Raggio",
                 "text": "Testo",

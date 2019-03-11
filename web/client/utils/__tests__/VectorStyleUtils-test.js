@@ -246,8 +246,10 @@ describe("VectorStyleUtils ", () => {
         expect(!!geometryFunctions.startPoint).toBe(true);
         expect(geometryFunctions.startPoint.type).toBe("Point");
         expect(!!geometryFunctions.endPoint).toBe(true);
+        expect(geometryFunctions.lineToArc.type).toBe("LineString");
+        expect(!!geometryFunctions.lineToArc).toBe(true);
         expect(geometryFunctions.endPoint.type).toBe("Point");
-        expect(Object.keys(geometryFunctions).length).toBe(3);
+        expect(Object.keys(geometryFunctions).length).toBe(4);
     });
     it("getGeometryFunction", () => {
         expect(getGeometryFunction("centerPoint", "type")).toBe("Point");

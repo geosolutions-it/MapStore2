@@ -45,8 +45,23 @@ const {changeDrawingStatus} = require('../actions/draw');
     * @type {Object}
     */
 
+const validateFeatureCollection = (feature) => {
+    let features = feature.features.map(f => {
+        let coords = [];
+        if (f.geometry.type === "LineString" || f.geometry.type === "MultiPoint") {
+            coords = f.geometry.coordinates.filter(validateCoordsArray);
+        } else if (f.geometry.type === "Polygon") {
+            coords = [f.geometry.coordinates[0].filter(validateCoordsArray)];
+        } else {
+            coords = [f.geometry.coordinates].filter(validateCoordsArray)[0];
+        }
+        return set("geometry.coordinates", coords, f);
+    });
+    return set("features", features, feature);
+};
+
 const getSelectDrawStatus = (state) => {
-    const feature = state.annotations.editing;
+    let feature = state.annotations.editing;
     const multiGeom = state.annotations.config.multiGeometry;
     const drawOptions = {
         featureProjection: "EPSG:4326",
@@ -57,10 +72,12 @@ const getSelectDrawStatus = (state) => {
         translateEnabled: false,
         transformToFeatureCollection: true
     };
+
+    feature = validateFeatureCollection(feature);
     return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}));
 };
 const getReadOnlyDrawStatus = (state) => {
-    const feature = state.annotations.editing;
+    let feature = state.annotations.editing;
     const multiGeom = state.annotations.config.multiGeometry;
     const drawOptions = {
         featureProjection: "EPSG:4326",
@@ -71,10 +88,11 @@ const getReadOnlyDrawStatus = (state) => {
         drawEnabled: false,
         transformToFeatureCollection: true
     };
+    feature = validateFeatureCollection(feature);
     return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, "annotations", [feature], drawOptions, feature.style);
 };
 const getEditingGeomDrawStatus = (state) => {
-    const feature = state.annotations.editing;
+    let feature = state.annotations.editing;
     const multiGeom = state.annotations.config.multiGeometry;
     const drawOptions = {
         featureProjection: "EPSG:4326",
@@ -88,6 +106,7 @@ const getEditingGeomDrawStatus = (state) => {
         useSelectedStyle: true,
         transformToFeatureCollection: true
     };
+    feature = validateFeatureCollection(feature);
     return changeDrawingStatus("drawOrEdit", state.draw.drawMethod, "annotations", [feature], drawOptions, feature.style);
 };
 const mergeGeometry = (features) => {
@@ -116,22 +135,6 @@ const mergeGeometry = (features) => {
     });
 };
 
-const toggleDrawOrEdit = (state, featureType) => {
-    const feature = state.annotations.editing;
-    const drawing = state.annotations.drawing;
-    const type = featureType || state.annotations.featureType;
-    const multiGeom = state.annotations.config.multiGeometry;
-    const drawOptions = {
-        featureProjection: "EPSG:4326",
-        stopAfterDrawing: !multiGeom,
-        editEnabled: type !== "Circle",
-        drawing,
-        drawEnabled: type === "Circle",
-        transformToFeatureCollection: true,
-        addClickCallback: true
-    };
-    return changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}));
-};
 
 const createNewFeature = (action) => {
     return {
@@ -223,9 +226,24 @@ module.exports = (viewer) => ({
     removeAnnotationEpic: (action$, store) => action$.ofType(CONFIRM_REMOVE_ANNOTATION)
         .switchMap((action) => {
             if (action.id === 'geometry') {
+                let state = store.getState();
+                const feature = state.annotations.editing;
+                const drawing = state.annotations.drawing;
+                const type = state.annotations.featureType;
+                const multiGeom = state.annotations.config.multiGeometry;
+                const drawOptions = {
+                    featureProjection: "EPSG:4326",
+                    stopAfterDrawing: !multiGeom,
+                    editEnabled: type !== "Circle",
+                    drawing,
+                    drawEnabled: type === "Circle",
+                    transformToFeatureCollection: true,
+                    addClickCallback: false
+                };
+
                 return Rx.Observable.from([
                     changeDrawingStatus("replace", store.getState().annotations.featureType, "annotations", [store.getState().annotations.editing], {}),
-                    toggleDrawOrEdit(store.getState())
+                    changeDrawingStatus("drawOrEdit", type, "annotations", [feature], drawOptions, assign({}, feature.style, {highlight: false}))
                 ]);
             }
             const newFeatures = annotationsLayerSelector(store.getState()).features.filter(f => f.properties.id !== action.id);
@@ -345,9 +363,11 @@ module.exports = (viewer) => ({
     setAnnotationStyleEpic: (action$, store) => action$.ofType(SET_STYLE)
         .switchMap( () => {
             // TODO verify if we need to override the style here or in the store
-            const features = store.getState().annotations.editing.features;
+            let feature = validateFeatureCollection(store.getState().annotations.editing);
+            const features = feature.features;
             const selected = store.getState().annotations.selected;
             let ftChanged = find(features, f => f.properties.id === selected.properties.id); // can use also selected.style
+
             let projectedFeature = reprojectGeoJson(ftChanged, "EPSG:4326", "EPSG:3857");
             return Rx.Observable.from([
                 changeDrawingStatus("updateStyle", store.getState().annotations.featureType, "annotations", [projectedFeature], {}, assign({}, selected.style, {highlight: false}))
@@ -478,7 +498,7 @@ module.exports = (viewer) => ({
                     selected = set("geometry.coordinates", [selected.geometry.coordinates[0].filter(validateCoordsArray)], selected);
                     break;
                 }
-                case "LineString": {
+                case "LineString": case "MultiPoint": {
                     selected = set("geometry.coordinates", selected.geometry.coordinates.filter(validateCoordsArray), selected);
                     break;
                 }
@@ -496,14 +516,14 @@ module.exports = (viewer) => ({
             // TODO update selected feature in editing features
 
             let selectedIndex = findIndex(feature.features, (f) => f.properties.id === selected.properties.id);
-            if (selected.properties.isValidFeature || selected.geometry.type === "LineString" || selected.geometry.type === "Polygon") {
+            if (selected.properties.isValidFeature || selected.geometry.type === "LineString" || selected.geometry.type === "MultiPoint" || selected.geometry.type === "Polygon") {
                 if (selectedIndex === -1) {
                     feature = set(`features`, feature.features.concat([selected]), feature);
                 } else {
                     feature = set(`features[${selectedIndex}]`, selected, feature);
                 }
             }
-            if (selectedIndex !== -1 && !selected.properties.isValidFeature && (selected.geometry.type !== "LineString" && selected.geometry.type !== "Polygon")) {
+            if (selectedIndex !== -1 && !selected.properties.isValidFeature && (selected.geometry.type !== "MultiPoint" && selected.geometry.type !== "LineString" && selected.geometry.type !== "Polygon")) {
                 feature = set(`features`, feature.features.filter((f, i) => i !== selectedIndex ), feature);
             }
 

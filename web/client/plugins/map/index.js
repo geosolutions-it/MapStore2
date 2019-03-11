@@ -45,6 +45,7 @@ module.exports = (mapType, actions) => {
     })(components.LMap);
 
     const MeasurementSupport = connect((state) => ({
+        enabled: state.controls && state.controls.measure && state.controls.measure.enabled || false,
         measurement: state.measurement || {},
         useTreshold: state.measurement && state.measurement.useTreshold || null,
         uom: state.measurement && state.measurement.uom || {

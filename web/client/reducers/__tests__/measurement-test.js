@@ -11,10 +11,13 @@ const {
     toggleMeasurement,
     changeMeasurementState,
     changeUom,
+    changeCoordinates,
+    changeFormatMeasurement,
     resetGeometry,
-    changeGeometry
+    changeGeometry,
+    init
 } = require('../../actions/measurement');
-const {RESET_CONTROLS} = require('../../actions/controls');
+const {RESET_CONTROLS, setControlProperty} = require('../../actions/controls');
 const feature = {
     type: "Feature",
     geometry: {
@@ -29,7 +32,7 @@ describe('Test the measurement reducer', () => {
 
     it('returns original state on unrecognized action', () => {
         let state = measurement(undefined, {type: 'UNKNOWN'});
-        expect(state.lineMeasureEnabled).toBe(false);
+        expect(state.lineMeasureEnabled).toBe(true);
         expect(state.areaMeasureEnabled).toBe(false);
         expect(state.bearingMeasureEnabled).toBe(false);
         expect(state.uom.area.unit).toBe("sqm");
@@ -49,6 +52,8 @@ describe('Test the measurement reducer', () => {
     it('RESET_GEOMETRY', () => {
         const state = measurement({feature: {}}, resetGeometry());
         expect(state.feature.properties.disabled).toBe(true);
+        expect(state.isDrawing).toBe(true);
+        expect(state.updatedByUI).toBe(false);
 
     });
     it('CHANGE_MEASUREMENT_TOOL previous geomType empty', () => {
@@ -99,16 +104,63 @@ describe('Test the measurement reducer', () => {
         }));
         expect(state.lenUnit).toBe("km");
         expect(state.uom.length.label).toBe("km");
+        expect(state.updatedByUI).toBe(true);
+
     });
     it('CHANGED_GEOMETRY', () => {
         let state = measurement( {feature: {}}, changeGeometry(feature));
         expect(state.feature.geometry.coordinates.length).toBe(2);
+        expect(state.isDrawing).toBe(false);
+        expect(state.updatedByUI).toBe(false);
     });
     it('RESET_CONTROLS', () => {
-        let state = measurement( {feature: {}}, {type: RESET_CONTROLS});
+        let state = measurement( {feature: {}, geomType: "Bearing", bearingMeasureEnabled: true}, {type: RESET_CONTROLS});
         expect(state.lineMeasureEnabled).toBe(false);
         expect(state.areaMeasureEnabled).toBe(false);
         expect(state.bearingMeasureEnabled).toBe(false);
+        expect(state.geomType).toEqual("");
+    });
+    it('INIT', () => {
+        let state = measurement( {feature: {}}, init({showAddAsAnnotation: true}));
+        expect(state.showAddAsAnnotation).toBe(true);
+    });
+    it('CHANGE_FORMAT', () => {
+        let state = measurement( {format: "aeronautical"}, changeFormatMeasurement("decimal"));
+        expect(state.format).toBe("decimal");
+    });
+    it('CHANGE_COORDINATES', () => {
+        const coordinates = [{lon: 3, lat: 1}, {lon: 5, lat: 5}];
+        let state = measurement({
+            feature: {
+            geometry: {
+                type: "LineString",
+                coordinates: [[1, 3], [5, 4]]
+                }
+            }
+        }, changeCoordinates(coordinates));
+        expect(state.feature.geometry.coordinates).toEqual([[3, 1], [5, 5]]);
+        expect(state.feature.properties.disabled).toEqual(false);
+        expect(state.updatedByUI).toBe(true);
+    });
+    it('SET_CONTROL_PROPERTY closing measure tool', () => {
+        let state = measurement({
+            geomType: "LineString",
+            lineMeasureEnabled: true,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false
+        }, setControlProperty("measure", "enabled", false));
+        expect(state.lineMeasureEnabled).toEqual(false);
+        expect(state.geomType).toEqual("");
+    });
+    it('SET_CONTROL_PROPERTY closing other tools than measure', () => {
+        let state = measurement({
+            geomType: "LineString",
+            lineMeasureEnabled: true,
+            areaMeasureEnabled: false,
+            bearingMeasureEnabled: false
+        }, setControlProperty("drawer", "enabled", false));
+        expect(state.lineMeasureEnabled).toEqual(true);
+        expect(state.geomType).toEqual("LineString");
     });
 
 });

@@ -39,6 +39,8 @@
         "details": {
             "title": "O karti"
         },
+        "showEmptyMessageGFI": "Show empty results message in GetFeatureInfo panel",
+        "remove": "Delete",
         "layerProperties": {
             "windowTitle": "Svojstva sloja",
             "title": "Naslov",
@@ -532,7 +534,10 @@
             "areaLabel": "Površina",
             "bearingLabel": "Azimut",
             "formula": "Formula za izračun udaljenosti",
-            "showLabel": "Prikaži oznaku mjerenja"
+            "showLabel": "Prikaži oznaku mjerenja",
+            "addAsAnnotation": "Add as annotation",
+            "newMeasure": "New annotation",
+            "selectTool": "Select a measurement tool"
         },
         "search":{
             "decimal": "Decimal",
@@ -857,18 +862,29 @@
             "removeannotation": "Do you want to remove the annotation with title: {title}?",
             "removegeometry": "Želite li ukloniti sve pribilješke?",
             "confirm": "Potvrdi",
-            "undoGeom": "Are you sure to exit without saving? (You will lose any changes)",
-            "confirmGeom": "Confirm",
-            "cancelModalGeom": "Cancel",
-            "deleteFeature": "Delete this feature",
-            "undoDeleteFeature": "Are you sure to delete this feature?",
             "mandatory": "Obavezno polje",
             "emptygeometry": "Geometrija ne može biti prazna",
             "add": "Nova",
             "filter": "Filtriraj pribilješke...",
             "undo": "Želite li zaista napustiti trenutno uređivanje pribilješki?",
+            "titleUndoGeom": "The geometry has changed",
+            "undoGeom": "Are you sure to exit without saving? (You will lose any changes)",
+            "confirmGeom": "Confirm",
+            "cancelModalGeom": "Cancel",
+            "deleteFeature": "Delete this feature",
+            "undoDeleteFeature": "Are you sure to delete this feature?",
             "title": "Pribilješke",
             "zoomTo": "Približi",
+            "insertText": "Please insert the text annotation",
+            "downloadtooltip": "Download annotations",
+            "downloadcurrenttooltip": "Download current annotation",
+            "downloadError": "Export error",
+            "loadtooltip": "Import annotations",
+            "loadtitle": "Import Annotations",
+            "selectfiletext": "Drop your file here or click to select the Annotation File to import. (supported files: JSON)",
+            "loadoverride": "Replace annotations",
+            "loaderror": "Select one or more annotations files. (supported files: json)",
+            "defaulttitle": "Edit default title",
             "field": {
                 "title": "Naslov",
                 "description": "Opis"
@@ -886,11 +902,14 @@
                 "title": {
                     "Polygon": "Polygon editor",
                     "LineString": "LineString Editor",
+                    "Bearing": "Bearing Editor",
                     "Circle": "Circle editor",
                     "Point": "Marker editor",
+                    "MultiPoint": "LineString editor",
                     "Text": "Text editor"
                 },
                 "add": "Add new coordinates",
+                "addByClick": "Add new coordinates by clicking the plus button or on the map",
                 "valid": "Geometry is valid",
                 "radius": "Radius",
                 "text": "Text",
@@ -998,6 +1017,22 @@
             "add": "Dodaj",
             "cancel": "Odustani",
             "success": " ispravno uvezeno"
+        },
+        "mapImport": {
+            "title": "Import Data",
+            "dropZone": {
+                "heading": "<p><h4>Drop your configuration or vector files here</h4><small>or</small></p>",
+                "selectFiles": "Select Files...",
+                "infoSupported": "<p><small>Supported configuration files: MapStore2 legacy format<br />Supported vector layer files: shapefiles (must be contained in zip archives), KML/KMZ, GeoJSON or GPX</small></p>",
+                "note": "<p><small><i><strong>note</strong>: current map will be overridden in case of configuration files</i></small></p>"
+            },
+            "errors": {
+                "fileNotSupported": "File not supported",
+                "unknownError": "there was an unknown error during import"
+            }
+        },
+        "mapExport": {
+            "title": "Export Data"
         },
         "catalog": {
             "title": "Katalog",
@@ -1323,7 +1358,6 @@
                     "configureTableOptions": "Prilagodi postavke tabele",
                     "resetColumnsSizes": "Poništi sve promjene širine kolona",
                     "updateWidget": "Ažuriraj widget",
-                    "addToTheMap": "Dodaj widget na kartu",
                     "addTheWidget": "Dodaj widget",
                     "titlePlaceholder": "Umetni naslov...",
                     "textPlaceholder": "Umetni tekst...",
@@ -1353,9 +1387,16 @@
                     "showChartData": "Prikaži podatke grafikona",
                     "edit": "Uredi",
                     "delete": "Izbriši",
+                    "collapse": "Collapse",
                     "confirmDelete": "Jeste li sigurni?",
                     "downloadData": "Preuzmi podatke",
-                    "exportImage": "Izvezi sliku"
+                    "exportImage": "Izvezi sliku",
+                    "pin": "Pin",
+                    "unpin": "Unpin",
+                    "hide": "Hide",
+                    "hideDescription": "Hide this widget to other users",
+                    "unhide": "Unhide",
+                    "unhideDescription": "Unhide the widget to other users"
                 }
             },
             "chartType": {
@@ -1447,6 +1488,13 @@
             "advancedOptions":{
                 "line": "Napredne mogućnosti",
                 "bar": "Napredne mogućnosti"
+            },
+            "tray": {
+                "title": "Widgets",
+                "expandTray": "Expand widgets tray",
+                "collapseTray": "Collapse widgets tray",
+                "expandAll": "Expand all widgets",
+                "collapseAll": "Collapse all widgets"
             }
         },
         "dashboard": {

@@ -104,7 +104,12 @@ const MapInfoUtils = {
                 geometry: {
                     type: 'Point',
                     coordinates: [parseFloat(clickedPoint.lng), parseFloat(clickedPoint.lat)]
-                }
+                },
+                style: [{
+                    iconUrl: require('../components/map/openlayers/img/marker-icon.png'),
+                    iconAnchor: [12, 41], // in leaflet ther is no anchor in fraction
+                    iconSize: [25, 41]
+                }]
             }
         ];
     },

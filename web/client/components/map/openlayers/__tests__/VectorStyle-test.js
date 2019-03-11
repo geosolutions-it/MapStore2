@@ -470,6 +470,34 @@ describe('Test VectorStyle', () => {
         });
         expect(geomFunc(feature).getType()).toBe("Point");
     });
+    it('getGeometryTrasformation, with lineStyle, geometry transformation applied to MultiPoint', () => {
+        const markerStyle = {
+            color: "#995511",
+            geometry: "lineToArc"
+        };
+        const geomFunc = getGeometryTrasformation(markerStyle);
+        expect(geomFunc).toNotBe(null);
+        const feature = new ol.Feature({
+            geometry: new ol.geom.MultiPoint([[1, 2], [2, 2], [3, 2], [1, 2]]),
+            labelPoint: new ol.geom.Point([1, 1]),
+            name: 'My Polygon'
+        });
+        expect(geomFunc(feature).getType()).toBe("LineString");
+    });
+    it('getGeometryTrasformation, with lineStyle, geometry transformation not applied to Polygon', () => {
+        const markerStyle = {
+            color: "#995511",
+            geometry: "lineToArc"
+        };
+        const geomFunc = getGeometryTrasformation(markerStyle);
+        expect(geomFunc).toNotBe(null);
+        const feature = new ol.Feature({
+            geometry: new ol.geom.Polygon([[[1, 2], [2, 2], [3, 2], [1, 2]]]),
+            labelPoint: new ol.geom.Point([1, 1]),
+            name: 'My Polygon'
+        });
+        expect(geomFunc(feature).getType()).toBe("Polygon");
+    });
     it('getFilter, old style version', () => {
         const markerStyle = {
             iconGlyph: "comment",

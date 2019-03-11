@@ -39,6 +39,7 @@
         "details": {
             "title": "Infos zu dieser Karte"
         },
+        "showEmptyMessageGFI": "Nachricht mit leeren Ergebnissen anzeigen",
         "remove": "Löschen",
         "layerProperties": {
             "windowTitle": "Ebenen Eigenschaften",
@@ -533,7 +534,10 @@
             "areaLabel": "Fläche",
             "bearingLabel": "Richtung",
             "formula": "Formel zur Entfernungsberechnung",
-            "showLabel": "Zeige Bezeichnungsetikett"
+            "showLabel": "Zeige Bezeichnungsetikett",
+            "addAsAnnotation": "Als Anmerkung hinzufügen",
+            "newMeasure": "Neue Anmerkung",
+            "selectTool": "Wählen Sie ein Messwerkzeug aus"
         },
         "search":{
             "decimal": "Dezimal",
@@ -869,11 +873,14 @@
                 "title": {
                     "Polygon": "Polygon-Editor",
                     "LineString": "LineString-Editor",
+                    "Bearing": "Bearing-Editor",
                     "Circle": "Kreis-Editor",
                     "Point": "Marker-Editor",
+                    "MultiPoint": "LineString-Editor",
                     "Text": "Text-Editor"
                 },
                 "add": "Fügen Sie neue Koordinaten hinzu",
+                "addByClick": "Fügen Sie neue Koordinaten hinzu, indem Sie auf die Plus-Schaltfläche oder auf die Karte klicken",
                 "valid": "Geometrie ist gültig",
                 "radius": "Radius",
                 "text": "Text",

@@ -35,38 +35,29 @@ class CoordinatesRow extends React.Component {
         formatVisible: false
     }
 
-    getColsSize = () => {
-        let colsSize = [
-            this.props.isDraggable && !(this.props.removeVisible || this.props.formatVisible) ? 2 : (this.props.removeVisible || this.props.formatVisible ? 0 : 1),
-            this.props.isDraggable || this.props.removeVisible || this.props.formatVisible ? 5 : 6,
-            this.props.isDraggable || this.props.removeVisible || this.props.formatVisible ? 5 : 6,
-            (this.props.removeVisible || this.props.formatVisible) && !this.props.isDraggable ? 2 : (this.props.isDraggable ? 0 : 1)
-        ];
-        return colsSize;
-    }
-
     render() {
         const {idx} = this.props;
         const rowStyle = {marginLeft: -5, marginRight: -5};
-        const colsSize = this.getColsSize();
+        const dragButton = (<div
+            className="square-button-md no-border btn btn-default"
+            style={{display: "flex" /*workaround for firefox*/}}
+            >
+            <Glyphicon
+            glyph="menu-hamburger"
+            disabled={!this.props.isDraggable}
+            style={{pointerEvents: !this.props.isDraggable ? "none" : "auto"}}
+        /></div>);
+
         return (
-            <Row className={`coordinateRow ${this.props.customClassName}`} style={!this.props.customClassName ? rowStyle : {}} onMouseEnter={() => {
+            <Row className={`coordinateRow ${this.props.customClassName || ""}`} style={!this.props.customClassName ? rowStyle : {}} onMouseEnter={() => {
                 if (this.props.onMouseEnter) {
                     this.props.onMouseEnter(this.props.component);
                 }
             }} onMouseLeave={this.props.onMouseLeave}>
-                <Col xs={colsSize[0]}>
-                    {this.props.isDraggable && this.props.connectDragSource(<div
-                        className="square-button-md no-border btn btn-default"
-                        style={{display: "flex" /*workaround for firefox*/}}
-                        >
-                        <Glyphicon
-                        glyph="menu-hamburger"
-                        disabled={!this.props.isDraggable}
-                        style={{pointerEvents: !this.props.isDraggable ? "none" : "auto"}}
-                    /></div>)}
+                <Col xs={1}>
+                    {this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton}
                 </Col>
-                <Col xs={colsSize[1]}>
+                <Col xs={5}>
                     {this.props.showLabels && <span><Message msgId="latitude"/></span>}
                     <CoordinateEntry
                         format={this.props.format}
@@ -89,7 +80,7 @@ class CoordinatesRow extends React.Component {
                         }}
                     />
                 </Col>
-                <Col xs={colsSize[2]}>
+                <Col xs={5}>
                     {this.props.showLabels && <span><Message msgId="longitude"/></span>}
                     <CoordinateEntry
                         format={this.props.format}
@@ -112,7 +103,7 @@ class CoordinatesRow extends React.Component {
                         }}
                     />
                 </Col>
-                <Col xs={colsSize[3]}>
+                <Col xs={1}>
                     <Toolbar
                         btnGroupProps={{ className: 'pull-right' }}
                         btnDefaultProps={{ className: 'square-button-md no-border'}}
