@@ -63,9 +63,18 @@ class AeronauticalCoordinateEditor extends React.Component {
                 ? (direction === this.props.directions[0] ? this.props.directions[1] : this.props.directions[0])
                 : direction;
             if ( degrees === -1) {
-                degrees = 0;
-                minutes = 0;
-                seconds = 0.0001;
+                // when switching from 0° 0' 0'' E to -1° 0' 0'' E it was not going to 1° 0' 0'' W
+                if (newValues.degrees < 0 && newValues.minutes >= 0) {
+                    degrees = newValues.degrees;
+                } else if (newValues.minutes < 0 && newValues.degrees <= 0) {
+                    // when switching from 0° 0' 0'' E to 0° -1' 0'' E it was not going to 0° 1' 0'' W
+                    degrees = 0;
+                    minutes = newValues.minutes;
+                } else {
+                    degrees = 0;
+                    minutes = 0;
+                    seconds = 0.0001;
+                }
             }
             return {
                 degrees,
@@ -86,12 +95,15 @@ class AeronauticalCoordinateEditor extends React.Component {
                 : 0;
 
     }
+    getInputStyle = (val) => {
+        return (isNaN(val) || val === "") ? {borderColor: "#a94442"} : {};
+    }
 
     render() {
         const inputStyle = { padding: 0, textAlign: "center", borderRight: 'none' };
-        const degreesInvalidStyle = isNaN(this.props.degrees) ? {borderColor: "#a94442"} : {};
-        const minutesInvalidStyle = isNaN(this.props.minutes) ? {borderColor: "#a94442"} : {};
-        const secondsInvalidStyle = isNaN(this.props.seconds) ? {borderColor: "#a94442"} : {};
+        const degreesInvalidStyle = this.getInputStyle(this.props.degrees);
+        const minutesInvalidStyle = this.getInputStyle(this.props.minutes);
+        const secondsInvalidStyle = this.getInputStyle(this.props.seconds);
         const labelStyle = {
             position: "relative",
             top: 0,

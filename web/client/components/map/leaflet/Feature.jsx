@@ -35,23 +35,26 @@ class Feature extends React.Component {
         }
     }
 
-    componentWillReceiveProps(newProps) {
+    componentWillReceiveProps(nextProps) {
         // TODO check if shallow comparison is enough properties and geometry
-        if (isEqual(newProps.properties, this.props.properties) || isEqual(newProps.geometry, this.props.geometry) || (newProps.features !== this.props.features) || (newProps.style !== this.props.style)) {
-            newProps.container.removeLayer(this._layer);
-            this.createLayer(newProps);
+        if (!isEqual(nextProps.properties, this.props.properties) ||
+            !isEqual(nextProps.geometry, this.props.geometry) ||
+            (nextProps.features !== this.props.features) ||
+            (nextProps.style !== this.props.style)) {
+            this.removeLayer(nextProps);
+            this.createLayer(nextProps);
         }
     }
 
     shouldComponentUpdate(nextProps) {
         // TODO check if shallow comparison is enough properties and geometry
-        return isEqual(nextProps.properties, this.props.properties) || isEqual(nextProps.geometry, this.props.geometry) || (nextProps.features !== this.props.features);
+        return !isEqual(nextProps.properties, this.props.properties) ||
+            !isEqual(nextProps.geometry, this.props.geometry) ||
+            (nextProps.features !== this.props.features);
     }
 
     componentWillUnmount() {
-        if (this._layer) {
-            this.props.container.removeLayer(this._layer);
-        }
+        this.removeLayer(this.props);
     }
 
     render() {
@@ -87,6 +90,10 @@ class Feature extends React.Component {
         }
     }
     addLayer(props, styles) {
+        /* remove the current layer
+        * to avoid multiple features to overlap
+        */
+        this.removeLayer(props);
         this._layer = geometryToLayer({
             type: props.type,
             geometry: props.geometry,
@@ -108,6 +115,14 @@ class Feature extends React.Component {
                 }, this.props.options.handleClickOnLayer ? this.props.options.id : null);
             }
         });
+    }
+    /* it removes the layer from a container otherwise we would create and add more
+     * layer with same features causing some unintended style override
+    */
+    removeLayer = (props) => {
+        if (this._layer) {
+            props.container.removeLayer(this._layer);
+        }
     }
 }
 

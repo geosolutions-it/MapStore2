@@ -68,8 +68,11 @@ module.exports = props => {
     let lngCorrected = null;
     if (latlng) {
         /* lngCorrected is the converted longitude in order to have the value between
-        the range (-180 / +180).*/
-        lngCorrected = latlng && Math.round(latlng.lng * 100000) / 100000;
+         * the range (-180 / +180).
+         * Precision has to be >= than the coordinate editor precision
+         * especially in the case of aeronautical degree edito which is 12
+        */
+        lngCorrected = latlng && Math.round(latlng.lng * 100000000000000000) / 100000000000000000;
         /* the following formula apply the converion */
         lngCorrected = lngCorrected - 360 * Math.floor(lngCorrected / 360 + 0.5);
     }
