@@ -357,7 +357,7 @@ const AnnotationsUtils = {
     * @return {object} feature
     */
     fromCircleToPolygon: (geometry, properties, style = STYLE_CIRCLE) => {
-        return {type: "Feature", geometry: properties.polygonGeom || geometry, properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle("Circle", style)}};
+        return {type: "Feature", geometry: properties.polygonGeom || geometry, properties: {id: properties.id || uuidv1(), ms_style: annStyleToOlStyle("Circle", style)}};
     },
     /**
     * Transform text point to single point with style
@@ -367,7 +367,7 @@ const AnnotationsUtils = {
     * @return {object} feature
     */
     fromTextToPoint: (geometry, properties, style = STYLE_TEXT) => {
-        return {type: "Feature", geometry, properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle("Text", style, properties.valueText)}};
+        return {type: "Feature", geometry, properties: {id: properties.id || uuidv1(), ms_style: annStyleToOlStyle("Text", style, properties.valueText)}};
     },
     /**
     * Transform LineString to geodesic LineString (with more points)
@@ -377,7 +377,7 @@ const AnnotationsUtils = {
     * @return {object} feature
     */
     fromLineStringToGeodesicLineString: (properties, style = STYLE_LINE) => {
-        return {type: "Feature", geometry: properties.geometryGeodesic, properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle(properties.geometryGeodesic.type, style)}};
+        return {type: "Feature", geometry: properties.geometryGeodesic, properties: {id: properties.id || uuidv1(), ms_style: annStyleToOlStyle(properties.geometryGeodesic.type, style)}};
     },
     /**
     * Flatten text point to single point with style
@@ -419,7 +419,7 @@ const AnnotationsUtils = {
             case "centerPoint": coordinates = turfCenter(ft).geometry.coordinates; break;
             default: break;
         }
-        return {coordinates, type};
+        return {type, coordinates};
     },
     /**
     * transform an annotation Feature into a simple geojson feature
@@ -434,13 +434,13 @@ const AnnotationsUtils = {
         if (properties.isText) {
             return AnnotationsUtils.fromTextToPoint(geometry, properties, style);
         }
-        if (properties.useGeodesicLines) {
+        if (geometry.type === "LineString" && properties.useGeodesicLines && style.filtering) {
             return AnnotationsUtils.fromLineStringToGeodesicLineString(properties, style);
         }
         return {
             type: "Feature",
             geometry,
-            properties: {...properties, id: properties.id || uuidv1(), ms_style: annStyleToOlStyle(geometry.type, style)}
+            properties: {id: properties.id || uuidv1(), ms_style: annStyleToOlStyle(geometry.type, style)}
         };
     },
     /**
@@ -454,9 +454,8 @@ const AnnotationsUtils = {
             if (f.type === "FeatureCollection") {
                 // takes the style from the feature coll if it is missing from the feature
                 return coll.concat(f.features.map(ft => {
-                    return castArray(ft.style || f.style).map(style => AnnotationsUtils.fromAnnotationToGeoJson({...ft, style}));
+                    return castArray(ft.style || f.style || {}).filter(s => isNil(s.filtering) ? true : s.filtering).map(style => AnnotationsUtils.fromAnnotationToGeoJson({...ft, style}));
                 }).reduce((p, c) => p.concat(c), []));
-                // AnnotationsUtils.fromAnnotationToGeoJson({...ft, style: ft.style || f.style})));
             }
             return f.geometry && f.geometry.type === "GeometryCollection" ? coll.concat(AnnotationsUtils.flattenGeometryCollection(f))
                 : coll.concat({type: "Feature", geometry: f.geometry, properties: {...f.properties, ms_style: annStyleToOlStyle(f.geometry.type, f.style)}});
