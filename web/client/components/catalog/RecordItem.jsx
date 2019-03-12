@@ -16,7 +16,7 @@ const uuidv1 = require('uuid/v1');
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const ContainerDimensions = require('react-container-dimensions').default;
 const ConfigUtils = require('../../utils/ConfigUtils');
-const {getRecordLinks, recordToLayer, extractOGCServicesReferences, buildSRSMap, extractEsriReferences, esriToLayer} = require('../../utils/CatalogUtils');
+const {getRecordLinks, recordToLayer, extractOGCServicesReferences, buildSRSMap, extractEsriReferences, esriToLayer, removeParameters} = require('../../utils/CatalogUtils');
 
 const tooltip = require('../misc/enhancers/tooltip');
 const Button = tooltip(ButtonRB);
@@ -76,7 +76,8 @@ class RecordItem extends React.Component {
         hideExpand: true,
         layers: [],
         onAdd: () => {},
-        source: 'metadataExplorer'
+        source: 'metadataExplorer',
+        record: {}
     };
 
     state = {};
@@ -168,7 +169,8 @@ class RecordItem extends React.Component {
                     onClick={() => {
                         const id = uuidv1();
                         if (this.props.source === 'backgroundSelector') {
-                            this.setState({showModal: {...wmts, type: 'wmts'}, id});
+                            const modalFeatures = {showModal: assign({}, wmts, {type: 'wmts'}), id};
+                            this.props.onAddBackgroundProperties(modalFeatures, true);
                         } else {
                             this.addwmtsLayer(wmts, id);
                         }
@@ -186,7 +188,15 @@ class RecordItem extends React.Component {
                     className="record-button"
                     bsStyle="primary"
                     bsSize={this.props.buttonSize}
-                    onClick={() => { this.addEsriLayer(); }}
+                    onClick={() => { 
+                        const id = uuidv1();
+                        if (this.props.source === 'backgroundSelector') {
+                            const modalFeatures = {showModal: assign({}, esri, {type: 'esri'}), id};
+                            this.props.onAddBackgroundProperties(modalFeatures, true);
+                        } else {
+                            this.addEsriLayer();
+                        }
+                         }}
                     key="addwmtsLayer">
                         <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap"/>
                 </Button>
@@ -221,9 +231,9 @@ class RecordItem extends React.Component {
 
     render() {
         let record = this.props.record;
-        const {wms, wmts} = record.group === 'background' && {} || extractOGCServicesReferences(record);
-        const disabled = record.group === 'background' && head((this.props.layers || []).filter(lay => lay.id === record.id));
-        const {esri} = extractEsriReferences(record);
+        const {wms, wmts} = record && record.group === 'background' && {} || record && record.references && extractOGCServicesReferences(record) || {};
+        const disabled = record && record.group === 'background' && head((this.props.layers || []).filter(lay => lay.id === record.id));
+        const {esri} = record && record.references && extractEsriReferences(record) || {};
         return (
             <Panel className="record-item" style={{opacity: disabled ? 0.4 : 1.0}}>
                 {!this.props.hideThumbnail && <div className="record-item-thumb">

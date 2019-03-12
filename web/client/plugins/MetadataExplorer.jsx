@@ -13,7 +13,6 @@ const assign = require('object-assign');
 const {createSelector} = require("reselect");
 const {Glyphicon, Panel} = require('react-bootstrap');
 const ContainerDimensions = require('react-container-dimensions').default;
-const Dock = require('react-dock').default;
 const {changeLayerProperties} = require('../actions/layers');
 const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalogMode,
     changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
@@ -87,7 +86,6 @@ const Catalog = connect(catalogSelector, {
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')
 })(require('../components/catalog/Catalog'));
 
-// const Dialog = require('../components/misc/Dialog');
 
 class MetadataExplorerComponent extends React.Component {
     static propTypes = {
