@@ -12,4 +12,7 @@
     <Category>
         <name>DASHBOARD</name>
     </Category>
+    <Category>
+        <name>BACKGROUND_THUMBNAIL</name>
+    </Category>
 </CategoryList>

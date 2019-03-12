@@ -401,6 +401,7 @@ const LayersUtils = {
             hidden: layer.hidden || false,
             origin: layer.origin,
             thematic: layer.thematic,
+            thumbId: layer.thumbId,
             ...assign({}, layer.params ? {params: layer.params} : {})
         };
     },

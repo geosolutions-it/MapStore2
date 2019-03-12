@@ -60,6 +60,7 @@ const DETAILS_SAVING = 'DETAILS:DETAILS_SAVING';
 const NO_DETAILS_AVAILABLE = "NO_DETAILS_AVAILABLE";
 const FEATURED_MAPS_SET_ENABLED = "FEATURED_MAPS:SET_ENABLED";
 const SAVE_MAP_RESOURCE = "SAVE_MAP_RESOURCE";
+const BACKGROUND_THUMBNAIL_CREATED = "BACKGROUND_THUMBNAIL_CREATED";
 
 
 /**
@@ -604,6 +605,7 @@ function createThumbnail(map, metadataMap, nameThumbnail, dataThumbnail, categor
     };
 }
 
+
 /**
  * Save all the metadata and thumbnail, if needed.
  * @memberof actions.maps
@@ -750,6 +752,12 @@ function saveDetails(detailsText) {
     };
 }
 
+function backgroundThumbnailsCreated(data) {
+    return {
+        type: BACKGROUND_THUMBNAIL_CREATED,
+        data
+    };
+}
 /**
  * deletes details section in the map state
  * @memberof actions.maps
@@ -957,5 +965,6 @@ module.exports = {
     mapError,
     mapsSearchTextChanged,
     updateAttribute,
-    saveMapResource
+    saveMapResource,
+    backgroundThumbnailsCreated, BACKGROUND_THUMBNAIL_CREATED
 };

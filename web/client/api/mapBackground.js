@@ -119,7 +119,9 @@ const getRecords = (url, startPosition, maxRecords, text, options, layers) => {
     });
 };
 
+const reset = () => {};
 module.exports = {
     getRecords,
+    reset,
     textSearch: (url, startPosition, maxRecords, text, options, layers) => getRecords(url, startPosition, maxRecords, text, options, layers)
 };

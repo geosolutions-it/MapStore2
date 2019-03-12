@@ -11,6 +11,7 @@ const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button: ButtonRB, Glyphicon} = require('react-bootstrap');
 const {isObject, head} = require('lodash');
+const assign = require('object-assign');
 const uuidv1 = require('uuid/v1');
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const ContainerDimensions = require('react-container-dimensions').default;
@@ -22,11 +23,6 @@ const Button = tooltip(ButtonRB);
 const defaultThumb = require('./img/default.jpg');
 
 const ModalMock = require('../background/ModalMock');
-
-const {layersSelector} = require('../../selectors/layers');
-
-const {connect} = require('react-redux');
-const {createSelector} = require('reselect');
 
 class RecordItem extends React.Component {
     static propTypes = {
@@ -50,13 +46,22 @@ class RecordItem extends React.Component {
         onPropertiesChange: PropTypes.func,
         onLayerChange: PropTypes.func,
         layers: PropTypes.array,
-        onAdd: PropTypes.func
+        onAdd: PropTypes.func,
+        source: PropTypes.string,
+        modalParams: PropTypes.object,
+        onAddBackgroundProperties: PropTypes.func,
+        onUpdateThumbnail: PropTypes.func,
+        unsavedChanges: PropTypes.bool,
+        deletedId: PropTypes.string
     };
 
     static defaultProps = {
+        modalParams: {showModal: false},
         buttonSize: "small",
         crs: "EPSG:3857",
         currentLocale: 'en-US',
+        onUpdateThumbnail: () => {},
+        onAddBackgroundProperties: () => {},
         onCopy: () => {},
         onError: () => {},
         onLayerAdd: () => {},
@@ -70,7 +75,8 @@ class RecordItem extends React.Component {
         hideIdentifier: false,
         hideExpand: true,
         layers: [],
-        onAdd: () => {}
+        onAdd: () => {},
+        source: 'metadataExplorer'
     };
 
     state = {};
@@ -80,6 +86,7 @@ class RecordItem extends React.Component {
     }
 
     componentWillUnmount() {
+
         document.removeEventListener('click', this.handleClick, false);
     }
 
@@ -103,6 +110,7 @@ class RecordItem extends React.Component {
         const {wms, wmts} = record.group === 'background' && {} || extractOGCServicesReferences(record);
         // let's create the buttons
         let buttons = [];
+        const buttonText = this.props.source === 'backgroundSelector' ? 'Add Background' : 'Add To Map';
         // TODO addLayer and addwmtsLayer do almost the same thing and they should be unified
         if (record.group === 'background') {
             buttons.push(
@@ -119,7 +127,7 @@ class RecordItem extends React.Component {
                         // this.props.onAdd();
                     }}
                     key="addlayer">
-                        <Glyphicon glyph="plus" />&nbsp;Add Background
+                        <Glyphicon glyph="plus" />&nbsp;{buttonText}
                 </Button>
             );
         }
@@ -132,15 +140,18 @@ class RecordItem extends React.Component {
                     bsSize={this.props.buttonSize}
                     onClick={() => {
                         const id = uuidv1();
-                        // this.addLayer(wms, id);
-                        /*this.props.onLayerChange('currentLayer', {...record, id, type: 'wms'});
-                        this.props.onLayerChange('tempLayer', {...record, id, type: 'wms'});
-                        this.props.onPropertiesChange(id, {visibility: true});*/
+                        if (this.props.source === 'backgroundSelector') {
 
-                        this.setState({showModal: {...wms, type: 'wms'}, id});
+                            const modalFeatures = {showModal: assign({}, wms, {type: 'wms'}), id};
+                            this.props.onAddBackgroundProperties(modalFeatures, true);
+                        } else {
+                            this.addLayer(wms);
+                        }
+
+
                     }}
                     key="addlayer">
-                        <Glyphicon glyph="plus" />&nbsp;Add Background
+                        <Glyphicon glyph="plus" />&nbsp;{buttonText}
                 </Button>
             );
         }
@@ -153,16 +164,15 @@ class RecordItem extends React.Component {
                     bsSize={this.props.buttonSize}
                     onClick={() => {
                         const id = uuidv1();
-                        // this.addwmtsLayer(wmts, id);
+                        if (this.props.source === 'backgroundSelector') {
+                            this.setState({showModal: {...wmts, type: 'wmts'}, id});
+                        } else {
+                            this.addwmtsLayer(wmts, id);
+                        }
 
-                        /*this.props.onLayerChange('currentLayer', {...record, id, type: 'wmts'});
-                        this.props.onLayerChange('tempLayer', {...record, id, type: 'wmts'});
-                        this.props.onPropertiesChange(id, {visibility: true});*/
-
-                        this.setState({showModal: {...wmts, type: 'wmts'}, id});
                     }}
                     key="addwmtsLayer">
-                        <Glyphicon glyph="plus" />&nbsp;Add Background
+                        <Glyphicon glyph="plus" />&nbsp;{buttonText}
                 </Button>
             );
         }
@@ -227,27 +237,29 @@ class RecordItem extends React.Component {
                     {!disabled ? this.renderButtons(record) : 'Added to background selector'}
                 </div>
                 <ModalMock
+                    deletedId = {this.props.deletedId}
+                    unsavedChanges = {this.props.unsavedChanges}
                     add
-                    showModal={this.state.showModal}
-                    onClose={() => this.setState({showModal: false, id: undefined})}
+                    modalParams={this.props.modalParams}
+                    onClose={() => this.props.onAddBackgroundProperties(null, false)}
                     onSave={() => {
 
-                        if (this.state.showModal.type === 'wms') {
-                            this.addLayer(this.state.showModal, this.state.id, this.state.showModal.title);
+                        if (this.props.modalParams.showModal.type === 'wms') {
+                            this.addLayer(this.props.modalParams.showModal, this.props.modalParams.id, this.props.modalParams.showModal.title);
                         }
 
-                        if (this.state.showModal.type === 'wmts') {
-                            this.addwmtsLayer(this.state.showModal, this.state.id, this.state.showModal.title);
+                        if (this.props.modalParams.showModal.type === 'wmts') {
+                            this.addwmtsLayer(this.props.modalParams.showModal, this.props.modalParams.id, this.props.modalParams.showModal.title);
                         }
-
-                        this.props.onLayerChange('currentLayer', {...this.state.showModal, id: this.state.id});
-                        this.props.onLayerChange('tempLayer', {...this.state.showModal, id: this.state.id});
-                        this.props.onPropertiesChange( this.state.id, {visibility: true});
-
-                        this.setState({showModal: false, id: undefined});
+                        this.props.onPropertiesChange(this.props.modalParams.id, this.props.modalParams.showModal);
+                        this.props.onLayerChange('currentLayer', assign({}, this.props.modalParams.showModal, {id: this.props.modalParams.id}));
+                        this.props.onLayerChange('tempLayer', this.props.modalParams.showModal);
+                        this.props.onPropertiesChange( this.props.modalParams.id, {visibility: true});
+                        this.props.onUpdateThumbnail(this.props.modalParams.newThumbnail, this.props.modalParams.thumbnailData, false, this.props.modalParams.id);
 
                     }}
-                    onUpdate={showModal => this.setState({showModal})}/>
+                    updateThumbnail={(data, url) => this.props.onUpdateThumbnail(data, url, true, this.props.modalParams.id)}
+                   />
             </Panel>
         );
     }
@@ -267,15 +279,17 @@ class RecordItem extends React.Component {
         if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
         } else {
+            const properties = {
+                removeParams,
+                url,
+                id,
+                title,
+                catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ? this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier : null
+            };
+            const LayerGroup = this.props.source === 'backgroundSelector' ? {group: 'background'} : {};
+            let layerProperties = assign({}, properties, LayerGroup);
             this.props.onLayerAdd(
-                recordToLayer(this.props.record, "wms", {
-                    group: 'background',
-                    removeParams,
-                    url,
-                    id,
-                    title,
-                    catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ? this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier : null
-                }));
+                recordToLayer(this.props.record, "wms", layerProperties));
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
                 let crs = this.props.record.boundingBox.crs;
@@ -291,13 +305,15 @@ class RecordItem extends React.Component {
         if (wmts.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
         } else {
-            this.props.onLayerAdd(recordToLayer(this.props.record, "wmts", {
+            const properties = {
                 removeParams,
                 url,
-                group: 'background',
                 id,
                 title
-            }));
+            };
+            const LayerGroup = this.props.source === 'backgroundSelector' ? {group: 'background'} : {};
+            let layerProperties = assign({}, properties, LayerGroup);
+            this.props.onLayerAdd(recordToLayer(this.props.record, "wmts", layerProperties));
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
                 let crs = this.props.record.boundingBox.crs;
@@ -312,4 +328,4 @@ class RecordItem extends React.Component {
     };
 }
 
-module.exports = connect(createSelector([layersSelector], (layers) => ({layers})))(RecordItem);
+module.exports = RecordItem;

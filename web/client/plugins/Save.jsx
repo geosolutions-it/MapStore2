@@ -15,7 +15,7 @@ const {Glyphicon} = require('react-bootstrap');
 const Message = require('../components/I18N/Message');
 const {toggleControl} = require('../actions/controls');
 const {loadMapInfo} = require('../actions/config');
-const {saveMapResource} = require('../actions/maps');
+const {saveMapResource, backgroundThumbnailsCreated} = require('../actions/maps');
 
 const ConfirmModal = require('../components/maps/modals/ConfirmModal');
 const ConfigUtils = require('../utils/ConfigUtils');
@@ -23,11 +23,12 @@ const ConfigUtils = require('../utils/ConfigUtils');
 const {mapSelector} = require('../selectors/map');
 const {layersSelector, groupsSelector} = require('../selectors/layers');
 const {mapOptionsToSaveSelector} = require('../selectors/mapsave');
+const {backgroundListSelector} = require('../selectors/backgroundselector');
 
 const MapUtils = require('../utils/MapUtils');
 const showSelector = state => state.controls && state.controls.save && state.controls.save.enabled;
 const textSearchConfigSelector = state => state.searchconfig && state.searchconfig.textSearchConfig;
-const selector = createSelector(mapSelector, mapOptionsToSaveSelector, layersSelector, groupsSelector, showSelector, textSearchConfigSelector, (map, additionalOptions, layers, groups, show, textSearchConfig) => ({
+const selector = createSelector(mapSelector, mapOptionsToSaveSelector, layersSelector, groupsSelector, showSelector, textSearchConfigSelector, backgroundListSelector, (map, additionalOptions, layers, groups, show, textSearchConfig, backgrounds) => ({
     currentZoomLvl: map && map.zoom,
     show,
     map,
@@ -35,7 +36,8 @@ const selector = createSelector(mapSelector, mapOptionsToSaveSelector, layersSel
     mapId: map && map.mapId,
     layers,
     textSearchConfig,
-    groups
+    groups,
+    backgrounds
 }));
 
 class Save extends React.Component {
@@ -50,13 +52,16 @@ class Save extends React.Component {
         layers: PropTypes.array,
         groups: PropTypes.array,
         params: PropTypes.object,
-        textSearchConfig: PropTypes.object
+        textSearchConfig: PropTypes.object,
+        backgrounds: PropTypes.array,
+        backgroundThumbnailsCreated: PropTypes.func
     };
 
     static defaultProps = {
         additionalOptions: {},
         onMapSave: () => {},
         loadMapInfo: () => {},
+        backgroundThumbnailsCreated: () => {},
         show: false
     };
 
@@ -92,7 +97,15 @@ class Save extends React.Component {
             if (this.props.map && this.props.layers) {
                 const resultingmap = MapUtils.saveMapConfiguration(this.props.map, this.props.layers, this.props.groups, this.props.textSearchConfig, this.props.additionalOptions);
                 const {name, description} = this.props.map.info;
-                this.props.onMapSave({id: this.props.mapId, data: resultingmap, metadata: {name, description}, category: "MAP"});
+                if (this.props.backgrounds && this.props.backgrounds.length > 0) {
+                    this.props.backgroundThumbnailsCreated({
+                        backgrounds: this.props.backgrounds,
+                        metadata: {name, description}
+                    });
+
+                }else {
+                    this.props.onMapSave({id: this.props.mapId, data: resultingmap, metadata: {name, description}, category: "MAP"});
+                }
                 this.props.onClose();
             }
         }
@@ -104,7 +117,8 @@ module.exports = {
         {
             onClose: toggleControl.bind(null, 'save', false),
             onMapSave: saveMapResource,
-            loadMapInfo
+            loadMapInfo,
+            backgroundThumbnailsCreated
         })(assign(Save, {
             BurgerMenu: {
                 name: 'save',

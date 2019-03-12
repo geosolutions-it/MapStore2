@@ -19,7 +19,9 @@ const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalog
     changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
     addLayer, addLayerError, resetCatalog, focusServicesList, changeText} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
+const {addBackgroundProperties, updateThumbnail} = require('../actions/backgroundselector');
 const {currentLocaleSelector} = require("../selectors/locale");
+const {layersSelector} = require('../selectors/layers');
 const {setControlProperty, toggleControl} = require("../actions/controls");
 const {resultSelector, serviceListOpenSelector, newServiceSelector,
     newServiceTypeSelector, selectedServiceTypeSelector, searchOptionsSelector,
@@ -29,12 +31,17 @@ const {resultSelector, serviceListOpenSelector, newServiceSelector,
 } = require("../selectors/catalog");
 
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+const {metadataSourceSelector, modalParamsSelector, unsavedChangesSelector} = require('../selectors/backgroundselector');
 const Message = require("../components/I18N/Message");
 require('./metadataexplorer/css/style.css');
 
 const CatalogUtils = require('../utils/CatalogUtils');
 
 const catalogSelector = createSelector([
+    (state) => unsavedChangesSelector(state),
+    (state) => layersSelector(state),
+    (state) => modalParamsSelector(state),
+    (state) => metadataSourceSelector(state),
     (state) => authkeyParamNameSelector(state),
     (state) => resultSelector(state),
     (state) => savingSelector(state),
@@ -44,7 +51,11 @@ const catalogSelector = createSelector([
     (state) => selectedServiceTypeSelector(state),
     (state) => searchOptionsSelector(state),
     (state) => currentLocaleSelector(state)
-], (authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale) =>({
+], (unsavedChanges, layers, modalParams, source, authkeyParamNames, result, saving, openCatalogServiceList, newService, newformat, selectedFormat, options, currentLocale) =>({
+    unsavedChanges,
+    layers,
+    modalParams,
+    source,
     authkeyParamNames,
     saving,
     openCatalogServiceList,
@@ -65,6 +76,8 @@ const catalogClose = () => {
 
 const Catalog = connect(catalogSelector, {
     // add layer action to pass to the layers
+    onUpdateThumbnail: updateThumbnail,
+    onAddBackgroundProperties: addBackgroundProperties,
     onZoomToExtent: zoomToExtent,
     onFocusServicesList: focusServicesList,
     onPropertiesChange: changeLayerProperties,
@@ -189,7 +202,8 @@ const MetadataExplorerPlugin = connect(metadataExplorerSelector, {
 const API = {
     csw: require('../api/CSW'),
     wms: require('../api/WMS'),
-    wmts: require('../api/WMTS')
+    wmts: require('../api/WMTS'),
+    backgrounds: require('../api/mapBackground')
 };
 /**
  * MetadataExplorer plugin. Shows the catalogs results (CSW, WMS and WMTS).
@@ -220,7 +234,7 @@ module.exports = {
             position: 5,
             text: <Message msgId="catalog.title"/>,
             icon: <Glyphicon glyph="folder-open"/>,
-            action: () => ({type: ""}),
+            action: setControlProperty.bind(null, "metadataexplorer", "enabled", true, true),
             priority: 2,
             doNotHide: true
         }

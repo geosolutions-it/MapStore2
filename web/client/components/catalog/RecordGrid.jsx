@@ -31,7 +31,13 @@ class RecordGrid extends React.Component {
         currentLocale: PropTypes.string,
         hideThumbnail: PropTypes.bool,
         hideIdentifier: PropTypes.bool,
-        hideExpand: PropTypes.bool
+        hideExpand: PropTypes.bool,
+        source: PropTypes.string,
+        onAddBackgroundProperties: PropTypes.func,
+        modalParams: PropTypes.object,
+        layers: PropTypes.object,
+        onUpdateThumbnail: PropTypes.func,
+        unsavedChanges: PropTypes.bool
     };
 
     static defaultProps = {
@@ -49,6 +55,12 @@ class RecordGrid extends React.Component {
 			<Col {...this.props.column} key={record.identifier}>
                 <Item
                     {...this.props}
+                    unsavedChanges={this.props.unsavedChanges}
+                    layers={this.props.layers}
+                    modalParams={this.props.modalParams}
+                    onUpdateThumbnail={this.props.onUpdateThumbnail}
+                    onAddBackgroundProperties = {this.props.onAddBackgroundProperties}
+                    source= {this.props.source}
                     onLayerAdd={this.props.onLayerAdd}
                     onZoomToExtent={this.props.onZoomToExtent}
                     zoomToLayer={this.props.zoomToLayer}

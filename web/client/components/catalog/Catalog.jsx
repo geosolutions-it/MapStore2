@@ -10,6 +10,7 @@ const PropTypes = require('prop-types');
 const Message = require('../I18N/Message');
 const LocaleUtils = require('../../utils/LocaleUtils');
 const assign = require('object-assign');
+const {omit} = require('lodash');
 const BorderLayout = require('../layout/BorderLayout');
 const Select = require('react-select');
 const SwitchPanel = require('../misc/switch/SwitchPanel');
@@ -64,7 +65,13 @@ class Catalog extends React.Component {
         zoomToLayer: PropTypes.bool,
         hideThumbnail: PropTypes.bool,
         hideIdentifier: PropTypes.bool,
-        hideExpand: PropTypes.bool
+        hideExpand: PropTypes.bool,
+        source: PropTypes.string,
+        onAddBackgroundProperties: PropTypes.func,
+        modalParams: PropTypes.object,
+        layers: PropTypes.array,
+        onUpdateThumbnail: PropTypes.func,
+        unsavedChanges: PropTypes.bool
     };
 
     static contextTypes = {
@@ -120,7 +127,7 @@ class Catalog extends React.Component {
         if (this.props.selectedService &&
             this.isValidServiceSelected() &&
             this.props.services[this.props.selectedService].autoload) {
-            this.search({services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText});
+            this.search({services: this.excludedBackgrounds(), selectedService: this.props.selectedService, searchText: this.props.searchText});
         }
     }
 
@@ -151,7 +158,7 @@ class Catalog extends React.Component {
 
     onKeyDown = (event) => {
         if (event.keyCode === 13) {
-            this.search({services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText});
+            this.search({services: this.excludedBackgrounds(), selectedService: this.props.selectedService, searchText: this.props.searchText});
         }
     };
 
@@ -209,6 +216,12 @@ class Catalog extends React.Component {
     renderRecords = () => {
         return (<div className="catalog-results">
                 <RecordGrid {...this.props} {...this.props.gridOptions} key="records"
+                    unsavedChanges={this.props.unsavedChanges}
+                    onUpdateThumbnail = {this.props.onUpdateThumbnail}
+                    layers={this.props.layers}
+                    modalParams= {this.props.modalParams}
+                    onAddBackgroundProperties={this.props.onAddBackgroundProperties}
+                    source={this.props.source}
                     records={this.props.records}
                     authkeyParamNames={this.props.authkeyParamNames}
                     catalogURL={this.isValidServiceSelected() && this.props.services[this.props.selectedService].url || ""}
@@ -225,7 +238,7 @@ class Catalog extends React.Component {
                     hideIdentifier={this.props.hideIdentifier}
                     hideExpand={this.props.hideExpand}
                     onAdd={() => {
-                        this.search({services: this.props.services, selectedService: this.props.selectedService});
+                        this.search({services: this.excludedBackgrounds(), selectedService: this.props.selectedService});
                     }}
                 />
         </div>);
@@ -235,7 +248,7 @@ class Catalog extends React.Component {
         const buttons = [];
         if (this.props.mode === "view" ) {
             if (this.props.includeSearchButton) {
-                buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={() => this.search({services: this.props.services, selectedService: this.props.selectedService, searchText: this.props.searchText})}
+                buttons.push(<Button bsStyle="primary" style={this.props.buttonStyle} onClick={() => this.search({services: this.excludedBackgrounds(), selectedService: this.props.selectedService, searchText: this.props.searchText})}
                             className={this.props.buttonClassName} key="catalog_search_button" disabled={!this.isValidServiceSelected()}>
                             {this.renderLoading()} <Message msgId="catalog.search"/>
                         </Button>);
@@ -300,7 +313,7 @@ class Catalog extends React.Component {
         return this.props.formats.map((format) => <option value={format.name} key={format.name}>{format.label}</option>);
     };
     getServices = () => {
-        return Object.keys(this.props.services).map(s => {
+        return Object.keys(this.excludedBackgrounds()).map(s => {
             return assign({}, this.props.services[s], {label: this.props.services[s].title, value: s});
         });
     };
@@ -398,22 +411,17 @@ class Catalog extends React.Component {
                                 onChange={(e) => this.props.onChangeTitle(e.target.value)}/>
                         </Col>
                     </FormGroup>
-              
+
                     </Form>
 
                     <SwitchPanel expanded={this.state.expanded} title={<div style={{paddingLeft: 14}}>Advanced Settings</div>} onSwitch={expanded => this.setState({expanded})}>
-                    
 
-                      
-                        
-                     
-                           
-         
+
                         <FormGroup style={{ overflow: 'hidden'}}>
                         <Col xs={12} ><Checkbox value="autoload" onChange={(e) => this.props.onChangeAutoload(e.target.checked)} checked={this.props.newService.autoload}>
                                   <Message msgId="catalog.autoload"/>
                                 </Checkbox></Col>
-                        
+
                         <Col xs={12} ><hr/><Checkbox onChange={() => this.setState({activeBasic: !this.state.activeBasic})}>Basic Authentication</Checkbox></Col>
                                 <div style={{marginBottom: 8, width: '100%'}}>
                         <Col xs={6} >
@@ -429,7 +437,7 @@ class Catalog extends React.Component {
                                 </div>
                                 <div>
                                 <Col xs={6} >
-                                
+
                             <ControlLabel>Password</ControlLabel>
                             </Col>
                             <Col xs={6} >
@@ -475,7 +483,11 @@ class Catalog extends React.Component {
     }
 
     isValidServiceSelected = () => {
+        // if (this.props.source === 'backgroundSelector') {
+        //     return this.props.services[this.props.selectedService] === 'Map Background';
+        // }
         return this.props.services[this.props.selectedService] !== undefined;
+
     };
     search = ({services, selectedService, start = 1, searchText = ""} = {}) => {
         const url = services[selectedService].url;
@@ -503,11 +515,17 @@ class Catalog extends React.Component {
     handlePage = (eventKey) => {
         if (eventKey) {
             let start = (eventKey - 1) * this.props.pageSize + 1;
-            this.search({services: this.props.services, selectedService: this.props.selectedService, start, searchText: this.props.searchText});
+            this.search({services: this.excludedBackgrounds(), selectedService: this.props.selectedService, start, searchText: this.props.searchText});
             this.setState({
                 loading: true
             });
         }
+    };
+    excludedBackgrounds = () => {
+        if (this.props.source !== 'backgroundSelector') {
+            return omit(this.props.services, 'Map Backgrounds');
+        }
+        return this.props.services;
     };
 }
 

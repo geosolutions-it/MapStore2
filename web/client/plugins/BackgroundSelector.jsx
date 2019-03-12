@@ -9,13 +9,19 @@
 const {connect} = require('react-redux');
 const {toggleControl, setControlProperty} = require('../actions/controls');
 const {changeLayerProperties} = require('../actions/layers');
+const {addBackground, editBackgroundProperties, addBackgroundProperties,
+    updateThumbnail, removeThumbnail} = require('../actions/backgroundselector');
 
 const {createSelector} = require('reselect');
-const {layersSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector} = require('../selectors/layers');
+const {layersSelector, backgroundControlsSelector,
+    currentBackgroundSelector, tempBackgroundSelector} = require('../selectors/layers');
 const {mapTypeSelector} = require('../selectors/maptype');
 const {invalidateUnsupportedLayer} = require('../utils/LayersUtils');
 const {mapSelector} = require('../selectors/map');
+const {backgroundThumbSelector, isEditSelector, modalParamsSelector,
+    isDeletedIdSelector, backgroundListSelector} = require('../selectors/backgroundselector');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
+const {allBackgroundLayerSelector} = require('../selectors/layers');
 
 const {drawerEnabledControlSelector} = require('../selectors/controls');
 
@@ -70,6 +76,12 @@ const thumbs = {
 };
 
 const backgroundSelector = createSelector([
+        modalParamsSelector,
+        backgroundListSelector,
+        isDeletedIdSelector,
+        isEditSelector,
+        allBackgroundLayerSelector,
+        backgroundThumbSelector,
         mapSelector,
         layersSelector,
         backgroundControlsSelector,
@@ -80,7 +92,13 @@ const backgroundSelector = createSelector([
         state => mapLayoutValuesSelector(state, {left: true, bottom: true}),
         state => state.controls && state.controls.metadataexplorer && state.controls.metadataexplorer.enabled
     ],
-    (map, layers, controls, drawer, maptype, currentLayer, tempLayer, style, enabledCatalog) => ({
+    ( CurrentModalParams, backgroundList, deletedId, editing, backgrounds, thumbURL, map, layers, controls, drawer, maptype, currentLayer, tempLayer, style, enabledCatalog) => ({
+        CurrentModalParams,
+        backgroundList,
+        deletedId,
+        editing,
+        backgrounds,
+        thumbURL,
         size: map && map.size || {width: 0, height: 0},
         layers: layers.filter((l) => l && l.group === "background").map((l) => invalidateUnsupportedLayer(l, maptype)) || [],
         tempLayer,
@@ -122,8 +140,12 @@ const BackgroundSelectorPlugin = connect(backgroundSelector, {
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start'),
-    onAdd: setControlProperty.bind(null, 'metadataexplorer', 'enabled', true),
-    onRemove: removeNode
+    onAdd: addBackground,
+    onRemove: removeNode,
+    onEditBackgroundProperties: editBackgroundProperties,
+    onUpdateThumbnail: updateThumbnail,
+    removeThumbnail,
+    addBackgroundProperties
 }, (stateProps, dispatchProps, ownProps) => ({
         ...stateProps,
         ...dispatchProps,
@@ -138,6 +160,8 @@ const BackgroundSelectorPlugin = connect(backgroundSelector, {
 module.exports = {
     BackgroundSelectorPlugin,
     reducers: {
-        controls: require('../reducers/controls')
-    }
+        controls: require('../reducers/controls'),
+        backgroundSelector: require('../reducers/backgroundselector')
+    },
+    epics: require('../epics/backgroundselector')
 };

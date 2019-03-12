@@ -70,7 +70,7 @@ class PreviewButton extends React.Component {
                             glyph: 'wrench',
                             tooltip: 'Edit current background',
                             visible: !this.props.enabledCatalog && !!( this.props.currentLayer.type === 'wms' || this.props.currentLayer.type === 'wmts'),
-                            onClick: () => this.props.onEdit(this.props.currentLayer)
+                            onClick: () => this.props.onEdit()
                         },
                         {
                             glyph: 'trash',

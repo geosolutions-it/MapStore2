@@ -12,18 +12,16 @@ const assign = require('object-assign');
 const PreviewButton = require('./PreviewButton');
 const PreviewList = require('./PreviewList');
 const PreviewIcon = require('./PreviewIcon');
-
-const PropTypes = require('prop-types');
-const ResizableModal = require('../misc/ResizableModal');
-const {head} = require('lodash');
-const {Form, FormGroup, ControlLabel, FormControl, Button, Glyphicon} = require('react-bootstrap');
-const Thumbnail = require('../maps/forms/Thumbnail');
 const ModalMock = require('./ModalMock');
 
+const PropTypes = require('prop-types');
+const {head, last} = require('lodash');
 require('./css/background.css');
 
 class BackgroundSelector extends React.Component {
     static propTypes = {
+        backgroundList: PropTypes.array,
+        backgrounds: PropTypes.array,
         start: PropTypes.number,
         style: PropTypes.object,
         enabled: PropTypes.bool,
@@ -39,10 +37,22 @@ class BackgroundSelector extends React.Component {
         onStartChange: PropTypes.func,
         onAdd: PropTypes.func,
         enabledCatalog: PropTypes.bool,
-        onRemove: PropTypes.func
+        onRemove: PropTypes.func,
+        source: PropTypes.string,
+        thumbURL: PropTypes.string,
+        onEditBackgroundProperties: PropTypes.func,
+        addBackgroundProperties: PropTypes.func,
+        onUpdateThumbnail: PropTypes.func,
+        editing: PropTypes.bool,
+        removeThumbnail: PropTypes.func,
+        deletedId: PropTypes.string,
+        CurrentModalParams: PropTypes.object
     };
 
     static defaultProps = {
+        onEditBackgroundProperties: ()=> {},
+        addBackgroundProperties: ()=> {},
+        source: 'backgroundSelector',
         start: 0,
         style: {},
         enabled: false,
@@ -52,7 +62,7 @@ class BackgroundSelector extends React.Component {
         size: {width: 0, height: 0},
         dimensions: {},
         thumbs: {
-            unknown: require('./img/dafault.jpg')
+            unknown: require('./img/default.jpg')
         },
         onPropertiesChange: () => {},
         onToggle: () => {},
@@ -64,8 +74,7 @@ class BackgroundSelector extends React.Component {
 
     state = {
         additionalParameters: [],
-        id: 0,
-        showAlert: true
+        id: 0
     };
 
     componentWillUnmount() {
@@ -74,8 +83,18 @@ class BackgroundSelector extends React.Component {
         this.props.onStartChange(0);
     }
 
+    getThumbById = (id, backgrounds) => {
+        const thumb = head(backgrounds.filter( background => background.id === id));
+        if (thumb && thumb.hasOwnProperty('CurrentNewThumbnail') && thumb.CurrentNewThumbnail === undefined) {
+            return this.props.thumbs.unknown;
+        }
+        return thumb && thumb.CurrentNewThumbnail && decodeURIComponent(thumb.CurrentNewThumbnail) || thumb && thumb.source;
+    };
     getThumb = (layer) => {
-        return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || layer.thumbURL || this.props.thumbs.unknown;
+        return this.props.thumbs[layer.source] && this.props.thumbs[layer.source][layer.name] || (this.props.backgroundList && this.getThumbById(layer.id, this.props.backgroundList)) ||
+        (this.props.backgrounds && this.getThumbById(layer.id, this.props.backgrounds)) ||
+
+        layer.source || (this.props.thumbURL && decodeURIComponent(this.props.thumbURL)) || this.props.thumbs.unknown;
     };
 
     getIcons = (side, frame, margin, vertical) => {
@@ -139,121 +158,48 @@ class BackgroundSelector extends React.Component {
             height: buttonSize,
             width: buttonSize * visibleIconsLength
         };
-
+        const CurrentModalParams = last(this.props.backgroundList);
+        const editedLayer = layer.id && head(this.props.layers.filter(laa => laa.id === layer.id));
         return visibleIconsLength <= 0 && this.props.enabled ? null : (
             <span>
+                 <ModalMock
+                    deletedId = {this.props.deletedId}
+                    editing = {this.props.editing}
+                    add = {false}
+                    thumbURL= {src}
+                    CurrentModalParams= {CurrentModalParams}
+                    modalParams={editedLayer}
+                    onClose={() => {
+                        this.props.onEditBackgroundProperties(false);
+                        this.props.removeThumbnail(null);
+                    }}
+                    onSave={() => {
+
+                        this.props.onPropertiesChange(editedLayer);
+                        // this.props.onPropertiesChange( this.props.modalParams.id, {visibility: true});
+                        this.props.removeThumbnail(this.props.deletedId ? editedLayer.id : null);
+                        this.props.addBackgroundProperties( assign({}, editedLayer, this.props.CurrentModalParams), false);
+                        this.props.onEditBackgroundProperties(false);
+                    }}
+                    updateThumbnail={(data, url) => !data && !url ? this.props.removeThumbnail(editedLayer.id) : this.props.onUpdateThumbnail(data, url, false, editedLayer.id)}
+                   />
                 <div className={'background-plugin-position'} style={this.props.style}>
                     <PreviewButton
-                    onEdit={(lay) => this.setState({showModal: lay})}
+                    onEdit={() => {
+                        this.props.onEditBackgroundProperties(true);
+                    }}
                     onRemove={(id, type, lay) => {
                         const nextLayer = head(this.props.layers.filter(laa => laa.id !== lay.id && !laa.invalid));
                         this.props.onRemove(id, type, lay);
+                        this.props.removeThumbnail(id);
                         this.props.onPropertiesChange(nextLayer.id, {visibility: true});
                         this.props.onLayerChange('currentLayer', {...nextLayer});
                         this.props.onLayerChange('tempLayer', {...nextLayer});
-                    }} layers={this.props.layers} enabledCatalog={this.props.enabledCatalog} currentLayer={this.props.currentLayer} onAdd={() => this.props.onAdd()} showLabel={configuration.label} src={src} side={sideButton} frame={frame} margin={margin} labelHeight={labelHeight} label={layer.title} onToggle={this.props.onToggle}/>
+                    }} layers={this.props.layers} enabledCatalog={this.props.enabledCatalog} currentLayer={this.props.currentLayer} onAdd={() => this.props.onAdd(this.props.source || 'backgroundSelector')} showLabel={configuration.label} src={src} side={sideButton} frame={frame} margin={margin} labelHeight={labelHeight} label={layer.title} onToggle={this.props.onToggle}/>
                     <div className="background-list-container" style={listContainerStyle}>
                         <PreviewList vertical={configuration.vertical} start={this.props.start} bottom={0} height={previewListStyle.height} width={previewListStyle.width} icons={icons} pagination={pagination} length={visibleIconsLength} onStartChange={this.props.onStartChange} />
                     </div>
                 </div>
-                <ResizableModal
-                    title={"Mockup info"}
-                    show={this.state.showAlert}
-                    fade
-                    onClose={() => this.setState({showAlert: false})}
-                    >
-                    <div style={{padding: 8}}>
-                        <h4 className="text-danger">Don't add this modal!! (Mockup info) </h4>
-                        <p>
-                            Current mockup shows only the workflow for the following background actions edit, add and remove.
-                            The Metadaexplorer will contain Map Backgrounds catalog and 'Add Background' button only if open by plus button of Background Selector.  
-                        </p>
-                    </div>
-                </ResizableModal>
-                <ModalMock
-                    showModal={this.state.showModal}
-                    onClose={() => this.setState({showModal: false})}
-                    onSave={() => {
-                        this.props.onPropertiesChange(this.state.showModal.id, {...this.state.showModal});
-                        this.setState({showModal: false});
-                        this.props.onLayerChange('currentLayer', {...this.state.showModal});
-                        this.props.onLayerChange('tempLayer', {...this.state.showModal});
-                        this.props.onPropertiesChange(this.state.showModal.id, {visibility: true});
-                    }}
-                    onUpdate={showModal => this.setState({showModal})}/>
-                {/*<ResizableModal
-                    title={"Edit Current Background"}
-                    show={this.state.showModal}
-                    fade
-                    onClose={() => this.setState({showModal: false, additionalParameters: []})}
-                    buttons={[
-                        {
-                            text: 'Save',
-                            bsStyle: 'primary',
-                            onClick: () => {
-                                this.props.onPropertiesChange(this.state.showModal.id, {...this.state.showModal});
-                                this.setState({showModal: false, additionalParameters: []});
-                                this.props.onLayerChange('currentLayer', {...this.state.showModal});
-                                this.props.onLayerChange('tempLayer', {...this.state.showModal});
-                                this.props.onPropertiesChange(this.state.showModal.id, {visibility: true});
-                            }
-                        }
-                    ]}>
-                    <Form style={{padding: 8}}>
-                        <FormGroup>
-                            <ControlLabel>Thumbnail</ControlLabel>
-                            <div className="shadow-soft" style={{width: 180, margin: 'auto'}}>
-                                <Thumbnail maps={{
-                                    newThumbnail: this.state.showModal && this.state.showModal.thumbURL
-                                }}/>
-                            </div>
-                        </FormGroup>
-                        <FormGroup>
-                            <ControlLabel>Title</ControlLabel>
-                            <FormControl
-                                value={this.state.showModal && this.state.showModal.title}
-                                placeholder="Enter displayed name"
-                                onChange={event => this.setState({showModal: {...this.state.showModal, title: event.target.value} })}/>
-                        </FormGroup>
-                        <FormGroup controlId="formControlsSelect">
-                            <ControlLabel>Format</ControlLabel>
-                            <FormControl componentClass="select" placeholder="Select format"
-                                onChange={event => this.setState({showModal: {...this.state.showModal, format: event.target.value} })}>
-                                <option value="image/png">image/png</option>
-                                <option value="image/png8">image/png8</option>
-                                <option value="image/jpeg">image/jpeg</option>
-                                <option value="image/vnd.jpeg-png">image/vnd.jpeg-png</option>
-                                <option value="image/gif">image/gif</option>
-                            </FormControl>
-                        </FormGroup>
-                        <FormGroup>
-                            <ControlLabel>Style</ControlLabel>
-                            <FormControl componentClass="select" value={this.state.showModal && this.state.showModal.style}
-                                onChange={event => this.setState({showModal: {...this.state.showModal, style: event.target.value} })}
-                                placeholder="Enter custom style name">
-                                <option value="default">default</option>
-                                <option value="image/png8">my style</option>
-                            </FormControl>
-                        </FormGroup>
-                        <FormGroup>
-                            <div style={{display: 'flex', alignItems: 'center'}}>
-                                <ControlLabel style={{flex: 1}}>Additional Parameters </ControlLabel>
-                                <Button
-                                    className="square-button-md"
-                                    style={{borderColor: 'transparent'}}
-                                    onClick={() => this.setState({id: this.state.id + 1, additionalParameters:
-                                    [...this.state.additionalParameters, {id: this.state.id, param: '', val: ''}]})}>
-                                    <Glyphicon glyph="plus"/>
-                                </Button>
-                            </div>
-                            {this.state.additionalParameters.map((val) => (<div key={'val:' + val.id} style={{display: 'flex', marginTop: 8}}>
-                            <FormControl style={{flex: 1, marginRight: 8}} placeholder="Parameter"/>
-                            <FormControl style={{flex: 1, marginRight: 8}} placeholder="Value"/>
-                            <Button onClick={() => this.setState({ additionalParameters: this.state.additionalParameters.filter((aa) => val.id !== aa.id)})} className="square-button-md" style={{borderColor: 'transparent'}}><Glyphicon glyph="trash"/></Button>
-                            </div>))}
-                        </FormGroup>
-                    </Form>
-                </ResizableModal>*/}
             </span>
         );
     };

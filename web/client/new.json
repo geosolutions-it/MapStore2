@@ -16,9 +16,6 @@
         "source": "osm",
 				"group": "background",
         "visibility": true
-<<<<<<< HEAD
-			}
-=======
 			},
       {
         "type": "tileprovider",
@@ -65,7 +62,6 @@
           }
         ]
       }
->>>>>>> upstream/master
 		]
 	}
 }
