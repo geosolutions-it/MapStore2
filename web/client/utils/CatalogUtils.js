@@ -44,7 +44,7 @@ const filterOnMatrix = (SRS, matrixIds) => {
 const getThumb = (dc) => {
     let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
     return head([].filter.call( refs, (ref) => {
-        return ref.scheme === "WWW:LINK-1.0-http--image-thumbnail" || ref.scheme === "thumbnail" || (ref.scheme === "WWW:DOWNLOAD-1.0-http--download" && (ref.value || "").indexOf(`${dc.identifier || ""}-thumb`) !== -1);
+        return ref.scheme === "WWW:LINK-1.0-http--image-thumbnail" || ref.scheme === "thumbnail" || (ref.scheme === "WWW:DOWNLOAD-1.0-http--download" && (ref.value || "").indexOf(`${dc.identifier || ""}-thumb`) !== -1) || (ref.scheme === "WWW:DOWNLOAD-REST_MAP" && (ref.value || "").indexOf(`${dc.identifier || ""}-thumb`) !== -1);
     }));
 };
 
@@ -57,6 +57,7 @@ const converters = {
                 let dc = record.dc;
                 let thumbURL;
                 let wms;
+                let esri;
                 // look in URI objects for wms and thumbnail
                 if (dc && dc.URI) {
                     const URI = isArray(dc.URI) ? dc.URI : (dc.URI && [dc.URI] || []);
@@ -72,6 +73,14 @@ const converters = {
                         let urlObj = urlUtil.parse(wms.value, true);
                         let layerName = urlObj.query && urlObj.query.layers || dc.alternative;
                         wms = assign({}, wms, {name: layerName} );
+                    }
+                }// checks for esri arcgis in geonode csw
+                if (!wms && dc && dc.references && dc.references.length) {
+                    let refs = Array.isArray(dc.references) ? dc.references : [dc.references];
+                    esri = head([].filter.call(refs, (ref) => { return ref.scheme && ref.scheme === "WWW:DOWNLOAD-REST_MAP"; }));
+                    if (esri) {
+                        let layerName = dc.alternative;
+                        esri = assign({}, esri, {name: layerName} );
                     }
                 }
                 if (!thumbURL && dc && dc.references) {
@@ -117,6 +126,18 @@ const converters = {
                     };
                     references.push(wmsReference);
                 }
+                if (esri && esri.name) {
+                    let esriReference = {
+                        type: 'arcgis',
+                        url: esri.value,
+                        SRS: [],
+                        params: {
+                            name: esri.name
+                        }
+                    };
+                    references.push(esriReference);
+                }
+
                 if (thumbURL) {
                     let absolute = (thumbURL.indexOf("http") === 0);
                     if (!absolute) {
@@ -150,8 +171,23 @@ const converters = {
                 service: records.service,
                 boundingBox: WMS.getBBox(record),
                 dimensions: (record.Dimension && castArray(record.Dimension) || []).map((dim) => assign({}, {
-                    values: dim._ && dim._.split(',') || []
-                }, dim.$ || {})),
+                        values: dim._ && dim._.split(',') || []
+                    }, dim.$ || {}))
+                    // TODO: re-enable when support to inline values is full (now timeline miss snap, auto-select and forward-backward buttons enabled/disabled for this kind of values)
+                    // TODO: replace with capabilities URL service. something like this:
+                    /*
+                    .map(dim => dim && dim.name !== "time" ? dim : {
+                        ...dim,
+                        values: undefined, <-- remove values (they can be removed from dimension's epic instead, using them as initial value)
+                        source: { <-- add the source
+                            type: "wms-capabilities",
+                            url: options.url
+                        }
+                    })
+                    */
+                    // excludes time from dimensions. TODO: remove when time from WMS capabilities is supported
+                    .filter(dim => dim && dim.name !== "time"),
+
                 references: [{
                     type: "OGC:WMS",
                     url: options && options.url,
@@ -167,8 +203,13 @@ const converters = {
     wmts: (records, options) => {
         if (records && records.records) {
             return records.records.map((record) => {
+                let urls = castArray(WMTSUtils.getGetTileURL(record) || (options && options.url));
+                if (urls.length === 1) {
+                    urls = urls[0];
+                }
+                const capabilitiesURL = WMTSUtils.getCapabilitiesURL(record);
                 const matrixIds = castArray(record.TileMatrixSetLink || []).reduce((previous, current) => {
-                    const tileMatrix = head((record.TileMatrixSet || []).filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
+                    const tileMatrix = head((record.TileMatrixSet && castArray(record.TileMatrixSet) || []).filter((matrix) => matrix["ows:Identifier"] === current.TileMatrixSet));
                     const tileMatrixSRS = tileMatrix && CoordinatesUtils.getEPSGCode(tileMatrix["ows:SupportedCRS"]);
                     const levels = current.TileMatrixSetLimits && (current.TileMatrixSetLimits.TileMatrixLimits || []).map((limit) => ({
                         identifier: limit.TileMatrix,
@@ -197,6 +238,10 @@ const converters = {
                 description: getNodeText(record["ows:Abstract"] || record["ows:Title"] || record["ows:Identifier"]),
                 identifier: getNodeText(record["ows:Identifier"]),
                 tags: "",
+                style: record.style,
+                capabilitiesURL: capabilitiesURL,
+                queryable: record.queryable,
+                requestEncoding: record.requestEncoding,
                 tileMatrixSet: record.TileMatrixSet,
                 matrixIds,
                 TileMatrixSetLink: castArray(record.TileMatrixSetLink),
@@ -211,7 +256,7 @@ const converters = {
                 },
                 references: [{
                     type: "OGC:WMTS",
-                    url: record.GetTileUrl || (options && options.url),
+                    url: urls,
                     SRS: filterOnMatrix(record.SRS || [], matrixIds),
                     params: {
                         name: record["ows:Identifier"]
@@ -247,6 +292,10 @@ const extractOGCServicesReferences = (record = { references: [] }) => ({
         || reference.type.indexOf("OGC:WMS") > -1 && reference.type.indexOf("http-get-map") > -1))),
     wmts: head(record.references.filter(reference => reference.type && (reference.type === "OGC:WMTS"
         || reference.type.indexOf("OGC:WMTS") > -1 && reference.type.indexOf("http-get-map") > -1)))
+});
+const extractEsriReferences = (record = { references: [] }) => ({
+    esri: head(record.references.filter(reference => reference.type && (reference.type === "ESRI:SERVER"
+        || reference.type === "arcgis" )))
 });
 const getRecordLinks = (record) => {
     let wmsGetCap = head(record.references.filter(reference => reference.type &&
@@ -288,11 +337,12 @@ const CatalogUtils = {
     removeParameters,
     getRecordLinks,
     extractOGCServicesReferences,
+    extractEsriReferences,
     /**
      * Convert a record into a MS2 layer
      * @param  {Object} record            The record
      * @param  {String} [type="wms"]      The layer type
-     * @param  {Object} options an object with additinal options.
+     * @param  {Object} options an object with additional options.
      *  - `catalogURL` to attach to the layer
      *  - `removeParameters` if you didn't provided an `url` option and you want to use record's one, you can remove some params (typically authkey params) using this.
      *  - `url`, if you already have the correct service URL (typically when you want to use you URL already stripped from some parameters, e.g. authkey params)
@@ -305,13 +355,37 @@ const CatalogUtils = {
         // let's extract the references we need
         const {wms, wmts} = extractOGCServicesReferences(record);
         const ogcServiceReference = wms || wmts;
+
         // typically you should remove authkey parameters
-        const {url: originalUrl, params} = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(ogcServiceReference.url), ["request", "layer", "service", "version"].concat(removeParams));
+        const cleanURL = URL => removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(URL), ["request", "layer", "layers", "service", "version"].concat(removeParams));
+        let originalUrl;
+        let params;
+        const urls = ogcServiceReference.url;
+
+        // extract additional parameters and alternative URLs.
+        if (isArray(urls)) {
+            originalUrl = urls.map( u => cleanURL(u)).map( ({url: u}) => u);
+            params = urls.map(u => cleanURL(u)).map(({params: p}) => p).reduce( (prev, cur) => ({...prev, ...cur}), {});
+        } else {
+            const { url: uu, params: pp } = cleanURL(urls);
+            originalUrl = uu;
+            params = pp;
+        }
+
+        // calculate and normalize URL
+        // if array of 1 element, take simply the string
+        const toLayerURL = u => isArray(u) && u.length === 1 ? u[0] : u;
+        const layerURL = toLayerURL(url || originalUrl);
+
         const allowedSRS = buildSRSMap(ogcServiceReference.SRS);
         return {
             id,
             type: type,
-            url: url || originalUrl,
+            requestEncoding: record.requestEncoding, // WMTS KVP vs REST, KVP by default
+            style: record.style,
+            url: layerURL,
+            capabilitiesURL: record.capabilitiesURL,
+            queryable: record.queryable,
             visibility: true,
             dimensions: record.dimensions || [],
             name: ogcServiceReference.params && ogcServiceReference.params.name,
@@ -337,6 +411,31 @@ const CatalogUtils = {
     },
     getCatalogRecords: (format, records, options) => {
         return format === 'backgrounds' && records && records.records || converters[format] && converters[format](records, options) || null;
+    },
+    esriToLayer: (record) => {
+        if (!record || !record.references) {
+            // we don't have a valid record so no buttons to add
+            return null;
+        }
+        // let's extract the references we need
+        const {esri} = extractEsriReferences(record);
+        return {
+            type: esri.type,
+            url: esri.url,
+            visibility: true,
+            dimensions: record.dimensions || [],
+            name: esri.params && esri.params.name,
+            bbox: {
+                crs: record.boundingBox.crs,
+                bounds: {
+                    minx: record.boundingBox.extent[0],
+                    miny: record.boundingBox.extent[1],
+                    maxx: record.boundingBox.extent[2],
+                    maxy: record.boundingBox.extent[3]
+                }
+            }
+        };
+
     }
 };
 module.exports = CatalogUtils;

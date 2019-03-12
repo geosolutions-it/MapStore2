@@ -60,6 +60,8 @@
             "featureInfoFormatLbl": "确定响应格式",
             "legenderror": "图例不可用"
         },
+        "longitude": "Longitude",
+        "latitude": "Latitude",
         "notification": {
             "update": "更新",
             "warning": "警告",
@@ -131,13 +133,14 @@
         },
         "home":{
             "open": "打开",
-            "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
+            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and React<br/><small>visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore 2的开发旨在以简单直观的方式创建，保存和共享地图和混搭，这些地图和混搭创建的内容来自知名来源，如Google Maps和OpenStreetMap，或者由使用开放协议的组织提供的服务，如OGC WMS，WFS，WMTS 或TMS等等。<br/>有关更多详细信息，请访问<a href=\"/mapstore/docs/\">主页</a>。",
+            "description": "MapStore 2的开发旨在以简单直观的方式创建，保存和共享地图和混搭，这些地图和混搭创建的内容来自知名来源，如Google Maps和OpenStreetMap，或者由使用开放协议的组织提供的服务，如OGC WMS，WFS，WMTS 或TMS等等。<br/>有关更多详细信息，请访问<a href=\"https://mapstore.readthedocs.io/en/latest/\">主页</a>。",
             "Applications": "应用",
             "Examples": "例子",
             "LinkedinGroup": "Mapstore Linkedin Group",
             "scrollTop": "滚动到页面顶部",
+            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
             "ml": {
                 "title": "Keep in touch and stay up-to-date with the mailing lists",
                 "subscribe_users": "Subscribe Users Mailing List",
@@ -342,6 +345,8 @@
         "identifyTitle": "特征信息",
         "identifyNoQueryableLayers": "没有有效的可查询层",
         "identifyRevGeocodeHeader": "坐标",
+        "identifyShowCoordinateEditor": "Show coordinate editor",
+        "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyRevGeocodeModalTitle": "地址",
         "identifyRevGeocodeSubmitText": "更多信息",
         "identifyRevGeocodeCloseText": "关闭",
@@ -373,7 +378,11 @@
             "bearingLabel": "方位角"
         },
         "search":{
-            "placeholder": "按地点名称或坐标搜索 ...",
+            "decimal": "十进制",
+            "aeronautical": "航空",
+            "changeSearchInputField": "更改搜索工具",
+            "addressSearch": "按地点名称搜索",
+            "coordinatesSearch": "按坐标搜索",
             "searchservicesbutton": "配置搜索服务",
             "configpaneltitle": "创建/编辑搜索服务",
             "serviceslistlabel": "可用的服务",
@@ -731,7 +740,11 @@
             "QRCodeLinkTitle": "qr code",
             "msgCopiedUrl": "Copied",
             "msgToCopyUrl": "Click to copy",
-            "sharedTitle": "Check out my new map: "
+            "sharedTitle": "Check out my new map: ",
+            "advancedOptions": "Advanced Options",
+            "addBboxParam": "Add bbox param to sharing link",
+            "wrongBboxParamTitle": "Invalid bbox param",
+            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Snapshot Preview",
@@ -1196,6 +1209,114 @@
             "tooltip": "创建和编辑图层样式",
             "paneltitle": "样式工具",
             "layerlabel": "图层"
+        },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filter styles by name, title or abstract",
+            "templateFilterPlaceholder": "Filter styles templates by title",
+            "createStyleFromTemplate": "Select a template to create a new style",
+            "titleRequired": "<div>Title is required!</div><div>Title and abstract must be alphanumeric</div>",
+            "titleSettings": "Title",
+            "titleSettingsplaceholder": "Enter title (alphanumeric)",
+            "abstractSettings": "Abstract",
+            "abstractSettingsplaceholder": "Enter abstract (alphanumeric)",
+            "createStyleModalTitle": "Create new style",
+            "filterMatchNotFound": "No styles match entered text filter",
+            "backToList": "Back to style list",
+            "createNewStyle": "Create new style",
+            "editSelectedStyle": "Edit selected style",
+            "saveCurrentStyle": "Save current style",
+            "addSelectedTemplate": "Add selected template to list of styles",
+            "deleteSelectedStyle": "Delete selected style",
+            "closeWithoutSaveAlertTitle": "Style has changed",
+            "closeWithoutSaveAlert": "You are quitting the style editor without save your changes",
+            "deleteStyleAlertTitle": "Delete style",
+            "deleteStyleAlert": "Selected style will be permanently delete",
+            "delete": "Delete",
+            "defaultStyle": "Default style",
+            "availableStyle": "Available style",
+            "styleNotFound": "Style not found",
+            "noPermission": "User cannot edit styles",
+            "deletedStyleSuccessTitle": "Delete style",
+            "deletedStyleSuccessMessage": "Style has been successfully deleted",
+            "deletedStyleErrorTitle": "Delete style error",
+            "deletedStyleErrorMessage": "Could not delete current style",
+            "savedStyleTitle": "Style saved",
+            "savedStyleMessage": "Style has been successfully saved",
+            "missingAvailableStyles": "Missing styles",
+	        "missingAvailableStylesMessage": "<ul><h4>Possible causes:</h4> <li>Selected layer is a layer group</li><li>Layer is not correctly configured server side</li></ul>",
+            "createTmpErrorTitle": "New Temporary Style",
+            "createTmpStyleErrorMessage": "Temporary style could not be created. This could due an unsupported style format on the style service",
+            "updateTmpErrorTitle": "Temporary Style Update",
+            "updateTmpStyleErrorMessage": "Temporary style could not be updated. This could be on unsupported style format or connection issue.",
+            "createStyleErrorTitle": "New Style",
+            "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
+            "updateStyleErrorTitle": "Edit Style",
+            "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
+            "genericValidationError": "Style is not valid and it could not be applied.",
+            "setDefaultStyle": "Set selected style as default for the current layer",
+            "setDefaultStyleSuccessTitle": "Success on set default style",
+            "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
+            "setDefaultStyleErrorTitle": "Error on set default style",
+            "setDefaultStyleErrorMessage": "It's not possible apply selected style as default"
+        },
+        "playback": {
+            "settings": {
+                "tooltip": "Settings",
+                "title": "Playback Settings",
+                "frameDuration": "Frame Duration",
+                "range": {
+                    "title": "Animation Range",
+                    "zoomTooltip": "Zoom to current animation range",
+                    "animationStart": "Animation start",
+                    "animationEnd": "Animation end",
+                    "zoomToCurrentPlayackRange": "Zoom to current playback range",
+                    "setToCurrentViewRange": "Set to current view range",
+                    "fitToSelectedLayerRange": "Fit to selected layer's range"
+                },
+                "step": {
+                    "tooltip": "When 'Snap to guide Layer' option is disabled, you can customize the animation step",
+                    "label": "Animation Step",
+                    "year": "{number, plural, =0 {Year} =1 {Year} other {Years}}",
+                    "week": "{number, plural, =0 {Week} =1 {Week} other {Weeks}}",
+                    "day": "{number, plural, =0 {Day} =1 {Day} other {Days}}",
+                    "hour": "{number, plural, =0 {Hour} =1 {Hour} other {Hours}}",
+                    "minute": "{number, plural, =0 {Minute} =1 {Minute} other {Minutes}}",
+                    "second": "{number, plural, =0 {Second} =1 {Second} other {Seconds}}"
+                },
+                "mode": {
+                    "title": "Mode",
+                    "following": "Follow the animation",
+                    "followingDescription": "When the animation is active, follow the cursor"
+                }
+            },
+            "backwardStep": "Step backward",
+            "forwardStep" : "Step forward",
+            "play": "Play",
+            "pause": "Pause",
+            "paused": "Play (paused)",
+            "stop": "Stop"
+        },
+        "timeline": {
+            "settings": {
+                "title": "Timeline Settings",
+                "snapToGuideLayer": "Snap to guide layer",
+                "snapToGuideLayerTooltip": "Forces the time cursor to snap to the selected layer's data. Disable this option to unlock the time cursors and enable the customization of animation step"
+            },
+            "currentTime": "Go to current time",
+            "rangeStart":"Go to the current time range",
+            "rangeEnd" : "Go to the current time range",
+            "hideLayerName" : "Hide layers names",
+            "showLayerName" : "Show layers names",
+            "enableRange": "Enable time range",
+            "disableRange": "Disable time range",
+            "enablePlayBack": "Enable playback controls",
+            "disablePlayBack": "Disable playback controls",
+            "expand" : "Expand time slider",
+            "collapse" : "Collapse time slider",
+            "errors": {
+                "multidim_error_title": "Backend service is not responding",
+                "multidim_error_message": "The required services for multidinensional support are not responding. Please try again later or contact the administrator."
+            }
         },
         "rulesmanager": {
             "placeholders": {

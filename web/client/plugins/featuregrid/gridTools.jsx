@@ -9,7 +9,7 @@ module.exports = [{
         name: '',
         key: "geometry",
         width: 35,
-        locked: true,
+        frozen: true,
         events: {
             onClick: (p, opts, describe, {crs}= {}) => {
                 return p.geometry ? zoomToExtent(bbox(p), crs || "EPSG:4326") : {type: "NONE"};

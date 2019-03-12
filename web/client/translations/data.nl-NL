@@ -62,6 +62,8 @@
             "featureInfoFormatLbl": "Informatie, formaat van het antwoord",
             "legenderror": "Het legende is niet berijkbaar"
         },
+        "longitude": "Longitude",
+        "latitude": "Latitude",
         "notification": {
             "update": "Bijwerken",
             "warning": "Waarschuwing",
@@ -132,13 +134,14 @@
         },
         "home":{
             "open": "Openen",
-            "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
+            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and React<br/><small>visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. <br/>Bezoek onze <a href=\"/mapstore/docs/\">homepage</a> voor meer detail.",
+            "description": "MapStore is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. <br/>Bezoek onze <a href=\"https://mapstore.readthedocs.io/en/latest/\">homepage</a> voor meer detail.",
             "Applications": "Toepassingen",
             "Examples": "Voorbeelden",
             "LinkedinGroup": "Mapstore Linkedin groep",
             "scrollTop": "Terug naar boven",
+            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
             "ml": {
                 "title": "Blijf op de hoogte van de laatste ontwikkelingen via mailinglijsten",
                 "subscribe_users": "Abonneer u op de gebruikers mailinglijsten",
@@ -339,6 +342,8 @@
         "identifyTitle": "Item informatie",
         "identifyNoQueryableLayers": "Geen actieve laag nodig",
         "identifyRevGeocodeHeader": "Coördinaten",
+        "identifyShowCoordinateEditor": "Show coordinate editor",
+        "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyRevGeocodeModalTitle": "Adres",
         "identifyRevGeocodeSubmitText": "Meer informatie",
         "identifyRevGeocodeCloseText": "Afsluiten",
@@ -369,8 +374,12 @@
             "areaLabel": "Afstand",
             "bearingLabel": "Richting"
         },
-        "search": {
-            "placeholder": "Zoeken op plaatsnaam of coördinaten...",
+        "search":{
+            "decimal": "Decimal",
+            "aeronautical": "Aeronautical",
+            "changeSearchInputField": "Change the search tool",
+            "addressSearch": "Zoeken op locatienaam",
+            "coordinatesSearch": "Zoeken op coördinaten",
             "searchservicesbutton": "Opzoekservices configureren",
             "configpaneltitle": "Een opzoekservice aanmaken/wijzigen",
             "serviceslistlabel": "Beschikbare services",
@@ -694,7 +703,11 @@
             "code": "Embed",
             "QRCodeLinkTitle": "qr code",
             "msgCopiedUrl":"Gekopieerd",
-            "msgToCopyUrl":"Klik om te kopiëren"
+            "msgToCopyUrl":"Klik om te kopiëren",
+            "advancedOptions": "Advanced Options",
+            "addBboxParam": "Add bbox param to sharing link",
+            "wrongBboxParamTitle": "Invalid bbox param",
+            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Preview van de vastgelegde kaart",
@@ -1133,6 +1146,114 @@
             "tooltip": "Maak en bewerk een laagstijl",
             "paneltitle": "Laagstijl",
             "layerlabel": "Laag"
+        },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filter styles by name, title or abstract",
+            "templateFilterPlaceholder": "Filter styles templates by title",
+            "createStyleFromTemplate": "Select a template to create a new style",
+            "titleRequired": "<div>Title is required!</div><div>Title and abstract must be alphanumeric</div>",
+            "titleSettings": "Title",
+            "titleSettingsplaceholder": "Enter title (alphanumeric)",
+            "abstractSettings": "Abstract",
+            "abstractSettingsplaceholder": "Enter abstract (alphanumeric)",
+            "createStyleModalTitle": "Create new style",
+            "filterMatchNotFound": "No styles match entered text filter",
+            "backToList": "Back to style list",
+            "createNewStyle": "Create new style",
+            "editSelectedStyle": "Edit selected style",
+            "saveCurrentStyle": "Save current style",
+            "addSelectedTemplate": "Add selected template to list of styles",
+            "deleteSelectedStyle": "Delete selected style",
+            "closeWithoutSaveAlertTitle": "Style has changed",
+            "closeWithoutSaveAlert": "You are quitting the style editor without save your changes",
+            "deleteStyleAlertTitle": "Delete style",
+            "deleteStyleAlert": "Selected style will be permanently delete",
+            "delete": "Delete",
+            "defaultStyle": "Default style",
+            "availableStyle": "Available style",
+            "styleNotFound": "Style not found",
+            "noPermission": "User cannot edit styles",
+            "deletedStyleSuccessTitle": "Delete style",
+            "deletedStyleSuccessMessage": "Style has been successfully deleted",
+            "deletedStyleErrorTitle": "Delete style error",
+            "deletedStyleErrorMessage": "Could not delete current style",
+            "savedStyleTitle": "Style saved",
+            "savedStyleMessage": "Style has been successfully saved",
+            "missingAvailableStyles": "Missing styles",
+	        "missingAvailableStylesMessage": "<ul><h4>Possible causes:</h4> <li>Selected layer is a layer group</li><li>Layer is not correctly configured server side</li></ul>",
+            "createTmpErrorTitle": "New Temporary Style",
+            "createTmpStyleErrorMessage": "Temporary style could not be created. This could due an unsupported style format on the style service",
+            "updateTmpErrorTitle": "Temporary Style Update",
+            "updateTmpStyleErrorMessage": "Temporary style could not be updated. This could be on unsupported style format or connection issue.",
+            "createStyleErrorTitle": "New Style",
+            "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
+            "updateStyleErrorTitle": "Edit Style",
+            "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
+            "genericValidationError": "Style is not valid and it could not be applied.",
+            "setDefaultStyle": "Set selected style as default for the current layer",
+            "setDefaultStyleSuccessTitle": "Success on set default style",
+            "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
+            "setDefaultStyleErrorTitle": "Error on set default style",
+            "setDefaultStyleErrorMessage": "It's not possible apply selected style as default"
+        },
+        "playback": {
+            "settings": {
+                "tooltip": "Settings",
+                "title": "Playback Settings",
+                "frameDuration": "Frame Duration",
+                "range": {
+                    "title": "Animation Range",
+                    "zoomTooltip": "Zoom to current animation range",
+                    "animationStart": "Animation start",
+                    "animationEnd": "Animation end",
+                    "zoomToCurrentPlayackRange": "Zoom to current playback range",
+                    "setToCurrentViewRange": "Set to current view range",
+                    "fitToSelectedLayerRange": "Fit to selected layer's range"
+                },
+                "step": {
+                    "tooltip": "When 'Snap to guide Layer' option is disabled, you can customize the animation step",
+                    "label": "Animation Step",
+                    "year": "{number, plural, =0 {Year} =1 {Year} other {Years}}",
+                    "week": "{number, plural, =0 {Week} =1 {Week} other {Weeks}}",
+                    "day": "{number, plural, =0 {Day} =1 {Day} other {Days}}",
+                    "hour": "{number, plural, =0 {Hour} =1 {Hour} other {Hours}}",
+                    "minute": "{number, plural, =0 {Minute} =1 {Minute} other {Minutes}}",
+                    "second": "{number, plural, =0 {Second} =1 {Second} other {Seconds}}"
+                },
+                "mode": {
+                    "title": "Mode",
+                    "following": "Follow the animation",
+                    "followingDescription": "When the animation is active, follow the cursor"
+                }
+            },
+            "backwardStep": "Step backward",
+            "forwardStep" : "Step forward",
+            "play": "Play",
+            "pause": "Pause",
+            "paused": "Play (paused)",
+            "stop": "Stop"
+        },
+        "timeline": {
+            "settings": {
+                "title": "Timeline Settings",
+                "snapToGuideLayer": "Snap to guide layer",
+                "snapToGuideLayerTooltip": "Forces the time cursor to snap to the selected layer's data. Disable this option to unlock the time cursors and enable the customization of animation step"
+            },
+            "currentTime": "Go to current time",
+            "rangeStart":"Go to the current time range",
+            "rangeEnd" : "Go to the current time range",
+            "hideLayerName" : "Hide layers names",
+            "showLayerName" : "Show layers names",
+            "enableRange": "Enable time range",
+            "disableRange": "Disable time range",
+            "enablePlayBack": "Enable playback controls",
+            "disablePlayBack": "Disable playback controls",
+            "expand" : "Expand time slider",
+            "collapse" : "Collapse time slider",
+            "errors": {
+                "multidim_error_title": "Backend service is not responding",
+                "multidim_error_message": "The required services for multidinensional support are not responding. Please try again later or contact the administrator."
+            }
         },
         "rulesmanager": {
             "placeholders": {

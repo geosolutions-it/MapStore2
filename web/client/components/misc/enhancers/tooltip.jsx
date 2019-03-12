@@ -12,7 +12,7 @@ const OverlayTrigger = require('../OverlayTrigger');
 const Message = require('../../I18N/Message');
 
 /**
- * Tooltip enhancer. Enhances an object adding a (localizable) tooltip.
+ * Tooltip enhancer. Enhances an object adding a tooltip (with i18n support).
  * It is applied only if props contains `tooltip` or `tooltipId`. It have to be applied to a React (functional) component
  * @type {function}
  * @name tooltip

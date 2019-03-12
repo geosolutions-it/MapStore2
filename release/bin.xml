@@ -7,18 +7,10 @@
   <fileSets>
     <fileSet>
       <!-- the main webapp -->
-      <directory>../web/target/mapstore</directory>
-      <outputDirectory>mapstore2/webapps/mapstore</outputDirectory>
+      <directory>./bin-war/target/</directory>
+      <outputDirectory>mapstore2/webapps/</outputDirectory>
       <includes>
-        <include>**/*</include>
-      </includes>
-    </fileSet>
-    <fileSet>
-      <!-- the main database -->
-      <directory>target</directory>
-      <outputDirectory>mapstore2/webapps/mapstore</outputDirectory>
-      <includes>
-        <include>geostore.h2.db</include>
+        <include>mapstore.war</include>
       </includes>
     </fileSet>
     <fileSet>

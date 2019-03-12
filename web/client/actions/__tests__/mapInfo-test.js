@@ -29,7 +29,9 @@ var {
     hideMapinfoRevGeocode,
     getVectorInfo,
     toggleMapInfoState,
-    updateCenterToMarker
+    updateCenterToMarker,
+    TOGGLE_SHOW_COORD_EDITOR, toggleShowCoordinateEditor,
+    CHANGE_FORMAT, changeFormat
 } = require('../mapInfo');
 
 describe('Test correctness of the map actions', () => {
@@ -205,5 +207,17 @@ describe('Test correctness of the map actions', () => {
         const retval = updateCenterToMarker('enabled');
         expect(retval.type).toBe(UPDATE_CENTER_TO_MARKER);
         expect(retval.status).toBe('enabled');
+    });
+    it('toggleShowCoordinateEditor', () => {
+        const showCoordinateEditor = true;
+        const retval = toggleShowCoordinateEditor(showCoordinateEditor);
+        expect(retval.type).toBe(TOGGLE_SHOW_COORD_EDITOR);
+        expect(retval.showCoordinateEditor).toBe(showCoordinateEditor);
+    });
+    it('changeFormat', () => {
+        const format = "decimal";
+        const retval = changeFormat(format);
+        expect(retval.type).toBe(CHANGE_FORMAT);
+        expect(retval.format).toBe(format);
     });
 });

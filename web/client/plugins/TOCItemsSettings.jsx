@@ -10,8 +10,8 @@ const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
 const {layerSettingSelector, layersSelector, groupsSelector} = require('../selectors/layers');
 const {head, isArray} = require('lodash');
-const {withState, compose, defaultProps} = require('recompose');
-const {hideSettings, updateSettings, updateNode} = require('../actions/layers');
+const {compose, defaultProps} = require('recompose');
+const {hideSettings, updateSettings, updateNode, updateSettingsParams} = require('../actions/layers');
 const {getLayerCapabilities} = require('../actions/layerCapabilities');
 const {currentLocaleSelector} = require('../selectors/locale');
 const {updateSettingsLifecycle} = require("../components/TOC/enhancers/tocItemsSettings");
@@ -20,6 +20,9 @@ const defaultSettingsTabs = require('./tocitemssettings/defaultSettingsTabs');
 const LayersUtils = require('../utils/LayersUtils');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 const {isAdminUserSelector} = require('../selectors/security');
+const {setControlProperty} = require('../actions/controls');
+const {toggleStyleEditor} = require('../actions/styleeditor');
+const { initialSettingsSelector, originalSettingsSelector, activeTabSettingsSelector } = require('../selectors/controls');
 
 const tocItemsSettingsSelector = createSelector([
     layerSettingSelector,
@@ -27,15 +30,21 @@ const tocItemsSettingsSelector = createSelector([
     groupsSelector,
     currentLocaleSelector,
     state => mapLayoutValuesSelector(state, {height: true}),
-    isAdminUserSelector
-], (settings, layers, groups, currentLocale, dockStyle, isAdmin) => ({
+    isAdminUserSelector,
+    initialSettingsSelector,
+    originalSettingsSelector,
+    activeTabSettingsSelector
+], (settings, layers, groups, currentLocale, dockStyle, isAdmin, initialSettings, originalSettings, activeTab) => ({
     settings,
     element: settings.nodeType === 'layers' && isArray(layers) && head(layers.filter(layer => layer.id === settings.node)) ||
     settings.nodeType === 'groups' && isArray(groups) && head(groups.filter(group => group.id === settings.node)) || {},
     groups,
     currentLocale,
     dockStyle,
-    isAdmin
+    isAdmin,
+    initialSettings,
+    originalSettings,
+    activeTab
 }));
 
 /**
@@ -65,9 +74,13 @@ const TOCItemsSettingsPlugin = compose(
         onHideSettings: hideSettings,
         onUpdateSettings: updateSettings,
         onUpdateNode: updateNode,
-        onRetrieveLayerData: getLayerCapabilities
+        onRetrieveLayerData: getLayerCapabilities,
+        onUpdateOriginalSettings: setControlProperty.bind(null, 'layersettings', 'originalSettings'),
+        onUpdateInitialSettings: setControlProperty.bind(null, 'layersettings', 'initialSettings'),
+        onSetTab: setControlProperty.bind(null, 'layersettings', 'activeTab'),
+        onUpdateParams: updateSettingsParams,
+        onToggleStyleEditor: toggleStyleEditor
     }),
-    withState('activeTab', 'onSetTab', 'general'),
     updateSettingsLifecycle,
     defaultProps({
         getDimension: LayersUtils.getDimension,

@@ -7,7 +7,22 @@
  */
 var expect = require('expect');
 var search = require('../search');
-const {TEXT_SEARCH_RESULTS_LOADED, TEXT_SEARCH_LOADING, TEXT_SEARCH_ERROR, TEXT_SEARCH_RESULTS_PURGE, TEXT_SEARCH_NESTED_SERVICES_SELECTED, TEXT_SEARCH_CANCEL_ITEM, UPDATE_RESULTS_STYLE} = require('../../actions/search');
+const {
+    TEXT_SEARCH_RESULTS_LOADED,
+    TEXT_SEARCH_LOADING,
+    TEXT_SEARCH_ERROR,
+    TEXT_SEARCH_RESULTS_PURGE,
+    TEXT_SEARCH_NESTED_SERVICES_SELECTED,
+    TEXT_SEARCH_CANCEL_ITEM,
+    UPDATE_RESULTS_STYLE,
+    resetSearch,
+    changeFormat,
+    changeCoord,
+    changeActiveSearchTool
+} = require('../../actions/search');
+const {
+    resetControls
+} = require('../../actions/controls');
 
 describe('Test the search reducer', () => {
     it('search results loading', () => {
@@ -118,5 +133,45 @@ describe('Test the search reducer', () => {
             style
         });
         expect(state.style).toEqual(style);
+    });
+    it('update active search tool', () => {
+        const activeSearchTool = "coordinateSearch";
+        const state = search({}, changeActiveSearchTool(activeSearchTool));
+        expect(state.activeSearchTool).toEqual(activeSearchTool);
+    });
+    it('CHANGE_FORMAT', () => {
+        const format = "decimal";
+        const state = search({}, changeFormat(format));
+        expect(state.format).toEqual(format);
+    });
+    it('CHANGE_COORD', () => {
+        const coordinate = "lat";
+        const val = 2;
+        const state = search({}, changeCoord(coordinate, val));
+        expect(state.coordinate).toEqual({[coordinate]: val});
+    });
+    it('TEXT_SEARCH_RESET', () => {
+        // reset maintains only the style
+        let state = search({
+            style: {
+                color: "#ff0000"
+            },
+            searchText: "Rome",
+            results: []
+        }, resetSearch());
+        expect(state).toEqual({style: {
+            color: "#ff0000"
+        }});
+
+        // or it keeps one empty
+        state = search({}, resetSearch());
+        expect(state).toEqual({style: {}});
+    });
+    it('RESET_CONTROLS', () => {
+
+        const state = search({style: {
+            color: "#ff0000"
+        }}, resetControls());
+        expect(state).toBe(null);
     });
 });

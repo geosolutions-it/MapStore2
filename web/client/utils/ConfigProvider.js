@@ -766,6 +766,43 @@ const CONFIGPROVIDER = {
                 }
             }
         }
+    },
+    PDOK: {
+        url: 'https://geodata.nationaalgeoregister.nl/tiles/service/wmts?layer={variant}&tilematrixset=EPSG:3857&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}',
+        options: {
+            attribution: '<a href="https://www.pdok.nl/introductie?articleid=1949876">BRT Achtergrondkaart</a> by ' +
+                '<a href="https://www.kadaster.nl/">Kadaster</a>, <a href="http://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>',
+            format: 'png',
+            bounds: [
+                [48.0405018704, -1.65729160235],
+                [56.1105896442, 12.4317272654]
+            ],
+            minZoom: 6,
+            maxZoom: 19,
+            maxNativeZoom: 19
+        },
+        variants: {
+            brtachtergrondkaart: 'brtachtergrondkaart',
+            brtachtergrondkaartgrijs: 'brtachtergrondkaartgrijs',
+            brtachtergrondkaartpastel: 'brtachtergrondkaartpastel',
+            brtachtergrondkaartwater: 'brtachtergrondkaartwater',
+            luchtfotoRGB: {
+                url: 'https://geodata.nationaalgeoregister.nl/luchtfoto/rgb/wmts?layer={variant}&tilematrixset=EPSG:3857&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}',
+                options: {
+                    variant: 'Actueel_ortho25',
+                    attribution: '<a href="https://www.pdok.nl/introductie?articleid=1954278">Luchtfoto Actueel Ortho 25cm RGB</a> ' +
+                        'by <a href="http://www.beeldmateriaal.nl">Beeldmateriaal.nl</a>, <a href="http://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>'
+                }
+            },
+            luchtfotoIR: {
+                url: 'https://geodata.nationaalgeoregister.nl/luchtfoto/rgb/wmts?layer={variant}&tilematrixset=EPSG:3857&Service=WMTS&Request=GetTile&Version=1.0.0&Format=image%2Fpng&TileMatrix={z}&TileCol={x}&TileRow={y}',
+                options: {
+                    variant: 'Actueel_ortho25IR',
+                    attribution: '<a href="https://www.pdok.nl/introductie?articleid=1954278">Luchtfoto Actueel Ortho 25cm Infrarood</a> ' +
+                        'by <a href="http://www.beeldmateriaal.nl">Beeldmateriaal.nl</a>, <a href="http://creativecommons.org/licenses/by/4.0">CC BY 4.0</a>'
+                }
+            }
+        }
     }
 };
 module.exports = CONFIGPROVIDER;

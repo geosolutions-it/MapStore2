@@ -78,7 +78,8 @@ This is the main structure:
       "myMode": [...]
   }
 }
-  ```
+```
+
 If you are building your own app, you can choose to create your custom modes or force one of them by passing the `mode` parameter in the query string.
 
 For adding a new locale or configuring currently supported locales, go check [this](internationalization) out.

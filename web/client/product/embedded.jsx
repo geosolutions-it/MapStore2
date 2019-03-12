@@ -25,13 +25,14 @@ const startApp = () => {
     }))(require('../components/app/StandardRouter'));
 
     const {updateMapLayoutEpic} = require('../epics/maplayout');
+    const {readQueryParamsOnMapEpic} = require('../epics/share');
 
     const appStore = require('../stores/StandardStore').bind(null, initialState, {
         mode: (state = 'embedded') => state,
         version: require('../reducers/version'),
         maplayout: require('../reducers/maplayout'),
         searchconfig: require('../reducers/searchconfig')
-    }, {updateMapLayoutEpic});
+    }, {updateMapLayoutEpic, readQueryParamsOnMapEpic});
 
     const appConfig = {
         mode: 'embedded',

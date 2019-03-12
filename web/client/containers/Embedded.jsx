@@ -15,7 +15,6 @@ const url = require('url');
 const urlQuery = url.parse(window.location.href, true).query;
 const PluginsUtils = require('../utils/PluginsUtils');
 const ConfigUtils = require('../utils/ConfigUtils');
-const {initMap} = require('../actions/map');
 
 const PluginsContainer = connect((state) => ({
     mode: urlQuery.mode || (state.browser && state.browser.mobile ? 'mobile' : 'desktop'),
@@ -55,6 +54,4 @@ class Embedded extends React.Component {
     }
 }
 
-module.exports = connect(() => ({}), {
-    onInit: initMap
-})(Embedded);
+module.exports = Embedded;

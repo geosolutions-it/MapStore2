@@ -10,6 +10,7 @@ const {createSelector} = require('reselect');
 
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
+const {defaultIconStyle} = require('../utils/SearchUtils');
 const {getNormalizedLatLon} = require('../utils/CoordinatesUtils');
 const {get, head, isEmpty, find, isObject, isArray, castArray} = require('lodash');
 
@@ -24,28 +25,31 @@ const geoColderSelector = state => state.search && state.search;
 // to avoid this separate loading from the layer object
 
 const centerToMarkerSelector = (state) => get(state, "mapInfo.centerToMarker", '');
-const defaultIconStyle = {
-    iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-};
+const additionalLayersSelector = state => get(state, "additionallayers", []);
+
 
 const layerSelectorWithMarkers = createSelector(
-    [layersSelector, markerSelector, geoColderSelector, centerToMarkerSelector],
-    (layers = [], markerPosition, geocoder, centerToMarker) => {
-        let newLayers = [...layers];
+    [layersSelector, markerSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector],
+    (layers = [], markerPosition, geocoder, centerToMarker, additionalLayers) => {
+
+        // Perform an override action on the layers using options retrieved from additional layers
+        const overrideLayers = additionalLayers.filter(({actionType}) => actionType === 'override');
+        const overlayLayers = additionalLayers.filter(({actionType}) => actionType === 'overlay').map(l => l.options);
+        let newLayers = layers.map(layer => {
+            const { options } = head(overrideLayers.filter(overrideLayer => overrideLayer.id === layer.id)) || {};
+            return options ? {...layer, ...options} : {...layer};
+        });
+        newLayers = newLayers.concat(overlayLayers);
         if ( markerPosition ) {
             const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
             newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", coords));
         }
         if (geocoder && geocoder.markerPosition) {
+            let geocoderStyle = isObject(geocoder.style) && geocoder.style || {};
             newLayers.push(MapInfoUtils.getMarkerLayer("GeoCoder", geocoder.markerPosition, "marker",
                 {
                     overrideOLStyle: true,
-                    style: isObject(geocoder.style) && !isEmpty(geocoder.style) && {...defaultIconStyle, ...geocoder.style} || defaultIconStyle
+                    style: {...defaultIconStyle, ...geocoderStyle}
                 }, geocoder.markerLabel
             ));
         }

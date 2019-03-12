@@ -84,6 +84,8 @@
             "templateFormatInfoAlertExample": "La identificación de la función es ${ properties }",
             "templatePreview": "Vista previa de template"
         },
+        "longitude": "Longitud",
+        "latitude": "Latitud",
         "notification": {
             "update": "Update",
             "warning": "Warning",
@@ -158,13 +160,14 @@
         },
         "home":{
             "open": "Abrir",
-            "shortDescription": "Modern webmapping con OL3, Leaflet y React<br/><small>visite la página de <a href=\"/mapstore/docs/\">documentación</a></small>",
+            "shortDescription": "Modern webmapping con OpenLayers, Leaflet y React<br/><small>visite la página de <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentación</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que propocionone protocolos estandar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"/mapstore/docs/\">página principal</a> para más detalles.",
+            "description": "MapStore está hecho para crear, guardar y compartir de forma simple e intuitiva mapas y composiciones creados a partir de contenidos de servidores tales como OpenStreetMap, Google Maps, MapQuest o  cualquier otro servidor que propocionone protocolos estandar tales como OGC WMS, WFS, WMTS o TMS y otros.<br/>Visite nuestra <a href=\"https://mapstore.readthedocs.io/en/latest/\">página principal</a> para más detalles.",
             "Applications": "Aplicaciones",
             "Examples": "Ejemplos",
             "LinkedinGroup": "Grupo Linkedin de Mapstore",
             "scrollTop": "Volver al principio de la página",
+            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
             "ml": {
                 "title": "Esté informado a la última sobre los cambios en el desrrollo via listas de correo",
                 "subscribe_users": "Suscribirse a las listas de correo de usuarios",
@@ -491,6 +494,8 @@
         "identifyTitle": "Informaciones de las features",
         "identifyNoQueryableLayers": "Noy hay capas a las que poder preguntar",
         "identifyRevGeocodeHeader": "Coordenadas",
+        "identifyShowCoordinateEditor": "Mostrar editor de coordenadas",
+        "identifyHideCoordinateEditor": "Ocultar editor de coordenadas",
         "identifyRevGeocodeModalTitle": "Dirección",
         "identifyRevGeocodeSubmitText": "Más información",
         "identifyRevGeocodeCloseText": "Cerrar",
@@ -529,7 +534,11 @@
             "showLabel": "Mostrar etiqueta de medición"
         },
         "search":{
-            "placeholder": "Búsqueda por toponimo o coordenadas...",
+            "decimal": "Decimal",
+            "aeronautical": "Aeronáutica",
+            "changeSearchInputField": "Cambiar la herramienta de búsqueda",
+            "addressSearch": "Buscar por nombre de ubicación",
+            "coordinatesSearch": "buscar por coordenadas",
             "searchservicesbutton": "Configurar los servicios de búsqueda",
             "configpaneltitle": "Crear / modificar un sercio de búsqueda",
             "serviceslistlabel": "Servicios disponibles",
@@ -895,7 +904,11 @@
             "QRCodeLinkTitle": "código qr",
             "msgCopiedUrl": "Url Copiada",
             "msgToCopyUrl": "Pinche para copiar",
-            "sharedTitle": "Mira mi nuevo mapa: "
+            "sharedTitle": "Mira mi nuevo mapa: ",
+            "advancedOptions": "Opciones avanzadas",
+            "addBboxParam": "Añadir bbox param al enlace de compartir",
+            "wrongBboxParamTitle": "Bbox no válido",
+            "wrongBboxParamMessage": "bbox params debe estar en EPSG:4326 y escrito como bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Previsualisación de la captura del mapa",
@@ -1278,9 +1291,16 @@
                     "showChartData": "Mostrar datos de gráfico",
                     "edit": "Editar",
                     "delete": "Borrar",
+                    "collapse": "Contraer",
                     "confirmDelete": "Está seguro?",
                     "downloadData": "Descargar datos",
-                    "exportImage": "Exportar imagen"
+                    "exportImage": "Exportar imagen",
+                    "pin": "Alfiler",
+                    "unpin": "Desprender",
+                    "hide": "Esconder",
+                    "hideDescription": "Ocultar este widget a otros usuarios",
+                    "unhide": "Ocultar",
+                    "unhideDescription": "Mostrar el widget a otros usuarios"
                 }
             },
             "chartType": {
@@ -1371,6 +1391,13 @@
             "advancedOptions":{
                 "line": "Opciones avanzadas",
                 "bar": "Opciones avanzadas"
+            },
+            "tray": {
+                "title": "Widgets",
+                "expandTray": "Expandir la bandeja de widgets",
+                "collapseTray": "Contraer la bandeja de widgets",
+                "expandAll": "Expandir todos los widgets",
+                "collapseAll": "Contraer todos los widgets"
             }
         },
         "dashboard": {
@@ -1444,6 +1471,114 @@
             "tooltip": "Crear y editar estilo de la capa",
             "paneltitle": "Estilo de la capa",
             "layerlabel": "Capa"
+        },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filtrar estilos por nombre, título o resumen.",
+            "templateFilterPlaceholder": "Filtrar plantillas de estilos por título",
+            "createStyleFromTemplate": "Seleccione una plantilla para crear un nuevo estilo",
+            "titleRequired": "<div> ¡Se requiere título! </div> <div> El título y el resumen deben ser alfanuméricos </div>",
+            "titleSettings": "Título",
+            "titleSettingsplaceholder": "Introduzca el título (alfanumérico)",
+            "abstractSettings": "Resumen",
+            "abstractSettingsplaceholder": "Introduzca resumen (alfanumérico)",
+            "createStyleModalTitle": "Crear nuevo estilo",
+            "filterMatchNotFound": "No hay estilos que coincidan con el filtro de texto introducido",
+            "backToList": "Volver a la lista de estilos",
+            "createNewStyle": "Crear nuevo estilo",
+            "editSelectedStyle": "Editar el estilo seleccionado",
+            "saveCurrentStyle": "Guardar el estilo actual",
+            "addSelectedTemplate": "Añadir plantilla seleccionada a la lista de estilos",
+            "deleteSelectedStyle": "Eliminar el estilo seleccionado",
+            "closeWithoutSaveAlertTitle": "El estilo ha cambiado",
+            "closeWithoutSaveAlert": "Está saliendo del editor de estilos sin guardar los cambios.",
+            "deleteStyleAlertTitle": "Eliminar estilo",
+            "deleteStyleAlert": "El estilo seleccionado será eliminado permanentemente",
+            "delete": "Borrar",
+            "defaultStyle": "Estilo por Defecto",
+            "availableStyle": "Estilo disponible",
+            "styleNotFound": "Estilo no encontrado",
+            "noPermission": "El usuario no puede editar estilos",
+            "deletedStyleSuccessTitle": "Eliminar estilo",
+            "deletedStyleSuccessMessage": "El estilo ha sido eliminado exitosamente.",
+            "deletedStyleErrorTitle": "Eliminar error de estilo",
+            "deletedStyleErrorMessage": "No se pudo eliminar el estilo actual",
+            "savedStyleTitle": "Estilo guardado",
+            "savedStyleMessage": "El estilo se ha guardado con éxito.",
+            "missingAvailableStyles": "Estilos que faltan",
+            "missingAvailableStylesMessage": "<ul> <h4> Causas posibles: </h4> <li> La capa seleccionada es un grupo de capas </li> <li> La capa no está configurada correctamente en el lado del servidor </li> </ul>",
+            "createTmpErrorTitle": "Nuevo estilo temporal",
+            "createTmpStyleErrorMessage": "No se pudo crear el estilo temporal. Esto podría deberse a un formato de estilo no compatible en el servicio de estilo",
+            "updateTmpErrorTitle": "Actualización de estilo temporal",
+            "updateTmpStyleErrorMessage": "El estilo temporal no pudo ser actualizado. Esto podría estar en formato de estilo no compatible o problema de conexión.",
+            "createStyleErrorTitle": "Nuevo estilo",
+            "createStyleErrorMessage": "El estilo no se pudo guardar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión.",
+            "updateStyleErrorTitle": "Editar estilo",
+            "updateStyleErrorMessage": "El estilo no se pudo actualizar en el servicio de estilo. Esto podría estar en formato de estilo no compatible o problema de conexión.",
+            "genericValidationError": "El estilo no es válido y no se pudo aplicar.",
+            "setDefaultStyle": "Establecer el estilo seleccionado como predeterminado para la capa actual",
+            "setDefaultStyleSuccessTitle": "Éxito en el estilo por defecto establecido",
+            "setDefaultStyleSuccessMessage": "El estilo predeterminado se ha aplicado con éxito",
+            "setDefaultStyleErrorTitle": "Error en el estilo predeterminado del set",
+            "setDefaultStyleErrorMessage": "No es posible aplicar el estilo seleccionado por defecto."
+        },
+        "playback": {
+            "settings": {
+                "tooltip": "Configuraciones",
+                "title": "Ajustes de reproducción",
+                "frameDuration": "Duración del marco",
+                "range": {
+                    "title": "Rabia de animacion",
+                    "zoomTooltip": "Zoom al rango de animación actual",
+                    "animationStart": "Inicio de animacion",
+                    "animationEnd": "Fin de la animacion",
+                    "zoomToCurrentPlayackRange": "Zoom al rango de reproducción actual",
+                    "setToCurrentViewRange": "Establecer en el rango de vista actual",
+                    "fitToSelectedLayerRange": "Ajustar al rango de la capa seleccionada"
+                },
+                "step": {
+                    "tooltip": "Cuando la opción 'Ajustar a la capa de guía' está deshabilitada, puede personalizar el paso de animación",
+                    "label": "Paso de animacion",
+                    "year": "{number, plural, =0 {Año} =1 {Año} other {Años}}",
+                    "week": "{number, plural, =0 {Semana} =1 {Semana} other {Semanas}}",
+                    "day": "{number, plural, =0 {Día} =1 {Día} other {Días}}",
+                    "hour": "{number, plural, =0 {Hora} =1 {Hora} other {Horas}}",
+                    "minute": "{number, plural, =0 {Minuto} =1 {Minuto} other {Minutos}}",
+                    "second": "{number, plural, =0 {Segundo} =1 {Segundo} other {Segundos}}"
+                },
+                "mode": {
+                    "title": "Modo",
+                    "following": "Sigue la animación",
+                    "followingDescription": "Cuando la animación está activa, sigue el cursor."
+                }
+            },
+            "backwardStep": "Paso atrás",
+            "forwardStep" : "Paso adelante",
+            "play": "Reproducir",
+            "paused": "Reproducir (pausado)",
+            "pause": "Pausa",
+            "stop": "Parada"
+        },
+        "timeline": {
+            "settings": {
+                "title": "Configuración de la línea de tiempo",
+                "snapToGuideLayer": "Ajustar a capa de guía",
+                "snapToGuideLayerTooltip": "Hace que el cursor del tiempo se ajuste a los datos de la capa seleccionada. Desactive esta opción para desbloquear los cursores de tiempo y habilitar la personalización del paso de animación"
+            },
+            "currentTime": "Ir a la hora actual",
+            "rangeStart": "Ir al rango de tiempo actual",
+            "rangeEnd": "Ir al rango de tiempo actual",
+            "hideLayerName": "Ocultar nombres de capas",
+            "showLayerName": "Mostrar nombres de capas",
+            "enableRange": "Habilitar rango de tiempo",
+            "disableRange": "Rango de tiempo de desactivación",
+            "enablePlayBack": "Habilitar controles de reproducción",
+            "disablePlayBack": "Deshabilita los controles de reproducción",
+            "expand" : "Expandir el control deslizante de tiempo",
+            "collapse" : "colapsar el control deslizante de tiempo",
+            "errors": {
+                "multidim_error_title": "El servicio de backend no responde",
+                "multidim_error_message": "Los servicios requeridos para soporte multidinensional no están respondiendo. Inténtelo de nuevo más tarde o póngase en contacto con el administrador."
+            }
         },
         "rulesmanager": {
             "apply": "Aplicar",

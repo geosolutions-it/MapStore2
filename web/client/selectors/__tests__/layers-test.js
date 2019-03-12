@@ -111,14 +111,9 @@ describe('Test layers selectors', () => {
         }});
         expect(props.length).toBe(2);
         expect(props[1].type).toBe("vector");
-        expect(props[1].style).toEqual({
-            iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        });
+        const {defaultIconStyle} = require('../../utils/SearchUtils');
+
+        expect(props[1].style).toEqual(defaultIconStyle);
     });
 
     it('test layerSelectorWithMarkers with custom style', () => {
@@ -126,14 +121,7 @@ describe('Test layers selectors', () => {
             color: '#ff0000'
         };
 
-        const defaultIconStyle = {
-            iconUrl: "https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
-            shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png',
-            iconSize: [25, 41],
-            iconAnchor: [12, 41],
-            popupAnchor: [1, -34],
-            shadowSize: [41, 41]
-        };
+        const {defaultIconStyle} = require('../../utils/SearchUtils');
 
         const props = layerSelectorWithMarkers({config: {layers: [{type: "osm"}]}, search: {
             markerPosition: {
@@ -150,6 +138,88 @@ describe('Test layers selectors', () => {
         expect(props[1].style).toEqual({...defaultIconStyle, ...style});
     });
 
+
+    it('test layerSelectorWithMarkers with override layers from additionallayers', () => {
+        const state = {
+            additionallayers: [
+                 {
+                     id: 'layer_001',
+                     owner: 'styleeditor',
+                     actionType: 'override',
+                     settings: {
+                         name: 'workspace:layer_001',
+                         properties: {
+                             pop: 500000
+                         }
+                     },
+                     options: {
+                        style: 'generic'
+                     }
+                 }
+             ],
+             layers: {
+                 flat: [
+                    {
+                        type: 'wms',
+                        id: 'layer_001',
+                        style: ''
+                    }
+                ]
+            }
+         };
+        const props = layerSelectorWithMarkers(state);
+        expect(props.length).toBe(1);
+        expect(props[0]).toEqual({
+            type: 'wms',
+            id: 'layer_001',
+            style: 'generic'
+        });
+    });
+    it('test layerSelectorWithMarkers with overlay layers from additionallayers', () => {
+        const state = {
+            additionallayers: [
+                 {
+                     id: 'layer_002',
+                     owner: 'styleeditor',
+                     actionType: 'overlay',
+                     settings: {
+                         name: 'workspace:layer_001',
+                         properties: {
+                             pop: 500000
+                         }
+                     },
+                     options: {
+                        type: "vector",
+                        name: 'layer_002',
+                        id: 'layer_002',
+                        style: 'generic'
+                     }
+                 }
+             ],
+             layers: {
+                 flat: [
+                    {
+                        type: 'wms',
+                        id: 'layer_001',
+                        style: ''
+                    }
+                ]
+            }
+         };
+        const props = layerSelectorWithMarkers(state);
+        expect(props.length).toBe(2);
+        expect(props[0]).toEqual({
+            type: 'wms',
+            id: 'layer_001',
+            style: ''
+        });
+        expect(props[1]).toEqual({
+            type: "vector",
+            name: 'layer_002',
+            id: 'layer_002',
+            style: 'generic'
+        });
+    });
     it('test groupsSelector from layers flat one group', () => {
         const props = groupsSelector({layers: {
             flat: [{type: "osm", id: "layer1", group: "group1"}, {type: "wms", id: "layer2", group: "group1"}],

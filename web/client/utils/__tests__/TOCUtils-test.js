@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 const expect = require('expect');
-const {createFromSearch} = require('../TOCUtils');
+const {createFromSearch, getTooltip, getTooltipText} = require('../TOCUtils');
 let options = [{label: "lab1", value: "val1"}];
 
 describe('TOCUtils', () => {
@@ -20,11 +20,46 @@ describe('TOCUtils', () => {
     });
 
     it('test createFromSearch for General Fragment with new valid value', () => {
-        let val = createFromSearch(options, "lab2");
-        expect(val.label).toBe("lab2");
-        expect(val.value).toBe("lab2");
-        val = createFromSearch(options, "lab2/lab5");
-        expect(val.label).toBe("lab2/lab5");
-        expect(val.value).toBe("lab2.lab5");
+        const node = {
+            name: 'layer00',
+            title: {
+                'default': 'Layer',
+                'it-IT': 'Livello'
+            },
+            id: "layer00",
+            description: "desc",
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const tooltipOptions = {"layer00": ["title", "description", "fakeFragment"]};
+        const currentLocale = "it-IT";
+        const tooltip = getTooltip(tooltipOptions, node, currentLocale);
+        expect(tooltip).toBe("Livello - desc");
+    });
+    it('test getTooltipText', () => {
+        const node = {
+            name: 'layer00',
+            title: {
+                'default': 'Layer',
+                'it-IT': 'Livello'
+            },
+            id: "layer00",
+            description: "desc",
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const currentLocale = "it-IT";
+        let tooltip = getTooltipText("title", node, currentLocale);
+        expect(tooltip).toBe("Livello");
+        tooltip = getTooltipText("description", node, currentLocale);
+        expect(tooltip).toBe("desc");
+
+        tooltip = getTooltipText("fakeFragment", node, currentLocale);
+        expect(tooltip).toBe(undefined);
+
     });
 });

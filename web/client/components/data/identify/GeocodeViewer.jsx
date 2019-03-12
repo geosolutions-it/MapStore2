@@ -23,7 +23,7 @@ const {Glyphicon, Row, Col} = require('react-bootstrap');
  * @prop {node} revGeocodeDisplayName text/info displayed on modal
  */
 
-module.exports = ({latlng, enableRevGeocode, hideRevGeocode = () => {}, showModalReverse, revGeocodeDisplayName}) => {
+module.exports = ({latlng, enableRevGeocode, hideRevGeocode = () => {}, showModalReverse, revGeocodeDisplayName, showCoordinateEditor = false}) => {
 
     let lngCorrected = null;
     if (latlng) {
@@ -35,10 +35,11 @@ module.exports = ({latlng, enableRevGeocode, hideRevGeocode = () => {}, showModa
     }
 
     return enableRevGeocode && latlng && lngCorrected ? (
-        <Row key="ms-geocode-coords" className="ms-geoscode-viewer text-center">
-            <Col xs={12}>
+        <Row key="ms-geocode-coords" className="ms-geoscode-viewer text-center" style={{display: showCoordinateEditor ? "none" : "block"}}>
+            {!showCoordinateEditor &&
+            (<Col xs={12}>
                 <div className="ms-geocode-coords">{latlng ? 'Lat: ' + (Math.round(latlng.lat * 100000) / 100000) + '- Long: ' + lngCorrected : null}</div>
-            </Col>
+            </Col>)}
             <Portal>
                 <ResizableModal
                     fade
