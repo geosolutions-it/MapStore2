@@ -14,10 +14,10 @@ const {createSelector} = require('reselect');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
+const { generalInfoFormatSelector, clickPointSelector } = require('../selectors/mapinfo');
 
-const {getFeatureInfo, getVectorInfo, showMapinfoMarker, hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, noQueryableLayers, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat,
-    toggleShowCoordinateEditor
-} = require('../actions/mapInfo');
+
+const {hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor} = require('../actions/mapInfo');
 const {changeMousePointer} = require('../actions/map');
 const {currentLocaleSelector} = require('../selectors/locale');
 
@@ -38,11 +38,10 @@ const selector = createSelector([
     (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
     (state) => state.mapInfo && state.mapInfo.responses || [],
     (state) => state.mapInfo && state.mapInfo.requests || [],
-    (state) => state.mapInfo && state.mapInfo.infoFormat,
+    generalInfoFormatSelector,
     mapSelector,
     layersSelector,
-    (state) => state.mapInfo && state.mapInfo.clickPoint,
-    (state) => state.mapInfo && state.mapInfo.clickLayer,
+    clickPointSelector,
     (state) => state.mapInfo && state.mapInfo.showModalReverse,
     (state) => state.mapInfo && state.mapInfo.reverseGeocodeData,
     (state) => state.mapInfo && state.mapInfo.warning,
@@ -50,8 +49,8 @@ const selector = createSelector([
     state => mapLayoutValuesSelector(state, {height: true}),
     (state) => state.mapInfo && state.mapInfo.formatCoord,
     (state) => state.mapInfo && state.mapInfo.showCoordinateEditor
-], (enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, formatCoord, showCoordinateEditor) => ({
-    enabled, responses, requests, format, map, layers, point, layer, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, formatCoord, showCoordinateEditor
+], (enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, formatCoord, showCoordinateEditor) => ({
+    enabled, responses, requests, format, map, layers, point, showModalReverse, reverseGeocodeData, warning, currentLocale, dockStyle, formatCoord, showCoordinateEditor
 }));
 // result panel
 
@@ -71,16 +70,10 @@ const identifyDefaultProps = defaultProps({
     format: MapInfoUtils.getDefaultInfoFormatValue(),
     requests: [],
     responses: [],
-    buffer: 2,
     viewerOptions: {},
     viewer: DefaultViewer,
     purgeResults: () => {},
-    buildRequest: MapInfoUtils.buildIdentifyRequest,
-    localRequest: () => {},
-    sendRequest: () => {},
-    showMarker: () => {},
     hideMarker: () => {},
-    noQueryableLayers: () => {},
     clearWarning: () => {},
     changeMousePointer: () => {},
     showRevGeocode: () => {},
@@ -94,20 +87,11 @@ const identifyDefaultProps = defaultProps({
     reverseGeocodeData: {},
     enableRevGeocode: true,
     wrapRevGeocode: false,
-    queryableLayersFilter: MapInfoUtils.defaultQueryableFilter,
     style: {},
     point: {},
     layer: null,
     map: {},
     layers: [],
-    maxItems: 10,
-    excludeParams: ["SLD_BODY"],
-    includeOptions: [
-        "buffer",
-        "cql_filter",
-        "filter",
-        "propertyName"
-    ],
     panelClassName: "modal-dialog info-panel modal-content",
     headerClassName: "modal-header",
     bodyClassName: "modal-body info-wrap",
@@ -115,7 +99,6 @@ const identifyDefaultProps = defaultProps({
     headerGlyph: "",
     closeGlyph: "1-close",
     className: "square-button",
-    allowMultiselection: false,
     currentLocale: 'en-US',
     fullscreen: false,
     showTabs: true,
@@ -169,16 +152,12 @@ const identifyDefaultProps = defaultProps({
 
 const IdentifyPlugin = compose(
     connect(selector, {
-        sendRequest: getFeatureInfo,
-        localRequest: getVectorInfo,
         purgeResults: purgeMapInfoResults,
         closeIdentify,
         onChangeClickPoint: featureInfoClick,
         onToggleShowCoordinateEditor: toggleShowCoordinateEditor,
         onChangeFormat: changeFormat,
         changeMousePointer,
-        showMarker: showMapinfoMarker,
-        noQueryableLayers,
         clearWarning,
         hideMarker: hideMapinfoMarker,
         showRevGeocode: showMapinfoRevGeocode,
