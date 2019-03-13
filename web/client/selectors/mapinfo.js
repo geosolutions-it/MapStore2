@@ -60,7 +60,7 @@ const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false)
 /**
  * Select queriable layers
  * @param {object} state the state
- * @return {array] the queriable layers
+ * @return {array} the queriable layers
  */
 const queryableLayersSelector = state => layersSelector(state).filter(defaultQueryableFilter);
 
