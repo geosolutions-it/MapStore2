@@ -56,10 +56,11 @@ const drawSupportActiveSelector = (state) => {
 const gridEditingSelector = createSelector(modeSelector, (mode) => mode === 'EDIT');
 const annotationsEditingSelector = (state) => get(state, "annotations.editing");
 const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false);
+
 /**
  * Select queriable layers
  * @param {object} state the state
- * @return the queriable layers
+ * @return {array] the queriable layers
  */
 const queryableLayersSelector = state => layersSelector(state).filter(defaultQueryableFilter);
 
@@ -69,7 +70,6 @@ const queryableLayersSelector = state => layersSelector(state).filter(defaultQue
  * @param  {object} state the state
  * @return {boolean} true if the get feature info has to stop the request
  */
-
 const stopGetFeatureInfoSelector = createSelector(
     mapInfoDisabledSelector,
     measureActiveSelector,
