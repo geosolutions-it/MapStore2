@@ -6,10 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {lifecycle, withHandlers, branch, withState, compose, defaultProps} = require('recompose');
-const MapInfoUtils = require('../../../../utils/MapInfoUtils');
+const {lifecycle, withHandlers, branch, withState, compose} = require('recompose');
 const {set} = require('../../../../utils/ImmutableUtils');
-const {isEqual, isArray, isNil} = require('lodash');
+const {isEqual, isNil} = require('lodash');
 
 /**
  * Enhancer to enable set index only if Component has not header in viewerOptions props
@@ -67,20 +66,16 @@ const identifyHandlers = withHandlers({
 });
 
 /**
- * Basic identify lificycle used in Identify plugin with IdentifyContainer component
+ * Basic identify lifecycle used in Identify plugin with IdentifyContainer component
  * - componentDidMount: show cursor on map as pointer if enabled props is true
  * - componentWillReceiveProps:
- *      - sends new request only if needsRefresh returns true
- *      - changes pointer enbale true/false
- *      - set index to 0 to when responses are changed to avoid empty view if index is greather than current responses lenght
- * @memberof enhancers.identifyLifecycle
- * @class
+ *      - changes pointer enable true/false - TODO: move it in an epic
+ *      - set index to 0 to when responses are changed to avoid empty view if index is greater than current responses length
+ * @memberof components.data.identify.enhancers.identify
+ * @name identifyLifecycle
  */
 const identifyLifecycle = compose(
     identifyHandlers,
-    defaultProps({
-        queryableLayersFilter: () => true
-    }),
     lifecycle({
         componentDidMount() {
             const {
@@ -105,48 +100,8 @@ const identifyLifecycle = compose(
                 changeMousePointer = () => {},
                 setIndex,
                 enabled,
-                responses,
-                showMarker = () => {},
-                needsRefresh = () => false,
-                buildRequest = () => {},
-                sendRequest = () => {},
-                localRequest = () => {},
-                noQueryableLayers = () => {},
-                includeOptions = [],
-                excludeParams = []
+                responses
             } = this.props;
-
-            if (needsRefresh(this.props, newProps)) {
-                if (!newProps.point.modifiers || newProps.point.modifiers.ctrl !== true || !newProps.allowMultiselection) {
-                    purgeResults();
-                }
-                const queryableLayers = isArray(newProps.layers) && (newProps.queryableLayersFilter && newProps.layers
-                    .filter(newProps.queryableLayersFilter) || newProps.layers);
-                    /*
-                     * .filter(newProps.layer ? l => l.id === newProps.layer : () => true);
-                     * this line was filtering too much, i.e. see issue #3344
-                    */
-                if (queryableLayers) {
-                    queryableLayers.forEach((layer) => {
-                        const {url, request, metadata} = buildRequest(layer, newProps);
-                        if (url) {
-                            sendRequest(url, request, metadata, MapInfoUtils.filterRequestParams(layer, includeOptions, excludeParams));
-                        } else {
-                            localRequest(layer, request, metadata);
-                        }
-                    });
-                }
-                if (queryableLayers && queryableLayers.length === 0) {
-                    noQueryableLayers();
-                } else {
-                    if (!newProps.layer) {
-                        showMarker();
-                    } else {
-                        hideMarker();
-                    }
-                }
-            }
-
             if (newProps.enabled && !enabled) {
                 changeMousePointer('pointer');
             } else if (!newProps.enabled && enabled) {
