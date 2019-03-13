@@ -22,6 +22,8 @@ const {
     NO_QUERYABLE_LAYERS,
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
+    UPDATE_MAPINFO_FEATURE,
+    HIGHLIGHT_FEATURE,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
     CHANGE_FORMAT,
@@ -67,6 +69,11 @@ function mapInfo(state = initState, action) {
         return assign({}, state, {
             enabled: !state.enabled
         });
+    case HIGHLIGHT_FEATURE: {
+        return assign({}, state, {
+            highlight: action.enabled
+        });
+    }
     case NEW_MAPINFO_REQUEST: {
         const {reqId, request} = action;
         const requests = state.requests || [];
@@ -92,6 +99,14 @@ function mapInfo(state = initState, action) {
         return assign({}, state, {
             clickPoint: action.point,
             clickLayer: action.layer || null
+        });
+    }
+    case UPDATE_MAPINFO_FEATURE: {
+        return assign({}, state, {
+            clickPoint: {
+                ...state.clickPoint,
+                features: action.features
+            }
         });
     }
     case CHANGE_MAPINFO_FORMAT: {

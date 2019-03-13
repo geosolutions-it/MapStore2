@@ -98,6 +98,7 @@ const MapInfoUtils = {
             return [];
         }
         return [
+            ...(clickedPoint.features || []),
             {
                 id: "get-feature-info-point",
                 type: "Feature",

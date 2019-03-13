@@ -86,6 +86,9 @@ const stopGetFeatureInfoSelector = createSelector(
         || !!isQueryPanelActive
     );
 
+/**
+ * Defines the general options of the identifyTool to build the request
+ */
 const identifyOptionsSelector = createStructuredSelector({
         format: generalInfoFormatSelector,
         map: mapSelector,
@@ -93,11 +96,14 @@ const identifyOptionsSelector = createStructuredSelector({
         currentLocale: currentLocaleSelector
     });
 
+const isHighlightEnabledSelector = state => state.mapInfo.highlight;
+
 module.exports = {
     identifyOptionsSelector,
     clickPointSelector,
     generalInfoFormatSelector,
     queryableLayersSelector,
     mapInfoRequestsSelector,
-    stopGetFeatureInfoSelector
+    stopGetFeatureInfoSelector,
+    isHighlightEnabledSelector
 };

@@ -32,14 +32,29 @@ const MapInfoUtils = require('../utils/MapInfoUtils');
  * @param basePath {string} base path to the service
  * @param requestParams {object} map of params for a getfeatureinfo request.
  */
-const getFeatureInfo = (basePath, requestParams, lMetaData, options = {}) => {
-    const param = { ...options, ...requestParams };
+const getFeatureInfo = (basePath, requestParams, lMetaData, appParams = {}, attachJSON = true) => {
+    const param = { ...appParams, ...requestParams };
     const reqId = uuid.v1();
-    return Rx.Observable.defer(() => axios.get(basePath, { params: param }))
+    const retrieveFlow = (params) => Rx.Observable.defer(() => axios.get(basePath, { params }));
+    return ((
+        attachJSON && param.info_format !== "application/json" )
+            // add the flow to get the geometry
+            ? Rx.Observable.forkJoin(
+                    retrieveFlow(param),
+                retrieveFlow({ ...param, info_format: "application/json"})
+                    .map(res => res.data.features)
+                    .catch(() => Rx.Observable.empty()) // errors on geometry retrieval are ignored
+                ).map(([response, features]) => ({
+                    ...response,
+                    features
+                }))
+            // simply get the feature info
+            : retrieveFlow(param)
+        )
         .map((response) =>
             response.data.exceptions
                 ? exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData)
-                : loadFeatureInfo(reqId, response.data, requestParams, lMetaData)
+                : loadFeatureInfo(reqId, response.data, requestParams, { ...lMetaData, features: response.features })
         )
         .catch((e) => Rx.Observable.of(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData)))
         .startWith(newMapInfoRequest(reqId, param));
