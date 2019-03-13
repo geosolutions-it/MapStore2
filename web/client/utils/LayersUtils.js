@@ -135,6 +135,26 @@ const deepChange = (nodes, findValue, propName, propValue) => {
 };
 
 /**
+ * adds or update node property in a nested node
+ * similar to deepchange but it overrides a whole group of options instead of one
+*/
+const deepOptionsChange = (nodes, findId, propValues = {}) => {
+    if (nodes && isArray(nodes) && nodes.length > 0) {
+        return nodes.map((node) => {
+            if (isObject(node)) {
+                if (node.id === findId) {
+                    return {...node, ...propValues};
+                } else if (node.nodes) {
+                    return {...node, nodes: deepOptionsChange(node.nodes, findId, propValues)};
+                }
+            }
+            return node;
+        });
+    }
+    return [];
+};
+
+/**
  * Extracts the sourceID of a layer.
  * @param {object} layer the layer object
  */
@@ -561,7 +581,8 @@ const LayersUtils = {
 
         }
         return layers;
-    }
+    },
+    deepOptionsChange
 };
 
 module.exports = LayersUtils;

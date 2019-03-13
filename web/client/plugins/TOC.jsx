@@ -495,16 +495,20 @@ class LayerTree extends React.Component {
  *  }]
  * ```
  *
- * Another layerOptions is `tooltipOptions` which contains the custom tooltips fragment for nodes in the TOC
- * structure is {"nodeID": ["prop1", "prop2"], "joinsStr": " - "}, it will display the fragment in the order are written
+ * Another layerOptions is `showTooltipOptions` (Default is true) which shows the tooltip
+ * section where you can change composition (title, desc, both, none) and placement
+ *
+ * You can customize the max length for the tooltip with `truncateLength` (Default is 807)
+ * You can change the conjuction in the "both" case with `joinStr` Default is " - "
  * for example
  * ```
  * "tooltipOptions": {
- *     "id_of_the_layer": ["title", "description"]
+ *     "showTooltipOptions": true,
+ *     "truncateLength": 200,
+ *     "joinStr": " : "
  * }
  * ```
- * it can contain also the "joinStr" property to be used for joining tooltips fragments, default is " - "
- */
+  */
 const TOCPlugin = connect(tocSelector, {
     groupPropertiesChangeHandler: changeGroupProperties,
     layerPropertiesChangeHandler: changeLayerProperties,

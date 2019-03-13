@@ -7,8 +7,12 @@
 */
 
 const expect = require('expect');
-const {layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
-    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector, currentBackgroundSelector, tempBackgroundSelector, centerToMarkerSelector, getLayersWithDimension} = require('../layers');
+const {
+    layersSelector, layerSelectorWithMarkers, groupsSelector, selectedNodesSelector, layerFilterSelector, layerSettingSelector,
+    layerMetadataSelector, wfsDownloadSelector, backgroundControlsSelector,
+    currentBackgroundSelector, tempBackgroundSelector, centerToMarkerSelector,
+    getLayersWithDimension, elementSelector
+} = require('../layers');
 
 describe('Test layers selectors', () => {
     it('test layersSelector from config', () => {
@@ -509,4 +513,295 @@ describe('Test layers selectors', () => {
         expect(getLayersWithDimension(state, 'reference').length).toBe(0);
     });
 
+    it('test elementSelector with a sub group node and a layer node', () => {
+        let settings = {
+            "expanded": true,
+            "node": "first.second",
+            "nodeType": "groups",
+            "options": {}
+        };
+        const flat = [
+          {
+            id: 'mapnik__0',
+            group: 'background',
+            source: 'osm',
+            name: 'mapnik',
+            title: 'Open Street Map',
+            type: 'osm',
+            visibility: true,
+            singleTile: false,
+            dimensions: [],
+            hideLoading: false,
+            handleClickOnLayer: false,
+            useForElevation: false,
+            hidden: false,
+            loading: false,
+            loadingError: false
+          },
+          {
+            id: 'HYBRID__1',
+            group: 'background',
+            source: 'google',
+            name: 'HYBRID',
+            title: 'Google HYBRID',
+            type: 'google',
+            visibility: false,
+            singleTile: false,
+            dimensions: [],
+            hideLoading: false,
+            handleClickOnLayer: false,
+            useForElevation: false,
+            hidden: false
+          },
+          {
+            id: 'osm__2',
+            group: 'background',
+            source: 'mapquest',
+            name: 'osm',
+            title: 'MapQuest OSM',
+            type: 'mapquest',
+            visibility: false,
+            singleTile: false,
+            dimensions: [],
+            hideLoading: false,
+            handleClickOnLayer: false,
+            useForElevation: false,
+            hidden: false,
+            apiKey: '__API_KEY_MAPQUEST__'
+          },
+          {
+            id: 'Night2012__3',
+            group: 'background',
+            source: 'nasagibs',
+            name: 'Night2012',
+            provider: 'NASAGIBS.ViirsEarthAtNight2012',
+            title: 'NASAGIBS Night 2012',
+            type: 'tileprovider',
+            visibility: false,
+            singleTile: false,
+            dimensions: [],
+            hideLoading: false,
+            handleClickOnLayer: false,
+            useForElevation: false,
+            hidden: false
+          },
+          {
+            id: 'OpenTopoMap__4',
+            group: 'background',
+            source: 'OpenTopoMap',
+            name: 'OpenTopoMap',
+            provider: 'OpenTopoMap',
+            title: 'OpenTopoMap',
+            type: 'tileprovider',
+            visibility: false,
+            singleTile: false,
+            dimensions: [],
+            hideLoading: false,
+            handleClickOnLayer: false,
+            useForElevation: false,
+            hidden: false
+          },
+          {
+            id: 'undefined__5',
+            group: 'background',
+            source: 'ol',
+            title: 'Empty Background',
+            type: 'empty',
+            visibility: false,
+            singleTile: false,
+            dimensions: [],
+            hideLoading: false,
+            handleClickOnLayer: false,
+            useForElevation: false,
+            hidden: false
+          },
+          {
+            id: 'topp:states__6',
+            format: 'image/png8',
+            search: {
+              url: 'https://demo.geo-solutions.it:443/geoserver/wfs',
+              type: 'wfs'
+            },
+            name: 'topp:states',
+            opacity: 1,
+            description: 'This is some census data on the states.',
+            title: 'USA Population',
+            type: 'wms',
+            url: 'https://demo.geo-solutions.it:443/geoserver/wms',
+            bbox: {
+              crs: 'EPSG:4326',
+              bounds: {
+                minx: -124.73142200000001,
+                miny: 24.955967,
+                maxx: -66.969849,
+                maxy: 49.371735
+              }
+            },
+            visibility: true,
+            singleTile: false,
+            allowedSRS: {},
+            dimensions: [],
+            hideLoading: false,
+            handleClickOnLayer: false,
+            catalogURL: 'https://demo.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states',
+            useForElevation: false,
+            hidden: false,
+            params: {
+              layers: 'topp:states'
+            },
+            loading: false,
+            loadingError: false,
+            group: 'first.second.third'
+          }
+        ];
+        const groups = [
+            {
+              id: 'first',
+              title: 'first',
+              name: 'first',
+              nodes: [
+                {
+                  id: 'first.second',
+                  title: 'second',
+                  name: 'second',
+                  nodes: [
+                    {
+                      id: 'first.second.third',
+                      title: 'third',
+                      name: 'third',
+                      nodes: [
+                        'topp:states__6'
+                      ],
+                      expanded: true
+                    }
+                  ],
+                  expanded: true
+                }
+              ],
+              expanded: true
+            }
+        ];
+        // group node
+        let state = {
+            layers: {
+                flat,
+                groups,
+                settings
+            }
+        };
+        let element = {
+            "id": "first.second",
+            "title": "second",
+            "name": "second",
+            "nodes": [
+                {
+                    "id": "first.second.third",
+                    "title": "third",
+                    "name": "third",
+                    "nodes": [
+                        {
+                            "id": "topp:states__6",
+                            "format": "image/png8",
+                            "search": {
+                                "url": "https://demo.geo-solutions.it:443/geoserver/wfs",
+                                "type": "wfs"
+                            },
+                            "name": "topp:states",
+                            "opacity": 1,
+                            "description": "This is some census data on the states.",
+                            "title": "USA Population",
+                            "type": "wms",
+                            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+                            "bbox": {
+                                "crs": "EPSG:4326",
+                                "bounds": {
+                                    "minx": -124.73142200000001,
+                                    "miny": 24.955967,
+                                    "maxx": -66.969849,
+                                    "maxy": 49.371735
+                                }
+                            },
+                            "visibility": true,
+                            "singleTile": false,
+                            "allowedSRS": {},
+                            "dimensions": [],
+                            "hideLoading": false,
+                            "handleClickOnLayer": false,
+                            "catalogURL": "https://demo.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states",
+                            "useForElevation": false,
+                            "hidden": false,
+                            "params": {
+                                "layers": "topp:states"
+                            },
+                            "loading": false,
+                            "loadingError": false,
+                            "group": "first.second.third",
+                            "expanded": false
+                        }
+                    ],
+                    "expanded": true,
+                    "visibility": true
+                }
+            ],
+            "expanded": true,
+            "visibility": true
+        };
+        expect(elementSelector(state)).toEqual(element);
+
+        // layer node
+        settings = {
+            "expanded": true,
+            "node": "topp:states__6",
+            "nodeType": "layers",
+            "options": {
+                "opacity": 1
+            }
+        };
+        state = {
+            layers: {
+                flat,
+                groups,
+                settings
+            }
+        };
+        element = {
+            "id": "topp:states__6",
+            "format": "image/png8",
+            "search": {
+                "url": "https://demo.geo-solutions.it:443/geoserver/wfs",
+                "type": "wfs"
+            },
+            "name": "topp:states",
+            "opacity": 1,
+            "description": "This is some census data on the states.",
+            "title": "USA Population",
+            "type": "wms",
+            "url": "https://demo.geo-solutions.it:443/geoserver/wms",
+            "bbox": {
+                "crs": "EPSG:4326",
+                "bounds": {
+                    "minx": -124.73142200000001,
+                    "miny": 24.955967,
+                    "maxx": -66.969849,
+                    "maxy": 49.371735
+                }
+            },
+            "visibility": true,
+            "singleTile": false,
+            "allowedSRS": {},
+            "dimensions": [],
+            "hideLoading": false,
+            "handleClickOnLayer": false,
+            "catalogURL": "https://demo.geo-solutions.it/geoserver/csw?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=topp:states",
+            "useForElevation": false,
+            "hidden": false,
+            "params": {
+                "layers": "topp:states"
+            },
+            "loading": false,
+            "loadingError": false,
+            "group": "first.second.third"
+        };
+        expect(elementSelector(state)).toEqual(element);
+    });
 });

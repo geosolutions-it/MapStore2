@@ -29,7 +29,8 @@ class DefaultGroup extends React.Component {
         selectedNodes: PropTypes.array,
         onSelect: PropTypes.func,
         titleTooltip: PropTypes.bool,
-        tooltipOptions: PropTypes.object
+        truncateLength: PropTypes.number,
+        joinStr: PropTypes.string
     };
 
     static defaultProps = {
@@ -45,6 +46,7 @@ class DefaultGroup extends React.Component {
         visibilityCheckType: "glyph",
         level: 1,
         currentLocale: 'en-US',
+        joinStr: ' - ',
         selectedNodes: [],
         onSelect: () => {},
         titleTooltip: false
@@ -75,7 +77,7 @@ class DefaultGroup extends React.Component {
                 <div className="toc-default-group-head">
                     {grab}
                     {this.renderVisibility(error)}
-                    <GroupTitle tooltipOptions={this.props.tooltipOptions} tooltip={this.props.titleTooltip} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onToggle} onSelect={this.props.onSelect}/>
+                    <GroupTitle joinStr={this.props.joinStr} truncateLength={this.props.truncateLength} tooltip={this.props.titleTooltip} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onToggle} onSelect={this.props.onSelect}/>
                 </div>
                 <GroupChildren level={this.props.level + 1} onSort={this.props.onSort} position="collapsible">
                     {this.props.children}
