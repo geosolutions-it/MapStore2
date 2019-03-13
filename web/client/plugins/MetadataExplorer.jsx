@@ -18,7 +18,7 @@ const {addService, deleteService, textSearch, changeCatalogFormat, changeCatalog
     changeUrl, changeTitle, changeAutoload, changeType, changeSelectedService,
     addLayer, addLayerError, resetCatalog, focusServicesList, changeText} = require("../actions/catalog");
 const {zoomToExtent} = require("../actions/map");
-const {addBackgroundProperties, updateThumbnail} = require('../actions/backgroundselector');
+const {addBackgroundProperties, updateThumbnail, removeThumbnail} = require('../actions/backgroundselector');
 const {currentLocaleSelector} = require("../selectors/locale");
 const {layersSelector} = require('../selectors/layers');
 const {setControlProperty, toggleControl} = require("../actions/controls");
@@ -81,6 +81,7 @@ const Catalog = connect(catalogSelector, {
     onZoomToExtent: zoomToExtent,
     onFocusServicesList: focusServicesList,
     onPropertiesChange: changeLayerProperties,
+    removeThumbnail,
     onToggle: toggleControl.bind(null, 'backgroundSelector', null),
     onLayerChange: setControlProperty.bind(null, 'backgroundSelector'),
     onStartChange: setControlProperty.bind(null, 'backgroundSelector', 'start')

@@ -52,7 +52,9 @@ class RecordItem extends React.Component {
         onAddBackgroundProperties: PropTypes.func,
         onUpdateThumbnail: PropTypes.func,
         unsavedChanges: PropTypes.bool,
-        deletedId: PropTypes.string
+        deletedId: PropTypes.string,
+        removeThumbnail: PropTypes.func
+        
     };
 
     static defaultProps = {
@@ -68,6 +70,7 @@ class RecordItem extends React.Component {
         onZoomToExtent: () => {},
         onPropertiesChange: () => {},
         onLayerChange: () => {},
+        removeThumbnail: () => {},
         style: {},
         showGetCapLinks: false,
         zoomToLayer: true,
@@ -266,6 +269,7 @@ class RecordItem extends React.Component {
                 <ModalMock
                     deletedId = {this.props.deletedId}
                     unsavedChanges = {this.props.unsavedChanges}
+                    thumbURL ={this.props.modalParams && this.props.modalParams.CurrentNewThumbnail}
                     add
                     modalParams={this.props.modalParams}
                     onClose={() => this.props.onAddBackgroundProperties(null, false)}
@@ -285,7 +289,7 @@ class RecordItem extends React.Component {
                         this.props.onUpdateThumbnail(this.props.modalParams.newThumbnail, this.props.modalParams.thumbnailData, false, this.props.modalParams.id);
 
                     }}
-                    updateThumbnail={(data, url) => this.props.onUpdateThumbnail(data, url, true, this.props.modalParams.id)}
+                    updateThumbnail={(data, url) => !data && !url ? this.props.removeThumbnail(this.props.modalParams.id) : this.props.onUpdateThumbnail(data, url, true, this.props.modalParams.id)}
                    />
             </Panel>
         );

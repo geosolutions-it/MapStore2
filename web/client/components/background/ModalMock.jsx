@@ -25,7 +25,6 @@ class ModalMock extends React.Component{
         unsavedChanges: PropTypes.bool,
         editing: PropTypes.bool,
         deletedId: PropTypes.string,
-        CurrentModalParams: PropTypes.object,
         thumbURL: PropTypes.string
     };
     static defaultProps = {
@@ -63,12 +62,6 @@ class ModalMock extends React.Component{
                     onUpdate = {(data, url) =>this.props.updateThumbnail(data, url)}
                     map={{
                         newThumbnail: this.props.deletedId ? null : this.props.thumbURL
-                        // (this.props.CurrentModalParams &&
-                        // this.props.CurrentModalParams.hasOwnProperty('CurrentNewThumbnail') && this.props.CurrentModalParams.CurrentNewThumbnail === undefined)
-                        // ? null : (this.props.thumbURL && decodeURIComponent(this.props.thumbURL)) ||
-                        // this.props.CurrentModalParams && this.props.CurrentModalParams.CurrentNewThumbnail || this.props.modalParams &&
-                        // (this.props.modalParams.CurrentNewThumbnail || this.props.modalParams.source),
-                        // id: this.props.modalParams && this.props.modalParams.id
                     }}/>
                 </div>
             </FormGroup>

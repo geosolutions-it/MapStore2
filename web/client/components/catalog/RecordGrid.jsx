@@ -37,7 +37,8 @@ class RecordGrid extends React.Component {
         modalParams: PropTypes.object,
         layers: PropTypes.object,
         onUpdateThumbnail: PropTypes.func,
-        unsavedChanges: PropTypes.bool
+        unsavedChanges: PropTypes.bool,
+        removeThumbnail: PropTypes.func
     };
 
     static defaultProps = {
@@ -58,6 +59,7 @@ class RecordGrid extends React.Component {
                     unsavedChanges={this.props.unsavedChanges}
                     layers={this.props.layers}
                     modalParams={this.props.modalParams}
+                    removeThumbnail={this.props.removeThumbnail}
                     onUpdateThumbnail={this.props.onUpdateThumbnail}
                     onAddBackgroundProperties = {this.props.onAddBackgroundProperties}
                     source= {this.props.source}

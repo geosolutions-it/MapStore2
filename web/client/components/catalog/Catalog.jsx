@@ -71,7 +71,8 @@ class Catalog extends React.Component {
         modalParams: PropTypes.object,
         layers: PropTypes.array,
         onUpdateThumbnail: PropTypes.func,
-        unsavedChanges: PropTypes.bool
+        unsavedChanges: PropTypes.bool,
+        removeThumbnail: PropTypes.func
     };
 
     static contextTypes = {
@@ -110,6 +111,7 @@ class Catalog extends React.Component {
         onReset: () => {},
         onSearch: () => {},
         onZoomToExtent: () => {},
+        removeThumbnail: () => {},
         pageSize: 4,
         records: [],
         saving: false,
