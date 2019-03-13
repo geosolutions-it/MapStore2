@@ -50,8 +50,7 @@ class DefaultLayer extends React.Component {
         filter: PropTypes.func,
         showFullTitleOnExpand: PropTypes.bool,
         hideOpacityTooltip: PropTypes.bool,
-        truncateLength: PropTypes.number,
-        joinStr: PropTypes.string
+        tooltipOptions: PropTypes.object
     };
 
     static defaultProps = {
@@ -150,7 +149,15 @@ class DefaultLayer extends React.Component {
                 <div className="toc-default-layer-head">
                     {grab}
                     {this.renderVisibility()}
-                    <Title truncateLength={this.props.truncateLength} joinStr={this.props.joinStr} tooltip={this.props.titleTooltip} filterText={this.props.filterText} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onSelect} onContextMenu={this.props.onContextMenu} />
+                    <Title
+                        tooltipOptions={this.props.tooltipOptions}
+                        tooltip={this.props.titleTooltip}
+                        filterText={this.props.filterText}
+                        node={this.props.node}
+                        currentLocale={this.props.currentLocale}
+                        onClick={this.props.onSelect}
+                        onContextMenu={this.props.onContextMenu}
+                    />
                     {this.props.node.loading ? <div className="toc-inline-loader"></div> : this.renderToolsLegend(isEmpty)}
                     {this.props.indicators ? this.renderIndicators() : null}
                 </div>

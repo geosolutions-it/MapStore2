@@ -21,8 +21,7 @@ class Title extends React.Component {
         currentLocale: PropTypes.string,
         filterText: PropTypes.string,
         tooltip: PropTypes.bool,
-        joinStr: PropTypes.string,
-        truncateLength: PropTypes.number
+        tooltipOptions: PropTypes.object
     };
 
     static defaultProps = {
@@ -31,8 +30,10 @@ class Title extends React.Component {
         currentLocale: 'en-US',
         filterText: '',
         tooltip: false,
-        truncateLength: 807,
-        joinStr: " - "
+        tooltipOptions: {
+            maxLength: 807,
+            separator: " - "
+        }
     };
 
     getFilteredTitle = (title) => {

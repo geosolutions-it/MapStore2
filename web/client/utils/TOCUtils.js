@@ -30,9 +30,9 @@ const TOCUtils = {
      * @param {string} currentLocale
      * @return {string} tooltip text
      */
-    getTooltip: (node, currentLocale, joinStr = " - ") => {
+    getTooltip: (node, currentLocale, separator = " - ") => {
         // if this node is present in the tooltipOptions then use those keys to create the text for the tooltip
-        return TOCUtils.getTooltipFragment(node.tooltipOptions, node, currentLocale, joinStr);
+        return TOCUtils.getTooltipFragment(node.tooltipOptions, node, currentLocale, separator);
     },
     /**
      * gets the fragment for the tooltip.
@@ -41,7 +41,7 @@ const TOCUtils = {
      * @param {string} currentLocale
      * @return {string} tooltip fragment
      */
-    getTooltipFragment: (fragment = "title", node, currentLocale, joinStr = " - ") => {
+    getTooltipFragment: (fragment = "title", node, currentLocale, separator = " - ") => {
         switch (fragment) {
             case "title": {
                 const translation = isObject(node.title) ? node.title[currentLocale] || node.title.default : node.title;
@@ -56,11 +56,28 @@ const TOCUtils = {
                 const translation = isObject(node.title) ? node.title[currentLocale] || node.title.default : node.title;
                 const title = translation || node.nam || "";
                 const description = node.description || "";
-                return `${title}${joinStr && description ? joinStr : ""}${description}`;
+                return `${title}${separator && description ? separator : ""}${description}`;
             }
             // default is the name of the property passed
             default: return node[fragment];
         }
+    },
+    /**
+     * gets in a single call the title and the tooltip for the node
+     * @param {object} node layer or group
+     * @param {string} currentLocale
+     * @return {string} separator
+     * @return {number} maxLength
+    */
+    getTitleAndtooltip: ({node, currentLocale, tooltipOptions = {separator: " - ", maxLength: 807}}) => {
+        let tooltipText = TOCUtils.getTooltip(node, currentLocale, tooltipOptions.separator).substring(0, tooltipOptions.maxLength);
+        if (tooltipText.length === tooltipOptions.maxLength) {
+            tooltipText += "...";
+        }
+        return {
+            title: TOCUtils.getTooltipFragment("title", node, currentLocale, tooltipOptions.separator),
+            tooltipText
+        };
     },
     /**
      * flatten groups and subgroups in a single array
@@ -77,23 +94,6 @@ const TOCUtils = {
             }
             return acc;
         }, []);
-    },
-    /**
-     * gets in a single call the title and the tooltip for the node
-     * @param {object} node layer or group
-     * @param {string} currentLocale
-     * @return {string} tooltip fragment
-     * @return {number} truncateLength
-    */
-    getTitleAndtooltip: ({node, currentLocale, joinStr = " - ", truncateLength = 807}) => {
-        let tooltipText = TOCUtils.getTooltip(node, currentLocale, joinStr).substring(0, truncateLength);
-        if (tooltipText.length === truncateLength) {
-            tooltipText += "...";
-        }
-        return {
-            title: TOCUtils.getTooltipFragment("title", node, currentLocale, joinStr),
-            tooltipText
-        };
     }
 };
 

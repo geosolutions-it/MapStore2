@@ -90,7 +90,7 @@
                 "description": "Description",
                 "both": "Titre et Description",
                 "none": "Aucune infobulle",
-                "labelPlacement": "Placement des info-bulles",
+                "labelPlacement": "Placement",
                 "right": "Droite",
                 "bottom": "Bottom",
                 "top": "Haut"

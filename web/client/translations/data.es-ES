@@ -89,7 +89,7 @@
                 "description": "Descripción",
                 "both": "Título y Descripción",
                 "none": "Sin información sobre herramientas",
-                "labelPlacement": "Colocación de información sobre herramientas",
+                "labelPlacement": "Colocación",
                 "right": "Derecha",
                 "bottom": "Bottom",
                 "top": "Cima"

@@ -50,7 +50,8 @@ const tocItemsSettingsSelector = createSelector([
  * TOCItemsSettings plugin. This plugin allows to edit settings of groups and layers.
  * Inherit props from ResizableModal (dock = false) and DockPanel (dock = true) in cfg
  *
- * @class TOCItemsSettings
+ * @class
+ * @name TOCItemsSettings
  * @memberof plugins
  * @static
  *
@@ -59,6 +60,7 @@ const tocItemsSettingsSelector = createSelector([
  * @prop cfg.showFeatureInfoTab {bool} enable/disbale feature info settings
  * @prop cfg.enableIFrameModule {bool} enable iframe in template editor of feature info, default true
  * @prop cfg.hideTitleTranslations {bool} if true hide the title translations tool
+ * @prop cfg.showTooltipOptions {bool} if true, it shows tooltip section
  * @example
  * {
  *   "name": "TOCItemsSettings",

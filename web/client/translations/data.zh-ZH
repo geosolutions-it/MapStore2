@@ -89,7 +89,7 @@
                 "description": "Description",
                 "both": "Title and Description",
                 "none": "No Tooltip",
-                "labelPlacement": "Tooltip placement",
+                "labelPlacement": "Placement",
                 "right": "Right",
                 "bottom": "Bottom",
                 "top": "Top"

@@ -9,7 +9,7 @@
 const React = require('react');
 const PropTypes = require('prop-types');
 const Spinner = require('react-spinkit');
-const {FormControl, FormGroup, ControlLabel, InputGroup} = require('react-bootstrap');
+const {FormControl, FormGroup, ControlLabel, InputGroup, Col} = require('react-bootstrap');
 const Message = require('../../../I18N/Message');
 const {SimpleSelect} = require('react-selectize');
 const {isString, isObject, find} = require('lodash');
@@ -149,31 +149,31 @@ class General extends React.Component {
                 </div> : null}
                 {   /* Tooltip section */
                     this.props.showTooltipOptions &&
-                    <div>
-                        <br/>
-                        <label key="tooltip-label" className="control-label"><Message msgId="layerProperties.tooltip.label" /></label>
-                        <SimpleSelect
-                            hideResetButton
-                            dropdownDirection={-1}
-                            key="tooltips-dropdown"
-                            options={tooltipItems}
-                            theme = "bootstrap3"
-                            value={find(tooltipItems, o => o.value === (this.props.element.tooltipOptions || "title") )}
-                            onValueChange={(item) => {
-                                this.updateEntry("tooltipOptions", {target: {value: item.value || "title"}});
-                            }}/>
-                        <br/>
-                        <label key="tooltip-placement-label" className="control-label"><Message msgId="layerProperties.tooltip.labelPlacement" /></label>
-                        <SimpleSelect
-                            hideResetButton
-                            dropdownDirection={-1}
-                            key="tooltips-placement-dropdown"
-                            options={tooltipPlacementItems}
-                            theme = "bootstrap3"
-                            value={find(tooltipPlacementItems, o => o.value === (this.props.element.tooltipPlacement || "top") )}
-                            onValueChange={(item) => {
-                                this.updateEntry("tooltipPlacement", {target: {value: item.value || "top"}});
-                            }}/>
+                    <div style={{width: "100%"}}>
+                        <Col xs={12} sm={8} className="first-selectize">
+                            <br/>
+                            <label key="tooltip-label" className="control-label"><Message msgId="layerProperties.tooltip.label" /></label>
+                            <SimpleSelect
+                                hideResetButton
+                                dropdownDirection={-1}
+                                key="tooltips-dropdown"
+                                options={tooltipItems}
+                                theme = "bootstrap3"
+                                value={find(tooltipItems, o => o.value === (this.props.element.tooltipOptions || "title") )}
+                                onValueChange={(item) => { this.updateEntry("tooltipOptions", {target: {value: item.value || "title"}}); }}/>
+                        </Col>
+                        <Col xs={12} sm={4} className="second-selectize">
+                            <br/>
+                            <label key="tooltip-placement-label" className="control-label"><Message msgId="layerProperties.tooltip.labelPlacement" /></label>
+                            <SimpleSelect
+                                hideResetButton
+                                dropdownDirection={-1}
+                                key="tooltips-placement-dropdown"
+                                options={tooltipPlacementItems}
+                                theme = "bootstrap3"
+                                value={find(tooltipPlacementItems, o => o.value === (this.props.element.tooltipPlacement || "top") )}
+                                onValueChange={(item) => { this.updateEntry("tooltipPlacement", {target: {value: item.value || "top"}}); }}/>
+                        </Col>
                     </div>
                 }
             </form>

@@ -107,7 +107,7 @@ describe('LayersUtils', () => {
         ]);
     });
 
-    it('deepOptionsChange, deep change of a subgroup in nested group ', () => {
+    it('deep change of a subgroup in nested group with object ', () => {
         const groups = [
             {
                 "id": "1",
@@ -138,7 +138,7 @@ describe('LayersUtils', () => {
                 "expanded": true
             }
         ];
-        const newGroups = LayersUtils.deepOptionsChange(groups, '1.3', {description: "new desc"});
+        const newGroups = LayersUtils.deepChange(groups, '1.3', {description: "new desc"});
         expect(newGroups).toExist();
         expect(newGroups[0].nodes[0].description).toBe("new desc");
         expect(newGroups[0].nodes[0].tooltipOptions).toBe("both");

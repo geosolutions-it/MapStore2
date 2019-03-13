@@ -50,7 +50,7 @@
             "transparent": "Transparant",
             "singleTile": "Single Tile",
             "cached": "Gebruik cache-opties",
-            "styleCustom": "G   ebruik een stijl genaamd \"{value} \"",
+            "styleCustom": "Gebruik een stijl genaamd \"{value} \"",
             "styleListLoadError": "Er is een fout opgetreden bij het laden van de lijst met stijlen",
             "stylesRefreshList": "Vernieuw de lijst met stijlen",
             "format": "Formaat",

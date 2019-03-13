@@ -163,7 +163,7 @@ function layers(state = { flat: [] }, action) {
             if (selector === 'group') {
                 const groups = state.groups ? [].concat(state.groups) : [];
                 // updating correctly options in a (deep) subgroup
-                let newGroups = LayersUtils.deepOptionsChange(groups, action.node, action.options);
+                let newGroups = LayersUtils.deepChange(groups, action.node, action.options);
                 return assign({}, state, {groups: newGroups});
             }
 

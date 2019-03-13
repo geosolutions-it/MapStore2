@@ -89,7 +89,7 @@
                 "description": "Descrizione",
                 "both": "Titolo e Descrizione",
                 "none": "Nessun Tooltip",
-                "labelPlacement": "Posizione del tooltip",
+                "labelPlacement": "Posizione",
                 "right": "Destra",
                 "bottom": "Sotto",
                 "top": "Sopra"
