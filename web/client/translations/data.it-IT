@@ -82,7 +82,18 @@
             "templateFormatInfoAlert1": "Click sul bottone di modifica per aggiungere un nuovo template.",
             "templateFormatInfoAlert2": "Usa ${ attribute } per aggiungere gli attributi da visualizzare",
             "templateFormatInfoAlertExample": "id della feature è ${ properties }",
-            "templatePreview": "Anteprima template"
+            "templatePreview": "Anteprima template",
+            "tooltip": {
+                "label": "Tooltip",
+                "title": "Titolo",
+                "description": "Descrizione",
+                "both": "Titolo e Descrizione",
+                "none": "Nessun Tooltip",
+                "labelPlacement": "Posizione",
+                "right": "Destra",
+                "bottom": "Sotto",
+                "top": "Sopra"
+            }
         },
         "longitude": "Longitudine",
         "latitude": "Latitudine",
