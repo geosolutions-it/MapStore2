@@ -103,11 +103,11 @@ describe('TOCUtils', () => {
             visibility: true,
             storeIndex: 9,
             type: 'wms',
-            url: 'fakeurl'
+            url: 'fakeurl',
+            tooltipOptions: "both"
         };
-        const tooltipOptions = {"layer00": ["title", "description", "fakeFragment"]};
         const currentLocale = "it-IT";
-        const tooltip = getTooltip(tooltipOptions, node, currentLocale);
+        const tooltip = getTooltip(node, currentLocale);
         expect(tooltip).toBe("Livello - desc");
     });
 
