@@ -75,6 +75,21 @@ const textFeature = {
     type: "Feature",
     properties: {isText: true, valueText: "pino"}
 };
+const geodesicLineString = {
+    geometry: {
+        type: "LineString",
+        coordinates: [[1, 2], [2, 2]]
+    },
+    type: "Feature",
+    properties: {
+        useGeodesicLines: true,
+        id: "geodesic.line",
+        geometryGeodesic: {
+            type: "LineString",
+            coordinates: [[]]
+        }
+    }
+};
 describe('Test the AnnotationsUtils', () => {
     it('getAvailableStyler for point or MultiPoint', () => {
         let stylers = getAvailableStyler({type: "Point"});
@@ -280,12 +295,12 @@ describe('Test the AnnotationsUtils', () => {
         expect(ft.geometry.type).toBe("Polygon");
         expect(ft.properties).toExist();
         expect(ft.properties.ms_style).toExist();
-        expect(ft.properties.isCircle).toBe(true);
+        expect(ft.properties.isCircle).toBe(undefined);
         const {geometry: geometry2, properties: properties2} = circle2;
 
         const ft2 = fromCircleToPolygon(geometry2, properties2, style.Circle);
         expect(ft2.geometry.type).toBe("Polygon");
-        expect(ft2.properties.isCircle).toBe(true);
+        expect(ft2.properties.isCircle).toBe(undefined);
     });
     it('textToPoint', () => {
         const {geometry, properties, style} = feature;
@@ -317,7 +332,15 @@ describe('Test the AnnotationsUtils', () => {
         expect(ft.geometry.type).toBe("Polygon");
         expect(ft.properties).toExist();
         expect(ft.properties.ms_style).toExist();
-        expect(ft.properties.isCircle).toBe(true);
+        expect(ft.properties.isCircle).toBe(undefined);
+    });
+    it('fromAnnotationToGeoJson with a geodesic LineString', () => {
+        const ft = fromAnnotationToGeoJson(geodesicLineString);
+        expect(ft.type).toBe("Feature");
+        expect(ft.geometry.type).toBe("LineString");
+        expect(ft.properties).toExist();
+        expect(ft.properties.ms_style).toExist();
+        expect(ft.properties.geometryGeodesic).toBe(undefined);
     });
     it('fromAnnotationToGeoJson with a text', () => {
         const ft = fromAnnotationToGeoJson(textFeature);
@@ -325,7 +348,7 @@ describe('Test the AnnotationsUtils', () => {
         expect(ft.geometry.type).toBe("Point");
         expect(ft.properties).toExist();
         expect(ft.properties.ms_style).toExist();
-        expect(ft.properties.isText).toBe(true);
+        expect(ft.properties.isText).toBe(undefined);
     });
     it('fromAnnotationToGeoJson with a point', () => {
         const ft = fromAnnotationToGeoJson(featureCollection.features[0]);
@@ -563,7 +586,7 @@ describe('Test the AnnotationsUtils', () => {
         };
         let fts = annotationsToPrint([f]);
         expect(fts).toExist();
-        expect(fts.length).toBe(3);
+        expect(fts.length).toBe(1); // filter the style not applied
     });
     it('getStartEndPointsForLinestring, defaults', () => {
         const styles = getStartEndPointsForLinestring();
@@ -694,10 +717,13 @@ describe('Test the AnnotationsUtils', () => {
             coordinates: [[1, 1], [2, 2]]
         };
         const properties = {
-            geometryGeodesic
+            geometryGeodesic,
+            id: "VR46"
         };
         const f = fromLineStringToGeodesicLineString(properties, {color: "#12233"});
         expect(f.geometry).toEqual(geometryGeodesic);
         expect(f.type).toEqual("Feature");
+        expect(f.properties.id).toEqual("VR46");
+        expect(f.properties.ms_style).toExist();
     });
 });
