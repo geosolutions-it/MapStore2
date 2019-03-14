@@ -5,10 +5,6 @@
  * This source code is licensed under the BSD-style license found in the
  * LICENSE file in the root directory of this source tree.
  */
-
-const assign = require('object-assign');
-const axios = require('axios');
-const uuid = require('uuid');
 const GeoCodingApi = require('../api/Nominatim');
 
 const LOAD_FEATURE_INFO = 'LOAD_FEATURE_INFO';
@@ -51,7 +47,7 @@ function loadFeatureInfo(reqId, data, rParams, lMetaData) {
 
 /**
  * Private
- * @return a ERROR_FEATURE_INFO action with the error occured
+ * @return a ERROR_FEATURE_INFO action with the error occurred
  */
 function errorFeatureInfo(reqId, e, rParams, lMetaData) {
     return {
@@ -65,7 +61,7 @@ function errorFeatureInfo(reqId, e, rParams, lMetaData) {
 
 /**
  * Private
- * @return a EXCEPTIONS_FEATURE_INFO action with the wms exception occured
+ * @return a EXCEPTIONS_FEATURE_INFO action with the wms exception occurred
  *         during a GetFeatureInfo request.
  */
 function exceptionsFeatureInfo(reqId, exceptions, rParams, lMetaData) {
@@ -104,31 +100,6 @@ function getVectorInfo(layer, request, metadata) {
         layer,
         request,
         metadata
-    };
-}
-
-
-/**
- * Sends a GetFeatureInfo request and dispatches the right action
- * in case of success, error or exceptions.
- *
- * @param basePath {string} base path to the service
- * @param requestParams {object} map of params for a getfeatureinfo request.
- */
-function getFeatureInfo(basePath, requestParams, lMetaData, options = {}) {
-    const param = assign({}, options, requestParams);
-    const reqId = uuid.v1();
-    return (dispatch) => {
-        dispatch(newMapInfoRequest(reqId, param));
-        axios.get(basePath, {params: param}).then((response) => {
-            if (response.data.exceptions) {
-                dispatch(exceptionsFeatureInfo(reqId, response.data.exceptions, requestParams, lMetaData));
-            } else {
-                dispatch(loadFeatureInfo(reqId, response.data, requestParams, lMetaData));
-            }
-        }).catch((e) => {
-            dispatch(errorFeatureInfo(reqId, e.data || e.statusText || e.status, requestParams, lMetaData));
-        });
     };
 }
 
@@ -267,7 +238,7 @@ module.exports = {
     TOGGLE_SHOW_COORD_EDITOR, toggleShowCoordinateEditor,
     CHANGE_FORMAT, changeFormat,
     closeIdentify,
-    getFeatureInfo,
+    exceptionsFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
     purgeMapInfoResults,

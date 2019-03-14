@@ -10,7 +10,8 @@ const PropTypes = require('prop-types');
 const React = require('react');
 const {Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
-const {getTooltipText, getTooltip} = require('../../../utils/TOCUtils');
+const {getTitleAndtooltip} = require('../../../utils/TOCUtils');
+
 require("./css/toctitle.css");
 
 class Title extends React.Component {
@@ -30,7 +31,10 @@ class Title extends React.Component {
         currentLocale: 'en-US',
         filterText: '',
         tooltip: false,
-        tooltipOptions: null
+        tooltipOptions: {
+            maxLength: 807,
+            separator: " - "
+        }
     };
 
     getFilteredTitle = (title) => {
@@ -45,10 +49,9 @@ class Title extends React.Component {
     }
 
     render() {
-        const title = getTooltipText("title", this.props.node, this.props.currentLocale);
-        const tooltipText = getTooltip(this.props.tooltipOptions, this.props.node, this.props.currentLocale);
-        return this.props.tooltip ? (
-            <OverlayTrigger placement="top" overlay={(<Tooltip id={"tooltip-layer-title"}>{tooltipText}</Tooltip>)}>
+        const {title, tooltipText} = getTitleAndtooltip(this.props);
+        return this.props.tooltip && tooltipText ? (
+            <OverlayTrigger placement={this.props.node.tooltipPlacement || "top"} overlay={(<Tooltip id={"tooltip-layer-title"}>{tooltipText}</Tooltip>)}>
                 <div className="toc-title" onClick={this.props.onClick ? (e) => this.props.onClick(this.props.node.id, 'layer', e.ctrlKey) : () => {}} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>
                     {this.getFilteredTitle(title)}
                 </div>

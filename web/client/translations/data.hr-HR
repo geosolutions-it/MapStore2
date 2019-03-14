@@ -84,7 +84,18 @@
             "templateFormatInfoAlert1": "Klikni na dugme za editiranje za dodavanje novog predloška.",
             "templateFormatInfoAlert2": "Koristi ${ attribute } za označavanje atributa za prikaz",
             "templateFormatInfoAlertExample": "Id objekta je ${ properties }",
-            "templatePreview": "Pregled predloška"
+            "templatePreview": "Pregled predloška",
+            "tooltip": {
+                "label": "Tooltip",
+                "title": "Title",
+                "description": "Description",
+                "both": "Title and Description",
+                "none": "No Tooltip",
+                "labelPlacement": "Placement",
+                "right": "Right",
+                "bottom": "Bottom",
+                "top": "Top"
+            }
         },
         "longitude": "Longitude",
         "latitude": "Latitude",

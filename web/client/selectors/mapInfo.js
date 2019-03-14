@@ -8,8 +8,14 @@
 
 const {get} = require('lodash');
 
-const {createSelector} = require('reselect');
+const { createSelector, createStructuredSelector } = require('reselect');
 const {modeSelector} = require('./featuregrid');
+const {mapSelector} = require('./map');
+const { currentLocaleSelector } = require('./locale');
+
+const {layersSelector} = require('./layers');
+const {defaultQueryableFilter} = require('../utils/MapInfoUtils');
+
 const {queryPanelSelector} = require('./controls');
 
 /**
@@ -40,6 +46,11 @@ const showEmptyMessageGFISelector = (state) => get(state, "mapInfo.configuration
 const mapInfoConfigurationSelector = (state) => get(state, "mapInfo.configuration", {});
 
 const measureActiveSelector = (state) => get(state, "controls.measure.enabled") && (get(state, "measurement.lineMeasureEnabled") || get(state, "measurement.areaMeasureEnabled") || get(state, "measurement.bearingMeasureEnabled"));
+/**
+ * Clicked point of mapInfo
+ * @param {object} state the state
+ */
+const clickPointSelector = state => state && state.mapInfo && state.mapInfo.clickPoint;
 const drawSupportActiveSelector = (state) => {
     const drawStatus = get(state, "draw.drawStatus", false);
     return drawStatus && drawStatus !== 'clean' && drawStatus !== 'stop';
@@ -49,12 +60,18 @@ const annotationsEditingSelector = (state) => get(state, "annotations.editing");
 const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false);
 
 /**
+ * Select queriable layers
+ * @param {object} state the state
+ * @return {array} the queriable layers
+ */
+const queryableLayersSelector = state => layersSelector(state).filter(defaultQueryableFilter);
+
+/**
  * selects stopGetFeatureInfo from state
  * @memberof selectors.mapinfo
  * @param  {object} state the state
  * @return {boolean} true if the get feature info has to stop the request
  */
-
 const stopGetFeatureInfoSelector = createSelector(
     mapInfoDisabledSelector,
     measureActiveSelector,
@@ -71,9 +88,19 @@ const stopGetFeatureInfoSelector = createSelector(
         || !!isQueryPanelActive
     );
 
+const identifyOptionsSelector = createStructuredSelector({
+        format: generalInfoFormatSelector,
+        map: mapSelector,
+        point: clickPointSelector,
+        currentLocale: currentLocaleSelector
+    });
+
 module.exports = {
     isMapInfoOpen,
+    identifyOptionsSelector,
+    clickPointSelector,
     generalInfoFormatSelector,
+    queryableLayersSelector,
     mapInfoRequestsSelector,
     stopGetFeatureInfoSelector,
     showEmptyMessageGFISelector,

@@ -45,6 +45,7 @@ class DefaultGroup extends React.Component {
         visibilityCheckType: "glyph",
         level: 1,
         currentLocale: 'en-US',
+        joinStr: ' - ',
         selectedNodes: [],
         onSelect: () => {},
         titleTooltip: false
@@ -75,7 +76,14 @@ class DefaultGroup extends React.Component {
                 <div className="toc-default-group-head">
                     {grab}
                     {this.renderVisibility(error)}
-                    <GroupTitle tooltipOptions={this.props.tooltipOptions} tooltip={this.props.titleTooltip} node={this.props.node} currentLocale={this.props.currentLocale} onClick={this.props.onToggle} onSelect={this.props.onSelect}/>
+                    <GroupTitle
+                        tooltipOptions={this.props.tooltipOptions}
+                        tooltip={this.props.titleTooltip}
+                        node={this.props.node}
+                        currentLocale={this.props.currentLocale}
+                        onClick={this.props.onToggle}
+                        onSelect={this.props.onSelect}
+                    />
                 </div>
                 <GroupChildren level={this.props.level + 1} onSort={this.props.onSort} position="collapsible">
                     {this.props.children}

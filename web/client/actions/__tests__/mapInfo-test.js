@@ -8,9 +8,6 @@
 
 var expect = require('expect');
 var {
-    ERROR_FEATURE_INFO,
-    EXCEPTIONS_FEATURE_INFO,
-    LOAD_FEATURE_INFO,
     CHANGE_MAPINFO_STATE,
     NEW_MAPINFO_REQUEST,
     PURGE_MAPINFO_RESULTS,
@@ -21,7 +18,6 @@ var {
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
     TOGGLE_EMPTY_MESSAGE_GFI, toggleEmptyMessageGFI,
-    getFeatureInfo,
     changeMapInfoState,
     newMapInfoRequest,
     purgeMapInfoResults,
@@ -36,108 +32,6 @@ var {
 } = require('../mapInfo');
 
 describe('Test correctness of the map actions', () => {
-
-    it('get feature info data', (done) => {
-        /*eslint-disable */
-        let reqId;
-        /*eslint-enable */
-        getFeatureInfo('base/web/client/test-resources/featureInfo-response.json', {p: "p"}, "meta")((e) => {
-            if (e.type === NEW_MAPINFO_REQUEST) {
-                reqId = e.reqId;
-                try {
-                    expect(e).toExist();
-                    expect(e.type).toBe(NEW_MAPINFO_REQUEST);
-                    expect(e.reqId).toExist();
-                    expect(e.request).toExist();
-                    expect(e.request.p).toBe("p");
-                } catch (ex) {
-                    done(ex);
-                }
-            } else if (e.type === LOAD_FEATURE_INFO) {
-                try {
-                    expect(e).toExist();
-                    expect(e.type).toBe(LOAD_FEATURE_INFO);
-                    expect(e.data).toExist();
-                    expect(e.requestParams).toExist();
-                    expect(e.reqId).toExist();
-                    expect(e.reqId).toBe(reqId);
-                    expect(e.requestParams.p).toBe("p");
-                    expect(e.layerMetadata).toBe("meta");
-                    done();
-                } catch (ex) {
-                    done(ex);
-                }
-            }
-        });
-    });
-
-    it('get feature info exception', (done) => {
-            /*eslint-disable */
-            let reqId;
-            /*eslint-enable */
-        getFeatureInfo('base/web/client/test-resources/featureInfo-exception.json', {p: "p"}, "meta")((e) => {
-            if (e.type === NEW_MAPINFO_REQUEST) {
-                reqId = e.reqId;
-                try {
-                    expect(e).toExist();
-                    expect(e.type).toBe(NEW_MAPINFO_REQUEST);
-                    expect(e.reqId).toExist();
-                    expect(e.request).toExist();
-                    expect(e.request.p).toBe("p");
-                } catch (ex) {
-                    done(ex);
-                }
-            } else if (e.type === EXCEPTIONS_FEATURE_INFO) {
-                try {
-                    expect(e).toExist();
-                    expect(e.type).toBe(EXCEPTIONS_FEATURE_INFO);
-                    expect(e.exceptions).toExist();
-                    expect(e.reqId).toExist();
-                    expect(e.reqId).toBe(reqId);
-                    expect(e.requestParams).toExist();
-                    expect(e.requestParams.p).toBe("p");
-                    expect(e.layerMetadata).toBe("meta");
-                    done();
-                } catch (ex) {
-                    done(ex);
-                }
-            }
-        });
-    });
-
-    it('get feature info error', (done) => {
-        /*eslint-disable */
-        let reqId;
-        /*eslint-enable */
-        getFeatureInfo('requestError.json', {p: "p"}, "meta")((e) => {
-            if (e.type === NEW_MAPINFO_REQUEST) {
-                reqId = e.reqId;
-                try {
-                    expect(e).toExist();
-                    expect(e.type).toBe(NEW_MAPINFO_REQUEST);
-                    expect(e.reqId).toExist();
-                    expect(e.request).toExist();
-                    expect(e.request.p).toBe("p");
-                } catch (ex) {
-                    done(ex);
-                }
-            } else if (e.type === ERROR_FEATURE_INFO) {
-                try {
-                    expect(e).toExist();
-                    expect(e.type).toBe(ERROR_FEATURE_INFO);
-                    expect(e.error).toExist();
-                    expect(e.reqId).toExist();
-                    expect(e.reqId).toBe(reqId);
-                    expect(e.requestParams).toExist();
-                    expect(e.requestParams.p).toBe("p");
-                    expect(e.layerMetadata).toBe("meta");
-                    done();
-                } catch (ex) {
-                    done(ex);
-                }
-            }
-        });
-    });
 
     it('gets vector info', () => {
         const retval = getVectorInfo('layer', 'request', 'metadata');

@@ -13,6 +13,7 @@ const LayersUtils = require('../utils/LayersUtils');
 const {defaultIconStyle} = require('../utils/SearchUtils');
 const {getNormalizedLatLon} = require('../utils/CoordinatesUtils');
 const {get, head, isEmpty, find, isObject, isArray, castArray} = require('lodash');
+const {flattenGroups} = require('../utils/TOCUtils');
 
 const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
 const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
@@ -97,6 +98,18 @@ const getLayersWithDimension = (state, dimension) =>
             l
             && l.dimensions
             && find(castArray(l.dimensions), {name: dimension}));
+
+/**
+ * gets the actual node opened in settings modal
+*/
+const elementSelector = (state) => {
+    const settings = layerSettingSelector(state);
+    const layers = layersSelector(state);
+    const groups = groupsSelector(state);
+    return settings.nodeType === 'layers' && isArray(layers) && head(layers.filter(layer => layer.id === settings.node)) ||
+    settings.nodeType === 'groups' && isArray(groups) && head(flattenGroups(groups, 0, true).filter(group => group.id === settings.node)) || {};
+};
+
 module.exports = {
     layersSelector,
     layerSelectorWithMarkers,
@@ -115,5 +128,6 @@ module.exports = {
     backgroundControlsSelector,
     currentBackgroundSelector,
     tempBackgroundSelector,
-    centerToMarkerSelector
+    centerToMarkerSelector,
+    elementSelector
 };

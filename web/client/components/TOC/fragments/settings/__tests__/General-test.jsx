@@ -44,7 +44,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(12);
+        expect(inputs.length).toBe(14);
 
     });
     it('tests Layer Properties Display component events', () => {
@@ -69,7 +69,7 @@ describe('test  Layer Properties General module component', () => {
         expect(comp).toExist();
         const inputs = ReactTestUtils.scryRenderedDOMComponentsWithTag( comp, "input" );
         expect(inputs).toExist();
-        expect(inputs.length).toBe(12);
+        expect(inputs.length).toBe(14);
         ReactTestUtils.Simulate.change(inputs[0]);
         expect(spy.calls.length).toBe(1);
     });
@@ -98,6 +98,46 @@ describe('test  Layer Properties General module component', () => {
         const forms = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "form-group" );
         expect(forms).toExist();
         expect(forms.length).toBe(3);
+    });
+
+    it('TEST showTooltipOptions = true', () => {
+        const layer = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: {opacity: 1}
+        };
+        const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} settings={settings}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
+        expect(labels.length).toBe(7);
+        expect(labels[4].innerText).toBe("layerProperties.group");
+        expect(labels[5].innerText).toBe("layerProperties.tooltip.label");
+        expect(labels[6].innerText).toBe("layerProperties.tooltip.labelPlacement");
+    });
+
+    it('TEST showTooltipOptions = false', () => {
+        const layer = {
+            name: 'layer00',
+            title: 'Layer',
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl'
+        };
+        const settings = {
+            options: {opacity: 1}
+        };
+        const comp = ReactDOM.render(<General pluginCfg={{}} element={layer} showTooltipOptions={false} settings={settings}/>, document.getElementById("container"));
+        expect(comp).toExist();
+        const labels = ReactTestUtils.scryRenderedDOMComponentsWithClass( comp, "control-label" );
+        expect(labels.length).toBe(5);
+        expect(labels[4].innerText).toBe("layerProperties.group");
     });
 
 });

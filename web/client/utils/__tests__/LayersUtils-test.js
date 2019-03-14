@@ -85,7 +85,6 @@ describe('LayersUtils', () => {
         ]);
     });
 
-
     it('deep change in nested group', () => {
 
         const nestedGroups = [
@@ -106,6 +105,44 @@ describe('LayersUtils', () => {
             {id: 'default', nodes: ['layer001', 'layer002']},
             {id: 'custom', nodes: [{id: 'custom.nested001', nodes: ['layer003', {id: 'custom.nested001.nested002', nodes: ['layer004'], value: 'now'}]}]}
         ]);
+    });
+
+    it('deep change of a subgroup in nested group with object ', () => {
+        const groups = [
+            {
+                "id": "1",
+                "title": "1",
+                "name": "1",
+                "nodes": [
+                    {
+                        "id": "1.3",
+                        "title": "3",
+                        "name": "3",
+                        "nodes": [
+                            {
+                                "id": "1.3.4",
+                                "title": "4",
+                                "name": "4",
+                                "nodes": [
+                                    "topp:states__6"
+                                ],
+                                "expanded": true
+                            }
+                        ],
+                        "expanded": true,
+                        "description": "old desc",
+                        "tooltipOptions": "both",
+                        "tooltipPlacement": "right"
+                    }
+                ],
+                "expanded": true
+            }
+        ];
+        const newGroups = LayersUtils.deepChange(groups, '1.3', {description: "new desc"});
+        expect(newGroups).toExist();
+        expect(newGroups[0].nodes[0].description).toBe("new desc");
+        expect(newGroups[0].nodes[0].tooltipOptions).toBe("both");
+        expect(newGroups[0].nodes[0].tooltipPlacement).toBe("right");
     });
 
     it('get groups node id in nested group', () => {
