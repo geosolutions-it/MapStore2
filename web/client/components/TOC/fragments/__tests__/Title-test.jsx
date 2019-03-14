@@ -166,16 +166,16 @@ describe('test Title module component', () => {
             visibility: true,
             storeIndex: 9,
             type: 'wms',
-            url: 'fakeurl'
+            url: 'fakeurl',
+            tooltipOptions: "both"
         };
-        const tooltipOptions = {"layer00": ["title", "description"]};
         const currentLocale = "it-IT";
-        const comp = ReactDOM.render(<Title node={node} tooltip tooltipOptions={tooltipOptions} currentLocale={currentLocale}/>, document.getElementById("container"));
+        const comp = ReactDOM.render(<Title node={node} tooltip currentLocale={currentLocale}/>, document.getElementById("container"));
         const domNode = ReactDOM.findDOMNode(comp);
         expect(domNode).toExist();
         ReactTestUtils.Simulate.mouseOver(domNode);
         expect(ReactDOM.findDOMNode(comp).getAttribute('aria-describedby')).toBe('tooltip-layer-title');
-        expect(getTooltip(tooltipOptions, node, currentLocale)).toBe("Livello - desc");
+        expect(getTooltip(node, currentLocale)).toBe("Livello - desc");
     });
 
 });

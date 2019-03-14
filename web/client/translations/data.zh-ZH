@@ -68,7 +68,34 @@
             "groupProperties": "组属性",
             "featureInfo": "特征信息",
             "featureInfoFormatLbl": "确定响应格式",
-            "legenderror": "图例不可用"
+            "legenderror": "图例不可用",
+            "editCustomFormat": "Edit custom format",
+            "exampleOfResponse": "Example",
+            "changedSettings": "Changed Settings",
+            "changedSettingsAlert": "You are closing the settings panel without save your changes",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Shows feature info results as plain text",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Shows feature info results as html",
+            "propertiesFormatTitle": "PROPERTIES",
+            "propertiesFormatDescription": "Shows feature info results as properties list",
+            "templateFormatTitle": "TEMPLATE",
+            "templateFormatDescription": "Customize feature info results format",
+            "templateFormatInfoAlert1": "Click on edit button to add a new template.",
+            "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
+            "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
+            "templatePreview": "Template preview",
+            "tooltip": {
+                "label": "Tooltip",
+                "title": "Title",
+                "description": "Description",
+                "both": "Title and Description",
+                "none": "No Tooltip",
+                "labelPlacement": "Placement",
+                "right": "Right",
+                "bottom": "Bottom",
+                "top": "Top"
+            }
         },
         "longitude": "Longitude",
         "latitude": "Latitude",
@@ -112,6 +139,7 @@
         "options": "选项",
         "settings": "设置",
         "help": "帮助",
+        "docs": "Docs",
         "gohome": "跳转首页",
         "back": "Back to the Importer",
         "printbutton": "打印",
@@ -123,6 +151,8 @@
         "elevation": "海拔",
         "close": "关闭",
         "cancel": "取消",
+        "no": "No",
+        "yes": "Yes",
         "confirm": "确认",
         "confirmTitle": "你确认吗?",
         "pageInfo": "{total, plural, =0 {No items} =1 {{total} Item of {total}} other {Items {start}-{end} of {total}}}",
@@ -216,10 +246,63 @@
         },
         "newMap": "新地图",
 		"maps": {
-			"search": "搜索地图...",
+            "title": "Maps",
             "addToFeaturedMaps": "Add to featured maps",
-            "removeFromFeaturedMaps": "Remove from featured maps"
+            "removeFromFeaturedMaps": "Remove from featured maps",
+            "feedback": {
+                "noDetailsAvailable": "Details not available",
+                "successSavedMap": "The map has been created correctly",
+                "errorDeletingMap": "Error when deleting this map",
+                "errorDeletingThumbnailOfMap": "Error when deleting thumbnail for this map",
+                "errorDeletingDetailsOfMap": "Error when deleting details for this map",
+                "allResDeleted": "All resources associated with this map have been deleted successfully",
+                "errorFetchingDetailsOfMap": "Error when fetching details for this map",
+                "details": {
+                    "deletedSuccesfully": "The details have been removed correctly",
+                    "savedSuccesfully": "The details have been saved correctly",
+                    "updatedSuccesfully": "The details have been updated correctly"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "The thumbnail have been removed correctly",
+                    "savedSuccesfully": "The thumbnail have been saved correctly",
+                    "updatedSuccesfully": "The thumbnail have been updated correctly"
+                },
+                "errorWhenSaving": "An error occurred during saving process",
+                "errorWhenUpdating": "An error occurred during updating process",
+                "errorWhenDeleting": "An error occurred during deleting process",
+                "errorSizeExceeded": "Please, reduce the size of the details or the quality of the images"
+            },
+			"search": "搜索地图..."
 		},
+        "resources": {
+            "deleteConfirmTitle": "Are you sure",
+            "deleteConfirmMessage": "Are you sure you want do delete this resource?",
+            "deleteConfirmButtonText": "Delete",
+            "deleteCancelButtonText": "Close",
+            "resource": {
+                "deleteResource": "Delete",
+                "editResource": "Edit properties",
+                "addToFeatured": "Add to featured",
+                "removeFromFeatured": "Remove from featured",
+                "showDetails": "Show details"
+            },
+            "contents": {
+                "title": "Contents"
+            },
+            "dashboards": {
+                "newDashboard": "New Dashboard",
+                "title": "Dashboards ({count})",
+                "titleNoCount": "Dashboards",
+                "create": "Create Dashboard",
+                "noDashboardAvailable": "No dashboard available",
+                "createANewOne": "Create a new one",
+                "deleteError": "There was an error deleting the resource",
+                "errorLoadingDashboards": "There was an error loading dashboards"
+            },
+            "maps": {
+                "title": "Maps ({count})"
+            }
+        },
         "map": {
             "errorLoadingFont": "The font family {family} is not correctly loaded. Some elements (like symbols in markers) can have rendering problems",
             "loading": "加载中...",
@@ -284,6 +367,7 @@
             "toolTrashLayerTooltip": "删除选定的图层",
             "toolTrashLayersTooltip": "删除选定的图层",
             "toolFeaturesGridTooltip": "打开属性表",
+            "toolDownloadTooltip": "Export layer data",
             "noFilteredResults": "没有结果",
             "filterPlaceholder": "过滤图层",
             "clearFilter": "清除过滤器",
@@ -313,6 +397,54 @@
                 "search": "更新搜索选项",
                 "title": "更新标题",
                 "dimensions": "更新维度"
+            },
+            "layerMetadata": {
+                "identifier": "Identifier",
+                "title": "Title",
+                "abstract": "Abstract",
+                "subject": "Subject",
+                "type": "Type",
+                "creator": "Creator",
+                "toolLayerMetadataTooltip": "Show the selected layer's metadata",
+                "layerMetadataPanelTitle": "Layer metadata",
+                "notification": {
+                    "warnigGetMetadataRecordById": "Error in metadata search"
+                }
+            },
+            "thematic": {
+                "classification_field": "Classification Field:",
+                "classification_method": "Classification Method:",
+                "classification_aggregate": "Aggregate Function:",
+                "classification_colors": "Color Ramp:",
+                "classification_intervals": "Intervals:",
+                "preview": "Preview",
+                "remove_thematic": "Back to Simple Style",
+                "values": {
+                    "equalInterval": "Equal Intervals",
+                    "quantile": "Quantile",
+                    "jenks": "Natural Breaks",
+                    "sum": "Sum",
+                    "avg": "Average",
+                    "count": "Count",
+                    "min": "Min",
+                    "max": "Max"
+                },
+                "configuration": "Configuration",
+                "apply": "Apply classification",
+                "restore": "Reset customizations",
+                "go_to_cfg": "Configure...",
+                "go_to_thema": "Use this configuration",
+                "cfgError": "Error in configuration JSON",
+                "classify": "Classify",
+                "remove": "Remove classification",
+                "data_panel": "Data",
+                "classification_stroke": "Stroke",
+                "classification_error": "Error calling the classification service: {message}",
+                "fields_error": "Error loading fields list: {message}",
+                "interval_limit": "Intervals should be a number between {min} and {max}",
+                "invalid_object": "Invalid service response",
+                "invalid_geometry": "Geometry type is not valid, not a point, line or polygon",
+                "invalid_classes": "Max must be greater than min in every class"
             }
         },
         "print":{
@@ -374,6 +506,11 @@
             "redoBtnTooltip": "前进"
         },
         "infoFormatLbl": "确定响应格式",
+        "measureSupport": {
+            "continueLine": "Click to continue drawing the line",
+            "continuePolygon": "Click to continue drawing the polygon",
+            "startDrawing": "Click to start drawing"
+        },
         "measureComponent": {
             "Measure": "测量",
             "MeasureLength": "测量距离",
@@ -766,7 +903,13 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "请插入用户名和密码",
                 "usernamePwdIncorrect":"用户名或密码不正确"
-            }
+            },
+            "detailsName": "Name",
+            "detailsRole": "Role",
+            "detailsGroups": "Groups",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Company",
+            "detailsNotes": "Notes"
         },
         "users": {
             "title": "Manage Accounts",

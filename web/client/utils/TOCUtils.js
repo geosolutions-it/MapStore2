@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {isObject, find, isNil} = require('lodash');
+const {isObject} = require('lodash');
 
 const TOCUtils = {
     createFromSearch: function(options, search) {
@@ -26,22 +26,13 @@ const TOCUtils = {
     },
     /**
      * gets and joins the fragments for tooltips of the node component in the TOC
-     * @param {object} tooltipOptions
      * @param {object} node layer or group
      * @param {string} currentLocale
      * @return {string} tooltip text
      */
-    getTooltip: (tooltipOptions, node, currentLocale) => {
+    getTooltip: (node, currentLocale, separator = " - ") => {
         // if this node is present in the tooltipOptions then use those keys to create the text for the tooltip
-        let tooltips = tooltipOptions && find(Object.keys(tooltipOptions), id => id === node.id);
-        if (tooltips) {
-            // if you specify a joinsStr it uses it for concatenating the various fields
-            return tooltipOptions[tooltips]
-                    .map(t => TOCUtils.getTooltipText(t, node, currentLocale))
-                    .filter(t => !isNil(t))
-                    .join(tooltipOptions.joinStr || " - ");
-        }
-        return TOCUtils.getTooltipText("title", node, currentLocale);
+        return TOCUtils.getTooltipFragment(node.tooltipOptions, node, currentLocale, separator);
     },
     /**
      * gets the fragment for the tooltip.
@@ -50,16 +41,59 @@ const TOCUtils = {
      * @param {string} currentLocale
      * @return {string} tooltip fragment
      */
-    getTooltipText: (fragment, node, currentLocale) => {
+    getTooltipFragment: (fragment = "title", node, currentLocale, separator = " - ") => {
         switch (fragment) {
             case "title": {
                 const translation = isObject(node.title) ? node.title[currentLocale] || node.title.default : node.title;
-                const title = translation || node.name;
+                const title = translation || node.name || "";
                 return title;
+            }
+            case "description": {
+                const description = node.description || "";
+                return description;
+            }
+            case "both": {
+                const translation = isObject(node.title) ? node.title[currentLocale] || node.title.default : node.title;
+                const title = translation || node.nam || "";
+                const description = node.description || "";
+                return `${title}${separator && description ? separator : ""}${description}`;
             }
             // default is the name of the property passed
             default: return node[fragment];
         }
+    },
+    /**
+     * gets in a single call the title and the tooltip for the node
+     * @param {object} node layer or group
+     * @param {string} currentLocale
+     * @return {string} separator
+     * @return {number} maxLength
+    */
+    getTitleAndtooltip: ({node, currentLocale, tooltipOptions = {separator: " - ", maxLength: 807}}) => {
+        let tooltipText = TOCUtils.getTooltip(node, currentLocale, tooltipOptions.separator).substring(0, tooltipOptions.maxLength);
+        if (tooltipText.length === tooltipOptions.maxLength) {
+            tooltipText += "...";
+        }
+        return {
+            title: TOCUtils.getTooltipFragment("title", node, currentLocale, tooltipOptions.separator),
+            tooltipText
+        };
+    },
+    /**
+     * flatten groups and subgroups in a single array
+     * @param {object[]} groups node to get the groups and subgroups
+     * @param {number} idx
+     * @params {boolean} wholeGroup, if true it returns the whole node
+     * @return {object[]} array of nodes (groups and subgroups)
+    */
+    flattenGroups: (groups, idx = 0, wholeGroup = false) => {
+        return groups.filter((group) => group.nodes).reduce((acc, g) => {
+            acc.push(wholeGroup ? g : {label: g.id.replace(/\./g, '/').replace(/\${dot}/g, '.'), value: g.id});
+            if (g.nodes.length > 0) {
+                return acc.concat(TOCUtils.flattenGroups(g.nodes, idx + 1, wholeGroup));
+            }
+            return acc;
+        }, []);
     }
 };
 

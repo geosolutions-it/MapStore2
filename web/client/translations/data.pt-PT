@@ -85,7 +85,18 @@
             "templateFormatInfoAlert1": "Clicar no botão editar para adicionar um novo template.",
             "templateFormatInfoAlert2": "Use ${ attribute } para identificar as propriedades que necessita visualizar",
             "templateFormatInfoAlertExample": "O id do tema é ${ properties }",
-            "templatePreview": "Preview do Template"
+            "templatePreview": "Preview do Template",
+            "tooltip": {
+                "label": "Tooltip",
+                "title": "Title",
+                "description": "Description",
+                "both": "Title and Description",
+                "none": "No Tooltip",
+                "labelPlacement": "Placement",
+                "right": "Right",
+                "bottom": "Bottom",
+                "top": "Top"
+            }
         },
         "longitude": "Longitude",
         "latitude": "Latitude",

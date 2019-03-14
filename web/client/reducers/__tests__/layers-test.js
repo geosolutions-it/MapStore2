@@ -175,6 +175,54 @@ describe('Test the layers reducer', () => {
         expect(state.flat[1].format).toNotExist();
     });
 
+
+    it('updateNode subgroups changing tooltipOptions', () => {
+        let testAction = {
+            "type": "UPDATE_NODE",
+            "node": "1.3",
+            "nodeType": "groups",
+            "options": {
+                "description": "denlayers/40935555",
+                "tooltipOptions": "both"
+            }
+        };
+        const groups = [
+            {
+                "id": "1",
+                "title": "1",
+                "name": "1",
+                "nodes": [
+                    {
+                        "id": "1.3",
+                        "title": "3",
+                        "name": "3",
+                        "nodes": [
+                            {
+                                "id": "1.3.4",
+                                "title": "4",
+                                "name": "4",
+                                "nodes": [
+                                    "topp:states__6"
+                                ],
+                                "expanded": true
+                            }
+                        ],
+                        "expanded": true,
+                        "description": "denlayers/4093",
+                        "tooltipOptions": "title",
+                        "tooltipPlacement": "right"
+                    }
+                ],
+                "expanded": true
+            }
+        ];
+        let state = layers({groups}, testAction);
+        expect(state.groups[0].nodes[0].tooltipOptions).toBe("both");
+        expect(state.groups[0].nodes[0].tooltipPlacement).toBe("right");
+        expect(state.groups[0].nodes[0].description).toBe("denlayers/40935555");
+        expect(state.groups[0].nodes[0].id).toBe("1.3");
+    });
+
     it('test layer visibility change for background', () => {
         const oldState = {flat: [{
             "type": "osm",

@@ -84,7 +84,18 @@
             "templateFormatInfoAlert1": "Haga clic en el botón Editar para agregar una nueva plantilla.",
             "templateFormatInfoAlert2": "Use ${ attribute } para ajustar las propiedades que necesita visualizar",
             "templateFormatInfoAlertExample": "La identificación de la función es ${ properties }",
-            "templatePreview": "Vista previa de template"
+            "templatePreview": "Vista previa de template",
+            "tooltip": {
+                "label": "Información sobre herramientas",
+                "title": "Título",
+                "description": "Descripción",
+                "both": "Título y Descripción",
+                "none": "Sin información sobre herramientas",
+                "labelPlacement": "Colocación",
+                "right": "Derecha",
+                "bottom": "Bottom",
+                "top": "Cima"
+            }
         },
         "longitude": "Longitud",
         "latitude": "Latitud",

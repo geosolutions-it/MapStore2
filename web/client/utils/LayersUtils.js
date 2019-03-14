@@ -118,14 +118,19 @@ const getGroupNodes = (node) => {
     return [];
 };
 
+
+/**
+ * adds or update node property in a nested node
+ * if propName is an object it overrides a whole group of options instead of one
+*/
 const deepChange = (nodes, findValue, propName, propValue) => {
     if (nodes && isArray(nodes) && nodes.length > 0) {
         return nodes.map((node) => {
             if (isObject(node)) {
                 if (node.id === findValue) {
-                    return assign({}, node, {[propName]: propValue});
-                }else if (node.nodes) {
-                    return assign({}, node, {nodes: deepChange(node.nodes, findValue, propName, propValue)});
+                    return {...node, ...(isObject(propName) ? propName : {[propName]: propValue})};
+                } else if (node.nodes) {
+                    return {...node, nodes: deepChange(node.nodes, findValue, propName, propValue)};
                 }
             }
             return node;

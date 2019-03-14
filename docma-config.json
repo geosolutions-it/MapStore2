@@ -225,6 +225,7 @@
                 "web/client/plugins/Search.jsx",
                 "web/client/plugins/SearchServicesConfig.jsx",
                 "web/client/plugins/TOC.jsx",
+                "web/client/plugins/TOCItemsSettings.jsx",
                 "web/client/plugins/ThematicLayer.jsx",
                 "web/client/plugins/WFSDownload.jsx",
                 "web/client/plugins/Widgets.jsx",
