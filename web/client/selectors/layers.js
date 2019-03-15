@@ -12,13 +12,15 @@ const MapInfoUtils = require('../utils/MapInfoUtils');
 const LayersUtils = require('../utils/LayersUtils');
 const {defaultIconStyle} = require('../utils/SearchUtils');
 const {getNormalizedLatLon} = require('../utils/CoordinatesUtils');
+const { clickedPointWithFeaturesSelector} = require('./mapinfo');
+const { defaultQueryableFilter } = require('../utils/MapInfoUtils');
+
 const {get, head, isEmpty, find, isObject, isArray, castArray} = require('lodash');
 
 const layersSelector = ({layers, config} = {}) => layers && isArray(layers) ? layers : layers && layers.flat || config && config.layers || [];
 const currentBackgroundLayerSelector = state => head(layersSelector(state).filter(l => l && l.visibility && l.group === "background"));
 const getLayerFromId = (state, id) => head(layersSelector(state).filter(l => l.id === id));
 const allBackgroundLayerSelector = state => layersSelector(state).filter(l => l.group === "background");
-const markerSelector = state => state.mapInfo && state.mapInfo.showMarker && state.mapInfo.clickPoint;
 const geoColderSelector = state => state.search && state.search;
 
 // TODO currently loading flag causes a re-creation of the selector on any pan
@@ -29,7 +31,7 @@ const additionalLayersSelector = state => get(state, "additionallayers", []);
 
 
 const layerSelectorWithMarkers = createSelector(
-    [layersSelector, markerSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector],
+    [layersSelector, clickedPointWithFeaturesSelector, geoColderSelector, centerToMarkerSelector, additionalLayersSelector],
     (layers = [], markerPosition, geocoder, centerToMarker, additionalLayers) => {
 
         // Perform an override action on the layers using options retrieved from additional layers
@@ -42,7 +44,7 @@ const layerSelectorWithMarkers = createSelector(
         newLayers = newLayers.concat(overlayLayers);
         if ( markerPosition ) {
             const coords = centerToMarker === 'enabled' ? getNormalizedLatLon(markerPosition.latlng) : markerPosition.latlng;
-            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", coords));
+            newLayers.push(MapInfoUtils.getMarkerLayer("GetFeatureInfo", {...coords, features: markerPosition.features}));
         }
         if (geocoder && geocoder.markerPosition) {
             let geocoderStyle = isObject(geocoder.style) && geocoder.style || {};
@@ -91,9 +93,18 @@ const getLayersWithDimension = (state, dimension) =>
             l
             && l.dimensions
             && find(castArray(l.dimensions), {name: dimension}));
+
+/**
+* Select queriable layers
+* @param {object} state the state
+* @return {array} the queriable layers
+*/
+const queryableLayersSelector = state => layersSelector(state).filter(defaultQueryableFilter);
+
 module.exports = {
     layersSelector,
     layerSelectorWithMarkers,
+    queryableLayersSelector,
     groupsSelector,
     currentBackgroundLayerSelector,
     allBackgroundLayerSelector,

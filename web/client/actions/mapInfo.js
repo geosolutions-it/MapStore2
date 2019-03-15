@@ -26,6 +26,7 @@ const UPDATE_MAPINFO_FEATURE = "UPDATE_MAPINFO_FEATURE";
 const HIGHLIGHT_FEATURE = "MAPINFO_HIGHLIGHT_FEATURE";
 const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
+const CHANGE_INDEX = 'IDENTIFY:CHANGE_INDEX';
 const CLOSE_IDENTIFY = 'IDENTIFY:CLOSE_IDENTIFY';
 const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
 const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
@@ -206,6 +207,13 @@ function highlightFeature(enabled) {
     };
 }
 
+function changeIndex(index) {
+    return {
+        type: CHANGE_INDEX,
+        index
+    };
+}
+
 const closeIdentify = () => ({
     type: CLOSE_IDENTIFY
 });
@@ -246,6 +254,7 @@ module.exports = {
     FEATURE_INFO_CLICK,
     UPDATE_MAPINFO_FEATURE, updateMapInfoFeature,
     HIGHLIGHT_FEATURE, highlightFeature,
+    CHANGE_INDEX, changeIndex,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
     CLOSE_IDENTIFY,

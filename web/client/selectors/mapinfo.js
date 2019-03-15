@@ -13,9 +13,6 @@ const {modeSelector} = require('./featuregrid');
 const {mapSelector} = require('./map');
 const { currentLocaleSelector } = require('./locale');
 
-const {layersSelector} = require('./layers');
-const {defaultQueryableFilter} = require('../utils/MapInfoUtils');
-
 const {queryPanelSelector} = require('./controls');
 
 /**
@@ -58,13 +55,6 @@ const annotationsEditingSelector = (state) => get(state, "annotations.editing");
 const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false);
 
 /**
- * Select queriable layers
- * @param {object} state the state
- * @return {array} the queriable layers
- */
-const queryableLayersSelector = state => layersSelector(state).filter(defaultQueryableFilter);
-
-/**
  * selects stopGetFeatureInfo from state
  * @memberof selectors.mapinfo
  * @param  {object} state the state
@@ -98,11 +88,39 @@ const identifyOptionsSelector = createStructuredSelector({
 
 const isHighlightEnabledSelector = state => state.mapInfo.highlight;
 
+const indexSelector = state => state.mapInfo.index;
+
+const responsesSelector = state => state.mapInfo && state.mapInfo.responses || [];
+
+
+const currentResponseSelector = createSelector(
+    responsesSelector, indexSelector,
+    (responses = [], index = 0) => responses[index]
+);
+const currentFeatureSelector = state => {
+    const currentResponse = currentResponseSelector(state) || {};
+    return get(currentResponse, 'data.features') || get(currentResponse, 'layerMetadata.features');
+};
+const clickedPointWithFeaturesSelector = createSelector(
+    clickPointSelector,
+    currentFeatureSelector,
+    (clickPoint, features) => clickPoint
+        ? {
+            ...clickPoint,
+            features
+        }
+        : undefined
+
+);
+
+
 module.exports = {
+    indexSelector,
+    responsesSelector,
+    clickedPointWithFeaturesSelector,
     identifyOptionsSelector,
     clickPointSelector,
     generalInfoFormatSelector,
-    queryableLayersSelector,
     mapInfoRequestsSelector,
     stopGetFeatureInfoSelector,
     isHighlightEnabledSelector

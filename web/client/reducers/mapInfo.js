@@ -24,6 +24,7 @@ const {
     FEATURE_INFO_CLICK,
     UPDATE_MAPINFO_FEATURE,
     HIGHLIGHT_FEATURE,
+    CHANGE_INDEX,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
     CHANGE_FORMAT,
@@ -69,6 +70,11 @@ function mapInfo(state = initState, action) {
         return assign({}, state, {
             enabled: !state.enabled
         });
+    case CHANGE_INDEX: {
+        return assign({}, state, {
+            index: action.index
+        });
+    }
     case HIGHLIGHT_FEATURE: {
         return assign({}, state, {
             highlight: action.enabled
