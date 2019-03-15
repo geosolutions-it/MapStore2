@@ -12,40 +12,53 @@ const React = require('react');
 const uuidv1 = require('uuid/v1');
 const assign = require('object-assign');
 
-const getAnnotationStyle = (type, defaultStyle = DEFAULT_ANNOTATIONS_STYLES) => {
-    return assign({}, defaultStyle[type], {type});
-};
 
 const DropdownButtonT = tooltip(DropdownButton);
-const DropdownFeatureType = ({onClick = () => {}, onStartDrawing = () => {}, onAddText = () => {}, onSetStyle = () => {}, bsStyle = "primary", ...props} = {}) => (
-    <DropdownButtonT id={props.idDropDown || uuidv1()} tooltipId={props.tooltipId} className="square-button-md" bsStyle={bsStyle} title={<Glyphicon glyph={props.glyph}/>} disabled={!!props.disabled} noCaret>
+const DropdownFeatureType = ({
+    onClick = () => {},
+    onStartDrawing = () => {},
+    onAddText = () => {},
+    onSetStyle = () => {},
+    titles = {},
+    glyph = "",
+    bsStyle = "primary",
+    ...props
+} = {}) => (
+    <DropdownButtonT
+        id={props.idDropDown || uuidv1()}
+        tooltipId={props.tooltipId}
+        className="square-button-md"
+        bsStyle={bsStyle}
+        title={<Glyphicon glyph={glyph}/>}
+        disabled={!!props.disabled}
+        noCaret>
 
         <MenuItem eventKey="1" onClick={() => {
             onClick("Point");
-            onSetStyle([{...getAnnotationStyle("Point"), highlight: true, id: uuidv1()}]);
+            onSetStyle([{ ...DEFAULT_ANNOTATIONS_STYLES.Point, highlight: true, id: uuidv1()}]);
             onStartDrawing();
         }}>
-            <Glyphicon glyph="point"/>{props.titles.marker}
+            <Glyphicon glyph="point"/>{titles.marker}
         </MenuItem>
 
         <MenuItem eventKey="2" onClick={() => {
             onClick("LineString");
             onSetStyle(
-                [{...getAnnotationStyle("LineString"), highlight: true, id: uuidv1()}]
+                [{ ...DEFAULT_ANNOTATIONS_STYLES.LineString, highlight: true, id: uuidv1()}]
                 .concat(getStartEndPointsForLinestring()));
             onStartDrawing();
         }}>
-            <Glyphicon glyph="line"/>{props.titles.line}
+            <Glyphicon glyph="line"/>{titles.line}
         </MenuItem>
 
         <MenuItem eventKey="3" onClick={() => {
             onClick("Polygon");
             onSetStyle([
-                {...getAnnotationStyle("Polygon"), highlight: true, id: uuidv1()}
+                {...DEFAULT_ANNOTATIONS_STYLES.Polygon, highlight: true, id: uuidv1()}
             ]);
             onStartDrawing();
         }}>
-            <Glyphicon glyph="polygon"/>{props.titles.polygon}
+            <Glyphicon glyph="polygon"/>{titles.polygon}
         </MenuItem>
 
         <MenuItem eventKey="4" onClick={() => {
@@ -56,7 +69,7 @@ const DropdownFeatureType = ({onClick = () => {}, onStartDrawing = () => {}, onA
             ]);
             onStartDrawing();
         }}>
-            <Glyphicon glyph="text-colour"/>{props.titles.text}
+            <Glyphicon glyph="text-colour"/>{titles.text}
         </MenuItem>
 
         <MenuItem eventKey="5" onClick={() => {
@@ -67,7 +80,7 @@ const DropdownFeatureType = ({onClick = () => {}, onStartDrawing = () => {}, onA
             ]);
             onStartDrawing();
         }}>
-            <Glyphicon glyph="1-circle"/>{props.titles.circle}
+            <Glyphicon glyph="1-circle"/>{titles.circle}
         </MenuItem>
     </DropdownButtonT>
 );

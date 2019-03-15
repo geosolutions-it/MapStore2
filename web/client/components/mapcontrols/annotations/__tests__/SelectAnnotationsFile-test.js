@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright 2018, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -10,7 +10,6 @@ const expect = require('expect');
 const React = require('react');
 const ReactDOM = require('react-dom');
 const SelectAnnotationsFile = require('../SelectAnnotationsFile');
-
 
 
 describe("test the SelectAnnotationsFile modal", () => {

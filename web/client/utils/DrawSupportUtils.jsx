@@ -56,7 +56,8 @@ const transformPolygonToCircle = (feature, mapCrs) => {
     if (!feature.getGeometry() || feature.getGeometry().getType() !== "Polygon" || feature.getProperties().center && feature.getProperties().center.length === 0) {
         return feature;
     }
-    if (feature.getProperties() && feature.getProperties().isCircle) {
+    if (feature.getProperties() && feature.getProperties().isCircle && feature.getProperties().center && feature.getProperties().center[0] && feature.getProperties().center[1]) {
+        // center must be a valid point
         const extent = feature.getGeometry().getExtent();
         let center;
         if (feature.getProperties().center) {

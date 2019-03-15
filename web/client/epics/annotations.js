@@ -45,15 +45,22 @@ const {changeDrawingStatus} = require('../actions/draw');
     * @type {Object}
     */
 
+/**
+ * TODO test this and move it into utils
+*/
 const validateFeatureCollection = (feature) => {
     let features = feature.features.map(f => {
         let coords = [];
+        if (!f.geometry ) {
+            return f;
+        }
         if (f.geometry.type === "LineString" || f.geometry.type === "MultiPoint") {
             coords = f.geometry.coordinates.filter(validateCoordsArray);
         } else if (f.geometry.type === "Polygon") {
-            coords = [f.geometry.coordinates[0].filter(validateCoordsArray)];
+            coords = f.geometry.coordinates[0] ? [f.geometry.coordinates[0].filter(validateCoordsArray)] : [[]];
         } else {
-            coords = [f.geometry.coordinates].filter(validateCoordsArray)[0];
+            coords = [f.geometry.coordinates].filter(validateCoordsArray);
+            coords = coords.length ? coords[0] : [];
         }
         return set("geometry.coordinates", coords, f);
     });

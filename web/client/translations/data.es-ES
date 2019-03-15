@@ -879,6 +879,7 @@
                     "MultiPoint": "Editor LineString",
                     "Text": "Editor de texto"
                 },
+                "center": "Centro",
                 "add": "Agregar nuevas coordenadas",
                 "addByClick": "Agregue nuevas coordenadas haciendo clic en el botón más o en el mapa",
                 "valid": "La geometría es válida",

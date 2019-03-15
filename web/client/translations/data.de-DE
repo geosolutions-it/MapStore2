@@ -879,6 +879,7 @@
                     "MultiPoint": "LineString-Editor",
                     "Text": "Text-Editor"
                 },
+                "center": "Center",
                 "add": "Fügen Sie neue Koordinaten hinzu",
                 "addByClick": "Fügen Sie neue Koordinaten hinzu, indem Sie auf die Plus-Schaltfläche oder auf die Karte klicken",
                 "valid": "Geometrie ist gültig",

@@ -50,10 +50,14 @@ class CoordinatesRow extends React.Component {
 
         return (
             <Row className={`coordinateRow ${this.props.customClassName || ""}`} style={!this.props.customClassName ? rowStyle : {}} onMouseEnter={() => {
-                if (this.props.onMouseEnter) {
+                if (this.props.onMouseEnter && this.props.component.lat && this.props.component.lon) {
                     this.props.onMouseEnter(this.props.component);
                 }
-            }} onMouseLeave={this.props.onMouseLeave}>
+            }} onMouseLeave={() => {
+                if (this.props.component.lat && this.props.component.lon) {
+                    this.props.onMouseLeave();
+                }
+            }}>
                 <Col xs={1}>
                     {this.props.isDraggable ? this.props.connectDragSource(dragButton) : dragButton}
                 </Col>
