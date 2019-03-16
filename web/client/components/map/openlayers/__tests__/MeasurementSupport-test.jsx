@@ -259,4 +259,33 @@ describe('Openlayers MeasurementSupport', () => {
             })
         });
     });
+    it('test drawing a distance (LineString) and moving pointer', () => {
+        let cmp = renderWithDrawing();
+        expect(cmp).toExist();
+        cmp = renderMeasurement({
+            measurement: {
+                geomType: "LineString",
+                feature: lineFeature,
+                lineMeasureEnabled: true,
+                updatedByUI: true,
+                showLabel: true
+            },
+            uom
+        });
+        cmp.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: new ol.Feature({
+                  geometry: new ol.geom.Point(1.0, 3.0),
+                  name: 'My Point'
+            })
+        });
+        map.dispatchEvent({
+            type: 'pointermove',
+            coordinate: [100, 400],
+            feature: new ol.Feature({
+                  geometry: new ol.geom.Point(13.0, 43.0),
+                  name: 'My Point'
+            })
+        });
+    });
 });
