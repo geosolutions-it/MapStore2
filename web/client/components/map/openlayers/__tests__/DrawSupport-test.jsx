@@ -2090,4 +2090,36 @@ describe('Test DrawSupport', () => {
         done();
     });
 
+    it('drawOrEdit a Circle feature in edit mode, then click for moving it', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [13, 43]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                valueText: "a text",
+                canEdit: true,
+                radius: 1111,
+                isCircle: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                opacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderThenClick({
+            feature,
+            drawMethod: "Circle"
+        });
+        expect(support).toExist();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        done();
+    });
+
+
 });
