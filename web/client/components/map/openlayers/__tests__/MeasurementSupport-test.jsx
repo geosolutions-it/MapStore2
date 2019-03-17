@@ -6,26 +6,26 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-let expect = require('expect');
-let React = require('react');
-let ReactDOM = require('react-dom');
-let ol = require('openlayers');
-let MeasurementSupport = require('../MeasurementSupport');
+const expect = require('expect');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const ol = require('openlayers');
+const MeasurementSupport = require('../MeasurementSupport');
 
 describe('Openlayers MeasurementSupport', () => {
     let msNode;
 
     /* basic objects */
-    let viewOptions = {
+    const viewOptions = {
         projection: 'EPSG:3857',
         center: [0, 0],
         zoom: 5
     };
-    let map = new ol.Map({
+    const map = new ol.Map({
         target: "map",
         view: new ol.View(viewOptions)
     });
-    let lineFeature = {
+    const lineFeature = {
         type: "Feature",
         geometry: {
             type: "LineString",
@@ -33,7 +33,7 @@ describe('Openlayers MeasurementSupport', () => {
         },
         properties: {}
     };
-    let lineFeature2 = {
+    const lineFeature2 = {
         type: "Feature",
         geometry: {
             type: "LineString",
@@ -41,14 +41,14 @@ describe('Openlayers MeasurementSupport', () => {
         },
         properties: {}
     };
-    let invalidLineFeature = {
+    const invalidLineFeature = {
         type: "Feature",
         geometry: {
             type: "LineString",
             coordinates: [[1, 1], [55, 5], ["", 5]]
         }
     };
-    let polyFeature = {
+    const polyFeature = {
         type: "Feature",
         geometry: {
             type: "Polygon",
@@ -56,7 +56,7 @@ describe('Openlayers MeasurementSupport', () => {
         },
         properties: {}
     };
-    let invalidPolyFeature = {
+    const invalidPolyFeature = {
         type: "Feature",
         geometry: {
             type: "Polygon",
@@ -64,17 +64,17 @@ describe('Openlayers MeasurementSupport', () => {
         },
         properties: {}
     };
-    let measurementProp = {
+    const measurementProp = {
         geomType: null
     };
-    let uom = {
+    const uom = {
         length: {unit: 'm', label: 'm'},
         area: {unit: 'sqm', label: 'm²'}
     };
     function getMapLayersNum(olMap) {
         return olMap.getLayers().getLength();
     }
-    /* utility used to rennder the MeasurementSupport component with some default props*/
+    /* utility used to render the MeasurementSupport component with some default props*/
     const renderMeasurement = (props = {}) => {
         return ReactDOM.render(
             <MeasurementSupport
@@ -231,7 +231,7 @@ describe('Openlayers MeasurementSupport', () => {
             uom
         });
     });
-    it('test drawing a distance  area (LineString) with invalid tooltip after change uom', () => {
+    it('test drawing a distance (LineString) with invalid tooltip after change uom', () => {
         let cmp = renderWithDrawing();
         expect(cmp).toExist();
         cmp = renderMeasurement({

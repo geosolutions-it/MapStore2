@@ -13,6 +13,57 @@ const assign = require('object-assign');
 const DrawSupport = require('../DrawSupport');
 const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
 
+const viewOptions = {
+    projection: 'EPSG:3857',
+    center: [0, 0],
+    zoom: 5
+};
+const olMap = new ol.Map({
+    target: "map",
+    view: new ol.View(viewOptions)
+});
+const testHandlers = {
+    onStatusChange: () => {},
+    onGeometryChanged: () => {},
+    onEndDrawing: () => {},
+    onDrawingFeatures: () => {}
+};
+
+/* utility used to render the MeasurementSupport component with some default props*/
+const renderDrawSupport = (props = {}) => {
+    return ReactDOM.render(
+        <DrawSupport
+            features={props.features | []}
+            map={props.map || olMap}
+            onDrawingFeatures={testHandlers.onDrawingFeatures}
+            {...props}
+        />, document.getElementById("container"));
+};
+const renderThenClick = (props = {}) => {
+    let support = renderDrawSupport();
+
+    support = renderDrawSupport({
+        drawStatus: "drawOrEdit",
+        features: [props.feature],
+        options: {
+            drawEnabled: false,
+            editEnabled: true,
+            addClickCallback: true
+        },
+        ...props
+    });
+    support.props.map.dispatchEvent({
+        type: "singleclick",
+        coordinate: [500, 30]
+    });
+    support.modifyInteraction.dispatchEvent({
+        type: "singleclick",
+        coordinate: [500, 30]
+    });
+    return support;
+};
+
+// externalize this feature
 let CIRCLE = {
     type: 'FeatureCollection',
     id: '36835090-23ad-11e8-9839-9bab136db9a3',
@@ -458,6 +509,7 @@ describe('Test DrawSupport', () => {
     afterEach((done) => {
         document.body.innerHTML = '';
         setTimeout(done);
+        expect.restoreSpies();
     });
 
     it('creates a default style when none is specified', () => {
@@ -579,9 +631,6 @@ describe('Test DrawSupport', () => {
             })
         };
 
-        const testHandlers = {
-            onStatusChange: () => {}
-        };
         const ft = {
             type: "Feature",
             geometry: {
@@ -619,9 +668,6 @@ describe('Test DrawSupport', () => {
             })
         };
 
-        const testHandlers = {
-            onStatusChange: () => {}
-        };
 
         const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
         const support = ReactDOM.render(
@@ -746,10 +792,6 @@ describe('Test DrawSupport', () => {
                 })
             })
         };
-        const testHandlers = {
-            onEndDrawing: () => {},
-            onStatusChange: () => {}
-        };
         const feature = new ol.Feature({
               geometry: new ol.geom.Point(13.0, 43.0),
               name: 'My Point'
@@ -783,10 +825,6 @@ describe('Test DrawSupport', () => {
                     getCode: () => 'EPSG:4326'
                 })
             })
-        };
-        const testHandlers = {
-            onEndDrawing: () => {},
-            onStatusChange: () => {}
         };
         const feature = new ol.Feature({
               geometry: new ol.geom.Point(13.0, 43.0),
@@ -1478,11 +1516,6 @@ describe('Test DrawSupport', () => {
             })
         };
 
-        const testHandlers = {
-            onEndDrawing: () => {},
-            onStatusChange: () => {},
-            onGeometryChanged: () => {}
-        };
         const geoJSON = {
             type: 'Feature',
             geometry: {
@@ -1537,11 +1570,6 @@ describe('Test DrawSupport', () => {
             })
         };
 
-        const testHandlers = {
-            onEndDrawing: () => {},
-            onStatusChange: () => {},
-            onGeometryChanged: () => {}
-        };
         const geoJSON = {
             type: 'Feature',
             geometry: {
@@ -1929,6 +1957,137 @@ describe('Test DrawSupport', () => {
             expect(drawnFt.getStyle()()[0].getFill().getColor()).toEqual("rgba(255, 255, 255, 0.5)");
             done();
         }, 100);
+    });
+
+    it('drawOrEdit a polygon feature in edit mode, then click for adding a coord', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Polygon',
+                coordinates: [[
+                  [13, 43],
+                  [15, 43],
+                  [15, 44],
+                  [13, 43]
+                ]]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                canEdit: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                opacity: 1,
+                fillColor: "#0000FF",
+                fillOpacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderThenClick({
+            feature,
+            drawMethod: feature.geometry.type
+        });
+        expect(support).toExist();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        expect(spyOnDrawingFeatures).toHaveBeenCalledWith([{
+            "type": "Feature",
+            "geometry": {
+                "coordinates": [[
+                        [
+                            13,
+                            42.99999999999999
+                        ],
+                        [
+                            14.999999999999998,
+                            42.99999999999999
+                        ],
+                        [
+                            14.999999999999998,
+                            44.00000000000001
+                        ],
+                        [
+                            0.004491576420597608,
+                            0.00026949458522981454
+                        ],
+                        [
+                            13,
+                            42.99999999999999
+                        ]
+                    ]],
+                "type": "Polygon"
+            },
+            "properties": {
+                "name": "some name",
+                "id": "a-unique-id",
+                "canEdit": true
+            }
+        }]);
+        done();
+    });
+    it('drawOrEdit a LineString feature in edit mode, then click for adding a coord', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'LineString',
+                coordinates: [
+                  [13, 43],
+                  [15, 43],
+                  [15, 44],
+                  [13, 43]
+                ]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                canEdit: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                opacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderThenClick({
+            feature,
+            drawMethod: feature.geometry.type
+        });
+        expect(support).toExist();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        done();
+    });
+
+    it('drawOrEdit a Text feature in edit mode, then click for adding a coord', (done) => {
+        const feature = {
+            type: 'Feature',
+            geometry: {
+                type: 'Point',
+                coordinates: [13, 43]
+            },
+            properties: {
+                name: "some name",
+                id: "a-unique-id",
+                valueText: "a text",
+                canEdit: true,
+                isText: true
+            },
+            style: [{
+                id: "style-id",
+                color: "#FF0000",
+                label: "a text",
+                opacity: 1
+            }]
+        };
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderThenClick({
+            feature,
+            drawMethod: "Text"
+        });
+        expect(support).toExist();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        done();
     });
 
 });
