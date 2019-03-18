@@ -379,7 +379,7 @@ class DrawSupport extends React.Component {
         this.drawInteraction.on('drawend', function(evt) {
             this.sketchFeature = evt.feature;
             this.sketchFeature.set('id', uuid.v1());
-            let drawnGeom = evt.feature.getGeometry();
+            let drawnGeom = this.sketchFeature.getGeometry();
             let drawnFeatures = this.drawLayer.getSource().getFeatures();
             let previousGeometries;
             let features = this.props.features;
@@ -395,7 +395,7 @@ class DrawSupport extends React.Component {
                     newFeature = this.getNewFeature(newDrawMethod, coordinates);
                     // TODO verify center is projected in 4326 and is an array
                     center = reproject(center, this.getMapCrs(), "EPSG:4326", false);
-                    const originalId = newProps && newProps.features && newProps.features.length && newProps.features[0].features && newProps.features[0].features.length && newProps.features[0].features.filter(f => f.properties.isDrawing)[0].properties.id || this.sketchFeature.get("id");
+                    const originalId = newProps && newProps.features && newProps.features.length && newProps.features[0] && newProps.features[0].features && newProps.features[0].features.length && newProps.features[0].features.filter(f => f.properties.isDrawing)[0].properties.id || this.sketchFeature.get("id");
                     // this.sketchFeature.set('id', originalId);
                     newFeature.setProperties({isCircle: true, radius, center: [center.x, center.y], id: originalId});
                 } else if (drawMethod === "Polygon") {
@@ -435,7 +435,7 @@ class DrawSupport extends React.Component {
                     const center = drawnGeom.getCenter();
                     const coordinates = this.polygonCoordsFromCircle(center, radius);
                     const newMultiGeom = this.toMulti(this.createOLGeometry({type: newDrawMethod, coordinates}));
-                    if (features.length === 1 && !features[0].geometry) {
+                    if (features.length === 1 && features[0] && !features[0].geometry) {
                         previousGeometries = [];
                         geomCollection = new ol.geom.GeometryCollection([newMultiGeom]);
                     } else {
@@ -835,7 +835,7 @@ class DrawSupport extends React.Component {
         };
         this.clean();
 
-        let newFeature = reprojectGeoJson(head(newProps.features), newProps.options.featureProjection, this.getMapCrs());
+        let newFeature = reprojectGeoJson(head(newProps.features), newProps.options.featureProjection, this.getMapCrs()) || {};
         let props;
         if (newFeature && newFeature.features && newFeature.features.length) {
             // filtering circles features only when drawing
@@ -999,7 +999,7 @@ class DrawSupport extends React.Component {
         // retrieve geodesic center from properties
         // it's different from extent center
         let center = geometryProperties && geometryProperties.geodesicCenter || ol.extent.getCenter(extent);
-        let coordinates = geometry.getCoordinates();
+        let coordinates;
         let projection = this.props.map.getView().getProjection().getCode();
         let radius;
         let type = geometry.getType();
