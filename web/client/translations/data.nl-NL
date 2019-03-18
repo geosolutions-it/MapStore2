@@ -21,6 +21,8 @@
         "enable": "Activeren",
         "layers": "Lagen",
         "warning": "Opgepast",
+        "errorTitleDefault": "Error",
+        "errorDefault": "An error occurred",
         "pageInfoShowMore": "Results {count} of {total}",
         "showMore": "Show more...",
         "version": {
@@ -33,6 +35,9 @@
         },
         "localeErrors": {
             "404": "Vertaalbestand niet gevonden"
+        },
+        "details": {
+            "title": "About this map"
         },
         "layerProperties": {
             "windowTitle": "Eigenschappen van de laag",
@@ -60,8 +65,37 @@
             "groupProperties": "Groep properties",
             "featureInfo": "Feature Info",
             "featureInfoFormatLbl": "Informatie, formaat van het antwoord",
-            "legenderror": "Het legende is niet berijkbaar"
+            "legenderror": "Het legende is niet berijkbaar",
+            "editCustomFormat": "Edit custom format",
+            "exampleOfResponse": "Example",
+            "changedSettings": "Changed Settings",
+            "changedSettingsAlert": "You are closing the settings panel without save your changes",
+            "textFormatTitle": "TEXT",
+            "textFormatDescription": "Shows feature info results as plain text",
+            "htmlFormatTitle": "HTML",
+            "htmlFormatDescription": "Shows feature info results as html",
+            "propertiesFormatTitle": "PROPERTIES",
+            "propertiesFormatDescription": "Shows feature info results as properties list",
+            "templateFormatTitle": "TEMPLATE",
+            "templateFormatDescription": "Customize feature info results format",
+            "templateFormatInfoAlert1": "Click on edit button to add a new template.",
+            "templateFormatInfoAlert2": "Use ${ attribute } to wrap the properties you need to display",
+            "templateFormatInfoAlertExample": "The id of the feature is ${ properties }",
+            "templatePreview": "Template preview",
+            "tooltip": {
+                "label": "Tooltip",
+                "title": "Title",
+                "description": "Description",
+                "both": "Title and Description",
+                "none": "No Tooltip",
+                "labelPlacement": "Tooltip placement",
+                "right": "Right",
+                "bottom": "Bottom",
+                "top": "Top"
+            }
         },
+        "longitude": "Longitude",
+        "latitude": "Latitude",
         "notification": {
             "update": "Bijwerken",
             "warning": "Waarschuwing",
@@ -102,9 +136,11 @@
         "options": "Opties",
         "settings": "Instellingen",
         "help": "Help",
+        "docs": "Docs",
         "gohome": "Terug",
         "back": "Back to the Importer",
         "printbutton": "Afdrukken",
+        "annotationsbutton": "Annotations",
         "noresultfound": "Geen enkel resultaat gevonden",
         "save": "Opslaan",
         "saveAs": "Opslaan als",
@@ -112,6 +148,8 @@
         "elevation": "Hoogte",
         "close": "Sluiten",
         "cancel": "Annuleren",
+        "no": "No",
+        "yes": "Yes",
         "confirm": "Bevestigen",
         "confirmTitle": "Kunt u bevestigen?",
         "pageInfo": "{total, plural, =0 {geen enkel item} =1 {{total} item van de {total}} other {{start}-{end} items van de {total}}}",
@@ -132,13 +170,14 @@
         },
         "home":{
             "open": "Openen",
-            "shortDescription": "Modern webmapping with OL3, Leaflet and React<br/><small>visit the <a href=\"/mapstore/docs/\">documentation</a> page</small>",
+            "shortDescription": "Modern webmapping with OpenLayers, Leaflet and React<br/><small>visit the <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentation</a> page</small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. <br/>Bezoek onze <a href=\"/mapstore/docs/\">homepage</a> voor meer detail.",
+            "description": "MapStore is ontwikkeld om op een eenvoudige en intuïtieve manier kaarten en assemblages te maken, te bewaren en te delen. Kaarten op basis van inhoud van van servers zoals OpenStreetMap, Google Maps, MapQuest en iedere andere specifieke server van uw of van een andere organisatie. <br/>Bezoek onze <a href=\"https://mapstore.readthedocs.io/en/latest/\">homepage</a> voor meer detail.",
             "Applications": "Toepassingen",
             "Examples": "Voorbeelden",
             "LinkedinGroup": "Mapstore Linkedin groep",
             "scrollTop": "Terug naar boven",
+            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
             "ml": {
                 "title": "Blijf op de hoogte van de laatste ontwikkelingen via mailinglijsten",
                 "subscribe_users": "Abonneer u op de gebruikers mailinglijsten",
@@ -204,10 +243,63 @@
         },
         "newMap": "Nieuwe kaart",
 		"maps": {
-			"search": "Kaarten opzoeken...",
+            "title": "Maps",
             "addToFeaturedMaps": "Add to featured maps",
-            "removeFromFeaturedMaps": "Remove from featured maps"
+            "removeFromFeaturedMaps": "Remove from featured maps",
+            "feedback": {
+                "noDetailsAvailable": "Details not available",
+                "successSavedMap": "The map has been created correctly",
+                "errorDeletingMap": "Error when deleting this map",
+                "errorDeletingThumbnailOfMap": "Error when deleting thumbnail for this map",
+                "errorDeletingDetailsOfMap": "Error when deleting details for this map",
+                "allResDeleted": "All resources associated with this map have been deleted successfully",
+                "errorFetchingDetailsOfMap": "Error when fetching details for this map",
+                "details": {
+                    "deletedSuccesfully": "The details have been removed correctly",
+                    "savedSuccesfully": "The details have been saved correctly",
+                    "updatedSuccesfully": "The details have been updated correctly"
+                },
+                "thumbnail": {
+                    "deletedSuccesfully": "The thumbnail have been removed correctly",
+                    "savedSuccesfully": "The thumbnail have been saved correctly",
+                    "updatedSuccesfully": "The thumbnail have been updated correctly"
+                },
+                "errorWhenSaving": "An error occurred during saving process",
+                "errorWhenUpdating": "An error occurred during updating process",
+                "errorWhenDeleting": "An error occurred during deleting process",
+                "errorSizeExceeded": "Please, reduce the size of the details or the quality of the images"
+            },
+			"search": "Kaarten opzoeken..."
 		},
+        "resources": {
+            "deleteConfirmTitle": "Are you sure",
+            "deleteConfirmMessage": "Are you sure you want do delete this resource?",
+            "deleteConfirmButtonText": "Delete",
+            "deleteCancelButtonText": "Close",
+            "resource": {
+                "deleteResource": "Delete",
+                "editResource": "Edit properties",
+                "addToFeatured": "Add to featured",
+                "removeFromFeatured": "Remove from featured",
+                "showDetails": "Show details"
+            },
+            "contents": {
+                "title": "Contents"
+            },
+            "dashboards": {
+                "newDashboard": "New Dashboard",
+                "title": "Dashboards ({count})",
+                "titleNoCount": "Dashboards",
+                "create": "Create Dashboard",
+                "noDashboardAvailable": "No dashboard available",
+                "createANewOne": "Create a new one",
+                "deleteError": "There was an error deleting the resource",
+                "errorLoadingDashboards": "There was an error loading dashboards"
+            },
+            "maps": {
+                "title": "Maps ({count})"
+            }
+        },
         "map": {
             "errorLoadingFont": "The font family {family} is not correctly loaded. Some elements (like symbols in markers) can have rendering problems",
             "loading": "Bezig met laden...",
@@ -263,14 +355,32 @@
             "toggleLayerVisibility": "Zet de zichtbaarheid van de laag aan / uit",
             "displayLegendAndTools": "Toon de legende en de tools",
             "zoomToLayerExtent": "Zoom op de laag",
+            "addLayer": "Add Layer",
+            "toolZoomToLayerTooltip": "Zoom to selected layer extent",
+            "toolZoomToLayersTooltip": "Zoom to selected layers extent",
+            "toolLayerSettingsTooltip": "Selected layer settings",
+            "toolGroupSettingsTooltip": "Selected group settings",
+            "toolTrashLayerTooltip": "Remove selected layer",
+            "toolTrashLayersTooltip": "Remove selected layers",
+            "toolFeaturesGridTooltip": "Open Attribute Table",
+            "toolDownloadTooltip": "Export layer data",
+            "noFilteredResults": "No results",
+            "filterPlaceholder": "Filter layers",
+            "clearFilter": "Clear filter",
+            "toolReloadLayerTooltip": "Force reload of selected layer",
+            "toolReloadLayersTooltip": "Force reload of selected layers",
+            "statusIconOpen": "Close group",
+            "statusIconClose": "Open group",
+            "grabLayerIcon": "Grab and sort layer",
+            "grabGroupIcon": "Grab and sort group",
+            "toggleLayerVisibilityWarning": "Toggle layer visibility, Warning: layer didn't load correctly",
+            "createWidget": "Create a widget for the selected layer",
             "editLayerProperties": "Wijzig de eigenschappen van de laag",
             "browseData": "Open de attributentabel",
-            "searchFeatures": "Zoek op deze laag ...",
             "removeLayer": "De laag verwijderen",
             "loadingerror": "De laag is niet correct geladen",
             "measure": "Meten",
             "backgroundSwitcher": "achtergrond kaart",
-            "toolDownloadTooltip": "Export layer data",
             "layers": "Lagen",
             "drawerButton": "Lagen",
             "refreshTitle": "Lagen bijwerken",
@@ -296,6 +406,41 @@
                 "notification": {
                     "warnigGetMetadataRecordById": "Fout bij zoeken naar metadata"
                 }
+            },
+            "thematic": {
+                "classification_field": "Classification Field:",
+                "classification_method": "Classification Method:",
+                "classification_aggregate": "Aggregate Function:",
+                "classification_colors": "Color Ramp:",
+                "classification_intervals": "Intervals:",
+                "preview": "Preview",
+                "remove_thematic": "Back to Simple Style",
+                "values": {
+                    "equalInterval": "Equal Intervals",
+                    "quantile": "Quantile",
+                    "jenks": "Natural Breaks",
+                    "sum": "Sum",
+                    "avg": "Average",
+                    "count": "Count",
+                    "min": "Min",
+                    "max": "Max"
+                },
+                "configuration": "Configuration",
+                "apply": "Apply classification",
+                "restore": "Reset customizations",
+                "go_to_cfg": "Configure...",
+                "go_to_thema": "Use this configuration",
+                "cfgError": "Error in configuration JSON",
+                "classify": "Classify",
+                "remove": "Remove classification",
+                "data_panel": "Data",
+                "classification_stroke": "Stroke",
+                "classification_error": "Error calling the classification service: {message}",
+                "fields_error": "Error loading fields list: {message}",
+                "interval_limit": "Intervals should be a number between {min} and {max}",
+                "invalid_object": "Invalid service response",
+                "invalid_geometry": "Geometry type is not valid, not a point, line or polygon",
+                "invalid_classes": "Max must be greater than min in every class"
             }
         },
         "print":{
@@ -339,6 +484,8 @@
         "identifyTitle": "Item informatie",
         "identifyNoQueryableLayers": "Geen actieve laag nodig",
         "identifyRevGeocodeHeader": "Coördinaten",
+        "identifyShowCoordinateEditor": "Show coordinate editor",
+        "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyRevGeocodeModalTitle": "Adres",
         "identifyRevGeocodeSubmitText": "Meer informatie",
         "identifyRevGeocodeCloseText": "Afsluiten",
@@ -355,6 +502,11 @@
             "redoBtnTooltip": "Vooruit gaan"
         },
         "infoFormatLbl": "Informatie, formaat van het antwoord",
+        "measureSupport": {
+            "continueLine": "Click to continue drawing the line",
+            "continuePolygon": "Click to continue drawing the polygon",
+            "startDrawing": "Click to start drawing"
+        },
         "measureComponent": {
             "Measure": "Meten",
             "MeasureLength": "Meetafstand",
@@ -369,8 +521,12 @@
             "areaLabel": "Afstand",
             "bearingLabel": "Richting"
         },
-        "search": {
-            "placeholder": "Zoeken op plaatsnaam of coördinaten...",
+        "search":{
+            "decimal": "Decimal",
+            "aeronautical": "Aeronautical",
+            "changeSearchInputField": "Change the search tool",
+            "addressSearch": "Zoeken op locatienaam",
+            "coordinatesSearch": "Zoeken op coördinaten",
             "searchservicesbutton": "Opzoekservices configureren",
             "configpaneltitle": "Een opzoekservice aanmaken/wijzigen",
             "serviceslistlabel": "Beschikbare services",
@@ -511,7 +667,7 @@
             "zoomIn": "This is the helptext for the ZoomIn",
             "zoomOut": "This is the helptext for the ZoomOut",
             "searchBar": "Typ het op te zoeken adres. Bv. 'Kunstlaan, Brussel'. U kunt ook coördinaten onder volgende vorm invoeren : 43.87,10.20",
-            "metadataExplorer": "This is the helptext for the MetadataExplorer",
+            "metadataexplorer": "This is the helptext for the MetadataExplorer",
             "settingsPanel": "This is the helptext for the SettingsPanel",
             "gohome": "This is the helptext for Home",
             "measureComponent": "This is the helptext for the MeasureComponent",
@@ -539,7 +695,7 @@
             },
             "comboField": {
                 "default_placeholder": "Kies...",
-                 "drop_down": "Open Dropdown"
+                "drop_down": "Open Dropdown"
             },
             "form": {
                 "header": "Zoek in de data",
@@ -630,7 +786,13 @@
             "loginFailedStatusMessages": {
                 "usernamePwdInsert": "Vul alstublieft uw gebruikersnaam en wachtwoord in",
                 "usernamePwdIncorrect":"Ongeldige gebruikersnaam of wachtwoord"
-            }
+            },
+            "detailsName": "Name",
+            "detailsRole": "Role",
+            "detailsGroups": "Groups",
+            "detailsEmail": "E-mail",
+            "detailsCompany": "Company",
+            "detailsNotes": "Notes"
         },
         "users": {
             "title": "Accounts beheren",
@@ -687,14 +849,19 @@
             "socialIntro": "Via je favoriete sociale netwerk",
             "directLinkTitle": "Via een directe link",
             "embeddedLinkTitle": "Via de geïntegreerde code",
-            "forceDrawer": "Inhoudsopgave tonen",
-            "apiLinkTitle": "Via API's",
             "social": "Social",
             "direct": "Link",
             "code": "Embed",
+            "forceDrawer": "Inhoudsopgave tonen",
+            "apiLinkTitle": "Via API's",
             "QRCodeLinkTitle": "qr code",
             "msgCopiedUrl":"Gekopieerd",
-            "msgToCopyUrl":"Klik om te kopiëren"
+            "msgToCopyUrl":"Klik om te kopiëren",
+            "sharedTitle": "Check out my new map: ",
+            "advancedOptions": "Advanced Options",
+            "addBboxParam": "Add bbox param to sharing link",
+            "wrongBboxParamTitle": "Invalid bbox param",
+            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Preview van de vastgelegde kaart",
@@ -1133,6 +1300,114 @@
             "tooltip": "Maak en bewerk een laagstijl",
             "paneltitle": "Laagstijl",
             "layerlabel": "Laag"
+        },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filter styles by name, title or abstract",
+            "templateFilterPlaceholder": "Filter styles templates by title",
+            "createStyleFromTemplate": "Select a template to create a new style",
+            "titleRequired": "<div>Title is required!</div><div>Title and abstract must be alphanumeric</div>",
+            "titleSettings": "Title",
+            "titleSettingsplaceholder": "Enter title (alphanumeric)",
+            "abstractSettings": "Abstract",
+            "abstractSettingsplaceholder": "Enter abstract (alphanumeric)",
+            "createStyleModalTitle": "Create new style",
+            "filterMatchNotFound": "No styles match entered text filter",
+            "backToList": "Back to style list",
+            "createNewStyle": "Create new style",
+            "editSelectedStyle": "Edit selected style",
+            "saveCurrentStyle": "Save current style",
+            "addSelectedTemplate": "Add selected template to list of styles",
+            "deleteSelectedStyle": "Delete selected style",
+            "closeWithoutSaveAlertTitle": "Style has changed",
+            "closeWithoutSaveAlert": "You are quitting the style editor without save your changes",
+            "deleteStyleAlertTitle": "Delete style",
+            "deleteStyleAlert": "Selected style will be permanently delete",
+            "delete": "Delete",
+            "defaultStyle": "Default style",
+            "availableStyle": "Available style",
+            "styleNotFound": "Style not found",
+            "noPermission": "User cannot edit styles",
+            "deletedStyleSuccessTitle": "Delete style",
+            "deletedStyleSuccessMessage": "Style has been successfully deleted",
+            "deletedStyleErrorTitle": "Delete style error",
+            "deletedStyleErrorMessage": "Could not delete current style",
+            "savedStyleTitle": "Style saved",
+            "savedStyleMessage": "Style has been successfully saved",
+            "missingAvailableStyles": "Missing styles",
+	        "missingAvailableStylesMessage": "<ul><h4>Possible causes:</h4> <li>Selected layer is a layer group</li><li>Layer is not correctly configured server side</li></ul>",
+            "createTmpErrorTitle": "New Temporary Style",
+            "createTmpStyleErrorMessage": "Temporary style could not be created. This could due an unsupported style format on the style service",
+            "updateTmpErrorTitle": "Temporary Style Update",
+            "updateTmpStyleErrorMessage": "Temporary style could not be updated. This could be on unsupported style format or connection issue.",
+            "createStyleErrorTitle": "New Style",
+            "createStyleErrorMessage": "Style could not be saved on the style service. This could be on unsupported style format or connection issue.",
+            "updateStyleErrorTitle": "Edit Style",
+            "updateStyleErrorMessage": "Style could not be updated on the style service. This could be on unsupported style format or connection issue.",
+            "genericValidationError": "Style is not valid and it could not be applied.",
+            "setDefaultStyle": "Set selected style as default for the current layer",
+            "setDefaultStyleSuccessTitle": "Success on set default style",
+            "setDefaultStyleSuccessMessage": "Default Style has been successfully applied",
+            "setDefaultStyleErrorTitle": "Error on set default style",
+            "setDefaultStyleErrorMessage": "It's not possible apply selected style as default"
+        },
+        "playback": {
+            "settings": {
+                "tooltip": "Settings",
+                "title": "Playback Settings",
+                "frameDuration": "Frame Duration",
+                "range": {
+                    "title": "Animation Range",
+                    "zoomTooltip": "Zoom to current animation range",
+                    "animationStart": "Animation start",
+                    "animationEnd": "Animation end",
+                    "zoomToCurrentPlayackRange": "Zoom to current playback range",
+                    "setToCurrentViewRange": "Set to current view range",
+                    "fitToSelectedLayerRange": "Fit to selected layer's range"
+                },
+                "step": {
+                    "tooltip": "When 'Snap to guide Layer' option is disabled, you can customize the animation step",
+                    "label": "Animation Step",
+                    "year": "{number, plural, =0 {Year} =1 {Year} other {Years}}",
+                    "week": "{number, plural, =0 {Week} =1 {Week} other {Weeks}}",
+                    "day": "{number, plural, =0 {Day} =1 {Day} other {Days}}",
+                    "hour": "{number, plural, =0 {Hour} =1 {Hour} other {Hours}}",
+                    "minute": "{number, plural, =0 {Minute} =1 {Minute} other {Minutes}}",
+                    "second": "{number, plural, =0 {Second} =1 {Second} other {Seconds}}"
+                },
+                "mode": {
+                    "title": "Mode",
+                    "following": "Follow the animation",
+                    "followingDescription": "When the animation is active, follow the cursor"
+                }
+            },
+            "backwardStep": "Step backward",
+            "forwardStep" : "Step forward",
+            "play": "Play",
+            "pause": "Pause",
+            "paused": "Play (paused)",
+            "stop": "Stop"
+        },
+        "timeline": {
+            "settings": {
+                "title": "Timeline Settings",
+                "snapToGuideLayer": "Snap to guide layer",
+                "snapToGuideLayerTooltip": "Forces the time cursor to snap to the selected layer's data. Disable this option to unlock the time cursors and enable the customization of animation step"
+            },
+            "currentTime": "Go to current time",
+            "rangeStart":"Go to the current time range",
+            "rangeEnd" : "Go to the current time range",
+            "hideLayerName" : "Hide layers names",
+            "showLayerName" : "Show layers names",
+            "enableRange": "Enable time range",
+            "disableRange": "Disable time range",
+            "enablePlayBack": "Enable playback controls",
+            "disablePlayBack": "Disable playback controls",
+            "expand" : "Expand time slider",
+            "collapse" : "Collapse time slider",
+            "errors": {
+                "multidim_error_title": "Backend service is not responding",
+                "multidim_error_message": "The required services for multidinensional support are not responding. Please try again later or contact the administrator."
+            }
         },
         "rulesmanager": {
             "placeholders": {

@@ -82,8 +82,21 @@
             "templateFormatInfoAlert1": "Clicar no botão editar para adicionar um novo template.",
             "templateFormatInfoAlert2": "Use ${ attribute } para identificar as propriedades que necessita visualizar",
             "templateFormatInfoAlertExample": "O id do tema é ${ properties }",
-            "templatePreview": "Preview do Template"
+            "templatePreview": "Preview do Template",
+            "tooltip": {
+                "label": "Tooltip",
+                "title": "Title",
+                "description": "Description",
+                "both": "Title and Description",
+                "none": "No Tooltip",
+                "labelPlacement": "Placement",
+                "right": "Right",
+                "bottom": "Bottom",
+                "top": "Top"
+            }
         },
+        "longitude": "Longitude",
+        "latitude": "Latitude",
         "notification": {
             "update": "Actualizar",
             "warning": "Aviso",
@@ -158,13 +171,14 @@
         },
         "home":{
             "open": "Abrir",
-            "shortDescription": "Modern webmapping com OL3, Leaflet e React<br/><small>visite a página de <a href=\"/mapstore/docs/\">documentação</a></small>",
+            "shortDescription": "Modern webmapping com OpenLayers, Leaflet e React<br/><small>visite a página de <a href=\"https://mapstore.readthedocs.io/en/latest/\">documentação</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
             "description": "MapStore 2 foi desenvolvido para criar, guardar e partilhar de uma maneira simples e intuitiva mapas e mashups criados seleccionando conteudos de fontes populares como o Google Maps e OpenStreetMap ou de serviços fornecidos por organisações utilizando protocolos livre como OGC WMS, WFS, WMTS ou TMS, etc.<br/>Visite <a href=\"http://geosolutions-it.github.io/MapStore2/\">home page</a> para mais detalhes.",
             "Applications": "Aplicações",
             "Examples": "Exemplos",
             "LinkedinGroup": "Grupo Mapstore no Linkedin",
             "scrollTop": "Navegar para o topo da página",
+            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
             "ml": {
                 "title": "Mantenha-se em contacto e actualizado com as mailing lists",
                 "subscribe_users": "Subscrever a Mailing List de Utilizadores",
@@ -490,6 +504,8 @@
         "identifyTitle": "Informação do elemento",
         "identifyNoQueryableLayers": "No active queryable layer",
         "identifyRevGeocodeHeader": "Coordenadas",
+        "identifyShowCoordinateEditor": "Show coordinate editor",
+        "identifyHideCoordinateEditor": "Hide coordinate editor",
         "identifyRevGeocodeModalTitle": "Endereço",
         "identifyRevGeocodeSubmitText": "Mais informação",
         "identifyRevGeocodeCloseText": "Fechar",
@@ -528,7 +544,11 @@
             "showLabel": "Mostrar etiqueta de distância"
         },
         "search":{
-            "placeholder": "Pesquisar localização por nome ou coordenadas ...",
+            "decimal": "Decimal",
+            "aeronautical": "Aeronautical",
+            "changeSearchInputField": "Change the search tool",
+            "addressSearch": "Pesquisar por nome de local",
+            "coordinatesSearch": "pesquisa por coordenadas",
             "searchservicesbutton": "Configure search services",
             "configpaneltitle": "Create/edit a search service",
             "serviceslistlabel": "Available services",
@@ -894,7 +914,11 @@
             "QRCodeLinkTitle": "qr code",
             "msgCopiedUrl": "Copied",
             "msgToCopyUrl": "Click to copy",
-            "sharedTitle": "Check out my new map: "
+            "sharedTitle": "Check out my new map: ",
+            "advancedOptions": "Advanced Options",
+            "addBboxParam": "Add bbox param to sharing link",
+            "wrongBboxParamTitle": "Invalid bbox param",
+            "wrongBboxParamMessage": "bbox params must be in EPSG:4326 and wrote as bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Snapshot Preview",

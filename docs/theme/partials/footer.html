@@ -1,0 +1,76 @@
+{% import "partials/language.html" as lang with context %}
+<footer class="md-footer">
+  {% if page.previous_page or page.next_page %}
+    <div class="md-footer-nav">
+      <nav class="md-footer-nav__inner md-grid">
+        {% if page.previous_page %}
+          <a href="{{ page.previous_page.url | url }}" title="{{ page.previous_page.title }}" class="md-flex md-footer-nav__link md-footer-nav__link--prev" rel="prev">
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-back md-footer-nav__button"></i>
+            </div>
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  {{ lang.t("footer.previous") }}
+                </span>
+                {{ page.previous_page.title }}
+              </span>
+            </div>
+          </a>
+        {% endif %}
+        {% if page.next_page %}
+          <a href="{{ page.next_page.url | url }}" title="{{ page.next_page.title }}" class="md-flex md-footer-nav__link md-footer-nav__link--next" rel="next">
+            <div class="md-flex__cell md-flex__cell--stretch md-footer-nav__title">
+              <span class="md-flex__ellipsis">
+                <span class="md-footer-nav__direction">
+                  {{ lang.t("footer.next") }}
+                </span>
+                {{ page.next_page.title }}
+              </span>
+            </div>
+            <div class="md-flex__cell md-flex__cell--shrink">
+              <i class="md-icon md-icon--arrow-forward md-footer-nav__button"></i>
+            </div>
+          </a>
+        {% endif %}
+      </nav>
+    </div>
+  {% endif %}
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-footer-items md-footer-license">
+          <b><a href="{{ config.site }}" target="_blank">MapStore</a></b> is Free and Open Source software and is licensed under the Simplified BSD License.
+      </div>
+      <div class="md-footer-items">
+          <small>We welcome any contributions, take a look at our <big><b><a href="{{ config.repo_issues }}" target="_blank">issues</a></b></big> on GitHub.</small>
+      </div>
+      <div class="md-footer-items">
+          Play with the <big><b><a href="https://mapstore.geo-solutions.it" target="_blank">MapStore online Demo</a></b></big>.
+      </div>
+      <div class="md-footer-items md-footer-brand">
+          <a href="{{ config.theme.company_url }}" target="_blank">
+              <img class="md-footer-brand-img" src="img/geosolutions-brand.png"
+                onerror="this.onerror=null;this.src='../img/geosolutions-brand.png';this.src='../../img/geosolutions-brand.png'">
+          </a>
+      </div>
+      <div class="md-footer-items">
+          <small>{{ config.theme.company_contacts }}</small>
+      </div>
+      {% block social %}
+        {% include "partials/social.html" %}
+      {% endblock %}
+      <div class="md-footer-copyright">
+        {% if config.copyright %}
+          <div class="md-footer-copyright__highlight">
+            {{ config.copyright }}
+          </div>
+        {% endif %}
+        powered by
+        <a href="https://www.mkdocs.org" target="_blank">MkDocs</a>
+        and
+        <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank">
+          Material for MkDocs</a>
+      </div>
+    </div>
+  </div>
+</footer>

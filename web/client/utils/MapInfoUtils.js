@@ -66,7 +66,7 @@ const MapInfoUtils = {
             && layer.featureInfo.format
             && INFO_FORMATS[layer.featureInfo.format]
             || props.format
-            || 'application/json',
+            || MapInfoUtils.getDefaultInfoFormatValue(),
     getLayerFeatureInfoViewer(layer) {
         if (layer.featureInfo
             && layer.featureInfo.viewer) {
@@ -119,12 +119,20 @@ const MapInfoUtils = {
             ...otherParams
         };
     },
-    buildIdentifyRequest(layer, props) {
+    /**
+     *
+     * @param {object} layer the layer object
+     * @param {object} options the options for the request
+     * @param {string} options.format the format to use
+     * @param {string} options.map the map object, with projection and
+     * @param {object} options.point
+     */
+    buildIdentifyRequest(layer, options) {
         if (MapInfoUtils.services[layer.type]) {
-            let infoFormat = MapInfoUtils.getDefaultInfoFormatValueFromLayer(layer, props);
+            let infoFormat = MapInfoUtils.getDefaultInfoFormatValueFromLayer(layer, options);
             let viewer = MapInfoUtils.getLayerFeatureInfoViewer(layer);
             const featureInfo = MapInfoUtils.getLayerFeatureInfo(layer);
-            return MapInfoUtils.services[layer.type].buildRequest(layer, props, infoFormat, viewer, featureInfo);
+            return MapInfoUtils.services[layer.type].buildRequest(layer, options, infoFormat, viewer, featureInfo);
         }
         return {};
     },

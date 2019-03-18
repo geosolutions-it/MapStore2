@@ -159,7 +159,12 @@ class PluginsContainer extends React.Component {
     filterLoaded = (plugin) => plugin && !plugin.impl.loadPlugin;
 
     filterRoot = (plugin) => {
-        const container = PluginsUtils.getMorePrioritizedContainer(plugin.impl, this.props.pluginsConfig[this.props.mode], 0);
+        const container = PluginsUtils.getMorePrioritizedContainer(
+            plugin.impl,
+            PluginsUtils.getPluginConfiguration(this.props.pluginsConfig[this.props.mode], plugin.name).override,
+            this.props.pluginsConfig[this.props.mode],
+            0
+        );
         // render on root if container is root (plugin === null || plugin.impl === null) or plugin explicitly wants to render on root (doNotHide = true)
         // in addition to the container
         return !container.plugin || !container.plugin.impl || container.plugin.impl.doNotHide;

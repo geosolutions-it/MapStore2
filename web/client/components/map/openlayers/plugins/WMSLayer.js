@@ -192,11 +192,15 @@ Layers.registerType('wms', {
                         [key]: undefined
                     });
                 }, {})));
-                if (layer.getSource().refresh) {
-                    layer.getSource().refresh();
-                }
             }
             if (oldOptions.singleTile !== newOptions.singleTile || oldOptions.securityToken !== newOptions.securityToken || oldOptions.ratio !== newOptions.ratio) {
+                // this forces cache empty, required when auth permission changed to avoid caching when unauthorized
+                // Moved here to avoid the layer disappearing during animations
+                if (changed) {
+                    if (layer.getSource().refresh) {
+                        layer.getSource().refresh();
+                    }
+                }
                 const urls = getWMSURLs(isArray(newOptions.url) ? newOptions.url : [newOptions.url]);
                 const queryParameters = wmsToOpenlayersOptions(newOptions) || {};
                 urls.forEach(url => SecurityUtils.addAuthenticationParameter(url, queryParameters, newOptions.securityToken));

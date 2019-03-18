@@ -15,7 +15,7 @@ This is the overall framework folder structure:
 +-- .editorconfig
 +-- .travis.yml
 +-- ...
-+-- web      (MapStore2 maven module)
++-- web      (MapStore maven module)
     +-- pom.xml
     +-- src        (maven java webapp src folder)
     |   +-- main
@@ -42,7 +42,7 @@ This is the overall framework folder structure:
         +-- translations (i18n localization files)
         |  +-- data.en-US
         |  ...
-        |  product (the MapStore2 main application)
+        |  product (the MapStore main application)
         |   +...
         +-- examples   (example applications)
              +-- 3dviewer

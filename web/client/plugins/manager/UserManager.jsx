@@ -23,6 +23,7 @@ class UserManager extends React.Component {
     static propTypes = {
         onNewUser: PropTypes.func,
         splitTools: PropTypes.bool,
+        showOptions: PropTypes.bool,
         isSearchClickable: PropTypes.bool,
         className: PropTypes.string,
         hideOnBlur: PropTypes.bool,
@@ -40,6 +41,7 @@ class UserManager extends React.Component {
         className: "user-search",
         hideOnBlur: false,
         isSearchClickable: true,
+        showOptions: false,
         splitTools: false,
         placeholderMsgId: "users.searchUsers",
         typeAhead: false,
@@ -61,6 +63,7 @@ class UserManager extends React.Component {
                 <SearchBar
                     className={this.props.className}
                     splitTools={this.props.splitTools}
+                    showOptions={this.props.showOptions}
                     isSearchClickable={this.props.isSearchClickable}
                     hideOnBlur={this.props.hideOnBlur}
                     placeholderMsgId ={this.props.placeholderMsgId}

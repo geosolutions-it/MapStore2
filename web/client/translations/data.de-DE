@@ -82,8 +82,21 @@
             "templateFormatInfoAlert1": "Klicken Sie auf Bearbeiten, um eine neue Vorlage hinzuzufügen.",
             "templateFormatInfoAlert2": "Verwenden Sie ${ attribute }, um die Eigenschaften zu umbrechen, die Sie anzeigen müssen",
             "templateFormatInfoAlertExample": "Die ID des Features lautet ${ properties }",
-            "templatePreview": "Vorschau template"
+            "templatePreview": "Vorschau template",
+            "tooltip": {
+                "label": "QuickInfo",
+                "title": "Titel",
+                "description": "Beschreibung",
+                "both": "Titel und Beschreibung",
+                "none": "Kein Tooltip",
+                "labelPlacement": "Platzierung",
+                "right": "Recht",
+                "bottom": "Bottom",
+                "top": "Oben"
+            }
         },
+        "longitude": "Länge",
+        "latitude": "Breite",
         "notification": {
             "update": "Update",
             "warning": "Warning",
@@ -158,13 +171,14 @@
         },
         "home":{
             "open": "Öffnen",
-            "shortDescription": "Modern webmapping mit OL3, Leaflet und React<br/><small>besuchen sie die <a href=\"/mapstore/docs/\">dokumentationsseite</a></small>",
+            "shortDescription": "Modern webmapping mit OpenLayers, Leaflet und React<br/><small>besuchen sie die <a href=\"https://mapstore.readthedocs.io/en/latest/\">dokumentationsseite</a></small>",
             "forkMeOnGitHub": "Fork me on GitHub",
-            "description": "MapStore wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren.<br/>Besuche die <a href=\"/mapstore/docs/\">Homepage</a> für mehr Details.",
+            "description": "MapStore wurde entwickelt, um auf einfache und intuitive Weise Karten und Mashups zu erstellen, zu speichern und zu teilen die auf Inhalten von bekannten Quellen wie Google Maps und OpenStreetMap oder von Diensten die auf offenen Protokollen wie OGC WMS, WFS, WMTS or TMS und so weiter basieren.<br/>Besuche die <a href=\"https://mapstore.readthedocs.io/en/latest/\">Homepage</a> für mehr Details.",
             "Applications": "Anwendungen",
             "Examples": "Beispiele",
             "LinkedinGroup": "Mapstore Linkedin Gruppe",
             "scrollTop": "An den Anfang der Seite scrollen",
+            "footerDescription": "<small>GeoSolutions S.a.s. | Via di Montramito 3/A, 55054 Massarosa (Lucca) - Italy info@geo-solutions.it | Tel: +39 0584 962313 | Fax: +39 0584 1660272</small>",
             "ml": {
                 "title": "Bleibe in Verbindung und auf dem Laufenden mit der Mailing Liste",
                 "subscribe_users": "Abonniere die Benutzer Mailing Liste",
@@ -491,6 +505,8 @@
         "identifyTitle": "Feature Info",
         "identifyNoQueryableLayers": "Keine aktive abrufbare Ebene",
         "identifyRevGeocodeHeader": "Koordinaten",
+        "identifyShowCoordinateEditor": "Koordinateneditor anzeigen",
+        "identifyHideCoordinateEditor": "Koordinateneditor ausblenden",
         "identifyRevGeocodeModalTitle": "Addresse",
         "identifyRevGeocodeSubmitText": "Mehr Informationen",
         "identifyRevGeocodeCloseText": "Schliessen",
@@ -529,7 +545,11 @@
             "showLabel": "Zeige Bezeichnungsetikett"
         },
         "search":{
-            "placeholder": "Suche nache einer Adresse oder gib Koordinaten ein ...",
+            "decimal": "Dezimal",
+            "aeronautical": "Luftfahrt",
+            "changeSearchInputField": "Ändern Sie das Suchwerkzeug",
+            "addressSearch": "Suche nach Standortname",
+            "coordinatesSearch": "Suche nach Koordinaten",
             "searchservicesbutton": "Konfigurations-Suchdienste konfigurieren",
             "configpaneltitle": "Einen Suchdienst anlegen / bearbeiten",
             "serviceslistlabel": "Verfügbare Dienstleistungen",
@@ -895,7 +915,11 @@
             "QRCodeLinkTitle": "QR code",
             "msgCopiedUrl": "Kopiert",
             "msgToCopyUrl": "Klicke um zu kopieren",
-            "sharedTitle": "Schau auf meine neue Karte: "
+            "sharedTitle": "Schau auf meine neue Karte: ",
+            "advancedOptions": "Erweiterte Optionen",
+            "addBboxParam": "Fügen Sie einen bbox param zum Freigabeverlink hinzu",
+            "wrongBboxParamTitle": "Ungültiger Bbox-Parameter",
+            "wrongBboxParamMessage": "bbox-Parameter müssen in EPSG:4326 sein und schreiben als bbox=minx,miny,maxx,maxy"
         },
         "snapshot": {
             "title": "Snapshot Vorschau",
@@ -1278,9 +1302,16 @@
                     "showChartData": "Diagrammdaten anzeigen",
                     "edit": "Bearbeiten",
                     "delete": "Löschen",
+                    "collapse": "Reduzieren",
                     "confirmDelete": "Bist du sicher?",
                     "downloadData": "Daten herunterladen",
-                    "exportImage": "Bild exportieren"
+                    "exportImage": "Bild exportieren",
+                    "pin": "Pin",
+                    "unpin": "Unpin",
+                    "hide": "Verbergen",
+                    "hideDescription": "Verstecken Sie dieses Widget für andere Benutzer",
+                    "unhide": "Einblenden",
+                    "unhideDescription": "Blenden Sie das Widget für andere Benutzer ein"
                 }
             },
             "chartType": {
@@ -1371,6 +1402,13 @@
             "advancedOptions":{
                 "line": "Erweiterte Optione",
                 "bar": "Erweiterte Optione"
+            },
+            "tray": {
+                "title": "Widgets",
+                "expandTray": "Widgetsleiste erweitern",
+                "collapseTray": "Widgets-Fach ausblenden",
+                "expandAll": "Erweitern Sie alle Widgets",
+                "collapseAll": "Reduzieren Sie alle Widgets"
             }
         },
         "dashboard": {
@@ -1444,6 +1482,114 @@
             "tooltip": "Erstelle und bearbeite den Ebenen Stil",
             "paneltitle": "Gestalter",
             "layerlabel": "Ebene"
+        },
+        "styleeditor": {
+            "styleListfilterPlaceholder": "Filtern Sie Stile nach Name, Titel oder Abstract",
+            "templateFilterPlaceholder": "Filterstile Vorlagen nach Titel",
+            "createStyleFromTemplate": "Wählen Sie eine Vorlage aus, um einen neuen Stil zu erstellen",
+            "titleRequired": "<div> Titel ist Pflicht! </div> <div> Titel und Abstract müssen alphanumerisch sein </div>",
+            "titleSettings": "Titel",
+            "titleSettingsplaceholder": "Titel eingeben (alphanumerisch)",
+            "abstractSettings": "Abstrakt",
+            "abstractSettingsplaceholder": "Abstrakt eingeben (alphanumerisch)",
+            "createStyleModalTitle": "Erstellen Sie einen neuen Stil",
+            "filterMatchNotFound": "Keine Stile entsprechen dem eingegebenen Textfilter",
+            "backToList": "Zurück zur Stilliste",
+            "createNewStyle": "Erstellen Sie einen neuen Stil",
+            "editSelectedStyle": "Bearbeiten Sie den ausgewählten Stil",
+            "saveCurrentStyle": "Aktuellen Stil speichern",
+            "addSelectedTemplate": "Fügen Sie die ausgewählte Vorlage zur Liste der Stile hinzu",
+            "deleteSelectedStyle": "Löschen Sie den ausgewählten Stil",
+            "closeWithoutSaveAlertTitle": "Der Stil hat sich geändert",
+            "closeWithoutSaveAlert": "Sie beenden den Style-Editor, ohne Ihre Änderungen zu speichern",
+            "deleteStyleAlertTitle": "Löschen Sie den Stil",
+            "deleteStyleAlert": "Der ausgewählte Stil wird endgültig gelöscht",
+            "delete": "Löschen",
+            "defaultStyle": "Standardstil",
+            "availableStyle": "Verfügbarer Stil",
+            "styleNotFound": "Stil nicht gefunden",
+            "noPermission": "Benutzer kann keine Stile bearbeiten",
+            "deletedStyleSuccessTitle": "Löschen Sie den Stil",
+            "deletedStyleSuccessMessage": "Der Stil wurde erfolgreich gelöscht",
+            "deletedStyleErrorTitle": "Stilfehler löschen",
+            "deletedStyleErrorMessage": "Der aktuelle Stil konnte nicht gelöscht werden",
+            "savedStyleTitle": "Stil gespeichert",
+            "savedStyleMessage": "Der Style wurde erfolgreich gespeichert",
+            "missingAvailableStyles": "Fehlende Stile",
+            "missingAvailableStylesMessage": "<ul><h4> Mögliche Ursachen: </h4> <li> Die ausgewählte Ebene ist eine Ebenengruppe. </li> <li> Die Ebene ist nicht serverseitig richtig konfiguriert. </li> </ul>",
+            "createTmpErrorTitle": "Neuer temporärer Stil",
+            "createTmpStyleErrorMessage": "Temporärer Stil konnte nicht erstellt werden. Dies könnte aufgrund eines nicht unterstützten Formatformats des Style-Service erfolgen",
+            "updateTmpErrorTitle": "Temporäre Stilaktualisierung",
+            "updateTmpStyleErrorMessage": "Temporärer Stil konnte nicht aktualisiert werden. Dies kann auf ein nicht unterstütztes Format- oder Verbindungsproblem zurückzuführen sein.",
+            "createStyleErrorTitle": "Neuer Stil",
+            "createStyleErrorMessage": "Stil konnte nicht im Stildienst gespeichert werden. Dies kann auf ein nicht unterstütztes Format- oder Verbindungsproblem zurückzuführen sein.",
+            "updateStyleErrorTitle": "Stil bearbeiten",
+            "updateStyleErrorMessage": "Der Stil konnte im Stildienst nicht aktualisiert werden. Dies kann auf ein nicht unterstütztes Format- oder Verbindungsproblem zurückzuführen sein.",
+            "genericValidationError": "Stil ist nicht gültig und konnte nicht angewendet werden.",
+            "setDefaultStyle": "Legen Sie den ausgewählten Stil als Standard für die aktuelle Ebene fest",
+            "setDefaultStyleSuccessTitle": "Erfolg beim Setzen des Standardstils",
+            "setDefaultStyleSuccessMessage": "Der Standardstil wurde erfolgreich angewendet",
+            "setDefaultStyleErrorTitle": "Fehler beim Festlegen des Standardstils",
+            "setDefaultStyleErrorMessage": "Es ist nicht möglich, den ausgewählten Stil als Standard anzuwenden"
+        },
+        "playback": {
+            "settings": {
+                "tooltip": "die Einstellungen",
+                "title": "Wiedergabeeinstellungen",
+                "frameDuration": "Frame-Dauer",
+                "range": {
+                    "title": "Animations-Wut",
+                    "zoomTooltip": "Zoom auf den aktuellen Animationsbereich",
+                    "animationStart": "Animation beginnt",
+                    "animationEnd": "Ende der Animation",
+                    "zoomToCurrentPlayackRange": "Zoom auf den aktuellen Wiedergabebereich",
+                    "setToCurrentViewRange": "Auf aktuellen Ansichtsbereich setzen",
+                    "fitToSelectedLayerRange": "An den Bereich der ausgewählten Ebene anpassen"
+                },
+                "step": {
+                    "tooltip": "Wenn die Option 'An Führungsebene anpassen' deaktiviert ist, können Sie den Animationsschritt anpassen",
+                    "label": "Animationsschritt",
+                    "year": "{number, plural, =0 {Jahr} =1 {Jahr} other {Jahre}}",
+                    "week": "{number, plural, =0 {Woche} =1 {Woche} other {Wochen}}",
+                    "day": "{number, plural, =0 {Tag} =1 {Tag} other {Tage}}",
+                    "hour": "{number, plural, =0 {Stunde} =1 {Stunde} other {Stunden}}",
+                    "minute": "{number, plural, =0 {Minute} =1 {Minute} other {Minuten}}",
+                    "second": "{number, plural, =0 {Sekunde} =1 {Sekunde} other {Sekunden}}"
+                },
+                "mode": {
+                    "title": "Modus",
+                    "following": "Folge der Animation",
+                    "followingDescription": "Wenn die Animation aktiv ist, folgen Sie dem Cursor"
+                }
+            },
+            "backwardStep": "Schritt zurück",
+            "forwardStep" : "Schritt vorwärts",
+            "play": "Abspielen",
+            "pause": "Pause",
+            "paused": "Abspielen (pausiert)",
+            "stop": "Stopp"
+        },
+        "timeline": {
+            "settings": {
+                "title": "Timeline-Einstellungen",
+                "snapToGuideLayer": "Auf Führungsebene ausrichten",
+                "snapToGuideLayerTooltip": "Zwingt den Zeitcursor, sich an den Daten der ausgewählten Ebene zu fangen. Deaktivieren Sie diese Option, um die Zeitcursor zu entsperren und die Anpassung des Animationsschritts zu aktivieren."
+            },
+            "currentTime": "Gehe zur aktuellen Uhrzeit",
+            "rangeStart": "Gehe zum aktuellen Zeitbereich",
+            "rangeEnd": "Gehe zum aktuellen Zeitbereich",
+            "hideLayerName": "Namen der Ebenen ausblenden",
+            "showLayerName": "Layer-Namen anzeigen",
+            "enableRange": "Zeitraum aktivieren",
+            "disableRange": "Zeitbereich deaktivieren",
+            "enablePlayBack": "Aktivieren Sie die Wiedergabesteuerung",
+            "disablePlayBack": "Deaktivieren Sie die Wiedergabesteuerung",
+            "expand" : "Erweitern Sie den Zeitschieberegler",
+            "collapse" : "Schieberegler für die Zeitspanne reduzieren",
+            "errors": {
+                "multidim_error_title": "Der Backend-Service reagiert nicht",
+                "multidim_error_message": "Die erforderlichen Dienste für die mehrdimensionale Unterstützung reagieren nicht. Bitte versuchen Sie es später erneut oder wenden Sie sich an den Administrator."
+            }
         },
         "rulesmanager": {
             "apply": "Anwenden",

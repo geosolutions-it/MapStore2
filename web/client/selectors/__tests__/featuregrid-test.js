@@ -64,7 +64,8 @@ let feature2 = {
 let initialState = {
         query: {
         featureTypes: {
-          'editing:polygons': {
+            // use name with chars ":" and "."
+          'editing:polygons.test': {
             geometry: [
               {
                 label: 'geometry',
@@ -259,7 +260,7 @@ let initialState = {
         resultError: null,
         isNew: false,
         filterObj: {
-          featureTypeName: 'editing:polygons',
+          featureTypeName: 'editing:polygons.test',
           groupFields: [
             {
               id: 1,
@@ -284,7 +285,7 @@ let initialState = {
           hits: false
         },
         searchUrl: 'http://localhost:8081/geoserver/wfs?',
-        typeName: 'editing:polygons',
+        typeName: 'editing:polygons.test',
         url: 'http://localhost:8081/geoserver/wfs?',
         featureLoading: false
       },
@@ -458,14 +459,14 @@ describe('Test featuregrid selectors', () => {
     it('test hasSupportedGeometry', () => {
         expect(hasSupportedGeometry(initialState)).toBe(true);
         let initialStateWithGmlGeometry = assign({}, initialState);
-        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].type = 'gml:Geometry';
-        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].localType = 'Geometry';
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].type = 'gml:Geometry';
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].localType = 'Geometry';
         expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(false);
-        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].type = 'gml:GeometryCollection';
-        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].localType = 'GeometryCollection';
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].type = 'gml:GeometryCollection';
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].localType = 'GeometryCollection';
         expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(false);
-        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].type = 'gml:Polygon';
-        initialStateWithGmlGeometry.query.featureTypes['editing:polygons'].original.featureTypes[0].properties[1].localType = 'Polygon';
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].type = 'gml:Polygon';
+        initialStateWithGmlGeometry.query.featureTypes['editing:polygons.test'].original.featureTypes[0].properties[1].localType = 'Polygon';
         expect(hasSupportedGeometry(initialStateWithGmlGeometry)).toBe(true);
 
     });
@@ -480,7 +481,7 @@ describe('Test featuregrid selectors', () => {
             flat: [{
                 id: "TEST_LAYER",
                 title: "Test Layer",
-                name: 'editing:polygons'
+                name: 'editing:polygons.test'
             }]
         }, featuregrid: {
             open: true,
@@ -489,7 +490,7 @@ describe('Test featuregrid selectors', () => {
             select: [feature1, feature2],
             changes: [{id: feature2.id, updated: {geometry: null}}]
         }};
-        expect(selectedLayerNameSelector(state)).toBe('editing:polygons');
+        expect(selectedLayerNameSelector(state)).toBe('editing:polygons.test');
         expect(selectedLayerNameSelector({})).toBe('');
     });
     it('queryOptionsSelector gets viewParams', () => {
@@ -498,7 +499,7 @@ describe('Test featuregrid selectors', () => {
                 flat: [{
                     id: "TEST_LAYER",
                     title: "Test Layer",
-                    name: 'editing:polygons',
+                    name: 'editing:polygons.test',
                     params: {
                         viewParams: "a:b"
                     }
@@ -519,7 +520,7 @@ describe('Test featuregrid selectors', () => {
                 flat: [{
                     id: "TEST_LAYER",
                     title: "Test Layer",
-                    name: 'editing:polygons',
+                    name: 'editing:polygons.test',
                     params: {
                         CQL_FILTER: "a:b"
                     }

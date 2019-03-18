@@ -13,7 +13,6 @@ const Draggable = require('react-draggable');
 const Spinner = require('react-spinkit');
 const assign = require('object-assign');
 const Message = require('../I18N/Message');
-require('./style/dialog.css');
 
 class Dialog extends React.Component {
     static propTypes = {

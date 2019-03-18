@@ -1,0 +1,647 @@
+
+@keyframes timeline-loading {
+    0% {
+        background-color: fade(darken(@ms2-color-shade-lighter, 10%), 70%);
+        border-color: fade(darken(@ms2-color-shade-lighter, 10%), 70%);
+    }
+    50% {
+        background-color: fade(@ms2-color-shade-lighter, 70%);
+        border-color: fade(@ms2-color-shade-lighter, 70%);
+    }
+    100% {
+        background-color: fade(darken(@ms2-color-shade-lighter, 10%), 70%);
+        border-color: fade(darken(@ms2-color-shade-lighter, 10%), 70%);
+    }
+}
+.timeline-plugin {
+    * {
+        font-size: @font-size-small;
+        h4 {
+            font-size: @font-size-base;
+            font-weight: bold;
+        }
+    }
+    .ms-timeline-expand {
+        position: absolute;
+        top: 0;
+        right: 0;
+        transform: translate(-50%, -100%);
+        border-top-left-radius: 50%;
+        border-top-right-radius: 50%;
+        height: 20px;
+    }
+
+    /* local mixin to highlight handlers on timeline, used on active and over */
+    .ms-time-color-active(
+        @color: @ms2-color-text,
+        @b-top: @ms2-color-text,
+        @b-right: 'transparent',
+        @b-bottom: @ms2-color-text,
+        @b-left: 'transparent',
+        @a-color: 'unset'
+    ) {
+        background-color: @color;
+        border-left: 1px solid @color;
+        box-sizing: unset;
+        border-right: 1px solid @color;
+        &:before, &::before, &:after, &::after {
+            border-top-color: @b-top;
+            border-right-color: @b-right;
+            border-bottom-color: @b-bottom;
+            border-left-color: @b-left;
+            color: @a-color;
+        }
+    }
+
+    .vis-custom-time {
+
+        &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
+            .shadow-soft;
+            background-color: lighten(@ms2-color-text, 30%);
+            width: 2px;
+            z-index: 65;
+            cursor: ew-resize;
+            & > div {
+                &:hover, &:active {
+                    /* chevron right icon */
+                    &:before, &::before {
+                        display: flex;
+                        font-size: 10px;
+                        justify-content: flex-start;
+                        content: "\e257";
+                    }
+                    /* chevron left icon */
+                    &:after, &::after {
+                        display: flex;
+                        font-size: 10px;
+                        justify-content: flex-end;
+                        content: "\e258";
+                    }
+                }
+                &:hover, &:active {
+                    /* common style between chevron left and right */
+                    &:before, &::before, &:after, &::after {
+                        align-items: center;
+
+                        box-sizing: border-box;
+                        position: absolute;
+                        pointer-events: none;
+                        bottom: 12px;
+                        width: 30px;
+                        height: 20px;
+                        font-family: "mapstore2";
+                        left: 50%;
+                        margin-left: 1px;
+                        transform: translateX(-50%);
+                        color: lighten(@ms2-color-text, 20%);
+                    }
+                }
+
+            }
+
+        }
+
+        &.currentTime, &.startPlaybackTime, &.endPlaybackTime, &.offsetTime {
+            &:before, &::before, &:after, &::after {
+                content: '';
+                display: block;
+                width: 0;
+                height: 0;
+                box-sizing: border-box;
+                position: absolute;
+                pointer-events: none;
+            }
+        }
+
+        &.endPlaybackTime {
+            background-color: lighten(@ms2-color-danger, 5%);
+            /* stop icon */
+            &:after, &::after {
+                bottom: 24px;
+                left: -16px;
+                content: "\E074";
+                font-size: 18px;
+                font-family: "mapstore2";
+                color: lighten(@ms2-color-danger, 5%);
+            }
+            &:hover, &:active {
+                /* mixin hightlight handler, change background and stop icon colors */
+                .ms-time-color-active(
+                    @ms2-color-danger,
+                    'transparent',
+                    'transparent',
+                    'transparent',
+                    'transparent',
+                    @ms2-color-danger
+                );
+                z-index: 67;
+            }
+            & > div {
+                &:active, &:hover {
+                    &:before, &::before, &:after, &::after {
+                        color: @ms2-color-danger;
+                    }
+                }
+            }
+        }
+
+        &.startPlaybackTime {
+            background-color: lighten(@ms2-color-success, 10%);
+            /* play icon */
+            &:after, &::after {
+                bottom: 24px;
+                left: 1px;
+                content: "\E072";
+                font-family: "mapstore2";
+                font-size: 18px;
+                color: lighten(@ms2-color-success, 10%);
+            }
+            &:hover, &:active {
+                /* mixin hightlight handler, change background and play icon colors */
+                .ms-time-color-active(
+                    @ms2-color-success,
+                    'transparent',
+                    'transparent',
+                    'transparent',
+                    'transparent',
+                    @ms2-color-success
+                );
+                z-index: 67;
+            }
+            & > div {
+                &:active, &:hover {
+                    &:before, &::before, &:after, &::after {
+                        color: @ms2-color-success;
+                    }
+                }
+            }
+        }
+
+        &.currentTime {
+            background-color: lighten(@ms2-color-text, 30%);
+            cursor: move;
+            cursor: grab;
+            cursor: -moz-grab;
+            cursor: -webkit-grab;
+
+            &:before, &::before, &:after, &::after {
+                border-left: 10px solid transparent;
+                border-right: 10px solid transparent;
+            }
+            /* generate a triangle on top of the handler */
+            &:before, &::before {
+                top: 0;
+                left: -9px;
+                border-top: 10px solid lighten(@ms2-color-text, 30%);
+            }
+            /* generate a triangle on bottom of the handler */
+            &:after, &::after {
+                bottom: 0;
+                left: -9px;
+                border-bottom: 10px solid lighten(@ms2-color-text, 30%);
+            }
+
+            &:hover {
+                /* mixin hightlight handler, change background and triangles colors */
+                .ms-time-color-active(
+                    lighten(@ms2-color-text, 20%),
+                    lighten(@ms2-color-text, 20%),
+                    'transparent',
+                    lighten(@ms2-color-text, 20%)
+                );
+            }
+            &:active {
+                cursor: grabbing;
+                cursor: -moz-grabbing;
+                cursor: -webkit-grabbing;
+                /* mixin hightlight handler, change background and triangles colors */
+                .ms-time-color-active(
+                    lighten(@ms2-color-text, 20%),
+                    lighten(@ms2-color-text, 20%),
+                    'transparent',
+                    lighten(@ms2-color-text, 20%)
+                );
+                z-index: 67;
+            }
+        }
+    }
+
+    &.with-time-offset {
+        .vis-custom-time {
+            &.currentTime {
+                cursor: ew-resize;
+                /* generate a smaller tiangle on bottom of the handler */
+                &:before, &::before {
+                    top: 0;
+                    left: 0;
+                    border-bottom: 10px solid transparent;
+                    border-left: 10px solid lighten(@ms2-color-text, 30%);
+                    border-top: unset;
+                }
+                /* generate a smaller tiangle on top of the handler */
+                &:after, &::after {
+                    bottom: 0;
+                    left: 0;
+                    border-top: 10px solid transparent;
+                    border-left: 10px solid lighten(@ms2-color-text, 30%);
+                    border-bottom: unset;
+                }
+                &:hover, &:active {
+                    /* mixin hightlight handler, change background and triangles colors */
+                    .ms-time-color-active(
+                        lighten(@ms2-color-text, 20%),
+                        'transparent',
+                        'transparent',
+                        'transparent',
+                        lighten(@ms2-color-text, 20%)
+                    );
+                    z-index: 67;
+                }
+            }
+
+            &.offsetTime {
+                /* generate a smaller tiangle on bottom of the handler */
+                &:before, &::before {
+                    top: 0;
+                    left: -9px;
+                    border-bottom: 10px solid transparent;
+                    border-right: 10px solid lighten(@ms2-color-text, 30%);
+                }
+                /* generate a smaller tiangle on top of the handler */
+                &:after, &::after {
+                    bottom: 0;
+                    left: -9px;
+                    border-top: 10px solid transparent;
+                    border-right: 10px solid lighten(@ms2-color-text, 30%);
+                }
+
+                &:hover, &:active {
+                    /* mixin hightlight handler, change background and triangles colors */
+                    .ms-time-color-active(
+                        lighten(@ms2-color-text, 20%),
+                        'transparent',
+                        lighten(@ms2-color-text, 20%),
+                        'transparent',
+                        'transparent'
+                    );
+                    z-index: 67;
+                }
+            }
+        }
+    }
+
+    .shadow-soft;
+    .timeline-plugin-toolbar {
+        display: flex;
+        align-items: center;
+        position: relative;
+        background-color: @ms2-color-background;
+        padding: 2px;
+        z-index: 50;
+        .shadow-soft;
+        .timeline-plugin-btn-group {
+            display: flex;
+        }
+        h4 {
+            margin-left: 8px;
+            margin-right: 8px;
+        }
+        .btn-group {
+            margin-right: 4px;
+        }
+
+        .timeline-plugin-toolbar-right {
+            margin-right: 2px;
+            margin-left: auto;
+        }
+        &.ms-collapsed {
+            flex-direction: column;
+            .ms-inline-datetime {
+                margin-right: 0;
+                padding-right: 8px;
+                border-right: none;
+                align-self: flex-start;
+                + .timeline-plugin-btn-group {
+                    margin-top: 2px;
+                    padding-top: 2px;
+                    width: 100%;
+                    display: flex;
+                    justify-content: center;
+                    border-top: 1px solid @ms2-color-shade-lighter;
+                }
+            }
+        }
+    }
+
+    .vis-timeline {
+        background-color: fade(@ms2-color-background, 90%);
+        border: none;
+        .vis-panel {
+            &.vis-background {
+                .vis-time-axis {
+                    .vis-grid {
+                        &.vis-major, &.vis-minor {
+                            z-index: 1;
+                        }
+                    }
+                }
+            }
+            &.vis-bottom {
+                .vis-time-axis {
+                    background-color: @ms2-color-background;
+                }
+            }
+            &.vis-center {
+                .vis-group {
+                    z-index: 10;
+                    &.selected {
+                        background-color: fade(@ms2-color-primary, 5%);
+                    }
+                    &.loading {
+                        .vis-item {
+                            &.vis-dot {
+                                animation: timeline-loading .3s linear infinite;
+                            }
+                            &.vis-range {
+                                &.histogram-item {
+                                    .vis-item-overflow {
+                                        .vis-item-content {
+
+                                            .histogram-box {
+                                                border-color: @ms2-color-shade-lighter;
+                                                animation: timeline-loading .3s linear infinite;
+                                            }
+                                            .histogram-count {
+                                                display: none;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    .vis-item {
+                        &.vis-dot {
+                            border-color: fade(@ms2-color-primary, 50%);
+                        }
+                        &.vis-range {
+                            border-color: transparent;
+                            background-color: fade(@ms2-color-primary, 50%);
+                            .vis-item-content {
+                                padding: 0 5px;
+                                margin: 5px 0;
+                                background-color: fade(@ms2-color-primary, 50%);
+                                border-color: darken(@ms2-color-primary, 10%);
+                            }
+
+                            background-color: transparent;
+                            border-color: transparent;
+                            &.histogram-item {
+                                &.vis-item {
+                                    top: 0 !important; // override inline offset due to auto-set
+                                }
+                                background: none;
+                                border: none;
+                                bottom: 0;
+                                .vis-item-overflow {
+                                    bottom: 0;
+                                    .vis-item-content {
+                                        bottom: 0;
+                                        position: relative;
+                                        background-color: transparent;
+                                        width: 100%;
+                                        height: 100%;
+                                        .histogram-box {
+                                            width: 100%;
+                                            position: absolute;
+                                            bottom: 0;
+                                            background-color: fade(@ms2-color-primary, 50%);
+                                            border-color: darken(@ms2-color-primary, 10%);
+                                            bottom: 0;
+                                            left: 0;
+                                            right: 0;
+                                        }
+                                        .histogram-count {
+                                            z-index: 1;
+                                            position: relative;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            &.vis-left {
+                height: 100% !important;
+                background-color: @ms2-color-background;
+                border: none;
+                .shadow;
+                z-index: 30;
+                .vis-content {
+                    margin-bottom: 30%;
+                    border-bottom: 1px solid @ms2-color-shade-lighter;
+
+                    .vis-label {
+                        &:hover {
+                            background-color: @ms2-color-shade-lighter;
+                            cursor: pointer;
+                        }
+                        &.selected {
+                            background-color: @ms2-color-primary;
+                            color: @ms2-color-text-primary;
+
+                            .vis-inner {
+                                .timeline-layer-label-container {
+                                    .timeline-layer-icon {
+                                        .timeline-spinner {
+                                            .mapstore-circle-loader(1px, 12px, @ms2-color-text-primary);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .vis-inner {
+                            .timeline-layer-label-container {
+                                .timeline-layer-icon {
+                                    width: 18px;
+                                    height: 18px;
+                                    border-right: 1px solid @ms2-color-shade-lighter;
+                                    float: left;
+                                    padding: 1px;
+                                    .timeline-spinner {
+                                        .mapstore-circle-loader(1px, 12px, @ms2-color-primary);
+                                    }
+                                }
+                                .timeline-layer-title {
+                                    margin-left: 6px;
+                                    float: left;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+
+    }
+
+    .vis-item.vis-background.ms-current-range {
+        cursor: move;
+        cursor: grab;
+        cursor: -moz-grab;
+        cursor: -webkit-grab;
+        z-index: 60;
+        &:active {
+            cursor: move;
+            cursor: grabbing;
+            cursor: -moz-grabbing;
+            cursor: -webkit-grabbing;
+            z-index: 70;
+        }
+
+        background-color: fade(lighten(@ms2-color-text, 10%), 20%);
+        border-left: 1px dashed lighten(@ms2-color-text, 10%);
+        border-right: 1px dashed lighten(@ms2-color-text, 10%);
+        box-sizing: border-box;
+    }
+
+    .vis-item.vis-background.ms-playback-range {
+        background-color: fade(lighten(@ms2-color-success, 10%), 20%);
+    }
+
+    &.hide-layers-name {
+        .vis-panel {
+            &.vis-left {
+                .vis-content {
+                    .vis-label {
+                        .vis-inner {
+                            .timeline-layer-label-container {
+                                .timeline-layer-icon {
+                                    border-right: none;
+                                    width: 14px;
+                                }
+                                .timeline-layer-title {
+                                    display: none;
+                                    margin: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /* read only section */
+    &, &.with-time-offset {
+        .read-only-timeline {
+            .vis-custom-time {
+                &.currentTime,
+                &.startPlaybackTime,
+                &.endPlaybackTime,
+                &.offsetTime {
+                    cursor: default;
+                    border: none;
+                    & > div {
+                        &:before, &::before, &:after, &::after {
+                            content: "";
+                        }
+                    }
+                }
+
+                &.currentTime,
+                &.offsetTime {
+                    background-color: lighten(@ms2-color-text, 30%);
+                }
+
+                &.endPlaybackTime {
+                    background-color: @ms2-color-danger;
+                }
+                &.startPlaybackTime {
+                    background-color: @ms2-color-success;
+                }
+            }
+        }
+    }
+    
+}
+
+.ms-inline-datetime {
+    margin-right: 8px;
+    padding-right: 8px;
+    border-right: 1px solid @ms2-color-shade-lighter;
+    background-color: @ms2-color-background;
+    min-height: @square-btn-medium-size;
+    display: flex;
+    align-items: center;
+    .form-group {
+        display: flex;
+        align-items: center;
+        margin-bottom: 0;
+        & > .glyphicon:first-child {
+            font-size: 18px;
+        }
+        .btn {
+            width: 100%;
+            padding: 0;
+            border: transparent;
+            font-size: 7px;
+            .glyphicon {
+                font-size: 7px;
+            }
+        }
+        .form-control {
+            padding: 0;
+            font-size: @font-size-base;
+            text-align: center;
+            height: auto;
+        }
+        .ms-inline-datetime-input {
+            display: inline-block;
+            text-align: center;
+            width: 32px;
+            margin-right: 4px;
+            &.ms-dt-year {
+                width: 45px;
+            }
+            &.ms-dt-icon {
+                width: auto;
+                margin: auto 6px;
+            }
+            &.ms-dt-separator {
+                width: auto;
+                font-weight: bold;
+            }
+        }
+    }
+}
+
+.playback-plugin {
+    .ms-playback-settings {
+        position: absolute;
+        overflow: auto;
+        top: -5px;
+        transform: ~"translateY(-100%)";
+        padding: 8px;
+        background-color: @ms2-color-background;
+        max-width: 400px;
+        min-width: 300px;
+        .shadow-far;
+        .mapstore-switch-panel {
+            padding-left: 5px;
+            padding-right: 5px;
+        }
+        h4 {
+            span {
+                font-size: 13px;
+                font-style: italic;
+
+            }
+            margin-left: 0;
+            border-bottom: 1px solid @ms2-color-shade-lighter;
+        }
+    }
+}

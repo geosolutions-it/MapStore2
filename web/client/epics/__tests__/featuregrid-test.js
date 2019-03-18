@@ -48,13 +48,13 @@ const {CHANGE_DRAWING_STATUS} = require('../../actions/draw');
 const {SHOW_NOTIFICATION} = require('../../actions/notifications');
 const {RESET_CONTROLS, SET_CONTROL_PROPERTY, toggleControl} = require('../../actions/controls');
 const {ZOOM_TO_EXTENT} = require('../../actions/map');
-const {PURGE_MAPINFO_RESULTS} = require('../../actions/mapInfo');
+const { CLOSE_IDENTIFY } = require('../../actions/mapInfo');
 const {toggleSyncWms, QUERY, querySearchResponse} = require('../../actions/wfsquery');
 const {CHANGE_LAYER_PROPERTIES} = require('../../actions/layers');
 const {geometryChanged} = require('../../actions/draw');
 
 const {layerSelectedForSearch, UPDATE_QUERY} = require('../../actions/wfsquery');
-
+const {LOAD_FILTER} = require('../../actions/queryform');
 
 const {
     setHighlightFeaturesPath,
@@ -71,7 +71,7 @@ const {
     onCloseFeatureGridConfirmed,
     onFeatureGridZoomAll,
     resetControlsOnEnterInEditMode,
-    closeIdentifyEpic,
+    closeIdentifyWhenOpenFeatureGrid,
     startSyncWmsFilter,
     stopSyncWmsFilter,
     handleDrawFeature,
@@ -1035,13 +1035,13 @@ describe('featuregrid Epics', () => {
         }, {});
     });
 
-    it('test closeIdentifyEpic', (done) => {
-        testEpic(closeIdentifyEpic, 1, openFeatureGrid(), actions => {
+    it('test closeIdentifyWhenOpenFeatureGrid', (done) => {
+        testEpic(closeIdentifyWhenOpenFeatureGrid, 1, openFeatureGrid(), actions => {
             expect(actions.length).toBe(1);
             actions.map((action) => {
                 switch (action.type) {
-                    case PURGE_MAPINFO_RESULTS:
-                        expect(action.type).toBe(PURGE_MAPINFO_RESULTS);
+                    case CLOSE_IDENTIFY:
+                        expect(action.type).toBe(CLOSE_IDENTIFY);
                         break;
                     default:
                         expect(true).toBe(false);
@@ -1479,18 +1479,24 @@ describe('featuregrid Epics', () => {
         }, newState);
     });
 
-    it('test onOpenAdvancedSearch to throw drawstatechange if drawStatus is not clean on queryPanel close', (done) => {
+    it('test onOpenAdvancedSearch', (done) => {
         const stateFeaturegrid = {
             featuregrid: {
                 open: true,
-                selectedLayer: "TEST__6",
+                // layer id with `.` and `:`
+                selectedLayer: "TEST:A.LAYER__6",
                 mode: 'EDIT',
                 select: [{id: 'polygons.1', _new: 'polygons._new'}],
-                changes: []
+                changes: [],
+                advancedFilters: {
+                    "TEST:A.LAYER__6": {
+                        "someFilter": "something"
+                    }
+                }
             },
             layers: {
                 flat: [{
-                    id: "TEST__6",
+                    id: "TEST:A.LAYER__6",
                     name: "V_TEST",
                     title: "V_TEST",
                     filterObj,
@@ -1508,7 +1514,12 @@ describe('featuregrid Epics', () => {
             expect(actions.length).toBe(4);
             actions.map((action) => {
                 switch (action.type) {
+                    case LOAD_FILTER:
+                        // load filter, if present
+                        expect(action.filter).toExist();
+                        break;
                     case CHANGE_DRAWING_STATUS:
+                        //  throw drawstatechange if drawStatus is not clean on queryPanel close
                         expect(action.status).toBe('clean');
                         break;
                     default:

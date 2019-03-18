@@ -8,9 +8,9 @@
 
 const PropTypes = require('prop-types');
 const React = require('react');
-const {isObject} = require('lodash');
 const {Tooltip} = require('react-bootstrap');
 const OverlayTrigger = require('../../misc/OverlayTrigger');
+const {getTitleAndtooltip} = require('../../../utils/TOCUtils');
 require("./css/toctitle.css");
 
 class Title extends React.Component {
@@ -20,7 +20,8 @@ class Title extends React.Component {
         onContextMenu: PropTypes.func,
         currentLocale: PropTypes.string,
         filterText: PropTypes.string,
-        tooltip: PropTypes.bool
+        tooltip: PropTypes.bool,
+        tooltipOptions: PropTypes.object
     };
 
     static defaultProps = {
@@ -28,7 +29,11 @@ class Title extends React.Component {
         onContextMenu: () => {},
         currentLocale: 'en-US',
         filterText: '',
-        tooltip: false
+        tooltip: false,
+        tooltipOptions: {
+            maxLength: 807,
+            separator: " - "
+        }
     };
 
     getFilteredTitle = (title) => {
@@ -43,10 +48,9 @@ class Title extends React.Component {
     }
 
     render() {
-        const translation = isObject(this.props.node.title) ? this.props.node.title[this.props.currentLocale] || this.props.node.title.default : this.props.node.title;
-        const title = translation || this.props.node.name;
-        return this.props.tooltip ? (
-            <OverlayTrigger placement="top" overlay={(<Tooltip id={"tooltip-layer-title"}>{title}</Tooltip>)}>
+        const {title, tooltipText} = getTitleAndtooltip(this.props);
+        return this.props.tooltip && tooltipText ? (
+            <OverlayTrigger placement={this.props.node.tooltipPlacement || "top"} overlay={(<Tooltip id={"tooltip-layer-title"}>{tooltipText}</Tooltip>)}>
                 <div className="toc-title" onClick={this.props.onClick ? (e) => this.props.onClick(this.props.node.id, 'layer', e.ctrlKey) : () => {}} onContextMenu={(e) => {e.preventDefault(); this.props.onContextMenu(this.props.node); }}>
                     {this.getFilteredTitle(title)}
                 </div>
@@ -60,5 +64,6 @@ class Title extends React.Component {
         );
     }
 }
+
 
 module.exports = Title;

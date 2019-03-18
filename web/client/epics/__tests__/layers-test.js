@@ -12,13 +12,14 @@ const configureMockStore = require('redux-mock-store').default;
 const { createEpicMiddleware, combineEpics } = require('redux-observable');
 const {
     refreshLayers, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, UPDATE_NODE,
-    updateLayerDimension, CHANGE_LAYER_PARAMS
+    updateLayerDimension, CHANGE_LAYER_PARAMS, updateSettingsParams, UPDATE_SETTINGS
 } = require('../../actions/layers');
+const { SET_CONTROL_PROPERTY } = require('../../actions/controls');
 const {
     testEpic
 } = require('./epicTestUtils');
 
-const { refresh, updateDimension } = require('../layers');
+const { refresh, updateDimension, updateSettingsParamsEpic } = require('../layers');
 const rootEpic = combineEpics(refresh);
 const epicMiddleware = createEpicMiddleware(rootEpic);
 const mockStore = configureMockStore([epicMiddleware]);
@@ -121,6 +122,101 @@ describe('layers Epics', () => {
                         default:
                             expect(true).toBe(false);
 
+                    }
+                });
+                done();
+            }, state);
+    });
+
+    it('test updateSettingsParamsEpic with update to false', done => {
+
+        const state = {
+            controls: {
+                layersettings: {
+                    initialSettings: {
+                        id: 'layerid',
+                        name: 'layerName',
+                        style: ''
+                    },
+                    originalSettings: {
+
+                    }
+                }
+            }
+        };
+
+        testEpic(
+            updateSettingsParamsEpic,
+            2,
+            updateSettingsParams({style: 'generic'}),
+            actions => {
+                expect(actions.length).toBe(2);
+                actions.map((action) => {
+                    switch (action.type) {
+                        case SET_CONTROL_PROPERTY:
+                            expect(action.control).toBe('layersettings');
+                            expect(action.property).toBe('originalSettings');
+                            expect(action.value).toEqual({ style: '' });
+                            break;
+                        case UPDATE_SETTINGS:
+                            expect(action.options).toEqual({style: 'generic'});
+                            break;
+                        default:
+                            expect(true).toBe(false);
+                    }
+                });
+                done();
+            }, state);
+    });
+
+    it('test updateSettingsParamsEpic with update to true', done => {
+
+        const state = {
+            controls: {
+                layersettings: {
+                    initialSettings: {
+                        id: 'layerId',
+                        name: 'layerName',
+                        style: ''
+                    },
+                    originalSettings: {
+
+                    }
+                }
+            },
+            layers: {
+                settings: {
+                    expanded: true,
+                    node: 'layerId',
+                    nodeType: 'layers',
+                    options: { opacity: 1 }
+                }
+            }
+        };
+
+        testEpic(
+            updateSettingsParamsEpic,
+            3,
+            updateSettingsParams({style: 'generic'}, true),
+            actions => {
+                expect(actions.length).toBe(3);
+                actions.map((action) => {
+                    switch (action.type) {
+                        case SET_CONTROL_PROPERTY:
+                            expect(action.control).toBe('layersettings');
+                            expect(action.property).toBe('originalSettings');
+                            expect(action.value).toEqual({ style: '' });
+                            break;
+                        case UPDATE_SETTINGS:
+                            expect(action.options).toEqual({style: 'generic'});
+                            break;
+                        case UPDATE_NODE:
+                            expect(action.node).toEqual('layerId');
+                            expect(action.nodeType).toEqual('layers');
+                            expect(action.options).toEqual({opacity: 1, style: 'generic'});
+                            break;
+                        default:
+                            expect(true).toBe(false);
                     }
                 });
                 done();

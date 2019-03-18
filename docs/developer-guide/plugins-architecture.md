@@ -1,10 +1,10 @@
 # Plugins Architecture
 
-MapStore2 fully embraces both ReactJS and Redux concepts, enhancing them with the **plugin** concept.
+MapStore fully embraces both ReactJS and Redux concepts, enhancing them with the **plugin** concept.
 
-A plugin in MapStore2 is a smart ReactJS component that is:
+A plugin in MapStore is a smart ReactJS component that is:
 
- * **connected** to a Redux store, so that some properties are automatically wired to the standard MapStore2 state
+ * **connected** to a Redux store, so that some properties are automatically wired to the standard MapStore state
  * **wired** to standard actions for common events
 
 In addition a plugin:
