@@ -455,7 +455,7 @@ describe('Test the AnnotationsUtils', () => {
         expect(coordToArray({lon: 2, lat: 1})[0]).toBe(2);
         expect(coordToArray({lon: 2, lat: 1})[1]).toBe(1);
     });
-    it('test getBaseCoord defaults and not', () => {
+    it('test getBaseCoord', () => {
         expect(getBaseCoord().length).toBe(1);
         expect(getBaseCoord()[0].length).toBe(1);
         expect(getBaseCoord("Polygon").length).toBe(0);

@@ -12,6 +12,7 @@ const ol = require('openlayers');
 const assign = require('object-assign');
 const DrawSupport = require('../DrawSupport');
 const {DEFAULT_ANNOTATIONS_STYLES} = require('../../../../utils/AnnotationsUtils');
+const {circle} = require('../../../../test-resources/drawsupport/features');
 
 const viewOptions = {
     projection: 'EPSG:3857',
@@ -29,7 +30,7 @@ const testHandlers = {
     onDrawingFeatures: () => {}
 };
 
-/* utility used to render the MeasurementSupport component with some default props*/
+/*  used to render the DrawSupport component with some default props*/
 const renderDrawSupport = (props = {}) => {
     return ReactDOM.render(
         <DrawSupport
@@ -39,9 +40,14 @@ const renderDrawSupport = (props = {}) => {
             {...props}
         />, document.getElementById("container"));
 };
-const renderThenClick = (props = {}) => {
-    let support = renderDrawSupport();
 
+/**
+ * it renders Drawsupport in edit mode with singleclick Listener enabled and
+ * it dispatches a singleclick mouse event
+*/
+const renderAndClick = (props = {}, options = {}) => {
+    let support = renderDrawSupport();
+    // entering componentWillReceiveProps
     support = renderDrawSupport({
         drawStatus: "drawOrEdit",
         features: [props.feature],
@@ -54,451 +60,11 @@ const renderThenClick = (props = {}) => {
     });
     support.props.map.dispatchEvent({
         type: "singleclick",
-        coordinate: [500, 30]
-    });
-    support.modifyInteraction.dispatchEvent({
-        type: "singleclick",
-        coordinate: [500, 30]
+        coordinate: options.singleClickCoordiante || [500, 30]
     });
     return support;
 };
 
-// externalize this feature
-let CIRCLE = {
-    type: 'FeatureCollection',
-    id: '36835090-23ad-11e8-9839-9bab136db9a3',
-    features: [{
-        type: 'Feature',
-        geometry: {
-            type: 'Polygon',
-            coordinates: [
-            [
-              [
-                -7.066692092065635,
-                47.17477833929903
-              ],
-              [
-                -7.070957956986268,
-                47.26697075050753
-              ],
-              [
-                -7.083738716328214,
-                47.35863997502234
-              ],
-              [
-                -7.104983930273322,
-                47.44942710493982
-              ],
-              [
-                -7.134609753668168,
-                47.53897854842588
-              ],
-              [
-                -7.172499266922562,
-                47.6269473500946
-              ],
-              [
-                -7.218502937437762,
-                47.71299445745591
-              ],
-              [
-                -7.272439209743323,
-                47.796789930095706
-              ],
-              [
-                -7.334095222013593,
-                47.87801408888858
-              ],
-              [
-                -7.403227646136091,
-                47.95635860315586
-              ],
-              [
-                -7.479563648016411,
-                48.03152751426181
-              ],
-              [
-                -7.562801964329729,
-                48.10323819468144
-              ],
-              [
-                -7.6526140914695295,
-                48.17122224206827
-              ],
-              [
-                -7.748645582001249,
-                48.235226308292674
-              ],
-              [
-                -7.850517443504369,
-                48.29501286380931
-              ],
-              [
-                -7.95782763428237,
-                48.35036089804014
-              ],
-              [
-                -8.07015265003761,
-                48.40106655672712
-              ],
-              [
-                -8.18704919524932,
-                48.44694371741463
-              ],
-              [
-                -8.308055932658505,
-                48.48782450436609
-              ],
-              [
-                -8.432695303955327,
-                48.52355974430404
-              ],
-              [
-                -8.560475414483594,
-                48.55401936438973
-              ],
-              [
-                -8.690891974524225,
-                48.57909273383168
-              ],
-              [
-                -8.823430289496404,
-                48.59868895043517
-              ],
-              [
-                -8.95756729122193,
-                48.612737073283476
-              ],
-              [
-                -9.092773602236358,
-                48.62118630258009
-              ],
-              [
-                -9.228515625000002,
-                48.62400610748772
-              ],
-              [
-                -9.364257647763646,
-                48.62118630258009
-              ],
-              [
-                -9.499463958778072,
-                48.612737073283476
-              ],
-              [
-                -9.633600960503598,
-                48.59868895043517
-              ],
-              [
-                -9.766139275475776,
-                48.57909273383168
-              ],
-              [
-                -9.89655583551641,
-                48.55401936438973
-              ],
-              [
-                -10.024335946044676,
-                48.52355974430404
-              ],
-              [
-                -10.148975317341497,
-                48.48782450436609
-              ],
-              [
-                -10.269982054750683,
-                48.44694371741463
-              ],
-              [
-                -10.386878599962396,
-                48.40106655672712
-              ],
-              [
-                -10.499203615717633,
-                48.35036089804014
-              ],
-              [
-                -10.606513806495634,
-                48.29501286380931
-              ],
-              [
-                -10.708385667998753,
-                48.235226308292674
-              ],
-              [
-                -10.804417158530473,
-                48.17122224206827
-              ],
-              [
-                -10.894229285670272,
-                48.10323819468144
-              ],
-              [
-                -10.977467601983593,
-                48.03152751426181
-              ],
-              [
-                -11.053803603863912,
-                47.95635860315586
-              ],
-              [
-                -11.12293602798641,
-                47.87801408888858
-              ],
-              [
-                -11.184592040256682,
-                47.796789930095706
-              ],
-              [
-                -11.238528312562241,
-                47.71299445745591
-              ],
-              [
-                -11.284531983077443,
-                47.6269473500946
-              ],
-              [
-                -11.322421496331836,
-                47.53897854842588
-              ],
-              [
-                -11.352047319726681,
-                47.44942710493982
-              ],
-              [
-                -11.373292533671789,
-                47.35863997502234
-              ],
-              [
-                -11.386073293013734,
-                47.26697075050753
-              ],
-              [
-                -11.390339157934367,
-                47.17477833929903
-              ],
-              [
-                -11.386073293013734,
-                47.08242559504841
-              ],
-              [
-                -11.373292533671789,
-                46.990277901535556
-              ],
-              [
-                -11.35204731972668,
-                46.8987017170481
-              ],
-              [
-                -11.322421496331836,
-                46.808063084694076
-              ],
-              [
-                -11.284531983077443,
-                46.718726115193576
-              ],
-              [
-                -11.238528312562241,
-                46.63105144927073
-              ],
-              [
-                -11.184592040256682,
-                46.545394707297326
-              ],
-              [
-                -11.12293602798641,
-                46.46210493431348
-              ],
-              [
-                -11.053803603863912,
-                46.381523048960865
-              ],
-              [
-                -10.977467601983593,
-                46.303980305201314
-              ],
-              [
-                -10.894229285670272,
-                46.22979677595146
-              ],
-              [
-                -10.804417158530473,
-                46.15927986793656
-              ],
-              [
-                -10.708385667998753,
-                46.09272287714786
-              ],
-              [
-                -10.60651380649563,
-                46.03040359427646
-              ],
-              [
-                -10.499203615717633,
-                45.972582969388
-              ],
-              [
-                -10.386878599962396,
-                45.919503844897314
-              ],
-              [
-                -10.269982054750683,
-                45.871389765601215
-              ],
-              [
-                -10.148975317341497,
-                45.828443874131516
-              ],
-              [
-                -10.024335946044676,
-                45.79084789970411
-              ],
-              [
-                -9.89655583551641,
-                45.75876124746622
-              ],
-              [
-                -9.766139275475776,
-                45.73232019509079
-              ],
-              [
-                -9.633600960503598,
-                45.711637202538626
-              ],
-              [
-                -9.499463958778076,
-                45.696800340115416
-              ],
-              [
-                -9.364257647763646,
-                45.6878728390993
-              ],
-              [
-                -9.228515625000002,
-                45.684892768315834
-              ],
-              [
-                -9.092773602236358,
-                45.6878728390993
-              ],
-              [
-                -8.95756729122193,
-                45.696800340115416
-              ],
-              [
-                -8.823430289496406,
-                45.711637202538626
-              ],
-              [
-                -8.690891974524225,
-                45.73232019509079
-              ],
-              [
-                -8.560475414483594,
-                45.75876124746622
-              ],
-              [
-                -8.43269530395533,
-                45.79084789970411
-              ],
-              [
-                -8.308055932658508,
-                45.828443874131516
-              ],
-              [
-                -8.187049195249319,
-                45.871389765601215
-              ],
-              [
-                -8.07015265003761,
-                45.919503844897314
-              ],
-              [
-                -7.95782763428237,
-                45.972582969388
-              ],
-              [
-                -7.850517443504371,
-                46.03040359427646
-              ],
-              [
-                -7.7486455820012505,
-                46.09272287714786
-              ],
-              [
-                -7.652614091469531,
-                46.15927986793656
-              ],
-              [
-                -7.562801964329729,
-                46.22979677595146
-              ],
-              [
-                -7.479563648016411,
-                46.3039803052013
-              ],
-              [
-                -7.403227646136092,
-                46.381523048960865
-              ],
-              [
-                -7.334095222013593,
-                46.46210493431348
-              ],
-              [
-                -7.272439209743323,
-                46.545394707297326
-              ],
-              [
-                -7.218502937437762,
-                46.63105144927073
-              ],
-              [
-                -7.172499266922562,
-                46.718726115193576
-              ],
-              [
-                -7.134609753668168,
-                46.808063084694076
-              ],
-              [
-                -7.104983930273322,
-                46.8987017170481
-              ],
-              [
-                -7.083738716328214,
-                46.990277901535556
-              ],
-              [
-                -7.070957956986268,
-                47.08242559504841
-              ],
-              [
-                -7.066692092065635,
-                47.17477833929903
-              ]
-            ]
-          ]
-        }
-    }],
-    newFeature: true,
-    properties: {
-        id: '36835090-23ad-11e8-9839-9bab136db9a3',
-        circles: [0],
-        isCircle: true
-    },
-    style: {
-        type: 'Circle',
-        Circle: {
-            color: '#ffcc33',
-            opacity: 1,
-            weight: 3,
-            fillColor: '#ffffff',
-            fillOpacity: 0.2,
-            radius: 10
-        }
-    }
-};
 
 describe('Test DrawSupport', () => {
     beforeEach((done) => {
@@ -1627,7 +1193,7 @@ describe('Test DrawSupport', () => {
         };
 
         const support = ReactDOM.render(
-            <DrawSupport features={[CIRCLE]} map={fakeMap}/>, document.getElementById("container"));
+            <DrawSupport features={[circle]} map={fakeMap}/>, document.getElementById("container"));
         expect(support).toExist();
         const center = [1, 1];
         const radius = 100;
@@ -1959,7 +1525,7 @@ describe('Test DrawSupport', () => {
         }, 100);
     });
 
-    it('drawOrEdit a polygon feature in edit mode, then click for adding a coord', (done) => {
+    it('test draw callbacks in edit mode with Polygons feature', (done) => {
         const feature = {
             type: 'Feature',
             geometry: {
@@ -1985,48 +1551,23 @@ describe('Test DrawSupport', () => {
             }]
         };
         const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
-        let support = renderThenClick({
+        let support = renderAndClick({
             feature,
             drawMethod: feature.geometry.type
         });
         expect(support).toExist();
         expect(spyOnDrawingFeatures).toHaveBeenCalled();
-        expect(spyOnDrawingFeatures).toHaveBeenCalledWith([{
-            "type": "Feature",
-            "geometry": {
-                "coordinates": [[
-                        [
-                            13,
-                            42.99999999999999
-                        ],
-                        [
-                            14.999999999999998,
-                            42.99999999999999
-                        ],
-                        [
-                            14.999999999999998,
-                            44.00000000000001
-                        ],
-                        [
-                            0.004491576420597608,
-                            0.00026949458522981454
-                        ],
-                        [
-                            13,
-                            42.99999999999999
-                        ]
-                    ]],
-                "type": "Polygon"
-            },
-            "properties": {
-                "name": "some name",
-                "id": "a-unique-id",
-                "canEdit": true
-            }
-        }]);
+        const ft = spyOnDrawingFeatures.calls[0].arguments[0][0];
+        expect(ft.type).toBe("Feature");
+        expect(ft.geometry.type).toBe("Polygon");
+        expect(ft.properties).toEqual({
+            "name": "some name",
+            "id": "a-unique-id",
+            "canEdit": true
+        });
         done();
     });
-    it('drawOrEdit a LineString feature in edit mode, then click for adding a coord', (done) => {
+    it('test draw callbacks in edit mode with LineString feature', (done) => {
         const feature = {
             type: 'Feature',
             geometry: {
@@ -2050,7 +1591,7 @@ describe('Test DrawSupport', () => {
             }]
         };
         const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
-        let support = renderThenClick({
+        let support = renderAndClick({
             feature,
             drawMethod: feature.geometry.type
         });
@@ -2059,7 +1600,7 @@ describe('Test DrawSupport', () => {
         done();
     });
 
-    it('drawOrEdit a Text feature in edit mode, then click for adding a coord', (done) => {
+    it('test draw callbacks in edit mode with Text feature', (done) => {
         const feature = {
             type: 'Feature',
             geometry: {
@@ -2081,7 +1622,7 @@ describe('Test DrawSupport', () => {
             }]
         };
         const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
-        let support = renderThenClick({
+        let support = renderAndClick({
             feature,
             drawMethod: "Text"
         });
@@ -2090,7 +1631,7 @@ describe('Test DrawSupport', () => {
         done();
     });
 
-    it('drawOrEdit a Circle feature in edit mode, then click for moving it', (done) => {
+    it('test draw callbacks in edit mode with Circle feature', (done) => {
         const feature = {
             type: 'Feature',
             geometry: {
@@ -2112,7 +1653,7 @@ describe('Test DrawSupport', () => {
             }]
         };
         const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
-        let support = renderThenClick({
+        let support = renderAndClick({
             feature,
             drawMethod: "Circle"
         });
