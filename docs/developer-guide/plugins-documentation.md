@@ -77,4 +77,4 @@ Expressions are supported in **cfg** properties and in **hideFrom** and **showIn
 In addition to monitored state also the **page request parameters** are available as variables to be
 used in expressions.
 
-Look at the [plugin reference page](./api/plugins) for a list of available configuration properties.
+Look at the [plugin reference page](https://mapstore2.geo-solutions.it/mapstore/docs/api/plugins) for a list of available configuration properties.

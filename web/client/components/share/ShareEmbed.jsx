@@ -1,5 +1,4 @@
-const PropTypes = require('prop-types');
-/**
+/*
  * Copyright 2016, GeoSolutions Sas.
  * All rights reserved.
  *
@@ -12,16 +11,12 @@ const PropTypes = require('prop-types');
     to the clipboard
 */
 
-// components required
-const React = require('react');
-const CopyToClipboard = require('react-copy-to-clipboard');
-const Message = require('../../components/I18N/Message');
-const {Glyphicon, Col, Grid, Row, Tooltip, Button, Checkbox} = require('react-bootstrap');
-const OverlayTrigger = require('../misc/OverlayTrigger');
-
-const url = require('url');
-// css required
-require('./share.css');
+import React from 'react';
+import PropTypes from 'prop-types';
+import Message from '../../components/I18N/Message';
+import { Checkbox } from 'react-bootstrap';
+import ShareCopyToClipboard from './ShareCopyToClipboard';
+import url from 'url';
 
 class ShareEmbed extends React.Component {
     static propTypes = {
@@ -44,34 +39,27 @@ class ShareEmbed extends React.Component {
     };
 
     render() {
-
         const codeEmbedded = "<iframe style=\"border: none;\" height=\"400\" width=\"600\" src=\"" + this.generateUrl(this.props.shareUrl) + "\"></iframe>";
-        const tooltip = (<Tooltip placement="bottom" className="in" id="tooltip-bottom" style={{zIndex: 2001}}>
-                             {this.state.copied ? <Message msgId="share.msgCopiedUrl"/> : <Message msgId="share.msgToCopyUrl"/>}
-                         </Tooltip>);
-        const copyTo = (<OverlayTrigger placement="bottom" overlay={tooltip}>
-                            <CopyToClipboard text={codeEmbedded} onCopy={ () => this.setState({copied: true}) } >
-                                <Button className="buttonCopyTextArea" bsStyle="info" bsSize="large">
-                                    <Glyphicon glyph="copy" onMouseLeave={() => {this.setState({copied: false}); }} />
-                                </Button>
-                            </CopyToClipboard>
-                        </OverlayTrigger>);
         return (
             <div className="input-link">
-                <Grid className="embed-box" fluid>
-                    <Row key="title">
-                          <h4>
-                             <Message msgId="share.embeddedLinkTitle"/>
-                          </h4>
-                          {this.renderTools()}
-                      </Row>
-                      <Row key="data" className="row-button">
-                          <Col key="textarea" xs={10} sm={10} md={10}><textarea name="description" rows="6" value={codeEmbedded} enabled="false" readOnly /></Col>
-                          <Col key="button" xs={2} sm={2} md={2}>
-                              {copyTo}
-                          </Col>
-                      </Row>
-                  </Grid>
+                <div className="input-link-head">
+                    <h4>
+                        <Message msgId="share.embeddedLinkTitle"/>
+                    </h4>
+                    <ShareCopyToClipboard
+                        copied={this.state.copied}
+                        shareUrl={codeEmbedded}
+                        onCopy={() => this.setState({ copied: true })}
+                        onMouseLeave={() => this.setState({ copied: false })}/>
+                </div>
+                <div className="input-link-tools">
+                    {this.renderTools()}
+                </div>
+                <pre>
+                    <code>
+                        {codeEmbedded}
+                    </code>
+                </pre>
             </div>
         );
     }
@@ -86,4 +74,4 @@ class ShareEmbed extends React.Component {
     };
 }
 
-module.exports = ShareEmbed;
+export default ShareEmbed;

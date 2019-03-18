@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-module.exports = (config, pluginsDef) => {
+module.exports = (config, pluginsDef, overrideConfig = cfg => cfg) => {
     const React = require('react');
     const ReactDOM = require('react-dom');
     const {connect} = require('react-redux');
@@ -31,20 +31,21 @@ module.exports = (config, pluginsDef) => {
 
         const {updateMapLayoutEpic} = require('../epics/maplayout');
         const {setSupportedLocales} = require('../epics/localconfig');
+        const {readQueryParamsOnMapEpic} = require('../epics/share');
 
         const appStore = require('../stores/StandardStore').bind(null, initialState, {
             maptype: require('../reducers/maptype'),
             maps: require('../reducers/maps'),
             maplayout: require('../reducers/maplayout'),
             version: require('../reducers/version')
-        }, {...appEpics, updateMapLayoutEpic, setSupportedLocales});
+        }, {...appEpics, updateMapLayoutEpic, setSupportedLocales, readQueryParamsOnMapEpic});
 
         const initialActions = [
             () => loadMaps(ConfigUtils.getDefaults().geoStoreUrl, ConfigUtils.getDefaults().initialMapFilter || "*"),
             loadVersion
         ];
 
-        const appConfig = {
+        const appConfig = overrideConfig({
             storeOpts,
             appEpics,
             appStore,
@@ -53,7 +54,7 @@ module.exports = (config, pluginsDef) => {
             appComponent: StandardRouter,
             printingEnabled: true,
             themeCfg
-        };
+        });
 
         ReactDOM.render(
             <StandardApp {...appConfig}/>,

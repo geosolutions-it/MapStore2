@@ -78,6 +78,10 @@ const authenticationRules = [
 ];
 
 describe('Tests ajax library', () => {
+    afterEach(() => {
+        expect.restoreSpies();
+    });
+
     it('uses proxy for requests not on the same origin', (done) => {
         axios.get('http://fakeexternaldomain.mapstore2').then(() => {
             done();

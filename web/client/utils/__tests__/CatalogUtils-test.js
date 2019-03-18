@@ -44,7 +44,7 @@ describe('Test the CatalogUtils', () => {
             records: [{
                 Dimension: [{
                     $: {
-                        name: 'time'
+                        name: 'elevation'
                     }
                 }]
             }]
@@ -59,7 +59,7 @@ describe('Test the CatalogUtils', () => {
             records: [{
                 Dimension: [{
                     $: {
-                        name: 'time'
+                        name: 'elevation'
                     },
                     _: '1,2'
                 }]
@@ -68,6 +68,21 @@ describe('Test the CatalogUtils', () => {
         expect(records.length).toBe(1);
         expect(records[0].dimensions.length).toBe(1);
         expect(records[0].dimensions[0].values.length).toBe(2);
+    });
+    // this is needed to avoid to show time values for timeline, until support for time values is fully implemented
+    it('wms dimensions time is excluded', () => {
+        const records = CatalogUtils.getCatalogRecords('wms', {
+            records: [{
+                Dimension: [{
+                    $: {
+                        name: 'time'
+                    },
+                    _: '2008-10-31T00:00:00.000Z,2008-11-04T00:00:00.000Z'
+                }]
+            }]
+        }, {});
+        expect(records.length).toBe(1);
+        expect(records[0].dimensions.length).toBe(0);
     });
 
     it('wms limited srs', () => {
@@ -369,6 +384,16 @@ describe('Test the CatalogUtils', () => {
         expect(records.length).toBe(1);
         expect(records[0].references[0].url).toBe(undefined);
     });
+    it('wmts capabilities url', () => {
+        const wmtsRecords = [{ GetTileURL: "tileURL"}];
+        const records = CatalogUtils.getCatalogRecords('wmts', { records: wmtsRecords });
+        expect(records.length).toBe(1);
+        expect(records[0].capabilitiesURL).toBe("tileURL");
+        const wmtsRecords2 = [{ GetTileURL: "tileURL", capabilitiesURL: "capURL" }];
+        const records2 = CatalogUtils.getCatalogRecords('wmts', { records: wmtsRecords2 });
+        expect(records2.length).toBe(1);
+        expect(records2[0].capabilitiesURL).toBe("capURL");
+    });
     it('csw correctly retrive layer name and thumb from pycsw', () => {
         const records = CatalogUtils.getCatalogRecords('csw', {
             records: [{
@@ -384,15 +409,30 @@ describe('Test the CatalogUtils', () => {
                     identifier: "09d4e114-74a0-11e8-9c12-20c9d079dc21"
 
                 }
+            },
+            {
+                dc: {
+                    alternative: "1-Hurricane Track",
+                    identifier: "e5efb394-aac2-432e-b784-f18a6f663915",
+                    references: [{
+                            scheme: "WWW:DOWNLOAD-REST_MAP",
+                            value: "https://sampleserver6.arcgisonline.com/arcgis/rest/services/Hurricanes/MapServer"
+                        }]
+                    }
             }]
         }, {});
-        expect(records.length).toBe(1);
+        expect(records.length).toBe(2);
         const r = records[0];
         expect(r.thumbnail).toExist();
         expect(r.references.length).toBe(1);
         const ref = r.references[0];
         expect(ref.type).toBe("OGC:WMS");
         expect(ref.params.name).toBe("layer.name");
+        const esri = records[1];
+        expect(esri).toExist();
+        expect(esri.references[0]).toExist();
+        expect(esri.references[0].type).toBe("arcgis");
+        expect(esri.references[0].params.name).toBe("1-Hurricane Track");
     });
 
 });

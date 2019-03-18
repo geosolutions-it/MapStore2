@@ -12,10 +12,10 @@ const {branch, nest} = require('recompose');
  * @param {function} showMask gets props as argument and returns true if the enhancer should be applied
  * @param {*} maskContent the content of the mask
  */
-const maskEnhancer = (showMask, maskContent, { maskContainerStyle, maskStyle, className }) => (A) => nest(
+const maskEnhancer = (showMask, maskContent, { maskContainerStyle, maskStyle, className, white }) => (A) => nest(
     (props) => (<div className={`ms2-mask-container ${className || ''} ${!showMask(props) && 'ms2-mask-empty' || ''}`} style={maskContainerStyle} >
         {props.children}
-        {showMask(props) ? <div className="ms2-mask" style={maskStyle} >
+        {showMask(props) ? <div className={"ms2-mask" + (white ? " white-mask" : "")} style={maskStyle} >
             {maskContent(props)}
         </div> : null}
     </div>),
@@ -28,20 +28,21 @@ const maskEnhancer = (showMask, maskContent, { maskContainerStyle, maskStyle, cl
  * @param {object} options options for the mask:
  *  - alwaysWrap: true by default. if false, apply the enhancer only when showMask is true.
  *    This will cause a complete remount and re-render of the wrapped component, that may be a problem if you're using lifecycle methods, so by default is false
- *  -
+ *  - white: makes the mask background white, false by default
  */
 module.exports = (
         showMask = () => {},
         maskContent = () => {},
         {
             alwaysWrap = true,
+            white = false,
             maskContainerStyle = {},
             maskStyle = {},
             className
         } = {}
     ) => alwaysWrap
-        ? maskEnhancer(showMask, maskContent, { maskContainerStyle, maskStyle, className })
+        ? maskEnhancer(showMask, maskContent, { maskContainerStyle, maskStyle, className, white })
         : branch(
             showMask,
-            maskEnhancer(() => true, maskContent, { maskContainerStyle, maskStyle })
+            maskEnhancer(() => true, maskContent, { maskContainerStyle, maskStyle, white })
         );

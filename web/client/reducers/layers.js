@@ -159,12 +159,11 @@ function layers(state = { flat: [] }, action) {
             }
         }
         case UPDATE_NODE: {
-
             const selector = action.nodeType === 'groups' ? 'group' : 'id';
-
             if (selector === 'group') {
                 const groups = state.groups ? [].concat(state.groups) : [];
-                const newGroups = LayersUtils.deepChange(groups, action.node, 'title', action.options.title);
+                // updating correctly options in a (deep) subgroup
+                let newGroups = LayersUtils.deepChange(groups, action.node, action.options);
                 return assign({}, state, {groups: newGroups});
             }
 
@@ -228,10 +227,10 @@ function layers(state = { flat: [] }, action) {
                 newGroups = moveNode(newGroups, newLayer.id, groupId, newLayers, action.foreground);
             }
             let orderedNewLayers = LayersUtils.sortLayers ? LayersUtils.sortLayers(newGroups, newLayers) : newLayers;
-            return {
-                    flat: orderedNewLayers,
-                    groups: newGroups
-            };
+            return assign({}, state, {
+                flat: orderedNewLayers,
+                groups: newGroups
+            });
         }
         case REMOVE_LAYER: {
             const newGroups = deepRemove(state.groups, action.layerId);

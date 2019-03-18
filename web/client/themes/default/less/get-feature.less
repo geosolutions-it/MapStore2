@@ -1,91 +1,32 @@
-#mapstore-getfeatureinfo .panel-body {
-	padding: 0;
-}
 
-#mapstore-getfeatureinfo .panel-heading {
-	background-color: @ms2-color-background;
-	color: @ms2-color-text;
-    background-image: none;
-}
-
-.mapstore-mobile-identify {
-    -webkit-overflow-scrolling: touch;
-    background-color: @ms2-color-background;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    max-width: none !important;
-    height: 55%;
-    transition: 0.3s;
-    &.fullscreen {
-        height: 100%;
+.coordinateRow {
+    margin: 8px 0px;
+    border: 1px solid #dddddd;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    box-sizing: border-box;
+    input {
+        font-size: 12px;
+        font-family: Menlo, Monaco, Consolas, Courier New, monospace;
     }
-
-    .info-wrap {
-        position: absolute;
-        height: ~"calc(100% - @{square-btn-size})";
-        width: 100%;
+    .col-xs-5, .col-xs-1, .col-xs-2 {
         padding: 0;
-
-        .swipe-header-left-button,
-        .swipe-header-right-button {
-            height: @square-btn-medium-size;
-            width: @square-btn-medium-size;
-            padding: floor((@padding-left-square-md)/1.230769231) (@padding-left-square-md);
-            outline: 0 !important;
-
-            .glyphicon {
-                font-size: @icon-size-md;
-            }
-        }
-
-        .swipe-header-left-button {
-            right: @square-btn-medium-size !important;
-        }
-
-        .swipe-header-right-button {
-            right: 0 !important;
-        }
-
-        .react-swipeable-view-container {
-            .panel-heading {
-                height: @square-btn-medium-size + 10px !important;
-                .panel-title {
-                    & > span {
-                        & > span {
-                            width: ~"calc(100% - @{square-btn-medium-size} * 2 - 10px)";
-                            display: inline-block;
-                            overflow: hidden;
-                            text-overflow: ellipsis;
-                        }
-                    }
-                }
-            }
-        }
-
-
-        & > div {
-            display: flex;
-            flex-direction: column;
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            padding: 10px;
-            padding-bottom: 0;
-            overflow: hidden;
-            #mapstore-identify-revgeocoder {
-                margin-bottom: 10px;
-                overflow: hidden;
-                & > div {
-                    overflow: hidden;
-                }
-            }
-
-            .mapstore-identify-viewer {
-                flex: 1;
-                overflow: auto;
-            }
-        }
+        float: unset;
+        width: auto;
+        margin: 0 4px;
+    }
+    .col-xs-5 {
+        display: grid;
+        flex: 1;
+    }
+    &.GFI-coord-editor .col-xs-2 {
+        min-width: unset !important;
+    }
+    .form-group {
+        margin: 4px 0;
+    }
+    .pull-right.btn-group {
+        margin-top: 20px;
     }
 }

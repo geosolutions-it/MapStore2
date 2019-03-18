@@ -1,5 +1,5 @@
-# MapStore2 API usage
-You can include MapStore2 in your application and interact with it via its JavaScript API
+# MapStore API usage
+You can include MapStore in your application and interact with it via its JavaScript API
 
 ## How to use
 

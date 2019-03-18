@@ -33,6 +33,7 @@ const SELECT_NODE = 'LAYERS:SELECT_NODE';
 const FILTER_LAYERS = 'LAYERS:FILTER_LAYERS';
 const SHOW_LAYER_METADATA = 'LAYERS:SHOW_LAYER_METADATA';
 const HIDE_LAYER_METADATA = 'LAYERS:HIDE_LAYER_METADATA';
+const UPDATE_SETTINGS_PARAMS = 'LAYERS:UPDATE_SETTINGS_PARAMS';
 
 function showSettings(node, nodeType, options) {
     return {
@@ -257,13 +258,21 @@ function hideLayerMetadata() {
     };
 }
 
+function updateSettingsParams(newParams, update) {
+    return {
+        type: UPDATE_SETTINGS_PARAMS,
+        newParams,
+        update
+    };
+}
+
 module.exports = {
     changeLayerProperties, changeLayerParams, changeGroupProperties, toggleNode, sortNode, removeNode, contextNode,
     updateNode, layerLoading, layerLoad, layerError, addLayer, removeLayer, showSettings, hideSettings, updateSettings, refreshLayers,
     layersRefreshed, layersRefreshError, refreshLayerVersion, updateLayerDimension, browseData, clearLayers, selectNode, filterLayers, showLayerMetadata,
-    hideLayerMetadata, download,
+    hideLayerMetadata, download, updateSettingsParams,
     CHANGE_LAYER_PROPERTIES, CHANGE_LAYER_PARAMS, CHANGE_GROUP_PROPERTIES, TOGGLE_NODE, SORT_NODE,
     REMOVE_NODE, UPDATE_NODE, LAYER_LOADING, LAYER_LOAD, LAYER_ERROR, ADD_LAYER, REMOVE_LAYER,
     SHOW_SETTINGS, HIDE_SETTINGS, UPDATE_SETTINGS, CONTEXT_NODE, REFRESH_LAYERS, LAYERS_REFRESHED, LAYERS_REFRESH_ERROR, UPDATE_LAYERS_DIMENSION, BROWSE_DATA, DOWNLOAD,
-    CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA
+    CLEAR_LAYERS, SELECT_NODE, FILTER_LAYERS, SHOW_LAYER_METADATA, HIDE_LAYER_METADATA, UPDATE_SETTINGS_PARAMS
 };

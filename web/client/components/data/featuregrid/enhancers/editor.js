@@ -106,7 +106,7 @@ const featuresToGrid = compose(
         })
     ),
     withPropsOnChange(
-        ["features", "newFeatures", "isFocused", "virualScroll"],
+        ["features", "newFeatures", "isFocused", "virtualScroll"],
         props => ({
             rowsCount: ( props.isFocused || !props.virtualScroll) && props.rows && props.rows.length || (props.pagination && props.pagination.totalFeatures) || 0
         })
@@ -151,7 +151,7 @@ const featuresToGrid = compose(
     withPropsOnChange(
         ["gridOpts", "describeFeatureType", "actionOpts", "mode", "select", "columns"],
         props => {
-            // bind proper events and setup the colums array
+            // bind proper events and setup the columns array
             // bind and get proper grid events from gridEvents object
             let {
                 onRowsSelected = () => {},
@@ -160,7 +160,7 @@ const featuresToGrid = compose(
                 hasTemporaryChanges = () => {},
                 ...gridEvents} = getGridEvents(props.gridEvents, props.rowGetter, props.describeFeatureType, props.actionOpts, props.columns);
 
-            // setup gridOpts setting app selection events binded
+            // setup gridOpts setting app selection events bind
             let gridOpts = props.gridOpts;
             gridOpts = {
                 ...gridOpts,

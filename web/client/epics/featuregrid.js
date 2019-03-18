@@ -28,7 +28,7 @@ const {reset, QUERY_FORM_SEARCH, loadFilter} = require('../actions/queryform');
 const {zoomToExtent} = require('../actions/map');
 
 const {BROWSE_DATA, changeLayerProperties, refreshLayerVersion} = require('../actions/layers');
-const {purgeMapInfoResults} = require('../actions/mapInfo');
+const { closeIdentify } = require('../actions/mapInfo');
 const {getCapabilities, parseLayerCapabilities} = require('../api/WMS');
 
 const {SORT_BY, CHANGE_PAGE, SAVE_CHANGES, SAVE_SUCCESS, DELETE_SELECTED_FEATURES, featureSaving, changePage,
@@ -171,7 +171,7 @@ const createLoadPageFlow = (store) => ({page, size} = {}) => {
 };
 
 const createInitialQueryFlow = (action$, store, {url, name, id} = {}) => {
-    const filterObj = get(store.getState(), `featuregrid.advancedFilters.${id}`);
+    const filterObj = get(store.getState(), `featuregrid.advancedFilters["${id}"]`);
     const createInitialQuery = () => createQuery(url, filterObj || {
         featureTypeName: name,
         filterType: 'OGC',
@@ -606,7 +606,7 @@ module.exports = {
     onOpenAdvancedSearch: (action$, store) =>
         action$.ofType(OPEN_ADVANCED_SEARCH).switchMap(() => {
             return Rx.Observable.of(
-                loadFilter(get(store.getState(), `featuregrid.advancedFilters.${selectedLayerIdSelector(store.getState())}`)),
+                loadFilter(get(store.getState(), `featuregrid.advancedFilters["${selectedLayerIdSelector(store.getState())}"]`)),
                 closeFeatureGrid(),
                 setControlProperty('queryPanel', "enabled", true)
             )
@@ -642,10 +642,10 @@ module.exports = {
     resetControlsOnEnterInEditMode: (action$) =>
         action$.ofType(TOGGLE_MODE)
         .filter(a => a.mode === MODES.EDIT).map(() => resetControls(["query"])),
-    closeIdentifyEpic: (action$) =>
+    closeIdentifyWhenOpenFeatureGrid: (action$) =>
         action$.ofType(OPEN_FEATURE_GRID)
         .switchMap(() => {
-            return Rx.Observable.of(purgeMapInfoResults());
+            return Rx.Observable.of(closeIdentify());
         }),
     /**
      * start sync filter with wms layer

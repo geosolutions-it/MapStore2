@@ -30,7 +30,7 @@
     "app": {
         "title": "MapStore documentation",
         "base": "/mapstore/docs",
-        "entrance": "content:site",
+        "entrance": "api:framework",
         "routing": { "method": "path", "caseSensitive": true }
     },
     "template": {
@@ -48,14 +48,9 @@
                     "iconClass": "ico-book",
                     "label": "Guides",
                     "items": [
-                        { "label": "Home", "href": "./" },
+                        { "label": "User Guide", "href": "https://mapstore.readthedocs.io/en/latest/user-guide/home-page/" },
                         { "separator": true },
-                        { "label": "Developer's guide", "href": "developer-guide" },
-                        { "separator": true },
-                        { "label": "Plugins Architecture", "href": "plugins-architecture" },
-                        { "label": "Configuring Plugins", "href": "plugins-documentation" },
-                        { "separator": true },
-                        { "label": "Project Creation Script", "href": "project-creation-script" }
+                        { "label": "Developer's guide", "href": "https://mapstore.readthedocs.io/en/latest/developer-guide/" }
                     ]
                 },
                 {
@@ -106,6 +101,7 @@
           "framework": [
             "web/client/api/SLDService.js",
             "web/client/components/index.jsdoc",
+            "web/client/components/app/StandardApp.jsx",
             "web/client/components/buttons/FullScreenButton.jsx",
             "web/client/components/buttons/GlobeViewSwitcherButton.jsx",
             "web/client/components/buttons/GoFullButton.jsx",
@@ -125,6 +121,7 @@
             "web/client/components/misc/cardgrids/SideGrid.jsx",
             "web/client/components/misc/enhancers/emptyState.jsx",
             "web/client/components/misc/enhancers/tooltip.jsx",
+            "web/client/components/misc/enhancers/security/accessRuleParser.jsx",
             "web/client/components/misc/panels/Accordion.jsx",
             "web/client/components/misc/panels/DockablePanel.jsx",
             "web/client/components/misc/panels/DockPanel.jsx",
@@ -228,17 +225,14 @@
                 "web/client/plugins/Search.jsx",
                 "web/client/plugins/SearchServicesConfig.jsx",
                 "web/client/plugins/TOC.jsx",
+                "web/client/plugins/TOCItemsSettings.jsx",
                 "web/client/plugins/ThematicLayer.jsx",
                 "web/client/plugins/WFSDownload.jsx",
+                "web/client/plugins/Widgets.jsx",
+                "web/client/plugins/WidgetsTray.jsx",
                 "web/client/plugins/ZoomIn.jsx",
                 "web/client/plugins/ZoomOut.jsx"
             ]
-        },
-        "./docs/**/*md",
-        {
-            "readme": "./README.md",
-            "developer-guide": "./docs/developer-guide/index.md",
-            "site": "./docs/index.md"
         }
     ]
 }

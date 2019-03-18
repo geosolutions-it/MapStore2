@@ -10,7 +10,7 @@ const Rx = require('rxjs');
 const {MAP_CONFIG_LOADED} = require('../actions/config');
 const {TOGGLE_CONTROL, toggleControl} = require('../actions/controls');
 const {addLayer, updateNode, changeLayerProperties, removeLayer} = require('../actions/layers');
-const {hideMapinfoMarker, purgeMapInfoResults} = require('../actions/mapInfo');
+const { hideMapinfoMarker, purgeMapInfoResults, closeIdentify} = require('../actions/mapInfo');
 
 const {updateAnnotationGeometry, setStyle, toggleStyle, cleanHighlight, toggleAdd,
     CONFIRM_REMOVE_ANNOTATION, SAVE_ANNOTATION, EDIT_ANNOTATION, CANCEL_EDIT_ANNOTATION,
@@ -118,7 +118,9 @@ module.exports = (viewer) => ({
                     features: newFeatures
                 }),
                 hideMapinfoMarker(),
-                purgeMapInfoResults()
+                // TODO: not sure if necessary to purge also results. closeIdentify may purge automatically if annotations are disabled
+                purgeMapInfoResults(),
+                closeIdentify()
             ].concat(newFeatures.length === 0 ? [removeLayer('annotations')] : []));
         }),
     saveAnnotationEpic: (action$, store) =>

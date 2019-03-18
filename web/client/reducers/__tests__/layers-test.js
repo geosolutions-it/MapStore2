@@ -7,7 +7,7 @@
  */
 var expect = require('expect');
 var layers = require('../layers');
-const { changeLayerParams } = require('../../actions/layers');
+const { changeLayerParams, addLayer } = require('../../actions/layers');
 
 
 describe('Test the layers reducer', () => {
@@ -173,6 +173,54 @@ describe('Test the layers reducer', () => {
         let state = layers({flat: [{id: 'sample'}, {id: 'other'}]}, testAction);
         expect(state.flat[0].format).toBe("image/vnd.jpeg-png");
         expect(state.flat[1].format).toNotExist();
+    });
+
+
+    it('updateNode subgroups changing tooltipOptions', () => {
+        let testAction = {
+            "type": "UPDATE_NODE",
+            "node": "1.3",
+            "nodeType": "groups",
+            "options": {
+                "description": "denlayers/40935555",
+                "tooltipOptions": "both"
+            }
+        };
+        const groups = [
+            {
+                "id": "1",
+                "title": "1",
+                "name": "1",
+                "nodes": [
+                    {
+                        "id": "1.3",
+                        "title": "3",
+                        "name": "3",
+                        "nodes": [
+                            {
+                                "id": "1.3.4",
+                                "title": "4",
+                                "name": "4",
+                                "nodes": [
+                                    "topp:states__6"
+                                ],
+                                "expanded": true
+                            }
+                        ],
+                        "expanded": true,
+                        "description": "denlayers/4093",
+                        "tooltipOptions": "title",
+                        "tooltipPlacement": "right"
+                    }
+                ],
+                "expanded": true
+            }
+        ];
+        let state = layers({groups}, testAction);
+        expect(state.groups[0].nodes[0].tooltipOptions).toBe("both");
+        expect(state.groups[0].nodes[0].tooltipPlacement).toBe("right");
+        expect(state.groups[0].nodes[0].description).toBe("denlayers/40935555");
+        expect(state.groups[0].nodes[0].id).toBe("1.3");
     });
 
     it('test layer visibility change for background', () => {
@@ -488,6 +536,33 @@ describe('Test the layers reducer', () => {
         expect(state.groups[0].name).toBe("test");
         expect(state.groups[0].nodes[0]).toBe("test_id3");
         expect(state.groups[0].nodes[1]).toBe("test_id1");
+    });
+
+    it('add new layer and verify old state', () => {
+        const testAction = addLayer({ group: "test", id: "test_id1" });
+
+        const state = layers(
+            {
+                flat: [
+                    {
+                        id: "layer"
+                    }
+                ],
+                settings: {
+                    options: {
+                        opacity: 0.8
+                    }
+                },
+                selected: [
+                    "layer"
+                ]
+            },
+            testAction
+        );
+
+        expect(state.settings).toExist();
+        expect(state.selected).toExist();
+
     });
 
     it('remove layer', () => {

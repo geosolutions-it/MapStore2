@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?><DomainValues xmlns="http://demo.geo-solutions.it/share/wmts-multidim/wmts_multi_dimensional.xsd" xmlns:ows="http://www.opengis.net/ows/1.1">
+  <ows:Identifier>time</ows:Identifier>
+  <Limit>2</Limit>
+  <Sort>asc</Sort>
+  <Domain>2016-09-01T00:00:00.000Z,2016-09-03T00:00:00.000Z</Domain>
+  <Size>2</Size>
+</DomainValues>

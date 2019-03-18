@@ -10,12 +10,11 @@ const PropTypes = require('prop-types');
 const SharingLinks = require('./SharingLinks');
 const Message = require('../I18N/Message');
 const {Image, Panel, Button: ButtonRB, Glyphicon} = require('react-bootstrap');
-const {isObject} = require('lodash');
+const { isObject } = require('lodash');
 
 const CoordinatesUtils = require('../../utils/CoordinatesUtils');
 const ContainerDimensions = require('react-container-dimensions').default;
-const ConfigUtils = require('../../utils/ConfigUtils');
-const {getRecordLinks, recordToLayer, extractOGCServicesReferences, buildSRSMap, removeParameters} = require('../../utils/CatalogUtils');
+const {getRecordLinks, recordToLayer, extractOGCServicesReferences, buildSRSMap, extractEsriReferences, esriToLayer} = require('../../utils/CatalogUtils');
 
 const tooltip = require('../misc/enhancers/tooltip');
 const Button = tooltip(ButtonRB);
@@ -86,6 +85,9 @@ class RecordItem extends React.Component {
         }
         // let's extract the references we need
         const {wms, wmts} = extractOGCServicesReferences(record);
+        // let's extract the esri
+        const {esri} = extractEsriReferences(record);
+
         // let's create the buttons
         let buttons = [];
         // TODO addLayer and addwmtsLayer do almost the same thing and they should be unified
@@ -110,6 +112,19 @@ class RecordItem extends React.Component {
                     bsStyle="primary"
                     bsSize={this.props.buttonSize}
                     onClick={() => { this.addwmtsLayer(wmts); }}
+                    key="addwmtsLayer">
+                        <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap"/>
+                </Button>
+            );
+        }
+        if (esri) {
+            buttons.push(
+                <Button
+                    key="wmts-button"
+                    className="record-button"
+                    bsStyle="primary"
+                    bsSize={this.props.buttonSize}
+                    onClick={() => { this.addEsriLayer(); }}
                     key="addwmtsLayer">
                         <Glyphicon glyph="plus" />&nbsp;<Message msgId="catalog.addToMap"/>
                 </Button>
@@ -145,6 +160,7 @@ class RecordItem extends React.Component {
     render() {
         let record = this.props.record;
         const {wms, wmts} = extractOGCServicesReferences(record);
+        const {esri} = extractEsriReferences(record);
         return (
             <Panel className="record-item">
                 {!this.props.hideThumbnail && <div className="record-item-thumb">
@@ -167,7 +183,7 @@ class RecordItem extends React.Component {
                         {!this.props.hideIdentifier && <h4><small>{record && record.identifier}</small></h4>}
                         <p className="record-item-description">{this.renderDescription(record)}</p>
                     </div>
-                    {!wms && !wmts && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}
+                    {!wms && !wmts && !esri && <small className="text-danger"><Message msgId="catalog.missingReference"/></small>}
                     {!this.props.hideExpand && <div
                     className="ms-ruler"
                     style={{visibility: 'hidden', height: 0, whiteSpace: 'nowrap', position: 'absolute' }}
@@ -187,16 +203,13 @@ class RecordItem extends React.Component {
     };
 
     addLayer = (wms) => {
-        const removeParams = ["request", "layer", "layers", "service", "version"].concat(this.props.authkeyParamNames);
-        const { url } = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wms.url), removeParams );
         const allowedSRS = buildSRSMap(wms.SRS);
         if (wms.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
         } else {
             this.props.onLayerAdd(
                 recordToLayer(this.props.record, "wms", {
-                    removeParams,
-                    url,
+                    removeParams: this.props.authkeyParamNames,
                     catalogURL: this.props.catalogType === 'csw' && this.props.catalogURL ? this.props.catalogURL + "?request=GetRecordById&service=CSW&version=2.0.2&elementSetName=full&id=" + this.props.record.identifier : null
                 }));
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
@@ -208,15 +221,12 @@ class RecordItem extends React.Component {
     };
 
     addwmtsLayer = (wmts) => {
-        const removeParams = ["request", "layer"].concat(this.props.authkeyParamNames);
-        const { url } = removeParameters(ConfigUtils.cleanDuplicatedQuestionMarks(wmts.url), removeParams);
         const allowedSRS = buildSRSMap(wmts.SRS);
         if (wmts.SRS.length > 0 && !CoordinatesUtils.isAllowedSRS(this.props.crs, allowedSRS)) {
             this.props.onError('catalog.srs_not_allowed');
         } else {
             this.props.onLayerAdd(recordToLayer(this.props.record, "wmts", {
-                removeParams,
-                url
+                removeParams: this.props.authkeyParamNames
             }));
             if (this.props.record.boundingBox && this.props.zoomToLayer) {
                 let extent = this.props.record.boundingBox.extent;
@@ -225,7 +235,14 @@ class RecordItem extends React.Component {
             }
         }
     };
-
+    addEsriLayer = () => {
+        this.props.onLayerAdd(esriToLayer(this.props.record));
+        if (this.props.record.boundingBox && this.props.zoomToLayer) {
+            let extent = this.props.record.boundingBox.extent;
+            let crs = this.props.record.boundingBox.crs;
+            this.props.onZoomToExtent(extent, crs);
+        }
+    };
     displayExpand = width => {
         const descriptionWidth = this.descriptionRuler ? this.descriptionRuler.clientWidth : 0;
         return descriptionWidth > width;

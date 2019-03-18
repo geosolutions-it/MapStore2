@@ -18,7 +18,13 @@ const React = require('react');
 const ReactDOM = require('react-dom');
 const ReactTestUtils = require('react-dom/test-utils');
 const expect = require('expect');
-const TableWidget = require('../TableWidget');
+const { compose, defaultProps } = require('recompose');
+const tableWidget = require('../../enhancers/tableWidget');
+
+const TableWidget = compose(
+    defaultProps({ canEdit: true }),
+    tableWidget
+)(require('../TableWidget'));
 const describePois = require('json-loader!../../../../test-resources/wfs/describe-pois.json');
 
 describe('TableWidget component', () => {

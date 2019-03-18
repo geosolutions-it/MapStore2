@@ -23,6 +23,7 @@ const {
     EXPORT_CSV,
     EXPORT_IMAGE,
     DEPENDENCY_SELECTOR_KEY,
+    TOGGLE_TRAY,
     createChart, NEW_CHART,
     exportCSV,
     exportImage,
@@ -39,7 +40,8 @@ const {
     changeEditorSetting,
     setPage,
     setupDependencySelector,
-    toggleDependencySelector
+    toggleDependencySelector,
+    toggleTray
 } = require('../widgets');
 
 describe('Test correctness of the widgets actions', () => {
@@ -181,6 +183,12 @@ describe('Test correctness of the widgets actions', () => {
         const retval = createChart(true);
         expect(retval).toExist();
         expect(retval.type).toBe(NEW_CHART);
+    });
+    it('toggleTray', () => {
+        const retval = toggleTray(true);
+        expect(retval).toExist();
+        expect(retval.type).toBe(TOGGLE_TRAY);
+        expect(retval.value).toBe(true);
     });
 
 });

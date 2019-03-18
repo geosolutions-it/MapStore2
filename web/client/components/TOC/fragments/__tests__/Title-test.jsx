@@ -6,13 +6,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-var React = require('react');
-var ReactDOM = require('react-dom');
-var Title = require('../Title');
+const React = require('react');
+const ReactDOM = require('react-dom');
+const Title = require('../Title');
+const {getTooltip} = require('../../../../utils/TOCUtils');
 
-var expect = require('expect');
+const expect = require('expect');
 
-var ReactTestUtils = require('react-dom/test-utils');
+const ReactTestUtils = require('react-dom/test-utils');
 
 describe('test Title module component', () => {
     beforeEach((done) => {
@@ -152,4 +153,29 @@ describe('test Title module component', () => {
         ReactTestUtils.Simulate.mouseOver(domNode);
         expect(ReactDOM.findDOMNode(comp).getAttribute('aria-describedby')).toBe(null);
     });
+
+    it('tests Title with customtooltip fragments', () => {
+        const node = {
+            name: 'layer00',
+            title: {
+                'default': 'Layer',
+                'it-IT': 'Livello'
+            },
+            id: "layer00",
+            description: "desc",
+            visibility: true,
+            storeIndex: 9,
+            type: 'wms',
+            url: 'fakeurl',
+            tooltipOptions: "both"
+        };
+        const currentLocale = "it-IT";
+        const comp = ReactDOM.render(<Title node={node} tooltip currentLocale={currentLocale}/>, document.getElementById("container"));
+        const domNode = ReactDOM.findDOMNode(comp);
+        expect(domNode).toExist();
+        ReactTestUtils.Simulate.mouseOver(domNode);
+        expect(ReactDOM.findDOMNode(comp).getAttribute('aria-describedby')).toBe('tooltip-layer-title');
+        expect(getTooltip(node, currentLocale)).toBe("Livello - desc");
+    });
+
 });

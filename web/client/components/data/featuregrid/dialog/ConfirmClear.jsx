@@ -1,11 +1,12 @@
 const React = require('react');
 const Confirm = require('../../../misc/ConfirmDialog');
+const Portal = require('../../../misc/Portal');
 const Message = require('../../../I18N/Message');
 module.exports = ({
     onClose = () => {},
     saving = false,
     onConfirm = () => {}
-} = {}) => (<Confirm
+} = {}) => (<Portal><Confirm
     draggable={false}
     show
     onClose={onClose}
@@ -16,4 +17,4 @@ module.exports = ({
     confirmButtonDisabled={saving}
     closeText={<Message msgId="featuregrid.noButton" />}>
     <Message msgId="featuregrid.clear"/>
-    </Confirm>);
+    </Confirm></Portal>);
