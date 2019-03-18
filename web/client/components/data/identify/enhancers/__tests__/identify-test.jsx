@@ -23,28 +23,7 @@ describe("test identify enhancers", () => {
         setTimeout(done);
     });
 
-    it('test switchControlledIdentify', () => {
-        const Component = switchControlledIdentify(({index = 0, setIndex = () => {}}) => <div id="test-component" onClick={() => setIndex(2)}>{index}</div>);
-        ReactDOM.render(<Component />, document.getElementById("container"));
-        let testComponent = document.getElementById('test-component');
-        expect(testComponent.innerHTML).toBe('0');
-        TestUtils.Simulate.click(testComponent);
-        expect(testComponent.innerHTML).toBe('2');
-
-        ReactDOM.render(<Component viewerOptions={{header: true}}/>, document.getElementById("container"));
-        testComponent = document.getElementById('test-component');
-        expect(testComponent.innerHTML).toBe('0');
-        TestUtils.Simulate.click(testComponent);
-        expect(testComponent.innerHTML).toBe('0');
-
-        ReactDOM.render(<Component viewerOptions={{}}/>, document.getElementById("container"));
-        testComponent = document.getElementById('test-component');
-        expect(testComponent.innerHTML).toBe('0');
-        TestUtils.Simulate.click(testComponent);
-        expect(testComponent.innerHTML).toBe('2');
-    });
-
-    it('test switchControlledIdentify component changes mousepointer on enable / disable', () => {
+    it('test identifyLifecycle component changes mousepointer on enable / disable', () => {
 
         const Component = identifyLifecycle(() => <div id="test-component"></div>);
 
@@ -70,7 +49,7 @@ describe("test identify enhancers", () => {
         expect(spyMousePointer.calls.length).toEqual(2);
     });
 
-    it("test switchControlledIdentify component doesn't need reset current index when requests are the same", () => {
+    it("test identifyLifecycle component doesn't need reset current index when requests are the same", () => {
         const Component = identifyLifecycle(() => <div id="test-component"></div>);
         const testHandlers = {
             setIndex: () => {}

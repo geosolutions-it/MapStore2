@@ -6,15 +6,12 @@
 * LICENSE file in the root directory of this source tree.
 */
 
-const {get} = require('lodash');
+const { get, isArray } = require('lodash');
 
 const { createSelector, createStructuredSelector } = require('reselect');
 const {modeSelector} = require('./featuregrid');
 const {mapSelector} = require('./map');
 const { currentLocaleSelector } = require('./locale');
-
-const {layersSelector} = require('./layers');
-const {defaultQueryableFilter} = require('../utils/MapInfoUtils');
 
 const {queryPanelSelector} = require('./controls');
 
@@ -60,13 +57,6 @@ const annotationsEditingSelector = (state) => get(state, "annotations.editing");
 const mapInfoDisabledSelector = (state) => !get(state, "mapInfo.enabled", false);
 
 /**
- * Select queriable layers
- * @param {object} state the state
- * @return {array} the queriable layers
- */
-const queryableLayersSelector = state => layersSelector(state).filter(defaultQueryableFilter);
-
-/**
  * selects stopGetFeatureInfo from state
  * @memberof selectors.mapinfo
  * @param  {object} state the state
@@ -88,6 +78,9 @@ const stopGetFeatureInfoSelector = createSelector(
         || !!isQueryPanelActive
     );
 
+/**
+ * Defines the general options of the identifyTool to build the request
+ */
 const identifyOptionsSelector = createStructuredSelector({
         format: generalInfoFormatSelector,
         map: mapSelector,
@@ -95,14 +88,54 @@ const identifyOptionsSelector = createStructuredSelector({
         currentLocale: currentLocaleSelector
     });
 
+const isHighlightEnabledSelector = state => state.mapInfo.highlight;
+
+const indexSelector = state => state.mapInfo.index;
+
+const responsesSelector = state => state.mapInfo && state.mapInfo.responses || [];
+
+
+const currentResponseSelector = createSelector(
+    responsesSelector, indexSelector,
+    (responses = [], index = 0) => responses[index]
+);
+const currentFeatureSelector = state => {
+    const currentResponse = currentResponseSelector(state) || {};
+    return get(currentResponse, 'data.features') || get(currentResponse, 'layerMetadata.features');
+};
+
+const applyMapInfoStyle = f => ({...f, style: f.style || {
+    color: '#ffcc33',
+    opacity: 1,
+    weight: 3,
+    fillColor: '#ffffff',
+    fillOpacity: 0.2
+}});
+
+const clickedPointWithFeaturesSelector = createSelector(
+    clickPointSelector,
+    currentFeatureSelector,
+    (clickPoint, features) => clickPoint
+        ? {
+            ...clickPoint,
+            features: features && isArray(features) && features.map(applyMapInfoStyle )
+        }
+        : undefined
+
+);
+
+
 module.exports = {
     isMapInfoOpen,
+    indexSelector,
+    responsesSelector,
+    clickedPointWithFeaturesSelector,
     identifyOptionsSelector,
     clickPointSelector,
     generalInfoFormatSelector,
-    queryableLayersSelector,
     mapInfoRequestsSelector,
     stopGetFeatureInfoSelector,
     showEmptyMessageGFISelector,
-    mapInfoConfigurationSelector
+    mapInfoConfigurationSelector,
+    isHighlightEnabledSelector
 };

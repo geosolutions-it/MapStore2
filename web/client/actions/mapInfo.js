@@ -22,8 +22,11 @@ const GET_VECTOR_INFO = 'GET_VECTOR_INFO';
 const NO_QUERYABLE_LAYERS = 'NO_QUERYABLE_LAYERS';
 const CLEAR_WARNING = 'CLEAR_WARNING';
 const FEATURE_INFO_CLICK = 'FEATURE_INFO_CLICK';
+const UPDATE_MAPINFO_FEATURE = "UPDATE_MAPINFO_FEATURE";
+const HIGHLIGHT_FEATURE = "MAPINFO_HIGHLIGHT_FEATURE";
 const TOGGLE_MAPINFO_STATE = 'TOGGLE_MAPINFO_STATE';
 const UPDATE_CENTER_TO_MARKER = 'UPDATE_CENTER_TO_MARKER';
+const CHANGE_INDEX = 'IDENTIFY:CHANGE_INDEX';
 const CLOSE_IDENTIFY = 'IDENTIFY:CLOSE_IDENTIFY';
 const CHANGE_FORMAT = 'IDENTIFY:CHANGE_FORMAT';
 const TOGGLE_SHOW_COORD_EDITOR = 'IDENTIFY:TOGGLE_SHOW_COORD_EDITOR';
@@ -193,6 +196,27 @@ function featureInfoClick(point, layer) {
     };
 }
 
+function updateMapInfoFeature(features) {
+    return {
+        type: UPDATE_MAPINFO_FEATURE,
+        features
+    };
+}
+
+function highlightFeature(enabled) {
+    return {
+        type: HIGHLIGHT_FEATURE,
+        enabled
+    };
+}
+
+function changeIndex(index) {
+    return {
+        type: CHANGE_INDEX,
+        index
+    };
+}
+
 const closeIdentify = () => ({
     type: CLOSE_IDENTIFY
 });
@@ -231,6 +255,9 @@ module.exports = {
     NO_QUERYABLE_LAYERS,
     CLEAR_WARNING,
     FEATURE_INFO_CLICK,
+    UPDATE_MAPINFO_FEATURE, updateMapInfoFeature,
+    HIGHLIGHT_FEATURE, highlightFeature,
+    CHANGE_INDEX, changeIndex,
     TOGGLE_MAPINFO_STATE,
     UPDATE_CENTER_TO_MARKER,
     CLOSE_IDENTIFY,

@@ -6,21 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {lifecycle, withHandlers, branch, withState, compose} = require('recompose');
+const {lifecycle, withHandlers, compose} = require('recompose');
 const {set} = require('../../../../utils/ImmutableUtils');
 const {isEqual, isNil} = require('lodash');
-
-/**
- * Enhancer to enable set index only if Component has not header in viewerOptions props
- * @memberof enhancers.switchControlledIdentify
- * @class
- */
-const switchControlledIdentify = branch(
-    ({viewerOptions}) => !viewerOptions || (viewerOptions && !viewerOptions.header),
-    withState(
-        'index', 'setIndex', 0
-    )
-);
 
 /**
  * Enhancer to enable set index only if Component has header
@@ -118,6 +106,5 @@ const identifyLifecycle = compose(
 );
 
 module.exports = {
-    identifyLifecycle,
-    switchControlledIdentify
+    identifyLifecycle
 };

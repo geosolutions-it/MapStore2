@@ -9,22 +9,25 @@ const React = require('react');
 const {Glyphicon} = require('react-bootstrap');
 const {connect} = require('react-redux');
 const {createSelector} = require('reselect');
-const {compose, defaultProps} = require('recompose');
 const assign = require('object-assign');
-
-const {hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor} = require('../actions/mapInfo');
-const {changeMousePointer} = require('../actions/map');
 
 const {mapSelector} = require('../selectors/map');
 const {layersSelector} = require('../selectors/layers');
-const {showEmptyMessageGFISelector, generalInfoFormatSelector, clickPointSelector } = require('../selectors/mapInfo');
+const { generalInfoFormatSelector, clickPointSelector, indexSelector, responsesSelector, showEmptyMessageGFISelector } = require('../selectors/mapInfo');
+
+
+const { hideMapinfoMarker, showMapinfoRevGeocode, hideMapinfoRevGeocode, clearWarning, toggleMapInfoState, changeMapInfoFormat, updateCenterToMarker, closeIdentify, purgeMapInfoResults, featureInfoClick, changeFormat, toggleShowCoordinateEditor, changeIndex} = require('../actions/mapInfo');
+const {changeMousePointer} = require('../actions/map');
+
+
 const {currentLocaleSelector} = require('../selectors/locale');
 const {mapLayoutValuesSelector} = require('../selectors/maplayout');
 
+const { compose, defaultProps } = require('recompose');
 const MapInfoUtils = require('../utils/MapInfoUtils');
 const loadingState = require('../components/misc/enhancers/loadingState');
-const {switchControlledDefaultViewer, defaultViewerHandlers, defaultViewerDefaultProps} = require('../components/data/identify/enhancers/defaultViewer');
-const {identifyLifecycle, switchControlledIdentify} = require('../components/data/identify/enhancers/identify');
+const {defaultViewerHandlers, defaultViewerDefaultProps} = require('../components/data/identify/enhancers/defaultViewer');
+const {identifyLifecycle} = require('../components/data/identify/enhancers/identify');
 const defaultIdentifyButtons = require('./identify/defaultIdentifyButtons');
 const Message = require('./locale/Message');
 
@@ -32,7 +35,7 @@ require('./identify/identify.css');
 
 const selector = createSelector([
     (state) => state.mapInfo && state.mapInfo.enabled || state.controls && state.controls.info && state.controls.info.enabled || false,
-    (state) => state.mapInfo && state.mapInfo.responses || [],
+    responsesSelector,
     (state) => state.mapInfo && state.mapInfo.requests || [],
     generalInfoFormatSelector,
     mapSelector,
@@ -51,9 +54,23 @@ const selector = createSelector([
 }));
 // result panel
 
-
+/**
+ * Enhancer to enable set index only if Component has not header in viewerOptions props
+ */
+const identifyIndex = compose(
+        connect(
+            createSelector(indexSelector, (index) => ({ index })),
+            {
+                setIndex: changeIndex
+            }
+        ),
+        defaultProps({
+            index: 0
+        })
+    )
+;
 const DefaultViewer = compose(
-    switchControlledDefaultViewer,
+    identifyIndex,
     defaultViewerDefaultProps,
     defaultViewerHandlers,
     loadingState(({responses}) => responses.length === 0)
@@ -174,7 +191,7 @@ const IdentifyPlugin = compose(
         onEnableCenterToMarker: updateCenterToMarker.bind(null, 'enabled')
     }),
     identifyDefaultProps,
-    switchControlledIdentify,
+    identifyIndex,
     defaultViewerHandlers,
     identifyLifecycle
 )(require('../components/data/identify/IdentifyContainer'));

@@ -6,7 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const {withState, withHandlers, branch, defaultProps} = require('recompose');
+const {withHandlers, defaultProps} = require('recompose');
 const MapInfoUtils = require('../../../../utils/MapInfoUtils');
 
 /**
@@ -27,18 +27,6 @@ const defaultViewerHandlers = withHandlers({
 
 
 /**
- * Enhancer to enable set index only if Component has header
- * @memberof enhancers.switchControlledDefaultViewer
- * @class
- */
-const switchControlledDefaultViewer = branch(
-    ({header}) => header,
-    withState(
-        'index', 'setIndex', 0
-    )
-);
-
-/**
  * Set the default props of DefaultViewer
  * @memberof enhancers.defaultViewerDefaultProps
  * @class
@@ -50,6 +38,5 @@ const defaultViewerDefaultProps = defaultProps({
 
 module.exports = {
     defaultViewerHandlers,
-    switchControlledDefaultViewer,
     defaultViewerDefaultProps
 };
