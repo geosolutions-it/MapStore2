@@ -27,6 +27,7 @@ olMap.disableEventListener = () => {};
 
 const testHandlers = {
     onStatusChange: () => {},
+    onSelectFeatures: () => {},
     onGeometryChanged: () => {},
     onEndDrawing: () => {},
     onDrawingFeatures: () => {}
@@ -115,19 +116,24 @@ describe('Test DrawSupport', () => {
             getView: () => ({getProjection: () => ({getCode: () => "EPSG:3857"})}),
             disableEventListener: () => {},
             addInteraction: () => {},
+            enableEventListener: () => {},
+            removeInteraction: () => {},
+            removeLayer: () => {},
             getInteractions: () => ({
                 getLength: () => 0
             })
         };
-        const spyAdd = expect.spyOn(fakeMap, "addLayer");
-        const spyInteraction = expect.spyOn(fakeMap, "addInteraction");
+        const spyAddLayer = expect.spyOn(fakeMap, "addLayer");
+        const spyAddInteraction = expect.spyOn(fakeMap, "addInteraction");
         const support = ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
         expect(support).toExist();
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Point"/>, document.getElementById("container"));
-        expect(spyAdd.calls.length).toBe(1);
-        expect(spyInteraction.calls.length).toBe(1);
+        ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="LineString  "/>, document.getElementById("container"));
+        expect(spyAddLayer.calls.length).toBe(2);
+        expect(spyAddInteraction.calls.length).toBe(2);
     });
 
     it('starts drawing bbox', () => {
@@ -378,6 +384,51 @@ describe('Test DrawSupport', () => {
         ReactDOM.render(
             <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Point" options={{stopAfterDrawing: true}}
                 onEndDrawing={testHandlers.onEndDrawing} onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
+        support.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: feature
+        });
+        support.drawInteraction.dispatchEvent({
+            type: 'drawend',
+            feature: feature
+        });
+        expect(spyEnd.calls.length).toBe(1);
+        expect(spyChangeStatus.calls.length).toBe(1);
+    });
+
+    it('end drawing a circle feature ', () => {
+        const fakeMap = {
+            addLayer: () => {},
+            disableEventListener: () => {},
+            addInteraction: () => {},
+            getInteractions: () => ({
+                getLength: () => 0
+            }),
+            getView: () => ({
+                getProjection: () => ({
+                    getCode: () => 'EPSG:4326'
+                })
+            })
+        };
+        const feature = new ol.Feature({
+              geometry: new ol.geom.Circle([13.0, 43.0], 100),
+              name: 'My Point'
+        });
+        const spyEnd = expect.spyOn(testHandlers, "onEndDrawing");
+        const spyChangeStatus = expect.spyOn(testHandlers, "onStatusChange");
+        const support = ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap}/>, document.getElementById("container"));
+        expect(support).toExist();
+        ReactDOM.render(
+            <DrawSupport features={[]} map={fakeMap} drawStatus="start" drawMethod="Circle" options={{
+                    stopAfterDrawing: true,
+                    geodesic: true
+                }}
+                onEndDrawing={testHandlers.onEndDrawing} onChangeDrawingStatus={testHandlers.onStatusChange}/>, document.getElementById("container"));
+        support.drawInteraction.dispatchEvent({
+            type: 'drawstart',
+            feature: feature
+        });
         support.drawInteraction.dispatchEvent({
             type: 'drawend',
             feature: feature
@@ -1943,5 +1994,91 @@ describe('Test DrawSupport', () => {
 
         done();
     });
+    it('test select interaction, retrieving a drawn feature', (done) => {
+        const spyOnSelectFeatures = expect.spyOn(testHandlers, "onSelectFeatures");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "LineString",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                selected: geomCollFeature,
+                transformToFeatureCollection: false,
+                selectEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const feature = new ol.Feature({
+            geometry: new ol.geom.Point(13.0, 43.0),
+            name: 'My Point'
+        });
+        support.selectInteraction.dispatchEvent({
+            type: 'select',
+            feature: feature
+        });
+        expect(spyOnSelectFeatures).toHaveBeenCalled();
+        done();
+    });
+    it('test modifyend event for modifyInteraction with Circle, exported FeatureCollection', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "Circle",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: true,
+                editEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const center = [1300, 4300];
+        const radius = 1000;
+        support.modifyInteraction.dispatchEvent({
+            type: 'modifyend',
+            features: new ol.Collection(
+                [new ol.Feature({
+                    geometry: new ol.geom.Circle(center, radius)
+                })]
+            )
+        });
+        expect(spyOnGeometryChanged).toNotHaveBeenCalled();
+        expect(spyOnDrawingFeatures).toHaveBeenCalled();
+        expect(spyOnDrawingFeatures.calls.length).toBe(1);
+        const ArgsEndDrawing = spyOnDrawingFeatures.calls[0].arguments;
+        expect(ArgsEndDrawing.length).toBe(1);
 
+        done();
+    });
+
+    it('test modifyend event for modifyInteraction with Circle, exported FeatureCollection', (done) => {
+        const spyOnGeometryChanged = expect.spyOn(testHandlers, "onGeometryChanged");
+        const spyOnDrawingFeatures = expect.spyOn(testHandlers, "onDrawingFeatures");
+        let support = renderDrawSupport();
+        support = renderDrawSupport({
+            drawMethod: "Circle",
+            drawStatus: "drawOrEdit",
+            features: [geomCollFeature],
+            options: {
+                transformToFeatureCollection: false,
+                editEnabled: true
+            }
+        });
+        expect(support).toExist();
+        const center = [1300, 4300];
+        const radius = 1000;
+        support.modifyInteraction.dispatchEvent({
+            type: 'modifyend',
+            features: new ol.Collection(
+                [new ol.Feature({
+                    geometry: new ol.geom.Circle(center, radius)
+                })]
+            )
+        });
+        expect(spyOnGeometryChanged).toHaveBeenCalled();
+        expect(spyOnDrawingFeatures).toNotHaveBeenCalled();
+
+        done();
+    });
 });
